@@ -1,0 +1,103 @@
+body {
+    padding: 20px 30px;
+    margin: 0px;
+}
+
+h1 {
+    font-family: Arial, Helvetica, sans-serif;
+	font-size: 28px;
+    margin: 20px 0px 4px 0px;
+}
+
+h2 {
+    font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;
+    margin: 14px 0px 4px 0px;
+}
+
+h3 {
+    font-family: Arial, Helvetica, sans-serif;
+	font-size: 17px;
+    margin: 14px 0px 4px 0px;
+}
+
+p {
+    margin: 6px 0px 6px 0px;
+}
+
+ol {
+	padding: 0px 0px 0px 30px;
+	margin: 10px 0 10px 0;
+}
+
+ul {
+	padding: 0px 0px 0px 30px;
+	margin: 10px 0 10px 0;
+	list-style-type: square;
+}
+
+li {
+	margin: 3px 0 3px 0;
+}
+
+dl {
+	margin: 0;
+	padding: 0;
+}
+
+dt {
+	margin: 0;
+	padding: 0;
+	font-weight: bold;
+}
+
+dd {
+	margin: 5px 0 1em 5px;
+	padding: 0;
+}
+
+table {
+	border: none;
+	margin: 0 10px 0 5px;
+	width: 100%;
+}
+
+th {
+	background-color: #E0E0E0;
+	text-align: left;
+}
+
+th, td {
+	padding: 4px;
+}
+
+td {
+	background-color: #F0F0F0;
+}
+
+.primary {
+	text-decoration: underline;
+}
+
+A:link, A:visited {
+	color: #005CB1;
+}
+
+A:hover {
+	color: #B42000;
+}
+
+#navigation {
+	margin: 0;
+	padding: 0;
+}
+
+#navigation li {
+	display: inline;
+	height: 0;
+	margin-right: 10px;
+}
+
+.tc1 { width: 7em; }
+.tc2 { width: 6em; }
+.tc3 { width: 7em; }

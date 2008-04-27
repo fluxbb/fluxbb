@@ -1,0 +1,111 @@
+/****************************************************************/
+/* 1. BACKGROUND AND TEXT COLOURS */
+/****************************************************************/
+
+/* 1.1 Default background colour and text colour */
+
+BODY {BACKGROUND-COLOR: #FFF}
+
+.pun {COLOR: #333}
+
+DIV.box, .pun BLOCKQUOTE, DIV.codebox, #adminconsole FIELDSET TH, .rowodd, .roweven {BACKGROUND-COLOR: #F1F1F1}
+#adminconsole TD, #adminconsole TH {BORDER-COLOR: #F1F1F1}
+
+/* 1. 2 Darker background colours */
+
+TD.tc2, TD.tc3, TD.tcmod, #postpreview, #viewprofile DD, DIV.forminfo,
+#adminconsole FIELDSET TD, DIV.blockmenu DIV.box, #adstats DD {BACKGROUND-COLOR: #DEDFDF}
+
+/* 1.3 Main headers and navigation bar background and text colour */
+
+.pun H2, #brdmenu {BACKGROUND-COLOR: #B84623; COLOR: #FFF}
+
+/* 1.4 Table header rows */
+
+.pun TH {BACKGROUND-COLOR: #D1D1D1}
+
+/* 1.5 Fieldset legend text colour */
+
+.pun LEGEND {COLOR: #822100}
+
+/* 1.6 Highlighted text for various items */
+
+.pun DIV.blockmenu LI.isactive A, #posterror LI STRONG {COLOR: #333}
+
+/****************************************************************/
+/* 2. POST BACKGROUNDS AND TEXT */
+/****************************************************************/
+
+/* 2.1 This is the setup for posts. */
+
+DIV.blockpost DIV.box, DIV.postright, DIV.postfootright {BACKGROUND-COLOR: #DEDFDF}
+DIV.postright, DIV.postfootright {BORDER-LEFT-COLOR: #F1F1F1}
+DIV.postleft, DIV.postfootleft, DIV.blockpost LABEL {BACKGROUND-COLOR: #F1F1F1}
+
+/* 2.2 Background for post headers and text colour for post numbers in viewtopic */
+
+DIV.blockpost H2 {BACKGROUND-COLOR: #D25028}
+DIV.blockpost H2 SPAN.conr {COLOR: #FCCFC1}
+
+/* 2.3 This is the line above the signature in posts. Colour and background should be the same */
+
+.pun HR {BACKGROUND-COLOR: #333; COLOR: #333}
+
+/****************************************************************/
+/* 3. BORDER COLOURS */
+/****************************************************************/
+
+/* 3.1 All external borders */
+
+DIV.box {BORDER-COLOR: #B84623}
+
+/* 3.2 Makes the top border of posts match the colour used for post headers */
+
+DIV.blockpost DIV.box {BORDER-COLOR: #D25028 #B84623 #B84623}
+
+/* 3.3 Table internal borders. By default TH is same as background so border is invisible */
+
+.pun TD {BORDER-COLOR: #E1C3C3}
+.pun TH {BORDER-COLOR: #D1D1D1}
+
+/* 3.4 Creates the inset border for quote boxes, code boxes and form info boxes */
+
+.pun BLOCKQUOTE, DIV.codebox, DIV.forminfo, DIV.blockpost LABEL {BORDER-COLOR: #ACA899 #FFF #FFF #ACA899}
+
+/* 3.5 Gecko's default fieldset borders are really nasty so this gives them a colour
+without interferring with IE's rather nice default */
+
+.pun DIV>FIELDSET {BORDER-COLOR: #ACA899}
+
+/****************************************************************/
+/* 4. LINK COLOURS */
+/****************************************************************/
+
+/* 4.1 This is the default for all links */
+
+.pun A:link, .pun A:visited {COLOR: #822100}
+.pun A:hover {COLOR: #CA3300}
+
+/* 4.2 This is the colour for links in header rows and the navigation bar */
+
+.pun H2 A:link, .pun H2 A:visited, #brdmenu A:link, #brdmenu A:visited {COLOR: #FFF}
+.pun H2 A:hover, #brdmenu A:hover {COLOR: #FFF}
+
+/* 4.3 This is for closed topics and "hot" links */
+
+LI.postreport A:link, LI.postreport A:visited, TR.iclosed TD.tcl A:link, TR.iclosed TD.tcl A:visited {COLOR: #888}
+LI.postreport A:hover, TR.iclosed TD.tcl A:hover {COLOR: #AAA}
+LI.maintenancelink A:link, LI.maintenancelink A:visited {COLOR: #B42000}
+LI.maintenancelink A:hover {COLOR: #B42000}
+
+/****************************************************************/
+/* 5. POST STATUS INDICATORS */
+/****************************************************************/
+
+/* These are the post status indicators which appear at the left of some tables. 
+.inew = new posts, .iredirect = redirect forums, .iclosed = closed topics and
+.isticky = sticky topics. The default is "icon". By default only .inew is different.*/
+
+DIV.icon {BORDER-COLOR: #E6E6E6 #DEDEDE #DADADA #E2E2E2}
+TR.iredirect DIV.icon {BORDER-COLOR: #F1F1F1 #F1F1F1 #F1F1F1 #F1F1F1}
+DIV.inew {BORDER-COLOR: #C23000 #AF2C00 #992600 #AC2B00}

@@ -1,0 +1,122 @@
+/****************************************************************/
+/* 1. BACKGROUND AND TEXT COLOURS */
+/****************************************************************/
+
+/* 1.1 Default background colour and text colour */
+
+BODY {BACKGROUND-COLOR: #2A2A2A}
+
+.pun {COLOR: #D4D4D4}
+
+DIV.box,  #adminconsole FIELDSET TH, .rowodd, .roweven {BACKGROUND-COLOR: #383838}
+#adminconsole TD, #adminconsole TH {BORDER-COLOR: #383838}
+
+/* 1. 2 Darker background colours */
+
+TD.tc2, TD.tc3, TD.tcmod, #brdfooter DIV.box {BACKGROUND-COLOR: #424242}
+#adminconsole FIELDSET TD, #viewprofile DD, DIV.forminfo, DIV.blockmenu DIV.box, #adstats DD {BACKGROUND-COLOR: #484848}
+
+.pun BLOCKQUOTE, DIV.codebox {BACKGROUND-COLOR: #353533}
+
+/* 1.3 Main headers and navigation bar background and text colour */
+
+.pun H2, #brdmenu {BACKGROUND-COLOR: #565656; COLOR: #D4D4D4}
+
+/* 1.4 Table header rows */
+
+.pun TH, .bgc4 {BACKGROUND-COLOR: #484848}
+
+/* 1.5 Fieldset legend text colour */
+
+.pun LEGEND {COLOR: #60C860}
+
+/* 1.6 Highlighted text for various items */
+
+.pun DIV.blockmenu LI.isactive A, #posterror LI STRONG {COLOR: #D4D4D4}
+
+/* 1.7 Dark background for form elements */
+
+.pun TEXTAREA, .pun INPUT, .pun SELECT {BACKGROUND-COLOR: #2A2A2A; COLOR: #D4D4D4}
+
+/****************************************************************/
+/* 2. POST BACKGROUNDS AND TEXT */
+/****************************************************************/
+
+/* 2.1 This is the setup for posts. */
+
+DIV.blockpost DIV.box, DIV.postright, DIV.postfootright, #postpreview {BACKGROUND-COLOR: #383838}
+DIV.postright, DIV.postfootright {BORDER-LEFT-COLOR: #424242}
+DIV.postleft, DIV.postfootleft, DIV.blockpost LABEL {BACKGROUND-COLOR: #424242}
+
+/* 2.2 Background for post headers and text colour for post numbers in viewtopic */
+
+DIV.blockpost H2 {BACKGROUND-COLOR: #565656}
+DIV.blockpost H2 SPAN.conr {COLOR: #A19E96}
+
+/* 2.3 This is the line above the signature in posts. Colour and background should be the same */
+
+.pun HR {BACKGROUND-COLOR: #606060; COLOR: #606060} 
+
+/****************************************************************/
+/* 3. BORDER COLOURS */
+/****************************************************************/
+
+/* 3.1 All external borders (H1 is the board title) */
+
+DIV.box {BORDER-COLOR: #565656}
+
+/* 3.2 Makes the top border of posts match the colour used for post headers */
+
+DIV.blockpost DIV.box {BORDER-COLOR: #565656 #525252 #525252}
+
+/* 3.3 Table internal borders. By default TH is same as background so border is invisible */
+
+.pun TD {BORDER-COLOR: #565656}
+.pun TH {BORDER-COLOR: #484848}
+
+/* 3.4 Creates the inset border for quote boxes, code boxes and form info boxes */
+
+.pun BLOCKQUOTE, DIV.codebox, DIV.forminfo, DIV.blockpost LABEL {BORDER-COLOR: #606060}
+
+/* 3.5 Gecko's default fieldset borders are really nasty so this gives them a colour
+without interferring with IE's rather nice default */
+
+.pun DIV>FIELDSET {BORDER-COLOR: #ACA899}
+
+/****************************************************************/
+/* 4. LINK COLOURS */
+/****************************************************************/
+
+/* 4.1 This is the default for all links */
+
+.pun A:link, .pun A:visited {COLOR: #60C860}
+.pun A:hover {COLOR: #80EE80}
+
+/* 4.2 This is the colour for links in header rows and the navigation bar */
+
+.pun H2 A:link, .pun H2 A:visited {COLOR: #D4D4D4}
+.pun H2 A:hover {COLOR: #D4D4D4}
+
+/* 4.3 This is for closed topics and "hot" links */
+
+LI.postreport A:link, LI.postreport A:visited, TR.iclosed TD.tcl A:link, TR.iclosed TD.tcl A:visited {COLOR: #888}
+LI.postreport A:hover, TR.iclosed TD.tcl A:hover {COLOR: #AAA}
+LI.maintenancelink A:link, LI.maintenancelink A:visited {COLOR: #FF4000}
+LI.maintenancelink A:hover {COLOR: #FF5010}
+
+/****************************************************************/
+/* 5. POST STATUS INDICATORS */
+/****************************************************************/
+
+/* These are the post status indicators which appear at the left of some tables. 
+.inew = new posts, .iredirect = redirect forums, .iclosed = closed topics and
+.isticky = sticky topics. The default is "icon". By default only .inew is different.*/
+
+DIV.icon {BORDER-COLOR: #484848 #404040 #3C3C3C #444444}
+TR.iredirect DIV.icon {BORDER-COLOR: #383838 #383838 #383838 #383838}
+DIV.inew {BORDER-COLOR: #60C860 #54AF54 #499849 #59B657}
+
+/* 5.2 Class .tclcon is a div inside the first column of tables with post indicators. The
+margin creates space for the post status indicator */
+
+TD DIV.tclcon {MARGIN-LEFT: 2.3em}

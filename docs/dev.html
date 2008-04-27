@@ -1,0 +1,1969 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>PunBB Docs: Developer Information</title>
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" type="text/css" href="style/docs.css" />
+</head>
+
+<body>
+  <ul id="navigation">
+    <li><a href="index.html">Index</a></li>
+
+    <li><a href="about.html">About</a></li>
+
+    <li><a href="install.html">Install</a></li>
+
+    <li><a href="faq.html">FAQ</a></li>
+
+    <li><a href="dev.html">Developer info</a></li>
+  </ul>
+
+  <h1>Developer Information</h1>
+
+  <p>Information for developers to enhance your existing PunBB
+  installation.</p>
+  <hr />
+
+  <h2>Table of Contents</h2>
+
+  <ul>
+    <li><a href="#syndication">Syndication</a></li>
+
+    <li><a href="#integration">Website Integration</a></li>
+
+    <li><a href="#plugins">Plugins</a></li>
+
+    <li><a href="#dbtables">Database Tables Reference</a></li>
+  </ul>
+  <hr />
+
+  <h2>Syndication<a name="syndication" id="syndication"></a></h2>
+
+  <p>This script extern.php is used to include information about
+  your board from pages outside the forums and to syndicate news
+  about recent discussions via RSS. The script can display a list
+  of recent discussions (sorted by post time or last post time), a
+  list of active users or a collection of general board statistics.
+  The script can be called directly via an URL (for RSS), from a
+  PHP include command or through the use of Server Side Includes
+  (SSI).</p>
+
+  <p>The scripts behaviour is controlled via variables supplied in
+  the URL to the script. The different variables are: action (what
+  to output), show (how many topics to display), forum (the ID of
+  the forum to poll for topics) and type (output as HTML or RSS).
+  The only mandatory variable is action.</p>
+
+  <p>Possible/default values are:</p>
+
+  <ul>
+    <li><strong>action:</strong> active (show most recently active
+    topics) (HTML or RSS)<br />
+    new (show newest topics) (HTML or RSS)<br />
+    online (show users online) (HTML)<br />
+    online_full (as above, but includes a full list) (HTML)<br />
+    stats (show board statistics) (HTML)</li>
+
+    <li><strong>show:</strong> Any integer value between 1 and 50.
+    This variables is ignored for RSS output. The default is
+    15.</li>
+
+    <li><strong>fid:</strong> One or more forum IDs
+    (comma-separated). If ignored, topics from all guest-readable
+    forums will be polled.</li>
+
+    <li><strong>type:</strong> RSS. Anything else means HTML
+    output.</li>
+  </ul>
+
+  <p>Here are some examples using PHP include().</p>
+
+  <ul>
+    <li>Show the 15 most recently active topics from all
+    forums:<br />
+    include('http://host.com/forums/extern.php?action=active');</li>
+
+    <li>Show the 10 newest topics from forums with ID 5, 6 and
+    7:<br />
+    include('http://host.com/forums/extern.php?action=new&amp;show=10&amp;fid=5,6,7');</li>
+
+    <li>Show users online:<br />
+    include('http://host.com/forums/extern.php?action=online');</li>
+
+    <li>Show users online with full listing of users:<br />
+    include('http://host.com/forums/extern.php?action=online_full');</li>
+
+    <li>Show board statistics:<br />
+    include('http://host.com/forums/extern.php?action=stats');</li>
+  </ul>
+
+  <p>Here are some examples using SSI.</p>
+
+  <ul>
+    <li>Show the 5 newest topics from forums with ID 11 and
+    22:<br />
+    &lt;!--#include
+    virtual="forums/extern.php?action=new&amp;show=5&amp;fid=11,22"
+    --&gt;</li>
+
+    <li>Show board statistics:<br />
+    &lt;!--#include virtual="forums/extern.php?action=stats"
+    --&gt;</li>
+  </ul>
+
+  <p>And finally some examples using extern.php to output an RSS
+  0.91 feed.</p>
+
+  <ul>
+    <li>Output the 15 most recently active topics:<br />
+    http://host.com/extern.php?action=active&amp;type=RSS</li>
+
+    <li>Output the 15 newest topics from forum with ID=2:<br />
+    http://host.com/extern.php?action=active&amp;type=RSS&amp;fid=2</li>
+  </ul>
+  <hr />
+
+  <h2>Website Integration<a name="integration"
+  id="integration"></a></h2>
+
+  <p>Integrating PunBB into your website code is easy if you know
+  a little PHP. By including PunBB's script common.php, you gain
+  access to all PunBB global variables such as $db and $pun_user.
+  However, in order to include this file, you need to define a
+  constant called PUN_ROOT. This constant should be set to the
+  relative path to your PunBB forum directory. For example, if
+  your website front page is located in /home/user/public_html/
+  and your forums are located in /home/user/public_html/forums/,
+  your PUN_ROOT should be './forums/'. The PHP code to accomplish
+  this could look something like this:</p>
+
+  <pre>define('PUN_ROOT', './forums/');
+require PUN_ROOT.'include/common.php';</pre>
+
+  <p>Once you've included common.php, you can access and utilize
+  all of PunBB's global variables and functions. Typically, you
+  will be most interested in the $pun_user array. This array holds
+  information about the current user. Another interesting variable
+  is the database object $db. How to use these variables in your
+  own script is out of the scope of this document, but here's a
+  small example showing you how to print a simple message greeting
+  the current user on your website front page:</p>
+
+  <pre>Hello &lt;?php echo pun_htmlspecialchars($pun_user['username']); ?&gt;!</pre>
+
+  <p>In addition to defining PUN_ROOT, you can define a number of
+  other constants to alter the behaviour of PunBB when including
+  common.php. The two most interesting of these constants are
+  PUN_TURN_OFF_MAINT and PUN_QUIET_VISIT. If PUN_TURN_OFF_MAINT is
+  defined when including common.php, PunBB will not exit and
+  display the maintenance message if the forums are placed into
+  maintenance mode. You generally don't want this message to appear
+  on your website front page, so defining that constant is a good
+  idea. The other constant, PUN_QUIET_VISIT, prevents PunBB from
+  updating the current user's last visit data in the database so
+  that a visit to the front page doesn't count as a visit in the
+  forums. This is also desirable behaviour in most cases. It
+  doesn't matter what value you set these constants to, but setting
+  them to a value of 1 is probably a good idea. Example:</p>
+
+  <pre>define('PUN_TURN_OFF_MAINT', 1);
+define('PUN_QUIET_VISIT', 1);</pre>
+
+  <p>Please note that these constants must be defined before
+  common.php is included.</p>
+  <hr />
+
+  <h2>Admin Plugins<a name="plugins" id="plugins"></a></h2>
+
+  <p>Admin plugins are modules for the PunBB admin interface that
+  can be installed by simply dropping the plugin script in the
+  plugins/ directory. See the example plugin for information on how
+  to write your own plugin. Here are a few notes of interest for
+  aspiring plugin authors:</p>
+
+  <ul>
+    <li>If you want to display a message via the message()
+    function, you must do so before calling
+    generate_admin_menu($plugin).</li>
+
+    <li>Plugins are loaded by admin_loader.php and must not be
+    terminated (e.g. by calling exit()). After the plugin script
+    has finished, the loader script displays the footer, so don't
+    worry about that. Please note that terminating a plugin by
+    calling message() or redirect() is fine though.</li>
+
+    <li>The action attribute of any and all &lt;form&gt; tags and
+    the target URL for the redirect() function must be set to the
+    value of $_SERVER['REQUEST_URI']. This URL can however be
+    extended to include extra variables (like the addition of
+    &amp;foo=bar in the example plugin).</li>
+
+    <li>If your plugin is for administrators only, the filename
+    must have the prefix "AP_". If it is for both administrators
+    and moderators, use the prefix "AMP_". The example plugin has
+    the prefix "AMP_" and is therefore available for both admins
+    and moderators in the navigation menu.</li>
+
+    <li>Use _ instead of spaces in the file name.</li>
+
+    <li>Since plugin scripts are included from the PunBB script
+    admin_loader.php, you have access to all PunBB functions and
+    global variables (e.g. $db, $pun_config, $pun_user etc).</li>
+
+    <li>Do your best to keep the look and feel of your plugins'
+    user interface similar to the rest of the admin scripts. Feel
+    free to borrow markup and code from the admin scripts to use in
+    your plugins.</li>
+
+    <li>Plugins must be released under the GNU General Public
+    License or a GPL compatible license. Copy the GPL preamble at
+    the top of this file into your plugin script and alter the
+    copyright notice to refrect the author of the plugin (i.e.
+    you).</li>
+  </ul>
+  <hr />
+
+  <h2>Database Tables Reference<a name="dbtables" id=
+  "dbtables"></a></h2>
+
+  <p>The following is a complete list of all PunBB database tables
+  and their respective fields. Primary key fields are
+  underlined.</p>
+
+  <h3>bans<a id="bans" name="bans"></a></h3>
+
+  <table summary="Banned users">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th class="tc4">Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="primary">id</td>
+
+        <td>int</td>
+
+        <td> </td>
+
+        <td>The auto-incrementing (identity) primary key identifier
+        for this table.</td>
+      </tr>
+
+      <tr>
+        <td>username</td>
+
+        <td>varchar(200)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The username this ban applies to.</td>
+      </tr>
+
+      <tr>
+        <td>ip</td>
+
+        <td>varchar(255)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The IP address(es) or partial IP address(es) this ban
+        applies to.</td>
+      </tr>
+
+      <tr>
+        <td>email</td>
+
+        <td>varchar(50)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The e-mail address or e-mail address domain name this
+        ban applies to.</td>
+      </tr>
+
+      <tr>
+        <td>message</td>
+
+        <td>varchar(255)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>A message that is displayed for the banned user.</td>
+      </tr>
+
+      <tr>
+        <td>expire</td>
+
+        <td>int</td>
+
+        <td><em>NULL</em></td>
+
+        <td>A UNIX timestamp representing the day when the ban
+        expires.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>categories<a id="categories" name="categories"></a></h3>
+
+  <table summary="Categories that envelop forums">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="primary">id</td>
+
+        <td>int</td>
+
+        <td> </td>
+
+        <td>The auto-incrementing (identity) primary key identifier
+        for this table.</td>
+      </tr>
+
+      <tr>
+        <td>cat_name</td>
+
+        <td>varchar(80)</td>
+
+        <td>'New Category'</td>
+
+        <td>The name of the category.</td>
+      </tr>
+
+      <tr>
+        <td>disp_position</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>The vertical display position of the category (relative
+        to other categories).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>censoring<a id="censoring" name="censoring"></a></h3>
+
+  <table summary="Words to censor in posts">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="primary">id</td>
+
+        <td>int</td>
+
+        <td> </td>
+
+        <td>The auto-incrementing (identity) primary key identifier
+        for this table.</td>
+      </tr>
+
+      <tr>
+        <td>search_for</td>
+
+        <td>varchar(60)</td>
+
+        <td> </td>
+
+        <td>The term to search for.</td>
+      </tr>
+
+      <tr>
+        <td>replace_with</td>
+
+        <td>varchar(60)</td>
+
+        <td> </td>
+
+        <td>The term to replace <em>search_for</em> with.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>config<a id="config" name="config"></a></h3>
+
+  <table summary="Configuration settings">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="primary">conf_name</td>
+
+        <td>varchar(255)</td>
+
+        <td> </td>
+
+        <td>The name of a configuration variable. General
+        configuration options start with the prefix o_ and general
+        permission options start with p_.</td>
+      </tr>
+
+      <tr>
+        <td>conf_value</td>
+
+        <td>text</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The value of the configuration variable
+        <em>conf_name</em>.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>forum_perms<a id="forum_perms" name="forum_perms"></a></h3>
+
+  <table summary="Group forum permissions">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="primary">group_id</td>
+
+        <td>int</td>
+
+        <td> </td>
+
+        <td>The user group for which these permissions apply.
+        Primary key identifier together with forum_id for this
+        table.</td>
+      </tr>
+
+      <tr>
+        <td class="primary">forum_id</td>
+
+        <td>int</td>
+
+        <td> </td>
+
+        <td>The forum in which these permissions apply. Primary key
+        identifier together with group_id for this table.</td>
+      </tr>
+
+      <tr>
+        <td>read_forum</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>0 = Deny. 1 = Allow.</td>
+      </tr>
+
+      <tr>
+        <td>post_replies</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>0 = Deny. 1 = Allow.</td>
+      </tr>
+
+      <tr>
+        <td>post_topics</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>0 = Deny. 1 = Allow.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>forums<a id="forums" name="forums"></a></h3>
+
+  <table summary="Forums">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="primary">id</td>
+
+        <td>int</td>
+
+        <td> </td>
+
+        <td>The auto-incrementing (identity) primary key identifier
+        for this table.</td>
+      </tr>
+
+      <tr>
+        <td>forum_name</td>
+
+        <td>varchar(80)</td>
+
+        <td>'New forum'</td>
+
+        <td>The name of the forum.</td>
+      </tr>
+
+      <tr>
+        <td>forum_desc</td>
+
+        <td>text</td>
+
+        <td><em>NULL</em></td>
+
+        <td>A description of the forum.</td>
+      </tr>
+
+      <tr>
+        <td>redirect_url</td>
+
+        <td>varchar(100)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The URL to redirect users to upon clicking the forum
+        link on the index page.</td>
+      </tr>
+
+      <tr>
+        <td>moderators</td>
+
+        <td>text</td>
+
+        <td><em>NULL</em></td>
+
+        <td>A serialized PHP array of moderators.</td>
+      </tr>
+
+      <tr>
+        <td>num_topics</td>
+
+        <td>mediumint/int</td>
+
+        <td>0</td>
+
+        <td>The number of topics the forum contains.</td>
+      </tr>
+
+      <tr>
+        <td>num_posts</td>
+
+        <td>mediumint/int</td>
+
+        <td>0</td>
+
+        <td>The number of posts the forum contains.</td>
+      </tr>
+
+      <tr>
+        <td>last_post</td>
+
+        <td>int</td>
+
+        <td><em>NULL</em></td>
+
+        <td>A UNIX timestamp representing the date/time the last
+        post was made in the forum.</td>
+      </tr>
+
+      <tr>
+        <td>last_post_id</td>
+
+        <td>int</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The ID of the last post that was made in the
+        forum.</td>
+      </tr>
+
+      <tr>
+        <td>last_poster</td>
+
+        <td>varchar(200)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The username (or guest name) of the user that made the
+        last post in the forum.</td>
+      </tr>
+
+      <tr>
+        <td>sort_by</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>0</td>
+
+        <td>0 = Display topics sorted by last post. 1 = Display topics sorted by topic start.</td>
+      </tr>
+
+      <tr>
+        <td>disp_position</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>The vertical display position of the forum (relative to
+        other forums in the same category).</td>
+      </tr>
+
+      <tr>
+        <td>cat_id</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>The category in which the forum resides.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>groups<a id="groups" name="groups"></a></h3>
+
+  <table summary="User groups">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="primary">g_id</td>
+
+        <td>int</td>
+
+        <td> </td>
+
+        <td>The auto-incrementing (identity) primary key identifier
+        for this table.</td>
+      </tr>
+
+      <tr>
+        <td>g_title</td>
+
+        <td>varchar(50)</td>
+
+        <td> </td>
+
+        <td>The name of the group.</td>
+      </tr>
+
+      <tr>
+        <td>g_user_title</td>
+
+        <td>varchar(50)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The title of users in this group.</td>
+      </tr>
+
+      <tr>
+        <td>g_read_board</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>0 = Deny. 1 = Allow.</td>
+      </tr>
+
+      <tr>
+        <td>g_post_replies</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>0 = Deny. 1 = Allow.</td>
+      </tr>
+
+      <tr>
+        <td>g_post_topics</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>0 = Deny. 1 = Allow.</td>
+      </tr>
+
+      <tr>
+        <td>g_post_polls</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>0 = Deny. 1 = Allow.</td>
+      </tr>
+
+      <tr>
+        <td>g_edit_posts</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>0 = Deny. 1 = Allow.</td>
+      </tr>
+
+      <tr>
+        <td>g_delete_posts</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>0 = Deny. 1 = Allow.</td>
+      </tr>
+
+      <tr>
+        <td>g_delete_topics</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>0 = Deny. 1 = Allow.</td>
+      </tr>
+
+      <tr>
+        <td>g_set_title</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>0 = Deny. 1 = Allow.</td>
+      </tr>
+
+      <tr>
+        <td>g_search</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>0 = Deny. 1 = Allow.</td>
+      </tr>
+
+      <tr>
+        <td>g_search_users</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>0 = Deny. 1 = Allow.</td>
+      </tr>
+
+      <tr>
+        <td>g_edit_subjects_<br />
+        interval</td>
+
+        <td>smallint</td>
+
+        <td>300</td>
+
+        <td>Number of seconds after post time that users in this
+        group may edit the subject of topics they've posted.</td>
+      </tr>
+
+      <tr>
+        <td>g_post_flood</td>
+
+        <td>smallint</td>
+
+        <td>30</td>
+
+        <td>Number of seconds that users in this group have to wait
+        between posts.</td>
+      </tr>
+
+      <tr>
+        <td>g_search_flood</td>
+
+        <td>smallint</td>
+
+        <td>30</td>
+
+        <td>Number of seconds that users in this group have to wait
+        between searches.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>online<a id="online" name="online"></a></h3>
+
+  <table summary="Users currently online">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>user_id</td>
+
+        <td>int</td>
+
+        <td>1</td>
+
+        <td>ID of the user (always 1 for guests).</td>
+      </tr>
+
+      <tr>
+        <td>ident</td>
+
+        <td>varchar(200)</td>
+
+        <td> </td>
+
+        <td>Identification string for the user. Username for logged
+        in users and IP address for guests.</td>
+      </tr>
+
+      <tr>
+        <td>logged</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>A UNIX timestamp representing the date/time for the
+        user's last activity.</td>
+      </tr>
+
+      <tr>
+        <td>idle</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>0</td>
+
+        <td>0 = User has been active within the last "Online
+        timeout" seconds. 1 = User has timed out.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>posts<a id="posts" name="posts"></a></h3>
+
+  <table summary="Posts">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="primary">id</td>
+
+        <td>int</td>
+
+        <td> </td>
+
+        <td>The auto-incrementing (identity) primary key identifier
+        for this table.</td>
+      </tr>
+
+      <tr>
+        <td>poster</td>
+
+        <td>varchar(200)</td>
+
+        <td> </td>
+
+        <td>The username (or guest name) of the user that made the
+        post.</td>
+      </tr>
+
+      <tr>
+        <td>poster_id</td>
+
+        <td>int</td>
+
+        <td>1</td>
+
+        <td>The user ID of the user that made the post (always 1
+        for guests).</td>
+      </tr>
+
+      <tr>
+        <td>poster_ip</td>
+
+        <td>varchar(15)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The IP address the post was made from.</td>
+      </tr>
+
+      <tr>
+        <td>poster_email</td>
+
+        <td>varchar(50)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The guest e-mail address (if supplied).</td>
+      </tr>
+
+      <tr>
+        <td>message</td>
+
+        <td>text</td>
+
+        <td> </td>
+
+        <td>The actual message contents.</td>
+      </tr>
+
+      <tr>
+        <td>hide_smilies</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>0</td>
+
+        <td>0 = Let users decide whether to show smilies as images
+        or not in this post. 1 = Never show smilies as images in
+        this post.</td>
+      </tr>
+
+      <tr>
+        <td>posted</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>A UNIX timestamp representing the date/time the post
+        was made.</td>
+      </tr>
+
+      <tr>
+        <td>edited</td>
+
+        <td>int</td>
+
+        <td><em>NULL</em></td>
+
+        <td>A UNIX timestamp representing the date/time the post
+        was last edited.</td>
+      </tr>
+
+      <tr>
+        <td>edited_by</td>
+
+        <td>varchar(200)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The username of the user that last edited the
+        post.</td>
+      </tr>
+
+      <tr>
+        <td>topic_id</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>The topic ID in which the post resides.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>ranks<a id="ranks" name="ranks"></a></h3>
+
+  <table summary="Ranking of users">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="primary">id</td>
+
+        <td>int</td>
+
+        <td> </td>
+
+        <td>The auto-incrementing (identity) primary key identifier
+        for this table.</td>
+      </tr>
+
+      <tr>
+        <td>rank</td>
+
+        <td>varchar(50)</td>
+
+        <td> </td>
+
+        <td>The rank title.</td>
+      </tr>
+
+      <tr>
+        <td>min_posts</td>
+
+        <td>mediumint/int</td>
+
+        <td>0</td>
+
+        <td>The number of posts a user must attain in order to
+        reach the rank.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>reports<a id="reports" name="reports"></a></h3>
+
+  <table summary="Reported topics/posts">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="primary">id</td>
+
+        <td>int</td>
+
+        <td> </td>
+
+        <td>The auto-incrementing (identity) primary key identifier
+        for this table.</td>
+      </tr>
+
+      <tr>
+        <td>post_id</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>The post the report relates to.</td>
+      </tr>
+
+      <tr>
+        <td>topic_id</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>The topic in which the reported post resides in.</td>
+      </tr>
+
+      <tr>
+        <td>forum_id</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>The forum in which the reported post resides in.</td>
+      </tr>
+
+      <tr>
+        <td>reported_by</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>The user ID of the user that reported the post.</td>
+      </tr>
+
+      <tr>
+        <td>created</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>A UNIX timestamp representing the date/time the post
+        was last edited.</td>
+      </tr>
+
+      <tr>
+        <td>message</td>
+
+        <td>text</td>
+
+        <td> </td>
+
+        <td>The report message.</td>
+      </tr>
+
+      <tr>
+        <td>zapped</td>
+
+        <td>int</td>
+
+        <td><em>NULL</em></td>
+
+        <td>A UNIX timestamp representing the date/time the report
+        was zapped (marked as read).</td>
+      </tr>
+
+      <tr>
+        <td>zapped_by</td>
+
+        <td>int</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The username of the administrator or moderator that
+        zapped the report.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>search_cache<a id="search_cache" name=
+  "search_cache"></a></h3>
+
+  <table summary="Search cache">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="primary">id</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>The primary key identifier for this table.</td>
+      </tr>
+
+      <tr>
+        <td>ident</td>
+
+        <td>varchar(200)</td>
+
+        <td> </td>
+
+        <td>Identification string for the searcher. Username for
+        logged in users and IP address for guests.</td>
+      </tr>
+
+      <tr>
+        <td>search_data</td>
+
+        <td>text</td>
+
+        <td> </td>
+
+        <td>A serialized PHP array of search data (e.g. post ID's,
+        sort direction etc.).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>search_matches<a id="search_matches" name=
+  "search_matches"></a></h3>
+
+  <table summary="Posts matching search words">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>post_id</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>The post this match relates to.</td>
+      </tr>
+
+      <tr>
+        <td>word_id</td>
+
+        <td>mediumint/int</td>
+
+        <td>0</td>
+
+        <td>The word this match relates to.</td>
+      </tr>
+
+      <tr>
+        <td>subject_match</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>0</td>
+
+        <td>0 = Match is in the post message. 1 = Match is in the
+        topic subject.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>search_words<a id="search_words" name=
+  "search_words"></a></h3>
+
+  <table summary="Words used in posts">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>id</td>
+
+        <td>mediumint/int</td>
+
+        <td> </td>
+
+        <td>An integer identifier for this table.</td>
+      </tr>
+
+      <tr>
+        <td class="primary">word</td>
+
+        <td>varchar(20)</td>
+
+        <td> </td>
+
+        <td>The indexed word (primary key).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>subscriptions<a id="subscriptions" name=
+  "subscriptions"></a></h3>
+
+  <table summary="E-mail subscriptions to topics">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="primary">user_id</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>The user that subscribes to <em>topic_id</em>. Primary
+        key identifier together with <em>topic_id</em> for this
+        table.</td>
+      </tr>
+
+      <tr>
+        <td class="primary">topic_id</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>The topic <em>user_id</em> subscribes to. Primary key
+        identifier together with <em>user_id</em> for this
+        table.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>topics<a id="topics" name="topics"></a></h3>
+
+  <table summary="Topics">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="primary">id</td>
+
+        <td>int</td>
+
+        <td> </td>
+
+        <td>The auto-incrementing (identity) primary key identifier
+        for this table.</td>
+      </tr>
+
+      <tr>
+        <td>poster</td>
+
+        <td>varchar(200)</td>
+
+        <td> </td>
+
+        <td>The username (or guest name) of the user that posted
+        the topic.</td>
+      </tr>
+
+      <tr>
+        <td>subject</td>
+
+        <td>varchar(255)</td>
+
+        <td> </td>
+
+        <td>The topic subject.</td>
+      </tr>
+
+      <tr>
+        <td>posted</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>A UNIX timestamp representing the date/time the topic
+        was posted.</td>
+      </tr>
+
+      <tr>
+        <td>last_post</td>
+
+        <td>int</td>
+
+        <td><em>NULL</em></td>
+
+        <td>A UNIX timestamp representing the date/time the last
+        post was made in the topic.</td>
+      </tr>
+
+      <tr>
+        <td>last_post_id</td>
+
+        <td>int</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The ID of the last post that was made in the
+        topic.</td>
+      </tr>
+
+      <tr>
+        <td>last_poster</td>
+
+        <td>varchar(200)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The username (or guest name) of the user that made the
+        last post in the topic.</td>
+      </tr>
+
+      <tr>
+        <td>num_views</td>
+
+        <td>mediumint/int</td>
+
+        <td>0</td>
+
+        <td>The number of times the topic has been viewed.</td>
+      </tr>
+
+      <tr>
+        <td>num_replies</td>
+
+        <td>mediumint/int</td>
+
+        <td>0</td>
+
+        <td>The number of replies that have been posted in the
+        topic.</td>
+      </tr>
+
+      <tr>
+        <td>closed</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>0</td>
+
+        <td>0 = Topic is open. 1 = Topic is closed.</td>
+      </tr>
+
+      <tr>
+        <td>sticky</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>0</td>
+
+        <td>0 = Topic is a regular topic. 1 = Topic is a sticky
+        topic.</td>
+      </tr>
+
+      <tr>
+        <td>moved_to</td>
+
+        <td>int</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The forum to which the topic has been moved.</td>
+      </tr>
+
+      <tr>
+        <td>forum_id</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>The forum in which the topic resides.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>users<a id="users" name="users"></a></h3>
+
+  <table summary="Users">
+    <thead>
+      <tr>
+        <th class="tc1">Field</th>
+
+        <th class="tc2">Type</th>
+
+        <th class="tc3">Default</th>
+
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="primary">id</td>
+
+        <td>int</td>
+
+        <td> </td>
+
+        <td>The auto-incrementing (identity) primary key identifier
+        for this table.</td>
+      </tr>
+
+      <tr>
+        <td>group_id</td>
+
+        <td>int</td>
+
+        <td>4</td>
+
+        <td>The user group to which this user belongs.</td>
+      </tr>
+
+      <tr>
+        <td>username</td>
+
+        <td>varchar(200)</td>
+
+        <td> </td>
+
+        <td>The user's username.</td>
+      </tr>
+
+      <tr>
+        <td>password</td>
+
+        <td>varchar(40)</td>
+
+        <td> </td>
+
+        <td>The user password as an 40 byte SHA1 hash or an 32 byte
+        MD5 hash.</td>
+      </tr>
+
+      <tr>
+        <td>email</td>
+
+        <td>varchar(50)</td>
+
+        <td> </td>
+
+        <td>The user e-mail address.</td>
+      </tr>
+
+      <tr>
+        <td>title</td>
+
+        <td>varchar(50)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The user custom title.</td>
+      </tr>
+
+      <tr>
+        <td>realname</td>
+
+        <td>varchar(40)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The user's name.</td>
+      </tr>
+
+      <tr>
+        <td>url</td>
+
+        <td>varchar(100)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>A link to the user's website.</td>
+      </tr>
+
+      <tr>
+        <td>jabber</td>
+
+        <td>varchar(75)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The user's Jabber address.</td>
+      </tr>
+
+      <tr>
+        <td>icq</td>
+
+        <td>varchar(12)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The user's ICQ UIN.</td>
+      </tr>
+
+      <tr>
+        <td>msn</td>
+
+        <td>varchar(50)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The user's MSN Messenger e-mail address.</td>
+      </tr>
+
+      <tr>
+        <td>aim</td>
+
+        <td>varchar(30)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The user's AOL Instant Messenger username.</td>
+      </tr>
+
+      <tr>
+        <td>yahoo</td>
+
+        <td>varchar(30)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The user's Yahoo Messenger username.</td>
+      </tr>
+
+      <tr>
+        <td>location</td>
+
+        <td>varchar(30)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The user's geographical location.</td>
+      </tr>
+
+      <tr>
+        <td>use_avatar</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>0</td>
+
+        <td>0 = Don't show avatar to other users. 1 = Show avatar
+        to other users.</td>
+      </tr>
+
+      <tr>
+        <td>signature</td>
+
+        <td>text</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The user's signature.</td>
+      </tr>
+
+      <tr>
+        <td>disp_topics</td>
+
+        <td>tinyint/smallint</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The number of topics to display on forum page (uses
+        forum default if left blank).</td>
+      </tr>
+
+      <tr>
+        <td>disp_posts</td>
+
+        <td>tinyint/smallint</td>
+
+        <td><em>NULL</em></td>
+
+        <td>The number of posts to display on topic page (uses
+        forum default if left blank).</td>
+      </tr>
+
+      <tr>
+        <td>email_setting</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>0 = Show e-mail address to other users. 1 = Hide e-mail
+        address, but allow form e-mail. 2 = Hide e-mail address and
+        disallow form e-mail.</td>
+      </tr>
+
+      <tr>
+        <td>save_pass</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>0 = Don't remember user between visits. 1 = Remember
+        user between visits.</td>
+      </tr>
+
+      <tr>
+        <td>notify_with_post</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>0</td>
+
+        <td>0 = Include only topic subject in subscription
+        notification e-mails. 1 = Include both topic subject and
+        post content in subscription notification e-mails.</td>
+      </tr>
+
+      <tr>
+        <td>show_smilies</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>Show smilies as images.</td>
+      </tr>
+
+      <tr>
+        <td>show_img</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>Show images in posts.</td>
+      </tr>
+
+      <tr>
+        <td>show_img_sig</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>Show images in signatures.</td>
+      </tr>
+
+      <tr>
+        <td>show_avatars</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>Show avatars.</td>
+      </tr>
+
+      <tr>
+        <td>show_sig</td>
+
+        <td>tinyint/smallint</td>
+
+        <td>1</td>
+
+        <td>Show signatures.</td>
+      </tr>
+
+      <tr>
+        <td>timezone</td>
+
+        <td>float</td>
+
+        <td>0</td>
+
+        <td>The user's timezone.</td>
+      </tr>
+
+      <tr>
+        <td>language</td>
+
+        <td>varchar(25)</td>
+
+        <td>'English'</td>
+
+        <td>The user's preferred language for the forum UI.</td>
+      </tr>
+
+      <tr>
+        <td>style</td>
+
+        <td>varchar(25)</td>
+
+        <td>'Oxygen'</td>
+
+        <td>The user's preferred style.</td>
+      </tr>
+
+      <tr>
+        <td>num_posts</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>The number of posts the user has made.</td>
+      </tr>
+
+      <tr>
+        <td>last_post</td>
+
+        <td>int</td>
+
+        <td><em>NULL</em></td>
+
+        <td>A UNIX timestamp representing the date/time the last
+        post by the user was made.</td>
+      </tr>
+
+      <tr>
+        <td>registered</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>A UNIX timestamp representing the date the user
+        registered.</td>
+      </tr>
+
+      <tr>
+        <td>registration_ip</td>
+
+        <td>varchar(15)</td>
+
+        <td>0.0.0.0</td>
+
+        <td>The IP address used when registering.</td>
+      </tr>
+
+      <tr>
+        <td>last_visit</td>
+
+        <td>int</td>
+
+        <td>0</td>
+
+        <td>A UNIX timestamp representing the date/time the last
+        visit by the user commenced.</td>
+      </tr>
+
+      <tr>
+        <td>admin_note</td>
+
+        <td>varchar(30)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>A user note only viewable and editable by
+        administrators and moderators.</td>
+      </tr>
+
+      <tr>
+        <td>activate_string</td>
+
+        <td>varchar(50)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>A temporary storage string for new passwords and new
+        e-mail addresses.</td>
+      </tr>
+
+      <tr>
+        <td>activate_key</td>
+
+        <td>varchar(8)</td>
+
+        <td><em>NULL</em></td>
+
+        <td>A temporary storage string for new password and new
+        e-mail address activation keys.</td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

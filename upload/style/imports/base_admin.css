@@ -1,0 +1,45 @@
+#adminconsole .block2 {MARGIN-TOP: 12px}
+
+/*** Admin Main Content ***/
+* HTML #adstats DD {HEIGHT: 1%}
+#adstats DD {MARGIN-LEFT: 14em; PADDING: 3px; MARGIN-BOTTOM: 5px; LINE-HEIGHT: 1.5em}
+#adstats DT {FLOAT:left; WIDTH: 13em; PADDING: 3px; line-height: 1.5em}
+#adstats {PADDING: 15px 15px 5px 10px}
+#adintro {PADDING: 5px}
+#adintro P {PADDING: 10px}
+#adstats DL {PADDING: 5px 0 10px 5px}
+
+#adminconsole FIELDSET TD {TEXT-ALIGN: left; PADDING: 4px; WHITE-SPACE: normal}
+#adminconsole FIELDSET TH {TEXT-ALIGN: left; PADDING: 4px; WHITE-SPACE: normal}
+#adminconsole FIELDSET TD SPAN, #adminconsole FIELDSET TH SPAN {DISPLAY: block; FONT-SIZE: 1em; FONT-WEIGHT: normal}
+#adminconsole TH {WIDTH: 15em; FONT-WEIGHT: bold}
+#adminconsole INPUT, #adminconsole SELECT, #adminconsole TEXTAREA {MARGIN-BOTTOM: 0; MARGIN-TOP: 0; FONT-WEIGHT: normal}
+#adminconsole TABLE.aligntop TH, #adminconsole TABLE.aligntop TD {VERTICAL-ALIGN: top}
+#adminconsole TABLE.aligntop TH {PADDING-TOP: 0.7em}
+#adminconsole TD, #adminconsole TH {BORDER-STYLE: solid; BORDER-WIDTH: 3px 0px 3px 0px}
+#adminconsole P {PADDING-BOTTOM: 6px}
+#adminconsole .topspace {PADDING-TOP: 6px}
+#adminconsole P.submittop, #adminconsole P.submitend {TEXT-ALIGN: center}
+#adminconsole TH.hidehead {COLOR: #f1f1f1}
+#adminconsole THEAD TH {PADDING-BOTTOM: 0px}
+#adminconsole P.linkactions {FONT-WEIGHT: bold; PADDING-LEFT: 5px}
+#adminconsole TH INPUT, #adminconsole DIV.fsetsubmit {MARGIN-TOP: 6px}
+
+/*** Particular table settings ***/
+#categoryedit .tcl {WIDTH: 25%}
+#censoring .tcl, #censoring .tc2, #ranks .tcl, #ranks .tc2 {WIDTH: 20%}
+TABLE#forumperms TH, TABLE#forumperms TD {WHITE-SPACE: normal; WIDTH: auto; TEXT-ALIGN: center}
+TABLE#forumperms .atcl {TEXT-ALIGN: left; WIDTH: 15em; WHITE-SPACE: nowrap}
+#adminconsole TD.nodefault {BACKGROUND-COLOR: #D59B9B}
+
+/*** User Search Result Tables ***/
+#users2 TH, #users2 TH {TEXT-ALIGN: left}
+#users2 .tcl, #users2 .tc3, #users2 .tc5 {WIDTH: 15%; TEXT-ALIGN: left}
+#users2 .tc2 {WIDTH: 22%; TEXT-ALIGN: left}
+#users2 .tc4 {WIDTH: 8%}
+#users2 .tc4 {TEXT-ALIGN: center}
+#users2 .tcr {WHITE-SPACE: nowrap}
+#adminconsole #linkst, #adminconsole #linksb A {FONT-WEIGHT: bold}
+
+/*** Plugins ***/
+#exampleplugin .inbox {PADDING: 6px 6px 0px 6px}

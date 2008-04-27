@@ -1,0 +1,548 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>PunBB Docs: Frequently Asked Questions</title>
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" type="text/css" href="style/docs.css" />
+</head>
+
+<body>
+  <ul id="navigation">
+    <li><a href="index.html">Index</a></li>
+
+    <li><a href="about.html">About</a></li>
+
+    <li><a href="install.html">Install</a></li>
+
+    <li><a href="faq.html">FAQ</a></li>
+
+    <li><a href="dev.html">Developer info</a></li>
+  </ul>
+
+  <h1>Frequently Asked Questions</h1>
+
+  <p>The following is a collection of frequently asked and
+  anticipated questions of PunBB.</p>
+  <hr />
+
+  <h2>Table of Contents</h2>
+
+  <ol>
+    <li>
+      <a href="#general">General usage</a>
+
+      <ol>
+        <li><a href="#faq1_1">Why can't I login?</a></li>
+
+        <li><a href="#faq1_2">Does PunBB support BBCode and if so,
+        how do I use it?</a></li>
+      </ol>
+    </li>
+
+    <li>
+      <a href="#admin">Administration</a>
+
+      <ol>
+        <li><a href="#faq2_1">I keep seeing messages like <em>"Bad
+        HTTP_REFERER."</em>. How can I get rid of them?</a></li>
+
+        <li><a href="#faq2_2">How do I grant a user moderator
+        access to a certain forum?</a></li>
+
+        <li><a href="#faq2_3">Avatar uploads don't work. What could
+        be wrong?</a></li>
+
+        <li><a href="#faq2_4">I get a message saying "Unable to
+        write configuration cache file to cache directory.". What's
+        wrong?</a></li>
+
+        <li><a href="#faq2_5">People using Internet Explorer 6 are
+        unable to login. Why?</a></li>
+
+        <li><a href="#faq2_6">I've set the forum into maintenance
+        mode and I'm logged out. How do I turn it off?</a></li>
+
+        <li><a href="#faq2_7">What's this <em>"DEBUG mode"</em> and
+        how do I enable it?</a></li>
+
+        <li><a href="#faq2_8">Is it possible to have more than one
+        <em>"Base URL"</em>?</a></li>
+
+        <li><a href="#faq2_9">I've updated the database manually,
+        but the changes have no effect. What's up?</a></li>
+      </ol>
+    </li>
+
+    <li>
+      <a href="#mods">Modifications and site integration</a>
+
+      <ol>
+        <li><a href="#faq3_1">How do I add more smilies to my
+        forums?</a></li>
+
+        <li><a href="#faq3_2">How can I use smilies of different
+        sizes than 15x15 pixels?</a></li>
+
+        <li><a href="#faq3_3">How do I add my own footer/header so
+        that I can integrate my forums into design of the rest of
+        my website?</a></li>
+
+        <li><a href="#faq3_4">Is it possible to include my own PHP
+        scripts in the templates?</a></li>
+
+        <li><a href="#faq3_5">I want to display information from
+        the forums on my website's front page. How can I do
+        this?</a></li>
+
+        <li><a href="#faq3_6">Does PunBB provide RSS feeds for
+        recent discussions?</a></li>
+
+        <li><a href="#faq3_7">I've developed a modification for
+        PunBB and I want to release it to the public. What do I do
+        now?</a></li>
+      </ol>
+    </li>
+
+    <li>
+      <a href="#license">License and copyright</a>
+
+      <ol>
+        <li><a href="#faq4_1">What license is PunBB released
+        under?</a></li>
+
+        <li><a href="#faq4_2">May I remove the copyright from the
+        page footer?</a></li>
+
+        <li><a href="#faq4_3">May I add my own copyright to the
+        page footer?</a></li>
+
+        <li><a href="#faq4_4">May I remove the copyright from the
+        source code?</a></li>
+      </ol>
+    </li>
+  </ol>
+  <hr />
+
+  <h2>1. General usage<a name="general" id="general"></a></h2>
+
+  <dl>
+    <dt>1.1 - Why can't I login?<a name="faq1_1" id=
+    "faq1_1"></a></dt>
+
+    <dd>There are many possible reasons. The most common reason is
+    that you have simply entered the wrong username or password.
+    Please double-check that you have entered the correct
+    information and try again. If it still doesn't work, you can
+    request a new password by clicking the link <em>"Forgotten your
+    password?"</em> on the login page.</dd>
+
+    <dd>When you enter the correct username and password, you will
+    be redirected to the page on which you clicked the
+    <em>"Login"</em> link. If you find that after being redirected
+    you are still not logged in, the problem is almost certainly
+    related to cookies. PunBB relies on cookies to determine if you
+    are logged in or not. Make sure that your browser it setup to
+    accept cookies. If you are still unable to login, you should
+    contact an administrator of the forums you are having problems
+    with.</dd>
+
+    <dt>1.2 - Does PunBB support BBCode and if so, how do I use it?
+    <a name="faq1_2" id="faq1_2"></a></dt>
+
+    <dd>Yes, PunBB supports BBCode. It supports a subset of the
+    tags that are present in many other bulletin boards. The tags
+    supported by PunBB are bold, underline, italic, color, url,
+    email, img, quote and code. Usage instructions can be found in
+    the script help.php. Links to this script can be found next to
+    text areas that allow BBCode (e.g. when posting a
+    message).</dd>
+  </dl>
+
+  <h2>2. Administration<a name="admin" id="admin"></a></h2>
+
+  <dl>
+    <dt>2.1 - I keep seeing messages like <em>"Bad
+    HTTP_REFERER."</em>. How can I get rid of them?<a name="faq2_1"
+    id="faq2_1"></a></dt>
+
+    <dd>When a script in PunBB receives form data, it checks the
+    CGI variable HTTP_REFERER (misspelled in the HTTP standard) to
+    make sure that the form was submitted from the correct script.
+    The check is only made for administrators and moderators. The
+    referrer check is a security mechanism that prevents malicious
+    users from deceiving administrators and moderators by silently
+    and invisibly submitting a form from an external page to one of
+    the scripts in PunBB.</dd>
+
+    <dd>The referrer check can fail for a number of reasons. The
+    check relies on the variable <em>"Base URL"</em> from the
+    options page in the admin interface. If <em>"Base URL"</em> is
+    not correctly set, the referrer check will fail. It is also
+    vital that you visit the forums by entering the exact URL found
+    in <em>"Base URL"</em> into your browsers address bar. If
+    <em>"Base URL"</em> is set to http://somehost.com and you visit
+    the forums by going to http://www.somehost.com (note the www
+    part), the check will fail.</dd>
+
+    <dd>Another common reason for the check to fail is that you are
+    browsing the forum through a proxy or firewall of some sort
+    that is stripping HTTP_REFERER from all requests. Norton
+    Internet Security and Norton Personal Firewall are known to
+    strip HTTP_REFERER in its default setup. Some popup/ad stoppers
+    are also known to do this (most of them don't though).</dd>
+
+    <dd>Note: You can find information on how to setup Norton
+    Internet Security and Norton Personal Firewall to not strip
+    referrer information at the following addresses: <a
+    href="http://service1.symantec.com/SUPPORT/sunset-c2002kb.nsf/672c231f89ff479085256ee600556cc3/4ef3ba8adbc86ab285256ede00518df1">
+    2002 and earlier</a> and <a
+    href="http://service1.symantec.com/SUPPORT/nip.nsf/735050b77b1fcece88256bc7005c3bc6/b9b47ad7eddd343b88256c6b006a85a8">
+    2003 and 2004</a>.</dd>
+
+    <dt>2.2 - How do I grant a user moderator access to a certain
+    forum? <a name="faq2_2" id="faq2_2"></a></dt>
+
+    <dd>The first step is to move the user user to the moderators
+    group. This can be done in the user's profile under
+    <em>"Administration"</em>.</dd>
+
+    <dd>The next step is to give the new moderator access rights to
+    one or more forums. This is also done in the user's profile.
+    Just below the drop-down menu we just used, you will find a
+    list of forums together with a checkbox. Select the forums you
+    want to grant the user moderator access to and click
+    <em>"Update forums"</em>. The user is now a moderator and can
+    edit and delete posts and topics in the forums you
+    selected.</dd>
+
+    <dt>2.3 - Avatar uploads don't work. What could be wrong?
+    <a name="faq2_3" id="faq2_3"></a></dt>
+
+    <dd>In order for avatar uploads to work, the user account under
+    which the webserver runs must have write permissions to the
+    avatar directory. In UNIX (or UNIX-like) operating systems,
+    this is usually done via the command <em>"chmod"</em>. Most FTP
+    clients have support for this and it is usually done by
+    right-clicking the directory and selecting something along the
+    lines of <em>"Attributes"</em> or <em>"Permissions"</em>. If
+    you don't know what values to enter, try 0777 (or just 777 if
+    you can only enter three digits).</dd>
+
+    <dt>2.4 - I get a message saying "Unable to write configuration
+    cache file to cache directory.". What's wrong?<a name="faq2_4"
+    id="faq2_4"></a></dt>
+
+    <dd>Similar to avatar upload, where PunBB needs to be able to
+    write to the avatar directory, PunBB needs to be able to write
+    to the cache directory. See the above question for
+    details.</dd>
+
+    <dt>2.5 - People using Internet Explorer 6 are unable to login.
+    Why? <a name="faq2_5" id="faq2_5"></a></dt>
+
+    <dd>The problem is related to how Internet Explorer 6 handles
+    third party cookies. A first party cookie is a cookie that
+    originates from the host domain, whereas a third party cookie
+    originates from another domain. The problem arises when a
+    website utilizes some form of domain redirect or frame-based
+    redirect service. I.e. a service that redirects the user to the
+    real location instead of pointing directly at it. The best
+    solution to the problem is to not use such a domain redirect
+    service and use a "real" domain instead. However, a quick fix
+    that seems to work most of the time can be found in the script
+    include/functions.php. Search for P3P and follow the
+    instructions.</dd>
+
+    <dt>2.6 - I've set the forum into maintenance mode and I'm
+    logged out. How do I turn it off?<a name="faq2_6" id=
+    "faq2_6"></a></dt>
+
+    <dd>Copy/upload the script turn_off_maintenance_mode.php from
+    the directory extras/ into the forum root directory and run it
+    through your browser. A message will appear when the operation
+    has completed. Don't forget to remove the script from the forum
+    root directory when finished.</dd>
+
+    <dt>2.7 - What's this <em>"DEBUG mode"</em> and how do I enable
+    it? <a name="faq2_7" id="faq2_7"></a></dt>
+
+    <dd><em>"DEBUG mode"</em> can be used to display more detailed
+    error messages in case of failure. These error messages can be
+    helpful when tracking down the cause of the failure. When
+    <em>"DEBUG mode"</em> is enabled, PunBB will also display the
+    script generation time and the number of SQL queries executed
+    for every page. This information will be displayed in the page
+    footer.</dd>
+
+    <dd>To enable <em>"DEBUG mode"</em>, open up the file
+    include/common.php in a text editor and locate the line that
+    starts with <em>"//define('PUN_DEBUG', 1);".</em> It it located
+    at the very top of the file below the software license
+    preamble. Then remove the two slashes in the beginning of the
+    line and save/upload the script. Once you've solved the
+    problem, it is recommended that <em>"DEBUG mode"</em> be turned
+    off again (just add the two slashes again).</dd>
+
+    <dt>2.8 - Is it possible to have more than one <em>"Base
+    URL"</em>? <a name="faq2_8" id="faq2_8"></a></dt>
+
+    <dd>No, it's not. However, there is extremely seldom a need to
+    have more than one. The need often arises when you access your
+    forums through one URL externally and one URL internally. The
+    internal URL is often the IP address or the name of the
+    computer that runs the webserver. The problem is easily solved
+    by editing your hosts file. The hosts file contains a list of
+    IP addresses and host names. If you haven't made any changes to
+    it earlier, it unsually only contains the IP address 127.0.0.1
+    and the hostname localhost. If you enter http://localhost/ into
+    your browsers adress field, your operating system will first
+    check the hosts file to see if localhost can be found in there.
+    If it finds it, it will navigate to the IP address 127.0.0.1
+    instead of trying to look up the host name localhost with
+    traditional DNS. So, what you want to do is to add a line to
+    this file with the IP address of the webserver and the hostname
+    that you use to access your server externally. If the host name
+    for your forums is www.mycoolforums.com and the IP address of
+    the webserver is 192.168.100.15, you would add the line:</dd>
+    
+    <dd>
+      <pre>192.168.100.15      www.mycoolforums.com</pre>
+    </dd>
+
+    <dd>The hosts file is located in different locations depending
+    on what operating system you run. Here's a list of where the
+    file can usually be found in a few operating systems:</dd>
+
+    <dd>
+      <ul>
+        <li>Windows 95/98/ME: c:\windows\hosts</li>
+
+        <li>Windows NT/2000/XP:
+        c:\windows\system32\drivers\etc\hosts</li>
+
+        <li>Linux/UNIX: /etc/hosts</li>
+      </ul>
+    </dd>
+
+    <dd>Once you've added the line to your hosts file, you can set
+    your <em>"Base URL"</em> to www.mycoolforums.com and use that
+    URL to access your forums externally as well as
+    internally.</dd>
+
+    <dt>2.9 - I've updated the database manually, but the changes
+    have no effect. What's up? <a name="faq2_9" id=
+    "faq2_9"></a></dt>
+
+    <dd>In order to decrease the load on the database server, PunBB
+    caches parts of the database to PHP scripts in the cache/
+    directory. If you've made manual changes to any of the tables
+    bans, config, categories, forums or ranks, the cached data
+    might have to be updated. To do this, simply delete all PHP
+    scripts in the cache/ directory. PunBB will regenerate them
+    when it needs them.</dd>
+  </dl>
+
+  <h2>3. Modifications and site integration<a name="mods" id=
+  "mods"></a></h2>
+
+  <dl>
+    <dt>3.1 - How do I add more smilies to my forums?<a name=
+    "faq3_1" id="faq3_1"></a></dt>
+
+    <dd>Adding more smilies to your forums is not difficult, but it
+    involves editing one of the scripts that comes with PunBB.
+    Here's a step-by-step instruction. Having very basic knowledge
+    of PHP or programming in general is recommended.</dd>
+
+    <dd>
+      <ol>
+        <li>Copy the smilies you want to add/change to into the
+        directory img/smilies/.</li>
+
+        <li>Open up the file include/parser.php in a text editor
+        and locate the line that starts with <em>"// Here you can
+        add additional smilies if you like"</em> (it's almost at
+        the top of the file). There you will find two PHP arrays -
+        $smiley_text and $smiley_img. $smiley_text contains the
+        character combinations for the smileys (e.g. :D or
+        :rolleyes:) and $smiley_img contains the filenames of the
+        smiley images (e.g. big_smile.png or roll.png).</li>
+
+        <li>For every new smiley that you want to add, add a
+        character combination to $smiley_text and a filename to
+        $smiley_img. Please note that you must escape the character
+        ' (singlequote) with a backslash if you use it in any of
+        your smilies (e.g. ':rock\'n\'roll:'). Singlequote must be
+        escaped so that PHP can understand that it is not the end
+        of the string, but a character in the string. The same goes
+        for backslash. If your smiley contains a backslash, just
+        must escape that backslash with another backslash (e.g.
+        ':\\').</li>
+
+        <li>Once you've added your smileys above, you should pay
+        attention to the row below the smiley arrays. It says that
+        if any of your smilies contain any of the characters &amp;,
+        ", ', &lt; or &gt;, you must uncomment the row
+        thereafter.</li>
+
+        <li>Finally save/upload the file and try it out. A list of
+        all installed smilies can be found at the bottom of the
+        help text in help.php.</li>
+      </ol>
+    </dd>
+
+    <dd>If you get a PHP error message stating that it encountered
+    a <em>"Parse error"</em>, you probably forgot to escape a
+    singlequote or backslash character in the $smiley_text
+    array.</dd>
+
+    <dt>3.2 - How can I use smilies of different sizes than 15x15
+    pixels?<a name="faq3_2" id="faq3_2"></a></dt>
+
+    <dd>To use non-15x15 pixel smilies, you must prevent PunBB from
+    adding the width="15" and height="15" attributes to img tags.
+    This can be done by editing include/parser.php in a text
+    editor. Open up the file and search for:</dd>
+
+    <dd>
+      <pre>width="15" height="15"</pre>
+    </dd>
+
+    <dd>The text should be somewhere around line 260. Then replace
+    the values with a width and height of your choice. If you want
+    to use smilies of varying sizes, remove the attributes
+    completely.</dd>
+
+    <dt>3.3 - How do I add my own footer/header so that I can
+    integrate my forums into design of the rest of my
+    website?<a name="faq3_3" id="faq3_3"></a></dt>
+
+    <dd>For this purpose, PunBB has a simple template system. The
+    template files are located in include/template/. There are five
+    templates - main.tpl, admin.tpl, help.tpl, maintenance.tpl and
+    redirect.tpl. The file main.tpl contains the template for
+    almost all pages that are displayed in the forum, admin.tpl is
+    the template for the admin interface, help.php is for the help
+    screen, maintenance.tpl is the template for the message page
+    that is displayed when the forum is put in maintenance mode,
+    and finally the file redirect.tpl is used to display the
+    redirect pages e.g. when logging in or when posting a
+    message.</dd>
+
+    <dd>The templates contain variables that are replaced with
+    actual content when a page is displayed. All variables in PunBB
+    are enclosed in less-than and more-than signs (&lt; and &gt;).
+    For example, the variable for the title of the forums is called
+    &lt;pun_title&gt;. When PunBB displays the index page, it reads
+    the file main.tpl and replaces &lt;pun_title&gt; with the title
+    of the forums. There are 11 replacement variables in
+    main.tpl.</dd>
+
+    <dd>If you want to customize the look of PunBB so that it fits
+    the design of other pages on your website, it is primarily the
+    template files you should edit. For example, if you wanted to
+    add your own logo at the top of all forum pages, you would edit
+    main.tpl and add markup for displaying your logo at the
+    appropriate position in the file. It is possible to include PHP
+    scripts from the templates. See the next FAQ entry for more
+    info on that.</dd>
+
+    <dt>3.4 - Is it possible to include my own PHP scripts in the
+    templates?<a name="faq3_4" id="faq3_4"></a></dt>
+
+    <dd>Yes. PunBB has a special replacement variable called
+    pun_include for including scripts in the templates. For
+    example, if you wanted to include a script called banner.php
+    at the bottom of all forum pages, you would place the script
+    in include/user/ and add the following to your template
+    files:</dd>
+
+    <dd>
+      <pre>&lt;pun_include "banner.php"&gt;</pre>
+    </dd>
+
+    <dd>The script banner.php must be located in the user include
+    directory mentioned above and its file extension must be .php,
+    .php4, .php5, .inc, .htm, .html or .txt. PunBB will execute the
+    script and the pun_include variable will be replaced by any
+    output that the script produces. Please note that all included
+    scripts have access to the PunBB variables, so if you e.g.
+    wanted to access the database, you could use the $db object just
+    like the rest of PunBB does. Be careful when dealing with global
+    variables in included scripts so that they don't collide with
+    PunBB's global variables.</dd>
+
+    <dt>3.5 - I want to display information from the forums on my
+    website's front page. How can I do this?<a name="faq3_5" id=
+    "faq3_5"></a></dt>
+
+    <dd>The script extern.php found in the forum root directory can
+    output various bits of information from the forums. See
+    <a href="dev.html#syndication">Developer Information</a> for
+    more information.</dd>
+
+    <dt>3.6 - Does PunBB provide RSS feeds for recent discussions?
+    <a name="faq3_6" id="faq3_6"></a></dt>
+
+    <dd>Yes. The script extern.php found in the forum root
+    directory can produce RSS 0.91 feeds on recent discussions. See
+    <a href="dev.html#syndication">Developer Information</a> for
+    more information.</dd>
+
+    <dt>3.7 - I've developed a modification for PunBB and I want to
+    release it to the public. What do I do now?<a name="faq3_7" id=
+    "faq3_7"></a></dt>
+
+    <dd>Visit the PunBB.org <a href=
+    "http://www.punbb.org/downloads.php">downloads page</a> and
+    download the Mod SDK. It contains a text file with instructions,
+    a template for the readme file (all mods have a readme.txt) and
+    a template for a mod installation script (if needed).</dd>
+
+    <dd>For more information about PunBB modding, visit the
+    <a href="http://www.punres.org/">PunBB Resource</a>.</dd>
+  </dl>
+
+  <h2>4. License and copyright<a name="license" id=
+  "license"></a></h2>
+
+  <dl>
+    <dt>4.1 - What license is PunBB released under?<a name="faq4_1"
+    id="faq4_1"></a></dt>
+
+    <dd>PunBB is released under The <a href="include/gpl.txt">GNU
+    General Public License</a>. In short terms this means that
+    PunBB is free to download, use, distribute, modify and even
+    charge for. However, if any of these modifications are released
+    to the public, that code must also be released under the same
+    license as PunBB.</dd>
+
+    <dt>4.2 - May I remove the copyright from the page footer?
+    <a name="faq4_2" id="faq4_2"></a></dt>
+
+    <dd>Yes, but please don't. If you must, please try to keep at
+    least "Powered by <a href="http://www.punbb.org/">PunBB</a>"
+    with the link to www.punbb.org intact.</dd>
+
+    <dt>4.3 - May I add my own copyright to the page footer?
+    <a name="faq4_3" id="faq4_3"></a></dt>
+
+    <dd>Yes, but you may not alter the original copyright in such a
+    way that it loses it's original "meaning". It must, in other
+    words, be absolutely clear who is the copyright holder of
+    PunBB. Adding an additional line with your copyright notice is
+    OK.</dd>
+
+    <dt>4.4 - May I remove the copyright from the source code?
+    <a name="faq4_4" id="faq4_4"></a></dt>
+
+    <dd>No. The copyright notice in all the source files must be
+    left intact. Any modification or removal of this copyright is
+    illegal under the terms of the <a href="include/gpl.txt">GNU
+    General Public Licence</a>.</dd>
+  </dl>
+</body>
+</html>
