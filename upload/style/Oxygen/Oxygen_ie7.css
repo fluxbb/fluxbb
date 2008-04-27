@@ -1,0 +1,146 @@
+/*************************************************************
+A - SETUP
+**************************************************************/
+	
+/* Start from scratch
+----------------------------------------------------------=--*/
+
+.main table {
+	border-collapse: collapse
+	}
+
+.pun legend {
+	margin-left: -7px;
+	}
+
+	
+/* Make the skip link work
+----------------------------------------------------------=--*/
+
+.ietabfix:active, #pun-main {
+	zoom: 1;
+	}
+
+/* Welcome Box
+----------------------------------------------------------=--*/
+
+#pun-visit {
+	zoom: 1;
+	}
+	
+/* Alert Box
+----------------------------------------------------------=--*/
+
+#pun-alert, #pun-alert h1 {
+	zoom: 1;
+	}
+
+
+/* Statistics
+-------------------------------------------------------------*/
+
+ #pun-info {
+ 	min-height: 1px;
+ 	}
+ 
+ #pun-info #stats ul, #pun-info #onlinelist {
+ 	min-height: 1px;
+ 	}
+	
+/* About Box (Footer / Copyright / Jump Menu)
+----------------------------------------------------------=--*/
+
+#pun-about {
+	min-height: 1px;
+	}
+
+/* Paging and Posting
+----------------------------------------------------------=--*/
+	
+.pun .crumbs,
+.main .paged-head,
+.main .paged-foot,
+.main .paged-foot .submitting {
+	min-height: 1px;
+	}
+	
+/* Main Headings
+----------------------------------------------------------=--*/
+	
+.main .main-head,
+.main .main-foot {
+	min-height: 1px;
+	}
+	
+/* Tabbed Navigation
+-------------------------------------------------------------*/
+	
+.main .main-nav {
+	min-height: 1px;
+	}
+	
+
+/* Forms
+-------------------------------------------------------------*/
+	
+.frm .frm-set div,
+.frm .link,
+.frm .frm-group,
+.frm .radbox {
+	min-height: 1px;
+	}
+	
+.radbox input,
+.post-select input {
+	height: 13px;
+	width: 13px;
+	}
+	
+.pun span.submit input,
+.pun span.cancel input {
+	padding-bottom: 0;
+	}
+
+.pun .frm,
+.frm .profile {
+	min-height: 1px
+	}
+
+.frm .profile .sig-demo {
+	min-height: 1px;
+	}
+
+.frm .radbox label {
+	float: left;
+	}
+	
+.main .dataset, .main .datagrid {
+	min-height: 1px;
+	}
+	
+
+/* Posts
+-------------------------------------------------------------*/
+
+.main .topic, .main .post, .main .post .postbody, .main .topic .post .postfoot {
+	min-height: 1px;
+	position: relative;
+	}
+	
+.main .post .user {
+	min-height: 1px;
+	position: relative;
+	}
+
+* html .entry-content .codebox pre { /* 6 Only */
+	overflow: visible;
+	overflow-x:auto;
+	padding-bottom: 2em;
+	}
+  
+.entry-content .codebox pre { /* 7 Only */
+	min-height: 3em
+	}
+	
+	
+

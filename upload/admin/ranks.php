@@ -1,0 +1,295 @@
+<?php
+/***********************************************************************
+
+  Copyright (C) 2002-2008  PunBB.org
+
+  This file is part of PunBB.
+
+  PunBB is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published
+  by the Free Software Foundation; either version 2 of the License,
+  or (at your option) any later version.
+
+  PunBB is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+  MA  02111-1307  USA
+
+************************************************************************/
+
+
+if (!defined('PUN_ROOT'))
+	define('PUN_ROOT', '../');
+require PUN_ROOT.'include/common.php';
+require PUN_ROOT.'include/common_admin.php';
+
+($hook = get_hook('ark_start')) ? eval($hook) : null;
+
+if ($pun_user['g_id'] != PUN_ADMIN)
+	message($lang_common['No permission']);
+
+// Load the admin.php language file
+require PUN_ROOT.'lang/'.$pun_user['language'].'/admin.php';
+
+
+// Add a rank
+if (isset($_POST['add_rank']))
+{
+	$rank = trim($_POST['new_rank']);
+	$min_posts = intval($_POST['new_min_posts']);
+
+	if ($rank == '')
+		message($lang_admin['Title message']);
+
+	if ($min_posts < 0)
+		message($lang_admin['Min posts message']);
+
+	($hook = get_hook('ark_add_rank_form_submitted')) ? eval($hook) : null;
+
+	// Make sure there isn't already a rank with the same min_posts value
+	$query = array(
+		'SELECT'	=> '1',
+		'FROM'		=> 'ranks AS r',
+		'WHERE'		=> 'min_posts='.$min_posts
+	);
+
+	($hook = get_hook('ark_qr_check_rank_collision')) ? eval($hook) : null;
+	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+	if ($pun_db->num_rows($result))
+		message(sprintf($lang_admin['Min posts occupied message'], $min_posts));
+
+	$query = array(
+		'INSERT'	=> 'rank, min_posts',
+		'INTO'		=> 'ranks',
+		'VALUES'	=> '\''.$pun_db->escape($rank).'\', '.$min_posts
+	);
+
+	($hook = get_hook('ark_qr_add_rank')) ? eval($hook) : null;
+	$pun_db->query_build($query) or error(__FILE__, __LINE__);
+
+	// Regenerate the ranks cache
+	require_once PUN_ROOT.'include/cache.php';
+	generate_ranks_cache();
+
+	redirect(pun_link($pun_url['admin_ranks']), $lang_admin['Rank added'].' '.$lang_admin['Redirect']);
+}
+
+
+// Update a rank
+else if (isset($_POST['update']))
+{
+	$id = intval(key($_POST['update']));
+
+	$rank = trim($_POST['rank'][$id]);
+	$min_posts = intval($_POST['min_posts'][$id]);
+
+	if ($rank == '')
+		message($lang_admin['Title message']);
+
+	if ($min_posts < 0)
+		message($lang_admin['Min posts message']);
+
+	($hook = get_hook('ark_update_form_submitted')) ? eval($hook) : null;
+
+	// Make sure there isn't already a rank with the same min_posts value
+	$query = array(
+		'SELECT'	=> '1',
+		'FROM'		=> 'ranks AS r',
+		'WHERE'		=> 'id!='.$id.' AND min_posts='.$min_posts
+	);
+
+	($hook = get_hook('ark_qr_check_rank_collision2')) ? eval($hook) : null;
+	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+	if ($pun_db->num_rows($result))
+		message(sprintf($lang_admin['Min posts occupied message'], $min_posts));
+
+	$query = array(
+		'UPDATE'	=> 'ranks',
+		'SET'		=> 'rank=\''.$pun_db->escape($rank).'\', min_posts='.$min_posts,
+		'WHERE'		=> 'id='.$id
+	);
+
+	($hook = get_hook('ark_qr_update_rank')) ? eval($hook) : null;
+	$pun_db->query_build($query) or error(__FILE__, __LINE__);
+
+	// Regenerate the ranks cache
+	require_once PUN_ROOT.'include/cache.php';
+	generate_ranks_cache();
+
+	redirect(pun_link($pun_url['admin_ranks']), $lang_admin['Rank updated'].' '.$lang_admin['Redirect']);
+}
+
+
+// Remove a rank
+else if (isset($_POST['remove']))
+{
+	$id = intval(key($_POST['remove']));
+
+	($hook = get_hook('ark_remove_form_submitted')) ? eval($hook) : null;
+
+	$query = array(
+		'DELETE'	=> 'ranks',
+		'WHERE'		=> 'id='.$id
+	);
+
+	($hook = get_hook('ark_qr_delete_rank')) ? eval($hook) : null;
+	$pun_db->query_build($query) or error(__FILE__, __LINE__);
+
+	// Regenerate the ranks cache
+	require_once PUN_ROOT.'include/cache.php';
+	generate_ranks_cache();
+
+	redirect(pun_link($pun_url['admin_ranks']), $lang_admin['Rank removed'].' '.$lang_admin['Redirect']);
+}
+
+
+// Load the cached ranks
+if (file_exists(PUN_CACHE_DIR.'cache_ranks.php'))
+	include PUN_CACHE_DIR.'cache_ranks.php';
+
+if (!defined('PUN_RANKS_LOADED'))
+{
+	require_once PUN_ROOT.'include/cache.php';
+	generate_ranks_cache();
+	require PUN_CACHE_DIR.'cache_ranks.php';
+}
+
+
+// Setup the form
+$pun_page['fld_count'] = $pun_page['set_count'] = 0;
+
+// Setup breadcrumbs
+$pun_page['crumbs'] = array(
+	array($pun_config['o_board_title'], pun_link($pun_url['index'])),
+	array($lang_admin['Forum administration'], pun_link($pun_url['admin_index'])),
+	$lang_admin['Ranks']
+);
+
+($hook = get_hook('ark_pre_header_load')) ? eval($hook) : null;
+
+define('PUN_PAGE_SECTION', 'users');
+define('PUN_PAGE', 'admin-ranks');
+require PUN_ROOT.'header.php';
+
+?>
+<div id="pun-main" class="main sectioned admin">
+
+<?php echo generate_admin_menu(); ?>
+
+	<div class="main-head">
+		<h1><span>{ <?php echo end($pun_page['crumbs']) ?> }</span></h1>
+	</div>
+
+	<div class="main-content frm">
+		<div class="frm-head">
+			<h2><span><?php echo $lang_admin['Add new rank'] ?></span></h2>
+		</div>
+		<div class="frm-info">
+			<p><?php printf($lang_admin['Add rank intro'], '<strong><a href="'.pun_link($pun_url['admin_options_features']).'">'.$lang_admin['Settings'].' - '.$lang_admin['Features'].'</a></strong>') ?></p>
+		</div>
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo pun_link($pun_url['admin_ranks']) ?>?action=foo">
+			<div class="hidden">
+				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(pun_link($pun_url['admin_ranks']).'?action=foo') ?>" />
+			</div>
+			<fieldset class="frm-set set<?php echo ++$pun_page['set_count'] ?>">
+				<legend class="frm-legend"><strong><?php echo $lang_admin['Add rank legend'] ?></strong></legend>
+<?php ($hook = get_hook('ark_add_rank_pre_rank')) ? eval($hook) : null; ?>
+				<div class="frm-fld text">
+					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+					<span class="fld-label"><?php echo $lang_admin['Rank title'] ?></span><br />
+					<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="new_rank" size="24" maxlength="50" /></span>
+					</label>
+				</div>
+<?php ($hook = get_hook('ark_add_rank_pre_min_posts')) ? eval($hook) : null; ?>
+				<div class="frm-fld">
+					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+						<span class="fld-label"><?php echo $lang_admin['Min posts'] ?></span><br />
+						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="new_min_posts" size="7" maxlength="7" /></span>
+					</label>
+				</div>
+<?php ($hook = get_hook('ark_add_rank_end')) ? eval($hook) : null; ?>
+			</fieldset>
+			<div class="frm-buttons">
+				<span class="submit"><input type="submit" name="add_rank" value="<?php echo $lang_admin['Add rank'] ?>" /></span>
+			</div>
+		</form>
+	</div>
+<?php
+
+if (!empty($pun_ranks))
+{
+	// Reset fieldset counter
+	$pun_page['set_count'] = 0;
+
+?>
+	<div class="main-content frm">
+		<div class="frm-head">
+			<h2><span><?php echo $lang_admin['Existing ranks intro'] ?></span></h2>
+		</div>
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo pun_link($pun_url['admin_ranks']) ?>?action=foo">
+			<div class="hidden">
+				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(pun_link($pun_url['admin_ranks']).'?action=foo') ?>" />
+			</div>
+<?php
+
+	foreach ($pun_ranks as $rank_key => $cur_rank)
+	{
+
+	?>
+			<fieldset class="frm-set set<?php echo ++$pun_page['set_count'] ?>">
+				<legend class="frm-legend"><span><?php echo $lang_admin['Rank'].' '.($rank_key + 1) ?></span></legend>
+<?php ($hook = get_hook('ark_edit_rank_pre_rank')) ? eval($hook) : null; ?>
+				<div class="frm-fld text">
+					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+						<span class="fld-label"><?php echo $lang_admin['Rank title'] ?></span><br />
+						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="rank[<?php echo $cur_rank['id'] ?>]" value="<?php echo pun_htmlencode($cur_rank['rank']) ?>" size="24" maxlength="50" /></span>
+					</label>
+				</div>
+<?php ($hook = get_hook('ark_edit_rank_pre_min_posts')) ? eval($hook) : null; ?>
+				<div class="frm-fld text">
+					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+						<span class="fld-label"><?php echo $lang_admin['Min posts'] ?></span><br />
+						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="min_posts[<?php echo $cur_rank['id'] ?>]" value="<?php echo $cur_rank['min_posts'] ?>" size="7" maxlength="7" /></span>
+					</label>
+					<span class="submit"><input type="submit" name="update[<?php echo $cur_rank['id'] ?>]" value="<?php echo $lang_admin['Update'] ?>" /> <input type="submit" name="remove[<?php echo $cur_rank['id'] ?>]" value="<?php echo $lang_admin['Remove'] ?>" /></span>
+				</div>
+<?php ($hook = get_hook('ark_edit_rank_end')) ? eval($hook) : null; ?>
+			</fieldset>
+	<?php
+
+	}
+
+?>
+		</form>
+	</div>
+<?php
+
+}
+else
+{
+
+?>
+	<div class="main-content frm">
+		<div class="frm-head">
+			<h2><span><?php echo $lang_admin['Existing ranks intro'] ?></span></h2>
+		</div>
+		<div class="frm-form">
+			<div class="frm-info">
+				<p><?php echo $lang_admin['No ranks'] ?></p>
+			</div>
+		</div>
+	</div>
+<?php
+
+}
+
+?>
+</div>
+<?php
+
+require PUN_ROOT.'footer.php';

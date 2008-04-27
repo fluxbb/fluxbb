@@ -1,0 +1,1664 @@
+/*************************************************************
+A - SETUP
+**************************************************************/
+	
+/* Start from scratch
+-------------------------------------------------------------*/
+
+html, body, /* Remove this line if integrating */
+.pun div, .pun p, .pun h1, .pun h2, .pun h3, .pun h4, .pun h5, .pun h6,
+.pun blockquote, .pun pre, .pun code, .pun samp,
+.pun abbr, .pun acronym, .pun address, .pun small, .pun cite,
+.pun span, .pun em, .pun img, .pun strong,
+.pun dl, .pun dt, .pun dd, .pun ol, .pun ul, .pun li,
+.pun form, .pun fieldset, .pun label, .pun legend,
+.pun table, .pun caption, .pun tbody, .pun tfoot, .pun thead,
+.pun tr, .pun th, .pun td {
+	margin: 0;
+	padding: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	font-weight: normal;
+	font-style: normal;
+	}
+
+.pun fieldset, .pun img, .pun cite {
+	border: none;
+	}
+
+.pun ol, .pun ul {
+	list-style: none;
+	}
+
+.pun table {
+	width: 100%;
+	table-layout: fixed;
+	empty-cells: show;
+	border-spacing: 0;
+	}
+	
+.pun td {
+	overflow: hidden;
+	vertical-align: middle;
+	}
+	
+.pun span.submit input,
+.pun span.cancel input {
+	overflow: visible;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	padding-bottom: 2px;
+	}
+	
+.pun a {
+	cursor: pointer;
+	text-decoration: underline;
+	}
+	
+.pun div.divider, .pun fieldset br {
+	display: none;
+	}
+	
+	
+/* Text Setup
+-------------------------------------------------------------*/
+
+.pun { /* Needs modifying if body has non default font-size */
+	font: 75%/130% Verdana, Arial, Helvetica, sans-serif;
+	}
+	
+.pun samp, .pun code, .pun pre, .pun option, .pun optgroup {
+	font-size: 1em;
+	font-family: Verdana, Arial, sans-serif;
+	font-style: normal;
+	}
+
+.pun input, .pun select, .pun textarea {
+	font-size: 1.1em;
+	font-family: Verdana, Arial, sans-serif;
+	}
+	
+.pun code {
+	font-size: 1.1em;
+	line-height: 140%;
+	font-family: 'andale mono', 'lucida console', monospace
+	}
+	
+.frm .frm-info li span strong,
+.pun .important strong,
+.pun .warn strong,
+.pun .post-entry .entry-content strong,
+.pun .post-entry .entry-content strong * {
+	font-weight: bold;
+	}
+	
+.pun .entry-content em.bbuline {
+	text-decoration: underline;
+	}
+
+/*************************************************************
+B - FLOAT CLEARING AND HIDDEN STUFF
+**************************************************************/
+	
+/* Clear Me
+-------------------------------------------------------------*/
+
+.pun-page:after,
+#pun-visit:after,
+#pun-about:after,
+#pun-info #stats:after,
+.pun .crumbs:after,
+#pun-info #onlinelist:after,
+.main .paged-head:after,
+.main .paged-foot:after,
+.main .main-head:after,
+.main .main-foot:after,
+.sectioned .main-nav:after,
+.frm .frm-set div:after,
+.frm .link:after,
+.frm .frm-group:after,
+.user .user-info li.status:after,
+.frm .profile:after,
+.main .topic .post .postbody:after,
+.main .topic .post .postfoot:after {
+	content: "";
+	display: block;
+	font-size: 0;
+	height: 0;
+	line-height: 0.0;
+	overflow:hidden;
+	visibility: hidden;
+ 	clear: both;
+	}
+	
+/* Hide Me
+-------------------------------------------------------------*/
+
+.main h1,
+#pun-info .main-head,
+#pun-info #stats h3,
+#qjump legend,
+.crumbs span span,
+.crumbs strong span,
+.main table .tcmod label span,
+.main .main-head h2 span span,
+.main .main-foot .h2 strong span,
+.frm .frm-legend,
+.frm .frm-legend span,
+.frm .frm-info h3,
+.frm .frm-warn,
+.user .user-info .status strong,
+.user .user-info .title strong,
+.frm .profile h3,
+.pun a span span,
+.main .post h3 cite,
+.main .post .posthead .post-select span,
+.main .post .post-entry h4,
+.frm .twin .twin2 .fld-label,
+.pun .frm .frm-group .nodefault span.noshow,
+.main .parted .frm-head {
+ 	font-size: 0;
+ 	left: -9999px;
+ 	text-indent: -9999px;
+ 	position:absolute;
+ 	line-height: 0em;
+ 	}
+	
+	
+/*************************************************************
+C - PAGE LAYOUT and COMMON ELEMENTS
+**************************************************************/
+
+/* Page Layout
+-------------------------------------------------------------*/
+
+.pun-page {
+	width: 95%;
+	margin: 0 auto;
+	padding: 20px 0;
+	}
+
+#pun-redirect, #pun-maint, #pun-util {
+	margin: 50px auto 12px auto;
+	width: 60%;
+	}
+	
+.pun { /* Confines clearing behaviour within forum wrapper */
+	float: left;
+	width: 100%;
+	position: relative;
+	}
+	
+	
+/* Skip Link
+-------------------------------------------------------------*/
+	
+#pun-access {
+	text-align: right;
+	padding: 0;
+	height: 0;
+	margin: 0;
+	position: absolute;
+	background: transparent;
+	}
+	
+#pun-access a, #pun-access a:link, #pun-access a:visited {
+	height: 2em;
+	padding: 0 1.3em;
+	line-height: 2em;
+	position: absolute;
+	left: -999em;
+	margin: 1px;
+	width: 12em;
+	}
+	
+#pun-access a:hover, #pun-access a:active, #pun-access a:focus {
+	text-indent: 0;
+	background: #000;
+	position: static;
+	float: right;
+	}
+	
+	
+/* Board Title and Description
+-------------------------------------------------------------*/
+	
+#pun-title {
+	padding: 1.3em 1.3em 0.3em 1.3em;
+	white-space: nowrap;
+	}
+	
+#pun-title strong {
+	font-size: 1.5em;
+	}
+	
+#pun-desc {
+	padding: 0 1.3em 1em 1.3em;
+	}
+	
+	
+/* Main Menu
+-------------------------------------------------------------*/
+	
+#pun-navlinks ul {
+	padding: 0.7em 1.3em;
+	}
+	
+#pun-navlinks ul li {
+	display: inline;
+	margin-right: 0.8em;
+	font-size: 1.2em;
+	}
+	
+	
+/* Welcome Box
+-------------------------------------------------------------*/
+
+#pun-visit {
+	border-style: none solid solid solid;
+	border-width: 1px;
+	padding: 0.8em 1.3em 0.8em 1.3em;
+	margin: 0 0 1em 0;
+	}
+	
+#pun-visit ul {
+	float: right;
+	}
+	
+#pun-visit ul li {
+	display: inline;
+	margin-left: 0.7em;
+	}
+	
+#pun-visit p span, #pun-visit ul li a {
+	white-space: nowrap;
+	}
+	
+#pun-visit p strong,
+#pun-visit ul li strong {
+	font-weight: bold;
+	}
+	
+	
+/* Alert Box
+-------------------------------------------------------------*/
+
+#pun-alert {
+	border-style: solid;
+	border-width: 1px;
+	margin: 0 0 1em 0;
+	}
+	
+#pun-alert h1 {
+	padding: 0.6em 0;
+	margin: 0 1.3em 0.6em 1.3em;
+	border-bottom-style: dashed;
+	border-bottom-width: 1px;
+	}
+	
+#pun-alert h1 strong {
+	font-size: 1.1em;
+	}
+
+#pun-alert p {
+	padding: 0.2em 0 0.8em 0;
+	margin: 0 1.3em;
+	}
+
+#pun-alert p strong {
+	display: block;
+	padding-bottom: 0.2em;
+	font-weight: bold;
+	}
+	
+	
+/* Statistics
+-------------------------------------------------------------*/
+
+ #stats ul {
+ 	padding: 0.6em 1.3em;
+ 	}
+ 	
+ #stats ul li.st-users {
+ 	float: left;
+ 	clear: both;
+ 	white-space: nowrap;
+ 	line-height: 150%;
+ 	}
+ 
+ #stats ul li.st-activity {
+ 	text-align: right;
+ 	display: block;
+ 	white-space: nowrap;
+ 	line-height: 150%;
+ 	}
+ 	
+#stats ul li strong {
+	font-weight: bold;
+	}
+ 
+#onlinelist {
+	border-top-style: dashed;
+	border-top-width: 1px;
+	line-height: 150%;
+	padding: 0.6em 1.3em;
+	}
+ 
+#onlinelist h3 {
+	float: left;
+	margin: 0 0.5em 0 0;
+	}
+	
+#onlinelist h3 strong {
+	font-weight: bold;
+	}
+	
+	
+/* About Box (Footer / Copyright / Jump Menu) and Home Link
+-------------------------------------------------------------*/
+
+#pun-about {
+	border-style: solid;
+	border-width: 1px;
+	margin: 0 0 1em 0;
+	padding: 0.6em 1.3em;
+	}
+
+#pun-about p {
+	text-align: right;
+	}
+	
+#pun-about #qjump {
+	float: left;
+	width: 40%;
+	}
+	
+#pun-about #qjump label {
+	font-weight: bold;
+	display: block;
+	}
+	
+#pun-home {
+	font-weight: normal;
+	float:right;
+	padding: 0.4em 1.3em 0 0;
+	}
+	
+/* Announcements
+-------------------------------------------------------------*/
+
+#pun-announcement .userbox {
+	margin: 0 0 1em 0;
+	padding-bottom: 1em;
+	}
+	
+#pun-announcement .msg-head {
+	font-size: 1.2em;
+	padding-bottom: 0.5em;
+	margin-bottom: 0.5em;
+	border-bottom-style: dashed;
+	border-bottom-width: 1px;
+	font-size: 1.1em;
+	font-weight: bold;
+	}
+
+	
+/*************************************************************
+D - MAIN CONTENT COMMON ELEMENTS
+**************************************************************/
+
+/* Common Styling
+-------------------------------------------------------------*/
+	
+.main .main-content, .paged .paged-foot {
+	margin-bottom: 1em;
+	}
+	
+.paged .main-content {
+	margin-bottom: 0;
+	}
+
+.main .main-content {
+	border-style: solid;
+	border-width: 1px;
+	}
+	
+
+
+/* Breadcrumbs
+-------------------------------------------------------------*/
+
+#pun-crumbs-head,
+#pun-crumbs-foot {
+	padding: 0 1.3em;
+	margin: 0 0 1em 0;
+	}
+	
+#pun-crumbs-head .crumb,
+#pun-crumbs-foot .crumb {
+	padding-left: 1.5em;
+	padding-right: 0.5em;
+	background-image: url(crumb.png);
+	background-repeat: no-repeat;
+	background-position: center left;
+	white-space: nowrap;
+	float: left;
+	}	
+
+#pun-crumbs-head .crumbfirst,
+#pun-crumbs-foot .crumbfirst {
+	background-image: none;
+	padding-left: 0;
+	}
+
+#pun-crumbs-head .crumblast,
+#pun-crumbs-foot .crumblast {
+	font-weight: bold;
+	}
+	
+	
+/* Paging and Posting
+-------------------------------------------------------------*/
+	
+.main .paged-head,
+.main .paged-foot {
+	border-style: solid;
+	border-width: 1px;
+	padding: 0 1.3em;
+	min-height: 2.6em;
+	}
+	
+.main .paged-head .paging,
+.main .paged-foot .paging {
+	float: left;
+	font-size: 1.1em;
+	padding: 0.6em 0;
+	}
+	
+.main .paged-head .posting,
+.main .paged-foot .posting {
+	float: right;
+	font-size: 1.1em;
+	padding: 0.6em 0;
+	}
+	
+.pun .posting, .pun .posting * {
+	white-space: nowrap;
+	}
+	
+.main .paged-head .posting span,
+.main .paged-head .paging strong,
+.main .paged-foot .posting span,
+.main .paged-foot .paging strong {
+	font-weight: bold;
+	}
+	
+.main .paged-foot .submitting {
+	float: right;
+	padding: 0.3em 0 0.3em 0;
+	}
+	
+.main .submitting {
+	text-align: right;
+	}
+	
+.main .paged-foot .submitting span {
+	margin-left: 0.8em;
+	}
+
+
+.pun .paging, .pun .paging * {
+	white-space:nowrap;
+	}
+
+.pun .paging a, .pun .paging strong, .pun .paging span {
+	border-left-style:solid;
+	border-left-width: 1px;
+	text-decoration: none;
+	padding: 0 0.2em 0 0.6em;
+	}
+	
+.pun .paging .item1, .pun .paging .pages {
+	border: 0;
+	padding-left: 0;
+	}
+
+.pun .paging .pages {
+	padding-right: 0.3em;
+	}
+	
+
+/* Main Headers and Footers
+-------------------------------------------------------------*/
+
+.main .main-head,
+.main .main-foot {
+	padding: 0.7em 1.3em;
+	min-height: 1.3em;
+	}
+
+#pun-install .main-head {
+	padding-left: 1.7em;
+	}
+	
+.main .main-head h1 {
+	position: static;
+	font-size: 1em;
+	line-height: 1.3em;
+	text-indent: 0;
+	}
+
+.main .main-head h1,
+.main .main-head h2,
+.main .main-foot .h2 {
+	float: left;
+	padding: 0 1px;
+	}
+
+.main .main-head h1 span,
+.main .main-head h2 span,
+.main .main-foot .h2 strong {
+	font-size: 1.1em;
+	}
+
+.main .main-head .main-options,
+.main .main-foot .main-options,
+.admin .main-head h2,
+.admin .main-head h1 {
+	float: right;
+	padding: 0 1px;
+	}
+
+.main .main-head .main-options a.feed-option {
+	margin-left: 0.5em;
+	font-size: 0.9em;
+	float:left;
+	letter-spacing: -0.1em;
+	border-style: solid;
+	border-width: 1px;
+	padding-right: 3px;
+	line-height: 1.2em;
+	height: 1.3em;
+	}
+	
+.main .main-head .main-options a.sub-option {
+	float: left;
+	margin-right: 1em;
+	}
+	
+.main .main-foot .main-options a.mod-option,
+.main .main-foot .main-options a.user-option {
+	margin-left: 0.8em;
+	}
+	
+.main .main-head .main-options a.feed-option,
+.main .main-head .main-options a.feed-option:link,
+.main .main-head .main-options a.feed-option:visited {
+	padding-left: 18px;
+	background-repeat: no-repeat;
+	background-position: left;
+	background-image: url(feed.png);
+	}
+
+.main .main-head a.exthelp,
+.main-head a.exthelp:link,
+.main .main-head a.exthelp:visited {
+	padding-left: 20px;
+	background-repeat: no-repeat;
+	background-position: left;
+	background-image: url(helpdark.png);
+	}
+	
+.main .frm-head {
+	padding: 0.5em 1.7em;
+	border-style: solid none solid none;
+	border-width: 1px;
+	background: #f1f1f1 !important;
+	border-bottom-color: #bbb !important;
+	}
+
+.main .frm-head span, .main .frm-part h3 span {
+	font-size: 1.1em;
+	}
+
+/* Tabbed Navigation (General
+-------------------------------------------------------------*/
+
+.main .main-nav {
+	min-width: 62em;
+	}
+
+.main .main-nav * {
+	white-space: nowrap;
+	}
+
+.main .main-nav ul {
+	padding: 0 1.9em;
+	}
+
+.main .main-nav ul li {
+	display: inline;
+	float:left;
+	padding: 0 5px 0 0;
+	}
+
+.main .main-nav ul li a,
+.main .main-nav ul li a:link,
+.main .main-nav ul li a:visited {
+	border-style: solid solid none solid;
+	border-width: 1px;
+	float: left;
+	height: 2.2em;
+	line-height: 2.2em;
+	padding: 0 1em;
+	}
+
+	
+/* Tabbed Navigation (with submenu)
+-------------------------------------------------------------*/
+.main .submenu {
+	position: relative;
+	}
+
+.main .submenu ul li.topactive ul {
+	border: none;
+	height: 1.85em;
+	left: 0;
+	line-height: 1.5em;
+	margin: 0;
+	padding: 0.3em 1.7em 0.5em;
+	position: absolute;
+	top: 2.3em;
+	}
+
+.main .submenu ul li.topactive ul li a,
+.main .submenu ul li.topactive ul li a:link,
+.main .submenu ul li.topactive ul li a:visited {
+	margin-right: 0.8em;
+	border: none;
+	padding: 0;
+	}
+
+/*************************************************************
+E - MAIN TABLES ( Index / Forums / Userlist )
+**************************************************************/
+
+/* Table Cells Widths and Alignment
+-------------------------------------------------------------*/
+
+.main table .tcl {
+	width: 50%;
+	text-align: left;
+	}
+
+.main table .tc2,
+.main table .tc3,
+.main table .tcmod {
+	width: 10%;
+	text-align: center;
+	}
+
+.main table .tcr {
+	width: 30%;
+	text-align: left;
+	}
+	
+#pun-userlist table .tcl,
+#pun-searchtopics table .tcl,
+#pun-modforum table .tcl {
+	width: 40%
+	}
+	
+#pun-userlist table .tc2,
+#pun-searchtopics table .tc2 {
+	width: 20%;
+	text-align: left;
+	}
+	
+#pun-debug  table .tcl {
+	white-space:normal;
+	width: 15%;
+	}
+
+#pun-debug table .tcr {
+	white-space: normal;
+	width: 90%;
+	}
+	
+#pun-admin-users table .tcl {
+	width: 35%;
+	line-height: 1.4em;
+	}
+	
+	
+#pun-admin-users table .tc2 {
+	width: 20%;
+	}
+	
+#pun-admin-users table .tc3 {
+	width: 10%;
+	}
+	
+#pun-admin-users table .tcr {
+	width: 20%;
+	}
+	
+#pun-admin-users table .actions {
+	width: 15%;
+	}
+	
+#pun-admin-users td.tcl span {
+	display: block;
+	}
+	
+#pun-admin-users td.tcl strong {
+	font-weight: bold;
+	}
+	
+	
+/* Table Cell Styling
+-------------------------------------------------------------*/
+
+.main table .tcl h3 span {
+	font-size: 1.1em;
+	font-weight: bold;
+	}
+
+.main table .tcl span.topic-nav,
+.main table .tcl span.topic-nav *,
+.main table .tcr a {
+	white-space: nowrap;
+	}
+	
+.main table .tcl .modlist {
+	display: block;
+	padding-top: 0.3em
+	}
+	
+.main table td {
+	padding: 0.6em 1.3em 0.7em 1.3em;
+	border-width: 1px;
+	border-style: solid none none solid;
+	line-height: 130%;
+	}
+	
+.main table td.tcl {
+	border-left-style: none;
+	border-left-width: 0
+	} 
+	
+.main table th {
+	padding: 0.5em 1.3em;
+	border-style: none;
+	}
+
+.main table tbody.statused td.tcl {
+	padding-left: 3.4em;
+	}
+	
+.main table tbody.statused span.status {
+	margin-left: -2.4em;
+	position: absolute;
+	}
+
+.main table .tcl img {
+	border-style: solid;
+	border-width: 0.6em;
+	display: inline;
+	height: 0;
+	width: 0;
+	float: left;
+	margin-right: 0.4em;
+	margin-top: 0.1em;
+	}
+	
+#pun-index .main table .tcl img {
+	border-width: 0.7em;
+	}
+
+#pun-index .main table .tcr .byuser {
+	display: block;
+	}
+	
+.main table td.actions, .main table th.actions {
+	text-align: right;
+	}
+
+.main table td.actions span {
+	display: block;
+	}
+	
+/*************************************************************
+E - MAIN FORMS
+**************************************************************/
+
+/* General Styling
+-------------------------------------------------------------*/
+	
+.frm .frm-form {
+	margin: 1.7em 1.7em 0.7em 1.7em;
+	}
+	
+.frm .frm-set {
+	border-top-style: dashed;
+	border-top-width: 1px;
+	padding: 1.3em 0 0.5em 0;
+	}
+
+.frm .set1 {
+	border-top-style: none;
+	padding-top: 0;
+	}
+	
+.frm .frm-buttons {
+	padding: 0.8em 0 0.3em 15.6em;
+	border-top-style: double;
+	border-top-width: 3px;
+	margin-top: 0.5em;
+	}
+	
+.frm .frm-buttons span {
+	margin-right: 1em;
+	}
+	
+.frm .frm-fld span.submit {
+	clear: left;
+	display: block;
+	padding-top: 0.3em;
+	}
+	
+.frm table {
+	border-style: solid;
+	border-width: 1px;
+	margin-bottom: 1em;
+	}
+	
+/* Text, Select. Link Field and Textarea
+-------------------------------------------------------------*/
+
+.main form .frm-fld {
+	padding: 0 0 0.7em 0;
+	margin: 0 0 0 15.6em;
+	position: relative;
+	line-height: 1.3em;
+	}
+
+.main form .frm-fld .fld-label {
+	float: left;
+	width: 14.6em;
+	position: relative;
+	margin-left: -15.6em;
+	text-align: right;
+	font-weight: bold;
+	padding: 3px 1em 2px 0;
+	}
+	
+.main form .link .fld-label {
+	padding: 0 1em 0 0;
+	}
+	
+.admin .frm form fieldset .link .fld-input {
+	float: left;
+	}
+	
+.main form .frm-fld .fld-input,
+.main form .frm-fld .fld-input input,
+.main form .frm-fld .fld-input select {
+	float: left;
+	}
+	
+.main form .frm-fld .fld-input {
+	padding-right: 0.5em;
+	}
+	
+.main form .frm-fld label span.fld-help,
+.main form .frm-fld label span.fld-extra {
+	float: left;
+	width: 98%;
+	display: block;
+	font-size: 0.9em;
+	margin-left: -2px;
+	position: relative;
+	}
+
+.main form .textarea label span.fld-help {
+	width: 86%;
+	}
+	
+.main form .frm-fld label span.fld-extra {
+	display: inline;
+	width: auto;
+	margin: 0;
+	padding-top: 3px;
+	}
+	
+.main form .frm-fld label small.extra {
+	font-size: 1em;
+	}
+
+.main form .frm-fld .fld-label a {
+	margin-left: 0.5em;
+	}
+	
+.main form .frm-fld .fld-label a span {
+	font-weight: bold;
+	}
+	
+.main form .textarea .fld-input,
+.main form .longtext .fld-input {
+ 	width: 84%;
+ 	padding-right: 0.8em;
+ 	}
+	
+.main form .textarea textarea,
+.main form .longtext input {
+	width: 100%;
+	}
+
+.main form .frm-fld em.req-text {
+ 	float: left;
+ 	padding-top: 2px;
+ 	}
+ 	
+ .main .frm .frm-part {
+	margin: 0 -1.7em;
+ 	padding: 0 1.7em;
+ 	border-top: 1px solid #ddd;
+ 	margin-top: 1em;
+ 	}
+ 	
+ .main .frm .frm-part h3 {
+ 	margin-top: 0;
+ 	background: #f1f1f1;
+ 	margin: 1em -1.7em;
+ 	margin-top: 0;
+ 	margin-bottom: 1.3em;
+ 	padding: 0.5em 1.7em;
+ 	border-top: 1px solid #fff;
+ 	border-bottom: 1px solid #bbb;
+ 	}
+ 	
+ .main .frm .part1 {
+	margin-top: -1.7em;
+	border-top: none;
+ 	}
+ 	
+ .main .frm .frm-part h3 * {
+ 	color: #113C5E;
+ 	}
+ 	
+ /* Checkboxes and Radio Buttons
+-------------------------------------------------------------*/
+	
+.main form .frm-group {
+	padding: 0 0 0.7em 0;
+	position: relative;
+	}
+
+.main form .radbox {
+	margin: 0 0 0 15.6em;
+	padding: 3px 0 0.3em 23px;
+	line-height: 1.3em;
+	position: relative;
+	}
+
+.main form .checkbox {
+	padding-bottom: 1em;
+	}
+	
+.main form .radbox input {
+	float: left;
+	position: relative;
+	left: -20px;
+	top: 0.65em;
+	margin: -7px -13px 0 0;
+	min-width: 13px;
+	min-height: 13px;
+	}
+	
+.main form .checkbox .fld-label {
+	float: left;
+	width: 14.6em;
+	text-align: right;
+	position: relative;
+	left: -23px;
+	padding: 0;
+	margin-left: -15.6em;
+	font-weight: bold;
+	}
+	
+.main form .frm-yesno label,
+.main form .frm-choice label {
+	float: left;
+	}
+	
+.main form .frm-yesno label {
+	width: 8em;
+	}
+	
+.main form .frm-choice label {
+	width: 11em;
+	}
+	
+.main form .frm-group legend span {
+	position: absolute;
+	left: 0;
+	width: 14.6em;
+	text-align: right;
+	padding-top: 3px;
+	font-weight: bold;
+	}
+	
+	
+ /* Form Information Boxes
+-------------------------------------------------------------*/
+	
+.frm .frm-info,
+.frm .frm-error,
+.frm .req-warn {
+	margin: 1.7em;
+	padding: 1em 1em 0.3em 1em;
+	border-style: solid;
+	border-width: 1px;
+	}
+	
+.frm .frm-form .frm-info {
+	margin: 0.7em 0 1.7em 0;
+	}
+
+.frm .frm-info p,
+.frm .frm-error .warn,
+.frm .frm-error .important {
+	padding: 0 0 0.8em 0;
+	}
+	
+.frm .frm-info ul {
+	padding: 0 0 0.2em 1em;
+	margin: 0 0 0 8px;
+	}
+	
+.frm .frm-info li,
+.frm .frm-error li {
+	padding: 0 0 0.7em 0.5em;
+	list-style-type: square;
+	line-height: normal;
+	}
+	
+#pun-main .frm .actions a, #pun-main .frm .actions a * {
+	font-weight: bold;
+	}
+
+.frm .frm-info .actions {
+	padding-left: 2em;
+	}
+
+.frm .actions a {
+	margin-right: 0.7em;
+	white-space: nowrap;
+	}
+	
+#pun-search .frm .frm-info .actions {
+	background: url('searchicon.png') no-repeat top left;
+	padding-left: 2.2em;
+	}
+	
+.frm .frm-error ul {
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-left: 0;
+	margin-left: 1.6em;
+	}
+	
+.frm .frm-error li {
+	line-height: 1.5em;
+	}
+	
+.main form .item-select {
+	position: relative;
+	float: right;
+	margin-top: -2.8em;
+	z-index: 100;
+	padding-bottom: 0;
+	}
+
+.main form div.item-select * {
+	font-weight: bold;
+	}
+	
+.main form div.item-select .fld-label {
+	font-weight: normal;
+	}
+	
+	
+ /* Data Boxes
+-------------------------------------------------------------*/
+
+.main .frm-form .databox {
+	margin: 1.7em 0;
+	}
+	
+.main .databox {
+	margin: 1.7em;
+	padding: 1em 1em 0.3em 1em;
+	border-style: solid;
+	border-width: 1px;
+	overflow: hidden;
+	}
+	
+.main .databox p,
+.main .databox ul {
+	padding-bottom: 0.8em;
+	overflow: hidden;
+	}
+	
+.main .databox .legend {
+	padding-bottom: 0.5em;
+	border-bottom-style: dashed;
+	border-bottom-width: 1px;
+	margin-bottom: 0.7em;
+	}
+	
+.main .databox .legend span,
+.main .databox .term span {
+	font-weight: bold;
+	}
+	
+.main .databox .legend strong {
+	float: right;
+	font-weight: bold;
+	}
+	
+.main .databox .note {
+	font-weight: bold;
+	padding-bottom: 0.3em;
+	}
+	
+ /* Multiple Data Boxes (Data Sets)
+-------------------------------------------------------------*/
+
+	
+.main .dataset {
+	margin: 1.7em;
+	border-style: solid solid solid solid;
+	border-width: 1px;
+	}
+
+.main .frm-form .dataset {
+	margin: 1.7em 0;
+	}
+
+.main .dataset .databox {
+	margin: 0;
+	border-style: dashed none none none;
+	padding: 0.8em 1em 0 1em;
+	}
+
+.main .dataset .db1 {
+	border: none;
+	}
+	
+.main .dataset .databox .legend {
+	padding: 0;
+	margin: 0;
+	border: none;
+	}
+
+ /* Multiple Data Boxes with Grid layout (Data Grids)
+-------------------------------------------------------------*/
+
+.main .datagrid {
+	margin: 1.7em;
+	border-style: solid solid solid solid;
+	border-width: 1px;
+	}
+	
+.main .datagrid .databox {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	position: relative;
+	border-style: dashed none none none;
+	}
+	
+.main .datagrid .db1 {
+	border: none;
+	}
+	
+.main .datagrid .databox .data {
+	padding: 0.8em 1em 0.8em 1em;
+	margin: 0 0 0 16em;
+	border-left-style: dashed;
+	border-left-width: 1px;
+	}
+	
+.main .datagrid .legend {
+	position: absolute;
+	padding: 0.8em 1em 0 1em;
+	margin: 0;
+	border: none;
+	left: 0;
+	top: 0;
+	}
+	
+/*************************************************************
+F - USER PROFILES
+**************************************************************/
+
+ /* User Identity (Profile and Viewtopic)
+-------------------------------------------------------------*/
+	
+.user .user-ident {
+	position: relative;
+	padding-top: 1.6em;
+	white-space: normal;
+	}
+
+.user .user-ident img {
+	display: block;
+	margin-bottom: 0.3em;
+	}
+
+.user .user-ident .username {
+	font-size: 1.2em;
+	font-weight: bold;
+	display: block;
+	position: absolute;
+	top: 0;
+	margin: 0;
+	line-height:1.2em;
+	}
+	
+.user .user-ident a {
+	text-decoration: none;
+	}
+	
+.user .user-info li {
+	padding-bottom: 0.2em;
+	line-height: 1.3em;
+	}
+	
+.user .user-info .status,
+.user .user-info .title {
+	padding-bottom: 0.8em;
+	}
+
+.user .user-info .title span {
+	font-weight: bold;
+	}
+	
+.user .user-info .status span {
+	border-left-style: solid;
+	border-left-width: 0.7em;
+	float:left;
+	font-weight: normal;
+	height: 0.8em;
+	line-height: 0.8em;
+	padding-left: 0.4em;
+	position: relative;
+	font-style: normal;
+	}
+
+
+ /* Profile normal view and edit profile about page
+-------------------------------------------------------------*/
+
+.frm .profile {
+	margin: 1.7em;
+	padding: 1em 1em 0.3em 17em;
+	border-style: solid;
+	border-width: 1px;
+	}
+
+.frm .profile .user,
+.frm .profile .user-data,
+.frm .profile .user-actions {
+	float: left;
+	margin: 0;
+	padding-bottom: 1em;
+	padding-left: 4em;
+	display: inline;
+	}
+
+.frm .profile .user {
+	margin: 0 0 0 -16em;
+	padding-left: 0;
+	white-space: normal;
+	padding-bottom: 0;
+	overflow: hidden;
+	width: 16em;
+	}
+	
+.frm .profile .username {
+	width: 14em;
+	overflow: hidden;
+	}
+
+.frm .profile .user-actions li,
+.frm .profile .user-data li {
+	line-height: 1.4em;
+	padding-bottom: 0.8em;
+	list-style-position: outside;
+	list-style-type: disc;
+	white-space: nowrap;
+	}
+	
+.frm .profile .user-actions li a {
+	font-weight: bold;
+	}
+	
+.frm .sig-demo {
+	margin-left: 15.6em;
+	margin-right: 13%;
+	padding-top: 0.8em;
+	padding-bottom: 1em;
+	border-top: 1px dashed #ccc;
+	clear:left;
+	}
+	
+.frm .profile .sig-demo {
+	margin-left: 3em;
+	}
+	
+.frm .av-preview img {
+	float: right;
+	margin-left: 2em;
+	margin-bottom: 1em;
+	}
+	
+/*************************************************************
+G - TOPICS / POSTS
+**************************************************************/
+
+/* Parsed Content
+-------------------------------------------------------------*/
+
+.main .post-entry {
+	padding: 0.3em 1em 0 1em;
+	}
+
+.main .entry-content {
+	padding-bottom: 0.8em;
+	overflow: hidden;
+	width: 100%
+	}
+	
+.main .sig-content {
+	padding-top: 0.8em
+	}	
+
+.main .sig-content .sig-line {
+	border-top-style: solid;
+	border-top-width: 1px;
+	display: block;
+	padding-bottom: 0.5em;
+	width: 250px;
+	}
+
+.main .entry-content .quotebox,
+.main .entry-content .codebox {
+	border-style: solid;
+	border-width: 1px;
+	margin: 0 1em 1em 1em;
+	padding: 1em 1em 0.3em 1em;
+	}
+  
+.main .entry-content blockquote {
+	overflow: hidden;
+	width: 100%;
+	}
+	
+.main .entry-content .quotebox cite {
+	display: block;
+	font-style: normal;
+	font-weight: bold;
+	margin-bottom: 0.8em;
+	}
+	
+.main .entry-content .codebox strong {
+	display: block;
+	margin-bottom: 0.8em;
+	}
+
+.main .entry-content pre {
+	margin: 0;
+	max-height: 35em;
+	min-height: 2em;
+	overflow: auto;
+	padding: 0 2% 0.1em 0;
+	width: 98%;
+	}
+	
+.main .entry-content em {
+	font-style: italic
+	}
+
+.main .entry-content em.bbuline {
+	font-style: normal;
+	text-decoration: underline;
+	}
+
+.main .entry-content p {
+	margin: 0 0 1em 0;
+	}
+
+.frm .post-entry {
+	margin: 1.7em;
+	border-style: solid;
+	border-width: 1px;
+	}
+
+/* Topic / Post Layout
+-------------------------------------------------------------*/
+
+.main .topic .post {
+	border-style: solid none none none;
+	border-width: 1px;
+	}
+
+.main .topic .firstpost {
+	border-top: none;
+	margin-top: 0;
+	}
+
+.main .topic .post .postmain {
+	margin-left: 17em;
+	position: relative;
+	border-left-style: solid;
+	border-left-width: 1px;
+	}
+	
+.main .topic .post .posthead {
+	border-bottom-style: dashed;
+	border-bottom-width: 1px;
+	margin-bottom: 0.7em;
+	}
+	
+.main .topic .post .posthead h3 {
+	padding: 0.5em 0 0.5em 1em;
+	margin: 0;
+	}
+	
+.main .topic .post .posthead h3 strong {
+	float: right;
+	font-weight: bold;
+	position: relative;
+	text-decoration: none;
+	padding-right: 1em;
+	}
+	
+.main .topic .post .postmain  .user {
+	float: left;
+	margin: -2.6em 0 0 -16em;
+	width: 15em;
+	}
+	
+.main .topic .user-info {
+	overflow: hidden;
+	width: 15em;
+	}
+
+.main .topic .user-ident .username {
+	overflow: hidden;
+	width: 13em;
+	}
+	
+.main .topic .post .user .user-info {
+	padding-bottom: 1em;
+	}
+	
+.main .topic .post .postmain .postfoot {
+	margin-left: -17em;
+	text-align: right;
+	border-top-style: dashed;
+	border-top-width: 1px;
+	padding: 0.5em 1em;
+	}
+	
+.main .topic .post .postmain .postfoot .post-options a {
+	margin-left: 1em;
+	}
+
+.main .topic .post .postmain .postfoot .post-options a.contact {
+	float: left;
+	margin-right: 1em;
+	margin-left: 0;
+	}
+	
+.main .topic .post .postmain .entry-info {
+	padding: 0 0 1em 0;
+	margin: 0 0 0 1.5em;
+	}
+
+.main .post .item-select {
+	padding-right: 1em;
+	}
+
+#pun-searchposts .main .post h3 cite {
+	position: static;
+	font-size: 1em;
+	}
+	
+#pun-searchposts .main .post h4.entry-title {
+	position: static;
+	font-size: 1em;
+	padding-bottom: 1em;
+	font-weight: normal;
+	line-height: 1.3em;
+	text-indent: 0;
+	}
+	
+#pun-searchposts .main h3 strong {
+	text-decoration: none;
+	}
+	
+#pun-searchposts .main h4.entry-title strong {
+	display: block;
+	font-weight: bold;
+	}
+	
+	
+/*************************************************************
+H - OTHER MAIN CONTENT ITEMS
+**************************************************************/
+
+/* Message Boxes / Redirect
+-------------------------------------------------------------*/
+
+.main .message {
+	padding-bottom: 0.3em;
+	}
+
+.main .message p {
+	padding: 0 1.3em 0;
+	margin: 1em 0;
+	}
+	
+.main .message p span {
+	display: block;
+	padding-top: 1em;
+	}
+
+	
+/* Help File
+-------------------------------------------------------------*/
+	
+.frm .example code {
+	display: block;
+	}
+
+.frm .example li,
+.frm div.example {
+	padding: 0 0 1em 0;
+	line-height: normal;
+	margin: 0 0 0 1.5em;
+	list-style: disc;
+	}
+	
+.frm .example code {
+	padding-bottom: 0.1em;
+	}
+	
+.frm ul.example {
+	padding: 0 0 0 0.5em;
+	margin: 0;
+	}
+
+.frm .example span {
+	font-size: 0.9em;
+	}
+	
+#pun-help h3 {
+	padding: 0 0 0.7em 0;
+	margin: 0;
+	}
+	
+#pun-help .quotebox, #pun-help .codebox {
+	margin: 0.3em 0 0 0;
+	}
+	
+.frm .example code * {
+	vertical-align: middle;
+	}
+	
+	
+/* Rules
+-------------------------------------------------------------*/
+	
+.pun .userbox {
+	padding: 1em 1.3em 0.7em 1.3em;
+	margin: 1.7em;
+	border-style: solid;
+	border-width: 1px;
+	}
+	
+.pun .userbox p, .pun .userbox h2, .pun .userbox h3, .pun .userbox h4 {
+	margin: 0 0 0.8em 0;
+	list-style: disc;
+	}
+	
+.pun .userbox h2 {
+	font-size: 1.2em;
+	font-weight: bold;
+	}
+	
+.pun .userbox h3 {
+	font-size: 1.1em;
+	font-weight: bold;
+	}
+	
+.pun .userbox ul, .pun .userbox ol {
+	margin: 0 0 0.3em 1.5em;
+	list-style: disc;
+	}
+	
+.pun .userbox li {
+	margin-bottom: 0.5em;
+	}
+	
+.pun .userbox strong {
+	font-weight: bold;
+	}
+	
+.pun .userbox em {
+	font-style: italic;
+	}

@@ -1,0 +1,140 @@
+/*************************************************************
+A - SETUP
+**************************************************************/
+	
+/* Start from scratch
+----------------------------------------------------------=--*/
+
+* html .main table {
+	border-collapse: collapse
+	}
+
+* html .pun legend {
+	margin-left: -7px;
+	}
+
+	
+/* Make the skip link work
+----------------------------------------------------------=--*/
+
+.ietabfix:active, #pun-main {
+	zoom: 1;
+	}
+
+/* Welcome Box
+----------------------------------------------------------=--*/
+
+#pun-visit {
+	zoom: 1;
+	}
+	
+/* Alert Box
+----------------------------------------------------------=--*/
+
+#pun-alert, #pun-alert h1 {
+	zoom: 1;
+	}
+
+
+/* Statistics
+-------------------------------------------------------------*/
+
+ #pun-info {
+ 	height: 1px;
+ 	}
+ 
+ #pun-info #stats ul, #pun-info #onlinelist {
+ 	zoom: 1;
+ 	}
+	
+/* About Box (Footer / Copyright / Jump Menu)
+----------------------------------------------------------=--*/
+
+#pun-about,
+.pun .userbox {
+	zoom: 1;
+	}
+
+/* Paging and Posting
+----------------------------------------------------------=--*/
+	
+.pun .crumbs,
+.main .paged-head,
+.main .paged-foot,
+.main .paged-foot .submitting {
+	zoom: 1;
+	}
+	
+/* Main Headings
+----------------------------------------------------------=--*/
+	
+.main .main-head,
+.main .main-foot {
+	zoom: 1;
+	}
+	
+/* Tabbed Navigation
+-------------------------------------------------------------*/
+	
+.main .main-nav {
+	zoom: 1;
+	}
+	
+
+/* Forms
+-------------------------------------------------------------*/
+	
+.frm .frm-set div,
+.frm .link,
+.frm .frm-group,
+.frm .radbox {
+	height: 1px;
+	}
+	
+* html .radbox input,
+* html .post-select input {
+	height: 13px;
+	width: 13px;
+	}
+	
+.pun span.submit input,
+.pun span.cancel input {
+	padding-bottom: 0;
+	}
+
+.pun .frm,
+.frm .profile {
+	height: 1px
+	}
+
+.frm .profile .sig-demo {
+	zoom: 1;
+	}
+
+.frm .radbox label {
+	float: left;
+	}
+	
+.main .dataset, .main .datagrid {
+	height: 1%;
+	}
+	
+
+/* Posts
+-------------------------------------------------------------*/
+
+.main .topic, .main .post, .main .post .postbody, .main .topic .post .postfoot {
+	zoom: 1;
+	position: relative;
+	}
+	
+.main .post .user {
+	zoom: 1;
+	position: relative;
+	}
+
+* html .entry-content .codebox pre { /* 6 Only */
+	overflow: visible;
+	overflow-x:auto;
+	padding-bottom: 2em;
+	}
