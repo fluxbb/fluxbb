@@ -602,9 +602,6 @@ if ($forum_config['o_topic_views'] == '1')
 		'UPDATE'	=> 'topics',
 		'SET'		=> 'num_views=num_views+1',
 		'WHERE'		=> 'id='.$id,
-		'PARAMS'	=> array(
-			'LOW_PRIORITY'	=> 1	// MySQL only
-		)
 	);
 
 	($hook = get_hook('vt_qr_increment_num_views')) ? eval($hook) : null;

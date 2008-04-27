@@ -241,9 +241,6 @@ if (isset($_POST['form_sent']))
 				'UPDATE'	=> 'users',
 				'SET'		=> 'num_posts=num_posts+1, last_post='.$now,
 				'WHERE'		=> 'id='.$forum_user['id'],
-				'PARAMS'	=> array(
-					'LOW_PRIORITY'	=> 1	// MySQL only
-				)
 			);
 
 			($hook = get_hook('po_qr_increment_num_posts')) ? eval($hook) : null;

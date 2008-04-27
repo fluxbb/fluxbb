@@ -206,9 +206,6 @@ else if (isset($_GET['email']))
 				'UPDATE'	=> 'users',
 				'SET'		=> 'last_email_sent='.time(),
 				'WHERE'		=> 'id='.$forum_user['id'],
-				'PARAMS'	=> array(
-					'LOW_PRIORITY'	=> 1	// MySQL only
-				)
 			);
 
 			($hook = get_hook('mi_qr_update_last_email_sent')) ? eval($hook) : null;

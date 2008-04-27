@@ -143,9 +143,6 @@ class DBLayer
 		{
 			$query['UPDATE'] = (isset($query['PARAMS']['NO_PREFIX']) ? '' : $this->prefix).$query['UPDATE'];
 
-			if (isset($query['PARAMS']['LOW_PRIORITY']))
-				$query['UPDATE'] = 'LOW_PRIORITY '.$query['UPDATE'];
-
 			$sql = 'UPDATE '.$query['UPDATE'].' SET '.$query['SET'];
 
 			if (!empty($query['WHERE']))

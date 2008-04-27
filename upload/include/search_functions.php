@@ -577,9 +577,6 @@ function get_search_results($query, &$search_set, &$forum_page)
 			'UPDATE'	=> 'users',
 			'SET'		=> 'last_search='.time(),
 			'WHERE'		=> 'id='.$forum_user['id'],
-			'PARAMS'	=> array(
-				'LOW_PRIORITY'	=> 1	// MySQL only
-			)
 		);
 
 		($hook = get_hook('se_qr_update_last_search_time')) ? eval($hook) : null;
