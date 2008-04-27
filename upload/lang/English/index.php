@@ -5,7 +5,7 @@ $lang_index = array(
 
 'Topics'				=>  'Topics',
 'Moderators'			=>  'Moderators',
-'Link to'				=>	'Link to',	// As in "Link to http://www.punbb.org/"
+'Link to'				=>	'Link to',	// As in "Link to http://www.fluxbb.org/"
 'Empty board'			=>	'Board is empty.',
 'Newest user'			=>	'Newest registered user',
 'Users online'			=>	'Registered users online',

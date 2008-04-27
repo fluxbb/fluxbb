@@ -75,7 +75,7 @@ function pun_mail($to, $subject, $message, $from = '')
 	$subject = trim(preg_replace('#[\n\r]+#s', '', $subject));
 	$from = trim(preg_replace('#[\n\r:]+#s', '', $from));
 
-	$headers = 'From: '.$from."\r\n".'Date: '.date('r')."\r\n".'MIME-Version: 1.0'."\r\n".'Content-transfer-encoding: 8bit'."\r\n".'Content-type: text/plain; charset='.$lang_common['lang_encoding']."\r\n".'X-Mailer: PunBB Mailer';
+	$headers = 'From: '.$from."\r\n".'Date: '.date('r')."\r\n".'MIME-Version: 1.0'."\r\n".'Content-transfer-encoding: 8bit'."\r\n".'Content-type: text/plain; charset='.$lang_common['lang_encoding']."\r\n".'X-Mailer: FluxBB Mailer';
 
 	// Make sure all linebreaks are CRLF in message (and strip out any NULL bytes)
 	$message = str_replace(array("\n", "\0"), array("\r\n", ''), pun_linebreaks($message));
@@ -97,7 +97,7 @@ function pun_mail($to, $subject, $message, $from = '')
 
 //
 // This function was originally a part of the phpBB Group forum software phpBB2 (http://www.phpbb.com).
-// They deserve all the credit for writing it. I made small modifications for it to suit PunBB and it's coding standards.
+// They deserve all the credit for writing it. I made small modifications for it to suit FluxBB and it's coding standards.
 //
 function server_parse($socket, $expected_response)
 {
@@ -115,7 +115,7 @@ function server_parse($socket, $expected_response)
 
 //
 // This function was originally a part of the phpBB Group forum software phpBB2 (http://www.phpbb.com).
-// They deserve all the credit for writing it. I made small modifications for it to suit PunBB and it's coding standards.
+// They deserve all the credit for writing it. I made small modifications for it to suit FluxBB and it's coding standards.
 //
 function smtp_mail($to, $subject, $message, $headers = '')
 {

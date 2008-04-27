@@ -30,7 +30,7 @@
 //define('PUN_SHOW_QUERIES', 1);
 
 if (!defined('PUN_ROOT'))
-	exit('The constant PUN_ROOT must be defined and point to a valid PunBB installation root directory.');
+	exit('The constant PUN_ROOT must be defined and point to a valid FluxBB installation root directory.');
 
 
 // Load the functions script
@@ -44,14 +44,14 @@ unregister_globals();
 
 // If PUN isn't defined, config.php is missing or corrupt
 if (!defined('PUN'))
-	exit('The file \'config.php\' doesn\'t exist or is corrupt. Please run <a href="install.php">install.php</a> to install PunBB first.');
+	exit('The file \'config.php\' doesn\'t exist or is corrupt. Please run <a href="install.php">install.php</a> to install FluxBB first.');
 
 
 // Record the start time (will be used to calculate the generation time for the page)
 list($usec, $sec) = explode(' ', microtime());
 $pun_start = ((float)$usec + (float)$sec);
 
-// Make sure PHP reports all errors except E_NOTICE. PunBB supports E_ALL, but a lot of scripts it may interact with, do not.
+// Make sure PHP reports all errors except E_NOTICE. FluxBB supports E_ALL, but a lot of scripts it may interact with, do not.
 error_reporting(E_ALL ^ E_NOTICE);
 
 // Turn off magic_quotes_runtime
@@ -74,9 +74,9 @@ if (get_magic_quotes_gpc())
 if (version_compare(PHP_VERSION, '4.2.0', '<'))
 	mt_srand((double)microtime()*1000000);
 
-// If a cookie name is not specified in config.php, we use the default (punbb_cookie)
+// If a cookie name is not specified in config.php, we use the default (forum_cookie)
 if (empty($cookie_name))
-	$cookie_name = 'punbb_cookie';
+	$cookie_name = 'forum_cookie';
 
 // Define a few commonly used constants
 define('PUN_UNVERIFIED', 32000);
@@ -145,4 +145,5 @@ check_bans();
 
 // Update online list
 update_users_online();
+
 

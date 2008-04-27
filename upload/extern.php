@@ -113,7 +113,7 @@ define('PUN_ROOT', './');
 
 // If PUN isn't defined, config.php is missing or corrupt
 if (!defined('PUN'))
-	exit('The file \'config.php\' doesn\'t exist or is corrupt. Please run install.php to install PunBB first.');
+	exit('The file \'config.php\' doesn\'t exist or is corrupt. Please run install.php to install FluxBB first.');
 
 
 // Make sure PHP reports all errors except E_NOTICE

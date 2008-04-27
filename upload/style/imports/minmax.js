@@ -1,5 +1,5 @@
 // minmax.js - written by Andrew Clover <and@doxdesk.com>
-// Adapted for PunBB by Rickard Andersson and Paul Sullivan
+// Adapted for FluxBB by Rickard Andersson and Paul Sullivan
 
 /*@cc_on
 @if (@_win32 && @_jscript_version>4)

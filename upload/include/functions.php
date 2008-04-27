@@ -159,7 +159,7 @@ function set_default_user()
 
 
 //
-// Set a cookie, PunBB style!
+// Set a cookie, FluxBB style!
 //
 function pun_setcookie($user_id, $password_hash, $expire)
 {
@@ -948,7 +948,7 @@ function error($message, $file, $line, $db_error = false)
 
 	// Set a default title if the script failed before $pun_config could be populated
 	if (empty($pun_config))
-		$pun_config['o_board_title'] = 'PunBB';
+		$pun_config['o_board_title'] = 'FluxBB';
 
 	// Empty output buffer and stop buffering
 	@ob_end_clean();
@@ -981,7 +981,7 @@ H2 {MARGIN: 0; COLOR: #FFFFFF; BACKGROUND-COLOR: #B84623; FONT-SIZE: 1.1em; PADD
 
 	if (defined('PUN_DEBUG'))
 	{
-		echo "\t\t".'<strong>File:</strong> '.$file.'<br />'."\n\t\t".'<strong>Line:</strong> '.$line.'<br /><br />'."\n\t\t".'<strong>PunBB reported</strong>: '.$message."\n";
+		echo "\t\t".'<strong>File:</strong> '.$file.'<br />'."\n\t\t".'<strong>Line:</strong> '.$line.'<br /><br />'."\n\t\t".'<strong>FluxBB reported</strong>: '.$message."\n";
 
 		if ($db_error)
 		{

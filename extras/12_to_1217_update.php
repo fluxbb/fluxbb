@@ -84,7 +84,7 @@ if (!isset($_POST['form_sent']))
 <html dir="ltr">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>PunBB Update</title>
+<title>FluxBB Update</title>
 <link rel="stylesheet" type="text/css" href="style/Oxygen.css" />
 </head>
 <body>
@@ -93,12 +93,12 @@ if (!isset($_POST['form_sent']))
 <div id="puninstall" class="pun" style="margin: 10% 20% auto 20%">
 
 <div class="blockform">
-	<h2><span>PunBB Update</span></h2>
+	<h2><span>FluxBB Update</span></h2>
 	<div class="box">
 		<form method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" onsubmit="this.start.disabled=true">
 			<div><input type="hidden" name="form_sent" value="1" /></div>
 			<div class="inform">
-				<p style="font-size: 1.1em">This script will update your current PunBB <?php echo $cur_version ?> forum database to PunBB <?php echo $update_to ?>. The update procedure might take anything from a second to a few minutes depending on the speed of the server and the size of the forum database. Don't forget to make a backup of the database before continuing.</p>
+				<p style="font-size: 1.1em">This script will update your current PunBB/FluxBB <?php echo $cur_version ?> forum database to FluxBB <?php echo $update_to ?>. The update procedure might take anything from a second to a few minutes depending on the speed of the server and the size of the forum database. Don't forget to make a backup of the database before continuing.</p>
 				<p style="font-size: 1.1em">Did you read the update instructions in the documentation? If not, start there.</p>
 			</div>
 			<p><input type="submit" name="start" value="Start upgrade" /></p>
@@ -162,7 +162,7 @@ else
 <html dir="ltr">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>PunBB Update</title>
+<title>FluxBB Update</title>
 <link rel="stylesheet" type="text/css" href="style/Oxygen.css" />
 </head>
 <body>

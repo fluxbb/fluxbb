@@ -106,7 +106,7 @@ else if ($footer_style == 'viewforum' || $footer_style == 'viewtopic')
 }
 
 ?>
-			<p class="conr">Powered by <a href="http://www.punbb.org/">PunBB</a><?php if ($pun_config['o_show_version'] == '1') echo ' '.$pun_config['o_cur_version']; ?><br />&copy; Copyright 2002&#8211;2005 Rickard Andersson</p>
+			<p class="conr">Powered by <a href="http://fluxbb.org/">FluxBB</a><?php if ($pun_config['o_show_version'] == '1') echo ' '.$pun_config['o_cur_version']; ?></p>
 <?php
 
 // Display debug info (if enabled/defined)

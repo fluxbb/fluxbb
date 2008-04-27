@@ -23,18 +23,18 @@
 ************************************************************************/
 
 
-// The PunBB version this script installs
-$punbb_version = '1.2.17';
+// The FluxBB version this script installs
+$fluxbb_version = '1.2.17';
 
 
 define('PUN_ROOT', './');
 if (file_exists(PUN_ROOT.'config.php'))
-	exit('The file \'config.php\' already exists which would mean that PunBB is already installed. You should go <a href="index.php">here</a> instead.');
+	exit('The file \'config.php\' already exists which would mean that FluxBB is already installed. You should go <a href="index.php">here</a> instead.');
 
 
 // Make sure we are running at least PHP 4.1.0
 if (intval(str_replace('.', '', phpversion())) < 410)
-	exit('You are running PHP version '.PHP_VERSION.'. PunBB requires at least PHP 4.1.0 to run properly. You must upgrade your PHP installation before you can continue.');
+	exit('You are running PHP version '.PHP_VERSION.'. FluxBB requires at least PHP 4.1.0 to run properly. You must upgrade your PHP installation before you can continue.');
 
 // Disable error reporting for uninitialized variables
 error_reporting(E_ALL);
@@ -63,7 +63,7 @@ if (!isset($_POST['form_sent']))
 		$db_extensions[] = array('pgsql', 'PostgreSQL');
 
 	if (empty($db_extensions))
-		exit('This PHP environment does not have support for any of the databases that PunBB supports. PHP needs to have support for either MySQL, PostgreSQL or SQLite in order for PunBB to be installed.');
+		exit('This PHP environment does not have support for any of the databases that FluxBB supports. PHP needs to have support for either MySQL, PostgreSQL or SQLite in order for FluxBB to be installed.');
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -71,7 +71,7 @@ if (!isset($_POST['form_sent']))
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>PunBB Installation</title>
+<title>FluxBB Installation</title>
 <link rel="stylesheet" type="text/css" href="style/Oxygen.css" />
 <script type="text/javascript">
 <!--
@@ -116,29 +116,29 @@ function process_form(the_form)
 <div class="pun">
 
 <div class="block">
-	<h2><span>PunBB Installation</span></h2>
+	<h2><span>FluxBB Installation</span></h2>
 	<div class="box">
 		<div class="inbox">
-			<p>Welcome to PunBB installation! You are about to install PunBB. In order to install PunBB you must complete the form set out below. If you encounter any difficulties with the installation, please refer to the documentation.</p>
+			<p>Welcome to FluxBB installation! You are about to install FluxBB. In order to install FluxBB you must complete the form set out below. If you encounter any difficulties with the installation, please refer to the documentation.</p>
 		</div>
 	</div>
 </div>
 
 <div class="blockform">
-	<h2><span>Install PunBB 1.2</span></h2>
+	<h2><span>Install FluxBB 1.2</span></h2>
 	<div class="box">
 		<form id="install" method="post" action="install.php" onsubmit="this.start.disabled=true;if(process_form(this)){return true;}else{this.start.disabled=false;return false;}">
 		<div><input type="hidden" name="form_sent" value="1" /></div>
 			<div class="inform">
 				<div class="forminfo">
 					<h3>Database setup</h3>
-					<p>Please enter the requested information in order to setup your database for PunBB. You must know all the information asked for before proceeding with the installation.</p>
+					<p>Please enter the requested information in order to setup your database for FluxBB. You must know all the information asked for before proceeding with the installation.</p>
 				</div>
 				<fieldset>
 				<legend>Select your database type</legend>
 					<div class="infldset">
-						<p>PunBB currently supports MySQL, PostgreSQL and SQLite. If your database of choice is missing from the drop-down menu below, it means this PHP environment does not have support for that particular database. More information regarding support for particular versions of each database can be found in the FAQ.</p>
-<?php if ($dual_mysql): ?>						<p>PunBB has detected that your PHP environment supports two different ways of communicating with MySQL. The two options are called standard and improved. If you are uncertain which one to use, start by trying improved and if that fails, try standard.</p>
+						<p>FluxBB currently supports MySQL, PostgreSQL and SQLite. If your database of choice is missing from the drop-down menu below, it means this PHP environment does not have support for that particular database. More information regarding support for particular versions of each database can be found in the FAQ.</p>
+<?php if ($dual_mysql): ?>						<p>FluxBB has detected that your PHP environment supports two different ways of communicating with MySQL. The two options are called standard and improved. If you are uncertain which one to use, start by trying improved and if that fails, try standard.</p>
 <?php endif; ?>						<label><strong>Database type</strong>
 						<br /><select name="req_db_type">
 <?php
@@ -165,7 +165,7 @@ function process_form(the_form)
 				<fieldset>
 					<legend>Enter then name of your database</legend>
 					<div class="infldset">
-						<p>The name of the database that PunBB will be installed into. The database must exist. For SQLite, this is the relative path to the database file. If the SQLite database file does not exist, PunBB will attempt to create it.</p>
+						<p>The name of the database that FluxBB will be installed into. The database must exist. For SQLite, this is the relative path to the database file. If the SQLite database file does not exist, FluxBB will attempt to create it.</p>
 						<label for="req_db_name"><strong>Database name</strong><br /><input id="req_db_name" type="text" name="req_db_name" size="30" maxlength="50" /><br /></label>
 					</div>
 				</fieldset>
@@ -185,7 +185,7 @@ function process_form(the_form)
 				<fieldset>
 					<legend>Enter database table prefix</legend>
 					<div class="infldset">
-						<p>If you like you can specify a table prefix. This way you can run multiple copies of PunBB in the same database (example: foo_).</p>
+						<p>If you like you can specify a table prefix. This way you can run multiple copies of FluxBB in the same database (example: foo_).</p>
 						<label>Table prefix<br /><input id="db_prefix" type="text" name="db_prefix" size="20" maxlength="30" /><br /></label>
 					</div>
 				</fieldset>
@@ -193,7 +193,7 @@ function process_form(the_form)
 			<div class="inform">
 				<div class="forminfo">
 					<h3>Administration setup</h3>
-					<p>Please enter the requested information in order to setup an administrator for your PunBB installation</p>
+					<p>Please enter the requested information in order to setup an administrator for your FluxBB installation</p>
 				</div>
 				<fieldset>
 					<legend>Enter Administrators username</legend>
@@ -225,9 +225,9 @@ function process_form(the_form)
 			</div>
 			<div class="inform">
 				<fieldset>
-					<legend>Enter the Base URL of your PunBB installation</legend>
+					<legend>Enter the Base URL of your FluxBB installation</legend>
 					<div class="infldset">
-						<p>The URL (without trailing slash) of your PunBB forum (example: http://forum.myhost.com or http://myhost.com/~myuser). This <strong>must</strong> be correct or administrators and moderators will not be able to submit any forms. Please note that the preset value below is just an educated guess by PunBB.</p>
+						<p>The URL (without trailing slash) of your FluxBB forum (example: http://forum.myhost.com or http://myhost.com/~myuser). This <strong>must</strong> be correct or administrators and moderators will not be able to submit any forms. Please note that the preset value below is just an educated guess by FluxBB.</p>
 						<label><strong>Base URL</strong><br /><input type="text" name="req_base_url" value="http://<?php echo $_SERVER['SERVER_NAME'].str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) ?>" size="60" maxlength="100" /><br /></label>
 					</div>
 				</fieldset>
@@ -282,7 +282,7 @@ else
 		else
 			echo '<strong style="color: A00000">An error occured.</strong><br /><br />';
 
-		echo '<strong>PunBB reported:</strong> '.htmlspecialchars($message).'<br /><br />';
+		echo '<strong>FluxBB reported:</strong> '.htmlspecialchars($message).'<br /><br />';
 
 		if ($db_error !== false)
 			echo '<strong>Database reported:</strong> '.htmlspecialchars($db_error['error_msg']).(($db_error['error_no']) ? ' (Errno: '.$db_error['error_no'].')' : '');
@@ -365,7 +365,7 @@ else
 		case 'pgsql':
 			// Make sure we are running at least PHP 4.3.0 (needed only for PostgreSQL)
 			if (version_compare(PHP_VERSION, '4.3.0', '<'))
-				error('You are running PHP version '.PHP_VERSION.'. PunBB requires at least PHP 4.3.0 to run properly when using PostgreSQL. You must upgrade your PHP installation or use a different database before you can continue.');
+				error('You are running PHP version '.PHP_VERSION.'. FluxBB requires at least PHP 4.3.0 to run properly when using PostgreSQL. You must upgrade your PHP installation or use a different database before you can continue.');
 			break;
 
 		case 'sqlite':
@@ -375,10 +375,10 @@ else
 	}
 
 
-	// Make sure PunBB isn't already installed
+	// Make sure FluxBB isn't already installed
 	$result = $db->query('SELECT 1 FROM '.$db_prefix.'users WHERE id=1');
 	if ($db->num_rows($result))
-		error('A table called "'.$db_prefix.'users" is already present in the database "'.$db_name.'". This could mean that PunBB is already installed or that another piece of software is installed and is occupying one or more of the table names PunBB requires. If you want to install multiple copies of PunBB in the same database, you must choose a different table prefix.');
+		error('A table called "'.$db_prefix.'users" is already present in the database "'.$db_name.'". This could mean that FluxBB is already installed or that another piece of software is installed and is occupying one or more of the table names FluxBB requires. If you want to install multiple copies of FluxBB in the same database, you must choose a different table prefix.');
 
 
 	// Create all tables
@@ -1287,9 +1287,9 @@ else
 
 	// Insert config data
 	$config = array(
-		'o_cur_version'				=> "'$punbb_version'",
-		'o_board_title'				=> "'My PunBB forum'",
-		'o_board_desc'				=> "'Unfortunately no one can be told what PunBB is - you have to see it for yourself.'",
+		'o_cur_version'				=> "'$fluxbb_version'",
+		'o_board_title'				=> "'My FluxBB forum'",
+		'o_board_desc'				=> "'Unfortunately no one can be told what FluxBB is - you have to see it for yourself.'",
 		'o_server_timezone'			=> "'0'",
 		'o_time_format'				=> "'H:i:s'",
 		'o_date_format'				=> "'Y-m-d'",
@@ -1375,7 +1375,7 @@ else
 	$db->query('INSERT INTO '.$db_prefix."topics (poster, subject, posted, last_post, last_post_id, last_poster, forum_id) VALUES('".$db->escape($username)."', 'Test post', ".$now.", ".$now.", 1, '".$db->escape($username)."', 1)")
 		or error('Unable to insert into table '.$db_prefix.'topics. Please check your configuration and try again.');
 
-	$db->query('INSERT INTO '.$db_prefix."posts (poster, poster_id, poster_ip, message, posted, topic_id) VALUES('".$db->escape($username)."', 2, '127.0.0.1', 'If you are looking at this (which I guess you are), the install of PunBB appears to have worked! Now log in and head over to the administration control panel to configure your forum.', ".$now.', 1)')
+	$db->query('INSERT INTO '.$db_prefix."posts (poster, poster_id, poster_ip, message, posted, topic_id) VALUES('".$db->escape($username)."', 2, '127.0.0.1', 'If you are looking at this (which I guess you are), the install of FluxBB appears to have worked! Now log in and head over to the administration control panel to configure your forum.', ".$now.', 1)')
 		or error('Unable to insert into table '.$db_prefix.'posts. Please check your configuration and try again.');
 
 	$db->query('INSERT INTO '.$db_prefix."ranks (rank, min_posts) VALUES('New member', 0)")
@@ -1393,7 +1393,7 @@ else
 	$alerts = '';
 	// Check if the cache directory is writable
 	if (!@is_writable('./cache/'))
-		$alerts .= '<p style="font-size: 1.1em"><span style="color: #C03000"><strong>The cache directory is currently not writable!</strong></span> In order for PunBB to function properly, the directory named <em>cache</em> must be writable by PHP. Use chmod to set the appropriate directory permissions. If in doubt, chmod to 0777.</p>';
+		$alerts .= '<p style="font-size: 1.1em"><span style="color: #C03000"><strong>The cache directory is currently not writable!</strong></span> In order for FluxBB to function properly, the directory named <em>cache</em> must be writable by PHP. Use chmod to set the appropriate directory permissions. If in doubt, chmod to 0777.</p>';
 
 	// Check if default avatar directory is writable
 	if (!@is_writable('./img/avatars/'))
@@ -1401,7 +1401,7 @@ else
 
 
 	/// Display config.php and give further instructions
-	$config = '<?php'."\n\n".'$db_type = \''.$db_type."';\n".'$db_host = \''.$db_host."';\n".'$db_name = \''.$db_name."';\n".'$db_username = \''.$db_username."';\n".'$db_password = \''.$db_password."';\n".'$db_prefix = \''.$db_prefix."';\n".'$p_connect = false;'."\n\n".'$cookie_name = '."'punbb_cookie';\n".'$cookie_domain = '."'';\n".'$cookie_path = '."'/';\n".'$cookie_secure = 0;'."\n".'$cookie_seed = \''.substr(pun_hash(uniqid(rand(), true)), 0, 16)."';\n\ndefine('PUN', 1);";
+	$config = '<?php'."\n\n".'$db_type = \''.$db_type."';\n".'$db_host = \''.$db_host."';\n".'$db_name = \''.$db_name."';\n".'$db_username = \''.$db_username."';\n".'$db_password = \''.$db_password."';\n".'$db_prefix = \''.$db_prefix."';\n".'$p_connect = false;'."\n\n".'$cookie_name = '."'forum_cookie';\n".'$cookie_domain = '."'';\n".'$cookie_path = '."'/';\n".'$cookie_secure = 0;'."\n".'$cookie_seed = \''.substr(pun_hash(uniqid(rand(), true)), 0, 16)."';\n\ndefine('PUN', 1);";
 
 
 ?>
@@ -1410,7 +1410,7 @@ else
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>PunBB Installation</title>
+<title>FluxBB Installation</title>
 <link rel="stylesheet" type="text/css" href="style/Oxygen.css" />
 </head>
 <body>
@@ -1424,7 +1424,7 @@ else
 		<div class="fakeform">
 			<div class="inform">
 				<div class="forminfo">
-					<p>To finalize the installation all you need to do is to <strong>copy and paste the text in the text box below into a file called config.php and then upload this file to the root directory of your PunBB installation</strong>. Make sure there are no linebreaks or spaces before &lt;?php. You can later edit config.php if you reconfigure your setup (e.g. change the database password or ).</p>
+					<p>To finalize the installation all you need to do is to <strong>copy and paste the text in the text box below into a file called config.php and then upload this file to the root directory of your FluxBB installation</strong>. Make sure there are no linebreaks or spaces before &lt;?php. You can later edit config.php if you reconfigure your setup (e.g. change the database password or ).</p>
 <?php if ($alerts != ''): ?>					<?php echo $alerts."\n" ?>
 <?php endif; ?>				</div>
 				<fieldset>
@@ -1436,7 +1436,7 @@ else
 			</div>
 			<div class="inform">
 				<div class="forminfo">
-					<p>Once you have created config.php with the contents above, PunBB is installed!</p>
+					<p>Once you have created config.php with the contents above, FluxBB is installed!</p>
 					<p><a href="index.php">Go to forum index</a></p>
 				</div>
 			</div>

@@ -43,7 +43,7 @@ if ($action == 'check_upgrade')
 	if (!ini_get('allow_url_fopen'))
 		message('Unable to check for upgrade since \'allow_url_fopen\' is disabled on this system.');
 
-	$fp = @fopen('http://www.punbb.org/latest_version', 'r');
+	$fp = @fopen('http://fluxbb.org/latest_version', 'r');
 	$latest_version = trim(@fread($fp, 16));
 	@fclose($fp);
 
@@ -57,9 +57,9 @@ if ($action == 'check_upgrade')
 	$latest_version = (strlen($latest_version) == 2) ? intval($latest_version) * 10 : intval($latest_version);
 
 	if ($cur_version >= $latest_version)
-		message('You are running the latest version of PunBB.');
+		message('You are running the latest version of FluxBB.');
 	else
-		message('A new version of PunBB has been released. You can download the latest version at <a href="http://www.punbb.org/">PunBB.org</a>.');
+		message('A new version of FluxBB has been released. You can download the latest version at <a href="http://fluxbb.org/">FluxBB.org</a>.');
 }
 
 
@@ -155,7 +155,7 @@ generate_admin_menu('index');
 		<div id="adintro" class="box">
 			<div class="inbox">
 				<p>
-					Welcome to the PunBB administration control panel. From here you can control vital aspects of the forum. Depending on whether you are an administrator or a moderator you can<br /><br />
+					Welcome to the FluxBB administration control panel. From here you can control vital aspects of the forum. Depending on whether you are an administrator or a moderator you can<br /><br />
 					&nbsp;- organize categories and forums.<br />
 					&nbsp;- set forum-wide options and preferences.<br />
 					&nbsp;- control permissions for users and guests.<br />
@@ -173,9 +173,9 @@ generate_admin_menu('index');
 		<div id="adstats" class="box">
 			<div class="inbox">
 				<dl>
-					<dt>PunBB version</dt>
+					<dt>FluxBB version</dt>
 					<dd>
-						PunBB <?php echo $pun_config['o_cur_version'] ?> - <a href="admin_index.php?action=check_upgrade">Check for upgrade</a><br />
+						FluxBB <?php echo $pun_config['o_cur_version'] ?> - <a href="admin_index.php?action=check_upgrade">Check for upgrade</a><br />
 						&copy; Copyright 2002, 2003, 2004, 2005 Rickard Andersson
 					</dd>
 					<dt>Server load</dt>

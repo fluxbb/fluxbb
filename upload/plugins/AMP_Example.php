@@ -49,8 +49,8 @@
 ##
 ##  5. Use _ instead of spaces in the file name.
 ##
-##  6. Since plugin scripts are included from the PunBB script
-##     admin_loader.php, you have access to all PunBB functions and
+##  6. Since plugin scripts are included from the FluxBB script
+##     admin_loader.php, you have access to all FluxBB functions and
 ##     global variables (e.g. $db, $pun_config, $pun_user etc).
 ##
 ##  7. Do your best to keep the look and feel of your plugins' user

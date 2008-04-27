@@ -222,7 +222,7 @@ generate_admin_menu('options');
 											<option value="12"<?php if ($pun_config['o_server_timezone'] == 12 ) echo ' selected="selected"' ?>>+12</option>
 											<option value="13"<?php if ($pun_config['o_server_timezone'] == 13 ) echo ' selected="selected"' ?>>+13</option>
 										</select>
-										<span>The timezone of the server where PunBB is installed.</span>
+										<span>The timezone of the server where FluxBB is installed.</span>
 									</td>
 								</tr>
 								<tr>
@@ -376,7 +376,7 @@ generate_admin_menu('options');
 									<th scope="row">Make clickable links</th>
 									<td>
 										<input type="radio" name="form[make_links]" value="1"<?php if ($pun_config['o_make_links'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[make_links]" value="0"<?php if ($pun_config['o_make_links'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>When enabled, PunBB will automatically detect any URL's in posts and make them clickable hyperlinks.</span>
+										<span>When enabled, FluxBB will automatically detect any URL's in posts and make them clickable hyperlinks.</span>
 									</td>
 								</tr>
 								<tr>
@@ -420,7 +420,7 @@ generate_admin_menu('options');
 									<th scope="row">Quick post</th>
 									<td>
 										<input type="radio" name="form[quickpost]" value="1"<?php if ($pun_config['o_quickpost'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[quickpost]" value="0"<?php if ($pun_config['o_quickpost'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>When enabled, PunBB will add a quick post form at the bottom of topics. This way users can post directly from the topic view.</span>
+										<span>When enabled, FluxBB will add a quick post form at the bottom of topics. This way users can post directly from the topic view.</span>
 									</td>
 								</tr>
 								<tr>
@@ -462,7 +462,7 @@ generate_admin_menu('options');
 									<th scope="row">GZip output</th>
 									<td>
 										<input type="radio" name="form[gzip]" value="1"<?php if ($pun_config['o_gzip'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[gzip]" value="0"<?php if ($pun_config['o_gzip'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>If enabled, PunBB will gzip the output sent to browsers. This will reduce bandwidth usage, but use a little more CPU. This feature requires that PHP is configured with zlib (--with-zlib). Note: If you already have one of the Apache modules mod_gzip or mod_deflate set up to compress PHP scripts, you should disable this feature.</span>
+										<span>If enabled, FluxBB will gzip the output sent to browsers. This will reduce bandwidth usage, but use a little more CPU. This feature requires that PHP is configured with zlib (--with-zlib). Note: If you already have one of the Apache modules mod_gzip or mod_deflate set up to compress PHP scripts, you should disable this feature.</span>
 									</td>
 								</tr>
 								<tr>
@@ -499,7 +499,7 @@ generate_admin_menu('options');
 									<th scope="row">Report new registrations</th>
 									<td>
 										<input type="radio" name="form[regs_report]" value="1"<?php if ($pun_config['o_regs_report'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[regs_report]" value="0"<?php if ($pun_config['o_regs_report'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>If enabled, PunBB will notify users on the mailing list (see below) when a new user registers in the forums.</span>
+										<span>If enabled, FluxBB will notify users on the mailing list (see below) when a new user registers in the forums.</span>
 									</td>
 								</tr>
 								<tr>
@@ -529,7 +529,7 @@ generate_admin_menu('options');
 									<th scope="row">Upload directory</th>
 									<td>
 										<input type="text" name="form[avatars_dir]" size="35" maxlength="50" value="<?php echo pun_htmlspecialchars($pun_config['o_avatars_dir']) ?>" />
-										<span>The upload directory for avatars (relative to the PunBB root directory). PHP must have write permissions to this directory.</span>
+										<span>The upload directory for avatars (relative to the FluxBB root directory). PHP must have write permissions to this directory.</span>
 									</td>
 								</tr>
 								<tr>
