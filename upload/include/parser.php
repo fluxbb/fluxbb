@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -24,7 +26,7 @@
 
 
 // Make sure no one attempts to run this script "directly"
-if (!defined('PUN'))
+if (!defined('FORUM'))
 	exit;
 
 
@@ -33,7 +35,7 @@ $smiley_text = array(':)', '=)', ':|', '=|', ':(', '=(', ':D', '=D', ':o', ':O',
 $smiley_img = array('smile.png', 'smile.png', 'neutral.png', 'neutral.png', 'sad.png', 'sad.png', 'big_smile.png', 'big_smile.png', 'yikes.png', 'yikes.png', 'wink.png', 'hmm.png', 'tongue.png', 'lol.png', 'mad.png', 'roll.png', 'cool.png');
 
 // Uncomment the next row if you add smilies that contain any of the characters &"'<>
-//$smiley_text = array_map('pun_htmlspecialchars', $smiley_text);
+//$smiley_text = array_map('forum_htmlspecialchars', $smiley_text);
 
 
 //
@@ -127,17 +129,17 @@ function check_tag_order($text, &$errors)
 		if (preg_match('#\[quote=(&quot;|"|\'|)(.*)\\1\]#sU', $text, $matches))
 			$q2_start = strpos($text, $matches[0]);
 		else
-			$q2_start = PUN_MAX_POSTSIZE + 1;
+			$q2_start = FORUM_MAX_POSTSIZE + 1;
 
 		// Deal with strpos() returning false when the string is not found
-		// (PUN_MAX_POSTSIZE + 1 is one byte longer than the maximum post length)
-		if ($c_start === false) $c_start = PUN_MAX_POSTSIZE + 1;
-		if ($c_end === false) $c_end = PUN_MAX_POSTSIZE + 1;
-		if ($q_start === false) $q_start = PUN_MAX_POSTSIZE + 1;
-		if ($q_end === false) $q_end = PUN_MAX_POSTSIZE + 1;
+		// (FORUM_MAX_POSTSIZE + 1 is one byte longer than the maximum post length)
+		if ($c_start === false) $c_start = FORUM_MAX_POSTSIZE + 1;
+		if ($c_end === false) $c_end = FORUM_MAX_POSTSIZE + 1;
+		if ($q_start === false) $q_start = FORUM_MAX_POSTSIZE + 1;
+		if ($q_end === false) $q_end = FORUM_MAX_POSTSIZE + 1;
 
 		// If none of the strings were found
-		if (min($c_start, $c_end, $q_start, $q_end, $q2_start) == PUN_MAX_POSTSIZE + 1)
+		if (min($c_start, $c_end, $q_start, $q_end, $q2_start) == FORUM_MAX_POSTSIZE + 1)
 			break;
 
 		// We are interested in the first quote (regardless of the type of quote)
@@ -231,7 +233,7 @@ function check_tag_order($text, &$errors)
 //
 function split_text($text, $start, $end)
 {
-	global $pun_config;
+	global $forum_config;
 
 	$tokens = explode($start, $text);
 
@@ -245,9 +247,9 @@ function split_text($text, $start, $end)
 		$outside[] = $temp[1];
 	}
 
-	if ($pun_config['o_indent_num_spaces'] != 8 && $start == '[code]')
+	if ($forum_config['o_indent_num_spaces'] != 8 && $start == '[code]')
 	{
-		$spaces = str_repeat(' ', $pun_config['o_indent_num_spaces']);
+		$spaces = str_repeat(' ', $forum_config['o_indent_num_spaces']);
 		$inside = str_replace("\t", $spaces, $inside);
 	}
 
@@ -260,7 +262,7 @@ function split_text($text, $start, $end)
 //
 function handle_url_tag($url, $link = '')
 {
-	global $pun_user;
+	global $forum_user;
 
 	$full_url = str_replace(array(' ', '\'', '`', '"'), array('%20', '', '', ''), $url);
 	if (strpos($url, 'www.') === 0)			// If it starts with www, we add http://
@@ -282,14 +284,14 @@ function handle_url_tag($url, $link = '')
 //
 function handle_img_tag($url, $is_signature = false)
 {
-	global $lang_common, $pun_config, $pun_user;
+	global $lang_common, $forum_config, $forum_user;
 
 	$img_tag = '<a href="'.$url.'">&lt;'.$lang_common['Image link'].'&gt;</a>';
 
-	if ($is_signature && $pun_user['show_img_sig'] != '0')
-		$img_tag = '<img class="sigimage" src="'.$url.'" alt="'.pun_htmlencode($url).'" />';
-	else if (!$is_signature && $pun_user['show_img'] != '0')
-		$img_tag = '<span class="postimg"><img src="'.$url.'" alt="'.pun_htmlencode($url).'" /></span>';
+	if ($is_signature && $forum_user['show_img_sig'] != '0')
+		$img_tag = '<img class="sigimage" src="'.$url.'" alt="'.forum_htmlencode($url).'" />';
+	else if (!$is_signature && $forum_user['show_img'] != '0')
+		$img_tag = '<span class="postimg"><img src="'.$url.'" alt="'.forum_htmlencode($url).'" /></span>';
 
 	return $img_tag;
 }
@@ -300,7 +302,7 @@ function handle_img_tag($url, $is_signature = false)
 //
 function do_bbcode($text)
 {
-	global $lang_common, $pun_user;
+	global $lang_common, $forum_user;
 
 	if (strpos($text, 'quote') !== false)
 	{
@@ -339,7 +341,7 @@ function do_bbcode($text)
 //
 function do_clickable($text)
 {
-	global $pun_user;
+	global $forum_user;
 
 	$text = ' '.$text;
 
@@ -355,7 +357,7 @@ function do_clickable($text)
 //
 function do_smilies($text)
 {
-	global $pun_config, $base_url, $smiley_text, $smiley_img;
+	global $forum_config, $base_url, $smiley_text, $smiley_img;
 
 	$text = ' '.$text.' ';
 
@@ -372,13 +374,13 @@ function do_smilies($text)
 //
 function parse_message($text, $hide_smilies)
 {
-	global $pun_config, $lang_common, $pun_user;
+	global $forum_config, $lang_common, $forum_user;
 
-	if ($pun_config['o_censoring'] == '1')
+	if ($forum_config['o_censoring'] == '1')
 		$text = censor_words($text);
 
 	// Convert applicable characters to HTML entities
-	$text = pun_htmlencode($text);
+	$text = forum_htmlencode($text);
 
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
@@ -388,18 +390,18 @@ function parse_message($text, $hide_smilies)
 		$text = implode('<">', $outside);
 	}
 
-	if ($pun_config['o_make_links'] == '1')
+	if ($forum_config['o_make_links'] == '1')
 		$text = do_clickable($text);
 
 
-	if ($pun_config['o_smilies'] == '1' && $pun_user['show_smilies'] == '1' && $hide_smilies == '0')
+	if ($forum_config['o_smilies'] == '1' && $forum_user['show_smilies'] == '1' && $hide_smilies == '0')
 		$text = do_smilies($text);
 
-	if ($pun_config['p_message_bbcode'] == '1' && strpos($text, '[') !== false && strpos($text, ']') !== false)
+	if ($forum_config['p_message_bbcode'] == '1' && strpos($text, '[') !== false && strpos($text, ']') !== false)
 	{
 		$text = do_bbcode($text);
 
-		if ($pun_config['p_message_img_tag'] == '1')
+		if ($forum_config['p_message_img_tag'] == '1')
 		{
 //			$text = preg_replace('#\[img\]((ht|f)tps?://)([^\s<"]*?)\.(jpg|jpeg|png|gif)\[/img\]#e', 'handle_img_tag(\'$1$3.$4\')', $text);
 			$text = preg_replace('#\[img\]((ht|f)tps?://)([^\s<"]*?)\[/img\]#e', 'handle_img_tag(\'$1$3\')', $text);
@@ -440,24 +442,24 @@ function parse_message($text, $hide_smilies)
 //
 function parse_signature($text)
 {
-	global $pun_config, $lang_common, $pun_user;
+	global $forum_config, $lang_common, $forum_user;
 
-	if ($pun_config['o_censoring'] == '1')
+	if ($forum_config['o_censoring'] == '1')
 		$text = censor_words($text);
 
-	$text = pun_htmlencode($text);
+	$text = forum_htmlencode($text);
 
-	if ($pun_config['o_make_links'] == '1')
+	if ($forum_config['o_make_links'] == '1')
 		$text = do_clickable($text);
 
-	if ($pun_config['o_smilies_sig'] == '1' && $pun_user['show_smilies'] != '0')
+	if ($forum_config['o_smilies_sig'] == '1' && $forum_user['show_smilies'] != '0')
 		$text = do_smilies($text);
 
-	if ($pun_config['p_sig_bbcode'] == '1' && strpos($text, '[') !== false && strpos($text, ']') !== false)
+	if ($forum_config['p_sig_bbcode'] == '1' && strpos($text, '[') !== false && strpos($text, ']') !== false)
 	{
 		$text = do_bbcode($text);
 
-		if ($pun_config['p_sig_img_tag'] == '1')
+		if ($forum_config['p_sig_img_tag'] == '1')
 		{
 //			$text = preg_replace('#\[img\]((ht|f)tps?://)([^\s<"]*?)\.(jpg|jpeg|png|gif)\[/img\]#e', 'handle_img_tag(\'$1$3.$4\', true)', $text);
 			$text = preg_replace('#\[img\]((ht|f)tps?://)([^\s<"]*?)\[/img\]#e', 'handle_img_tag(\'$1$3\', true)', $text);

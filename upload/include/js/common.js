@@ -1,4 +1,4 @@
-var Punbb = {
+var Forum = {
 	/* attach FN to WINDOW.ONLOAD handler */
 	addLoadEvent: function(fn)
 	{
@@ -13,14 +13,14 @@ var Punbb = {
 	/* add X class to N node, return TRUE if added, FALSE if already exists */
 	addClass: function(n, x)
 	{
-		if (Punbb.hasClass(n, x)) return false;
+		if (Forum.hasClass(n, x)) return false;
 		else n.className += ' ' + x;
 		return true;
 	},
 	/* remove X class from N node, return TRUE if removed, FALSE if not present */
 	removeClass: function(n, x)
 	{
-		if (!Punbb.hasClass(n, x)) return false;
+		if (!Forum.hasClass(n, x)) return false;
 		x = new RegExp('\\s*\\b' + x + '\\b', 'g');
 		n.className = n.className.replace(x, '');
 		return true;
@@ -34,7 +34,7 @@ var Punbb = {
 		{
 			n.style.visibility = 'hidden';
 			setTimeout(function(){n.style.visibility=x}, 200);
-			setTimeout(function(){Punbb.blink(n,i-1)}, 400);
+			setTimeout(function(){Forum.blink(n,i-1)}, 400);
 		}
 	},
 	/* return true if node N scrolled into view, else false (y axis only) */
@@ -105,7 +105,7 @@ var Punbb = {
 		for (var i=0,len=arr.length; i<len; i++)
 		{
 			if (typeof arr[i] == 'object' && arr.length) {
-				flt.concat(Punbb.flatten(arr[i]))
+				flt.concat(Forum.flatten(arr[i]))
 				alert('length1!!'+ arr.length);
 				//x.hasChildNodes()
 			}
@@ -118,22 +118,22 @@ var Punbb = {
 	{
 		var elements = form.elements;
 		var fn = function(x) { return x.name && x.name.indexOf('req_')==0 };
-		var nodes = Punbb.arrayOfMatched(fn, elements);
+		var nodes = Forum.arrayOfMatched(fn, elements);
 		fn = function(x) { return /^\s*$/.test(x.value) };
-		var empty = Punbb.find(fn, nodes);
+		var empty = Forum.find(fn, nodes);
 		if (empty > -1)
-		//if (Punbb.find(fn, nodes) > -1)
+		//if (Forum.find(fn, nodes) > -1)
 		{
 			var n = document.getElementById('req-msg');
-			Punbb.removeClass(n, 'frm-warn');
-			var newlyAdded = Punbb.addClass(n, 'frm-error');
-			if (!Punbb.onScreen(n))
+			Forum.removeClass(n, 'frm-warn');
+			var newlyAdded = Forum.addClass(n, 'frm-error');
+			if (!Forum.onScreen(n))
 			{
 				n.scrollIntoView(); // method not in W3C DOM, but fully cross-browser?
-				setTimeout(function(){Punbb.blink(n)}, 500);
+				setTimeout(function(){Forum.blink(n)}, 500);
 			}
-			else if (!newlyAdded) Punbb.blink(n);
-			if (Punbb.onScreen(nodes[empty])) nodes[empty].focus();
+			else if (!newlyAdded) Forum.blink(n);
+			if (Forum.onScreen(nodes[empty])) nodes[empty].focus();
 			return false;
 		}
 		return true;
@@ -146,15 +146,15 @@ var Punbb = {
 		{
 			var elements = forms[i].elements;
 			var fn = function(x) { return x.name && x.name.indexOf('req_')==0 };
-			if (Punbb.find(fn, elements) > -1)
+			if (Forum.find(fn, elements) > -1)
 			{
 				fn = function(x) { return x.type && (x.type=='submit' && x.name!='cancel') };
-				var nodes = Punbb.arrayOfMatched(fn, elements)
+				var nodes = Forum.arrayOfMatched(fn, elements)
 				var formRef = forms[i];
-				fn = function() { return Punbb.validateForm(formRef) };
+				fn = function() { return Forum.validateForm(formRef) };
 				//TODO: look at passing array of node refs instead of forum ref
-				//fn = function() { return Punbb.checkReq(required.slice(0)) };
-				nodes = Punbb.map(function(x){x.onclick=fn}, nodes);
+				//fn = function() { return Forum.checkReq(required.slice(0)) };
+				nodes = Forum.map(function(x){x.onclick=fn}, nodes);
 			}
 		}
 	},
@@ -164,7 +164,7 @@ var Punbb = {
 		var nodes = document.getElementsByTagName('a');
 		for (var i=0; i<nodes.length; i++)
 		{
-			if (Punbb.hasClass(nodes[i], 'exthelp')) // || nodes[i].getAttribute('rel') == 'external')
+			if (Forum.hasClass(nodes[i], 'exthelp')) // || nodes[i].getAttribute('rel') == 'external')
 				nodes[i].onclick = function() { window.open(this.href); return false; };
 		}
 	},
@@ -175,13 +175,13 @@ var Punbb = {
 		nodes = nodes.all ? nodes.all : nodes.getElementsByTagName('*');
 		// TODO: make sure line above gets nodes in display-order across browsers
 		var fn = function(x) { return x.tagName.toUpperCase()=='TEXTAREA' || (x.tagName.toUpperCase()=='INPUT' && (x.type=='text') || (x.type=='password')) };
-		var n = Punbb.find(fn, nodes);
+		var n = Forum.find(fn, nodes);
 		if (n > -1) nodes[n].focus();
 	}
 }
-Punbb.addLoadEvent(Punbb.attachValidateForm);
-Punbb.addLoadEvent(Punbb.attachWindowOpen);
-Punbb.addLoadEvent(Punbb.autoFocus);
+Forum.addLoadEvent(Forum.attachValidateForm);
+Forum.addLoadEvent(Forum.attachWindowOpen);
+Forum.addLoadEvent(Forum.autoFocus);
 
 /* A handful of functions in this script have been released into the Public
    Domain by Shawn Brown or other authors. Although I, Shawn Brown, do not

@@ -6,14 +6,14 @@ A - SETUP
 -------------------------------------------------------------*/
 
 html, body, /* Remove this line if integrating */
-.pun div, .pun p, .pun h1, .pun h2, .pun h3, .pun h4, .pun h5, .pun h6,
-.pun blockquote, .pun pre, .pun code, .pun samp,
-.pun abbr, .pun acronym, .pun address, .pun small, .pun cite,
-.pun span, .pun em, .pun img, .pun strong,
-.pun dl, .pun dt, .pun dd, .pun ol, .pun ul, .pun li,
-.pun form, .pun fieldset, .pun label, .pun legend,
-.pun table, .pun caption, .pun tbody, .pun tfoot, .pun thead,
-.pun tr, .pun th, .pun td {
+.brd div, .brd p, .brd h1, .brd h2, .brd h3, .brd h4, .brd h5, .brd h6,
+.brd blockquote, .brd pre, .brd code, .brd samp,
+.brd abbr, .brd acronym, .brd address, .brd small, .brd cite,
+.brd span, .brd em, .brd img, .brd strong,
+.brd dl, .brd dt, .brd dd, .brd ol, .brd ul, .brd li,
+.brd form, .brd fieldset, .brd label, .brd legend,
+.brd table, .brd caption, .brd tbody, .brd tfoot, .brd thead,
+.brd tr, .brd th, .brd td {
 	margin: 0;
 	padding: 0;
 	font-size: 100%;
@@ -22,40 +22,40 @@ html, body, /* Remove this line if integrating */
 	font-style: normal;
 	}
 
-.pun fieldset, .pun img, .pun cite {
+.brd fieldset, .brd img, .brd cite {
 	border: none;
 	}
 
-.pun ol, .pun ul {
+.brd ol, .brd ul {
 	list-style: none;
 	}
 
-.pun table {
+.brd table {
 	width: 100%;
 	table-layout: fixed;
 	empty-cells: show;
 	border-spacing: 0;
 	}
 	
-.pun td {
+.brd td {
 	overflow: hidden;
 	vertical-align: middle;
 	}
 	
-.pun span.submit input,
-.pun span.cancel input {
+.brd span.submit input,
+.brd span.cancel input {
 	overflow: visible;
 	padding-left: 0.5em;
 	padding-right: 0.5em;
 	padding-bottom: 2px;
 	}
 	
-.pun a {
+.brd a {
 	cursor: pointer;
 	text-decoration: underline;
 	}
 	
-.pun div.divider, .pun fieldset br {
+.brd div.divider, .brd fieldset br {
 	display: none;
 	}
 	
@@ -63,36 +63,36 @@ html, body, /* Remove this line if integrating */
 /* Text Setup
 -------------------------------------------------------------*/
 
-.pun { /* Needs modifying if body has non default font-size */
+.brd { /* Needs modifying if body has non default font-size */
 	font: 75%/130% Verdana, Arial, Helvetica, sans-serif;
 	}
 	
-.pun samp, .pun code, .pun pre, .pun option, .pun optgroup {
+.brd samp, .brd code, .brd pre, .brd option, .brd optgroup {
 	font-size: 1em;
 	font-family: Verdana, Arial, sans-serif;
 	font-style: normal;
 	}
 
-.pun input, .pun select, .pun textarea {
+.brd input, .brd select, .brd textarea {
 	font-size: 1.1em;
 	font-family: Verdana, Arial, sans-serif;
 	}
 	
-.pun code {
+.brd code {
 	font-size: 1.1em;
 	line-height: 140%;
 	font-family: 'andale mono', 'lucida console', monospace
 	}
 	
 .frm .frm-info li span strong,
-.pun .important strong,
-.pun .warn strong,
-.pun .post-entry .entry-content strong,
-.pun .post-entry .entry-content strong * {
+.brd .important strong,
+.brd .warn strong,
+.brd .post-entry .entry-content strong,
+.brd .post-entry .entry-content strong * {
 	font-weight: bold;
 	}
 	
-.pun .entry-content em.bbuline {
+.brd .entry-content em.bbuline {
 	text-decoration: underline;
 	}
 
@@ -103,12 +103,12 @@ B - FLOAT CLEARING AND HIDDEN STUFF
 /* Clear Me
 -------------------------------------------------------------*/
 
-.pun-page:after,
-#pun-visit:after,
-#pun-about:after,
-#pun-info #stats:after,
-.pun .crumbs:after,
-#pun-info #onlinelist:after,
+.brd-page:after,
+#brd-visit:after,
+#brd-about:after,
+#brd-info #stats:after,
+.brd .crumbs:after,
+#brd-info #onlinelist:after,
 .main .paged-head:after,
 .main .paged-foot:after,
 .main .main-head:after,
@@ -135,8 +135,8 @@ B - FLOAT CLEARING AND HIDDEN STUFF
 -------------------------------------------------------------*/
 
 .main h1,
-#pun-info .main-head,
-#pun-info #stats h3,
+#brd-info .main-head,
+#brd-info #stats h3,
 #qjump legend,
 .crumbs span span,
 .crumbs strong span,
@@ -150,12 +150,12 @@ B - FLOAT CLEARING AND HIDDEN STUFF
 .user .user-info .status strong,
 .user .user-info .title strong,
 .frm .profile h3,
-.pun a span span,
+.brd a span span,
 .main .post h3 cite,
 .main .post .posthead .post-select span,
 .main .post .post-entry h4,
 .frm .twin .twin2 .fld-label,
-.pun .frm .frm-group .nodefault span.noshow,
+.brd .frm .frm-group .nodefault span.noshow,
 .main .parted .frm-head {
  	font-size: 0;
  	left: -9999px;
@@ -172,18 +172,18 @@ C - PAGE LAYOUT and COMMON ELEMENTS
 /* Page Layout
 -------------------------------------------------------------*/
 
-.pun-page {
+.brd-page {
 	width: 95%;
 	margin: 0 auto;
 	padding: 20px 0;
 	}
 
-#pun-redirect, #pun-maint, #pun-util {
+#brd-redirect, #brd-maint, #brd-util {
 	margin: 50px auto 12px auto;
 	width: 60%;
 	}
 	
-.pun { /* Confines clearing behaviour within forum wrapper */
+.brd { /* Confines clearing behaviour within forum wrapper */
 	float: left;
 	width: 100%;
 	position: relative;
@@ -193,7 +193,7 @@ C - PAGE LAYOUT and COMMON ELEMENTS
 /* Skip Link
 -------------------------------------------------------------*/
 	
-#pun-access {
+#brd-access {
 	text-align: right;
 	padding: 0;
 	height: 0;
@@ -202,7 +202,7 @@ C - PAGE LAYOUT and COMMON ELEMENTS
 	background: transparent;
 	}
 	
-#pun-access a, #pun-access a:link, #pun-access a:visited {
+#brd-access a, #brd-access a:link, #brd-access a:visited {
 	height: 2em;
 	padding: 0 1.3em;
 	line-height: 2em;
@@ -212,7 +212,7 @@ C - PAGE LAYOUT and COMMON ELEMENTS
 	width: 12em;
 	}
 	
-#pun-access a:hover, #pun-access a:active, #pun-access a:focus {
+#brd-access a:hover, #brd-access a:active, #brd-access a:focus {
 	text-indent: 0;
 	background: #000;
 	position: static;
@@ -223,16 +223,16 @@ C - PAGE LAYOUT and COMMON ELEMENTS
 /* Board Title and Description
 -------------------------------------------------------------*/
 	
-#pun-title {
+#brd-title {
 	padding: 1.3em 1.3em 0.3em 1.3em;
 	white-space: nowrap;
 	}
 	
-#pun-title strong {
+#brd-title strong {
 	font-size: 1.5em;
 	}
 	
-#pun-desc {
+#brd-desc {
 	padding: 0 1.3em 1em 1.3em;
 	}
 	
@@ -240,11 +240,11 @@ C - PAGE LAYOUT and COMMON ELEMENTS
 /* Main Menu
 -------------------------------------------------------------*/
 	
-#pun-navlinks ul {
+#brd-navlinks ul {
 	padding: 0.7em 1.3em;
 	}
 	
-#pun-navlinks ul li {
+#brd-navlinks ul li {
 	display: inline;
 	margin-right: 0.8em;
 	font-size: 1.2em;
@@ -254,28 +254,28 @@ C - PAGE LAYOUT and COMMON ELEMENTS
 /* Welcome Box
 -------------------------------------------------------------*/
 
-#pun-visit {
+#brd-visit {
 	border-style: none solid solid solid;
 	border-width: 1px;
 	padding: 0.8em 1.3em 0.8em 1.3em;
 	margin: 0 0 1em 0;
 	}
 	
-#pun-visit ul {
+#brd-visit ul {
 	float: right;
 	}
 	
-#pun-visit ul li {
+#brd-visit ul li {
 	display: inline;
 	margin-left: 0.7em;
 	}
 	
-#pun-visit p span, #pun-visit ul li a {
+#brd-visit p span, #brd-visit ul li a {
 	white-space: nowrap;
 	}
 	
-#pun-visit p strong,
-#pun-visit ul li strong {
+#brd-visit p strong,
+#brd-visit ul li strong {
 	font-weight: bold;
 	}
 	
@@ -283,29 +283,29 @@ C - PAGE LAYOUT and COMMON ELEMENTS
 /* Alert Box
 -------------------------------------------------------------*/
 
-#pun-alert {
+#brd-alert {
 	border-style: solid;
 	border-width: 1px;
 	margin: 0 0 1em 0;
 	}
 	
-#pun-alert h1 {
+#brd-alert h1 {
 	padding: 0.6em 0;
 	margin: 0 1.3em 0.6em 1.3em;
 	border-bottom-style: dashed;
 	border-bottom-width: 1px;
 	}
 	
-#pun-alert h1 strong {
+#brd-alert h1 strong {
 	font-size: 1.1em;
 	}
 
-#pun-alert p {
+#brd-alert p {
 	padding: 0.2em 0 0.8em 0;
 	margin: 0 1.3em;
 	}
 
-#pun-alert p strong {
+#brd-alert p strong {
 	display: block;
 	padding-bottom: 0.2em;
 	font-weight: bold;
@@ -357,28 +357,28 @@ C - PAGE LAYOUT and COMMON ELEMENTS
 /* About Box (Footer / Copyright / Jump Menu) and Home Link
 -------------------------------------------------------------*/
 
-#pun-about {
+#brd-about {
 	border-style: solid;
 	border-width: 1px;
 	margin: 0 0 1em 0;
 	padding: 0.6em 1.3em;
 	}
 
-#pun-about p {
+#brd-about p {
 	text-align: right;
 	}
 	
-#pun-about #qjump {
+#brd-about #qjump {
 	float: left;
 	width: 40%;
 	}
 	
-#pun-about #qjump label {
+#brd-about #qjump label {
 	font-weight: bold;
 	display: block;
 	}
 	
-#pun-home {
+#brd-home {
 	font-weight: normal;
 	float:right;
 	padding: 0.4em 1.3em 0 0;
@@ -387,12 +387,12 @@ C - PAGE LAYOUT and COMMON ELEMENTS
 /* Announcements
 -------------------------------------------------------------*/
 
-#pun-announcement .userbox {
+#brd-announcement .userbox {
 	margin: 0 0 1em 0;
 	padding-bottom: 1em;
 	}
 	
-#pun-announcement .msg-head {
+#brd-announcement .msg-head {
 	font-size: 1.2em;
 	padding-bottom: 0.5em;
 	margin-bottom: 0.5em;
@@ -428,14 +428,14 @@ D - MAIN CONTENT COMMON ELEMENTS
 /* Breadcrumbs
 -------------------------------------------------------------*/
 
-#pun-crumbs-head,
-#pun-crumbs-foot {
+#brd-crumbs-head,
+#brd-crumbs-foot {
 	padding: 0 1.3em;
 	margin: 0 0 1em 0;
 	}
 	
-#pun-crumbs-head .crumb,
-#pun-crumbs-foot .crumb {
+#brd-crumbs-head .crumb,
+#brd-crumbs-foot .crumb {
 	padding-left: 1.5em;
 	padding-right: 0.5em;
 	background-image: url(crumb.png);
@@ -445,14 +445,14 @@ D - MAIN CONTENT COMMON ELEMENTS
 	float: left;
 	}	
 
-#pun-crumbs-head .crumbfirst,
-#pun-crumbs-foot .crumbfirst {
+#brd-crumbs-head .crumbfirst,
+#brd-crumbs-foot .crumbfirst {
 	background-image: none;
 	padding-left: 0;
 	}
 
-#pun-crumbs-head .crumblast,
-#pun-crumbs-foot .crumblast {
+#brd-crumbs-head .crumblast,
+#brd-crumbs-foot .crumblast {
 	font-weight: bold;
 	}
 	
@@ -482,7 +482,7 @@ D - MAIN CONTENT COMMON ELEMENTS
 	padding: 0.6em 0;
 	}
 	
-.pun .posting, .pun .posting * {
+.brd .posting, .brd .posting * {
 	white-space: nowrap;
 	}
 	
@@ -507,23 +507,23 @@ D - MAIN CONTENT COMMON ELEMENTS
 	}
 
 
-.pun .paging, .pun .paging * {
+.brd .paging, .brd .paging * {
 	white-space:nowrap;
 	}
 
-.pun .paging a, .pun .paging strong, .pun .paging span {
+.brd .paging a, .brd .paging strong, .brd .paging span {
 	border-left-style:solid;
 	border-left-width: 1px;
 	text-decoration: none;
 	padding: 0 0.2em 0 0.6em;
 	}
 	
-.pun .paging .item1, .pun .paging .pages {
+.brd .paging .item1, .brd .paging .pages {
 	border: 0;
 	padding-left: 0;
 	}
 
-.pun .paging .pages {
+.brd .paging .pages {
 	padding-right: 0.3em;
 	}
 	
@@ -537,7 +537,7 @@ D - MAIN CONTENT COMMON ELEMENTS
 	min-height: 1.3em;
 	}
 
-#pun-install .main-head {
+#brd-install .main-head {
 	padding-left: 1.7em;
 	}
 	
@@ -703,55 +703,55 @@ E - MAIN TABLES ( Index / Forums / Userlist )
 	text-align: left;
 	}
 	
-#pun-userlist table .tcl,
-#pun-searchtopics table .tcl,
-#pun-modforum table .tcl {
+#brd-userlist table .tcl,
+#brd-searchtopics table .tcl,
+#brd-modforum table .tcl {
 	width: 40%
 	}
 	
-#pun-userlist table .tc2,
-#pun-searchtopics table .tc2 {
+#brd-userlist table .tc2,
+#brd-searchtopics table .tc2 {
 	width: 20%;
 	text-align: left;
 	}
 	
-#pun-debug  table .tcl {
+#brd-debug  table .tcl {
 	white-space:normal;
 	width: 15%;
 	}
 
-#pun-debug table .tcr {
+#brd-debug table .tcr {
 	white-space: normal;
 	width: 90%;
 	}
 	
-#pun-admin-users table .tcl {
+#brd-admin-users table .tcl {
 	width: 35%;
 	line-height: 1.4em;
 	}
 	
 	
-#pun-admin-users table .tc2 {
+#brd-admin-users table .tc2 {
 	width: 20%;
 	}
 	
-#pun-admin-users table .tc3 {
+#brd-admin-users table .tc3 {
 	width: 10%;
 	}
 	
-#pun-admin-users table .tcr {
+#brd-admin-users table .tcr {
 	width: 20%;
 	}
 	
-#pun-admin-users table .actions {
+#brd-admin-users table .actions {
 	width: 15%;
 	}
 	
-#pun-admin-users td.tcl span {
+#brd-admin-users td.tcl span {
 	display: block;
 	}
 	
-#pun-admin-users td.tcl strong {
+#brd-admin-users td.tcl strong {
 	font-weight: bold;
 	}
 	
@@ -812,11 +812,11 @@ E - MAIN TABLES ( Index / Forums / Userlist )
 	margin-top: 0.1em;
 	}
 	
-#pun-index .main table .tcl img {
+#brd-index .main table .tcl img {
 	border-width: 0.7em;
 	}
 
-#pun-index .main table .tcr .byuser {
+#brd-index .main table .tcr .byuser {
 	display: block;
 	}
 	
@@ -1084,7 +1084,7 @@ E - MAIN FORMS
 	line-height: normal;
 	}
 	
-#pun-main .frm .actions a, #pun-main .frm .actions a * {
+#brd-main .frm .actions a, #brd-main .frm .actions a * {
 	font-weight: bold;
 	}
 
@@ -1097,7 +1097,7 @@ E - MAIN FORMS
 	white-space: nowrap;
 	}
 	
-#pun-search .frm .frm-info .actions {
+#brd-search .frm .frm-info .actions {
 	background: url('searchicon.png') no-repeat top left;
 	padding-left: 2.2em;
 	}
@@ -1533,12 +1533,12 @@ G - TOPICS / POSTS
 	padding-right: 1em;
 	}
 
-#pun-searchposts .main .post h3 cite {
+#brd-searchposts .main .post h3 cite {
 	position: static;
 	font-size: 1em;
 	}
 	
-#pun-searchposts .main .post h4.entry-title {
+#brd-searchposts .main .post h4.entry-title {
 	position: static;
 	font-size: 1em;
 	padding-bottom: 1em;
@@ -1547,11 +1547,11 @@ G - TOPICS / POSTS
 	text-indent: 0;
 	}
 	
-#pun-searchposts .main h3 strong {
+#brd-searchposts .main h3 strong {
 	text-decoration: none;
 	}
 	
-#pun-searchposts .main h4.entry-title strong {
+#brd-searchposts .main h4.entry-title strong {
 	display: block;
 	font-weight: bold;
 	}
@@ -1607,12 +1607,12 @@ H - OTHER MAIN CONTENT ITEMS
 	font-size: 0.9em;
 	}
 	
-#pun-help h3 {
+#brd-help h3 {
 	padding: 0 0 0.7em 0;
 	margin: 0;
 	}
 	
-#pun-help .quotebox, #pun-help .codebox {
+#brd-help .quotebox, #brd-help .codebox {
 	margin: 0.3em 0 0 0;
 	}
 	
@@ -1624,41 +1624,41 @@ H - OTHER MAIN CONTENT ITEMS
 /* Rules
 -------------------------------------------------------------*/
 	
-.pun .userbox {
+.brd .userbox {
 	padding: 1em 1.3em 0.7em 1.3em;
 	margin: 1.7em;
 	border-style: solid;
 	border-width: 1px;
 	}
 	
-.pun .userbox p, .pun .userbox h2, .pun .userbox h3, .pun .userbox h4 {
+.brd .userbox p, .brd .userbox h2, .brd .userbox h3, .brd .userbox h4 {
 	margin: 0 0 0.8em 0;
 	list-style: disc;
 	}
 	
-.pun .userbox h2 {
+.brd .userbox h2 {
 	font-size: 1.2em;
 	font-weight: bold;
 	}
 	
-.pun .userbox h3 {
+.brd .userbox h3 {
 	font-size: 1.1em;
 	font-weight: bold;
 	}
 	
-.pun .userbox ul, .pun .userbox ol {
+.brd .userbox ul, .brd .userbox ol {
 	margin: 0 0 0.3em 1.5em;
 	list-style: disc;
 	}
 	
-.pun .userbox li {
+.brd .userbox li {
 	margin-bottom: 0.5em;
 	}
 	
-.pun .userbox strong {
+.brd .userbox strong {
 	font-weight: bold;
 	}
 	
-.pun .userbox em {
+.brd .userbox em {
 	font-style: italic;
 	}

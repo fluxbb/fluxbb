@@ -1,4 +1,4 @@
-# BEGIN PunBB
+# BEGIN FluxBB
 
 <IfModule mod_rewrite.c>
 RewriteEngine On
@@ -8,4 +8,4 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . rewrite.php [L]
 </IfModule>
 
-# END PunBB
+# END FluxBB

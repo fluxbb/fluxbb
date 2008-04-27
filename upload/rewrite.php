@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -23,11 +25,11 @@
 ************************************************************************/
 
 
-define('PUN_ROOT', './');
-require PUN_ROOT.'include/essentials.php';
+define('FORUM_ROOT', './');
+require FORUM_ROOT.'include/essentials.php';
 
 // Bring in all the rewrite rules
-require PUN_ROOT.'include/rewrite_rules.php';
+require FORUM_ROOT.'include/rewrite_rules.php';
 
 // Allow extensions to create their own rewrite rules/modify existing rules
 ($hook = get_hook('re_rewrite_rules')) ? eval($hook) : null;
@@ -45,7 +47,7 @@ if (strpos($request_uri, '?') !== false)
 $rewritten_url = '';
 $url_parts = array();
 // We go through every rewrite rule
-foreach ($pun_rewrite_rules as $rule => $rewrite_to)
+foreach ($forum_rewrite_rules as $rule => $rewrite_to)
 {
 	// We have a match!
 	if (preg_match($rule, $request_uri))
@@ -92,4 +94,4 @@ if (empty($rewritten_url))
 // We change $_SERVER['PHP_SELF'] so that it reflects the file we're actually loading
 $_SERVER['PHP_SELF'] = str_replace('rewrite.php', $url_parts[0], $_SERVER['PHP_SELF']);
 
-require PUN_ROOT.$url_parts[0];
+require FORUM_ROOT.$url_parts[0];

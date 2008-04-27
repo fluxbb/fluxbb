@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -24,14 +26,14 @@
 
 
 // Make sure no one attempts to run this script "directly"
-if (!defined('PUN'))
+if (!defined('FORUM'))
 	exit;
 
 
 //
 // Return current timestamp (with microseconds) as a float (used in dblayer)
 //
-if (defined('PUN_SHOW_QUERIES'))
+if (defined('FORUM_SHOW_QUERIES'))
 {
 	function get_microtime()
 	{
@@ -45,19 +47,19 @@ if (defined('PUN_SHOW_QUERIES'))
 switch ($db_type)
 {
 	case 'mysql':
-		require PUN_ROOT.'include/dblayer/mysql.php';
+		require FORUM_ROOT.'include/dblayer/mysql.php';
 		break;
 
 	case 'mysqli':
-		require PUN_ROOT.'include/dblayer/mysqli.php';
+		require FORUM_ROOT.'include/dblayer/mysqli.php';
 		break;
 
 	case 'pgsql':
-		require PUN_ROOT.'include/dblayer/pgsql.php';
+		require FORUM_ROOT.'include/dblayer/pgsql.php';
 		break;
 
 	case 'sqlite':
-		require PUN_ROOT.'include/dblayer/sqlite.php';
+		require FORUM_ROOT.'include/dblayer/sqlite.php';
 		break;
 
 	default:
@@ -67,4 +69,4 @@ switch ($db_type)
 
 
 // Create the database adapter object (and open/connect to/select db)
-$pun_db = new DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect);
+$forum_db = new DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect);

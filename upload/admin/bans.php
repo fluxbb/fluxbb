@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -23,18 +25,18 @@
 ************************************************************************/
 
 
-if (!defined('PUN_ROOT'))
-	define('PUN_ROOT', '../');
-require PUN_ROOT.'include/common.php';
-require PUN_ROOT.'include/common_admin.php';
+if (!defined('FORUM_ROOT'))
+	define('FORUM_ROOT', '../');
+require FORUM_ROOT.'include/common.php';
+require FORUM_ROOT.'include/common_admin.php';
 
 ($hook = get_hook('aba_start')) ? eval($hook) : null;
 
-if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_ban_users'] == '0'))
+if ($forum_user['g_id'] != FORUM_ADMIN && ($forum_user['g_moderator'] != '1' || $forum_user['g_mod_ban_users'] == '0'))
 	message($lang_common['No permission']);
 
 // Load the admin.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/admin.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin.php';
 
 
 // Add/edit a ban (stage 1)
@@ -60,11 +62,11 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 			);
 
 			($hook = get_hook('aba_qr_get_user_by_id')) ? eval($hook) : null;
-			$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-			if (!$pun_db->num_rows($result))
+			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+			if (!$forum_db->num_rows($result))
 				message($lang_admin['No user id message']);
 
-			list($group_id, $ban_user, $ban_email, $ban_ip) = $pun_db->fetch_row($result);
+			list($group_id, $ban_user, $ban_email, $ban_ip) = $forum_db->fetch_row($result);
 		}
 		else	// Otherwise the username is in POST
 		{
@@ -77,20 +79,20 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 				$query = array(
 					'SELECT'	=> 'u.id, u.group_id, u.username, u.email, u.registration_ip',
 					'FROM'		=> 'users AS u',
-					'WHERE'		=> 'u.username=\''.$pun_db->escape($ban_user).'\' AND u.id>1'
+					'WHERE'		=> 'u.username=\''.$forum_db->escape($ban_user).'\' AND u.id>1'
 				);
 
 				($hook = get_hook('aba_qr_get_user_by_username')) ? eval($hook) : null;
-				$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-				if (!$pun_db->num_rows($result))
+				$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+				if (!$forum_db->num_rows($result))
 					message($lang_admin['No user username message']);
 
-				list($user_id, $group_id, $ban_user, $ban_email, $ban_ip) = $pun_db->fetch_row($result);
+				list($user_id, $group_id, $ban_user, $ban_email, $ban_ip) = $forum_db->fetch_row($result);
 			}
 		}
 
 		// Make sure we're not banning an admin
-		if (isset($group_id) && $group_id == PUN_ADMIN)
+		if (isset($group_id) && $group_id == FORUM_ADMIN)
 			message($lang_admin['User is admin message']);
 
 		// If we have a $user_id, we can try to find the last known IP of that user
@@ -105,9 +107,9 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 			);
 
 			($hook = get_hook('aba_qr_get_last_known_ip')) ? eval($hook) : null;
-			$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-			$ban_ip = ($pun_db->num_rows($result)) ? $pun_db->result($result) : $ban_ip;
+			$ban_ip = ($forum_db->num_rows($result)) ? $forum_db->result($result) : $ban_ip;
 		}
 
 		$mode = 'add';
@@ -127,9 +129,9 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		);
 
 		($hook = get_hook('aba_qr_get_ban_data')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-		if ($pun_db->num_rows($result))
-			list($ban_user, $ban_ip, $ban_email, $ban_message, $ban_expire) = $pun_db->fetch_row($result);
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		if ($forum_db->num_rows($result))
+			list($ban_user, $ban_ip, $ban_email, $ban_message, $ban_expire) = $forum_db->fetch_row($result);
 		else
 			message($lang_common['Bad request']);
 
@@ -141,29 +143,29 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 
 
 	// Setup the form
-	$pun_page['fld_count'] = $pun_page['set_count'] = 0;
+	$forum_page['fld_count'] = $forum_page['set_count'] = 0;
 
 	// Setup breadcrumbs
-	$pun_page['crumbs'] = array(
-		array($pun_config['o_board_title'], pun_link($pun_url['index'])),
-		array($lang_admin['Forum administration'], pun_link($pun_url['admin_index'])),
-		array($lang_admin['Bans'], pun_link($pun_url['admin_bans'])),
+	$forum_page['crumbs'] = array(
+		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+		array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
+		array($lang_admin['Bans'], forum_link($forum_url['admin_bans'])),
 		$lang_admin['Ban advanced']
 	);
 
 	($hook = get_hook('aba_add_edit_ban_pre_header_load')) ? eval($hook) : null;
 
-	define('PUN_PAGE_SECTION', 'users');
-	define('PUN_PAGE', 'admin-bans');
-	require PUN_ROOT.'header.php';
+	define('FORUM_PAGE_SECTION', 'users');
+	define('FORUM_PAGE', 'admin-bans');
+	require FORUM_ROOT.'header.php';
 
 ?>
-<div id="pun-main" class="main admin sectioned">
+<div id="brd-main" class="main admin sectioned">
 
 <?php echo generate_admin_menu(); ?>
 
 	<div class="main-head">
-		<h1><span>{ <?php echo end($pun_page['crumbs']) ?> }</span></h1>
+		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
 	<div class="main-content frm">
@@ -173,53 +175,53 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		<div class="frm-info">
 			<p class="warn"><?php echo $lang_admin['Ban IP warning'] ?></p>
 		</div>
-		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo pun_link($pun_url['admin_bans']) ?>">
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_bans']) ?>">
 			<div class="hidden">
-				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(pun_link($pun_url['admin_bans'])) ?>" />
+				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_bans'])) ?>" />
 				<input type="hidden" name="mode" value="<?php echo $mode ?>" />
 <?php if ($mode == 'edit'): ?>				<input type="hidden" name="ban_id" value="<?php echo $ban_id ?>" />
 <?php endif; ?>			</div>
 <?php ($hook = get_hook('aba_add_edit_ban_pre_criteria_fieldset')) ? eval($hook) : null; ?>
-			<fieldset class="frm-set set<?php echo ++$pun_page['set_count'] ?>">
+			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><span><?php echo $lang_admin['Ban criteria legend'] ?></span></legend>
 <?php ($hook = get_hook('aba_add_edit_ban_pre_username')) ? eval($hook) : null; ?>
 				<div class="frm-fld text">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_admin['Username to ban'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="ban_user" size="25" maxlength="25" value="<?php if (isset($ban_user)) echo pun_htmlencode($ban_user); ?>" /></span>
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_user" size="25" maxlength="25" value="<?php if (isset($ban_user)) echo forum_htmlencode($ban_user); ?>" /></span>
 					</label>
 				</div>
 				<div class="frm-fld text">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_admin['E-mail/domain to ban'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="ban_email" size="40" maxlength="80" value="<?php if (isset($ban_email)) echo strtolower($ban_email); ?>" /></span>
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_email" size="40" maxlength="80" value="<?php if (isset($ban_email)) echo strtolower($ban_email); ?>" /></span>
 						<span class="fld-help"><?php echo $lang_admin['E-mail/domain info'] ?></span>
 					</label>
 				</div>
 				<div class="frm-fld text">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_admin['IP-addresses to ban'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="ban_ip" size="45" maxlength="255" value="<?php if (isset($ban_ip)) echo $ban_ip; ?>" /></span>
-						<span class="fld-help"><?php echo $lang_admin['IP-addresses info']; if ($ban_user != '' && isset($user_id)) echo ' '.$lang_admin['IP-addresses info 2'].'<a href="'.pun_link($pun_url['admin_users']).'?ip_stats='.$user_id.'">'.$lang_admin['IP-addresses info link'].'</a>' ?></span>
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_ip" size="45" maxlength="255" value="<?php if (isset($ban_ip)) echo $ban_ip; ?>" /></span>
+						<span class="fld-help"><?php echo $lang_admin['IP-addresses info']; if ($ban_user != '' && isset($user_id)) echo ' '.$lang_admin['IP-addresses info 2'].'<a href="'.forum_link($forum_url['admin_users']).'?ip_stats='.$user_id.'">'.$lang_admin['IP-addresses info link'].'</a>' ?></span>
 					</label>
 				</div>
 <?php ($hook = get_hook('aba_add_edit_ban_criteria_end')) ? eval($hook) : null; ?>
 			</fieldset>
 <?php ($hook = get_hook('aba_add_edit_ban_pre_settings_fieldset')) ? eval($hook) : null; ?>
-			<fieldset class="frm-set set<?php echo ++$pun_page['set_count'] ?>">
+			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><span><?php echo $lang_admin['Ban settings legend'] ?></span></legend>
 <?php ($hook = get_hook('aba_add_edit_ban_pre_message')) ? eval($hook) : null; ?>
 				<div class="frm-fld text">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_admin['Ban message'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="ban_message" size="50" maxlength="255" value="<?php if (isset($ban_message)) echo pun_htmlencode($ban_message); ?>" /></span>
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_message" size="50" maxlength="255" value="<?php if (isset($ban_message)) echo forum_htmlencode($ban_message); ?>" /></span>
 						<span class="fld-help"><?php echo $lang_admin['Ban message info'] ?></span>
 					</label>
 				</div>
 				<div class="frm-fld text">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_admin['Expire date'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="ban_expire" size="17" maxlength="10" value="<?php if (isset($ban_expire)) echo $ban_expire; ?>" /></span>
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_expire" size="17" maxlength="10" value="<?php if (isset($ban_expire)) echo $ban_expire; ?>" /></span>
 						<span class="fld-help"><?php echo $lang_admin['Expire date info'] ?></span>
 					</label>
 				</div>
@@ -235,7 +237,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 </div>
 <?php
 
-	require PUN_ROOT.'footer.php';
+	require FORUM_ROOT.'footer.php';
 }
 
 
@@ -281,7 +283,7 @@ else if (isset($_POST['add_edit_ban']))
 		$ban_ip = implode(' ', $addresses);
 	}
 
-	require PUN_ROOT.'include/email.php';
+	require FORUM_ROOT.'include/email.php';
 	if ($ban_email != '' && !is_valid_email($ban_email))
 	{
 		if (!preg_match('/^[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/', $ban_email))
@@ -298,21 +300,21 @@ else if (isset($_POST['add_edit_ban']))
 	else
 		$ban_expire = 'NULL';
 
-	$ban_user = ($ban_user != '') ? '\''.$pun_db->escape($ban_user).'\'' : 'NULL';
-	$ban_ip = ($ban_ip != '') ? '\''.$pun_db->escape($ban_ip).'\'' : 'NULL';
-	$ban_email = ($ban_email != '') ? '\''.$pun_db->escape($ban_email).'\'' : 'NULL';
-	$ban_message = ($ban_message != '') ? '\''.$pun_db->escape($ban_message).'\'' : 'NULL';
+	$ban_user = ($ban_user != '') ? '\''.$forum_db->escape($ban_user).'\'' : 'NULL';
+	$ban_ip = ($ban_ip != '') ? '\''.$forum_db->escape($ban_ip).'\'' : 'NULL';
+	$ban_email = ($ban_email != '') ? '\''.$forum_db->escape($ban_email).'\'' : 'NULL';
+	$ban_message = ($ban_message != '') ? '\''.$forum_db->escape($ban_message).'\'' : 'NULL';
 
 	if ($_POST['mode'] == 'add')
 	{
 		$query = array(
 			'INSERT'	=> 'username, ip, email, message, expire, ban_creator',
 			'INTO'		=> 'bans',
-			'VALUES'	=> $ban_user.', '.$ban_ip.', '.$ban_email.', '.$ban_message.', '.$ban_expire.', '.$pun_user['id']
+			'VALUES'	=> $ban_user.', '.$ban_ip.', '.$ban_email.', '.$ban_message.', '.$ban_expire.', '.$forum_user['id']
 		);
 
 		($hook = get_hook('aba_qr_add_ban')) ? eval($hook) : null;
-		$pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
 	else
 	{
@@ -323,14 +325,14 @@ else if (isset($_POST['add_edit_ban']))
 		);
 
 		($hook = get_hook('aba_qr_update_ban')) ? eval($hook) : null;
-		$pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
 
 	// Regenerate the bans cache
-	require_once PUN_ROOT.'include/cache.php';
+	require_once FORUM_ROOT.'include/cache.php';
 	generate_bans_cache();
 
-	redirect(pun_link($pun_url['admin_bans']), (($_POST['mode'] == 'edit') ? $lang_admin['Ban edited'] : $lang_admin['Ban added']).' '.$lang_admin['Redirect']);
+	redirect(forum_link($forum_url['admin_bans']), (($_POST['mode'] == 'edit') ? $lang_admin['Ban edited'] : $lang_admin['Ban added']).' '.$lang_admin['Redirect']);
 }
 
 
@@ -353,39 +355,39 @@ else if (isset($_GET['del_ban']))
 	);
 
 	($hook = get_hook('aba_qr_delete_ban')) ? eval($hook) : null;
-	$pun_db->query_build($query) or error(__FILE__, __LINE__);
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the bans cache
-	require_once PUN_ROOT.'include/cache.php';
+	require_once FORUM_ROOT.'include/cache.php';
 	generate_bans_cache();
 
-	redirect(pun_link($pun_url['admin_bans']), $lang_admin['Ban removed'].' '. $lang_admin['Redirect']);
+	redirect(forum_link($forum_url['admin_bans']), $lang_admin['Ban removed'].' '. $lang_admin['Redirect']);
 }
 
 
 // Setup the form
-$pun_page['part_count'] = $pun_page['fld_count'] = $pun_page['set_count'] = 0;
+$forum_page['part_count'] = $forum_page['fld_count'] = $forum_page['set_count'] = 0;
 
 // Setup breadcrumbs
-$pun_page['crumbs'] = array(
-	array($pun_config['o_board_title'], pun_link($pun_url['index'])),
-	array($lang_admin['Forum administration'], pun_link($pun_url['admin_index'])),
+$forum_page['crumbs'] = array(
+	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+	array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
 	$lang_admin['Bans']
 );
 
 ($hook = get_hook('aba_pre_header_loaded')) ? eval($hook) : null;
 
-define('PUN_PAGE_SECTION', 'users');
-define('PUN_PAGE', 'admin-bans');
-require PUN_ROOT.'header.php';
+define('FORUM_PAGE_SECTION', 'users');
+define('FORUM_PAGE', 'admin-bans');
+require FORUM_ROOT.'header.php';
 
 ?>
-<div id="pun-main" class="main sectioned admin">
+<div id="brd-main" class="main sectioned admin">
 
 <?php echo generate_admin_menu(); ?>
 
 	<div class="main-head">
-		<h1><span>{ <?php echo end($pun_page['crumbs']) ?> }</span></h1>
+		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
 	<div class="main-content frm">
@@ -395,16 +397,16 @@ require PUN_ROOT.'header.php';
 		<div class="frm-info">
 			<p><?php echo $lang_admin['Advanced ban info'] ?></p>
 		</div>
-		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo pun_link($pun_url['admin_bans']) ?>?action=more">
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_bans']) ?>?action=more">
 			<div class="hidden">
-				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(pun_link($pun_url['admin_bans']).'?action=more') ?>" />
+				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_bans']).'?action=more') ?>" />
 			</div>
-			<fieldset class="frm-set set<?php echo ++$pun_page['set_count'] ?>">
+			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><strong><?php echo $lang_admin['New ban legend'] ?></strong></legend>
 				<div class="frm-fld text">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_admin['Username to ban'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="new_ban_user" size="25" maxlength="25" /></span>
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="new_ban_user" size="25" maxlength="25" /></span>
 					</label>
 				</div>
 			</fieldset>
@@ -416,7 +418,7 @@ require PUN_ROOT.'header.php';
 <?php
 
 // Reset fieldset counter
-$pun_page['set_count'] = 0;
+$forum_page['set_count'] = 0;
 
 ?>
 	<div class="main-content frm">
@@ -425,36 +427,36 @@ $pun_page['set_count'] = 0;
 		</div>
 <?php
 
-if (!empty($pun_bans))
+if (!empty($forum_bans))
 {
-	$pun_page['item_num'] = 0;
-	foreach ($pun_bans as $ban_key => $cur_ban)
+	$forum_page['item_num'] = 0;
+	foreach ($forum_bans as $ban_key => $cur_ban)
 	{
-		$pun_page['ban_info'] = array();
-		$pun_page['ban_creator'] = ($cur_ban['ban_creator_username'] != '') ? '<a href="'.pun_link($pun_url['user'], $cur_ban['ban_creator']).'">'.pun_htmlencode($cur_ban['ban_creator_username']).'</a>' : $lang_admin['Unknown'];
+		$forum_page['ban_info'] = array();
+		$forum_page['ban_creator'] = ($cur_ban['ban_creator_username'] != '') ? '<a href="'.forum_link($forum_url['user'], $cur_ban['ban_creator']).'">'.forum_htmlencode($cur_ban['ban_creator_username']).'</a>' : $lang_admin['Unknown'];
 
 		if ($cur_ban['username'] != '')
-			$pun_page['ban_info'][] = '<span>'.$lang_admin['Username'].': '.pun_htmlencode($cur_ban['username']).'</span>';
+			$forum_page['ban_info'][] = '<span>'.$lang_admin['Username'].': '.forum_htmlencode($cur_ban['username']).'</span>';
 
 		if ($cur_ban['email'] != '')
-			$pun_page['ban_info'][] = '<span>'.$lang_admin['E-mail'].': '.$cur_ban['email'].'</span>';
+			$forum_page['ban_info'][] = '<span>'.$lang_admin['E-mail'].': '.$cur_ban['email'].'</span>';
 
 		if ($cur_ban['ip'] != '')
-			$pun_page['ban_info'][] = '<span>'.$lang_admin['IP-ranges'].': '.$cur_ban['ip'].'</span>';
+			$forum_page['ban_info'][] = '<span>'.$lang_admin['IP-ranges'].': '.$cur_ban['ip'].'</span>';
 
 		if ($cur_ban['expire'] != '')
-			$pun_page['ban_info'][] = '<span>'.$lang_admin['Expire date'].': '.format_time($cur_ban['expire'], true).'</span>';
+			$forum_page['ban_info'][] = '<span>'.$lang_admin['Expire date'].': '.format_time($cur_ban['expire'], true).'</span>';
 
 		($hook = get_hook('aba_view_ban_pre_display')) ? eval($hook) : null;
 
 ?>
-		<div class="ban-item databox db<?php echo ++$pun_page['item_num'] ?>">
-			<h3 class="legend"><span><?php printf($lang_admin['Current ban head'], $pun_page['ban_creator']) ?></span></h3>
-<?php if (!empty($pun_page['ban_info'])): ?>			<p class="data">
-				<?php echo implode('<br />', $pun_page['ban_info'])."\n" ?>
+		<div class="ban-item databox db<?php echo ++$forum_page['item_num'] ?>">
+			<h3 class="legend"><span><?php printf($lang_admin['Current ban head'], $forum_page['ban_creator']) ?></span></h3>
+<?php if (!empty($forum_page['ban_info'])): ?>			<p class="data">
+				<?php echo implode('<br />', $forum_page['ban_info'])."\n" ?>
 			</p>
-<?php endif; if ($cur_ban['message'] != ''): ?>			<p><?php echo $lang_admin['Reason'].': '.pun_htmlencode($cur_ban['message']) ?></p>
-<?php endif; ?>		<p class="actions"><a href="<?php echo pun_link($pun_url['admin_bans']).'?edit_ban='.$cur_ban['id'] ?>"><?php echo $lang_admin['Edit'] ?></a> <a href="<?php echo pun_link($pun_url['admin_bans']).'?del_ban='.$cur_ban['id'].'&amp;csrf_token='.generate_form_token('del_ban'.$cur_ban['id']) ?>"><?php echo $lang_admin['Remove'] ?></a></p>
+<?php endif; if ($cur_ban['message'] != ''): ?>			<p><?php echo $lang_admin['Reason'].': '.forum_htmlencode($cur_ban['message']) ?></p>
+<?php endif; ?>		<p class="actions"><a href="<?php echo forum_link($forum_url['admin_bans']).'?edit_ban='.$cur_ban['id'] ?>"><?php echo $lang_admin['Edit'] ?></a> <a href="<?php echo forum_link($forum_url['admin_bans']).'?del_ban='.$cur_ban['id'].'&amp;csrf_token='.generate_form_token('del_ban'.$cur_ban['id']) ?>"><?php echo $lang_admin['Remove'] ?></a></p>
 </div>
 <?php
 
@@ -477,4 +479,4 @@ else
 </div>
 <?php
 
-require PUN_ROOT.'footer.php';
+require FORUM_ROOT.'footer.php';

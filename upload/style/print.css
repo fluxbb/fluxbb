@@ -1,14 +1,14 @@
 /* This is just a test stylesheet to be completed later */
 
-.pun-common,
-.pun-form,
-.pun-modmenu,
-.pun-mainhead,
-.pun-mainfoot,
+.brd-common,
+.brd-form,
+.brd-modmenu,
+.brd-mainhead,
+.brd-mainfoot,
 .postlinks,
-#pun-maintitle,
+#brd-maintitle,
 .post dt span,
-.pun-main h2 span.item2 {
+.brd-main h2 span.item2 {
 	display: none
 	}
 	
@@ -30,7 +30,7 @@
 	padding-bottom: 0.5em;
 	}
 	
-.pun-main h2 {
+.brd-main h2 {
 	padding-bottom: 0.2em;
 	border-bottom: 1px solid black;
 	}

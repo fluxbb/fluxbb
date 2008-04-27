@@ -4,7 +4,7 @@
 $lang_index = array(
 
 'Moderated by'			=>  'Moderated by %s',
-'Link to'				=>	'Link to %s',	// As in "Link to http://www.punbb.org/"
+'Link to'				=>	'Link to %s',	// As in "Link to http://www.fluxbb.org/"
 'Empty board'			=>	'Board is empty',
 'Newest user'			=>	'Newest registered user',
 'No of users'			=>	'Total number of registered users',

@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -23,27 +25,27 @@
 ************************************************************************/
 
 
-if (!defined('PUN_ROOT'))
-	define('PUN_ROOT', './');
-require PUN_ROOT.'include/common.php';
+if (!defined('FORUM_ROOT'))
+	define('FORUM_ROOT', './');
+require FORUM_ROOT.'include/common.php';
 
 ($hook = get_hook('he_start')) ? eval($hook) : null;
 
 $section = isset($_GET['section']) ? $_GET['section'] : null;
 
-if ($pun_user['g_read_board'] == '0')
+if ($forum_user['g_read_board'] == '0')
 	message($lang_common['No view']);
 
 // Load the help.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/help.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/help.php';
 
 
-$page_title = pun_htmlencode($pun_config['o_board_title']).' - '.$lang_help['Help'];
-define('PUN_PAGE', 'help');
-require PUN_ROOT.'header.php';
+$page_title = forum_htmlencode($forum_config['o_board_title']).' - '.$lang_help['Help'];
+define('FORUM_PAGE', 'help');
+require FORUM_ROOT.'header.php';
 
 ?>
-<div id="pun-main" class="main">
+<div id="brd-main" class="main">
 
 	<h1><span><?php echo $lang_help['Help'] ?></span></h1>
 
@@ -95,8 +97,8 @@ if (!$section || $section == 'bbcode')
 				<h3><?php echo $lang_help['Links info'] ?></h3>
 				<ul class="example">
 					<li>
-						<code>[url=<?php echo $base_url.'/' ?>]<?php echo pun_htmlencode($pun_config['o_board_title']) ?>[/url]</code> <span><?php echo $lang_help['produces'] ?></span>
-						<samp><a href="<?php echo $base_url.'/' ?>"><?php echo pun_htmlencode($pun_config['o_board_title']) ?></a></samp>
+						<code>[url=<?php echo $base_url.'/' ?>]<?php echo forum_htmlencode($forum_config['o_board_title']) ?>[/url]</code> <span><?php echo $lang_help['produces'] ?></span>
+						<samp><a href="<?php echo $base_url.'/' ?>"><?php echo forum_htmlencode($forum_config['o_board_title']) ?></a></samp>
 					</li>
 					<li>
 						<code>[url]<?php echo $base_url.'/' ?>[/url]</code> <span><?php echo $lang_help['produces'] ?></span>
@@ -162,8 +164,8 @@ else if ($section == 'img')
 		<div class="frm-form">
 			<ul class="example">
 				<li>
-					<code>[img=PunBB logo]<?php echo $base_url ?>/img/logo.png[/img]</code>
-					<samp><img src="<?php echo $base_url ?>/img/logo.png" alt="PunBB logo" /></samp>
+					<code>[img=FluxBB logo]<?php echo $base_url ?>/img/logo.png[/img]</code>
+					<samp><img src="<?php echo $base_url ?>/img/logo.png" alt="FluxBB logo" /></samp>
 				</li>
 			</ul>
 		</div>
@@ -188,7 +190,7 @@ else if ($section == 'smilies')
 <?php
 
 	// Display the smiley set
-	require PUN_ROOT.'include/parser.php';
+	require FORUM_ROOT.'include/parser.php';
 
 	$num_smilies = count($smiley_text);
 	for ($i = 0; $i < $num_smilies; ++$i)
@@ -238,4 +240,4 @@ else if ($section == 'smilies')
 
 ($hook = get_hook('he_end')) ? eval($hook) : null;
 
-require PUN_ROOT.'footer.php';
+require FORUM_ROOT.'footer.php';

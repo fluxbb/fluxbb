@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -24,47 +26,47 @@
 
 
 // Enable DEBUG mode by removing // from the following line
-define('PUN_DEBUG', 1);
+define('FORUM_DEBUG', 1);
 
 // This displays all executed queries in the page footer.
 // DO NOT enable this in a production environment!
-//define('PUN_SHOW_QUERIES', 1);
+//define('FORUM_SHOW_QUERIES', 1);
 
 // Enable this if an extension is causing problems and you can't access the admin interface
-//define('PUN_DISABLE_HOOKS', 1);
+//define('FORUM_DISABLE_HOOKS', 1);
 
-if (!defined('PUN_ROOT'))
-	exit('The constant PUN_ROOT must be defined and point to a valid PunBB installation root directory.');
+if (!defined('FORUM_ROOT'))
+	exit('The constant FORUM_ROOT must be defined and point to a valid FluxBB installation root directory.');
 
 
 // Load the functions script
-require PUN_ROOT.'include/functions.php';
+require FORUM_ROOT.'include/functions.php';
 
 // Reverse the effect of register_globals
-pun_unregister_globals();
+forum_unregister_globals();
 
 
 // Attempt to load the configuration file config.php
-if (file_exists(PUN_ROOT.'config.php'))
-	include PUN_ROOT.'config.php';
+if (file_exists(FORUM_ROOT.'config.php'))
+	include FORUM_ROOT.'config.php';
 
-if (!defined('PUN'))
-	error('The file \'config.php\' doesn\'t exist or is corrupt. Please run <a href="install.php">install.php</a> to install PunBB first.');
+if (!defined('FORUM'))
+	error('The file \'config.php\' doesn\'t exist or is corrupt. Please run <a href="install.php">install.php</a> to install FluxBB first.');
 
 
 // Record the start time (will be used to calculate the generation time for the page)
 list($usec, $sec) = explode(' ', microtime());
-$pun_start = ((float)$usec + (float)$sec);
+$forum_start = ((float)$usec + (float)$sec);
 
-// Make sure PHP reports all errors except E_NOTICE. PunBB supports E_ALL, but a lot of scripts it may interact with, do not.
+// Make sure PHP reports all errors except E_NOTICE. FluxBB supports E_ALL, but a lot of scripts it may interact with, do not.
 error_reporting(E_ALL);
 
 // Force POSIX locale (to prevent functions such as strtolower() from messing up UTF-8 strings)
 setlocale(LC_CTYPE, 'C');
 
 // If the cache directory is not specified, we use the default setting
-if (!defined('PUN_CACHE_DIR'))
-	define('PUN_CACHE_DIR', PUN_ROOT.'cache/');
+if (!defined('FORUM_CACHE_DIR'))
+	define('FORUM_CACHE_DIR', FORUM_ROOT.'cache/');
 
 
 // Construct REQUEST_URI if it isn't set
@@ -72,34 +74,34 @@ if (!isset($_SERVER['REQUEST_URI']))
 	$_SERVER['REQUEST_URI'] = (isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '').'?'.(isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '');
 
 // Load DB abstraction layer and connect
-require PUN_ROOT.'include/dblayer/common_db.php';
+require FORUM_ROOT.'include/dblayer/common_db.php';
 
 // Start a transaction
-$pun_db->start_transaction();
+$forum_db->start_transaction();
 
 
 // Load cached config
-if (file_exists(PUN_CACHE_DIR.'cache_config.php'))
-	include PUN_CACHE_DIR.'cache_config.php';
+if (file_exists(FORUM_CACHE_DIR.'cache_config.php'))
+	include FORUM_CACHE_DIR.'cache_config.php';
 
-if (!defined('PUN_CONFIG_LOADED'))
+if (!defined('FORUM_CONFIG_LOADED'))
 {
-	require_once PUN_ROOT.'include/cache.php';
+	require_once FORUM_ROOT.'include/cache.php';
 	generate_config_cache();
-	require PUN_CACHE_DIR.'cache_config.php';
+	require FORUM_CACHE_DIR.'cache_config.php';
 }
 
 
 // Load hooks
-if (file_exists(PUN_CACHE_DIR.'cache_hooks.php'))
-	include PUN_CACHE_DIR.'cache_hooks.php';
+if (file_exists(FORUM_CACHE_DIR.'cache_hooks.php'))
+	include FORUM_CACHE_DIR.'cache_hooks.php';
 
-if (!defined('PUN_HOOKS_LOADED'))
+if (!defined('FORUM_HOOKS_LOADED'))
 {
-	require_once PUN_ROOT.'include/cache.php';
+	require_once FORUM_ROOT.'include/cache.php';
 	generate_hooks_cache();
-	require PUN_CACHE_DIR.'cache_hooks.php';
+	require FORUM_CACHE_DIR.'cache_hooks.php';
 }
 
 
-define('PUN_ESSENTIALS_LOADED', 1);
+define('FORUM_ESSENTIALS_LOADED', 1);

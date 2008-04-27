@@ -9,7 +9,7 @@ A - SETUP
 	border-collapse: collapse
 	}
 
-.pun legend {
+.brd legend {
 	margin-left: -7px;
 	}
 
@@ -17,21 +17,21 @@ A - SETUP
 /* Make the skip link work
 ----------------------------------------------------------=--*/
 
-.ietabfix:active, #pun-main {
+.ietabfix:active, #brd-main {
 	zoom: 1;
 	}
 
 /* Welcome Box
 ----------------------------------------------------------=--*/
 
-#pun-visit {
+#brd-visit {
 	zoom: 1;
 	}
 	
 /* Alert Box
 ----------------------------------------------------------=--*/
 
-#pun-alert, #pun-alert h1 {
+#brd-alert, #brd-alert h1 {
 	zoom: 1;
 	}
 
@@ -39,25 +39,25 @@ A - SETUP
 /* Statistics
 -------------------------------------------------------------*/
 
- #pun-info {
+ #brd-info {
  	min-height: 1px;
  	}
  
- #pun-info #stats ul, #pun-info #onlinelist {
+ #brd-info #stats ul, #brd-info #onlinelist {
  	min-height: 1px;
  	}
 	
 /* About Box (Footer / Copyright / Jump Menu)
 ----------------------------------------------------------=--*/
 
-#pun-about {
+#brd-about {
 	min-height: 1px;
 	}
 
 /* Paging and Posting
 ----------------------------------------------------------=--*/
 	
-.pun .crumbs,
+.brd .crumbs,
 .main .paged-head,
 .main .paged-foot,
 .main .paged-foot .submitting {
@@ -96,12 +96,12 @@ A - SETUP
 	width: 13px;
 	}
 	
-.pun span.submit input,
-.pun span.cancel input {
+.brd span.submit input,
+.brd span.cancel input {
 	padding-bottom: 0;
 	}
 
-.pun .frm,
+.brd .frm,
 .frm .profile {
 	min-height: 1px
 	}

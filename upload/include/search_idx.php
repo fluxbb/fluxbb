@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -28,7 +30,7 @@
 
 
 // Make sure no one attempts to run this script "directly"
-if (!defined('PUN'))
+if (!defined('FORUM'))
 	exit;
 
 
@@ -38,7 +40,7 @@ if (!defined('PUN'))
 //
 function split_words($text)
 {
-	global $pun_user;
+	global $forum_user;
 	static $noise_match, $noise_replace, $stopwords;
 
 	if (empty($noise_match))
@@ -46,7 +48,7 @@ function split_words($text)
 		$noise_match = 		array('[quote', '[code', '[url', '[img', '[email', '[color', '[colour', 'quote]', 'code]', 'url]', 'img]', 'email]', 'color]', 'colour]', '^', '$', '&', '(', ')', '<', '>', '`', '\'', '"', '|', ',', '@', '_', '?', '%', '~', '+', '[', ']', '{', '}', ':', '\\', '/', '=', '#', ';', '!', '*');
 		$noise_replace =	array('',       '',      '',     '',     '',       '',       '',        '',       '',      '',     '',     '',       '',       '',        ' ', ' ', ' ', ' ', ' ', ' ', ' ', '',  '',   ' ', ' ', ' ', ' ', '',  ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '' ,  ' ', ' ', ' ', ' ', ' ', ' ');
 
-		$stopwords = (array)@file(PUN_ROOT.'lang/'.$pun_user['language'].'/stopwords.txt');
+		$stopwords = (array)@file(FORUM_ROOT.'lang/'.$forum_user['language'].'/stopwords.txt');
 		$stopwords = array_map('trim', $stopwords);
 	}
 
@@ -70,7 +72,7 @@ function split_words($text)
 		while (list($i, $word) = @each($words))
 		{
 			$words[$i] = trim($word, '.');
-			$num_chars = pun_strlen($word);
+			$num_chars = forum_strlen($word);
 
 			if ($num_chars < 3 || $num_chars > 20 || in_array($words[$i], $stopwords))
 				unset($words[$i]);
@@ -86,7 +88,7 @@ function split_words($text)
 //
 function update_search_index($mode, $post_id, $message, $subject = null)
 {
-	global $db_type, $pun_db;
+	global $db_type, $forum_db;
 
 	// Split old and new post/subject to obtain array of 'words'
 	$words_message = split_words($message);
@@ -94,19 +96,19 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 	if ($mode == 'edit')
 	{
-		$result = $pun_db->query('SELECT w.id, w.word, m.subject_match FROM '.$pun_db->prefix.'search_words AS w INNER JOIN '.$pun_db->prefix.'search_matches AS m ON w.id=m.word_id WHERE m.post_id='.$post_id) or error(__FILE__, __LINE__);
+		$result = $forum_db->query('SELECT w.id, w.word, m.subject_match FROM '.$forum_db->prefix.'search_words AS w INNER JOIN '.$forum_db->prefix.'search_matches AS m ON w.id=m.word_id WHERE m.post_id='.$post_id) or error(__FILE__, __LINE__);
 
 		// Declare here to stop array_keys() and array_diff() from complaining if not set
 		$cur_words['post'] = array();
 		$cur_words['subject'] = array();
 
-		while ($row = $pun_db->fetch_row($result))
+		while ($row = $forum_db->fetch_row($result))
 		{
 			$match_in = ($row[2]) ? 'subject' : 'post';
 			$cur_words[$match_in][$row[1]] = $row[0];
 		}
 
-		$pun_db->free_result($result);
+		$forum_db->free_result($result);
 
 		$words['add']['post'] = array_diff($words_message, array_keys($cur_words['post']));
 		$words['add']['subject'] = array_diff($words_subject, array_keys($cur_words['subject']));
@@ -129,13 +131,13 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 	if (!empty($unique_words))
 	{
-		$result = $pun_db->query('SELECT id, word FROM '.$pun_db->prefix.'search_words WHERE word IN('.implode(',', preg_replace('#^(.*)$#', '\'\1\'', $unique_words)).')') or error(__FILE__, __LINE__);
+		$result = $forum_db->query('SELECT id, word FROM '.$forum_db->prefix.'search_words WHERE word IN('.implode(',', preg_replace('#^(.*)$#', '\'\1\'', $unique_words)).')') or error(__FILE__, __LINE__);
 
 		$word_ids = array();
-		while ($row = $pun_db->fetch_row($result))
+		while ($row = $forum_db->fetch_row($result))
 			$word_ids[$row[1]] = $row[0];
 
-		$pun_db->free_result($result);
+		$forum_db->free_result($result);
 
 		$new_words = array_diff($unique_words, array_keys($word_ids));
 		unset($unique_words);
@@ -146,12 +148,12 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 			{
 				case 'mysql':
 				case 'mysqli':
-					$pun_db->query('INSERT INTO '.$pun_db->prefix.'search_words (word) VALUES'.implode(',', preg_replace('#^(.*)$#', '(\'\1\')', $new_words))) or error(__FILE__, __LINE__);
+					$forum_db->query('INSERT INTO '.$forum_db->prefix.'search_words (word) VALUES'.implode(',', preg_replace('#^(.*)$#', '(\'\1\')', $new_words))) or error(__FILE__, __LINE__);
 					break;
 
 				default:
 					while (list(, $word) = @each($new_words))
-						$pun_db->query('INSERT INTO '.$pun_db->prefix.'search_words (word) VALUES(\''.$word.'\')') or error(__FILE__, __LINE__);
+						$forum_db->query('INSERT INTO '.$forum_db->prefix.'search_words (word) VALUES(\''.$word.'\')') or error(__FILE__, __LINE__);
 					break;
 			}
 		}
@@ -170,7 +172,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 			while (list(, $word) = @each($wordlist))
 				$sql .= (($sql != '') ? ',' : '').$cur_words[$match_in][$word];
 
-			$pun_db->query('DELETE FROM '.$pun_db->prefix.'search_matches WHERE word_id IN('.$sql.') AND post_id='.$post_id.' AND subject_match='.$subject_match) or error(__FILE__, __LINE__);
+			$forum_db->query('DELETE FROM '.$forum_db->prefix.'search_matches WHERE word_id IN('.$sql.') AND post_id='.$post_id.' AND subject_match='.$subject_match) or error(__FILE__, __LINE__);
 		}
 	}
 
@@ -180,7 +182,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 		$subject_match = ($match_in == 'subject') ? 1 : 0;
 
 		if (!empty($wordlist))
-			$pun_db->query('INSERT INTO '.$pun_db->prefix.'search_matches (post_id, word_id, subject_match) SELECT '.$post_id.', id, '.$subject_match.' FROM '.$pun_db->prefix.'search_words WHERE word IN('.implode(',', preg_replace('#^(.*)$#', '\'\1\'', $wordlist)).')') or error(__FILE__, __LINE__);
+			$forum_db->query('INSERT INTO '.$forum_db->prefix.'search_matches (post_id, word_id, subject_match) SELECT '.$post_id.', id, '.$subject_match.' FROM '.$forum_db->prefix.'search_words WHERE word IN('.implode(',', preg_replace('#^(.*)$#', '\'\1\'', $wordlist)).')') or error(__FILE__, __LINE__);
 	}
 
 	unset($words);
@@ -192,30 +194,30 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 //
 function strip_search_index($post_ids)
 {
-	global $db_type, $pun_db;
+	global $db_type, $forum_db;
 
 	switch ($db_type)
 	{
 		case 'mysql':
 		case 'mysqli':
 		{
-			$result = $pun_db->query('SELECT word_id FROM '.$pun_db->prefix.'search_matches WHERE post_id IN('.$post_ids.') GROUP BY word_id') or error(__FILE__, __LINE__);
+			$result = $forum_db->query('SELECT word_id FROM '.$forum_db->prefix.'search_matches WHERE post_id IN('.$post_ids.') GROUP BY word_id') or error(__FILE__, __LINE__);
 
-			if ($pun_db->num_rows($result))
+			if ($forum_db->num_rows($result))
 			{
 				$word_ids = '';
-				while ($row = $pun_db->fetch_row($result))
+				while ($row = $forum_db->fetch_row($result))
 					$word_ids .= ($word_ids != '') ? ','.$row[0] : $row[0];
 
-				$result = $pun_db->query('SELECT word_id FROM '.$pun_db->prefix.'search_matches WHERE word_id IN('.$word_ids.') GROUP BY word_id HAVING COUNT(word_id)=1') or error(__FILE__, __LINE__);
+				$result = $forum_db->query('SELECT word_id FROM '.$forum_db->prefix.'search_matches WHERE word_id IN('.$word_ids.') GROUP BY word_id HAVING COUNT(word_id)=1') or error(__FILE__, __LINE__);
 
-				if ($pun_db->num_rows($result))
+				if ($forum_db->num_rows($result))
 				{
 					$word_ids = '';
-					while ($row = $pun_db->fetch_row($result))
+					while ($row = $forum_db->fetch_row($result))
 						$word_ids .= ($word_ids != '') ? ','.$row[0] : $row[0];
 
-					$pun_db->query('DELETE FROM '.$pun_db->prefix.'search_words WHERE id IN('.$word_ids.')') or error(__FILE__, __LINE__);
+					$forum_db->query('DELETE FROM '.$forum_db->prefix.'search_words WHERE id IN('.$word_ids.')') or error(__FILE__, __LINE__);
 				}
 			}
 
@@ -223,9 +225,9 @@ function strip_search_index($post_ids)
 		}
 
 		default:
-			$pun_db->query('DELETE FROM '.$pun_db->prefix.'search_words WHERE id IN(SELECT word_id FROM '.$pun_db->prefix.'search_matches WHERE word_id IN(SELECT word_id FROM '.$pun_db->prefix.'search_matches WHERE post_id IN('.$post_ids.') GROUP BY word_id) GROUP BY word_id HAVING COUNT(word_id)=1)') or error(__FILE__, __LINE__);
+			$forum_db->query('DELETE FROM '.$forum_db->prefix.'search_words WHERE id IN(SELECT word_id FROM '.$forum_db->prefix.'search_matches WHERE word_id IN(SELECT word_id FROM '.$forum_db->prefix.'search_matches WHERE post_id IN('.$post_ids.') GROUP BY word_id) GROUP BY word_id HAVING COUNT(word_id)=1)') or error(__FILE__, __LINE__);
 			break;
 	}
 
-	$pun_db->query('DELETE FROM '.$pun_db->prefix.'search_matches WHERE post_id IN('.$post_ids.')') or error(__FILE__, __LINE__);
+	$forum_db->query('DELETE FROM '.$forum_db->prefix.'search_matches WHERE post_id IN('.$post_ids.')') or error(__FILE__, __LINE__);
 }

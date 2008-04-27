@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -23,21 +25,21 @@
 ************************************************************************/
 
 
-if (!defined('PUN_ROOT'))
-	define('PUN_ROOT', './');
-require PUN_ROOT.'include/common.php';
+if (!defined('FORUM_ROOT'))
+	define('FORUM_ROOT', './');
+require FORUM_ROOT.'include/common.php';
 
 ($hook = get_hook('mr_start')) ? eval($hook) : null;
 
 // Load the misc.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/misc.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/misc.php';
 
 
 // This particular function doesn't require forum-based moderator access. It can be used
 // by all moderators and admins.
 if (isset($_GET['get_host']))
 {
-	if (!$pun_user['is_admmod'])
+	if (!$forum_user['is_admmod'])
 		message($lang_common['No permission']);
 
 	($hook = get_hook('mr_view_ip_selected')) ? eval($hook) : null;
@@ -58,14 +60,14 @@ if (isset($_GET['get_host']))
 		);
 
 		($hook = get_hook('mr_qr_get_poster_ip')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-		if (!$pun_db->num_rows($result))
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		if (!$forum_db->num_rows($result))
 			message($lang_common['Bad request']);
 
-		$ip = $pun_db->result($result);
+		$ip = $forum_db->result($result);
 	}
 
-	message(sprintf($lang_misc['Hostname lookup'], $ip, @gethostbyaddr($ip), '<a href="'.pun_link($pun_url['admin_users']).'?show_users='.$ip.'">'.$lang_misc['Show more users'].'</a>'));
+	message(sprintf($lang_misc['Hostname lookup'], $ip, @gethostbyaddr($ip), '<a href="'.forum_link($forum_url['admin_users']).'?show_users='.$ip.'">'.$lang_misc['Show more users'].'</a>'));
 }
 
 
@@ -81,18 +83,18 @@ $query = array(
 	'JOINS'		=> array(
 		array(
 			'LEFT JOIN'		=> 'forum_perms AS fp',
-			'ON'			=> '(fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].')'
+			'ON'			=> '(fp.forum_id=f.id AND fp.group_id='.$forum_user['g_id'].')'
 		)
 	),
 	'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fid
 );
 
 ($hook = get_hook('mr_qr_get_forum_data')) ? eval($hook) : null;
-$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-if (!$pun_db->num_rows($result))
+$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+if (!$forum_db->num_rows($result))
 	message($lang_common['Bad request']);
 
-$cur_forum = $pun_db->fetch_assoc($result);
+$cur_forum = $forum_db->fetch_assoc($result);
 
 // Make sure we're not trying to moderate a redirect forum
 if ($cur_forum['redirect_url'] != '')
@@ -101,17 +103,17 @@ if ($cur_forum['redirect_url'] != '')
 // Setup the array of moderators
 $mods_array = ($cur_forum['moderators'] != '') ? unserialize($cur_forum['moderators']) : array();
 
-if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || !array_key_exists($pun_user['username'], $mods_array)))
+if ($forum_user['g_id'] != FORUM_ADMIN && ($forum_user['g_moderator'] != '1' || !array_key_exists($forum_user['username'], $mods_array)))
 	message($lang_common['No permission']);
 
 // Get topic/forum tracking data
-if (!$pun_user['is_guest'])
+if (!$forum_user['is_guest'])
 	$tracked_topics = get_tracked_topics();
 
 
 // Did someone click a cancel button?
 if (isset($_POST['cancel']))
-	redirect(pun_link($pun_url['forum'], array($fid, sef_friendly($cur_forum['forum_name']))), $lang_common['Cancel redirect']);
+	redirect(forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name']))), $lang_common['Cancel redirect']);
 
 
 // All other topic moderation features require a topic id in GET
@@ -131,15 +133,15 @@ if (isset($_GET['tid']))
 	);
 
 	($hook = get_hook('mr_qr_get_topic_info')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-	if (!$pun_db->num_rows($result))
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+	if (!$forum_db->num_rows($result))
 		message($lang_common['Bad request']);
 
-	$cur_topic = $pun_db->fetch_assoc($result);
+	$cur_topic = $forum_db->fetch_assoc($result);
 
 	// User pressed the cancel button
 	if (isset($_POST['delete_posts_cancel']))
-		redirect(pun_link($pun_url['topic'], array($tid, sef_friendly($cur_topic['subject']))), $lang_common['Cancel redirect']);
+		redirect(forum_link($forum_url['topic'], array($tid, sef_friendly($cur_topic['subject']))), $lang_common['Cancel redirect']);
 
 	// Delete one or more posts
 	if (isset($_POST['delete_posts']) || isset($_POST['delete_posts_comply']))
@@ -153,7 +155,7 @@ if (isset($_GET['tid']))
 		if (isset($_POST['delete_posts_comply']))
 		{
 			if (!isset($_POST['req_confirm']))
-				redirect(pun_link($pun_url['topic'], array($tid, sef_friendly($cur_topic['subject']))), $lang_common['No confirm redirect']);
+				redirect(forum_link($forum_url['topic'], array($tid, sef_friendly($cur_topic['subject']))), $lang_common['No confirm redirect']);
 
 			($hook = get_hook('mr_confirm_delete_posts_form_submitted')) ? eval($hook) : null;
 
@@ -168,8 +170,8 @@ if (isset($_GET['tid']))
 			);
 
 			($hook = get_hook('mr_qr_verify_post_ids')) ? eval($hook) : null;
-			$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-			if ($pun_db->result($result) != substr_count($posts, ',') + 1)
+			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+			if ($forum_db->result($result) != substr_count($posts, ',') + 1)
 				message($lang_common['Bad request']);
 
 			// Delete the posts
@@ -179,9 +181,9 @@ if (isset($_GET['tid']))
 			);
 
 			($hook = get_hook('mr_qr_delete_posts')) ? eval($hook) : null;
-			$pun_db->query_build($query) or error(__FILE__, __LINE__);
+			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-			require PUN_ROOT.'include/search_idx.php';
+			require FORUM_ROOT.'include/search_idx.php';
 			strip_search_index($posts);
 
 			// Get last_post, last_post_id, and last_poster for the topic after deletion
@@ -194,8 +196,8 @@ if (isset($_GET['tid']))
 			);
 
 			($hook = get_hook('mr_qr_get_topic_last_post_data')) ? eval($hook) : null;
-			$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-			$last_post = $pun_db->fetch_assoc($result);
+			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+			$last_post = $forum_db->fetch_assoc($result);
 
 			// How many posts did we just delete?
 			$num_posts_deleted = substr_count($posts, ',') + 1;
@@ -203,58 +205,58 @@ if (isset($_GET['tid']))
 			// Update the topic
 			$query = array(
 				'UPDATE'	=> 'topics',
-				'SET'		=> 'last_post='.$last_post['posted'].', last_post_id='.$last_post['id'].', last_poster=\''.$pun_db->escape($last_post['poster']).'\', num_replies=num_replies-'.$num_posts_deleted,
+				'SET'		=> 'last_post='.$last_post['posted'].', last_post_id='.$last_post['id'].', last_poster=\''.$forum_db->escape($last_post['poster']).'\', num_replies=num_replies-'.$num_posts_deleted,
 				'WHERE'		=> 'id='.$tid
 			);
 
 			($hook = get_hook('mr_qr_update_topic')) ? eval($hook) : null;
-			$pun_db->query_build($query) or error(__FILE__, __LINE__);
+			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			sync_forum($fid);
 
-			redirect(pun_link($pun_url['topic'], array($tid, sef_friendly($cur_topic['subject']))), $lang_misc['Delete posts redirect']);
+			redirect(forum_link($forum_url['topic'], array($tid, sef_friendly($cur_topic['subject']))), $lang_misc['Delete posts redirect']);
 		}
 
 		// Setup form
-		$pun_page['set_count'] = $pun_page['fld_count'] = 0;
-		$pun_page['form_action'] = pun_link($pun_url['delete_multiple'], array($fid, $tid));
+		$forum_page['set_count'] = $forum_page['fld_count'] = 0;
+		$forum_page['form_action'] = forum_link($forum_url['delete_multiple'], array($fid, $tid));
 
-		$pun_page['hidden_fields'] = array(
-			'<input type="hidden" name="csrf_token" value="'.generate_form_token($pun_page['form_action']).'" />',
+		$forum_page['hidden_fields'] = array(
+			'<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />',
 			'<input type="hidden" name="posts" value="'.implode(',', array_keys($posts)).'" />'
 		);
 
 		// Setup breadcrumbs
-		$pun_page['crumbs'] = array(
-			array($pun_config['o_board_title'], pun_link($pun_url['index'])),
-			array($cur_forum['forum_name'], pun_link($pun_url['forum'], array($fid, sef_friendly($cur_forum['forum_name'])))),
-			array($cur_topic['subject'], pun_link($pun_url['topic'], array($tid, sef_friendly($cur_topic['subject'])))),
+		$forum_page['crumbs'] = array(
+			array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+			array($cur_forum['forum_name'], forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name'])))),
+			array($cur_topic['subject'], forum_link($forum_url['topic'], array($tid, sef_friendly($cur_topic['subject'])))),
 			$lang_misc['Delete posts']
 		);
 
 		($hook = get_hook('mr_confirm_delete_posts_pre_header_load')) ? eval($hook) : null;
 
-		define('PUN_PAGE', 'dialogue');
-		require PUN_ROOT.'header.php';
+		define('FORUM_PAGE', 'dialogue');
+		require FORUM_ROOT.'header.php';
 
 ?>
-<div id="pun-main" class="main">
+<div id="brd-main" class="main">
 
-	<h1><span><?php echo end($pun_page['crumbs']) ?></span></h1>
+	<h1><span><?php echo end($forum_page['crumbs']) ?></span></h1>
 
 	<div class="main-head">
 		<h2><span><?php echo $lang_misc['Confirm post delete'] ?></span></h2>
 	</div>
 
 	<div class="main-content frm">
-		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $pun_page['form_action'] ?>">
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 			<div class="hidden">
-				<?php echo implode("\n\t\t\t\t", $pun_page['hidden_fields'])."\n" ?>
+				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-			<fieldset class="frm-set set<?php echo ++$pun_page['set_count'] ?>">
+			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><strong><?php echo $lang_misc['Delete posts'] ?></strong></legend>
 				<div class="checkbox radbox">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_common['Please confirm'] ?></span><br /><input type="checkbox" id="fld<?php echo $pun_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /> <?php echo $lang_misc['Confirm post delete'] ?>.</label>
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_common['Please confirm'] ?></span><br /><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /> <?php echo $lang_misc['Confirm post delete'] ?>.</label>
 				</div>
 			</fieldset>
 			<div class="frm-buttons">
@@ -269,91 +271,91 @@ if (isset($_GET['tid']))
 
 		$forum_id = $fid;
 
-		require PUN_ROOT.'footer.php';
+		require FORUM_ROOT.'footer.php';
 	}
 
 
 	// Show the delete multiple posts view
 
 	// Load the viewtopic.php language file
-	require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
+	require FORUM_ROOT.'lang/'.$forum_user['language'].'/topic.php';
 
 	// Used to disable the Move and Delete buttons if there are no replies to this topic
-	$pun_page['button_status'] = ($cur_topic['num_replies'] == 0) ? ' disabled="disabled"' : '';
+	$forum_page['button_status'] = ($cur_topic['num_replies'] == 0) ? ' disabled="disabled"' : '';
 
 
 	// Determine the post offset (based on $_GET['p'])
-	$pun_page['num_pages'] = ceil(($cur_topic['num_replies'] + 1) / $pun_user['disp_posts']);
-	$pun_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $pun_page['num_pages']) ? 1 : $_GET['p'];
-	$pun_page['start_from'] = $pun_user['disp_posts'] * ($pun_page['page'] - 1);
-	$pun_page['finish_at'] = min(($pun_page['start_from'] + $pun_user['disp_posts']), ($cur_topic['num_replies'] + 1));
+	$forum_page['num_pages'] = ceil(($cur_topic['num_replies'] + 1) / $forum_user['disp_posts']);
+	$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
+	$forum_page['start_from'] = $forum_user['disp_posts'] * ($forum_page['page'] - 1);
+	$forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_posts']), ($cur_topic['num_replies'] + 1));
 
 	// Generate paging links
-	$pun_page['page_post'] = '<p class="paging"><span class="pages">'.$lang_common['Pages'].'</span> '.paginate($pun_page['num_pages'], $pun_page['page'], $pun_url['delete_multiple'], $lang_common['Paging separator'], array($fid, $tid)).'</p>';
+	$forum_page['page_post'] = '<p class="paging"><span class="pages">'.$lang_common['Pages'].'</span> '.paginate($forum_page['num_pages'], $forum_page['page'], $forum_url['delete_multiple'], $lang_common['Paging separator'], array($fid, $tid)).'</p>';
 
 	// Navigation links for header and page numbering for title/meta description
-	if ($pun_page['page'] < $pun_page['num_pages'])
+	if ($forum_page['page'] < $forum_page['num_pages'])
 	{
-		$pun_page['nav'][] = '<link rel="last" href="'.pun_sublink($pun_url['delete_multiple'], $pun_url['page'], $pun_page['num_pages'], array($fid, $tid)).'" title="'.$lang_common['Page'].' '.$pun_page['num_pages'].'" />';
-		$pun_page['nav'][] = '<link rel="next" href="'.pun_sublink($pun_url['delete_multiple'], $pun_url['page'], ($pun_page['page'] + 1), array($fid, $tid)).'" title="'.$lang_common['Page'].' '.($pun_page['page'] + 1).'" />';
+		$forum_page['nav'][] = '<link rel="last" href="'.forum_sublink($forum_url['delete_multiple'], $forum_url['page'], $forum_page['num_pages'], array($fid, $tid)).'" title="'.$lang_common['Page'].' '.$forum_page['num_pages'].'" />';
+		$forum_page['nav'][] = '<link rel="next" href="'.forum_sublink($forum_url['delete_multiple'], $forum_url['page'], ($forum_page['page'] + 1), array($fid, $tid)).'" title="'.$lang_common['Page'].' '.($forum_page['page'] + 1).'" />';
 	}
-	if ($pun_page['page'] > 1)
+	if ($forum_page['page'] > 1)
 	{
-		$pun_page['nav'][] = '<link rel="prev" href="'.pun_sublink($pun_url['delete_multiple'], $pun_url['page'], ($pun_page['page'] - 1), array($fid, $tid)).'" title="'.$lang_common['Page'].' '.($pun_page['page'] - 1).'" />';
-		$pun_page['nav'][] = '<link rel="first" href="'.pun_link($pun_url['delete_multiple'], array($fid, $tid)).'" title="'.$lang_common['Page'].' 1" />';
+		$forum_page['nav'][] = '<link rel="prev" href="'.forum_sublink($forum_url['delete_multiple'], $forum_url['page'], ($forum_page['page'] - 1), array($fid, $tid)).'" title="'.$lang_common['Page'].' '.($forum_page['page'] - 1).'" />';
+		$forum_page['nav'][] = '<link rel="first" href="'.forum_link($forum_url['delete_multiple'], array($fid, $tid)).'" title="'.$lang_common['Page'].' 1" />';
 	}
 
 	// Generate page information
-	if ($pun_page['num_pages'] > 1)
-		$pun_page['main_info'] = '<span>'.sprintf($lang_common['Page number'], $pun_page['page'], $pun_page['num_pages']).' </span>'.sprintf($lang_common['Paged info'], $lang_common['Posts'], $pun_page['start_from'] + 1, $pun_page['finish_at'], $cur_topic['num_replies'] + 1);
+	if ($forum_page['num_pages'] > 1)
+		$forum_page['main_info'] = '<span>'.sprintf($lang_common['Page number'], $forum_page['page'], $forum_page['num_pages']).' </span>'.sprintf($lang_common['Paged info'], $lang_common['Posts'], $forum_page['start_from'] + 1, $forum_page['finish_at'], $cur_topic['num_replies'] + 1);
 	else
-		$pun_page['main_info'] = sprintf($lang_common['Page info'], $lang_common['Posts'], ($cur_topic['num_replies'] + 1));
+		$forum_page['main_info'] = sprintf($lang_common['Page info'], $lang_common['Posts'], ($cur_topic['num_replies'] + 1));
 
-	if ($pun_config['o_censoring'] == '1')
+	if ($forum_config['o_censoring'] == '1')
 		$cur_topic['subject'] = censor_words($cur_topic['subject']);
 
 	// Setup form
-	$pun_page['form_action'] = pun_link($pun_url['delete_multiple'], array($fid, $tid));
+	$forum_page['form_action'] = forum_link($forum_url['delete_multiple'], array($fid, $tid));
 
 	// Setup breadcrumbs
-	$pun_page['crumbs'] = array(
-		array($pun_config['o_board_title'], pun_link($pun_url['index'])),
-		array($cur_forum['forum_name'], pun_link($pun_url['forum'], array($fid, sef_friendly($cur_forum['forum_name'])))),
-		array($cur_topic['subject'], pun_link($pun_url['topic'], array($tid, sef_friendly($cur_topic['subject'])))),
+	$forum_page['crumbs'] = array(
+		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+		array($cur_forum['forum_name'], forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name'])))),
+		array($cur_topic['subject'], forum_link($forum_url['topic'], array($tid, sef_friendly($cur_topic['subject'])))),
 		$lang_topic['Delete posts']
 	);
 
 	($hook = get_hook('mr_post_actions_pre_header_load')) ? eval($hook) : null;
 
-	define('PUN_PAGE', 'modtopic');
-	require PUN_ROOT.'header.php';
+	define('FORUM_PAGE', 'modtopic');
+	require FORUM_ROOT.'header.php';
 
 ?>
-<div id="pun-main" class="main paged">
+<div id="brd-main" class="main paged">
 
-	<h1><span><?php echo end($pun_page['crumbs']) ?></span></h1>
+	<h1><span><?php echo end($forum_page['crumbs']) ?></span></h1>
 
-	<form method="post" accept-charset="utf-8" action="<?php echo $pun_page['form_action'] ?>">
+	<form method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 
 	<div class="hidden">
-		<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($pun_page['form_action']) ?>" />
+		<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
 	</div>
 
 	<div class="paged-head">
-		<?php echo $pun_page['page_post']."\n" ?>
+		<?php echo $forum_page['page_post']."\n" ?>
 	</div>
 
 	<div class="main-head">
-		<h2><span><?php echo $pun_page['main_info'] ?></span></h2>
+		<h2><span><?php echo $forum_page['main_info'] ?></span></h2>
 		<p class="main-options"><?php echo $lang_misc['Select posts'] ?></p>
 	</div>
 
 	<div class="main-content topic">
 <?php
 
-	require PUN_ROOT.'include/parser.php';
+	require FORUM_ROOT.'include/parser.php';
 
-	$pun_page['item_count'] = 0;	// Keep track of post numbers
+	$forum_page['item_count'] = 0;	// Keep track of post numbers
 
 	// Retrieve the posts (and their respective poster)
 	$query = array(
@@ -371,83 +373,83 @@ if (isset($_GET['tid']))
 		),
 		'WHERE'		=> 'p.topic_id='.$tid,
 		'ORDER BY'	=> 'p.id',
-		'LIMIT'		=> $pun_page['start_from'].','.$pun_user['disp_posts']
+		'LIMIT'		=> $forum_page['start_from'].','.$forum_user['disp_posts']
 	);
 
 	($hook = get_hook('mr_qr_get_posts')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-	while ($cur_post = $pun_db->fetch_assoc($result))
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+	while ($cur_post = $forum_db->fetch_assoc($result))
 	{
-		++$pun_page['item_count'];
+		++$forum_page['item_count'];
 
-		$pun_page['post_options'] = $pun_page['message'] = array();
-		$pun_page['user_ident'] = '';
-		$pun_page['user_info'] = '';
+		$forum_page['post_options'] = $forum_page['message'] = array();
+		$forum_page['user_ident'] = '';
+		$forum_page['user_info'] = '';
 		$cur_post['username'] = $cur_post['poster'];
 
 		// Generate the post heading
-		$pun_page['item_ident'] = array(
-			'num'	=> '<strong>'.($pun_page['start_from'] + $pun_page['item_count']).'</strong>',
-			'user'	=> '<cite>'.($cur_topic['posted'] == $cur_post['posted'] ? sprintf($lang_topic['Topic by'], pun_htmlencode($cur_post['username'])) : sprintf($lang_topic['Reply by'], pun_htmlencode($cur_post['username']))).'</cite>',
+		$forum_page['item_ident'] = array(
+			'num'	=> '<strong>'.($forum_page['start_from'] + $forum_page['item_count']).'</strong>',
+			'user'	=> '<cite>'.($cur_topic['posted'] == $cur_post['posted'] ? sprintf($lang_topic['Topic by'], forum_htmlencode($cur_post['username'])) : sprintf($lang_topic['Reply by'], forum_htmlencode($cur_post['username']))).'</cite>',
 			'date'	=> '<span>'.format_time($cur_post['posted']).'</span>'
 		);
 
-		$pun_page['item_head'] = '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.pun_link($pun_url['post'], $cur_post['id']).'">'.implode(' ', $pun_page['item_ident']).'</a>';
+		$forum_page['item_head'] = '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.implode(' ', $forum_page['item_ident']).'</a>';
 
 		// Generate the checkbox field
 		if ($cur_post['id'] != $cur_topic['first_post_id'])
-			$pun_page['item_select'] = '<div class="checkbox radbox item-select"><label for="fld'.$cur_post['id'].'"><span class="fld-label">'.$lang_misc['Select post'].'</span> <input type="checkbox" id="fld'.$cur_post['id'].'" name="posts['.$cur_post['id'].']" value="1" /> '.$pun_page['item_ident']['num'].'</label></div>';
+			$forum_page['item_select'] = '<div class="checkbox radbox item-select"><label for="fld'.$cur_post['id'].'"><span class="fld-label">'.$lang_misc['Select post'].'</span> <input type="checkbox" id="fld'.$cur_post['id'].'" name="posts['.$cur_post['id'].']" value="1" /> '.$forum_page['item_ident']['num'].'</label></div>';
 
 		// Generate author identification
-		$pun_page['user_ident'] = (($cur_post['poster_id'] > 1) ? '<strong class="username"><a title="'.sprintf($lang_topic['Go to profile'], pun_htmlencode($cur_post['username'])).'" href="'.pun_link($pun_url['user'], $cur_post['poster_id']).'">'.pun_htmlencode($cur_post['username']).'</a></strong>' : '<strong class="username">'.pun_htmlencode($cur_post['username']).'</strong>');
-		$pun_page['user_info'] = '<li class="title"><span><strong>'.$lang_topic['Title'].'</strong> '.get_title($cur_post).'</span></li>';
+		$forum_page['user_ident'] = (($cur_post['poster_id'] > 1) ? '<strong class="username"><a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a></strong>' : '<strong class="username">'.forum_htmlencode($cur_post['username']).'</strong>');
+		$forum_page['user_info'] = '<li class="title"><span><strong>'.$lang_topic['Title'].'</strong> '.get_title($cur_post).'</span></li>';
 
 		// Give the post some class
-		$pun_page['item_status'] = array(
+		$forum_page['item_status'] = array(
 			'post',
-			($pun_page['item_count'] % 2 == 0) ? 'odd' : 'even'
+			($forum_page['item_count'] % 2 == 0) ? 'odd' : 'even'
 		);
 
-		if ($pun_page['item_count'] == 1)
-			$pun_page['item_status'][] = 'firstpost';
+		if ($forum_page['item_count'] == 1)
+			$forum_page['item_status'][] = 'firstpost';
 
-		if (($pun_page['start_from'] + $pun_page['item_count']) == $pun_page['finish_at'])
-			$pun_page['item_status'][] = 'lastpost';
-
-		if ($cur_post['id'] == $cur_topic['first_post_id'])
-			$pun_page['item_status'][] = 'topicpost';
+		if (($forum_page['start_from'] + $forum_page['item_count']) == $forum_page['finish_at'])
+			$forum_page['item_status'][] = 'lastpost';
 
 		if ($cur_post['id'] == $cur_topic['first_post_id'])
-			$pun_page['item_subject'] = $lang_common['Topic'].': '.$cur_topic['subject'];
+			$forum_page['item_status'][] = 'topicpost';
+
+		if ($cur_post['id'] == $cur_topic['first_post_id'])
+			$forum_page['item_subject'] = $lang_common['Topic'].': '.$cur_topic['subject'];
 		else
-			$pun_page['item_subject'] = $lang_common['Re'].' '.$cur_topic['subject'];
+			$forum_page['item_subject'] = $lang_common['Re'].' '.$cur_topic['subject'];
 
 		// Perform the main parsing of the message (BBCode, smilies, censor words etc)
-		$pun_page['message'][] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
+		$forum_page['message'][] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 
 		if ($cur_post['edited'] != '')
-			$pun_page['message'][] = '<p class="lastedit"><em>'.sprintf($lang_topic['Last edited'], pun_htmlencode($cur_post['edited_by']), format_time($cur_post['edited'])).'</em></p>';
+			$forum_page['message'][] = '<p class="lastedit"><em>'.sprintf($lang_topic['Last edited'], forum_htmlencode($cur_post['edited_by']), format_time($cur_post['edited'])).'</em></p>';
 
 		($hook = get_hook('mr_post_actions_row_pre_display')) ? eval($hook) : null;
 
 ?>
-		<div class="<?php echo implode(' ', $pun_page['item_status']) ?>">
+		<div class="<?php echo implode(' ', $forum_page['item_status']) ?>">
 			<div class="postmain">
 				<div id="p<?php echo $cur_post['id'] ?>" class="posthead">
-					<h3><?php echo $pun_page['item_head'] ?></h3>
+					<h3><?php echo $forum_page['item_head'] ?></h3>
 				</div>
-				<?php if (isset($pun_page['item_select'])) echo $pun_page['item_select']."\n" ?>
+				<?php if (isset($forum_page['item_select'])) echo $forum_page['item_select']."\n" ?>
 				<div class="postbody">
 					<div class="user">
-						<h4 class="user-ident"><?php echo $pun_page['user_ident'] ?></h4>
+						<h4 class="user-ident"><?php echo $forum_page['user_ident'] ?></h4>
 						<ul class="user-info">
-							<?php echo $pun_page['user_info']."\n" ?>
+							<?php echo $forum_page['user_info']."\n" ?>
 						</ul>
 					</div>
 					<div class="post-entry">
-						<h4 class="entry-title"><?php echo $pun_page['item_subject'] ?></h4>
+						<h4 class="entry-title"><?php echo $forum_page['item_subject'] ?></h4>
 						<div class="entry-content">
-							<?php echo implode("\n\t\t\t\t\t\t\t", $pun_page['message'])."\n" ?>
+							<?php echo implode("\n\t\t\t\t\t\t\t", $forum_page['message'])."\n" ?>
 						</div>
 					</div>
 				</div>
@@ -461,19 +463,19 @@ if (isset($_GET['tid']))
 	</div>
 
 	<div class="main-foot">
-		<p class="h2"><strong><?php echo $pun_page['main_info'] ?></strong></p>
+		<p class="h2"><strong><?php echo $forum_page['main_info'] ?></strong></p>
 	</div>
 
 	<div class="paged-foot">
-		<p class="submitting"><span class="submit"><input type="submit" name="delete_posts" value="<?php echo $lang_misc['Delete posts'] ?>"<?php echo $pun_page['button_status'] ?> /></span></p>
-		<?php echo $pun_page['page_post']."\n" ?>
+		<p class="submitting"><span class="submit"><input type="submit" name="delete_posts" value="<?php echo $lang_misc['Delete posts'] ?>"<?php echo $forum_page['button_status'] ?> /></span></p>
+		<?php echo $forum_page['page_post']."\n" ?>
 	</div>
 
 	</form>
 
 </div>
 
-<div id="pun-crumbs-foot">
+<div id="brd-crumbs-foot">
 	<p class="crumbs"><?php echo generate_crumbs(false) ?></p>
 </div>
 
@@ -481,7 +483,7 @@ if (isset($_GET['tid']))
 
 	$forum_id = $fid;
 
-	require PUN_ROOT.'footer.php';
+	require FORUM_ROOT.'footer.php';
 }
 
 
@@ -508,12 +510,12 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		);
 
 		($hook = get_hook('mr_qr_get_move_to_forum_name')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-		if (!$pun_db->num_rows($result))
+		if (!$forum_db->num_rows($result))
 			message($lang_common['Bad request']);
 
-		$move_to_forum_name = $pun_db->result($result);
+		$move_to_forum_name = $forum_db->result($result);
 
 		// Verify that the topic IDs are valid
 		$query = array(
@@ -523,8 +525,8 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		);
 
 		($hook = get_hook('mr_qr_verify_topic_ids')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-		if ($pun_db->result($result) != count($topics))
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		if ($forum_db->result($result) != count($topics))
 			message($lang_common['Bad request']);
 
 		// Delete any redirect topics if there are any (only if we moved/copied the topic back to where it where it was once moved from)
@@ -534,7 +536,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		);
 
 		($hook = get_hook('mr_qr_delete_redirect_topics')) ? eval($hook) : null;
-		$pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Move the topic(s)
 		$query = array(
@@ -544,7 +546,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		);
 
 		($hook = get_hook('mr_qr_move_topics')) ? eval($hook) : null;
-		$pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Should we create redirect topics?
 		if (isset($_POST['with_redirect']))
@@ -559,26 +561,26 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 				);
 
 				($hook = get_hook('mr_qr_get_redirect_topic_data')) ? eval($hook) : null;
-				$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-				$moved_to = $pun_db->fetch_assoc($result);
+				$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+				$moved_to = $forum_db->fetch_assoc($result);
 
 				// Create the redirect topic
 				$query = array(
 					'INSERT'	=> 'poster, subject, posted, last_post, moved_to, forum_id',
 					'INTO'		=> 'topics',
-					'VALUES'	=> '\''.$pun_db->escape($moved_to['poster']).'\', \''.$pun_db->escape($moved_to['subject']).'\', '.$moved_to['posted'].', '.$moved_to['last_post'].', '.$cur_topic.', '.$fid
+					'VALUES'	=> '\''.$forum_db->escape($moved_to['poster']).'\', \''.$forum_db->escape($moved_to['subject']).'\', '.$moved_to['posted'].', '.$moved_to['last_post'].', '.$cur_topic.', '.$fid
 				);
 
 				($hook = get_hook('mr_qr_add_redirect_topic')) ? eval($hook) : null;
-				$pun_db->query_build($query) or error(__FILE__, __LINE__);
+				$forum_db->query_build($query) or error(__FILE__, __LINE__);
 			}
 		}
 
 		sync_forum($fid);			// Synchronize the forum FROM which the topic was moved
 		sync_forum($move_to_forum);	// Synchronize the forum TO which the topic was moved
 
-		$pun_page['redirect_msg'] = (count($topics) > 1) ? $lang_misc['Move topics redirect'] : $lang_misc['Move topic redirect'];
-		redirect(pun_link($pun_url['forum'], array($move_to_forum, sef_friendly($move_to_forum_name))), $pun_page['redirect_msg']);
+		$forum_page['redirect_msg'] = (count($topics) > 1) ? $lang_misc['Move topics redirect'] : $lang_misc['Move topic redirect'];
+		redirect(forum_link($forum_url['forum'], array($move_to_forum, sef_friendly($move_to_forum_name))), $forum_page['redirect_msg']);
 	}
 
 	if (isset($_POST['move_topics']))
@@ -606,12 +608,12 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		);
 
 		($hook = get_hook('mr_qr_get_topic_to_move_subject')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-		if (!$pun_db->num_rows($result))
+		if (!$forum_db->num_rows($result))
 			message($lang_common['Bad request']);
 
-		$subject = $pun_db->result($result);
+		$subject = $forum_db->result($result);
 	}
 
 	// Get forums we can move the post into
@@ -625,7 +627,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 			),
 			array(
 				'LEFT JOIN'		=> 'forum_perms AS fp',
-				'ON'			=> '(fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].')'
+				'ON'			=> '(fp.forum_id=f.id AND fp.group_id='.$forum_user['g_id'].')'
 			)
 		),
 		'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND f.redirect_url IS NULL AND f.id!='.$fid,
@@ -633,75 +635,75 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	);
 
 	($hook = get_hook('mr_qr_get_target_forums')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-	$num_forums = $pun_db->num_rows($result);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+	$num_forums = $forum_db->num_rows($result);
 
 	if (!$num_forums)
 		message($lang_misc['Nowhere to move']);
 
 	$forum_list = array();
 	for ($i = 0; $i < $num_forums; ++$i)
-		$forum_list[] = $pun_db->fetch_assoc($result);
+		$forum_list[] = $forum_db->fetch_assoc($result);
 
 	// Setup form
-	$pun_page['fld_count'] = $pun_page['set_count'] = 0;
-	$pun_page['form_action'] = pun_link($pun_url['moderate_forum'], $fid);
+	$forum_page['fld_count'] = $forum_page['set_count'] = 0;
+	$forum_page['form_action'] = forum_link($forum_url['moderate_forum'], $fid);
 
-	$pun_page['hidden_fields'] = array(
-		'<input type="hidden" name="csrf_token" value="'.generate_form_token($pun_page['form_action']).'" />',
+	$forum_page['hidden_fields'] = array(
+		'<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />',
 		'<input type="hidden" name="topics" value="'.$topics.'" />'
 	);
 
 	// Setup breadcrumbs
-	$pun_page['crumbs'][] = array($pun_config['o_board_title'], pun_link($pun_url['index']));
-	$pun_page['crumbs'][] = array($cur_forum['forum_name'], pun_link($pun_url['forum'], array($fid, sef_friendly($cur_forum['forum_name']))));
+	$forum_page['crumbs'][] = array($forum_config['o_board_title'], forum_link($forum_url['index']));
+	$forum_page['crumbs'][] = array($cur_forum['forum_name'], forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name']))));
 	if ($action == 'single')
-		$pun_page['crumbs'][] = array($subject, pun_link($pun_url['topic'], array($topics, sef_friendly($subject))));
+		$forum_page['crumbs'][] = array($subject, forum_link($forum_url['topic'], array($topics, sef_friendly($subject))));
 	else
-		$pun_page['crumbs'][] = array($lang_misc['Moderate forum'], pun_link($pun_url['moderate_forum'], $fid));
-	$pun_page['crumbs'][] =	($action == 'single') ? $lang_misc['Move topic'] : $lang_misc['Move topics'];
+		$forum_page['crumbs'][] = array($lang_misc['Moderate forum'], forum_link($forum_url['moderate_forum'], $fid));
+	$forum_page['crumbs'][] =	($action == 'single') ? $lang_misc['Move topic'] : $lang_misc['Move topics'];
 
 	($hook = get_hook('mr_move_topics_pre_header_load')) ? eval($hook) : null;
 
-	define('PUN_PAGE', 'dialogue');
-	require PUN_ROOT.'header.php';
+	define('FORUM_PAGE', 'dialogue');
+	require FORUM_ROOT.'header.php';
 
 ?>
-<div id="pun-main" class="main">
+<div id="brd-main" class="main">
 
-	<h1><span><?php echo end($pun_page['crumbs']) ?></span></h1>
+	<h1><span><?php echo end($forum_page['crumbs']) ?></span></h1>
 
 	<div class="main-head">
-		<h2><span><?php echo end($pun_page['crumbs']).' '.$lang_misc['To new forum'] ?></span></h2>
+		<h2><span><?php echo end($forum_page['crumbs']).' '.$lang_misc['To new forum'] ?></span></h2>
 	</div>
 
 	<div class="main-content frm">
-		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $pun_page['form_action'] ?>">
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 			<div class="hidden">
-				<?php echo implode("\n\t\t\t\t", $pun_page['hidden_fields'])."\n" ?>
+				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-			<fieldset class="frm-set set<?php echo ++$pun_page['set_count'] ?>">
+			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><strong><?php echo $lang_misc['Move topic'] ?></strong></legend>
 				<div class="frm-fld select">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_misc['Move to'] ?></span><br />
-						<span class="fld-input"><select id="fld<?php echo $pun_page['fld_count'] ?>" name="move_to_forum">
+						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="move_to_forum">
 <?php
 
-	$pun_page['cur_category'] = 0;
+	$forum_page['cur_category'] = 0;
 	foreach ($forum_list as $cur_forum)
 	{
-		if ($cur_forum['cid'] != $pun_page['cur_category'])	// A new category since last iteration?
+		if ($cur_forum['cid'] != $forum_page['cur_category'])	// A new category since last iteration?
 		{
-			if ($pun_page['cur_category'])
+			if ($forum_page['cur_category'])
 				echo "\t\t\t\t\t\t".'</optgroup>'."\n";
 
-			echo "\t\t\t\t\t\t".'<optgroup label="'.pun_htmlencode($cur_forum['cat_name']).'">'."\n";
-			$pun_page['cur_category'] = $cur_forum['cid'];
+			echo "\t\t\t\t\t\t".'<optgroup label="'.forum_htmlencode($cur_forum['cat_name']).'">'."\n";
+			$forum_page['cur_category'] = $cur_forum['cid'];
 		}
 
 		if ($cur_forum['fid'] != $fid)
-			echo "\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'">'.pun_htmlencode($cur_forum['forum_name']).'</option>'."\n";
+			echo "\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'">'.forum_htmlencode($cur_forum['forum_name']).'</option>'."\n";
 	}
 
 ?>
@@ -710,7 +712,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 					</label>
 				</div>
 				<div class="checkbox radbox">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_misc['Redirect topic'] ?></span><br /><input type="checkbox" id="fld<?php echo $pun_page['fld_count'] ?>" name="with_redirect" value="1"<?php if ($action == 'single') echo ' checked="checked"' ?> /> <?php echo ($action == 'single') ? $lang_misc['Leave redirect'] : $lang_misc['Leave redirects'] ?></label>
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_misc['Redirect topic'] ?></span><br /><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="with_redirect" value="1"<?php if ($action == 'single') echo ' checked="checked"' ?> /> <?php echo ($action == 'single') ? $lang_misc['Leave redirect'] : $lang_misc['Leave redirects'] ?></label>
 				</div>
 			</fieldset>
 			<div class="frm-buttons">
@@ -725,7 +727,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 
 	$forum_id = $fid;
 
-	require PUN_ROOT.'footer.php';
+	require FORUM_ROOT.'footer.php';
 }
 
 
@@ -739,7 +741,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 	if (isset($_POST['delete_topics_comply']))
 	{
 		if (!isset($_POST['req_confirm']))
-			redirect(pun_link($pun_url['forum'], array($fid, sef_friendly($cur_forum['forum_name']))), $lang_common['Cancel redirect']);
+			redirect(forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name']))), $lang_common['Cancel redirect']);
 
 		($hook = get_hook('mr_confirm_delete_topics_form_submitted')) ? eval($hook) : null;
 
@@ -754,8 +756,8 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		);
 
 		($hook = get_hook('mr_qr_verify_topic_ids2')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-		if ($pun_db->result($result) != substr_count($topics, ',') + 1)
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		if ($forum_db->result($result) != substr_count($topics, ',') + 1)
 			message($lang_common['Bad request']);
 
 		// Delete the topics and any redirect topics
@@ -765,7 +767,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		);
 
 		($hook = get_hook('mr_qr_delete_topics')) ? eval($hook) : null;
-		$pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Delete any subscriptions
 		$query = array(
@@ -774,7 +776,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		);
 
 		($hook = get_hook('mr_qr_delete_subscriptions')) ? eval($hook) : null;
-		$pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Create a list of the post ID's in the deleted topic and strip the search index
 		$query = array(
@@ -784,16 +786,16 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		);
 
 		($hook = get_hook('mr_qr_get_deleted_posts')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$post_ids = '';
-		while ($row = $pun_db->fetch_row($result))
+		while ($row = $forum_db->fetch_row($result))
 			$post_ids .= ($post_ids != '') ? ','.$row[0] : $row[0];
 
 		// Strip the search index provided we're not just deleting redirect topics
 		if ($post_ids != '')
 		{
-			require PUN_ROOT.'include/search_idx.php';
+			require FORUM_ROOT.'include/search_idx.php';
 			strip_search_index($post_ids);
 		}
 
@@ -804,54 +806,54 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		);
 
 		($hook = get_hook('mr_qr_delete_topic_posts')) ? eval($hook) : null;
-		$pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		sync_forum($fid);
 
-		redirect(pun_link($pun_url['forum'], array($fid, sef_friendly($cur_forum['forum_name']))), $lang_misc['Delete topics redirect']);
+		redirect(forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name']))), $lang_misc['Delete topics redirect']);
 	}
 
 
 	// Setup form
-	$pun_page['fld_count'] = $pun_page['set_count'] = 0;
-	$pun_page['form_action'] = pun_link($pun_url['moderate_forum'], $fid);
+	$forum_page['fld_count'] = $forum_page['set_count'] = 0;
+	$forum_page['form_action'] = forum_link($forum_url['moderate_forum'], $fid);
 
-	$pun_page['hidden_fields'] = array(
-		'<input type="hidden" name="csrf_token" value="'.generate_form_token($pun_page['form_action']).'" />',
+	$forum_page['hidden_fields'] = array(
+		'<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />',
 		'<input type="hidden" name="topics" value="'.implode(',', array_keys($topics)).'" />'
 	);
 
 	// Setup breadcrumbs
-	$pun_page['crumbs'] = array(
-		array($pun_config['o_board_title'], pun_link($pun_url['index'])),
-		array($cur_forum['forum_name'], pun_link($pun_url['forum'], array($fid, sef_friendly($cur_forum['forum_name'])))),
-		array($lang_misc['Moderate forum'], pun_link($pun_url['moderate_forum'], $fid)),
+	$forum_page['crumbs'] = array(
+		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+		array($cur_forum['forum_name'], forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name'])))),
+		array($lang_misc['Moderate forum'], forum_link($forum_url['moderate_forum'], $fid)),
 		$lang_misc['Delete topics']
 	);
 
 	($hook = get_hook('mr_delete_topics_pre_header_load')) ? eval($hook) : null;
 
-	define('PUN_PAGE', 'dialogue');
-	require PUN_ROOT.'header.php';
+	define('FORUM_PAGE', 'dialogue');
+	require FORUM_ROOT.'header.php';
 
 ?>
-<div id="pun-main" class="main">
+<div id="brd-main" class="main">
 
-	<h1><span><?php echo end($pun_page['crumbs']) ?></span></h1>
+	<h1><span><?php echo end($forum_page['crumbs']) ?></span></h1>
 
 	<div class="main-head">
 		<h2><span><?php echo $lang_misc['Confirm topic delete'] ?></span></h2>
 	</div>
 
 	<div class="main-content frm">
-		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $pun_page['form_action'] ?>">
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 			<div class="hidden">
-				<?php echo implode("\n\t\t\t\t", $pun_page['hidden_fields'])."\n" ?>
+				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-			<fieldset class="frm-set set<?php echo ++$pun_page['set_count'] ?>">
+			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><strong><?php echo $lang_misc['Delete topics'] ?></strong></legend>
 				<div class="checkbox radbox">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_common['Please confirm'] ?></span><br /><input type="checkbox" id="fld<?php echo $pun_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /> <?php echo $lang_misc['Delete topics comply'] ?></label>
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_common['Please confirm'] ?></span><br /><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /> <?php echo $lang_misc['Delete topics comply'] ?></label>
 				</div>
 			</fieldset>
 			<div class="frm-buttons">
@@ -866,7 +868,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 
 	$forum_id = $fid;
 
-	require PUN_ROOT.'footer.php';
+	require FORUM_ROOT.'footer.php';
 }
 
 
@@ -891,10 +893,10 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 		);
 
 		($hook = get_hook('mr_qr_open_close_topics')) ? eval($hook) : null;
-		$pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-		$pun_page['redirect_msg'] = ($action) ? $lang_misc['Close topics redirect'] : $lang_misc['Open topics redirect'];
-		redirect(pun_link($pun_url['moderate_forum'], $fid), $pun_page['redirect_msg']);
+		$forum_page['redirect_msg'] = ($action) ? $lang_misc['Close topics redirect'] : $lang_misc['Open topics redirect'];
+		redirect(forum_link($forum_url['moderate_forum'], $fid), $forum_page['redirect_msg']);
 	}
 	// Or just one in $_GET
 	else
@@ -916,12 +918,12 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 		);
 
 		($hook = get_hook('mr_qr_get_open_close_topic_subject')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-		if (!$pun_db->num_rows($result))
+		if (!$forum_db->num_rows($result))
 			message($lang_common['Bad request']);
 
-		$subject = $pun_db->result($result);
+		$subject = $forum_db->result($result);
 
 		$query = array(
 			'UPDATE'	=> 'topics',
@@ -930,10 +932,10 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 		);
 
 		($hook = get_hook('mr_qr_open_close_topic')) ? eval($hook) : null;
-		$pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-		$pun_page['redirect_msg'] = ($action) ? $lang_misc['Close topic redirect'] : $lang_misc['Open topic redirect'];
-		redirect(pun_link($pun_url['topic'], array($topic_id, sef_friendly($subject))), $pun_page['redirect_msg']);
+		$forum_page['redirect_msg'] = ($action) ? $lang_misc['Close topic redirect'] : $lang_misc['Open topic redirect'];
+		redirect(forum_link($forum_url['topic'], array($topic_id, sef_friendly($subject))), $forum_page['redirect_msg']);
 	}
 }
 
@@ -960,12 +962,12 @@ else if (isset($_GET['stick']))
 	);
 
 	($hook = get_hook('mr_qr_get_stick_topic_subject')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	if (!$pun_db->num_rows($result))
+	if (!$forum_db->num_rows($result))
 		message($lang_common['Bad request']);
 
-	$subject = $pun_db->result($result);
+	$subject = $forum_db->result($result);
 
 	$query = array(
 		'UPDATE'	=> 'topics',
@@ -974,9 +976,9 @@ else if (isset($_GET['stick']))
 	);
 
 	($hook = get_hook('mr_qr_stick_topic')) ? eval($hook) : null;
-	$pun_db->query_build($query) or error(__FILE__, __LINE__);
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	redirect(pun_link($pun_url['topic'], array($stick, sef_friendly($subject))), $lang_misc['Stick topic redirect']);
+	redirect(forum_link($forum_url['topic'], array($stick, sef_friendly($subject))), $lang_misc['Stick topic redirect']);
 }
 
 
@@ -1002,12 +1004,12 @@ else if (isset($_GET['unstick']))
 	);
 
 	($hook = get_hook('mr_qr_get_unstick_topic_subject')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	if (!$pun_db->num_rows($result))
+	if (!$forum_db->num_rows($result))
 		message($lang_common['Bad request']);
 
-	$subject = $pun_db->result($result);
+	$subject = $forum_db->result($result);
 
 	$query = array(
 		'UPDATE'	=> 'topics',
@@ -1016,9 +1018,9 @@ else if (isset($_GET['unstick']))
 	);
 
 	($hook = get_hook('mr_qr_unstick_topic')) ? eval($hook) : null;
-	$pun_db->query_build($query) or error(__FILE__, __LINE__);
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	redirect(pun_link($pun_url['topic'], array($unstick, sef_friendly($subject))), $lang_misc['Unstick topic redirect']);
+	redirect(forum_link($forum_url['topic'], array($unstick, sef_friendly($subject))), $lang_misc['Unstick topic redirect']);
 }
 
 
@@ -1028,78 +1030,78 @@ else if (isset($_GET['unstick']))
 // No specific forum moderation action was specified in the query string, so we'll display the moderate forum view
 
 // Load the viewforum.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/forum.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/forum.php';
 
 // Determine the topic offset (based on $_GET['p'])
-$pun_page['num_pages'] = ceil($cur_forum['num_topics'] / $pun_user['disp_topics']);
+$forum_page['num_pages'] = ceil($cur_forum['num_topics'] / $forum_user['disp_topics']);
 
-$pun_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $pun_page['num_pages']) ? 1 : $_GET['p'];
-$pun_page['start_from'] = $pun_user['disp_topics'] * ($pun_page['page'] - 1);
-$pun_page['finish_at'] = min(($pun_page['start_from'] + $pun_user['disp_topics']), ($cur_forum['num_topics']));
+$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
+$forum_page['start_from'] = $forum_user['disp_topics'] * ($forum_page['page'] - 1);
+$forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_topics']), ($cur_forum['num_topics']));
 
 // Generate paging links
-$pun_page['page_post'] = '<p class="paging"><span class="pages">'.$lang_common['Pages'].'</span> '.paginate($pun_page['num_pages'], $pun_page['page'], $pun_url['moderate_forum'], $lang_common['Paging separator'], $fid).'</p>';
+$forum_page['page_post'] = '<p class="paging"><span class="pages">'.$lang_common['Pages'].'</span> '.paginate($forum_page['num_pages'], $forum_page['page'], $forum_url['moderate_forum'], $lang_common['Paging separator'], $fid).'</p>';
 
 // Navigation links for header and page numbering for title/meta description
-if ($pun_page['page'] < $pun_page['num_pages'])
+if ($forum_page['page'] < $forum_page['num_pages'])
 {
-	$pun_page['nav'][] = '<link rel="last" href="'.pun_sublink($pun_url['moderate_forum'], $pun_url['page'], $pun_page['num_pages'], $fid).'" title="'.$lang_common['Page'].' '.$pun_page['num_pages'].'" />';
-	$pun_page['nav'][] = '<link rel="next" href="'.pun_sublink($pun_url['moderate_forum'], $pun_url['page'], ($pun_page['page'] + 1), $fid).'" title="'.$lang_common['Page'].' '.($pun_page['page'] + 1).'" />';
+	$forum_page['nav'][] = '<link rel="last" href="'.forum_sublink($forum_url['moderate_forum'], $forum_url['page'], $forum_page['num_pages'], $fid).'" title="'.$lang_common['Page'].' '.$forum_page['num_pages'].'" />';
+	$forum_page['nav'][] = '<link rel="next" href="'.forum_sublink($forum_url['moderate_forum'], $forum_url['page'], ($forum_page['page'] + 1), $fid).'" title="'.$lang_common['Page'].' '.($forum_page['page'] + 1).'" />';
 }
-if ($pun_page['page'] > 1)
+if ($forum_page['page'] > 1)
 {
-	$pun_page['nav'][] = '<link rel="prev" href="'.pun_sublink($pun_url['moderate_forum'], $pun_url['page'], ($pun_page['page'] - 1), $fid).'" title="'.$lang_common['Page'].' '.($pun_page['page'] - 1).'" />';
-	$pun_page['nav'][] = '<link rel="first" href="'.pun_link($pun_url['moderate_forum'], $fid).'" title="'.$lang_common['Page'].' 1" />';
+	$forum_page['nav'][] = '<link rel="prev" href="'.forum_sublink($forum_url['moderate_forum'], $forum_url['page'], ($forum_page['page'] - 1), $fid).'" title="'.$lang_common['Page'].' '.($forum_page['page'] - 1).'" />';
+	$forum_page['nav'][] = '<link rel="first" href="'.forum_link($forum_url['moderate_forum'], $fid).'" title="'.$lang_common['Page'].' 1" />';
 }
 
 // Generate page information
-if ($pun_page['num_pages'] > 1)
-	$pun_page['main_info'] = '<span>'.sprintf($lang_common['Page number'], $pun_page['page'], $pun_page['num_pages']).' </span>'.sprintf($lang_common['Paged info'], $lang_common['Topics'], $pun_page['start_from'] + 1, $pun_page['finish_at'], $cur_forum['num_topics']);
+if ($forum_page['num_pages'] > 1)
+	$forum_page['main_info'] = '<span>'.sprintf($lang_common['Page number'], $forum_page['page'], $forum_page['num_pages']).' </span>'.sprintf($lang_common['Paged info'], $lang_common['Topics'], $forum_page['start_from'] + 1, $forum_page['finish_at'], $cur_forum['num_topics']);
 else
-	$pun_page['main_info'] = (($pun_db->num_rows($result)) ? sprintf($lang_common['Page info'], $lang_common['Topics'], $cur_forum['num_topics']) : $lang_forum['No topics']);
+	$forum_page['main_info'] = (($forum_db->num_rows($result)) ? sprintf($lang_common['Page info'], $lang_common['Topics'], $cur_forum['num_topics']) : $lang_forum['No topics']);
 
 // Setup form
-$pun_page['fld_count'] = 0;
-$pun_page['form_action'] = pun_link($pun_url['moderate_forum'], $fid);
+$forum_page['fld_count'] = 0;
+$forum_page['form_action'] = forum_link($forum_url['moderate_forum'], $fid);
 
 // Setup breadcrumbs
-$pun_page['crumbs'] = array(
-	array($pun_config['o_board_title'], pun_link($pun_url['index'])),
-	array($cur_forum['forum_name'], pun_link($pun_url['forum'], array($fid, sef_friendly($cur_forum['forum_name'])))),
+$forum_page['crumbs'] = array(
+	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+	array($cur_forum['forum_name'], forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name'])))),
 	$lang_forum['Moderate forum']
 );
 
 ($hook = get_hook('mr_topic_actions_pre_header_load')) ? eval($hook) : null;
 
-define('PUN_PAGE', 'modforum');
-require PUN_ROOT.'header.php';
+define('FORUM_PAGE', 'modforum');
+require FORUM_ROOT.'header.php';
 
 ?>
-<div id="pun-main" class="main paged">
+<div id="brd-main" class="main paged">
 
-	<h1><span><?php echo end($pun_page['crumbs']) ?></span></h1>
+	<h1><span><?php echo end($forum_page['crumbs']) ?></span></h1>
 
-	<form method="post" accept-charset="utf-8" action="<?php echo $pun_page['form_action'] ?>">
+	<form method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 
 	<div class="paged-head">
-		<?php echo $pun_page['page_post']."\n" ?>
+		<?php echo $forum_page['page_post']."\n" ?>
 	</div>
 
 	<div class="main-head">
-		<h2><span><?php echo $pun_page['main_info'] ?></span></h2>
+		<h2><span><?php echo $forum_page['main_info'] ?></span></h2>
 		<p class="main-options"><?php echo $lang_misc['Select topics'] ?></p>
 	</div>
 
 	<div id="forum<?php echo $fid ?>" class="main-content forum">
 		<div class="hidden">
-			<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($pun_page['form_action']) ?>" />
+			<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
 		</div>
-		<table cellspacing="0" summary="<?php echo $lang_forum['Table summary mods'].pun_htmlencode($cur_forum['forum_name']) ?>">
+		<table cellspacing="0" summary="<?php echo $lang_forum['Table summary mods'].forum_htmlencode($cur_forum['forum_name']) ?>">
 			<thead>
 				<tr>
 					<th class="tcl" scope="col"><?php echo $lang_common['Topic'] ?></th>
 					<th class="tc2" scope="col"><?php echo $lang_common['Replies'] ?></th>
-<?php if ($pun_config['o_topic_views'] == '1'): ?>					<th class="tc3" scope="col"><?php echo $lang_forum['Views'] ?></th>
+<?php if ($forum_config['o_topic_views'] == '1'): ?>					<th class="tc3" scope="col"><?php echo $lang_forum['Views'] ?></th>
 <?php endif; ?>					<th class="tcr" scope="col"><?php echo $lang_common['Last post'] ?></th>
 					<th class="tcmod" scope="col"><?php echo $lang_misc['Select'] ?></th>
 				</tr>
@@ -1113,94 +1115,94 @@ $query = array(
 	'FROM'		=> 'topics AS t',
 	'WHERE'		=> 'forum_id='.$fid,
 	'ORDER BY'	=> 't.sticky DESC, last_post DESC',
-	'LIMIT'		=>	$pun_page['start_from'].', '.$pun_user['disp_topics']
+	'LIMIT'		=>	$forum_page['start_from'].', '.$forum_user['disp_topics']
 );
 
 ($hook = get_hook('mr_qr_get_topics')) ? eval($hook) : null;
-$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 // If there are topics in this forum.
-if ($pun_db->num_rows($result))
+if ($forum_db->num_rows($result))
 {
-	$pun_page['button_status'] = '';
-	$pun_page['item_count'] = 0;
+	$forum_page['button_status'] = '';
+	$forum_page['item_count'] = 0;
 
-	while ($cur_topic = $pun_db->fetch_assoc($result))
+	while ($cur_topic = $forum_db->fetch_assoc($result))
 	{
-		++$pun_page['item_count'];
+		++$forum_page['item_count'];
 
 		// Start from scratch
-		$pun_page['item_subject'] = $pun_page['item_status'] = $pun_page['item_last_post'] = $pun_page['item_alt_message'] = $pun_page['item_nav'] = array();
-		$pun_page['item_indicator'] = '';
-		$pun_page['item_alt_message'][] = $lang_common['Topic'].' '.($pun_page['start_from'] + $pun_page['item_count']);
+		$forum_page['item_subject'] = $forum_page['item_status'] = $forum_page['item_last_post'] = $forum_page['item_alt_message'] = $forum_page['item_nav'] = array();
+		$forum_page['item_indicator'] = '';
+		$forum_page['item_alt_message'][] = $lang_common['Topic'].' '.($forum_page['start_from'] + $forum_page['item_count']);
 
-		if ($pun_config['o_censoring'] == '1')
+		if ($forum_config['o_censoring'] == '1')
 			$cur_topic['subject'] = censor_words($cur_topic['subject']);
 
 		if ($cur_topic['moved_to'] != null)
 		{
-			$pun_page['item_status'][] = 'moved';
-			$pun_page['item_last_post'][] = $pun_page['item_alt_message'][] = $lang_forum['Moved'];
-			$pun_page['item_subject'][] = '<a href="'.pun_link($pun_url['topic'], array($cur_topic['moved_to'], sef_friendly($cur_topic['subject']))).'">'.pun_htmlencode($cur_topic['subject']).'</a>';
-			$pun_page['item_subject'][] = '<span class="byuser">'.sprintf($lang_common['By user'], pun_htmlencode($cur_topic['poster'])).'</span>';
+			$forum_page['item_status'][] = 'moved';
+			$forum_page['item_last_post'][] = $forum_page['item_alt_message'][] = $lang_forum['Moved'];
+			$forum_page['item_subject'][] = '<a href="'.forum_link($forum_url['topic'], array($cur_topic['moved_to'], sef_friendly($cur_topic['subject']))).'">'.forum_htmlencode($cur_topic['subject']).'</a>';
+			$forum_page['item_subject'][] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($cur_topic['poster'])).'</span>';
 			$cur_topic['num_replies'] = $cur_topic['num_views'] = ' - ';
-			$pun_page['ghost_topic'] = true;
+			$forum_page['ghost_topic'] = true;
 		}
 		else
 		{
-			$pun_page['ghost_topic'] = false;
+			$forum_page['ghost_topic'] = false;
 
 			if ($cur_topic['sticky'] == '1')
 			{
-				$pun_page['item_subject'][] = $lang_forum['Sticky'];
-				$pun_page['item_status'][] = 'sticky';
+				$forum_page['item_subject'][] = $lang_forum['Sticky'];
+				$forum_page['item_status'][] = 'sticky';
 			}
 
 			if ($cur_topic['closed'] == '1')
 			{
-				$pun_page['item_subject'][] = $lang_common['Closed'];
-				$pun_page['item_status'][] = 'closed';
+				$forum_page['item_subject'][] = $lang_common['Closed'];
+				$forum_page['item_status'][] = 'closed';
 			}
 
-			$pun_page['item_subject'][] = '<a href="'.pun_link($pun_url['topic'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))).'">'.pun_htmlencode($cur_topic['subject']).'</a>';
+			$forum_page['item_subject'][] = '<a href="'.forum_link($forum_url['topic'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))).'">'.forum_htmlencode($cur_topic['subject']).'</a>';
 
-			$pun_page['item_pages'] = ceil(($cur_topic['num_replies'] + 1) / $pun_user['disp_posts']);
+			$forum_page['item_pages'] = ceil(($cur_topic['num_replies'] + 1) / $forum_user['disp_posts']);
 
-			if ($pun_page['item_pages'] > 1)
-				$pun_page['item_nav'][] = paginate($pun_page['item_pages'], -1, $pun_url['topic'], $lang_common['Page separator'], array($cur_topic['id'], sef_friendly($cur_topic['subject'])));
+			if ($forum_page['item_pages'] > 1)
+				$forum_page['item_nav'][] = paginate($forum_page['item_pages'], -1, $forum_url['topic'], $lang_common['Page separator'], array($cur_topic['id'], sef_friendly($cur_topic['subject'])));
 
 			// Does this topic contain posts we haven't read? If so, tag it accordingly.
-			if ($cur_topic['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$cur_topic['id']]) || $tracked_topics['topics'][$cur_topic['id']] < $cur_topic['last_post']) && (!isset($tracked_topics['forums'][$fid]) || $tracked_topics['forums'][$fid] < $cur_topic['last_post']) && !$pun_page['ghost_topic'])
+			if ($cur_topic['last_post'] > $forum_user['last_visit'] && (!isset($tracked_topics['topics'][$cur_topic['id']]) || $tracked_topics['topics'][$cur_topic['id']] < $cur_topic['last_post']) && (!isset($tracked_topics['forums'][$fid]) || $tracked_topics['forums'][$fid] < $cur_topic['last_post']) && !$forum_page['ghost_topic'])
 			{
-				$pun_page['item_nav'][] = '<a href="'.pun_link($pun_url['topic_new_posts'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))).'" title="'.$lang_forum['New posts info'].'">'.$lang_common['New posts'].'</a>';
-				$pun_page['item_status'][] = 'new';
+				$forum_page['item_nav'][] = '<a href="'.forum_link($forum_url['topic_new_posts'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))).'" title="'.$lang_forum['New posts info'].'">'.$lang_common['New posts'].'</a>';
+				$forum_page['item_status'][] = 'new';
 			}
 
-			if (!empty($pun_page['item_nav']))
-				$pun_page['item_subject'][] = '<span class="topic-nav">[&#160;'.implode('&#160;&#160;', $pun_page['item_nav']).'&#160;]</span>';
+			if (!empty($forum_page['item_nav']))
+				$forum_page['item_subject'][] = '<span class="topic-nav">[&#160;'.implode('&#160;&#160;', $forum_page['item_nav']).'&#160;]</span>';
 
-			$pun_page['item_subject'][] = '<span class="byuser">'.sprintf($lang_common['By user'], pun_htmlencode($cur_topic['poster'])).'</span>';
-			$pun_page['item_last_post'][] = '<a href="'.pun_link($pun_url['post'], $cur_topic['last_post_id']).'">'.format_time($cur_topic['last_post']).'</a>';
-			$pun_page['item_last_post'][] = '<span class="byuser">'.sprintf($lang_common['By user'], pun_htmlencode($cur_topic['last_poster'])).'</span>';
+			$forum_page['item_subject'][] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($cur_topic['poster'])).'</span>';
+			$forum_page['item_last_post'][] = '<a href="'.forum_link($forum_url['post'], $cur_topic['last_post_id']).'">'.format_time($cur_topic['last_post']).'</a>';
+			$forum_page['item_last_post'][] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($cur_topic['last_poster'])).'</span>';
 
-			if (empty($pun_page['item_status']))
-				$pun_page['item_status'][] = 'normal';
+			if (empty($forum_page['item_status']))
+				$forum_page['item_status'][] = 'normal';
 
-			$pun_page['subject_label'] = $cur_topic['subject'];
+			$forum_page['subject_label'] = $cur_topic['subject'];
 		}
 
-		$pun_page['item_style'] = (($pun_page['item_count'] % 2 != 0) ? 'odd' : 'even').' '.implode(' ', $pun_page['item_status']);
-		$pun_page['item_indicator'] = '<span class="status '.implode(' ', $pun_page['item_status']).'" title="'.implode(' - ', $pun_page['item_alt_message']).'"><img src="'.$base_url.'/style/'.$pun_user['style'].'/status.png" alt="'.implode(' - ', $pun_page['item_alt_message']).'" />'.$pun_page['item_indicator'].'</span>';
+		$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? 'odd' : 'even').' '.implode(' ', $forum_page['item_status']);
+		$forum_page['item_indicator'] = '<span class="status '.implode(' ', $forum_page['item_status']).'" title="'.implode(' - ', $forum_page['item_alt_message']).'"><img src="'.$base_url.'/style/'.$forum_user['style'].'/status.png" alt="'.implode(' - ', $forum_page['item_alt_message']).'" />'.$forum_page['item_indicator'].'</span>';
 
 		($hook = get_hook('mr_topic_actions_row_pre_display')) ? eval($hook) : null;
 
 ?>
-				<tr class="<?php echo $pun_page['item_style'] ?>">
-					<td class="tcl"><?php echo $pun_page['item_indicator'].' '.implode(' ', $pun_page['item_subject']) ?></td>
-					<td class="tc2"><?php echo (!$pun_page['ghost_topic']) ? $cur_topic['num_replies'] : ' - ' ?></td>
-<?php if ($pun_config['o_topic_views'] == '1'): ?>					<td class="tc3"><?php echo (!$pun_page['ghost_topic']) ? $cur_topic['num_views'] : ' - ' ?></td>
-<?php endif; ?>					<td class="tcr"><?php echo implode(' ', $pun_page['item_last_post']) ?></td>
-					<td class="tcmod"><label for="fld<?php echo ++$pun_page['fld_count'] ?>"><input id="fld<?php echo $pun_page['fld_count'] ?>" type="checkbox" name="topics[<?php echo $cur_topic['id'] ?>]" value="1" /> <span><?php echo $pun_page['subject_label'] ?></span></label></td>
+				<tr class="<?php echo $forum_page['item_style'] ?>">
+					<td class="tcl"><?php echo $forum_page['item_indicator'].' '.implode(' ', $forum_page['item_subject']) ?></td>
+					<td class="tc2"><?php echo (!$forum_page['ghost_topic']) ? $cur_topic['num_replies'] : ' - ' ?></td>
+<?php if ($forum_config['o_topic_views'] == '1'): ?>					<td class="tc3"><?php echo (!$forum_page['ghost_topic']) ? $cur_topic['num_views'] : ' - ' ?></td>
+<?php endif; ?>					<td class="tcr"><?php echo implode(' ', $forum_page['item_last_post']) ?></td>
+					<td class="tcmod"><label for="fld<?php echo ++$forum_page['fld_count'] ?>"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="checkbox" name="topics[<?php echo $cur_topic['id'] ?>]" value="1" /> <span><?php echo $forum_page['subject_label'] ?></span></label></td>
 				</tr>
 <?php
 
@@ -1208,16 +1210,16 @@ if ($pun_db->num_rows($result))
 }
 else
 {
-	$pun_page['button_status'] = ' disabled="disabled"';
-	$pun_page['item_indicator'] = '<span class="status empty" title="'.$lang_forum['No topics'].'"><img src="'.$base_url.'/style/'.$pun_user['style'].'/status.png" alt="'.$lang_forum['No topics'].'" /></span>';
+	$forum_page['button_status'] = ' disabled="disabled"';
+	$forum_page['item_indicator'] = '<span class="status empty" title="'.$lang_forum['No topics'].'"><img src="'.$base_url.'/style/'.$forum_user['style'].'/status.png" alt="'.$lang_forum['No topics'].'" /></span>';
 
 	($hook = get_hook('mr_topic_actions_forum_empty')) ? eval($hook) : null;
 
 ?>
 				<tr class="odd empty">
-					<td class="tcl"><?php echo $pun_page['item_indicator'].' '.$lang_forum['First topic nag'] ?></td>
+					<td class="tcl"><?php echo $forum_page['item_indicator'].' '.$lang_forum['First topic nag'] ?></td>
 					<td class="tc2"> - </td>
-<?php if ($pun_config['o_topic_views'] == '1'): ?>					<td class="tc3"> - </td>
+<?php if ($forum_config['o_topic_views'] == '1'): ?>					<td class="tc3"> - </td>
 <?php endif; ?>					<td class="tcr"><?php echo $lang_forum['Never'] ?></td>
 					<td class="tcmod"> - </td>
 				</tr>
@@ -1231,11 +1233,11 @@ else
 <?php
 
 // Setup moderator control buttons
-$pun_page['main_mod_submit'] = array(
-	'<span class="submit"><input type="submit" name="move_topics" value="'.$lang_misc['Move'].'"'.$pun_page['button_status'].' /></span>',
-	'<span class="submit"><input type="submit" name="delete_topics" value="'.$lang_common['Delete'].'"'.$pun_page['button_status'].' /></span>',
-	'<span class="submit"><input type="submit" name="open" value="'.$lang_misc['Open'].'"'.$pun_page['button_status'].' /></span>',
-	'<span class="submit"><input type="submit" name="close" value="'.$lang_misc['Close'].'"'.$pun_page['button_status'].' /></span>'
+$forum_page['main_mod_submit'] = array(
+	'<span class="submit"><input type="submit" name="move_topics" value="'.$lang_misc['Move'].'"'.$forum_page['button_status'].' /></span>',
+	'<span class="submit"><input type="submit" name="delete_topics" value="'.$lang_common['Delete'].'"'.$forum_page['button_status'].' /></span>',
+	'<span class="submit"><input type="submit" name="open" value="'.$lang_misc['Open'].'"'.$forum_page['button_status'].' /></span>',
+	'<span class="submit"><input type="submit" name="close" value="'.$lang_misc['Close'].'"'.$forum_page['button_status'].' /></span>'
 );
 
 ($hook = get_hook('mr_topic_actions_post_topic_list')) ? eval($hook) : null;
@@ -1244,19 +1246,19 @@ $pun_page['main_mod_submit'] = array(
 	</div>
 
 	<div class="main-foot">
-		<p class="h2"><strong><?php echo $pun_page['main_info'] ?></strong></p>
+		<p class="h2"><strong><?php echo $forum_page['main_info'] ?></strong></p>
 	</div>
 
 	<div class="paged-foot">
-		<p class="submitting"><?php echo implode("\n\t\t\t", $pun_page['main_mod_submit'])."\n" ?></p>
-		<?php echo $pun_page['page_post']."\n" ?>
+		<p class="submitting"><?php echo implode("\n\t\t\t", $forum_page['main_mod_submit'])."\n" ?></p>
+		<?php echo $forum_page['page_post']."\n" ?>
 	</div>
 
 	</form>
 
 </div>
 
-<div id="pun-crumbs-foot">
+<div id="brd-crumbs-foot">
 	<p class="crumbs"><?php echo generate_crumbs(false) ?></p>
 </div>
 <?php
@@ -1265,4 +1267,4 @@ $forum_id = $fid;
 
 ($hook = get_hook('mr_end')) ? eval($hook) : null;
 
-require PUN_ROOT.'footer.php';
+require FORUM_ROOT.'footer.php';

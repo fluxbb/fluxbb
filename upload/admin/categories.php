@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -23,18 +25,18 @@
 ************************************************************************/
 
 
-if (!defined('PUN_ROOT'))
-	define('PUN_ROOT', '../');
-require PUN_ROOT.'include/common.php';
-require PUN_ROOT.'include/common_admin.php';
+if (!defined('FORUM_ROOT'))
+	define('FORUM_ROOT', '../');
+require FORUM_ROOT.'include/common.php';
+require FORUM_ROOT.'include/common_admin.php';
 
 ($hook = get_hook('acg_start')) ? eval($hook) : null;
 
-if ($pun_user['g_id'] != PUN_ADMIN)
+if ($forum_user['g_id'] != FORUM_ADMIN)
 	message($lang_common['No permission']);
 
 // Load the admin.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/admin.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin.php';
 
 
 // Add a new category
@@ -51,13 +53,13 @@ if (isset($_POST['add_cat']))
 	$query = array(
 		'INSERT'	=> 'cat_name, disp_position',
 		'INTO'		=> 'categories',
-		'VALUES'	=> '\''.$pun_db->escape($new_cat_name).'\', '.$new_cat_pos
+		'VALUES'	=> '\''.$forum_db->escape($new_cat_name).'\', '.$new_cat_pos
 	);
 
 	($hook = get_hook('acg_qr_add_category')) ? eval($hook) : null;
-	$pun_db->query_build($query) or error(__FILE__, __LINE__);
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	redirect(pun_link($pun_url['admin_categories']), $lang_admin['Category added'].' '.$lang_admin['Redirect']);
+	redirect(forum_link($forum_url['admin_categories']), $lang_admin['Category added'].' '.$lang_admin['Redirect']);
 }
 
 
@@ -70,7 +72,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 
 	// User pressed the cancel button
 	if (isset($_POST['del_cat_cancel']))
-		redirect(pun_link($pun_url['admin_categories']), $lang_admin['Cancel redirect']);
+		redirect(forum_link($forum_url['admin_categories']), $lang_admin['Cancel redirect']);
 
 	($hook = get_hook('acg_del_cat_form_submitted')) ? eval($hook) : null;
 
@@ -85,12 +87,12 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 		);
 
 		($hook = get_hook('acg_qr_get_forums_to_delete')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-		$num_forums = $pun_db->num_rows($result);
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		$num_forums = $forum_db->num_rows($result);
 
 		for ($i = 0; $i < $num_forums; ++$i)
 		{
-			$cur_forum = $pun_db->result($result, $i);
+			$cur_forum = $forum_db->result($result, $i);
 
 			// Prune all posts and topics
 			prune($cur_forum, 1, -1);
@@ -102,7 +104,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 			);
 
 			($hook = get_hook('acg_qr_delete_forum')) ? eval($hook) : null;
-			$pun_db->query_build($query) or error(__FILE__, __LINE__);
+			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 
 		delete_orphans();
@@ -114,13 +116,13 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 		);
 
 		($hook = get_hook('acg_qr_delete_category')) ? eval($hook) : null;
-		$pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Regenerate the quickjump cache
-		require_once PUN_ROOT.'include/cache.php';
+		require_once FORUM_ROOT.'include/cache.php';
 		generate_quickjump_cache();
 
-		redirect(pun_link($pun_url['admin_categories']), $lang_admin['Category deleted'].' '.$lang_admin['Redirect']);
+		redirect(forum_link($forum_url['admin_categories']), $lang_admin['Category deleted'].' '.$lang_admin['Redirect']);
 	}
 	else	// If the user hasn't comfirmed the delete
 	{
@@ -131,44 +133,44 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 		);
 
 		($hook = get_hook('acg_qr_get_category_name')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-		$cat_name = $pun_db->result($result);
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		$cat_name = $forum_db->result($result);
 
 
 		// Setup breadcrumbs
-		$pun_page['crumbs'] = array(
-			array($pun_config['o_board_title'], pun_link($pun_url['index'])),
-			array($lang_admin['Forum administration'], pun_link($pun_url['admin_index'])),
-			array($lang_admin['Categories'], pun_link($pun_url['admin_categories'])),
+		$forum_page['crumbs'] = array(
+			array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+			array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
+			array($lang_admin['Categories'], forum_link($forum_url['admin_categories'])),
 			$lang_admin['Delete category']
 		);
 
 		($hook = get_hook('acg_del_cat_pre_header_load')) ? eval($hook) : null;
 
-		define('PUN_PAGE_SECTION', 'start');
-		define('PUN_PAGE', 'admin-categories');
-		require PUN_ROOT.'header.php';
+		define('FORUM_PAGE_SECTION', 'start');
+		define('FORUM_PAGE', 'admin-categories');
+		require FORUM_ROOT.'header.php';
 
 ?>
-<div id="pun-main" class="main sectioned admin">
+<div id="brd-main" class="main sectioned admin">
 
 
 <?php echo generate_admin_menu(); ?>
 
 	<div class="main-head">
-		<h1><span>{ <?php echo end($pun_page['crumbs']) ?> }</span></h1>
+		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
 	<div class="main-content frm">
 		<div class="frm-head">
-			<h2><span><?php printf($lang_admin['Confirm delete cat'], pun_htmlencode($cat_name)) ?></span></h2>
+			<h2><span><?php printf($lang_admin['Confirm delete cat'], forum_htmlencode($cat_name)) ?></span></h2>
 		</div>
 		<div class="frm-info">
 			<p class="warn"><?php echo $lang_admin['Delete category warning'] ?></p>
 		</div>
-		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo pun_link($pun_url['admin_categories']) ?>">
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_categories']) ?>">
 			<div class="hidden">
-				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(pun_link($pun_url['admin_categories'])) ?>" />
+				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_categories'])) ?>" />
 				<input type="hidden" name="cat_to_delete" value="<?php echo $cat_to_delete ?>" />
 			</div>
 			<div class="frm-buttons">
@@ -181,7 +183,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 </div>
 <?php
 
-		require PUN_ROOT.'footer.php';
+		require FORUM_ROOT.'footer.php';
 	}
 }
 
@@ -200,8 +202,8 @@ else if (isset($_POST['update']))	// Change position and name of the categories
 	);
 
 	($hook = get_hook('acg_qr_get_categories')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-	while ($cur_cat = $pun_db->fetch_assoc($result))
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+	while ($cur_cat = $forum_db->fetch_assoc($result))
 	{
 		// If these aren't set, we're looking at a category that was added after
 		// the admin started editing: we don't want to mess with it
@@ -218,21 +220,21 @@ else if (isset($_POST['update']))	// Change position and name of the categories
 			{
 				$query = array(
 					'UPDATE'	=> 'categories',
-					'SET'		=> 'cat_name=\''.$pun_db->escape($cat_name[$cur_cat['id']]).'\', disp_position='.$cat_order[$cur_cat['id']],
+					'SET'		=> 'cat_name=\''.$forum_db->escape($cat_name[$cur_cat['id']]).'\', disp_position='.$cat_order[$cur_cat['id']],
 					'WHERE'		=> 'id='.$cur_cat['id']
 				);
 
 				($hook = get_hook('acg_qr_update_category')) ? eval($hook) : null;
-				$pun_db->query_build($query) or error(__FILE__, __LINE__);
+				$forum_db->query_build($query) or error(__FILE__, __LINE__);
 			}
 		}
 	}
 
 	// Regenerate the quickjump cache
-	require_once PUN_ROOT.'include/cache.php';
+	require_once FORUM_ROOT.'include/cache.php';
 	generate_quickjump_cache();
 
-	redirect(pun_link($pun_url['admin_categories']), $lang_admin['Categories updated'].' '.$lang_admin['Redirect']);
+	redirect(forum_link($forum_url['admin_categories']), $lang_admin['Categories updated'].' '.$lang_admin['Redirect']);
 }
 
 
@@ -244,37 +246,37 @@ $query = array(
 );
 
 ($hook = get_hook('acg_qr_get_categories2')) ? eval($hook) : null;
-$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-$num_cats = $pun_db->num_rows($result);
+$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+$num_cats = $forum_db->num_rows($result);
 
 for ($i = 0; $i < $num_cats; ++$i)
-	$cat_list[] = $pun_db->fetch_row($result);
+	$cat_list[] = $forum_db->fetch_row($result);
 
 // Setup the form
-$pun_page['fld_count'] = $pun_page['set_count'] = $pun_page['part_count'] = 0;
+$forum_page['fld_count'] = $forum_page['set_count'] = $forum_page['part_count'] = 0;
 
 
 // Setup breadcrumbs
-$pun_page['crumbs'] = array(
-	array($pun_config['o_board_title'], pun_link($pun_url['index'])),
-	array($lang_admin['Forum administration'], pun_link($pun_url['admin_index'])),
+$forum_page['crumbs'] = array(
+	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+	array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
 	$lang_admin['Categories']
 );
 
 ($hook = get_hook('acg_cat_header_load')) ? eval($hook) : null;
 
-define('PUN_PAGE_SECTION', 'start');
-define('PUN_PAGE', 'admin-categories');
-require PUN_ROOT.'header.php';
+define('FORUM_PAGE_SECTION', 'start');
+define('FORUM_PAGE', 'admin-categories');
+require FORUM_ROOT.'header.php';
 
 ?>
-<div id="pun-main" class="main sectioned admin">
+<div id="brd-main" class="main sectioned admin">
 
 
 <?php echo generate_admin_menu(); ?>
 
 	<div class="main-head">
-		<h1><span>{ <?php echo end($pun_page['crumbs']) ?> }</span></h1>
+		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
 	<div class="main-content frm">
@@ -282,24 +284,24 @@ require PUN_ROOT.'header.php';
 			<h2><span><?php echo $lang_admin['Add category head'] ?></span></h2>
 		</div>
 		<div class="frm-info">
-			<p><?php printf($lang_admin['Add category info'], '<a href="'.pun_link($pun_url['admin_forums']).'">'.$lang_admin['Add category info link text'].'</a>') ?></p>
+			<p><?php printf($lang_admin['Add category info'], '<a href="'.forum_link($forum_url['admin_forums']).'">'.$lang_admin['Add category info link text'].'</a>') ?></p>
 		</div>
-		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo pun_link($pun_url['admin_categories']) ?>?action=foo">
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_categories']) ?>?action=foo">
 			<div class="hidden">
-				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(pun_link($pun_url['admin_categories']).'?action=foo') ?>" />
+				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_categories']).'?action=foo') ?>" />
 			</div>
-			<fieldset class="frm-set set<?php echo ++$pun_page['set_count'] ?>">
+			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><strong><?php echo $lang_admin['Add category'] ?></strong></legend>
 				<div class="frm-fld text">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_admin['New category name'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="new_cat_name" size="35" maxlength="80" /></span>
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="new_cat_name" size="35" maxlength="80" /></span>
 					</label>
 				</div>
 				<div class="frm-fld text">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_admin['Position'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="position" size="3" maxlength="3" /></span>
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="position" size="3" maxlength="3" /></span>
 						<span class="fld-extra"><?php echo $lang_admin['Category position help'] ?></span>
 					</label>
 				</div>
@@ -315,7 +317,7 @@ require PUN_ROOT.'header.php';
 ($hook = get_hook('acg_new_form')) ? eval($hook) : null;
 
 // Reset fieldset counter
-$pun_page['set_count'] = 0;
+$forum_page['set_count'] = 0;
 
 if ($num_cats)
 {
@@ -325,20 +327,20 @@ if ($num_cats)
 		<div class="frm-head">
 			<h2><span><?php echo $lang_admin['Del category head'] ?></span></h2>
 		</div>
-		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo pun_link($pun_url['admin_categories']) ?>?action=foo">
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_categories']) ?>?action=foo">
 			<div class="hidden">
-				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(pun_link($pun_url['admin_categories']).'?action=foo') ?>" />
+				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_categories']).'?action=foo') ?>" />
 			</div>
-			<fieldset class="frm-set set<?php echo ++$pun_page['set_count'] ?>">
+			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><strong><?php echo $lang_admin['Delete category'] ?></strong></legend>
 				<div class="frm-fld select">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_admin['Select category'] ?></span><br />
-						<span class="fld-input"><select id="fld<?php echo $pun_page['fld_count'] ?>" name="cat_to_delete">
+						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="cat_to_delete">
 <?php
 
 	while (list(, list($cat_id, $cat_name, ,)) = @each($cat_list))
-		echo "\t\t\t\t\t\t\t".'<option value="'.$cat_id.'">'.pun_htmlencode($cat_name).'</option>'."\n";
+		echo "\t\t\t\t\t\t\t".'<option value="'.$cat_id.'">'.forum_htmlencode($cat_name).'</option>'."\n";
 
 ?>
 						</select></span>
@@ -357,9 +359,9 @@ if ($num_cats)
 		<div class="frm-head">
 			<h2><span><?php echo $lang_admin['Edit categories head'] ?></span></h2>
 		</div>
-		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo pun_link($pun_url['admin_categories']) ?>?action=foo">
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_categories']) ?>?action=foo">
 			<div class="hidden">
-				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(pun_link($pun_url['admin_categories']).'?action=foo') ?>" />
+				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_categories']).'?action=foo') ?>" />
 			</div>
 
 <?php
@@ -369,19 +371,19 @@ if ($num_cats)
 	{
 		list(, list($cat_id, $cat_name, $position)) = @each($cat_list);
 		// Reset fieldset counter
-		$pun_page['set_count'] = 0;
+		$forum_page['set_count'] = 0;
 
 ?>
-			<fieldset class="frm-set set<?php echo ++$pun_page['set_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo pun_htmlencode($cat_name) ?></strong></legend>
+			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+				<legend class="frm-legend"><strong><?php echo forum_htmlencode($cat_name) ?></strong></legend>
 				<div class="frm-fld text twin">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>" class="twin1">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>" class="twin1">
 						<span class="fld-label"><?php echo $lang_admin['Edit category'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="cat_name[<?php echo $cat_id ?>]" value="<?php echo pun_htmlencode($cat_name) ?>" size="35" maxlength="80" /></span>
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="cat_name[<?php echo $cat_id ?>]" value="<?php echo forum_htmlencode($cat_name) ?>" size="35" maxlength="80" /></span>
 					</label><br />
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>" class="twin2">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>" class="twin2">
 						<span class="fld-label"><?php echo $lang_admin['Position'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="cat_order[<?php echo $cat_id ?>]" value="<?php echo $position ?>" size="3" maxlength="3" /></span>
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="cat_order[<?php echo $cat_id ?>]" value="<?php echo $position ?>" size="3" maxlength="3" /></span>
 					</label>
 				</div>
 <?php ($hook = get_hook('acg_edit_cat_fieldset_end')) ? eval($hook) : null; ?>
@@ -406,4 +408,4 @@ if ($num_cats)
 </div>
 <?php
 
-require PUN_ROOT.'footer.php';
+require FORUM_ROOT.'footer.php';

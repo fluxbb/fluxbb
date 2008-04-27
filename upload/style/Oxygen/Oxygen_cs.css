@@ -21,11 +21,11 @@ COLOUR CHART
 A - BACKGROUND and BORDERS
 **************************************************************/
 
-.main-content, #pun-visit, .paged-head, .paged-foot, .postmain {
+.main-content, #brd-visit, .paged-head, .paged-foot, .postmain {
 	background: #fbfbfb;
 	}
 	
-#pun-about, .main th, .main td.tc2, .main td.tc3, #pun-debug td.tcl {
+#brd-about, .main th, .main td.tc2, .main td.tc3, #brd-debug td.tcl {
 	background: #f4f4f4;
 	}
 	
@@ -33,11 +33,11 @@ A - BACKGROUND and BORDERS
 	background: #f1f1f1;
 	}
 	
-#pun-title, #pun-desc {
+#brd-title, #brd-desc {
 	background:#296fa5;
 	}
 
-#pun-navlinks {
+#brd-navlinks {
 	background: #113c5e;
 	}
 
@@ -45,7 +45,7 @@ A - BACKGROUND and BORDERS
 	background: #1f537b;
 	}
 	
-.frm-info, .frm-error, #pun-alert, .dataset .ext-error {
+.frm-info, .frm-error, #brd-alert, .dataset .ext-error {
 	background: #ffffe1;
 	}
 
@@ -53,7 +53,7 @@ A - BACKGROUND and BORDERS
 	background: #fff;
 	}
 
-.pun div, div.pun, .pun td, .pun table, #stats h3, .frm .frm-set {
+.brd div, div.brd, .brd td, .brd table, #stats h3, .frm .frm-set {
 	border-color: #ddd;
 	}
 	
@@ -61,7 +61,7 @@ A - BACKGROUND and BORDERS
 	background: #f4f9fd;
 	}
 
-.status span, .sig-content span.sig-line, .databox .legend, #pun-announcement .msg-head, #pun-alert p, #pun-alert h1 {
+.status span, .sig-content span.sig-line, .databox .legend, #brd-announcement .msg-head, #brd-alert p, #brd-alert h1 {
 	border-color: #bbb;
 	}
 
@@ -81,11 +81,11 @@ A - BACKGROUND and BORDERS
 	border-color: #ddd;
 	}
 	
-.pun .paging a, .pun .paging strong, .pun .paging span {
+.brd .paging a, .brd .paging strong, .brd .paging span {
 	border-color: #ddd;
 	}
 	
-.pun .paged-head, .pun .paged-foot {
+.brd .paged-head, .brd .paged-foot {
 	background: #fff;
 	}
 	
@@ -93,27 +93,27 @@ A - BACKGROUND and BORDERS
 B - TEXT
 **************************************************************/
 
-.pun {
+.brd {
 	color: #333;
 	}
 
-#pun-title {
+#brd-title {
 	color: #fff;
 	}
 
-#pun-desc, #pun-navlinks, .main-head, .main-foot, #pun-home {
+#brd-desc, #brd-navlinks, .main-head, .main-foot, #brd-home {
 	color: #ddd;
 	}
 	
-.main-content li span, .databox .data, .frm-info, .frm-info span, #pun-alert div, .frm-set, .fld-label,
+.main-content li span, .databox .data, .frm-info, .frm-info span, #brd-alert div, .frm-set, .fld-label,
 .isonline, .example code, .example li code, .example li samp, .frm .frm-group legend,
 .example li span, .example li .samp, p.item span, .entry-info li * {
 	color: #666;
 	}
 	
-.main-content li strong, .important strong, .user-info li.title span, #pun-alert strong,
+.main-content li strong, .important strong, .user-info li.title span, #brd-alert strong,
 .frm-error li span, .frm-info li span strong, .online .isonline, .frm h3.link *, .frm h4.link *,
-#pun-help h3, .main th {
+#brd-help h3, .main th {
 	color: #000;
 	}
 	
@@ -121,7 +121,7 @@ B - TEXT
 	color: #00569c;
 	}
 	
-.main .frm-head, .main .databox .legend, .pun .userbox .msg-head {
+.main .frm-head, .main .databox .legend, .brd .userbox .msg-head {
 	color: #113C5E;
 	}
 	
@@ -137,7 +137,7 @@ B - TEXT
 	color: #CD9C96;
 	}
 
-em.req-text, #req-msg p em, .pun li.warn, .pun .warn strong, .pun .frm-group .warn, .main .ext-error .legend, #pun-alert h1 strong {
+em.req-text, #req-msg p em, .brd li.warn, .brd .warn strong, .brd .frm-group .warn, .main .ext-error .legend, #brd-alert h1 strong {
 	color: #b42000;
 	}
 	
@@ -145,13 +145,13 @@ em.req-text, #req-msg p em, .pun li.warn, .pun .warn strong, .pun .frm-group .wa
 C - LINKS
 **************************************************************/
 	
-.pun a, .pun a:link, .pun a:visited {
+.brd a, .brd a:link, .brd a:visited {
 	color: #00569c;
 	}
 	
-#pun-home a, #pun-home a:link, #pun-home a:visited,
+#brd-home a, #brd-home a:link, #brd-home a:visited,
 .main-head a, .main-head a:link, .main-head a:visited,
-#pun-navlinks a, #pun-navlinks a:link, #pun-navlinks a:visited {
+#brd-navlinks a, #brd-navlinks a:link, #brd-navlinks a:visited {
 	color: #ddd;
 	text-decoration: none;
 	}	
@@ -166,15 +166,15 @@ C - LINKS
 	color: #fff;
 	}
 
-.pun a:hover, .pun a:active, .pun a:focus {
+.brd a:hover, .brd a:active, .brd a:focus {
 	color: #b42000;
 	}
 	
 .main-head a:hover, .main-head a:active, .main-head a:focus,
 .main-foot a:hover, .main-foot a:active, .main-foot a:focus,
-#pun-home a:hover, #pun-home a:active, #pun-home a:focus,
-#pun-navlinks a:hover, #pun-navlinks a:active, #pun-navlinks a:focus,
-#pun-access a:hover, #pun-access a:active, #pun-access a:focus {
+#brd-home a:hover, #brd-home a:active, #brd-home a:focus,
+#brd-navlinks a:hover, #brd-navlinks a:active, #brd-navlinks a:focus,
+#brd-access a:hover, #brd-access a:active, #brd-access a:focus {
 	color: #fff;
 	text-decoration: underline;
 	}	

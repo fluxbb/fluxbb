@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -79,7 +81,7 @@ class DBLayer
 			error('Unable to connect to PostgreSQL server.', __FILE__, __LINE__);
 
 		// Setup the client-server character set (UTF-8)
-		if (!defined('PUN_NO_SET_NAMES'))
+		if (!defined('FORUM_NO_SET_NAMES'))
 			pg_send_query($this->link_id, 'SET NAMES \'utf8\'') or error(__FILE__, __LINE__);
 
 		return $this->link_id;
@@ -116,7 +118,7 @@ class DBLayer
 		if (strrpos($sql, 'LIMIT') !== false)
 			$sql = preg_replace('#LIMIT ([0-9]+),([ 0-9]+)#', 'LIMIT \\2 OFFSET \\1', $sql);
 
-		if (defined('PUN_SHOW_QUERIES'))
+		if (defined('FORUM_SHOW_QUERIES'))
 			$q_start = get_microtime();
 
 		@pg_send_query($this->link_id, $sql);
@@ -124,7 +126,7 @@ class DBLayer
 
 		if (pg_result_status($this->query_result) != PGSQL_FATAL_ERROR)
 		{
-			if (defined('PUN_SHOW_QUERIES'))
+			if (defined('FORUM_SHOW_QUERIES'))
 				$this->saved_queries[] = array($sql, sprintf('%.5f', get_microtime() - $q_start));
 
 			++$this->num_queries;
@@ -135,7 +137,7 @@ class DBLayer
 		}
 		else
 		{
-			if (defined('PUN_SHOW_QUERIES'))
+			if (defined('FORUM_SHOW_QUERIES'))
 				$this->saved_queries[] = array($sql, 0);
 
 			$this->error_msg = @pg_result_error($this->query_result);
@@ -318,7 +320,7 @@ class DBLayer
 		{
 			if ($this->in_transaction)
 			{
-				if (defined('PUN_SHOW_QUERIES'))
+				if (defined('FORUM_SHOW_QUERIES'))
 					$this->saved_queries[] = array('COMMIT', 0);
 
 				@pg_query($this->link_id, 'COMMIT');

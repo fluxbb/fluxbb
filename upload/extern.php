@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -69,13 +71,13 @@
 define('MAX_SUBJECT_LENGTH', 30);
 
 
-if (!defined('PUN_ROOT'))
-	define('PUN_ROOT', './');
-require PUN_ROOT.'include/common.php';
+if (!defined('FORUM_ROOT'))
+	define('FORUM_ROOT', './');
+require FORUM_ROOT.'include/common.php';
 
 ($hook = get_hook('ex_start')) ? eval($hook) : null;
 
-if ($pun_user['g_read_board'] == '0')
+if ($forum_user['g_read_board'] == '0')
 	exit($lang_common['No view']);
 
 
@@ -93,7 +95,7 @@ function escape_cdata($str)
 //
 function output_rss($feed)
 {
-	global $lang_common, $pun_config;
+	global $lang_common, $forum_config;
 
 	// Send XML/no cache headers
 	header('Content-Type: text/xml; charset=utf-8');
@@ -104,24 +106,24 @@ function output_rss($feed)
 	echo '<?xml version="1.0" encoding="utf-8"?>'."\r\n";
 	echo '<rss version="2.0">'."\r\n";
 	echo "\t".'<channel>'."\r\n";
-	echo "\t\t".'<title>'.pun_htmlencode($feed['title']).'</title>'."\r\n";
+	echo "\t\t".'<title>'.forum_htmlencode($feed['title']).'</title>'."\r\n";
 	echo "\t\t".'<link>'.$feed['link'].'</link>'."\r\n";
-	echo "\t\t".'<description>'.pun_htmlencode($feed['description']).'</description>'."\r\n";
+	echo "\t\t".'<description>'.forum_htmlencode($feed['description']).'</description>'."\r\n";
 	echo "\t\t".'<lastBuildDate>'.gmdate('r', count($feed['items']) ? $feed['items'][0]['pubdate'] : time()).'</lastBuildDate>'."\r\n";
 
-	if ($pun_config['o_show_version'] == '1')
-		echo "\t\t".'<generator>PunBB '.$pun_config['o_cur_version'].'</generator>'."\r\n";
+	if ($forum_config['o_show_version'] == '1')
+		echo "\t\t".'<generator>FluxBB '.$forum_config['o_cur_version'].'</generator>'."\r\n";
 	else
-		echo "\t\t".'<generator>PunBB</generator>'."\r\n";
+		echo "\t\t".'<generator>FluxBB</generator>'."\r\n";
 
 	$num_items = count($feed['items']);
 	for ($i = 0; $i < $num_items; ++$i)
 	{
 		echo "\t\t".'<item>'."\r\n";
-		echo "\t\t\t".'<title>'.pun_htmlencode($feed['items'][$i]['title']).'</title>'."\r\n";
+		echo "\t\t\t".'<title>'.forum_htmlencode($feed['items'][$i]['title']).'</title>'."\r\n";
 		echo "\t\t\t".'<link>'.$feed['items'][$i]['link'].'</link>'."\r\n";
-		echo "\t\t\t".'<description>'.pun_htmlencode($feed['items'][$i]['description']).'</description>'."\r\n";
-		echo "\t\t\t".'<author>dummy@example.com ('.pun_htmlencode($feed['items'][$i]['author']).')</author>'."\r\n";
+		echo "\t\t\t".'<description>'.forum_htmlencode($feed['items'][$i]['description']).'</description>'."\r\n";
+		echo "\t\t\t".'<author>dummy@example.com ('.forum_htmlencode($feed['items'][$i]['author']).')</author>'."\r\n";
 		echo "\t\t\t".'<pubDate>'.gmdate('r', $feed['items'][$i]['pubdate']).'</pubDate>'."\r\n";
 		echo "\t\t\t".'<guid>'.$feed['items'][$i]['link'].'</guid>'."\r\n";
 		echo "\t\t".'</item>'."\r\n";
@@ -137,7 +139,7 @@ function output_rss($feed)
 //
 function output_atom($feed)
 {
-	global $lang_common, $pun_config;
+	global $lang_common, $forum_config;
 
 	// Send XML/no cache headers
 	header('Content-Type: text/xml; charset=utf-8');
@@ -148,14 +150,14 @@ function output_atom($feed)
 	echo '<?xml version="1.0" encoding="utf-8"?>'."\r\n";
 	echo '<feed xmlns="http://www.w3.org/2005/Atom">'."\r\n";
 
-	echo "\t".'<title type="html">'.pun_htmlencode($feed['title']).'</title>'."\r\n";
-	echo "\t".'<link rel="self" href="'.pun_htmlencode($_SERVER['SCRIPT_NAME'].($_SERVER['QUERY_STRING'] != '' ? '?'.$_SERVER['QUERY_STRING'] :'')).'"/>'."\r\n";
+	echo "\t".'<title type="html">'.forum_htmlencode($feed['title']).'</title>'."\r\n";
+	echo "\t".'<link rel="self" href="'.forum_htmlencode($_SERVER['SCRIPT_NAME'].($_SERVER['QUERY_STRING'] != '' ? '?'.$_SERVER['QUERY_STRING'] :'')).'"/>'."\r\n";
 	echo "\t".'<updated>'.gmdate('Y-m-d\TH:i:s\Z', count($feed['items']) ? $feed['items'][0]['pubdate'] : time()).'</updated>'."\r\n";
 
-	if ($pun_config['o_show_version'] == '1')
-		echo "\t".'<generator version="'.$pun_config['o_cur_version'].'">PunBB</generator>'."\r\n";
+	if ($forum_config['o_show_version'] == '1')
+		echo "\t".'<generator version="'.$forum_config['o_cur_version'].'">FluxBB</generator>'."\r\n";
 	else
-		echo "\t".'<generator>PunBB</generator>'."\r\n";
+		echo "\t".'<generator>FluxBB</generator>'."\r\n";
 
 	echo "\t".'<id>'.$feed['link'].'</id>'."\r\n";
 
@@ -165,11 +167,11 @@ function output_atom($feed)
 	for ($i = 0; $i < $num_items; ++$i)
 	{
 		echo "\t\t".'<entry>'."\r\n";
-		echo "\t\t\t".'<title type="html">'.pun_htmlencode($feed['items'][$i]['title']).'</title>'."\r\n";
+		echo "\t\t\t".'<title type="html">'.forum_htmlencode($feed['items'][$i]['title']).'</title>'."\r\n";
 		echo "\t\t\t".'<link rel="alternate" href="'.$feed['items'][$i]['link'].'"/>'."\r\n";
-		echo "\t\t\t".'<'.$content_tag.' type="html">'.pun_htmlencode($feed['items'][$i]['description']).'</'.$content_tag.'>'."\r\n";
+		echo "\t\t\t".'<'.$content_tag.' type="html">'.forum_htmlencode($feed['items'][$i]['description']).'</'.$content_tag.'>'."\r\n";
 		echo "\t\t\t".'<author>'."\r\n";
-		echo "\t\t\t\t".'<name>'.pun_htmlencode($feed['items'][$i]['author']).'</name>'."\r\n";
+		echo "\t\t\t\t".'<name>'.forum_htmlencode($feed['items'][$i]['author']).'</name>'."\r\n";
 		echo "\t\t\t".'</author>'."\r\n";
 		echo "\t\t\t".'<updated>'.gmdate('Y-m-d\TH:i:s\Z', $feed['items'][$i]['pubdate']).'</updated>'."\r\n";
 		echo "\t\t\t".'<id>'.$feed['items'][$i]['link'].'</id>'."\r\n";
@@ -185,7 +187,7 @@ function output_atom($feed)
 //
 function output_xml($feed)
 {
-	global $lang_common, $pun_config;
+	global $lang_common, $forum_config;
 
 	// Send XML/no cache headers
 	header('Content-Type: text/xml; charset=utf-8');
@@ -197,20 +199,20 @@ function output_xml($feed)
 	echo '<source>'."\r\n";
 	echo "\t".'<url>'.$feed['link'].'</url>'."\r\n";
 
-	$pun_tag = ($feed['type'] == 'posts') ? 'post' : 'topic';
+	$forum_tag = ($feed['type'] == 'posts') ? 'post' : 'topic';
 
 	$num_items = count($feed['items']);
 	for ($i = 0; $i < $num_items; ++$i)
 	{
-		echo "\t".'<'.$pun_tag.' id="'.$feed['items'][$i]['id'].'">'."\r\n";
+		echo "\t".'<'.$forum_tag.' id="'.$feed['items'][$i]['id'].'">'."\r\n";
 
-		echo "\t\t".'<title>'.pun_htmlencode($feed['items'][$i]['title']).'</title>'."\r\n";
+		echo "\t\t".'<title>'.forum_htmlencode($feed['items'][$i]['title']).'</title>'."\r\n";
 		echo "\t\t".'<link>'.$feed['items'][$i]['link'].'</link>'."\r\n";
-		echo "\t\t".'<content>'.pun_htmlencode($feed['items'][$i]['description']).'</content>'."\r\n";
-		echo "\t\t".'<author>'.pun_htmlencode($feed['items'][$i]['author']).'</author>'."\r\n";
+		echo "\t\t".'<content>'.forum_htmlencode($feed['items'][$i]['description']).'</content>'."\r\n";
+		echo "\t\t".'<author>'.forum_htmlencode($feed['items'][$i]['author']).'</author>'."\r\n";
 		echo "\t\t".'<posted>'.gmdate('r', $feed['items'][$i]['pubdate']).'</posted>'."\r\n";
 
-		echo "\t".'</'.$pun_tag.'>'."\r\n";
+		echo "\t".'</'.$forum_tag.'>'."\r\n";
 	}
 
 	echo '</source>'."\r\n";
@@ -222,20 +224,20 @@ function output_xml($feed)
 //
 function output_html($feed)
 {
-	global $pun_config;
+	global $forum_config;
 
 	$num_items = count($feed['items']);
 	for ($i = 0; $i < $num_items; ++$i)
 	{
-		if ($pun_config['o_censoring'] == '1')
+		if ($forum_config['o_censoring'] == '1')
 			$feed['items'][$i]['title'] = censor_words($feed['items'][$i]['title']);
 
-		if (pun_strlen($feed['items'][$i]['title']) > MAX_SUBJECT_LENGTH)
-			$subject_truncated = pun_htmlencode(trim(substr($feed['items'][$i]['title'], 0, (MAX_SUBJECT_LENGTH-5)))).' …';
+		if (forum_strlen($feed['items'][$i]['title']) > MAX_SUBJECT_LENGTH)
+			$subject_truncated = forum_htmlencode(trim(substr($feed['items'][$i]['title'], 0, (MAX_SUBJECT_LENGTH-5)))).' …';
 		else
-			$subject_truncated = pun_htmlencode($feed['items'][$i]['title']);
+			$subject_truncated = forum_htmlencode($feed['items'][$i]['title']);
 
-		echo '<li><a href="'.$feed['items'][$i]['link'].'" title="'.pun_htmlencode($feed['items'][$i]['title']).'">'.$subject_truncated.'</a></li>'."\n";
+		echo '<li><a href="'.$feed['items'][$i]['link'].'" title="'.forum_htmlencode($feed['items'][$i]['title']).'">'.$subject_truncated.'</a></li>'."\n";
 	}
 }
 
@@ -271,26 +273,26 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 			'JOINS'		=> array(
 				array(
 					'LEFT JOIN'		=> 'forum_perms AS fp',
-					'ON'			=> '(fp.forum_id=t.forum_id AND fp.group_id='.PUN_GUEST.')'
+					'ON'			=> '(fp.forum_id=t.forum_id AND fp.group_id='.FORUM_GUEST.')'
 				)
 			),
 			'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND t.moved_to IS NULL and t.id='.$tid
 		);
 
 		($hook = get_hook('ex_qr_get_topic_data')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-		if (!$pun_db->num_rows($result))
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		if (!$forum_db->num_rows($result))
 			exit($lang_common['Bad request']);
 
-		$cur_topic = $pun_db->fetch_assoc($result);
+		$cur_topic = $forum_db->fetch_assoc($result);
 
-		if ($pun_config['o_censoring'] == '1')
+		if ($forum_config['o_censoring'] == '1')
 			$cur_topic['subject'] = censor_words($cur_topic['subject']);
 
 		// Setup the feed
 		$feed = array(
-			'title' 		=>	$pun_config['o_board_title'].' - '.$cur_topic['subject'],
-			'link'			=>	pun_link($pun_url['topic'], array($tid, sef_friendly($cur_topic['subject']))),
+			'title' 		=>	$forum_config['o_board_title'].' - '.$cur_topic['subject'],
+			'link'			=>	forum_link($forum_url['topic'], array($tid, sef_friendly($cur_topic['subject']))),
 			'description'	=>	sprintf($lang_common['RSS description topic'], $cur_topic['subject']),
 			'items'			=>	array(),
 			'type'			=>	'posts'
@@ -306,14 +308,14 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 		);
 
 		($hook = get_hook('ex_qr_get_posts')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-		while ($cur_post = $pun_db->fetch_assoc($result))
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		while ($cur_post = $forum_db->fetch_assoc($result))
 		{
 			$feed['items'][] = array(
 				'id'			=>	$cur_post['id'],
 				'title'			=>	$lang_common['RSS reply'].$cur_topic['subject'],
-				'link'			=>	pun_link($pun_url['post'], $cur_post['id']),
-				'description'	=>	($pun_config['o_censoring'] == '1') ? censor_words($cur_post['message']) : $cur_post['message'],
+				'link'			=>	forum_link($forum_url['post'], $cur_post['id']),
+				'description'	=>	($forum_config['o_censoring'] == '1') ? censor_words($cur_post['message']) : $cur_post['message'],
 				'author'		=>	$cur_post['poster'],
 				'pubdate'		=>	$cur_post['posted']
 			);
@@ -351,9 +353,9 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 
 		// Setup the feed
 		$feed = array(
-			'title' 		=>	$pun_config['o_board_title'],
-			'link'			=>	pun_link($pun_url['index']),
-			'description'	=>	sprintf($lang_common['RSS description'], $pun_config['o_board_title']),
+			'title' 		=>	$forum_config['o_board_title'],
+			'link'			=>	forum_link($forum_url['index']),
+			'description'	=>	sprintf($lang_common['RSS description'], $forum_config['o_board_title']),
 			'items'			=>	array(),
 			'type'			=>	'topics'
 		);
@@ -379,7 +381,7 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 				),
 				array(
 					'LEFT JOIN'		=> 'forum_perms AS fp',
-					'ON'			=> '(fp.forum_id=f.id AND fp.group_id='.PUN_GUEST.')'
+					'ON'			=> '(fp.forum_id=f.id AND fp.group_id='.FORUM_GUEST.')'
 				)
 			),
 			'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND t.moved_to IS NULL',
@@ -391,17 +393,17 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 			$query['WHERE'] .= $forum_sql;
 
 		($hook = get_hook('ex_qr_get_topics')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-		while ($cur_topic = $pun_db->fetch_assoc($result))
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		while ($cur_topic = $forum_db->fetch_assoc($result))
 		{
-			if ($pun_config['o_censoring'] == '1')
+			if ($forum_config['o_censoring'] == '1')
 				$cur_topic['subject'] = censor_words($cur_topic['subject']);
 
 			$feed['items'][] = array(
 				'id'			=>	$cur_topic['id'],
 				'title'			=>	$cur_topic['subject'],
-				'link'			=>	pun_link($pun_url['topic_new_posts'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))),
-				'description'	=>	$lang_common['Forum'].': <a href="'.pun_link($pun_url['forum'], array($cur_topic['fid'], sef_friendly($cur_topic['forum_name']))).'">'.$cur_topic['forum_name'].'</a>',
+				'link'			=>	forum_link($forum_url['topic_new_posts'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))),
+				'description'	=>	$lang_common['Forum'].': <a href="'.forum_link($forum_url['forum'], array($cur_topic['fid'], sef_friendly($cur_topic['forum_name']))).'">'.$cur_topic['forum_name'].'</a>',
 				'author'		=>	$cur_topic['last_poster'],
 				'pubdate'		=>	$cur_topic['last_post']
 			);
@@ -423,7 +425,7 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 else if ($_GET['action'] == 'online' || $_GET['action'] == 'online_full')
 {
 	// Load the index.php language file
-	require PUN_ROOT.'lang/'.$pun_config['o_default_lang'].'/index.php';
+	require FORUM_ROOT.'lang/'.$forum_config['o_default_lang'].'/index.php';
 
 	// Fetch users online info and generate strings for output
 	$num_guests = $num_users = 0;
@@ -437,12 +439,12 @@ else if ($_GET['action'] == 'online' || $_GET['action'] == 'online_full')
 	);
 
 	($hook = get_hook('ex_qr_get_users_online')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-	while ($pun_user_online = $pun_db->fetch_assoc($result))
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+	while ($forum_user_online = $forum_db->fetch_assoc($result))
 	{
-		if ($pun_user_online['user_id'] > 1)
+		if ($forum_user_online['user_id'] > 1)
 		{
-			$users[] = '<a href="'.pun_link($pun_url['user'], $pun_user_online['user_id']).'">'.pun_htmlencode($pun_user_online['ident']).'</a>';
+			$users[] = '<a href="'.forum_link($forum_url['user'], $forum_user_online['user_id']).'">'.forum_htmlencode($forum_user_online['ident']).'</a>';
 			++$num_users;
 		}
 		else
@@ -466,7 +468,7 @@ else if ($_GET['action'] == 'online' || $_GET['action'] == 'online_full')
 else if ($_GET['action'] == 'stats')
 {
 	// Load the index.php language file
-	require PUN_ROOT.'lang/'.$pun_config['o_default_lang'].'/index.php';
+	require FORUM_ROOT.'lang/'.$forum_config['o_default_lang'].'/index.php';
 
 	// Collect some statistics from the database
 	$query = array(
@@ -475,8 +477,8 @@ else if ($_GET['action'] == 'stats')
 	);
 
 	($hook = get_hook('ex_qr_get_user_count')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-	$stats['total_users'] = $pun_db->result($result);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+	$stats['total_users'] = $forum_db->result($result);
 
 	$query = array(
 		'SELECT'	=> 'u.id, u.username',
@@ -486,8 +488,8 @@ else if ($_GET['action'] == 'stats')
 	);
 
 	($hook = get_hook('ex_qr_get_newest_user')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-	$stats['last_user'] = $pun_db->fetch_assoc($result);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+	$stats['last_user'] = $forum_db->fetch_assoc($result);
 
 	$query = array(
 		'SELECT'	=> 'SUM(f.num_topics), SUM(f.num_posts)',
@@ -495,11 +497,11 @@ else if ($_GET['action'] == 'stats')
 	);
 
 	($hook = get_hook('ex_qr_get_post_stats')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-	list($stats['total_topics'], $stats['total_posts']) = $pun_db->fetch_row($result);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+	list($stats['total_topics'], $stats['total_posts']) = $forum_db->fetch_row($result);
 
 	echo $lang_index['No of users'].': '.$stats['total_users'].'<br />';
-	echo $lang_index['Newest user'].': <a href="'.pun_link($pun_url['user'], $stats['last_user']['id']).'">'.pun_htmlencode($stats['last_user']['username']).'</a><br />';
+	echo $lang_index['Newest user'].': <a href="'.forum_link($forum_url['user'], $stats['last_user']['id']).'">'.forum_htmlencode($stats['last_user']['username']).'</a><br />';
 	echo $lang_index['No of topics'].': '.intval($stats['total_topics']).'<br />';
 	echo $lang_index['No of posts'].': '.intval($stats['total_posts']);
 

@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -23,18 +25,18 @@
 ************************************************************************/
 
 
-if (!defined('PUN_ROOT'))
-	define('PUN_ROOT', '../');
-require PUN_ROOT.'include/common.php';
-require PUN_ROOT.'include/common_admin.php';
+if (!defined('FORUM_ROOT'))
+	define('FORUM_ROOT', '../');
+require FORUM_ROOT.'include/common.php';
+require FORUM_ROOT.'include/common_admin.php';
 
 ($hook = get_hook('apr_start')) ? eval($hook) : null;
 
-if ($pun_user['g_id'] != PUN_ADMIN)
+if ($forum_user['g_id'] != FORUM_ADMIN)
 	message($lang_common['No permission']);
 
 // Load the admin.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/admin.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin.php';
 
 
 if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comply']))
@@ -57,12 +59,12 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 			);
 
 			($hook = get_hook('apr_qr_get_all_forums')) ? eval($hook) : null;
-			$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-			$num_forums = $pun_db->num_rows($result);
+			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+			$num_forums = $forum_db->num_rows($result);
 
 			for ($i = 0; $i < $num_forums; ++$i)
 			{
-				$fid = $pun_db->result($result, $i);
+				$fid = $forum_db->result($result, $i);
 
 				prune($fid, $_POST['prune_sticky'], $prune_date);
 				sync_forum($fid);
@@ -77,7 +79,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 
 		delete_orphans();
 
-		redirect(pun_link($pun_url['admin_prune']), $lang_admin['Prune done'].' '.$lang_admin['Redirect']);
+		redirect(forum_link($forum_url['admin_prune']), $lang_admin['Prune done'].' '.$lang_admin['Redirect']);
 	}
 
 
@@ -100,8 +102,8 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 		);
 
 		($hook = get_hook('apr_qr_get_forum_name')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-		$forum = pun_htmlencode($pun_db->result($result));
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		$forum = forum_htmlencode($forum_db->result($result));
 	}
 	else
 		$forum = 'all forums';
@@ -119,44 +121,44 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 		$query['WHERE'] .= ' AND t.sticky=0';
 
 	($hook = get_hook('apr_qr_get_topic_count')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-	$num_topics = $pun_db->result($result);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+	$num_topics = $forum_db->result($result);
 
 	if (!$num_topics)
 		message($lang_admin['No days old message']);
 
 
 	// Setup breadcrumbs
-	$pun_page['crumbs'] = array(
-		array($pun_config['o_board_title'], pun_link($pun_url['index'])),
-		array($lang_admin['Forum administration'], pun_link($pun_url['admin_index'])),
-		array($lang_admin['Prune topics'], pun_link($pun_url['admin_prune'])),
+	$forum_page['crumbs'] = array(
+		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+		array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
+		array($lang_admin['Prune topics'], forum_link($forum_url['admin_prune'])),
 		$lang_admin['Confirm prune heading']
 	);
 
 	($hook = get_hook('apr_prune_comply_pre_header_load')) ? eval($hook) : null;
 
-	define('PUN_PAGE_SECTION', 'management');
-	define('PUN_PAGE', 'admin-prune');
-	require PUN_ROOT.'header.php';
+	define('FORUM_PAGE_SECTION', 'management');
+	define('FORUM_PAGE', 'admin-prune');
+	require FORUM_ROOT.'header.php';
 
 ?>
-<div id="pun-main" class="main sectioned admin">
+<div id="brd-main" class="main sectioned admin">
 
 
 <?php echo generate_admin_menu(); ?>
 
 	<div class="main-head">
-		<h1><span>{ <?php echo end($pun_page['crumbs']) ?> }</span></h1>
+		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
 	<div class="main-content frm">
 		<div class="frm-head">
 			<h2><span><?php printf($lang_admin['Prune details head'], ($forum == 'all forums') ? $lang_admin['All forums'] : $forum ) ?></span></h2>
 		</div>
-		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo pun_link($pun_url['admin_prune']) ?>?action=foo">
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_prune']) ?>?action=foo">
 			<div class="hidden">
-				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(pun_link($pun_url['admin_prune']).'?action=foo') ?>" />
+				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_prune']).'?action=foo') ?>" />
 				<input type="hidden" name="prune_days" value="<?php echo $prune_days ?>" />
 				<input type="hidden" name="prune_sticky" value="<?php echo intval($_POST['prune_sticky']) ?>" />
 				<input type="hidden" name="prune_from" value="<?php echo $prune_from ?>" />
@@ -175,35 +177,35 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 </div>
 <?php
 
-	require PUN_ROOT.'footer.php';
+	require FORUM_ROOT.'footer.php';
 }
 
 
 else
 {
 	// Setup form
-	$pun_page['set_count'] = $pun_page['fld_count'] = 0;
+	$forum_page['set_count'] = $forum_page['fld_count'] = 0;
 
 	// Setup breadcrumbs
-	$pun_page['crumbs'] = array(
-		array($pun_config['o_board_title'], pun_link($pun_url['index'])),
-		array($lang_admin['Forum administration'], pun_link($pun_url['admin_index'])),
+	$forum_page['crumbs'] = array(
+		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+		array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
 		$lang_admin['Prune topics']
 	);
 
 	($hook = get_hook('apr_pre_header_load')) ? eval($hook) : null;
 
-	define('PUN_PAGE_SECTION', 'management');
-	define('PUN_PAGE', 'admin-prune');
-	require PUN_ROOT.'header.php';
+	define('FORUM_PAGE_SECTION', 'management');
+	define('FORUM_PAGE', 'admin-prune');
+	require FORUM_ROOT.'header.php';
 
 ?>
-<div id="pun-main" class="main sectioned admin">
+<div id="brd-main" class="main sectioned admin">
 
 <?php echo generate_admin_menu(); ?>
 
 	<div class="main-head">
-		<h1><span>{ <?php echo end($pun_page['crumbs']) ?> }</span></h1>
+		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
 	<div class="main-content frm">
@@ -217,19 +219,19 @@ else
 		<div id="req-msg" class="frm-warn">
 			<p class="important"><?php printf($lang_common['Required warn'], '<em class="req-text">'.$lang_common['Required'].'</em>') ?></p>
 		</div>
-		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo pun_link($pun_url['admin_prune']) ?>?action=foo">
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_prune']) ?>?action=foo">
 			<div class="hidden">
-				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(pun_link($pun_url['admin_prune']).'?action=foo') ?>" />
+				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_prune']).'?action=foo') ?>" />
 				<input type="hidden" name="form_sent" value="1" />
 			</div>
 <?php ($hook = get_hook('apr_pre_prune_fieldset')) ? eval($hook) : null; ?>
-			<fieldset class="frm-set set<?php echo ++$pun_page['set_count'] ?>">
+			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><span><?php echo $lang_admin['Prune legend'] ?></span></legend>
 <?php ($hook = get_hook('apr_pre_prune_from')) ? eval($hook) : null; ?>
 				<div class="frm-fld select">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_admin['Prune from'] ?></span><br />
-						<span class="fld-input"><select id="fld<?php echo $pun_page['fld_count'] ?>" name="prune_from">
+						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="prune_from">
 							<option value="all"><?php echo $lang_admin['All forums'] ?></option>
 <?php
 
@@ -247,21 +249,21 @@ else
 	);
 
 	($hook = get_hook('apr_qr_get_forum_list')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$cur_category = 0;
-	while ($forum = $pun_db->fetch_assoc($result))
+	while ($forum = $forum_db->fetch_assoc($result))
 	{
 		if ($forum['cid'] != $cur_category)	// Are we still in the same category?
 		{
 			if ($cur_category)
 				echo "\t\t\t\t\t\t\t\t".'</optgroup>'."\n";
 
-			echo "\t\t\t\t\t\t\t\t".'<optgroup label="'.pun_htmlencode($forum['cat_name']).'">'."\n";
+			echo "\t\t\t\t\t\t\t\t".'<optgroup label="'.forum_htmlencode($forum['cat_name']).'">'."\n";
 			$cur_category = $forum['cid'];
 		}
 
-		echo "\t\t\t\t\t\t\t\t\t".'<option value="'.$forum['fid'].'">'.pun_htmlencode($forum['forum_name']).'</option>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t".'<option value="'.$forum['fid'].'">'.forum_htmlencode($forum['forum_name']).'</option>'."\n";
 	}
 
 ?>
@@ -270,14 +272,14 @@ else
 					</label>
 				</div>
 				<div class="frm-fld text">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_admin['Days old'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="req_prune_days" size="4" maxlength="4" /></span>
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_prune_days" size="4" maxlength="4" /></span>
 						<em class="req-text"><?php echo $lang_common['Required'] ?></em>
 					</label>
 				</div>
 				<div class="radbox checkbox">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_admin['Prune sticky'] ?></span><br /><input type="checkbox" id="fld<?php echo $pun_page['fld_count'] ?>" name="prune_sticky" value="1" checked="checked" /> <?php echo $lang_admin['Prune sticky enable'] ?></label>
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_admin['Prune sticky'] ?></span><br /><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="prune_sticky" value="1" checked="checked" /> <?php echo $lang_admin['Prune sticky enable'] ?></label>
 				</div>
 <?php ($hook = get_hook('apr_prune_end')) ? eval($hook) : null; ?>
 			</fieldset>
@@ -291,5 +293,5 @@ else
 </div>
 <?php
 
-	require PUN_ROOT.'footer.php';
+	require FORUM_ROOT.'footer.php';
 }

@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -29,25 +31,25 @@
 //
 
 
-define('PUN_ROOT', './');
-if (!file_exists(PUN_ROOT.'include/common.php'))
+define('FORUM_ROOT', './');
+if (!file_exists(FORUM_ROOT.'include/common.php'))
 	exit('This file must be run from the forum root directory.');
 
 // Make sure common.php doesn't exit with the maintenance message
-define('PUN_TURN_OFF_MAINT', 1);
+define('FORUM_TURN_OFF_MAINT', 1);
 
-require PUN_ROOT.'include/common.php';
+require FORUM_ROOT.'include/common.php';
 
 
 if (isset($_POST['form_sent']))
 {
-	$pun_db->query('UPDATE '.$pun_db->prefix.'config SET conf_value=\'0\' WHERE conf_name=\'o_maintenance\'') or error(__FILE__, __LINE__);
+	$forum_db->query('UPDATE '.$forum_db->prefix.'config SET conf_value=\'0\' WHERE conf_name=\'o_maintenance\'') or error(__FILE__, __LINE__);
 
 	// Regenerate the config cache
-	require_once PUN_ROOT.'include/cache.php';
+	require_once FORUM_ROOT.'include/cache.php';
 	generate_config_cache();
 
-	$pun_db->close();
+	$forum_db->close();
 
 	exit('<script type="text/javascript">window.location="turn_off_maintenance_mode.php?done=1"</script>JavaScript redirect unsuccessful. Click <a href="turn_off_maintenance_mode.php?done=1">here</a> to continue.');
 }
@@ -63,14 +65,14 @@ if (isset($_POST['form_sent']))
 <?php
 
 // Include stylesheets
-require PUN_ROOT.'style/'.$pun_user['style'].'/'.$pun_user['style'].'.php';
+require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php';
 
 ?>
 </head>
 <body>
 
-<div id="pun-util">
-<div class="pun">
+<div id="brd-util">
+<div class="brd">
 
 <?php
 
@@ -78,7 +80,7 @@ if (isset($_GET['done']))
 {
 
 ?>
-<div id="pun-main" class="main">
+<div id="brd-main" class="main">
 
 	<h1><span><?php echo $lang_common['Maintenance'] ?></span></h1>
 
@@ -97,7 +99,7 @@ else
 {
 
 ?>
-<div id="pun-main" class="main">
+<div id="brd-main" class="main">
 
 	<h1><span><?php echo $lang_common['Maintenance'] ?></span></h1>
 

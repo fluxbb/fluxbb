@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -56,7 +58,7 @@ class DBLayer
 			error('Unable to connect to MySQL server. MySQL reported: '.mysql_error(), __FILE__, __LINE__);
 
 		// Setup the client-server character set (UTF-8)
-		if (!defined('PUN_NO_SET_NAMES'))
+		if (!defined('FORUM_NO_SET_NAMES'))
 			mysql_query('SET NAMES \'utf8\'', $this->link_id) or error(__FILE__, __LINE__);
 
 		return $this->link_id;
@@ -80,7 +82,7 @@ class DBLayer
 		if (strlen($sql) > 140000)
 			exit('Insane query. Aborting.');
 
-		if (defined('PUN_SHOW_QUERIES'))
+		if (defined('FORUM_SHOW_QUERIES'))
 			$q_start = get_microtime();
 
 		if ($unbuffered)
@@ -90,7 +92,7 @@ class DBLayer
 
 		if ($this->query_result)
 		{
-			if (defined('PUN_SHOW_QUERIES'))
+			if (defined('FORUM_SHOW_QUERIES'))
 				$this->saved_queries[] = array($sql, sprintf('%.5f', get_microtime() - $q_start));
 
 			++$this->num_queries;
@@ -99,7 +101,7 @@ class DBLayer
 		}
 		else
 		{
-			if (defined('PUN_SHOW_QUERIES'))
+			if (defined('FORUM_SHOW_QUERIES'))
 				$this->saved_queries[] = array($sql, 0);
 
 			return false;

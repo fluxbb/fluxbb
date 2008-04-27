@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -23,22 +25,22 @@
 ************************************************************************/
 
 
-if (!defined('PUN_ROOT'))
-	define('PUN_ROOT', '../');
-require PUN_ROOT.'include/common.php';
-require PUN_ROOT.'include/common_admin.php';
+if (!defined('FORUM_ROOT'))
+	define('FORUM_ROOT', '../');
+require FORUM_ROOT.'include/common.php';
+require FORUM_ROOT.'include/common_admin.php';
 
 ($hook = get_hook('ain_start')) ? eval($hook) : null;
 
-if (!$pun_user['is_admmod'])
+if (!$forum_user['is_admmod'])
 	message($lang_common['No permission']);
 
 // Load the admin.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/admin.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin.php';
 
 
 // Show phpinfo() output
-if (isset($_GET['action']) && $_GET['action'] == 'phpinfo' && $pun_user['g_id'] == PUN_ADMIN)
+if (isset($_GET['action']) && $_GET['action'] == 'phpinfo' && $forum_user['g_id'] == FORUM_ADMIN)
 {
 	($hook = get_hook('ain_phpinfo_selected')) ? eval($hook) : null;
 
@@ -52,10 +54,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'phpinfo' && $pun_user['g_id'] 
 
 
 // Generate check for updates text block
-if ($pun_user['g_id'] == PUN_ADMIN)
+if ($forum_user['g_id'] == FORUM_ADMIN)
 {
-	if ($pun_config['o_check_for_updates'] == '1')
-		$punbb_updates = $lang_admin['Check for updates enabled'];
+	if ($forum_config['o_check_for_updates'] == '1')
+		$fluxbb_updates = $lang_admin['Check for updates enabled'];
 	else
 	{
 		// Get a list of installed hotfix extensions
@@ -66,14 +68,14 @@ if ($pun_user['g_id'] == PUN_ADMIN)
 		);
 
 		($hook = get_hook('ain_qr_get_hotfixes')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-		$num_hotfixes = $pun_db->num_rows($result);
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		$num_hotfixes = $forum_db->num_rows($result);
 
 		$hotfixes = array();
 		for ($i = 0; $i < $num_hotfixes; ++$i)
-			$hotfixes[] = urlencode($pun_db->result($result, $i));
+			$hotfixes[] = urlencode($forum_db->result($result, $i));
 
-		$punbb_updates = '<a href="http://punbb.org/update/?version='.urlencode($pun_config['o_cur_version']).'&amp;hotfixes='.implode(',', $hotfixes).'">'.$lang_admin['Check for updates manual'].'</a>';
+		$fluxbb_updates = '<a href="http://fluxbb.org/update/?version='.urlencode($forum_config['o_cur_version']).'&amp;hotfixes='.implode(',', $hotfixes).'">'.$lang_admin['Check for updates manual'].'</a>';
 	}
 }
 
@@ -109,8 +111,8 @@ $query = array(
 );
 
 ($hook = get_hook('ain_qr_get_users_online')) ? eval($hook) : null;
-$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-$num_online = $pun_db->result($result);
+$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+$num_online = $forum_db->result($result);
 
 
 // Get the database system version
@@ -121,8 +123,8 @@ switch ($db_type)
 		break;
 
 	default:
-		$result = $pun_db->query('SELECT VERSION()') or error(__FILE__, __LINE__);
-		$db_version = $pun_db->result($result);
+		$result = $forum_db->query('SELECT VERSION()') or error(__FILE__, __LINE__);
+		$db_version = $forum_db->result($result);
 		break;
 }
 
@@ -133,10 +135,10 @@ if ($db_type == 'mysql' || $db_type == 'mysqli')
 	$db_version = 'MySQL '.$db_version;
 
 	// Calculate total db size/row count
-	$result = $pun_db->query('SHOW TABLE STATUS FROM `'.$db_name.'` LIKE \''.$db_prefix.'%\'') or error(__FILE__, __LINE__);
+	$result = $forum_db->query('SHOW TABLE STATUS FROM `'.$db_name.'` LIKE \''.$db_prefix.'%\'') or error(__FILE__, __LINE__);
 
 	$total_records = $total_size = 0;
-	while ($status = $pun_db->fetch_assoc($result))
+	while ($status = $forum_db->fetch_assoc($result))
 	{
 		$total_records += $status['Rows'];
 		$total_size += $status['Data_length'] + $status['Index_length'];
@@ -167,28 +169,28 @@ else if (ini_get('xcache.cacher'))
 else
 	$php_accelerator = 'N/A';
 
-$pun_page['item_num'] = 0;
+$forum_page['item_num'] = 0;
 
 // Setup breadcrumbs
-$pun_page['crumbs'] = array(
-	array($pun_config['o_board_title'], pun_link($pun_url['index'])),
-	array($lang_admin['Forum administration'], pun_link($pun_url['admin_index'])),
+$forum_page['crumbs'] = array(
+	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+	array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
 	$lang_admin['Information']
 );
 
 ($hook = get_hook('ain_pre_header_load')) ? eval($hook) : null;
 
-define('PUN_PAGE_SECTION', 'start');
-define('PUN_PAGE', 'admin-information');
-require PUN_ROOT.'header.php';
+define('FORUM_PAGE_SECTION', 'start');
+define('FORUM_PAGE', 'admin-information');
+require FORUM_ROOT.'header.php';
 
 ?>
-<div id="pun-main" class="main sectioned admin">
+<div id="brd-main" class="main sectioned admin">
 
 <?php echo generate_admin_menu(); ?>
 
 	<div class="main-head">
-		<h1><span>{ <?php echo end($pun_page['crumbs']) ?> }</span></h1>
+		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
 	<div class="main-content frm">
@@ -200,29 +202,30 @@ require PUN_ROOT.'header.php';
 		</div>
 		<div class="datagrid">
 <?php ($hook = get_hook('ain_pre_version')) ? eval($hook) : null; ?>
-			<div class="idx-item databox db<?php echo ++$pun_page['item_num']?>">
-				<h3 class="legend"><span><?php echo $lang_admin['PunBB version'] ?></span></h3>
+			<div class="idx-item databox db<?php echo ++$forum_page['item_num']?>">
+				<h3 class="legend"><span><?php echo $lang_admin['FluxBB version'] ?></span></h3>
 				<ul class="data">
-					<li><span>PunBB <?php echo $pun_config['o_cur_version'] ?></span></li>
-					<li><span>&copy; Copyright 2002-2008 <a href="http://punbb.org/">PunBB.org</a></span></li>
-<?php if (isset($punbb_updates)): ?>					<li><span><?php echo $punbb_updates ?></span></li>
+					<li><span>FluxBB <?php echo $forum_config['o_cur_version'] ?></span></li>
+					<li><span>&copy; Copyright 2008 <a href="http://fluxbb.org/">FluxBB.org</a></span></li>
+					<li><span>&copy; Copyright 2002-2008 PunBB.org</span></li>
+<?php if (isset($fluxbb_updates)): ?>					<li><span><?php echo $fluxbb_updates ?></span></li>
 <?php endif; ?>				</ul>
 			</div>
 <?php ($hook = get_hook('ain_pre_server_load')) ? eval($hook) : null; ?>
-			<div class="idx-item databox db<?php echo ++$pun_page['item_num']?>">
+			<div class="idx-item databox db<?php echo ++$forum_page['item_num']?>">
 				<h3 class="legend"><span><?php echo $lang_admin['Server load'] ?></span></h3>
 				<p class="data"><?php echo $server_load ?> (<?php echo $num_online.' '.$lang_admin['users online']?>)</p>
 			</div>
-<?php ($hook = get_hook('ain_pre_environment')) ? eval($hook) : null; if ($pun_user['g_id'] == PUN_ADMIN): ?>					<div class="idx-item databox db<?php echo ++$pun_page['item_num']?>">
+<?php ($hook = get_hook('ain_pre_environment')) ? eval($hook) : null; if ($forum_user['g_id'] == FORUM_ADMIN): ?>					<div class="idx-item databox db<?php echo ++$forum_page['item_num']?>">
 				<h3 class="legend"><span><?php echo $lang_admin['Environment'] ?></span></h3>
 				<ul class="data">
 					<li><span><?php echo $lang_admin['Operating system'] ?>: <?php echo PHP_OS ?></span></li>
-					<li><span>PHP: <?php echo PHP_VERSION ?> - <a href="<?php echo pun_link($pun_url['admin_index']) ?>?action=phpinfo"><?php echo $lang_admin['Show info'] ?></a></span></li>
+					<li><span>PHP: <?php echo PHP_VERSION ?> - <a href="<?php echo forum_link($forum_url['admin_index']) ?>?action=phpinfo"><?php echo $lang_admin['Show info'] ?></a></span></li>
 					<li><span><?php echo $lang_admin['Accelerator'] ?>: <?php echo $php_accelerator ?></span></li>
 				</ul>
 			</div>
 <?php ($hook = get_hook('ain_pre_database')) ? eval($hook) : null; ?>
-			<div class="idx-item databox db<?php echo ++$pun_page['item_num']?>">
+			<div class="idx-item databox db<?php echo ++$forum_page['item_num']?>">
 				<h3 class="legend"><span><?php echo $lang_admin['Database'] ?></span></h3>
 				<ul class="data">
 					<li><span><?php echo $db_version ?></span></li>
@@ -236,4 +239,4 @@ require PUN_ROOT.'header.php';
 </div>
 <?php
 
-require PUN_ROOT.'footer.php';
+require FORUM_ROOT.'footer.php';

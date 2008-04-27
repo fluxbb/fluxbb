@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -23,21 +25,21 @@
 ************************************************************************/
 
 
-define('PUN_VERSION', '1.3 Beta');
+define('FORUM_VERSION', '1.3 Beta');
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
 
-define('PUN_ROOT', './');
-define('PUN', 1);
-define('PUN_DEBUG', 1);
+define('FORUM_ROOT', './');
+define('FORUM', 1);
+define('FORUM_DEBUG', 1);
 
-if (file_exists(PUN_ROOT.'config.php'))
-	exit('The file \'config.php\' already exists which would mean that PunBB is already installed. You should go <a href="index.php">here</a> instead.');
+if (file_exists(FORUM_ROOT.'config.php'))
+	exit('The file \'config.php\' already exists which would mean that FluxBB is already installed. You should go <a href="index.php">here</a> instead.');
 
 
 // Make sure we are running at least MIN_PHP_VERSION
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
-	exit('You are running PHP version '.PHP_VERSION.'. PunBB requires at least PHP '.MIN_PHP_VERSION.' to run properly. You must upgrade your PHP installation before you can continue.');
+	exit('You are running PHP version '.PHP_VERSION.'. FluxBB requires at least PHP '.MIN_PHP_VERSION.' to run properly. You must upgrade your PHP installation before you can continue.');
 
 // Disable error reporting for uninitialized variables
 error_reporting(E_ALL);
@@ -46,7 +48,7 @@ error_reporting(E_ALL);
 @set_time_limit(0);
 
 // We need some stuff from functions.php
-require PUN_ROOT.'include/functions.php';
+require FORUM_ROOT.'include/functions.php';
 
 
 //
@@ -56,12 +58,12 @@ function generate_config_file()
 {
 	global $db_type, $db_host, $db_name, $db_username, $db_password, $db_prefix, $base_url, $cookie_name;
 
-	return '<?php'."\n\n".'$db_type = \''.$db_type."';\n".'$db_host = \''.$db_host."';\n".'$db_name = \''.addslashes($db_name)."';\n".'$db_username = \''.addslashes($db_username)."';\n".'$db_password = \''.addslashes($db_password)."';\n".'$db_prefix = \''.addslashes($db_prefix)."';\n".'$p_connect = false;'."\n\n".'$base_url = \''.$base_url.'\';'."\n\n".'$cookie_name = '."'".$cookie_name."';\n".'$cookie_domain = '."'';\n".'$cookie_path = '."'/';\n".'$cookie_secure = 0;'."\n\ndefine('PUN', 1);";
+	return '<?php'."\n\n".'$db_type = \''.$db_type."';\n".'$db_host = \''.$db_host."';\n".'$db_name = \''.addslashes($db_name)."';\n".'$db_username = \''.addslashes($db_username)."';\n".'$db_password = \''.addslashes($db_password)."';\n".'$db_prefix = \''.addslashes($db_prefix)."';\n".'$p_connect = false;'."\n\n".'$base_url = \''.$base_url.'\';'."\n\n".'$cookie_name = '."'".$cookie_name."';\n".'$cookie_domain = '."'';\n".'$cookie_path = '."'/';\n".'$cookie_secure = 0;'."\n\ndefine('FORUM', 1);";
 }
 
 
 // Load the language file
-require PUN_ROOT.'lang/English/install.php';
+require FORUM_ROOT.'lang/English/install.php';
 
 
 if (isset($_POST['generate_config']))
@@ -116,7 +118,7 @@ if (!isset($_POST['form_sent']))
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>PunBB Installation</title>
+<title>FluxBB Installation</title>
 <link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen.css" />
 <link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen_cs.css" />
 <!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen_ie6.css" /><![endif]-->
@@ -124,28 +126,28 @@ if (!isset($_POST['form_sent']))
 </head>
 <body>
 
-<div id="pun-install" class="pun-page">
-<div class="pun">
+<div id="brd-install" class="brd-page">
+<div class="brd">
 
-<div id="pun-title">
-	<div><strong><?php printf($lang_install['Install PunBB'], PUN_VERSION) ?></strong></div>
+<div id="brd-title">
+	<div><strong><?php printf($lang_install['Install FluxBB'], FORUM_VERSION) ?></strong></div>
 </div>
 
-<div id="pun-desc">
-	<div><?php printf ($lang_install['Install welcome'], PUN_VERSION) ?></div>
+<div id="brd-desc">
+	<div><?php printf ($lang_install['Install welcome'], FORUM_VERSION) ?></div>
 </div>
 
-<div id="pun-head">
-	<div id="pun-visit">
+<div id="brd-head">
+	<div id="brd-visit">
 		<p><?php echo $lang_install['Install intro'] ?></p>
 	</div>
 </div>
 
 
-<div id="pun-main" class="main">
+<div id="brd-main" class="main">
 
 	<div class="main-head">
-		<h1><span><?php printf($lang_install['Install PunBB'], PUN_VERSION) ?></span></h1>
+		<h1><span><?php printf($lang_install['Install FluxBB'], FORUM_VERSION) ?></span></h1>
 	</div>
 
 	<div class="main-content frm parted">
@@ -349,13 +351,13 @@ else
 		$base_url = $_POST['req_base_url'];
 
 	// Validate form
-	if (pun_strlen($db_name) == 0)
+	if (forum_strlen($db_name) == 0)
 		error($lang_install['Missing database name']);
-	if (pun_strlen($username) < 2)
+	if (forum_strlen($username) < 2)
 		error($lang_install['Username too short']);
-	if (pun_strlen($username) > 25)
+	if (forum_strlen($username) > 25)
 		error($lang_install['Username too long']);
-	if (pun_strlen($password1) < 4)
+	if (forum_strlen($password1) < 4)
 		error($lang_install['Pass too short']);
 	if ($password1 != $password2)
 		error($lang_install['Pass not match']);
@@ -374,11 +376,11 @@ else
 
 	// Make sure board title and description aren't left blank
 	if ($board_title == '')
-		$board_title = 'My PunBB forum';
+		$board_title = 'My FluxBB forum';
 	if ($board_descrip == '')
-		$board_descrip = 'Unfortunately no one can be told what PunBB is - you have to see it for yourself.';
+		$board_descrip = 'Unfortunately no one can be told what FluxBB is - you have to see it for yourself.';
 
-	if (pun_strlen($base_url) == 0)
+	if (forum_strlen($base_url) == 0)
 		error($lang_install['Missing base url']);
 
 
@@ -386,19 +388,19 @@ else
 	switch ($db_type)
 	{
 		case 'mysql':
-			require PUN_ROOT.'include/dblayer/mysql.php';
+			require FORUM_ROOT.'include/dblayer/mysql.php';
 			break;
 
 		case 'mysqli':
-			require PUN_ROOT.'include/dblayer/mysqli.php';
+			require FORUM_ROOT.'include/dblayer/mysqli.php';
 			break;
 
 		case 'pgsql':
-			require PUN_ROOT.'include/dblayer/pgsql.php';
+			require FORUM_ROOT.'include/dblayer/pgsql.php';
 			break;
 
 		case 'sqlite':
-			require PUN_ROOT.'include/dblayer/sqlite.php';
+			require FORUM_ROOT.'include/dblayer/sqlite.php';
 			break;
 
 		default:
@@ -406,14 +408,14 @@ else
 	}
 
 	// Create the database object (and connect/select db)
-	$pun_db = new DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, false);
+	$forum_db = new DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, false);
 
 
 	// If MySQL, make sure it's at least 4.1.2
 	if ($db_type == 'mysql' || $db_type == 'mysqli')
 	{
-		$result = $pun_db->query('SELECT VERSION()') or error(__FILE__, __LINE__);
-		$mysql_version = $pun_db->result($result);
+		$result = $forum_db->query('SELECT VERSION()') or error(__FILE__, __LINE__);
+		$mysql_version = $forum_db->result($result);
 		if (version_compare($mysql_version, MIN_MYSQL_VERSION, '<'))
 			error(sprintf($lang_install['Invalid MySQL version'], $mysql_version, MIN_MYSQL_VERSION));
 	}
@@ -427,10 +429,10 @@ else
 		error($lang_install['SQLite prefix collision']);
 
 
-	// Make sure PunBB isn't already installed
-	$result = $pun_db->query('SELECT 1 FROM '.$db_prefix.'users WHERE id=1');
-	if ($pun_db->num_rows($result))
-		error(sprintf($lang_install['PunBB already installed'], $db_prefix, $db_name));
+	// Make sure FluxBB isn't already installed
+	$result = $forum_db->query('SELECT 1 FROM '.$db_prefix.'users WHERE id=1');
+	if ($forum_db->num_rows($result))
+		error(sprintf($lang_install['FluxBB already installed'], $db_prefix, $db_name));
 
 
 	// Create all tables
@@ -451,7 +453,7 @@ else
 			break;
 
 		case 'pgsql':
-			$pun_db->start_transaction();
+			$forum_db->start_transaction();
 
 			$sql = 'CREATE TABLE '.$db_prefix."bans (
 					id SERIAL,
@@ -466,7 +468,7 @@ else
 			break;
 
 		case 'sqlite':
-			$pun_db->start_transaction();
+			$forum_db->start_transaction();
 
 			$sql = 'CREATE TABLE '.$db_prefix."bans (
 					id INTEGER NOT NULL,
@@ -482,7 +484,7 @@ else
 
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 	switch ($db_type)
@@ -516,7 +518,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -551,7 +553,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -583,7 +585,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -633,7 +635,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -671,7 +673,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -712,7 +714,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -777,7 +779,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -872,7 +874,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -913,7 +915,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -972,7 +974,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -1007,7 +1009,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -1060,7 +1062,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -1095,7 +1097,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -1127,7 +1129,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -1161,7 +1163,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -1193,7 +1195,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -1261,7 +1263,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -1419,7 +1421,7 @@ else
 			break;
 	}
 
-	$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 	// Add some indexes
@@ -1465,24 +1467,24 @@ else
 
 	@reset($queries);
 	while (list(, $sql) = @each($queries))
-		$pun_db->query($sql) or error(__FILE__, __LINE__);
+		$forum_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
 	$now = time();
 
 	// Insert the four preset groups
-	$pun_db->query('INSERT INTO '.$pun_db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_edit_subjects_interval, g_post_flood, g_search_flood, g_email_flood) VALUES('Administrators', 'Administrator', 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0)") or error(__FILE__, __LINE__);
-	$pun_db->query('INSERT INTO '.$pun_db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_edit_subjects_interval, g_post_flood, g_search_flood, g_email_flood) VALUES('Guest', NULL, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0)") or error(__FILE__, __LINE__);
-	$pun_db->query('INSERT INTO '.$pun_db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_edit_subjects_interval, g_post_flood, g_search_flood, g_email_flood) VALUES('Members', NULL, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 300, 60, 30, 60)") or error(__FILE__, __LINE__);
-	$pun_db->query('INSERT INTO '.$pun_db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_edit_subjects_interval, g_post_flood, g_search_flood, g_email_flood) VALUES('Moderators', 'Moderator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0)") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_edit_subjects_interval, g_post_flood, g_search_flood, g_email_flood) VALUES('Administrators', 'Administrator', 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0)") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_edit_subjects_interval, g_post_flood, g_search_flood, g_email_flood) VALUES('Guest', NULL, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0)") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_edit_subjects_interval, g_post_flood, g_search_flood, g_email_flood) VALUES('Members', NULL, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 300, 60, 30, 60)") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_edit_subjects_interval, g_post_flood, g_search_flood, g_email_flood) VALUES('Moderators', 'Moderator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0)") or error(__FILE__, __LINE__);
 
 	// Insert guest and first admin user
-	$pun_db->query('INSERT INTO '.$db_prefix."users (group_id, username, password, email) VALUES(2, 'Guest', 'Guest', 'Guest')") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$db_prefix."users (group_id, username, password, email) VALUES(2, 'Guest', 'Guest', 'Guest')") or error(__FILE__, __LINE__);
 
 	$salt = random_key(12);
 
-	$pun_db->query('INSERT INTO '.$db_prefix."users (group_id, username, password, email, num_posts, last_post, registered, registration_ip, last_visit, salt) VALUES(1, '".$pun_db->escape($username)."', '".sha1($salt.sha1($password1))."', '$email', 1, ".$now.", ".$now.", '127.0.0.1', ".$now.", '".$pun_db->escape($salt)."')") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$db_prefix."users (group_id, username, password, email, num_posts, last_post, registered, registration_ip, last_visit, salt) VALUES(1, '".$forum_db->escape($username)."', '".sha1($salt.sha1($password1))."', '$email', 1, ".$now.", ".$now.", '127.0.0.1', ".$now.", '".$forum_db->escape($salt)."')") or error(__FILE__, __LINE__);
 
 	// Enable/disable avatars depending on file_uploads setting in PHP configuration
 	$avatars = in_array(strtolower(@ini_get('file_uploads')), array('on', 'true', '1')) ? 1 : 0;
@@ -1492,9 +1494,9 @@ else
 
 	// Insert config data
 	$config = array(
-		'o_cur_version'				=> "'".PUN_VERSION."'",
-		'o_board_title'				=> "'".$pun_db->escape($board_title)."'",
-		'o_board_desc'				=> "'".$pun_db->escape($board_descrip)."'",
+		'o_cur_version'				=> "'".FORUM_VERSION."'",
+		'o_board_title'				=> "'".$forum_db->escape($board_title)."'",
+		'o_board_desc'				=> "'".$forum_db->escape($board_descrip)."'",
 		'o_default_timezone'		=> "'0'",
 		'o_time_format'				=> "'H:i:s'",
 		'o_date_format'				=> "'Y-m-d'",
@@ -1566,27 +1568,27 @@ else
 	);
 
 	while (list($conf_name, $conf_value) = @each($config))
-		$pun_db->query('INSERT INTO '.$db_prefix."config (conf_name, conf_value) VALUES('$conf_name', $conf_value)") or error(__FILE__, __LINE__);
+		$forum_db->query('INSERT INTO '.$db_prefix."config (conf_name, conf_value) VALUES('$conf_name', $conf_value)") or error(__FILE__, __LINE__);
 
 	// Insert some other default data
-	$pun_db->query('INSERT INTO '.$db_prefix."categories (cat_name, disp_position) VALUES('".$lang_install['Default category name']."', 1)") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$db_prefix."categories (cat_name, disp_position) VALUES('".$lang_install['Default category name']."', 1)") or error(__FILE__, __LINE__);
 
-	$pun_db->query('INSERT INTO '.$db_prefix."forums (forum_name, forum_desc, num_topics, num_posts, last_post, last_post_id, last_poster, disp_position, cat_id) VALUES('".$lang_install['Default forum name']."', '".$lang_install['Default forum descrip']."', 1, 1, ".$now.", 1, '".$pun_db->escape($username)."', 1, 1)") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$db_prefix."forums (forum_name, forum_desc, num_topics, num_posts, last_post, last_post_id, last_poster, disp_position, cat_id) VALUES('".$lang_install['Default forum name']."', '".$lang_install['Default forum descrip']."', 1, 1, ".$now.", 1, '".$forum_db->escape($username)."', 1, 1)") or error(__FILE__, __LINE__);
 
-	$pun_db->query('INSERT INTO '.$db_prefix.'topics (poster, subject, posted, first_post_id, last_post, last_post_id, last_poster, forum_id) VALUES(\''.$pun_db->escape($username).'\', \''.$lang_install['Default topic subject'].'\', '.$now.', 1, '.$now.', 1, \''.$pun_db->escape($username).'\', 1)') or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$db_prefix.'topics (poster, subject, posted, first_post_id, last_post, last_post_id, last_poster, forum_id) VALUES(\''.$forum_db->escape($username).'\', \''.$lang_install['Default topic subject'].'\', '.$now.', 1, '.$now.', 1, \''.$forum_db->escape($username).'\', 1)') or error(__FILE__, __LINE__);
 
-	$pun_db->query('INSERT INTO '.$db_prefix.'posts (poster, poster_id, poster_ip, message, posted, topic_id) VALUES(\''.$pun_db->escape($username).'\', 2, \'127.0.0.1\', \''.$lang_install['Default post contents'].'\', '.$now.', 1)') or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$db_prefix.'posts (poster, poster_id, poster_ip, message, posted, topic_id) VALUES(\''.$forum_db->escape($username).'\', 2, \'127.0.0.1\', \''.$lang_install['Default post contents'].'\', '.$now.', 1)') or error(__FILE__, __LINE__);
 
 	// Add new post to search table
-	require PUN_ROOT.'include/search_idx.php';
-	update_search_index('post', $pun_db->insert_id(), $lang_install['Default post contents'], $lang_install['Default topic subject']);
+	require FORUM_ROOT.'include/search_idx.php';
+	update_search_index('post', $forum_db->insert_id(), $lang_install['Default post contents'], $lang_install['Default topic subject']);
 
-	$pun_db->query('INSERT INTO '.$db_prefix."ranks (rank, min_posts) VALUES('".$lang_install['Default rank 1']."', 0)") or error(__FILE__, __LINE__);
-	$pun_db->query('INSERT INTO '.$db_prefix."ranks (rank, min_posts) VALUES('".$lang_install['Default rank 2']."', 10)") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$db_prefix."ranks (rank, min_posts) VALUES('".$lang_install['Default rank 1']."', 0)") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$db_prefix."ranks (rank, min_posts) VALUES('".$lang_install['Default rank 2']."', 10)") or error(__FILE__, __LINE__);
 
 
 	if ($db_type == 'pgsql' || $db_type == 'sqlite')
-		$pun_db->end_transaction();
+		$forum_db->end_transaction();
 
 
 
@@ -1604,16 +1606,16 @@ else
 		$alerts[] = '<li>'.$lang_install['File upload alert'].'</li>';
 
 	// Add some random bytes at the end of the cookie name to prevent collisions
-	$cookie_name = 'punbb_cookie_'.random_key(6, false, true);
+	$cookie_name = 'forum_cookie_'.random_key(6, false, true);
 
 	/// Generate the config.php file data
 	$config = generate_config_file();
 
 	// Attempt to write config.php and serve it up for download if writing fails
 	$written = false;
-	if (is_writable(PUN_ROOT))
+	if (is_writable(FORUM_ROOT))
 	{
-		$fh = @fopen(PUN_ROOT.'config.php', 'wb');
+		$fh = @fopen(FORUM_ROOT.'config.php', 'wb');
 		if ($fh)
 		{
 			fwrite($fh, $config);
@@ -1630,7 +1632,7 @@ else
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>PunBB Installation</title>
+<title>FluxBB Installation</title>
 <link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen.css" />
 <link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen_forms.css" />
 <link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen_cs.css" />
@@ -1639,25 +1641,25 @@ else
 
 <body>
 
-<div id="pun-install" class="pun-page">
-<div class="pun">
+<div id="brd-install" class="brd-page">
+<div class="brd">
 
-<div id="pun-title">
-	<div id="logo"><strong><?php printf($lang_install['Install PunBB'], PUN_VERSION) ?></strong></div>
+<div id="brd-title">
+	<div id="logo"><strong><?php printf($lang_install['Install FluxBB'], FORUM_VERSION) ?></strong></div>
 </div>
 
-<div id="pun-desc">
-	<div id="desc"><?php printf($lang_install['Success description'], PUN_VERSION) ?></div>
+<div id="brd-desc">
+	<div id="desc"><?php printf($lang_install['Success description'], FORUM_VERSION) ?></div>
 </div>
 
-<div id="pun-visit">
+<div id="brd-visit">
 	<p><?php echo $lang_install['Success welcome'] ?></p>
 </div>
 
 <?php
 ?>
 
-<div id="pun-main" class="main">
+<div id="brd-main" class="main">
 
 	<div class="main-head">
 		<h1><span><?php echo $lang_install['Final instructions'] ?></span></h1>
@@ -1685,12 +1687,12 @@ if (!$written)
 			<input type="hidden" name="generate_config" value="1" />
 			<input type="hidden" name="db_type" value="<?php echo $db_type; ?>" />
 			<input type="hidden" name="db_host" value="<?php echo $db_host; ?>" />
-			<input type="hidden" name="db_name" value="<?php echo pun_htmlencode($db_name); ?>" />
-			<input type="hidden" name="db_username" value="<?php echo pun_htmlencode($db_username); ?>" />
-			<input type="hidden" name="db_password" value="<?php echo pun_htmlencode($db_password); ?>" />
-			<input type="hidden" name="db_prefix" value="<?php echo pun_htmlencode($db_prefix); ?>" />
-			<input type="hidden" name="base_url" value="<?php echo pun_htmlencode($base_url); ?>" />
-			<input type="hidden" name="cookie_name" value="<?php echo pun_htmlencode($cookie_name); ?>" />
+			<input type="hidden" name="db_name" value="<?php echo forum_htmlencode($db_name); ?>" />
+			<input type="hidden" name="db_username" value="<?php echo forum_htmlencode($db_username); ?>" />
+			<input type="hidden" name="db_password" value="<?php echo forum_htmlencode($db_password); ?>" />
+			<input type="hidden" name="db_prefix" value="<?php echo forum_htmlencode($db_prefix); ?>" />
+			<input type="hidden" name="base_url" value="<?php echo forum_htmlencode($base_url); ?>" />
+			<input type="hidden" name="cookie_name" value="<?php echo forum_htmlencode($cookie_name); ?>" />
 			</div>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" value="<?php echo $lang_install['Download config'] ?>" /></span>

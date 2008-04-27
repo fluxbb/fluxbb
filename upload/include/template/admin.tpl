@@ -1,37 +1,37 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" <!-- pun_local -->>
+<html xmlns="http://www.w3.org/1999/xhtml" <!-- forum_local -->>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- pun_head -->
+<!-- forum_head -->
 </head>
 <body>
 
-<div <!-- pun_page --> class="pun-page">
-<div class="pun">
-<!-- pun_skip -->
-<!-- pun_title -->
-<!-- pun_desc -->
-<!-- pun_navlinks -->
-<!-- pun_visit -->
+<div <!-- forum_page --> class="brd-page">
+<div class="brd">
+<!-- forum_skip -->
+<!-- forum_title -->
+<!-- forum_desc -->
+<!-- forum_navlinks -->
+<!-- forum_visit -->
 
-<!-- pun_alert -->
+<!-- forum_alert -->
 
-<!-- pun_announcement -->
+<!-- forum_announcement -->
 
-<!-- pun_crumbs -->
-
-<div class="divider"><hr /></div>
-
-<!-- pun_main -->
+<!-- forum_crumbs -->
 
 <div class="divider"><hr /></div>
 
-<!-- pun_stats -->
+<!-- forum_main -->
 
-<!-- pun_about -->
+<div class="divider"><hr /></div>
 
-<!-- pun_debug -->
+<!-- forum_stats -->
+
+<!-- forum_about -->
+
+<!-- forum_debug -->
 
 </div>
 </div>

@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -24,7 +26,7 @@
 
 
 // Make sure no one attempts to run this script "directly"
-if (!defined('PUN'))
+if (!defined('FORUM'))
 	exit;
 
 
@@ -33,7 +35,7 @@ if (!defined('PUN'))
 //
 function generate_config_cache()
 {
-	global $pun_db;
+	global $forum_db;
 
 	// Get the forum config from the DB
 	$query = array(
@@ -42,18 +44,18 @@ function generate_config_cache()
 	);
 
 	($hook = get_hook('ch_qr_get_config')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$output = array();
-	while ($cur_config_item = $pun_db->fetch_row($result))
+	while ($cur_config_item = $forum_db->fetch_row($result))
 		$output[$cur_config_item[0]] = $cur_config_item[1];
 
 	// Output config as PHP code
-	$fh = @fopen(PUN_CACHE_DIR.'cache_config.php', 'wb');
+	$fh = @fopen(FORUM_CACHE_DIR.'cache_config.php', 'wb');
 	if (!$fh)
 		error('Unable to write configuration cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'.', __FILE__, __LINE__);
 
-	fwrite($fh, '<?php'."\n\n".'define(\'PUN_CONFIG_LOADED\', 1);'."\n\n".'$pun_config = '.var_export($output, true).';'."\n\n".'?>');
+	fwrite($fh, '<?php'."\n\n".'define(\'FORUM_CONFIG_LOADED\', 1);'."\n\n".'$forum_config = '.var_export($output, true).';'."\n\n".'?>');
 
 	fclose($fh);
 }
@@ -64,7 +66,7 @@ function generate_config_cache()
 //
 function generate_bans_cache()
 {
-	global $pun_db;
+	global $forum_db;
 
 	// Get the ban list from the DB
 	$query = array(
@@ -80,18 +82,18 @@ function generate_bans_cache()
 	);
 
 	($hook = get_hook('ch_qr_get_bans')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$output = array();
-	while ($cur_ban = $pun_db->fetch_assoc($result))
+	while ($cur_ban = $forum_db->fetch_assoc($result))
 		$output[] = $cur_ban;
 
 	// Output ban list as PHP code
-	$fh = @fopen(PUN_CACHE_DIR.'cache_bans.php', 'wb');
+	$fh = @fopen(FORUM_CACHE_DIR.'cache_bans.php', 'wb');
 	if (!$fh)
 		error('Unable to write bans cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'.', __FILE__, __LINE__);
 
-	fwrite($fh, '<?php'."\n\n".'define(\'PUN_BANS_LOADED\', 1);'."\n\n".'$pun_bans = '.var_export($output, true).';'."\n\n".'?>');
+	fwrite($fh, '<?php'."\n\n".'define(\'FORUM_BANS_LOADED\', 1);'."\n\n".'$forum_bans = '.var_export($output, true).';'."\n\n".'?>');
 
 	fclose($fh);
 }
@@ -102,7 +104,7 @@ function generate_bans_cache()
 //
 function generate_ranks_cache()
 {
-	global $pun_db;
+	global $forum_db;
 
 	// Get the rank list from the DB
 	$query = array(
@@ -112,18 +114,18 @@ function generate_ranks_cache()
 	);
 
 	($hook = get_hook('ch_qr_get_ranks')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$output = array();
-	while ($cur_rank = $pun_db->fetch_assoc($result))
+	while ($cur_rank = $forum_db->fetch_assoc($result))
 		$output[] = $cur_rank;
 
 	// Output ranks list as PHP code
-	$fh = @fopen(PUN_CACHE_DIR.'cache_ranks.php', 'wb');
+	$fh = @fopen(FORUM_CACHE_DIR.'cache_ranks.php', 'wb');
 	if (!$fh)
 		error('Unable to write ranks cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'.', __FILE__, __LINE__);
 
-	fwrite($fh, '<?php'."\n\n".'define(\'PUN_RANKS_LOADED\', 1);'."\n\n".'$pun_ranks = '.var_export($output, true).';'."\n\n".'?>');
+	fwrite($fh, '<?php'."\n\n".'define(\'FORUM_RANKS_LOADED\', 1);'."\n\n".'$forum_ranks = '.var_export($output, true).';'."\n\n".'?>');
 
 	fclose($fh);
 }
@@ -134,7 +136,7 @@ function generate_ranks_cache()
 //
 function generate_censors_cache()
 {
-	global $pun_db;
+	global $forum_db;
 
 	// Get the censor list from the DB
 	$query = array(
@@ -144,18 +146,18 @@ function generate_censors_cache()
 	);
 
 	($hook = get_hook('ch_qr_get_censored_words')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$output = array();
-	while ($cur_censor = $pun_db->fetch_assoc($result))
+	while ($cur_censor = $forum_db->fetch_assoc($result))
 		$output[] = $cur_censor;
 
 	// Output censors list as PHP code
-	$fh = @fopen(PUN_CACHE_DIR.'cache_censors.php', 'wb');
+	$fh = @fopen(FORUM_CACHE_DIR.'cache_censors.php', 'wb');
 	if (!$fh)
 		error('Unable to write censor cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'.', __FILE__, __LINE__);
 
-	fwrite($fh, '<?php'."\n\n".'define(\'PUN_CENSORS_LOADED\', 1);'."\n\n".'$pun_censors = '.var_export($output, true).';'."\n\n".'?>');
+	fwrite($fh, '<?php'."\n\n".'define(\'FORUM_CENSORS_LOADED\', 1);'."\n\n".'$forum_censors = '.var_export($output, true).';'."\n\n".'?>');
 
 	fclose($fh);
 }
@@ -166,7 +168,7 @@ function generate_censors_cache()
 //
 function generate_quickjump_cache($group_id = false)
 {
-	global $pun_db, $lang_common, $pun_url, $pun_config, $pun_user, $base_url;
+	global $forum_db, $lang_common, $forum_url, $forum_config, $forum_user, $base_url;
 
 	// If a group_id was supplied, we generate the quickjump cache for that group only
 	if ($group_id !== false)
@@ -180,22 +182,22 @@ function generate_quickjump_cache($group_id = false)
 		);
 
 		($hook = get_hook('ch_qr_get_groups')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-		$num_groups = $pun_db->num_rows($result);
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		$num_groups = $forum_db->num_rows($result);
 
 		for ($i = 0; $i < $num_groups; ++$i)
-			$groups[] = $pun_db->result($result, $i);
+			$groups[] = $forum_db->result($result, $i);
 	}
 
 	// Loop through the groups in $groups and output the cache for each of them
 	while (list(, $group_id) = @each($groups))
 	{
 		// Output quickjump as PHP code
-		$fh = @fopen(PUN_CACHE_DIR.'cache_quickjump_'.$group_id.'.php', 'wb');
+		$fh = @fopen(FORUM_CACHE_DIR.'cache_quickjump_'.$group_id.'.php', 'wb');
 		if (!$fh)
 			error('Unable to write quickjump cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'.', __FILE__, __LINE__);
 
-		$output = '<?php'."\n\n".'if (!defined(\'PUN\')) exit;'."\n".'define(\'PUN_QJ_LOADED\', 1);'."\n".'$forum_id = isset($forum_id) ? $forum_id : 0;'."\n\n".'?>';
+		$output = '<?php'."\n\n".'if (!defined(\'FORUM\')) exit;'."\n".'define(\'FORUM_QJ_LOADED\', 1);'."\n".'$forum_id = isset($forum_id) ? $forum_id : 0;'."\n\n".'?>';
 		$output .= "\t".'<form id="qjump" method="get" accept-charset="utf-8" action="'.$base_url.'/viewforum.php">'."\n\t\t".'<fieldset>'."\n\t\t\t".'<legend>'.$lang_common['Quick jump legend'].'</legend>'."\n\t\t\t".'<label for="qjump-select"><?php echo $lang_common[\'Jump to\'] ?>'.'</label><br />'."\n\t\t\t".'<span><select id="qjump-select" name="id">'."\n";
 
 		// Get the list of categories and forums from the DB
@@ -217,30 +219,30 @@ function generate_quickjump_cache($group_id = false)
 		);
 
 		($hook = get_hook('ch_qr_get_cats_and_forums')) ? eval($hook) : null;
-		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$cur_category = 0;
 		$forum_count = 0;
-		while ($cur_forum = $pun_db->fetch_assoc($result))
+		while ($cur_forum = $forum_db->fetch_assoc($result))
 		{
 			if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
 			{
 				if ($cur_category)
 					$output .= "\t\t\t".'</optgroup>'."\n";
 
-				$output .= "\t\t\t".'<optgroup label="'.pun_htmlencode($cur_forum['cat_name']).'">'."\n";
+				$output .= "\t\t\t".'<optgroup label="'.forum_htmlencode($cur_forum['cat_name']).'">'."\n";
 				$cur_category = $cur_forum['cid'];
 			}
 
 			$redirect_tag = ($cur_forum['redirect_url'] != '') ? ' &gt;&gt;&gt;' : '';
-			$output .= "\t\t\t\t".'<option value="'.$cur_forum['fid'].'"<?php echo ($forum_id == '.$cur_forum['fid'].') ? \' selected="selected"\' : \'\' ?>>'.pun_htmlencode($cur_forum['forum_name']).$redirect_tag.'</option>'."\n";
+			$output .= "\t\t\t\t".'<option value="'.$cur_forum['fid'].'"<?php echo ($forum_id == '.$cur_forum['fid'].') ? \' selected="selected"\' : \'\' ?>>'.forum_htmlencode($cur_forum['forum_name']).$redirect_tag.'</option>'."\n";
 			$forum_count++;
 		}
 
 		$output .= "\t\t\t".'</optgroup>'."\n\t\t\t".'</select>'."\n\t\t\t".'<input type="submit" value="<?php echo $lang_common[\'Go\'] ?>" /></span>'."\n\t\t".'</fieldset>'."\n\t".'</form>'."\n";
 
 		if ($forum_count < 2)
-			$output = '<?php'."\n\n".'if (!defined(\'PUN\')) exit;'."\n".'define(\'PUN_QJ_LOADED\', 1);';
+			$output = '<?php'."\n\n".'if (!defined(\'FORUM\')) exit;'."\n".'define(\'FORUM_QJ_LOADED\', 1);';
 
 		fwrite($fh, $output);
 
@@ -254,7 +256,7 @@ function generate_quickjump_cache($group_id = false)
 //
 function generate_hooks_cache()
 {
-	global $pun_db, $pun_config, $base_url;
+	global $forum_db, $forum_config, $base_url;
 
 	// Get the hooks from the DB
 	$query = array(
@@ -271,24 +273,24 @@ function generate_hooks_cache()
 	);
 
 	($hook = get_hook('ch_qr_get_hooks')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$output = array();
-	while ($cur_hook = $pun_db->fetch_assoc($result))
+	while ($cur_hook = $forum_db->fetch_assoc($result))
 	{
 		$ext_info = '$ext_info = array('."\n".
 			'\'id\'		=> \''.$cur_hook['extension_id'].'\','."\n".
-			'\'path\'	=> PUN_ROOT.\'extensions/'.$cur_hook['extension_id'].'\','."\n".
+			'\'path\'	=> FORUM_ROOT.\'extensions/'.$cur_hook['extension_id'].'\','."\n".
 			'\'url\'	=> $GLOBALS[\'base_url\'].\'/extensions/'.$cur_hook['extension_id'].'\');';
 		$output[$cur_hook['id']][] = $ext_info."\n\n".$cur_hook['code']."\n";
 	}
 
 	// Output hooks as PHP code
-	$fh = @fopen(PUN_CACHE_DIR.'cache_hooks.php', 'wb');
+	$fh = @fopen(FORUM_CACHE_DIR.'cache_hooks.php', 'wb');
 	if (!$fh)
 		error('Unable to write hooks cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'.', __FILE__, __LINE__);
 
-	fwrite($fh, '<?php'."\n\n".'define(\'PUN_HOOKS_LOADED\', 1);'."\n\n".'$pun_hooks = '.var_export($output, true).';'."\n\n".'?>');
+	fwrite($fh, '<?php'."\n\n".'define(\'FORUM_HOOKS_LOADED\', 1);'."\n\n".'$forum_hooks = '.var_export($output, true).';'."\n\n".'?>');
 
 	fclose($fh);
 }
@@ -299,7 +301,7 @@ function generate_hooks_cache()
 //
 function generate_updates_cache()
 {
-	global $pun_db, $pun_config;
+	global $forum_db, $forum_config;
 
 	// Get a list of installed hotfix extensions
 	$query = array(
@@ -309,20 +311,20 @@ function generate_updates_cache()
 	);
 
 	($hook = get_hook('ch_qr_get_hotfixes')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-	$num_hotfixes = $pun_db->num_rows($result);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+	$num_hotfixes = $forum_db->num_rows($result);
 
 	$hotfixes = array();
 	for ($i = 0; $i < $num_hotfixes; ++$i)
-		$hotfixes[] = urlencode($pun_db->result($result, $i));
+		$hotfixes[] = urlencode($forum_db->result($result, $i));
 
-	// Contact the punbb.org updates service
-	$result = get_remote_file('http://punbb.org/update/?type=xml&version='.urlencode($pun_config['o_cur_version']).'&hotfixes='.implode(',', $hotfixes), 8);
+	// Contact the fluxbb.org updates service
+	$result = get_remote_file('http://fluxbb.org/update/?type=xml&version='.urlencode($forum_config['o_cur_version']).'&hotfixes='.implode(',', $hotfixes), 8);
 
 	// Make sure we got everything we need
 	if ($result != null && strpos($result['content'], '</updates>') !== false)
 	{
-		require PUN_ROOT.'/include/xml.php';
+		require FORUM_ROOT.'/include/xml.php';
 
 		$output = xml_to_array($result['content']);
 		$output = current($output);
@@ -336,11 +338,11 @@ function generate_updates_cache()
 	($hook = get_hook('ch_generate_updates_cache_write')) ? eval($hook) : null;
 
 	// Output update status as PHP code
-	$fh = @fopen(PUN_CACHE_DIR.'cache_updates.php', 'wb');
+	$fh = @fopen(FORUM_CACHE_DIR.'cache_updates.php', 'wb');
 	if (!$fh)
 		error('Unable to write updates cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'.', __FILE__, __LINE__);
 
-	fwrite($fh, '<?php'."\n\n".'if (!defined(\'PUN_UPDATES_LOADED\')) define(\'PUN_UPDATES_LOADED\', 1);'."\n\n".'$pun_updates = '.var_export($output, true).';'."\n\n".'?>');
+	fwrite($fh, '<?php'."\n\n".'if (!defined(\'FORUM_UPDATES_LOADED\')) define(\'FORUM_UPDATES_LOADED\', 1);'."\n\n".'$forum_updates = '.var_export($output, true).';'."\n\n".'?>');
 
 	fclose($fh);
 }

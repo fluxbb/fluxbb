@@ -1,16 +1,18 @@
 <?php
 /***********************************************************************
 
-  Copyright (C) 2002-2008  PunBB.org
+  Copyright (C) 2008  FluxBB.org
 
-  This file is part of PunBB.
+  Based on code copyright (C) 2002-2008  PunBB.org
 
-  PunBB is free software; you can redistribute it and/or modify it
+  This file is part of FluxBB.
+
+  FluxBB is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published
   by the Free Software Foundation; either version 2 of the License,
   or (at your option) any later version.
 
-  PunBB is distributed in the hope that it will be useful, but
+  FluxBB is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -23,22 +25,22 @@
 ************************************************************************/
 
 
-if (!defined('PUN_ROOT'))
-	define('PUN_ROOT', '../');
+if (!defined('FORUM_ROOT'))
+	define('FORUM_ROOT', '../');
 
 // Tell common.php that we don't want output buffering
-define('PUN_DISABLE_BUFFERING', 1);
+define('FORUM_DISABLE_BUFFERING', 1);
 
-require PUN_ROOT.'include/common.php';
-require PUN_ROOT.'include/common_admin.php';
+require FORUM_ROOT.'include/common.php';
+require FORUM_ROOT.'include/common_admin.php';
 
 ($hook = get_hook('ari_start')) ? eval($hook) : null;
 
-if ($pun_user['g_id'] != PUN_ADMIN)
+if ($forum_user['g_id'] != FORUM_ADMIN)
 	message($lang_common['No permission']);
 
 // Load the admin.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/admin.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin.php';
 
 if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 {
@@ -49,7 +51,7 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 
 	// We validate the CSRF token. If it's set in POST and we're at this point, the token is valid.
 	// If it's in GET, we need to make sure it's valid.
-	if (!isset($_POST['csrf_token']) && (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== generate_form_token('reindex'.$pun_user['id'])))
+	if (!isset($_POST['csrf_token']) && (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== generate_form_token('reindex'.$forum_user['id'])))
 		csrf_confirm_form();
 
 	($hook = get_hook('ari_cycle_start')) ? eval($hook) : null;
@@ -64,25 +66,25 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 		);
 
 		($hook = get_hook('ari_qr_empty_search_matches')) ? eval($hook) : null;
-		$pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$query = array(
 			'DELETE'	=> 'search_words'
 		);
 
 		($hook = get_hook('ari_qr_empty_search_words')) ? eval($hook) : null;
-		$pun_db->query_build($query) or error(__FILE__, __LINE__);
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Reset the sequence for the search words (not needed for SQLite)
 		switch ($db_type)
 		{
 			case 'mysql':
 			case 'mysqli':
-				$result = $pun_db->query('ALTER TABLE '.$pun_db->prefix.'search_words auto_increment=1') or error(__FILE__, __LINE__);
+				$result = $forum_db->query('ALTER TABLE '.$forum_db->prefix.'search_words auto_increment=1') or error(__FILE__, __LINE__);
 				break;
 
 			case 'pgsql';
-				$result = $pun_db->query('SELECT setval(\''.$pun_db->prefix.'search_words_id_seq\', 1, false)') or error(__FILE__, __LINE__);
+				$result = $forum_db->query('SELECT setval(\''.$forum_db->prefix.'search_words_id_seq\', 1, false)') or error(__FILE__, __LINE__);
 		}
 	}
 
@@ -93,7 +95,7 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<title><?php echo pun_htmlencode($pun_config['o_board_title']) ?> - Rebuilding search index …</title>
+<title><?php echo forum_htmlencode($forum_config['o_board_title']) ?> - Rebuilding search index …</title>
 <style type="text/css">
 body {
 	font: 68.75% Verdana, Arial, Helvetica, sans-serif;
@@ -108,7 +110,7 @@ body {
 
 <?php
 
-	require PUN_ROOT.'include/search_idx.php';
+	require FORUM_ROOT.'include/search_idx.php';
 
 	// Fetch posts to process
 	$query = array(
@@ -126,11 +128,11 @@ body {
 	);
 
 	($hook = get_hook('ari_qr_fetch_posts')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$post_id = 0;
 	echo '<p>';
-	while ($cur_post = $pun_db->fetch_row($result))
+	while ($cur_post = $forum_db->fetch_row($result))
 	{
 		printf($lang_admin['Processing post'], $cur_post[0], $cur_post[2]).'<br />'."\n";
 
@@ -153,16 +155,16 @@ body {
 	);
 
 	($hook = get_hook('ari_qr_find_next_post')) ? eval($hook) : null;
-	$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	$query_str = ($pun_db->num_rows($result)) ? '?i_per_page='.$per_page.'&i_start_at='.$pun_db->result($result).'&csrf_token='.generate_form_token('reindex'.$pun_user['id']) : '';
+	$query_str = ($forum_db->num_rows($result)) ? '?i_per_page='.$per_page.'&i_start_at='.$forum_db->result($result).'&csrf_token='.generate_form_token('reindex'.$forum_user['id']) : '';
 
 	($hook = get_hook('ari_cycle_end')) ? eval($hook) : null;
 
-	$pun_db->end_transaction();
-	$pun_db->close();
+	$forum_db->end_transaction();
+	$forum_db->close();
 
-	exit('<script type="text/javascript">window.location="'.pun_link($pun_url['admin_reindex']).$query_str.'"</script><br />'.$lang_admin['Javascript redirect'].' <a href="'.pun_link($pun_url['admin_reindex']).$query_str.'">'.$lang_admin['Click to continue'].'</a>.');
+	exit('<script type="text/javascript">window.location="'.forum_link($forum_url['admin_reindex']).$query_str.'"</script><br />'.$lang_admin['Javascript redirect'].' <a href="'.forum_link($forum_url['admin_reindex']).$query_str.'">'.$lang_admin['Click to continue'].'</a>.');
 }
 
 
@@ -175,31 +177,31 @@ $query = array(
 );
 
 ($hook = get_hook('ari_qr_find_lowest_post_id')) ? eval($hook) : null;
-$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-if ($pun_db->num_rows($result))
-	$first_id = $pun_db->result($result);
+$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+if ($forum_db->num_rows($result))
+	$first_id = $forum_db->result($result);
 
 // Setup form
-$pun_page['set_count'] = $pun_page['fld_count'] = 0;
+$forum_page['set_count'] = $forum_page['fld_count'] = 0;
 
 // Setup breadcrumbs
-$pun_page['crumbs'] = array(
-	array($pun_config['o_board_title'], pun_link($pun_url['index'])),
-	array($lang_admin['Forum administration'], pun_link($pun_url['admin_index'])),
+$forum_page['crumbs'] = array(
+	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+	array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
 	$lang_admin['Rebuild index']
 );
 
-define('PUN_PAGE_SECTION', 'management');
-define('PUN_PAGE', 'admin-reindex');
-require PUN_ROOT.'header.php';
+define('FORUM_PAGE_SECTION', 'management');
+define('FORUM_PAGE', 'admin-reindex');
+require FORUM_ROOT.'header.php';
 
 ?>
-<div id="pun-main" class="main sectioned admin">
+<div id="brd-main" class="main sectioned admin">
 
 <?php echo generate_admin_menu(); ?>
 
 	<div class="main-head">
-		<h1><span>{ <?php echo end($pun_page['crumbs']) ?> }</span></h1>
+		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
 	<div class="main-content frm">
@@ -209,30 +211,30 @@ require PUN_ROOT.'header.php';
 		<div class="frm-info">
 			<p><?php echo $lang_admin['Reindex info'] ?></p>
 		</div>
-		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo pun_link($pun_url['admin_reindex']) ?>">
+		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_reindex']) ?>">
 			<div class="hidden">
-				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token('reindex'.$pun_user['id']) ?>" />
+				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token('reindex'.$forum_user['id']) ?>" />
 			</div>
 <?php ($hook = get_hook('ari_pre_rebuild_fieldset')) ? eval($hook) : null; ?>
-			<fieldset class="frm-set set<?php echo ++$pun_page['set_count'] ?>">
+			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><span><?php echo $lang_admin['Rebuild index legend'] ?></span></legend>
 <?php ($hook = get_hook('ari_pre_per_page')) ? eval($hook) : null; ?>
 				<div class="frm-fld text">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_admin['Posts per cycle'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="i_per_page" size="7" maxlength="7" value="100" /></span>
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="i_per_page" size="7" maxlength="7" value="100" /></span>
 						<span class="fld-help"><?php echo $lang_admin['Posts per cycle info'] ?></span>
 					</label>
 				</div>
 				<div class="frm-fld text">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_admin['Starting post'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $pun_page['fld_count'] ?>" name="i_start_at" size="7" maxlength="7" value="<?php echo (isset($first_id)) ? $first_id : 0 ?>" /></span>
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="i_start_at" size="7" maxlength="7" value="<?php echo (isset($first_id)) ? $first_id : 0 ?>" /></span>
 						<span class="fld-help"><?php echo $lang_admin['Starting post info'] ?></span>
 					</label>
 				</div>
 				<div class="radbox checkbox">
-					<label for="fld<?php echo ++$pun_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_admin['Empty index'] ?></span><br /><input type="checkbox" id="fld<?php echo $pun_page['fld_count'] ?>" name="i_empty_index" value="1" checked="checked" /> <?php echo $lang_admin['Empty index info'] ?></label>
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_admin['Empty index'] ?></span><br /><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="i_empty_index" value="1" checked="checked" /> <?php echo $lang_admin['Empty index info'] ?></label>
 				</div>
 <?php ($hook = get_hook('ari_rebuild_end')) ? eval($hook) : null; ?>
 			</fieldset>
@@ -250,4 +252,4 @@ require PUN_ROOT.'header.php';
 </div>
 <?php
 
-require PUN_ROOT.'footer.php';
+require FORUM_ROOT.'footer.php';
