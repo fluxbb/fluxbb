@@ -201,21 +201,6 @@ if (defined('FORUM_SHOW_QUERIES'))
 // END SUBST - <!-- forum_debug -->
 
 
-// START SUBST - <!-- forum_include "*" -->
-while (preg_match('#<!-- ?forum_include "([^/\\\\]*?)" ?-->#', $tpl_main, $cur_include))
-{
-	if (!file_exists(FORUM_ROOT.'include/user/'.$cur_include[1]))
-		error('Unable to process user include &lt;!-- forum_include "'.forum_htmlencode($cur_include[1]).'" --&gt; from template main.tpl. There is no such file in folder /include/user/', __FILE__, __LINE__);
-
-	ob_start();
-	include FORUM_ROOT.'include/user/'.$cur_include[1];
-	$tpl_temp = ob_get_contents();
-	$tpl_main = str_replace($cur_include[0], $tpl_temp, $tpl_main);
-	ob_end_clean();
-}
-// END SUBST - <!-- forum_include "*" -->
-
-
 // Last call!
 ($hook = get_hook('ft_end')) ? eval($hook) : null;
 
