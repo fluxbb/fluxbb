@@ -88,7 +88,7 @@ elseif (isset($_GET['action']))
 	{
 		$value = null;
 		// Get any additional variables for quicksearches
-		if ($action == 'show_user_posts' || $action == 'show_user_topics')
+		if ($action == 'show_user_posts' || $action == 'show_user_topics' || $action == 'show_subscriptions')
 		{
 			$value = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
 			if ($value < 2)
@@ -99,6 +99,10 @@ elseif (isset($_GET['action']))
 
 		$search_id = '';
 		$show_as = 'topics';
+		
+		// Check we're allowed to see the subscriptions we're trying to look at
+		if ($action == 'show_subscriptions' && $forum_user['g_id'] != FORUM_ADMIN && $pun_user['id'] != $value)
+			message($lang_common['Bad request']);
 
 		// Generate the query for the search
 		$query = generate_action_search_query($action, $value, $search_id, $url_type, $show_as);
@@ -422,7 +426,7 @@ if (!$forum_user['is_guest'])
 	);
 
 	if ($forum_config['o_subscriptions'] == '1')
-		$forum_page['pd_searches'][] = '<a href="'.forum_link($forum_url['search_subscriptions']).'">'.$lang_common['Your subscriptions'].'</a>';
+		$forum_page['pd_searches'][] = '<a href="'.forum_link($forum_url['search_subscriptions'], $forum_user['id']).'">'.$lang_common['Your subscriptions'].'</a>';
 }
 
 // Setup breadcrumbs

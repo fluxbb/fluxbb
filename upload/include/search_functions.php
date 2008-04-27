@@ -504,7 +504,7 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 				'JOINS'		=> array(
 					array(
 						'INNER JOIN'	=> 'subscriptions AS s',
-						'ON'			=> '(t.id=s.topic_id AND s.user_id='.$forum_user['id'].')'
+						'ON'			=> '(t.id=s.topic_id AND s.user_id='.$value.')'
 					),
 					array(
 						'INNER JOIN'	=> 'forums AS f',
@@ -522,6 +522,7 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 			($hook = get_hook('se_qr_get_subscriptions')) ? eval($hook) : null;
 
 			$url_type = $forum_url['search_subscriptions'];
+			$search_id = $value;
 			break;
 
 		case 'show_unanswered':
