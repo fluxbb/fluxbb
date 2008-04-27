@@ -37,13 +37,8 @@ require PUN_ROOT.'include/common_admin.php';
 if ($pun_user['g_id'] != PUN_ADMIN)
 	message($lang_common['No permission']);
 
-// The reindexer isn't used for MySQL
-if ($db_type == 'mysql' || $db_type == 'mysqli')
-	message($lang_common['Bad request']);
-
 // Load the admin.php language file
 require PUN_ROOT.'lang/'.$pun_user['language'].'/admin.php';
-
 
 if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 {
@@ -79,8 +74,16 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 		$pun_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Reset the sequence for the search words (not needed for SQLite)
-		if ($db_type == 'pgsql')
-			$result = $pun_db->query('SELECT setval(\''.$pun_db->prefix.'search_words_id_seq\', 1, false)') or error(__FILE__, __LINE__);
+		switch ($db_type)
+		{
+			case 'mysql':
+			case 'mysqli':
+				$result = $pun_db->query('ALTER TABLE '.$pun_db->prefix.'search_words auto_increment=1') or error(__FILE__, __LINE__);
+				break;
+
+			case 'pgsql';
+				$result = $pun_db->query('SELECT setval(\''.$pun_db->prefix.'search_words_id_seq\', 1, false)') or error(__FILE__, __LINE__);
+		}
 	}
 
 ?>

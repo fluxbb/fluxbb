@@ -476,6 +476,36 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 
 	// Start by updating the database structure
 	case 'start':
+		// Put back dropped search tables
+		if (!$pun_db->table_exists($pun_db->prefix.'search_cache') && ($db_type == 'mysql' || $db_type == 'mysqli'))
+		{
+			$sql = 'CREATE TABLE '.$db_prefix."search_cache (
+					id INT(10) UNSIGNED NOT NULL DEFAULT 0,
+					ident VARCHAR(200) NOT NULL DEFAULT '',
+					search_data TEXT,
+					PRIMARY KEY (id)
+					) ENGINE = MyISAM CHARACTER SET utf8";
+					
+			$pun_db->query($sql) or error(__FILE__, __LINE__);
+					
+			$sql = 'CREATE TABLE '.$db_prefix."search_matches (
+					post_id INT(10) UNSIGNED NOT NULL DEFAULT 0,
+					word_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0,
+					subject_match TINYINT(1) NOT NULL DEFAULT 0
+					) ENGINE = MyISAM CHARACTER SET utf8";
+			
+			$pun_db->query($sql) or error(__FILE__, __LINE__);
+					
+			$sql = 'CREATE TABLE '.$db_prefix."search_words (
+					id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+					word VARCHAR(20) BINARY NOT NULL DEFAULT '',
+					PRIMARY KEY (word),
+					KEY ".$db_prefix."search_words_id_idx (id)
+					) ENGINE = MyISAM CHARACTER SET utf8";
+
+			$pun_db->query($sql) or error(__FILE__, __LINE__);
+		}
+	
 		// Add the extensions table if it doesn't already exist
 		if (!$pun_db->table_exists($pun_db->prefix.'extensions'))
 		{
@@ -590,6 +620,12 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 			// Remove NOT NULL from TEXT fields for consistency. See http://dev.punbb.org/changeset/596
 			$pun_db->query('ALTER TABLE '.$pun_db->prefix.'posts CHANGE message message TEXT') or error(__FILE__, __LINE__);
 			$pun_db->query('ALTER TABLE '.$pun_db->prefix.'reports CHANGE message message TEXT') or error(__FILE__, __LINE__);
+			
+			// Drop fulltext indexes  (should only apply to SVN installs)
+			if ($pun_db->index_exists($pun_db->prefix.'topics', $pun_db->prefix.'topics_subject_idx'))
+				$pun_db->query('ALTER TABLE '.$pun_db->prefix.'topics DROP INDEX '.$pun_db->prefix.'topics_subject_idx') or error(__FILE__, __LINE__);
+			if ($pun_db->index_exists($pun_db->prefix.'posts', $pun_db->prefix.'posts_message_idx'))
+				$pun_db->query('ALTER TABLE '.$pun_db->prefix.'posts DROP INDEX '.$pun_db->prefix.'posts_message_idx') or error(__FILE__, __LINE__);
 		}
 
 		// Add the DST option to the users table
@@ -734,10 +770,6 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 					break;
 			}
 		}
-
-		// Get rid of the old search tables for mysql/mysqli
-		if (($db_type == 'mysql' || $db_type == 'mysqli') && $pun_db->table_exists($pun_db->prefix.'search_cache') && $pun_db->table_exists($pun_db->prefix.'search_matches') && $pun_db->table_exists($pun_db->prefix.'search_words'))
-			$pun_db->query('DROP TABLE '.$pun_db->prefix.'search_cache, '.$pun_db->prefix.'search_matches, '.$pun_db->prefix.'search_words') or error(__FILE__, __LINE__);
 
 		// Add an index on last_post in the topics table
 		if (!$pun_db->index_exists($pun_db->prefix.'topics', $pun_db->prefix.'topics_last_post_idx'))
@@ -1052,12 +1084,6 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		// Do the cumbersome charset conversion of MySQL tables/columns
 		if ($db_type == 'mysql' || $db_type == 'mysqli')
 		{
-			// Drop fulltext indexes to prevent errors in convert_table_utf8() (should only apply to SVN installs)
-			if ($pun_db->index_exists($pun_db->prefix.'topics', $pun_db->prefix.'topics_subject_idx'))
-				$pun_db->query('ALTER TABLE '.$pun_db->prefix.'topics DROP INDEX '.$pun_db->prefix.'topics_subject_idx') or error(__FILE__, __LINE__);
-			if ($pun_db->index_exists($pun_db->prefix.'posts', $pun_db->prefix.'posts_message_idx'))
-				$pun_db->query('ALTER TABLE '.$pun_db->prefix.'posts DROP INDEX '.$pun_db->prefix.'posts_message_idx') or error(__FILE__, __LINE__);
-
 			echo 'Converting table '.$pun_db->prefix.'bans …<br />'."\n"; flush();
 			convert_table_utf8($pun_db->prefix.'bans');
 			echo 'Converting table '.$pun_db->prefix.'categories …<br />'."\n"; flush();
@@ -1090,29 +1116,6 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 			convert_table_utf8($pun_db->prefix.'topics');
 			echo 'Converting table '.$pun_db->prefix.'users …<br />'."\n"; flush();
 			convert_table_utf8($pun_db->prefix.'users');
-		}
-
-		$query_str = '?stage=add_fulltext';
-		break;
-
-
-	// Add fulltext indexes (MySQL only)
-	case 'add_fulltext':
-		if ($db_type == 'mysql' || $db_type == 'mysqli')
-		{
-			// Add topic subject fulltext index
-			if (!$pun_db->index_exists($pun_db->prefix.'topics', $pun_db->prefix.'topics_subject_idx'))
-			{
-				echo 'Adding fulltext index '.$pun_db->prefix.'topics_subject_idx …<br />'."\n"; flush();
-				$pun_db->query('ALTER TABLE '.$pun_db->prefix.'topics ADD FULLTEXT '.$pun_db->prefix.'topics_subject_idx(subject)') or error(__FILE__, __LINE__);
-			}
-
-			// Add post message fulltext index
-			if (!$pun_db->index_exists($pun_db->prefix.'posts', $pun_db->prefix.'posts_message_idx'))
-			{
-				echo 'Adding fulltext index '.$pun_db->prefix.'posts_message_idx …<br />'."\n"; flush();
-				$pun_db->query('ALTER TABLE '.$pun_db->prefix.'posts ADD FULLTEXT '.$pun_db->prefix.'posts_message_idx(message)') or error(__FILE__, __LINE__);
-			}
 		}
 
 		$query_str = '?stage=finish';

@@ -78,8 +78,7 @@ function generate_admin_menu()
 			$adnav_sublinks[] = '<li'.((PUN_PAGE == 'admin-reports') ? ' class="isactive"' : '').'><a href="'.pun_link($pun_url['admin_reports']).'">'.$lang_admin['Reports'].'</a></li>';
 			$adnav_sublinks[] = '<li'.((PUN_PAGE == 'admin-prune') ? ' class="isactive"' : '').'><a href="'.pun_link($pun_url['admin_prune']).'">'.$lang_admin['Prune topics'].'</a></li>';
 
-			if ($db_type != 'mysql' && $db_type != 'mysqli')
-				$adnav_sublinks[] = '<li'.((PUN_PAGE == 'admin-reindex') ? ' class="isactive"' : '').'><a href="'.pun_link($pun_url['admin_reindex']).'">'.$lang_admin['Rebuild index'].'</a></li>';
+			$adnav_sublinks[] = '<li'.((PUN_PAGE == 'admin-reindex') ? ' class="isactive"' : '').'><a href="'.pun_link($pun_url['admin_reindex']).'">'.$lang_admin['Rebuild index'].'</a></li>';
 
 			$adnav_sublinks[] = '<li'.((PUN_PAGE == 'admin-options-maintenance') ? ' class="isactive"' : '').'><a href="'.pun_link($pun_url['admin_options_maintenance']).'">'.$lang_admin['Maintenance mode'].'</a></li>';
 		}
@@ -191,11 +190,8 @@ function prune($forum_id, $prune_sticky, $prune_date)
 		$pun_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// We removed a bunch of posts, so now we have to update the search index
-		if ($db_type != 'mysql' && $db_type != 'mysqli')
-		{
-			require_once PUN_ROOT.'include/search_idx.php';
-			strip_search_index($post_ids);
-		}
+		require_once PUN_ROOT.'include/search_idx.php';
+		strip_search_index($post_ids);
 	}
 }
 

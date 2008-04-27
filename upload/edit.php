@@ -129,8 +129,7 @@ if (isset($_POST['form_sent']))
 	{
 		($hook = get_hook('ed_pre_post_edited')) ? eval($hook) : null;
 
-		if ($db_type != 'mysql' && $db_type != 'mysqli')
-			require PUN_ROOT.'include/search_idx.php';
+		require PUN_ROOT.'include/search_idx.php';
 
 		if ($can_edit_subject)
 		{
@@ -145,10 +144,9 @@ if (isset($_POST['form_sent']))
 			$pun_db->query_build($query) or error(__FILE__, __LINE__);
 
 			// We changed the subject, so we need to take that into account when we update the search words
-			if ($db_type != 'mysql' && $db_type != 'mysqli')
-				update_search_index('edit', $id, $message, $subject);
+			update_search_index('edit', $id, $message, $subject);
 		}
-		else if ($db_type != 'mysql' && $db_type != 'mysqli')
+		else
 			update_search_index('edit', $id, $message);
 
 		// Update the post

@@ -48,6 +48,18 @@ error_reporting(E_ALL);
 // We need some stuff from functions.php
 require PUN_ROOT.'include/functions.php';
 
+
+//
+// Generate output to be used for config.php
+//
+function generate_config_file()
+{
+	global $db_type, $db_host, $db_name, $db_username, $db_password, $db_prefix, $base_url, $cookie_name;
+
+	return '<?php'."\n\n".'$db_type = \''.$db_type."';\n".'$db_host = \''.$db_host."';\n".'$db_name = \''.addslashes($db_name)."';\n".'$db_username = \''.addslashes($db_username)."';\n".'$db_password = \''.addslashes($db_password)."';\n".'$db_prefix = \''.addslashes($db_prefix)."';\n".'$p_connect = false;'."\n\n".'$base_url = \''.$base_url.'\';'."\n\n".'$cookie_name = '."'".$cookie_name."';\n".'$cookie_domain = '."'';\n".'$cookie_path = '."'/';\n".'$cookie_secure = 0;'."\n\ndefine('PUN', 1);";
+}
+
+
 // Load the language file
 require PUN_ROOT.'lang/English/install.php';
 
@@ -66,7 +78,7 @@ if (isset($_POST['generate_config']))
 	$base_url = $_POST['base_url'];
 	$cookie_name = $_POST['cookie_name'];
 
-	echo get_config_file();
+	echo generate_config_file();
 	exit;
 }
 
@@ -1054,6 +1066,16 @@ else
 
 	switch ($db_type)
 	{
+		case 'mysql':
+		case 'mysqli':
+			$sql = 'CREATE TABLE '.$db_prefix."search_cache (
+					id INT(10) UNSIGNED NOT NULL DEFAULT 0,
+					ident VARCHAR(200) NOT NULL DEFAULT '',
+					search_data TEXT,
+					PRIMARY KEY (id)
+					) ENGINE = MyISAM CHARACTER SET utf8";
+			break;
+
 		case 'pgsql':
 			$sql = 'CREATE TABLE '.$db_prefix."search_cache (
 					id INT NOT NULL DEFAULT 0,
@@ -1073,13 +1095,21 @@ else
 			break;
 	}
 
-	if ($db_type != 'mysql' && $db_type != 'mysqli')
-		$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$pun_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
 	switch ($db_type)
 	{
+		case 'mysql':
+		case 'mysqli':
+			$sql = 'CREATE TABLE '.$db_prefix."search_matches (
+					post_id INT(10) UNSIGNED NOT NULL DEFAULT 0,
+					word_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0,
+					subject_match TINYINT(1) NOT NULL DEFAULT 0
+					) ENGINE = MyISAM CHARACTER SET utf8";
+			break;
+
 		case 'pgsql':
 			$sql = 'CREATE TABLE '.$db_prefix."search_matches (
 					post_id INT NOT NULL DEFAULT 0,
@@ -1097,13 +1127,22 @@ else
 			break;
 	}
 
-	if ($db_type != 'mysql' && $db_type != 'mysqli')
-		$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$pun_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
 	switch ($db_type)
 	{
+		case 'mysql':
+		case 'mysqli':
+			$sql = 'CREATE TABLE '.$db_prefix."search_words (
+					id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+					word VARCHAR(20) BINARY NOT NULL DEFAULT '',
+					PRIMARY KEY (word),
+					KEY ".$db_prefix."search_words_id_idx (id)
+					) ENGINE = MyISAM CHARACTER SET utf8";
+			break;
+
 		case 'pgsql':
 			$sql = 'CREATE TABLE '.$db_prefix."search_words (
 					id SERIAL,
@@ -1122,8 +1161,7 @@ else
 			break;
 	}
 
-	if ($db_type != 'mysql' && $db_type != 'mysqli')
-		$pun_db->query($sql) or error(__FILE__, __LINE__);
+	$pun_db->query($sql) or error(__FILE__, __LINE__);
 
 
 
@@ -1394,15 +1432,16 @@ else
 			$queries[] = 'ALTER TABLE '.$db_prefix.'online ADD INDEX '.$db_prefix.'online_user_id_idx(user_id)';
 			$queries[] = 'ALTER TABLE '.$db_prefix.'posts ADD INDEX '.$db_prefix.'posts_topic_id_idx(topic_id)';
 			$queries[] = 'ALTER TABLE '.$db_prefix.'posts ADD INDEX '.$db_prefix.'posts_multi_idx(poster_id, topic_id)';
-			$queries[] = 'ALTER TABLE '.$db_prefix.'posts ADD FULLTEXT '.$db_prefix.'posts_message_idx(message)';
 			$queries[] = 'ALTER TABLE '.$db_prefix.'reports ADD INDEX '.$db_prefix.'reports_zapped_idx(zapped)';
 			$queries[] = 'ALTER TABLE '.$db_prefix.'topics ADD INDEX '.$db_prefix.'topics_forum_id_idx(forum_id)';
 			$queries[] = 'ALTER TABLE '.$db_prefix.'topics ADD INDEX '.$db_prefix.'topics_moved_to_idx(moved_to)';
 			$queries[] = 'ALTER TABLE '.$db_prefix.'topics ADD INDEX '.$db_prefix.'topics_last_post_idx(last_post)';
 			$queries[] = 'ALTER TABLE '.$db_prefix.'topics ADD INDEX '.$db_prefix.'topics_first_post_id_idx(first_post_id)';
-			$queries[] = 'ALTER TABLE '.$db_prefix.'topics ADD FULLTEXT '.$db_prefix.'topics_subject_idx(subject)';
 			$queries[] = 'ALTER TABLE '.$db_prefix.'users ADD INDEX '.$db_prefix.'users_registered_idx(registered)';
 			$queries[] = 'ALTER TABLE '.$db_prefix.'users ADD INDEX '.$db_prefix.'users_username_idx(username(8))';
+			$queries[] = 'ALTER TABLE '.$db_prefix.'search_matches ADD INDEX '.$db_prefix.'search_matches_word_id_idx(word_id)';
+			$queries[] = 'ALTER TABLE '.$db_prefix.'search_matches ADD INDEX '.$db_prefix.'search_matches_post_id_idx(post_id)';
+			$queries[] = 'ALTER TABLE '.$db_prefix.'search_cache ADD INDEX '.$db_prefix.'search_cache_ident_idx(ident(8))';
 			break;
 
 		default:
@@ -1539,11 +1578,8 @@ else
 	$pun_db->query('INSERT INTO '.$db_prefix.'posts (poster, poster_id, poster_ip, message, posted, topic_id) VALUES(\''.$pun_db->escape($username).'\', 2, \'127.0.0.1\', \''.$lang_install['Default post contents'].'\', '.$now.', 1)') or error(__FILE__, __LINE__);
 
 	// Add new post to search table
-	if ($db_type != 'mysql' && $db_type != 'mysqli')
-	{
-		require PUN_ROOT.'include/search_idx.php';
-		update_search_index('post', $pun_db->insert_id(), $message, $subject);
-	}
+	require PUN_ROOT.'include/search_idx.php';
+	update_search_index('post', $pun_db->insert_id(), $lang_install['Default post contents'], $lang_install['Default topic subject']);
 
 	$pun_db->query('INSERT INTO '.$db_prefix."ranks (rank, min_posts) VALUES('".$lang_install['Default rank 1']."', 0)") or error(__FILE__, __LINE__);
 	$pun_db->query('INSERT INTO '.$db_prefix."ranks (rank, min_posts) VALUES('".$lang_install['Default rank 2']."', 10)") or error(__FILE__, __LINE__);
@@ -1571,7 +1607,7 @@ else
 	$cookie_name = 'punbb_cookie_'.random_key(6, false, true);
 
 	/// Generate the config.php file data
-	$config = get_config_file();
+	$config = generate_config_file();
 
 	// Attempt to write config.php and serve it up for download if writing fails
 	$written = false;
@@ -1684,11 +1720,4 @@ else
 
 <?php
 
-}
-
-function get_config_file ()
-{
-	global $db_type, $db_host, $db_name, $db_username, $db_password, $db_prefix, $base_url, $cookie_name;
-
-	return '<?php'."\n\n".'$db_type = \''.$db_type."';\n".'$db_host = \''.$db_host."';\n".'$db_name = \''.addslashes($db_name)."';\n".'$db_username = \''.addslashes($db_username)."';\n".'$db_password = \''.addslashes($db_password)."';\n".'$db_prefix = \''.addslashes($db_prefix)."';\n".'$p_connect = false;'."\n\n".'$base_url = \''.$base_url.'\';'."\n\n".'$cookie_name = '."'".$cookie_name."';\n".'$cookie_domain = '."'';\n".'$cookie_path = '."'/';\n".'$cookie_secure = 0;'."\n\ndefine('PUN', 1);";
 }

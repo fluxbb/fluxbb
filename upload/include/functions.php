@@ -1111,11 +1111,8 @@ function delete_topic($topic_id, $forum_id)
 		($hook = get_hook('fn_qr_delete_topic_posts')) ? eval($hook) : null;
 		$pun_db->query_build($query) or error(__FILE__, __LINE__);
 
-		if ($db_type != 'mysql' && $db_type != 'mysqli')
-		{
-			require PUN_ROOT.'include/search_idx.php';
-			strip_search_index($post_ids);
-		}
+		require PUN_ROOT.'include/search_idx.php';
+		strip_search_index($post_ids);
 	}
 
 	// Delete any subscriptions for this topic
@@ -1164,11 +1161,8 @@ function delete_post($post_id, $topic_id, $forum_id)
 	($hook = get_hook('fn_qr_delete_post')) ? eval($hook) : null;
 	$pun_db->query_build($query) or error(__FILE__, __LINE__);
 
-	if ($db_type != 'mysql' && $db_type != 'mysqli')
-	{
-		require PUN_ROOT.'include/search_idx.php';
-		strip_search_index($post_id);
-	}
+	require PUN_ROOT.'include/search_idx.php';
+	strip_search_index($post_id);
 
 	// Count number of replies in the topic
 	$query = array(
@@ -1262,11 +1256,9 @@ function add_topic($post_info, &$new_tid, &$new_pid)
 	($hook = get_hook('fn_qr_update_topic3')) ? eval($hook) : null;
 	$pun_db->query_build($query) or error(__FILE__, __LINE__);
 
-	if ($db_type != 'mysql' && $db_type != 'mysqli')
-	{
-		require PUN_ROOT.'include/search_idx.php';
-		update_search_index('post', $new_pid, $post_info['message'], $post_info['subject']);
-	}
+	require PUN_ROOT.'include/search_idx.php';
+	update_search_index('post', $new_pid, $post_info['message'], $post_info['subject']);
+
 
 	sync_forum($post_info['forum_id']);
 
@@ -1350,11 +1342,8 @@ function add_post($post_info, &$new_pid)
 
 	sync_forum($post_info['forum_id']);
 
-	if ($db_type != 'mysql' && $db_type != 'mysqli')
-	{
-		require PUN_ROOT.'include/search_idx.php';
-		update_search_index('post', $new_pid, $post_info['message']);
-	}
+	require PUN_ROOT.'include/search_idx.php';
+	update_search_index('post', $new_pid, $post_info['message']);
 
 	send_subscriptions($post_info, $new_pid);
 

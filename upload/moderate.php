@@ -181,11 +181,8 @@ if (isset($_GET['tid']))
 			($hook = get_hook('mr_qr_delete_posts')) ? eval($hook) : null;
 			$pun_db->query_build($query) or error(__FILE__, __LINE__);
 
-			if ($db_type != 'mysql' && $db_type != 'mysqli')
-			{
-				require PUN_ROOT.'include/search_idx.php';
-				strip_search_index($posts);
-			}
+			require PUN_ROOT.'include/search_idx.php';
+			strip_search_index($posts);
 
 			// Get last_post, last_post_id, and last_poster for the topic after deletion
 			$query = array(
@@ -779,28 +776,25 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		($hook = get_hook('mr_qr_delete_subscriptions')) ? eval($hook) : null;
 		$pun_db->query_build($query) or error(__FILE__, __LINE__);
 
-		if ($db_type != 'mysql' && $db_type != 'mysqli')
+		// Create a list of the post ID's in the deleted topic and strip the search index
+		$query = array(
+			'SELECT'	=> 'p.id',
+			'FROM'		=> 'posts AS p',
+			'WHERE'		=> 'p.topic_id IN('.$topics.')'
+		);
+
+		($hook = get_hook('mr_qr_get_deleted_posts')) ? eval($hook) : null;
+		$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
+
+		$post_ids = '';
+		while ($row = $pun_db->fetch_row($result))
+			$post_ids .= ($post_ids != '') ? ','.$row[0] : $row[0];
+
+		// Strip the search index provided we're not just deleting redirect topics
+		if ($post_ids != '')
 		{
-			// Create a list of the post ID's in the deleted topic and strip the search index
-			$query = array(
-				'SELECT'	=> 'p.id',
-				'FROM'		=> 'posts AS p',
-				'WHERE'		=> 'p.topic_id IN('.$topics.')'
-			);
-
-			($hook = get_hook('mr_qr_get_deleted_posts')) ? eval($hook) : null;
-			$result = $pun_db->query_build($query) or error(__FILE__, __LINE__);
-
-			$post_ids = '';
-			while ($row = $pun_db->fetch_row($result))
-				$post_ids .= ($post_ids != '') ? ','.$row[0] : $row[0];
-
-			// Strip the search index provided we're not just deleting redirect topics
-			if ($post_ids != '')
-			{
-				require PUN_ROOT.'include/search_idx.php';
-				strip_search_index($post_ids);
-			}
+			require PUN_ROOT.'include/search_idx.php';
+			strip_search_index($post_ids);
 		}
 
 		// Delete posts
