@@ -70,6 +70,7 @@
 // The length at which topic subjects will be truncated (for HTML output)
 define('MAX_SUBJECT_LENGTH', 30);
 
+define('FORUM_QUIET_VISIT', 1);
 
 if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
