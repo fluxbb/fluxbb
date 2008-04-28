@@ -84,58 +84,52 @@ ob_start();
 
 // Is this a page that we want search index spiders to index?
 if (!defined('FORUM_ALLOW_INDEX'))
-	echo '<meta name="ROBOTS" content="NOINDEX, FOLLOW" />'."\n";
+	$forum_head['robots'] = '<meta name="ROBOTS" content="NOINDEX, FOLLOW" />';
 else
-	echo '<meta name="description" content="'.generate_crumbs(true).' '.$lang_common['Title separator'].' '.forum_htmlencode($forum_config['o_board_desc']).'" />'."\n";
+	$forum_head['descriptions'] =  '<meta name="description" content="'.generate_crumbs(true).' '.$lang_common['Title separator'].' '.forum_htmlencode($forum_config['o_board_desc']).'" />';
 
 // Should we output a MicroID? http://microid.org/
 if (strpos(FORUM_PAGE, 'profile') === 0)
-	echo '<meta name="microid" content="mailto+http:sha1:'.sha1(sha1('mailto:'.$user['email']).sha1(forum_link($forum_url['user'], $id))).'" />'."\n";
+	$forum_head['microid'] = '<meta name="microid" content="mailto+http:sha1:'.sha1(sha1('mailto:'.$user['email']).sha1(forum_link($forum_url['user'], $id))).'" />';
 
-?>
-<title><?php echo generate_crumbs(true) ?></title>
-<?php
+$forum_head['title'] = '<title>'.generate_crumbs(true).'</title>';
 
 // Should we output feed links?
 if (FORUM_PAGE == 'viewtopic')
 {
-	echo '<link rel="alternate" type="application/rss+xml" href="'.forum_link($forum_url['topic_rss'], $id).'" title="'.$lang_common['RSS Feed'].'" />'."\n";
-	echo '<link rel="alternate" type="application/atom+xml" href="'.forum_link($forum_url['topic_atom'], $id).'" title="'.$lang_common['ATOM Feed'].'" />'."\n";
+	$forum_head['rss'] = '<link rel="alternate" type="application/rss+xml" href="'.forum_link($forum_url['topic_rss'], $id).'" title="'.$lang_common['RSS Feed'].'" />';
+	$forum_head['atom'] =  '<link rel="alternate" type="application/atom+xml" href="'.forum_link($forum_url['topic_atom'], $id).'" title="'.$lang_common['ATOM Feed'].'" />';
 }
 else if (FORUM_PAGE == 'viewforum')
 {
-	echo '<link rel="alternate" type="application/rss+xml" href="'.forum_link($forum_url['forum_rss'], $id).'" title="RSS" />'."\n";
-	echo '<link rel="alternate" type="application/atom+xml" href="'.forum_link($forum_url['forum_atom'], $id).'" title="ATOM" />'."\n";
+	$forum_head['rss'] = '<link rel="alternate" type="application/rss+xml" href="'.forum_link($forum_url['forum_rss'], $id).'" title="RSS" />';
+	$forum_head['atom'] = '<link rel="alternate" type="application/atom+xml" href="'.forum_link($forum_url['forum_atom'], $id).'" title="ATOM" />';
 }
 
-?>
-<link rel="top" href="<?php echo $base_url ?>" title="<?php echo $lang_common['Forum index'] ?>" />
-<?php
+$forum_head['top'] = '<link rel="top" href="'.$base_url.'" title="'.$lang_common['Forum index'].'" />';
 
 // If there are more than two breadcrumbs, add the "up" link (second last)
 if (count($forum_page['crumbs']) > 2)
-	echo '<link rel="up" href="'.$forum_page['crumbs'][count($forum_page['crumbs']) - 2][1].'" title="'.forum_htmlencode($forum_page['crumbs'][count($forum_page['crumbs']) - 2][0]).'" />'."\n";
+	$forum_head['up'] = '<link rel="up" href="'.$forum_page['crumbs'][count($forum_page['crumbs']) - 2][1].'" title="'.forum_htmlencode($forum_page['crumbs'][count($forum_page['crumbs']) - 2][0]).'" />';
 
 // If there are other page navigation links (first, next, prev and last)
 if (!empty($forum_page['nav']))
-	echo implode("\n", $forum_page['nav'])."\n";
+	$forum_head['nav'] = implode("\n", $forum_page['nav']);
 
-?>
-<link rel="search" href="<?php echo forum_link($forum_url['search']) ?>" title="<?php echo $lang_common['Search'] ?>" />
-<link rel="author" href="<?php echo forum_link($forum_url['users']) ?>" title="<?php echo $lang_common['User list'] ?>" />
-<?php
+$forum_head['search'] = '<link rel="search" href="'.forum_link($forum_url['search']).'" title="'.$lang_common['Search'].'" />';
+$forum_head['author'] = '<link rel="author" href="'.forum_link($forum_url['users']).'" title="'.$lang_common['User list'].'" />';
 
 // Include stylesheets
 	require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php';
 
-?>
-<script type="text/javascript" src="<?php echo $base_url ?>/include/js/common.js"></script>
-
-<?php
-
+$forum_head['commonjs'] = '<script type="text/javascript" src="'.$base_url.'/include/js/common.js"></script>';
+	
 ($hook = get_hook('hd_'.FORUM_PAGE.'_head')) ? eval($hook) : null;
 
 ($hook = get_hook('hd_head')) ? eval($hook) : null;
+
+echo implode("\n",$forum_head);
+unset($forum_head);
 
 $tpl_temp = trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_head -->', $tpl_temp, $tpl_main);
