@@ -80,7 +80,6 @@ $tpl_main = str_replace('<!-- forum_local -->', 'xml:lang="'.$lang_common['lang_
 
 
 // START SUBST - <!-- forum_head -->
-ob_start();
 
 // Is this a page that we want search index spiders to index?
 if (!defined('FORUM_ALLOW_INDEX'))
@@ -119,8 +118,18 @@ if (!empty($forum_page['nav']))
 $forum_head['search'] = '<link rel="search" href="'.forum_link($forum_url['search']).'" title="'.$lang_common['Search'].'" />';
 $forum_head['author'] = '<link rel="author" href="'.forum_link($forum_url['users']).'" title="'.$lang_common['User list'].'" />';
 
+ob_start();
+
 // Include stylesheets
-	require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php';
+require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php';
+
+$head_temp = trim(ob_get_contents());
+$num_temp = 0;
+foreach (explode("\n", $head_temp) as $style_temp) {
+	$forum_head['style'.$num_temp++] = $style_temp;
+}
+
+ob_end_clean();
 
 $forum_head['commonjs'] = '<script type="text/javascript" src="'.$base_url.'/include/js/common.js"></script>';
 
@@ -128,12 +137,9 @@ $forum_head['commonjs'] = '<script type="text/javascript" src="'.$base_url.'/inc
 
 ($hook = get_hook('hd_head')) ? eval($hook) : null;
 
-echo implode("\n",$forum_head);
+$tpl_main = str_replace('<!-- forum_head -->', implode("\n",$forum_head), $tpl_main);
 unset($forum_head);
 
-$tpl_temp = trim(ob_get_contents());
-$tpl_main = str_replace('<!-- forum_head -->', $tpl_temp, $tpl_main);
-ob_end_clean();
 // END SUBST - <!-- forum_head -->
 
 

@@ -2314,19 +2314,28 @@ function redirect($destination_url, $message)
 
 
 	// START SUBST - <!-- forum_head -->
+
+	$forum_head['refresh'] = '<meta http-equiv="refresh" content="'.$forum_config['o_redirect_delay'].';URL='.str_replace(array('<', '>', '"'), array('&lt;', '&gt;', '&quot;'), $destination_url).'" />';
+	$forum_head['title'] = '<title>'.$lang_common['Redirecting'].' - '.forum_htmlencode($forum_config['o_board_title']).'</title>';
+
 	ob_start();
 
-?>
-<meta http-equiv="refresh" content="<?php echo $forum_config['o_redirect_delay'] ?>;URL=<?php echo str_replace(array('<', '>', '"'), array('&lt;', '&gt;', '&quot;'), $destination_url) ?>" />
-<title><?php echo $lang_common['Redirecting'].' - '.forum_htmlencode($forum_config['o_board_title']) ?></title>
-<?php
-
-	// Include the stylesheets
+	// Include stylesheets
 	require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php';
 
-	$tpl_temp = "\t".trim(ob_get_contents());
-	$tpl_redir = str_replace('<!-- forum_head -->', $tpl_temp, $tpl_redir);
+	$head_temp = trim(ob_get_contents());
+	$num_temp = 0;
+	foreach (explode("\n", $head_temp) as $style_temp) {
+		$forum_head['style'.$num_temp++] = $style_temp;
+	}
+
 	ob_end_clean();
+	
+	($hook = get_hook('fn_redirect_head')) ? eval($hook) : null;
+
+	$tpl_redir = str_replace('<!-- forum_head -->', implode("\n",$forum_head), $tpl_redir);
+	unset($forum_head);
+
 	// END SUBST - <!-- forum_head -->
 
 
