@@ -137,7 +137,7 @@ $lang_common = array(
 
 // Alerts
 'Alert notice'			=>	'<strong>ATTENTION!</strong> There are important %s that you should view immediatelly.',
-'Admin alerts'			=>	'Administration Alerts and Messages',
+'Admin alerts'			=>	'Administrator Alerts',
 'Maintenance mode'		=>	'Maintenance mode is enabled!',
 'Maintenance alert'		=>	'<strong>WARNING!</strong> This board is in maintenance mode. <em>DO NOT</em> logout, if you do you will not be able to login.',
 'Updates'				=>	'FluxBB updates:',
