@@ -235,7 +235,7 @@ if ($forum_db->num_rows($result))
 			$forum_page['item_status']['moved'] = 'moved';
 			$forum_page['item_last_post']['moved'] = $forum_page['item_alt_message']['moved'] = $lang_forum['Moved'];
 			$forum_page['item_subject']['moved_to'] = '<a href="'.forum_link($forum_url['topic'], array($cur_topic['moved_to'], sef_friendly($cur_topic['subject']))).'">'.forum_htmlencode($cur_topic['subject']).'</a>';
-			$forum_page['item_subject']['moved'_by] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($cur_topic['poster'])).'</span>';
+			$forum_page['item_subject']['moved_by'] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($cur_topic['poster'])).'</span>';
 			$cur_topic['num_replies'] = $cur_topic['num_views'] = ' - ';
 		}
 		else
