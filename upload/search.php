@@ -422,12 +422,9 @@ $forum_page['pd_searches'] = array(
 
 if (!$forum_user['is_guest'])
 {
-	array_push(
-		$forum_page['pd_searches'],
-		'new' => '<a href="'.forum_link($forum_url['search_new']).'" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a>',
-		'user_posts' => '<a href="'.forum_link($forum_url['search_user_posts'], $forum_user['id']).'">'.$lang_common['Your posts'].'</a>',
-		'user_topics' => '<a href="'.forum_link($forum_url['search_user_topics'], $forum_user['id']).'">'.$lang_common['Your topics'].'</a>'
-	);
+	$forum_page['pd_searches']['new'] = '<a href="'.forum_link($forum_url['search_new']).'" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a>';
+	$forum_page['pd_searches']['user_posts'] = '<a href="'.forum_link($forum_url['search_user_posts'], $forum_user['id']).'">'.$lang_common['Your posts'].'</a>';
+	$forum_page['pd_searches']['user_topics'] = '<a href="'.forum_link($forum_url['search_user_topics'], $forum_user['id']).'">'.$lang_common['Your topics'].'</a>';
 
 	if ($forum_config['o_subscriptions'] == '1')
 		 $forum_page['pd_searches']['subscriptions'] = '<a href="'.forum_link($forum_url['search_subscriptions'], $forum_user['id']).'">'.$lang_common['Your subscriptions'].'</a>';
