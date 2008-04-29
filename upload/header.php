@@ -270,7 +270,7 @@ if (!empty($alert_items))
 
 ?>
 <div id="brd-alert">
-	<p class="warn"><?php printf($lang_common['Alert notice'], '<strong><a href="'.forum_link($forum_url['admin_index']).'">'.$lang_common['View alerts'].'</a></strong>') ?></p>
+	<p class="warn"><?php printf($lang_common['Alert notice'], '<a href="'.forum_link($forum_url['admin_index']).'">'.$lang_common['Admin alerts'].'</a>') ?></p>
 </div>
 <?php
 
