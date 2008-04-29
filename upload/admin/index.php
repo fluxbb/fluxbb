@@ -169,8 +169,6 @@ else if (ini_get('xcache.cacher'))
 else
 	$php_accelerator = 'N/A';
 
-$forum_page['item_num'] = 0;
-
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
 	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
@@ -200,12 +198,17 @@ ob_start();
 		<div class="frm-head">
 			<h2><span><?php echo $lang_admin['Information head'] ?></span></h2>
 		</div>
-		<div class="frm-info">
-			<p><?php echo $lang_admin['Welcome info'] ?></p>
+<?php if (!empty($alert_items)): ?>		<div class="datagrid">
+			<div id="admin-alerts" class="idx-item databox db1">
+				<h3 class="legend warn"><span><?php echo $lang_admin['Alerts'] ?></span></h3>
+				<div class="data">
+					<?php echo implode(' ',$alert_items) ?>
+				</div>
+			</div>
 		</div>
-		<div class="datagrid">
+<?php endif; ?>		<div class="datagrid">
 <?php ($hook = get_hook('ain_pre_version')) ? eval($hook) : null; ?>
-			<div class="idx-item databox db<?php echo ++$forum_page['item_num']?>">
+			<div class="idx-item databox db1">
 				<h3 class="legend"><span><?php echo $lang_admin['FluxBB version'] ?></span></h3>
 				<ul class="data">
 					<li><span>FluxBB <?php echo $forum_config['o_cur_version'] ?></span></li>
@@ -215,11 +218,11 @@ ob_start();
 <?php endif; ?>				</ul>
 			</div>
 <?php ($hook = get_hook('ain_pre_server_load')) ? eval($hook) : null; ?>
-			<div class="idx-item databox db<?php echo ++$forum_page['item_num']?>">
+			<div class="idx-item databox">
 				<h3 class="legend"><span><?php echo $lang_admin['Server load'] ?></span></h3>
 				<p class="data"><?php echo $server_load ?> (<?php echo $num_online.' '.$lang_admin['users online']?>)</p>
 			</div>
-<?php ($hook = get_hook('ain_pre_environment')) ? eval($hook) : null; if ($forum_user['g_id'] == FORUM_ADMIN): ?>					<div class="idx-item databox db<?php echo ++$forum_page['item_num']?>">
+<?php ($hook = get_hook('ain_pre_environment')) ? eval($hook) : null; if ($forum_user['g_id'] == FORUM_ADMIN): ?>					<div class="idx-item databox">
 				<h3 class="legend"><span><?php echo $lang_admin['Environment'] ?></span></h3>
 				<ul class="data">
 					<li><span><?php echo $lang_admin['Operating system'] ?>: <?php echo PHP_OS ?></span></li>
@@ -228,7 +231,7 @@ ob_start();
 				</ul>
 			</div>
 <?php ($hook = get_hook('ain_pre_database')) ? eval($hook) : null; ?>
-			<div class="idx-item databox db<?php echo ++$forum_page['item_num']?>">
+			<div class="idx-item databox">
 				<h3 class="legend"><span><?php echo $lang_admin['Database'] ?></span></h3>
 				<ul class="data">
 					<li><span><?php echo $db_version ?></span></li>

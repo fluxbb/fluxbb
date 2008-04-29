@@ -48,8 +48,7 @@ $lang_admin = array(
 
 // Start-Information
 'Information head'				=>	'Welcome to FluxBB administration control panel',
-'Welcome info'					=>	'From here you can control vital aspects of the forum. Depending on whether you are an administrator or a moderator you can enable and disable features, manage users and groups, create and manage categories and forums, manage extensions and maintain your FluxBB installation in good order.',
-'FluxBB version'					=>	'FluxBB version',
+'FluxBB version'				=>	'FluxBB version',
 'Check for updates enabled'		=>	'This board is setup to automatically check for updates and hotfixes against the FluxBB.org updates service.',
 'Check for updates manual'		=>	'Check for updates',	// Link text
 'Server load'					=>	'Server load',
@@ -63,6 +62,7 @@ $lang_admin = array(
 'Rows'							=>	'Rows',
 'Size'							=>	'Size',
 'phpinfo disabled'				=>	'The PHP function phpinfo() has been disabled on this server.',
+'Alerts'						=>	'ALERTS / MESSAGES',
 
 // Start-Categories
 'Add category head'				=>	'Add category (create a new category at the specified position)',
@@ -107,7 +107,7 @@ $lang_admin = array(
 'User groups'					=>	'User groups',
 'Save'							=>	'Save',
 'E-mail'						=>	'E-mail',
-'Redirect'						=>	'Redirecting â€¦',
+'Redirect'						=>	'Redirecting …',
 'Category'						=>	'Category',
 'Post replies'					=>	'Post&#160;replies',
 'Post topics'					=>	'Post&#160;topics',
@@ -119,7 +119,7 @@ $lang_admin = array(
 'Warning'						=>	'Warning!',
 'Important'						=>	'Important:',
 'Cancel'						=>	'Cancel',
-'Cancel redirect'				=>	'Operation cancelled. Redirecting â€¦',
+'Cancel redirect'				=>	'Operation cancelled. Redirecting …',
 'Delete confirm head'			=>	'Delete confirmation',
 'Requires confirmation'			=>	'(Requires confirmation via separate form)',
 'Unknown'						=>	'Unknown',
@@ -346,8 +346,8 @@ $lang_admin = array(
 'Starting post info'			=>	'The post ID to start rebuilding at. The default value is the first available ID in the database. Normally you would not want to change this.',
 'Empty index'					=>	'Empty index',
 'Empty index info'				=>	'Empty search index before rebuilding (see below).',
-'Rebuilding index title'		=>	'Rebuilding search index â€¦',
-'Rebuilding index'				=>	'Rebuilding index â€¦ This might be a good time to put on some coffee :-)',
+'Rebuilding index title'		=>	'Rebuilding search index …',
+'Rebuilding index'				=>	'Rebuilding index … This might be a good time to put on some coffee :-)',
 'Processing post'				=>	'Processing post <strong>%s</strong> in topic <strong>%s</strong>.',
 'Javascript redirect'			=>	'JavaScript redirect unsuccessful.',
 'Click to continue'				=>	'Click here to continue',

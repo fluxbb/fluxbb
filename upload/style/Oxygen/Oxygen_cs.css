@@ -45,7 +45,7 @@ A - BACKGROUND and BORDERS
 	background: #1f537b;
 	}
 	
-.frm-info, .frm-error, #brd-alert, .dataset .ext-error {
+.frm-info, .frm-error, #brd-alert, #brd-maintenance, .dataset .ext-error, .brd #admin-alerts {
 	background: #ffffe1;
 	}
 
@@ -61,7 +61,7 @@ A - BACKGROUND and BORDERS
 	background: #f4f9fd;
 	}
 
-.status span, .sig-content span.sig-line, .databox .legend, #brd-announcement .msg-head, #brd-alert p, #brd-alert h1 {
+.status span, .sig-content span.sig-line, .databox .legend, #brd-announcement .msg-head {
 	border-color: #bbb;
 	}
 
@@ -105,15 +105,15 @@ B - TEXT
 	color: #ddd;
 	}
 	
-.main-content li span, .databox .data, .frm-info, .frm-info span, #brd-alert div, .frm-set, .fld-label,
+.main-content li span, .databox .data, .frm-info, .frm-info span, .frm-set, .fld-label,
 .isonline, .example code, .example li code, .example li samp, .frm .frm-group legend,
 .example li span, .example li .samp, p.item span, .entry-info li * {
 	color: #666;
 	}
 	
-.main-content li strong, .important strong, .user-info li.title span, #brd-alert strong,
+.main-content li strong, .important strong, .user-info li.title span,
 .frm-error li span, .frm-info li span strong, .online .isonline, .frm h3.link *, .frm h4.link *,
-#brd-help h3, .main th {
+#brd-help h3, .main th, #brd-maintenance em, .brd #admin-alerts p strong {
 	color: #000;
 	}
 	
@@ -137,7 +137,8 @@ B - TEXT
 	color: #CD9C96;
 	}
 
-em.req-text, #req-msg p em, .brd li.warn, .brd .warn strong, .brd .frm-group .warn, .main .ext-error .legend, #brd-alert h1 strong {
+em.req-text, #req-msg p em, .brd li.warn, .brd .warn strong, .brd .frm-group .warn, .main .ext-error .legend,
+.brd #admin-alerts .legend span {
 	color: #b42000;
 	}
 	

@@ -283,34 +283,28 @@ C - PAGE LAYOUT and COMMON ELEMENTS
 /* Alert Box
 -------------------------------------------------------------*/
 
-#brd-alert {
+#brd-alert, #brd-maintenance {
 	border-style: solid;
 	border-width: 1px;
 	margin: 0 0 1em 0;
 	}
 	
-#brd-alert h1 {
-	padding: 0.6em 0;
-	margin: 0 1.3em 0.6em 1.3em;
-	border-bottom-style: dashed;
-	border-bottom-width: 1px;
+#brd-alert p, #brd-maintenance p {
+	padding: 0.8em 0 0.8em 0;
+	margin: 0 1.3em;
+	font-size: 1.084em;
 	}
 	
-#brd-alert h1 strong {
-	font-size: 1.1em;
+#brd-alert strong,
+#brd-maintenance strong,
+#brd-maintenance em {
+	font-weight: bold;
+	font-style: normal;
 	}
-
-#brd-alert p {
-	padding: 0.2em 0 0.8em 0;
-	margin: 0 1.3em;
-	}
-
-#brd-alert p strong {
-	display: block;
-	padding-bottom: 0.2em;
+	
+.brd #admin-alerts p strong {
 	font-weight: bold;
 	}
-	
 	
 /* Statistics
 -------------------------------------------------------------*/

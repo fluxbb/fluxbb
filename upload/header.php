@@ -169,7 +169,8 @@ $tpl_main = str_replace('<!-- forum_navlinks -->', '<div id="brd-navlinks">'."\n
 
 
 // START SUBST - <!-- forum_crumbs -->
-$tpl_main = str_replace('<!-- forum_crumbs -->', '<div class="brd-crumbs">'."\n\t".'<p class="crumbs">'.generate_crumbs(false).'</p>'."\n".'</div>'."\n", $tpl_main);
+if (FORUM_PAGE != 'index')
+	$tpl_main = str_replace('<!-- forum_crumbs -->', '<div class="brd-crumbs">'."\n\t".'<p class="crumbs">'.generate_crumbs(false).'</p>'."\n".'</div>'."\n", $tpl_main);
 // END SUBST - <!-- forum_crumbs -->
 
 
@@ -250,7 +251,7 @@ if ($forum_user['g_id'] == FORUM_ADMIN)
 
 	// Warn the admin that maintenance mode is enabled
 	if ($forum_config['o_maintenance'] == '1')
-		$alert_items['maintenance'] = '<p id="maint-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Maintenance mode'].'</strong> <span>'.$lang_common['Maintenance alert'].'</span></p>';
+		$alert_items['maintenance'] = '<p id="maint-alert" class="warn"><strong>'.$lang_common['Maintenance mode'].'</strong> <span>'.$lang_common['Maintenance alert'].'</span></p>';
 
 	// Warn the admin that the install script is accessible
 	if (file_exists(FORUM_ROOT.'install.php'))
@@ -269,12 +270,20 @@ if (!empty($alert_items))
 
 ?>
 <div id="brd-alert">
-	<h1 class="warn"><strong><?php echo $lang_common['Attention'] ?></strong></h1>
-	<div>
-		<?php echo implode("\n\t\t", $alert_items)."\n" ?>
-	</div>
+	<p class="warn"><?php printf($lang_common['Alert notice'], '<strong><a href="'.forum_link($forum_url['admin_index']).'">'.$lang_common['View alerts'].'</a></strong>') ?></p>
 </div>
 <?php
+
+	if ($forum_config['o_maintenance'] == '1')
+	{
+
+?>
+<div id="brd-maintenance">
+	<p class="warn"><?php echo $lang_common['Maintenance alert'] ?></p>
+</div>
+<?php
+
+	}
 
 	$tpl_temp = ob_get_contents();
 	$tpl_main = str_replace('<!-- forum_alert -->', $tpl_temp, $tpl_main);

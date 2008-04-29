@@ -136,18 +136,20 @@ $lang_common = array(
 'Attention'				=>	'Attention!',
 
 // Alerts
+'Alert notice'			=>	'%s There are important forum messages and/or alerts that you should view immediatelly.',
+'View alerts'			=>	'View New Alerts!',
 'Maintenance mode'		=>	'Maintenance mode is enabled!',
-'Maintenance alert'		=>	'This board is in maintenance mode. DO NOT logout, if you do you will not be able to login.',
-'Updates'				=>	'FluxBB updates',
+'Maintenance alert'		=>	'<strong>WARNING!</strong> This board is in maintenance mode. <em>DO NOT</em> logout, if you do you will not be able to login.',
+'Updates'				=>	'FluxBB updates:',
 'Updates failed'		=>	'The latest attempt at checking for updates against the FluxBB.org updates service failed. This probably just means that the service is temporarily overloaded or out of order. However, if this alert does not disappear within a day or two, you should disable the automatic check for updates and check for updates manually in the future.',
 'Updates version n hf'	=>	'A newer version of FluxBB, version %s, is available for download at <a href="http://FluxBB.org/">FluxBB.org</a>. Furthermore, one or more hotfix extensions are available for install on the Extensions tab of the admin interface.',
 'Updates version'		=>	'A newer version of FluxBB, version %s, is available for download at <a href="http://FluxBB.org/">FluxBB.org</a>.',
 'Updates hf'			=>	'One or more hotfix extensions are available for install on the Extensions tab of the admin interface.',
-'Install script'		=>	'Install script uploaded',
+'Install script'		=>	'Install script uploaded:',
 'Install script alert'	=>	'FluxBB\'s installation script (install.php) is currently uploaded to the forum root. Since FluxBB is already installed, the file should be deleted or moved out of the forum root for security reasons.',
-'Update script'			=>	'Database update script uploaded',
+'Update script'			=>	'Database update script uploaded:',
 'Update script alert'	=>	'FluxBB\'s database update script (db_update.php) is currently uploaded to the forum root. Once it has been used to update the forum, it should be deleted or moved out of the forum root for security reasons.',
-'Maint script'			=>	'Maintenance mode disabling script uploaded',
+'Maint script'			=>	'Maintenance mode disabling script uploaded:',
 'Maint script alert'	=>	'FluxBB\'s maintenance mode disabling script (turn_off_maintenance_mode.php) is currently uploaded to the forum root. It should be deleted or moved out of the forum root if it is not being used.',
 
 // Stuff for Search links and jump menu
