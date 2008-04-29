@@ -612,7 +612,7 @@ if ($forum_config['o_smilies'] == '1')
 $tpl_temp = trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_qpost -->', $tpl_temp, $tpl_main);
 ob_end_clean();
-// END SUBST - <!-- forum_main -->
+// END SUBST - <!-- forum_qpost -->
 
 }
 

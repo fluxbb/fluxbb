@@ -25,6 +25,7 @@
 <div class="divider"><hr /></div>
 
 <!-- forum_main -->
+<!-- forum_qpost -->
 
 <div class="divider"><hr /></div>
 
