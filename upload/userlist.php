@@ -290,10 +290,6 @@ else
 	</div>
 
 </div>
-
-<div id="brd-crumbs-foot">
-	<p class="crumbs"><?php echo generate_crumbs(false) ?></p>
-</div>
 <?php
 
 ($hook = get_hook('ul_end')) ? eval($hook) : null;

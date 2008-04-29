@@ -163,7 +163,7 @@ $tpl_main = str_replace('<!-- forum_navlinks -->', '<div id="brd-navlinks">'."\n
 
 
 // START SUBST - <!-- forum_crumbs -->
-$tpl_main = str_replace('<!-- forum_crumbs -->', '<div id="brd-crumbs-head">'."\n\t".'<p class="crumbs">'.generate_crumbs(false).'</p>'."\n".'</div>'."\n", $tpl_main);
+$tpl_main = str_replace('<!-- forum_crumbs -->', '<div class="brd-crumbs">'."\n\t".'<p class="crumbs">'.generate_crumbs(false).'</p>'."\n".'</div>'."\n", $tpl_main);
 // END SUBST - <!-- forum_crumbs -->
 
 

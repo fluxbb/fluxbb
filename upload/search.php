@@ -392,10 +392,6 @@ if (isset($query))
 	</div>
 
 </div>
-
-<div id="brd-crumbs-foot">
-	<p class="crumbs"><?php echo generate_crumbs(false) ?></p>
-</div>
 <?php
 
 	$tpl_temp = trim(ob_get_contents());

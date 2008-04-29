@@ -428,14 +428,12 @@ D - MAIN CONTENT COMMON ELEMENTS
 /* Breadcrumbs
 -------------------------------------------------------------*/
 
-#brd-crumbs-head,
-#brd-crumbs-foot {
+.brd .brd-crumbs {
 	padding: 0 1.3em;
 	margin: 0 0 1em 0;
 	}
 	
-#brd-crumbs-head .crumb,
-#brd-crumbs-foot .crumb {
+.brd-crumbs .crumb {
 	padding-left: 1.5em;
 	padding-right: 0.5em;
 	background-image: url(crumb.png);
@@ -445,14 +443,12 @@ D - MAIN CONTENT COMMON ELEMENTS
 	float: left;
 	}	
 
-#brd-crumbs-head .crumbfirst,
-#brd-crumbs-foot .crumbfirst {
+.brd-crumbs .crumbfirst {
 	background-image: none;
 	padding-left: 0;
 	}
 
-#brd-crumbs-head .crumblast,
-#brd-crumbs-foot .crumblast {
+.brd-crumbs .crumblast {
 	font-weight: bold;
 	}
 	

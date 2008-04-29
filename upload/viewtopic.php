@@ -517,10 +517,6 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 	</div>
 
 </div>
-
-<div id="brd-crumbs-foot">
-	<p class="crumbs"><?php echo generate_crumbs(false) ?></p>
-</div>
 <?php
 
 ($hook = get_hook('vt_end')) ? eval($hook) : null;

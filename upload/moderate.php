@@ -485,11 +485,6 @@ if (isset($_GET['tid']))
 	</form>
 
 </div>
-
-<div id="brd-crumbs-foot">
-	<p class="crumbs"><?php echo generate_crumbs(false) ?></p>
-</div>
-
 <?php
 
 	$forum_id = $fid;
@@ -1291,10 +1286,6 @@ $forum_page['main_mod_submit'] = array(
 
 	</form>
 
-</div>
-
-<div id="brd-crumbs-foot">
-	<p class="crumbs"><?php echo generate_crumbs(false) ?></p>
 </div>
 <?php
 
