@@ -125,9 +125,9 @@ require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php'
 
 $head_temp = trim(ob_get_contents());
 $num_temp = 0;
-foreach (explode("\n", $head_temp) as $style_temp) {
+
+foreach (explode("\n", $head_temp) as $style_temp)
 	$forum_head['style'.$num_temp++] = $style_temp;
-}
 
 ob_end_clean();
 
