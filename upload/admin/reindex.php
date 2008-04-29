@@ -88,6 +88,12 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 		}
 	}
 
+	// Setup breadcrumbs
+	$forum_page['crumbs'] = array(
+		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+		$lang_admin['Rebuilding index title']
+	);
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -95,7 +101,7 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<title><?php echo forum_htmlencode($forum_config['o_board_title']) ?> - Rebuilding search index …</title>
+<title><?php echo generate_crumbs(true) ?></title>
 <style type="text/css">
 body {
 	font: 68.75% Verdana, Arial, Helvetica, sans-serif;
