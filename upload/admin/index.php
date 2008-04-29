@@ -213,7 +213,6 @@ ob_start();
 				<ul class="data">
 					<li><span>FluxBB <?php echo $forum_config['o_cur_version'] ?></span></li>
 					<li><span>&copy; Copyright 2008 <a href="http://fluxbb.org/">FluxBB.org</a></span></li>
-					<li><span>&copy; Copyright 2002-2008 PunBB.org</span></li>
 <?php if (isset($fluxbb_updates)): ?>					<li><span><?php echo $fluxbb_updates ?></span></li>
 <?php endif; ?>				</ul>
 			</div>
