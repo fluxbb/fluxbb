@@ -74,6 +74,9 @@ if (isset($_GET['ip_stats']))
 	define('FORUM_PAGE', 'admin-users');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -133,6 +136,11 @@ if (isset($_GET['ip_stats']))
 </div>
 <?php
 
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
+
 	require FORUM_ROOT.'footer.php';
 }
 
@@ -174,6 +182,9 @@ else if (isset($_GET['show_users']))
 	define('FORUM_PAGE_SECTION', 'users');
 	define('FORUM_PAGE', 'admin-users');
 	require FORUM_ROOT.'header.php';
+
+	// START SUBST - <!-- forum_main -->
+	ob_start();
 
 ?>
 <div id="brd-main" class="main sectioned admin">
@@ -305,6 +316,11 @@ else if (isset($_GET['show_users']))
 </div>
 <?php
 
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
+
 	require FORUM_ROOT.'footer.php';
 }
 
@@ -373,6 +389,9 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 	define('FORUM_PAGE', 'admin-users');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -409,6 +428,11 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 
 </div>
 <?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }
@@ -525,6 +549,9 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 	define('FORUM_PAGE', 'admin-users');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -571,6 +598,11 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 
 </div>
 <?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }
@@ -650,6 +682,9 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 	define('FORUM_PAGE', 'admin-users');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -707,6 +742,11 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 
 </div>
 <?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }
@@ -813,6 +853,9 @@ else if (isset($_POST['find_user']))
 	define('FORUM_PAGE', 'admin-users');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -911,6 +954,11 @@ if (!empty($forum_page['main_submit']))
 </div>
 <?php
 
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
+
 	require FORUM_ROOT.'footer.php';
 }
 
@@ -934,6 +982,9 @@ $forum_page['crumbs'] = array(
 define('FORUM_PAGE_SECTION', 'users');
 define('FORUM_PAGE', 'admin-users');
 require FORUM_ROOT.'header.php';
+
+// START SUBST - <!-- forum_main -->
+ob_start();
 
 ?>
 <div id="brd-main" class="main sectioned admin">
@@ -1163,5 +1214,10 @@ $forum_page['set_count'] = 0;
 
 </div>
 <?php
+
+$tpl_temp = trim(ob_get_contents());
+$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+ob_end_clean();
+// END SUBST - <!-- forum_main -->
 
 require FORUM_ROOT.'footer.php';

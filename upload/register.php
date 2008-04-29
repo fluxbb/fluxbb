@@ -70,6 +70,9 @@ else if ($forum_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_P
 	define('FORUM_PAGE', 'rules');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 	$forum_page['set_count'] = $forum_page['fld_count'] = 0;
 
 ?>
@@ -102,6 +105,11 @@ else if ($forum_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_P
 </div>
 <?php
 
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
+
 	require FORUM_ROOT.'footer.php';
 }
 
@@ -130,7 +138,7 @@ else if (isset($_POST['form_sent']))
 		if ($forum_config['o_regs_verify'] == '1')
 		{
 			$email2 = strtolower(trim($_POST['req_email2']));
-	
+
 			$password1 = random_key(8, true);
 			$password2 = $password1;
 		}
@@ -177,7 +185,7 @@ else if (isset($_POST['form_sent']))
 		{
 			if ($forum_config['p_allow_dupe_email'] == '0')
 				$errors[] = $lang_profile['Dupe e-mail'];
-	
+
 			while ($cur_dupe = $forum_db->fetch_assoc($result))
 				$dupe_list[] = $cur_dupe['username'];
 		}
@@ -280,6 +288,9 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE', 'register');
 require FORUM_ROOT.'header.php';
+
+// START SUBST - <!-- forum_main -->
+ob_start();
 
 ?>
 <div id="brd-main" class="main">
@@ -491,5 +502,10 @@ require FORUM_ROOT.'header.php';
 <?php
 
 ($hook = get_hook('rg_end')) ? eval($hook) : null;
+
+$tpl_temp = trim(ob_get_contents());
+$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+ob_end_clean();
+// END SUBST - <!-- forum_main -->
 
 require FORUM_ROOT.'footer.php';

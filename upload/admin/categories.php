@@ -151,6 +151,9 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 		define('FORUM_PAGE', 'admin-categories');
 		require FORUM_ROOT.'header.php';
 
+		// START SUBST - <!-- forum_main -->
+		ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -182,6 +185,11 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 
 </div>
 <?php
+
+		$tpl_temp = trim(ob_get_contents());
+		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+		ob_end_clean();
+		// END SUBST - <!-- forum_main -->
 
 		require FORUM_ROOT.'footer.php';
 	}
@@ -268,6 +276,9 @@ $forum_page['crumbs'] = array(
 define('FORUM_PAGE_SECTION', 'start');
 define('FORUM_PAGE', 'admin-categories');
 require FORUM_ROOT.'header.php';
+
+// START SUBST - <!-- forum_main -->
+ob_start();
 
 ?>
 <div id="brd-main" class="main sectioned admin">
@@ -407,5 +418,10 @@ if ($num_cats)
 
 </div>
 <?php
+
+$tpl_temp = trim(ob_get_contents());
+$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+ob_end_clean();
+// END SUBST - <!-- forum_main -->
 
 require FORUM_ROOT.'footer.php';

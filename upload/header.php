@@ -123,7 +123,7 @@ $forum_head['author'] = '<link rel="author" href="'.forum_link($forum_url['users
 	require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php';
 
 $forum_head['commonjs'] = '<script type="text/javascript" src="'.$base_url.'/include/js/common.js"></script>';
-	
+
 ($hook = get_hook('hd_'.FORUM_PAGE.'_head')) ? eval($hook) : null;
 
 ($hook = get_hook('hd_head')) ? eval($hook) : null;
@@ -285,10 +285,6 @@ if (!empty($alert_items))
 if ($forum_config['o_announcement'] == '1')
 	$tpl_main = str_replace('<!-- forum_announcement -->', '<div id="brd-announcement">'."\n\t".'<div class="userbox">'.($forum_config['o_announcement_heading'] != '' ? "\n\t\t".'<h1 class="msg-head">'.$forum_config['o_announcement_heading'].'</h1>' : '')."\n\t\t".$forum_config['o_announcement_message']."\n\t".'</div>'."\n".'</div>'."\n", $tpl_main);
 // END SUBST - <!-- forum_announcement -->
-
-
-// START SUBST - <!-- forum_main -->
-ob_start();
 
 ($hook = get_hook('hd_end')) ? eval($hook) : null;
 

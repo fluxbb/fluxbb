@@ -239,6 +239,9 @@ if (isset($_GET['tid']))
 		define('FORUM_PAGE', 'dialogue');
 		require FORUM_ROOT.'header.php';
 
+		// START SUBST - <!-- forum_main -->
+		ob_start();
+
 ?>
 <div id="brd-main" class="main">
 
@@ -270,6 +273,11 @@ if (isset($_GET['tid']))
 <?php
 
 		$forum_id = $fid;
+
+		$tpl_temp = trim(ob_get_contents());
+		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+		ob_end_clean();
+		// END SUBST - <!-- forum_main -->
 
 		require FORUM_ROOT.'footer.php';
 	}
@@ -329,6 +337,9 @@ if (isset($_GET['tid']))
 
 	define('FORUM_PAGE', 'modtopic');
 	require FORUM_ROOT.'header.php';
+
+	// START SUBST - <!-- forum_main -->
+	ob_start();
 
 ?>
 <div id="brd-main" class="main paged">
@@ -482,6 +493,11 @@ if (isset($_GET['tid']))
 <?php
 
 	$forum_id = $fid;
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }
@@ -668,6 +684,9 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	define('FORUM_PAGE', 'dialogue');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main">
 
@@ -726,6 +745,11 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 <?php
 
 	$forum_id = $fid;
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }
@@ -836,6 +860,9 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 	define('FORUM_PAGE', 'dialogue');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main">
 
@@ -867,6 +894,11 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 <?php
 
 	$forum_id = $fid;
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }
@@ -1076,6 +1108,9 @@ $forum_page['crumbs'] = array(
 define('FORUM_PAGE', 'modforum');
 require FORUM_ROOT.'header.php';
 
+// START SUBST - <!-- forum_main -->
+ob_start();
+
 ?>
 <div id="brd-main" class="main paged">
 
@@ -1266,5 +1301,10 @@ $forum_page['main_mod_submit'] = array(
 $forum_id = $fid;
 
 ($hook = get_hook('mr_end')) ? eval($hook) : null;
+
+$tpl_temp = trim(ob_get_contents());
+$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+ob_end_clean();
+// END SUBST - <!-- forum_main -->
 
 require FORUM_ROOT.'footer.php';

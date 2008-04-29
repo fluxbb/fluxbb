@@ -143,6 +143,9 @@ else if (isset($_GET['del_forum']))
 		define('FORUM_PAGE', 'admin-forums');
 		require FORUM_ROOT.'header.php';
 
+		// START SUBST - <!-- forum_main -->
+		ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -172,6 +175,11 @@ else if (isset($_GET['del_forum']))
 
 </div>
 <?php
+
+		$tpl_temp = trim(ob_get_contents());
+		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+		ob_end_clean();
+		// END SUBST - <!-- forum_main -->
 
 		require FORUM_ROOT.'footer.php';
 	}
@@ -423,6 +431,9 @@ else if (isset($_GET['edit_forum']))
 	define('FORUM_PAGE', 'admin-forums');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -584,6 +595,11 @@ $forum_page['set_count'] = 0;
 
 <?php
 
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
+
 	require FORUM_ROOT.'footer.php';
 }
 
@@ -602,6 +618,9 @@ $forum_page['crumbs'] = array(
 define('FORUM_PAGE_SECTION', 'start');
 define('FORUM_PAGE', 'admin-forums');
 require FORUM_ROOT.'header.php';
+
+// START SUBST - <!-- forum_main -->
+ob_start();
 
 ?>
 <div id="brd-main" class="main sectioned admin">
@@ -749,5 +768,10 @@ if ($forum_db->num_rows($result))
 
 </div>
 <?php
+
+$tpl_temp = trim(ob_get_contents());
+$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+ob_end_clean();
+// END SUBST - <!-- forum_main -->
 
 require FORUM_ROOT.'footer.php';

@@ -251,6 +251,9 @@ if (!$pid)
 define('FORUM_PAGE', 'viewtopic');
 require FORUM_ROOT.'header.php';
 
+// START SUBST - <!-- forum_main -->
+ob_start();
+
 ?>
 <div id="brd-main" class="main paged">
 
@@ -520,6 +523,14 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 </div>
 <?php
 
+($hook = get_hook('vt_end')) ? eval($hook) : null;
+
+$tpl_temp = trim(ob_get_contents());
+$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+ob_end_clean();
+// END SUBST - <!-- forum_main -->
+
+
 
 // Display quick post if enabled
 if ($forum_config['o_quickpost'] == '1' &&
@@ -527,6 +538,9 @@ if ($forum_config['o_quickpost'] == '1' &&
 	($cur_topic['post_replies'] == '1' || ($cur_topic['post_replies'] == '' && $forum_user['g_post_replies'] == '1')) &&
 	($cur_topic['closed'] == '0' || $forum_page['is_admmod']))
 {
+
+// START SUBST - <!-- forum_qpost -->
+ob_start();
 
 // Setup form
 $forum_page['form_action'] = forum_link($forum_url['new_reply'], $id);
@@ -593,6 +607,13 @@ if ($forum_config['o_smilies'] == '1')
 </div>
 <?php
 
+($hook = get_hook('vt_quickpost_end')) ? eval($hook) : null;
+
+$tpl_temp = trim(ob_get_contents());
+$tpl_main = str_replace('<!-- forum_qpost -->', $tpl_temp, $tpl_main);
+ob_end_clean();
+// END SUBST - <!-- forum_main -->
+
 }
 
 // Increment "num_views" for topic
@@ -609,7 +630,5 @@ if ($forum_config['o_topic_views'] == '1')
 }
 
 $forum_id = $cur_topic['forum_id'];
-
-($hook = get_hook('vt_end')) ? eval($hook) : null;
 
 require FORUM_ROOT.'footer.php';

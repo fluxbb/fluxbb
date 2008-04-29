@@ -140,6 +140,9 @@ if ($action == 'change_pass')
 			define('FORUM_PAGE', 'profile-changepass');
 			require FORUM_ROOT.'header.php';
 
+			// START SUBST - <!-- forum_main -->
+			ob_start();
+
 ?>
 <div id="brd-main" class="main">
 
@@ -210,6 +213,11 @@ if ($action == 'change_pass')
 
 </div>
 <?php
+
+			$tpl_temp = trim(ob_get_contents());
+			$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+			ob_end_clean();
+			// END SUBST - <!-- forum_main -->
 
 			require FORUM_ROOT.'footer.php';
 		}
@@ -290,6 +298,9 @@ if ($action == 'change_pass')
 	define('FORUM_PAGE', 'profile-changepass');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned">
 
@@ -368,6 +379,11 @@ if ($action == 'change_pass')
 
 </div>
 <?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }
@@ -525,6 +541,9 @@ else if ($action == 'change_email')
 	define('FORUM_PAGE', 'profile-changemail');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main">
 
@@ -597,6 +616,11 @@ else if ($action == 'change_email')
 </div>
 <?php
 
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
+
 	require FORUM_ROOT.'footer.php';
 }
 
@@ -645,6 +669,9 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 	define('FORUM_PAGE', 'dialogue');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main">
 
@@ -679,6 +706,11 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 
 </div>
 <?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }
@@ -1056,7 +1088,7 @@ else if (isset($_POST['form_sent']))
 						$errors[] = sprintf($lang_profile['Move failed'], '<a href="mailto:'.$forum_config['o_admin_email'].'">'.$forum_config['o_admin_email'].'</a>');
 
 					if (empty($errors))
-					{	
+					{
 						// Now check the width/height
 						list($width, $height, $type,) = getimagesize($forum_config['o_avatars_dir'].'/'.$id.'.tmp');
 						if (empty($width) || empty($height) || $width > $forum_config['o_avatars_width'] || $height > $forum_config['o_avatars_height'])
@@ -1326,6 +1358,9 @@ if ($forum_user['id'] != $id &&
 	define('FORUM_PAGE', 'profile');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main">
 
@@ -1362,6 +1397,11 @@ if ($forum_user['id'] != $id &&
 
 </div>
 <?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }
@@ -1474,6 +1514,9 @@ else
 		define('FORUM_PAGE', 'profile-about');
 		require FORUM_ROOT.'header.php';
 
+		// START SUBST - <!-- forum_main -->
+		ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned">
 
@@ -1515,6 +1558,11 @@ else
 </div>
 <?php
 
+		$tpl_temp = trim(ob_get_contents());
+		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+		ob_end_clean();
+		// END SUBST - <!-- forum_main -->
+
 		require FORUM_ROOT.'footer.php';
 	}
 
@@ -1537,6 +1585,9 @@ else
 
 		define('FORUM_PAGE', 'profile-identity');
 		require FORUM_ROOT.'header.php';
+
+		// START SUBST - <!-- forum_main -->
+		ob_start();
 
 ?>
 <div id="brd-main" class="main sectioned">
@@ -1682,6 +1733,11 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 </div>
 <?php
 
+		$tpl_temp = trim(ob_get_contents());
+		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+		ob_end_clean();
+		// END SUBST - <!-- forum_main -->
+
 		require FORUM_ROOT.'footer.php';
 	}
 
@@ -1708,6 +1764,9 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 
 		define('FORUM_PAGE', 'profile-settings');
 		require FORUM_ROOT.'header.php';
+
+		// START SUBST - <!-- forum_main -->
+		ob_start();
 
 ?>
 <div id="brd-main" class="main sectioned">
@@ -1959,6 +2018,11 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 </div>
 <?php
 
+		$tpl_temp = trim(ob_get_contents());
+		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+		ob_end_clean();
+		// END SUBST - <!-- forum_main -->
+
 		require FORUM_ROOT.'footer.php';
 	}
 
@@ -1990,6 +2054,9 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 
 		define('FORUM_PAGE', 'profile-signature');
 		require FORUM_ROOT.'header.php';
+
+		// START SUBST - <!-- forum_main -->
+		ob_start();
 
 ?>
 <div id="brd-main" class="main sectioned">
@@ -2056,6 +2123,11 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 </div>
 <?php
 
+		$tpl_temp = trim(ob_get_contents());
+		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+		ob_end_clean();
+		// END SUBST - <!-- forum_main -->
+
 		require FORUM_ROOT.'footer.php';
 	}
 
@@ -2101,6 +2173,9 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 
 		define('FORUM_PAGE', 'profile-avatar');
 		require FORUM_ROOT.'header.php';
+
+		// START SUBST - <!-- forum_main -->
+		ob_start();
 
 ?>
 <div id="brd-main" class="main sectioned">
@@ -2173,6 +2248,11 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 </div>
 <?php
 
+		$tpl_temp = trim(ob_get_contents());
+		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+		ob_end_clean();
+		// END SUBST - <!-- forum_main -->
+
 		require FORUM_ROOT.'footer.php';
 	}
 
@@ -2212,6 +2292,9 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 
 		define('FORUM_PAGE', 'profile-admin');
 		require FORUM_ROOT.'header.php';
+
+		// START SUBST - <!-- forum_main -->
+		ob_start();
 
 ?>
 <div id="brd-main" class="main sectioned">
@@ -2353,6 +2436,11 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 
 </div>
 <?php
+
+		$tpl_temp = trim(ob_get_contents());
+		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+		ob_end_clean();
+		// END SUBST - <!-- forum_main -->
 
 		require FORUM_ROOT.'footer.php';
 	}

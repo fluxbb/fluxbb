@@ -276,6 +276,9 @@ if (!$section || $section == 'setup')
 	define('FORUM_PAGE', 'admin-options-setup');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -646,6 +649,9 @@ else if ($section == 'features')
 	define('FORUM_PAGE', 'admin-options-features');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -888,6 +894,9 @@ else if ($section == 'announcements')
 	define('FORUM_PAGE', 'admin-options-announcements');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -951,6 +960,9 @@ else if ($section == 'registration')
 	define('FORUM_PAGE_SECTION', 'options');
 	define('FORUM_PAGE', 'admin-options-registration');
 	require FORUM_ROOT.'header.php';
+
+	// START SUBST - <!-- forum_main -->
+	ob_start();
 
 ?>
 <div id="brd-main" class="main sectioned admin">
@@ -1053,6 +1065,9 @@ else if ($section == 'maintenance')
 	define('FORUM_PAGE', 'admin-options-maintenance');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -1118,6 +1133,9 @@ else if ($section == 'email')
 	define('FORUM_PAGE_SECTION', 'options');
 	define('FORUM_PAGE', 'admin-options-email');
 	require FORUM_ROOT.'header.php';
+
+	// START SUBST - <!-- forum_main -->
+	ob_start();
 
 ?>
 <div id="brd-main" class="main sectioned admin">
@@ -1222,5 +1240,10 @@ $forum_page['set_count'] = 0;
 }
 
 ($hook = get_hook('aop_new_section')) ? eval($hook) : null;
+
+$tpl_temp = trim(ob_get_contents());
+$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+ob_end_clean();
+// END SUBST - <!-- forum_main -->
 
 require FORUM_ROOT.'footer.php';

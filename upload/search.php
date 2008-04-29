@@ -70,7 +70,7 @@ elseif (isset($_GET['action']))
 		$sort_by = (isset($_GET['sort_by'])) ? intval($_GET['sort_by']) : null;
 		$search_in = (!isset($_GET['search_in']) || $_GET['search_in'] == 'all') ? 0 : (($_GET['search_in'] == 'message') ? 1 : -1);
 		$forum = (isset($_GET['forum'])) ? intval($_GET['forum']) : -1;
-		
+
 		if (preg_match('#^[\*%]+$#', $keywords) || (forum_strlen(str_replace(array('*', '%'), '', $keywords)) < 3))
 			$keywords = '';
 
@@ -99,7 +99,7 @@ elseif (isset($_GET['action']))
 
 		$search_id = '';
 		$show_as = 'topics';
-		
+
 		// Check we're allowed to see the subscriptions we're trying to look at
 		if ($action == 'show_subscriptions' && $forum_user['g_id'] != FORUM_ADMIN && $pun_user['id'] != $value)
 			message($lang_common['Bad request']);
@@ -116,28 +116,28 @@ if (isset($query))
 {
 	// No results?
 	if (!$query)
-		no_search_results();	
-	
+		no_search_results();
+
 	// Work out the settings for pagination
 	$forum_page['per_page'] = ($show_as == 'posts') ? $forum_user['disp_posts'] : $forum_user['disp_topics'];
 	$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
-	
+
 	// We now have a query that will give us our results in $query, lets get the data!
 	$num_hits = get_search_results($query, $search_set, $forum_page);
-	
+
 	($hook = get_hook('se_post_results_fetched')) ? eval($hook) : null;
 
 	// No search results?
 	if ($num_hits == 0)
 		no_search_results($action);
-	
+
 	//
 	// Output the search results
 	//
-	
+
 	// Generate paging links
 	$forum_page['page_post'] = '<p class="paging"><span class="pages">'.$lang_common['Pages'].'</span> '.paginate($forum_page['num_pages'], $forum_page['page'], $url_type, $lang_common['Paging separator'], $search_id).'</p>';
-	
+
 	// Get topic/forum tracking data
 	if (!$forum_user['is_guest'])
 		$tracked_topics = get_tracked_topics();
@@ -160,11 +160,14 @@ if (isset($query))
 
 	$action = (isset($action)) ? $action : null;
 	generate_search_crumbs($action);
-	
+
 	($hook = get_hook('se_results_pre_header_load')) ? eval($hook) : null;
 
 	define('FORUM_PAGE', $show_as == 'topics' ? 'searchtopics' : 'searchposts');
 	require FORUM_ROOT.'header.php';
+
+	// START SUBST - <!-- forum_main -->
+	ob_start();
 
 	if ($show_as == 'topics')
 	{
@@ -395,6 +398,11 @@ if (isset($query))
 </div>
 <?php
 
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
+
 	require FORUM_ROOT.'footer.php';
 }
 
@@ -439,6 +447,9 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE', 'search');
 require FORUM_ROOT.'header.php';
+
+// START SUBST - <!-- forum_main -->
+ob_start();
 
 ?>
 <div id="brd-main" class="main">
@@ -571,5 +582,11 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 <?php
 
 ($hook = get_hook('se_end')) ? eval($hook) : null;
+
+$tpl_temp = trim(ob_get_contents());
+$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+ob_end_clean();
+// END SUBST - <!-- forum_main -->
+
 
 require FORUM_ROOT.'footer.php';

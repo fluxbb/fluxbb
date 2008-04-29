@@ -58,6 +58,9 @@ if ($action == 'rules')
 	define('FORUM_PAGE', 'rules');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main">
 
@@ -75,6 +78,11 @@ if ($action == 'rules')
 
 </div>
 <?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }
@@ -240,6 +248,9 @@ else if (isset($_GET['email']))
 	define('FORUM_PAGE', 'formemail');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main">
 
@@ -312,6 +323,11 @@ else if (isset($_GET['email']))
 
 </div>
 <?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }
@@ -415,6 +431,9 @@ else if (isset($_GET['report']))
 	define('FORUM_PAGE', 'report');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main">
 
@@ -454,6 +473,11 @@ else if (isset($_GET['report']))
 
 </div>
 <?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }

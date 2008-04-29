@@ -184,6 +184,9 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 			define('FORUM_PAGE', 'admin-extensions-install');
 			require FORUM_ROOT.'header.php';
 
+			// START SUBST - <!-- forum_main -->
+			ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -213,6 +216,11 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 </div>
 <?php
 
+			$tpl_temp = trim(ob_get_contents());
+			$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+			ob_end_clean();
+			// END SUBST - <!-- forum_main -->
+
 			require FORUM_ROOT.'footer.php';
 		}
 		else
@@ -225,6 +233,9 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 	define('FORUM_PAGE_SECTION', 'extensions');
 	define('FORUM_PAGE', 'admin-extensions-install');
 	require FORUM_ROOT.'header.php';
+
+	// START SUBST - <!-- forum_main -->
+	ob_start();
 
 ?>
 <div id="brd-main" class="main sectioned admin">
@@ -282,6 +293,11 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 
 </div>
 <?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }
@@ -369,6 +385,9 @@ else if (isset($_GET['uninstall']))
 			define('FORUM_PAGE', 'admin-extensions-manage');
 			require FORUM_ROOT.'header.php';
 
+			// START SUBST - <!-- forum_main -->
+			ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -399,6 +418,11 @@ else if (isset($_GET['uninstall']))
 </div>
 <?php
 
+			$tpl_temp = trim(ob_get_contents());
+			$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+			ob_end_clean();
+			// END SUBST - <!-- forum_main -->
+
 			require FORUM_ROOT.'footer.php';
 		}
 		else
@@ -411,6 +435,9 @@ else if (isset($_GET['uninstall']))
 		define('FORUM_PAGE_SECTION', 'extensions');
 		define('FORUM_PAGE', 'admin-extensions-manage');
 		require FORUM_ROOT.'header.php';
+
+		// START SUBST - <!-- forum_main -->
+		ob_start();
 
 ?>
 <div id="brd-main" class="main sectioned admin">
@@ -447,6 +474,11 @@ else if (isset($_GET['uninstall']))
 
 </div>
 <?php
+
+		$tpl_temp = trim(ob_get_contents());
+		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+		ob_end_clean();
+		// END SUBST - <!-- forum_main -->
 
 		require FORUM_ROOT.'footer.php';
 	}
@@ -526,8 +558,10 @@ if ($section == 'install')
 
 	define('FORUM_PAGE_SECTION', 'extensions');
 	define('FORUM_PAGE', 'admin-extensions-install');
-
 	require FORUM_ROOT.'header.php';
+
+	// START SUBST - <!-- forum_main -->
+	ob_start();
 
 ?>
 <div id="brd-main" class="main sectioned admin">
@@ -649,6 +683,11 @@ if ($section == 'install')
 </div>
 <?php
 
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
+
 	require FORUM_ROOT.'footer.php';
 }
 else
@@ -664,8 +703,10 @@ else
 
 	define('FORUM_PAGE_SECTION', 'extensions');
 	define('FORUM_PAGE', 'admin-extensions-manage');
-
 	require FORUM_ROOT.'header.php';
+
+	// START SUBST - <!-- forum_main -->
+	ob_start();
 
 ?>
 <div id="brd-main" class="main sectioned admin">
@@ -726,6 +767,11 @@ else
 
 </div>
 <?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }

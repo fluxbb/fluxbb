@@ -159,6 +159,9 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 	define('FORUM_PAGE', 'admin-bans');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main admin sectioned">
 
@@ -236,6 +239,11 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 
 </div>
 <?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }
@@ -381,6 +389,9 @@ define('FORUM_PAGE_SECTION', 'users');
 define('FORUM_PAGE', 'admin-bans');
 require FORUM_ROOT.'header.php';
 
+// START SUBST - <!-- forum_main -->
+ob_start();
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -478,5 +489,10 @@ else
 
 </div>
 <?php
+
+$tpl_temp = trim(ob_get_contents());
+$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+ob_end_clean();
+// END SUBST - <!-- forum_main -->
 
 require FORUM_ROOT.'footer.php';

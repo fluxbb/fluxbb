@@ -1726,6 +1726,9 @@ function message($message, $link = '')
 
 		define('FORUM_PAGE', 'message');
 		require FORUM_ROOT.'header.php';
+
+		// START SUBST - <!-- forum_main -->
+		ob_start();
 	}
 
 ?>
@@ -1742,6 +1745,11 @@ function message($message, $link = '')
 
 </div>
 <?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }
@@ -1808,6 +1816,9 @@ function csrf_confirm_form()
 	define('FORUM_PAGE', 'dialogue');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 	($hook = get_hook('fn_csrf_confirm_form_pre_header_load')) ? eval($hook) : null;
 
 ?>
@@ -1834,6 +1845,11 @@ function csrf_confirm_form()
 	</div>
 </div>
 <?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }

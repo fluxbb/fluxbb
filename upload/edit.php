@@ -211,6 +211,9 @@ $forum_page['crumbs'] = array(
 define('FORUM_PAGE', 'postedit');
 require FORUM_ROOT.'header.php';
 
+// START SUBST - <!-- forum_main -->
+ob_start();
+
 ?>
 <div id="brd-main" class="main">
 
@@ -354,5 +357,10 @@ if (!empty($forum_page['checkboxes']))
 $forum_id = $cur_post['fid'];
 
 ($hook = get_hook('ed_end')) ? eval($hook) : null;
+
+$tpl_temp = trim(ob_get_contents());
+$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+ob_end_clean();
+// END SUBST - <!-- forum_main -->
 
 require FORUM_ROOT.'footer.php';

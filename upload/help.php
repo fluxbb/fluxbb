@@ -44,6 +44,10 @@ $page_title = forum_htmlencode($forum_config['o_board_title']).' - '.$lang_help[
 define('FORUM_PAGE', 'help');
 require FORUM_ROOT.'header.php';
 
+// START SUBST - <!-- forum_main -->
+ob_start();
+
+
 ?>
 <div id="brd-main" class="main">
 
@@ -239,5 +243,10 @@ else if ($section == 'smilies')
 <?php
 
 ($hook = get_hook('he_end')) ? eval($hook) : null;
+
+$tpl_temp = trim(ob_get_contents());
+$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+ob_end_clean();
+// END SUBST - <!-- forum_main -->
 
 require FORUM_ROOT.'footer.php';

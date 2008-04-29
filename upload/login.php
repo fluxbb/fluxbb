@@ -195,7 +195,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 		$email = strtolower(trim($_POST['req_email']));
 		if (!is_valid_email($email))
 			$errors[] = $lang_common['Invalid e-mail'];
-		
+
 		// Did everything go according to plan?
 		if (empty($errors))
 		{
@@ -268,6 +268,9 @@ else if ($action == 'forget' || $action == 'forget_2')
 	define ('FORUM_PAGE', 'dialogue');
 	require FORUM_ROOT.'header.php';
 
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
 ?>
 <div id="brd-main" class="main">
 
@@ -334,6 +337,11 @@ else if ($action == 'forget' || $action == 'forget_2')
 </div>
 <?php
 
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
+
 	require FORUM_ROOT.'footer.php';
 }
 
@@ -365,6 +373,9 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE', 'login');
 require FORUM_ROOT.'header.php';
+
+// START SUBST - <!-- forum_main -->
+ob_start();
 
 ?>
 <div id="brd-main" class="main">
@@ -440,5 +451,10 @@ require FORUM_ROOT.'header.php';
 <?php
 
 ($hook = get_hook('li_end')) ? eval($hook) : null;
+
+$tpl_temp = trim(ob_get_contents());
+$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+ob_end_clean();
+// END SUBST - <!-- forum_main -->
 
 require FORUM_ROOT.'footer.php';
