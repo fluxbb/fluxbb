@@ -447,16 +447,16 @@ if (!empty($forum_bans))
 		$forum_page['ban_creator'] = ($cur_ban['ban_creator_username'] != '') ? '<a href="'.forum_link($forum_url['user'], $cur_ban['ban_creator']).'">'.forum_htmlencode($cur_ban['ban_creator_username']).'</a>' : $lang_admin['Unknown'];
 
 		if ($cur_ban['username'] != '')
-			$forum_page['ban_info'][] = '<span>'.$lang_admin['Username'].': '.forum_htmlencode($cur_ban['username']).'</span>';
+			$forum_page['ban_info']['username'] = '<span>'.$lang_admin['Username'].': '.forum_htmlencode($cur_ban['username']).'</span>';
 
 		if ($cur_ban['email'] != '')
-			$forum_page['ban_info'][] = '<span>'.$lang_admin['E-mail'].': '.$cur_ban['email'].'</span>';
+			$forum_page['ban_info']['email'] = '<span>'.$lang_admin['E-mail'].': '.$cur_ban['email'].'</span>';
 
 		if ($cur_ban['ip'] != '')
-			$forum_page['ban_info'][] = '<span>'.$lang_admin['IP-ranges'].': '.$cur_ban['ip'].'</span>';
+			$forum_page['ban_info']['ip'] = '<span>'.$lang_admin['IP-ranges'].': '.$cur_ban['ip'].'</span>';
 
 		if ($cur_ban['expire'] != '')
-			$forum_page['ban_info'][] = '<span>'.$lang_admin['Expire date'].': '.format_time($cur_ban['expire'], true).'</span>';
+			$forum_page['ban_info']['expire'] = '<span>'.$lang_admin['Expire date'].': '.format_time($cur_ban['expire'], true).'</span>';
 
 		($hook = get_hook('aba_view_ban_pre_display')) ? eval($hook) : null;
 

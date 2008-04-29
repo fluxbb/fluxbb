@@ -192,9 +192,9 @@ else
 
 	$visit_links = array();
 	if ($forum_user['g_search'] == '1')
-		$visit_links[] = '<li id="vs-searchnew"><a href="'.forum_link($forum_url['search_new']).'" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a></li>';
+		$visit_links['searchnew'] = '<li id="vs-searchnew"><a href="'.forum_link($forum_url['search_new']).'" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a></li>';
 
-	$visit_links[] = '<li id="vs-markread"><a href="'.forum_link($forum_url['mark_read'], generate_form_token('markread'.$forum_user['id'])).'">'.$lang_common['Mark all as read'].'</a></li>';
+	$visit_links['markread'] = '<li id="vs-markread"><a href="'.forum_link($forum_url['mark_read'], generate_form_token('markread'.$forum_user['id'])).'">'.$lang_common['Mark all as read'].'</a></li>';
 
 	if ($forum_user['is_admmod'])
 	{
@@ -208,7 +208,7 @@ else
 		$result_header = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		if ($forum_db->result($result_header))
-			$visit_links[] = '<li id="vs-reports"><a href="'.forum_link($forum_url['admin_reports']).'"><strong>'.$lang_common['New reports'].'</strong></a></li>';
+			$visit_links['reports'] = '<li id="vs-reports"><a href="'.forum_link($forum_url['admin_reports']).'"><strong>'.$lang_common['New reports'].'</strong></a></li>';
 	}
 }
 
@@ -239,30 +239,26 @@ if ($forum_user['g_id'] == FORUM_ADMIN)
 	if ($forum_config['o_check_for_updates'] == '1')
 	{
 		if ($forum_updates['fail'])
-			$alert_items[] = '<p id="updates-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Updates'].'</strong> <span>'.$lang_common['Updates failed'].'</span></p>';
+			$alert_items['update_fail'] = '<p id="updates-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Updates'].'</strong> <span>'.$lang_common['Updates failed'].'</span></p>';
 		else if (isset($forum_updates['version']) && isset($forum_updates['hotfix']))
-			$alert_items[] = '<p id="updates-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Updates'].'</strong> <span>'.sprintf($lang_common['Updates version n hf'], $forum_updates['version']).'</span></p>';
+			$alert_items['update_version_hotfix'] = '<p id="updates-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Updates'].'</strong> <span>'.sprintf($lang_common['Updates version n hf'], $forum_updates['version']).'</span></p>';
 		else if (isset($forum_updates['version']))
-			$alert_items[] = '<p id="updates-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Updates'].'</strong> <span>'.sprintf($lang_common['Updates version'], $forum_updates['version']).'</span></p>';
+			$alert_items['update_version'] = '<p id="updates-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Updates'].'</strong> <span>'.sprintf($lang_common['Updates version'], $forum_updates['version']).'</span></p>';
 		else if (isset($forum_updates['hotfix']))
-			$alert_items[] = '<p id="updates-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Updates'].'</strong> <span>'.$lang_common['Updates hf'].'</span></p>';
+			$alert_items['update_hotfix'] = '<p id="updates-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Updates'].'</strong> <span>'.$lang_common['Updates hf'].'</span></p>';
 	}
 
 	// Warn the admin that maintenance mode is enabled
 	if ($forum_config['o_maintenance'] == '1')
-		$alert_items[] = '<p id="maint-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Maintenance mode'].'</strong> <span>'.$lang_common['Maintenance alert'].'</span></p>';
+		$alert_items['maintenance'] = '<p id="maint-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Maintenance mode'].'</strong> <span>'.$lang_common['Maintenance alert'].'</span></p>';
 
 	// Warn the admin that the install script is accessible
 	if (file_exists(FORUM_ROOT.'install.php'))
-		$alert_items[] = '<p id="install-script-exists-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Install script'].'</strong> <span>'.$lang_common['Install script alert'].'</span></p>';
+		$alert_items['install'] = '<p id="install-script-exists-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Install script'].'</strong> <span>'.$lang_common['Install script alert'].'</span></p>';
 
 	// Warn the admin that the database update script is accessible
 	if (file_exists(FORUM_ROOT.'db_update.php'))
-		$alert_items[] = '<p id="update-script-exists-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Update script'].'</strong> <span>'.$lang_common['Update script alert'].'</span></p>';
-
-	// Warn the admin that the script to disable maintenance mode is accessible
-	if (file_exists(FORUM_ROOT.'turn_off_maintenance_mode.php'))
-		$alert_items[] = '<p id="disable-maint-script-exists-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Maint script'].'</strong> <span>'.$lang_common['Maint script alert'].'</span></p>';
+		$alert_items['db_update'] = '<p id="update-script-exists-alert"'.(empty($alert_items) ? ' class="first-alert"' : '').'><strong>'.$lang_common['Update script'].'</strong> <span>'.$lang_common['Update script alert'].'</span></p>';
 }
 
 ($hook = get_hook('hd_alert')) ? eval($hook) : null;

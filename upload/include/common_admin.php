@@ -40,54 +40,54 @@ function generate_admin_menu()
 
 	if ($forum_user['g_id'] != FORUM_ADMIN)
 	{
-		$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-information') ? ' class="li-first isactive">' : ' class="li-first">').'<a href="'.forum_link($forum_url['admin_index']).'">'.$lang_admin['Information'].'</span></a></li>';
-		$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-users') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_users']).'">'.$lang_admin['User search'].'</a></li>';
+		$adnav_sublinks['index'] = '<li'.((FORUM_PAGE == 'admin-information') ? ' class="li-first isactive">' : ' class="li-first">').'<a href="'.forum_link($forum_url['admin_index']).'">'.$lang_admin['Information'].'</span></a></li>';
+		$adnav_sublinks['users'] = '<li'.((FORUM_PAGE == 'admin-users') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_users']).'">'.$lang_admin['User search'].'</a></li>';
 
 		if ($forum_config['o_censoring'] == '1')
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-censoring') ? ' class="isactive">' : '>').'<a href="'.forum_link($forum_url['admin_censoring']).'">'.$lang_admin['Censoring'].'</a></li>';
+			$adnav_sublinks['censoring'] = '<li'.((FORUM_PAGE == 'admin-censoring') ? ' class="isactive">' : '>').'<a href="'.forum_link($forum_url['admin_censoring']).'">'.$lang_admin['Censoring'].'</a></li>';
 
-		$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-reports') ? ' class="isactive">' : '>').'<a href="'.forum_link($forum_url['admin_reports']).'">'.$lang_admin['Reports'].'</a></li>';
+		$adnav_sublinks['reports'] = '<li'.((FORUM_PAGE == 'admin-reports') ? ' class="isactive">' : '>').'<a href="'.forum_link($forum_url['admin_reports']).'">'.$lang_admin['Reports'].'</a></li>';
 
 		if ($forum_user['g_mod_ban_users'] == '1')
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-bans') ? ' class="isactive">' : '>').'<a href="'.forum_link($forum_url['admin_bans']).'">'.$lang_admin['Bans'].'</a></li>';
+			$adnav_sublinks['bans'] = '<li'.((FORUM_PAGE == 'admin-bans') ? ' class="isactive">' : '>').'<a href="'.forum_link($forum_url['admin_bans']).'">'.$lang_admin['Bans'].'</a></li>';
 	}
 	else
 	{
 		if (FORUM_PAGE_SECTION == 'start')
 		{
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-information') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_index']).'">'.$lang_admin['Information'].'</a></li>';
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-categories') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_categories']).'">'.$lang_admin['Categories'].'</a></li>';
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-forums') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_forums']).'">'.$lang_admin['Forums'].'</a></li>';
+			$adnav_sublinks['index'] = '<li'.((FORUM_PAGE == 'admin-information') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_index']).'">'.$lang_admin['Information'].'</a></li>';
+			$adnav_sublinks['categories'] = '<li'.((FORUM_PAGE == 'admin-categories') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_categories']).'">'.$lang_admin['Categories'].'</a></li>';
+			$adnav_sublinks['forums'] = '<li'.((FORUM_PAGE == 'admin-forums') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_forums']).'">'.$lang_admin['Forums'].'</a></li>';
 		}
 		else if (FORUM_PAGE_SECTION == 'users')
 		{
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-users') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_users']).'">'.$lang_admin['Searches'].'</a></li>';
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-groups') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_groups']).'">'.$lang_admin['Groups'].'</a></li>';
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-ranks') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_ranks']).'">'.$lang_admin['Ranks'].'</a></li>';
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-bans') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_bans']).'">'.$lang_admin['Bans'].'</a></li>';
+			$adnav_sublinks['users'] = '<li'.((FORUM_PAGE == 'admin-users') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_users']).'">'.$lang_admin['Searches'].'</a></li>';
+			$adnav_sublinks['groups'] = '<li'.((FORUM_PAGE == 'admin-groups') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_groups']).'">'.$lang_admin['Groups'].'</a></li>';
+			$adnav_sublinks['ranks'] = '<li'.((FORUM_PAGE == 'admin-ranks') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_ranks']).'">'.$lang_admin['Ranks'].'</a></li>';
+			$adnav_sublinks['bans'] = '<li'.((FORUM_PAGE == 'admin-bans') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_bans']).'">'.$lang_admin['Bans'].'</a></li>';
 		}
 		else if (FORUM_PAGE_SECTION == 'options')
 		{
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-options-setup') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_options_setup']).'">'.$lang_admin['Setup'].'</a></li>';
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-options-features') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_options_features']).'">'.$lang_admin['Features'].'</a></li>';
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-options-announcements') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_options_announcements']).'">'.$lang_admin['Announcements'].'</a></li>';
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-options-email') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_options_email']).'">'.$lang_admin['E-mail'].'</a></li>';
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-options-registration') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_options_registration']).'">'.$lang_admin['Registration'].'</a></li>';
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-censoring') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_censoring']).'">'.$lang_admin['Censoring'].'</a></li>';
+			$adnav_sublinks['options_setup'] = '<li'.((FORUM_PAGE == 'admin-options-setup') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_options_setup']).'">'.$lang_admin['Setup'].'</a></li>';
+			$adnav_sublinks['options_features'] = '<li'.((FORUM_PAGE == 'admin-options-features') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_options_features']).'">'.$lang_admin['Features'].'</a></li>';
+			$adnav_sublinks['options-announcements'] = '<li'.((FORUM_PAGE == 'admin-options-announcements') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_options_announcements']).'">'.$lang_admin['Announcements'].'</a></li>';
+			$adnav_sublinks['options-email'] = '<li'.((FORUM_PAGE == 'admin-options-email') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_options_email']).'">'.$lang_admin['E-mail'].'</a></li>';
+			$adnav_sublinks['options-registration'] = '<li'.((FORUM_PAGE == 'admin-options-registration') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_options_registration']).'">'.$lang_admin['Registration'].'</a></li>';
+			$adnav_sublinks['censoring'] = '<li'.((FORUM_PAGE == 'admin-censoring') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_censoring']).'">'.$lang_admin['Censoring'].'</a></li>';
 		}
 		else if (FORUM_PAGE_SECTION == 'management')
 		{
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-reports') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_reports']).'">'.$lang_admin['Reports'].'</a></li>';
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-prune') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_prune']).'">'.$lang_admin['Prune topics'].'</a></li>';
+			$adnav_sublinks['reports'] = '<li'.((FORUM_PAGE == 'admin-reports') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_reports']).'">'.$lang_admin['Reports'].'</a></li>';
+			$adnav_sublinks['prune'] = '<li'.((FORUM_PAGE == 'admin-prune') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_prune']).'">'.$lang_admin['Prune topics'].'</a></li>';
 
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-reindex') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_reindex']).'">'.$lang_admin['Rebuild index'].'</a></li>';
+			$adnav_sublinks['reindex'] = '<li'.((FORUM_PAGE == 'admin-reindex') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_reindex']).'">'.$lang_admin['Rebuild index'].'</a></li>';
 
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-options-maintenance') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_options_maintenance']).'">'.$lang_admin['Maintenance mode'].'</a></li>';
+			$adnav_sublinks['options-maintenance'] = '<li'.((FORUM_PAGE == 'admin-options-maintenance') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_options_maintenance']).'">'.$lang_admin['Maintenance mode'].'</a></li>';
 		}
 		else if (FORUM_PAGE_SECTION == 'extensions')
 		{
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-extensions-manage') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_extensions_manage']).'">'.$lang_admin['Manage extensions'].'</a></li>';
-			$adnav_sublinks[] = '<li'.((FORUM_PAGE == 'admin-extensions-install') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_extensions_install']).'">'.$lang_admin['Install extensions'].'</a></li>';
+			$adnav_sublinks['extensions-manage'] = '<li'.((FORUM_PAGE == 'admin-extensions-manage') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_extensions_manage']).'">'.$lang_admin['Manage extensions'].'</a></li>';
+			$adnav_sublinks['extensions-install'] = '<li'.((FORUM_PAGE == 'admin-extensions-install') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_extensions_install']).'">'.$lang_admin['Install extensions'].'</a></li>';
 		}
 	}
 
@@ -99,14 +99,14 @@ function generate_admin_menu()
 		$adnav_submenu = '';
 
 	if ($forum_user['g_id'] != FORUM_ADMIN)
-		$adnav_links[] = '<li class="topactive"><a href="'.forum_link($forum_url['admin_index']).'"><span>'.$lang_admin['Moderate'].'</span></a>'.$adnav_submenu."\n\t\t\t".'</li>';
+		$adnav_links['index'] = '<li class="topactive"><a href="'.forum_link($forum_url['admin_index']).'"><span>'.$lang_admin['Moderate'].'</span></a>'.$adnav_submenu."\n\t\t\t".'</li>';
 	else
 	{
-		$adnav_links[] = '<li'.((FORUM_PAGE_SECTION == 'start') ? ' class="topactive"' : '').'><a href="'.forum_link($forum_url['admin_index']).'"><span>'.$lang_admin['Start'].'</span></a>'.(((FORUM_PAGE_SECTION == 'start') && ($adnav_submenu != '')) ? $adnav_submenu."\n\t\t\t" : '').'</li>';
-		$adnav_links[] = '<li'.((FORUM_PAGE_SECTION == 'options') ? ' class="topactive"' : '').'><a href="'.forum_link($forum_url['admin_options_setup']).'"><span>'.$lang_admin['Settings'].'</span></a>'.(((FORUM_PAGE_SECTION == 'options') && ($adnav_submenu != '')) ? $adnav_submenu."\n\t\t\t" : '').'</li>';
-		$adnav_links[] = '<li'.((FORUM_PAGE_SECTION == 'users') ? ' class="topactive"' : '').'><a href="'.forum_link($forum_url['admin_users']).'"><span>'.$lang_admin['Users'].'</span></a>'.(((FORUM_PAGE_SECTION == 'users') && ($adnav_submenu != '')) ? $adnav_submenu."\n\t\t\t" : '').'</li>';
-		$adnav_links[] = '<li'.((FORUM_PAGE_SECTION == 'management') ? ' class="topactive"' : '').'><a href="'.forum_link($forum_url['admin_reports']).'"><span>'.$lang_admin['Management'].'</span></a>'.(((FORUM_PAGE_SECTION == 'management') && ($adnav_submenu != '')) ? $adnav_submenu."\n\t\t\t" : '').'</li>';
-		$adnav_links[] = '<li'.((FORUM_PAGE_SECTION == 'extensions') ? ' class="topactive"' : '').'><a href="'.forum_link($forum_url['admin_extensions_manage']).'"><span>'.$lang_admin['Extensions'].'</span></a>'.(((FORUM_PAGE_SECTION == 'extensions') && ($adnav_submenu != '')) ? $adnav_submenu."\n\t\t\t" : '').'</li>';
+		$adnav_links['index'] = '<li'.((FORUM_PAGE_SECTION == 'start') ? ' class="topactive"' : '').'><a href="'.forum_link($forum_url['admin_index']).'"><span>'.$lang_admin['Start'].'</span></a>'.(((FORUM_PAGE_SECTION == 'start') && ($adnav_submenu != '')) ? $adnav_submenu."\n\t\t\t" : '').'</li>';
+		$adnav_links['options_setup'] = '<li'.((FORUM_PAGE_SECTION == 'options') ? ' class="topactive"' : '').'><a href="'.forum_link($forum_url['admin_options_setup']).'"><span>'.$lang_admin['Settings'].'</span></a>'.(((FORUM_PAGE_SECTION == 'options') && ($adnav_submenu != '')) ? $adnav_submenu."\n\t\t\t" : '').'</li>';
+		$adnav_links['users'] = '<li'.((FORUM_PAGE_SECTION == 'users') ? ' class="topactive"' : '').'><a href="'.forum_link($forum_url['admin_users']).'"><span>'.$lang_admin['Users'].'</span></a>'.(((FORUM_PAGE_SECTION == 'users') && ($adnav_submenu != '')) ? $adnav_submenu."\n\t\t\t" : '').'</li>';
+		$adnav_links['reports'] = '<li'.((FORUM_PAGE_SECTION == 'management') ? ' class="topactive"' : '').'><a href="'.forum_link($forum_url['admin_reports']).'"><span>'.$lang_admin['Management'].'</span></a>'.(((FORUM_PAGE_SECTION == 'management') && ($adnav_submenu != '')) ? $adnav_submenu."\n\t\t\t" : '').'</li>';
+		$adnav_links['extensions_manage'] = '<li'.((FORUM_PAGE_SECTION == 'extensions') ? ' class="topactive"' : '').'><a href="'.forum_link($forum_url['admin_extensions_manage']).'"><span>'.$lang_admin['Extensions'].'</span></a>'.(((FORUM_PAGE_SECTION == 'extensions') && ($adnav_submenu != '')) ? $adnav_submenu."\n\t\t\t" : '').'</li>';
 	}
 
 	($hook = get_hook('ca_admin_menu_new_link')) ? eval($hook) : null;

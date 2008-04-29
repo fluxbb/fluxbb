@@ -304,13 +304,13 @@ if (isset($_GET['tid']))
 	// Navigation links for header and page numbering for title/meta description
 	if ($forum_page['page'] < $forum_page['num_pages'])
 	{
-		$forum_page['nav'][] = '<link rel="last" href="'.forum_sublink($forum_url['delete_multiple'], $forum_url['page'], $forum_page['num_pages'], array($fid, $tid)).'" title="'.$lang_common['Page'].' '.$forum_page['num_pages'].'" />';
-		$forum_page['nav'][] = '<link rel="next" href="'.forum_sublink($forum_url['delete_multiple'], $forum_url['page'], ($forum_page['page'] + 1), array($fid, $tid)).'" title="'.$lang_common['Page'].' '.($forum_page['page'] + 1).'" />';
+		$forum_page['nav']['last'] = '<link rel="last" href="'.forum_sublink($forum_url['delete_multiple'], $forum_url['page'], $forum_page['num_pages'], array($fid, $tid)).'" title="'.$lang_common['Page'].' '.$forum_page['num_pages'].'" />';
+		$forum_page['nav']['next'] = '<link rel="next" href="'.forum_sublink($forum_url['delete_multiple'], $forum_url['page'], ($forum_page['page'] + 1), array($fid, $tid)).'" title="'.$lang_common['Page'].' '.($forum_page['page'] + 1).'" />';
 	}
 	if ($forum_page['page'] > 1)
 	{
-		$forum_page['nav'][] = '<link rel="prev" href="'.forum_sublink($forum_url['delete_multiple'], $forum_url['page'], ($forum_page['page'] - 1), array($fid, $tid)).'" title="'.$lang_common['Page'].' '.($forum_page['page'] - 1).'" />';
-		$forum_page['nav'][] = '<link rel="first" href="'.forum_link($forum_url['delete_multiple'], array($fid, $tid)).'" title="'.$lang_common['Page'].' 1" />';
+		$forum_page['nav']['prev'] = '<link rel="prev" href="'.forum_sublink($forum_url['delete_multiple'], $forum_url['page'], ($forum_page['page'] - 1), array($fid, $tid)).'" title="'.$lang_common['Page'].' '.($forum_page['page'] - 1).'" />';
+		$forum_page['nav']['first'] = '<link rel="first" href="'.forum_link($forum_url['delete_multiple'], array($fid, $tid)).'" title="'.$lang_common['Page'].' 1" />';
 	}
 
 	// Generate page information
@@ -422,13 +422,13 @@ if (isset($_GET['tid']))
 		);
 
 		if ($forum_page['item_count'] == 1)
-			$forum_page['item_status'][] = 'firstpost';
+			$forum_page['item_status']['firstpost'] = 'firstpost';
 
 		if (($forum_page['start_from'] + $forum_page['item_count']) == $forum_page['finish_at'])
-			$forum_page['item_status'][] = 'lastpost';
+			$forum_page['item_status']['lastpost'] = 'lastpost';
 
 		if ($cur_post['id'] == $cur_topic['first_post_id'])
-			$forum_page['item_status'][] = 'topicpost';
+			$forum_page['item_status']['topicpost'] = 'topicpost';
 
 		if ($cur_post['id'] == $cur_topic['first_post_id'])
 			$forum_page['item_subject'] = $lang_common['Topic'].': '.$cur_topic['subject'];
@@ -436,10 +436,10 @@ if (isset($_GET['tid']))
 			$forum_page['item_subject'] = $lang_common['Re'].' '.$cur_topic['subject'];
 
 		// Perform the main parsing of the message (BBCode, smilies, censor words etc)
-		$forum_page['message'][] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
+		$forum_page['message']['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 
 		if ($cur_post['edited'] != '')
-			$forum_page['message'][] = '<p class="lastedit"><em>'.sprintf($lang_topic['Last edited'], forum_htmlencode($cur_post['edited_by']), format_time($cur_post['edited'])).'</em></p>';
+			$forum_page['message']['edited'] = '<p class="lastedit"><em>'.sprintf($lang_topic['Last edited'], forum_htmlencode($cur_post['edited_by']), format_time($cur_post['edited'])).'</em></p>';
 
 		($hook = get_hook('mr_post_actions_row_pre_display')) ? eval($hook) : null;
 
@@ -1072,13 +1072,13 @@ $forum_page['page_post'] = '<p class="paging"><span class="pages">'.$lang_common
 // Navigation links for header and page numbering for title/meta description
 if ($forum_page['page'] < $forum_page['num_pages'])
 {
-	$forum_page['nav'][] = '<link rel="last" href="'.forum_sublink($forum_url['moderate_forum'], $forum_url['page'], $forum_page['num_pages'], $fid).'" title="'.$lang_common['Page'].' '.$forum_page['num_pages'].'" />';
-	$forum_page['nav'][] = '<link rel="next" href="'.forum_sublink($forum_url['moderate_forum'], $forum_url['page'], ($forum_page['page'] + 1), $fid).'" title="'.$lang_common['Page'].' '.($forum_page['page'] + 1).'" />';
+	$forum_page['nav']['last'] = '<link rel="last" href="'.forum_sublink($forum_url['moderate_forum'], $forum_url['page'], $forum_page['num_pages'], $fid).'" title="'.$lang_common['Page'].' '.$forum_page['num_pages'].'" />';
+	$forum_page['nav']['next'] = '<link rel="next" href="'.forum_sublink($forum_url['moderate_forum'], $forum_url['page'], ($forum_page['page'] + 1), $fid).'" title="'.$lang_common['Page'].' '.($forum_page['page'] + 1).'" />';
 }
 if ($forum_page['page'] > 1)
 {
-	$forum_page['nav'][] = '<link rel="prev" href="'.forum_sublink($forum_url['moderate_forum'], $forum_url['page'], ($forum_page['page'] - 1), $fid).'" title="'.$lang_common['Page'].' '.($forum_page['page'] - 1).'" />';
-	$forum_page['nav'][] = '<link rel="first" href="'.forum_link($forum_url['moderate_forum'], $fid).'" title="'.$lang_common['Page'].' 1" />';
+	$forum_page['nav']['prev'] = '<link rel="prev" href="'.forum_sublink($forum_url['moderate_forum'], $forum_url['page'], ($forum_page['page'] - 1), $fid).'" title="'.$lang_common['Page'].' '.($forum_page['page'] - 1).'" />';
+	$forum_page['nav']['first'] = '<link rel="first" href="'.forum_link($forum_url['moderate_forum'], $fid).'" title="'.$lang_common['Page'].' 1" />';
 }
 
 // Generate page information
@@ -1164,17 +1164,17 @@ if ($forum_db->num_rows($result))
 		// Start from scratch
 		$forum_page['item_subject'] = $forum_page['item_status'] = $forum_page['item_last_post'] = $forum_page['item_alt_message'] = $forum_page['item_nav'] = array();
 		$forum_page['item_indicator'] = '';
-		$forum_page['item_alt_message'][] = $lang_common['Topic'].' '.($forum_page['start_from'] + $forum_page['item_count']);
+		$forum_page['item_alt_message']['topic'] = $lang_common['Topic'].' '.($forum_page['start_from'] + $forum_page['item_count']);
 
 		if ($forum_config['o_censoring'] == '1')
 			$cur_topic['subject'] = censor_words($cur_topic['subject']);
 
 		if ($cur_topic['moved_to'] != null)
 		{
-			$forum_page['item_status'][] = 'moved';
-			$forum_page['item_last_post'][] = $forum_page['item_alt_message'][] = $lang_forum['Moved'];
-			$forum_page['item_subject'][] = '<a href="'.forum_link($forum_url['topic'], array($cur_topic['moved_to'], sef_friendly($cur_topic['subject']))).'">'.forum_htmlencode($cur_topic['subject']).'</a>';
-			$forum_page['item_subject'][] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($cur_topic['poster'])).'</span>';
+			$forum_page['item_status']['moved'] = 'moved';
+			$forum_page['item_last_post']['moved'] = $forum_page['item_alt_message']['moved'] = $lang_forum['Moved'];
+			$forum_page['item_subject']['moved'] = '<a href="'.forum_link($forum_url['topic'], array($cur_topic['moved_to'], sef_friendly($cur_topic['subject']))).'">'.forum_htmlencode($cur_topic['subject']).'</a>';
+			$forum_page['item_subject']['moved'] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($cur_topic['poster'])).'</span>';
 			$cur_topic['num_replies'] = $cur_topic['num_views'] = ' - ';
 			$forum_page['ghost_topic'] = true;
 		}
@@ -1184,39 +1184,39 @@ if ($forum_db->num_rows($result))
 
 			if ($cur_topic['sticky'] == '1')
 			{
-				$forum_page['item_subject'][] = $lang_forum['Sticky'];
-				$forum_page['item_status'][] = 'sticky';
+				$forum_page['item_subject']['sticky'] = $lang_forum['Sticky'];
+				$forum_page['item_status']['sticky'] = 'sticky';
 			}
 
 			if ($cur_topic['closed'] == '1')
 			{
-				$forum_page['item_subject'][] = $lang_common['Closed'];
-				$forum_page['item_status'][] = 'closed';
+				$forum_page['item_subject']['closed'] = $lang_common['Closed'];
+				$forum_page['item_status']['closed'] = 'closed';
 			}
 
-			$forum_page['item_subject'][] = '<a href="'.forum_link($forum_url['topic'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))).'">'.forum_htmlencode($cur_topic['subject']).'</a>';
+			$forum_page['item_subject']['subject'] = '<a href="'.forum_link($forum_url['topic'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))).'">'.forum_htmlencode($cur_topic['subject']).'</a>';
 
 			$forum_page['item_pages'] = ceil(($cur_topic['num_replies'] + 1) / $forum_user['disp_posts']);
 
 			if ($forum_page['item_pages'] > 1)
-				$forum_page['item_nav'][] = paginate($forum_page['item_pages'], -1, $forum_url['topic'], $lang_common['Page separator'], array($cur_topic['id'], sef_friendly($cur_topic['subject'])));
+				$forum_page['item_nav']['pages'] = paginate($forum_page['item_pages'], -1, $forum_url['topic'], $lang_common['Page separator'], array($cur_topic['id'], sef_friendly($cur_topic['subject'])));
 
 			// Does this topic contain posts we haven't read? If so, tag it accordingly.
 			if ($cur_topic['last_post'] > $forum_user['last_visit'] && (!isset($tracked_topics['topics'][$cur_topic['id']]) || $tracked_topics['topics'][$cur_topic['id']] < $cur_topic['last_post']) && (!isset($tracked_topics['forums'][$fid]) || $tracked_topics['forums'][$fid] < $cur_topic['last_post']) && !$forum_page['ghost_topic'])
 			{
-				$forum_page['item_nav'][] = '<a href="'.forum_link($forum_url['topic_new_posts'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))).'" title="'.$lang_forum['New posts info'].'">'.$lang_common['New posts'].'</a>';
-				$forum_page['item_status'][] = 'new';
+				$forum_page['item_nav']['new'] = '<a href="'.forum_link($forum_url['topic_new_posts'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))).'" title="'.$lang_forum['New posts info'].'">'.$lang_common['New posts'].'</a>';
+				$forum_page['item_status']['new'] = 'new';
 			}
 
 			if (!empty($forum_page['item_nav']))
-				$forum_page['item_subject'][] = '<span class="topic-nav">[&#160;'.implode('&#160;&#160;', $forum_page['item_nav']).'&#160;]</span>';
+				$forum_page['item_subject']['nav'] = '<span class="topic-nav">[&#160;'.implode('&#160;&#160;', $forum_page['item_nav']).'&#160;]</span>';
 
-			$forum_page['item_subject'][] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($cur_topic['poster'])).'</span>';
-			$forum_page['item_last_post'][] = '<a href="'.forum_link($forum_url['post'], $cur_topic['last_post_id']).'">'.format_time($cur_topic['last_post']).'</a>';
-			$forum_page['item_last_post'][] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($cur_topic['last_poster'])).'</span>';
+			$forum_page['item_subject']['poster'] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($cur_topic['poster'])).'</span>';
+			$forum_page['item_last_post']['last_post'] = '<a href="'.forum_link($forum_url['post'], $cur_topic['last_post_id']).'">'.format_time($cur_topic['last_post']).'</a>';
+			$forum_page['item_last_post']['last_poster'] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($cur_topic['last_poster'])).'</span>';
 
 			if (empty($forum_page['item_status']))
-				$forum_page['item_status'][] = 'normal';
+				$forum_page['item_status']['normal'] = 'normal';
 
 			$forum_page['subject_label'] = $cur_topic['subject'];
 		}

@@ -161,12 +161,12 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 	{
 		$forum_page['item_title'] = '<h3><a class="external" href="'.forum_htmlencode($cur_forum['redirect_url']).'" title="'.sprintf($lang_index['Link to'], forum_htmlencode($cur_forum['redirect_url'])).'"><span>'.forum_htmlencode($cur_forum['forum_name']).'</span></a></h3>';
 		$cur_forum['num_topics'] = $cur_forum['num_posts'] = ' - ';
-		$forum_page['item_status'][] = 'redirect';
+		$forum_page['item_status']['redirect'] = 'redirect';
 		$forum_page['item_alt_message'] = $lang_index['External forum'];
-		$forum_page['item_last_post'][] = $lang_common['Unknown'];
+		$forum_page['item_last_post']['redirect'] = $lang_common['Unknown'];
 
 		if ($cur_forum['forum_desc'] != '')
-			$forum_page['item_subject'][] = $cur_forum['forum_desc'];
+			$forum_page['item_subject']['redirect'] = $cur_forum['forum_desc'];
 	}
 	else
 	{
@@ -180,7 +180,7 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 			{
 				if (empty($tracked_topics['topics'][$check_topic_id]) || $tracked_topics['topics'][$check_topic_id] < $check_last_post)
 				{
-					$forum_page['item_status'][] = 'new';
+					$forum_page['item_status']['new'] = 'new';
 					$forum_page['item_alt_message'] = $lang_index['Forum has new'];
 					break;
 				}
@@ -188,7 +188,7 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 		}
 
 		if ($cur_forum['forum_desc'] != '')
-			$forum_page['item_subject'][] = $cur_forum['forum_desc'];
+			$forum_page['item_subject']['desc'] = $cur_forum['forum_desc'];
 
 		if ($cur_forum['moderators'] != '')
 		{
@@ -198,20 +198,20 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 			while (list($mod_username, $mod_id) = @each($forum_page['mods_array']))
 				$forum_page['item_mods'][] = ($forum_user['g_view_users'] == '1') ? '<a href="'.forum_link($forum_url['user'], $mod_id).'">'.forum_htmlencode($mod_username).'</a>' : forum_htmlencode($mod_username);
 
-			$forum_page['item_subject'][] = '<span class="modlist">('.sprintf($lang_index['Moderated by'], implode(', ', $forum_page['item_mods'])).')</span>';
+			$forum_page['item_subject']['modlist'] = '<span class="modlist">('.sprintf($lang_index['Moderated by'], implode(', ', $forum_page['item_mods'])).')</span>';
 		}
 
 		// If there is a last_post/last_poster.
 		if ($cur_forum['last_post'] != '')
 		{
-			$forum_page['item_last_post'][] = '<a href="'.forum_link($forum_url['post'], $cur_forum['last_post_id']).'"><span>'.format_time($cur_forum['last_post']).'</span></a>';
-			$forum_page['item_last_post'][] =	'<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($cur_forum['last_poster'])).'</span>';
+			$forum_page['item_last_post']['post'] = '<a href="'.forum_link($forum_url['post'], $cur_forum['last_post_id']).'"><span>'.format_time($cur_forum['last_post']).'</span></a>';
+			$forum_page['item_last_post']['poster'] =	'<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($cur_forum['last_poster'])).'</span>';
 		}
 		else
-			$forum_page['item_last_post'][] = $lang_common['Never'];
+			$forum_page['item_last_post']['never'] = $lang_common['Never'];
 
 		if (empty($forum_page['item_status']))
-			$forum_page['item_status'][] = 'normal';
+			$forum_page['item_status']['normal'] = 'normal';
 	}
 
 	$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? 'odd' : 'even').' '.implode(' ', $forum_page['item_status']);
@@ -307,10 +307,10 @@ $query = array(
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 list($stats['total_topics'], $stats['total_posts']) = $forum_db->fetch_row($result);
 
-$stats_list[] = '<li class="st-users"><span>'.$lang_index['No of users'].':</span> <strong>'. $stats['total_users'].'</strong></li>';
-$stats_list[] = '<li class="st-users"><span>'.$lang_index['Newest user'].':</span> <strong>'.($forum_user['g_view_users'] == '1' ? '<a href="'.forum_link($forum_url['user'], $stats['last_user']['id']).'">'.forum_htmlencode($stats['last_user']['username']).'</a>' : forum_htmlencode($stats['last_user']['username'])).'</strong></li>';
-$stats_list[] = '<li class="st-activity"><span>'.$lang_index['No of topics'].':</span> <strong>'.intval($stats['total_topics']).'</strong></li>';
-$stats_list[] = '<li class="st-activity"><span>'.$lang_index['No of posts'].':</span> <strong>'.intval($stats['total_posts']).'</strong></li>';
+$stats_list['no_of_users'] = '<li class="st-users"><span>'.$lang_index['No of users'].':</span> <strong>'. $stats['total_users'].'</strong></li>';
+$stats_list['newest_user'] = '<li class="st-users"><span>'.$lang_index['Newest user'].':</span> <strong>'.($forum_user['g_view_users'] == '1' ? '<a href="'.forum_link($forum_url['user'], $stats['last_user']['id']).'">'.forum_htmlencode($stats['last_user']['username']).'</a>' : forum_htmlencode($stats['last_user']['username'])).'</strong></li>';
+$stats_list['no_of_topics'] = '<li class="st-activity"><span>'.$lang_index['No of topics'].':</span> <strong>'.intval($stats['total_topics']).'</strong></li>';
+$stats_list['no_of_posts'] = '<li class="st-activity"><span>'.$lang_index['No of posts'].':</span> <strong>'.intval($stats['total_posts']).'</strong></li>';
 
 ?>
 <div id="brd-info" class="main">

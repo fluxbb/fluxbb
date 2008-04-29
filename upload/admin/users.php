@@ -287,12 +287,12 @@ else if (isset($_GET['show_users']))
 	if ($forum_page['num_users'] > 0)
 	{
 		if ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && $forum_user['g_mod_ban_users'] == '1'))
-			$forum_page['main_submit'][] = '<span class="submit"><input type="submit" name="ban_users" value="'.$lang_admin['Ban'].'" /></span>';
+			$forum_page['main_submit']['ban'] = '<span class="submit"><input type="submit" name="ban_users" value="'.$lang_admin['Ban'].'" /></span>';
 
 		if ($forum_user['g_id'] == FORUM_ADMIN)
 		{
-			$forum_page['main_submit'][] = '<span class="submit"><input type="submit" name="delete_users" value="'.$lang_admin['Delete'].'" /></span>';
-			$forum_page['main_submit'][] = '<span class="submit"><input type="submit" name="change_group" value="'.$lang_admin['Change group'].'" /></span>';
+			$forum_page['main_submit']['delete'] = '<span class="submit"><input type="submit" name="delete_users" value="'.$lang_admin['Delete'].'" /></span>';
+			$forum_page['main_submit']['change_group'] = '<span class="submit"><input type="submit" name="change_group" value="'.$lang_admin['Change group'].'" /></span>';
 		}
 	}
 
@@ -926,12 +926,12 @@ $forum_page['main_submit'] = array();
 if ($forum_page['num_users'] > 0)
 {
 	if ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && $forum_user['g_mod_ban_users'] == '1'))
-		$forum_page['main_submit'][] = '<span class="submit"><input type="submit" name="ban_users" value="'.$lang_admin['Ban'].'" /></span>';
+		$forum_page['main_submit']['ban'] = '<span class="submit"><input type="submit" name="ban_users" value="'.$lang_admin['Ban'].'" /></span>';
 
 	if ($forum_user['g_id'] == FORUM_ADMIN)
 	{
-		$forum_page['main_submit'][] = '<span class="submit"><input type="submit" name="delete_users" value="'.$lang_admin['Delete'].'" /></span>';
-		$forum_page['main_submit'][] = '<span class="submit"><input type="submit" name="change_group" value="'.$lang_admin['Change group'].'" /></span>';
+		$forum_page['main_submit']['deLete'] = '<span class="submit"><input type="submit" name="delete_users" value="'.$lang_admin['Delete'].'" /></span>';
+		$forum_page['main_submit']['change_group'] = '<span class="submit"><input type="submit" name="change_group" value="'.$lang_admin['Change group'].'" /></span>';
 	}
 }
 

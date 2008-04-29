@@ -659,7 +659,7 @@ function generate_search_crumbs($action = null)
 		case 'show_new':
 			$forum_page['crumbs'][] = $lang_common['New posts'];
 			$forum_page['main_info'] = (($forum_page['num_pages'] == 1) ? sprintf($lang_common['Page info'], $lang_search['Topics with new'], $num_hits) : '<span>'.sprintf($lang_common['Page number'], $forum_page['page'], $forum_page['num_pages']).' </span>'.sprintf($lang_common['Paged info'], $lang_search['Topics with new'], $forum_page['start_from'] + 1, $forum_page['finish_at'], $num_hits));
-			$forum_page['main_foot_options'][] = '<a class="user-option" href="'.forum_link($forum_url['mark_read'], generate_form_token('markread'.$forum_user['id'])).'">'.$lang_common['Mark all as read'].'</a>';
+			$forum_page['main_foot_options']['mark_read'] = '<a class="user-option" href="'.forum_link($forum_url['mark_read'], generate_form_token('markread'.$forum_user['id'])).'">'.$lang_common['Mark all as read'].'</a>';
 			break;
 
 		case 'show_recent':
@@ -675,13 +675,13 @@ function generate_search_crumbs($action = null)
 		case 'show_user_posts':
 			$forum_page['crumbs'][] = sprintf($lang_search['Posts by'], $search_set[0]['pposter']);
 			$forum_page['main_info'] = (($forum_page['num_pages'] == 1) ? sprintf($lang_common['Page info'], sprintf($lang_search['Posts by'], $search_set[0]['pposter']), $num_hits) : '<span>'.sprintf($lang_common['Page number'], $forum_page['page'], $forum_page['num_pages']).' </span>'.sprintf($lang_common['Paged info'], sprintf($lang_search['Posts by'], $search_set[0]['pposter']), $forum_page['start_from'] + 1, $forum_page['finish_at'], $num_hits));
-			$forum_page['main_foot_options'][] = '<a class="user-option" href="'.forum_link($forum_url['search_user_topics'], $search_id).'">'.sprintf($lang_search['Topics by'], $search_set[0]['pposter']).'</a>';
+			$forum_page['main_foot_options']['search_user_topics'] = '<a class="user-option" href="'.forum_link($forum_url['search_user_topics'], $search_id).'">'.sprintf($lang_search['Topics by'], $search_set[0]['pposter']).'</a>';
 			break;
 
 		case 'show_user_topics':
 			$forum_page['crumbs'][] = sprintf($lang_search['Topics by'], $search_set[0]['poster']);
 			$forum_page['main_info'] = (($forum_page['num_pages'] == 1) ? sprintf($lang_common['Page info'], sprintf($lang_search['Topics by'], $search_set[0]['poster']), $num_hits) : '<span>'.sprintf($lang_common['Page number'], $forum_page['page'], $forum_page['num_pages']).' </span>'.sprintf($lang_common['Paged info'], sprintf($lang_search['Topics by'], $search_set[0]['poster']), $forum_page['start_from'] + 1, $forum_page['finish_at'], $num_hits));
-			$forum_page['main_foot_options'][] = '<a class="user-option" href="'.forum_link($forum_url['search_user_posts'], $search_id).'">'.sprintf($lang_search['Posts by'], $search_set[0]['poster']).'</a>';
+			$forum_page['main_foot_options']['search_user_posts'] = '<a class="user-option" href="'.forum_link($forum_url['search_user_posts'], $search_id).'">'.sprintf($lang_search['Posts by'], $search_set[0]['poster']).'</a>';
 			break;
 
 		case 'show_subscriptions':

@@ -282,9 +282,9 @@ if ($action == 'change_pass')
 	$forum_page['set_count'] = $forum_page['fld_count'] = 0;
 	$forum_page['form_action'] = forum_link($forum_url['change_password'], $id);
 
-	$forum_page['hidden_fields'][] = '<input type="hidden" name="form_sent" value="1" />';
+	$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
 	if ($forum_user['is_admmod'])
-		$forum_page['hidden_fields'][] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+		$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
 
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
@@ -522,9 +522,9 @@ else if ($action == 'change_email')
 	$forum_page['set_count'] = $forum_page['fld_count'] = 0;
 	$forum_page['form_action'] = forum_link($forum_url['change_email'], $id);
 
-	$forum_page['hidden_fields'][] = '<input type="hidden" name="form_sent" value="1" />';
+	$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
 	if ($forum_user['is_admmod'])
-		$forum_page['hidden_fields'][] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+		$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
 
 	// Setup form information
 	$forum_page['frm_info'] = '<p class="important"><span>'.$lang_profile['E-mail info'].'</span></p>';
@@ -1283,10 +1283,10 @@ if ($forum_user['id'] != $id &&
 			$forum_page['avatar_format'] = '';
 
 		if ($forum_page['avatar_format'] != '')
-			$forum_page['user_ident'][] = '<img src="'.$base_url.'/'.$forum_config['o_avatars_dir'].'/'.$id.'.'.$forum_page['avatar_format'].'" '.$forum_page['img_size'][3].' alt="'.$lang_profile['Avatar'].'" />';
+			$forum_page['user_ident']['avatar'] = '<img src="'.$base_url.'/'.$forum_config['o_avatars_dir'].'/'.$id.'.'.$forum_page['avatar_format'].'" '.$forum_page['img_size'][3].' alt="'.$lang_profile['Avatar'].'" />';
 	}
 
-	$forum_page['user_ident'][] = '<strong class="username'.(($user['realname'] =='') ? ' fn nickname' : ' nickname').'">'.forum_htmlencode($user['username']).'</strong>';
+	$forum_page['user_ident']['username'] = '<strong class="username'.(($user['realname'] =='') ? ' fn nickname' : ' nickname').'">'.forum_htmlencode($user['username']).'</strong>';
 
 	// Setup user information
 	$forum_page['user_info'] = array(
@@ -1296,19 +1296,19 @@ if ($forum_user['id'] != $id &&
 	);
 
 	if ($forum_config['o_show_post_count'] == '1' || $forum_user['is_admmod'])
-		$forum_page['user_info'][] = '<li><span><strong>'.$lang_profile['Posts'].'</strong> '.$user['num_posts'].'</span></li>';
+		$forum_page['user_info']['posts'] = '<li><span><strong>'.$lang_profile['Posts'].'</strong> '.$user['num_posts'].'</span></li>';
 
 
 	// Setup user actions
 	$forum_page['user_actions'] = array();
 
 	if ($user['email_setting'] != '2' && !$forum_user['is_guest'] && $forum_user['g_send_email'] == '1')
-		$forum_page['user_actions'][] =  '<li><a href="'.forum_link($forum_url['email'], $id).'">'.$lang_common['Send forum e-mail'].'</a></li>';
+		$forum_page['user_actions']['email'] =  '<li><a href="'.forum_link($forum_url['email'], $id).'">'.$lang_common['Send forum e-mail'].'</a></li>';
 
 	if ($forum_user['g_search'] == '1')
 	{
-		$forum_page['user_actions'][] = '<li><a href="'.forum_link($forum_url['search_user_posts'], $id).'">'.$lang_profile['Show posts'].'</a></li>';
-		$forum_page['user_actions'][] = '<li><a href="'.forum_link($forum_url['search_user_topics'], $id).'">'.$lang_profile['Show topics'].'</a></li>';
+		$forum_page['user_actions']['search_posts'] = '<li><a href="'.forum_link($forum_url['search_user_posts'], $id).'">'.$lang_profile['Show posts'].'</a></li>';
+		$forum_page['user_actions']['search_topics'] = '<li><a href="'.forum_link($forum_url['search_user_topics'], $id).'">'.$lang_profile['Show topics'].'</a></li>';
 	}
 
 	// Setup user data
@@ -1318,9 +1318,9 @@ if ($forum_user['id'] != $id &&
 	);
 
 	if ($user['email_setting'] == '0' && !$forum_user['is_guest'] && $forum_user['g_send_email'] == '1')
-		$forum_page['user_data'][] = '<li><strong>'.$lang_profile['E-mail'].'</strong> <span><a href="mailto:'.$user['email'].'" class="email">'.($forum_config['o_censoring'] == '1' ? censor_words($user['email']) : $user['email']).'</a></span></li>';
+		$forum_page['user_data']['email'] = '<li><strong>'.$lang_profile['E-mail'].'</strong> <span><a href="mailto:'.$user['email'].'" class="email">'.($forum_config['o_censoring'] == '1' ? censor_words($user['email']) : $user['email']).'</a></span></li>';
 	else
-		$forum_page['user_data'][] = '<li><strong>'.$lang_profile['E-mail'].'</strong> <span>'.$lang_profile['Private'].'</span></li>';
+		$forum_page['user_data']['email'] = '<li><strong>'.$lang_profile['E-mail'].'</strong> <span>'.$lang_profile['Private'].'</span></li>';
 
 	if ($user['url'] != '')
 	{
@@ -1432,10 +1432,10 @@ else
 				$forum_page['avatar_format'] = '';
 
 			if ($forum_page['avatar_format'] != '')
-				$forum_page['user_ident'][] = '<img src="'.$base_url.'/'.$forum_config['o_avatars_dir'].'/'.$id.'.'.$forum_page['avatar_format'].'" '.$forum_page['img_size'][3].' alt="'.$lang_profile['Avatar'].'" />';
+				$forum_page['user_ident']['avatar'] = '<img src="'.$base_url.'/'.$forum_config['o_avatars_dir'].'/'.$id.'.'.$forum_page['avatar_format'].'" '.$forum_page['img_size'][3].' alt="'.$lang_profile['Avatar'].'" />';
 		}
 
-		$forum_page['user_ident'][] = '<strong class="username'.(($user['realname'] =='') ? ' fn nickname' :  ' nickname').'">'.forum_htmlencode($user['username']).'</strong>';
+		$forum_page['user_ident']['username'] = '<strong class="username'.(($user['realname'] =='') ? ' fn nickname' :  ' nickname').'">'.forum_htmlencode($user['username']).'</strong>';
 
 		// Setup user information
 		$forum_page['user_info'] = array(
@@ -1445,31 +1445,31 @@ else
  		);
 
  		if ($forum_config['o_show_post_count'] == '1' || $forum_user['is_admmod'])
-			$forum_page['user_info'][] = '<li><span><strong>'.$lang_profile['Posts'].'</strong> '.$user['num_posts'].'</span></li>';
+			$forum_page['user_info']['posts'] = '<li><span><strong>'.$lang_profile['Posts'].'</strong> '.$user['num_posts'].'</span></li>';
 
 		if ($forum_user['is_admmod'])
-			$forum_page['user_info'][]= '<li><span><strong>'.$lang_profile['IP'].'</strong> <a href="'.forum_link($forum_url['get_host'], forum_htmlencode($user['registration_ip'])).'">'.forum_htmlencode($user['registration_ip']).'</a></span></li>';
+			$forum_page['user_info']['ip']= '<li><span><strong>'.$lang_profile['IP'].'</strong> <a href="'.forum_link($forum_url['get_host'], forum_htmlencode($user['registration_ip'])).'">'.forum_htmlencode($user['registration_ip']).'</a></span></li>';
 
 		if ($forum_user['is_admmod'] && $user['admin_note'] != '')
-				$forum_page['user_info'][] = '<li><span><strong>'.$lang_profile['Note'].'</strong> '.forum_htmlencode($user['admin_note']).'</span></li>';
+				$forum_page['user_info']['note'] = '<li><span><strong>'.$lang_profile['Note'].'</strong> '.forum_htmlencode($user['admin_note']).'</span></li>';
 
 
 		// Setup user actions
 		$forum_page['user_actions'] = array();
 
 		if ($forum_user['id'] == $id || $forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && $forum_user['g_mod_change_passwords'] == '1'))
-			$forum_page['user_actions'][] = '<li><a href="'.forum_link($forum_url['change_password'], $id).'">'.$lang_profile['Change password'].'</a></li>';
+			$forum_page['user_actions']['change_password'] = '<li><a href="'.forum_link($forum_url['change_password'], $id).'">'.$lang_profile['Change password'].'</a></li>';
 
 		if (!$forum_user['is_admmod'] && $forum_config['o_regs_verify'] == '1')
-			$forum_page['user_actions'][] = '<li><a href="'.forum_link($forum_url['change_email'], $id).'">'.$lang_profile['Change e-mail'].'</a></li>';
+			$forum_page['user_actions']['change_email'] = '<li><a href="'.forum_link($forum_url['change_email'], $id).'">'.$lang_profile['Change e-mail'].'</a></li>';
 
 		if (($user['email_setting'] != '2' || $forum_user['is_admmod']) && $forum_user['g_send_email'] == '1')
-			$forum_page['user_actions'][] = '<li><a href="'.forum_link($forum_url['email'], $id).'">'.$lang_profile['Send forum e-mail'].'</a></li>';
+			$forum_page['user_actions']['email'] = '<li><a href="'.forum_link($forum_url['email'], $id).'">'.$lang_profile['Send forum e-mail'].'</a></li>';
 
 		if ($forum_user['g_search'] == '1' || $forum_user['is_admmod'])
 		{
-			$forum_page['user_actions'][] = '<li><a href="'.forum_link($forum_url['search_user_posts'], $id).'">'.$lang_profile['Show posts'].'</a></li>';
-			$forum_page['user_actions'][] = '<li><a href="'.forum_link($forum_url['search_user_topics'], $id).'">'.$lang_profile['Show topics'].'</a></li>';
+			$forum_page['user_actions']['search_posts'] = '<li><a href="'.forum_link($forum_url['search_user_posts'], $id).'">'.$lang_profile['Show posts'].'</a></li>';
+			$forum_page['user_actions']['search_topics'] = '<li><a href="'.forum_link($forum_url['search_user_topics'], $id).'">'.$lang_profile['Show topics'].'</a></li>';
 		}
 
 
@@ -1480,9 +1480,9 @@ else
 		);
 
 		if (($user['email_setting'] == '0' && !$forum_user['is_guest']) && $forum_user['g_send_email'] == '1')
-			$forum_page['user_data'][] = '<li><strong>'.$lang_profile['E-mail'].'</strong> <span><a href="mailto:'.$user['email'].'" class="email">'.($forum_config['o_censoring'] == '1' ? censor_words($user['email']) : $user['email']).'</a></span></li>';
+			$forum_page['user_data']['email'] = '<li><strong>'.$lang_profile['E-mail'].'</strong> <span><a href="mailto:'.$user['email'].'" class="email">'.($forum_config['o_censoring'] == '1' ? censor_words($user['email']) : $user['email']).'</a></span></li>';
 		else
-			$forum_page['user_data'][] = '<li><strong>'.$lang_profile['E-mail'].'</strong> <span>'.$lang_profile['Private'].'</span></li>';
+			$forum_page['user_data']['email'] = '<li><strong>'.$lang_profile['E-mail'].'</strong> <span>'.$lang_profile['Private'].'</span></li>';
 
 		if ($user['url'] != '')
 		{
@@ -1572,11 +1572,11 @@ else
 		$forum_page['set_count'] = $forum_page['fld_count'] = 0;
 		$forum_page['form_action'] = forum_link($forum_url['profile_identity'], $id);
 
-		$forum_page['hidden_fields'][] = '<input type="hidden" name="form_sent" value="1" />';
+		$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
 		if ($forum_user['is_admmod'])
-			$forum_page['hidden_fields'][] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+			$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
 		if ($forum_user['is_admmod'] && ($forum_user['g_id'] == FORUM_ADMIN || $forum_user['g_mod_rename_users'] == '1'))
-			$forum_page['hidden_fields'][] = '<input type="hidden" name="old_username" value="'.forum_htmlencode($user['username']).'" />';
+			$forum_page['hidden_fields']['old_username'] = '<input type="hidden" name="old_username" value="'.forum_htmlencode($user['username']).'" />';
 
 		// Does the form have required fields
 		$forum_page['has_required'] = ((($forum_user['is_admmod'] && ($forum_user['g_id'] == FORUM_ADMIN || $forum_user['g_mod_rename_users'] == '1')) || ($forum_user['is_admmod'] || $forum_config['o_regs_verify'] != '1')) ? true : false);
@@ -1756,9 +1756,9 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 		$forum_page['set_count'] = $forum_page['fld_count'] = 0;
 		$forum_page['form_action'] = forum_link($forum_url['profile_settings'], $id);
 
-		$forum_page['hidden_fields'][] = '<input type="hidden" name="form_sent" value="1" />';
+		$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
 		if ($forum_user['is_admmod'])
-			$forum_page['hidden_fields'][] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+			$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
 
 		($hook = get_hook('pf_change_details_settings_pre_header_load')) ? eval($hook) : null;
 
@@ -2037,18 +2037,18 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 		$forum_page['set_count'] = $forum_page['fld_count'] = 0;
 		$forum_page['form_action'] = forum_link($forum_url['profile_signature'], $id);
 
-		$forum_page['hidden_fields'][] = '<input type="hidden" name="form_sent" value="1" />';
+		$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
 		if ($forum_user['is_admmod'])
-			$forum_page['hidden_fields'][] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+			$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
 
 		// Setup help
 		$forum_page['main_head_options'] = array();
 		if ($forum_config['p_sig_bbcode'] == '1')
-			$forum_page['main_head_options'][] = '<a class="exthelp" href="'.forum_link($forum_url['help'], 'bbcode').'" title="'.sprintf($lang_common['Help page'], $lang_common['BBCode']).'"><span>'.$lang_common['BBCode'].'</span></a>';
+			$forum_page['main_head_options']['bbcode'] = '<a class="exthelp" href="'.forum_link($forum_url['help'], 'bbcode').'" title="'.sprintf($lang_common['Help page'], $lang_common['BBCode']).'"><span>'.$lang_common['BBCode'].'</span></a>';
 		if ($forum_config['p_sig_img_tag'] == '1')
-			$forum_page['main_head_options'][] = '<a class="exthelp" href="'.forum_link($forum_url['help'], 'img').'" title="'.sprintf($lang_common['Help page'], $lang_common['Images']).'"><span>'.$lang_common['Images'].'</span></a>';
+			$forum_page['main_head_options']['img'] = '<a class="exthelp" href="'.forum_link($forum_url['help'], 'img').'" title="'.sprintf($lang_common['Help page'], $lang_common['Images']).'"><span>'.$lang_common['Images'].'</span></a>';
 		if ($forum_config['o_smilies_sig'] == '1')
-			$forum_page['main_head_options'][] = '<a class="exthelp" href="'.forum_link($forum_url['help'], 'smilies').'" title="'.sprintf($lang_common['Help page'], $lang_common['Smilies']).'"><span>'.$lang_common['Smilies'].'</span></a>';
+			$forum_page['main_head_options']['smilies'] = '<a class="exthelp" href="'.forum_link($forum_url['help'], 'smilies').'" title="'.sprintf($lang_common['Help page'], $lang_common['Smilies']).'"><span>'.$lang_common['Smilies'].'</span></a>';
 
 		($hook = get_hook('pf_change_details_signature_pre_header_load')) ? eval($hook) : null;
 
@@ -2151,22 +2151,22 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 			'<input type="hidden" name="MAX_FILE_SIZE" value="'.$forum_config['o_avatars_size'].'" />'
 		);
 		if ($forum_user['is_admmod'])
-			$forum_page['hidden_fields'][] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+			$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
 
 		// Setup form information
 		$forum_page['frm_info'] = array();
 
 		if ($forum_page['avatar_format'] != '')
 		{
-			$forum_page['frm_info'][] = '<li><span>'.$lang_profile['Avatar info change'].'</span></li>';
-			$forum_page['frm_info'][] = '<li><span>'.$lang_profile['Avatar info type'].'</span></li>';
-			$forum_page['frm_info'][] = '<li><span>'.sprintf($lang_profile['Avatar info size'], $forum_config['o_avatars_width'], $forum_config['o_avatars_height'], $forum_config['o_avatars_size'], ceil($forum_config['o_avatars_size'] / 1024)).'</span></li>';
+			$forum_page['frm_info']['avatar_change'] = '<li><span>'.$lang_profile['Avatar info change'].'</span></li>';
+			$forum_page['frm_info']['avatar_info'] = '<li><span>'.$lang_profile['Avatar info type'].'</span></li>';
+			$forum_page['frm_info']['avatar_size'] = '<li><span>'.sprintf($lang_profile['Avatar info size'], $forum_config['o_avatars_width'], $forum_config['o_avatars_height'], $forum_config['o_avatars_size'], ceil($forum_config['o_avatars_size'] / 1024)).'</span></li>';
 			$forum_page['avatar_demo'] = '<img src="'.$base_url.'/'.$forum_config['o_avatars_dir'].'/'.$id.'.'.$forum_page['avatar_format'].'" '.$forum_page['img_size'][3].' alt="'.$lang_profile['Avatar'].'" />';
 		}
 		else
 		{
-			$forum_page['frm_info'][] = '<li><span>'.$lang_profile['Avatar info none'].'</span></li>';
-			$forum_page['frm_info'][] = '<li><span>'.sprintf($lang_profile['Avatar info size'], $forum_config['o_avatars_width'], $forum_config['o_avatars_height'], $forum_config['o_avatars_size'], ceil($forum_config['o_avatars_size'] / 1024)).'</span></li>';
+			$forum_page['frm_info']['avatar_none'] = '<li><span>'.$lang_profile['Avatar info none'].'</span></li>';
+			$forum_page['frm_info']['avatar_size'] = '<li><span>'.sprintf($lang_profile['Avatar info size'], $forum_config['o_avatars_width'], $forum_config['o_avatars_height'], $forum_config['o_avatars_size'], ceil($forum_config['o_avatars_size'] / 1024)).'</span></li>';
 		}
 
 		($hook = get_hook('pf_change_details_avatar_pre_header_load')) ? eval($hook) : null;
@@ -2266,27 +2266,27 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 
 		if ($forum_user['g_moderator'] == '1')
 		{
-			$forum_page['user_actions'][] = '<li class="frm-fld link"><span class="fld-label"><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user'].'</a>:</span> <span class="fld-input">'.$lang_profile['Ban user info'].'</span></li>';
-			$forum_page['user_management'][] = '<li><span>'.$lang_profile['Manage ban'].'</span></li>';
+			$forum_page['user_actions']['ban'] = '<li class="frm-fld link"><span class="fld-label"><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user'].'</a>:</span> <span class="fld-input">'.$lang_profile['Ban user info'].'</span></li>';
+			$forum_page['user_management']['ban'] = '<li><span>'.$lang_profile['Manage ban'].'</span></li>';
 		}
 		else if ($forum_user['g_moderator'] != '1' && $user['g_id'] != FORUM_ADMIN )
 		{
-			$forum_page['user_actions'][] = '<li class="frm-fld link"><span class="fld-label"><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user'].'</a>:</span> <span class="fld-input">'.$lang_profile['Ban user info'].'</span></li>';
-			$forum_page['user_actions'][] = '<li class="frm-fld link"><span class="fld-label"><a href="'.forum_link($forum_url['delete_user'], $id).'">'.$lang_profile['Delete user'].'</a>:</span> <span class="fld-input">'.$lang_profile['Delete user info'].'</span></li>';
-			$forum_page['user_management'][] = '<li><span>'.$lang_profile['Manage ban'].'</span></li>';
-			$forum_page['user_management'][] = '<li><span>'.$lang_profile['Manage delete'].'</span></li>';
+			$forum_page['user_actions']['ban'] = '<li class="frm-fld link"><span class="fld-label"><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user'].'</a>:</span> <span class="fld-input">'.$lang_profile['Ban user info'].'</span></li>';
+			$forum_page['user_actions']['delete'] = '<li class="frm-fld link"><span class="fld-label"><a href="'.forum_link($forum_url['delete_user'], $id).'">'.$lang_profile['Delete user'].'</a>:</span> <span class="fld-input">'.$lang_profile['Delete user info'].'</span></li>';
+			$forum_page['user_management']['ban'] = '<li><span>'.$lang_profile['Manage ban'].'</span></li>';
+			$forum_page['user_management']['delete'] = '<li><span>'.$lang_profile['Manage delete'].'</span></li>';
 		}
 
 		if ($forum_user['g_moderator'] != '1' &&  $forum_user['id'] != $id && $user['g_id'] == FORUM_ADMIN )
-			$forum_page['user_management'][] = '<li><span>'.$lang_profile['Manage groups'].'</span></li>';
+			$forum_page['user_management']['groups'] = '<li><span>'.$lang_profile['Manage groups'].'</span></li>';
 
 		// Setup form
 		$forum_page['fld_count'] = $forum_page['set_count'] = 0;
 		$forum_page['form_action'] = forum_link($forum_url['profile_admin'], $id);
 
-		$forum_page['hidden_fields'][] = '<input type="hidden" name="form_sent" value="1" />';
+		$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
 		if ($forum_user['is_admmod'])
-			$forum_page['hidden_fields'][] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+			$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
 
 		($hook = get_hook('pf_change_details_admin_pre_header_load')) ? eval($hook) : null;
 

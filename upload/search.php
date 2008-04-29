@@ -145,17 +145,17 @@ if (isset($query))
 	// Navigation links for header and page numbering for title/meta description
 	if ($forum_page['page'] < $forum_page['num_pages'])
 	{
-		$forum_page['nav'][] = '<link rel="last" href="'.forum_sublink($url_type, $forum_url['page'], $forum_page['num_pages'], $search_id).'" title="'.$lang_common['Page'].' '.$forum_page['num_pages'].'" />';
-		$forum_page['nav'][] = '<link rel="next" href="'.forum_sublink($url_type, $forum_url['page'], ($forum_page['page'] + 1), $search_id).'" title="'.$lang_common['Page'].' '.($forum_page['page'] + 1).'" />';
+		$forum_page['nav']['last'] = '<link rel="last" href="'.forum_sublink($url_type, $forum_url['page'], $forum_page['num_pages'], $search_id).'" title="'.$lang_common['Page'].' '.$forum_page['num_pages'].'" />';
+		$forum_page['nav']['next'] = '<link rel="next" href="'.forum_sublink($url_type, $forum_url['page'], ($forum_page['page'] + 1), $search_id).'" title="'.$lang_common['Page'].' '.($forum_page['page'] + 1).'" />';
 	}
 	if ($forum_page['page'] > 1)
 	{
-		$forum_page['nav'][] = '<link rel="prev" href="'.forum_sublink($url_type, $forum_url['page'], ($forum_page['page'] - 1), $search_id).'" title="'.$lang_common['Page'].' '.($forum_page['page'] - 1).'" />';
-		$forum_page['nav'][] = '<link rel="first" href="'.forum_link($url_type, $search_id).'" title="'.$lang_common['Page'].' 1" />';
+		$forum_page['nav']['prev'] = '<link rel="prev" href="'.forum_sublink($url_type, $forum_url['page'], ($forum_page['page'] - 1), $search_id).'" title="'.$lang_common['Page'].' '.($forum_page['page'] - 1).'" />';
+		$forum_page['nav']['first'] = '<link rel="first" href="'.forum_link($url_type, $search_id).'" title="'.$lang_common['Page'].' 1" />';
 	}
 
 	// Setup breadcrumbs and results header and footer
-	$forum_page['main_foot_options'][] = '<a class="user-option" href="'.forum_link($forum_url['search']).'">'.$lang_search['Perform new search'].'</a>';
+	$forum_page['main_foot_options']['new_search'] = '<a class="user-option" href="'.forum_link($forum_url['search']).'">'.$lang_search['Perform new search'].'</a>';
 	$forum_page['crumbs'][] = array($forum_config['o_board_title'], forum_link($forum_url['index']));
 
 	$action = (isset($action)) ? $action : null;
@@ -251,21 +251,21 @@ if (isset($query))
 			// Generate the post options links
 			$forum_page['post_options'] = array();
 
-			$forum_page['post_options'][] = '<a href="'.forum_link($forum_url['forum'], array($search_set[$i]['forum_id'], sef_friendly($search_set[$i]['forum_name']))).'"><span>'.$lang_search['Go to forum'].'<span>: '.forum_htmlencode($search_set[$i]['forum_name']).'</span></span></a>';
+			$forum_page['post_options']['forum'] = '<a href="'.forum_link($forum_url['forum'], array($search_set[$i]['forum_id'], sef_friendly($search_set[$i]['forum_name']))).'"><span>'.$lang_search['Go to forum'].'<span>: '.forum_htmlencode($search_set[$i]['forum_name']).'</span></span></a>';
 
 			if ($search_set[$i]['pid'] != $search_set[$i]['first_post_id'])
-				$forum_page['post_options'][] = '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink topic'].'" href="'.forum_link($forum_url['topic'], array($search_set[$i]['tid'], sef_friendly($search_set[$i]['subject']))).'"><span>'.$lang_search['Go to topic'].'<span>: '.forum_htmlencode($search_set[$i]['subject']).'</span></span></a>';
+				$forum_page['post_options']['topic'] = '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink topic'].'" href="'.forum_link($forum_url['topic'], array($search_set[$i]['tid'], sef_friendly($search_set[$i]['subject']))).'"><span>'.$lang_search['Go to topic'].'<span>: '.forum_htmlencode($search_set[$i]['subject']).'</span></span></a>';
 
-			$forum_page['post_options'][] = '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $search_set[$i]['pid']).'"><span>'.$lang_search['Go to post'].' <span>'.($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
+			$forum_page['post_options']['post'] = '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $search_set[$i]['pid']).'"><span>'.$lang_search['Go to post'].' <span>'.($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
 
 			// Generate the post title
 			$forum_page['item_subject'] = array();
 			if ($search_set[$i]['pid'] == $search_set[$i]['first_post_id'])
-				$forum_page['item_subject'][] = '<strong>'.$lang_common['Topic'].': '.forum_htmlencode($search_set[$i]['subject']).'</strong>';
+				$forum_page['item_subject']['topic'] = '<strong>'.$lang_common['Topic'].': '.forum_htmlencode($search_set[$i]['subject']).'</strong>';
 			else
-				$forum_page['item_subject'][] = '<strong>'.$lang_common['Re'].' '.forum_htmlencode($search_set[$i]['subject']).'</strong>';
+				$forum_page['item_subject']['re'] = '<strong>'.$lang_common['Re'].' '.forum_htmlencode($search_set[$i]['subject']).'</strong>';
 
-			$forum_page['item_subject'][] = sprintf($lang_search['Topic info'], forum_htmlencode($search_set[$i]['poster']), forum_htmlencode($search_set[$i]['forum_name']), $search_set[$i]['num_replies']);
+			$forum_page['item_subject']['topic_info'] = sprintf($lang_search['Topic info'], forum_htmlencode($search_set[$i]['poster']), forum_htmlencode($search_set[$i]['forum_name']), $search_set[$i]['num_replies']);
 
 			// Generate the post message
 			if ($forum_config['o_censoring'] == '1')
@@ -283,13 +283,13 @@ if (isset($query))
 			);
 
 			if ($forum_page['item_count'] == 1)
-				$forum_page['item_status'][] = 'firstpost';
+				$forum_page['item_status']['firstpost'] = 'firstpost';
 
 			if (($forum_page['start_from'] + $forum_page['item_count']) == $forum_page['finish_at'])
-				$forum_page['item_status'][] = 'lastpost';
+				$forum_page['item_status']['lastpost'] = 'lastpost';
 
 			if ($search_set[$i]['pid'] == $search_set[$i]['first_post_id'])
-				$forum_page['item_status'][] = 'topicpost';
+				$forum_page['item_status']['topicpost'] = 'topicpost';
 
 			($hook = get_hook('se_results_posts_row_pre_display')) ? eval($hook) : null;
 
@@ -329,30 +329,30 @@ if (isset($query))
 
 			if ($search_set[$i]['closed'] != '0')
 			{
-				$forum_page['item_subject'][] = $lang_common['Closed'];
-				$forum_page['item_status'][] = 'closed';
+				$forum_page['item_subject']['closed'] = $lang_common['Closed'];
+				$forum_page['item_status']['closed'] = 'closed';
 			}
 
-			$forum_page['item_subject'][] = '<a href="'.forum_link($forum_url['topic'], array($search_set[$i]['tid'], sef_friendly($search_set[$i]['subject']))).'">'.forum_htmlencode($search_set[$i]['subject']).'</a>';
+			$forum_page['item_subject']['subject'] = '<a href="'.forum_link($forum_url['topic'], array($search_set[$i]['tid'], sef_friendly($search_set[$i]['subject']))).'">'.forum_htmlencode($search_set[$i]['subject']).'</a>';
 
 			$forum_page['item_pages'] = ceil(($search_set[$i]['num_replies'] + 1) / $forum_user['disp_posts']);
 
 			if ($forum_page['item_pages'] > 1)
-				$forum_page['item_nav'][] = paginate($forum_page['item_pages'], -1, $forum_url['topic'], $lang_common['Page separator'], array($search_set[$i]['tid'], sef_friendly($search_set[$i]['subject'])));
+				$forum_page['item_nav']['pages'] = paginate($forum_page['item_pages'], -1, $forum_url['topic'], $lang_common['Page separator'], array($search_set[$i]['tid'], sef_friendly($search_set[$i]['subject'])));
 
 			// Does this topic contain posts we haven't read? If so, tag it accordingly.
 			if (!$forum_user['is_guest'] && $search_set[$i]['last_post'] > $forum_user['last_visit'] && (!isset($tracked_topics['topics'][$search_set[$i]['tid']]) || $tracked_topics['topics'][$search_set[$i]['tid']] < $search_set[$i]['last_post']) && (!isset($tracked_topics['forums'][$search_set[$i]['forum_id']]) || $tracked_topics['forums'][$search_set[$i]['forum_id']] < $search_set[$i]['last_post']))
 			{
-				$forum_page['item_nav'][] = '<a href="'.forum_link($forum_url['topic_new_posts'], array($search_set[$i]['tid'], sef_friendly($search_set[$i]['subject']))).'" title="'.$lang_forum['New posts info'].'">'.$lang_common['New posts'].'</a>';
-				$forum_page['item_status'][] = 'new';
+				$forum_page['item_nav']['new'] = '<a href="'.forum_link($forum_url['topic_new_posts'], array($search_set[$i]['tid'], sef_friendly($search_set[$i]['subject']))).'" title="'.$lang_forum['New posts info'].'">'.$lang_common['New posts'].'</a>';
+				$forum_page['item_status']['new'] = 'new';
 			}
 
 			if (!empty($forum_page['item_nav']))
-				$forum_page['item_subject'][] = '<span class="topic-nav">[&#160;'.implode('&#160;&#160;', $forum_page['item_nav']).'&#160;]</span>';
+				$forum_page['item_subject']['nav'] = '<span class="topic-nav">[&#160;'.implode('&#160;&#160;', $forum_page['item_nav']).'&#160;]</span>';
 
 			$forum_page['item_subject'][] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($search_set[$i]['poster'])).'</span>';
-			$forum_page['item_last_post'][] = '<a href="'.forum_link($forum_url['post'], $search_set[$i]['last_post_id']).'">'.format_time($search_set[$i]['last_post']).'</a>';
-			$forum_page['item_last_post'][] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($search_set[$i]['last_poster'])).'</span>';
+			$forum_page['item_last_post']['post'] = '<a href="'.forum_link($forum_url['post'], $search_set[$i]['last_post_id']).'">'.format_time($search_set[$i]['last_post']).'</a>';
+			$forum_page['item_last_post']['user'] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($search_set[$i]['last_poster'])).'</span>';
 			$forum_page['item_indicator'] = '<span class="status '.implode(' ', $forum_page['item_status']).'" title="'.$forum_page['item_alt_message'].'"><img src="'.$base_url.'/style/'.$forum_user['style'].'/status.png" alt="'.$forum_page['item_alt_message'].'" />'.$forum_page['item_indicator'].'</span>';
 
 			($hook = get_hook('se_results_topics_row_pre_display')) ? eval($hook) : null;
@@ -410,27 +410,27 @@ if (isset($query))
 $forum_page['set_count'] = $forum_page['fld_count'] = 0;
 
 // Setup form information
-$forum_page['frm-info'] = array('<li><span>'.$lang_search['Search info'].'</span></li>');
-$forum_page['frm-info'][] = '<li><span>'.$lang_search['Refine info'].'</span></li>';
-$forum_page['frm-info'][] = '<li><span>'.$lang_search['Wildcard info'].'<span></li>';
+$forum_page['frm-info'] = array('search' => '<li><span>'.$lang_search['Search info'].'</span></li>');
+$forum_page['frm-info']['refine'] = '<li><span>'.$lang_search['Refine info'].'</span></li>';
+$forum_page['frm-info']['wildcard'] = '<li><span>'.$lang_search['Wildcard info'].'<span></li>';
 
 // Setup predefined search (pds) links
 $forum_page['pd_searches'] = array(
-	'<a href="'.forum_link($forum_url['search_24h']).'">'.$lang_common['Recent posts'].'</a>',
-	'<a href="'.forum_link($forum_url['search_unanswered']).'">'.$lang_common['Unanswered topics'].'</a>'
+	'recent' => '<a href="'.forum_link($forum_url['search_24h']).'">'.$lang_common['Recent posts'].'</a>',
+	'unanswered' => '<a href="'.forum_link($forum_url['search_unanswered']).'">'.$lang_common['Unanswered topics'].'</a>'
 );
 
 if (!$forum_user['is_guest'])
 {
 	array_push(
 		$forum_page['pd_searches'],
-		'<a href="'.forum_link($forum_url['search_new']).'" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a>',
-		'<a href="'.forum_link($forum_url['search_user_posts'], $forum_user['id']).'">'.$lang_common['Your posts'].'</a>',
-		'<a href="'.forum_link($forum_url['search_user_topics'], $forum_user['id']).'">'.$lang_common['Your topics'].'</a>'
+		'new' => '<a href="'.forum_link($forum_url['search_new']).'" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a>',
+		'user_posts' => '<a href="'.forum_link($forum_url['search_user_posts'], $forum_user['id']).'">'.$lang_common['Your posts'].'</a>',
+		'user_topics' => '<a href="'.forum_link($forum_url['search_user_topics'], $forum_user['id']).'">'.$lang_common['Your topics'].'</a>'
 	);
 
 	if ($forum_config['o_subscriptions'] == '1')
-		$forum_page['pd_searches'][] = '<a href="'.forum_link($forum_url['search_subscriptions'], $forum_user['id']).'">'.$lang_common['Your subscriptions'].'</a>';
+		 $forum_page['pd_searches']['subscriptions'] = '<a href="'.forum_link($forum_url['search_subscriptions'], $forum_user['id']).'">'.$lang_common['Your subscriptions'].'</a>';
 }
 
 // Setup breadcrumbs
