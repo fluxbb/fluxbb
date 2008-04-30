@@ -34,6 +34,10 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = -1
 {
 	global $forum_db, $forum_user, $forum_config, $forum_url, $lang_search, $lang_common, $db_type;
 
+	$return = ($hook = get_hook('sq_create_search_cache_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+	
 	// Flood protection
 	if (!$forum_user['is_guest'] && $forum_user['last_search'] != '' && (time() - $forum_user['last_search']) < $forum_user['g_search_flood'] && (time() - $forum_user['last_search']) >= 0)
 		message(sprintf($lang_search['Search flood'], $forum_user['g_search_flood']));
@@ -144,6 +148,8 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = -1
 		}
 
 		unset($result_list);
+		
+		($hook = get_hook('sq_create_search_cache_end')) ? eval($hook) : null;
 	}
 
 	// If it's a search for author name (and that author name isn't Guest)

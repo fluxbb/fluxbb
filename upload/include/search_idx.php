@@ -40,6 +40,11 @@ if (!defined('FORUM'))
 //
 function split_words($text)
 {
+
+	$return = ($hook = get_hook('si_split_words_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+
 	global $forum_user;
 	static $noise_match, $noise_replace, $stopwords;
 
@@ -89,6 +94,10 @@ function split_words($text)
 function update_search_index($mode, $post_id, $message, $subject = null)
 {
 	global $db_type, $forum_db;
+	
+	$return = ($hook = get_hook('si_update_search_index_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	// Split old and new post/subject to obtain array of 'words'
 	$words_message = split_words($message);
@@ -196,6 +205,10 @@ function strip_search_index($post_ids)
 {
 	global $db_type, $forum_db;
 
+	$return = ($hook = get_hook('si_strip_search_index_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+	
 	switch ($db_type)
 	{
 		case 'mysql':
