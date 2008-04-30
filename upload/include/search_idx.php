@@ -105,8 +105,21 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 	if ($mode == 'edit')
 	{
-		$result = $forum_db->query('SELECT w.id, w.word, m.subject_match FROM '.$forum_db->prefix.'search_words AS w INNER JOIN '.$forum_db->prefix.'search_matches AS m ON w.id=m.word_id WHERE m.post_id='.$post_id) or error(__FILE__, __LINE__);
+		$query = array(
+			'SELECT'	=> 'w.id, w.word, m.subject_match',
+			'FROM'		=> 'search_words AS w',
+			'JOINS'		=> array(
+				array(
+					'INNER JOIN'	=> 'search_matches AS m',
+					'ON'			=> 'w.id=m.word_id'
+				)
+			),
+			'WHERE'		=> 'm.post_id='.$post_id
+		);
 
+		($hook = get_hook('si_qr_get_current_words')) ? eval($hook) : null;
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		
 		// Declare here to stop array_keys() and array_diff() from complaining if not set
 		$cur_words['post'] = array();
 		$cur_words['subject'] = array();
@@ -140,8 +153,15 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 	if (!empty($unique_words))
 	{
-		$result = $forum_db->query('SELECT id, word FROM '.$forum_db->prefix.'search_words WHERE word IN('.implode(',', preg_replace('#^(.*)$#', '\'\1\'', $unique_words)).')') or error(__FILE__, __LINE__);
+		$query = array(
+			'SELECT'	=> 'id, word',
+			'FROM'		=> 'search_words',
+			'WHERE'		=> 'word IN('.implode(',', preg_replace('#^(.*)$#', '\'\1\'', $unique_words)).')'
+		);
 
+		($hook = get_hook('si_qr_get_existing_words')) ? eval($hook) : null;
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		
 		$word_ids = array();
 		while ($row = $forum_db->fetch_row($result))
 			$word_ids[$row[1]] = $row[0];
@@ -157,16 +177,26 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 			{
 				case 'mysql':
 				case 'mysqli':
-					$forum_db->query('INSERT INTO '.$forum_db->prefix.'search_words (word) VALUES'.implode(',', preg_replace('#^(.*)$#', '(\'\1\')', $new_words))) or error(__FILE__, __LINE__);
+					$sql = 'INSERT INTO '.$forum_db->prefix.'search_words (word) VALUES'.implode(',', preg_replace('#^(.*)$#', '(\'\1\')', $new_words));
+					($hook = get_hook('si_qr_mysql_insert_words')) ? eval($hook) : null;
+					$forum_db->query($sql) or error(__FILE__, __LINE__);
 					break;
 
 				default:
 					while (list(, $word) = @each($new_words))
-						$forum_db->query('INSERT INTO '.$forum_db->prefix.'search_words (word) VALUES(\''.$word.'\')') or error(__FILE__, __LINE__);
+					{
+						$query = array(
+							'INSERT'	=> 'word',
+							'INTO'		=> 'search_words',
+							'VALUES'	=> '\''.$word.'\''
+						);
+
+						($hook = get_hook('si_qr_insert_words')) ? eval($hook) : null;
+						$forum_db->query_build($query) or error(__FILE__, __LINE__);
+					}
 					break;
 			}
 		}
-
 		unset($new_words);
 	}
 
@@ -181,7 +211,13 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 			while (list(, $word) = @each($wordlist))
 				$sql .= (($sql != '') ? ',' : '').$cur_words[$match_in][$word];
 
-			$forum_db->query('DELETE FROM '.$forum_db->prefix.'search_matches WHERE word_id IN('.$sql.') AND post_id='.$post_id.' AND subject_match='.$subject_match) or error(__FILE__, __LINE__);
+			$query = array(
+				'DELETE'	=> 'search_matches',
+				'WHERE'		=> 'word_id IN('.$sql.') AND post_id='.$post_id.' AND subject_match='.$subject_match
+			);
+
+			($hook = get_hook('si_qr_delete_matches')) ? eval($hook) : null;
+			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 	}
 
@@ -191,7 +227,11 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 		$subject_match = ($match_in == 'subject') ? 1 : 0;
 
 		if (!empty($wordlist))
-			$forum_db->query('INSERT INTO '.$forum_db->prefix.'search_matches (post_id, word_id, subject_match) SELECT '.$post_id.', id, '.$subject_match.' FROM '.$forum_db->prefix.'search_words WHERE word IN('.implode(',', preg_replace('#^(.*)$#', '\'\1\'', $wordlist)).')') or error(__FILE__, __LINE__);
+		{
+			$sql = 'INSERT INTO '.$forum_db->prefix.'search_matches (post_id, word_id, subject_match) SELECT '.$post_id.', id, '.$subject_match.' FROM '.$forum_db->prefix.'search_words WHERE word IN('.implode(',', preg_replace('#^(.*)$#', '\'\1\'', $wordlist)).')';
+			($hook = get_hook('si_qr_delete_matches')) ? eval($hook) : null;
+			$forum_db->query($sql) or error(__FILE__, __LINE__);
+		}
 	}
 
 	unset($words);
