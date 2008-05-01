@@ -253,34 +253,62 @@ function strip_search_index($post_ids)
 	{
 		case 'mysql':
 		case 'mysqli':
-		{
-			$result = $forum_db->query('SELECT word_id FROM '.$forum_db->prefix.'search_matches WHERE post_id IN('.$post_ids.') GROUP BY word_id') or error(__FILE__, __LINE__);
+			$query = array(
+				'SELECT'	=> 'word_id',
+				'FROM'		=> 'search_matches',
+				'WHERE'		=> 'post_id IN('.$post_ids.')',
+				'GROUP BY'	=> 'word_id'
+			);
 
+			($hook = get_hook('si_qr_mysql_get_post_words')) ? eval($hook) : null;
+			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		
 			if ($forum_db->num_rows($result))
 			{
 				$word_ids = '';
 				while ($row = $forum_db->fetch_row($result))
 					$word_ids .= ($word_ids != '') ? ','.$row[0] : $row[0];
 
-				$result = $forum_db->query('SELECT word_id FROM '.$forum_db->prefix.'search_matches WHERE word_id IN('.$word_ids.') GROUP BY word_id HAVING COUNT(word_id)=1') or error(__FILE__, __LINE__);
+				$query = array(
+					'SELECT'	=> 'word_id',
+					'FROM'		=> 'search_matches',
+					'WHERE'		=> 'word_id IN('.$word_ids.')',
+					'GROUP BY'	=> 'word_id',
+					'HAVING'	=> 'COUNT(word_id)=1'
+				);
 
+				($hook = get_hook('si_qr_mysql_get_removable_words')) ? eval($hook) : null;
+				$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+				
 				if ($forum_db->num_rows($result))
 				{
 					$word_ids = '';
 					while ($row = $forum_db->fetch_row($result))
 						$word_ids .= ($word_ids != '') ? ','.$row[0] : $row[0];
 
-					$forum_db->query('DELETE FROM '.$forum_db->prefix.'search_words WHERE id IN('.$word_ids.')') or error(__FILE__, __LINE__);
+					$query = array(
+						'DELETE'	=> 'search_words',
+						'WHERE'		=> 'id IN('.$word_ids.')'
+					);
+
+					($hook = get_hook('si_qr_mysql_delete_words')) ? eval($hook) : null;
+					$forum_db->query_build($query) or error(__FILE__, __LINE__);
 				}
 			}
 
 			break;
-		}
 
 		default:
-			$forum_db->query('DELETE FROM '.$forum_db->prefix.'search_words WHERE id IN(SELECT word_id FROM '.$forum_db->prefix.'search_matches WHERE word_id IN(SELECT word_id FROM '.$forum_db->prefix.'search_matches WHERE post_id IN('.$post_ids.') GROUP BY word_id) GROUP BY word_id HAVING COUNT(word_id)=1)') or error(__FILE__, __LINE__);
+			$sql = 'DELETE FROM '.$forum_db->prefix.'search_words WHERE id IN(SELECT word_id FROM '.$forum_db->prefix.'search_matches WHERE word_id IN(SELECT word_id FROM '.$forum_db->prefix.'search_matches WHERE post_id IN('.$post_ids.') GROUP BY word_id) GROUP BY word_id HAVING COUNT(word_id)=1)';
+			($hook = get_hook('si_qr_delete_words')) ? eval($hook) : null;
+			$forum_db->query($sql) or error(__FILE__, __LINE__);
 			break;
 	}
-
-	$forum_db->query('DELETE FROM '.$forum_db->prefix.'search_matches WHERE post_id IN('.$post_ids.')') or error(__FILE__, __LINE__);
+	
+	$query = array(
+		'DELETE'	=> 'search_matches',
+		'WHERE'		=> 'post_id IN('.$post_ids.')'
+	);
+	($hook = get_hook('si_qr_delete_matches')) ? eval($hook) : null;
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 }
