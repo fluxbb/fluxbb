@@ -1787,6 +1787,10 @@ function csrf_confirm_form()
 {
 	global $forum_db, $forum_url, $lang_common, $forum_config, $base_url, $forum_start, $tpl_main, $forum_user, $forum_page, $forum_updates;
 
+	// If we've disabled the CSRF check for this page, we have nothing to do here.
+	if (defined('FORUM_DISABLE_CSRF_CONFIRM'))
+		return;
+
 	// User pressed the cancel button
 	if (isset($_POST['confirm_cancel']))
 		redirect(forum_htmlencode($_POST['prev_url']), $lang_common['Cancel redirect']);
