@@ -52,19 +52,23 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	$a = array( '#\[url=("|\'|)(.*?)\\1\]\s*#i',
 				'#\[url\]\s*#i',
 				'#\s*\[/url\]#i',
+				'#\[img=("|\'|)(.*?)\\1\]\s*#i',
+				'#\[img\]\s*#i',
+				'#\s*\[/img\]#i',
 				'#\[email=("|\'|)(.*?)\\1\]\s*#i',
 				'#\[email\]\s*#i',
 				'#\s*\[/email\]#i',
-				'#\[img\]\s*(.*?)\s*\[/img\]#is',
 				'#\[colou?r=("|\'|)(.*?)\\1\](.*?)\[/colou?r\]#is');
 
 	$b = array(	'[url=$2]',
 				'[url]',
 				'[/url]',
+				'[img=$2]',
+				'[img]',
+				'[/img]',
 				'[email=$2]',
 				'[email]',
 				'[/email]',
-				'[img]$1[/img]',
 				'[color=$2]$3[/color]');
 
 	if (!$is_signature)
@@ -414,12 +418,6 @@ function do_bbcode($text, $is_signature = false)
 	}
 	// This thing takes a while! :)
 	$text = preg_replace($pattern, $replace, $text);
-
-
-	if ($forum_config['p_message_img_tag'] == '1')
-	{
-//			$text = preg_replace('#\[img\]((ht|f)tps?://)([^\s<"]*?)\.(jpg|jpeg|png|gif)\[/img\]#e', 'handle_img_tag(\'$1$3.$4\')', $text);
-	}
 	
 	return $text;
 }
