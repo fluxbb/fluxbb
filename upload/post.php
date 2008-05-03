@@ -353,7 +353,7 @@ ob_start();
 <?php
 
 // If preview selected and there are no errors
-if (isset($_POST['preview']) && empty($forum_page['errors']))
+if (isset($_POST['preview']) && empty($errors))
 {
 	require_once FORUM_ROOT.'include/parser.php';
 	$forum_page['preview_message'] = parse_message(trim($_POST['req_message']), $hide_smilies);
