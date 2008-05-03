@@ -43,9 +43,18 @@ $smiley_img = array('smile.png', 'smile.png', 'neutral.png', 'neutral.png', 'sad
 //
 function preparse_bbcode($text, &$errors, $is_signature = false)
 {
+	$return = ($hook = get_hook('ps_preparse_bbcode_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+
 	// Change all simple BBCodes to lower case
 	$a = array('[B]', '[I]', '[U]', '[/B]', '[/I]', '[/U]');
 	$b = array('[b]', '[i]', '[u]', '[/b]', '[/i]', '[/u]');
+	
+	$return = ($hook = get_hook('ps_preparse_bbcode_str_replace')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+	
 	$text = str_replace($a, $b, $text);
 
 	// Do the more complex BBCodes (also strip excessive whitespace and useless quotes)
@@ -85,6 +94,10 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 		$b[] = '[code]$1[/code]'."\n";
 	}
 
+	$return = ($hook = get_hook('ps_preparse_bbcode_preg_replace')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+	
 	// Run this baby!
 	$text = preg_replace($a, $b, $text);
 
@@ -99,6 +112,10 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	$temp_text = preparse_tags($text, &$errors, $is_signature);
 	if ($temp_text !== false)
 		$text = $temp_text;
+		
+	$return = ($hook = get_hook('ps_preparse_bbcode_end')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 		
 	return trim($text);
 }
@@ -122,6 +139,10 @@ function preparse_tags($text, &$errors, $is_signature = false)
     $tags_ignore = array('code');
     // Block tags, block tags can only go within another block tag, they cannot be in a normal tag
     $tags_block = array('quote','code');
+	
+	$return = ($hook = get_hook('ps_preparse_tags_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
     $split_text = preg_split("/(\[.*?\])/", $text, -1, PREG_SPLIT_DELIM_CAPTURE);
     
@@ -294,6 +315,11 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		$errors[] = sprintf($lang_common['BBCode error 5'], $current_ignore);
         return false;
     }
+
+	$return = ($hook = get_hook('ps_preparse_tags_end')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+	
     return $new_text;
 }
 
@@ -375,6 +401,10 @@ function handle_img_tag($url, $is_signature = false, $alt=null)
 function do_bbcode($text, $is_signature = false)
 {
 	global $lang_common, $forum_user, $forum_config;
+	
+	$return = ($hook = get_hook('ps_do_bbcode_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	if (strpos($text, 'quote') !== false)
 	{
@@ -416,9 +446,18 @@ function do_bbcode($text, $is_signature = false)
 			$replace[] = 'handle_img_tag(\'$2$4\', false, \'$1\')';
 		}
 	}
+
+	$return = ($hook = get_hook('ps_do_bbcode_replace')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+		
 	// This thing takes a while! :)
 	$text = preg_replace($pattern, $replace, $text);
 	
+	$return = ($hook = get_hook('ps_do_bbcode_end')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+		
 	return $text;
 }
 
