@@ -347,16 +347,19 @@ function handle_url_tag($url, $link = '')
 //
 // Turns an URL from the [img] tag into an <img> tag or a <a href...> tag
 //
-function handle_img_tag($url, $is_signature = false)
+function handle_img_tag($url, $is_signature = false, $alt=null)
 {
 	global $lang_common, $forum_config, $forum_user;
 
+	if ($alt == null)
+		$alt = $url;
+	
 	$img_tag = '<a href="'.$url.'">&lt;'.$lang_common['Image link'].'&gt;</a>';
 
 	if ($is_signature && $forum_user['show_img_sig'] != '0')
-		$img_tag = '<img class="sigimage" src="'.$url.'" alt="'.forum_htmlencode($url).'" />';
+		$img_tag = '<img class="sigimage" src="'.$url.'" alt="'.forum_htmlencode($alt).'" />';
 	else if (!$is_signature && $forum_user['show_img'] != '0')
-		$img_tag = '<span class="postimg"><img src="'.$url.'" alt="'.forum_htmlencode($url).'" /></span>';
+		$img_tag = '<span class="postimg"><img src="'.$url.'" alt="'.forum_htmlencode($alt).'" /></span>';
 
 	return $img_tag;
 }
@@ -365,7 +368,7 @@ function handle_img_tag($url, $is_signature = false)
 //
 // Convert BBCodes to their HTML equivalent
 //
-function do_bbcode($text)
+function do_bbcode($text, $is_signature = false)
 {
 	global $lang_common, $forum_user, $forum_config;
 
@@ -394,6 +397,21 @@ function do_bbcode($text)
 					 '<a href="mailto:$1">$2</a>',
 					 '<span style="color: $1">$2</span>');
 
+	if ($forum_config['p_message_img_tag'] == '1')
+	{
+		$pattern[] = '#\[img\]((ht|f)tps?://)([^\s<"]*?)\[/img\]#e';
+		$pattern[] = '#\[img=([^\[]*?)\]((ht|f)tps?://)([^\s<"]*?)\[/img\]#e';
+		if ($is_signature)
+		{
+			$replace[] = 'handle_img_tag(\'$1$3\', true)';
+			$replace[] = 'handle_img_tag(\'$2$4\', true, \'$1\')';
+		}
+		else
+		{
+			$replace[] = 'handle_img_tag(\'$1$3\', false)';
+			$replace[] = 'handle_img_tag(\'$2$4\', false, \'$1\')';
+		}
+	}
 	// This thing takes a while! :)
 	$text = preg_replace($pattern, $replace, $text);
 
@@ -401,7 +419,6 @@ function do_bbcode($text)
 	if ($forum_config['p_message_img_tag'] == '1')
 	{
 //			$text = preg_replace('#\[img\]((ht|f)tps?://)([^\s<"]*?)\.(jpg|jpeg|png|gif)\[/img\]#e', 'handle_img_tag(\'$1$3.$4\')', $text);
-		$text = preg_replace('#\[img\]((ht|f)tps?://)([^\s<"]*?)\[/img\]#e', 'handle_img_tag(\'$1$3\')', $text);
 	}
 	
 	return $text;
@@ -521,15 +538,7 @@ function parse_signature($text)
 		$text = do_smilies($text);
 
 	if ($forum_config['p_sig_bbcode'] == '1' && strpos($text, '[') !== false && strpos($text, ']') !== false)
-	{
-		$text = do_bbcode($text);
-
-		if ($forum_config['p_sig_img_tag'] == '1')
-		{
-//			$text = preg_replace('#\[img\]((ht|f)tps?://)([^\s<"]*?)\.(jpg|jpeg|png|gif)\[/img\]#e', 'handle_img_tag(\'$1$3.$4\', true)', $text);
-			$text = preg_replace('#\[img\]((ht|f)tps?://)([^\s<"]*?)\[/img\]#e', 'handle_img_tag(\'$1$3\', true)', $text);
-		}
-	}
+		$text = do_bbcode($text, true);
 
 	// Deal with newlines, tabs and multiple spaces
 	$pattern = array("\n", "\t", '  ', '  ');
