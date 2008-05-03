@@ -502,19 +502,35 @@ function parse_message($text, $hide_smilies)
 {
 	global $forum_config, $lang_common, $forum_user;
 
+	$return = ($hook = get_hook('ps_parse_message_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+	
 	if ($forum_config['o_censoring'] == '1')
 		$text = censor_words($text);
+		
+	$return = ($hook = get_hook('ps_parse_message_post_censor')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	// Convert applicable characters to HTML entities
 	$text = forum_htmlencode($text);
+	
+	$return = ($hook = get_hook('ps_parse_message_pre_split')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
 		list($inside, $outside) = split_text($text, '[code]', '[/code]');
 		$outside = array_map('ltrim', $outside);
-		$text = implode('<">', $outside);
+		$text = implode('[%]', $outside);
 	}
+	
+	$return = ($hook = get_hook('ps_parse_message_post_split')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	if ($forum_config['o_make_links'] == '1')
 		$text = do_clickable($text);
@@ -527,15 +543,23 @@ function parse_message($text, $hide_smilies)
 		$text = do_bbcode($text);
 	}
 
+	$return = ($hook = get_hook('ps_parse_message_bbcode')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+
 	// Deal with newlines, tabs and multiple spaces
 	$pattern = array("\n", "\t", '  ', '  ');
 	$replace = array('<br />', '&nbsp; &nbsp; ', '&nbsp; ', ' &nbsp;');
 	$text = str_replace($pattern, $replace, $text);
 
+	$return = ($hook = get_hook('ps_parse_message_pre_merge')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+	
 	// If we split up the message before we have to concatenate it together again (code tags)
 	if (isset($inside))
 	{
-		$outside = explode('<">', $text);
+		$outside = explode('[%]', $text);
 		$text = '';
 
 		$num_tokens = count($outside);
@@ -547,11 +571,19 @@ function parse_message($text, $hide_smilies)
 				$text .= '</p><div class="codebox"><strong>'.$lang_common['Code'].':</strong><pre><code>'.$inside[$i].'</code></pre></div><p>';
 		}
 	}
+	
+	$return = ($hook = get_hook('ps_parse_message_post_merge')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	// Add paragraph tag around post, but make sure there are no empty paragraphs
 	$text = preg_replace('#<br />\s*?<br />(?!\s*<br />)#i', "</p><p>", $text);
 	$text = str_replace('<p></p>', '', '<p>'.$text.'</p>');
 
+	$return = ($hook = get_hook('ps_parse_message_end')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+	
 	return $text;
 }
 
