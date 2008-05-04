@@ -139,11 +139,9 @@ function preparse_tags($text, &$errors, $is_signature = false)
                 $new_text .= $current;
             continue;
         }
-		
-		$current = strtolower($current);
-        
+
         // We definitely have a bbcode tag.
-        
+		
         if ($current_ignore)
         {
             //This is if we are currently in a tag which escapes other bbcode such as code
@@ -152,6 +150,8 @@ function preparse_tags($text, &$errors, $is_signature = false)
             $new_text .= $current;
 				continue;
         }
+
+		$current = strtolower($current);
 
         if ($current_nest)
         {
