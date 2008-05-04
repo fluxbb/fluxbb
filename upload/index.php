@@ -127,10 +127,13 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 
 		++$forum_page['cat_count'];
 		$forum_page['item_count'] = 1;
+		$cur_forum['cat_head'] = forum_htmlencode($cur_forum['cat_name']);
+		
+		($hook = get_hook('in_forum_pre_cat_head')) ? eval($hook) : null;
 
 ?>
 	<div class="main-head">
-		<h2><span><?php echo forum_htmlencode($cur_forum['cat_name']) ?></span></h2>
+		<h2><span><?php echo $cur_forum['cat_head'] ?></span></h2>
 	</div>
 
 	<div id="category<?php echo $forum_page['cat_count'] ?>" class="main-content category">
