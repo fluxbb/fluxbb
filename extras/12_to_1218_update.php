@@ -23,13 +23,13 @@
 ************************************************************************/
 
 
-// This script updates the forum database from version 1.2.* to 1.2.17.
+// This script updates the forum database from version 1.2.* to 1.2.18.
 // Copy this file to the forum root directory and run it. Then remove it from
 // the root directory.
 
 
-$update_from = array('1.2', '1.2.1', '1.2.2', '1.2.3', '1.2.4', '1.2.5', '1.2.6', '1.2.7', '1.2.8', '1.2.9', '1.2.10', '1.2.11', '1.2.12', '1.2.13', '1.2.14', '1.2.15', '1.2.16');
-$update_to = '1.2.17';
+$update_from = array('1.2', '1.2.1', '1.2.2', '1.2.3', '1.2.4', '1.2.5', '1.2.6', '1.2.7', '1.2.8', '1.2.9', '1.2.10', '1.2.11', '1.2.12', '1.2.13', '1.2.14', '1.2.15', '1.2.16', '1.2.17');
+$update_to = '1.2.18';
 
 
 define('PUN_ROOT', './');
