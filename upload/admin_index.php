@@ -176,7 +176,6 @@ generate_admin_menu('index');
 					<dt>FluxBB version</dt>
 					<dd>
 						FluxBB <?php echo $pun_config['o_cur_version'] ?> - <a href="admin_index.php?action=check_upgrade">Check for upgrade</a><br />
-						&copy; Copyright 2002, 2003, 2004, 2005 Rickard Andersson
 					</dd>
 					<dt>Server load</dt>
 					<dd>
