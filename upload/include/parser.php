@@ -109,7 +109,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 			$errors[] = $lang_profile['Signature quote/code'];
 	}
 	
-	$temp_text = preparse_tags($text, &$errors, $is_signature);
+	$temp_text = preparse_tags($text, $errors, $is_signature);
 	if ($temp_text !== false)
 		$text = $temp_text;
 		
