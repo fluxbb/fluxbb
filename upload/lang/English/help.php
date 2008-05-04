@@ -27,7 +27,7 @@ $lang_help = array(
 'Quotes with name'		=>	'Quote with name',
 'Quotes without name'	=>	'Quote without name',
 'Quotes info'			=>	'To quote someone use the quote tag. You can use the quote tag without specifying a name.',
-'Quote text'			=>	'This is the text i want to quote.',
+'Quote text'			=>	'This is the text I want to quote.',
 'produces named'		=>	'produces a quote box citing the person being quoted.',
 'produces unnamed'		=>	'produces a bare quote box.',
 
