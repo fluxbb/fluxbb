@@ -481,7 +481,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		// Put back dropped search tables
 		if (!$forum_db->table_exists($forum_db->prefix.'search_cache') && ($db_type == 'mysql' || $db_type == 'mysqli'))
 		{
-			$sql = 'CREATE TABLE '.$db_prefix."search_cache (
+			$sql = 'CREATE TABLE '.$forum_db->prefix."search_cache (
 					id INT(10) UNSIGNED NOT NULL DEFAULT 0,
 					ident VARCHAR(200) NOT NULL DEFAULT '',
 					search_data TEXT,
@@ -490,7 +490,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 					
 			$forum_db->query($sql) or error(__FILE__, __LINE__);
 					
-			$sql = 'CREATE TABLE '.$db_prefix."search_matches (
+			$sql = 'CREATE TABLE '.$forum_db->prefix."search_matches (
 					post_id INT(10) UNSIGNED NOT NULL DEFAULT 0,
 					word_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0,
 					subject_match TINYINT(1) NOT NULL DEFAULT 0
@@ -498,11 +498,11 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 			
 			$forum_db->query($sql) or error(__FILE__, __LINE__);
 					
-			$sql = 'CREATE TABLE '.$db_prefix."search_words (
+			$sql = 'CREATE TABLE '.$forum_db->prefix."search_words (
 					id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 					word VARCHAR(20) BINARY NOT NULL DEFAULT '',
 					PRIMARY KEY (word),
-					KEY ".$db_prefix."search_words_id_idx (id)
+					KEY ".$forum_db->prefix."search_words_id_idx (id)
 					) ENGINE = MyISAM CHARACTER SET utf8";
 
 			$forum_db->query($sql) or error(__FILE__, __LINE__);
@@ -628,6 +628,31 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'topics DROP INDEX '.$forum_db->prefix.'topics_subject_idx') or error(__FILE__, __LINE__);
 			if ($forum_db->index_exists($forum_db->prefix.'posts', $forum_db->prefix.'posts_message_idx'))
 				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'posts DROP INDEX '.$forum_db->prefix.'posts_message_idx') or error(__FILE__, __LINE__);
+		}
+
+		// Make all IP fields VARCHAR(39) to support IPv6
+		switch ($db_type)
+		{
+			case 'mysql':
+			case 'mysqli':
+				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'posts CHANGE poster_ip poster_ip VARCHAR(39)') or error(__FILE__, __LINE__);
+				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'users CHANGE registration_ip registration_ip VARCHAR(39) NOT NULL DEFAULT \'0.0.0.0\'') or error(__FILE__, __LINE__);
+				break;
+
+			case 'pgsql':
+				$forum_db->add_field($forum_db->prefix.'posts', 'tmp_poster_ip', 'VARCHAR(39)', true, null, 'poster_ip');
+				$forum_db->query('UPDATE '.$forum_db->prefix.'posts SET tmp_poster_ip = poster_ip') or error(__FILE__, __LINE__);
+				$forum_db->drop_field($forum_db->prefix.'posts', 'poster_ip');
+				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'posts RENAME COLUMN tmp_poster_ip TO poster_ip') or error(__FILE__, __LINE__);
+
+				$forum_db->add_field($forum_db->prefix.'users', 'tmp_registration_ip', 'VARCHAR(39)', false, '0.0.0.0', 'registration_ip');
+				$forum_db->query('UPDATE '.$forum_db->prefix.'users SET tmp_registration_ip = registration_ip') or error(__FILE__, __LINE__);
+				$forum_db->drop_field($forum_db->prefix.'users', 'registration_ip');
+				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'users RENAME COLUMN tmp_registration_ip TO registration_ip') or error(__FILE__, __LINE__);
+				break;
+
+			case 'sqlite':
+				break;
 		}
 
 		// Add the DST option to the users table

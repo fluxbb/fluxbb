@@ -332,8 +332,11 @@ function check_bans()
 	if (defined('FORUM_ADMIN') && $forum_user['g_id'] == FORUM_ADMIN || !$forum_bans)
 		return;
 
-	// Add a dot at the end of the IP address to prevent banned address 192.168.0.5 from matching e.g. 192.168.0.50
-	$user_ip = get_remote_address().'.';
+	// Add a dot or a colon (depending on IPv4/IPv6) at the end of the IP address to prevent banned address
+	// 192.168.0.5 from matching e.g. 192.168.0.50
+	$user_ip = get_remote_address();
+	$user_ip .= (strpos($user_ip, '.') !== false) ? '.' : ':';
+
 	$bans_altered = false;
 
 	foreach ($forum_bans as $cur_ban)
@@ -373,7 +376,15 @@ function check_bans()
 			$num_ips = count($cur_ban_ips);
 			for ($i = 0; $i < $num_ips; ++$i)
 			{
-				$cur_ban_ips[$i] = $cur_ban_ips[$i].'.';
+				// Both the ban and the IP match IPv4
+				if (strpos($cur_ban_ips[$i], '.') !== false && strpos($user_ip, '.') !== false)
+					$cur_ban_ips[$i] = $cur_ban_ips[$i].'.';
+				// Both the ban and the IP match IPv6
+				else if (strpos($cur_ban_ips[$i], ':') !== false && strpos($user_ip, ':') !== false)
+					$cur_ban_ips[$i] = $cur_ban_ips[$i].':';
+				// The ban and the IP are not using the same system
+				else
+					continue;
 
 				if (substr($user_ip, 0, strlen($cur_ban_ips[$i])) == $cur_ban_ips[$i])
 				{
