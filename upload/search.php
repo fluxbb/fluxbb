@@ -71,10 +71,10 @@ elseif (isset($_GET['action']))
 		$search_in = (!isset($_GET['search_in']) || $_GET['search_in'] == 'all') ? 0 : (($_GET['search_in'] == 'message') ? 1 : -1);
 		$forum = (isset($_GET['forum'])) ? intval($_GET['forum']) : -1;
 
-		if (preg_match('#^[\*%]+$#', $keywords) || (forum_strlen(str_replace(array('*', '%'), '', $keywords)) < 3))
+		if (preg_match('#^[\*%]+$#', $keywords))
 			$keywords = '';
 
-		if (preg_match('#^[\*%]+$#', $author) || forum_strlen(str_replace(array('*', '%'), '', $author)) < 2)
+		if (preg_match('#^[\*%]+$#', $author))
 			$author = '';
 
 		if (!$keywords && !$author)

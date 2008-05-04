@@ -37,6 +37,15 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = -1
 	$return = ($hook = get_hook('sf_create_search_cache_start')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
+		
+	if (forum_strlen(str_replace(array('*', '%'), '', $author)) < 2)
+		$author = '';
+	
+	if (forum_strlen(str_replace(array('*', '%'), '', $keywords)) < 3)
+		$keywords = '';
+
+	if (!$keywords && !$author)
+		message($lang_search['No terms']);
 	
 	// Flood protection
 	if (!$forum_user['is_guest'] && $forum_user['last_search'] != '' && (time() - $forum_user['last_search']) < $forum_user['g_search_flood'] && (time() - $forum_user['last_search']) >= 0)
