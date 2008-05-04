@@ -326,7 +326,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 //
 // Split text into chunks ($inside contains all text inside $start and $end, and $outside contains all text outside)
 //
-function split_text($text, $start, $end)
+function split_text($text, $start, $end, $retab = true)
 {
 	global $forum_config;
 
@@ -342,7 +342,7 @@ function split_text($text, $start, $end)
 		$outside[] = $temp[1];
 	}
 
-	if ($forum_config['o_indent_num_spaces'] != 8 && $start == '[code]')
+	if ($forum_config['o_indent_num_spaces'] != 8 && $retab)
 	{
 		$spaces = str_repeat(' ', $forum_config['o_indent_num_spaces']);
 		$inside = str_replace("\t", $spaces, $inside);
