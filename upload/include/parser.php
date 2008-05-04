@@ -47,60 +47,6 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	if ($return != null)
 		return $return;
 
-	// Change all simple BBCodes to lower case
-	$a = array('[B]', '[I]', '[U]', '[/B]', '[/I]', '[/U]');
-	$b = array('[b]', '[i]', '[u]', '[/b]', '[/i]', '[/u]');
-	
-	$return = ($hook = get_hook('ps_preparse_bbcode_str_replace')) ? eval($hook) : null;
-	if ($return != null)
-		return $return;
-	
-	$text = str_replace($a, $b, $text);
-
-	// Do the more complex BBCodes (also strip excessive whitespace and useless quotes)
-	$a = array( '#\[url=("|\'|)(.*?)\\1\]\s*#i',
-				'#\[url\]\s*#i',
-				'#\s*\[/url\]#i',
-				'#\[img=("|\'|)(.*?)\\1\]\s*#i',
-				'#\[img\]\s*#i',
-				'#\s*\[/img\]#i',
-				'#\[email=("|\'|)(.*?)\\1\]\s*#i',
-				'#\[email\]\s*#i',
-				'#\s*\[/email\]#i',
-				'#\[colou?r=("|\'|)(.*?)\\1\](.*?)\[/colou?r\]#is');
-
-	$b = array(	'[url=$2]',
-				'[url]',
-				'[/url]',
-				'[img=$2]',
-				'[img]',
-				'[/img]',
-				'[email=$2]',
-				'[email]',
-				'[/email]',
-				'[color=$2]$3[/color]');
-
-	if (!$is_signature)
-	{
-		// For non-signatures, we have to do the quote and code tags as well
-		$a[] = '#\[quote=(&quot;|"|\'|)(.*?)\\1\]\s*#i';
-		$a[] = '#\[quote\]\s*#i';
-		$a[] = '#\s*\[/quote\]\s*#i';
-		$a[] = '#\[code\][\r\n]*(.*?)\s*\[/code\]\s*#is';
-
-		$b[] = '[quote=$1$2$1]';
-		$b[] = '[quote]';
-		$b[] = '[/quote]'."\n";
-		$b[] = '[code]$1[/code]'."\n";
-	}
-
-	$return = ($hook = get_hook('ps_preparse_bbcode_preg_replace')) ? eval($hook) : null;
-	if ($return != null)
-		return $return;
-	
-	// Run this baby!
-	$text = preg_replace($a, $b, $text);
-
 	if ($is_signature)
 	{
 		global $lang_profile;
@@ -127,7 +73,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
     // Start off by making some arrays of bbcode tags and what we need to do with each one
     
     // List of all the tags
-    $tags = array('quote','code','b','i','u','color','url','email','img');
+    $tags = array('quote','code','b','i','u','color','colour','url','email','img');
     // List of tags that we need to check are open (You could not put b,i,u in here then illegal nesting like [b][i][/b][/i] would be allowed)
     $tags_opened = $tags;
     // and tags we need to check are closed (the same as above, added it just in case)
@@ -139,6 +85,10 @@ function preparse_tags($text, &$errors, $is_signature = false)
     $tags_ignore = array('code');
     // Block tags, block tags can only go within another block tag, they cannot be in a normal tag
     $tags_block = array('quote','code');
+	// Tags we trim interior whitespace
+	$tags_trim = array('url','email','image');
+	// Tags we remove quotes from the argument
+	$tags_quotes = array('url','email','image');
 	
 	$return = ($hook = get_hook('ps_preparse_tags_start')) ? eval($hook) : null;
 	if ($return != null)
@@ -159,7 +109,10 @@ function preparse_tags($text, &$errors, $is_signature = false)
         {
             // Its not a bbcode tag so we put it on the end and continue
             if (!$current_nest)
-                $new_text .= $current;
+				if (in_array($open_tags[$opened_tag],$tags_trim))
+					$new_text .= trim($current);
+				else
+					$new_text .= $current;
             continue;
         }
         
@@ -176,6 +129,8 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			$current_tag = substr($current,1,strpos($current, '=')-1);
 			$current_arg = substr($current,strpos($current, '=')+1,-1);
 		}
+		
+		$current_tag = strtolower($current_tag);
 
         if (!in_array($current_tag, $tags))
         {
@@ -184,6 +139,8 @@ function preparse_tags($text, &$errors, $is_signature = false)
                 $new_text .= $current;
             continue;
         }
+		
+		$current = strtolower($current);
         
         // We definitely have a bbcode tag.
         
@@ -293,6 +250,10 @@ function preparse_tags($text, &$errors, $is_signature = false)
                     continue;
                 }
             }
+			if (strpos($current,'=') !== false && in_array($current_tag,$tags_quotes)) {
+				$current = preg_replace('#\['.$current_tag.'=("|\'|)(.*?)\\1\]\s*#i', '['.$current_tag.'=$2]', $current);
+			}
+
             $open_tags[] = $current_tag;
             $opened_tag++;
             $new_text .= $current;
@@ -420,7 +381,7 @@ function do_bbcode($text, $is_signature = false)
 					 '#\[url=([^\[]*?)\](.*?)\[/url\]#e',
 					 '#\[email\]([^\[]*?)\[/email\]#',
 					 '#\[email=([^\[]*?)\](.*?)\[/email\]#',
-					 '#\[color=([a-zA-Z]*|\#?[0-9a-fA-F]{6})](.*?)\[/color\]#s');
+					 '#\[colou?r=([a-zA-Z]*|\#?[0-9a-fA-F]{6})](.*?)\[/colou?r\]#s');
 
 	$replace = array('<strong>$1</strong>',
 					 '<em>$1</em>',
