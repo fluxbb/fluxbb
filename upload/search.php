@@ -430,6 +430,13 @@ if (!$forum_user['is_guest'])
 		 $forum_page['pd_searches']['subscriptions'] = '<a href="'.forum_link($forum_url['search_subscriptions'], $forum_user['id']).'">'.$lang_common['Your subscriptions'].'</a>';
 }
 
+// Setup sort by options
+$forum_page['frm-sort'] = array();
+$forum_page['frm-sort'][0] = '<option value="0">'.$lang_search['Sort by post time'].'</option>';
+$forum_page['frm-sort'][1] = '<option value="1">'.$lang_search['Sort by author'].'</option>';
+$forum_page['frm-sort'][2] = '<option value="2">'.$lang_search['Sort by subject'].'</option>';
+$forum_page['frm-sort'][3] = '<option value="3">'.$lang_search['Sort by forum'].'</option>';
+
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
 	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
@@ -545,10 +552,7 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_search['Sort by'] ?></span><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="sort_by">
-						<option value="0"><?php echo $lang_search['Sort by post time'] ?></option>
-						<option value="1"><?php echo $lang_search['Sort by author'] ?></option>
-						<option value="2"><?php echo $lang_search['Sort by subject'] ?></option>
-						<option value="3"><?php echo $lang_search['Sort by forum'] ?></option>
+						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['frm-sort'])."\n" ?>
 						</select></span><br />
 					</label>
 				</div>
