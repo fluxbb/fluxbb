@@ -381,7 +381,7 @@ function do_bbcode($text, $is_signature = false)
 					 '#\[url=([^\[]*?)\](.*?)\[/url\]#e',
 					 '#\[email\]([^\[]*?)\[/email\]#',
 					 '#\[email=([^\[]*?)\](.*?)\[/email\]#',
-					 '#\[colou?r=([a-zA-Z]*|\#?[0-9a-fA-F]{6})](.*?)\[/colou?r\]#s');
+					 '#\[colou?r=([a-zA-Z]{3,20}|\#?[0-9a-fA-F]{6})](.*?)\[/colou?r\]#s');
 
 	$replace = array('<strong>$1</strong>',
 					 '<em>$1</em>',
