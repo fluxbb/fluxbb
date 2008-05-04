@@ -109,10 +109,13 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		{
 			// Its not a bbcode tag so we put it on the end and continue
 			if (!$current_nest)
+			{
 				if (in_array($open_tags[$opened_tag], $tags_trim))
 					$new_text .= trim($current);
 				else
 					$new_text .= $current;
+			}
+
 			continue;
 		}
 		
@@ -137,18 +140,20 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			// Its not a bbcode tag so we put it on the end and continue
 			if (!$current_nest)
 				$new_text .= $current;
+
 			continue;
 		}
 
 		// We definitely have a bbcode tag.
-
 		if ($current_ignore)
 		{
 			//This is if we are currently in a tag which escapes other bbcode such as code
 			if ($current_ignore == $current_tag && $current == '[/'.$current_ignore.']') 
 				$current_ignore = '';
+
 			$new_text .= $current;
-				continue;
+
+			continue;
 		}
 
 		$current = strtolower($current);
@@ -198,7 +203,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 						$errors[] = sprintf($lang_common['BBCode error 2'], $current_tag, $open_tags[$opened_tag]);
 						return false;
 					}
-					elseif (in_array($open_tags[$opened_tag], $tags_closed))
+					else if (in_array($open_tags[$opened_tag], $tags_closed))
 						break;
 					else
 					{
@@ -207,11 +212,13 @@ function preparse_tags($text, &$errors, $is_signature = false)
 					}
 				}
 			}
+
 			if (in_array($current_tag, $tags_nested))
 			{
 				if (isset($current_depth[$current_tag]))
 					$current_depth[$current_tag]--;
 			}
+
 			$new_text .= $current;
 			continue;
 		}
@@ -224,6 +231,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 				$errors[] = sprintf($lang_common['BBCode error 3'], $current_tag, $open_tags[$opened_tag]);
 				return false;
 			}
+
 			if (in_array($current_tag, $tags_ignore))
 			{
 				// Its an ignore tag so we don't need to worry about whats inside it,
@@ -231,12 +239,14 @@ function preparse_tags($text, &$errors, $is_signature = false)
 				$new_text .= $current;
 				continue;
 			}
+
 			if (in_array($current_tag, $open_tags) && !in_array($current_tag, $tags_nested))
 			{
 				// We tried to open a tag within itself that shouldn't be allowed.
 				$errors[] = sprintf($lang_common['BBCode error 4'], $current_tag);
 				return false;
 			}
+
 			if (in_array($current_tag, $tags_nested))
 			{
 				if (isset($current_depth[$current_tag]))
@@ -250,7 +260,9 @@ function preparse_tags($text, &$errors, $is_signature = false)
 					continue;
 				}
 			}
-			if (strpos($current, '=') !== false && in_array($current_tag, $tags_quotes)) {
+
+			if (strpos($current, '=') !== false && in_array($current_tag, $tags_quotes))
+			{
 				$current = preg_replace('#\['.$current_tag.'=("|\'|)(.*?)\\1\]\s*#i', '['.$current_tag.'=$2]', $current);
 			}
 
@@ -260,6 +272,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			continue;
 		}
 	}
+
 	// Check we closed all the tags we needed to
 	foreach ($tags_closed as $check)
 	{
@@ -270,6 +283,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			return false;
 		}
 	}
+
 	if ($current_ignore)
 	{
 		// We left an ignore tag open
