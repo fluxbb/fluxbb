@@ -278,11 +278,14 @@ function generate_hooks_cache()
 	$output = array();
 	while ($cur_hook = $forum_db->fetch_assoc($result))
 	{
-		$ext_info = '$ext_info = array('."\n".
+		$load_ext_info = '$ext_info_stack[] = array('."\n".
 			'\'id\'		=> \''.$cur_hook['extension_id'].'\','."\n".
 			'\'path\'	=> FORUM_ROOT.\'extensions/'.$cur_hook['extension_id'].'\','."\n".
-			'\'url\'	=> $GLOBALS[\'base_url\'].\'/extensions/'.$cur_hook['extension_id'].'\');';
-		$output[$cur_hook['id']][] = $ext_info."\n\n".$cur_hook['code']."\n";
+			'\'url\'	=> $GLOBALS[\'base_url\'].\'/extensions/'.$cur_hook['extension_id'].'\');'."\n".'
+			$ext_info = $ext_info_stack[count($ext_info_stack) - 1];';
+		$unload_ext_info = 'array_pop($ext_info_stack);'."\n".'$ext_info = empty($ext_info_stack) ? array() : $ext_info_stack[count($ext_info_stack) - 1];';
+
+		$output[$cur_hook['id']][] = $load_ext_info."\n\n".$cur_hook['code']."\n\n".$unload_ext_info."\n";
 	}
 
 	// Output hooks as PHP code
