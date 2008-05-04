@@ -54,68 +54,68 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 		if (preg_match('#\[quote=(&quot;|"|\'|)(.*)\\1\]|\[quote\]|\[/quote\]|\[code\]|\[/code\]#i', $text))
 			$errors[] = $lang_profile['Signature quote/code'];
 	}
-	
+
 	$temp_text = preparse_tags($text, $errors, $is_signature);
 	if ($temp_text !== false)
 		$text = $temp_text;
-		
+
 	$return = ($hook = get_hook('ps_preparse_bbcode_end')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-		
+
 	return trim($text);
 }
 
 function preparse_tags($text, &$errors, $is_signature = false)
 {
 	global $lang_common;
+
+	// Start off by making some arrays of bbcode tags and what we need to do with each one
 	
-    // Start off by making some arrays of bbcode tags and what we need to do with each one
-    
-    // List of all the tags
-    $tags = array('quote','code','b','i','u','color','colour','url','email','img');
-    // List of tags that we need to check are open (You could not put b,i,u in here then illegal nesting like [b][i][/b][/i] would be allowed)
-    $tags_opened = $tags;
-    // and tags we need to check are closed (the same as above, added it just in case)
-    $tags_closed = $tags;
-    // Tags we can nest and the depth they can be nested to (only quotes )
-    $tags_nested = array('quote');
-    $tags_nested_depth = array('quote' => 3);
-    // Tags to ignore the contents of completely (just code)
-    $tags_ignore = array('code');
-    // Block tags, block tags can only go within another block tag, they cannot be in a normal tag
-    $tags_block = array('quote','code');
+	// List of all the tags
+	$tags = array('quote', 'code', 'b', 'i', 'u', 'color', 'colour', 'url', 'email', 'img');
+	// List of tags that we need to check are open (You could not put b,i,u in here then illegal nesting like [b][i][/b][/i] would be allowed)
+	$tags_opened = $tags;
+	// and tags we need to check are closed (the same as above, added it just in case)
+	$tags_closed = $tags;
+	// Tags we can nest and the depth they can be nested to (only quotes )
+	$tags_nested = array('quote');
+	$tags_nested_depth = array('quote' => 3);
+	// Tags to ignore the contents of completely (just code)
+	$tags_ignore = array('code');
+	// Block tags, block tags can only go within another block tag, they cannot be in a normal tag
+	$tags_block = array('quote', 'code');
 	// Tags we trim interior whitespace
-	$tags_trim = array('url','email','image');
+	$tags_trim = array('url', 'email', 'image');
 	// Tags we remove quotes from the argument
-	$tags_quotes = array('url','email','image');
-	
+	$tags_quotes = array('url', 'email', 'image');
+
 	$return = ($hook = get_hook('ps_preparse_tags_start')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
 
-    $split_text = preg_split("/(\[.*?\])/", $text, -1, PREG_SPLIT_DELIM_CAPTURE);
-    
-    $open_tags = array('post');
-    $opened_tag = 0;
-    $new_text = '';
-    $current_ignore = '';
-    $current_nest = '';
-    $current_depth = array();
-    
-    foreach($split_text as $current)
-    {
-        if (strpos($current, '[') === false && strpos($current, ']') === false)
-        {
-            // Its not a bbcode tag so we put it on the end and continue
-            if (!$current_nest)
-				if (in_array($open_tags[$opened_tag],$tags_trim))
+	$split_text = preg_split("/(\[.*?\])/", $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+	
+	$open_tags = array('post');
+	$opened_tag = 0;
+	$new_text = '';
+	$current_ignore = '';
+	$current_nest = '';
+	$current_depth = array();
+	
+	foreach ($split_text as $current)
+	{
+		if (strpos($current, '[') === false && strpos($current, ']') === false)
+		{
+			// Its not a bbcode tag so we put it on the end and continue
+			if (!$current_nest)
+				if (in_array($open_tags[$opened_tag], $tags_trim))
 					$new_text .= trim($current);
 				else
 					$new_text .= $current;
-            continue;
-        }
-        
+			continue;
+		}
+		
 		if (strpos($current, '/') === 1)
 		{
 			$current_tag = substr($current, 2, -1);
@@ -129,159 +129,159 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			$current_tag = substr($current,1,strpos($current, '=')-1);
 			$current_arg = substr($current,strpos($current, '=')+1,-1);
 		}
-		
+
 		$current_tag = strtolower($current_tag);
 
-        if (!in_array($current_tag, $tags))
-        {
-            // Its not a bbcode tag so we put it on the end and continue
-            if (!$current_nest)
-                $new_text .= $current;
-            continue;
-        }
+		if (!in_array($current_tag, $tags))
+		{
+			// Its not a bbcode tag so we put it on the end and continue
+			if (!$current_nest)
+				$new_text .= $current;
+			continue;
+		}
 
-        // We definitely have a bbcode tag.
-		
-        if ($current_ignore)
-        {
-            //This is if we are currently in a tag which escapes other bbcode such as code
-            if ($current_ignore == $current_tag && $current == '[/'.$current_ignore.']') 
-                $current_ignore = '';
-            $new_text .= $current;
+		// We definitely have a bbcode tag.
+
+		if ($current_ignore)
+		{
+			//This is if we are currently in a tag which escapes other bbcode such as code
+			if ($current_ignore == $current_tag && $current == '[/'.$current_ignore.']') 
+				$current_ignore = '';
+			$new_text .= $current;
 				continue;
-        }
+		}
 
 		$current = strtolower($current);
 
-        if ($current_nest)
-        {
-            // We are currently too deeply nested so lets see if we are closing the tag or not.
-            if ($current_tag != $current_nest)
-                continue;
-                
-            if (substr($current, 1, 1) == '/')
-                $current_depth[$current_nest]--;
-            else
-                $current_depth[$current_nest]++;
-            
-            if ($current_depth[$current_nest] <= $tags_nested_depth[$current_nest])
-                $current_nest = '';
+		if ($current_nest)
+		{
+			// We are currently too deeply nested so lets see if we are closing the tag or not.
+			if ($current_tag != $current_nest)
+				continue;
+				
+			if (substr($current, 1, 1) == '/')
+				$current_depth[$current_nest]--;
+			else
+				$current_depth[$current_nest]++;
+			
+			if ($current_depth[$current_nest] <= $tags_nested_depth[$current_nest])
+				$current_nest = '';
 
-            continue;
-        }
+			continue;
+		}
 
-        if (substr($current, 1, 1) == '/')
-        {
-            //This is if we are closing a tag
-            if ($opened_tag == 0 || !in_array($current_tag,$open_tags))
-            {
-                //We tried to close a tag which is not open 
-                if (in_array($current_tag, $tags_opened))
-                {
-                    $errors[] = sprintf($lang_common['BBCode error 1'], $current_tag);
-                    return false;
-                }
-            }
-            else
-            {
-                while (true)
-                {
-                    if ($open_tags[$opened_tag] == $current_tag)
-                    {
-                        array_pop($open_tags);
-                        $opened_tag--;
-                        break;
-                    }
-                    
-                    if (in_array($open_tags[$opened_tag],$tags_closed) && in_array($current_tag,$tags_closed))
-                    {
-                        $errors[] = sprintf($lang_common['BBCode error 2'], $current_tag, $open_tags[$opened_tag]);
-                        return false;
-                    }
-                    elseif (in_array($open_tags[$opened_tag],$tags_closed))
-                        break;
-                    else
-                    {
-                        array_pop($open_tags);
-                        $opened_tag--;
-                    }
-                }
-            }
-            if (in_array($current_tag,$tags_nested))
-            {
-                if (isset($current_depth[$current_tag]))
-                    $current_depth[$current_tag]--;
-            }
-            $new_text .= $current;
-            continue;
-        }
-        else
-        {
-            // We are opening a tag
-            if (in_array($current_tag,$tags_block) && !in_array($open_tags[$opened_tag],$tags_block) && $opened_tag != 0)
-            {
-                // We tried to open a block tag within a non-block tag
-                $errors[] = sprintf($lang_common['BBCode error 3'], $current_tag, $open_tags[$opened_tag]);
-                return false;
-            }
-            if (in_array($current_tag,$tags_ignore))
-            {
-                // Its an ignore tag so we don't need to worry about whats inside it,
-                $current_ignore = $current_tag;
-                $new_text .= $current;
-                continue;
-            }
-            if (in_array($current_tag,$open_tags) && !in_array($current_tag,$tags_nested))
-            {
-                // We tried to open a tag within itself that shouldn't be allowed.
-                $errors[] = sprintf($lang_common['BBCode error 4'], $current_tag);
-                return false;
-            }
-            if (in_array($current_tag,$tags_nested))
-            {
-                if (isset($current_depth[$current_tag]))
-                    $current_depth[$current_tag]++;
-                else
-                    $current_depth[$current_tag] = 1;
-                    
-                if ($current_depth[$current_tag] > $tags_nested_depth[$current_tag])
-                {
-                    $current_nest = $current_tag;
-                    continue;
-                }
-            }
-			if (strpos($current,'=') !== false && in_array($current_tag,$tags_quotes)) {
+		if (substr($current, 1, 1) == '/')
+		{
+			//This is if we are closing a tag
+			if ($opened_tag == 0 || !in_array($current_tag, $open_tags))
+			{
+				//We tried to close a tag which is not open 
+				if (in_array($current_tag, $tags_opened))
+				{
+					$errors[] = sprintf($lang_common['BBCode error 1'], $current_tag);
+					return false;
+				}
+			}
+			else
+			{
+				while (true)
+				{
+					if ($open_tags[$opened_tag] == $current_tag)
+					{
+						array_pop($open_tags);
+						$opened_tag--;
+						break;
+					}
+					
+					if (in_array($open_tags[$opened_tag], $tags_closed) && in_array($current_tag, $tags_closed))
+					{
+						$errors[] = sprintf($lang_common['BBCode error 2'], $current_tag, $open_tags[$opened_tag]);
+						return false;
+					}
+					elseif (in_array($open_tags[$opened_tag], $tags_closed))
+						break;
+					else
+					{
+						array_pop($open_tags);
+						$opened_tag--;
+					}
+				}
+			}
+			if (in_array($current_tag, $tags_nested))
+			{
+				if (isset($current_depth[$current_tag]))
+					$current_depth[$current_tag]--;
+			}
+			$new_text .= $current;
+			continue;
+		}
+		else
+		{
+			// We are opening a tag
+			if (in_array($current_tag, $tags_block) && !in_array($open_tags[$opened_tag], $tags_block) && $opened_tag != 0)
+			{
+				// We tried to open a block tag within a non-block tag
+				$errors[] = sprintf($lang_common['BBCode error 3'], $current_tag, $open_tags[$opened_tag]);
+				return false;
+			}
+			if (in_array($current_tag, $tags_ignore))
+			{
+				// Its an ignore tag so we don't need to worry about whats inside it,
+				$current_ignore = $current_tag;
+				$new_text .= $current;
+				continue;
+			}
+			if (in_array($current_tag, $open_tags) && !in_array($current_tag, $tags_nested))
+			{
+				// We tried to open a tag within itself that shouldn't be allowed.
+				$errors[] = sprintf($lang_common['BBCode error 4'], $current_tag);
+				return false;
+			}
+			if (in_array($current_tag, $tags_nested))
+			{
+				if (isset($current_depth[$current_tag]))
+					$current_depth[$current_tag]++;
+				else
+					$current_depth[$current_tag] = 1;
+					
+				if ($current_depth[$current_tag] > $tags_nested_depth[$current_tag])
+				{
+					$current_nest = $current_tag;
+					continue;
+				}
+			}
+			if (strpos($current, '=') !== false && in_array($current_tag, $tags_quotes)) {
 				$current = preg_replace('#\['.$current_tag.'=("|\'|)(.*?)\\1\]\s*#i', '['.$current_tag.'=$2]', $current);
 			}
 
-            $open_tags[] = $current_tag;
-            $opened_tag++;
-            $new_text .= $current;
-            continue;
-        }
-    }
-    // Check we closed all the tags we needed to
-    foreach($tags_closed as $check)
-    {
-        if (in_array($check,$open_tags))
-        {
-            // We left an important tag open
-            $errors[] = sprintf($lang_common['BBCode error 5'], $check);
-            return false;
-        }
-    }
-    if ($current_ignore)
-    {
-        // We left an ignore tag open
+			$open_tags[] = $current_tag;
+			$opened_tag++;
+			$new_text .= $current;
+			continue;
+		}
+	}
+	// Check we closed all the tags we needed to
+	foreach ($tags_closed as $check)
+	{
+		if (in_array($check, $open_tags))
+		{
+			// We left an important tag open
+			$errors[] = sprintf($lang_common['BBCode error 5'], $check);
+			return false;
+		}
+	}
+	if ($current_ignore)
+	{
+		// We left an ignore tag open
 		$errors[] = sprintf($lang_common['BBCode error 5'], $current_ignore);
-        return false;
-    }
+		return false;
+	}
 
 	$return = ($hook = get_hook('ps_preparse_tags_end')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-	
-    return $new_text;
+
+	return $new_text;
 }
 
 //
@@ -344,7 +344,7 @@ function handle_img_tag($url, $is_signature = false, $alt=null)
 
 	if ($alt == null)
 		$alt = $url;
-	
+
 	$img_tag = '<a href="'.$url.'">&lt;'.$lang_common['Image link'].'&gt;</a>';
 
 	if ($is_signature && $forum_user['show_img_sig'] != '0')
@@ -362,7 +362,7 @@ function handle_img_tag($url, $is_signature = false, $alt=null)
 function do_bbcode($text, $is_signature = false)
 {
 	global $lang_common, $forum_user, $forum_config;
-	
+
 	$return = ($hook = get_hook('ps_do_bbcode_start')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
@@ -411,14 +411,14 @@ function do_bbcode($text, $is_signature = false)
 	$return = ($hook = get_hook('ps_do_bbcode_replace')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-		
+
 	// This thing takes a while! :)
 	$text = preg_replace($pattern, $replace, $text);
-	
+
 	$return = ($hook = get_hook('ps_do_bbcode_end')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-		
+
 	return $text;
 }
 
@@ -466,17 +466,17 @@ function parse_message($text, $hide_smilies)
 	$return = ($hook = get_hook('ps_parse_message_start')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-	
+
 	if ($forum_config['o_censoring'] == '1')
 		$text = censor_words($text);
-		
+
 	$return = ($hook = get_hook('ps_parse_message_post_censor')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
 
 	// Convert applicable characters to HTML entities
 	$text = forum_htmlencode($text);
-	
+
 	$return = ($hook = get_hook('ps_parse_message_pre_split')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
@@ -488,7 +488,7 @@ function parse_message($text, $hide_smilies)
 		$outside = array_map('ltrim', $outside);
 		$text = implode('[%]', $outside);
 	}
-	
+
 	$return = ($hook = get_hook('ps_parse_message_post_split')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
@@ -516,7 +516,7 @@ function parse_message($text, $hide_smilies)
 	$return = ($hook = get_hook('ps_parse_message_pre_merge')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-	
+
 	// If we split up the message before we have to concatenate it together again (code tags)
 	if (isset($inside))
 	{
@@ -532,7 +532,7 @@ function parse_message($text, $hide_smilies)
 				$text .= '</p><div class="codebox"><strong>'.$lang_common['Code'].':</strong><pre><code>'.$inside[$i].'</code></pre></div><p>';
 		}
 	}
-	
+
 	$return = ($hook = get_hook('ps_parse_message_post_merge')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
@@ -544,7 +544,7 @@ function parse_message($text, $hide_smilies)
 	$return = ($hook = get_hook('ps_parse_message_end')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-	
+
 	return $text;
 }
 
