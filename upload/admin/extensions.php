@@ -61,7 +61,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 	if (isset($_GET['install']))
 		$manifest = @file_get_contents(FORUM_ROOT.'extensions/'.$id.'/manifest.xml');
 	else
-		$manifest = @end(get_remote_file('http://flux.org/update/manifest/'.$id.'.xml', 16));
+		$manifest = @end(get_remote_file('http://fluxbb.org/update/manifest/'.$id.'.xml', 16));
 
 	// Parse manifest.xml into an array and validate it
 	$ext_data = xml_to_array($manifest);
