@@ -1132,8 +1132,12 @@ else if (isset($_POST['form_sent']))
 		}
 	}
 
+	$skip_db_update_sections = array('avatar');
+
+	($hook = get_hook('pf_change_details_pre_database_validation')) ? eval($hook) : null;
+
 	// All sections apart from avatar potentially affect the database
-	if (($section != 'avatar') && empty($errors))
+	if (!in_array($section, $skip_db_update_sections) && empty($errors))
 	{
 		($hook = get_hook('pf_change_details_database_validation')) ? eval($hook) : null;
 
