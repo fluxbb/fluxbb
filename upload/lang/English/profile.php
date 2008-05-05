@@ -57,7 +57,6 @@ $lang_profile = array(
 'Avatar info size'			=>	'The maximum image size allowed is %sx%s pixels and %s bytes (%s KB).',
 'Delete avatar'				=>	'Delete avatar file',
 'Upload avatar file'		=>	'Upload avatar file:',
-'Remove avatar file'		=>	'Delete avatar file:',
 'Avatar upload help'		=>	'(Select file then update your profile to install)',
 
 // About and Identity sections

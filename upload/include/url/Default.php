@@ -82,7 +82,6 @@ $forum_url = array(
 	'topic_new_posts'				=>	'viewtopic.php?id=$1&amp;action=new',
 	'topic_last_post'				=>	'viewtopic.php?id=$1&amp;action=last',
 	'unsubscribe'					=>	'misc.php?unsubscribe=$1&amp;csrf_token=$2',
-	'upload_avatar'					=>	'profile.php?action=upload_avatar&amp;id=$1',
 	'user'							=>	'profile.php?id=$1',
 	'users'							=>	'userlist.php',
 	'users_browse'					=>	'userlist.php?show_group=$1&amp;sort_by=$2&amp;sort_dir=$3&amp;username=$4',

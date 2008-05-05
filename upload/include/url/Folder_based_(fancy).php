@@ -79,7 +79,6 @@ $forum_url = array(
 	'topic_new_posts'				=>	'topic/$1/$2/new/posts/',
 	'topic_last_post'				=>	'topic/$1/last/post/',
 	'unsubscribe'					=>	'unsubscribe/$1/$2/',
-	'upload_avatar'					=>	'upload/avatar/$1/',
 	'user'							=>	'user/$1/',
 	'users'							=>	'users/',
 	'users_browse'					=>	'users/$4/$1/$2/$3/',
