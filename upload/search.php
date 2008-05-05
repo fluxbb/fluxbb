@@ -120,8 +120,7 @@ if (isset($query))
 
 	// Work out the settings for pagination
 	$forum_page['per_page'] = ($show_as == 'posts') ? $forum_user['disp_posts'] : $forum_user['disp_topics'];
-	$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
-
+	
 	// We now have a query that will give us our results in $query, lets get the data!
 	$num_hits = get_search_results($query, $search_set, $forum_page);
 
