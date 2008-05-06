@@ -2043,7 +2043,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 
 		$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
 		if ($forum_user['is_admmod'])
-			$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+			$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
 
 		// Setup help
 		$forum_page['main_head_options'] = array();
