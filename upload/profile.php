@@ -1892,7 +1892,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 			echo "\t\t\t\t\t\t".'<option value="'.$key.'"';
 			if ($user['time_format'] == $key)
 				echo ' selected="selected"';
-			echo '>'. gmdate($time_format);
+			echo '>'. gmdate($time_format, time() + (($forum_user['timezone'] + $forum_user['dst']) * 3600));
 			if ($key == 0)
 				echo ' ('.$lang_profile['Default'].')';
 			echo "</option>\n";
