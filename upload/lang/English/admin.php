@@ -63,6 +63,7 @@ $lang_admin = array(
 'Size'							=>	'Size',
 'phpinfo disabled'				=>	'The PHP function phpinfo() has been disabled on this server.',
 'Alerts'						=>	'Administrator Alerts',
+'Not applicable'				=>	'N/A',
 
 // Start-Categories
 'Add category head'				=>	'Add category (create a new category at the specified position)',

@@ -167,7 +167,7 @@ else if (ini_get('eaccelerator.enable'))
 else if (ini_get('xcache.cacher'))
 	$php_accelerator = '<a href="http://trac.lighttpd.net/xcache/">XCache</a>';
 else
-	$php_accelerator = 'N/A';
+	$php_accelerator = $lang_admin['Not applicable'];
 
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
