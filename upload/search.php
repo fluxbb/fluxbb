@@ -101,7 +101,7 @@ elseif (isset($_GET['action']))
 		$show_as = 'topics';
 
 		// Check we're allowed to see the subscriptions we're trying to look at
-		if ($action == 'show_subscriptions' && $forum_user['g_id'] != FORUM_ADMIN && $pun_user['id'] != $value)
+		if ($action == 'show_subscriptions' && $forum_user['g_id'] != FORUM_ADMIN && $forum_user['id'] != $value)
 			message($lang_common['Bad request']);
 
 		// Generate the query for the search
