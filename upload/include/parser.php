@@ -144,6 +144,10 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			continue;
 		}
 
+		if ($equalpos = strpos($current,'='))
+			$current = strtolower(substr($current, 0, $equalpos)).substr($current,$equalpos);
+		else
+			$current = strtolower($current);
 		// We definitely have a bbcode tag.
 		if ($current_ignore)
 		{
