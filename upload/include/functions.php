@@ -2521,7 +2521,7 @@ function error()
 			if (isset($file) && isset($line))
 				echo '<p><em>The error occurred on line '.$line.' in '.$file.'</em></p>'."\n";
 
-			$db_error = isset($GLOBALS['db']) ? $GLOBALS['db']->error() : array();
+			$db_error = isset($GLOBALS['forum_db']) ? $GLOBALS['forum_db']->error() : array();
 			if (!empty($db_error['error_msg']))
 			{
 				echo '<p><strong>Database reported:</strong> '.forum_htmlencode($db_error['error_msg']).(($db_error['error_no']) ? ' (Errno: '.$db_error['error_no'].')' : '').'.</p>'."\n";
@@ -2541,8 +2541,8 @@ function error()
 <?php
 
 	// If a database connection was established (before this error) we close it
-	if (isset($GLOBALS['db']))
-		$GLOBALS['db']->close();
+	if (isset($GLOBALS['forum_db']))
+		$GLOBALS['forum_db']->close();
 
 	exit;
 }
