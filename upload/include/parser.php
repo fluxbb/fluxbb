@@ -31,11 +31,21 @@ if (!defined('FORUM'))
 
 
 // Here you can add additional smilies if you like (please note that you must escape singlequote and backslash)
-$smiley_text = array(':)', '=)', ':|', '=|', ':(', '=(', ':D', '=D', ':o', ':O', ';)', ':/', ':P', ':lol:', ':mad:', ':rolleyes:', ':cool:');
-$smiley_img = array('smile.png', 'smile.png', 'neutral.png', 'neutral.png', 'sad.png', 'sad.png', 'big_smile.png', 'big_smile.png', 'yikes.png', 'yikes.png', 'wink.png', 'hmm.png', 'tongue.png', 'lol.png', 'mad.png', 'roll.png', 'cool.png');
+$smilies = array(':)' => 'smile.png', '=)' => 'smile.png', ':|' => 'neutral.png', '=|' => 'neutral.png', ':(' => 'sad.png', '=(' => 'sad.png', ':D' => 'big_smile.png', '=D' => 'big_smile.png', ':o' => 'yikes.png', ':O' => 'yikes.png', ';)' => 'wink.png', ':/' => 'hmm.png', ':P' => 'tongue.png', ':lol:' => 'lol.png', ':mad:' => 'mad.png', ':rolleyes:' => 'roll.png', ':cool:' => 'cool.png');
 
 // Uncomment the next row if you add smilies that contain any of the characters &"'<>
-//$smiley_text = array_map('forum_htmlspecialchars', $smiley_text);
+//$smilies = array_combine(array_map('forum_htmlspecialchars', array_keys($smilies)), array_values($smilies));
+
+$return = ($hook = get_hook('ps_start')) ? eval($hook) : null;
+
+$smilies_match = array();
+$smilies_replace = array();
+foreach ($smilies as $smiley_text => $smiley_img)
+{
+	$smilies_match[] = "#(?<=.\W|\W.|^\W)".preg_quote($smiley_text, '#')."(?=.\W|\W.|\W$)#m";
+	$smilies_replace[] = '$1<img src="'.$base_url.'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.substr($smiley_img, 0, strrpos($smiley_img, '.')).'" />$2';
+
+}
 
 
 //
@@ -462,13 +472,11 @@ function do_clickable($text)
 //
 function do_smilies($text)
 {
-	global $forum_config, $base_url, $smiley_text, $smiley_img;
+	global $forum_config, $base_url, $smilies_match, $smilies_replace;
 
 	$text = ' '.$text.' ';
 
-	$num_smilies = count($smiley_text);
-	for ($i = 0; $i < $num_smilies; ++$i)
-		$text = preg_replace("#(?<=.\W|\W.|^\W)".preg_quote($smiley_text[$i], '#')."(?=.\W|\W.|\W$)#m", '$1<img src="'.$base_url.'/img/smilies/'.$smiley_img[$i].'" width="15" height="15" alt="'.substr($smiley_img[$i], 0, strrpos($smiley_img[$i], '.')).'" />$2', $text);
+	$text = preg_replace($smilies_match, $smilies_replace, $text);
 
 	return substr($text, 1, -1);
 }

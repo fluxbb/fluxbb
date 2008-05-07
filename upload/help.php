@@ -196,36 +196,13 @@ else if ($section == 'smilies')
 	// Display the smiley set
 	require FORUM_ROOT.'include/parser.php';
 
-	$num_smilies = count($smiley_text);
-	for ($i = 0; $i < $num_smilies; ++$i)
-	{
-		// Is there a smiley at the current index?
-		if (!isset($smiley_text[$i]))
-			continue;
+  $smiley_groups = array();
 
-		echo "\t\t\t\t".'<li><code>'.$smiley_text[$i];
+	foreach ($smilies as $smiley_text => $smiley_img)
+	  $smiley_groups[$smiley_img][] = $smiley_text;
 
-		// Save the current text and image
-		$cur_img = $smiley_img[$i];
-		$cur_text = $smiley_text[$i];
-
-		// Loop through the rest of the array and see if there are any duplicate images
-		// (more than one text representation for one image)
-		for ($next = $i + 1; $next < $num_smilies; ++$next)
-		{
-			// Did we find a dupe?
-			if (isset($smiley_img[$next]) && $smiley_img[$i] == $smiley_img[$next])
-			{
-				echo ' '.$lang_common['and'].' '.$smiley_text[$next];
-
-				// Remove the dupe so we won't display it twice
-				unset($smiley_text[$next]);
-				unset($smiley_img[$next]);
-			}
-		}
-
-		echo ' <span>'.$lang_help['produces'].'</span> <img src="'.$base_url.'/img/smilies/'.$cur_img.'" width="15" height="15" alt="'.$cur_text.'" /></code></li>'."\n";
-	}
+	foreach ($smiley_groups as $smiley_img => $smiley_texts)
+		echo "\t\t\t\t".'<li><code>'.implode(' '.$lang_common['and'].' ', $smiley_texts).' <span>'.$lang_help['produces'].'</span> <img src="'.$base_url.'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.$smiley_texts[0].'" /></code></li>'."\n";
 
 ?>
 			</ul>
