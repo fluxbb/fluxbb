@@ -196,10 +196,10 @@ else if ($section == 'smilies')
 	// Display the smiley set
 	require FORUM_ROOT.'include/parser.php';
 
-  $smiley_groups = array();
+	$smiley_groups = array();
 
 	foreach ($smilies as $smiley_text => $smiley_img)
-	  $smiley_groups[$smiley_img][] = $smiley_text;
+		$smiley_groups[$smiley_img][] = $smiley_text;
 
 	foreach ($smiley_groups as $smiley_img => $smiley_texts)
 		echo "\t\t\t\t".'<li><code>'.implode(' '.$lang_common['and'].' ', $smiley_texts).' <span>'.$lang_help['produces'].'</span> <img src="'.$base_url.'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.$smiley_texts[0].'" /></code></li>'."\n";

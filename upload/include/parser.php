@@ -44,7 +44,6 @@ foreach ($smilies as $smiley_text => $smiley_img)
 {
 	$smilies_match[] = "#(?<=.\W|\W.|^\W)".preg_quote($smiley_text, '#')."(?=.\W|\W.|\W$)#m";
 	$smilies_replace[] = '$1<img src="'.$base_url.'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.substr($smiley_img, 0, strrpos($smiley_img, '.')).'" />$2';
-
 }
 
 
