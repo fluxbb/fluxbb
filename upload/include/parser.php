@@ -153,23 +153,25 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			continue;
 		}
 
-		if ($equalpos = strpos($current,'='))
-			$current = strtolower(substr($current, 0, $equalpos)).substr($current,$equalpos);
-		else
-			$current = strtolower($current);
 		// We definitely have a bbcode tag.
 		if ($current_ignore)
 		{
 			//This is if we are currently in a tag which escapes other bbcode such as code
-			if ($current_ignore == $current_tag && $current == '[/'.$current_ignore.']') 
+			if ($current_ignore == $current_tag)
+			{
+				$current = '[/'.$current_tag.']';
 				$current_ignore = '';
+			}
 
 			$new_text .= $current;
 
 			continue;
 		}
 
-		$current = strtolower($current);
+		if ($equalpos = strpos($current,'='))
+			$current = strtolower(substr($current, 0, $equalpos)).substr($current,$equalpos);
+		else
+			$current = strtolower($current);
 
 		if ($current_nest)
 		{
