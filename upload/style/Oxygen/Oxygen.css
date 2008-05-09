@@ -173,8 +173,10 @@ C - PAGE LAYOUT and COMMON ELEMENTS
 -------------------------------------------------------------*/
 
 .brd-page {
-	width: 95%;
+	width: 90%;
 	margin: 0 auto;
+	min-width: 700px;
+	max-width: 1100px;
 	padding: 20px 0;
 	}
 
