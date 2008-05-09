@@ -40,7 +40,7 @@ $forum_rewrite_rules = array(
 	'/^request[\/_-]?password(\.html?|\/)?$/i'																				=>	'login.php?action=forget',
 	'/^user[\/_-]?([0-9]+)(\.html?|\/)?$/i'																					=>	'profile.php?id=$1',
 	'/^user[\/_-]?([0-9]+)[\/_-]?([a-z]+)(\.html?|\/)?$/i'																	=>	'profile.php?section=$2&id=$1',
-	'/^(delete|upload)[\/_-]?(avatar|user)?[\/_-]?([0-9]+)[\/_-]?([a-z0-9]+)?(\.html?|\/)?$/i'								=>	'profile.php?action=$1_$2&id=$3&csrf_token=$4',
+	'/^(delete)[\/_-]?(avatar|user)?[\/_-]?([0-9]+)[\/_-]?([a-z0-9]+)?(\.html?|\/)?$/i'										=>	'profile.php?action=$1_$2&id=$3&csrf_token=$4',
 	'/^change[\/_-]?(email|pass)(word)?[\/_-]?([0-9]+)[\/_-]([a-zA-Z0-9]+)(\.html?|\/)?$/i'									=>	'profile.php?action=change_$1&id=$3&key=$4',
 	'/^change[\/_-]?(email|pass)(word)?[\/_-]?([0-9]+)(\.html?|\/)?$/i'														=>	'profile.php?action=change_$1&id=$3',
 	'/^search[\/_-]?(new|recent|unanswered)(\.html?|\/)?$/i'																=>	'search.php?action=show_$1',
