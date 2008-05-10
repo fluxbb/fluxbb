@@ -1,6 +1,9 @@
 # BEGIN FluxBB
 
 <IfModule mod_rewrite.c>
+# MultiViews interfers with proper rewriting
+Options -MultiViews
+
 RewriteEngine On
 RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
