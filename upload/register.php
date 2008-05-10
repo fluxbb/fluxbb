@@ -276,7 +276,7 @@ $forum_page['form_action'] = $base_url.'/register.php?action=register';
 // Setup form information
 $forum_page['frm_info']['intro'] = '<p>'.$lang_profile['Register intro'].'</p>';
 if ($forum_config['o_regs_verify'] != '0')
-	$forum_page['frm_info']['email'] = '<p class="warn">'.$lang_profile['E-mail info'].'</p>';
+	$forum_page['frm_info']['email'] = '<p class="warn">'.$lang_profile['Reg e-mail info'].'</p>';
 
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(

@@ -215,6 +215,7 @@ $lang_profile = array(
 'Reg complete'				=>	'Registration complete. Logging in and redirecting …',
 'Register errors'			=>	'<strong>Warning!</strong> The following errors must be corrected before you can register:',
 'E-mail info'				=>	'<strong>Important!</strong> An e-mail will be sent to your new address with an activation link. You must click the link in the e-mail you receive to activate the new address. You must therefore ensure that you enter a valid and current e-mail address.',
+'Reg e-mail info'			=>	'<strong>Important!</strong> An e-mail with an activation link will be sent to the address you provide. You must click the link in the e-mail in order to activate your new account. You must therefore ensure that you enter a valid and current e-mail address.',
 'Register at'				=>	'Register at %s',
 'Register intro'			=>	'Registration enables you to use features not available when browsing the board as a guest. The fields below only make up a small part of all the settings you can alter in your profile. If you have any questions regarding this forum you should ask an administrator. Please complete the form below in order to register.',
 'Username'					=>	'Username:',
