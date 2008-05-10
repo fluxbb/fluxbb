@@ -211,7 +211,7 @@ $query = array(
 		)
 	),
 	'WHERE'		=> 'u.id>1',
-	'ORDER BY'	=> $forum_page['sort_by'].' '.$forum_page['sort_dir'],
+	'ORDER BY'	=> $forum_page['sort_by'].' '.$forum_page['sort_dir'].', u.id ASC',
 	'LIMIT'		=> $forum_page['start_from'].', 50'
 );
 
