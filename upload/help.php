@@ -168,8 +168,8 @@ else if ($section == 'img')
 		<div class="frm-form">
 			<ul class="example">
 				<li>
-					<code>[img=FluxBB logo]<?php echo $base_url ?>/img/logo.png[/img]</code>
-					<samp><img src="<?php echo $base_url ?>/img/logo.png" alt="FluxBB logo" /></samp>
+					<code>[img=FluxBB bbcode test]<?php echo $base_url ?>/img/test.png[/img]</code>
+					<samp><img src="<?php echo $base_url ?>/img/test.png" alt="FluxBB bbcode test" /></samp>
 				</li>
 			</ul>
 		</div>
