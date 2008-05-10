@@ -153,7 +153,7 @@ $tpl_main = str_replace('<!-- forum_skip -->', '<div id="brd-access"><a href="#b
 // END SUBST - <!-- forum_skip -->
 
 // START SUBST - <!-- forum_title -->
-$tpl_main = str_replace('<!-- forum_title -->', '<div id="brd-title">'."\n\t".'<div><strong>'.forum_htmlencode($forum_config['o_board_title']).'</strong></div>'."\n".'</div>'."\n", $tpl_main);
+$tpl_main = str_replace('<!-- forum_title -->', '<div id="brd-title">'."\n\t".'<p><a href="'.forum_link($forum_url['index']).'">'.forum_htmlencode($forum_config['o_board_title']).'</a></p>'."\n".'</div>'."\n", $tpl_main);
 // END SUBST - <!-- forum_title -->
 
 

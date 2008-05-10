@@ -230,8 +230,9 @@ C - PAGE LAYOUT and COMMON ELEMENTS
 	white-space: nowrap;
 	}
 	
-#brd-title strong {
+#brd-title a:link, #brd-title a:visited {
 	font-size: 1.5em;
+	text-decoration: none;
 	}
 	
 #brd-desc {
