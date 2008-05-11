@@ -501,7 +501,7 @@ else if (isset($_GET['edit_forum']))
 							<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="sort_by">
 									<option value="0"<?php if ($cur_forum['sort_by'] == '0') echo ' selected="selected"' ?>><?php echo $lang_admin['Sort last post'] ?></option>
 									<option value="1"<?php if ($cur_forum['sort_by'] == '1') echo ' selected="selected"' ?>><?php echo $lang_admin['Sort topic start'] ?></option>
-							</select></span>
+<?php ($hook = get_hook('afo_edit_forum_modify_sort_by')) ? eval($hook) : null; ?>							</select></span>
 						</label>
 					</div>
 					<div class="frm-fld text">
