@@ -315,6 +315,8 @@ $stats_list['newest_user'] = '<li class="st-users"><span>'.$lang_index['Newest u
 $stats_list['no_of_topics'] = '<li class="st-activity"><span>'.$lang_index['No of topics'].':</span> <strong>'.intval($stats['total_topics']).'</strong></li>';
 $stats_list['no_of_posts'] = '<li class="st-activity"><span>'.$lang_index['No of posts'].':</span> <strong>'.intval($stats['total_posts']).'</strong></li>';
 
+($hook = get_hook('in_pre_stats_info_output')) ? eval($hook) : null;
+
 ?>
 <div id="brd-info" class="main">
 	<div class="main-head">
