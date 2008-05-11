@@ -385,6 +385,7 @@ $lang_admin = array(
 'Time format'					=>	'Time format',
 'Date format'					=>	'Date format',
 'Current format'				=>	'Current format:',
+'External format help'			=>	'See <a class="exthelp" href="http://www.php.net/manual/en/function.date.php">here</a> for formatting options.',
 'Check for updates'				=>	'Check for updates',
 'Auto check for updates'		=>	'Enable automatic update checking.',
 'Updates info'					=>	'If you enable automatic updates FluxBB will periodically check if there are any important updates to your software. The updates may be new releases or hotfix extensions. When updates are available a message will appear near the top of your board.',
