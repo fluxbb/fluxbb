@@ -349,6 +349,10 @@ function handle_url_tag($url, $link = '')
 {
 	global $forum_user;
 
+	$return = ($hook = get_hook('ps_handle_url_tag_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+
 	$full_url = str_replace(array(' ', '\'', '`', '"'), array('%20', '', '', ''), $url);
 	if (strpos($url, 'www.') === 0)			// If it starts with www, we add http://
 		$full_url = 'http://'.$full_url;
@@ -359,6 +363,10 @@ function handle_url_tag($url, $link = '')
 
 	// Ok, not very pretty :-)
 	$link = ($link == '' || $link == $url) ? ((strlen($url) > 55) ? substr($url, 0 , 39).' &#133; '.substr($url, -10) : $url) : stripslashes($link);
+
+	$return = ($hook = get_hook('ps_handle_url_tag_end')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	return '<a href="'.$full_url.'">'.$link.'</a>';
 }
@@ -371,6 +379,10 @@ function handle_img_tag($url, $is_signature = false, $alt=null)
 {
 	global $lang_common, $forum_config, $forum_user;
 
+	$return = ($hook = get_hook('ps_handle_img_tag_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+
 	if ($alt == null)
 		$alt = $url;
 
@@ -380,6 +392,10 @@ function handle_img_tag($url, $is_signature = false, $alt=null)
 		$img_tag = '<img class="sigimage" src="'.$url.'" alt="'.forum_htmlencode($alt).'" />';
 	else if (!$is_signature && $forum_user['show_img'] != '0')
 		$img_tag = '<span class="postimg"><img src="'.$url.'" alt="'.forum_htmlencode($alt).'" /></span>';
+
+	$return = ($hook = get_hook('ps_handle_img_tag_end')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	return $img_tag;
 }
