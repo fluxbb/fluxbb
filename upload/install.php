@@ -33,8 +33,8 @@ define('FORUM_ROOT', './');
 define('FORUM', 1);
 define('FORUM_DEBUG', 1);
 
-if (file_exists(FORUM_ROOT.'config.php'))
-	exit('The file \'config.php\' already exists which would mean that FluxBB is already installed. You should go <a href="index.php">here</a> instead.');
+//if (file_exists(FORUM_ROOT.'config.php'))
+//	exit('The file \'config.php\' already exists which would mean that FluxBB is already installed. You should go <a href="index.php">here</a> instead.');
 
 
 // Make sure we are running at least MIN_PHP_VERSION
@@ -130,11 +130,11 @@ if (!isset($_POST['form_sent']))
 <div class="brd">
 
 <div id="brd-title">
-	<div><strong><?php printf($lang_install['Install FluxBB'], FORUM_VERSION) ?></strong></div>
+	<p><strong><?php printf($lang_install['Install FluxBB'], FORUM_VERSION) ?></strong></p>
 </div>
 
 <div id="brd-desc">
-	<div><?php printf ($lang_install['Install welcome'], FORUM_VERSION) ?></div>
+	<p><?php printf ($lang_install['Install welcome'], FORUM_VERSION) ?></p>
 </div>
 
 <div id="brd-head">
@@ -1645,11 +1645,11 @@ else
 <div class="brd">
 
 <div id="brd-title">
-	<div id="logo"><strong><?php printf($lang_install['Install FluxBB'], FORUM_VERSION) ?></strong></div>
+	<p><strong><?php printf($lang_install['Install FluxBB'], FORUM_VERSION) ?></strong></p>
 </div>
 
 <div id="brd-desc">
-	<div id="desc"><?php printf($lang_install['Success description'], FORUM_VERSION) ?></div>
+	<p><?php printf($lang_install['Success description'], FORUM_VERSION) ?></p>
 </div>
 
 <div id="brd-visit">

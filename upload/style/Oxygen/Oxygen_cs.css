@@ -97,7 +97,7 @@ B - TEXT
 	color: #333;
 	}
 
-#brd-title a {
+#brd-title p, #brd-title a {
 	color: #fff;
 	}
 

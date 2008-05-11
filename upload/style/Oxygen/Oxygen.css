@@ -229,9 +229,11 @@ C - PAGE LAYOUT and COMMON ELEMENTS
 	padding: 1.3em 1.3em 0.3em 1.3em;
 	white-space: nowrap;
 	}
+#brd-title p {
+	font-size: 1.5em;
+	}	
 	
 #brd-title a:link, #brd-title a:visited {
-	font-size: 1.5em;
 	text-decoration: none;
 	}
 	
