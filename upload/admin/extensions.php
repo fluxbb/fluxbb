@@ -153,9 +153,9 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 		foreach ($ext_data['extension']['hooks']['hook'] as $hook)
 		{
 			$query = array(
-				'INSERT'	=> 'id, extension_id, code, installed',
+				'INSERT'	=> 'id, extension_id, code, installed, priority',
 				'INTO'		=> 'extension_hooks',
-				'VALUES'	=> '\''.$forum_db->escape(trim($hook['attributes']['id'])).'\', \''.$forum_db->escape($id).'\', \''.$forum_db->escape(trim($hook['content'])).'\', '.time()
+				'VALUES'	=> '\''.$forum_db->escape(trim($hook['attributes']['id'])).'\', \''.$forum_db->escape($id).'\', \''.$forum_db->escape(trim($hook['content'])).'\', '.time().', '.(isset($hook['attributes']['priority']) ? $hook['attributes']['priority'] : 5)
 			);
 
 			($hook = get_hook('aex_qr_add_hook')) ? eval($hook) : null;

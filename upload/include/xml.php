@@ -206,6 +206,8 @@ function validate_manifest($xml_array, $folder_name)
 						$errors[] = $lang_admin['extension/hooks/hook error'];
 					if (!isset($hook['attributes']['id']) || $hook['attributes']['id'] == '')
 						$errors[] = $lang_admin['extension/hooks/hook error2'];
+					if (isset($hook['attributes']['priority']) && (!ctype_digit($hook['attributes']['priority']) || $hook['attributes']['priority'] < 0 || $hook['attributes']['priority'] > 10))
+						$errors[] = $lang_admin['extension/hooks/hook error3'];
 				}
 			}
 		}

@@ -269,7 +269,7 @@ function generate_hooks_cache()
 			)
 		),
 		'WHERE'		=> 'e.disabled=0',
-		'ORDER BY'	=> 'eh.installed'
+		'ORDER BY'	=> 'eh.priority, eh.installed'
 	);
 
 	($hook = get_hook('ch_qr_get_hooks')) ? eval($hook) : null;

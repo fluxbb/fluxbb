@@ -648,6 +648,7 @@ else
 					extension_id VARCHAR(50) NOT NULL DEFAULT '',
 					code TEXT,
 					installed INT(10) UNSIGNED NOT NULL DEFAULT 0,
+					priority TINYINT(1) UNSIGNED NOT NULL DEFAULT 5,
 					PRIMARY KEY(id, extension_id)
 					) ENGINE = MyISAM CHARACTER SET utf8";
 			break;
@@ -658,6 +659,7 @@ else
 					extension_id VARCHAR(50) NOT NULL DEFAULT '',
 					code TEXT,
 					installed INT NOT NULL DEFAULT 0,
+					priority SMALLINT NOT NULL DEFAULT 5,
 					PRIMARY KEY(id, extension_id)
 					)";
 			break;
@@ -668,6 +670,7 @@ else
 					extension_id VARCHAR(50) NOT NULL DEFAULT '',
 					code TEXT,
 					installed INTEGER NOT NULL DEFAULT 0,
+					priority INTEGER NOT NULL DEFAULT 5,
 					PRIMARY KEY(id, extension_id)
 					)";
 			break;

@@ -581,6 +581,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 							extension_id VARCHAR(50) NOT NULL DEFAULT '',
 							code TEXT,
 							installed INT(10) UNSIGNED NOT NULL DEFAULT 0,
+							priority TINYINT(1) UNSIGNED NOT NULL DEFAULT 5,
 							PRIMARY KEY(id, extension_id)
 							) ENGINE = MyISAM CHARACTER SET utf8";
 					break;
@@ -591,6 +592,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 							extension_id VARCHAR(50) NOT NULL DEFAULT '',
 							code TEXT,
 							installed INT NOT NULL DEFAULT 0,
+							priority SMALLINT NOT NULL DEFAULT 5,
 							PRIMARY KEY(id, extension_id)
 							)";
 					break;
@@ -601,6 +603,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 							extension_id VARCHAR(50) NOT NULL DEFAULT '',
 							code TEXT,
 							installed INTEGER NOT NULL DEFAULT 0,
+							priority INTEGER NOT NULL DEFAULT 5,
 							PRIMARY KEY(id, extension_id)
 							)";
 					break;
@@ -608,6 +611,9 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 
 			$forum_db->query($sql) or error(__FILE__, __LINE__);
 		}
+
+		// Add priority field to extension_hooks
+		$forum_db->add_field($forum_db->prefix.'extension_hooks', 'priority', 'TINYINT(1)', false, 5, 'installed');
 
 		if ($db_type == 'mysql' || $db_type == 'mysqli')
 		{

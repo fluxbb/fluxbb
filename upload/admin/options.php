@@ -442,14 +442,14 @@ $forum_page['set_count'] = 0;
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 							<span class="fld-label"><?php echo $lang_admin['Time format'] ?></span><br />
 							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[time_format]" size="25" maxlength="25" value="<?php echo forum_htmlencode($forum_config['o_time_format']) ?>" /></span><br />
-							<span class="fld-help">[<?php echo $lang_admin['Current format'].' '.gmdate($forum_config['o_time_format']) ?>]</span>
+							<span class="fld-help">[<?php echo $lang_admin['Current format'].' '.gmdate($pun_config['o_time_format']) ?>] <?php echo $lang_admin['External format help'] ?></span>
 						</label>
 					</div>
 					<div class="frm-fld text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 							<span class="fld-label"><?php echo $lang_admin['Date format'] ?></span><br />
 							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[date_format]" size="25" maxlength="25" value="<?php echo forum_htmlencode($forum_config['o_date_format']) ?>" /></span><br />
-							<span class="fld-help">[<?php echo $lang_admin['Current format'].' '.gmdate($forum_config['o_date_format']) ?>]</span>
+							<span class="fld-help">[<?php echo $lang_admin['Current format'].' '.gmdate($pun_config['o_date_format']) ?>] <?php echo $lang_admin['External format help'] ?></span>
 						</label>
 					</div>
 <?php ($hook = get_hook('aop_setup_local_end')) ? eval($hook) : null; ?>
