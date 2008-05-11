@@ -286,7 +286,7 @@ $query = array(
 	'FROM'		=> 'users AS u'
 );
 
-($hook = get_hook('ft_qr_get_user_count')) ? eval($hook) : null;
+($hook = get_hook('in_qr_get_user_count')) ? eval($hook) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 $stats['total_users'] = $forum_db->result($result);
 
@@ -297,7 +297,7 @@ $query = array(
 	'LIMIT'		=> '1'
 );
 
-($hook = get_hook('ft_qr_get_newest_user')) ? eval($hook) : null;
+($hook = get_hook('in_qr_get_newest_user')) ? eval($hook) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 $stats['last_user'] = $forum_db->fetch_assoc($result);
 
@@ -306,7 +306,7 @@ $query = array(
 	'FROM'		=> 'forums AS f'
 );
 
-($hook = get_hook('ft_qr_get_post_stats')) ? eval($hook) : null;
+($hook = get_hook('in_qr_get_post_stats')) ? eval($hook) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 list($stats['total_topics'], $stats['total_posts']) = $forum_db->fetch_row($result);
 
@@ -329,7 +329,7 @@ $stats_list['no_of_posts'] = '<li class="st-activity"><span>'.$lang_index['No of
 		</div>
 <?php
 
-($hook = get_hook('ft_pre_users_online')) ? eval($hook) : null;
+($hook = get_hook('in_pre_users_online')) ? eval($hook) : null;
 
 if ($forum_config['o_users_online'] == '1')
 {
@@ -341,14 +341,14 @@ if ($forum_config['o_users_online'] == '1')
 		'ORDER BY'	=> 'o.ident'
 	);
 
-	($hook = get_hook('ft_qr_get_online_info')) ? eval($hook) : null;
+	($hook = get_hook('in_qr_get_online_info')) ? eval($hook) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$num_guests = 0;
 	$users = array();
 
 	while ($forum_user_online = $forum_db->fetch_assoc($result))
 	{
-		($hook = get_hook('ft_add_online_user_loop')) ? eval($hook) : null;
+		($hook = get_hook('in_add_online_user_loop')) ? eval($hook) : null;
 
 		if ($forum_user_online['user_id'] > 1)
 			$users[] = ($forum_user['g_view_users'] == '1') ? '<a href="'.forum_link($forum_url['user'], $forum_user_online['user_id']).'">'.forum_htmlencode($forum_user_online['ident']).'</a>' : forum_htmlencode($forum_user_online['ident']);
@@ -356,6 +356,7 @@ if ($forum_config['o_users_online'] == '1')
 			++$num_guests;
 	}
 
+	($hook = get_hook('in_pre_online_info_output')) ? eval($hook) : null;
 ?>
 		<div id="onlinelist">
 			<h3><?php printf($lang_index['Online'], $num_guests, count($users)) ?></h3>
@@ -371,7 +372,7 @@ if ($forum_config['o_users_online'] == '1')
 
 }
 
-($hook = get_hook('ft_post_users_online')) ? eval($hook) : null;
+($hook = get_hook('in_post_users_online')) ? eval($hook) : null;
 
 ?>
 	</div>
