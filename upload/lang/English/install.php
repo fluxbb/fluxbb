@@ -4,7 +4,7 @@
 $lang_install = array(
 
 // Install Form
-'Install FluxBB'				=>	'Install FluxBB %s',
+'Install FluxBB'			=>	'Install FluxBB %s',
 'Required'					=>	'(Required)',
 'Install welcome'			=>	'Welcome to FluxBB installation. You are about to install FluxBB %s.',
 'Install head'				=>	'Complete all three parts of this form to install your forum',

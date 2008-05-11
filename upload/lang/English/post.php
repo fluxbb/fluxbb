@@ -20,7 +20,7 @@ $lang_post = array(
 'Post errors'			=>	'<strong>Warning!</strong> The following errors must be corrected before your message can be posted:',
 'Guest name'			=>	'Guest name:',	// For guests (instead of Username)
 'Guest e-mail'			=>	'Guest e-mail:',
-'Post redirect'			=>	'Post entered. Redirecting …',
+'Post redirect'			=>	'Post entered. Redirecting &#8230;',
 'Post reply'			=>	'Post reply',
 'Post new topic'		=>	'Post new topic',
 'Topic subject'			=>	'Topic subject:',
@@ -42,8 +42,8 @@ $lang_post = array(
 // Edit post
 'Edit post legend'		=>	'Edit message',
 'Edit this'				=>	'Edit this %s by %s',
-'Silent edit'			=>	'Silent edit (don\'t display "Last edited by …" in topic view for this edit).',
+'Silent edit'			=>	'Silent edit (don\'t display "Last edited by &#8230;" in topic view for this edit).',
 'Edit post'				=>	'Edit ',
-'Edit redirect'			=>	'Post updated. Redirecting …'
+'Edit redirect'			=>	'Post updated. Redirecting &#8230;'
 
 );

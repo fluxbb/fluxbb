@@ -12,7 +12,7 @@ $lang_delete = array(
 'Confirm delete'		=>	'You must confirm:',
 'Posted'				=>	'Posted',
 'Delete'				=>	'Delete',	// The submit button
-'Post del redirect'		=>	'Post deleted. Redirecting …',
-'Topic del redirect'	=>	'Topic deleted. Redirecting …',
+'Post del redirect'		=>	'Post deleted. Redirecting &#8230;',
+'Topic del redirect'	=>	'Topic deleted. Redirecting &#8230;',
 
 );
