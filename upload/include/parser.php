@@ -437,7 +437,7 @@ function do_bbcode($text, $is_signature = false)
 					 '<a href="mailto:$1">$2</a>',
 					 '<span style="color: $1">$2</span>');
 
-	if ($forum_config['p_message_img_tag'] == '1')
+	if (($is_signature && $forum_config['p_sig_img_tag'] == '1') || (!$is_signature && $forum_config['p_message_img_tag'] == '1'))
 	{
 		$pattern[] = '#\[img\]((ht|f)tps?://)([^\s<"]*?)\[/img\]#e';
 		$pattern[] = '#\[img=([^\[]*?)\]((ht|f)tps?://)([^\s<"]*?)\[/img\]#e';
