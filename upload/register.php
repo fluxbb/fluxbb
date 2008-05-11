@@ -473,7 +473,7 @@ ob_start();
 					</label>
 				</div>
 				<div class="checkbox radbox">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_profile['Adjust for DST'] ?></span><br /><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="dst" value="<?php echo(isset($_POST['dst']) ? 'checked="checked"' : '') ?>"/> <?php echo $lang_profile['DST label'] ?></label>
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_profile['Adjust for DST'] ?></span><br /><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="dst" <?php echo(isset($_POST['dst']) ? 'checked="checked" ' : '') ?>/> <?php echo $lang_profile['DST label'] ?></label>
 				</div>
 <?php ($hook = get_hook('rg_register_local_end')) ? eval($hook) : null; ?>
 			</fieldset>

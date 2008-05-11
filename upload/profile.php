@@ -1879,7 +1879,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 					</label>
 				</div>
 				<div class="checkbox radbox">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_profile['Adjust for DST'] ?></span><br /><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[dst]" value="1" <?php if ($user['dst'] == 1) echo ' checked="checked"' ?> /> <?php echo $lang_profile['DST label'] ?></label>
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_profile['Adjust for DST'] ?></span><br /><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[dst]" value="1" <?php if ($user['dst'] == 1) echo 'checked="checked" ' ?>/> <?php echo $lang_profile['DST label'] ?></label>
 				</div>
 				<div class="frm-fld select">
 					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
