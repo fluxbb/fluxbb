@@ -120,7 +120,7 @@ if (isset($query))
 
 	// Work out the settings for pagination
 	$forum_page['per_page'] = ($show_as == 'posts') ? $forum_user['disp_posts'] : $forum_user['disp_topics'];
-	
+
 	// We now have a query that will give us our results in $query, lets get the data!
 	$num_hits = get_search_results($query, $search_set, $forum_page);
 
@@ -411,7 +411,7 @@ $forum_page['set_count'] = $forum_page['fld_count'] = 0;
 // Setup form information
 $forum_page['frm-info'] = array('search' => '<li><span>'.$lang_search['Search info'].'</span></li>');
 $forum_page['frm-info']['refine'] = '<li><span>'.$lang_search['Refine info'].'</span></li>';
-$forum_page['frm-info']['wildcard'] = '<li><span>'.$lang_search['Wildcard info'].'<span></li>';
+$forum_page['frm-info']['wildcard'] = '<li><span>'.$lang_search['Wildcard info'].'</span></li>';
 
 // Setup predefined search (pds) links
 $forum_page['pd_searches'] = array(
