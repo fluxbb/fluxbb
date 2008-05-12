@@ -1214,6 +1214,15 @@ else if (isset($_POST['form_sent']))
 			($hook = get_hook('pf_qr_update_username5')) ? eval($hook) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
+			$query = array(
+				'UPDATE'	=> 'posts',
+				'SET'		=> 'edited_by=\''.$forum_db->escape($form['username']).'\'',
+				'WHERE'		=> 'edited_by=\''.$forum_db->escape($old_username).'\''
+			);
+
+			($hook = get_hook('pf_qr_update_username6')) ? eval($hook) : null;
+			$forum_db->query_build($query) or error(__FILE__, __LINE__);
+
 			// If the user is a moderator or an administrator we have to update the moderator lists and bans cache
 			if ($user['g_id'] == FORUM_ADMIN || $user['g_moderator'] == '1')
 			{
