@@ -320,6 +320,8 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 				'author'		=>	$cur_post['poster'],
 				'pubdate'		=>	$cur_post['posted']
 			);
+
+			($hook = get_hook('ex_modify_cur_post_item')) ? eval($hook) : null;
 		}
 
 		if (intval($cur_topic['num_replies']) <= 14)
@@ -408,6 +410,8 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 				'author'		=>	$cur_topic['last_poster'],
 				'pubdate'		=>	$cur_topic['last_post']
 			);
+
+			($hook = get_hook('ex_modify_cur_topic_item')) ? eval($hook) : null;
 		}
 
 		($hook = get_hook('ex_pre_forum_output')) ? eval($hook) : null;
@@ -451,6 +455,8 @@ else if ($_GET['action'] == 'online' || $_GET['action'] == 'online_full')
 		else
 			++$num_guests;
 	}
+
+	($hook = get_hook('ex_pre_online_output')) ? eval($hook) : null;
 
 	echo $lang_index['Guests online'].': '.$num_guests.'<br />';
 
@@ -500,6 +506,8 @@ else if ($_GET['action'] == 'stats')
 	($hook = get_hook('ex_qr_get_post_stats')) ? eval($hook) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	list($stats['total_topics'], $stats['total_posts']) = $forum_db->fetch_row($result);
+
+	($hook = get_hook('ex_pre_stats_output')) ? eval($hook) : null;
 
 	echo $lang_index['No of users'].': '.$stats['total_users'].'<br />';
 	echo $lang_index['Newest user'].': <a href="'.forum_link($forum_url['user'], $stats['last_user']['id']).'">'.forum_htmlencode($stats['last_user']['username']).'</a><br />';
