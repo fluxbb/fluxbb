@@ -360,7 +360,7 @@ function generate_cached_search_query($search_id, &$show_as)
 	if ($show_as == 'posts')
 	{
 		$query = array(
-			'SELECT'	=> 'p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, '.(($db_type != 'sqlite') ? 'SUBSTRING' : 'SUBSTR').'(p.message, 1, 1000) AS message, t.id AS tid, t.poster, t.subject, t.first_post_id, t.posted, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id, f.forum_name',
+			'SELECT'	=> 'p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, p.message, p.hide_smilies, t.id AS tid, t.poster, t.subject, t.first_post_id, t.posted, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id, f.forum_name',
 			'FROM'		=> 'posts AS p',
 			'JOINS'		=> array(
 				array(
@@ -467,7 +467,7 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 
 		case 'show_user_posts':
 			$query = array(
-				'SELECT'	=> 'p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, '.(($db_type != 'sqlite') ? 'SUBSTRING' : 'SUBSTR').'(p.message, 1, 1000) AS message, t.id AS tid, t.poster, t.subject, t.first_post_id, t.posted, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id, f.forum_name',
+				'SELECT'	=> 'p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, p.message, p.hide_smilies, t.id AS tid, t.poster, t.subject, t.first_post_id, t.posted, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id, f.forum_name',
 				'FROM'		=> 'posts AS p',
 				'JOINS'		=> array(
 					array(

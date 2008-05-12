@@ -225,6 +225,9 @@ if (isset($query))
 
 	$forum_page['item_count'] = 0;
 
+	if ($show_as == 'posts')
+		require FORUM_ROOT.'include/parser.php';
+
 	// Finally, lets loop through the results and output them
 	for ($i = 0; $i < count($search_set); ++$i)
 	{
@@ -266,14 +269,7 @@ if (isset($query))
 
 			$forum_page['item_subject']['topic_info'] = sprintf($lang_search['Topic info'], forum_htmlencode($search_set[$i]['poster']), forum_htmlencode($search_set[$i]['forum_name']), $search_set[$i]['num_replies']);
 
-			// Generate the post message
-			if ($forum_config['o_censoring'] == '1')
-				$search_set[$i]['message'] = censor_words($search_set[$i]['message']);
-
-			$forum_page['message'] = str_replace("\n", '<br />', forum_htmlencode($search_set[$i]['message']));
-
-			if (forum_strlen($forum_page['message']) >= 1000)
-				$forum_page['message'] .= '&#160;&#8230;';
+			$forum_page['message'] = parse_message($search_set[$i]['message'], $search_set[$i]['hide_smilies']);
 
 			// Give the post some class
 			$forum_page['item_status'] = array(
