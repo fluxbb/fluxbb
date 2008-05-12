@@ -309,8 +309,8 @@ function forum_setcookie($name, $value, $expire)
 
 	($hook = get_hook('fn_forum_setcookie_start')) ? eval($hook) : null;
 
-	// Enable sending of a P3P header by removing // from the following line (try this if login is failing in IE6)
-//	@header('P3P: CP="CUR ADM"');
+	// Enable sending of a P3P header
+	@header('P3P: CP="CUR ADM"');
 
 	if (version_compare(PHP_VERSION, '5.2.0', '>='))
 		setcookie($name, $value, $expire, $cookie_path, $cookie_domain, $cookie_secure, true);

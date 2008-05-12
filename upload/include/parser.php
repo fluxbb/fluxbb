@@ -33,9 +33,6 @@ if (!defined('FORUM'))
 // Here you can add additional smilies if you like (please note that you must escape singlequote and backslash)
 $smilies = array(':)' => 'smile.png', '=)' => 'smile.png', ':|' => 'neutral.png', '=|' => 'neutral.png', ':(' => 'sad.png', '=(' => 'sad.png', ':D' => 'big_smile.png', '=D' => 'big_smile.png', ':o' => 'yikes.png', ':O' => 'yikes.png', ';)' => 'wink.png', ':/' => 'hmm.png', ':P' => 'tongue.png', ':lol:' => 'lol.png', ':mad:' => 'mad.png', ':rolleyes:' => 'roll.png', ':cool:' => 'cool.png');
 
-// Uncomment the next row if you add smilies that contain any of the characters &"'<>
-//$smilies = array_combine(array_map('forum_htmlspecialchars', array_keys($smilies)), array_values($smilies));
-
 ($hook = get_hook('ps_start')) ? eval($hook) : null;
 
 $smilies_match = array();

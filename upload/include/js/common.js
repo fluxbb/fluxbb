@@ -164,7 +164,7 @@ var Forum = {
 		var nodes = document.getElementsByTagName('a');
 		for (var i=0; i<nodes.length; i++)
 		{
-			if (Forum.hasClass(nodes[i], 'exthelp')) // || nodes[i].getAttribute('rel') == 'external')
+			if (Forum.hasClass(nodes[i], 'exthelp'))
 				nodes[i].onclick = function() { window.open(this.href); return false; };
 		}
 	},
