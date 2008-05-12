@@ -1205,13 +1205,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		$forum_db->query('DELETE FROM '.$forum_db->prefix.'search_cache') or error(__FILE__, __LINE__);
 
 		// Empty the PHP cache
-		$d = dir(FORUM_CACHE_DIR);
-		while (($entry = $d->read()) !== false)
-		{
-			if (substr($entry, strlen($entry)-4) == '.php')
-				@unlink(FORUM_CACHE_DIR.$entry);
-		}
-		$d->close();
+		forum_clear_cache();
 
 		// Drop Base URL row from database config
 		if (array_key_exists('o_base_url', $forum_config))

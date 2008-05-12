@@ -163,13 +163,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 		}
 
 		// Empty the PHP cache
-		$d = dir(FORUM_CACHE_DIR);
-		while (($entry = $d->read()) !== false)
-		{
-			if (substr($entry, strlen($entry)-4) == '.php')
-				@unlink(FORUM_CACHE_DIR.$entry);
-		}
-		$d->close();
+		forum_clear_cache();
 
 		// Regenerate the hooks cache
 		require_once FORUM_ROOT.'include/cache.php';
@@ -364,13 +358,7 @@ else if (isset($_GET['uninstall']))
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Empty the PHP cache
-		$d = dir(FORUM_CACHE_DIR);
-		while (($entry = $d->read()) !== false)
-		{
-			if (substr($entry, strlen($entry)-4) == '.php')
-				@unlink(FORUM_CACHE_DIR.$entry);
-		}
-		$d->close();
+		forum_clear_cache();
 
 		// Regenerate the hooks cache
 		require_once FORUM_ROOT.'include/cache.php';

@@ -1063,6 +1063,21 @@ function clean_forum_moderators()
 
 
 //
+// Delete every .php file in the forum's cache directory
+//
+function forum_clear_cache()
+{
+	$d = dir(FORUM_CACHE_DIR);
+	while (($entry = $d->read()) !== false)
+	{
+		if (substr($entry, strlen($entry)-4) == '.php')
+			@unlink(FORUM_CACHE_DIR.$entry);
+	}
+	$d->close();
+}
+
+
+//
 // Locate and delete any orphaned redirect topics
 //
 function delete_orphans()
