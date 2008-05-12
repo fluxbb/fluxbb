@@ -1010,6 +1010,36 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		if ($forum_db->num_rows($result))
 			$query_str = '?stage=conv_reports&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$end_at;
 		else
+			$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
+		break;
+
+
+	// Convert search words
+	case 'conv_search_words':
+		// Determine where to start
+		if ($start_at == 0)
+		{
+			// Get the first search word ID from the db
+			$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'search_words ORDER BY id LIMIT 1') or error(__FILE__, __LINE__);
+			if ($forum_db->num_rows($result))
+				$start_at = $forum_db->result($result);
+		}
+		$end_at = $start_at + PER_PAGE;
+
+		// Fetch words to process this cycle
+		$result = $forum_db->query('SELECT id, word FROM '.$forum_db->prefix.'search_words WHERE id>='.$start_at.' AND id<'.$end_at.' ORDER BY id') or error(__FILE__, __LINE__);
+		while ($cur_item = $forum_db->fetch_assoc($result))
+		{
+			echo 'Converting search word '.$cur_item['id'].' …<br />'."\n";
+			if (convert_to_utf8($cur_item['word'], $old_charset))
+				$forum_db->query('UPDATE '.$forum_db->prefix.'search_words SET word=\''.$forum_db->escape($cur_item['word']).'\' WHERE id='.$cur_item['id']) or error(__FILE__, __LINE__);
+		}
+
+		// Check if there is more work to do
+		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'search_words WHERE id>='.$end_at) or error(__FILE__, __LINE__);
+		if ($forum_db->num_rows($result))
+			$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$end_at;
+		else
 			$query_str = '?stage=conv_users&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
 		break;
 
@@ -1143,6 +1173,12 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 			convert_table_utf8($forum_db->prefix.'ranks');
 			echo 'Converting table '.$forum_db->prefix.'reports …<br />'."\n"; flush();
 			convert_table_utf8($forum_db->prefix.'reports');
+			echo 'Converting table '.$forum_db->prefix.'search_cache …<br />'."\n"; flush();
+			convert_table_utf8($forum_db->prefix.'search_cache');
+			echo 'Converting table '.$forum_db->prefix.'search_matches …<br />'."\n"; flush();
+			convert_table_utf8($forum_db->prefix.'search_matches');
+			echo 'Converting table '.$forum_db->prefix.'search_words …<br />'."\n"; flush();
+			convert_table_utf8($forum_db->prefix.'search_words');
 			echo 'Converting table '.$forum_db->prefix.'subscriptions …<br />'."\n"; flush();
 			convert_table_utf8($forum_db->prefix.'subscriptions');
 			echo 'Converting table '.$forum_db->prefix.'topics …<br />'."\n"; flush();
@@ -1166,8 +1202,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 			sync_forum($row[0]);
 
 		// We'll empty the search cache table as well (using DELETE FROM since SQLite does not support TRUNCATE TABLE)
-		if ($db_type != 'mysql' && $db_type != 'mysqli')
-			$forum_db->query('DELETE FROM '.$forum_db->prefix.'search_cache') or error(__FILE__, __LINE__);
+		$forum_db->query('DELETE FROM '.$forum_db->prefix.'search_cache') or error(__FILE__, __LINE__);
 
 		// Empty the PHP cache
 		$d = dir(FORUM_CACHE_DIR);
