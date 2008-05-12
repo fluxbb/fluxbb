@@ -36,7 +36,7 @@ $smilies = array(':)' => 'smile.png', '=)' => 'smile.png', ':|' => 'neutral.png'
 // Uncomment the next row if you add smilies that contain any of the characters &"'<>
 //$smilies = array_combine(array_map('forum_htmlspecialchars', array_keys($smilies)), array_values($smilies));
 
-$return = ($hook = get_hook('ps_start')) ? eval($hook) : null;
+($hook = get_hook('ps_start')) ? eval($hook) : null;
 
 $smilies_match = array();
 $smilies_replace = array();
