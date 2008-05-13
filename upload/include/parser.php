@@ -69,8 +69,8 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 		$pattern = array('#\[list\](.*?)\[/list\]#ems',
 						 '#\[list=([1a\*])\](.*?)\[/list\]#ems');
 
-		$replace = array('preparse_list_tag(\'$1\')',
-						 'preparse_list_tag(\'$2\', \'$1\')');
+		$replace = array('preparse_list_tag(\'$1\', \'*\', $errors)',
+						 'preparse_list_tag(\'$2\', \'$1\', $errors)');
 
 		$text = preg_replace($pattern, $replace, $text);		
 
@@ -413,13 +413,21 @@ function preparse_tags($text, &$errors, $is_signature = false)
 //
 // Parse the contents of [list] bbcode
 //
-function preparse_list_tag($content, $type = '*')
+function preparse_list_tag($content, $type = '*', &$errors)
 {
+	global $lang_common;
+
+	if (strpos($content,'[list') !== false)
+	{
+		$errors['list'] = $lang_common['BBCode nested list'];
+		return '[list='.$type.']'.$content.'[/list]';
+	}
+
 	$items = explode('[*]',$content);
 	$content = '';
 	foreach ($items as $item)
 		if (trim($item) != '')
-			$content .= '[*]'.str_replace('[/*]','',$item)."[/*]\n";
+			$content .= trim('[*]'.str_replace('[/*]','',$item))."[/*]\n";
 
 	return '[list='.$type.']'."\n".$content.'[/list]';
 }
