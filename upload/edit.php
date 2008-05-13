@@ -116,7 +116,7 @@ if (isset($_POST['form_sent']))
 		$message = ucwords(strtolower($message));
 
 	// Validate BBCode syntax
-	if ($forum_config['p_message_bbcode'] == '1' && strpos($message, '[') !== false && strpos($message, ']') !== false)
+	if ($forum_config['p_message_bbcode'] == '1' || $forum_config['o_make_links'] == '1')
 	{
 		require FORUM_ROOT.'include/parser.php';
 		$message = preparse_bbcode($message, $errors);

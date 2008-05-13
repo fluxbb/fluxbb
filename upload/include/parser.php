@@ -35,20 +35,13 @@ $smilies = array(':)' => 'smile.png', '=)' => 'smile.png', ':|' => 'neutral.png'
 
 ($hook = get_hook('ps_start')) ? eval($hook) : null;
 
-$smilies_match = array();
-$smilies_replace = array();
-foreach ($smilies as $smiley_text => $smiley_img)
-{
-	$smilies_match[] = "#(?<=.\W|\W.|^\W)".preg_quote($smiley_text, '#')."(?=.\W|\W.|\W$)#m";
-	$smilies_replace[] = '$1<img src="'.$base_url.'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.substr($smiley_img, 0, strrpos($smiley_img, '.')).'" />$2';
-}
-
-
 //
 // Make sure all BBCodes are lower case and do a little cleanup
 //
 function preparse_bbcode($text, &$errors, $is_signature = false)
 {
+	global $forum_config;
+
 	$return = ($hook = get_hook('ps_preparse_bbcode_start')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
@@ -69,6 +62,9 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	if ($return != null)
 		return $return;
 
+	if ($forum_config['o_make_links'] == '1')
+		$text = do_clickable($text);
+
 	return trim($text);
 }
 
@@ -77,7 +73,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	global $lang_common;
 
 	// Start off by making some arrays of bbcode tags and what we need to do with each one
-	
+
 	// List of all the tags
 	$tags = array('quote', 'code', 'b', 'i', 'u', 'color', 'colour', 'url', 'email', 'img');
 	// List of tags that we need to check are open (You could not put b,i,u in here then illegal nesting like [b][i][/b][/i] would be allowed)
@@ -101,14 +97,14 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		return $return;
 
 	$split_text = preg_split("/(\[.*?\])/", $text, -1, PREG_SPLIT_DELIM_CAPTURE);
-	
+
 	$open_tags = array('post');
 	$opened_tag = 0;
 	$new_text = '';
 	$current_ignore = '';
 	$current_nest = '';
 	$current_depth = array();
-	
+
 	foreach ($split_text as $current)
 	{
 		if (strpos($current, '[') === false && strpos($current, ']') === false)
@@ -124,7 +120,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 
 			continue;
 		}
-		
+
 		if (strpos($current, '/') === 1)
 		{
 			$current_tag = substr($current, 2, -1);
@@ -342,10 +338,8 @@ function split_text($text, $start, $end, $retab = true)
 //
 // Truncate URL if longer than 55 characters (add http:// or ftp:// if missing)
 //
-function handle_url_tag($url, $link = '')
+function handle_url_tag($url, $link = '', $bbcode = false)
 {
-	global $forum_user;
-
 	$return = ($hook = get_hook('ps_handle_url_tag_start')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
@@ -365,7 +359,13 @@ function handle_url_tag($url, $link = '')
 	if ($return != null)
 		return $return;
 
-	return '<a href="'.$full_url.'">'.$link.'</a>';
+	if ($bbcode)
+		if ($full_url == $link)
+			return '[url]'.$link.'[/url]';
+		else
+			return '[url='.$full_url.']'.$link.'[/url]';
+	else
+		return '<a href="'.$full_url.'">'.$link.'</a>';
 }
 
 
@@ -374,7 +374,7 @@ function handle_url_tag($url, $link = '')
 //
 function handle_img_tag($url, $is_signature = false, $alt=null)
 {
-	global $lang_common, $forum_config, $forum_user;
+	global $lang_common, $forum_user;
 
 	$return = ($hook = get_hook('ps_handle_img_tag_start')) ? eval($hook) : null;
 	if ($return != null)
@@ -470,12 +470,10 @@ function do_bbcode($text, $is_signature = false)
 //
 function do_clickable($text)
 {
-	global $forum_user;
-
 	$text = ' '.$text;
 
-	$text = preg_replace('#([\s\(\)])(https?|ftp|news){1}://([\w\-]+\.([\w\-]+\.)*[\w]+(:[0-9]+)?(/[^"\s\(\)<\[]*)?)#ie', '\'$1\'.handle_url_tag(\'$2://$3\')', $text);
-	$text = preg_replace('#([\s\(\)])(www|ftp)\.(([\w\-]+\.)*[\w]+(:[0-9]+)?(/[^"\s\(\)<\[]*)?)#ie', '\'$1\'.handle_url_tag(\'$2.$3\', \'$2.$3\')', $text);
+	$text = preg_replace('#([\s\(\)])(https?|ftp|news){1}://([\w\-]+\.([\w\-]+\.)*[\w]+(:[0-9]+)?(/[^"\s\(\)<\[]*)?)#ie', '\'$1\'.handle_url_tag(\'$2://$3\', \'$2://$3\', true)', $text);
+	$text = preg_replace('#([\s\(\)])(www|ftp)\.(([\w\-]+\.)*[\w]+(:[0-9]+)?(/[^"\s\(\)<\[]*)?)#ie', '\'$1\'.handle_url_tag(\'$2.$3\', \'$2.$3\', true)', $text);
 
 	return substr($text, 1);
 }
@@ -486,11 +484,15 @@ function do_clickable($text)
 //
 function do_smilies($text)
 {
-	global $forum_config, $base_url, $smilies_match, $smilies_replace;
+	global $forum_config, $base_url, $smilies;
 
 	$text = ' '.$text.' ';
-
-	$text = preg_replace($smilies_match, $smilies_replace, $text);
+	
+	foreach ($smilies as $smiley_text => $smiley_img)
+	{
+		if (strpos($text, $smiley_text) !== false)
+			$text = preg_replace("#(?<=.\W|\W.|^\W)".preg_quote($smiley_text, '#')."(?=.\W|\W.|\W$)#m", '$1<img src="'.$base_url.'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.substr($smiley_img, 0, strrpos($smiley_img, '.')).'" />$2', $text);
+	}
 
 	return substr($text, 1, -1);
 }
@@ -532,9 +534,6 @@ function parse_message($text, $hide_smilies)
 	$return = ($hook = get_hook('ps_parse_message_post_split')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-
-	if ($forum_config['o_make_links'] == '1')
-		$text = do_clickable($text);
 
 	if ($forum_config['o_smilies'] == '1' && $forum_user['show_smilies'] == '1' && $hide_smilies == '0')
 		$text = do_smilies($text);
@@ -600,9 +599,6 @@ function parse_signature($text)
 		$text = censor_words($text);
 
 	$text = forum_htmlencode($text);
-
-	if ($forum_config['o_make_links'] == '1')
-		$text = do_clickable($text);
 
 	if ($forum_config['o_smilies_sig'] == '1' && $forum_user['show_smilies'] != '0')
 		$text = do_smilies($text);

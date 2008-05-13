@@ -1006,7 +1006,7 @@ else if (isset($_POST['form_sent']))
 				$form['signature'] = ucwords(strtolower($form['signature']));
 
 			// Validate BBCode syntax
-			if ($forum_config['p_sig_bbcode'] == '1' && strpos($form['signature'], '[') !== false && strpos($form['signature'], ']') !== false)
+			if ($forum_config['p_sig_bbcode'] == '1' || $forum_config['o_make_links'] == '1')
 			{
 				require FORUM_ROOT.'include/parser.php';
 				$form['signature'] = preparse_bbcode($form['signature'], $errors, true);
