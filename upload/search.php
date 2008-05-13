@@ -301,7 +301,7 @@ if (isset($query))
 					<div class="post-entry">
 						<h4 class="entry-title"><?php echo implode(' ', $forum_page['item_subject']) ?></h4>
 						<div class="entry-content">
-							<p><?php echo $forum_page['message'] ?></p>
+							<?php echo $forum_page['message'] ?>
 						</div>
 					</div>
 				</div>
