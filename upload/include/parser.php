@@ -57,6 +57,15 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	if (strpos($text, '[list') !== false)
 	{
 		// Tidy up lists
+
+		// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
+		if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
+		{
+			list($inside, $outside) = split_text($text, '[code]', '[/code]');
+			$outside = $outside;
+			$text = implode('[%]', $outside);
+		}
+
 		$pattern = array('#\[list\](.*?)\[/list\]#ems',
 						 '#\[list=([1a\*])\](.*?)\[/list\]#ems');
 
@@ -64,6 +73,22 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 						 'preparse_list_tag(\'$2\', \'$1\')');
 
 		$text = preg_replace($pattern, $replace, $text);		
+
+		// If we split up the message before we have to concatenate it together again (code tags)
+		if (isset($inside))
+		{
+			$outside = explode('[%]', $text);
+			$text = '';
+
+			$num_tokens = count($outside);
+
+			for ($i = 0; $i < $num_tokens; ++$i)
+			{
+				$text .= $outside[$i];
+				if (isset($inside[$i]))
+					$text .= '[code]'.$inside[$i].'[/code]';
+			}
+		}
 	}
 
 	$temp_text = preparse_tags($text, $errors, $is_signature);
