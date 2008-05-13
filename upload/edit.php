@@ -224,7 +224,7 @@ ob_start();
 if (isset($_POST['preview']) && empty($forum_page['errors']))
 {
 	require_once FORUM_ROOT.'include/parser.php';
-	$forum_page['preview_message'] = parse_message(trim($_POST['req_message']), $hide_smilies);
+	$forum_page['preview_message'] = parse_message($message, $hide_smilies);
 
 ?>
 	<div class="main-head">
