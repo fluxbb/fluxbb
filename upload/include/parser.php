@@ -75,7 +75,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	// Start off by making some arrays of bbcode tags and what we need to do with each one
 
 	// List of all the tags
-	$tags = array('quote', 'code', 'b', 'i', 'u', 'color', 'colour', 'url', 'email', 'img');
+	$tags = array('quote', 'code', 'b', 'i', 'u', 'color', 'colour', 'url', 'email', 'img', 'list', '*');
 	// List of tags that we need to check are open (You could not put b,i,u in here then illegal nesting like [b][i][/b][/i] would be allowed)
 	$tags_opened = $tags;
 	// and tags we need to check are closed (the same as above, added it just in case)
@@ -85,9 +85,9 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	// Tags to ignore the contents of completely (just code)
 	$tags_ignore = array('code');
 	// Block tags, block tags can only go within another block tag, they cannot be in a normal tag
-	$tags_block = array('quote', 'code');
+	$tags_block = array('quote', 'code', 'list');
 	// Tags we trim interior whitespace
-	$tags_trim = array('url', 'email', 'image');
+	$tags_trim = array('url', 'email', 'image', '*');
 	// Tags we remove quotes from the argument
 	$tags_quotes = array('url', 'email', 'image');
 
@@ -398,6 +398,25 @@ function handle_img_tag($url, $is_signature = false, $alt=null)
 
 
 //
+// Parse the contents of [list] bbcode
+//
+function handle_list_tag($content, $type = '*')
+{
+	$content = preg_replace('#\s*\[\*\](.*?)\[/\*\]\s*#s', '<li>$1</li>', trim($content));
+
+	if ($type == '*')
+		$content = '<ul>'.$content.'</ul>';
+	else
+		if ($type == 'a')
+			$content = '<ol class="alpha">'.$content.'</ol>';
+		else
+			$content = '<ol class="decimal">'.$content.'</ol>';
+
+	return '</p>'.$content.'<p>';
+}
+
+
+//
 // Convert BBCodes to their HTML equivalent
 //
 function do_bbcode($text, $is_signature = false)
@@ -410,12 +429,14 @@ function do_bbcode($text, $is_signature = false)
 
 	if (strpos($text, 'quote') !== false)
 	{
-		$text = str_replace('[quote]', '</p><div class="quotebox"><blockquote><p>', $text);
+		$text = preg_replace('#\s*\[quote\]\s*#', '</p><div class="quotebox"><blockquote><p>', $text);
 		$text = preg_replace('#\[quote=(&quot;|"|\'|)(.*)\\1\]#seU', '"</p><div class=\"quotebox\"><cite>".str_replace(array(\'[\', \'\\"\'), array(\'&#91;\', \'"\'), \'$2\')." ".$lang_common[\'wrote\'].":</cite><blockquote><p>"', $text);
-		$text = preg_replace('#\[\/quote\]\s*#', '</p></blockquote></div><p>', $text);
+		$text = preg_replace('#\s*\[\/quote\]\s*#', '</p></blockquote></div><p>', $text);
 	}
 
-	$pattern = array('#\[b\](.*?)\[/b\]#s',
+	$pattern = array('#\s*\[list\](.*?)\[/list\]\s*#ems',
+					 '#\s*\[list=([1a\*])\](.*?)\[/list\]\s*#ems',
+					 '#\[b\](.*?)\[/b\]#s',
 					 '#\[i\](.*?)\[/i\]#s',
 					 '#\[u\](.*?)\[/u\]#s',
 					 '#\[url\]([^\[]*?)\[/url\]#e',
@@ -424,7 +445,9 @@ function do_bbcode($text, $is_signature = false)
 					 '#\[email=([^\[]*?)\](.*?)\[/email\]#',
 					 '#\[colou?r=([a-zA-Z]{3,20}|\#?[0-9a-fA-F]{6})](.*?)\[/colou?r\]#s');
 
-	$replace = array('<strong>$1</strong>',
+	$replace = array('handle_list_tag(\'$1\')',
+					 'handle_list_tag(\'$2\', \'$1\')',
+					 '<strong>$1</strong>',
 					 '<em>$1</em>',
 					 '<em class="bbuline">$1</em>',
 					 'handle_url_tag(\'$1\')',
@@ -526,7 +549,7 @@ function parse_message($text, $hide_smilies)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
 		list($inside, $outside) = split_text($text, '[code]', '[/code]');
-		$outside = array_map('ltrim', $outside);
+		$outside = array_map('trim', $outside);
 		$text = implode('[%]', $outside);
 	}
 
@@ -567,7 +590,7 @@ function parse_message($text, $hide_smilies)
 		{
 			$text .= $outside[$i];
 			if (isset($inside[$i]))
-				$text .= '</p><div class="codebox"><strong>'.$lang_common['Code'].':</strong><pre><code>'.$inside[$i].'</code></pre></div><p>';
+				$text .= '</p><div class="codebox"><pre><code>'.trim($inside[$i], "\n\r").'</code></pre></div><p>';
 		}
 	}
 
