@@ -53,6 +53,18 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 		if (preg_match('#\[quote=(&quot;|"|\'|)(.*)\\1\]|\[quote\]|\[/quote\]|\[code\]|\[/code\]#i', $text))
 			$errors[] = $lang_profile['Signature quote/code'];
 	}
+	
+	if (strpos($text, '[list') !== false)
+	{
+		// Tidy up lists
+		$pattern = array('#\[list\](.*?)\[/list\]#ems',
+						 '#\[list=([1a\*])\](.*?)\[/list\]#ems');
+
+		$replace = array('preparse_list_tag(\'$1\')',
+						 'preparse_list_tag(\'$2\', \'$1\')');
+
+		$text = preg_replace($pattern, $replace, $text);		
+	}
 
 	$temp_text = preparse_tags($text, $errors, $is_signature);
 	if ($temp_text !== false)
@@ -325,6 +337,22 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	return $new_text;
 }
 
+
+//
+// Parse the contents of [list] bbcode
+//
+function preparse_list_tag($content, $type = '*')
+{
+	$items = explode('[*]',$content);
+	$content = '';
+	foreach ($items as $item)
+		if (trim($item) != '')
+			$content .= '[*]'.str_replace('[/*]','',$item)."[/*]\n";
+
+	return '[list='.$type.']'."\n".$content.'[/list]';
+}
+
+
 //
 // Split text into chunks ($inside contains all text inside $start and $end, and $outside contains all text outside)
 //
@@ -447,15 +475,14 @@ function do_bbcode($text, $is_signature = false)
 	if ($return != null)
 		return $return;
 
-	if (strpos($text, 'quote') !== false)
+	if (strpos($text, '[quote') !== false)
 	{
 		$text = preg_replace('#\s*\[quote\]\s*#', '</p><div class="quotebox"><blockquote><p>', $text);
 		$text = preg_replace('#\[quote=(&quot;|"|\'|)(.*)\\1\]#seU', '"</p><div class=\"quotebox\"><cite>".str_replace(array(\'[\', \'\\"\'), array(\'&#91;\', \'"\'), \'$2\')." ".$lang_common[\'wrote\'].":</cite><blockquote><p>"', $text);
 		$text = preg_replace('#\s*\[\/quote\]\s*#', '</p></blockquote></div><p>', $text);
 	}
 
-	$pattern = array('#\s*\[list\](.*?)\[/list\]\s*#ems',
-					 '#\s*\[list=([1a\*])\](.*?)\[/list\]\s*#ems',
+	$pattern = array('#\s*\[list=([1a\*])\](.*?)\[/list\]\s*#ems',
 					 '#\[b\](.*?)\[/b\]#s',
 					 '#\[i\](.*?)\[/i\]#s',
 					 '#\[u\](.*?)\[/u\]#s',
@@ -465,8 +492,7 @@ function do_bbcode($text, $is_signature = false)
 					 '#\[email=([^\[]*?)\](.*?)\[/email\]#',
 					 '#\[colou?r=([a-zA-Z]{3,20}|\#?[0-9a-fA-F]{6})](.*?)\[/colou?r\]#s');
 
-	$replace = array('handle_list_tag(\'$1\')',
-					 'handle_list_tag(\'$2\', \'$1\')',
+	$replace = array('handle_list_tag(\'$2\', \'$1\')',
 					 '<strong>$1</strong>',
 					 '<em>$1</em>',
 					 '<em class="bbuline">$1</em>',
