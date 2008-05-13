@@ -114,6 +114,7 @@ $lang_common = array(
 'BBCode error 3'		=>	'[%1$s] was opened within [%2$s], this is not allowed',
 'BBCode error 4'		=>	'[%1$s] was opened within itself, this is not allowed',
 'BBCode error 5'		=>	'[%1$s] was found without a matching [/%1$s]',
+'BBCode error 6'		=>	'[%1$s] tag is empty',
 
 // Stuff for the navigator (top of every page)
 'Navigation'			=>	'Forum navigation',

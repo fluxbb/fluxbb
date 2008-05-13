@@ -103,14 +103,20 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	$current_ignore = '';
 	$current_nest = '';
 	$current_depth = array();
+	$content = 0;
 
 	foreach ($split_text as $current)
 	{
+		if ($current == '')
+			continue;
+
 		if (strpos($current, '[') === false && strpos($current, ']') === false)
 		{
 			// Its not a bbcode tag so we put it on the end and continue
 			if (!$current_nest)
 			{
+				$content = 1;
+
 				if (in_array($open_tags[$opened_tag], $tags_trim))
 					$new_text .= trim($current);
 				else
@@ -138,6 +144,8 @@ function preparse_tags($text, &$errors, $is_signature = false)
 
 		if (!in_array($current_tag, $tags))
 		{
+			$content = 1;
+
 			// Its not a bbcode tag so we put it on the end and continue
 			if (!$current_nest)
 				$new_text .= $current;
@@ -146,9 +154,12 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		}
 
 		// We definitely have a bbcode tag.
+		
+		//This is if we are currently in a tag which escapes other bbcode such as code
 		if ($current_ignore)
 		{
-			//This is if we are currently in a tag which escapes other bbcode such as code
+			$content = 1;
+
 			if ($current_ignore == $current_tag)
 			{
 				$current = '[/'.$current_tag.']';
@@ -185,6 +196,12 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		if (substr($current, 1, 1) == '/')
 		{
 			//This is if we are closing a tag
+
+			if ($content == 0) {
+				$errors[] = sprintf($lang_common['BBCode error 6'], $current_tag);
+				return false;
+			}
+
 			if ($opened_tag == 0 || !in_array($current_tag, $open_tags))
 			{
 				//We tried to close a tag which is not open 
@@ -232,6 +249,9 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		else
 		{
 			// We are opening a tag
+
+			$content = 0;
+
 			if (in_array($current_tag, $tags_block) && !in_array($open_tags[$opened_tag], $tags_block) && $opened_tag != 0)
 			{
 				// We tried to open a block tag within a non-block tag
