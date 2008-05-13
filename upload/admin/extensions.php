@@ -150,16 +150,20 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 		}
 
 		// Now insert the hooks
-		foreach ($ext_data['extension']['hooks']['hook'] as $hook)
+		foreach ($ext_data['extension']['hooks']['hook'] as $ext_hook)
 		{
-			$query = array(
-				'INSERT'	=> 'id, extension_id, code, installed, priority',
-				'INTO'		=> 'extension_hooks',
-				'VALUES'	=> '\''.$forum_db->escape(trim($hook['attributes']['id'])).'\', \''.$forum_db->escape($id).'\', \''.$forum_db->escape(trim($hook['content'])).'\', '.time().', '.(isset($hook['attributes']['priority']) ? $hook['attributes']['priority'] : 5)
-			);
+			$cur_hooks = explode(',',$ext_hook['attributes']['id']);
+			foreach ($cur_hooks as $cur_hook)
+			{
+				$query = array(
+					'INSERT'	=> 'id, extension_id, code, installed, priority',
+					'INTO'		=> 'extension_hooks',
+					'VALUES'	=> '\''.$forum_db->escape(trim($cur_hook)).'\', \''.$forum_db->escape($id).'\', \''.$forum_db->escape(trim($ext_hook['content'])).'\', '.time().', '.(isset($ext_hook['attributes']['priority']) ? $ext_hook['attributes']['priority'] : 5)
+				);
 
-			($hook = get_hook('aex_qr_add_hook')) ? eval($hook) : null;
-			$forum_db->query_build($query) or error(__FILE__, __LINE__);
+				($hook = get_hook('aex_qr_add_hook')) ? eval($hook) : null;
+				$forum_db->query_build($query) or error(__FILE__, __LINE__);
+			}
 		}
 
 		// Empty the PHP cache
