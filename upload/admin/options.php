@@ -113,6 +113,7 @@ if (isset($_POST['form_sent']))
 			if (!isset($form['subject_all_caps']) || $form['subject_all_caps'] != '1') $form['subject_all_caps'] = '0';
 
 			$form['indent_num_spaces'] = intval($form['indent_num_spaces']);
+			$form['quote_depth'] = intval($form['quote_depth']);
 
 			if (!isset($form['signatures']) || $form['signatures'] != '1') $form['signatures'] = '0';
 			if (!isset($form['sig_bbcode']) || $form['sig_bbcode'] != '1') $form['sig_bbcode'] = '0';
@@ -735,6 +736,13 @@ $forum_page['set_count'] = 0;
 							<span class="fld-label"><?php echo $lang_admin['Indent size'] ?></span><br />
 							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[indent_num_spaces]" size="3" maxlength="3" value="<?php echo $forum_config['o_indent_num_spaces'] ?>" /></span><br />
 							<span class="fld-extra"><?php echo $lang_admin['Indent size info'] ?></span>
+						</label>
+					</div>
+					<div class="frm-fld text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
+							<span class="fld-label"><?php echo $lang_admin['Quote depth'] ?></span><br />
+							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[quote_depth]" size="3" maxlength="3" value="<?php echo $forum_config['o_quote_depth'] ?>" /></span><br />
+							<span class="fld-extra"><?php echo $lang_admin['Quote depth info'] ?></span>
 						</label>
 					</div>
 <?php ($hook = get_hook('aop_features_message_end')) ? eval($hook) : null; ?>

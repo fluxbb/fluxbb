@@ -70,7 +70,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 
 function preparse_tags($text, &$errors, $is_signature = false)
 {
-	global $lang_common;
+	global $lang_common, $forum_config;
 
 	// Start off by making some arrays of bbcode tags and what we need to do with each one
 
@@ -81,8 +81,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	// and tags we need to check are closed (the same as above, added it just in case)
 	$tags_closed = $tags;
 	// Tags we can nest and the depth they can be nested to (only quotes )
-	$tags_nested = array('quote');
-	$tags_nested_depth = array('quote' => 3);
+	$tags_nested = array('quote' => $forum_config['o_quote_depth']);
 	// Tags to ignore the contents of completely (just code)
 	$tags_ignore = array('code');
 	// Block tags, block tags can only go within another block tag, they cannot be in a normal tag
@@ -177,7 +176,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			else
 				$current_depth[$current_nest]++;
 			
-			if ($current_depth[$current_nest] <= $tags_nested_depth[$current_nest])
+			if ($current_depth[$current_nest] <= $tags_nested[$current_nest])
 				$current_nest = '';
 
 			continue;
@@ -221,7 +220,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 				}
 			}
 
-			if (in_array($current_tag, $tags_nested))
+			if (in_array($current_tag, array_keys($tags_nested)))
 			{
 				if (isset($current_depth[$current_tag]))
 					$current_depth[$current_tag]--;
@@ -248,21 +247,21 @@ function preparse_tags($text, &$errors, $is_signature = false)
 				continue;
 			}
 
-			if (in_array($current_tag, $open_tags) && !in_array($current_tag, $tags_nested))
+			if (in_array($current_tag, $open_tags) && !in_array($current_tag, array_keys($tags_nested)))
 			{
 				// We tried to open a tag within itself that shouldn't be allowed.
 				$errors[] = sprintf($lang_common['BBCode error 4'], $current_tag);
 				return false;
 			}
 
-			if (in_array($current_tag, $tags_nested))
+			if (in_array($current_tag, array_keys($tags_nested)))
 			{
 				if (isset($current_depth[$current_tag]))
 					$current_depth[$current_tag]++;
 				else
 					$current_depth[$current_tag] = 1;
 					
-				if ($current_depth[$current_tag] > $tags_nested_depth[$current_tag])
+				if ($current_depth[$current_tag] > $tags_nested[$current_tag])
 				{
 					$current_nest = $current_tag;
 					continue;

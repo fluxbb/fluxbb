@@ -679,6 +679,10 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		// Drop use_avatar column from users table
 		$forum_db->drop_field($forum_db->prefix.'users', 'use_avatar');
 
+		// Add quote depth option
+		if (!array_key_exists('o_quote_depth', $forum_config))
+			$forum_db->query('INSERT INTO '.$forum_db->prefix.'config (conf_name, conf_value) VALUES(\'o_quote_depth\', \'3\')') or error(__FILE__, __LINE__);
+
 		// Make sure we have o_additional_navlinks (was added in 1.2.1)
 		if (!array_key_exists('o_additional_navlinks', $forum_config))
 			$forum_db->query('INSERT INTO '.$forum_db->prefix.'config (conf_name, conf_value) VALUES(\'o_additional_navlinks\', \'\')') or error(__FILE__, __LINE__);
