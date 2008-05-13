@@ -142,6 +142,10 @@ em.req-text, #req-msg p em, .brd li.warn, .brd .warn strong, .brd .frm-group .wa
 	color: #b42000;
 	}
 	
+.main .entry-content li {
+	color: #333;
+	}
+	
 /*************************************************************
 C - LINKS
 **************************************************************/

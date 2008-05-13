@@ -1435,7 +1435,26 @@ G - TOPICS / POSTS
 .main .entry-content p {
 	margin: 0 0 1em 0;
 	}
-
+	
+.brd .entry-content ul {
+	margin: 0 0 0.5em 2em;
+	list-style-type: disc;
+	}
+	
+.brd .entry-content ol {
+	margin: 0 0 0.5em 2.5em;
+	list-style-type: decimal;
+	}
+	
+.brd .entry-content ol.alpha {
+	list-style-type: upper-alpha;
+	}
+	
+.main .entry-content li {
+	padding: 0 0 0.5em 0;
+	line-height: 1.3em;
+	}
+	
 .frm .post-entry {
 	margin: 1.7em;
 	border-style: solid;
