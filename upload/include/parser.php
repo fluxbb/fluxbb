@@ -102,6 +102,8 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	$tags_trim = array('url', 'email', 'image', '*');
 	// Tags we remove quotes from the argument
 	$tags_quotes = array('url', 'email', 'image');
+	// Tags we disallow bbcode in
+	$tags_no_bbcode = array('url', 'email', 'image');
 
 	$return = ($hook = get_hook('ps_preparse_tags_start')) ? eval($hook) : null;
 	if ($return != null)
@@ -116,6 +118,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	$current_nest = '';
 	$current_depth = array();
 	$content = 0;
+	$no_bbcode = 0;
 
 	foreach ($split_text as $current)
 	{
@@ -127,7 +130,8 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			// Its not a bbcode tag so we put it on the end and continue
 			if (!$current_nest)
 			{
-				$content = 1;
+				if (trim($current) != '')
+					$content = 1;
 
 				if (in_array($open_tags[$opened_tag], $tags_trim))
 					$new_text .= trim($current);
@@ -187,6 +191,12 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			$current = strtolower(substr($current, 0, $equalpos)).substr($current,$equalpos);
 		else
 			$current = strtolower($current);
+			
+		if ($no_bbcode && $current_tag != $open_tags[$opened_tag])
+		{
+			$errors[] = sprintf($lang_common['BBCode error 3'], $current_tag, $open_tags[$opened_tag]);
+			return false;
+		}
 
 		if ($current_nest)
 		{
@@ -210,7 +220,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			//This is if we are closing a tag
 
 			if ($content == 0) {
-				$errors[] = sprintf($lang_common['BBCode error 6'], $current_tag);
+				$errors[] = sprintf($lang_common['BBCode error 2'], $current_tag);
 				return false;
 			}
 
@@ -236,8 +246,39 @@ function preparse_tags($text, &$errors, $is_signature = false)
 					
 					if (in_array($open_tags[$opened_tag], $tags_closed) && in_array($current_tag, $tags_closed))
 					{
-						$errors[] = sprintf($lang_common['BBCode error 2'], $current_tag, $open_tags[$opened_tag]);
-						return false;
+						if (in_array($current_tag, $open_tags))
+						{
+							$temp_opened = array();
+							$temp = '';
+							while (!empty($open_tags))
+							{
+								$temp_tag = array_pop($open_tags);
+								array_push($temp_opened, $temp_tag);
+								
+								if ($temp_tag == $current_tag)
+									break;
+								else
+									$temp .= '[/'.$temp_tag.']';
+							}
+							$current = $temp.$current;
+							$temp = '';
+							array_pop($temp_opened);
+							while (!empty($temp_opened))
+							{
+								$temp_tag = array_pop($temp_opened);
+								$temp .= '['.$temp_tag.']';
+								array_push($open_tags, $temp_tag);
+							}
+							$current .= $temp;
+							$opened_tag--;
+							echo $current;
+							break;
+						}
+						else
+						{
+							$errors[] = sprintf($lang_common['BBCode error 1'], $current_tag);
+							return false;
+						}
 					}
 					else if (in_array($open_tags[$opened_tag], $tags_closed))
 						break;
@@ -254,6 +295,9 @@ function preparse_tags($text, &$errors, $is_signature = false)
 				if (isset($current_depth[$current_tag]))
 					$current_depth[$current_tag]--;
 			}
+			
+			if (in_array($current_tag, $tags_no_bbcode))
+				$no_bbcode = 0;
 
 			$new_text .= $current;
 			continue;
@@ -304,6 +348,9 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			{
 				$current = preg_replace('#\['.$current_tag.'=("|\'|)(.*?)\\1\]\s*#i', '['.$current_tag.'=$2]', $current);
 			}
+			
+			if (in_array($current_tag, $tags_no_bbcode))
+				$no_bbcode = 1;
 
 			$open_tags[] = $current_tag;
 			$opened_tag++;

@@ -110,11 +110,10 @@ $lang_common = array(
 
 // Stuff for include/parser.php
 'BBCode error 1'		=>	'[/%1$s] was found without a matching [%1$s]',
-'BBCode error 2'		=>	'[/%1$s] found after [%2$s], make sure [%2$s] is properly closed',
+'BBCode error 2'		=>	'[%1$s] tag is empty',
 'BBCode error 3'		=>	'[%1$s] was opened within [%2$s], this is not allowed',
 'BBCode error 4'		=>	'[%1$s] was opened within itself, this is not allowed',
 'BBCode error 5'		=>	'[%1$s] was found without a matching [/%1$s]',
-'BBCode error 6'		=>	'[%1$s] tag is empty',
 
 // Stuff for the navigator (top of every page)
 'Navigation'			=>	'Forum navigation',
