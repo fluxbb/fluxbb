@@ -431,6 +431,11 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 			$forum_page['post_options']['quote'] = '<a href="'.forum_link($forum_url['quote'], array($id, $cur_post['id'])).'"><span>'.$lang_topic['Quote'].'<span>&#160;'.$lang_topic['Post'].' '.($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
 		}
 	}
+	else
+	{
+		if (($cur_topic['post_replies'] == '' && $forum_user['g_post_replies'] == '1') || $cur_topic['post_replies'] == '1')
+			$forum_page['post_options']['quote'] = '<a href="'.forum_link($forum_url['quote'], array($id, $cur_post['id'])).'"><span>'.$lang_topic['Quote'].'<span>&#160;'.$lang_topic['Post'].' '.($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
+	}
 
 	// Give the post some class
 	$forum_page['item_status'] = array(
