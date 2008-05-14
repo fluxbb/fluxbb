@@ -37,7 +37,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = -1
 	$return = ($hook = get_hook('sf_create_search_cache_start')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-		
+
 	if (forum_strlen(str_replace(array('*', '%'), '', $author)) < 2)
 		$author = '';
 	
@@ -46,11 +46,24 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = -1
 
 	if (!$keywords && !$author)
 		message($lang_search['No terms']);
-	
+
 	// Flood protection
 	if (!$forum_user['is_guest'] && $forum_user['last_search'] != '' && (time() - $forum_user['last_search']) < $forum_user['g_search_flood'] && (time() - $forum_user['last_search']) >= 0)
 		message(sprintf($lang_search['Search flood'], $forum_user['g_search_flood']));
-	
+
+	if (!$forum_user['is_guest'])
+	{
+		// Set the user's last_search time
+		$query = array(
+			'UPDATE'	=> 'users',
+			'SET'		=> 'last_search='.time(),
+			'WHERE'		=> 'id='.$forum_user['id'],
+		);
+
+		($hook = get_hook('sf_qr_update_last_search_time')) ? eval($hook) : null;
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
+	}
+
 	// We need to grab results, insert them into the cache and reload with a search id before showing them
 	$keyword_results = $author_results = array();
 
@@ -600,19 +613,6 @@ function get_search_results($query, &$search_set, &$forum_page)
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	else
 		$result = $forum_db->query($query) or error(__FILE__, __LINE__);
-
-	if (!$forum_user['is_guest'])
-	{
-		// Set the user's last_search time
-		$query = array(
-			'UPDATE'	=> 'users',
-			'SET'		=> 'last_search='.time(),
-			'WHERE'		=> 'id='.$forum_user['id'],
-		);
-
-		($hook = get_hook('sf_qr_update_last_search_time')) ? eval($hook) : null;
-		$forum_db->query_build($query) or error(__FILE__, __LINE__);
-	}
 
 	// Make sure we actually have some results
 	$num_hits = $forum_db->num_rows($result);
