@@ -190,6 +190,7 @@ if (isset($query))
 		<table cellspacing="0" summary="<?php echo $lang_search['Table summary'] ?>">
 			<thead>
 				<tr>
+<?php ($hook = get_hook('se_table_header_begin')) ? eval($hook) : null; ?>
 					<th class="tcl" scope="col"><?php echo $lang_common['Topic']; ?></th>
 					<th class="tc2" scope="col"><?php echo $lang_common['Forum'] ?></th>
 					<th class="tc3" scope="col"><?php echo $lang_common['Replies'] ?></th>
@@ -354,6 +355,7 @@ if (isset($query))
 
 ?>
 				<tr class="<?php echo ($forum_page['item_count'] % 2 != 0) ? 'odd' : 'even' ?>">
+<?php ($hook = get_hook('se_table_contents_begin')) ? eval($hook) : null; ?>
 					<td class="tcl"><?php echo $forum_page['item_indicator'].' '.implode(' ', $forum_page['item_subject']) ?></td>
 					<td class="tc2"><?php echo forum_htmlencode($search_set[$i]['forum_name']) ?></td>
 					<td class="tc3"><?php echo $search_set[$i]['num_replies'] ?></td>
