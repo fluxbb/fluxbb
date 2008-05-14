@@ -179,8 +179,6 @@ function cookie_login(&$forum_user)
 
 					$forum_user['last_visit'] = $forum_user['logged'];
 				}
-				
-				$forum_user['prev_url'] = get_current_url(255);
 
 				// Now update the logged time and save the current URL in the online list
 				$query = array(
@@ -275,8 +273,6 @@ function set_default_user()
 	}
 	else
 	{
-		$forum_user['prev_url'] = get_current_url(255);
-
 		$query = array(
 			'UPDATE'	=> 'online',
 			'SET'		=> 'logged='.time(),
