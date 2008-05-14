@@ -186,9 +186,10 @@ function cookie_login(&$forum_user)
 					'SET'		=> 'logged='.$now,
 					'WHERE'		=> 'user_id='.$forum_user['id']
 				);
-				
-				if ($forum_user['prev_url'] != null)
-					$query['SET'] .= ', prev_url=\''.$forum_db->escape($forum_user['prev_url']).'\'';
+
+				$current_url = get_current_url(255);
+				if ($current_url != null)
+					$query['SET'] .= ', prev_url=\''.$forum_db->escape($current_url).'\'';
 
 				if ($forum_user['idle'] == '1')
 					$query['SET'] .= ', idle=0';
@@ -261,13 +262,13 @@ function set_default_user()
 			'VALUES'	=> '1, \''.$forum_db->escape($remote_addr).'\', '.$forum_user['logged'].', \''.$forum_user['csrf_token'].'\'',
 			'UNIQUE'	=> 'user_id=1 AND ident=\''.$forum_db->escape($remote_addr).'\''
 		);
-		
+
 		if ($forum_user['prev_url'] != null)
 		{
 			$query['REPLACE'] .= ', prev_url';
 			$query['VALUES'] .= ', \''.$forum_db->escape($forum_user['prev_url']).'\'';
 		}
-		
+
 		($hook = get_hook('fn_qr_add_online_guest_user')) ? eval($hook) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
@@ -278,14 +279,15 @@ function set_default_user()
 			'SET'		=> 'logged='.time(),
 			'WHERE'		=> 'ident=\''.$forum_db->escape($remote_addr).'\''
 		);
-		
-		if ($forum_user['prev_url'] != null)
-			$query['SET'] .= ', prev_url=\''.$forum_db->escape($forum_user['prev_url']).'\'';
+
+		$current_url = get_current_url(255);
+		if ($current_url != null)
+			$query['SET'] .= ', prev_url=\''.$forum_db->escape($current_url).'\'';
 
 		($hook = get_hook('fn_qr_update_online_guest_user')) ? eval($hook) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
-
+	
 	$forum_user['disp_topics'] = $forum_config['o_disp_topics_default'];
 	$forum_user['disp_posts'] = $forum_config['o_disp_posts_default'];
 	$forum_user['timezone'] = $forum_config['o_default_timezone'];
@@ -2044,7 +2046,7 @@ function get_remote_address()
 //
 // Try to determine the current URL
 //
-function get_current_url($max_length=0)
+function get_current_url($max_length = 0)
 {
 	global $base_url;
 
@@ -2054,18 +2056,17 @@ function get_current_url($max_length=0)
 	$port = (isset($_SERVER['SERVER_PORT']) && (($_SERVER['SERVER_PORT'] != '80' && $protocol == 'http://') || ($_SERVER['SERVER_PORT'] != '443' && $protocol == 'https://')) && strpos($_SERVER['HTTP_HOST'], ':') === false) ? ':'.$_SERVER['SERVER_PORT'] : '';
 
 	$url = $protocol.$_SERVER['HTTP_HOST'].$port.$_SERVER['REQUEST_URI'];
-	
+
 	if (strlen($url) <= $max_length || $max_length == 0)
 		return $url;
-		
+
 	// If we have a $max_length and the actual url is too long, try to find an alternative
-	
 	$get = '?';
 	foreach ($_GET as $key => $string)
 		$get .= $key.'='.$string.'&amp;';
 
-	$url = substr($protocol.$_SERVER['HTTP_HOST'].$port.$_SERVER["PHP_SELF"].$get,0,-1);
-	
+	$url = substr($protocol.$_SERVER['HTTP_HOST'].$port.$_SERVER['PHP_SELF'].$get, 0, -1);
+
 	if (strlen($url) <= $max_length)
 		return $url;
 	
