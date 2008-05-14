@@ -62,7 +62,6 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 		if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 		{
 			list($inside, $outside) = split_text($text, '[code]', '[/code]');
-			$outside = $outside;
 			$text = implode('[%]', $outside);
 		}
 
@@ -556,12 +555,12 @@ function do_bbcode($text, $is_signature = false)
 
 	if (strpos($text, '[quote') !== false)
 	{
-		$text = preg_replace('#\s*\[quote\]\s*#', '</p><div class="quotebox"><blockquote><p>', $text);
+		$text = preg_replace('#\[quote\]\s*#', '</p><div class="quotebox"><blockquote><p>', $text);
 		$text = preg_replace('#\[quote=(&quot;|"|\'|)(.*)\\1\]#seU', '"</p><div class=\"quotebox\"><cite>".str_replace(array(\'[\', \'\\"\'), array(\'&#91;\', \'"\'), \'$2\')." ".$lang_common[\'wrote\'].":</cite><blockquote><p>"', $text);
-		$text = preg_replace('#\s*\[\/quote\]\s*#', '</p></blockquote></div><p>', $text);
+		$text = preg_replace('#\s*\[\/quote\]#', '</p></blockquote></div><p>', $text);
 	}
 
-	$pattern = array('#\s*\[list=([1a\*])\](.*?)\[/list\]\s*#ems',
+	$pattern = array('#\[list=([1a\*])\](.*?)\[/list\]*#ems',
 					 '#\[b\](.*?)\[/b\]#s',
 					 '#\[i\](.*?)\[/i\]#s',
 					 '#\[u\](.*?)\[/u\]#s',
@@ -674,7 +673,6 @@ function parse_message($text, $hide_smilies)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
 		list($inside, $outside) = split_text($text, '[code]', '[/code]');
-		$outside = array_map('trim', $outside);
 		$text = implode('[%]', $outside);
 	}
 
@@ -724,7 +722,7 @@ function parse_message($text, $hide_smilies)
 		return $return;
 
 	// Add paragraph tag around post, but make sure there are no empty paragraphs
-	$text = preg_replace('#<br />\s*?<br />(?!\s*<br />)#i', "</p><p>", $text);
+	$text = preg_replace('#<br />\s*?<br />((\s*<br />)*)#i', "</p>$1<p>", $text);
 	$text = str_replace('<p></p>', '', '<p>'.$text.'</p>');
 
 	$return = ($hook = get_hook('ps_parse_message_end')) ? eval($hook) : null;
