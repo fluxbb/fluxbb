@@ -296,7 +296,6 @@ function preparse_tags($text, &$errors, $is_signature = false)
 							}
 							$current .= $temp;
 							$opened_tag--;
-							echo $current;
 							break;
 						}
 						else
