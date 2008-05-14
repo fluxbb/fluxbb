@@ -424,8 +424,10 @@ function preparse_list_tag($content, $type = '*', &$errors)
 	$items = explode('[*]',$content);
 	$content = '';
 	foreach ($items as $item)
+	{
 		if (trim($item) != '')
 			$content .= trim('[*]'.str_replace('[/*]','',$item))."[/*]\n";
+	}
 
 	return '[list='.$type.']'."\n".$content.'[/list]';
 }
@@ -485,10 +487,12 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 		return $return;
 
 	if ($bbcode)
+	{
 		if ($full_url == $link)
 			return '[url]'.$link.'[/url]';
 		else
 			return '[url='.$full_url.']'.$link.'[/url]';
+	}
 	else
 		return '<a href="'.$full_url.'">'.$link.'</a>';
 }
@@ -497,7 +501,7 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 //
 // Turns an URL from the [img] tag into an <img> tag or a <a href...> tag
 //
-function handle_img_tag($url, $is_signature = false, $alt=null)
+function handle_img_tag($url, $is_signature = false, $alt = null)
 {
 	global $lang_common, $forum_user;
 
