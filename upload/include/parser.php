@@ -128,6 +128,8 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	$tags_quotes = array('url', 'email', 'img');
 	// Tags we disallow bbcode in
 	$tags_no_bbcode = array('url', 'email', 'img');
+	// Tags we can automatically fix
+	$tags_fix = array('quote', 'b', 'i', 'u');
 
 	$return = ($hook = get_hook('ps_preparse_tags_start')) ? eval($hook) : null;
 	if ($return != null)
@@ -267,7 +269,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 						$opened_tag--;
 						break;
 					}
-					
+
 					if (in_array($open_tags[$opened_tag], $tags_closed) && in_array($current_tag, $tags_closed))
 					{
 						if (in_array($current_tag, $open_tags))
@@ -277,8 +279,14 @@ function preparse_tags($text, &$errors, $is_signature = false)
 							while (!empty($open_tags))
 							{
 								$temp_tag = array_pop($open_tags);
+
+								if (!in_array($temp_tag, $tags_fix))
+								{
+									$errors[] = sprintf($lang_common['BBCode error 5'], array_pop($temp_opened));
+									return false;
+								}
 								array_push($temp_opened, $temp_tag);
-								
+
 								if ($temp_tag == $current_tag)
 									break;
 								else
@@ -323,6 +331,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 				$no_bbcode = 0;
 
 			$new_text .= $current;
+
 			continue;
 		}
 		else
