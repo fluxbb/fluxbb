@@ -124,11 +124,11 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	// Block tags, block tags can only go within another block tag, they cannot be in a normal tag
 	$tags_block = array('quote', 'code', 'list');
 	// Tags we trim interior whitespace
-	$tags_trim = array('url', 'email', 'image', '*');
+	$tags_trim = array('url', 'email', 'img', '*');
 	// Tags we remove quotes from the argument
-	$tags_quotes = array('url', 'email', 'image');
+	$tags_quotes = array('url', 'email', 'img');
 	// Tags we disallow bbcode in
-	$tags_no_bbcode = array('url', 'email', 'image');
+	$tags_no_bbcode = array('url', 'email', 'img');
 
 	$return = ($hook = get_hook('ps_preparse_tags_start')) ? eval($hook) : null;
 	if ($return != null)
