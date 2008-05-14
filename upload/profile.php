@@ -1260,6 +1260,8 @@ else if (isset($_POST['form_sent']))
 			}
 		}
 
+		($hook = get_hook('pf_change_details_pre_redirect')) ? eval($hook) : null;
+
 		redirect(forum_link($forum_url['profile_'.$section], $id), $lang_profile['Profile redirect']);
 	}
 }
