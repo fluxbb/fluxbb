@@ -921,8 +921,8 @@ else if (isset($_POST['form_sent']))
 				}
 			}
 
-			// Add http:// if the URL doesn't contain it already
-			if ($form['url'] != '' && strpos(strtolower($form['url']), 'http://') !== 0)
+			// Add http:// if the URL doesn't contain it or https:// already
+			if ($form['url'] != '' && strpos(strtolower($form['url']), 'http://') !== 0  && strpos(strtolower($form['url']), 'https://') !== 0)
 				$form['url'] = 'http://'.$form['url'];
 
 			// If the ICQ UIN contains anything other than digits it's invalid
