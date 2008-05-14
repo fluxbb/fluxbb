@@ -489,7 +489,8 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 		$full_url = 'http://'.$full_url;
 
 	// Ok, not very pretty :-)
-	$link = ($link == '' || $link == $url) ? ((strlen($url) > 55) ? substr($url, 0 , 39).' &#133; '.substr($url, -10) : $url) : stripslashes($link);
+	if (!$bbcode)
+		$link = ($link == '' || $link == $url) ? ((strlen($url) > 55) ? substr($url, 0 , 39).' &#133; '.substr($url, -10) : $url) : stripslashes($link);
 
 	$return = ($hook = get_hook('ps_handle_url_tag_end')) ? eval($hook) : null;
 	if ($return != null)
