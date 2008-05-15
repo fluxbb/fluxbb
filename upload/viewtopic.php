@@ -461,6 +461,8 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 	else
 		$forum_page['item_subject'] = $lang_common['Re'].' '.$cur_topic['subject'];
 
+	$forum_page['item_subject'] = forum_htmlencode($forum_page['item_subject']);
+
 	// Perform the main parsing of the message (BBCode, smilies, censor words etc)
 	$forum_page['message']['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 
