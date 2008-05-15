@@ -358,6 +358,8 @@ if (isset($_POST['preview']) && empty($errors))
 	require_once FORUM_ROOT.'include/parser.php';
 	$forum_page['preview_message'] = parse_message(trim($message), $hide_smilies);
 
+	($hook = get_hook('po_pre_preview_display')) ? eval($hook) : null;
+
 ?>
 	<div class="main-head">
 		<h2><span><?php echo $tid ? $lang_post['Preview reply'] : $lang_post['Preview new topic']; ?></span></h2>

@@ -164,6 +164,8 @@ if (isset($_POST['form_sent']))
 		($hook = get_hook('ed_qr_update_post')) ? eval($hook) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
+		($hook = get_hook('ed_pre_edited_redirect')) ? eval($hook) : null;
+
 		redirect(forum_link($forum_url['post'], $id), $lang_post['Edit redirect']);
 	}
 }
@@ -225,6 +227,8 @@ if (isset($_POST['preview']) && empty($forum_page['errors']))
 {
 	require_once FORUM_ROOT.'include/parser.php';
 	$forum_page['preview_message'] = parse_message($message, $hide_smilies);
+
+	($hook = get_hook('ed_pre_preview_display')) ? eval($hook) : null;
 
 ?>
 	<div class="main-head">
