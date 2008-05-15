@@ -181,7 +181,7 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 			// There are new posts in this forum, but have we read all of them already?
 			while (list($check_topic_id, $check_last_post) = @each($new_topics[$cur_forum['fid']]))
 			{
-				if (empty($tracked_topics['topics'][$check_topic_id]) || $tracked_topics['topics'][$check_topic_id] < $check_last_post)
+				if ((empty($tracked_topics['topics'][$check_topic_id]) || $tracked_topics['topics'][$check_topic_id] < $check_last_post) && (empty($tracked_topics['forums'][$cur_forum['fid']]) || $tracked_topics['forums'][$cur_forum['fid']] < $check_last_post))
 				{
 					$forum_page['item_status']['new'] = 'new';
 					$forum_page['item_alt_message'] = $lang_index['Forum has new'];
