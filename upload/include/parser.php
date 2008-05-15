@@ -122,12 +122,12 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	$tags_ignore = array('code');
 	// Block tags, block tags can only go within another block tag, they cannot be in a normal tag
 	$tags_block = array('quote', 'code', 'list');
-	// Tags we trim interior whitespace
+	// Tags we trim interior lines
 	$tags_trim = array('url', 'email', 'img', '*');
 	// Tags we remove quotes from the argument
 	$tags_quotes = array('url', 'email', 'img');
-	// Tags we disallow bbcode in
-	$tags_no_bbcode = array('url', 'email', 'img');
+	// Tags we limit bbcode in
+	$tags_limit_bbcode = array('url' => array('b', 'i', 'u', 'color', 'colour', 'img'), 'email' => array('b', 'i', 'u', 'color', 'colour', 'img'), 'img' => array());
 	// Tags we can automatically fix
 	$tags_fix = array('quote', 'b', 'i', 'u');
 
@@ -144,7 +144,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	$current_nest = '';
 	$current_depth = array();
 	$content = 0;
-	$no_bbcode = 0;
+	$limit_bbcode = $tags;
 
 	foreach ($split_text as $current)
 	{
@@ -160,7 +160,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 					$content = 1;
 
 				if (in_array($open_tags[$opened_tag], $tags_trim))
-					$new_text .= trim($current);
+					$new_text .= trim($current, "\r\n");
 				else
 					$new_text .= $current;
 			}
@@ -218,7 +218,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		else
 			$current = strtolower($current);
 			
-		if ($no_bbcode && $current_tag != $open_tags[$opened_tag])
+		if (!in_array($current_tag, $limit_bbcode) && $current_tag != $open_tags[$opened_tag])
 		{
 			$errors[] = sprintf($lang_common['BBCode error 3'], $current_tag, $open_tags[$opened_tag]);
 			return false;
@@ -327,8 +327,10 @@ function preparse_tags($text, &$errors, $is_signature = false)
 					$current_depth[$current_tag]--;
 			}
 			
-			if (in_array($current_tag, $tags_no_bbcode))
-				$no_bbcode = 0;
+			if (in_array($open_tags[$opened_tag], array_keys($tags_limit_bbcode)))
+				$limit_bbcode = $tags_limit_bbcode[$open_tags[$opened_tag]];
+			else
+				$limit_bbcode = $tags;
 
 			$new_text .= $current;
 
@@ -381,8 +383,8 @@ function preparse_tags($text, &$errors, $is_signature = false)
 				$current = preg_replace('#\['.$current_tag.'=("|\'|)(.*?)\\1\]\s*#i', '['.$current_tag.'=$2]', $current);
 			}
 			
-			if (in_array($current_tag, $tags_no_bbcode))
-				$no_bbcode = 1;
+			if (in_array($current_tag, array_keys($tags_limit_bbcode)))
+				$limit_bbcode = $tags_limit_bbcode[$current_tag];
 
 			$open_tags[] = $current_tag;
 			$opened_tag++;
@@ -542,7 +544,7 @@ function handle_img_tag($url, $is_signature = false, $alt = null)
 //
 function handle_list_tag($content, $type = '*')
 {
-	$content = preg_replace('#\s*\[\*\](.*?)\[/\*\]\s*#s', '<li>$1</li>', trim($content));
+	$content = preg_replace('#\s*\[\*\](.*?)\[/\*\]\s*#s', '<li>$1</li>', trim(stripslashes($content)));
 
 	if ($type == '*')
 		$content = '<ul>'.$content.'</ul>';
@@ -578,20 +580,12 @@ function do_bbcode($text, $is_signature = false)
 					 '#\[b\](.*?)\[/b\]#s',
 					 '#\[i\](.*?)\[/i\]#s',
 					 '#\[u\](.*?)\[/u\]#s',
-					 '#\[url\]([^\[]*?)\[/url\]#e',
-					 '#\[url=([^\[]*?)\](.*?)\[/url\]#e',
-					 '#\[email\]([^\[]*?)\[/email\]#',
-					 '#\[email=([^\[]*?)\](.*?)\[/email\]#',
 					 '#\[colou?r=([a-zA-Z]{3,20}|\#?[0-9a-fA-F]{6})](.*?)\[/colou?r\]#s');
 
 	$replace = array('handle_list_tag(\'$2\', \'$1\')',
 					 '<strong>$1</strong>',
 					 '<em>$1</em>',
 					 '<em class="bbuline">$1</em>',
-					 'handle_url_tag(\'$1\')',
-					 'handle_url_tag(\'$1\', \'$2\')',
-					 '<a href="mailto:$1">$1</a>',
-					 '<a href="mailto:$1">$2</a>',
 					 '<span style="color: $1">$2</span>');
 
 	if (($is_signature && $forum_config['p_sig_img_tag'] == '1') || (!$is_signature && $forum_config['p_message_img_tag'] == '1'))
@@ -609,6 +603,16 @@ function do_bbcode($text, $is_signature = false)
 			$replace[] = 'handle_img_tag(\'$2$4\', false, \'$1\')';
 		}
 	}
+	
+	$pattern[] = '#\[url\]([^\[]*?)\[/url\]#e';
+	$pattern[] = '#\[url=([^\[]*?)\](.*?)\[/url\]#e';
+	$pattern[] = '#\[email\]([^\[]*?)\[/email\]#';
+	$pattern[] = '#\[email=([^\[]*?)\](.*?)\[/email\]#';
+	
+	$replace[] = 'handle_url_tag(\'$1\')';
+	$replace[] = 'handle_url_tag(\'$1\', \'$2\')';
+	$replace[] = '<a href="mailto:$1">$1</a>';
+	$replace[] = '<a href="mailto:$1">$2</a>';
 
 	$return = ($hook = get_hook('ps_do_bbcode_replace')) ? eval($hook) : null;
 	if ($return != null)
@@ -737,6 +741,7 @@ function parse_message($text, $hide_smilies)
 
 	// Add paragraph tag around post, but make sure there are no empty paragraphs
 	$text = preg_replace('#<br />\s*?<br />((\s*<br />)*)#i', "</p>$1<p>", $text);
+	$text = str_replace('<p><br />', '<p>', $text);
 	$text = str_replace('<p></p>', '', '<p>'.$text.'</p>');
 
 	$return = ($hook = get_hook('ps_parse_message_end')) ? eval($hook) : null;
