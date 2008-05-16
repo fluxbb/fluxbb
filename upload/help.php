@@ -95,6 +95,7 @@ if (!$section || $section == 'bbcode')
 						<code>[b][u]<?php echo $lang_help['Bold, underlined text'] ?>[/u][/b]</code> <span><?php echo $lang_help['produces'] ?></span>
 						<samp><em class="bbuline"><b><?php echo $lang_help['Bold, underlined text'] ?></b></em></samp>
 					</li>
+<?php ($hook = get_hook('he_new_bbcode_text_style')) ? eval($hook) : null; ?>
 				</ul>
 			</div>
 			<div class="frm-set">
@@ -116,6 +117,7 @@ if (!$section || $section == 'bbcode')
 						<code>[email=name@example.com]<?php echo $lang_help['My e-mail address'] ?>[/email]</code><span><?php echo $lang_help['produces'] ?></span>
 						<samp><a href="mailto:name@example.com"><?php echo $lang_help['My e-mail address'] ?></a></samp>
 					</li>
+<?php ($hook = get_hook('he_new_bbcode_link')) ? eval($hook) : null; ?>
 				</ul>
 			</div>
 			<div class="frm-set">
@@ -148,6 +150,7 @@ if (!$section || $section == 'bbcode')
 					</li>
 				</ul>
 			</div>
+<?php ($hook = get_hook('he_new_bbcode_section')) ? eval($hook) : null; ?>
 		</div>
 	</div>
 <?php
