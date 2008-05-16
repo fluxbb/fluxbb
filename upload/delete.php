@@ -86,6 +86,8 @@ if (($forum_user['g_delete_posts'] == '0' ||
 	message($lang_common['No permission']);
 
 
+($hook = get_hook('dl_post_selected')) ? eval($hook) : null;
+
 // User pressed the cancel button
 if (isset($_POST['cancel']))
 	redirect(forum_link($forum_url['post'], $id), $lang_common['Cancel redirect']);

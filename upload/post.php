@@ -108,6 +108,8 @@ if ((($tid && (($cur_posting['post_replies'] == '' && $forum_user['g_post_replie
 	message($lang_common['No permission']);
 
 
+($hook = get_hook('po_posting_location_selected')) ? eval($hook) : null;
+
 // Start with a clean slate
 $errors = array();
 
