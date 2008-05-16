@@ -97,6 +97,8 @@ elseif (isset($_GET['action']))
 		else if ($action == 'show_recent')
 			$value = (isset($_GET['value'])) ? intval($_GET['value']) : 86400;
 
+		($hook = get_hook('se_additional_quicksearch_variables')) ? eval($hook) : null;
+
 		$search_id = '';
 		$show_as = 'topics';
 
