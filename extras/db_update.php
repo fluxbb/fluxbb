@@ -1145,7 +1145,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		if ($forum_db->num_rows($result))
 			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$end_at;
 		else
-			$query_str = ($db_type == 'mysql' || $db_type == 'mysqli') ? '?stage=conv_tables' : '?stage=finish';
+			$query_str = '?stage=conv_tables';
 		break;
 
 
