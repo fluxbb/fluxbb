@@ -49,6 +49,9 @@ define('FORUM_ROOT', './');
 @include FORUM_ROOT.'config.php';
 
 
+if (defined('PUN'))
+	define('FORUM', 1);
+
 // If FORUM isn't defined, config.php is missing or corrupt or we are outside the root directory
 if (!defined('FORUM'))
 	exit('This file must be run from the forum root directory.');
@@ -1191,9 +1194,37 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 			convert_table_utf8($forum_db->prefix.'users');
 		}
 
-		$query_str = '?stage=finish';
+		$query_str = '?stage=preparse_posts';
 		break;
 
+	case 'preparse_posts':
+		require FORUM_ROOT.'include/parser.php';
+		// Determine where to start
+		if ($start_at == 0)
+		{
+			// Get the first post ID from the db
+			$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'posts ORDER BY id LIMIT 1') or error(__FILE__, __LINE__);
+			if ($forum_db->num_rows($result))
+				$start_at = $forum_db->result($result);
+		}
+		$end_at = $start_at + PER_PAGE;
+
+		// Fetch posts to process this cycle
+		$result = $forum_db->query('SELECT id, message FROM '.$forum_db->prefix.'posts WHERE id>='.$start_at.' AND id<'.$end_at.' ORDER BY id') or error(__FILE__, __LINE__);
+		while ($cur_item = $forum_db->fetch_assoc($result))
+		{
+			echo 'Preparsing post '.$cur_item['id'].' …<br />'."\n";
+			$temp = array();
+			$forum_db->query('UPDATE '.$forum_db->prefix.'posts SET message=\''.$forum_db->escape(preparse_bbcode($cur_item['message'],$temp)).'\' WHERE id='.$cur_item['id']) or error(__FILE__, __LINE__);
+		}
+
+		// Check if there is more work to do
+		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'posts WHERE id>='.$end_at) or error(__FILE__, __LINE__);
+		if ($forum_db->num_rows($result))
+			$query_str = '?stage=preparse_posts&req_per_page='.PER_PAGE.'&start_at='.$end_at;
+		else
+			$query_str = '?stage=finish';
+		break;
 
 	// Show results page
 	case 'finish':
