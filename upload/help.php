@@ -150,6 +150,26 @@ if (!$section || $section == 'bbcode')
 					</li>
 				</ul>
 			</div>
+			<div class="frm-set">
+				<h3><span><?php echo $lang_help['List info'] ?></span></h3>
+				<ul class="example">
+					<li><code>[list][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code> <span><?php echo $lang_help['produces list'] ?></span>
+						<div class="entry-content samp">
+							<ul><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ol>
+						</div>
+					</li>
+					<li><code>[list=1][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code> <span><?php echo $lang_help['produces decimal list'] ?></span>
+						<div class="entry-content samp">
+							<ol class="decimal"><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ol>
+						</div>
+					</li>
+					<li><code>[list=a][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code> <span><?php echo $lang_help['produces alpha list'] ?></span>
+						<div class="entry-content samp">
+							<ol class="alpha"><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ol>
+						</div>
+					</li>
+				</ul>
+			</div>
 <?php ($hook = get_hook('he_new_bbcode_section')) ? eval($hook) : null; ?>
 		</div>
 	</div>
