@@ -76,6 +76,8 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
+($hook = get_hook('in_main_output_start')) ? eval($hook) : null;
+
 // Print the categories and forums
 $query = array(
 	'SELECT'	=> 'c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.forum_desc, f.redirect_url, f.moderators, f.num_topics, f.num_posts, f.last_post, f.last_post_id, f.last_poster',
@@ -279,6 +281,8 @@ ob_end_clean();
 
 // START SUBST - <!-- forum_stats -->
 ob_start();
+
+($hook = get_hook('in_stats_output_start')) ? eval($hook) : null;
 
 // Collect some statistics from the database
 $query = array(

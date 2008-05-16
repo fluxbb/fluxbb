@@ -271,6 +271,8 @@ else if ($action == 'forget' || $action == 'forget_2')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('li_forgot_pass_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main">
 
@@ -376,6 +378,8 @@ require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
 ob_start();
+
+($hook = get_hook('li_login_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main">

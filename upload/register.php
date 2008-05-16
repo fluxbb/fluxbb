@@ -73,6 +73,8 @@ else if ($forum_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_P
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('rg_rules_output_start')) ? eval($hook) : null;
+
 	$forum_page['set_count'] = $forum_page['fld_count'] = 0;
 
 ?>
@@ -291,6 +293,8 @@ require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
 ob_start();
+
+($hook = get_hook('rg_register_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main">

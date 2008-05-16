@@ -197,12 +197,16 @@ $forum_page['crumbs'] = array(
 	$lang_admin['Rebuild index']
 );
 
+($hook = get_hook('ari_pre_header_load')) ? eval($hook) : null;
+
 define('FORUM_PAGE_SECTION', 'management');
 define('FORUM_PAGE', 'admin-reindex');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
 ob_start();
+
+($hook = get_hook('ari_main_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned admin">

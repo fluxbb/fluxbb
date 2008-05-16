@@ -146,6 +146,8 @@ else if (isset($_GET['del_forum']))
 		// START SUBST - <!-- forum_main -->
 		ob_start();
 
+		($hook = get_hook('afo_del_forum_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -434,6 +436,8 @@ else if (isset($_GET['edit_forum']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('afo_edit_forum_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -621,6 +625,8 @@ require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
 ob_start();
+
+($hook = get_hook('afo_main_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned admin">

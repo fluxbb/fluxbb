@@ -242,6 +242,8 @@ if (isset($_GET['tid']))
 		// START SUBST - <!-- forum_main -->
 		ob_start();
 
+		($hook = get_hook('mr_confirm_delete_posts_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main">
 
@@ -340,6 +342,8 @@ if (isset($_GET['tid']))
 
 	// START SUBST - <!-- forum_main -->
 	ob_start();
+
+	($hook = get_hook('mr_post_actions_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main paged">
@@ -682,6 +686,8 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('mr_move_topics_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main">
 
@@ -857,6 +863,8 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 
 	// START SUBST - <!-- forum_main -->
 	ob_start();
+
+	($hook = get_hook('mr_delete_topics_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main">
@@ -1105,6 +1113,8 @@ require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
 ob_start();
+
+($hook = get_hook('mr_topic_actions_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main paged">

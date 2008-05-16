@@ -151,6 +151,8 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
+($hook = get_hook('acs_main_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 

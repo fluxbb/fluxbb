@@ -280,6 +280,8 @@ if (!$section || $section == 'setup')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('aop_setup_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -653,6 +655,8 @@ else if ($section == 'features')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('aop_features_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -905,6 +909,8 @@ else if ($section == 'announcements')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('aop_announcements_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -971,6 +977,8 @@ else if ($section == 'registration')
 
 	// START SUBST - <!-- forum_main -->
 	ob_start();
+
+	($hook = get_hook('aop_registration_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned admin">
@@ -1076,6 +1084,8 @@ else if ($section == 'maintenance')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('aop_maintenance_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -1144,6 +1154,8 @@ else if ($section == 'email')
 
 	// START SUBST - <!-- forum_main -->
 	ob_start();
+
+	($hook = get_hook('aop_email_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned admin">

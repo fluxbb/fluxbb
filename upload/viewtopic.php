@@ -254,6 +254,8 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
+($hook = get_hook('vt_main_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main paged">
 
@@ -544,6 +546,8 @@ if ($forum_config['o_quickpost'] == '1' &&
 
 // START SUBST - <!-- forum_qpost -->
 ob_start();
+
+($hook = get_hook('vt_qpost_output_start')) ? eval($hook) : null;
 
 // Setup form
 $forum_page['form_action'] = forum_link($forum_url['new_reply'], $id);

@@ -145,6 +145,8 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('apr_prune_comply_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -209,6 +211,8 @@ else
 
 	// START SUBST - <!-- forum_main -->
 	ob_start();
+
+	($hook = get_hook('apr_main_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned admin">

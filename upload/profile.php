@@ -143,6 +143,8 @@ if ($action == 'change_pass')
 			// START SUBST - <!-- forum_main -->
 			ob_start();
 
+			($hook = get_hook('pf_change_pass_key_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main">
 
@@ -300,6 +302,8 @@ if ($action == 'change_pass')
 
 	// START SUBST - <!-- forum_main -->
 	ob_start();
+
+	($hook = get_hook('pf_change_pass_normal_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned">
@@ -544,6 +548,8 @@ else if ($action == 'change_email')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('pf_change_email_normal_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main">
 
@@ -671,6 +677,8 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 
 	// START SUBST - <!-- forum_main -->
 	ob_start();
+
+	($hook = get_hook('pf_delete_user_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main">
@@ -1376,6 +1384,8 @@ if ($forum_user['id'] != $id &&
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('pf_view_details_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main">
 
@@ -1532,6 +1542,8 @@ else
 		// START SUBST - <!-- forum_main -->
 		ob_start();
 
+		($hook = get_hook('pf_change_details_about_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned">
 
@@ -1603,6 +1615,8 @@ else
 
 		// START SUBST - <!-- forum_main -->
 		ob_start();
+
+		($hook = get_hook('pf_change_details_identity_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned">
@@ -1782,6 +1796,8 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 
 		// START SUBST - <!-- forum_main -->
 		ob_start();
+
+		($hook = get_hook('pf_change_details_settings_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned">
@@ -2073,6 +2089,8 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 		// START SUBST - <!-- forum_main -->
 		ob_start();
 
+		($hook = get_hook('pf_change_details_signature_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned">
 
@@ -2193,6 +2211,8 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 		// START SUBST - <!-- forum_main -->
 		ob_start();
 
+		($hook = get_hook('pf_change_details_avatar_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned">
 
@@ -2311,6 +2331,8 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 
 		// START SUBST - <!-- forum_main -->
 		ob_start();
+
+		($hook = get_hook('pf_change_details_admin_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned">

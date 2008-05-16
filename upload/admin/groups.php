@@ -104,6 +104,8 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('agr_add_edit_group_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -536,6 +538,8 @@ else if (isset($_GET['del_group']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('agr_del_group_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -622,6 +626,8 @@ require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
 ob_start();
+
+($hook = get_hook('agr_main_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned admin">

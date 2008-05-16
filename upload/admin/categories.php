@@ -154,6 +154,8 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 		// START SUBST - <!-- forum_main -->
 		ob_start();
 
+		($hook = get_hook('acg_delete_cat_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -279,6 +281,8 @@ require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
 ob_start();
+
+($hook = get_hook('acg_main_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned admin">

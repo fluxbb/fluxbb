@@ -170,6 +170,8 @@ if (isset($query))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('se_results_output_start')) ? eval($hook) : null;
+
 	if ($show_as == 'topics')
 	{
 		// Load the forum.php language file
@@ -449,6 +451,8 @@ require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
 ob_start();
+
+($hook = get_hook('se_main_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main">

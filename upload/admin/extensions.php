@@ -185,6 +185,8 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 			// START SUBST - <!-- forum_main -->
 			ob_start();
 
+			($hook = get_hook('aex_install_notices_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -235,6 +237,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('aex_install_output_start')) ? eval($hook) : null;
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -380,6 +383,8 @@ else if (isset($_GET['uninstall']))
 			// START SUBST - <!-- forum_main -->
 			ob_start();
 
+			($hook = get_hook('aex_uninstall_notices_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -430,6 +435,8 @@ else if (isset($_GET['uninstall']))
 
 		// START SUBST - <!-- forum_main -->
 		ob_start();
+
+		($hook = get_hook('aex_uninstall_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned admin">
@@ -554,6 +561,8 @@ if ($section == 'install')
 
 	// START SUBST - <!-- forum_main -->
 	ob_start();
+
+	($hook = get_hook('aex_section_install_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned admin">
@@ -699,6 +708,8 @@ else
 
 	// START SUBST - <!-- forum_main -->
 	ob_start();
+
+	($hook = get_hook('aex_section_manage_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned admin">

@@ -61,6 +61,8 @@ if ($action == 'rules')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('mi_rules_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main">
 
@@ -251,6 +253,8 @@ else if (isset($_GET['email']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('mi_email_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main">
 
@@ -433,6 +437,8 @@ else if (isset($_GET['report']))
 
 	// START SUBST - <!-- forum_main -->
 	ob_start();
+
+	($hook = get_hook('mi_report_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main">

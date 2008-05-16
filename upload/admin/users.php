@@ -77,6 +77,8 @@ if (isset($_GET['ip_stats']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('aus_ip_stats_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -185,6 +187,8 @@ else if (isset($_GET['show_users']))
 
 	// START SUBST - <!-- forum_main -->
 	ob_start();
+
+	($hook = get_hook('aus_show_users_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned admin">
@@ -392,6 +396,8 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('aus_delete_users_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -552,6 +558,8 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('aus_ban_users_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -684,6 +692,8 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 
 	// START SUBST - <!-- forum_main -->
 	ob_start();
+
+	($hook = get_hook('aus_change_group_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned admin">
@@ -856,6 +866,8 @@ else if (isset($_POST['find_user']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
+	($hook = get_hook('aus_find_user_output_start')) ? eval($hook) : null;
+
 ?>
 <div id="brd-main" class="main sectioned admin">
 
@@ -985,6 +997,8 @@ require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
 ob_start();
+
+($hook = get_hook('aus_search_form_output_start')) ? eval($hook) : null;
 
 ?>
 <div id="brd-main" class="main sectioned admin">
