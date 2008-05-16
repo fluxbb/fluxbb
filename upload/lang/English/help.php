@@ -38,6 +38,14 @@ $lang_help = array(
 'produces code box'		=>	'produces a code box.',
 'produces scroll box'	=>	'produces a scrolling code box.',
 
+'List info'				=>	'To create a list you can use the list tag. You can create 3 types of lists using the list tag.',
+'List text 1'			=>	'Example list item 1.',
+'List text 2'			=>	'Example list item 2.',
+'List text 3'			=>	'Example list item 3.',
+'produces list'			=>	'produces a bulleted list.',
+'produces decimal list'	=>	'produces numbered list.',
+'produces alpha list'	=>	'produces alphabetically labelled list.',
+
 'Nested tags'			=>	'Nested tags',
 'Nested tags info'		=>	'BBCode can be nested to create more advanced formatting. For example:',
 'Bold, underlined text'	=>	'Bold, underlined text',
