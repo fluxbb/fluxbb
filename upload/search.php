@@ -528,6 +528,8 @@ $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 $cur_category = 0;
 while ($cur_forum = $forum_db->fetch_assoc($result))
 {
+	($hook = get_hook('se_forum_loop_start')) ? eval($hook) : null;
+
 	if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
 	{
 		if ($cur_category)

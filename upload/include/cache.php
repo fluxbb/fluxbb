@@ -225,6 +225,8 @@ function generate_quickjump_cache($group_id = false)
 		$forum_count = 0;
 		while ($cur_forum = $forum_db->fetch_assoc($result))
 		{
+			($hook = get_hook('ch_quickjump_forum_loop_start')) ? eval($hook) : null;
+
 			if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
 			{
 				if ($cur_category)
