@@ -350,6 +350,10 @@ function generate_cached_search_query($search_id, &$show_as)
 	else
 		return false;
 
+	// If there are no posts, we don't need to execute the query
+	if (empty($search_results))
+		return false;
+
 	switch ($sort_by)
 	{
 		case 1:
