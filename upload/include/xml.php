@@ -208,6 +208,10 @@ function validate_manifest($xml_array, $folder_name)
 						$errors[] = $lang_admin['extension/hooks/hook error2'];
 					if (isset($hook['attributes']['priority']) && (!ctype_digit($hook['attributes']['priority']) || $hook['attributes']['priority'] < 0 || $hook['attributes']['priority'] > 10))
 						$errors[] = $lang_admin['extension/hooks/hook error3'];
+
+					$last_element = array_pop(token_get_all('<?php '.$hook['content']));
+					if (is_array($last_element) && $last_element[0] == T_INLINE_HTML)
+						$errors[] = $lang_admin['extension/hooks/hook error4'];
 				}
 			}
 		}

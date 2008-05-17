@@ -214,6 +214,7 @@ $lang_admin = array(
 'extension/hooks/hook error'	=>	'Element extension/hooks/hook is malformed or missing.',
 'extension/hooks/hook error2'	=>	'Element extension/hooks/hook is missing attribute "id".',
 'extension/hooks/hook error3'	=>	'Element extension/hooks/hook has an out of bounds value in attribute "priority".',
+'extension/hooks/hook error4'	=>	'Element extension/hooks/hook has content which does not end in PHP mode.',
 'No XML support'				=>	'This PHP environment doesn\'t have XML support built in. XML support is required if you want to use FluxBB extensions. Consult the PHP documentation for further assistance.',
 'No installed extensions'		=>	'There are no installed extensions.',
 'No available extensions'		=>	'There are no extensions available for install or upgrade.',
