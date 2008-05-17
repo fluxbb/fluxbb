@@ -305,7 +305,9 @@ function forum_setcookie($name, $value, $expire)
 {
 	global $cookie_path, $cookie_domain, $cookie_secure;
 
-	($hook = get_hook('fn_forum_setcookie_start')) ? eval($hook) : null;
+	$return = ($hook = get_hook('fn_forum_setcookie_start')) ? eval($hook) : null;
+	if ($return != null)
+		return;
 
 	// Enable sending of a P3P header
 	@header('P3P: CP="CUR ADM"');
@@ -620,7 +622,9 @@ function set_tracked_topics($tracked_topics)
 {
 	global $cookie_name, $cookie_path, $cookie_domain, $cookie_secure, $forum_config;
 
-	($hook = get_hook('fn_set_tracked_topics_start')) ? eval($hook) : null;
+	$return = ($hook = get_hook('fn_set_tracked_topics_start')) ? eval($hook) : null;
+	if ($return != null)
+		return;
 
 	$cookie_data = '';
 	if (!empty($tracked_topics))
@@ -654,6 +658,10 @@ function set_tracked_topics($tracked_topics)
 function get_tracked_topics()
 {
 	global $cookie_name;
+
+	$return = ($hook = get_hook('fn_get_tracked_topics_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	$cookie_data = isset($_COOKIE[$cookie_name.'_track']) ? $_COOKIE[$cookie_name.'_track'] : false;
 	if (!$cookie_data)
@@ -1528,7 +1536,9 @@ function send_subscriptions($post_info, $new_pid)
 //
 function sef_friendly($str)
 {
-	($hook = get_hook('fn_sef_friendly_start')) ? eval($hook) : null;
+	$return = ($hook = get_hook('fn_sef_friendly_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	$str = strtolower(utf8_decode($str));
 	$str = strtr($str,
@@ -1963,7 +1973,9 @@ function format_time($timestamp, $date_only = false)
 {
 	global $forum_config, $lang_common, $forum_user, $forum_time_formats, $forum_date_formats;
 
-	($hook = get_hook('fn_format_time_start')) ? eval($hook) : null;
+	$return = ($hook = get_hook('fn_format_time_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	if ($timestamp == '')
 		return $lang_common['Never'];
@@ -2027,7 +2039,9 @@ function generate_form_token($target_url)
 {
 	global $forum_user;
 
-	($hook = get_hook('fn_generate_form_token_start')) ? eval($hook) : null;
+	$return = ($hook = get_hook('fn_generate_form_token_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	return sha1(str_replace('&amp;', '&', $target_url).$forum_user['csrf_token']);
 }
@@ -2037,7 +2051,9 @@ function generate_form_token($target_url)
 //
 function get_remote_address()
 {
-	($hook = get_hook('fn_get_remote_address_start')) ? eval($hook) : null;
+	$return = ($hook = get_hook('fn_get_remote_address_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	return $_SERVER['REMOTE_ADDR'];
 }
@@ -2050,7 +2066,9 @@ function get_current_url($max_length = 0)
 {
 	global $base_url;
 
-	($hook = get_hook('fn_get_current_url')) ? eval($hook) : null;
+	$return = ($hook = get_hook('fn_get_current_url_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	$protocol = (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') ? 'http://' : 'https://';
 	$port = (isset($_SERVER['SERVER_PORT']) && (($_SERVER['SERVER_PORT'] != '80' && $protocol == 'http://') || ($_SERVER['SERVER_PORT'] != '443' && $protocol == 'https://')) && strpos($_SERVER['HTTP_HOST'], ':') === false) ? ':'.$_SERVER['SERVER_PORT'] : '';
@@ -2080,7 +2098,9 @@ function get_current_url($max_length = 0)
 //
 function forum_htmlencode($str)
 {
-	($hook = get_hook('fn_forum_htmlencode')) ? eval($hook) : null;
+	$return = ($hook = get_hook('fn_forum_htmlencode')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 }
