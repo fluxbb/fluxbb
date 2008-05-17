@@ -441,7 +441,7 @@ else if (isset($_POST['set_default_group']))
 else if (isset($_GET['del_group']))
 {
 	$group_id = intval($_GET['del_group']);
-	if ($group_id < 4)
+	if ($group_id <= FORUM_GUEST)
 		message($lang_common['Bad request']);
 
 	// User pressed the cancel button
@@ -755,7 +755,7 @@ while ($cur_group = $forum_db->fetch_assoc($result))
 ?>
 			<div class="grp-item databox db<?php echo ++$forum_page['item_num'] ?>">
 				<h3 class="data"><span><?php echo forum_htmlencode($cur_group['g_title']) ?></span></h3>
-				<p class="legend actions"><a href="<?php echo forum_link($forum_url['admin_groups']).'?edit_group='.$cur_group['g_id'] ?>"><span><?php echo $lang_admin['Edit'] ?><span><?php echo forum_htmlencode($cur_group['g_title']) ?></span></span></a><?php if ($cur_group['g_id'] > FORUM_MEMBER) echo ' <a href="'.forum_link($forum_url['admin_groups']).'?del_group='.$cur_group['g_id'].'"><span>'.$lang_admin['Remove'].'<span> '.forum_htmlencode($cur_group['g_title']).'</span></span></a>' ?></p>
+				<p class="legend actions"><a href="<?php echo forum_link($forum_url['admin_groups']).'?edit_group='.$cur_group['g_id'] ?>"><span><?php echo $lang_admin['Edit'] ?><span><?php echo forum_htmlencode($cur_group['g_title']) ?></span></span></a><?php if ($cur_group['g_id'] > FORUM_GUEST) echo ' <a href="'.forum_link($forum_url['admin_groups']).'?del_group='.$cur_group['g_id'].'"><span>'.$lang_admin['Remove'].'<span> '.forum_htmlencode($cur_group['g_title']).'</span></span></a>' ?></p>
 			</div>
 <?php
 

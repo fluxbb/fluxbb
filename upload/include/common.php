@@ -55,7 +55,6 @@ if (empty($cookie_name))
 define('FORUM_UNVERIFIED', 0);
 define('FORUM_ADMIN', 1);
 define('FORUM_GUEST', 2);
-define('FORUM_MEMBER', 3);
 
 
 // Enable output buffering
