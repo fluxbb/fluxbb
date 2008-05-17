@@ -472,7 +472,6 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 					)
 				),
 				'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND t.last_post>'.(time() - $value).' AND t.moved_to IS NULL',
-				'GROUP BY'	=> 't.id',
 				'ORDER BY'	=> 't.last_post DESC'
 			);
 
@@ -588,7 +587,6 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 					)
 				),
 				'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND t.num_replies=0 AND t.moved_to IS NULL',
-				'GROUP BY'	=> 't.id',
 				'ORDER BY'	=> 't.last_post DESC'
 			);
 
