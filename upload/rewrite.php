@@ -44,6 +44,10 @@ $request_uri = substr($_SERVER['REQUEST_URI'], strlen($path_to_script));
 if (strpos($request_uri, '?') !== false)
 	$request_uri = substr($request_uri, 0, strpos($request_uri, '?'));
 
+// Lighttpd's 404 handler does not pass query string, so we need to create one and set it properly in $_GET
+$_SERVER['QUERY_STRING'] = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+parse_str($_SERVER['QUERY_STRING'], $_GET);
+
 $rewritten_url = '';
 $url_parts = array();
 // We go through every rewrite rule
