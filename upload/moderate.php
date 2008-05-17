@@ -785,6 +785,19 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		if ($forum_db->result($result) != substr_count($topics, ',') + 1)
 			message($lang_common['Bad request']);
 
+		// Create an array of forum IDs that need to be synced
+		$forum_ids = array($fid);
+		$query = array(
+			'SELECT'	=> 't.forum_id',
+			'FROM'		=> 'topics AS t',
+			'WHERE'		=> 't.moved_to IN('.$topics.')'
+		);
+
+		($hook = get_hook('mr_qr_get_forums_to_sync')) ? eval($hook) : null;
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		while ($row = $forum_db->fetch_row($result))
+			$forum_ids[] = $row[0];
+
 		// Delete the topics and any redirect topics
 		$query = array(
 			'DELETE'	=> 'topics',
@@ -833,7 +846,8 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		($hook = get_hook('mr_qr_delete_topic_posts')) ? eval($hook) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-		sync_forum($fid);
+		foreach ($forum_ids as $cur_forum_id)
+			sync_forum($cur_forum_id);
 
 		redirect(forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name']))), $lang_misc['Delete topics redirect']);
 	}

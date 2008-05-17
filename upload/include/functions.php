@@ -1132,6 +1132,19 @@ function delete_topic($topic_id, $forum_id)
 
 	($hook = get_hook('fn_delete_topic_start')) ? eval($hook) : null;
 
+	// Create an array of forum IDs that need to be synced
+	$forum_ids = array($forum_id);
+	$query = array(
+		'SELECT'	=> 't.forum_id',
+		'FROM'		=> 'topics AS t',
+		'WHERE'		=> 't.moved_to='.$topic_id
+	);
+
+	($hook = get_hook('fn_qr_get_forums_to_sync')) ? eval($hook) : null;
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+	while ($row = $forum_db->fetch_row($result))
+		$forum_ids[] = $row[0];
+
 	// Delete the topic and any redirect topics
 	$query = array(
 		'DELETE'	=> 'topics',
@@ -1179,7 +1192,8 @@ function delete_topic($topic_id, $forum_id)
 	($hook = get_hook('fn_qr_delete_topic_subscriptions')) ? eval($hook) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	sync_forum($forum_id);
+	foreach ($forum_ids as $cur_forum_id)
+		sync_forum($cur_forum_id);
 
 	($hook = get_hook('fn_delete_topic_end')) ? eval($hook) : null;
 }
