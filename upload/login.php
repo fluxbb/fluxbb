@@ -46,12 +46,13 @@ if (isset($_POST['form_sent']) && $action == 'in')
 {
 	$form_username = trim($_POST['req_username']);
 	$form_password = trim($_POST['req_password']);
+	$save_pass = isset($_POST['save_pass']);
 
 	($hook = get_hook('li_login_form_submitted')) ? eval($hook) : null;
 
 	// Get user info matching login attempt
 	$query = array(
-		'SELECT'	=> 'u.id, u.group_id, u.password, u.save_pass, u.salt',
+		'SELECT'	=> 'u.id, u.group_id, u.password, u.salt',
 		'FROM'		=> 'users AS u'
 	);
 
@@ -62,13 +63,13 @@ if (isset($_POST['form_sent']) && $action == 'in')
 
 	($hook = get_hook('li_qr_get_login_data')) ? eval($hook) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-	list($user_id, $group_id, $db_password_hash, $save_pass, $salt) = $forum_db->fetch_row($result);
+	list($user_id, $group_id, $db_password_hash, $salt) = $forum_db->fetch_row($result);
 
 	$authorized = false;
 	if (!empty($db_password_hash))
 	{
 		$sha1_in_db = (strlen($db_password_hash) == 40) ? true : false;
-		$form_password_hash = sha1($salt.sha1($form_password));
+		$form_password_hash = forum_hash($form_password, $salt);
 
 		if ($sha1_in_db && $db_password_hash == $form_password_hash)
 			$authorized = true;
@@ -77,7 +78,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 			$authorized = true;
 
 			$salt = random_key(12);
-			$form_password_hash = sha1($salt.sha1($form_password));
+			$form_password_hash = forum_hash($form_password, $salt);
 
 			// There's an old MD5 hash or an unsalted SHA1 hash in the database, so we replace it
 			// with a randomly generated salt and a new, salted SHA1 hash
@@ -122,8 +123,8 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		($hook = get_hook('li_qr_delete_online_user')) ? eval($hook) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-		$expire = ($save_pass == '1') ? time() + 31536000 : 0;
-		forum_setcookie($cookie_name, base64_encode($user_id.'|'.$form_password_hash), $expire);
+		$expire = ($save_pass) ? time() + 1209600 : time() + $forum_config['o_timeout_visit'];
+		forum_setcookie($cookie_name, base64_encode($user_id.'|'.$form_password_hash.'|'.$expire.'|'.sha1($salt.$form_password_hash.forum_hash($expire, $salt))), $expire);
 
 		redirect(forum_htmlencode($_POST['redirect_url']).((substr_count($_POST['redirect_url'], '?') == 1) ? '&amp;' : '?').'login=1', $lang_login['Login redirect']);
 	}
@@ -168,7 +169,8 @@ else if ($action == 'out')
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
 
-	forum_setcookie($cookie_name, base64_encode('1|'.random_key(8, true)), time() + 31536000);
+	$expire = time() + 1209600;
+	forum_setcookie($cookie_name, base64_encode('1|'.random_key(8, true).'|'.$expire.'|'.random_key(8, true)), $expire);
 
 	// Reset tracked topics
 	set_tracked_topics(null);
@@ -442,6 +444,9 @@ ob_start();
 						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_password" value="<?php echo isset($_POST['req_password']) ? ($_POST['req_password']) : '' ?>" size="30" /></span><br />
 						<em class="req-text"><?php echo $lang_common['Required'] ?></em>
 					</label>
+				</div>
+				<div class="checkbox radbox">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_login['Remember me'] ?></span><br /><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="save_pass" value="1" /></label>
 				</div>
 			</fieldset>
 <?php ($hook = get_hook('li_login_post_fieldset')) ? eval($hook) : null; ?>

@@ -7,6 +7,7 @@ $lang_login = array(
 'Login info'				=>	'Login to %s',
 'Username'					=>	'Username:',
 'Password'					=>	'Password:',
+'Remember me'				=>	'Remember me:',
 'E-mail address'			=>	'E-mail address:',
 'E-mail address help'		=>	'Enter the e-mail address set in your profile.',
 'Login errors'				=>	'<strong>Warning!</strong> The following errors must be corrected before you can login:',

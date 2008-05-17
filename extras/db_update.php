@@ -682,6 +682,9 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		// Drop use_avatar column from users table
 		$forum_db->drop_field($forum_db->prefix.'users', 'use_avatar');
 
+		// Drop save_pass column from users table
+		$forum_db->drop_field($forum_db->prefix.'users', 'save_pass');
+
 		// Add quote depth option
 		if (!array_key_exists('o_quote_depth', $forum_config))
 			$forum_db->query('INSERT INTO '.$forum_db->prefix.'config (conf_name, conf_value) VALUES(\'o_quote_depth\', \'3\')') or error(__FILE__, __LINE__);

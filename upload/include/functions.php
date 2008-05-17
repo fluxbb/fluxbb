@@ -72,7 +72,7 @@ function authenticate_user($user, $password, $password_is_hash = false)
 
 	if (!isset($forum_user['id']) ||
 		($password_is_hash && $password != $forum_user['password']) ||
-		(!$password_is_hash && sha1($forum_user['salt'].sha1($password)) != $forum_user['password']))
+		(!$password_is_hash && forum_hash($password, $forum_user['salt']) != $forum_user['password']))
 		set_default_user();
 
 	($hook = get_hook('fn_authenticate_user_end')) ? eval($hook) : null;
@@ -89,27 +89,36 @@ function cookie_login(&$forum_user)
 	($hook = get_hook('fn_cookie_login_start')) ? eval($hook) : null;
 
 	$now = time();
-	$expire = $now + 31536000;	// The cookie expires after a year
+	$expire = $now + 1209600;	// The cookie expires after 14 days
 
 	// We assume it's a guest
-	$cookie = array('user_id' => 1, 'password_hash' => 'Guest');
+	$cookie = array('user_id' => 1, 'password_hash' => 'Guest', 'expiration_time' => 0, 'expire_hash' => 'Guest');
 
 	// If a cookie is set, we get the user_id and password hash from it
 	if (isset($_COOKIE[$cookie_name]))
-		@list($cookie['user_id'], $cookie['password_hash']) = @explode('|', base64_decode($_COOKIE[$cookie_name]));
+		@list($cookie['user_id'], $cookie['password_hash'], $cookie['expiration_time'], $cookie['expire_hash']) = @explode('|', base64_decode($_COOKIE[$cookie_name]));
 
 	($hook = get_hook('fn_cookie_login_fetch_cookie')) ? eval($hook) : null;
 
-	if (intval($cookie['user_id']) > 1)
+	// If this a cookie for a logged in user and it shouldn't have already expired
+	if (intval($cookie['user_id']) > 1 && intval($cookie['expiration_time']) > $now)
 	{
 		authenticate_user(intval($cookie['user_id']), $cookie['password_hash'], true);
+
+		// We now validate the cookie hash
+		if ($cookie['expire_hash'] !== sha1($forum_user['salt'].$forum_user['password'].forum_hash(intval($cookie['expiration_time']), $forum_user['salt'])))
+			set_default_user();
 
 		// If we got back the default user, the login failed
 		if ($forum_user['id'] == '1')
 		{
-			forum_setcookie($cookie_name, base64_encode('1|'.random_key(8, true)), $expire);
+			forum_setcookie($cookie_name, base64_encode('1|'.random_key(8, true).'|'.$expire.'|'.random_key(8, true)), $expire);
 			return;
 		}
+
+		// Send a new, updated cookie with a new expiration timestamp
+		$expire = (intval($cookie['expiration_time']) > $now + $forum_config['o_timeout_visit']) ? $now + 1209600 : $now + $forum_config['o_timeout_visit'];
+		forum_setcookie($cookie_name, base64_encode($forum_user['id'].'|'.$forum_user['password'].'|'.$expire.'|'.sha1($forum_user['salt'].$forum_user['password'].forum_hash($expire, $forum_user['salt']))), $expire);
 
 		// Set a default language if the user selected language no longer exists
 		if (!file_exists(FORUM_ROOT.'lang/'.$forum_user['language'].'/common.php'))
@@ -123,9 +132,6 @@ function cookie_login(&$forum_user)
 			$forum_user['disp_topics'] = $forum_config['o_disp_topics_default'];
 		if (!$forum_user['disp_posts'])
 			$forum_user['disp_posts'] = $forum_config['o_disp_posts_default'];
-
-		if ($forum_user['save_pass'] == '0')
-			$expire = 0;
 
 		// Check user has a valid date and time format
 		if (!isset($forum_time_formats[$forum_user['time_format']]))
@@ -199,7 +205,7 @@ function cookie_login(&$forum_user)
 
 				// Update tracked topics with the current expire time
 				if (isset($_COOKIE[$cookie_name.'_track']))
-					forum_setcookie($cookie_name.'_track', $_COOKIE[$cookie_name.'_track'], time() + $forum_config['o_timeout_visit']);
+					forum_setcookie($cookie_name.'_track', $_COOKIE[$cookie_name.'_track'], $now + $forum_config['o_timeout_visit']);
 			}
 		}
 
@@ -838,9 +844,9 @@ function add_user($user_info, &$new_uid)
 
 	// Add the user
 	$query = array(
-		'INSERT'	=> 'username, group_id, password, email, email_setting, save_pass, timezone, dst, language, style, registered, registration_ip, last_visit, salt, activate_key',
+		'INSERT'	=> 'username, group_id, password, email, email_setting, timezone, dst, language, style, registered, registration_ip, last_visit, salt, activate_key',
 		'INTO'		=> 'users',
-		'VALUES'	=> '\''.$forum_db->escape($user_info['username']).'\', '.$user_info['group_id'].', \''.$forum_db->escape($user_info['password_hash']).'\', \''.$forum_db->escape($user_info['email']).'\', '.$user_info['email_setting'].', '.$user_info['save_pass'].', '.floatval($user_info['timezone']).', '.$user_info['dst'].', \''.$forum_db->escape($user_info['language']).'\', \''.$forum_db->escape($user_info['style']).'\', '.$user_info['registered'].', \''.$forum_db->escape($user_info['registration_ip']).'\', '.$user_info['registered'].', \''.$forum_db->escape($user_info['salt']).'\', '.$user_info['activate_key'].''
+		'VALUES'	=> '\''.$forum_db->escape($user_info['username']).'\', '.$user_info['group_id'].', \''.$forum_db->escape($user_info['password_hash']).'\', \''.$forum_db->escape($user_info['email']).'\', '.$user_info['email_setting'].', '.floatval($user_info['timezone']).', '.$user_info['dst'].', \''.$forum_db->escape($user_info['language']).'\', \''.$forum_db->escape($user_info['style']).'\', '.$user_info['registered'].', \''.$forum_db->escape($user_info['registration_ip']).'\', '.$user_info['registered'].', \''.$forum_db->escape($user_info['salt']).'\', '.$user_info['activate_key'].''
 	);
 
 	($hook = get_hook('fn_qr_add_user')) ? eval($hook) : null;
@@ -2059,6 +2065,20 @@ function generate_form_token($target_url)
 
 	return sha1(str_replace('&amp;', '&', $target_url).$forum_user['csrf_token']);
 }
+
+
+//
+// Generates a salted, SHA-1 hash of $str
+//
+function forum_hash($str, $salt)
+{
+	$return = ($hook = get_hook('fn_forum_hash_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+
+	return sha1($salt.sha1($str));
+}
+
 
 //
 // Try to determine the correct remote IP-address

@@ -238,8 +238,6 @@ $lang_profile = array(
 'E-mail setting 1'			=>	'Display your e-mail address to other users.',
 'E-mail setting 2'			=>	'Hide your e-mail address but allow e-mail via the forum.',
 'E-mail setting 3'			=>	'Hide your e-mail address and disallow e-mail via the forum.',
-'Persistent login'			=>	'Persistent login:',
-'Save user/pass'			=>	'Remain logged in between visits (recommended).',
 
 // Form validation stuff
 'Profile update errors'		=>	'<strong>Warning!</strong> The following errors must be corrected before your profile can be updated:',

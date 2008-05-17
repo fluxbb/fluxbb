@@ -205,12 +205,11 @@ else if (isset($_POST['form_sent']))
 			else
 				$language = $forum_config['o_default_lang'];
 
-			$save_pass = (!isset($_POST['save_pass']) || $_POST['save_pass'] != '1') ? 0 : 1;
 			$email_setting = intval($_POST['email_setting']);
 			if ($email_setting < 0 || $email_setting > 2) $email_setting = 1;
 			$initial_group_id = ($forum_config['o_regs_verify'] == '0') ? $forum_config['o_default_user_group'] : FORUM_UNVERIFIED;
 			$salt = random_key(12);
-			$password_hash = sha1($salt.sha1($password1));
+			$password_hash = forum_hash($password1, $salt);
 
 			// Insert the new user into the database. We do this now to get the last inserted id for later use.
 			$user_info = array(
@@ -221,7 +220,6 @@ else if (isset($_POST['form_sent']))
 				'password_hash'			=>	$password_hash,
 				'email'					=>	$email1,
 				'email_setting'			=>	$email_setting,
-				'save_pass'				=>	$save_pass,
 				'timezone'				=>	$_POST['timezone'],
 				'dst'					=>	isset($_POST['dst']) ? '1' : '0',
 				'language'				=>	$language,
@@ -264,7 +262,9 @@ else if (isset($_POST['form_sent']))
 			if ($forum_config['o_regs_verify'] == '1')
 				message(sprintf($lang_profile['Reg e-mail'], '<a href="mailto:'.$forum_config['o_admin_email'].'">'.$forum_config['o_admin_email'].'</a>'));
 
-			forum_setcookie($cookie_name, base64_encode($new_uid.'|'.$password_hash), ($save_pass != '0') ? time() + 31536000 : 0);
+			$expire = time() + $forum_config['o_timeout_visit'];
+
+			forum_setcookie($cookie_name, base64_encode($new_uid.'|'.$password_hash.'|'.$expire.'|'.sha1($salt.$password_hash.forum_hash($expire, $salt))), $expire);
 
 			redirect(forum_link($forum_url['index']), $lang_profile['Reg complete']);
 		}
@@ -490,9 +490,6 @@ ob_start();
 					<div class="radbox"><label for="fld<?php echo ++$forum_page['fld_count'] ?>"><input type="radio" id="fld<?php echo $forum_page['fld_count'] ?>" name="email_setting" value="1" <?php echo((!isset($_POST['email_setting']) || intval($_POST['email_setting']) == 1) ? 'checked="checked"' : '') ?>/> <?php echo $lang_profile['E-mail setting 2'] ?></label></div>
 					<div class="radbox"><label for="fld<?php echo ++$forum_page['fld_count'] ?>"><input type="radio" id="fld<?php echo $forum_page['fld_count'] ?>" name="email_setting" value="2" <?php echo((isset($_POST['email_setting']) && intval($_POST['email_setting']) == 2) ? 'checked="checked"' : '') ?>/> <?php echo $lang_profile['E-mail setting 3'] ?></label></div>
 				</fieldset>
-				<div class="checkbox radbox">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_profile['Persistent login'] ?></span><br /><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="save_pass" value="1" <?php echo((!isset($_POST['register']) || isset($_POST['save_pass'])) ? 'checked="checked"' : '') ?>/> <?php echo $lang_profile['Save user/pass'] ?></label>
-				</div>
 <?php ($hook = get_hook('rg_register_other_end')) ? eval($hook) : null; ?>
 			</fieldset>
 <?php ($hook = get_hook('rg_register_post_other_fieldset')) ? eval($hook) : null; ?>

@@ -109,7 +109,7 @@ if ($action == 'change_pass')
 				// Did everything go according to plan?
 				if (empty($errors))
 				{
-					$new_password_hash = sha1($user['salt'].sha1($new_password1));
+					$new_password_hash = forum_hash($new_password1, $salt);
 
 					$query = array(
 						'UPDATE'	=> 'users',
@@ -247,7 +247,7 @@ if ($action == 'change_pass')
 		$authorized = false;
 		if (!empty($user['password']))
 		{
-			$old_password_hash = sha1($user['salt'].sha1($old_password));
+			$old_password_hash = forum_hash($old_password, $user['salt']);
 
 			if (($user['password'] == $old_password_hash) || $forum_user['is_admmod'])
 				$authorized = true;
@@ -259,7 +259,7 @@ if ($action == 'change_pass')
 		// Did everything go according to plan?
 		if (empty($errors))
 		{
-			$new_password_hash = sha1($user['salt'].sha1($new_password1));
+			$new_password_hash = forum_hash($new_password1, $user['salt']);
 
 			$query = array(
 				'UPDATE'	=> 'users',
@@ -272,8 +272,10 @@ if ($action == 'change_pass')
 
 			if ($forum_user['id'] == $id)
 			{
-				$expire = ($user['save_pass'] == '1') ? time() + 31536000 : 0;
-				forum_setcookie($cookie_name, base64_encode($forum_user['id'].'|'.$new_password_hash), $expire);
+				$cookie_data = @explode('|', base64_decode($_COOKIE[$cookie_name]));
+
+				$expire = ($cookie_data[2] > $now + $forum_config['o_timeout_visit']) ? time() + 1209600 : time() + $forum_config['o_timeout_visit'];
+				forum_setcookie($cookie_name, base64_encode($forum_user['id'].'|'.$new_password_hash.'|'.$expire.'|'.sha1($user['salt'].$new_password_hash.forum_hash($expire, $user['salt']))), $expire);
 			}
 
 			redirect(forum_link($forum_url['profile_about'], $id), $lang_profile['Pass updated redirect']);
@@ -433,7 +435,7 @@ else if ($action == 'change_email')
 	{
 		($hook = get_hook('pf_change_email_normal_form_submitted')) ? eval($hook) : null;
 
-		if (sha1($forum_user['salt'].sha1($_POST['req_password'])) !== $forum_user['password'])
+		if (forum_hash($_POST['req_password'], $forum_user['salt']) !== $forum_user['password'])
 			$errors[] = $lang_profile['Wrong password'];
 
 		require FORUM_ROOT.'include/email.php';
@@ -942,7 +944,7 @@ else if (isset($_POST['form_sent']))
 
 		case 'settings':
 		{
-			$form = extract_elements(array('dst', 'timezone', 'language', 'email_setting', 'save_pass', 'notify_with_post', 'auto_notify', 'time_format', 'date_format', 'disp_topics', 'disp_posts', 'show_smilies', 'show_img', 'show_img_sig', 'show_avatars', 'show_sig', 'style'));
+			$form = extract_elements(array('dst', 'timezone', 'language', 'email_setting', 'notify_with_post', 'auto_notify', 'time_format', 'date_format', 'disp_topics', 'disp_posts', 'show_smilies', 'show_img', 'show_img_sig', 'show_avatars', 'show_sig', 'style'));
 
 			($hook = get_hook('pf_change_details_settings_validation')) ? eval($hook) : null;
 
@@ -953,17 +955,11 @@ else if (isset($_POST['form_sent']))
 			$form['email_setting'] = intval($form['email_setting']);
 			if ($form['email_setting'] < 0 && $form['email_setting'] > 2) $form['email_setting'] = 1;
 
-			if (!isset($form['save_pass']) || $form['save_pass'] != '1') $form['save_pass'] = '0';
-
 			if ($forum_config['o_subscriptions'] == '1')
 			{
 				if (!isset($form['notify_with_post']) || $form['notify_with_post'] != '1') $form['notify_with_post'] = '0';
 				if (!isset($form['auto_notify']) || $form['auto_notify'] != '1') $form['auto_notify'] = '0';
 			}
-
-			// If the save_pass setting has changed, we need to set a new cookie with the appropriate expire date
-			if ($forum_user['id'] == $id && $form['save_pass'] != $forum_user['save_pass'])
-				forum_setcookie($cookie_name, base64_encode($id.'|'.$user['password']), ($form['save_pass'] == '1') ? time() + 31536000 : 0);
 
 			// Make sure we got a valid language string
 			if (isset($form['language']))
@@ -2034,9 +2030,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 						<div class="radbox"><label for="fld<?php echo ++$forum_page['fld_count'] ?>"><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[notify_with_post]" value="1"<?php if ($user['notify_with_post'] == '1') echo ' checked="checked"' ?> /> <?php echo $lang_profile['Notify full'] ?></label></div>
 						<div class="radbox"><label for="fld<?php echo ++$forum_page['fld_count'] ?>"><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[auto_notify]" value="1"<?php if ($user['auto_notify'] == '1') echo ' checked="checked"' ?> /> <?php echo $lang_profile['Subscribe by default'] ?></label></div>
 				</fieldset>
-<?php endif; ?>				<div class="checkbox radbox">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_profile['Persistent login'] ?></span><br /><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[save_pass]" value="1"<?php if ($user['save_pass'] == '1') echo ' checked="checked"' ?> /> <?php echo $lang_profile['Save user/pass'] ?></label>
-				</div>
+<?php endif; ?>
 <?php ($hook = get_hook('pf_change_details_settings_other_end')) ? eval($hook) : null; ?>
 			</fieldset>
 <?php ($hook = get_hook('pf_change_details_settings_post_other_fieldset')) ? eval($hook) : null; ?>

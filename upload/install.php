@@ -1294,7 +1294,6 @@ else
 					disp_topics TINYINT(3) UNSIGNED,
 					disp_posts TINYINT(3) UNSIGNED,
 					email_setting TINYINT(1) NOT NULL DEFAULT 1,
-					save_pass TINYINT(1) NOT NULL DEFAULT 1,
 					notify_with_post TINYINT(1) NOT NULL DEFAULT 0,
 					auto_notify TINYINT(1) NOT NULL DEFAULT 0,
 					show_smilies TINYINT(1) NOT NULL DEFAULT 1,
@@ -1344,7 +1343,6 @@ else
 					disp_topics SMALLINT,
 					disp_posts SMALLINT,
 					email_setting SMALLINT NOT NULL DEFAULT 1,
-					save_pass SMALLINT NOT NULL DEFAULT 1,
 					notify_with_post SMALLINT NOT NULL DEFAULT 0,
 					auto_notify SMALLINT NOT NULL DEFAULT 0,
 					show_smilies SMALLINT NOT NULL DEFAULT 1,
@@ -1394,7 +1392,6 @@ else
 					disp_topics INTEGER,
 					disp_posts INTEGER,
 					email_setting INTEGER NOT NULL DEFAULT 1,
-					save_pass INTEGER NOT NULL DEFAULT 1,
 					notify_with_post INTEGER NOT NULL DEFAULT 0,
 					auto_notify INTEGER NOT NULL DEFAULT 0,
 					show_smilies INTEGER NOT NULL DEFAULT 1,
@@ -1487,7 +1484,7 @@ else
 
 	$salt = random_key(12);
 
-	$forum_db->query('INSERT INTO '.$db_prefix."users (group_id, username, password, email, num_posts, last_post, registered, registration_ip, last_visit, salt) VALUES(1, '".$forum_db->escape($username)."', '".sha1($salt.sha1($password1))."', '$email', 1, ".$now.", ".$now.", '127.0.0.1', ".$now.", '".$forum_db->escape($salt)."')") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$db_prefix."users (group_id, username, password, email, num_posts, last_post, registered, registration_ip, last_visit, salt) VALUES(1, '".$forum_db->escape($username)."', '".forum_hash($password1, $salt)."', '$email', 1, ".$now.", ".$now.", '127.0.0.1', ".$now.", '".$forum_db->escape($salt)."')") or error(__FILE__, __LINE__);
 
 	// Enable/disable avatars depending on file_uploads setting in PHP configuration
 	$avatars = in_array(strtolower(@ini_get('file_uploads')), array('on', 'true', '1')) ? 1 : 0;
