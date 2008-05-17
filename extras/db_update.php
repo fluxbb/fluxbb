@@ -94,7 +94,7 @@ if (version_compare($cur_version, '1.2', '<'))
 	error('Version mismatch. The database \''.$db_name.'\' doesn\'t seem to be running a FluxBB database schema supported by this update script.', __FILE__, __LINE__);
 
 // If we've already done charset conversion in a previous update, we have to do SET NAMES
-if (strpos($cur_version, '1.3') === 0)
+if (strpos($cur_version, '1.3') === 0 && $db_type != 'sqlite')
 	$forum_db->query('SET NAMES \'utf8\'') or error(__FILE__, __LINE__);
 
 
