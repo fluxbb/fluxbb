@@ -1361,7 +1361,7 @@ else
 					style VARCHAR(25) NOT NULL DEFAULT 'Oxygen',
 					num_posts INT NOT NULL DEFAULT 0,
 					last_post INT,
-					last_search INT
+					last_search INT,
 					last_email_sent INT,
 					registered INT NOT NULL DEFAULT 0,
 					registration_ip VARCHAR(39) NOT NULL DEFAULT '0.0.0.0',
