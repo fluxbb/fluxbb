@@ -231,6 +231,10 @@ $lang_admin = array(
 'Extension by'					=>	'Created by %s',
 'Hotfix description'			=>	'This hotfix for your FluxBB installation was detected by automatic update.',
 'Install hotfix'				=>	'Install hotfix',
+'Missing dependency'			=>	'This extension cannot be installed unless "%s" is installed and enabled',
+'Uninstall dependency'			=>	'This extension cannot be uninstall while "%s" is installed.',
+'Disable dependency'			=>	'This extension cannot be disabled while "%s" is enabled.',
+'Disabled dependency'			=>	'This extension cannot be enabled while "%s" is disabled.',
 
 // admin_forums
 'Delete forum'					=>	'Delete forum',

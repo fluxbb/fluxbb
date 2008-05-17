@@ -571,6 +571,9 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 
 		// Add disabled field to extensions
 		$forum_db->add_field($forum_db->prefix.'extensions', 'disabled', 'TINYINT(1)', false, 0, 'uninstall_note');
+		
+		// Add dependencies field to extensions
+		$forum_db->add_field($forum_db->prefix.'extensions', 'dependencies', 'VARCHAR(255)', true, null, 'disabled');
 
 		// Add the extension_hooks table
 		if (!$forum_db->table_exists($forum_db->prefix.'extension_hooks'))
