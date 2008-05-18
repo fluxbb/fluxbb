@@ -182,7 +182,8 @@ if (isset($_POST['form_sent']))
 	// Validate BBCode syntax
 	if ($forum_config['p_message_bbcode'] == '1' || $forum_config['o_make_links'] == '1')
 	{
-		require FORUM_ROOT.'include/parser.php';
+		if (!defined('FORUM_PARSER_LOADED'))
+			require FORUM_ROOT.'include/parser.php';
 		$message = preparse_bbcode($message, $errors);
 	}
 
@@ -359,7 +360,8 @@ ob_start();
 // If preview selected and there are no errors
 if (isset($_POST['preview']) && empty($errors))
 {
-	require_once FORUM_ROOT.'include/parser.php';
+	if (!defined('FORUM_PARSER_LOADED'))
+		require FORUM_ROOT.'include/parser.php';
 	$forum_page['preview_message'] = parse_message(trim($message), $hide_smilies);
 
 	($hook = get_hook('po_pre_preview_display')) ? eval($hook) : null;
@@ -555,7 +557,8 @@ if (!empty($forum_page['checkboxes']))
 // Check if the topic review is to be displayed
 if ($tid && $forum_config['o_topic_review'] != '0')
 {
-	require_once FORUM_ROOT.'include/parser.php';
+	if (!defined('FORUM_PARSER_LOADED'))
+		require FORUM_ROOT.'include/parser.php';
 
 	// Get posts to display in topic review
 	$query = array(

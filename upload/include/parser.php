@@ -777,3 +777,5 @@ function parse_signature($text)
 
 	return $text;
 }
+
+define('FORUM_PARSER_LOADED', 1);

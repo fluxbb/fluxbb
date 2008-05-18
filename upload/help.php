@@ -219,7 +219,8 @@ else if ($section == 'smilies')
 <?php
 
 	// Display the smiley set
-	require FORUM_ROOT.'include/parser.php';
+	if (!defined('FORUM_PARSER_LOADED'))
+		require FORUM_ROOT.'include/parser.php';
 
 	$smiley_groups = array();
 

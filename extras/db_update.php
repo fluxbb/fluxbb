@@ -1207,7 +1207,9 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		break;
 
 	case 'preparse_posts':
-		require FORUM_ROOT.'include/parser.php';
+		if (!defined('FORUM_PARSER_LOADED'))
+			require FORUM_ROOT.'include/parser.php';
+
 		// Determine where to start
 		if ($start_at == 0)
 		{

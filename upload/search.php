@@ -231,7 +231,10 @@ if (isset($query))
 	$forum_page['item_count'] = 0;
 
 	if ($show_as == 'posts')
-		require FORUM_ROOT.'include/parser.php';
+	{
+		if (!defined('FORUM_PARSER_LOADED'))
+			require FORUM_ROOT.'include/parser.php';
+	}
 
 	// Finally, lets loop through the results and output them
 	for ($i = 0; $i < count($search_set); ++$i)

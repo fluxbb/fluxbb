@@ -1012,7 +1012,8 @@ else if (isset($_POST['form_sent']))
 			// Validate BBCode syntax
 			if ($forum_config['p_sig_bbcode'] == '1' || $forum_config['o_make_links'] == '1')
 			{
-				require FORUM_ROOT.'include/parser.php';
+				if (!defined('FORUM_PARSER_LOADED'))
+					require FORUM_ROOT.'include/parser.php';
 				$form['signature'] = preparse_bbcode($form['signature'], $errors, true);
 			}
 
@@ -1275,7 +1276,8 @@ else if (isset($_POST['form_sent']))
 
 if ($user['signature'] != '')
 {
-	require_once FORUM_ROOT.'include/parser.php';
+	if (!defined('FORUM_PARSER_LOADED'))
+		require FORUM_ROOT.'include/parser.php';
 	$parsed_signature = parse_signature($user['signature']);
 }
 
