@@ -73,7 +73,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 	// Make sure we have an array of dependencies
 	if (!isset($ext_data['extension']['dependencies']))
 		$ext_data['extension']['dependencies'] = array();
-	elseif (!is_array(current($ext_data['extension']['dependencies'])))
+	else if (!is_array(current($ext_data['extension']['dependencies'])))
 		$ext_data['extension']['dependencies'] = array($ext_data['extension']['dependencies']['dependency']);
 	else
 		$ext_data['extension']['dependencies'] = $ext_data['extension']['dependencies']['dependency'];
@@ -90,8 +90,10 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 		$installed_ext[] = $row['id'];
 
 	foreach ($ext_data['extension']['dependencies'] as $dependency)
+	{
 		if (!in_array($dependency, $installed_ext))
 			message(sprintf($lang_admin['Missing dependency'], $dependency));
+	}
 
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
@@ -594,8 +596,10 @@ else if (isset($_GET['flip']))
 			$installed_ext[] = $row['id'];
 
 		foreach ($dependencies as $dependency)
+		{
 			if (!empty($dependency) && !in_array($dependency, $installed_ext))
 				message(sprintf($lang_admin['Disabled dependency'], $dependency));
+		}
 	}
 
 	$query = array(
