@@ -741,12 +741,7 @@ else if ($action == 'delete_avatar')
 
 	($hook = get_hook('pf_delete_avatar_selected')) ? eval($hook) : null;
 
-	if (file_exists($forum_config['o_avatars_dir'].'/'.$id.'.jpg'))
-		@unlink($forum_config['o_avatars_dir'].'/'.$id.'.jpg');
-	if (file_exists($forum_config['o_avatars_dir'].'/'.$id.'.png'))
-		@unlink($forum_config['o_avatars_dir'].'/'.$id.'.png');
-	if (file_exists($forum_config['o_avatars_dir'].'/'.$id.'.gif'))
-		@unlink($forum_config['o_avatars_dir'].'/'.$id.'.gif');
+	delete_avatar($id);
 
 	redirect(forum_link($forum_url['profile_avatar'], $id), $lang_profile['Avatar deleted redirect']);
 }
@@ -1068,6 +1063,9 @@ else if (isset($_POST['form_sent']))
 			if (is_uploaded_file($uploaded_file['tmp_name']) && empty($errors))
 			{
 				$allowed_types = array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png');
+
+				($hook = get_hook('pf_change_details_avatar_allowed_types')) ? eval($hook) : null;
+
 				if (!in_array($uploaded_file['type'], $allowed_types))
 					$errors[] = $lang_profile['Bad type'];
 				else
@@ -1080,13 +1078,15 @@ else if (isset($_POST['form_sent']))
 				if (empty($errors))
 				{
 					// Determine type
-					$extensions = null;
+					$extension = null;
 					if ($uploaded_file['type'] == 'image/gif')
-						$extensions = array('.gif', '.jpg', '.png');
+						$extension = '.gif';
 					else if ($uploaded_file['type'] == 'image/jpeg' || $uploaded_file['type'] == 'image/pjpeg')
-						$extensions = array('.jpg', '.gif', '.png');
+						$extension = '.jpg';
 					else
-						$extensions = array('.png', '.gif', '.jpg');
+						$extension = '.png';
+
+					($hook = get_hook('pf_change_details_avatar_determine_extension')) ? eval($hook) : null;
 
 					// Move the file to the avatar directory. We do this before checking the width/height to circumvent open_basedir restrictions.
 					if (!@move_uploaded_file($uploaded_file['tmp_name'], $forum_config['o_avatars_dir'].'/'.$id.'.tmp'))
@@ -1110,16 +1110,11 @@ else if (isset($_POST['form_sent']))
 						if (empty($errors))
 						{
 							// Delete any old avatars
-							if (file_exists($forum_config['o_avatars_dir'].'/'.$id.$extensions[0]))
-								@unlink($forum_config['o_avatars_dir'].'/'.$id.$extensions[0]);
-							if (file_exists($forum_config['o_avatars_dir'].'/'.$id.$extensions[1]))
-								@unlink($forum_config['o_avatars_dir'].'/'.$id.$extensions[1]);
-							if (file_exists($forum_config['o_avatars_dir'].'/'.$id.$extensions[2]))
-								@unlink($forum_config['o_avatars_dir'].'/'.$id.$extensions[2]);
+							delete_avatar($id);
 
 							// Put the new avatar in its place
-							@rename($forum_config['o_avatars_dir'].'/'.$id.'.tmp', $forum_config['o_avatars_dir'].'/'.$id.$extensions[0]);
-							@chmod($forum_config['o_avatars_dir'].'/'.$id.$extensions[0], 0644);
+							@rename($forum_config['o_avatars_dir'].'/'.$id.'.tmp', $forum_config['o_avatars_dir'].'/'.$id.$extension);
+							@chmod($forum_config['o_avatars_dir'].'/'.$id.$extension, 0644);
 						}
 					}
 				}
@@ -1294,17 +1289,10 @@ if ($forum_user['id'] != $id &&
 
 	if ($forum_config['o_avatars'] == '1')
 	{
-		if ($forum_page['img_size'] = @getimagesize($forum_config['o_avatars_dir'].'/'.$id.'.gif'))
-			$forum_page['avatar_format'] = 'gif';
-		else if ($forum_page['img_size'] = @getimagesize($forum_config['o_avatars_dir'].'/'.$id.'.jpg'))
-			$forum_page['avatar_format'] = 'jpg';
-		else if ($forum_page['img_size'] = @getimagesize($forum_config['o_avatars_dir'].'/'.$id.'.png'))
-			$forum_page['avatar_format'] = 'png';
-		else
-			$forum_page['avatar_format'] = '';
+		$forum_page['avatar_markup'] = generate_avatar_markup($id);
 
-		if ($forum_page['avatar_format'] != '')
-			$forum_page['user_ident']['avatar'] = '<img src="'.$base_url.'/'.$forum_config['o_avatars_dir'].'/'.$id.'.'.$forum_page['avatar_format'].'" '.$forum_page['img_size'][3].' alt="'.$lang_profile['Avatar'].'" />';
+		if (!empty($forum_page['avatar_markup']))
+			$forum_page['user_ident']['avatar'] = $forum_page['avatar_markup'];
 	}
 
 	$forum_page['user_ident']['username'] = '<strong class="username'.(($user['realname'] =='') ? ' fn nickname' : ' nickname').'">'.forum_htmlencode($user['username']).'</strong>';
@@ -1445,17 +1433,10 @@ else
 
 		if ($forum_config['o_avatars'] == '1')
 		{
-			if ($forum_page['img_size'] = @getimagesize($forum_config['o_avatars_dir'].'/'.$id.'.gif'))
-				$forum_page['avatar_format'] = 'gif';
-			else if ($forum_page['img_size'] = @getimagesize($forum_config['o_avatars_dir'].'/'.$id.'.jpg'))
-				$forum_page['avatar_format'] = 'jpg';
-			else if ($forum_page['img_size'] = @getimagesize($forum_config['o_avatars_dir'].'/'.$id.'.png'))
-				$forum_page['avatar_format'] = 'png';
-			else
-				$forum_page['avatar_format'] = '';
+			$forum_page['avatar_markup'] = generate_avatar_markup($id);
 
-			if ($forum_page['avatar_format'] != '')
-				$forum_page['user_ident']['avatar'] = '<img src="'.$base_url.'/'.$forum_config['o_avatars_dir'].'/'.$id.'.'.$forum_page['avatar_format'].'" '.$forum_page['img_size'][3].' alt="'.$lang_profile['Avatar'].'" />';
+			if (!empty($forum_page['avatar_markup']))
+				$forum_page['user_ident']['avatar'] = $forum_page['avatar_markup'];
 		}
 
 		$forum_page['user_ident']['username'] = '<strong class="username'.(($user['realname'] =='') ? ' fn nickname' :  ' nickname').'">'.forum_htmlencode($user['username']).'</strong>';
@@ -2162,14 +2143,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 
 	else if ($section == 'avatar' && $forum_config['o_avatars'] == '1')
 	{
-		if ($forum_page['img_size'] = @getimagesize($forum_config['o_avatars_dir'].'/'.$id.'.gif'))
-			$forum_page['avatar_format'] = 'gif';
-		else if ($forum_page['img_size'] = @getimagesize($forum_config['o_avatars_dir'].'/'.$id.'.jpg'))
-			$forum_page['avatar_format'] = 'jpg';
-		else if ($forum_page['img_size'] = @getimagesize($forum_config['o_avatars_dir'].'/'.$id.'.png'))
-			$forum_page['avatar_format'] = 'png';
-		else
-			$forum_page['avatar_format'] = '';
+		$forum_page['avatar_markup'] = generate_avatar_markup($id);
 
 		// Setup the form
 		$forum_page['set_count'] = $forum_page['fld_count'] = 0;
@@ -2185,12 +2159,12 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 		// Setup form information
 		$forum_page['frm_info'] = array();
 
-		if ($forum_page['avatar_format'] != '')
+		if (!empty($forum_page['avatar_markup']))
 		{
 			$forum_page['frm_info']['avatar_change'] = '<li><span>'.$lang_profile['Avatar info change'].'</span></li>';
 			$forum_page['frm_info']['avatar_info'] = '<li><span>'.$lang_profile['Avatar info type'].'</span></li>';
 			$forum_page['frm_info']['avatar_size'] = '<li><span>'.sprintf($lang_profile['Avatar info size'], $forum_config['o_avatars_width'], $forum_config['o_avatars_height'], $forum_config['o_avatars_size'], ceil($forum_config['o_avatars_size'] / 1024)).'</span></li>';
-			$forum_page['avatar_demo'] = '<img src="'.$base_url.'/'.$forum_config['o_avatars_dir'].'/'.$id.'.'.$forum_page['avatar_format'].'" '.$forum_page['img_size'][3].' alt="'.$lang_profile['Avatar'].'" />';
+			$forum_page['avatar_demo'] = $forum_page['avatar_markup'];
 		}
 		else
 		{
@@ -2221,7 +2195,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 	</div>
 
 	<div class="main-content frm">
-		<div class="frm-info<?php echo ($forum_page['avatar_format'] != '') ? ' av-preview' : '' ?>">
+		<div class="frm-info<?php echo (!empty($forum_page['avatar_markup'])) ? ' av-preview' : '' ?>">
 			<?php echo (isset($forum_page['avatar_demo'])) ? $forum_page['avatar_demo']."\n" : ''."\n" ?>
 			<ul>
 				<?php echo implode("\n\t\t\t\t", $forum_page['frm_info'])."\n\t\t\t" ?>
@@ -2257,7 +2231,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="frm-warn">
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-<?php if ($forum_page['avatar_format'] != ''): ?>				<p class="frm-fld link"><span class="fld-label"><a href="<?php echo forum_link($forum_url['delete_avatar'], array($id, generate_form_token('delete_avatar'.$id.$forum_user['id']))) ?>"><?php echo $lang_profile['Delete avatar'] ?></a>:</span> <span class="fm-input"><?php echo $lang_profile['Avatar info remove'] ?></span></p>
+<?php if (!empty($forum_page['avatar_markup'])): ?>				<p class="frm-fld link"><span class="fld-label"><a href="<?php echo forum_link($forum_url['delete_avatar'], array($id, generate_form_token('delete_avatar'.$id.$forum_user['id']))) ?>"><?php echo $lang_profile['Delete avatar'] ?></a>:</span> <span class="fm-input"><?php echo $lang_profile['Avatar info remove'] ?></span></p>
 <?php endif; ?>			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><strong><?php echo $lang_profile['Avatar'] ?></strong></legend>
 <?php ($hook = get_hook('pf_change_details_avatar_fieldset_start')) ? eval($hook) : null; ?>

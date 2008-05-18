@@ -583,6 +583,32 @@ function generate_profile_menu()
 
 }
 
+//
+// Outputs markup to display a user's avatar
+//
+function generate_avatar_markup($user_id)
+{
+	global $forum_config, $base_url;
+
+	$filetypes = array('jpg', 'gif', 'png');
+
+	($hook = get_hook('fn_generate_avatar_markup_start')) ? eval($hook) : null;
+
+	foreach ($filetypes as $cur_type)
+	{
+		$path = $forum_config['o_avatars_dir'].'/'.$user_id.'.'.$cur_type;
+
+		if (file_exists($path) && $img_size = @getimagesize($path))
+			return '<img src="'.$base_url.'/'.$path.'" '.$img_size[3].' alt="" />';
+	}
+
+	$return = ($hook = get_hook('fn_generate_avatar_markup_end')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+
+	return '';
+}
+
 
 //
 // Generate breadcrumb navigation
@@ -983,12 +1009,7 @@ function delete_user($user_id)
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Delete user avatar
-	if (file_exists($forum_config['o_avatars_dir'].'/'.$user_id.'.gif'))
-		@unlink($forum_config['o_avatars_dir'].'/'.$user_id.'.gif');
-	if (file_exists($forum_config['o_avatars_dir'].'/'.$user_id.'.jpg'))
-		@unlink($forum_config['o_avatars_dir'].'/'.$user_id.'.jpg');
-	if (file_exists($forum_config['o_avatars_dir'].'/'.$user_id.'.png'))
-		@unlink($forum_config['o_avatars_dir'].'/'.$user_id.'.png');
+	delete_avatar($user_id);
 
 	// If the user is a moderator or an administrator, we remove him/her from the moderator list in all forums
 	// and regenerate the bans cache (in case he/she created any bans)
@@ -1083,6 +1104,26 @@ function forum_clear_cache()
 			@unlink(FORUM_CACHE_DIR.$entry);
 	}
 	$d->close();
+}
+
+
+//
+// Deletes any avatars owned by the specified user ID
+//
+function delete_avatar($user_id)
+{
+	global $forum_config;
+
+	$filetypes = array('jpg', 'gif', 'png');
+
+	($hook = get_hook('fn_delete_avatar_start')) ? eval($hook) : null;
+
+	// Delete user avatar
+	foreach ($filetypes as $cur_type)
+	{
+		if (file_exists($forum_config['o_avatars_dir'].'/'.$user_id.'.'.$cur_type))
+			@unlink($forum_config['o_avatars_dir'].'/'.$user_id.'.'.$cur_type);
+	}
 }
 
 

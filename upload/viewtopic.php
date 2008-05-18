@@ -327,12 +327,10 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 	// Generate author identification
 	if ($cur_post['poster_id'] > 1 && $forum_config['o_avatars'] == '1' && $forum_user['show_avatars'] != '0')
 	{
-		if (file_exists($forum_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.gif') && $img_size = @getimagesize($forum_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.gif'))
-			$forum_page['user_ident']['avatar'] = '<img src="'.$base_url.'/'.$forum_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.gif" '.$img_size[3].' alt="" />';
-		else if (file_exists($forum_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.jpg') && $img_size = @getimagesize($forum_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.jpg'))
-			$forum_page['user_ident']['avatar'] = '<img src="'.$base_url.'/'.$forum_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.jpg" '.$img_size[3].' alt="" />';
-		else if (file_exists($forum_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.png') && $img_size = @getimagesize($forum_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.png'))
-			$forum_page['user_ident']['avatar'] = '<img src="'.$base_url.'/'.$forum_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.png" '.$img_size[3].' alt="" />';
+		$forum_page['avatar_markup'] = generate_avatar_markup($cur_post['poster_id']);
+
+		if (!empty($forum_page['avatar_markup']))
+			$forum_page['user_ident']['avatar'] = $forum_page['avatar_markup'];
 	}
 
 	if ($cur_post['poster_id'] > 1)
