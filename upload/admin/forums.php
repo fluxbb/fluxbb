@@ -765,12 +765,12 @@ if ($forum_db->num_rows($result))
 				<span class="submit"><input type="submit" class="button" name="update_positions" value="<?php echo $lang_admin['Update positions'] ?>" /></span>
 			</div>
 		</form>
+	</div>
 <?php
 
 }
 
 ?>
-	</div>
 
 </div>
 <?php
