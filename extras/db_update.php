@@ -527,6 +527,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 							uninstall TEXT,
 							uninstall_note TEXT,
 							disabled TINYINT(1) NOT NULL DEFAULT 0,
+							dependencies VARCHAR(255) NOT NULL DEFAULT '',
 							PRIMARY KEY(id)
 							) ENGINE = MyISAM CHARACTER SET utf8";
 					break;
@@ -541,6 +542,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 							uninstall TEXT,
 							uninstall_note TEXT,
 							disabled SMALLINT NOT NULL DEFAULT 0,
+							dependencies VARCHAR(255) NOT NULL DEFAULT '',
 							PRIMARY KEY(id)
 							)";
 					break;
@@ -555,6 +557,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 							uninstall TEXT,
 							uninstall_note TEXT,
 							disabled INTEGER NOT NULL DEFAULT 0,
+							dependencies VARCHAR(255) NOT NULL DEFAULT '',
 							PRIMARY KEY(id)
 							)";
 					break;
