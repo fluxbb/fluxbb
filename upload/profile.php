@@ -109,7 +109,7 @@ if ($action == 'change_pass')
 				// Did everything go according to plan?
 				if (empty($errors))
 				{
-					$new_password_hash = forum_hash($new_password1, $salt);
+					$new_password_hash = forum_hash($new_password1, $user['salt']);
 
 					$query = array(
 						'UPDATE'	=> 'users',
