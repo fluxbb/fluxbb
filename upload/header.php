@@ -197,7 +197,8 @@ else
 
 	$visit_links['markread'] = '<li id="vs-markread"><a href="'.forum_link($forum_url['mark_read'], generate_form_token('markread'.$forum_user['id'])).'">'.$lang_common['Mark all as read'].'</a></li>';
 
-	if ($forum_user['is_admmod'])
+	// We only need to run this query for mods/admins if there will actually be reports to look at
+	if ($forum_user['is_admmod'] && $forum_config['o_report_method'] != 1)
 	{
 		$query = array(
 			'SELECT'	=> 'COUNT(r.id)',
