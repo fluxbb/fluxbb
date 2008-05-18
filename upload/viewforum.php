@@ -287,6 +287,8 @@ if ($forum_db->num_rows($result))
 				$forum_page['item_status']['normal'] = 'normal';
 		}
 
+		($hook = get_hook('vf_row_pre_item_merge')) ? eval($hook) : null;
+
 		$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? 'odd' : 'even').' '.implode(' ', $forum_page['item_status']);
 		$forum_page['item_indicator'] = '<span class="status '.implode(' ', $forum_page['item_status']).'" title="'.implode(' - ', $forum_page['item_alt_message']).'"><img src="'.$base_url.'/style/'.$forum_user['style'].'/status.png" alt="'.implode(' - ', $forum_page['item_alt_message']).'" />'.$forum_page['item_indicator'].'</span>';
 
