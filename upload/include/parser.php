@@ -135,7 +135,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	if ($return != null)
 		return $return;
 
-	$split_text = preg_split("/(\[\S*?\])/", $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+	$split_text = preg_split("/(\[\S*?(?:=.*?)?\])/", $text, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 	$open_tags = array('post');
 	$opened_tag = 0;
