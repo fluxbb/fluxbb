@@ -1107,6 +1107,8 @@ else if (isset($_POST['form_sent']))
 							$errors[] = $lang_profile['Bad type'];
 						}
 
+						($hook = get_hook('pf_change_details_avatar_validate_file')) ? eval($hook) : null;
+
 						if (empty($errors))
 						{
 							// Delete any old avatars
