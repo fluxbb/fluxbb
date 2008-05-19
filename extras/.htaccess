@@ -5,7 +5,10 @@
 Options -MultiViews
 
 RewriteEngine On
-RewriteBase /
+
+# Uncomment and properly set the RewriteBase if the rewrite rules are not working properly
+#RewriteBase /
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . rewrite.php [L]
