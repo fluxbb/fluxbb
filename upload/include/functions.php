@@ -598,7 +598,7 @@ function generate_avatar_markup($user_id)
 	{
 		$path = $forum_config['o_avatars_dir'].'/'.$user_id.'.'.$cur_type;
 
-		if (file_exists($path) && $img_size = @getimagesize($path))
+		if (file_exists(FORUM_ROOT.$path) && $img_size = @getimagesize(FORUM_ROOT.$path))
 			return '<img src="'.$base_url.'/'.$path.'" '.$img_size[3].' alt="" />';
 	}
 
@@ -1121,8 +1121,8 @@ function delete_avatar($user_id)
 	// Delete user avatar
 	foreach ($filetypes as $cur_type)
 	{
-		if (file_exists($forum_config['o_avatars_dir'].'/'.$user_id.'.'.$cur_type))
-			@unlink($forum_config['o_avatars_dir'].'/'.$user_id.'.'.$cur_type);
+		if (file_exists(FORUM_ROOT.$forum_config['o_avatars_dir'].'/'.$user_id.'.'.$cur_type))
+			@unlink(FORUM_ROOT.$forum_config['o_avatars_dir'].'/'.$user_id.'.'.$cur_type);
 	}
 }
 
