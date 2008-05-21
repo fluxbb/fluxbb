@@ -116,6 +116,7 @@ $lang_common = array(
 'BBCode error 5'		=>	'[%1$s] was found without a matching [/%1$s]',
 'BBCode error 6'		=>	'[%s] tag had an empty attribute section',
 'BBCode nested list'	=>	'[list] tags cannot be nested',
+'BBCode code problem'	=>	'There is a problem with your [code] tags',
 
 // Stuff for the navigator (top of every page)
 'Navigation'			=>	'Forum navigation',

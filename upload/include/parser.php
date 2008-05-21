@@ -57,7 +57,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
-		list($inside, $outside) = split_text($text, '[code]', '[/code]');
+		list($inside, $outside) = split_text($text, '[code]', '[/code]', false, $errors);
 		$text = implode('[%]', $outside);
 	}
 
@@ -89,7 +89,10 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 		}
 	}
 
-	$temp_text = preparse_tags($text, $errors, $is_signature);
+	$temp_text = false;
+	if (empty($errors))
+		$temp_text = preparse_tags($text, $errors, $is_signature);
+
 	if ($temp_text !== false)
 		$text = $temp_text;
 
@@ -192,13 +195,13 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		}
 
 		// We definitely have a bbcode tag.
-		
+
 		//This is if we are currently in a tag which escapes other bbcode such as code
 		if ($current_ignore)
 		{
 			$content = 1;
 
-			if ($current_ignore == $current_tag)
+			if ('[/'.$current_ignore.']' == $current)
 			{
 				$current = '[/'.$current_tag.']';
 				$current_ignore = '';
@@ -257,7 +260,8 @@ function preparse_tags($text, &$errors, $is_signature = false)
 					return false;
 				}
 			}
-			elseif ($content == 0) {
+			elseif ($content == 0)
+			{
 				$errors[] = sprintf($lang_common['BBCode error 2'], $current_tag);
 				return false;
 			}
@@ -449,9 +453,9 @@ function preparse_list_tag($content, $type = '*', &$errors)
 //
 // Split text into chunks ($inside contains all text inside $start and $end, and $outside contains all text outside)
 //
-function split_text($text, $start, $end, $retab = true)
+function split_text($text, $start, $end, $retab = true, &$errors = array())
 {
-	global $forum_config;
+	global $forum_config, $lang_common;
 
 	$tokens = explode($start, $text);
 
@@ -461,6 +465,12 @@ function split_text($text, $start, $end, $retab = true)
 	for ($i = 1; $i < $num_tokens; ++$i)
 	{
 		$temp = explode($end, $tokens[$i]);
+
+		if (count($temp) != 2)
+		{
+			$errors[] = $lang_common['BBCode code problem'];
+			return array(null, array($text));
+		}
 		$inside[] = $temp[0];
 		$outside[] = $temp[1];
 	}
