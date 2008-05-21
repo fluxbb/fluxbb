@@ -110,10 +110,11 @@ $lang_common = array(
 
 // Stuff for include/parser.php
 'BBCode error 1'		=>	'[/%1$s] was found without a matching [%1$s]',
-'BBCode error 2'		=>	'[%1$s] tag is empty',
+'BBCode error 2'		=>	'[%s] tag is empty',
 'BBCode error 3'		=>	'[%1$s] was opened within [%2$s], this is not allowed',
-'BBCode error 4'		=>	'[%1$s] was opened within itself, this is not allowed',
+'BBCode error 4'		=>	'[%s] was opened within itself, this is not allowed',
 'BBCode error 5'		=>	'[%1$s] was found without a matching [/%1$s]',
+'BBCode error 6'		=>	'[%s] tag had an empty attribute section',
 'BBCode nested list'	=>	'[list] tags cannot be nested',
 
 // Stuff for the navigator (top of every page)

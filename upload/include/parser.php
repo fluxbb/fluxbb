@@ -54,39 +54,38 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 			$errors[] = $lang_profile['Signature quote/code'];
 	}
 	
-	if (strpos($text, '[list') !== false)
+	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
+	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
-		// Tidy up lists
+		list($inside, $outside) = split_text($text, '[code]', '[/code]');
+		$text = implode('[%]', $outside);
+	}
 
-		// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
-		if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
+	// Tidy up lists
+	$pattern = array('#\[list\](.*?)\[/list\]#ems',
+					 '#\[list=([1a\*])\](.*?)\[/list\]#ems');
+
+	$replace = array('preparse_list_tag(\'$1\', \'*\', $errors)',
+					 'preparse_list_tag(\'$2\', \'$1\', $errors)');
+
+	$text = preg_replace($pattern, $replace, $text);		
+
+	if ($forum_config['o_make_links'] == '1')
+		$text = do_clickable($text);
+
+	// If we split up the message before we have to concatenate it together again (code tags)
+	if (isset($inside))
+	{
+		$outside = explode('[%]', $text);
+		$text = '';
+
+		$num_tokens = count($outside);
+
+		for ($i = 0; $i < $num_tokens; ++$i)
 		{
-			list($inside, $outside) = split_text($text, '[code]', '[/code]');
-			$text = implode('[%]', $outside);
-		}
-
-		$pattern = array('#\[list\](.*?)\[/list\]#ems',
-						 '#\[list=([1a\*])\](.*?)\[/list\]#ems');
-
-		$replace = array('preparse_list_tag(\'$1\', \'*\', $errors)',
-						 'preparse_list_tag(\'$2\', \'$1\', $errors)');
-
-		$text = preg_replace($pattern, $replace, $text);		
-
-		// If we split up the message before we have to concatenate it together again (code tags)
-		if (isset($inside))
-		{
-			$outside = explode('[%]', $text);
-			$text = '';
-
-			$num_tokens = count($outside);
-
-			for ($i = 0; $i < $num_tokens; ++$i)
-			{
-				$text .= $outside[$i];
-				if (isset($inside[$i]))
-					$text .= '[code]'.$inside[$i].'[/code]';
-			}
+			$text .= $outside[$i];
+			if (isset($inside[$i]))
+				$text .= '[code]'.$inside[$i].'[/code]';
 		}
 	}
 
@@ -97,9 +96,6 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	$return = ($hook = get_hook('ps_preparse_bbcode_end')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-
-	if ($forum_config['o_make_links'] == '1')
-		$text = do_clickable($text);
 
 	return trim($text);
 }
@@ -135,7 +131,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	if ($return != null)
 		return $return;
 
-	$split_text = preg_split("/(\[\S*?(?:=.*?)?\])/", $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+	$split_text = preg_split("/(\[[a-zA-Z0-9-\/]*?(?:=.*?)?\])/", $text, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 	$open_tags = array('post');
 	$opened_tag = 0;
@@ -151,7 +147,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		if ($current == '')
 			continue;
 
-		if (strpos($current, '[') === false && strpos($current, ']') === false)
+		if (substr($current,0,1) != '[' || substr($current,-1,1) != ']')
 		{
 			// Its not a bbcode tag so we put it on the end and continue
 			if (!$current_nest)
@@ -214,7 +210,14 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		}
 
 		if ($equalpos = strpos($current,'='))
+		{
+			if (strlen(substr($current,$equalpos)) == 2)
+			{
+				$errors[] = sprintf($lang_common['BBCode error 6'], $current_tag);
+				return false;
+			}
 			$current = strtolower(substr($current, 0, $equalpos)).substr($current,$equalpos);
+		}
 		else
 			$current = strtolower($current);
 			
@@ -245,11 +248,6 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		{
 			//This is if we are closing a tag
 
-			if ($content == 0) {
-				$errors[] = sprintf($lang_common['BBCode error 2'], $current_tag);
-				return false;
-			}
-
 			if ($opened_tag == 0 || !in_array($current_tag, $open_tags))
 			{
 				//We tried to close a tag which is not open 
@@ -258,6 +256,10 @@ function preparse_tags($text, &$errors, $is_signature = false)
 					$errors[] = sprintf($lang_common['BBCode error 1'], $current_tag);
 					return false;
 				}
+			}
+			elseif ($content == 0) {
+				$errors[] = sprintf($lang_common['BBCode error 2'], $current_tag);
+				return false;
 			}
 			else
 			{
@@ -487,7 +489,7 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 		$full_url = 'http://'.$full_url;
 	else if (strpos($url, 'ftp.') === 0)	// Else if it starts with ftp, we add ftp://
 		$full_url = 'ftp://'.$full_url;
-	else if (!preg_match('#^([a-z0-9]{3,6})://#', $url, $bah)) 	// Else if it doesn't start with abcdef://, we add http://
+	else if (!preg_match('#^([a-z0-9]{3,6})://#', $url)) 	// Else if it doesn't start with abcdef://, we add http://
 		$full_url = 'http://'.$full_url;
 
 	// Ok, not very pretty :-)
@@ -580,7 +582,7 @@ function do_bbcode($text, $is_signature = false)
 					 '#\[b\](.*?)\[/b\]#s',
 					 '#\[i\](.*?)\[/i\]#s',
 					 '#\[u\](.*?)\[/u\]#s',
-					 '#\[colou?r=([a-zA-Z]{3,20}|\#?[0-9a-fA-F]{6})](.*?)\[/colou?r\]#s');
+					 '#\[colou?r=([a-zA-Z]{3,20}|\#[0-9a-fA-F]{6}|\#[0-9a-fA-F]{3})](.*?)\[/colou?r\]#s');
 
 	$replace = array('handle_list_tag(\'$2\', \'$1\')',
 					 '<strong>$1</strong>',
@@ -605,9 +607,9 @@ function do_bbcode($text, $is_signature = false)
 	}
 	
 	$pattern[] = '#\[url\]([^\[]*?)\[/url\]#e';
-	$pattern[] = '#\[url=([^\[]*?)\](.*?)\[/url\]#e';
+	$pattern[] = '#\[url=([^\[]+?)\](.*?)\[/url\]#e';
 	$pattern[] = '#\[email\]([^\[]*?)\[/email\]#';
-	$pattern[] = '#\[email=([^\[]*?)\](.*?)\[/email\]#';
+	$pattern[] = '#\[email=([^\[]+?)\](.*?)\[/email\]#';
 	
 	$replace[] = 'handle_url_tag(\'$1\')';
 	$replace[] = 'handle_url_tag(\'$1\', \'$2\')';
@@ -702,9 +704,7 @@ function parse_message($text, $hide_smilies)
 		$text = do_smilies($text);
 
 	if ($forum_config['p_message_bbcode'] == '1' && strpos($text, '[') !== false && strpos($text, ']') !== false)
-	{
 		$text = do_bbcode($text);
-	}
 
 	$return = ($hook = get_hook('ps_parse_message_bbcode')) ? eval($hook) : null;
 	if ($return != null)
