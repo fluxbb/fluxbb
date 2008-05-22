@@ -115,7 +115,7 @@ else if ($action == 'markread')
 	// Reset tracked topics
 	set_tracked_topics(null);
 
-	redirect($forum_user['prev_url'], $lang_misc['Mark read redirect']);
+	redirect(forum_link($forum_url['index']), $lang_misc['Mark read redirect']);
 }
 
 
@@ -132,11 +132,35 @@ else if ($action == 'markforumread')
 
 	($hook = get_hook('mi_markforumread_selected')) ? eval($hook) : null;
 
+	$fid = intval($_GET['fid']);
+	if ($fid < 1)
+		message($lang_common['Bad request']);
+
+	// Fetch some info about the forum
+	$query = array(
+		'SELECT'	=> 'f.forum_name',
+		'FROM'		=> 'forums AS f',
+		'JOINS'		=> array(
+			array(
+				'LEFT JOIN'		=> 'forum_perms AS fp',
+				'ON'			=> '(fp.forum_id=f.id AND fp.group_id='.$forum_user['g_id'].')'
+			)
+		),
+		'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fid
+	);
+
+	($hook = get_hook('mi_qr_markforumread_get_forum_info')) ? eval($hook) : null;
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+	if (!$forum_db->num_rows($result))
+		message($lang_common['Bad request']);
+
+	$forum_name = $forum_db->result($result);
+
 	$tracked_topics = get_tracked_topics();
-	$tracked_topics['forums'][intval($_GET['fid'])] = time();
+	$tracked_topics['forums'][$fid] = time();
 	set_tracked_topics($tracked_topics);
 
-	redirect($forum_user['prev_url'], $lang_misc['Mark forum read redirect']);
+	redirect(forum_link($forum_url['forum'], array($fid, sef_friendly($forum_name))), $lang_misc['Mark forum read redirect']);
 }
 
 
