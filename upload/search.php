@@ -239,6 +239,8 @@ if (isset($query))
 	// Finally, lets loop through the results and output them
 	for ($i = 0; $i < count($search_set); ++$i)
 	{
+		($hook = get_hook('se_results_loop_start')) ? eval($hook) : null;
+
 		++$forum_page['item_count'];
 
 		if ($forum_config['o_censoring'] == '1')

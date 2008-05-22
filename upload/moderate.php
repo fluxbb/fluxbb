@@ -1185,6 +1185,8 @@ if ($forum_db->num_rows($result))
 
 	while ($cur_topic = $forum_db->fetch_assoc($result))
 	{
+		($hook = get_hook('mr_topic_actions_row_loop_start')) ? eval($hook) : null;
+
 		++$forum_page['item_count'];
 
 		// Start from scratch
@@ -1247,7 +1249,7 @@ if ($forum_db->num_rows($result))
 			$forum_page['subject_label'] = $cur_topic['subject'];
 		}
 
-		($hook = get_hook('mr_row_pre_item_merge')) ? eval($hook) : null;
+		($hook = get_hook('mr_topic_actions_row_pre_item_merge')) ? eval($hook) : null;
 
 		$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? 'odd' : 'even').' '.implode(' ', $forum_page['item_status']);
 		$forum_page['item_indicator'] = '<span class="status '.implode(' ', $forum_page['item_status']).'" title="'.implode(' - ', $forum_page['item_alt_message']).'"><img src="'.$base_url.'/style/'.$forum_user['style'].'/status.png" alt="'.implode(' - ', $forum_page['item_alt_message']).'" />'.$forum_page['item_indicator'].'</span>';
