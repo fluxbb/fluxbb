@@ -314,10 +314,12 @@ else
 
 ?>
 				<tr class="odd empty">
+<?php ($hook = get_hook('vf_empty_table_contents_begin')) ? eval($hook) : null; ?>
 					<td class="tcl"><?php echo $forum_page['item_indicator'].' '.$lang_forum['First topic nag'] ?></td>
 					<td class="tc2">&#160;</td>
 <?php if ($forum_config['o_topic_views'] == '1'): ?>					<td class="tc3">&#160;</td>
-<?php endif; ?>					<td class="tcr"><?php echo $lang_forum['Never'] ?></td>
+<?php endif; ($hook = get_hook('vf_empty_table_contents_after_num_views')) ? eval($hook) : null; ?>					<td class="tcr"><?php echo $lang_forum['Never'] ?></td>
+<?php ($hook = get_hook('vf_empty_table_contents_after_last_post')) ? eval($hook) : null; ?>
 				</tr>
 <?php
 

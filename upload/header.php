@@ -224,7 +224,7 @@ else
 <?php endif; ?>	<p>
 		<?php echo implode("\n\t\t", $visit_msg)."\n" ?>
 	</p>
-</div>
+<?php ($hook = get_hook('hd_visit_pre_ending')) ? eval($hook) : null; ?></div>
 <?php
 
 $tpl_temp = ob_get_contents();

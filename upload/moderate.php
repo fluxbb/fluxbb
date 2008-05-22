@@ -1154,11 +1154,12 @@ ob_start();
 		<table cellspacing="0" summary="<?php echo $lang_forum['Table summary mods'].forum_htmlencode($cur_forum['forum_name']) ?>">
 			<thead>
 				<tr>
+<?php ($hook = get_hook('mr_table_header_begin')) ? eval($hook) : null; ?>
 					<th class="tcl" scope="col"><?php echo $lang_common['Topic'] ?></th>
 					<th class="tc2" scope="col"><?php echo $lang_common['Replies'] ?></th>
 <?php if ($forum_config['o_topic_views'] == '1'): ?>					<th class="tc3" scope="col"><?php echo $lang_forum['Views'] ?></th>
-<?php endif; ?>					<th class="tcr" scope="col"><?php echo $lang_common['Last post'] ?></th>
-					<th class="tcmod" scope="col"><?php echo $lang_misc['Select'] ?></th>
+<?php endif; ($hook = get_hook('mr_table_header_after_num_views')) ? eval($hook) : null; ?>					<th class="tcr" scope="col"><?php echo $lang_common['Last post'] ?></th>
+<?php ($hook = get_hook('mr_table_header_after_last_post')) ? eval($hook) : null; ?>					<th class="tcmod" scope="col"><?php echo $lang_misc['Select'] ?></th>
 				</tr>
 			</thead>
 			<tbody class="statused">
@@ -1246,6 +1247,8 @@ if ($forum_db->num_rows($result))
 			$forum_page['subject_label'] = $cur_topic['subject'];
 		}
 
+		($hook = get_hook('mr_row_pre_item_merge')) ? eval($hook) : null;
+
 		$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? 'odd' : 'even').' '.implode(' ', $forum_page['item_status']);
 		$forum_page['item_indicator'] = '<span class="status '.implode(' ', $forum_page['item_status']).'" title="'.implode(' - ', $forum_page['item_alt_message']).'"><img src="'.$base_url.'/style/'.$forum_user['style'].'/status.png" alt="'.implode(' - ', $forum_page['item_alt_message']).'" />'.$forum_page['item_indicator'].'</span>';
 
@@ -1253,11 +1256,12 @@ if ($forum_db->num_rows($result))
 
 ?>
 				<tr class="<?php echo $forum_page['item_style'] ?>">
+<?php ($hook = get_hook('mr_table_contents_begin')) ? eval($hook) : null; ?>
 					<td class="tcl"><?php echo $forum_page['item_indicator'].' '.implode(' ', $forum_page['item_subject']) ?></td>
 					<td class="tc2"><?php echo (!$forum_page['ghost_topic']) ? $cur_topic['num_replies'] : ' - ' ?></td>
 <?php if ($forum_config['o_topic_views'] == '1'): ?>					<td class="tc3"><?php echo (!$forum_page['ghost_topic']) ? $cur_topic['num_views'] : ' - ' ?></td>
-<?php endif; ?>					<td class="tcr"><?php echo implode(' ', $forum_page['item_last_post']) ?></td>
-					<td class="tcmod"><label for="fld<?php echo ++$forum_page['fld_count'] ?>"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="checkbox" name="topics[<?php echo $cur_topic['id'] ?>]" value="1" /> <span><?php echo $forum_page['subject_label'] ?></span></label></td>
+<?php endif; ($hook = get_hook('mr_table_contents_after_num_views')) ? eval($hook) : null; ?>					<td class="tcr"><?php echo implode(' ', $forum_page['item_last_post']) ?></td>
+<?php ($hook = get_hook('mr_table_contents_after_last_post')) ? eval($hook) : null; ?>					<td class="tcmod"><label for="fld<?php echo ++$forum_page['fld_count'] ?>"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="checkbox" name="topics[<?php echo $cur_topic['id'] ?>]" value="1" /> <span><?php echo $forum_page['subject_label'] ?></span></label></td>
 				</tr>
 <?php
 
@@ -1272,11 +1276,12 @@ else
 
 ?>
 				<tr class="odd empty">
+<?php ($hook = get_hook('mr_empty_table_contents_begin')) ? eval($hook) : null; ?>
 					<td class="tcl"><?php echo $forum_page['item_indicator'].' '.$lang_forum['First topic nag'] ?></td>
 					<td class="tc2"> - </td>
 <?php if ($forum_config['o_topic_views'] == '1'): ?>					<td class="tc3"> - </td>
-<?php endif; ?>					<td class="tcr"><?php echo $lang_forum['Never'] ?></td>
-					<td class="tcmod"> - </td>
+<?php endif; ($hook = get_hook('mr_empty_table_contents_after_num_views')) ? eval($hook) : null; ?>					<td class="tcr"><?php echo $lang_forum['Never'] ?></td>
+<?php ($hook = get_hook('mr_empty_table_contents_after_last_post')) ? eval($hook) : null; ?>					<td class="tcmod"> - </td>
 				</tr>
 <?php
 

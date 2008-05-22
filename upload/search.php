@@ -353,6 +353,8 @@ if (isset($query))
 			if (!empty($forum_page['item_nav']))
 				$forum_page['item_subject']['nav'] = '<span class="topic-nav">[&#160;'.implode('&#160;&#160;', $forum_page['item_nav']).'&#160;]</span>';
 
+			($hook = get_hook('se_results_topics_pre_item_merge')) ? eval($hook) : null;
+
 			$forum_page['item_subject'][] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($search_set[$i]['poster'])).'</span>';
 			$forum_page['item_last_post']['post'] = '<a href="'.forum_link($forum_url['post'], $search_set[$i]['last_post_id']).'">'.format_time($search_set[$i]['last_post']).'</a>';
 			$forum_page['item_last_post']['user'] = '<span class="byuser">'.sprintf($lang_common['By user'], forum_htmlencode($search_set[$i]['last_poster'])).'</span>';

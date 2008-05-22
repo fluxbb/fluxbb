@@ -203,6 +203,8 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 			while (list($mod_username, $mod_id) = @each($forum_page['mods_array']))
 				$forum_page['item_mods'][] = ($forum_user['g_view_users'] == '1') ? '<a href="'.forum_link($forum_url['user'], $mod_id).'">'.forum_htmlencode($mod_username).'</a>' : forum_htmlencode($mod_username);
 
+			($hook = get_hook('in_row_modify_modlist')) ? eval($hook) : null;
+
 			$forum_page['item_subject']['modlist'] = '<span class="modlist">('.sprintf($lang_index['Moderated by'], implode(', ', $forum_page['item_mods'])).')</span>';
 		}
 
@@ -218,6 +220,8 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 		if (empty($forum_page['item_status']))
 			$forum_page['item_status']['normal'] = 'normal';
 	}
+
+	($hook = get_hook('in_row_pre_item_merge')) ? eval($hook) : null;
 
 	$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? 'odd' : 'even').' '.implode(' ', $forum_page['item_status']);
 	$forum_page['item_indicator'] = '<span class="status '.implode(' ', $forum_page['item_status']).'" title="'.$forum_page['item_alt_message'].'"><img src="'.$base_url.'/style/'.$forum_user['style'].'/status.png" alt="'.$forum_page['item_alt_message'].'" /></span>';
