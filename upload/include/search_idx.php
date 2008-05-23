@@ -40,13 +40,12 @@ if (!defined('FORUM'))
 //
 function split_words($text)
 {
+	global $forum_user;
+	static $noise_match, $noise_replace, $stopwords;
 
 	$return = ($hook = get_hook('si_split_words_start')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-
-	global $forum_user;
-	static $noise_match, $noise_replace, $stopwords;
 
 	if (empty($noise_match))
 	{
