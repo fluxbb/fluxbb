@@ -306,7 +306,7 @@ if (!isset($_POST['form_sent']))
 				</fieldset>
 			</div>
 			<div class="frm-buttons">
-				<span class="submit"><input type="submit" name="start" value="Start install" /></span>
+				<span class="submit"><input type="submit" name="start" value="<?php echo $lang_install['Start install'] ?>" /></span>
 			</div>
 		</form>
 	</div>
