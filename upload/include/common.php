@@ -32,7 +32,8 @@ if (!defined('FORUM_ESSENTIALS_LOADED'))
 	require FORUM_ROOT.'include/essentials.php';
 
 // Turn off magic_quotes_runtime
-set_magic_quotes_runtime(0);
+if (get_magic_quotes_runtime())
+	set_magic_quotes_runtime(0);
 
 // Strip slashes from GET/POST/COOKIE (if magic_quotes_gpc is enabled)
 if (get_magic_quotes_gpc())
