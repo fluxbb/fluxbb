@@ -245,7 +245,8 @@ $forum_page['crumbs'] = array(
 
 ($hook = get_hook('vt_pre_header_load')) ? eval($hook) : null;
 
-if (!$pid)
+// Allow indexing if this isn't a permalink and it isn't a link with p=1
+if (!$pid && (!isset($_GET['p']) || $forum_page['page'] != 1))
 	define('FORUM_ALLOW_INDEX', 1);
 
 define('FORUM_PAGE', 'viewtopic');
