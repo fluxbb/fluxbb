@@ -28,16 +28,6 @@
 // Enable DEBUG mode by removing // from the following line
 define('FORUM_DEBUG', 1);
 
-// This displays all executed queries in the page footer.
-// DO NOT enable this in a production environment!
-//define('FORUM_SHOW_QUERIES', 1);
-
-// Enable this if an extension is causing problems and you can't access the admin interface
-//define('FORUM_DISABLE_HOOKS', 1);
-
-// Enable this if you are logged out with maintenance mode enabled
-//define('FORUM_TURN_OFF_MAINT', 1);
-
 if (!defined('FORUM_ROOT'))
 	exit('The constant FORUM_ROOT must be defined and point to a valid FluxBB installation root directory.');
 

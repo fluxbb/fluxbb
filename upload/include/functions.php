@@ -2635,7 +2635,7 @@ function error()
 			}
 		}
 		else
-			echo '<p><strong>Note:</strong> For detailed error information (necessary for troubleshooting), enable "DEBUG mode". To enable "DEBUG mode", open up the file include/essentials.php in a text editor and locate the line "//define(\'FORUM_DEBUG\', 1);". It it located at the very top of the file below the software license preamble. Then remove the two slashes in the beginning of the line and save/upload the script. Once you\'ve solved the problem, it is recommended that "DEBUG mode" be turned off again (just add the two slashes back again).</p>'."\n";
+			echo '<p><strong>Note:</strong> For detailed error information (necessary for troubleshooting), enable "DEBUG mode". To enable "DEBUG mode", open up the file config.php in a text editor, add a line that looks like "define(\'FORUM_DEBUG\', 1);" (without the quotation marks), and re-upload the file. Once you\'ve solved the problem, it is recommended that "DEBUG mode" be turned off again (just remove the line from the file and re-upload it).</p>'."\n";
 	}
 
 ?>
