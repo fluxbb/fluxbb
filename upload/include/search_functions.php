@@ -40,7 +40,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = -1
 
 	if (forum_strlen(str_replace(array('*', '%'), '', $author)) < 2)
 		$author = '';
-	
+
 	if (forum_strlen(str_replace(array('*', '%'), '', $keywords)) < 3)
 		$keywords = '';
 
@@ -170,7 +170,6 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = -1
 		}
 
 		unset($result_list);
-		
 	}
 
 	// If it's a search for author name (and that author name isn't Guest)
@@ -321,11 +320,11 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = -1
 function generate_cached_search_query($search_id, &$show_as)
 {
 	global $forum_db, $db_type, $forum_user;
-	
+
 	$return = ($hook = get_hook('sf_generate_cached_search_query')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-	
+
 	$ident = ($forum_user['is_guest']) ? get_remote_address() : $forum_user['username'];
 
 	$query = array(
@@ -412,7 +411,7 @@ function generate_cached_search_query($search_id, &$show_as)
 
 		($hook = get_hook('sf_qr_get_cached_hits_as_topics')) ? eval($hook) : null;
 	}
-	
+
 	return $query;
 }
 
@@ -427,7 +426,7 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 	$return = ($hook = get_hook('sf_generate_action_search_query')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-	
+
 	switch ($action)
 	{
 		case 'show_new':
@@ -452,9 +451,9 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 			);
 
 			$url_type = $forum_url['search_new'];
-			
+
 			($hook = get_hook('sf_qr_get_new')) ? eval($hook) : null;
-			
+
 			break;
 
 		case 'show_recent':
@@ -476,9 +475,9 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 			);
 
 			$url_type = $forum_url['search_24h'];
-			
+
 			($hook = get_hook('sf_qr_get_recent')) ? eval($hook) : null;
-			
+
 			break;
 
 		case 'show_user_posts':
@@ -502,13 +501,13 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 				'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id='.$value,
 				'ORDER BY'	=> 'pposted DESC'
 			);
-			
+
 			$url_type = $forum_url['search_user_posts'];
 			$search_id = $value;
 			$show_as = 'posts';
-			
+
 			($hook = get_hook('sf_qr_get_user_posts')) ? eval($hook) : null;
-			
+
 			break;
 
 		case 'show_user_topics':
@@ -532,12 +531,12 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 				'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id='.$value,
 				'ORDER BY'	=> 't.last_post DESC'
 			);
-			
+
 			$url_type = $forum_url['search_user_topics'];
 			$search_id = $value;
-			
+
 			($hook = get_hook('sf_qr_get_user_topics')) ? eval($hook) : null;
-			
+
 			break;
 
 		case 'show_subscriptions':
@@ -567,9 +566,9 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 
 			$url_type = $forum_url['search_subscriptions'];
 			$search_id = $value;
-			
+
 			($hook = get_hook('sf_qr_get_subscriptions')) ? eval($hook) : null;
-			
+
 			break;
 
 		case 'show_unanswered':
@@ -591,11 +590,11 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 			);
 
 			$url_type = $forum_url['search_unanswered'];
-			
+
 			($hook = get_hook('sf_qr_get_unanswered')) ? eval($hook) : null;
 			break;
 	}
-	
+
 	return $query;
 }
 
@@ -606,11 +605,11 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 function get_search_results($query, &$search_set, &$forum_page)
 {
 	global $forum_db, $forum_user, $lang_common;
-	
+
 	$return = ($hook = get_hook('sf_get_search_results_start')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-	
+
 	if (is_array($query))
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	else
@@ -624,7 +623,7 @@ function get_search_results($query, &$search_set, &$forum_page)
 	// Work out the settings for pagination
 	$forum_page['num_pages'] = ceil($num_hits / $forum_page['per_page']);
 	$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
-	
+
 	// Determine the topic or post offset (based on $forum_page['page'])
 	$forum_page['start_from'] = $forum_page['per_page'] * ($forum_page['page'] - 1);
 	$forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_page['per_page']), $num_hits);
@@ -640,7 +639,7 @@ function get_search_results($query, &$search_set, &$forum_page)
 	}
 
 	$forum_db->free_result($result);
-	
+
 	$return = ($hook = get_hook('sf_get_search_results_end')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
@@ -655,13 +654,13 @@ function get_search_results($query, &$search_set, &$forum_page)
 function no_search_results($action = 'search')
 {
 	global $forum_page, $lang_search, $forum_url;
-	
+
 	$forum_page['search_again'] = '<a href="'.forum_link($forum_url['search']).'">'.$lang_search['Perform new search'].'</a>';
-	
+
 	$return = ($hook = get_hook('sf_no_search_results')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-	
+
 	switch ($action)
 	{
 		case 'show_new':
@@ -698,7 +697,7 @@ function generate_search_crumbs($action = null)
 	$return = ($hook = get_hook('sf_generate_search_crumbs')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-	
+
 	switch ($action)
 	{
 		case 'show_new':
@@ -749,7 +748,7 @@ function validate_search_action($action)
 {
 	// A list of valid actions (extensions can add their own actions to the array)
 	$valid_actions = array('search', 'show_new', 'show_recent', 'show_user_posts', 'show_user_topics', 'show_subscriptions', 'show_unanswered');
-	
+
 	$return = ($hook = get_hook('sf_validate_actions')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
