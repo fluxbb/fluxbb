@@ -198,7 +198,8 @@ if (isset($query))
 					<th class="tcl" scope="col"><?php echo $lang_common['Topic']; ?></th>
 					<th class="tc2" scope="col"><?php echo $lang_common['Forum'] ?></th>
 					<th class="tc3" scope="col"><?php echo $lang_common['Replies'] ?></th>
-					<th class="tcr" scope="col"><?php echo $lang_common['Last post'] ?></th>
+<?php ($hook = get_hook('se_table_header_after_num_replies')) ? eval($hook) : null; ?>					<th class="tcr" scope="col"><?php echo $lang_common['Last post'] ?></th>
+<?php ($hook = get_hook('se_table_header_after_last_post')) ? eval($hook) : null; ?>
 				</tr>
 			</thead>
 			<tbody class="statused">
@@ -370,7 +371,8 @@ if (isset($query))
 					<td class="tcl"><?php echo $forum_page['item_indicator'].' '.implode(' ', $forum_page['item_subject']) ?></td>
 					<td class="tc2"><?php echo forum_htmlencode($search_set[$i]['forum_name']) ?></td>
 					<td class="tc3"><?php echo $search_set[$i]['num_replies'] ?></td>
-					<td class="tcr"><?php echo implode(' ', $forum_page['item_last_post']) ?></td>
+<?php ($hook = get_hook('se_table_contents_after_num_replies')) ? eval($hook) : null; ?>					<td class="tcr"><?php echo implode(' ', $forum_page['item_last_post']) ?></td>
+<?php ($hook = get_hook('se_table_contents_after_last_post')) ? eval($hook) : null; ?>
 				</tr>
 <?php
 
