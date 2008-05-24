@@ -48,6 +48,8 @@ require FORUM_ROOT.'include/functions.php';
 // Reverse the effect of register_globals
 forum_unregister_globals();
 
+// Ignore any user abort requests
+ignore_user_abort(true);
 
 // Attempt to load the configuration file config.php
 if (file_exists(FORUM_ROOT.'config.php'))
