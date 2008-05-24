@@ -140,7 +140,7 @@ body {
 	echo '<p>';
 	while ($cur_post = $forum_db->fetch_row($result))
 	{
-		printf($lang_admin['Processing post'], $cur_post[0], $cur_post[2]).'<br />'."\n";
+		echo sprintf($lang_admin['Processing post'], $cur_post[0], $cur_post[2]).'<br />'."\n";
 
 		if ($cur_post[0] == $cur_post[4])	// This is the "topic post" so we have to index the subject as well
 			update_search_index('post', $cur_post[0], $cur_post[1], $cur_post[3]);
