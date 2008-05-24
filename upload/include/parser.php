@@ -57,7 +57,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
-		list($inside, $outside) = split_text($text, '[code]', '[/code]', false, $errors);
+		list($inside, $outside) = split_text($text, '[code]', '[/code]', $errors);
 		$text = implode('[%]', $outside);
 	}
 
@@ -453,7 +453,7 @@ function preparse_list_tag($content, $type = '*', &$errors)
 //
 // Split text into chunks ($inside contains all text inside $start and $end, and $outside contains all text outside)
 //
-function split_text($text, $start, $end, $retab = true, &$errors = array())
+function split_text($text, $start, $end, &$errors, $retab = true)
 {
 	global $forum_config, $lang_common;
 
@@ -702,7 +702,7 @@ function parse_message($text, $hide_smilies)
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
-		list($inside, $outside) = split_text($text, '[code]', '[/code]');
+		list($inside, $outside) = split_text($text, '[code]', '[/code]', $errors);
 		$text = implode('[%]', $outside);
 	}
 
