@@ -57,6 +57,13 @@ if (!defined('FORUM'))
 	error('The file \'config.php\' doesn\'t exist or is corrupt. Please run <a href="install.php">install.php</a> to install FluxBB first.');
 
 
+// Block prefetch requests
+if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
+{
+	header('HTTP/1.1 403 Prefetching Forbidden');
+	exit;
+}
+
 // Record the start time (will be used to calculate the generation time for the page)
 list($usec, $sec) = explode(' ', microtime());
 $forum_start = ((float)$usec + (float)$sec);
