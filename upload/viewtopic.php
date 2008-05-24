@@ -156,6 +156,8 @@ if (!$forum_db->num_rows($result))
 
 $cur_topic = $forum_db->fetch_assoc($result);
 
+($hook = get_hook('vt_modify_topic_info')) ? eval($hook) : null;
+
 // Sort out who the moderators are and if we are currently a moderator (or an admin)
 $mods_array = ($cur_topic['moderators'] != '') ? unserialize($cur_topic['moderators']) : array();
 $forum_page['is_admmod'] = ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && array_key_exists($forum_user['username'], $mods_array))) ? true : false;
@@ -179,6 +181,8 @@ $forum_page['num_pages'] = ceil(($cur_topic['num_replies'] + 1) / $forum_user['d
 $forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
 $forum_page['start_from'] = $forum_user['disp_posts'] * ($forum_page['page'] - 1);
 $forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_posts']), ($cur_topic['num_replies'] + 1));
+
+($hook = get_hook('vt_modify_page_details')) ? eval($hook) : null;
 
 // Navigation links for header and page numbering for title/meta description
 if ($forum_page['page'] < $forum_page['num_pages'])

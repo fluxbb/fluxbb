@@ -63,6 +63,8 @@ if (!$forum_db->num_rows($result))
 
 $cur_forum = $forum_db->fetch_assoc($result);
 
+($hook = get_hook('vf_modify_forum_info')) ? eval($hook) : null;
+
 // Is this a redirect forum? In that case, redirect!
 if ($cur_forum['redirect_url'] != '')
 {
@@ -73,10 +75,7 @@ if ($cur_forum['redirect_url'] != '')
 }
 
 // Sort out who the moderators are and if we are currently a moderator (or an admin)
-$mods_array = array();
-if ($cur_forum['moderators'] != '')
-	$mods_array = unserialize($cur_forum['moderators']);
-
+$mods_array = ($cur_topic['moderators'] != '') ? unserialize($cur_topic['moderators']) : array();
 $forum_page['is_admmod'] = ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && array_key_exists($forum_user['username'], $mods_array))) ? true : false;
 
 // Sort out whether or not this user can post
@@ -91,6 +90,8 @@ $forum_page['num_pages'] = ceil($cur_forum['num_topics'] / $forum_user['disp_top
 $forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
 $forum_page['start_from'] = $forum_user['disp_topics'] * ($forum_page['page'] - 1);
 $forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_topics']), ($cur_forum['num_topics']));
+
+($hook = get_hook('vf_modify_page_details')) ? eval($hook) : null;
 
 // Navigation links for header and page numbering for title/meta description
 if ($forum_page['page'] < $forum_page['num_pages'])
