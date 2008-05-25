@@ -262,25 +262,25 @@ class DBLayer
 	}
 
 
-	function table_exists($table_name)
+	function table_exists($table_name, $no_prefix = false)
 	{
-		$result = $this->query('SHOW TABLES LIKE \''.$this->escape($table_name).'\'');
+		$result = $this->query('SHOW TABLES LIKE \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\'');
 		return $this->num_rows($result) > 0;
 	}
 
 
-	function field_exists($table_name, $field_name)
+	function field_exists($table_name, $field_name, $no_prefix = false)
 	{
-		$result = $this->query('SHOW COLUMNS FROM '.$table_name.' LIKE \''.$this->escape($field_name).'\'');
+		$result = $this->query('SHOW COLUMNS FROM '.($no_prefix ? '' : $this->prefix).$table_name.' LIKE \''.$this->escape($field_name).'\'');
 		return $this->num_rows($result) > 0;
 	}
 
 
-	function index_exists($table_name, $index_name)
+	function index_exists($table_name, $index_name, $no_prefix = false)
 	{
 		$exists = false;
 
-		$result = $this->query('SHOW INDEX FROM '.$table_name);
+		$result = $this->query('SHOW INDEX FROM '.($no_prefix ? '' : $this->prefix).$table_name);
 		while ($cur_index = $this->fetch_assoc($result))
 		{
 			if ($cur_index['Key_name'] == $index_name)
@@ -294,7 +294,7 @@ class DBLayer
 	}
 
 
-	function add_field($table_name, $field_name, $field_type, $allow_null, $default_value = null, $after_field = null)
+	function add_field($table_name, $field_name, $field_type, $allow_null, $default_value = null, $after_field = null, $no_prefix = false)
 	{
 		if ($this->field_exists($table_name, $field_name))
 			return;
@@ -302,15 +302,15 @@ class DBLayer
 		if ($default_value !== null && !is_int($default_value) && !is_float($default_value))
 			$default_value = '\''.$this->escape($default_value).'\'';
 
-		$this->query('ALTER TABLE '.$table_name.' ADD '.$field_name.' '.$field_type.($allow_null ? ' ' : ' NOT NULL').($default_value !== null ? ' DEFAULT '.$default_value : ' ').($after_field != null ? ' AFTER '.$after_field : '')) or error(__FILE__, __LINE__);
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ADD '.$field_name.' '.$field_type.($allow_null ? ' ' : ' NOT NULL').($default_value !== null ? ' DEFAULT '.$default_value : ' ').($after_field != null ? ' AFTER '.$after_field : '')) or error(__FILE__, __LINE__);
 	}
 
 
-	function drop_field($table_name, $field_name)
+	function drop_field($table_name, $field_name, $no_prefix = false)
 	{
 		if (!$this->field_exists($table_name, $field_name))
 			return;
 
-		$this->query('ALTER TABLE '.$table_name.' DROP '.$field_name) or error(__FILE__, __LINE__);
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' DROP '.$field_name) or error(__FILE__, __LINE__);
 	}
 }

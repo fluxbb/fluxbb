@@ -321,16 +321,16 @@ class DBLayer
 	}
 
 
-	function table_exists($table_name)
+	function table_exists($table_name, $no_prefix = false)
 	{
-		$result = $this->query('SELECT 1 FROM sqlite_master WHERE name = \''.$this->escape($table_name).'\' AND type=\'table\'');
+		$result = $this->query('SELECT 1 FROM sqlite_master WHERE name = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\' AND type=\'table\'');
 		return $this->num_rows($result) > 0;
 	}
 
 
-	function field_exists($table_name, $field_name)
+	function field_exists($table_name, $field_name, $no_prefix = false)
 	{
-		$result = $this->query('SELECT sql FROM sqlite_master WHERE name = \''.$this->escape($table_name).'\' AND type=\'table\'');
+		$result = $this->query('SELECT sql FROM sqlite_master WHERE name = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\' AND type=\'table\'');
 		if (!$this->num_rows($result))
 			return false;
 
@@ -338,14 +338,14 @@ class DBLayer
 	}
 
 
-	function index_exists($table_name, $index_name)
+	function index_exists($table_name, $index_name, $no_prefix = false)
 	{
-		$result = $this->query('SELECT 1 FROM sqlite_master WHERE tbl_name = \''.$this->escape($table_name).'\' AND name = \''.$this->escape($index_name).'\' AND type=\'index\'');
+		$result = $this->query('SELECT 1 FROM sqlite_master WHERE tbl_name = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\' AND name = \''.$this->escape($index_name).'\' AND type=\'index\'');
 		return $this->num_rows($result) > 0;
 	}
 
 
-	function add_field($table_name, $field_name, $field_type, $allow_null, $default_value = null, $after_field = null)
+	function add_field($table_name, $field_name, $field_type, $allow_null, $default_value = null, $after_field = null, $no_prefix = false)
 	{
 		if ($this->field_exists($table_name, $field_name))
 			return;
@@ -353,11 +353,11 @@ class DBLayer
 		if ($default_value !== null && !is_int($default_value) && !is_float($default_value))
 			$default_value = '\''.$this->escape($default_value).'\'';
 
-		$this->query('ALTER TABLE '.$table_name.' ADD '.$field_name.' '.$field_type.($allow_null ? ' ' : ' NOT NULL').($default_value !== null ? ' DEFAULT '.$default_value : ' ')) or error(__FILE__, __LINE__);
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ADD '.$field_name.' '.$field_type.($allow_null ? ' ' : ' NOT NULL').($default_value !== null ? ' DEFAULT '.$default_value : ' ')) or error(__FILE__, __LINE__);
 	}
 
 
-	function drop_field($table_name, $field_name)
+	function drop_field($table_name, $field_name, $no_prefix = false)
 	{
 		// No DROP column in SQLite
 		return;

@@ -336,28 +336,28 @@ class DBLayer
 	}
 
 
-	function table_exists($table_name)
+	function table_exists($table_name, $no_prefix = false)
 	{
-		$result = $this->query('SELECT 1 FROM pg_class WHERE relname = \''.$this->escape($table_name).'\'');
+		$result = $this->query('SELECT 1 FROM pg_class WHERE relname = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\'');
 		return $this->num_rows($result) > 0;
 	}
 
 
-	function field_exists($table_name, $field_name)
+	function field_exists($table_name, $field_name, $no_prefix = false)
 	{
-		$result = $this->query('SELECT 1 FROM pg_class c INNER JOIN pg_attribute a ON a.attrelid = c.oid WHERE c.relname = \''.$this->escape($table_name).'\' AND a.attname = \''.$this->escape($field_name).'\'');
+		$result = $this->query('SELECT 1 FROM pg_class c INNER JOIN pg_attribute a ON a.attrelid = c.oid WHERE c.relname = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\' AND a.attname = \''.$this->escape($field_name).'\'');
 		return $this->num_rows($result) > 0;
 	}
 
 
-	function index_exists($table_name, $index_name)
+	function index_exists($table_name, $index_name, $no_prefix = false)
 	{
-		$result = $this->query('SELECT 1 FROM pg_index i INNER JOIN pg_class c1 ON c1.oid = i.indrelid INNER JOIN pg_class c2 ON c2.oid = i.indexrelid WHERE c1.relname = \''.$this->escape($table_name).'\' AND c2.relname = \''.$this->escape($index_name).'\'');
+		$result = $this->query('SELECT 1 FROM pg_index i INNER JOIN pg_class c1 ON c1.oid = i.indrelid INNER JOIN pg_class c2 ON c2.oid = i.indexrelid WHERE c1.relname = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\' AND c2.relname = \''.$this->escape($index_name).'\'');
 		return $this->num_rows($result) > 0;
 	}
 
 
-	function add_field($table_name, $field_name, $field_type, $allow_null, $default_value = null, $after_field = null)
+	function add_field($table_name, $field_name, $field_type, $allow_null, $default_value = null, $after_field = null, $no_prefix = false)
 	{
 		if ($this->field_exists($table_name, $field_name))
 			return;
@@ -365,27 +365,27 @@ class DBLayer
 		$field_type = str_replace(array('TINY', 'FLOAT'), array('SMALL', 'REAL'), strtoupper($field_type));
 		$field_type = preg_replace('/(.*?INT)(\([0-9]+)\)/', '$1', $field_type);
 
-		$this->query('ALTER TABLE '.$table_name.' ADD '.$field_name.' '.$field_type) or error(__FILE__, __LINE__);
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ADD '.$field_name.' '.$field_type) or error(__FILE__, __LINE__);
 
 		if ($default_value !== null)
 		{
 			if (!is_int($default_value) && !is_float($default_value))
 				$default_value = '\''.$this->escape($default_value).'\'';
 
-			$this->query('ALTER TABLE '.$table_name.' ALTER '.$field_name.' SET DEFAULT '.$default_value) or error(__FILE__, __LINE__);
-			$this->query('UPDATE '.$table_name.' SET '.$field_name.'='.$default_value) or error(__FILE__, __LINE__);
+			$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ALTER '.$field_name.' SET DEFAULT '.$default_value) or error(__FILE__, __LINE__);
+			$this->query('UPDATE '.($no_prefix ? '' : $this->prefix).$table_name.' SET '.$field_name.'='.$default_value) or error(__FILE__, __LINE__);
 		}
 
 		if (!$allow_null)
-			$this->query('ALTER TABLE '.$table_name.' ALTER '.$field_name.' SET NOT NULL') or error(__FILE__, __LINE__);
+			$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ALTER '.$field_name.' SET NOT NULL') or error(__FILE__, __LINE__);
 	}
 
 
-	function drop_field($table_name, $field_name)
+	function drop_field($table_name, $field_name, $no_prefix = false)
 	{
 		if (!$this->field_exists($table_name, $field_name))
 			return;
 
-		$this->query('ALTER TABLE '.$table_name.' DROP '.$field_name) or error(__FILE__, __LINE__);
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' DROP '.$field_name) or error(__FILE__, __LINE__);
 	}
 }

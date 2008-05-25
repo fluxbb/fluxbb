@@ -482,7 +482,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 	// Start by updating the database structure
 	case 'start':
 		// Put back dropped search tables
-		if (!$forum_db->table_exists($forum_db->prefix.'search_cache') && ($db_type == 'mysql' || $db_type == 'mysqli'))
+		if (!$forum_db->table_exists('search_cache') && ($db_type == 'mysql' || $db_type == 'mysqli'))
 		{
 			$sql = 'CREATE TABLE '.$forum_db->prefix."search_cache (
 					id INT(10) UNSIGNED NOT NULL DEFAULT 0,
@@ -512,7 +512,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		}
 	
 		// Add the extensions table if it doesn't already exist
-		if (!$forum_db->table_exists($forum_db->prefix.'extensions'))
+		if (!$forum_db->table_exists('extensions'))
 		{
 			switch ($db_type)
 			{
@@ -567,19 +567,19 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		}
 
 		// Add uninstall_note field to extensions
-		$forum_db->add_field($forum_db->prefix.'extensions', 'uninstall_note', 'TEXT', true, null, 'uninstall');
+		$forum_db->add_field('extensions', 'uninstall_note', 'TEXT', true, null, 'uninstall');
 
 		// Drop uninstall_notes (plural) field
-		$forum_db->drop_field($forum_db->prefix.'extensions', 'uninstall_notes');
+		$forum_db->drop_field('extensions', 'uninstall_notes');
 
 		// Add disabled field to extensions
-		$forum_db->add_field($forum_db->prefix.'extensions', 'disabled', 'TINYINT(1)', false, 0, 'uninstall_note');
+		$forum_db->add_field('extensions', 'disabled', 'TINYINT(1)', false, 0, 'uninstall_note');
 		
 		// Add dependencies field to extensions
-		$forum_db->add_field($forum_db->prefix.'extensions', 'dependencies', 'VARCHAR(255)', true, null, 'disabled');
+		$forum_db->add_field('extensions', 'dependencies', 'VARCHAR(255)', true, null, 'disabled');
 
 		// Add the extension_hooks table
-		if (!$forum_db->table_exists($forum_db->prefix.'extension_hooks'))
+		if (!$forum_db->table_exists('extension_hooks'))
 		{
 			switch ($db_type)
 			{
@@ -622,7 +622,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		}
 
 		// Add priority field to extension_hooks
-		$forum_db->add_field($forum_db->prefix.'extension_hooks', 'priority', 'TINYINT(1)', false, 5, 'installed');
+		$forum_db->add_field('extension_hooks', 'priority', 'TINYINT(1)', false, 5, 'installed');
 
 		if ($db_type == 'mysql' || $db_type == 'mysqli')
 		{
@@ -639,9 +639,9 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'reports CHANGE message message TEXT') or error(__FILE__, __LINE__);
 			
 			// Drop fulltext indexes  (should only apply to SVN installs)
-			if ($forum_db->index_exists($forum_db->prefix.'topics', $forum_db->prefix.'topics_subject_idx'))
+			if ($forum_db->index_exists('topics', $forum_db->prefix.'topics_subject_idx'))
 				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'topics DROP INDEX '.$forum_db->prefix.'topics_subject_idx') or error(__FILE__, __LINE__);
-			if ($forum_db->index_exists($forum_db->prefix.'posts', $forum_db->prefix.'posts_message_idx'))
+			if ($forum_db->index_exists('posts', $forum_db->prefix.'posts_message_idx'))
 				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'posts DROP INDEX '.$forum_db->prefix.'posts_message_idx') or error(__FILE__, __LINE__);
 		}
 
@@ -655,14 +655,14 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 				break;
 
 			case 'pgsql':
-				$forum_db->add_field($forum_db->prefix.'posts', 'tmp_poster_ip', 'VARCHAR(39)', true, null, 'poster_ip');
+				$forum_db->add_field('posts', 'tmp_poster_ip', 'VARCHAR(39)', true, null, 'poster_ip');
 				$forum_db->query('UPDATE '.$forum_db->prefix.'posts SET tmp_poster_ip = poster_ip') or error(__FILE__, __LINE__);
-				$forum_db->drop_field($forum_db->prefix.'posts', 'poster_ip');
+				$forum_db->drop_field('posts', 'poster_ip');
 				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'posts RENAME COLUMN tmp_poster_ip TO poster_ip') or error(__FILE__, __LINE__);
 
-				$forum_db->add_field($forum_db->prefix.'users', 'tmp_registration_ip', 'VARCHAR(39)', false, '0.0.0.0', 'registration_ip');
+				$forum_db->add_field('users', 'tmp_registration_ip', 'VARCHAR(39)', false, '0.0.0.0', 'registration_ip');
 				$forum_db->query('UPDATE '.$forum_db->prefix.'users SET tmp_registration_ip = registration_ip') or error(__FILE__, __LINE__);
-				$forum_db->drop_field($forum_db->prefix.'users', 'registration_ip');
+				$forum_db->drop_field('users', 'registration_ip');
 				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'users RENAME COLUMN tmp_registration_ip TO registration_ip') or error(__FILE__, __LINE__);
 				break;
 
@@ -671,25 +671,25 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		}
 
 		// Add the DST option to the users table
-		$forum_db->add_field($forum_db->prefix.'users', 'dst', 'TINYINT(1)', false, 0, 'timezone');
+		$forum_db->add_field('users', 'dst', 'TINYINT(1)', false, 0, 'timezone');
 
 		// Add the salt field to the users table
-		$forum_db->add_field($forum_db->prefix.'users', 'salt', 'VARCHAR(12)', true, null, 'password');
+		$forum_db->add_field('users', 'salt', 'VARCHAR(12)', true, null, 'password');
 
 		// Add the access_keys field to the users table
-		$forum_db->add_field($forum_db->prefix.'users', 'access_keys', 'TINYINT(1)', false, 0, 'show_sig');
+		$forum_db->add_field('users', 'access_keys', 'TINYINT(1)', false, 0, 'show_sig');
 
 		// Add the CSRF token field to the online table
-		$forum_db->add_field($forum_db->prefix.'online', 'csrf_token', 'VARCHAR(40)', false, '', null);
+		$forum_db->add_field('online', 'csrf_token', 'VARCHAR(40)', false, '', null);
 
 		// Add the prev_url field to the online table
-		$forum_db->add_field($forum_db->prefix.'online', 'prev_url', 'VARCHAR(255)', true, null, null);
+		$forum_db->add_field('online', 'prev_url', 'VARCHAR(255)', true, null, null);
 
 		// Drop use_avatar column from users table
-		$forum_db->drop_field($forum_db->prefix.'users', 'use_avatar');
+		$forum_db->drop_field('users', 'use_avatar');
 
 		// Drop save_pass column from users table
-		$forum_db->drop_field($forum_db->prefix.'users', 'save_pass');
+		$forum_db->drop_field('users', 'save_pass');
 
 		// Add quote depth option
 		if (!array_key_exists('o_quote_depth', $forum_config))
@@ -735,14 +735,14 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 			$forum_db->query('UPDATE '.$forum_db->prefix.'config SET conf_value=\'1800\' WHERE conf_name=\'o_timeout_visit\'') or error(__FILE__, __LINE__);
 
 		// Remove obsolete g_post_polls permission from groups table
-		if ($forum_db->field_exists($forum_db->prefix.'groups', 'g_post_polls') && $db_type != 'sqlite')	// No DROP column in SQLite
+		if ($forum_db->field_exists('groups', 'g_post_polls') && $db_type != 'sqlite')	// No DROP column in SQLite
 			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'groups DROP g_post_polls') or error(__FILE__, __LINE__);
 
 		// Make room for multiple moderator groups
-		if (!$forum_db->field_exists($forum_db->prefix.'groups', 'g_moderator'))
+		if (!$forum_db->field_exists('groups', 'g_moderator'))
 		{
 			// Add g_moderator column to groups table
-			$forum_db->add_field($forum_db->prefix.'groups', 'g_moderator', 'TINYINT(1)', false, 0, 'g_user_title');
+			$forum_db->add_field('groups', 'g_moderator', 'TINYINT(1)', false, 0, 'g_user_title');
 
 			// Give the moderator group moderator privileges
 			$forum_db->query('UPDATE '.$forum_db->prefix.'groups SET g_moderator=1 WHERE g_id=2') or error(__FILE__, __LINE__);
@@ -774,7 +774,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		if (array_key_exists('p_mod_edit_users', $forum_config))
 		{
 			$forum_db->query('DELETE FROM '.$forum_db->prefix.'config WHERE conf_name=\'p_mod_edit_users\'') or error(__FILE__, __LINE__);
-			$forum_db->add_field($forum_db->prefix.'groups', 'g_mod_edit_users', 'TINYINT(1)', false, 0, 'g_moderator');
+			$forum_db->add_field('groups', 'g_mod_edit_users', 'TINYINT(1)', false, 0, 'g_moderator');
 			$forum_db->query('UPDATE '.$forum_db->prefix.'groups SET g_mod_edit_users='.$forum_config['p_mod_edit_users'].' WHERE g_moderator=1') or error(__FILE__, __LINE__);
 		}
 
@@ -782,7 +782,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		if (array_key_exists('p_mod_rename_users', $forum_config))
 		{
 			$forum_db->query('DELETE FROM '.$forum_db->prefix.'config WHERE conf_name=\'p_mod_rename_users\'') or error(__FILE__, __LINE__);
-			$forum_db->add_field($forum_db->prefix.'groups', 'g_mod_rename_users', 'TINYINT(1)', false, 0, 'g_mod_edit_users');
+			$forum_db->add_field('groups', 'g_mod_rename_users', 'TINYINT(1)', false, 0, 'g_mod_edit_users');
 			$forum_db->query('UPDATE '.$forum_db->prefix.'groups SET g_mod_rename_users='.$forum_config['p_mod_rename_users'].' WHERE g_moderator=1') or error(__FILE__, __LINE__);
 		}
 
@@ -790,7 +790,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		if (array_key_exists('p_mod_change_passwords', $forum_config))
 		{
 			$forum_db->query('DELETE FROM '.$forum_db->prefix.'config WHERE conf_name=\'p_mod_change_passwords\'') or error(__FILE__, __LINE__);
-			$forum_db->add_field($forum_db->prefix.'groups', 'g_mod_change_passwords', 'TINYINT(1)', false, 0, 'g_mod_rename_users');
+			$forum_db->add_field('groups', 'g_mod_change_passwords', 'TINYINT(1)', false, 0, 'g_mod_rename_users');
 			$forum_db->query('UPDATE '.$forum_db->prefix.'groups SET g_mod_change_passwords='.$forum_config['p_mod_change_passwords'].' WHERE g_moderator=1') or error(__FILE__, __LINE__);
 		}
 
@@ -798,12 +798,12 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		if (array_key_exists('p_mod_ban_users', $forum_config))
 		{
 			$forum_db->query('DELETE FROM '.$forum_db->prefix.'config WHERE conf_name=\'p_mod_ban_users\'') or error(__FILE__, __LINE__);
-			$forum_db->add_field($forum_db->prefix.'groups', 'g_mod_ban_users', 'TINYINT(1)', false, 0, 'g_mod_change_passwords');
+			$forum_db->add_field('groups', 'g_mod_ban_users', 'TINYINT(1)', false, 0, 'g_mod_change_passwords');
 			$forum_db->query('UPDATE '.$forum_db->prefix.'groups SET g_mod_ban_users='.$forum_config['p_mod_ban_users'].' WHERE g_moderator=1') or error(__FILE__, __LINE__);
 		}
 
 		// We need to add a unique index to avoid users having multiple rows in the online table
-		if (!$forum_db->index_exists($forum_db->prefix.'online', $forum_db->prefix.'online_user_id_ident_idx'))
+		if (!$forum_db->index_exists('online', $forum_db->prefix.'online_user_id_ident_idx'))
 		{
 			$forum_db->query('DELETE FROM '.$forum_db->prefix.'online') or error(__FILE__, __LINE__);
 
@@ -821,7 +821,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		}
 
 		// Add an index on last_post in the topics table
-		if (!$forum_db->index_exists($forum_db->prefix.'topics', $forum_db->prefix.'topics_last_post_idx'))
+		if (!$forum_db->index_exists('topics', $forum_db->prefix.'topics_last_post_idx'))
 		{
 			switch ($db_type)
 			{
@@ -837,35 +837,35 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		}
 
 		// Remove any remnants of the now defunct post approval system
-		$forum_db->drop_field($forum_db->prefix.'forums', 'approval');
-		$forum_db->drop_field($forum_db->prefix.'groups', 'g_posts_approved');
-		$forum_db->drop_field($forum_db->prefix.'posts', 'approved');
+		$forum_db->drop_field('forums', 'approval');
+		$forum_db->drop_field('groups', 'g_posts_approved');
+		$forum_db->drop_field('posts', 'approved');
 
 		// Add g_view_users field to groups table
-		$forum_db->add_field($forum_db->prefix.'groups', 'g_view_users', 'TINYINT(1)', false, 1, 'g_read_board');
+		$forum_db->add_field('groups', 'g_view_users', 'TINYINT(1)', false, 1, 'g_read_board');
 
 		// Add the time/date format settings to the user table
-		$forum_db->add_field($forum_db->prefix.'users', 'time_format', 'INT(10)', false, 0, 'dst');
-		$forum_db->add_field($forum_db->prefix.'users', 'date_format', 'INT(10)', false, 0, 'dst');
+		$forum_db->add_field('users', 'time_format', 'INT(10)', false, 0, 'dst');
+		$forum_db->add_field('users', 'date_format', 'INT(10)', false, 0, 'dst');
 
 		// Add the last_search column to the users table
-		$forum_db->add_field($forum_db->prefix.'users', 'last_search', 'INT(10)', true, null, 'last_post');
+		$forum_db->add_field('users', 'last_search', 'INT(10)', true, null, 'last_post');
 
 		// Add the last_email_sent column to the users table and the g_send_email and
 		// g_email_flood columns to the groups table
-		$forum_db->add_field($forum_db->prefix.'users', 'last_email_sent', 'INT(10)', true, null, 'last_search');
-		$forum_db->add_field($forum_db->prefix.'groups', 'g_send_email', 'TINYINT(1)', false, 1, 'g_search_users');
-		$forum_db->add_field($forum_db->prefix.'groups', 'g_email_flood', 'INT(10)', false, 60, 'g_search_flood');
+		$forum_db->add_field('users', 'last_email_sent', 'INT(10)', true, null, 'last_search');
+		$forum_db->add_field('groups', 'g_send_email', 'TINYINT(1)', false, 1, 'g_search_users');
+		$forum_db->add_field('groups', 'g_email_flood', 'INT(10)', false, 60, 'g_search_flood');
 
 		// Set non-default g_send_email and g_flood_email values properly
 		$forum_db->query('UPDATE '.$forum_db->prefix.'groups SET g_send_email=0 WHERE g_id=2') or error(__FILE__, __LINE__);
 		$forum_db->query('UPDATE '.$forum_db->prefix.'groups SET g_email_flood=0 WHERE g_id IN (1,2,4)') or error(__FILE__, __LINE__);
 
 		// Add the auto notify/subscription option to the users table
-		$forum_db->add_field($forum_db->prefix.'users', 'auto_notify', 'TINYINT(1)', false, 0, 'notify_with_post');
+		$forum_db->add_field('users', 'auto_notify', 'TINYINT(1)', false, 0, 'notify_with_post');
 
 		// Add the first_post_id column to the topics table
-		if (!$forum_db->field_exists($forum_db->prefix.'topics', 'first_post_id'))
+		if (!$forum_db->field_exists('topics', 'first_post_id'))
 		{
 			switch ($db_type)
 			{
@@ -876,7 +876,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 					break;
 
 				default:
-					$forum_db->add_field($forum_db->prefix.'topics', 'first_post_id', 'INT', false, 0, null);
+					$forum_db->add_field('topics', 'first_post_id', 'INT', false, 0, null);
 					$forum_db->query('CREATE INDEX '.$forum_db->prefix.'topics_first_post_id_idx ON '.$forum_db->prefix.'topics(first_post_id)') or error(__FILE__, __LINE__);
 					break;
 			}
@@ -894,7 +894,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		$forum_db->query('UPDATE '.$forum_db->prefix.'users SET group_id=0 WHERE group_id=32000') or error(__FILE__, __LINE__);
 
 		// Add the ban_creator column to the bans table
-		if (!$forum_db->field_exists($forum_db->prefix.'bans', 'ban_creator'))
+		if (!$forum_db->field_exists('bans', 'ban_creator'))
 		{
 			switch ($db_type)
 			{
@@ -904,7 +904,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 					break;
 
 				default:
-					$forum_db->add_field($forum_db->prefix.'bans', 'ban_creator', 'INT', false, 0, null);
+					$forum_db->add_field('bans', 'ban_creator', 'INT', false, 0, null);
 					break;
 			}
 		}
