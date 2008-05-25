@@ -602,9 +602,9 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 //
 // Get search results for a specified query, returns number of results
 //
-function get_search_results($query, &$search_set, &$forum_page)
+function get_search_results($query, &$search_set)
 {
-	global $forum_db, $forum_user, $lang_common;
+	global $forum_db, $forum_user, $forum_page, $lang_common;
 
 	$return = ($hook = get_hook('sf_get_search_results_start')) ? eval($hook) : null;
 	if ($return != null)

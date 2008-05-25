@@ -124,7 +124,7 @@ if (isset($query))
 	$forum_page['per_page'] = ($show_as == 'posts') ? $forum_user['disp_posts'] : $forum_user['disp_topics'];
 
 	// We now have a query that will give us our results in $query, lets get the data!
-	$num_hits = get_search_results($query, $search_set, $forum_page);
+	$num_hits = get_search_results($query, $search_set);
 
 	($hook = get_hook('se_post_results_fetched')) ? eval($hook) : null;
 
