@@ -63,14 +63,14 @@ if ($pid)
 
 	// Determine on what page the post is located (depending on $forum_user['disp_posts'])
 	$query = array(
-		'SELECT'	=> '1',
+		'SELECT'	=> 'COUNT(p.id)',
 		'FROM'		=> 'posts AS p',
 		'WHERE'		=> 'p.topic_id='.$id.' AND p.posted<'.$posted
 	);
 
 	($hook = get_hook('vt_qr_get_post_page')) ? eval($hook) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-	$num_posts = $forum_db->num_rows($result) + 1;
+	$num_posts = $forum_db->result($result) + 1;
 
 	$_GET['p'] = ceil($num_posts / $forum_user['disp_posts']);
 }
