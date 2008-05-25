@@ -203,14 +203,15 @@ class DBLayer
 	}
 
 
-	function result($query_id = 0, $row = 0)
+	function result($query_id = 0, $row = 0, $col = 0)
 	{
 		if ($query_id)
 		{
 			if ($row != 0)
 				@sqlite_seek($query_id, $row);
 
-			return @current(@sqlite_current($query_id));
+			$cur_row = @sqlite_current($query_id);
+			return $cur_row[$col];
 		}
 		else
 			return false;

@@ -216,9 +216,9 @@ class DBLayer
 	}
 
 
-	function result($query_id = 0, $row = 0)
+	function result($query_id = 0, $row = 0, $col = 0)
 	{
-		return ($query_id) ? @pg_fetch_result($query_id, $row, 0) : false;
+		return ($query_id) ? @pg_fetch_result($query_id, $row, $col) : false;
 	}
 
 
