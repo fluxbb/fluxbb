@@ -268,7 +268,7 @@ else if (isset($_GET['edit_forum']))
 	$query = array(
 		'SELECT'	=> 'f.id, f.forum_name, f.forum_desc, f.redirect_url, f.num_topics, f.sort_by, f.cat_id',
 		'FROM'		=> 'forums AS f',
-		'WHERE'		=> 'id='.$forum_id
+		'WHERE'		=> 'f.id='.$forum_id
 	);
 
 	($hook = get_hook('afo_qr_get_forum_details')) ? eval($hook) : null;
