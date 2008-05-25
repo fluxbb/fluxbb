@@ -85,7 +85,7 @@ $lang_admin = array(
 'Category added'				=>	'Category added.',
 'Category deleted'				=>	'Category deleted.',
 'Must name category'			=>	'You must enter a name for the category',
-'Must be integer'				=>	'Position must be an integer value',
+'Must be integer'				=>	'Position must be a positive integer value',
 
 
 

@@ -134,6 +134,9 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 
 		($hook = get_hook('acg_qr_get_category_name')) ? eval($hook) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		if (!$forum_db->num_rows($result))
+			message($lang_common['Bad request']);
+
 		$cat_name = $forum_db->result($result);
 
 

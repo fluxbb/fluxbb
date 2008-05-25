@@ -54,6 +54,18 @@ if (isset($_POST['add_forum']))
 	if ($forum_name == '')
 		message($lang_admin['Must enter forum message']);
 
+	// Make sure the category we're adding to exists
+	$query = array(
+		'SELECT'	=> '1',
+		'FROM'		=> 'categories AS c',
+		'WHERE'		=> 'c.id='.$add_to_cat
+	);
+
+	($hook = get_hook('afo_qr_validate_category_id')) ? eval($hook) : null;
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+	if (!$forum_db->num_rows($result))
+		message($lang_common['Bad request']);
+
 	$query = array(
 		'INSERT'	=> 'forum_name, disp_position, cat_id',
 		'INTO'		=> 'forums',
@@ -126,6 +138,9 @@ else if (isset($_GET['del_forum']))
 
 		($hook = get_hook('afo_qr_get_forum_name')) ? eval($hook) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		if (!$forum_db->num_rows($result))
+			message($lang_common['Bad request']);
+
 		$forum_name = $forum_db->result($result);
 
 
