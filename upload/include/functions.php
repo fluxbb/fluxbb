@@ -1597,15 +1597,18 @@ function send_subscriptions($post_info, $new_pid)
 //
 function sef_friendly($str)
 {
+	global $forum_user;
+	static $lang_replace;
+
+	if (!isset($lang_replace))
+		require FORUM_ROOT.'lang/'.$forum_user['language'].'/url_replace.php';
+
 	$return = ($hook = get_hook('fn_sef_friendly_start')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
 
+	$str = strtr($str, $lang_url_replace);
 	$str = strtolower(utf8_decode($str));
-	$str = strtr($str,
-		"\xc0\xc1\xc2\xc3\xc4\xc5\xe0\xe1\xe2\xe3\xe4\xe5\xd2\xd3\xd4\xd5\xd6\xd8\xf2\xf3\xf4\xf5\xf6\xf8\xc8\xc9\xca\xcb\xe8\xe9\xea\xeb\xc7\xe7\xcc\xcd\xce\xcf\xec\xed\xee\xef\xd9\xda\xdb\xdc\xf9\xfa\xfb\xfc\xff\xd1\xf1",
-		'aaaaaaaaaaaaooooooooooooeeeeeeeecciiiiiiiiuuuuuuuuynn'
-	);
 	$str = preg_replace(array('/[^a-z0-9\s]/', '/[\s]+/'), array('', '-'), $str);
 
 	return $str != '-' ? trim($str, '-') : '';
