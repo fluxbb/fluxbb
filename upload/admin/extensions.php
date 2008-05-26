@@ -141,7 +141,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 			// Update the existing extension
 			$query = array(
 				'UPDATE'	=> 'extensions',
-				'SET'		=> 'title=\''.$forum_db->escape($ext_data['extension']['title']).'\', version=\''.$forum_db->escape($ext_data['extension']['version']).'\', description=\''.$forum_db->escape($ext_data['extension']['description']).'\', author=\''.$forum_db->escape($ext_data['extension']['author']).'\', uninstall='.$uninstall_code.', uninstall_note='.$uninstall_note.', dependencies=\'|'.implode('|',$ext_data['extension']['dependencies']).'|\'',
+				'SET'		=> 'title=\''.$forum_db->escape($ext_data['extension']['title']).'\', version=\''.$forum_db->escape($ext_data['extension']['version']).'\', description=\''.$forum_db->escape($ext_data['extension']['description']).'\', author=\''.$forum_db->escape($ext_data['extension']['author']).'\', uninstall='.$uninstall_code.', uninstall_note='.$uninstall_note.', dependencies=\'|'.implode('|', $ext_data['extension']['dependencies']).'|\'',
 				'WHERE'		=> 'id=\''.$forum_db->escape($id).'\''
 			);
 
@@ -167,7 +167,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 			$query = array(
 				'INSERT'	=> 'id, title, version, description, author, uninstall, uninstall_note, dependencies',
 				'INTO'		=> 'extensions',
-				'VALUES'	=> '\''.$forum_db->escape($ext_data['extension']['id']).'\', \''.$forum_db->escape($ext_data['extension']['title']).'\', \''.$forum_db->escape($ext_data['extension']['version']).'\', \''.$forum_db->escape($ext_data['extension']['description']).'\', \''.$forum_db->escape($ext_data['extension']['author']).'\', '.$uninstall_code.', '.$uninstall_note.', \'|'.implode('|',$ext_data['extension']['dependencies']).'|\'',
+				'VALUES'	=> '\''.$forum_db->escape($ext_data['extension']['id']).'\', \''.$forum_db->escape($ext_data['extension']['title']).'\', \''.$forum_db->escape($ext_data['extension']['version']).'\', \''.$forum_db->escape($ext_data['extension']['description']).'\', \''.$forum_db->escape($ext_data['extension']['author']).'\', '.$uninstall_code.', '.$uninstall_note.', \'|'.implode('|', $ext_data['extension']['dependencies']).'|\'',
 			);
 
 			($hook = get_hook('aex_qr_add_ext')) ? eval($hook) : null;
@@ -177,7 +177,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 		// Now insert the hooks
 		foreach ($ext_data['extension']['hooks']['hook'] as $ext_hook)
 		{
-			$cur_hooks = explode(',',$ext_hook['attributes']['id']);
+			$cur_hooks = explode(',', $ext_hook['attributes']['id']);
 			foreach ($cur_hooks as $cur_hook)
 			{
 				$query = array(
@@ -582,7 +582,7 @@ else if (isset($_GET['flip']))
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$dependencies = $forum_db->fetch_assoc($result);
-		$dependencies = explode('|',substr($dependencies['dependencies'],1,-1));
+		$dependencies = explode('|', substr($dependencies['dependencies'], 1, -1));
 
 		$query = array(
 			'SELECT'	=> 'e.id',
