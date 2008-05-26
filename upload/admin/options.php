@@ -574,7 +574,7 @@ $forum_page['set_count'] = 0;
 		$d = dir(FORUM_ROOT.'include/url');
 		while (($entry = $d->read()) !== false)
 		{
-			if ($entry != '.' && $entry != '..' && substr($entry, strlen($entry)-4) == '.php')
+			if ($entry != '.' && $entry != '..' && substr($entry, strlen($entry) - 4) == '.php')
 				$url_schemes[] = $entry;
 		}
 		$d->close();
@@ -583,7 +583,7 @@ $forum_page['set_count'] = 0;
 
 		while (list(, $temp) = @each($url_schemes))
 		{
-			$temp = substr($temp,0,-4);
+			$temp = substr($temp, 0, -4);
 			if ($forum_config['o_sef'] == $temp)
 				echo "\t\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.str_replace('_', ' ', $temp).'</option>'."\n";
 			else
