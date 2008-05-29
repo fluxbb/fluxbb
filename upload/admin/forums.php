@@ -42,7 +42,7 @@ require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin.php';
 // Add a "default" forum
 if (isset($_POST['add_forum']))
 {
-	$add_to_cat = intval($_POST['add_to_cat']);
+	$add_to_cat = isset($_POST['add_to_cat']) ? intval($_POST['add_to_cat']) : 0;
 	if ($add_to_cat < 1)
 		message($lang_common['Bad request']);
 
