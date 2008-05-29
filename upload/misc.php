@@ -209,7 +209,7 @@ else if (isset($_GET['email']))
 			$errors[] = $lang_misc['No e-mail subject'];
 		if ($message == '')
 			$errors[] = $lang_misc['No e-mail message'];
-		else if (strlen($message) > FORUM_MAX_POSTSIZE)
+		else if (utf8_strlen($message) > FORUM_MAX_POSTSIZE)
 			$errors[] = $lang_misc['Too long e-mail message'];
 		if ($forum_user['last_email_sent'] != '' && (time() - $forum_user['last_email_sent']) < $forum_user['g_email_flood'] && (time() - $forum_user['last_email_sent']) >= 0)
 			$errors[] = sprintf($lang_misc['Email flood'], $forum_user['g_email_flood']);

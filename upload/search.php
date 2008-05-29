@@ -63,8 +63,8 @@ elseif (isset($_GET['action']))
 	// If it's a regular search (keywords and/or author)
 	if ($action == 'search')
 	{
-		$keywords = (isset($_GET['keywords'])) ? strtolower(trim($_GET['keywords'])) : null;
-		$author = (isset($_GET['author'])) ? strtolower(trim($_GET['author'])) : null;
+		$keywords = (isset($_GET['keywords'])) ? utf8_strtolower(trim($_GET['keywords'])) : null;
+		$author = (isset($_GET['author'])) ? utf8_strtolower(trim($_GET['author'])) : null;
 		$sort_dir = (isset($_GET['sort_dir'])) ? (($_GET['sort_dir'] == 'DESC') ? 'DESC' : 'ASC') : 'DESC';
 		$show_as = (isset($_GET['show_as'])) ? $_GET['show_as'] : 'posts';
 		$sort_by = (isset($_GET['sort_by'])) ? intval($_GET['sort_by']) : null;

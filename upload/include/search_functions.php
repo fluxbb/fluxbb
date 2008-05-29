@@ -38,10 +38,10 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = -1
 	if ($return != null)
 		return $return;
 
-	if (forum_strlen(str_replace(array('*', '%'), '', $author)) < 2)
+	if (utf8_strlen(str_replace(array('*', '%'), '', $author)) < 2)
 		$author = '';
 
-	if (forum_strlen(str_replace(array('*', '%'), '', $keywords)) < 3)
+	if (utf8_strlen(str_replace(array('*', '%'), '', $keywords)) < 3)
 		$keywords = '';
 
 	if (!$keywords && !$author)
@@ -88,7 +88,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = -1
 
 		while (list($i, $word) = @each($keywords_array))
 		{
-			$num_chars = forum_strlen($word);
+			$num_chars = utf8_strlen($word);
 
 			if ($word !== 'or' && ($num_chars < 3 || $num_chars > 20 || in_array($word, $stopwords)))
 				unset($keywords_array[$i]);
@@ -173,7 +173,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = -1
 	}
 
 	// If it's a search for author name (and that author name isn't Guest)
-	if ($author && strtolower($author) != 'guest' && strtolower($author) != strtolower($lang_common['Guest']))
+	if ($author && strtolower($author) != 'guest' && utf8_strtolower($author) != utf8_strtolower($lang_common['Guest']))
 	{
 		$query = array(
 			'SELECT'	=> 'u.id',

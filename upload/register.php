@@ -154,7 +154,7 @@ else if (isset($_POST['form_sent']))
 		$errors = array_merge($errors, validate_username($username));
 
 		// ... and the password
-		if (forum_strlen($password1) < 4)
+		if (utf8_strlen($password1) < 4)
 			$errors[] = $lang_profile['Pass too short'];
 		else if ($password1 != $password2)
 			$errors[] = $lang_profile['Pass not match'];

@@ -150,7 +150,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		if ($current == '')
 			continue;
 
-		if (substr($current,0,1) != '[' || substr($current,-1,1) != ']')
+		if (substr($current, 0, 1) != '[' || substr($current, -1, 1) != ']')
 		{
 			// Its not a bbcode tag so we put it on the end and continue
 			if (!$current_nest)
@@ -177,8 +177,8 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		}
 		else
 		{
-			$current_tag = substr($current,1,strpos($current, '=')-1);
-			$current_arg = substr($current,strpos($current, '=')+1,-1);
+			$current_tag = substr($current, 1, strpos($current, '=')-1);
+			$current_arg = substr($current, strpos($current, '=')+1, -1);
 		}
 
 		$current_tag = strtolower($current_tag);
@@ -214,12 +214,12 @@ function preparse_tags($text, &$errors, $is_signature = false)
 
 		if ($equalpos = strpos($current,'='))
 		{
-			if (strlen(substr($current,$equalpos)) == 2)
+			if (strlen(substr($current, $equalpos)) == 2)
 			{
 				$errors[] = sprintf($lang_common['BBCode error 6'], $current_tag);
 				return false;
 			}
-			$current = strtolower(substr($current, 0, $equalpos)).substr($current,$equalpos);
+			$current = strtolower(substr($current, 0, $equalpos)).substr($current, $equalpos);
 		}
 		else
 			$current = strtolower($current);
@@ -504,7 +504,7 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 
 	// Ok, not very pretty :-)
 	if (!$bbcode)
-		$link = ($link == '' || $link == $url) ? ((strlen($url) > 55) ? substr($url, 0 , 39).' &#133; '.substr($url, -10) : $url) : stripslashes($link);
+		$link = ($link == '' || $link == $url) ? ((utf8_strlen($url) > 55) ? utf8_substr($url, 0 , 39).' &#133; '.utf8_substr($url, -10) : $url) : stripslashes($link);
 
 	$return = ($hook = get_hook('ps_handle_url_tag_end')) ? eval($hook) : null;
 	if ($return != null)
@@ -651,7 +651,7 @@ function do_clickable($text)
 	$text = preg_replace('#([\s\(\)])(https?|ftp|news){1}://([\w\-]+\.([\w\-]+\.)*[\w]+(:[0-9]+)?(/[^"\s\(\)<\[]*)?)#ie', '\'$1\'.handle_url_tag(\'$2://$3\', \'$2://$3\', true)', $text);
 	$text = preg_replace('#([\s\(\)])(www|ftp)\.(([\w\-]+\.)*[\w]+(:[0-9]+)?(/[^"\s\(\)<\[]*)?)#ie', '\'$1\'.handle_url_tag(\'$2.$3\', \'$2.$3\', true)', $text);
 
-	return substr($text, 1);
+	return utf8_substr($text, 1);
 }
 
 
@@ -670,7 +670,7 @@ function do_smilies($text)
 			$text = preg_replace("#(?<=.\W|\W.|^\W)".preg_quote($smiley_text, '#')."(?=.\W|\W.|\W$)#m", '$1<img src="'.$base_url.'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.substr($smiley_img, 0, strrpos($smiley_img, '.')).'" />$2', $text);
 	}
 
-	return substr($text, 1, -1);
+	return utf8_substr($text, 1, -1);
 }
 
 

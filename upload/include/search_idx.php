@@ -60,7 +60,7 @@ function split_words($text)
 	$patterns[] = '#&[\#a-z0-9]+?;#i';
 	$patterns[] = '#\b[\w]+:\/\/[a-z0-9\.\-]+(\/[a-z0-9\?\.%_\-\+=&\/~]+)?#';
 	$patterns[] = '#\[\/?[a-z\*=\+\-]+(\:?[0-9a-z]+)?:[a-z0-9]{10,}(\:[a-z0-9]+)?=?.*?\]#';
-	$text = preg_replace($patterns, ' ', ' '.strtolower($text).' ');
+	$text = preg_replace($patterns, ' ', ' '.utf8_strtolower($text).' ');
 
 	// Filter out junk
 	$text = str_replace($noise_match, $noise_replace, $text);
@@ -76,7 +76,7 @@ function split_words($text)
 		while (list($i, $word) = @each($words))
 		{
 			$words[$i] = trim($word, '.');
-			$num_chars = forum_strlen($word);
+			$num_chars = utf8_strlen($word);
 
 			if ($num_chars < 3 || $num_chars > 20 || in_array($words[$i], $stopwords))
 				unset($words[$i]);

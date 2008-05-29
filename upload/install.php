@@ -351,13 +351,13 @@ else
 		$base_url = $_POST['req_base_url'];
 
 	// Validate form
-	if (forum_strlen($db_name) == 0)
+	if (utf8_strlen($db_name) == 0)
 		error($lang_install['Missing database name']);
-	if (forum_strlen($username) < 2)
+	if (utf8_strlen($username) < 2)
 		error($lang_install['Username too short']);
-	if (forum_strlen($username) > 25)
+	if (utf8_strlen($username) > 25)
 		error($lang_install['Username too long']);
-	if (forum_strlen($password1) < 4)
+	if (utf8_strlen($password1) < 4)
 		error($lang_install['Pass too short']);
 	if ($password1 != $password2)
 		error($lang_install['Pass not match']);
@@ -380,7 +380,7 @@ else
 	if ($board_descrip == '')
 		$board_descrip = 'Unfortunately no one can be told what FluxBB is - you have to see it for yourself.';
 
-	if (forum_strlen($base_url) == 0)
+	if (utf8_strlen($base_url) == 0)
 		error($lang_install['Missing base url']);
 
 

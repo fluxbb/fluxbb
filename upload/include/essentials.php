@@ -35,6 +35,10 @@ if (!defined('FORUM_ROOT'))
 // Load the functions script
 require FORUM_ROOT.'include/functions.php';
 
+// Load UTF-8 functions
+require FORUM_ROOT.'include/utf8/utf8.php';
+require FORUM_ROOT.'include/utf8/ucwords.php';
+
 // Reverse the effect of register_globals
 forum_unregister_globals();
 

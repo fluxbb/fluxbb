@@ -363,7 +363,7 @@ function check_bans()
 			continue;
 		}
 
-		if ($cur_ban['username'] != '' && strtolower($forum_user['username']) == strtolower($cur_ban['username']))
+		if ($cur_ban['username'] != '' && utf8_strtolower($forum_user['username']) == utf8_strtolower($cur_ban['username']))
 			$is_banned = true;
 
 		if ($cur_ban['ip'] != '')
@@ -833,11 +833,11 @@ function validate_username($username, $exclude_id = null)
 	$username = preg_replace('#\s+#s', ' ', $username);
 
 	// Validate username
-	if (forum_strlen($username) < 2)
+	if (utf8_strlen($username) < 2)
 		$errors[] = $lang_profile['Username too short'];
-	else if (forum_strlen($username) > 25)
+	else if (utf8_strlen($username) > 25)
 		$errors[] = $lang_profile['Username too long'];
-	else if (strtolower($username) == 'guest' || strtolower($username) == strtolower($lang_common['Guest']))
+	else if (strtolower($username) == 'guest' || utf8_strtolower($username) == utf8_strtolower($lang_common['Guest']))
 		$errors[] = $lang_profile['Username guest'];
 	else if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username))
 		$errors[] = $lang_profile['Username IP'];
@@ -1651,7 +1651,7 @@ function censor_words($text)
 	}
 
 	if (!empty($search_for))
-		$text = substr(preg_replace($search_for, $replace_with, ' '.$text.' '), 1, -1);
+		$text = utf8_substr(preg_replace($search_for, $replace_with, ' '.$text.' '), 1, -1);
 
 	return $text;
 }
@@ -1699,7 +1699,7 @@ function get_title($user)
 		$ban_list = array();
 
 		foreach ($forum_bans as $cur_ban)
-			$ban_list[] = strtolower($cur_ban['username']);
+			$ban_list[] = utf8_strtolower($cur_ban['username']);
 	}
 
 	// If not already loaded in a previous call, load the cached ranks
@@ -1720,7 +1720,7 @@ function get_title($user)
 	if ($user['title'] != '')
 		$user_title = forum_htmlencode($forum_config['o_censoring'] == '1' ? censor_words($user['title']) : $user['title']);
 	// If the user is banned
-	else if (in_array(strtolower($user['username']), $ban_list))
+	else if (in_array(utf8_strtolower($user['username']), $ban_list))
 		$user_title = $lang_common['Banned'];
 	// If the user group has a default user title
 	else if ($user['g_user_title'] != '')
@@ -2181,15 +2181,6 @@ function forum_htmlencode($str)
 		return $return;
 
 	return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
-}
-
-
-//
-// An UTF-8 aware version of strlen()
-//
-function forum_strlen($str)
-{
-	return strlen(utf8_decode($str));
 }
 
 

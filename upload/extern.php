@@ -233,8 +233,8 @@ function output_html($feed)
 		if ($forum_config['o_censoring'] == '1')
 			$feed['items'][$i]['title'] = censor_words($feed['items'][$i]['title']);
 
-		if (forum_strlen($feed['items'][$i]['title']) > MAX_SUBJECT_LENGTH)
-			$subject_truncated = forum_htmlencode(trim(substr($feed['items'][$i]['title'], 0, (MAX_SUBJECT_LENGTH-5)))).' …';
+		if (utf8_strlen($feed['items'][$i]['title']) > MAX_SUBJECT_LENGTH)
+			$subject_truncated = forum_htmlencode(trim(utf8_substr($feed['items'][$i]['title'], 0, (MAX_SUBJECT_LENGTH-5)))).' …';
 		else
 			$subject_truncated = forum_htmlencode($feed['items'][$i]['title']);
 

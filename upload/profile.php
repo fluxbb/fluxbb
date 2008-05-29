@@ -101,7 +101,7 @@ if ($action == 'change_pass')
 				$new_password1 = trim($_POST['req_new_password1']);
 				$new_password2 = trim($_POST['req_new_password2']);
 
-				if (forum_strlen($new_password1) < 4)
+				if (utf8_strlen($new_password1) < 4)
 					$errors[] = $lang_profile['Pass too short'];
 				else if ($new_password1 != $new_password2)
 					$errors[] = $lang_profile['Pass not match'];
@@ -239,7 +239,7 @@ if ($action == 'change_pass')
 		$new_password1 = trim($_POST['req_new_password1']);
 		$new_password2 = trim($_POST['req_new_password2']);
 
-		if (forum_strlen($new_password1) < 4)
+		if (utf8_strlen($new_password1) < 4)
 			$errors[] = $lang_profile['Pass too short'];
 		else if ($new_password1 != $new_password2)
 			$errors[] = $lang_profile['Pass not match'];
@@ -996,13 +996,13 @@ else if (isset($_POST['form_sent']))
 			$form['signature'] = forum_linebreaks(trim($_POST['signature']));
 
 			// Validate signature
-			if (forum_strlen($form['signature']) > $forum_config['p_sig_length'])
+			if (utf8_strlen($form['signature']) > $forum_config['p_sig_length'])
 				$errors[] = sprintf($lang_profile['Sig too long'], $forum_config['p_sig_length']);
 			if (substr_count($form['signature'], "\n") > ($forum_config['p_sig_lines'] - 1))
 				$errors[] = sprintf($lang_profile['Sig too many lines'], $forum_config['p_sig_lines']);
 
-			if ($form['signature'] != '' && $forum_config['p_sig_all_caps'] == '0' && strtoupper($form['signature']) == $form['signature'] && !$forum_user['is_admmod'])
-				$form['signature'] = ucwords(strtolower($form['signature']));
+			if ($form['signature'] != '' && $forum_config['p_sig_all_caps'] == '0' && utf8_strtoupper($form['signature']) == $form['signature'] && !$forum_user['is_admmod'])
+				$form['signature'] = utf8_ucwords(utf8_strtolower($form['signature']));
 
 			// Validate BBCode syntax
 			if ($forum_config['p_sig_bbcode'] == '1' || $forum_config['o_make_links'] == '1')
