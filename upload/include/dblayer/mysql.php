@@ -39,6 +39,10 @@ class DBLayer
 	var $saved_queries = array();
 	var $num_queries = 0;
 
+	var $datatype_transformations = array(
+		'/^SERIAL$/'	=>	'INT(10) UNSIGNED AUTO_INCREMENT'
+	);
+
 
 	function DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
 	{
@@ -283,7 +287,7 @@ class DBLayer
 		$result = $this->query('SHOW INDEX FROM '.($no_prefix ? '' : $this->prefix).$table_name);
 		while ($cur_index = $this->fetch_assoc($result))
 		{
-			if ($cur_index['Key_name'] == $index_name)
+			if ($cur_index['Key_name'] == ($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name)
 			{
 				$exists = true;
 				break;
@@ -294,10 +298,69 @@ class DBLayer
 	}
 
 
+	function create_table($table_name, $schema, $no_prefix = false)
+	{
+		if ($this->table_exists($table_name, $no_prefix))
+			return;
+
+		$query = 'CREATE TABLE '.($no_prefix ? '' : $this->prefix).$table_name." (\n";
+
+		// Go through every schema element and add it to the query
+		foreach ($schema['FIELDS'] as $field_name => $field_data)
+		{
+			$field_data['datatype'] = preg_replace(array_keys($this->datatype_transformations), array_values($this->datatype_transformations), $field_data['datatype']);
+
+			$query .= $field_name.' '.$field_data['datatype'];
+
+			if (!$field_data['allow_null'])
+				$query .= ' NOT NULL';
+
+			if (isset($field_data['default']))
+				$query .= ' DEFAULT '.$field_data['default'];
+
+			$query .= ",\n";
+		}
+
+		// If we have a primary key, add it
+		if (isset($schema['PRIMARY KEY']))
+			$query .= 'PRIMARY KEY ('.implode(',', $schema['PRIMARY KEY']).'),'."\n";
+
+		// Add unique keys
+		if (isset($schema['UNIQUE KEYS']))
+		{
+			foreach ($schema['UNIQUE KEYS'] as $key_name => $key_fields)
+				$query .= 'UNIQUE KEY '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$key_name.'('.implode(',', $key_fields).'),'."\n";
+		}
+
+		// Add indexes
+		if (isset($schema['INDEXES']))
+		{
+			foreach ($schema['INDEXES'] as $index_name => $index_fields)
+				$query .= 'KEY '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name.'('.implode(',', $index_fields).'),'."\n";
+		}
+
+		// We remove the last two characters (a newline and a comma) and add on the ending
+		$query = substr($query, 0, strlen($query) - 2)."\n".') ENGINE = '.(isset($schema['ENGINE']) ? $schema['ENGINE'] : 'MyISAM').' CHARACTER SET utf8';
+
+		$this->query($query) or error(__FILE__, __LINE__);
+	}
+
+
+	function drop_table($table_name, $no_prefix = false)
+	{
+		if (!$this->table_exists($table_name, $no_prefix))
+			return;
+
+		$this->query('DROP TABLE '.($no_prefix ? '' : $this->prefix).$table_name) or error(__FILE__, __LINE__);
+	}
+
+
 	function add_field($table_name, $field_name, $field_type, $allow_null, $default_value = null, $after_field = null, $no_prefix = false)
 	{
-		if ($this->field_exists($table_name, $field_name))
+		if ($this->field_exists($table_name, $field_name, $no_prefix))
 			return;
+
+		$field_type = preg_replace(array_keys($this->datatype_transformations), array_values($this->datatype_transformations), $field_type);
 
 		if ($default_value !== null && !is_int($default_value) && !is_float($default_value))
 			$default_value = '\''.$this->escape($default_value).'\'';
@@ -308,9 +371,25 @@ class DBLayer
 
 	function drop_field($table_name, $field_name, $no_prefix = false)
 	{
-		if (!$this->field_exists($table_name, $field_name))
+		if (!$this->field_exists($table_name, $field_name, $no_prefix))
 			return;
 
 		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' DROP '.$field_name) or error(__FILE__, __LINE__);
+	}
+
+	function add_index($table_name, $index_name, $index_fields, $unique = false, $no_prefix = false)
+	{
+		if ($this->index_exists($table_name, $index_name, $no_prefix))
+			return;
+
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ADD '.($unique ? 'UNIQUE ' : '').'INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name.' ('.implode(',', $index_fields).')') or error(__FILE__, __LINE__);
+	}
+
+	function drop_index($table_name, $index_name, $no_prefix = false)
+	{
+		if (!$this->index_exists($table_name, $index_name, $no_prefix))
+			return;
+
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' DROP INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name) or error(__FILE__, __LINE__);
 	}
 }

@@ -43,6 +43,12 @@ class DBLayer
 	var $error_no = false;
 	var $error_msg = 'Unknown';
 
+	var $datatype_transformations = array(
+		'/^SERIAL$/'															=>	'INTEGER',
+		'/^(TINY|SMALL|MEDIUM|BIG)?INT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$/i'	=>	'INTEGER',
+		'/^(TINY|MEDIUM|LONG)?TEXT$/i'											=>	'TEXT'
+	);
+
 
 	function DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
 	{
@@ -341,15 +347,74 @@ class DBLayer
 
 	function index_exists($table_name, $index_name, $no_prefix = false)
 	{
-		$result = $this->query('SELECT 1 FROM sqlite_master WHERE tbl_name = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\' AND name = \''.$this->escape($index_name).'\' AND type=\'index\'');
+		$result = $this->query('SELECT 1 FROM sqlite_master WHERE tbl_name = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\' AND name = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_'.$this->escape($index_name).'\' AND type=\'index\'');
 		return $this->num_rows($result) > 0;
+	}
+
+
+	function create_table($table_name, $schema, $no_prefix = false)
+	{
+		if ($this->table_exists($table_name, $no_prefix))
+			return;
+
+		$query = 'CREATE TABLE '.($no_prefix ? '' : $this->prefix).$table_name." (\n";
+
+		// Go through every schema element and add it to the query
+		foreach ($schema['FIELDS'] as $field_name => $field_data)
+		{
+			$field_data['datatype'] = preg_replace(array_keys($this->datatype_transformations), array_values($this->datatype_transformations), $field_data['datatype']);
+
+			$query .= $field_name.' '.$field_data['datatype'];
+
+			if (!$field_data['allow_null'])
+				$query .= ' NOT NULL';
+
+			if (isset($field_data['default']))
+				$query .= ' DEFAULT '.$field_data['default'];
+
+			$query .= ",\n";
+		}
+
+		// If we have a primary key, add it
+		if (isset($schema['PRIMARY KEY']))
+			$query .= 'PRIMARY KEY ('.implode(',', $schema['PRIMARY KEY']).'),'."\n";
+
+		// Add unique keys
+		if (isset($schema['UNIQUE KEYS']))
+		{
+			foreach ($schema['UNIQUE KEYS'] as $key_name => $key_fields)
+				$query .= 'UNIQUE ('.implode(',', $key_fields).'),'."\n";
+		}
+
+		// We remove the last two characters (a newline and a comma) and add on the ending
+		$query = substr($query, 0, strlen($query) - 2)."\n".')';
+
+		$this->query($query) or error(__FILE__, __LINE__);
+
+		// Add indexes
+		if (isset($schema['INDEXES']))
+		{
+			foreach ($schema['INDEXES'] as $index_name => $index_fields)
+				$this->add_index($table_name, $index_name, $index_fields, false, $no_prefix);
+		}
+	}
+
+
+	function drop_table($table_name, $no_prefix = false)
+	{
+		if (!$this->table_exists($table_name, $no_prefix))
+			return;
+
+		$this->query('DROP TABLE '.($no_prefix ? '' : $this->prefix).$table_name) or error(__FILE__, __LINE__);
 	}
 
 
 	function add_field($table_name, $field_name, $field_type, $allow_null, $default_value = null, $after_field = null, $no_prefix = false)
 	{
-		if ($this->field_exists($table_name, $field_name))
+		if ($this->field_exists($table_name, $field_name, $no_prefix))
 			return;
+
+		$field_type = preg_replace(array_keys($this->datatype_transformations), array_values($this->datatype_transformations), $field_type);
 
 		if ($default_value !== null && !is_int($default_value) && !is_float($default_value))
 			$default_value = '\''.$this->escape($default_value).'\'';
@@ -362,5 +427,21 @@ class DBLayer
 	{
 		// No DROP column in SQLite
 		return;
+	}
+
+	function add_index($table_name, $index_name, $index_fields, $unique = false, $no_prefix = false)
+	{
+		if ($this->index_exists($table_name, $index_name, $no_prefix))
+			return;
+
+		$this->query('CREATE '.($unique ? 'UNIQUE ' : '').'INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name.' ON '.($no_prefix ? '' : $this->prefix).$table_name.'('.implode(',', $index_fields).')') or error(__FILE__, __LINE__);
+	}
+
+	function drop_index($table_name, $index_name, $no_prefix = false)
+	{
+		if (!$this->index_exists($table_name, $index_name, $no_prefix))
+			return;
+
+		$this->query('DROP INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name) or error(__FILE__, __LINE__);
 	}
 }

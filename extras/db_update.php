@@ -484,86 +484,132 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		// Put back dropped search tables
 		if (!$forum_db->table_exists('search_cache') && ($db_type == 'mysql' || $db_type == 'mysqli'))
 		{
-			$sql = 'CREATE TABLE '.$forum_db->prefix."search_cache (
-					id INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					ident VARCHAR(200) NOT NULL DEFAULT '',
-					search_data TEXT,
-					PRIMARY KEY (id)
-					) ENGINE = MyISAM CHARACTER SET utf8";
-					
-			$forum_db->query($sql) or error(__FILE__, __LINE__);
-					
-			$sql = 'CREATE TABLE '.$forum_db->prefix."search_matches (
-					post_id INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					word_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0,
-					subject_match TINYINT(1) NOT NULL DEFAULT 0
-					) ENGINE = MyISAM CHARACTER SET utf8";
-			
-			$forum_db->query($sql) or error(__FILE__, __LINE__);
-					
-			$sql = 'CREATE TABLE '.$forum_db->prefix."search_words (
-					id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-					word VARCHAR(20) BINARY NOT NULL DEFAULT '',
-					PRIMARY KEY (word),
-					KEY ".$forum_db->prefix."search_words_id_idx (id)
-					) ENGINE = MyISAM CHARACTER SET utf8";
+			$schema = array(
+				'FIELDS'		=> array(
+					'id'			=> array(
+						'datatype'		=> 'INT(10) UNSIGNED',
+						'allow_null'	=> false,
+						'default'		=> '0'
+					),
+					'ident'			=> array(
+						'datatype'		=> 'VARCHAR(200)',
+						'allow_null'	=> false,
+						'default'		=> '""'
+					),
+					'search_data'	=> array(
+						'datatype'		=> 'TEXT',
+						'allow_null'	=> true
+					)
+				),
+				'PRIMARY KEY'	=> array('id'),
+				'INDEXES'		=> array(
+					'ident_idx'	=> array('ident(8)')
+				)
+			);
 
-			$forum_db->query($sql) or error(__FILE__, __LINE__);
+			$forum_db->create_table('search_cache', $schema);
+
+
+			$schema = array(
+				'FIELDS'		=> array(
+					'post_id'		=> array(
+						'datatype'		=> 'INT(10) UNSIGNED',
+						'allow_null'	=> false,
+						'default'		=> '0'
+					),
+					'word_id'		=> array(
+						'datatype'		=> 'INT(10) UNSIGNED',
+						'allow_null'	=> false,
+						'default'		=> '0'
+					),
+					'subject_match'	=> array(
+						'datatype'		=> 'TINYINT(1)',
+						'allow_null'	=> false,
+						'default'		=> '0'
+					)
+				),
+				'INDEXES'		=> array(
+					'word_id_idx'	=> array('word_id'),
+					'post_id_idx'	=> array('post_id')
+				)
+			);
+
+			$forum_db->create_table('search_matches', $schema);
+
+
+			$schema = array(
+				'FIELDS'		=> array(
+					'id'			=> array(
+						'datatype'		=> 'SERIAL',
+						'allow_null'	=> false
+					),
+					'word'			=> array(
+						'datatype'		=> 'VARCHAR(20)',
+						'allow_null'	=> false,
+						'default'		=> '""'
+					)
+				),
+				'PRIMARY KEY'	=> array('word'),
+				'INDEXES'		=> array(
+					'id_idx'	=> array('id')
+				)
+			);
+
+			$forum_db->create_table('search_words', $schema);
 		}
-	
+
 		// Add the extensions table if it doesn't already exist
 		if (!$forum_db->table_exists('extensions'))
 		{
-			switch ($db_type)
-			{
-				case 'mysql':
-				case 'mysqli':
-					$sql = 'CREATE TABLE '.$forum_db->prefix."extensions (
-							id VARCHAR(50) NOT NULL DEFAULT '',
-							title VARCHAR(255) NOT NULL DEFAULT '',
-							version VARCHAR(25) NOT NULL DEFAULT '',
-							description TEXT,
-							author VARCHAR(50) NOT NULL DEFAULT '',
-							uninstall TEXT,
-							uninstall_note TEXT,
-							disabled TINYINT(1) NOT NULL DEFAULT 0,
-							dependencies VARCHAR(255) NOT NULL DEFAULT '',
-							PRIMARY KEY(id)
-							) ENGINE = MyISAM CHARACTER SET utf8";
-					break;
+			$schema = array(
+				'FIELDS'		=> array(
+					'id'				=> array(
+						'datatype'		=> 'VARCHAR(50)',
+						'allow_null'	=> false,
+						'default'		=> '""'
+					),
+					'title'				=> array(
+						'datatype'		=> 'VARCHAR(255)',
+						'allow_null'	=> false,
+						'default'		=> '""'
+					),
+					'version'			=> array(
+						'datatype'		=> 'VARCHAR(25)',
+						'allow_null'	=> false,
+						'default'		=> '""'
+					),
+					'description'		=> array(
+						'datatype'		=> 'TEXT',
+						'allow_null'	=> true
+					),
+					'author'			=> array(
+						'datatype'		=> 'VARCHAR(50)',
+						'allow_null'	=> false,
+						'default'		=> '""'
+					),
+					'uninstall'			=> array(
+						'datatype'		=> 'TEXT',
+						'allow_null'	=> true
+					),
+					'uninstall_note'	=> array(
+						'datatype'		=> 'TEXT',
+						'allow_null'	=> true
+					),
+					'disabled'			=> array(
+						'datatype'		=> 'TINYINT(1)',
+						'allow_null'	=> false,
+						'default'		=> '0'
+					),
+					'dependencies'		=> array(
+						'datatype'		=> 'VARCHAR(255)',
+						'allow_null'	=> false,
+						'default'		=> '""'
+					)
+				),
+				'PRIMARY KEY'	=> array('id')
+			);
 
-				case 'pgsql':
-					$sql = 'CREATE TABLE '.$forum_db->prefix."extensions (
-							id VARCHAR(50) NOT NULL DEFAULT '',
-							title VARCHAR(255) NOT NULL DEFAULT '',
-							version VARCHAR(25) NOT NULL DEFAULT '',
-							description TEXT,
-							author VARCHAR(50) NOT NULL DEFAULT '',
-							uninstall TEXT,
-							uninstall_note TEXT,
-							disabled SMALLINT NOT NULL DEFAULT 0,
-							dependencies VARCHAR(255) NOT NULL DEFAULT '',
-							PRIMARY KEY(id)
-							)";
-					break;
-
-				case 'sqlite':
-					$sql = 'CREATE TABLE '.$forum_db->prefix."extensions (
-							id VARCHAR(50) NOT NULL DEFAULT '',
-							title VARCHAR(255) NOT NULL DEFAULT '',
-							version VARCHAR(25) NOT NULL DEFAULT '',
-							description TEXT,
-							author VARCHAR(50) NOT NULL DEFAULT '',
-							uninstall TEXT,
-							uninstall_note TEXT,
-							disabled INTEGER NOT NULL DEFAULT 0,
-							dependencies VARCHAR(255) NOT NULL DEFAULT '',
-							PRIMARY KEY(id)
-							)";
-					break;
-			}
-
-			$forum_db->query($sql) or error(__FILE__, __LINE__);
+			$forum_db->create_table('extensions', $schema);
 		}
 
 		// Add uninstall_note field to extensions
@@ -574,51 +620,44 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 
 		// Add disabled field to extensions
 		$forum_db->add_field('extensions', 'disabled', 'TINYINT(1)', false, 0, 'uninstall_note');
-		
+
 		// Add dependencies field to extensions
-		$forum_db->add_field('extensions', 'dependencies', 'VARCHAR(255)', true, null, 'disabled');
+		$forum_db->add_field('extensions', 'dependencies', 'VARCHAR(255)', false, '', 'disabled');
 
 		// Add the extension_hooks table
 		if (!$forum_db->table_exists('extension_hooks'))
 		{
-			switch ($db_type)
-			{
-				case 'mysql':
-				case 'mysqli':
-					$sql = 'CREATE TABLE '.$forum_db->prefix."extension_hooks (
-							id VARCHAR(50) NOT NULL DEFAULT '',
-							extension_id VARCHAR(50) NOT NULL DEFAULT '',
-							code TEXT,
-							installed INT(10) UNSIGNED NOT NULL DEFAULT 0,
-							priority TINYINT(1) UNSIGNED NOT NULL DEFAULT 5,
-							PRIMARY KEY(id, extension_id)
-							) ENGINE = MyISAM CHARACTER SET utf8";
-					break;
+			$schema = array(
+				'FIELDS'		=> array(
+					'id'			=> array(
+						'datatype'		=> 'VARCHAR(50)',
+						'allow_null'	=> false,
+						'default'		=> '""'
+					),
+					'extension_id'	=> array(
+						'datatype'		=> 'VARCHAR(50)',
+						'allow_null'	=> false,
+						'default'		=> '""'
+					),
+					'code'			=> array(
+						'datatype'		=> 'TEXT',
+						'allow_null'	=> true
+					),
+					'installed'		=> array(
+						'datatype'		=> 'INT(10) UNSIGNED',
+						'allow_null'	=> false,
+						'default'		=> '0'
+					),
+					'priority'		=> array(
+						'datatype'		=> 'TINYINT(1) UNSIGNED',
+						'allow_null'	=> false,
+						'default'		=> '5'
+					)
+				),
+				'PRIMARY KEY'	=> array('id', 'extension_id')
+			);
 
-				case 'pgsql':
-					$sql = 'CREATE TABLE '.$forum_db->prefix."extension_hooks (
-							id VARCHAR(50) NOT NULL DEFAULT '',
-							extension_id VARCHAR(50) NOT NULL DEFAULT '',
-							code TEXT,
-							installed INT NOT NULL DEFAULT 0,
-							priority SMALLINT NOT NULL DEFAULT 5,
-							PRIMARY KEY(id, extension_id)
-							)";
-					break;
-
-				case 'sqlite':
-					$sql = 'CREATE TABLE '.$forum_db->prefix."extension_hooks (
-							id VARCHAR(50) NOT NULL DEFAULT '',
-							extension_id VARCHAR(50) NOT NULL DEFAULT '',
-							code TEXT,
-							installed INTEGER NOT NULL DEFAULT 0,
-							priority INTEGER NOT NULL DEFAULT 5,
-							PRIMARY KEY(id, extension_id)
-							)";
-					break;
-			}
-
-			$forum_db->query($sql) or error(__FILE__, __LINE__);
+			$forum_db->create_table('extension_hooks', $schema);
 		}
 
 		// Add priority field to extension_hooks
@@ -629,7 +668,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 			// Make all e-mail fields VARCHAR(80)
 			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'bans CHANGE email email VARCHAR(80)') or error(__FILE__, __LINE__);
 			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'posts CHANGE poster_email poster_email VARCHAR(80)') or error(__FILE__, __LINE__);
-			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'users CHANGE email email VARCHAR(80)') or error(__FILE__, __LINE__);
+			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'users CHANGE email email VARCHAR(80) NOT NULL DEFAULT ""') or error(__FILE__, __LINE__);
 			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'users CHANGE jabber jabber VARCHAR(80)') or error(__FILE__, __LINE__);
 			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'users CHANGE msn msn VARCHAR(80)') or error(__FILE__, __LINE__);
 			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'users CHANGE activate_string activate_string VARCHAR(80)') or error(__FILE__, __LINE__);
@@ -637,12 +676,10 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 			// Remove NOT NULL from TEXT fields for consistency. See http://dev.punbb.org/changeset/596
 			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'posts CHANGE message message TEXT') or error(__FILE__, __LINE__);
 			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'reports CHANGE message message TEXT') or error(__FILE__, __LINE__);
-			
+
 			// Drop fulltext indexes  (should only apply to SVN installs)
-			if ($forum_db->index_exists('topics', $forum_db->prefix.'topics_subject_idx'))
-				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'topics DROP INDEX '.$forum_db->prefix.'topics_subject_idx') or error(__FILE__, __LINE__);
-			if ($forum_db->index_exists('posts', $forum_db->prefix.'posts_message_idx'))
-				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'posts DROP INDEX '.$forum_db->prefix.'posts_message_idx') or error(__FILE__, __LINE__);
+			$forum_db->drop_index('topics', 'subject_idx');
+			$forum_db->drop_index('posts', 'message_idx');
 		}
 
 		// Make all IP fields VARCHAR(39) to support IPv6
@@ -735,8 +772,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 			$forum_db->query('UPDATE '.$forum_db->prefix.'config SET conf_value=\'1800\' WHERE conf_name=\'o_timeout_visit\'') or error(__FILE__, __LINE__);
 
 		// Remove obsolete g_post_polls permission from groups table
-		if ($forum_db->field_exists('groups', 'g_post_polls') && $db_type != 'sqlite')	// No DROP column in SQLite
-			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'groups DROP g_post_polls') or error(__FILE__, __LINE__);
+		$forum_db->drop_field('groups', 'g_post_polls');
 
 		// Make room for multiple moderator groups
 		if (!$forum_db->field_exists('groups', 'g_moderator'))
@@ -811,30 +847,17 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 			{
 				case 'mysql':
 				case 'mysqli':
-					$forum_db->query('ALTER TABLE '.$forum_db->prefix.'online ADD UNIQUE INDEX '.$forum_db->prefix.'online_user_id_ident_idx (user_id, ident(25))') or error(__FILE__, __LINE__);
+					$forum_db->add_index('online', 'user_id_ident_idx', array('user_id', 'ident(25)'), true);
 					break;
 
 				default:
-					$forum_db->query('CREATE UNIQUE INDEX '.$forum_db->prefix.'online_user_id_ident_idx ON '.$forum_db->prefix.'online(user_id, ident)') or error(__FILE__, __LINE__);
+					$forum_db->add_index('online', 'user_id_ident_idx', array('user_id', 'ident'), true);
 					break;
 			}
 		}
 
 		// Add an index on last_post in the topics table
-		if (!$forum_db->index_exists('topics', $forum_db->prefix.'topics_last_post_idx'))
-		{
-			switch ($db_type)
-			{
-				case 'mysql':
-				case 'mysqli':
-					$forum_db->query('ALTER TABLE '.$forum_db->prefix.'topics ADD INDEX '.$forum_db->prefix.'topics_last_post_idx(last_post)') or error(__FILE__, __LINE__);
-					break;
-
-				default:
-					$forum_db->query('CREATE INDEX '.$forum_db->prefix.'topics_last_post_idx ON '.$forum_db->prefix.'topics(last_post)') or error(__FILE__, __LINE__);
-					break;
-			}
-		}
+		$forum_db->add_index('topics', 'last_post_idx', array('last_post'));
 
 		// Remove any remnants of the now defunct post approval system
 		$forum_db->drop_field('forums', 'approval');
@@ -867,19 +890,8 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		// Add the first_post_id column to the topics table
 		if (!$forum_db->field_exists('topics', 'first_post_id'))
 		{
-			switch ($db_type)
-			{
-				case 'mysql':
-				case 'mysqli':
-					$forum_db->query('ALTER TABLE '.$forum_db->prefix.'topics ADD first_post_id INT(10) UNSIGNED NOT NULL DEFAULT 0 AFTER posted') or error(__FILE__, __LINE__);
-					$forum_db->query('ALTER TABLE '.$forum_db->prefix.'topics ADD INDEX '.$forum_db->prefix.'topics_first_post_id_idx(first_post_id)') or error(__FILE__, __LINE__);
-					break;
-
-				default:
-					$forum_db->add_field('topics', 'first_post_id', 'INT', false, 0, null);
-					$forum_db->query('CREATE INDEX '.$forum_db->prefix.'topics_first_post_id_idx ON '.$forum_db->prefix.'topics(first_post_id)') or error(__FILE__, __LINE__);
-					break;
-			}
+			$forum_db->add_field('topics', 'first_post_id', 'INT(10) UNSIGNED', false, 0, 'posted');
+			$forum_db->add_index('topics', 'first_post_id_idx', array('first_post_id'));
 
 			// Now that we've added the column and indexed it, we need to give it correct data
 			$result = $forum_db->query('SELECT min(id) AS first_post, topic_id FROM '.$forum_db->prefix.'posts GROUP BY topic_id') or error(__FILE__, __LINE__);
@@ -894,20 +906,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		$forum_db->query('UPDATE '.$forum_db->prefix.'users SET group_id=0 WHERE group_id=32000') or error(__FILE__, __LINE__);
 
 		// Add the ban_creator column to the bans table
-		if (!$forum_db->field_exists('bans', 'ban_creator'))
-		{
-			switch ($db_type)
-			{
-				case 'mysql':
-				case 'mysqli':
-					$forum_db->query('ALTER TABLE '.$forum_db->prefix.'bans ADD ban_creator INT(10) UNSIGNED NOT NULL DEFAULT 0') or error(__FILE__, __LINE__);
-					break;
-
-				default:
-					$forum_db->add_field('bans', 'ban_creator', 'INT', false, 0, null);
-					break;
-			}
-		}
+		$forum_db->add_field('bans', 'ban_creator', 'INT(10) UNSIGNED', false, 0);
 
 		// Remove any hotfix extensions this update supersedes
 		if (!empty($supersedes_ext))

@@ -44,6 +44,15 @@ class DBLayer
 	var $error_no = false;
 	var $error_msg = 'Unknown';
 
+	var $datatype_transformations = array(
+		'/^(TINY|SMALL)INT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$/i'			=>	'SMALLINT',
+		'/^(MEDIUM)?INT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$/i'				=>	'INTEGER',
+		'/^BIGINT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$/i'						=>	'BIGINT',
+		'/^(TINY|MEDIUM|LONG)?TEXT$/i'										=>	'TEXT',
+		'/^DOUBLE( )?(\\([0-9,]+\\))?( )?(UNSIGNED)?$/i'					=>	'DOUBLE PRECISION',
+		'/^FLOAT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$/i'						=>	'REAL'
+	);
+
 
 	function DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
 	{
@@ -352,18 +361,75 @@ class DBLayer
 
 	function index_exists($table_name, $index_name, $no_prefix = false)
 	{
-		$result = $this->query('SELECT 1 FROM pg_index i INNER JOIN pg_class c1 ON c1.oid = i.indrelid INNER JOIN pg_class c2 ON c2.oid = i.indexrelid WHERE c1.relname = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\' AND c2.relname = \''.$this->escape($index_name).'\'');
+		$result = $this->query('SELECT 1 FROM pg_index i INNER JOIN pg_class c1 ON c1.oid = i.indrelid INNER JOIN pg_class c2 ON c2.oid = i.indexrelid WHERE c1.relname = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\' AND c2.relname = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_'.$this->escape($index_name).'\'');
 		return $this->num_rows($result) > 0;
+	}
+
+
+	function create_table($table_name, $schema, $no_prefix = false)
+	{
+		if ($this->table_exists($table_name, $no_prefix))
+			return;
+
+		$query = 'CREATE TABLE '.($no_prefix ? '' : $this->prefix).$table_name." (\n";
+
+		// Go through every schema element and add it to the query
+		foreach ($schema['FIELDS'] as $field_name => $field_data)
+		{
+			$field_data['datatype'] = preg_replace(array_keys($this->datatype_transformations), array_values($this->datatype_transformations), $field_data['datatype']);
+
+			$query .= $field_name.' '.$field_data['datatype'];
+
+			// The SERIAL datatype is a special case where we don't need to say not null
+			if (!$field_data['allow_null'] && $field_data['datatype'] != 'SERIAL')
+				$query .= ' NOT NULL';
+
+			if (isset($field_data['default']))
+				$query .= ' DEFAULT '.$field_data['default'];
+
+			$query .= ",\n";
+		}
+
+		// If we have a primary key, add it
+		if (isset($schema['PRIMARY KEY']))
+			$query .= 'PRIMARY KEY ('.implode(',', $schema['PRIMARY KEY']).'),'."\n";
+
+		// Add unique keys
+		if (isset($schema['UNIQUE KEYS']))
+		{
+			foreach ($schema['UNIQUE KEYS'] as $key_name => $key_fields)
+				$query .= 'UNIQUE ('.implode(',', $key_fields).'),'."\n";
+		}
+
+		// We remove the last two characters (a newline and a comma) and add on the ending
+		$query = substr($query, 0, strlen($query) - 2)."\n".')';
+
+		$this->query($query) or error(__FILE__, __LINE__);
+
+		// Add indexes
+		if (isset($schema['INDEXES']))
+		{
+			foreach ($schema['INDEXES'] as $index_name => $index_fields)
+				$this->add_index($table_name, $index_name, $index_fields, false, $no_prefix);
+		}
+	}
+
+
+	function drop_table($table_name, $no_prefix = false)
+	{
+		if (!$this->table_exists($table_name, $no_prefix))
+			return;
+
+		$this->query('DROP TABLE '.($no_prefix ? '' : $this->prefix).$table_name) or error(__FILE__, __LINE__);
 	}
 
 
 	function add_field($table_name, $field_name, $field_type, $allow_null, $default_value = null, $after_field = null, $no_prefix = false)
 	{
-		if ($this->field_exists($table_name, $field_name))
+		if ($this->field_exists($table_name, $field_name, $no_prefix))
 			return;
 
-		$field_type = str_replace(array('TINY', 'FLOAT'), array('SMALL', 'REAL'), strtoupper($field_type));
-		$field_type = preg_replace('/(.*?INT)(\([0-9]+)\)/', '$1', $field_type);
+		$field_type = preg_replace(array_keys($this->datatype_transformations), array_values($this->datatype_transformations), $field_type);
 
 		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ADD '.$field_name.' '.$field_type) or error(__FILE__, __LINE__);
 
@@ -383,9 +449,25 @@ class DBLayer
 
 	function drop_field($table_name, $field_name, $no_prefix = false)
 	{
-		if (!$this->field_exists($table_name, $field_name))
+		if (!$this->field_exists($table_name, $field_name, $no_prefix))
 			return;
 
 		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' DROP '.$field_name) or error(__FILE__, __LINE__);
+	}
+
+	function add_index($table_name, $index_name, $index_fields, $unique = false, $no_prefix = false)
+	{
+		if ($this->index_exists($table_name, $index_name, $no_prefix))
+			return;
+
+		$this->query('CREATE '.($unique ? 'UNIQUE ' : '').'INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name.' ON '.($no_prefix ? '' : $this->prefix).$table_name.'('.implode(',', $index_fields).')') or error(__FILE__, __LINE__);
+	}
+
+	function drop_index($table_name, $index_name, $no_prefix = false)
+	{
+		if (!$this->index_exists($table_name, $index_name, $no_prefix))
+			return;
+
+		$this->query('DROP INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name) or error(__FILE__, __LINE__);
 	}
 }
