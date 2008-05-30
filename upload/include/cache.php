@@ -37,6 +37,10 @@ function generate_config_cache()
 {
 	global $forum_db;
 
+	$return = ($hook = get_hook('ch_fn_generate_config_cache_start')) ? eval($hook) : null;
+	if ($return != null)
+		return;
+
 	// Get the forum config from the DB
 	$query = array(
 		'SELECT'	=> 'c.*',
@@ -67,6 +71,10 @@ function generate_config_cache()
 function generate_bans_cache()
 {
 	global $forum_db;
+
+	$return = ($hook = get_hook('ch_fn_generate_bans_cache_start')) ? eval($hook) : null;
+	if ($return != null)
+		return;
 
 	// Get the ban list from the DB
 	$query = array(
@@ -106,6 +114,10 @@ function generate_ranks_cache()
 {
 	global $forum_db;
 
+	$return = ($hook = get_hook('ch_fn_generate_ranks_cache_start')) ? eval($hook) : null;
+	if ($return != null)
+		return;
+
 	// Get the rank list from the DB
 	$query = array(
 		'SELECT'	=> 'r.*',
@@ -138,6 +150,10 @@ function generate_censors_cache()
 {
 	global $forum_db;
 
+	$return = ($hook = get_hook('ch_fn_generate_censors_cache_start')) ? eval($hook) : null;
+	if ($return != null)
+		return;
+
 	// Get the censor list from the DB
 	$query = array(
 		'SELECT'	=> 'c.*',
@@ -169,6 +185,10 @@ function generate_censors_cache()
 function generate_quickjump_cache($group_id = false)
 {
 	global $forum_db, $lang_common, $forum_url, $forum_config, $forum_user, $base_url;
+
+	$return = ($hook = get_hook('ch_fn_generate_quickjump_cache_start')) ? eval($hook) : null;
+	if ($return != null)
+		return;
 
 	// If a group_id was supplied, we generate the quickjump cache for that group only
 	if ($group_id !== false)
@@ -268,6 +288,10 @@ function generate_hooks_cache()
 {
 	global $forum_db, $forum_config, $base_url;
 
+	$return = ($hook = get_hook('ch_fn_generate_hooks_cache_start')) ? eval($hook) : null;
+	if ($return != null)
+		return;
+
 	// Get the hooks from the DB
 	$query = array(
 		'SELECT'	=> 'eh.id, eh.code, eh.extension_id',
@@ -315,6 +339,10 @@ function generate_hooks_cache()
 function generate_updates_cache()
 {
 	global $forum_db, $forum_config;
+
+	$return = ($hook = get_hook('ch_fn_generate_updates_cache_start')) ? eval($hook) : null;
+	if ($return != null)
+		return;
 
 	// Get a list of installed hotfix extensions
 	$query = array(
