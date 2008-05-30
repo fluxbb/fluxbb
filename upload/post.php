@@ -255,6 +255,8 @@ if (isset($_POST['form_sent']))
 			set_tracked_topics($tracked_topics);
 		}
 
+		($hook = get_hook('po_pre_posted_redirect')) ? eval($hook) : null;
+
 		redirect(forum_link($forum_url['post'], $new_pid), $lang_post['Post redirect']);
 	}
 }
