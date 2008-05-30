@@ -2366,7 +2366,16 @@ function maintenance_message()
 	header('HTTP/1.1 503 Service Temporarily Unavailable');
 
 	// Load the maintenance template
-	$tpl_maint = trim(file_get_contents(FORUM_ROOT.'include/template/maintenance.tpl'));
+	if (file_exists(FORUM_ROOT.'style/'.$forum_user['style'].'/maintenance.tpl'))
+		$tpl_path = FORUM_ROOT.'style/'.$forum_user['style'].'/maintenance.tpl';
+	else
+		$tpl_path = FORUM_ROOT.'include/template/maintenance.tpl';
+
+	($hook = get_hook('fn_maintenance_message_pre_template_loaded')) ? eval($hook) : null;
+
+	$tpl_maint = trim(file_get_contents($tpl_path));
+
+	($hook = get_hook('fn_maintenance_message_template_loaded')) ? eval($hook) : null;
 
 	// START SUBST - <!-- forum_local -->
 	$tpl_maint = str_replace('<!-- forum_local -->', 'xml:lang="'.$lang_common['lang_identifier'].'" lang="'.$lang_common['lang_identifier'].'" dir="'.$lang_common['lang_direction'].'"', $tpl_maint);
@@ -2468,8 +2477,16 @@ function redirect($destination_url, $message)
 	header('Content-type: text/html; charset=utf-8');
 
 	// Load the redirect template
-	$tpl_redir = trim(file_get_contents(FORUM_ROOT.'include/template/redirect.tpl'));
+	if (file_exists(FORUM_ROOT.'style/'.$forum_user['style'].'/redirect.tpl'))
+		$tpl_path = FORUM_ROOT.'style/'.$forum_user['style'].'/redirect.tpl';
+	else
+		$tpl_path = FORUM_ROOT.'include/template/redirect.tpl';
 
+	($hook = get_hook('fn_redirect_pre_template_loaded')) ? eval($hook) : null;
+
+	$tpl_redir = trim(file_get_contents($tpl_path));
+
+	($hook = get_hook('fn_redirect_template_loaded')) ? eval($hook) : null;
 
 	// START SUBST - <!-- forum_local -->
 	$tpl_redir = str_replace('<!-- forum_local -->', 'xml:lang="'.$lang_common['lang_identifier'].'" lang="'.$lang_common['lang_identifier'].'" dir="'.$lang_common['lang_direction'].'"', $tpl_redir);

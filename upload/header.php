@@ -42,19 +42,28 @@ header('Content-type: text/html; charset=utf-8');
 if (substr(FORUM_PAGE, 0, 5) == 'admin')
 {
 	if (file_exists(FORUM_ROOT.'style/'.$forum_user['style'].'/admin.tpl'))
-		$tpl_main = file_get_contents(FORUM_ROOT.'style/'.$forum_user['style'].'/admin.tpl');
+		$tpl_path = FORUM_ROOT.'style/'.$forum_user['style'].'/admin.tpl';
 	else
-		$tpl_main = file_get_contents(FORUM_ROOT.'include/template/admin.tpl');
+		$tpl_path = FORUM_ROOT.'include/template/admin.tpl';
 }
 else if (FORUM_PAGE == 'help')
-	$tpl_main = file_get_contents(FORUM_ROOT.'include/template/help.tpl');
+{
+	if (file_exists(FORUM_ROOT.'style/'.$forum_user['style'].'/help.tpl'))
+		$tpl_path = FORUM_ROOT.'style/'.$forum_user['style'].'/help.tpl';
+	else
+		$tpl_path = FORUM_ROOT.'include/template/help.tpl';
+}
 else
 {
 	if (file_exists(FORUM_ROOT.'style/'.$forum_user['style'].'/main.tpl'))
-		$tpl_main = file_get_contents(FORUM_ROOT.'style/'.$forum_user['style'].'/main.tpl');
+		$tpl_path = FORUM_ROOT.'style/'.$forum_user['style'].'/main.tpl';
 	else
-		$tpl_main = file_get_contents(FORUM_ROOT.'include/template/main.tpl');
+		$tpl_path = FORUM_ROOT.'include/template/main.tpl';
 }
+
+($hook = get_hook('hd_pre_template_loaded')) ? eval($hook) : null;
+
+$tpl_main = file_get_contents($tpl_path);
 
 ($hook = get_hook('hd_template_loaded')) ? eval($hook) : null;
 
