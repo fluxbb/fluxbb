@@ -64,15 +64,14 @@ function is_banned_email($email)
 //
 // Wrapper for PHP's mail()
 //
-function forum_mail($to, $subject, $message, $from = '')
+function forum_mail($to, $subject, $message, $reply_to = '')
 {
 	global $forum_config, $lang_common;
 
 	($hook = get_hook('em_forum_mail_start')) ? eval($hook) : null;
 
-	// Default sender/return address
-	if (!$from)
-		$from = '"'.sprintf($lang_common['Forum mailer'], str_replace('"', '', $forum_config['o_board_title'])).'" <'.$forum_config['o_webmaster_email'].'>';
+	// Default sender address
+	$from = '"'.sprintf($lang_common['Forum mailer'], str_replace('"', '', $forum_config['o_board_title'])).'" <'.$forum_config['o_webmaster_email'].'>';
 
 	// Do a little spring cleaning
 	$to = trim(preg_replace('#[\n\r]+#s', '', $to));
@@ -80,6 +79,9 @@ function forum_mail($to, $subject, $message, $from = '')
 	$from = trim(preg_replace('#[\n\r:]+#s', '', $from));
 
 	$headers = 'From: '.$from."\r\n".'Date: '.gmdate('r')."\r\n".'MIME-Version: 1.0'."\r\n".'Content-transfer-encoding: 8bit'."\r\n".'Content-type: text/plain; charset=utf-8'."\r\n".'X-Mailer: FluxBB Mailer';
+
+	if (!empty($reply_to))
+		$headers .= "\r\n".'Reply-To: '.trim(preg_replace('#[\n\r:]+#s', '', $reply_to));
 
 	// Make sure all linebreaks are CRLF in message (and strip out any NULL bytes)
 	$message = str_replace(array("\n", "\0"), array("\r\n", ''), forum_linebreaks($message));
