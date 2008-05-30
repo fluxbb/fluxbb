@@ -48,6 +48,9 @@ if (get_magic_quotes_gpc())
 	$_COOKIE = stripslashes_array($_COOKIE);
 }
 
+// Strip out "bad" UTF-8 characters
+forum_remove_bad_characters();
+
 // If a cookie name is not specified in config.php, we use the default (forum_cookie)
 if (empty($cookie_name))
 	$cookie_name = 'forum_cookie';
