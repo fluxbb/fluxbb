@@ -138,6 +138,15 @@ var Forum = {
 		}
 		return true;
 	},
+	/* create a proper redirect URL (if we're using SEF friendly URLs) and go there */
+	doQuickjumpRedirect: function(url, forum_names)
+	{
+		var selected_forum_id = document.getElementById('qjump-select')[document.getElementById('qjump-select').selectedIndex].value;
+		url = url.replace('$1', selected_forum_id);
+		url = url.replace('$2', forum_names[selected_forum_id]);
+		document.location = url;
+		return false;
+	},
 	/* attach form validation function to submit-type inputs */
 	attachValidateForm: function()
 	{

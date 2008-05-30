@@ -223,6 +223,7 @@ function generate_quickjump_cache($group_id = false)
 
 		$cur_category = 0;
 		$forum_count = 0;
+		$sef_friendly_names = array();
 		while ($cur_forum = $forum_db->fetch_assoc($result))
 		{
 			($hook = get_hook('ch_quickjump_forum_loop_start')) ? eval($hook) : null;
@@ -236,12 +237,19 @@ function generate_quickjump_cache($group_id = false)
 				$cur_category = $cur_forum['cid'];
 			}
 
+			$sef_friendly_names[$cur_forum['fid']] = sef_friendly($cur_forum['forum_name']);
 			$redirect_tag = ($cur_forum['redirect_url'] != '') ? ' &gt;&gt;&gt;' : '';
 			$output .= "\t\t\t\t".'<option value="'.$cur_forum['fid'].'"<?php echo ($forum_id == '.$cur_forum['fid'].') ? \' selected="selected"\' : \'\' ?>>'.forum_htmlencode($cur_forum['forum_name']).$redirect_tag.'</option>'."\n";
 			$forum_count++;
 		}
 
-		$output .= "\t\t\t".'</optgroup>'."\n\t\t\t".'</select>'."\n\t\t\t".'<input type="submit" value="<?php echo $lang_common[\'Go\'] ?>" /></span>'."\n\t\t".'</fieldset>'."\n\t".'</form>'."\n";
+		$output .= "\t\t\t".'</optgroup>'."\n\t\t\t".'</select>'."\n\t\t\t".'<input type="submit" value="<?php echo $lang_common[\'Go\'] ?>" onclick="return Forum.createQuickjumpURL(forum_quickjump_url, sef_friendly_url_array);" /></span>'."\n\t\t".'</fieldset>'."\n\t".'</form>'."\n";
+		$output .= "\t".'<script type="text/javascript">'."\n\t\t".'var forum_quickjump_url = "'.forum_link($forum_url['forum']).'";'."\n\t\t".'var sef_friendly_url_array = new Array('.$forum_db->num_rows($result).');';
+
+		foreach ($sef_friendly_names as $forum_id => $forum_name)
+			$output .= "\n\t\t".'sef_friendly_url_array['.$forum_id.'] = "'.forum_htmlencode($forum_name).'";';
+
+		$output .= "\n\t".'</script>'."\n";
 
 		if ($forum_count < 2)
 			$output = '<?php'."\n\n".'if (!defined(\'FORUM\')) exit;'."\n".'define(\'FORUM_QJ_LOADED\', 1);';
