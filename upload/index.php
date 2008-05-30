@@ -301,6 +301,7 @@ $stats['total_users'] = $forum_db->result($result);
 $query = array(
 	'SELECT'	=> 'u.id, u.username',
 	'FROM'		=> 'users AS u',
+	'WHERE'		=> 'u.group_id != '.FORUM_UNVERIFIED,
 	'ORDER BY'	=> 'u.registered DESC',
 	'LIMIT'		=> '1'
 );
