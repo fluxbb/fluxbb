@@ -263,7 +263,7 @@ function generate_quickjump_cache($group_id = false)
 			$forum_count++;
 		}
 
-		$output .= "\t\t\t".'</optgroup>'."\n\t\t\t".'</select>'."\n\t\t\t".'<input type="submit" value="<?php echo $lang_common[\'Go\'] ?>" onclick="return Forum.createQuickjumpURL(forum_quickjump_url, sef_friendly_url_array);" /></span>'."\n\t\t".'</fieldset>'."\n\t".'</form>'."\n";
+		$output .= "\t\t\t".'</optgroup>'."\n\t\t\t".'</select>'."\n\t\t\t".'<input type="submit" value="<?php echo $lang_common[\'Go\'] ?>" onclick="return Forum.doQuickjumpRedirect(forum_quickjump_url, sef_friendly_url_array);" /></span>'."\n\t\t".'</fieldset>'."\n\t".'</form>'."\n";
 		$output .= "\t".'<script type="text/javascript">'."\n\t\t".'var forum_quickjump_url = "'.forum_link($forum_url['forum']).'";'."\n\t\t".'var sef_friendly_url_array = new Array('.$forum_db->num_rows($result).');';
 
 		foreach ($sef_friendly_names as $forum_id => $forum_name)
