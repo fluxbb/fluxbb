@@ -283,10 +283,6 @@ if ($tid && isset($_GET['qid']))
 
 	list($q_poster, $q_message) = $forum_db->fetch_row($result);
 
-	$q_message = str_replace('[img]', '[url]', $q_message);
-	$q_message = str_replace('[/img]', '[/url]', $q_message);
-	$q_message = forum_htmlencode($q_message);
-
 	if ($forum_config['p_message_bbcode'] == '1')
 	{
 		// If username contains a square bracket, we add "" or '' around it (so we know when it starts and ends)
