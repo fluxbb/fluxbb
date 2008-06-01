@@ -35,6 +35,7 @@ $smilies = array(':)' => 'smile.png', '=)' => 'smile.png', ':|' => 'neutral.png'
 
 ($hook = get_hook('ps_start')) ? eval($hook) : null;
 
+
 //
 // Make sure all BBCodes are lower case and do a little cleanup
 //
@@ -53,7 +54,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 		if (preg_match('#\[quote=(&quot;|"|\'|)(.*)\\1\]|\[quote\]|\[/quote\]|\[code\]|\[/code\]#i', $text))
 			$errors[] = $lang_profile['Signature quote/code'];
 	}
-	
+
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
@@ -426,7 +427,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 
 
 //
-// Parse the contents of [list] bbcode
+// Preparse the contents of [list] bbcode
 //
 function preparse_list_tag($content, $type = '*', &$errors)
 {
@@ -556,7 +557,7 @@ function handle_img_tag($url, $is_signature = false, $alt = null)
 //
 function handle_list_tag($content, $type = '*')
 {
-	$content = preg_replace('#\s*\[\*\](.*?)\[/\*\]\s*#s', '<li>$1</li>', trim(stripslashes($content)));
+	$content = preg_replace('#\s*\[\*\](.*?)\[/\*\]\s*#s', '<li>$1</li>', trim($content));
 
 	if ($type == '*')
 		$content = '<ul>'.$content.'</ul>';
@@ -677,7 +678,7 @@ function do_smilies($text)
 //
 // Parse message text
 //
-function parse_message($text, $hide_smilies)
+function parse_message($text, $hide_smilies, $is_signature = false)
 {
 	global $forum_config, $lang_common, $forum_user;
 
@@ -700,7 +701,7 @@ function parse_message($text, $hide_smilies)
 		return $return;
 
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
-	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
+	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false && $is_signature === false)
 	{
 		list($inside, $outside) = split_text($text, '[code]', '[/code]', $errors);
 		$text = implode('[%]', $outside);
@@ -710,11 +711,11 @@ function parse_message($text, $hide_smilies)
 	if ($return != null)
 		return $return;
 
-	if ($forum_config['o_smilies'] == '1' && $forum_user['show_smilies'] == '1' && $hide_smilies == '0')
-		$text = do_smilies($text);
-
 	if ($forum_config['p_message_bbcode'] == '1' && strpos($text, '[') !== false && strpos($text, ']') !== false)
 		$text = do_bbcode($text);
+		
+	if ($forum_config['o_smilies'] == '1' && $forum_user['show_smilies'] == '1' && $hide_smilies == '0')
+		$text = do_smilies($text);
 
 	$return = ($hook = get_hook('ps_parse_message_bbcode')) ? eval($hook) : null;
 	if ($return != null)
@@ -750,9 +751,12 @@ function parse_message($text, $hide_smilies)
 		return $return;
 
 	// Add paragraph tag around post, but make sure there are no empty paragraphs
-	$text = preg_replace('#<br />\s*?<br />((\s*<br />)*)#i', "</p>$1<p>", $text);
-	$text = str_replace('<p><br />', '<p>', $text);
-	$text = str_replace('<p></p>', '', '<p>'.$text.'</p>');
+	if ($is_signature === false)
+	{
+		$text = preg_replace('#<br />\s*?<br />((\s*<br />)*)#i', "</p>$1<p>", $text);
+		$text = str_replace('<p><br />', '<p>', $text);
+		$text = str_replace('<p></p>', '', '<p>'.$text.'</p>');
+	}
 
 	$return = ($hook = get_hook('ps_parse_message_end')) ? eval($hook) : null;
 	if ($return != null)
@@ -769,23 +773,11 @@ function parse_signature($text)
 {
 	global $forum_config, $lang_common, $forum_user;
 
-	if ($forum_config['o_censoring'] == '1')
-		$text = censor_words($text);
-
-	$text = forum_htmlencode($text);
-
-	if ($forum_config['o_smilies_sig'] == '1' && $forum_user['show_smilies'] != '0')
-		$text = do_smilies($text);
-
-	if ($forum_config['p_sig_bbcode'] == '1' && strpos($text, '[') !== false && strpos($text, ']') !== false)
-		$text = do_bbcode($text, true);
-
-	// Deal with newlines, tabs and multiple spaces
-	$pattern = array("\n", "\t", '  ', '  ');
-	$replace = array('<br />', '&nbsp; &nbsp; ', '&nbsp; ', ' &nbsp;');
-	$text = str_replace($pattern, $replace, $text);
-
-	return $text;
+	$return = ($hook = get_hook('ps_parse_signature_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
+	
+	return parse_message($text, false, true);
 }
 
 define('FORUM_PARSER_LOADED', 1);
