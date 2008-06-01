@@ -110,4 +110,7 @@ if (!defined('FORUM_HOOKS_LOADED'))
 }
 
 
+// A good place to add common functions for your extension
+($hook = get_hook('es_essentials')) ? eval($hook) : null;
+
 define('FORUM_ESSENTIALS_LOADED', 1);

@@ -92,9 +92,6 @@ if (file_exists(FORUM_ROOT.'lang/'.$forum_user['language'].'/common.php'))
 else
 	error('There is no valid language pack \''.forum_htmlencode($forum_user['language']).'\' installed. Please reinstall a language of that name.');
 
-// Check if we are to display a maintenance message
-if ($forum_config['o_maintenance'] && $forum_user['g_id'] > FORUM_ADMIN && !defined('FORUM_TURN_OFF_MAINT'))
-	maintenance_message();
 
 // Setup the URL rewriting scheme
 if (file_exists(FORUM_ROOT.'include/url/'.$forum_config['o_sef'].'.php'))
@@ -102,6 +99,13 @@ if (file_exists(FORUM_ROOT.'include/url/'.$forum_config['o_sef'].'.php'))
 else
 	require FORUM_ROOT.'include/url/Default.php';
 
+// A good place to modify the URL scheme
+($hook = get_hook('co_modify_url_scheme')) ? eval($hook) : null;
+
+
+// Check if we are to display a maintenance message
+if ($forum_config['o_maintenance'] && $forum_user['g_id'] > FORUM_ADMIN && !defined('FORUM_TURN_OFF_MAINT'))
+	maintenance_message();
 
 // Load cached updates info
 if ($forum_user['g_id'] == FORUM_ADMIN)
@@ -146,7 +150,6 @@ if (!empty($_POST) && $forum_user['is_admmod'] && (isset($_POST['confirm_cancel'
 	csrf_confirm_form();
 
 
-// A good place to add common functions for your extension
 ($hook = get_hook('co_common')) ? eval($hook) : null;
 
 if (!defined('FORUM_MAX_POSTSIZE'))
