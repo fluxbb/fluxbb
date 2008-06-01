@@ -439,7 +439,7 @@ function preparse_list_tag($content, $type = '*', &$errors)
 		return '[list='.$type.']'.$content.'[/list]';
 	}
 
-	$items = explode('[*]',$content);
+	$items = explode('[*]',str_replace('\"', '"', $content));
 	$content = '';
 	foreach ($items as $item)
 	{
