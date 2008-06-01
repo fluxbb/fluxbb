@@ -439,12 +439,13 @@ function preparse_list_tag($content, $type = '*', &$errors)
 		return '[list='.$type.']'.$content.'[/list]';
 	}
 
-	$items = explode('[*]',str_replace('\"', '"', $content));
+	$items = explode('[*]', str_replace('\"', '"', $content));
+
 	$content = '';
 	foreach ($items as $item)
 	{
 		if (trim($item) != '')
-			$content .= trim('[*]'.str_replace('[/*]','',$item))."[/*]\n";
+			$content .= trim('[*]'.str_replace('[/*]', '', $item))."[/*]\n";
 	}
 
 	return '[list='.$type.']'."\n".$content.'[/list]';
