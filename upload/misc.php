@@ -446,9 +446,13 @@ else if (isset($_GET['report']))
 		$lang_misc['Report post']
 	);
 
+	// Setup main heading
+	$forum_page['main_head'] = end($forum_page['crumbs']);
+
 	($hook = get_hook('mi_report_pre_header_load')) ? eval($hook) : null;
 
 	define('FORUM_PAGE', 'report');
+	define('FORUM_PAGE_TYPE', 'report');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -457,42 +461,31 @@ else if (isset($_GET['report']))
 	($hook = get_hook('mi_report_output_start')) ? eval($hook) : null;
 
 ?>
-<div id="brd-main" class="main">
-
-	<h1><span><?php echo end($forum_page['crumbs']) ?></span></h1>
-
-	<div class="main-head">
-		<h2><span><?php echo $lang_misc['Send report'] ?></span></h2>
+<div class="main-content frm">
+	<div id="req-msg" class="req-warn">
+		<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Reqmark'].'</em>') ?></p>
 	</div>
-
-	<div class="main-content frm">
-		<div id="req-msg" class="frm-warn">
-			<p class="important"><?php printf($lang_common['Required warn'], '<em class="req-text">'.$lang_common['Required'].'</em>') ?></p>
+	<form id="afocus" class="frm-newform" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+		<div class="hidden">
+			<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 		</div>
-		<form id="afocus" class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
-			<div class="hidden">
-				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
-			</div>
 <?php ($hook = get_hook('mi_report_pre_fieldset')) ? eval($hook) : null; ?>
-			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
-				<div class="frm-fld text textarea required">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-						<span class="fld-label"><?php echo $lang_misc['Reason'] ?></span><br />
-						<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_reason" rows="5" cols="60"></textarea></span><br />
-						<em><?php echo $lang_common['Reqmark'] ?></em>
-						<span class="fld-help"><?php echo $lang_misc['Reason help'] ?></span>
-					</label>
-				</div>
-			</fieldset>
-<?php ($hook = get_hook('mi_report_post_fieldset')) ? eval($hook) : null; ?>
-			<div class="frm-buttons">
-				<span class="submit"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" accesskey="s" title="<?php echo $lang_common['Submit title'] ?>" /></span>
- 				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
+		<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+			<legend class="frm-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
+			<div class="frm-textarea required">
+				<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
+					<span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_misc['Reason'] ?></span>
+					<small><?php echo $lang_misc['Reason help'] ?></small>
+				</label><br />
+				<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_reason" rows="5" cols="60"></textarea></span><br />
 			</div>
-		</form>
-	</div>
-
+		</fieldset>
+<?php ($hook = get_hook('mi_report_post_fieldset')) ? eval($hook) : null; ?>
+		<div class="frm-buttons">
+			<span class="submit"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" /></span>
+			<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
+		</div>
+	</form>
 </div>
 <?php
 

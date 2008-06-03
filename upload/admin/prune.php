@@ -232,7 +232,7 @@ else
 			<p class="important"><?php echo $lang_admin['Prune caution'] ?></p>
 		</div>
 		<div id="req-msg" class="frm-warn">
-			<p class="important"><?php printf($lang_common['Required warn'], '<em class="req-text">'.$lang_common['Required'].'</em>') ?></p>
+			<p class="important"><?php printf($lang_common['Required warn'], '<em class="req-text">'.$lang_common['Reqmark'].'</em>') ?></p>
 		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_prune']) ?>?action=foo">
 			<div class="hidden">
@@ -290,7 +290,7 @@ else
 					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 						<span class="fld-label"><?php echo $lang_admin['Days old'] ?></span><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_prune_days" size="4" maxlength="4" /></span>
-						<em class="req-text"><?php echo $lang_common['Required'] ?></em>
+						<em class="req-text"><?php echo $lang_common['Reqmark'] ?></em>
 					</label>
 				</div>
 				<div class="radbox checkbox">

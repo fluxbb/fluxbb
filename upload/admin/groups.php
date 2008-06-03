@@ -121,7 +121,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 			<h2><span><?php echo $lang_admin['Group settings heading'] ?></span></h2>
 		</div>
 		<div id="req-msg" class="frm-warn">
-			<p class="important"><?php printf($lang_common['Required warn'], '<em class="req-text">'.$lang_common['Required'].'</em>') ?></p>
+			<p class="important"><?php printf($lang_common['Required warn'], '<em class="req-text">'.$lang_common['Reqmark'].'</em>') ?></p>
 		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_groups']) ?>">
 			<div class="hidden">
@@ -139,7 +139,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 							<span class="fld-label"><?php echo $lang_admin['Group title'] ?></span><br />
 							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_title" size="25" maxlength="50" value="<?php if ($mode == 'edit') echo forum_htmlencode($group['g_title']); ?>" /></span>
-							<em class="req-text"><?php echo $lang_common['Required'] ?></em>
+							<em class="req-text"><?php echo $lang_common['Reqmark'] ?></em>
 						</label>
 					</div>
 					<div class="frm-fld text required">

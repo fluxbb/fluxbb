@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 // Language definitions used in various scripts
 $lang_misc = array(
@@ -26,7 +26,6 @@ $lang_misc = array(
 'Report post'				=>	'Report post',
 'Reason'					=>	'Reason:',
 'Reason help'				=>	'Enter a short reason why you are reporting this post.',
-'Send report'				=>	'Send a message about this post to forum administrators and/or moderators',
 
 // Subscriptions
 'Already subscribed'		=>	'You are already subscribed to this topic.',
