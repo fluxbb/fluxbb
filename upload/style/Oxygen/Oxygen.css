@@ -5,122 +5,89 @@ A - SETUP
 /* Start from scratch
 -------------------------------------------------------------*/
 
-html, body, /* Remove this line if integrating */
-.brd div, .brd p, .brd h1, .brd h2, .brd h3, .brd h4, .brd h5, .brd h6,
-.brd blockquote, .brd pre, .brd code, .brd samp,
-.brd abbr, .brd acronym, .brd address, .brd small, .brd cite,
-.brd span, .brd em, .brd img, .brd strong,
-.brd dl, .brd dt, .brd dd, .brd ol, .brd ul, .brd li,
-.brd form, .brd fieldset, .brd label, .brd legend,
-.brd table, .brd caption, .brd tbody, .brd tfoot, .brd thead,
-.brd tr, .brd th, .brd td {
-	margin: 0;
-	padding: 0;
-	font-size: 100%;
-	vertical-align: baseline;
-	font-weight: normal;
-	font-style: normal;
+html, body, /* remove this line if necessary for site integration */
+.brd div, .brd p, .brd dl,.brd dt,.brd dd, .brd ul, .brd ol, .brd li,
+.brd h1,.brd h2,.brd h3, .brd h4, .brd h5, .brd h6, .brd pre,
+.brd form, .brd fieldset, .brd legend, .brd blockquote,
+.brd table, .brd th, .brd td {
+	margin:0;
+	padding:0;
 	}
-
+	
 .brd fieldset, .brd img, .brd cite {
-	border: none;
-	}
-
-.brd ol, .brd ul {
-	list-style: none;
-	}
-
-.brd table {
-	width: 100%;
-	table-layout: fixed;
-	empty-cells: show;
-	border-spacing: 0;
+	border: 0;
 	}
 	
-.brd td {
-	overflow: hidden;
-	vertical-align: middle;
-	}
-	
-.brd span.submit input,
-.brd span.cancel input {
-	overflow: visible;
-	padding-left: 0.5em;
-	padding-right: 0.5em;
-	padding-bottom: 2px;
-	}
-	
-.brd a {
-	cursor: pointer;
-	text-decoration: underline;
-	}
-	
-.brd div.divider, .brd fieldset br {
+.brd br, .brd hr, .brd .divider {
 	display: none;
 	}
 	
-	
-/* Text Setup
+
+/* Text Setup (Equalise everything before styling)
 -------------------------------------------------------------*/
 
-.brd { /* Needs modifying if body has non default font-size */
-	font: 75%/130% Verdana, Arial, Helvetica, sans-serif;
+body {
+	font-size: 100%;
+	}
+
+.brd {
+	font: 75%/1.5em verdana, helvetica, arial, sans-serif;
 	}
 	
-.brd samp, .brd code, .brd pre, .brd option, .brd optgroup {
+.brd h1,.brd h2,.brd h3, .brd h4, .brd h5, .brd h6 {
 	font-size: 1em;
-	font-family: Verdana, Arial, sans-serif;
+	font-weight: normal;
+	}
+	
+.brd samp, .brd code, .brd pre, .brd option, .brd optgroup,
+.brd input, .brd select, .brd textarea, .brd td, .brd th {
+	font-size: 1em;
+	font-family: verdana, helvetica, arial, sans-serif; 
 	font-style: normal;
 	}
-
-.brd input, .brd select, .brd textarea {
-	font-size: 1.1em;
-	font-family: Verdana, Arial, sans-serif;
+	
+.brd a, .brd a:link, .brd a:visited {
+	text-decoration: none;
 	}
 	
-.brd code {
-	font-size: 1.1em;
-	line-height: 140%;
-	font-family: 'andale mono', 'lucida console', monospace
-	}
-	
-.frm .frm-info li span strong,
-.brd .important strong,
-.brd .warn strong,
-.brd .post-entry .entry-content strong,
-.brd .post-entry .entry-content strong * {
-	font-weight: bold;
-	}
-	
-.brd .entry-content em.bbuline {
+.brd a:hover, .brd a:active, .brd a:focus {
 	text-decoration: underline;
 	}
-
-/*************************************************************
-B - FLOAT CLEARING AND HIDDEN STUFF
-**************************************************************/
 	
+.brd p {
+	padding: 0.5em 0;
+	}
+	
+.brd  ul, .brd ol {
+	padding: 0.5em 0 0.5em 1.5em;
+	}
+	
+.brd ul.spaced {
+	padding: 0.25em 0 0.25em 1.5em;
+	}
+	
+.brd ul.spaced li {
+	padding: 0.25em 0;
+	}
+	
+
 /* Clear Me
 -------------------------------------------------------------*/
 
-.brd-page:after,
-#brd-visit:after,
-#brd-about:after,
-#brd-info #stats:after,
-.brd .crumbs:after,
-#brd-info #onlinelist:after,
-.main .paged-head:after,
-.main .paged-foot:after,
-.main .main-head:after,
-.main .main-foot:after,
-.sectioned .main-nav:after,
 .frm .frm-set div:after,
 .frm .link:after,
 .frm .frm-group:after,
-.user .user-info li.status:after,
-.frm .profile:after,
-.main .topic .post .postbody:after,
-.main .topic .post .postfoot:after {
+.brd #req-msg:after,
+.brd #brd-online:after,
+.brd .main-pagepost:after,
+.brd .main-menu:after,
+.brd .cbox:after,
+.brd .main-head:after,
+.brd .main-menu ul:after,
+#brd-about:after,
+.brd .post:after,
+.brd .posthead h3:after,
+.brd .postbody:after {
 	content: "";
 	display: block;
 	font-size: 0;
@@ -130,54 +97,36 @@ B - FLOAT CLEARING AND HIDDEN STUFF
 	visibility: hidden;
  	clear: both;
 	}
-	
+
 /* Hide Me
 -------------------------------------------------------------*/
 
-.main h1,
-#brd-info .main-head,
-#brd-info #stats h3,
-#qjump legend,
-.crumbs span span,
-.crumbs strong span,
-.main table .tcmod label span,
-.main .main-head h2 span span,
-.main .main-foot .h2 strong span,
 .frm .frm-legend,
 .frm .frm-legend span,
-.frm .frm-info h3,
-.frm .frm-warn,
-.user .user-info .status strong,
-.user .user-info .title strong,
-.frm .profile h3,
-.brd a span span,
-.main .post h3 cite,
-.main .post .posthead .post-select span,
-.main .post .post-entry h4,
-.frm .twin .twin2 .fld-label,
-.brd .frm .frm-group .nodefault span.noshow,
-.main .parted .frm-head {
+.brd .req-warn p strong,
+#brd-stats .hn,
+#qjump label,
+.brd .post .entry-title,
+.brd .posthead h3 cite,
+.brd .postfoot a span span,
+.brd td.tcmod label span {
  	font-size: 0;
  	left: -9999px;
  	text-indent: -9999px;
  	position:absolute;
  	line-height: 0em;
  	}
-	
-	
+
+
 /*************************************************************
-C - PAGE LAYOUT and COMMON ELEMENTS
+C - GENERAL STYLING 
 **************************************************************/
 
 /* Page Layout
 -------------------------------------------------------------*/
 
 .brd-page {
-	width: 90%;
-	margin: 0 auto;
-	min-width: 700px;
-	max-width: 1100px;
-	padding: 20px 0;
+	padding: 20px 30px;
 	}
 
 #brd-redirect, #brd-maint, #brd-util {
@@ -190,496 +139,788 @@ C - PAGE LAYOUT and COMMON ELEMENTS
 	width: 100%;
 	position: relative;
 	}
+
+#brd-index .main {
+	margin-top: 1.5em;
+	}
+	
+.brd .main-content {
+	margin-bottom: 4px;
+	}
+	
+#brd-qpost {
+	margin-bottom: 1em;
+	}
+	
+/* Headings
+-------------------------------------------------------------*/
+
+.brd .main-head {
+	border-style: solid;
+	border-width: 1px;
+	padding: 0 1.417em;
+	}
+	
+.brd .content-head {
+	border-style: none none solid none;
+	border-width: 1px;
+	padding: 0 1.417em;
+	}
+	
+.brd .main-head .hn, .brd .content-head .hn {
+	font-size: 1.084em;
+	padding: 0.462em 0;
+	font-weight: normal;
+	}
+	
+.main .main-head small {
+	float:right;
+	font-size: 1em;
+	padding: 0.462em 0;
+	margin-top: -1.9em;
+	}
 	
 	
-/* Skip Link
+/* Content areas
+-------------------------------------------------------------*/
+
+.brd .main-content, .brd .gen-content {
+	border-style: solid;
+	border-width: 1px;
+	}
+	
+.brd .main-content {
+	margin: 4px 0;
+	}
+	
+.brd .gen-content {
+	padding: 0 1.417em;
+	}
+	
+/*************************************************************
+D - REUSABLE FORMATS 
+**************************************************************/
+
+/* Option Links (class="options")
+-------------------------------------------------------------*/
+
+.brd .options span {
+	border-left-style: solid;
+	border-left-width: 1px;
+	padding: 0 0 0 0.5em;
+	margin: 0 0 0 0.25em;
+	}
+	
+.brd .options span.item1 {
+	border-left: 0;
+	padding-left: 0;
+	margin-left: 0;
+	}
+	
+.brd .main-options, .brd .content-options {
+	text-align: center;
+	}
+	
+.brd .main-options .feed a {
+	padding: 2px 0 2px 20px;
+	background: url(feed-icon.png) center left no-repeat;
+	}
+
+/* Basic content box
+-------------------------------------------------------------*/
+
+.brd .cbox {
+	border-style: solid;
+	border-width: 1px;
+	padding: 0.25em 0;
+	margin: 1em 0;
+	zoom:1;
+	}
+	
+.brd .main-content .cbox {
+	margin: 1.417em;
+	}
+	
+.brd .cbox p, .brd .cbox .legend, .brd .cbox div {
+	padding: 0.5em 1.417em;
+	font-size: 1em;
+	}
+	
+.brd .cbox ul {
+	padding: 0.5em 1.5em;
+	margin-left: 1.417em;
+	margin-right: 1.417em;
+	font-size: 1em;
+	}
+	
+/* Two column content box
+-------------------------------------------------------------*/
+
+.brd .cpair .cbox {
+	border-style: none none none dashed;
+	margin: 0 0 0 16em;
+	}
+	
+.brd .cpair {
+	margin: 1.417em;
+	border-style: solid;
+	border-width: 1px;
+	position: relative;
+	zoom: 1;
+	}
+	
+.brd .cpair .cbox .legend {
+	float: left;
+	margin-left: -16em;
+	left: -1px;
+	width: 13em;
+	position: relative;
+	}
+	
+.brd .data-pair .data-box ul {
+	list-style: none;
+	margin-left: 0;
+	}
+	
+.brd .frm-pair {
+	border: 0;
+	margin: 0 1.417em;
+	}
+	
+.brd .frm-pair .frm-box {
+	border: 0;
+	padding: 0;
+	}
+	
+.brd .frm-pair .frm-box .legend {
+	text-align: right;
+	padding-right: 0;
+	padding-left: 1em;
+	width: 15em;
+	left: 0;
+	}
+	
+/* The Grid (Multiple two column content boxes)
+-------------------------------------------------------------*/
+
+.brd .cgrid .cpair {
+	margin: 0;
+	border-style: dashed none none none;
+	}
+
+.brd .cgrid .item1 {
+	border-top-style: none;
+	}
+	
+.brd .cgrid {
+	border-style: solid;
+	border-width: 1px;
+	margin: 1.5em;
+	position: relative;
+	}
+	
+.brd .maintalert {
+ 	color: red !important;
+ 	font-weight: bold;
+	}
+	
+.brd .newalert a {
+ 	font-weight: bold;
+ 	}
+
+ /* User Identity
 -------------------------------------------------------------*/
 	
-#brd-access {
+#brd-wrap .user-ident {
+	position: relative;
+	padding-bottom: 0.5em;
+	padding-top: 4em;
+	}
+	
+#brd-wrap .user-ident .username {
+	position: absolute;
+	display: block;
+	font-size: 1.167em;
+	top: 0.5em;
+	}
+	
+#brd-wrap .user-ident .usertitle {
+	top: 2em;
+	font-weight: bold;
+	font-size: 1em;
+	position: absolute;
+	display: block;
+	}
+	
+#brd-wrap .user-ident .userstatus {
+	font-size: 1em;
+	display: block;
+	border-left-style: solid;
+	border-left-width: 0.7em;
+	line-height: 0.8em;
+	margin-top: 0.75em;
+	text-indent: 0.5em;
+	}
+	
+.brd .online .userstatus {
+	font-weight: bold;
+	}
+	
+#brd-wrap .user-ident img {
+	display: block;
+	}
+
+ /* Other types of options
+-------------------------------------------------------------*/
+	
+.brd .text-options {
+	padding: 0 1.417em;
 	text-align: right;
-	padding: 0;
-	height: 0;
-	margin: 0;
-	position: absolute;
-	background: transparent;
-	}
-	
-#brd-access a, #brd-access a:link, #brd-access a:visited {
-	height: 2em;
-	padding: 0 1.3em;
-	line-height: 2em;
-	position: absolute;
-	left: -999em;
-	margin: 1px;
-	width: 12em;
-	}
-	
-#brd-access a:hover, #brd-access a:active, #brd-access a:focus {
-	text-indent: 0;
-	background: #000;
-	position: static;
+	margin-top: -2.15em;
+	position: relative;
 	float: right;
 	}
 	
-	
-/* Board Title and Description
+
+/*************************************************************
+D - COMMON BOARD ELEMENTS 
+**************************************************************/
+
+/* Logo and Description
 -------------------------------------------------------------*/
-	
+
 #brd-title {
-	padding: 1.3em 1.3em 0.3em 1.3em;
-	white-space: nowrap;
+	font-size: 1.75em;
+	font-family: helvetica, arial, sans-serif;
+	line-height: 1em;
+	padding: 0.5em 0 0 0;
 	}
-#brd-title p {
-	font-size: 1.5em;
-	}	
 	
-#brd-title a:link, #brd-title a:visited {
-	text-decoration: none;
+#brd-title a:hover, #brd-title a:active, #brd-title a:focus {
+	border-bottom-style: dotted;
+	border-bottom-width: 1px;
 	}
 	
 #brd-desc {
-	padding: 0 1.3em 1em 1.3em;
+	padding: 0.25em 0 0.5em 0;
 	}
 	
-	
-/* Main Menu
--------------------------------------------------------------*/
-	
-#brd-navlinks ul {
-	padding: 0.7em 1.3em;
-	}
-	
-#brd-navlinks ul li {
-	display: inline;
-	margin-right: 0.8em;
-	font-size: 1.2em;
-	}
-	
-	
-/* Welcome Box
--------------------------------------------------------------*/
-
-#brd-visit {
-	border-style: none solid solid solid;
-	border-width: 1px;
-	padding: 0.8em 1.3em 0.8em 1.3em;
-	margin: 0 0 1em 0;
-	}
-	
-#brd-visit ul {
+#brd-access {
 	float: right;
 	}
 	
-#brd-visit ul li {
+/* Main Menu
+-------------------------------------------------------------*/
+
+#brd-navlinks ul {
+	padding-left: 0;
+	padding-right: 0;
+	}
+
+#brd-navlinks li {
 	display: inline;
-	margin-left: 0.7em;
+	font-size: 1.167em;
+	padding: 0.429em 0.857em 0.429em 0;
 	}
 	
-#brd-visit p span, #brd-visit ul li a {
+/* Board Welecome
+-------------------------------------------------------------*/
+
+#brd-visit span.options {
 	white-space: nowrap;
 	}
-	
-#brd-visit p strong,
-#brd-visit ul li strong {
+
+#brd-visit a {
 	font-weight: bold;
 	}
-	
-	
-/* Alert Box
+
+
+/* Board statistics
 -------------------------------------------------------------*/
 
-#brd-alert, #brd-maintenance {
-	border-style: solid;
-	border-width: 1px;
-	margin: 0 0 1em 0;
+#brd-stats {
+	margin-top: 1.5em;
 	}
-	
-#brd-alert p, #brd-maintenance p {
-	padding: 0.8em 0 0.8em 0;
-	margin: 0 1.3em;
-	font-size: 1.084em;
-	}
-	
-#brd-alert strong,
-#brd-maintenance strong,
-#brd-maintenance em {
-	font-weight: bold;
-	font-style: normal;
-	}
-	
-.brd #admin-alerts p strong {
-	font-weight: bold;
-	}
-	
-/* Statistics
--------------------------------------------------------------*/
 
- #stats ul {
- 	padding: 0.6em 1.3em;
- 	}
- 	
- #stats ul li.st-users {
+#brd-stats ul {
+	list-style: none;
+	padding-left: 0;
+	}
+	
+#brd-stats ul li.st-users {
  	float: left;
  	clear: both;
  	white-space: nowrap;
- 	line-height: 150%;
  	}
  
- #stats ul li.st-activity {
+ #brd-stats ul li.st-activity {
  	text-align: right;
  	display: block;
  	white-space: nowrap;
- 	line-height: 150%;
+ 	}
+ 
+ #brd-online {
+ 	padding: 0.5em 1.417em;
+ 	margin-top: -1px;
  	}
  	
-#stats ul li strong {
-	font-weight: bold;
-	}
- 
-#onlinelist {
-	border-top-style: dashed;
-	border-top-width: 1px;
-	line-height: 150%;
-	padding: 0.6em 1.3em;
-	}
- 
-#onlinelist h3 {
-	float: left;
-	margin: 0 0.5em 0 0;
-	}
-	
-#onlinelist h3 strong {
-	font-weight: bold;
-	}
-	
-	
-/* About Box (Footer / Copyright / Jump Menu) and Home Link
+ #brd-online .hn, #brd-online p {
+ 	padding: 0;
+ 	}
+ 	
+ #brd-online .hn {
+ 	float: left;
+ 	margin-right: 0.75em;
+ 	}
+ 	
+ #brd-online {
+ 	margin-bottom: 1em;
+ 	}
+ 	
+ /* Board Footer
 -------------------------------------------------------------*/
 
 #brd-about {
-	border-style: solid;
-	border-width: 1px;
-	margin: 0 0 1em 0;
-	padding: 0.6em 1.3em;
+	padding: 0.25em 1.417em;
 	}
 
 #brd-about p {
 	text-align: right;
+	float: right;
 	}
 	
-#brd-about #qjump {
+#qjump {
 	float: left;
-	width: 40%;
+	padding: 0.333em 0 0 0;
+	margin: 0;
 	}
 	
-#brd-about #qjump label {
-	font-weight: bold;
-	display: block;
-	}
-	
-#brd-home {
-	font-weight: normal;
-	float:right;
-	padding: 0.4em 1.3em 0 0;
-	}
-	
-/* Announcements
+/* Pagination and Posting
 -------------------------------------------------------------*/
 
-#brd-announcement .userbox {
-	margin: 0 0 1em 0;
-	padding-bottom: 1em;
-	}
-	
-#brd-announcement .msg-head {
-	font-size: 1.2em;
-	padding-bottom: 0.5em;
-	margin-bottom: 0.5em;
-	border-bottom-style: dashed;
-	border-bottom-width: 1px;
-	font-size: 1.1em;
-	font-weight: bold;
-	}
-
-	
-/*************************************************************
-D - MAIN CONTENT COMMON ELEMENTS
-**************************************************************/
-
-/* Common Styling
--------------------------------------------------------------*/
-	
-.main .main-content, .paged .paged-foot {
-	margin-bottom: 1em;
-	}
-	
-.paged .main-content {
-	margin-bottom: 0;
-	}
-
-.main .main-content {
-	border-style: solid;
+.brd .main-pagepost {
+	border-style: dotted;
 	border-width: 1px;
 	}
-	
 
-
-/* Breadcrumbs
--------------------------------------------------------------*/
-
-.brd .brd-crumbs {
-	padding: 0 1.3em;
-	margin: 0 0 1em 0;
-	}
-	
-.brd-crumbs .crumb {
-	padding-left: 1.5em;
-	padding-right: 0.5em;
-	background-image: url(crumb.png);
-	background-repeat: no-repeat;
-	background-position: center left;
-	white-space: nowrap;
+.brd .main-pagepost p.paging {
 	float: left;
-	}	
-
-.brd-crumbs .crumbfirst {
-	background-image: none;
-	padding-left: 0;
-	}
-
-.brd-crumbs .crumblast {
-	font-weight: bold;
+	width: 50%;
 	}
 	
-	
-/* Paging and Posting
--------------------------------------------------------------*/
-	
-.main .paged-head,
-.main .paged-foot {
-	border-style: solid;
-	border-width: 1px;
-	padding: 0 1.3em;
-	min-height: 2.6em;
-	}
-	
-.main .paged-head .paging,
-.main .paged-foot .paging {
-	float: left;
-	font-size: 1.1em;
-	padding: 0.6em 0;
-	}
-	
-.main .paged-head .posting,
-.main .paged-foot .posting {
+.brd .main-pagepost p.posting {
 	float: right;
-	font-size: 1.1em;
-	padding: 0.6em 0;
 	}
 	
-.brd .posting, .brd .posting * {
-	white-space: nowrap;
-	}
-	
-.main .paged-head .posting span,
-.main .paged-head .paging strong,
-.main .paged-foot .posting span,
-.main .paged-foot .paging strong {
-	font-weight: bold;
-	}
-	
-.main .paged-foot .submitting {
-	float: right;
-	padding: 0.3em 0 0.3em 0;
-	}
-	
-.main .submitting {
-	text-align: right;
-	}
-	
-.main .paged-foot .submitting span {
-	margin-left: 0.8em;
-	}
-
-
 .brd .paging, .brd .paging * {
 	white-space:nowrap;
 	}
 
 .brd .paging a, .brd .paging strong, .brd .paging span {
-	border-left-style:solid;
+	padding: 0 1em;
+	border-left-style: solid;
 	border-left-width: 1px;
-	text-decoration: none;
-	padding: 0 0.2em 0 0.6em;
+	float: left;
 	}
 	
-.brd .paging .item1, .brd .paging .pages {
-	border: 0;
+.brd .paging .item1, .brd .paging span.pages {
+	border-left: 0;
 	padding-left: 0;
 	}
-
-.brd .paging .pages {
-	padding-right: 0.3em;
-	}
 	
+.brd .posting .newpost {
+	font-size: 1.084em;
+	font-weight: bold;
+	}
 
-/* Main Headers and Footers
+/* Breadcrumbs
 -------------------------------------------------------------*/
 
-.main .main-head,
-.main .main-foot {
-	padding: 0.7em 1.3em;
-	min-height: 1.3em;
-	}
-
-#brd-install .main-head {
-	padding-left: 1.7em;
+.brd .crumbs {
+	padding: 0.25em 1.417em;
 	}
 	
-.main .main-head h1 {
-	position: static;
-	font-size: 1em;
-	line-height: 1.3em;
-	text-indent: 0;
-	}
 
-.main .main-head h1,
-.main .main-head h2,
-.main .main-foot .h2 {
-	float: left;
-	padding: 0 1px;
-	}
-
-.main .main-head h1 span,
-.main .main-head h2 span,
-.main .main-foot .h2 strong {
-	font-size: 1.1em;
-	}
-
-.main .main-head .main-options,
-.main .main-foot .main-options,
-.admin .main-head h2,
-.admin .main-head h1 {
-	float: right;
-	padding: 0 1px;
-	}
-
-.main .main-head .main-options a.feed-option {
-	margin-left: 0.5em;
-	font-size: 0.9em;
-	float:left;
-	letter-spacing: -0.1em;
-	border-style: solid;
-	border-width: 1px;
-	padding-right: 3px;
-	line-height: 1.2em;
-	height: 1.3em;
+.brd .crumbs .crumblast {
+	font-weight: bold;
 	}
 	
-.main .main-head .main-options a.sub-option {
-	float: left;
-	margin-right: 1em;
-	}
-	
-.main .main-foot .main-options a.mod-option,
-.main .main-foot .main-options a.user-option {
-	margin-left: 0.8em;
-	}
-	
-.main .main-head .main-options a.feed-option,
-.main .main-head .main-options a.feed-option:link,
-.main .main-head .main-options a.feed-option:visited {
-	padding-left: 18px;
-	background-repeat: no-repeat;
-	background-position: left;
-	background-image: url(feed.png);
-	}
 
-.main .main-head a.exthelp,
-.main-head a.exthelp:link,
-.main .main-head a.exthelp:visited {
-	padding-left: 20px;
-	background-repeat: no-repeat;
-	background-position: left;
-	background-image: url(helpdark.png);
-	}
-	
-.main .frm-head {
-	padding: 0.5em 1.7em;
-	border-style: solid none solid none;
-	border-width: 1px;
-	background: #f1f1f1 !important;
-	border-bottom-color: #bbb !important;
-	}
-
-.main .frm-head span, .main .frm-part h3 span {
-	font-size: 1.1em;
-	}
-
-/* Tabbed Navigation (General
+/* Profile Menu
 -------------------------------------------------------------*/
 
-.main .main-nav {
-	min-width: 62em;
+.brd .main-menu {
+	border-bottom: 0;
 	}
-
-.main .main-nav * {
-	white-space: nowrap;
-	}
-
-.main .main-nav ul {
-	padding: 0 1.9em;
-	}
-
-.main .main-nav ul li {
-	display: inline;
-	float:left;
-	padding: 0 5px 0 0;
-	}
-
-.main .main-nav ul li a,
-.main .main-nav ul li a:link,
-.main .main-nav ul li a:visited {
-	border-style: solid solid none solid;
-	border-width: 1px;
-	float: left;
-	height: 2.2em;
-	line-height: 2.2em;
-	padding: 0 1em;
-	}
-
 	
-/* Tabbed Navigation (with submenu)
--------------------------------------------------------------*/
-.main .submenu {
-	position: relative;
-	}
-
-.main .submenu ul li.topactive ul {
-	border: none;
-	height: 1.85em;
-	left: 0;
-	line-height: 1.5em;
-	margin: 0;
-	padding: 0.3em 1.7em 0.5em;
-	position: absolute;
-	top: 2.3em;
-	}
-
-.main .submenu ul li.topactive ul li a,
-.main .submenu ul li.topactive ul li a:link,
-.main .submenu ul li.topactive ul li a:visited {
-	margin-right: 0.8em;
-	border: none;
+.brd .main-menu ul {
+	list-style-type: none;
 	padding: 0;
 	}
 
+.brd .main-menu li {
+	display: inline;
+	float:left;
+	}
+	
+.brd .main-menu li a {
+	padding:  0.462em 0.462em 0.6em 0.462em;
+	float: left;
+	font-family: helvetica, arial, sans-serif;
+	font-weight: bold;
+	font-size: 1.084em;
+	}
+	
+.brd .main-menu li.item1 {
+	border: 0;
+	}
+	
+.brd .main-menu li.item1 a {
+	padding-left: 0;
+	}
+	
+.brd .main-menu li.active a {
+	background: url(tab.png) bottom center no-repeat;
+	color: #000;
+	}
+	
+.brd .main-menu li a:hover, .brd .main-menu li a:active, .brd .main-menu li a:focus {
+	background: url(tab_hover.png) bottom center no-repeat;
+	text-decoration: none;
+	}
+	
+/* Message Boxes
+-------------------------------------------------------------*/
+
+.brd .message {
+	padding: 0.5em 1.417em;
+	}
+	
+.brd .message p span {
+	display: block;
+	padding-top: 1em;
+	}
+	
+	
+/*************************************************************
+F - MAIN FORMS
+**************************************************************/
+
+/* Form text
+-------------------------------------------------------------*/
+
+.brd .frm-set {
+	font-size: 1em;
+	line-height: 1.5em;
+	}
+	
+.brd .frm-text input, .brd .frm-select select {
+	font-size: 1.084em;
+	}
+	
+.brd label small {
+	font-size: 1em;
+	}
+	
+.brd .required label span {
+	font-weight: bold;
+	}
+	
+.brd label span em, .brd #req-msg p em {
+	font-size: 1.084em;
+	font-weight: bold;
+	}
+
+
+
+/* Fieldsets (Top Level)
+-------------------------------------------------------------*/
+
+.brd .frm-newform .frm-set {
+	padding-left: 17em;
+	padding-top: 1em;
+	margin: 0 1.417em;
+	border-top-style: dashed;
+	border-top-width: 1px;
+	}
+	
+.brd .frm-newform .set1 {
+	border-top: 0;
+	padding-top: 1px;
+	margin-top: 1.5em;
+	}
+	
+.brd div.frm-form {
+	padding: 0 1.417em 1.417em 1.417em;
+	}
+	
+.brd div.frm-form table {
+	border: 1px solid #ddd;
+	}
+	
+	
+/* Text and Select Fields
+-------------------------------------------------------------*/
+
+.brd .frm-newform .frm-text, .brd .frm-newform .frm-select {
+	padding: 2em 0 0.75em 0;
+	position: relative;
+	}
+	
+.brd .frm-newform .frm-text label span, .brd .frm-newform .frm-select label span {
+	margin: -2em 0 0 -17em;
+	padding: 2px 1em 2px 0;
+	position: relative;
+	text-align: right;
+	float: left;
+	width: 16em;
+	}
+	
+.brd .frm-newform .frm-text input, .brd .frm-newform .frm-select select {
+	float: left;
+	font-size: 1.084em;
+	}
+
+.brd .frm-newform .frm-text input:not([title]) { /* Fixes alignment issue in Safari */
+	height: 100%;
+	}
+	
+.brd .frm-newform .frm-text .fld-input, .brd .frm-newform .frm-select .fld-input {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+
+/* Textareas
+-------------------------------------------------------------*/
+
+.brd .frm-newform .frm-textarea {
+	padding: 0 0 0.75em 0;
+	position: relative;
+	}
+	
+.brd .frm-newform .frm-textarea label span {
+	margin: 0 0 0 -17em;
+	padding: 2px 1em 2px 0;
+	position: relative;
+	text-align: right;
+	float: left;
+	width: 16em;
+	}
+	
+.brd .frm-newform .frm-textarea span.fld-input {
+	display: block;
+	}
+	
+.brd .frm-newform .frm-textarea-help span.fld-input {
+	display: block;
+	clear: both;
+	}
+
+.brd .frm-newform .frm-textarea-help label span {
+	bottom: -1.666em;
+	}
+	
+.brd .frm-newform .frm-textarea textarea {
+	float: left;
+	font-size: 1.084em;
+	}
+	
+.brd .frm-newform .frm-textarea textarea { /* Fixes alignment issue in Safari */
+	height: 100%;
+	max-width: 100%;
+	}
+	
+.brd .frm-newform .frm-textarea label small {
+	float: left;
+	text-align: left;
+	position: relative;
+	margin-left: -1px;
+	font-size: 0.917em;
+	}
+
+	
+/* Checkboxes and Radio Button
+-------------------------------------------------------------*/
+
+.brd .frm-newform .frm-radbox {
+	position: relative;
+	padding-bottom: 0.75em;
+	}	
+
+.brd .frm-newform .frm-radbox label {
+	margin-left: 2em;
+	float: left;
+	}
+
+.brd .frm-newform .frm-radbox input {
+	margin: 0;
+	position: absolute;
+	left: -0.25em;
+	top: 0;
+	height: 1.55em;
+	width: 1.55em;
+	}
+
+.brd .frm-newform .frm-radbox label span {
+	float: left;
+	width: 16em;
+	padding-right: 1em;
+	text-align: right;
+	margin-left: -17em;
+	position: relative;
+	left: -2em;
+	}
+
+/* Radio Button and Checkbox Groups
+-------------------------------------------------------------*/
+
+.brd .frm-newform .frm-group {
+	padding-bottom: 0.25em;
+	position: relative;
+	}
+.brd .frm-newform .frm-group legend span {
+	width: 16em;
+	padding-right: 1em;
+	text-align:right;
+	position: absolute;
+	left: -17em;
+	font-weight: normal;
+	}
+
+.brd .frm-newform .frm-group .frm-radbox {
+	padding-bottom: 0.5em;
+	}
+	
+.brd .frm-newform .frm-yesno .frm-radbox {
+	float: left;
+	width: 9em;
+	}
+	
+/* Submit Buttons
+-------------------------------------------------------------*/
+	
+.brd .frm-newform .frm-buttons {
+	padding: 1em 0 0 17em;
+	margin: 0.75em 1.417em 1em 1.417em;
+	position: relative;
+	border-top-style: double;
+	border-width: 3px;
+	}
+
+#brd-login .frm-newform .set1 {
+	padding-bottom: 2em;
+	}
+	
+.brd .frm-newform .frm-options span.options {
+	position: absolute;
+	left: 17em;
+	margin-top: -7.5em;
+	}
+	
+	
+.brd .frm-newform .frm-options span.options a {
+	margin-right: 0.75em;
+	}
+	
+.brd .frm-buttons span.submit input,
+.brd span.cancel input {
+	overflow: visible;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	padding-bottom: 2px;
+	font-size: 1.084em;
+	}
+	
+	
+/* Required Fields and Field Help
+-------------------------------------------------------------*/
+
+.brd .frm-newform .frm-text label small, .brd .frm-newform .frm-select label small {
+	float: left;
+	text-align: left;
+	position: relative;
+	margin-top: -0.1em;
+	margin-left: -1px;
+	font-size: 0.917em;
+	}
+
+.brd .frm-newform .frm-short label small {
+	margin-top: -2em;
+	margin-left: 4.5em;
+	padding: 2px 1em 2px 0;
+	}
+	
+	
+.brd .frm-newform label span em, .brd #req-msg p em {
+	position: relative;
+	bottom: -0.15em;
+	}
+
+.brd div#req-msg {
+	border-bottom-style: dashed;
+	border-bottom-width: 1px;
+	padding-left: 16em;
+	margin: 1.5em 1.417em 0 1.417em;
+	}
+	
+.brd #req-msg p {
+	float: left;
+	padding: 0 1em;
+	margin-bottom: -0.85em;
+	font-weight: bold;
+	}
+	
+.brd .req-warn{
+	border-bottom-color: #D4DAE2;
+	}
+	
+.brd .req-warn p {
+	background: #fbfbfb;
+	color: #555;
+	}
+.brd .req-error {
+	border-bottom-color: #000;
+	}
+	
+.brd .req-error p {
+	color: #000;
+	background: #fbfbfb;
+	}
+	
+.brd ul li.req-error {
+	color: #b42000 !important;
+	font-weight: bold;
+	}
+	
+.brd ul li.req-error span {
+	color: #000;
+	}
+	
+.brd .req-error strong {
+	color: #b42000;
+	}
+	
+	
 /*************************************************************
 E - MAIN TABLES ( Index / Forums / Userlist )
 **************************************************************/
 
 /* Table Cells Widths and Alignment
 -------------------------------------------------------------*/
+
+.brd table {
+	width: 100%;
+	table-layout: fixed;
+	empty-cells: show;
+	border-spacing: 0;
+	line-height: 1.3333em;
+	}
+
+.brd td {
+	overflow: hidden;
+	vertical-align: middle;
+	}
 
 .main table .tcl {
 	width: 50%;
@@ -722,9 +963,7 @@ E - MAIN TABLES ( Index / Forums / Userlist )
 	
 #brd-admin-users table .tcl {
 	width: 35%;
-	line-height: 1.4em;
 	}
-	
 	
 #brd-admin-users table .tc2 {
 	width: 20%;
@@ -755,7 +994,7 @@ E - MAIN TABLES ( Index / Forums / Userlist )
 -------------------------------------------------------------*/
 
 .main table .tcl h3 span {
-	font-size: 1.1em;
+	font-size: 1.167em;
 	font-weight: bold;
 	}
 
@@ -770,11 +1009,16 @@ E - MAIN TABLES ( Index / Forums / Userlist )
 	padding-top: 0.3em
 	}
 	
+.brd .main-content th {
+	font-size: 1.084em;
+	padding: 0.462em 1.417em;
+	font-weight: normal;
+	}
+	
 .main table td {
-	padding: 0.6em 1.3em 0.7em 1.3em;
+	padding: 0.5em 1.417em;
 	border-width: 1px;
 	border-style: solid none none solid;
-	line-height: 130%;
 	}
 	
 .main table td.tcl {
@@ -823,856 +1067,196 @@ E - MAIN TABLES ( Index / Forums / Userlist )
 	display: block;
 	}
 	
-/*************************************************************
-E - MAIN FORMS
-**************************************************************/
-
-/* General Styling
--------------------------------------------------------------*/
-	
-.frm .frm-form {
-	margin: 1.7em 1.7em 0.7em 1.7em;
-	}
-	
-.frm .frm-set {
-	border-top-style: dashed;
-	border-top-width: 1px;
-	padding: 1.3em 0 0.5em 0;
-	}
-
-.frm .set1 {
-	border-top-style: none;
-	padding-top: 0;
-	}
-	
-.frm .frm-buttons {
-	padding: 0.8em 0 0.3em 15.6em;
-	border-top-style: double;
-	border-top-width: 3px;
-	margin-top: 0.5em;
-	}
-	
-.frm .frm-buttons span {
-	margin-right: 1em;
-	}
-	
-.frm .frm-fld span.submit {
-	clear: left;
-	display: block;
-	padding-top: 0.3em;
-	}
-	
-.frm table {
-	border-style: solid;
-	border-width: 1px;
-	margin-bottom: 1em;
-	}
-	
-/* Text, Select. Link Field and Textarea
--------------------------------------------------------------*/
-
-.main form .frm-fld {
-	padding: 0 0 0.7em 0;
-	margin: 0 0 0 15.6em;
-	position: relative;
-	line-height: 1.3em;
-	}
-
-.main form .frm-fld .fld-label {
-	float: left;
-	width: 14.6em;
-	position: relative;
-	margin-left: -15.6em;
-	text-align: right;
-	font-weight: bold;
-	padding: 3px 1em 2px 0;
-	}
-	
-.main form .link .fld-label {
-	padding: 0 1em 0 0;
-	}
-	
-.admin .frm form fieldset .link .fld-input {
-	float: left;
-	}
-	
-.main form .frm-fld .fld-input,
-.main form .frm-fld .fld-input input,
-.main form .frm-fld .fld-input select {
-	float: left;
-	}
-	
-.main form .frm-fld .fld-input {
-	padding-right: 0.5em;
-	}
-	
-.main form .frm-fld label span.fld-help,
-.main form .frm-fld label span.fld-extra {
-	float: left;
-	width: 98%;
-	display: block;
-	font-size: 0.9em;
-	margin-left: -2px;
+#brd-index .main-content {
 	position: relative;
 	}
-
-.main form .textarea label span.fld-help {
-	width: 86%;
-	}
-	
-.main form .frm-fld label span.fld-extra {
-	display: inline;
-	width: auto;
-	margin: 0;
-	padding-top: 3px;
-	}
-	
-.main form .frm-fld label small.extra {
-	font-size: 1em;
-	}
-
-.main form .frm-fld .fld-label a {
-	margin-left: 0.5em;
-	}
-	
-.main form .frm-fld .fld-label a span {
-	font-weight: bold;
-	}
-	
-.main form .textarea .fld-input,
-.main form .longtext .fld-input {
- 	width: 84%;
- 	padding-right: 0.8em;
- 	}
-	
-.main form .textarea textarea,
-.main form .longtext input {
-	width: 100%;
-	}
-
-.main form .frm-fld em.req-text {
- 	float: left;
- 	padding-top: 2px;
- 	}
- 	
- .main .frm .frm-part {
-	margin: 0 -1.7em;
- 	padding: 0 1.7em;
- 	border-top: 1px solid #ddd;
- 	margin-top: 1em;
- 	}
- 	
- .main .frm .frm-part h3 {
- 	margin-top: 0;
- 	background: #f1f1f1;
- 	margin: 1em -1.7em;
- 	margin-top: 0;
- 	margin-bottom: 1.3em;
- 	padding: 0.5em 1.7em;
- 	border-top: 1px solid #fff;
- 	border-bottom: 1px solid #bbb;
- 	}
- 	
- .main .frm .part1 {
-	margin-top: -1.7em;
-	border-top: none;
- 	}
- 	
- .main .frm .frm-part h3 * {
- 	color: #113C5E;
- 	}
- 	
- /* Checkboxes and Radio Buttons
--------------------------------------------------------------*/
-	
-.main form .frm-group {
-	padding: 0 0 0.7em 0;
-	position: relative;
-	}
-
-.main form .radbox {
-	margin: 0 0 0 15.6em;
-	padding: 3px 0 0.3em 23px;
-	line-height: 1.3em;
-	position: relative;
-	}
-
-.main form .checkbox {
-	padding-bottom: 1em;
-	}
-	
-.main form .radbox input {
-	float: left;
-	position: relative;
-	left: -20px;
-	top: 0.65em;
-	margin: -7px -13px 0 0;
-	min-width: 13px;
-	min-height: 13px;
-	}
-	
-.main form .checkbox .fld-label {
-	float: left;
-	width: 14.6em;
-	text-align: right;
-	position: relative;
-	left: -23px;
-	padding: 0;
-	margin-left: -15.6em;
-	font-weight: bold;
-	}
-	
-.main form .frm-yesno label,
-.main form .frm-choice label {
-	float: left;
-	}
-	
-.main form .frm-yesno label {
-	width: 8em;
-	}
-	
-.main form .frm-choice label {
-	width: 11em;
-	}
-	
-.main form .frm-group legend span {
+#brd-index .content-head {
+	width: 40%;
 	position: absolute;
-	left: 0;
-	width: 14.6em;
-	text-align: right;
-	padding-top: 3px;
-	font-weight: bold;
+	border: 0;
+	line-height: 1.333em;
 	}
 	
+/*************************************************************
+F - TOPICS
+**************************************************************/
 	
- /* Form Information Boxes
+/* Interface
 -------------------------------------------------------------*/
 	
-.frm .frm-info,
-.frm .frm-error,
-.frm .req-warn {
-	margin: 1.7em;
-	padding: 1em 1em 0.3em 1em;
-	border-style: solid;
+.brd .post {
+	border-style: solid none none none;
 	border-width: 1px;
 	}
 	
-.frm .frm-form .frm-info {
-	margin: 0.7em 0 1.7em 0;
+.brd .firstpost {
+	border-top: 0;
 	}
 
-.frm .frm-info p,
-.frm .frm-error .warn,
-.frm .frm-error .important {
-	padding: 0 0 0.8em 0;
+.brd .post .user {
+	float: left;
+	padding: 0 1em;
+	width: 16em;
+	margin-left: -18em;
+	margin-top: -2.5em;
 	}
 	
-.frm .frm-info ul {
-	padding: 0 0 0.2em 1em;
-	margin: 0 0 0 8px;
-	}
-	
-.frm .frm-info li,
-.frm .frm-error li {
-	padding: 0 0 0.7em 0.5em;
-	list-style-type: square;
-	line-height: normal;
-	}
-	
-#brd-main .frm .actions a, #brd-main .frm .actions a * {
-	font-weight: bold;
-	}
-
-.frm .frm-info .actions {
-	padding-left: 2em;
-	}
-
-.frm .actions a {
-	margin-right: 0.7em;
-	white-space: nowrap;
-	}
-	
-#brd-search .frm .frm-info .actions {
-	background: url('searchicon.png') no-repeat top left;
-	padding-left: 2.2em;
-	}
-	
-.frm .frm-error ul {
+.brd #post-preview .user {
 	margin-top: 0;
-	margin-bottom: 0;
+	}
+	
+.brd .user ul {
+	list-style: none;
 	padding-left: 0;
-	margin-left: 1.6em;
-	}
-	
-.frm .frm-error li {
-	line-height: 1.5em;
-	}
-	
-.main form .item-select {
-	position: relative;
-	float: right;
-	margin-top: -2.8em;
-	z-index: 100;
-	padding-bottom: 0;
 	}
 
-.main form div.item-select * {
-	font-weight: bold;
-	}
-	
-.main form div.item-select .fld-label {
+.brd .user ul li strong {
 	font-weight: normal;
 	}
 	
-	
- /* Data Boxes
--------------------------------------------------------------*/
-
-.main .frm-form .databox {
-	margin: 1.7em 0;
-	}
-	
-.main .databox {
-	margin: 1.7em;
-	padding: 1em 1em 0.3em 1em;
-	border-style: solid;
-	border-width: 1px;
-	overflow: hidden;
-	}
-	
-.main .databox p,
-.main .databox ul {
-	padding-bottom: 0.8em;
-	overflow: hidden;
-	}
-	
-.main .databox .legend {
-	padding-bottom: 0.5em;
-	border-bottom-style: dashed;
-	border-bottom-width: 1px;
-	margin-bottom: 0.7em;
-	}
-	
-.main .databox .legend span,
-.main .databox .term span {
-	font-weight: bold;
-	}
-	
-.main .databox .legend strong {
-	float: right;
-	font-weight: bold;
-	}
-	
-.main .databox .note {
-	font-weight: bold;
-	padding-bottom: 0.3em;
-	}
-	
- /* Multiple Data Boxes (Data Sets)
--------------------------------------------------------------*/
-
-	
-.main .dataset {
-	margin: 1.7em;
-	border-style: solid solid solid solid;
-	border-width: 1px;
-	}
-
-.main .frm-form .dataset {
-	margin: 1.7em 0;
-	}
-
-.main .dataset .databox {
-	margin: 0;
-	border-style: dashed none none none;
-	padding: 0.8em 1em 0 1em;
-	}
-
-.main .dataset .db1 {
-	border: none;
-	}
-	
-.main .dataset .databox .legend {
-	padding: 0;
-	margin: 0;
-	border: none;
-	}
-
- /* Multiple Data Boxes with Grid layout (Data Grids)
--------------------------------------------------------------*/
-
-.main .datagrid {
-	margin: 1.7em;
-	border-style: solid solid solid solid;
-	border-width: 1px;
-	}
-	
-.main .datagrid .databox {
-	margin: 0;
-	padding: 0;
-	width: 100%;
-	position: relative;
-	border-style: dashed none none none;
-	}
-	
-.main .datagrid .db1 {
-	border: none;
-	}
-	
-.main .datagrid .databox .data {
-	padding: 0.8em 1em 0.8em 1em;
-	margin: 0 0 0 16em;
-	border-left-style: dashed;
+.brd .postbody, .brd .posthead, .brd .postfoot-inner {
+	margin-left: 18em;
+	border-left-style: solid;
 	border-left-width: 1px;
 	}
 	
-.main .datagrid .legend {
-	position: absolute;
-	padding: 0.8em 1em 0 1em;
-	margin: 0;
-	border: none;
-	left: 0;
-	top: 0;
-	}
-	
-/*************************************************************
-F - USER PROFILES
-**************************************************************/
-
- /* User Identity (Profile and Viewtopic)
--------------------------------------------------------------*/
-	
-.user .user-ident {
-	position: relative;
-	padding-top: 1.6em;
-	white-space: normal;
-	}
-
-.user .user-ident img {
-	display: block;
-	margin-bottom: 0.3em;
-	}
-
-.user .user-ident .username {
-	font-size: 1.2em;
-	font-weight: bold;
-	display: block;
-	position: absolute;
-	top: 0;
-	margin: 0;
-	line-height:1.2em;
-	}
-	
-.user .user-ident a {
-	text-decoration: none;
-	}
-	
-.user .user-info li {
-	padding-bottom: 0.2em;
-	line-height: 1.3em;
-	}
-	
-.user .user-info .status,
-.user .user-info .title {
-	padding-bottom: 0.8em;
-	}
-
-.user .user-info .title span {
-	font-weight: bold;
-	}
-	
-.user .user-info .status span {
-	border-left-style: solid;
-	border-left-width: 0.7em;
-	float:left;
-	font-weight: normal;
-	height: 0.8em;
-	line-height: 0.8em;
-	padding-left: 0.4em;
-	position: relative;
-	font-style: normal;
-	}
-
-
- /* Profile normal view and edit profile about page
--------------------------------------------------------------*/
-
-.frm .profile {
-	margin: 1.7em;
-	padding: 1em 1em 0.3em 17em;
-	border-style: solid;
-	border-width: 1px;
-	}
-
-.frm .profile .user,
-.frm .profile .user-data,
-.frm .profile .user-actions {
-	float: left;
-	margin: 0;
+.brd .postbody {
 	padding-bottom: 1em;
-	padding-left: 4em;
-	display: inline;
-	}
-
-.frm .profile .user {
-	margin: 0 0 0 -16em;
-	padding-left: 0;
-	white-space: normal;
-	padding-bottom: 0;
-	overflow: hidden;
-	width: 16em;
 	}
 	
-.frm .profile .username {
-	width: 14em;
-	overflow: hidden;
-	}
-
-.frm .profile .user-actions li,
-.frm .profile .user-data li {
-	line-height: 1.4em;
-	padding-bottom: 0.8em;
-	list-style-position: outside;
-	list-style-type: disc;
-	white-space: nowrap;
+.brd .posthead {
+	padding: 0.5em 1em;
+	border-bottom-style: dashed;
+	border-bottom-width: 1px;
 	}
 	
-.frm .profile .user-actions li a {
-	font-weight: bold;
-	}
-	
-.frm .sig-demo {
-	margin-left: 15.6em;
-	margin-right: 13%;
-	padding-top: 0.8em;
-	padding-bottom: 1em;
-	border-top: 1px dashed #ccc;
-	clear:left;
-	}
-	
-.frm .profile .sig-demo {
-	margin-left: 3em;
-	}
-	
-.frm .av-preview img {
+.brd .posthead h3 a strong {
 	float: right;
-	margin-left: 2em;
-	margin-bottom: 1em;
 	}
 	
-/*************************************************************
-G - TOPICS / POSTS
-**************************************************************/
-
-/* Parsed Content
--------------------------------------------------------------*/
-
-.main .post-entry {
-	padding: 0.3em 1em 0 1em;
+.brd .posthead h3 label {
+	float: right;
+	margin: 0;
 	}
 
-.main .entry-content {
-	padding-bottom: 0.8em;
+.brd .posthead h3 label * {
+	margin: 0 0 0 0.5em;
+	
+	}
+	
+.brd .post-entry {
+	padding: 1em;
+	}
+	
+.brd .postfoot {
+	border-top-style: dashed;
+	border-top-width: 1px;
+	}
+	
+.brd .postfoot .post-options, .brd .postfoot .post-contacts {
+	padding: 0.5em 1em;
+	}
+	
+.brd .postfoot .post-contacts {
+	float: left;
+	margin-left: -18em;
+	}
+	
+.brd .postfoot .post-options {
+	text-align: right;
+	}
+
+.brd .postfoot .post-contacts a {
+	margin-right: 1em;
+	font-size: 1.084em;
+	}
+
+.brd .postfoot .post-options a {
+	margin-left: 1em;
+	font-size: 1.084em;
+	}
+	
+.brd .post .sig-content span.sig-line {
+	display: block;
+	padding-bottom: 0.75em;
+	margin-top: 1em;
+	width: 300px;
+	border-top: 1px solid #ccc;
+	}
+	
+	
+	
+/* Content
+-------------------------------------------------------------*/
+
+#brd-wrap .entry-content {
+	padding-bottom: 1px;
 	overflow: hidden;
 	width: 100%
 	}
-	
-.main .sig-content {
-	padding-top: 0.8em
-	}	
-
-.main .sig-content .sig-line {
-	border-top-style: solid;
-	border-top-width: 1px;
-	display: block;
-	padding-bottom: 0.5em;
-	width: 250px;
+#brd-wrap .entry-content br {
+	display: inline;
 	}
-
-.main .entry-content .quotebox,
-.main .entry-content .codebox {
+	
+#brd-wrap .entry-content p {
+	padding: 0;
+	margin: 0 0 1em 0;
+	}
+	
+#brd-wrap .entry-content ul {
+	padding: 0 0 0 2em;
+	margin: 0 0 1em 0;
+	list-style-type: disc;
+	}
+	
+#brd-wrap .entry-content ol {
+	padding: 0 0 0 2.5em;
+	margin: 0 0 1em 0;
+	list-style-type: decimal;
+	}
+	
+#brd-wrap .entry-content ol.alpha {
+	list-style-type: upper-alpha;
+	}
+	
+#brd-wrap .entry-content img {
+	vertical-align: text-top;
+	}
+	
+#brd-wrap .entry-content .quotebox,
+#brd-wrap .entry-content .codebox {
 	border-style: solid;
 	border-width: 1px;
-	margin: 0 1em 1em 1em;
+	margin: 0 1em 1.7em 1em;
 	padding: 1em 1em 0.3em 1em;
 	}
-  
-.main .entry-content blockquote {
+	
+#brd-wrap .entry-content blockquote {
 	overflow: hidden;
 	width: 100%;
 	}
 	
-.main .entry-content .quotebox cite {
+#brd-wrap .entry-content .quotebox cite {
 	display: block;
 	font-style: normal;
 	font-weight: bold;
-	margin-bottom: 0.8em;
+	padding-bottom: 0.5em;
 	}
 	
-.main .entry-content .codebox strong {
-	display: block;
-	margin-bottom: 0.8em;
-	}
-
-.main .entry-content pre {
+#brd-wrap .entry-content pre {
 	margin: 0;
 	max-height: 35em;
 	min-height: 2em;
 	overflow: auto;
 	padding: 0 2% 0.1em 0;
 	width: 98%;
+	}	
+
+#brd-wrap .entry-content img {
+	max-width: 100%;
 	}
 	
-.main .entry-content em {
-	font-style: italic
-	}
-
-.main .entry-content em.bbuline {
-	font-style: normal;
+#brd-wrap .entry-content span.bbu {
 	text-decoration: underline;
 	}
-
-.main .entry-content p {
-	margin: 0 0 1em 0;
-	}
 	
-.brd .entry-content ul {
-	margin: 0 0 0.5em 2em;
-	list-style-type: disc;
-	}
-	
-.brd .entry-content ol {
-	margin: 0 0 0.5em 2.5em;
-	list-style-type: decimal;
-	}
-	
-.brd .entry-content ol.alpha {
-	list-style-type: upper-alpha;
-	}
-	
-.main .entry-content li {
-	padding: 0 0 0.5em 0;
-	line-height: 1.3em;
-	}
-	
-.frm .post-entry {
-	margin: 1.7em;
-	border-style: solid;
-	border-width: 1px;
-	}
-
-/* Topic / Post Layout
--------------------------------------------------------------*/
-
-.main .topic .post {
-	border-style: solid none none none;
-	border-width: 1px;
-	}
-
-.main .topic .firstpost {
-	border-top: none;
-	margin-top: 0;
-	}
-
-.main .topic .post .postmain {
-	margin-left: 17em;
-	position: relative;
-	border-left-style: solid;
-	border-left-width: 1px;
-	}
-	
-.main .topic .post .posthead {
-	border-bottom-style: dashed;
-	border-bottom-width: 1px;
-	margin-bottom: 0.7em;
-	}
-	
-.main .topic .post .posthead h3 {
-	padding: 0.5em 0 0.5em 1em;
-	margin: 0;
-	}
-	
-.main .topic .post .posthead h3 strong {
-	float: right;
-	font-weight: bold;
-	position: relative;
-	text-decoration: none;
-	padding-right: 1em;
-	}
-	
-.main .topic .post .postmain  .user {
-	float: left;
-	margin: -2.6em 0 0 -16em;
-	width: 15em;
-	}
-	
-.main .topic .user-info {
-	overflow: hidden;
-	width: 15em;
-	}
-
-.main .topic .user-ident .username {
-	overflow: hidden;
-	width: 13em;
-	}
-	
-.main .topic .post .user .user-info {
-	padding-bottom: 1em;
-	}
-	
-.main .topic .post .postmain .postfoot {
-	margin-left: -17em;
-	text-align: right;
-	border-top-style: dashed;
-	border-top-width: 1px;
-	padding: 0.5em 1em;
-	}
-	
-.main .topic .post .postmain .postfoot .post-options a {
-	margin-left: 1em;
-	}
-
-.main .topic .post .postmain .postfoot .post-options a.contact {
-	float: left;
-	margin-right: 1em;
-	margin-left: 0;
-	}
-	
-.main .topic .post .postmain .entry-info {
-	padding: 0 0 1em 0;
-	margin: 0 0 0 1.5em;
-	}
-
-.main .post .item-select {
-	padding-right: 1em;
-	}
-
-#brd-searchposts .main .post h3 cite {
-	position: static;
-	font-size: 1em;
-	}
-	
-#brd-searchposts .main .post h4.entry-title {
-	position: static;
-	font-size: 1em;
-	padding-bottom: 1em;
-	font-weight: normal;
-	line-height: 1.3em;
-	text-indent: 0;
-	}
-	
-#brd-searchposts .main h3 strong {
-	text-decoration: none;
-	}
-	
-#brd-searchposts .main h4.entry-title strong {
-	display: block;
-	font-weight: bold;
-	}
-	
-	
-/*************************************************************
-H - OTHER MAIN CONTENT ITEMS
-**************************************************************/
-
-/* Message Boxes / Redirect
--------------------------------------------------------------*/
-
-.main .message {
-	padding-bottom: 0.3em;
-	}
-
-.main .message p {
-	padding: 0 1.3em 0;
-	margin: 1em 0;
-	}
-	
-.main .message p span {
-	display: block;
-	padding-top: 1em;
-	}
-
-	
-/* Help File
--------------------------------------------------------------*/
-	
-.frm .example code {
-	display: block;
-	}
-
-.frm .example li,
-.frm div.example {
-	padding: 0 0 1em 0;
-	line-height: normal;
-	margin: 0 0 0 1.5em;
-	list-style: disc;
-	}
-	
-.frm .example code {
-	padding-bottom: 0.1em;
-	}
-	
-.frm ul.example {
-	padding: 0 0 0 0.5em;
-	margin: 0;
-	}
-
-.frm .example span {
-	font-size: 0.9em;
-	}
-	
-#brd-help h3 {
-	padding: 0 0 0.7em 0;
-	margin: 0;
-	}
-	
-#brd-help .quotebox, #brd-help .codebox {
-	margin: 0.3em 0 0 0;
-	}
-	
-.frm .example code * {
-	vertical-align: middle;
-	}
-	
-	
-/* Rules
--------------------------------------------------------------*/
-	
-.brd .userbox {
-	padding: 1em 1.3em 0.7em 1.3em;
-	margin: 1.7em;
-	border-style: solid;
-	border-width: 1px;
-	}
-	
-.brd .userbox p, .brd .userbox h2, .brd .userbox h3, .brd .userbox h4 {
-	margin: 0 0 0.8em 0;
-	list-style: disc;
-	}
-	
-.brd .userbox h2 {
-	font-size: 1.2em;
-	font-weight: bold;
-	}
-	
-.brd .userbox h3 {
-	font-size: 1.1em;
-	font-weight: bold;
-	}
-	
-.brd .userbox ul, .brd .userbox ol {
-	margin: 0 0 0.3em 1.5em;
-	list-style: disc;
-	}
-	
-.brd .userbox li {
-	margin-bottom: 0.5em;
-	}
-	
-.brd .userbox strong {
-	font-weight: bold;
-	}
-	
-.brd .userbox em {
-	font-style: italic;
-	}

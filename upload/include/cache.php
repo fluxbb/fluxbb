@@ -218,7 +218,7 @@ function generate_quickjump_cache($group_id = false)
 			error('Unable to write quickjump cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'.', __FILE__, __LINE__);
 
 		$output = '<?php'."\n\n".'if (!defined(\'FORUM\')) exit;'."\n".'define(\'FORUM_QJ_LOADED\', 1);'."\n".'$forum_id = isset($forum_id) ? $forum_id : 0;'."\n\n".'?>';
-		$output .= "\t".'<form id="qjump" method="get" accept-charset="utf-8" action="'.$base_url.'/viewforum.php">'."\n\t\t".'<fieldset>'."\n\t\t\t".'<legend>'.$lang_common['Quick jump legend'].'</legend>'."\n\t\t\t".'<label for="qjump-select"><?php echo $lang_common[\'Jump to\'] ?>'.'</label><br />'."\n\t\t\t".'<span><select id="qjump-select" name="id">'."\n";
+		$output .= '<form id="qjump" method="get" accept-charset="utf-8" action="'.$base_url.'/viewforum.php">'."\n\t".'<div class="frm-select">'."\n\t\t".'<label for="qjump-select"><span><?php echo $lang_common[\'Jump to\'] ?>'.'</span></label><br />'."\n\t\t".'<span class="frm-input"><select id="qjump-select" name="id">'."\n";
 
 		// Get the list of categories and forums from the DB
 		$query = array(
@@ -263,13 +263,13 @@ function generate_quickjump_cache($group_id = false)
 			$forum_count++;
 		}
 
-		$output .= "\t\t\t".'</optgroup>'."\n\t\t\t".'</select>'."\n\t\t\t".'<input type="submit" value="<?php echo $lang_common[\'Go\'] ?>" onclick="return Forum.doQuickjumpRedirect(forum_quickjump_url, sef_friendly_url_array);" /></span>'."\n\t\t".'</fieldset>'."\n\t".'</form>'."\n";
-		$output .= "\t".'<script type="text/javascript">'."\n\t\t".'var forum_quickjump_url = "'.forum_link($forum_url['forum']).'";'."\n\t\t".'var sef_friendly_url_array = new Array('.$forum_db->num_rows($result).');';
+		$output .= "\t\t\t".'</optgroup>'."\n\t\t".'</select>'."\n\t\t".'<input type="submit" value="<?php echo $lang_common[\'Go\'] ?>" onclick="return Forum.doQuickjumpRedirect(forum_quickjump_url, sef_friendly_url_array);" /></span>'."\n\t".'</div>'."\n".'</form>'."\n";
+		$output .= '<script type="text/javascript">'."\n\t\t".'var forum_quickjump_url = "'.forum_link($forum_url['forum']).'";'."\n\t\t".'var sef_friendly_url_array = new Array('.$forum_db->num_rows($result).');';
 
 		foreach ($sef_friendly_names as $forum_id => $forum_name)
-			$output .= "\n\t\t".'sef_friendly_url_array['.$forum_id.'] = "'.forum_htmlencode($forum_name).'";';
+			$output .= "\n\t".'sef_friendly_url_array['.$forum_id.'] = "'.forum_htmlencode($forum_name).'";';
 
-		$output .= "\n\t".'</script>'."\n";
+		$output .= "\n".'</script>'."\n";
 
 		if ($forum_count < 2)
 			$output = '<?php'."\n\n".'if (!defined(\'FORUM\')) exit;'."\n".'define(\'FORUM_QJ_LOADED\', 1);';

@@ -89,7 +89,6 @@ define('FORUM_NO_SET_NAMES', 1);
 // Load DB abstraction layer and try to connect
 require FORUM_ROOT.'include/dblayer/common_db.php';
 
-
 // Check current version
 $result = $forum_db->query('SELECT conf_value FROM '.$forum_db->prefix.'config WHERE conf_name=\'o_cur_version\'');
 $cur_version = $forum_db->result($result);
@@ -379,26 +378,21 @@ require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php'
 <body>
 
 <div id="brd-update" class="brd-page">
-<div class="brd">
+<div id="brd-wrap" class="brd">
 
-<div id="brd-title">
-	<div><strong>FluxBB Database Update</strong></div>
+<div id="brd-head" class="gen-content">
+	<p id="brd-title">FluxBB Database Update</p>
+	<p id="brd-desc">Update database tables of current installation</p>
 </div>
 
-<div id="brd-desc">
-	<div>Update database tables of current installation</div>
-</div>
-
-<div id="brd-main" class="main">
-
-	<h1><span>FluxBB Database Update</span></h1>
+<div id="brd-main" class="main basic">
 
 	<div class="main-head">
-		<h2><span>Perform update of database tables</span></h2>
+		<h1 class="hn"><span>FluxBB Database Update : Perform update of database tables</span></h1>
 	</div>
 
 	<div class="main-content frm">
-		<div class="frm-info">
+		<div class="cbox info-box">
 			<ul>
 				<li class="warn"><span><strong>WARNING!</strong> This script will update your FluxBB forum database. The update procedure might take anything from a few seconds to a few minutes (or in extreme cases, hours) depending on the speed of the server, the size of the forum database and the number of changes required.</span></li>
 				<li><span>Do not forget to make a backup of the database before continuing.</span></li>
@@ -429,10 +423,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 ?>
 			</ul>
 		</div>
-		<div id="req-msg" class="frm-warn">
-			<p class="important"><strong>Important!</strong> All fields marked <em class="req-text">(Required)</em> must be completed before submitting this form.</p>
-		</div>
-		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+		<form class="frm-newform" method="get" accept-charset="utf-8" action="<?php echo $_SERVER['PHP_SELF'] ?>">
 			<div class="hidden">
 				<input type="hidden" name="stage" value="start" />
 			</div>
@@ -442,21 +433,23 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		{
 
 ?>
-			<div class="frm-info">
+			<div class="cbox info-box">
 				<p class="important"><strong>Enable conversion:</strong> When enabled this update script will, after it has made the required structural changes to the database, convert all text in the database from the current character set to UTF-8. This conversion is required if you're upgrading from FluxBB 1.2 and you are not currently using an UTF-8 language pack.</p>
 				<p class="important"><strong>Current character set:</strong> If the primary language in your forum is English, you can leave this at the default value. However, if your forum is non-English, you should enter the character set of the primary language pack used in the forum.</p>
 			</div>
+		<div id="req-msg" class="req-warn">
+			<p class="important"><strong>Important!</strong> All fields marked <em>*</em> must be completed before submitting this form.</p>
+		</div>
 			<fieldset class="frm-set set1">
 				<legend class="frm-legend"><span>Charset conversion</span></legend>
-				<div class="radbox checkbox">
-					<label for="fld1"><span class="fld-label">Enable conversion:</span><br /><input type="checkbox" id="fld1" name="convert_charset" value="1" checked="checked" /> Perform database charset conversion.</label>
+				<div class="frm-radbox">
+					<input type="checkbox" id="fld1" name="convert_charset" value="1" checked="checked" /> <label for="fld1"><span>Enable conversion:</span> Perform database charset conversion.</label>
 				</div>
-				<div class="frm-fld text required">
+				<div class="frm-text required">
 					<label for="fld2">
-						<span class="fld-label">Current character set:</span><br />
-						<span class="fld-input"><input type="text" id="fld2" name="req_old_charset" size="12" maxlength="20" value="ISO-8859-1" /></span>
-						<em class="req-text">(Required)</em>
-					</label>
+						<span><em>*</em> Current character set:</span>
+					</label><br />
+					<span class="fld-input"><input type="text" id="fld2" name="req_old_charset" size="12" maxlength="20" value="ISO-8859-1" /></span>
 				</div>
 			</fieldset>
 <?php
@@ -1282,26 +1275,21 @@ require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php'
 <body>
 
 <div id="brd-update" class="brd-page">
-<div class="brd">
+<div id="brd-wrap" class="brd">
 
-<div id="brd-title">
-	<div><strong>FluxBB Database Update</strong></div>
+<div id="brd-head" class="gen-content">
+	<p id="brd-title">FluxBB Database Update</p>
+	<p id="brd-desc">Update database tables of current installation</p>
 </div>
 
-<div id="brd-desc">
-	<div>Update database tables of current installation</div>
-</div>
-
-<div id="brd-main" class="main">
-
-	<h1><span>FluxBB Database Update</span></h1>
+<div id="brd-main" class="main basic">
 
 	<div class="main-head">
-		<h2><span>FluxBB Database Update completed!</span></h2>
+		<h1 class="hn"><span>FluxBB Database Update completed!</span></h1>
 	</div>
 
 	<div class="main-content frm">
-		<div class="frm-info">
+		<div class="cbox info-box">
 			<p>Your forum database was updated successfully.</p>
 <?php if (isset($new_config)): ?>					<p>In order to complete the process, you must now update your config.php script. <strong>Copy and paste the text in the text box below into the file called config.php in the root directory of your FluxBB installation</strong>. The file already exists, so you must edit/overwrite the contents of the old file.</p>
 <?php endif; ?>					<p class="important"><strong>Important!</strong> Once the update is completed you should remove this script from the forum root directory and follow the rest of the instructions in the update documentation.</p>
@@ -1309,11 +1297,11 @@ require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php'
 <?php if (isset($new_config)): ?>		<form class="frm-form" action="foo">
 			<fieldset class="frm-set set1">
 				<legend class="frm-legend"><span>New config.php contents</span></legend>
-				<div class="frm-field text textarea">
+				<div class="frm-textarea">
 					<label for="fld1">
-						<span class="frm-label">Copy contents:</span><br />
-						<span class="frm-input"><textarea id="fld1" readonly="readonly" cols="80" rows="20"><?php echo forum_htmlencode($new_config) ?></textarea></span>
-					</label>
+						<span>Copy contents:</span>
+					</label><br />
+					<span class="frm-input"><textarea id="fld1" readonly="readonly" cols="80" rows="20"><?php echo forum_htmlencode($new_config) ?></textarea></span>
 				</div>
 			</fieldset>
 		</form>

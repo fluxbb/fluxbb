@@ -133,13 +133,10 @@ if ($forum_user['is_admmod'])
 
 // Setup form information
 $forum_page['frm_info'] = array(
-	'<li><span><strong>'.$lang_common['Forum'].':</strong> '.forum_htmlencode($cur_post['forum_name']).'</span></li>',
-	'<li><span><strong>'.$lang_common['Topic'].':</strong> '.forum_htmlencode($cur_post['subject']).'</span></li>',
+	'<li><span>'.$lang_common['Forum'].':<strong> '.forum_htmlencode($cur_post['forum_name']).'</strong></span></li>',
+	'<li><span>'.$lang_common['Topic'].':<strong> '.forum_htmlencode($cur_post['subject']).'</strong></span></li>',
 	'<li><span>'.sprintf((($cur_post['is_topic']) ? $lang_delete['Delete topic info'] : $lang_delete['Delete post info']), $cur_post['poster'], format_time($cur_post['posted'])).'</span></li>'
 );
-
-// Setup main heading
-$forum_page['main_head'] = sprintf(($cur_post['is_topic']) ? $lang_delete['Delete topic head'] : $lang_delete['Delete post head'], $cur_post['poster'], format_time($cur_post['posted']));
 
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
@@ -149,9 +146,13 @@ $forum_page['crumbs'] = array(
 	(($cur_post['is_topic']) ? $lang_delete['Delete topic'] : $lang_delete['Delete post'])
 );
 
+// Setup Main Heading
+$forum_page['main_head'] = end($forum_page['crumbs']);
+
 ($hook = get_hook('dl_pre_header_load')) ? eval($hook) : null;
 
 define ('FORUM_PAGE', 'postdelete');
+define ('FORUM_PAGE_TYPE', 'basic');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
@@ -160,41 +161,30 @@ ob_start();
 ($hook = get_hook('dl_main_output_start')) ? eval($hook) : null;
 
 ?>
-<div id="brd-main" class="main">
-
-	<h1><span><?php echo end($forum_page['crumbs']) ?></span></h1>
-
-	<div class="main-head">
-		<h2><span><?php echo $forum_page['main_head'] ?></span></h2>
-	</div>
-	<div class="main-content frm">
-		<div class="frm-info">
-			<ul>
-				<?php echo implode("\n\t\t\t\t", $forum_page['frm_info'])."\n" ?>
-			</ul>
+<div class="main-content frm">
+	<div class="cbox data-box">
+		<ul>
+			<?php echo implode("\n\t\t\t\t", $forum_page['frm_info'])."\n" ?>
+		</ul>
+		<div class="entry-content">
+			<?php echo $cur_post['message']."\n" ?>
 		</div>
-		<div class="post-entry">
-			<div class="entry-content">
-				<?php echo $cur_post['message']."\n" ?>
-			</div>
-		</div>
-		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
-			<div class="hidden">
-				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
-			</div>
-			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_delete['Delete post'] ?></strong></legend>
-				<div class="checkbox radbox">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_common['Please confirm'] ?></span><br /><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /> <?php printf(((($cur_post['is_topic'])) ? $lang_delete['Delete topic head'] : $lang_delete['Delete post head']), $cur_post['poster'], format_time($cur_post['posted'])) ?>.</label>
-				</div>
-			</fieldset>
-			<div class="frm-buttons">
-				<span class="submit"><input type="submit" name="delete" value="<?php echo $lang_delete['Delete'] ?>" /></span>
-				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
-			</div>
-		</form>
 	</div>
-
+	<form class="frm-newform" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+		<div class="hidden">
+			<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
+		</div>
+		<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+			<legend class="frm-legend"><strong><?php echo $lang_delete['Delete post'] ?></strong></legend>
+			<div class="frm-radbox">
+				<input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /> <label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_common['Please confirm'] ?></span> <?php printf(((($cur_post['is_topic'])) ? $lang_delete['Delete topic head'] : $lang_delete['Delete post head']), $cur_post['poster'], format_time($cur_post['posted'])) ?></label>
+			</div>
+		</fieldset>
+		<div class="frm-buttons">
+			<span class="submit"><input type="submit" name="delete" value="<?php echo $lang_delete['Delete'] ?>" /></span>
+			<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
+		</div>
+	</form>
 </div>
 <?php
 

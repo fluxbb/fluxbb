@@ -67,10 +67,25 @@ if (!$forum_user['is_guest'])
 	$tracked_topics = get_tracked_topics();
 }
 
+// Setup headers
+$forum_page['main_head'] = forum_htmlencode($forum_config['o_board_title']);
+
+// Setup main options
+$forum_page['main_options'] = array();
+if (!$forum_user['is_guest'] || ($forum_user['g_read_board'] == '1' && $forum_user['g_search'] == '1'))
+{
+	$forum_page['main_options']['recent'] = '<span'.(empty($forum_page['main_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_24h']).'">'.$lang_index['View recent'].'</a></span>';
+	$forum_page['main_options']['unanswered'] = '<span'.(empty($forum_page['main_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_unanswered']).'">'.$lang_index['View unanswered'].'</a></span>';
+}
+
+if (!$forum_user['is_guest'])
+	$forum_page['main_options']['markread'] = '<span'.(empty($forum_page['main_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['mark_read'], generate_form_token('markread'.$forum_user['id'])).'">'.$lang_index['Mark all as read'].'</a></span>';
+
 ($hook = get_hook('in_pre_header_load')) ? eval($hook) : null;
 
 define('FORUM_ALLOW_INDEX', 1);
 define('FORUM_PAGE', 'index');
+define('FORUM_PAGE_TYPE', 'index');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
@@ -99,12 +114,6 @@ $query = array(
 ($hook = get_hook('in_qr_get_cats_and_forums')) ? eval($hook) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-?>
-<div id="brd-main" class="main">
-
-	<h1><span><?php echo forum_htmlencode($forum_config['o_board_title']) ?></span></h1>
-<?php
-
 $forum_page['cur_category'] = $forum_page['cat_count'] = $forum_page['item_count'] = 0;
 
 while ($cur_forum = $forum_db->fetch_assoc($result))
@@ -120,9 +129,9 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 		{
 
 ?>
-			</tbody>
-		</table>
-	</div>
+		</tbody>
+	</table>
+</div>
 <?php
 
 		}
@@ -130,28 +139,27 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 		++$forum_page['cat_count'];
 		$forum_page['item_count'] = 1;
 		$cur_forum['cat_head'] = forum_htmlencode($cur_forum['cat_name']);
-		
+
 		($hook = get_hook('in_forum_pre_cat_head')) ? eval($hook) : null;
 
 ?>
-	<div class="main-head">
-		<h2><span><?php echo $cur_forum['cat_head'] ?></span></h2>
+<div id="category<?php echo $forum_page['cat_count'] ?>" class="main-content category" style="margin-top: 4px">
+	<div class="content-head">
+		<h2 class="hn"><span><?php echo $cur_forum['cat_head'] ?></span></h2>
 	</div>
-
-	<div id="category<?php echo $forum_page['cat_count'] ?>" class="main-content category">
-		<table cellspacing="0" summary="<?php printf($lang_index['Table summary'], forum_htmlencode($cur_forum['cat_name'])) ?>">
-			<thead>
-				<tr>
+	<table cellspacing="0" summary="<?php printf($lang_index['Table summary'], forum_htmlencode($cur_forum['cat_name'])) ?>">
+		<thead>
+			<tr>
 <?php ($hook = get_hook('in_table_header_begin')) ? eval($hook) : null; ?>
-					<th class="tcl" scope="col"><?php echo $lang_common['Forum'] ?></th>
-					<th class="tc2" scope="col"><?php echo $lang_common['Topics'] ?></th>
-					<th class="tc3" scope="col"><?php echo $lang_common['Posts'] ?></th>
+				<th class="tcl" scope="col"><?php echo $lang_common['Forum'] ?></th>
+				<th class="tc2" scope="col"><?php echo $lang_common['Topics'] ?></th>
+				<th class="tc3" scope="col"><?php echo $lang_common['Posts'] ?></th>
 <?php ($hook = get_hook('in_table_header_after_num_posts')) ? eval($hook) : null; ?>
-					<th class="tcr" scope="col"><?php echo $lang_common['Last post'] ?></th>
+				<th class="tcr" scope="col"><?php echo $lang_common['Last post'] ?></th>
 <?php ($hook = get_hook('in_table_header_after_last_post')) ? eval($hook) : null; ?>
-				</tr>
-			</thead>
-			<tbody class="statused">
+			</tr>
+		</thead>
+		<tbody class="statused">
 <?php
 
 		$forum_page['cur_category'] = $cur_forum['cid'];
@@ -224,20 +232,23 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 	($hook = get_hook('in_row_pre_item_merge')) ? eval($hook) : null;
 
 	$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? 'odd' : 'even').' '.implode(' ', $forum_page['item_status']);
+	if ($forum_page['item_count'] == 1)
+		$forum_page['item_style'] .= ' row1';
+
 	$forum_page['item_indicator'] = '<span class="status '.implode(' ', $forum_page['item_status']).'" title="'.$forum_page['item_alt_message'].'"><img src="'.$base_url.'/style/'.$forum_user['style'].'/status.png" alt="'.$forum_page['item_alt_message'].'" /></span>';
 
 	($hook = get_hook('in_row_pre_display')) ? eval($hook) : null;
 
 ?>
-				<tr id="forum<?php echo $cur_forum['fid'] ?>" class="<?php echo $forum_page['item_style'] ?>">
+			<tr id="forum<?php echo $cur_forum['fid'] ?>" class="<?php echo $forum_page['item_style'] ?>">
 <?php ($hook = get_hook('in_table_contents_begin')) ? eval($hook) : null; ?>
-					<td class="tcl"><?php echo $forum_page['item_indicator'].' '.$forum_page['item_title'].implode('<br />', $forum_page['item_subject']) ?></td>
-					<td class="tc2"><?php echo $cur_forum['num_topics'] ?></td>
-					<td class="tc3"><?php echo $cur_forum['num_posts'] ?></td>
+				<td class="tcl"><?php echo $forum_page['item_indicator'].' '.$forum_page['item_title'].implode('<br />', $forum_page['item_subject']) ?></td>
+				<td class="tc2"><?php echo $cur_forum['num_topics'] ?></td>
+				<td class="tc3"><?php echo $cur_forum['num_posts'] ?></td>
 <?php ($hook = get_hook('in_table_contents_after_num_posts')) ? eval($hook) : null; ?>
-					<td class="tcr"><?php if (!empty($forum_page['item_last_post'])) echo implode(' ', $forum_page['item_last_post']) ?></td>
+				<td class="tcr"><?php if (!empty($forum_page['item_last_post'])) echo implode(' ', $forum_page['item_last_post']) ?></td>
 <?php ($hook = get_hook('in_table_contents_after_last_post')) ? eval($hook) : null; ?>
-				</tr>
+			</tr>
 <?php
 
 }
@@ -247,10 +258,8 @@ if ($forum_page['cur_category'] > 0)
 {
 
 ?>
-			</tbody>
-		</table>
-	</div>
-
+		</tbody>
+	</table>
 </div>
 <?php
 
@@ -259,17 +268,8 @@ else
 {
 
 ?>
-<div id="brd-main" class="main">
-
-	<h1><span><?php echo forum_htmlencode($forum_config['o_board_title']) ?></span></h1>
-
-	<div class="main-head">
-		<h2><span><?php echo $lang_common['Forum message'] ?></span></h2>
-	</div>
-	<div class="main-content message">
-		<p><?php echo $lang_index['Empty board'] ?></p>
-	</div>
-
+<div class="main-content message">
+	<p><?php echo $lang_index['Empty board'] ?></p>
 </div>
 <?php
 
@@ -327,18 +327,24 @@ $stats_list['no_of_posts'] = '<li class="st-activity"><span>'.$lang_index['No of
 ($hook = get_hook('in_pre_stats_info_output')) ? eval($hook) : null;
 
 ?>
-<div id="brd-info" class="main">
-	<div class="main-head">
-		<h2><span><?php echo $lang_index['Forum information'] ?></span></h2>
-	</div>
-	<div class="main-content">
-		<div id="stats">
-			<h3><?php echo $lang_index['Statistics'] ?></h3>
-			<ul>
-				<?php echo implode("\n\t\t\t\t", $stats_list)."\n" ?>
-			</ul>
-		</div>
+<div id="brd-stats" class="gen-content">
+	<h2 class="hn"><span><?php echo $lang_index['Statistics'] ?></span></h2>
+	<ul>
+		<?php echo implode("\n\t\t", $stats_list)."\n" ?>
+	</ul>
+</div>
 <?php
+
+($hook = get_hook('in_stats_end')) ? eval($hook) : null;
+
+$tpl_temp = trim(ob_get_contents());
+$tpl_main = str_replace('<!-- forum_stats -->', $tpl_temp, $tpl_main);
+ob_end_clean();
+// END SUBST - <!-- forum_stats -->
+
+
+// START SUBST - <!-- forum_online -->
+ob_start();
 
 ($hook = get_hook('in_pre_users_online')) ? eval($hook) : null;
 
@@ -369,32 +375,21 @@ if ($forum_config['o_users_online'] == '1')
 
 	($hook = get_hook('in_pre_online_info_output')) ? eval($hook) : null;
 ?>
-		<div id="onlinelist">
-			<h3><?php printf($lang_index['Online'], $num_guests, count($users)) ?></h3>
-<?php
-
-	// If there are registered users logged in, list them
-	if (count($users) > 0)
-		echo "\t\t\t".'<p>'.implode(', ', $users).'</p>'."\n";
-
-?>
-		</div>
+<div id="brd-online" class="gen-content">
+	<h3 class="hn"><span><?php printf($lang_index['Online'], $num_guests, count($users)) ?></span></h3>
+<?php echo (((count($users) > 0)) ? "\t".'<p>'.implode(', ', $users).'</p>' : '') ?>
+</div>
 <?php
 
 }
 
 ($hook = get_hook('in_post_users_online')) ? eval($hook) : null;
 
-?>
-	</div>
-</div>
-<?php
-
-($hook = get_hook('in_stats_end')) ? eval($hook) : null;
+($hook = get_hook('in_online_end')) ? eval($hook) : null;
 
 $tpl_temp = trim(ob_get_contents());
-$tpl_main = str_replace('<!-- forum_stats -->', $tpl_temp, $tpl_main);
+$tpl_main = str_replace('<!-- forum_online -->', $tpl_temp, $tpl_main);
 ob_end_clean();
-// END SUBST - <!-- forum_stats -->
+// END SUBST - <!-- forum_online -->
 
 require FORUM_ROOT.'footer.php';

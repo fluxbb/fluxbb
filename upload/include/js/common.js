@@ -1,4 +1,4 @@
-var Forum = {
+﻿var Forum = {
 	/* attach FN to WINDOW.ONLOAD handler */
 	addLoadEvent: function(fn)
 	{
@@ -125,8 +125,8 @@ var Forum = {
 		//if (Forum.find(fn, nodes) > -1)
 		{
 			var n = document.getElementById('req-msg');
-			Forum.removeClass(n, 'frm-warn');
-			var newlyAdded = Forum.addClass(n, 'frm-error');
+			Forum.removeClass(n, 'req-warn');
+			var newlyAdded = Forum.addClass(n, 'req-error');
 			if (!Forum.onScreen(n))
 			{
 				n.scrollIntoView(); // method not in W3C DOM, but fully cross-browser?

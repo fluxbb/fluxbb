@@ -28,6 +28,13 @@ A - SETUP
 	zoom: 1;
 	}
 	
+/* Alert Box
+----------------------------------------------------------=--*/
+
+#brd-alert, #brd-alert h1 {
+	zoom: 1;
+	}
+
 
 /* Statistics
 -------------------------------------------------------------*/
@@ -52,7 +59,8 @@ A - SETUP
 ----------------------------------------------------------=--*/
 	
 .brd .crumbs,
-.brd .main-pagepost,
+.main .paged-head,
+.main .paged-foot,
 .main .paged-foot .submitting {
 	zoom: 1;
 	}
@@ -60,14 +68,15 @@ A - SETUP
 /* Main Headings
 ----------------------------------------------------------=--*/
 	
-.brd .main-head {
+.main .main-head,
+.main .main-foot {
 	zoom: 1;
 	}
 	
 /* Tabbed Navigation
 -------------------------------------------------------------*/
 	
-.brd .main-menu {
+.main .main-nav {
 	zoom: 1;
 	}
 	
@@ -110,9 +119,6 @@ A - SETUP
 	height: 1%;
 	}
 	
-.brd .frm-textarea textarea {
-	width: 95%;
-	}
 
 /* Posts
 -------------------------------------------------------------*/
@@ -127,8 +133,8 @@ A - SETUP
 	position: relative;
 	}
 
-* html #brd-wrap .entry-content .codebox pre { /* 6 Only */
+* html .entry-content .codebox pre { /* 6 Only */
 	overflow: visible;
 	overflow-x:auto;
-	padding-bottom: 1.5em;
+	padding-bottom: 2em;
 	}

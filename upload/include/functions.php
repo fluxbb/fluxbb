@@ -156,13 +156,13 @@ function cookie_login(&$forum_user)
 					'VALUES'	=> $forum_user['id'].', \''.$forum_db->escape($forum_user['username']).'\', '.$forum_user['logged'].', \''.$forum_user['csrf_token'].'\'',
 					'UNIQUE'	=> 'user_id='.$forum_user['id']
 				);
-				
+
 				if ($forum_user['prev_url'] != null)
 				{
 					$query['REPLACE'] .= ', prev_url';
 					$query['VALUES'] .= ', \''.$forum_db->escape($forum_user['prev_url']).'\'';
 				}
-					
+
 				($hook = get_hook('fn_qr_add_online_user')) ? eval($hook) : null;
 				$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
@@ -293,7 +293,7 @@ function set_default_user()
 		($hook = get_hook('fn_qr_update_online_guest_user')) ? eval($hook) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
-	
+
 	$forum_user['disp_topics'] = $forum_config['o_disp_topics_default'];
 	$forum_user['disp_posts'] = $forum_config['o_disp_posts_default'];
 	$forum_user['timezone'] = $forum_config['o_default_timezone'];
@@ -492,7 +492,7 @@ function update_users_online()
 //
 function generate_navlinks()
 {
-	global $forum_config, $lang_common, $forum_url, $forum_user;
+	global $forum_config, $lang_common, $forum_url, $forum_user, $new_reports;
 
 	// Index should always be displayed
 	$links['index'] = '<li id="navindex"'.((FORUM_PAGE == 'index') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['index']).'"><span>'.$lang_common['Index'].'</span></a></li>';
@@ -519,15 +519,15 @@ function generate_navlinks()
 				$links['search'] = '<li id="navsearch"'.((FORUM_PAGE == 'search') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['search']).'"><span>'.$lang_common['Search'].'</span></a></li>';
 
 			$links['profile'] = '<li id="navprofile"'.((substr(FORUM_PAGE, 0, 7) == 'profile') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['user'], $forum_user['id']).'"><span>'.$lang_common['Profile'].'</span></a></li>';
+			$links['logout'] = '<li id="navlogout"><a href="'.forum_link($forum_url['logout'], array($forum_user['id'], generate_form_token('logout'.$forum_user['id']))).'"><span>'.$lang_common['Logout'].'</span></a></li>';
 		}
 		else
 		{
 			$links['search'] = '<li id="navsearch"'.((FORUM_PAGE == 'search') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['search']).'"><span>'.$lang_common['Search'].'</span></a></li>';
 			$links['profile'] = '<li id="navprofile"'.((FORUM_PAGE == 'editprofile' || FORUM_PAGE == 'viewprofile') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['user'], $forum_user['id']).'"><span>'.$lang_common['Profile'].'</span></a></li>';
+			$links['logout'] = '<li id="navlogout"><a href="'.forum_link($forum_url['logout'], array($forum_user['id'], generate_form_token('logout'.$forum_user['id']))).'"><span>'.$lang_common['Logout'].'</span></a></li>';
 			$links['admin'] = '<li id="navadmin"'.((substr(FORUM_PAGE, 0, 5) == 'admin') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['admin_index']).'"><span>'.$lang_common['Admin'].'</span></a></li>';
 		}
-
-		$links['logout'] = '<li id="navlogout"><a href="'.forum_link($forum_url['logout'], array($forum_user['id'], generate_form_token('logout'.$forum_user['id']))).'"><span>'.$lang_common['Logout'].'</span></a></li>';
 	}
 
 	// Are there any additional navlinks we should insert into the array before imploding it?
@@ -547,41 +547,6 @@ function generate_navlinks()
 	return implode("\n\t\t", $links);
 }
 
-
-//
-// Display the profile navigation menu
-//
-function generate_profile_menu()
-{
-	global $lang_profile, $forum_url, $forum_config, $forum_user, $id;
-
-	// Setup links for profile menu
-	$profilenav_links = array(
-		'<li'.((FORUM_PAGE == 'profile-about')  ? ' class="topactive">' : '>').'<a href="'.forum_link($forum_url['profile_about'], $id).'"><span>'.$lang_profile['Section about'].'</span></a></li>',
-		'<li'.((FORUM_PAGE == 'profile-identity')  ? ' class="topactive">' : '>').'<a href="'.forum_link($forum_url['profile_identity'], $id).'"><span>'.$lang_profile['Section identity'].'</span></a></li>',
-		'<li'.((FORUM_PAGE == 'profile-settings') ? ' class="topactive">' : '>').'<a href="'.forum_link($forum_url['profile_settings'], $id).'"><span>'.$lang_profile['Section settings'].'</span></a></li>',
-	);
-
-	if ($forum_config['o_signatures'] == '1')
-		$profilenav_links['signature'] = '<li'.((FORUM_PAGE == 'profile-signature') ? ' class="topactive">' : '>').'<a href="'.forum_link($forum_url['profile_signature'], $id).'"><span>'.$lang_profile['Section signature'].'</span></a></li>';
-
-	if ($forum_config['o_avatars'] == '1')
-		$profilenav_links['avatar'] = '<li'.((FORUM_PAGE == 'profile-avatar') ? ' class="topactive">' : '>').'<a href="'.forum_link($forum_url['profile_avatar'], $id).'"><span>'.$lang_profile['Section avatar'].'</span></a></li>';
-
-	if ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && $forum_user['g_mod_ban_users'] == '1'))
-		$profilenav_links['admin'] = '<li'.((FORUM_PAGE == 'profile-admin') ? ' class="topactive">' : '>').'<a href="'.forum_link($forum_url['profile_admin'], $id).'"><span>'.$lang_profile['Section admin'].'</span></a></li>';
-
-	($hook = get_hook('fn_generate_profile_menu_end')) ? eval($hook) : null;
-
-?>
-	<div id="profilenav" class="main-nav">
-		<ul>
-			<?php echo implode("\n\t\t\t", $profilenav_links)."\n"; ?>
-		</ul>
-	</div>
-<?php
-
-}
 
 //
 // Outputs markup to display a user's avatar
@@ -1829,7 +1794,7 @@ function clean_version($version)
 //
 // Display a message
 //
-function message($message, $link = '')
+function message($message, $link = '', $heading = '')
 {
 	global $forum_db, $forum_url, $lang_common, $forum_config, $base_url, $forum_start, $tpl_main, $forum_user, $forum_page, $forum_updates;
 
@@ -1837,13 +1802,20 @@ function message($message, $link = '')
 
 	if (!defined('FORUM_HEADER'))
 	{
+		if ($heading == '')
+			$heading = $lang_common['Forum message'];
+
 		// Setup breadcrumbs
 		$forum_page['crumbs'] = array(
 			array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-			$lang_common['Info']
+			$heading
 		);
 
+		//Setup headings
+		$forum_page['main_head'] = end($forum_page['crumbs']);
+
 		define('FORUM_PAGE', 'message');
+		define('FORUM_PAGE_TYPE', 'basic');
 		require FORUM_ROOT.'header.php';
 
 		// START SUBST - <!-- forum_main -->
@@ -1851,17 +1823,8 @@ function message($message, $link = '')
 	}
 
 ?>
-<div id="brd-main" class="main">
-
-	<h1><span><?php echo end($forum_page['crumbs']) ?></span></h1>
-
-	<div class="main-head">
-		<h2><span><?php echo $lang_common['Forum message'] ?></span></h2>
-	</div>
-	<div class="main-content message">
-		<p><?php echo $message ?><?php if ($link != '') echo ' <span>'.$link.'</span>' ?></p>
-	</div>
-
+<div class="main-content message">
+	<p><?php echo $message ?><?php if ($link != '') echo ' <span>'.$link.'</span>' ?></p>
 </div>
 <?php
 
@@ -2165,7 +2128,7 @@ function get_current_url($max_length = 0)
 
 	if (strlen($url) <= $max_length)
 		return $url;
-	
+
 	// We can't find a short enough url
 	return null;
 }
@@ -2454,6 +2417,8 @@ function redirect($destination_url, $message)
 {
 	global $forum_db, $forum_config, $lang_common, $forum_user, $base_url;
 
+	define('FORUM_PAGE', 'redirect');
+
 	($hook = get_hook('fn_redirect_start')) ? eval($hook) : null;
 
 	// Prefix with base_url (unless it's there already)
@@ -2510,7 +2475,7 @@ function redirect($destination_url, $message)
 	}
 
 	ob_end_clean();
-	
+
 	($hook = get_hook('fn_redirect_head')) ? eval($hook) : null;
 
 	$tpl_redir = str_replace('<!-- forum_head -->', implode("\n",$forum_head), $tpl_redir);
@@ -2523,13 +2488,12 @@ function redirect($destination_url, $message)
 	ob_start();
 
 ?>
-<div id="brd-main" class="main">
-
-	<h1><span><?php echo $lang_common['Redirecting'] ?></span></h1>
+<div id="brd-main" class="main basic">
 
 	<div class="main-head">
-		<h2><span><?php echo $message ?></span></h2>
+		<h1 class="hn"><span><?php echo $message ?></span></h1>
 	</div>
+
 	<div class="main-content message">
 		<p><?php printf($lang_common['Forwarding info'], $forum_config['o_redirect_delay'], intval($forum_config['o_redirect_delay']) == 1 ? $lang_common['second'] : $lang_common['seconds']) ?><span> <a href="<?php echo $destination_url ?>"><?php echo $lang_common['Click redirect'] ?></a></span></p>
 	</div>
@@ -2772,6 +2736,19 @@ function get_saved_queries()
 ';
 
 	return $output;
+}
+
+
+//
+// Extract part of a template file
+//
+function extract_part($whole, $start, $end)
+{
+   $start_pos = stripos($whole, $start) + strlen($start);
+
+   $end_pos = stripos($whole, $end, $start_pos + 1);
+
+   return  substr($whole, $start_pos, $end_pos - $start_pos);
 }
 
 

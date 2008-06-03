@@ -14,13 +14,11 @@ $lang_post = array(
 'Compose your'			=>	'Compose your',
 'New topic'				=>	'new topic',
 'New reply'				=>	'new reply',
-'Topic'					=>	'topic',
-'Reply'					=>	'reply',
 'Guest post legend'		=>	'Required information for guests',
 'Post errors'			=>	'<strong>Warning!</strong> The following errors must be corrected before your message can be posted:',
 'Guest name'			=>	'Guest name:',	// For guests (instead of Username)
 'Guest e-mail'			=>	'Guest e-mail:',
-'Post redirect'			=>	'Post entered. Redirecting &#8230;',
+'Post redirect'			=>	'Post entered. Redirecting …',
 'Post reply'			=>	'Post reply',
 'Post new topic'		=>	'Post new topic',
 'Topic subject'			=>	'Topic subject:',
@@ -35,15 +33,14 @@ $lang_post = array(
 'Post settings'			=>	'Post settings:',
 'Preview reply'			=>	'Preview of your reply',
 'Preview new topic'		=>	'Preview of your new topic',
-'Preview info'			=>	'This is how your post will appear once submitted.',
-'Skip to preview'		=>	'Go to post preview',
-'Skip to review'		=>	'Go to topic review',
 
 // Edit post
 'Edit post legend'		=>	'Edit message',
-'Edit this'				=>	'Edit this %s by %s',
-'Silent edit'			=>	'Silent edit (don\'t display "Last edited by &#8230;" in topic view for this edit).',
-'Edit post'				=>	'Edit ',
-'Edit redirect'			=>	'Post updated. Redirecting &#8230;'
+'Edit topic'			=>	'Edit topic',
+'Edit reply'			=>	'Edit reply',
+'Silent edit'			=>	'Silent edit (don\'t display "Last edited by …" in topic view for this edit).',
+'Preview edited topic'	=>	'Preview of you edited topic',
+'Preview edited reply'	=>	'Preview of your edited reply',
+'Edit redirect'			=>	'Post updated. Redirecting …'
 
 );

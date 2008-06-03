@@ -19,19 +19,14 @@ $lang_help = array(
 'Red text'				=>	'Red text',
 'Blue text'				=>	'Blue text',
 
-'Links'					=>	'Links',
-'Images'				=>	'Images',
 'Links info'			=>	'You can create links to other documents or to e-mail addresses using the following tags:',
 'My e-mail address'		=>	'My e-mail address',
 
-'Quotes with name'		=>	'Quote with name',
-'Quotes without name'	=>	'Quote without name',
 'Quotes info'			=>	'To quote someone use the quote tag. You can use the quote tag without specifying a name.',
 'Quote text'			=>	'This is the text I want to quote.',
 'produces named'		=>	'produces a quote box citing the person being quoted.',
 'produces unnamed'		=>	'produces a bare quote box.',
 
-'Code'					=>	'Code',
 'Code info'				=>	'When displaying source code you should make sure that you use the code tag. Text displayed with the code tag will use a monospaced font and will not be affected by other tags. Long items of code will cause the text to scroll.',
 'Code text'				=>	'This is some code.',
 'Code text long'		=>	'This is a long piece of code. This is a long piece of code. This is a long piece of code. This is a long piece of code. This is a long piece of code.',
@@ -45,11 +40,7 @@ $lang_help = array(
 'produces list'			=>	'produces a bulleted list.',
 'produces decimal list'	=>	'produces numbered list.',
 'produces alpha list'	=>	'produces alphabetically labelled list.',
-
-'Nested tags'			=>	'Nested tags',
-'Nested tags info'		=>	'BBCode can be nested to create more advanced formatting. For example:',
 'Bold, underlined text'	=>	'Bold, underlined text',
-
 'Smilies info'			=>	'If you like (and if it is enabled), the forum can convert a selection of smilies to image representations of those smilies. This forum recognizes the smilies listed below and replaces them with images.'
 
 );

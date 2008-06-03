@@ -14,9 +14,11 @@ $lang_index = array(
 'Guests online'			=>	'Guests',
 'Users online'			=>	'Registered users',
 'Statistics'			=>	'Forum statistics',
-'Forum information'		=>	'Forum information',
 'Table summary'			=>	'Listing of forums in the category %s.',
 'External forum'		=>	'Forum located on an external site.',
 'Forum has new'			=>	'Forum containing new posts since your last visit.',
+'View recent'			=>	'View recently active topics',
+'View unanswered'		=>	'View unanswered topics',
+'Mark all as read'		=>	'Mark all forums as read'
 
 );

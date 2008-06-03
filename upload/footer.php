@@ -33,7 +33,7 @@ if (!defined('FORUM'))
 ob_start();
 
 ?>
-<div id="brd-about">
+<div id="brd-about" class="gen-content">
 <?php
 
 // Display the "Jump to" drop list
@@ -57,19 +57,8 @@ $forum_db->end_transaction();
 
 ?>
 	<p id="copyright">Powered by <strong><a href="http://fluxbb.org/">FluxBB</a><?php if ($forum_config['o_show_version'] == '1') echo ' '.$forum_config['o_cur_version']; ?></strong></p>
+</div>
 <?php
-
-($hook = get_hook('ft_about_info_extra')) ? eval($hook) : null;
-
-// Display debug info (if enabled/defined)
-if (defined('FORUM_DEBUG'))
-{
-	// Calculate script generation time
-	list($usec, $sec) = explode(' ', microtime());
-	$time_diff = sprintf('%.3f', ((float)$usec + (float)$sec) - $forum_start);
-	echo "\t".'<p id="querytime">[ Generated in '.$time_diff.' seconds, '.$forum_db->get_num_queries().' queries executed ]</p>'."\n";
-}
-echo '</div>'."\n";
 
 $tpl_temp = trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_about -->', $tpl_temp, $tpl_main);
@@ -78,10 +67,27 @@ ob_end_clean();
 
 
 // START SUBST - <!-- forum_debug -->
-if (defined('FORUM_SHOW_QUERIES'))
-	$tpl_main = str_replace('<!-- forum_debug -->', get_saved_queries(), $tpl_main);
-// END SUBST - <!-- forum_debug -->
+if (defined('FORUM_DEBUG') || defined('FORUM_SHOW_QUERIES'))
+{
+	ob_start();
 
+	// Display debug info (if enabled/defined)
+	if (defined('FORUM_DEBUG'))
+	{
+		// Calculate script generation time
+		list($usec, $sec) = explode(' ', microtime());
+		$time_diff = sprintf('%.3f', ((float)$usec + (float)$sec) - $forum_start);
+		echo '<p id="querytime">[ Generated in '.$time_diff.' seconds, '.$forum_db->get_num_queries().' queries executed ]</p>'."\n";
+	}
+
+	if (defined('FORUM_SHOW_QUERIES'))
+		get_saved_queries();
+
+$tpl_temp = trim(ob_get_contents());
+$tpl_main = str_replace('<!-- forum_debug -->', $tpl_temp, $tpl_main);
+ob_end_clean();
+}
+// END SUBST - <!-- forum_debug -->
 
 // Last call!
 ($hook = get_hook('ft_end')) ? eval($hook) : null;
