@@ -141,6 +141,7 @@ $lang_common = array(
 // Stuff for Search links and jump menu
 'New posts info'		=>	'Lists topics that have new posts since your last visit',
 'Go'					=>	'Go',		// submit button in forum jump
+'Jump to'				=>	'Jump to forum:',
 'Debug table'			=>	'Debug information',
 
 // For extern.php RSS feed

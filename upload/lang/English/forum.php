@@ -11,6 +11,7 @@ $lang_forum = array(
 'Sticky'					=>	'[Sticky]',
 'Never'						=>	'Never',
 'No topics'					=>	'No topics have been posted',
+'First topic nag'			=>	'Be the first to post a topic in this forum.',
 'Table summary'				=>	'Topics in the %s forum. ',
 'You posted'				=>	'You have posted in this topic',
 'You posted indicator'		=>	'·&#160;',
