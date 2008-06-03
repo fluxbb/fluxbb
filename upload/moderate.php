@@ -394,8 +394,8 @@ if (isset($_GET['tid']))
 			$forum_page['item_head'] = '<label for="fld'.$cur_post['id'].'"><span>'.$lang_misc['Select post'].' </span> <input type="checkbox" id="fld'.$cur_post['id'].'" name="posts['.$cur_post['id'].']" value="1" /> <strong>'.($forum_page['start_from'] + $forum_page['item_count']).'</strong></label>'.$forum_page['item_head'];
 
 		// Generate author identification
-		$forum_page['user_ident'] = (($cur_post['poster_id'] > 1) ? '<strong class="username"><a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a></strong>' : '<strong class="username">'.forum_htmlencode($cur_post['username']).'</strong>');
-		$forum_page['user_info'] = '<span class="usertitle">'.get_title($cur_post).'</span>';
+		$forum_page['user_ident']['username'] = (($cur_post['poster_id'] > 1) ? '<strong class="username"><a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a></strong>' : '<strong class="username">'.forum_htmlencode($cur_post['username']).'</strong>');
+		$forum_page['user_ident']['usertitle'] = '<span class="usertitle">'.get_title($cur_post).'</span>';
 
 		// Give the post some class
 		$forum_page['item_status'] = array(
@@ -432,10 +432,7 @@ if (isset($_GET['tid']))
 			</div>
 			<div class="postbody">
 				<div class="user">
-					<h4 class="user-ident"><?php echo $forum_page['user_ident'] ?></h4>
-					<ul class="user-info">
-						<?php echo $forum_page['user_info']."\n" ?>
-					</ul>
+					<h4 class="user-ident"><?php echo implode('<br />', $forum_page['user_ident']) ?></h4>
 				</div>
 				<div class="post-entry">
 					<h4 class="entry-title"><?php echo $forum_page['item_subject'] ?></h4>
