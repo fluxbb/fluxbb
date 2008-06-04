@@ -50,7 +50,7 @@ if (file_exists(FORUM_ROOT.'config.php'))
 	include FORUM_ROOT.'config.php';
 
 if (!defined('FORUM'))
-	error('The file \'config.php\' doesn\'t exist or is corrupt. Please run <a href="install.php">install.php</a> to install FluxBB first.');
+	error('The file \'config.php\' doesn\'t exist or is corrupt. Please run <a href="'.FORUM_ROOT.'install.php">install.php</a> to install FluxBB first.');
 
 
 // Block prefetch requests
