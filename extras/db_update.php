@@ -542,7 +542,8 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 					'word'			=> array(
 						'datatype'		=> 'VARCHAR(20)',
 						'allow_null'	=> false,
-						'default'		=> '""'
+						'default'		=> '""',
+						'collation'		=> 'bin'
 					)
 				),
 				'PRIMARY KEY'	=> array('word'),
@@ -606,6 +607,22 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 			);
 
 			$forum_db->create_table('extensions', $schema);
+		}
+
+		// Make sure the collation on "word" in the search_words table is utf8_bin
+		if ($db_type == 'mysql' || $db_type == 'mysqli')
+		{
+			$result = $forum_db->query('SHOW FULL COLUMNS FROM '.$forum_db->prefix.'search_words') or error(__FILE__, __LINE__);
+			while ($cur_column = $forum_db->fetch_assoc($result))
+			{
+				if ($cur_column['Field'] === 'word')
+				{
+					if ($cur_column['Collation'] !== 'utf8_bin')
+						$forum_db->query('ALTER TABLE '.$forum_db->prefix.'search_words CHANGE word word VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT ""') or error(__FILE__, __LINE__);
+
+					break;
+				}
+			}
 		}
 
 		// Add uninstall_note field to extensions

@@ -1084,7 +1084,8 @@ else
 			'word'			=> array(
 				'datatype'		=> 'VARCHAR(20)',
 				'allow_null'	=> false,
-				'default'		=> '""'
+				'default'		=> '""',
+				'collation'		=> 'bin'
 			)
 		),
 		'PRIMARY KEY'	=> array('word'),

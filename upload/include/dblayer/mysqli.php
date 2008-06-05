@@ -312,6 +312,9 @@ class DBLayer
 
 			$query .= $field_name.' '.$field_data['datatype'];
 
+			if (isset($field_data['collation']))
+				$query .= 'CHARACTER SET utf8 COLLATE utf8_'.$field_data['collation'];
+
 			if (!$field_data['allow_null'])
 				$query .= ' NOT NULL';
 
