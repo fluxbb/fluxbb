@@ -172,29 +172,14 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 		if (!empty($new_words))
 		{
-			switch ($db_type)
-			{
-				case 'mysql':
-				case 'mysqli':
-					$sql = 'INSERT INTO '.$forum_db->prefix.'search_words (word) VALUES'.implode(',', preg_replace('#^(.*)$#', '(\'\1\')', $new_words));
-					($hook = get_hook('si_qr_mysql_insert_words')) ? eval($hook) : null;
-					$forum_db->query($sql) or error(__FILE__, __LINE__);
-					break;
+			$query = array(
+				'INSERT'	=> 'word',
+				'INTO'		=> 'search_words',
+				'VALUES'	=> preg_replace('#^(.*)$#', '\'\1\'', $new_words)
+			);
 
-				default:
-					while (list(, $word) = @each($new_words))
-					{
-						$query = array(
-							'INSERT'	=> 'word',
-							'INTO'		=> 'search_words',
-							'VALUES'	=> '\''.$word.'\''
-						);
-
-						($hook = get_hook('si_qr_insert_words')) ? eval($hook) : null;
-						$forum_db->query_build($query) or error(__FILE__, __LINE__);
-					}
-					break;
-			}
+			($hook = get_hook('si_qr_insert_words')) ? eval($hook) : null;
+			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 		unset($new_words);
 	}
@@ -247,61 +232,48 @@ function strip_search_index($post_ids)
 	$return = ($hook = get_hook('si_strip_search_index_start')) ? eval($hook) : null;
 	if ($return != null)
 		return $return;
-	
-	switch ($db_type)
+
+	$query = array(
+		'SELECT'	=> 'word_id',
+		'FROM'		=> 'search_matches',
+		'WHERE'		=> 'post_id IN('.$post_ids.')',
+		'GROUP BY'	=> 'word_id'
+	);
+
+	($hook = get_hook('si_qr_get_post_words')) ? eval($hook) : null;
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+
+	if ($forum_db->num_rows($result))
 	{
-		case 'mysql':
-		case 'mysqli':
+		$word_ids = '';
+		while ($row = $forum_db->fetch_row($result))
+			$word_ids .= ($word_ids != '') ? ','.$row[0] : $row[0];
+
+		$query = array(
+			'SELECT'	=> 'word_id',
+			'FROM'		=> 'search_matches',
+			'WHERE'		=> 'word_id IN('.$word_ids.')',
+			'GROUP BY'	=> 'word_id, subject_match',
+			'HAVING'	=> 'COUNT(word_id)=1'
+		);
+
+		($hook = get_hook('si_qr_get_removable_words')) ? eval($hook) : null;
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+
+		if ($forum_db->num_rows($result))
+		{
+			$word_ids = '';
+			while ($row = $forum_db->fetch_row($result))
+				$word_ids .= ($word_ids != '') ? ','.$row[0] : $row[0];
+
 			$query = array(
-				'SELECT'	=> 'word_id',
-				'FROM'		=> 'search_matches',
-				'WHERE'		=> 'post_id IN('.$post_ids.')',
-				'GROUP BY'	=> 'word_id'
+				'DELETE'	=> 'search_words',
+				'WHERE'		=> 'id IN('.$word_ids.')'
 			);
 
-			($hook = get_hook('si_qr_mysql_get_post_words')) ? eval($hook) : null;
-			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-		
-			if ($forum_db->num_rows($result))
-			{
-				$word_ids = '';
-				while ($row = $forum_db->fetch_row($result))
-					$word_ids .= ($word_ids != '') ? ','.$row[0] : $row[0];
-
-				$query = array(
-					'SELECT'	=> 'word_id',
-					'FROM'		=> 'search_matches',
-					'WHERE'		=> 'word_id IN('.$word_ids.')',
-					'GROUP BY'	=> 'word_id',
-					'HAVING'	=> 'COUNT(word_id)=1'
-				);
-
-				($hook = get_hook('si_qr_mysql_get_removable_words')) ? eval($hook) : null;
-				$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-				
-				if ($forum_db->num_rows($result))
-				{
-					$word_ids = '';
-					while ($row = $forum_db->fetch_row($result))
-						$word_ids .= ($word_ids != '') ? ','.$row[0] : $row[0];
-
-					$query = array(
-						'DELETE'	=> 'search_words',
-						'WHERE'		=> 'id IN('.$word_ids.')'
-					);
-
-					($hook = get_hook('si_qr_mysql_delete_words')) ? eval($hook) : null;
-					$forum_db->query_build($query) or error(__FILE__, __LINE__);
-				}
-			}
-
-			break;
-
-		default:
-			$sql = 'DELETE FROM '.$forum_db->prefix.'search_words WHERE id IN(SELECT word_id FROM '.$forum_db->prefix.'search_matches WHERE word_id IN(SELECT word_id FROM '.$forum_db->prefix.'search_matches WHERE post_id IN('.$post_ids.') GROUP BY word_id) GROUP BY word_id HAVING COUNT(word_id)=1)';
 			($hook = get_hook('si_qr_delete_words')) ? eval($hook) : null;
-			$forum_db->query($sql) or error(__FILE__, __LINE__);
-			break;
+			$forum_db->query_build($query) or error(__FILE__, __LINE__);
+		}
 	}
 	
 	$query = array(

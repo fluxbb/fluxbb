@@ -193,7 +193,20 @@ class DBLayer
 			if (!empty($query['INSERT']))
 				$sql .= ' ('.$query['INSERT'].')';
 
-			$sql .= ' VALUES('.$query['VALUES'].')';
+			if (is_array($query['VALUES']))
+			{
+				$new_query = $query;
+				$result_set = null;
+				foreach ($query['VALUES'] as $cur_values)
+				{
+					$new_query['VALUES'] = $cur_values;
+					$result_set = $this->query_build($new_query, $unbuffered);
+				}
+
+				return $result_set;
+			}
+			else
+				$sql .= ' VALUES('.$query['VALUES'].')';
 		}
 		else if (isset($query['UPDATE']))
 		{

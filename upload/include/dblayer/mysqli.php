@@ -141,7 +141,10 @@ class DBLayer
 			if (!empty($query['INSERT']))
 				$sql .= ' ('.$query['INSERT'].')';
 
-			$sql .= ' VALUES('.$query['VALUES'].')';
+			if (is_array($query['VALUES']))
+				$sql .= ' VALUES('.implode('),(', $query['VALUES']).')';
+			else
+				$sql .= ' VALUES('.$query['VALUES'].')';
 		}
 		else if (isset($query['UPDATE']))
 		{
