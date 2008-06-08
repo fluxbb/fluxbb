@@ -251,13 +251,15 @@ else
 		($hook = get_hook('hd_alert')) ? eval($hook) : null;
 	}
 
+	($hook = get_hook('hd_visitlinks_pre_visit_msg')) ? eval($hook) : null;
+
 	if (substr(FORUM_PAGE, 0, 5) == 'admin')
 		$visit_msg = '<p id="visit-acp">'.sprintf($lang_common['Logged in as'], '<strong>'.forum_htmlencode($forum_user['username']).'</strong>').' <br />'.$lang_common['Welcome admin'].'</p>';
 	else
 		$visit_msg = '<p id="visit-user"><span class="visit-msg">'.$visit_msg.'</span>'.(!empty($visit_links) ? ' <span class="options">'.implode(' ', $visit_links).'</span>' : '').'</p>';
-
-	($hook = get_hook('hd_visitlinks')) ? eval($hook) : null;
 }
+
+($hook = get_hook('hd_visitlinks')) ? eval($hook) : null;
 
 ?>
 <div id="brd-visit" class="gen-content">
