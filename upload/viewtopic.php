@@ -554,11 +554,11 @@ if (!$forum_user['is_guest'] && $forum_config['o_subscriptions'] == '1' && ($for
 
 // Setup help
 $forum_page['main_head_options'] = array();
-if ($forum_config['p_sig_bbcode'] == '1')
+if ($forum_config['p_message_bbcode'] == '1')
 	$forum_page['text_options']['bbcode'] = '<span'.(empty($forum_page['text_options']) ? ' class="item1"' : '').'><a class="exthelp" href="'.forum_link($forum_url['help'], 'bbcode').'" title="'.sprintf($lang_common['Help page'], $lang_common['BBCode']).'">'.$lang_common['BBCode'].'</a></span>';
-if ($forum_config['p_sig_img_tag'] == '1')
+if ($forum_config['p_message_img_tag'] == '1')
 	$forum_page['text_options']['img'] = '<span><a class="exthelp" href="'.forum_link($forum_url['help'], 'img').'" title="'.sprintf($lang_common['Help page'], $lang_common['Images']).'">'.$lang_common['Images'].'</a></span>';
-if ($forum_config['o_smilies_sig'] == '1')
+if ($forum_config['o_smilies'] == '1')
 	$forum_page['text_options']['smilies'] = '<span><a class="exthelp" href="'.forum_link($forum_url['help'], 'smilies').'" title="'.sprintf($lang_common['Help page'], $lang_common['Smilies']).'">'.$lang_common['Smilies'].'</a></span>';
 
 ($hook = get_hook('vt_quickpost_pre_display')) ? eval($hook) : null;
