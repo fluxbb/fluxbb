@@ -357,7 +357,7 @@ $forum_page['hidden_fields'] = array(
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
 	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-	sprintf($lang_login['Login info'], forum_htmlencode($forum_config['o_board_title']))
+	sprintf($lang_login['Login info'], $forum_config['o_board_title'])
 );
 
 //Setup headings

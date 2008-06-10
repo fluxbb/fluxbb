@@ -281,7 +281,7 @@ if ($forum_config['o_regs_verify'] != '0')
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
 	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-	sprintf($lang_profile['Register at'], forum_htmlencode($forum_config['o_board_title']))
+	sprintf($lang_profile['Register at'], $forum_config['o_board_title'])
 );
 
 //Setup headings
