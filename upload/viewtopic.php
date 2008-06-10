@@ -236,7 +236,7 @@ if ($forum_page['is_admmod'])
 $forum_page['crumbs'] = array(
 	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
 	array($cur_topic['forum_name'], forum_link($forum_url['forum'], array($cur_topic['forum_id'], sef_friendly($cur_topic['forum_name'])))),
-	forum_htmlencode($cur_topic['subject']),
+	$cur_topic['subject']
 );
 
 // Setup headers

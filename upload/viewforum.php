@@ -161,7 +161,7 @@ if (!$forum_user['is_guest'] && $forum_db->num_rows($result))
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
 	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-	forum_htmlencode($cur_forum['forum_name'])
+	$cur_forum['forum_name']
 );
 
 // Setup Headers
