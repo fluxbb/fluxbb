@@ -713,7 +713,7 @@ function parse_message($text, $hide_smilies, $is_signature = false)
 		return $return;
 
 	if ($forum_config['p_message_bbcode'] == '1' && strpos($text, '[') !== false && strpos($text, ']') !== false)
-		$text = do_bbcode($text);
+		$text = do_bbcode($text, $is_signature);
 		
 	if ($forum_config['o_smilies'] == '1' && $forum_user['show_smilies'] == '1' && $hide_smilies == '0')
 		$text = do_smilies($text);
