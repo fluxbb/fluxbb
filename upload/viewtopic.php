@@ -298,6 +298,9 @@ $query = array(
 
 ($hook = get_hook('vt_qr_get_posts')) ? eval($hook) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+
+$signature_cache = array();
+$avatar_cache = array();
 while ($cur_post = $forum_db->fetch_assoc($result))
 {
 	($hook = get_hook('vt_post_loop_start')) ? eval($hook) : null;
@@ -323,10 +326,11 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 	// Generate author identification
 	if ($cur_post['poster_id'] > 1 && $forum_config['o_avatars'] == '1' && $forum_user['show_avatars'] != '0')
 	{
-		$forum_page['avatar_markup'] = generate_avatar_markup($cur_post['poster_id']);
+		if (!isset($avatar_cache[$cur_post['poster_id']]))
+			$avatar_cache[$cur_post['poster_id']] = generate_avatar_markup($cur_post['poster_id']);
 
-		if (!empty($forum_page['avatar_markup']))
-			$forum_page['user_ident']['avatar'] = $forum_page['avatar_markup'];
+		if (!empty($avatar_cache[$cur_post['poster_id']]))
+			$forum_page['user_ident']['avatar'] = $avatar_cache[$cur_post['poster_id']];
 	}
 
 	if ($cur_post['poster_id'] > 1)
