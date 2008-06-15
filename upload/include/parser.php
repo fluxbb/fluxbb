@@ -445,7 +445,7 @@ function preparse_list_tag($content, $type = '*', &$errors)
 	foreach ($items as $item)
 	{
 		if (trim($item) != '')
-			$content .= trim('[*]'.str_replace('[/*]', '', $item))."[/*]\n";
+			$content .= '[*]'.str_replace('[/*]', '', trim($item))."[/*]\n";
 	}
 
 	return '[list='.$type.']'."\n".$content.'[/list]';
