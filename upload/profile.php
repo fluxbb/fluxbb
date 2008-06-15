@@ -267,7 +267,7 @@ if ($action == 'change_pass')
 			{
 				$cookie_data = @explode('|', base64_decode($_COOKIE[$cookie_name]));
 
-				$expire = ($cookie_data[2] > $now + $forum_config['o_timeout_visit']) ? time() + 1209600 : time() + $forum_config['o_timeout_visit'];
+				$expire = ($cookie_data[2] > time() + $forum_config['o_timeout_visit']) ? time() + 1209600 : time() + $forum_config['o_timeout_visit'];
 				forum_setcookie($cookie_name, base64_encode($forum_user['id'].'|'.$new_password_hash.'|'.$expire.'|'.sha1($user['salt'].$new_password_hash.forum_hash($expire, $user['salt']))), $expire);
 			}
 
