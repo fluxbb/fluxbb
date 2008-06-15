@@ -83,7 +83,7 @@ if (($forum_user['g_edit_posts'] == '0' ||
 	message($lang_common['No permission']);
 
 
-$can_edit_subject = ($id == $cur_post['first_post_id'] && (($forum_user['g_edit_subjects_interval'] == '0' || (time() - $cur_post['posted']) < $forum_user['g_edit_subjects_interval']) || $forum_page['is_admmod'])) ? true : false;
+$can_edit_subject = $id == $cur_post['first_post_id'];
 
 ($hook = get_hook('ed_post_selected')) ? eval($hook) : null;
 
