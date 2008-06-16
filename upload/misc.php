@@ -375,8 +375,8 @@ else if (isset($_GET['report']))
 		($hook = get_hook('mi_report_form_submitted')) ? eval($hook) : null;
 
 		// Flood protection
-		if ($forum_user['last_email_sent'] != '' && (time() - $forum_user['last_email_sent']) < $forum_user['g_post_flood'] && (time() - $forum_user['last_email_sent']) >= 0)
-			$errors[] = sprintf($lang_post['Report flood'], $forum_user['g_post_flood']);
+		if ($forum_user['last_email_sent'] != '' && (time() - $forum_user['last_email_sent']) < $forum_user['g_email_flood'] && (time() - $forum_user['last_email_sent']) >= 0)
+			$errors[] = sprintf($lang_misc['Report flood'], $forum_user['g_email_flood']);
 
 		// Clean up reason from POST
 		$reason = forum_linebreaks(trim($_POST['req_reason']));
