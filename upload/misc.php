@@ -376,7 +376,7 @@ else if (isset($_GET['report']))
 
 		// Flood protection
 		if ($forum_user['last_email_sent'] != '' && (time() - $forum_user['last_email_sent']) < $forum_user['g_email_flood'] && (time() - $forum_user['last_email_sent']) >= 0)
-			$errors[] = sprintf($lang_misc['Report flood'], $forum_user['g_email_flood']);
+			message(sprintf($lang_misc['Report flood'], $forum_user['g_email_flood']));
 
 		// Clean up reason from POST
 		$reason = forum_linebreaks(trim($_POST['req_reason']));
