@@ -374,6 +374,10 @@ else if (isset($_GET['report']))
 	{
 		($hook = get_hook('mi_report_form_submitted')) ? eval($hook) : null;
 
+		// Flood protection
+		if ($forum_user['last_post'] != '' && (time() - $forum_user['last_post']) < $forum_user['g_post_flood'] && (time() - $forum_user['last_post']) >= 0)
+			$errors[] = sprintf($lang_post['Report flood'], $forum_user['g_post_flood']);
+
 		// Clean up reason from POST
 		$reason = forum_linebreaks(trim($_POST['req_reason']));
 		if ($reason == '')
@@ -428,6 +432,16 @@ else if (isset($_GET['report']))
 				forum_mail($forum_config['o_mailing_list'], $mail_subject, $mail_message);
 			}
 		}
+
+		// Set last_post time to prevent flooding
+		$query = array(
+			'UPDATE'	=> 'users',
+			'SET'		=> 'last_post='.$now,
+			'WHERE'		=> 'id='.$forum_user['id']
+		);
+
+		($hook = get_hook('mi_qr_update_last_post')) ? eval($hook) : null;
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		redirect(forum_link($forum_url['post'], $post_id), $lang_misc['Report redirect']);
 	}

@@ -22,6 +22,7 @@ $lang_misc = array(
 
 // Report
 'No reason'					=>	'You must enter a reason.',
+'Report flood'				=>	'At least %s seconds have to pass between reports. Please wait a while and try sending again.',
 'Report redirect'			=>	'Post reported. Redirecting …',
 'Report post'				=>	'Report post',
 'Reason'					=>	'Reason:',
