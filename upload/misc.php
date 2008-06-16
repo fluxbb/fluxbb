@@ -375,7 +375,7 @@ else if (isset($_GET['report']))
 		($hook = get_hook('mi_report_form_submitted')) ? eval($hook) : null;
 
 		// Flood protection
-		if ($forum_user['last_post'] != '' && (time() - $forum_user['last_post']) < $forum_user['g_post_flood'] && (time() - $forum_user['last_post']) >= 0)
+		if ($forum_user['last_email_sent'] != '' && (time() - $forum_user['last_email_sent']) < $forum_user['g_post_flood'] && (time() - $forum_user['last_email_sent']) >= 0)
 			$errors[] = sprintf($lang_post['Report flood'], $forum_user['g_post_flood']);
 
 		// Clean up reason from POST
@@ -433,14 +433,14 @@ else if (isset($_GET['report']))
 			}
 		}
 
-		// Set last_post time to prevent flooding
+		// Set last_email_sent time to prevent flooding
 		$query = array(
 			'UPDATE'	=> 'users',
-			'SET'		=> 'last_post='.$now,
+			'SET'		=> 'last_email_sent='.time(),
 			'WHERE'		=> 'id='.$forum_user['id']
 		);
 
-		($hook = get_hook('mi_qr_update_last_post')) ? eval($hook) : null;
+		($hook = get_hook('mi_qr_update_reports_last_email_sent')) ? eval($hook) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		redirect(forum_link($forum_url['post'], $post_id), $lang_misc['Report redirect']);
