@@ -588,7 +588,7 @@ else if ($action == 'change_email')
 				<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 					<span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['Password'] ?></span><br />
 				</label><br />
-				<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_password" size="25" value="<?php echo(isset($_POST['req_password']) ? ($_POST['req_password']) : ''); ?>"/></span>
+				<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_password" size="25" value="<?php echo(isset($_POST['req_password']) ? ($_POST['req_password']) : ''); ?>"/></span>
 			</div>
 		</fieldset>
 <?php ($hook = get_hook('pf_change_email_normal_post_fieldset')) ? eval($hook) : null; ?>
