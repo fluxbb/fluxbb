@@ -282,7 +282,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 			</div>
 			<div class="ext-item databox">
 				<h3 class="legend"><span><?php echo forum_htmlencode($ext_data['extension']['title']).((strpos($id, 'hotfix_') !== 0) ? ' v'.$ext_data['extension']['version'] : '') ?></span></h3>
-				<p><span><?php printf($lang_admin['Extension by'], $ext_data['extension']['author']) ?></span><br /><span><?php echo forum_htmlencode($ext_data['extension']['description']) ?></span></p>
+				<p><span><?php printf($lang_admin['Extension by'], forum_htmlencode($ext_data['extension']['author'])) ?></span><br /><span><?php echo forum_htmlencode($ext_data['extension']['description']) ?></span></p>
 <?php
 
 	// Setup an array of warnings to display in the form
@@ -498,7 +498,7 @@ else if (isset($_GET['uninstall']))
 			</div>
 			<div class="ext-item databox">
 				<h3 class="legend"><span><?php echo forum_htmlencode($ext_data['title']).((strpos($id, 'hotfix_') !== 0) ? ' v'.$ext_data['version'] : '') ?></span></h3>
-				<p><span><?php printf($lang_admin['Extension by'], $ext_data['author']) ?></span><br /><span><?php echo forum_htmlencode($ext_data['description']) ?></span></p>
+				<p><span><?php printf($lang_admin['Extension by'], forum_htmlencode($ext_data['author'])) ?></span><br /><span><?php echo forum_htmlencode($ext_data['description']) ?></span></p>
 <?php if ($ext_data['uninstall_note'] != ''): ?>				<h4><?php echo $lang_admin['Uninstall note'] ?></h4>
 				<p><?php echo forum_htmlencode($ext_data['uninstall_note']) ?></p>
 <?php endif; ?>			</div>
@@ -838,7 +838,7 @@ else
 ?>
 		<div class="ext-item databox<?php if ($ext['disabled'] == '1') echo ' extdisabled' ?>">
 			<h3 class="legend"><span><?php echo forum_htmlencode($ext['title']).((strpos($id, 'hotfix_') !== 0) ? ' v'.$ext['version'] : '') ?><?php if ($ext['disabled'] == '1') echo ' ( <span>'.$lang_admin['Extension disabled'].'</span> )' ?></span></h3>
-			<p><span><?php printf($lang_admin['Extension by'], $ext['author']) ?></span><?php if ($ext['description'] != ''): ?><br /><span><?php echo forum_htmlencode($ext['description']) ?></span><?php endif; ?></p>
+			<p><span><?php printf($lang_admin['Extension by'], forum_htmlencode($ext['author'])) ?></span><?php if ($ext['description'] != ''): ?><br /><span><?php echo forum_htmlencode($ext['description']) ?></span><?php endif; ?></p>
 			<p class="actions"><?php echo implode('', $forum_page['ext_actions']) ?></p>
 		</div>
 <?php
