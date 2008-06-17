@@ -172,7 +172,7 @@ function validate_manifest($xml_array, $folder_name)
 			$errors[] = $lang_admin['extension/id error2'];
 		if (!isset($ext['title']) || $ext['title'] == '')
 			$errors[] = $lang_admin['extension/title error'];
-		if (!isset($ext['version']) || $ext['version'] == '')
+		if (!isset($ext['version']) || $ext['version'] == '' || preg_match('/[^a-z0-9\- \.]+/i', $ext['version']))
 			$errors[] = $lang_admin['extension/version error'];
 		if (!isset($ext['description']) || $ext['description'] == '')
 			$errors[] = $lang_admin['extension/description error'];
