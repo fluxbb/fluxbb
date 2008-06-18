@@ -121,6 +121,9 @@ if (isset($_POST['form_sent']))
 			if (!isset($form['smilies_sig']) || $form['smilies_sig'] != '1') $form['smilies_sig'] = '0';
 			if (!isset($form['sig_all_caps']) || $form['sig_all_caps'] != '1') $form['sig_all_caps'] = '0';
 
+			$form['sig_length'] = intval($form['sig_length']);
+			$form['sig_lines'] = intval($form['sig_lines']);
+
 			if (!isset($form['avatars']) || $form['avatars'] != '1') $form['avatars'] = '0';
 
 			// Clean avatars_dir
