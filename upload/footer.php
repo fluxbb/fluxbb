@@ -87,7 +87,7 @@ if (defined('FORUM_DEBUG') || defined('FORUM_SHOW_QUERIES'))
 	}
 
 	if (defined('FORUM_SHOW_QUERIES'))
-		get_saved_queries();
+		echo get_saved_queries();
 
 	($hook = get_hook('ft_debug_end')) ? eval($hook) : null;
 
