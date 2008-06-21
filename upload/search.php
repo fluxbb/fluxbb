@@ -235,13 +235,15 @@ if (isset($query))
 		if ($show_as == 'posts')
 		{
 			// Generate the post heading
-			$forum_page['item_head'] = array(
+			$forum_page['item_ident'] = array(
 				'num'	=> '<strong>'.($forum_page['start_from'] + $forum_page['item_count']).'</strong>',
 				'user'	=> '<cite>'.(($search_set[$i]['pid'] == $search_set[$i]['first_post_id']) ? sprintf($lang_topic['Topic by'], forum_htmlencode($search_set[$i]['pposter'])) : sprintf($lang_topic['Reply by'], forum_htmlencode($search_set[$i]['pposter']))).'</cite>',
 				'date'	=> '<span>'.format_time($search_set[$i]['pposted']).'</span>'
 			);
 
-			$forum_page['item_head'] = '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $search_set[$i]['pid']).'">'.implode(' ', $forum_page['item_head']).'</a>';
+			($hook = get_hook('se_results_posts_row_pre_item_head')) ? eval($hook) : null;
+
+			$forum_page['item_head'] = '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $search_set[$i]['pid']).'">'.implode(' ', $forum_page['item_ident']).'</a>';
 
 			// Generate author identification
 			$forum_page['user_ident'] = ($search_set[$i]['poster_id'] > 1 && $forum_user['g_view_users'] == '1') ? '<strong class="username"><a title="'.sprintf($lang_search['Go to profile'], forum_htmlencode($search_set[$i]['pposter'])).'" href="'.forum_link($forum_url['user'], $search_set[$i]['poster_id']).'">'.forum_htmlencode($search_set[$i]['pposter']).'</a></strong>' : '<strong class="username">'.forum_htmlencode($search_set[$i]['pposter']).'</strong>';

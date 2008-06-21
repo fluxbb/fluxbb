@@ -321,6 +321,8 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 		'date'	=> '<span>'.format_time($cur_post['posted']).'</span>'
 	);
 
+	($hook = get_hook('vt_row_pre_item_head')) ? eval($hook) : null;
+
 	$forum_page['item_head'] = '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.implode(' ', $forum_page['item_ident']).'</a>';
 
 	// Generate author identification
