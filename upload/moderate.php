@@ -454,6 +454,8 @@ $forum_page['mod_options'] = array();
 $forum_page['mod_options']['del_posts'] = '<span class="submit'.(empty($forum_page['mod_options']) ? ' item1' : '').'"><input type="submit" name="delete_posts" value="'.$lang_misc['Delete posts'].'" /></span>';
 $forum_page['mod_options']['del_topic'] = '<span'.(empty($forum_page['mod_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['delete'], $cur_topic['first_post_id']).'">'.$lang_misc['Delete whole topic'].'</a></span>';
 
+($hook = get_hook('mr_post_actions_pre_mod_options')) ? eval($hook) : null;
+
 ?>
 <div class="main-options mod-options">
 	<p class="options"><?php echo implode(' ', $forum_page['mod_options']) ?></p>
