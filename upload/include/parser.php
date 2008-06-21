@@ -55,6 +55,8 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 			$errors[] = $lang_profile['Signature quote/code'];
 	}
 
+	$text = str_replace('<">', forum_htmlencode('<">'), $text);
+
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
@@ -89,6 +91,8 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 				$text .= '[code]'.$inside[$i].'[/code]';
 		}
 	}
+
+	$text = str_replace(forum_htmlencode('<">'), '<">', $text);
 
 	$temp_text = false;
 	if (empty($errors))
