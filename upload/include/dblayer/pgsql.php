@@ -161,7 +161,7 @@ class DBLayer
 	}
 
 
-	function query_build($query, $unbuffered = false)
+	function query_build($query, $return_query_string = false, $unbuffered = false)
 	{
 		$sql = '';
 
@@ -234,7 +234,7 @@ class DBLayer
 			$sql .= ' SELECT '.$query['VALUES'].' WHERE NOT EXISTS (SELECT 1 FROM '.(isset($query['PARAMS']['NO_PREFIX']) ? '' : $this->prefix).$query['INTO'].' WHERE '.$query['UNIQUE'].')';
 		}
 
-		return $this->query($sql, $unbuffered);
+		return ($return_query_string) ? $sql : $this->query($sql, $unbuffered);
 	}
 
 

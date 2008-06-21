@@ -145,7 +145,7 @@ class DBLayer
 	}
 
 
-	function query_build($query, $unbuffered = false)
+	function query_build($query, $return_query_string = false, $unbuffered = false)
 	{
 		$sql = '';
 
@@ -218,7 +218,7 @@ class DBLayer
 			$sql .= ' VALUES('.$query['VALUES'].')';
 		}
 
-		return $this->query($sql, $unbuffered);
+		return ($return_query_string) ? $sql : $this->query($sql, $unbuffered);
 	}
 
 
