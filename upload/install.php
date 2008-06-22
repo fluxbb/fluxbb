@@ -1414,17 +1414,18 @@ else
 	$now = time();
 
 	// Insert the four preset groups
-	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES('Administrators', 'Administrator', 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)") or error(__FILE__, __LINE__);
-	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES('Guest', NULL, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0)") or error(__FILE__, __LINE__);
-	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES('Members', NULL, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 60, 30, 60)") or error(__FILE__, __LINE__);
-	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES('Moderators', 'Moderator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_id, g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES(1, 'Administrators', 'Administrator', 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_id, g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES(2, 'Guest', NULL, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0)") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_id, g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES(3, 'Members', NULL, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 60, 30, 60)") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_id, g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES(4, 'Moderators', 'Moderator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)") or error(__FILE__, __LINE__);
 
 	// Insert guest and first admin user
-	$forum_db->query('INSERT INTO '.$db_prefix."users (group_id, username, password, email) VALUES(2, 'Guest', 'Guest', 'Guest')") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$db_prefix."users (id, group_id, username, password, email) VALUES(1, 2, 'Guest', 'Guest', 'Guest')") or error(__FILE__, __LINE__);
 
 	$salt = random_key(12);
 
 	$forum_db->query('INSERT INTO '.$db_prefix."users (group_id, username, password, email, num_posts, last_post, registered, registration_ip, last_visit, salt) VALUES(1, '".$forum_db->escape($username)."', '".forum_hash($password1, $salt)."', '$email', 1, ".$now.", ".$now.", '127.0.0.1', ".$now.", '".$forum_db->escape($salt)."')") or error(__FILE__, __LINE__);
+	$new_uid = $forum_db->insert_id();
 
 	// Enable/disable avatars depending on file_uploads setting in PHP configuration
 	$avatars = in_array(strtolower(@ini_get('file_uploads')), array('on', 'true', '1')) ? 1 : 0;
@@ -1514,11 +1515,11 @@ else
 	// Insert some other default data
 	$forum_db->query('INSERT INTO '.$db_prefix."categories (cat_name, disp_position) VALUES('".$lang_install['Default category name']."', 1)") or error(__FILE__, __LINE__);
 
-	$forum_db->query('INSERT INTO '.$db_prefix."forums (forum_name, forum_desc, num_topics, num_posts, last_post, last_post_id, last_poster, disp_position, cat_id) VALUES('".$lang_install['Default forum name']."', '".$lang_install['Default forum descrip']."', 1, 1, ".$now.", 1, '".$forum_db->escape($username)."', 1, 1)") or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$db_prefix."forums (forum_name, forum_desc, num_topics, num_posts, last_post, last_post_id, last_poster, disp_position, cat_id) VALUES('".$lang_install['Default forum name']."', '".$lang_install['Default forum descrip']."', 1, 1, ".$now.", 1, '".$forum_db->escape($username)."', 1, ".$forum_db->insert_id().")") or error(__FILE__, __LINE__);
 
-	$forum_db->query('INSERT INTO '.$db_prefix.'topics (poster, subject, posted, first_post_id, last_post, last_post_id, last_poster, forum_id) VALUES(\''.$forum_db->escape($username).'\', \''.$lang_install['Default topic subject'].'\', '.$now.', 1, '.$now.', 1, \''.$forum_db->escape($username).'\', 1)') or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$db_prefix.'topics (poster, subject, posted, first_post_id, last_post, last_post_id, last_poster, forum_id) VALUES(\''.$forum_db->escape($username).'\', \''.$lang_install['Default topic subject'].'\', '.$now.', 1, '.$now.', 1, \''.$forum_db->escape($username).'\', '.$forum_db->insert_id().')') or error(__FILE__, __LINE__);
 
-	$forum_db->query('INSERT INTO '.$db_prefix.'posts (poster, poster_id, poster_ip, message, posted, topic_id) VALUES(\''.$forum_db->escape($username).'\', 2, \'127.0.0.1\', \''.$lang_install['Default post contents'].'\', '.$now.', 1)') or error(__FILE__, __LINE__);
+	$forum_db->query('INSERT INTO '.$db_prefix.'posts (id, poster, poster_id, poster_ip, message, posted, topic_id) VALUES(1, \''.$forum_db->escape($username).'\', '.$new_uid.', \'127.0.0.1\', \''.$lang_install['Default post contents'].'\', '.$now.', '.$forum_db->insert_id().')') or error(__FILE__, __LINE__);
 
 	// Add new post to search table
 	require FORUM_ROOT.'include/search_idx.php';
@@ -1527,10 +1528,7 @@ else
 	$forum_db->query('INSERT INTO '.$db_prefix."ranks (rank, min_posts) VALUES('".$lang_install['Default rank 1']."', 0)") or error(__FILE__, __LINE__);
 	$forum_db->query('INSERT INTO '.$db_prefix."ranks (rank, min_posts) VALUES('".$lang_install['Default rank 2']."', 10)") or error(__FILE__, __LINE__);
 
-
-	if ($db_type == 'pgsql' || $db_type == 'sqlite')
-		$forum_db->end_transaction();
-
+	$forum_db->end_transaction();
 
 
 	$alerts = array();
