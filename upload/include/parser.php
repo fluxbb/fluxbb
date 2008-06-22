@@ -133,7 +133,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	// Tags we remove quotes from the argument
 	$tags_quotes = array('url', 'email', 'img');
 	// Tags we limit bbcode in
-	$tags_limit_bbcode = array('*' => array('b', 'i', 'u', 'color', 'colour'), 'list' => array('*'), 'url' => array('b', 'i', 'u', 'color', 'colour', 'img'), 'email' => array('b', 'i', 'u', 'color', 'colour', 'img'), 'img' => array());
+	$tags_limit_bbcode = array('*' => array('b', 'i', 'u', 'color', 'colour', 'url', 'email'), 'list' => array('*'), 'url' => array('b', 'i', 'u', 'color', 'colour', 'img'), 'email' => array('b', 'i', 'u', 'color', 'colour', 'img'), 'img' => array());
 	// Tags we can automatically fix bad nesting
 	$tags_fix = array('quote', 'b', 'i', 'u', 'color', 'colour', 'url', 'email');
 
