@@ -61,7 +61,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
 		list($inside, $outside) = split_text($text, '[code]', '[/code]', $errors);
-		$text = implode('<">', $outside);
+		$text = implode("\0", $outside);
 	}
 
 	// Tidy up lists
@@ -79,7 +79,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	// If we split up the message before we have to concatenate it together again (code tags)
 	if (isset($inside))
 	{
-		$outside = explode('<">', $text);
+		$outside = explode("\0", $text);
 		$text = '';
 
 		$num_tokens = count($outside);
@@ -786,7 +786,7 @@ function parse_message($text, $hide_smilies)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
 		list($inside, $outside) = split_text($text, '[code]', '[/code]', $errors);
-		$text = implode('<">', $outside);
+		$text = implode("\0", $outside);
 	}
 
 	$return = ($hook = get_hook('ps_parse_message_post_split')) ? eval($hook) : null;
@@ -815,7 +815,7 @@ function parse_message($text, $hide_smilies)
 	// If we split up the message before we have to concatenate it together again (code tags)
 	if (isset($inside))
 	{
-		$outside = explode('<">', $text);
+		$outside = explode("\0", $text);
 		$text = '';
 
 		$num_tokens = count($outside);

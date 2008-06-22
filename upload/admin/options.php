@@ -126,9 +126,6 @@ if (isset($_POST['form_sent']))
 
 			if (!isset($form['avatars']) || $form['avatars'] != '1') $form['avatars'] = '0';
 
-			// Clean avatars_dir
-			$form['avatars_dir'] = str_replace("\0", '', $form['avatars_dir']);
-
 			// Make sure avatars_dir doesn't end with a slash
 			if (substr($form['avatars_dir'], -1) == '/')
 				$form['avatars_dir'] = substr($form['avatars_dir'], 0, -1);
