@@ -1249,6 +1249,34 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		if ($forum_db->num_rows($result))
 			$query_str = '?stage=preparse_posts&req_per_page='.PER_PAGE.'&start_at='.$end_at;
 		else
+			$query_str = '?stage=preparse_sigs';
+		break;
+
+	case 'preparse_sigs':
+		if (!defined('FORUM_PARSER_LOADED'))
+			require FORUM_ROOT.'include/parser.php';
+
+		// Determine where to start
+		if ($start_at == 0)
+		{
+			$start_at = 1;
+		}
+		$end_at = $start_at + PER_PAGE;
+
+		// Fetch users to process this cycle
+		$result = $forum_db->query('SELECT id, signature FROM '.$forum_db->prefix.'users WHERE id>='.$start_at.' AND id<'.$end_at.' ORDER BY id') or error(__FILE__, __LINE__);
+		while ($cur_item = $forum_db->fetch_assoc($result))
+		{
+			echo 'Preparsing signature '.$cur_item['id'].' …<br />'."\n";
+			$temp = array();
+			$forum_db->query('UPDATE '.$forum_db->prefix.'users SET signature=\''.$forum_db->escape(preparse_bbcode($cur_item['signature'],$temp,true)).'\' WHERE id='.$cur_item['id']) or error(__FILE__, __LINE__);
+		}
+
+		// Check if there is more work to do
+		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'users WHERE id>='.$end_at) or error(__FILE__, __LINE__);
+		if ($forum_db->num_rows($result))
+			$query_str = '?stage=preparse_sigs&req_per_page='.PER_PAGE.'&start_at='.$end_at;
+		else
 			$query_str = '?stage=finish';
 		break;
 
