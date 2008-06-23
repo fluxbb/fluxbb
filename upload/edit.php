@@ -231,6 +231,8 @@ if (isset($_POST['preview']) && empty($forum_page['errors']))
 		require FORUM_ROOT.'include/parser.php';
 	$forum_page['preview_message'] = parse_message($message, $hide_smilies);
 
+	$forum_page['preview_poster'] = '<strong class="username">'.forum_htmlencode($cur_post['poster']).'</strong>';
+ 
 	($hook = get_hook('ed_pre_preview_display')) ? eval($hook) : null;
 
 ?>
@@ -241,7 +243,7 @@ if (isset($_POST['preview']) && empty($forum_page['errors']))
 	<div class="post firstpost">
 		<div class="postbody">
 			<div class="user">
-				<h3 class="user-ident"><strong class="username"><?php echo $cur_post['poster'] ?></strong></h3>
+				<h3 class="user-ident"><?php echo $forum_page['preview_poster'] ?></h3>
 			</div>
 			<div class="post-entry">
 				<div class="entry-content">

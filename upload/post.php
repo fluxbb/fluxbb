@@ -360,6 +360,8 @@ if (isset($_POST['preview']) && empty($errors))
 		require FORUM_ROOT.'include/parser.php';
 	$forum_page['preview_message'] = parse_message(trim($message), $hide_smilies);
 
+	$forum_page['preview_username'] = '<strong class="username">'.forum_htmlencode($forum_user['username']).'</strong>';
+
 	($hook = get_hook('po_pre_preview_display')) ? eval($hook) : null;
 
 ?>
@@ -370,7 +372,7 @@ if (isset($_POST['preview']) && empty($errors))
 	<div class="post firstpost">
 		<div class="postbody">
 			<div class="user">
-				<h3 class="user-ident"><strong class="username"><?php echo $forum_user['username'] ?></strong></h3>
+				<h3 class="user-ident"><h3 class="user-ident"><?php echo $forum_page['preview_username'] ?></h3>
 			</div>
 			<div class="post-entry">
 				<div class="entry-content">
@@ -579,6 +581,7 @@ if ($tid && $forum_config['o_topic_review'] != '0')
 		);
 
 		$forum_page['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
+		$forum_page['poster'] = '<strong class="username"><?php echo forum_htmlencode($cur_post['poster']) ?></strong>';
 
 		($hook = get_hook('po_topic_review_row_pre_display')) ? eval($hook) : null;
 
@@ -589,7 +592,7 @@ if ($tid && $forum_config['o_topic_review'] != '0')
 		</div>
 		<div class="postbody">
 			<div class="user">
-				<h4 class="user-ident"><strong class="username"><?php echo $cur_post['poster'] ?></strong></h4>
+				<h4 class="user-ident"><?php echo $forum_page['poster'] ?></h4>
 			</div>
 			<div class="post-entry">
 				<div class="entry-content">
