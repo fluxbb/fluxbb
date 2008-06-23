@@ -581,7 +581,7 @@ if ($tid && $forum_config['o_topic_review'] != '0')
 		);
 
 		$forum_page['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
-		$forum_page['poster'] = '<strong class="username"><?php echo forum_htmlencode($cur_post['poster']) ?></strong>';
+		$forum_page['poster'] = '<strong class="username">'.forum_htmlencode($cur_post['poster']).'</strong>';
 
 		($hook = get_hook('po_topic_review_row_pre_display')) ? eval($hook) : null;
 
