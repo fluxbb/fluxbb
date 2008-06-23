@@ -263,7 +263,7 @@ ob_start();
 ?>
 <div id="forum<?php echo $cur_topic['forum_id'] ?>" class="main-content topic">
 	<div class="content-head">
-		<h2 class="hn"><span><?php printf($lang_topic['Topic head'],$cur_topic['poster'], format_time($cur_topic['posted'])) ?></span></h2>
+		<h2 class="hn"><span><?php printf($lang_topic['Topic head'], forum_htmlencode($cur_topic['poster']), format_time($cur_topic['posted'])) ?></span></h2>
 	</div>
 
 <?php

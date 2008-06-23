@@ -372,7 +372,7 @@ if (isset($_POST['preview']) && empty($errors))
 	<div class="post firstpost">
 		<div class="postbody">
 			<div class="user">
-				<h3 class="user-ident"><h3 class="user-ident"><?php echo $forum_page['preview_username'] ?></h3>
+				<h3 class="user-ident"><?php echo $forum_page['preview_username'] ?></h3>
 			</div>
 			<div class="post-entry">
 				<div class="entry-content">
