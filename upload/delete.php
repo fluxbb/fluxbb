@@ -135,7 +135,7 @@ if ($forum_user['is_admmod'])
 $forum_page['frm_info'] = array(
 	'<li><span>'.$lang_common['Forum'].':<strong> '.forum_htmlencode($cur_post['forum_name']).'</strong></span></li>',
 	'<li><span>'.$lang_common['Topic'].':<strong> '.forum_htmlencode($cur_post['subject']).'</strong></span></li>',
-	'<li><span>'.sprintf((($cur_post['is_topic']) ? $lang_delete['Delete topic info'] : $lang_delete['Delete post info']), $cur_post['poster'], format_time($cur_post['posted'])).'</span></li>'
+	'<li><span>'.sprintf((($cur_post['is_topic']) ? $lang_delete['Delete topic info'] : $lang_delete['Delete post info']), forum_htmlencode($cur_post['poster']), format_time($cur_post['posted'])).'</span></li>'
 );
 
 // Setup breadcrumbs
@@ -177,7 +177,7 @@ ob_start();
 		<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
 			<legend class="frm-legend"><strong><?php echo $lang_delete['Delete post'] ?></strong></legend>
 			<div class="frm-radbox">
-				<input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /> <label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_common['Please confirm'] ?></span> <?php printf(((($cur_post['is_topic'])) ? $lang_delete['Delete topic head'] : $lang_delete['Delete post head']), $cur_post['poster'], format_time($cur_post['posted'])) ?></label>
+				<input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /> <label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_common['Please confirm'] ?></span> <?php printf(((($cur_post['is_topic'])) ? $lang_delete['Delete topic head'] : $lang_delete['Delete post head']), forum_htmlencode($cur_post['poster']), format_time($cur_post['posted'])) ?></label>
 			</div>
 		</fieldset>
 		<div class="frm-buttons">
