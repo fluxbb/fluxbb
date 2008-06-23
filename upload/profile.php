@@ -1335,7 +1335,7 @@ if ($forum_user['id'] != $id &&
 	);
 
 	// Setup Headings
-	$forum_page['main_head'] = end($forum_page['crumbs']);
+	$forum_page['main_head'] = forum_htmlencode(end($forum_page['crumbs']));
 
 	$forum_page['item_count'] = 0;
 
@@ -1516,7 +1516,7 @@ else
 			 $forum_page['main_options']['subscriptions'] = '<span'.(empty($forum_page['main_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_subscriptions'], $forum_user['id']).'">'.$lang_profile['Show subscriptions'].'</a></span>';
 
 		// Setup headings
-		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], end($forum_page['crumbs']), $lang_profile['Section about']);
+		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], forum_htmlencode(end($forum_page['crumbs'])), $lang_profile['Section about']);
 
 		($hook = get_hook('pf_change_details_about_pre_header_load')) ? eval($hook) : null;
 
@@ -1593,7 +1593,7 @@ else
 		$forum_page['has_required'] = ((($forum_user['is_admmod'] && ($forum_user['g_id'] == FORUM_ADMIN || $forum_user['g_mod_rename_users'] == '1')) || ($forum_user['is_admmod'] || $forum_config['o_regs_verify'] != '1')) ? true : false);
 
 		// Setup headings
-		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], end($forum_page['crumbs']), $lang_profile['Section identity']);
+		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], forum_htmlencode(end($forum_page['crumbs'])), $lang_profile['Section identity']);
 
 		($hook = get_hook('pf_change_details_identity_pre_header_load')) ? eval($hook) : null;
 
@@ -1764,7 +1764,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 			$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
 
 		// Setup headings
-		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], end($forum_page['crumbs']), $lang_profile['Section settings']);
+		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], forum_htmlencode(end($forum_page['crumbs'])), $lang_profile['Section settings']);
 
 		($hook = get_hook('pf_change_details_settings_pre_header_load')) ? eval($hook) : null;
 
@@ -2045,7 +2045,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 			$forum_page['text_options']['smilies'] = '<span'.(empty($forum_page['text_options']) ? ' class="item1"' : '').'><a class="exthelp" href="'.forum_link($forum_url['help'], 'smilies').'" title="'.sprintf($lang_common['Help page'], $lang_common['Smilies']).'">'.$lang_common['Smilies'].'</a></span>';
 
 		// Setup headings
-		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], end($forum_page['crumbs']), $lang_profile['Section signature']);
+		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], forum_htmlencode(end($forum_page['crumbs'])), $lang_profile['Section signature']);
 
 		($hook = get_hook('pf_change_details_signature_pre_header_load')) ? eval($hook) : null;
 
@@ -2157,7 +2157,7 @@ if (!empty($forum_page['text_options']))
 		}
 
 		// Setup headings
-		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], end($forum_page['crumbs']), $lang_profile['Section avatar']);
+		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], forum_htmlencode(end($forum_page['crumbs'])), $lang_profile['Section avatar']);
 
 		($hook = get_hook('pf_change_details_avatar_pre_header_load')) ? eval($hook) : null;
 
@@ -2268,7 +2268,7 @@ if (!empty($forum_page['text_options']))
 			$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
 
 		// Setup headings
-		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], end($forum_page['crumbs']), $lang_profile['Section admin']);
+		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], forum_htmlencode(end($forum_page['crumbs'])), $lang_profile['Section admin']);
 
 		($hook = get_hook('pf_change_details_admin_pre_header_load')) ? eval($hook) : null;
 
