@@ -485,7 +485,7 @@ if ($fid)
 				<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
 					<span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_post['Write message'] ?></span>
 				</label><br />
-				<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_message" rows="14" cols="95"><?php echo isset($_POST['req_message']) ? forum_htmlencode($message) : (isset($forum_page['quote']) ? $forum_page['quote'] : ''); ?></textarea></span><br />
+				<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_message" rows="14" cols="95"><?php echo isset($_POST['req_message']) ? forum_htmlencode($message) : (isset($forum_page['quote']) ? forum_htmlencode($forum_page['quote']) : ''); ?></textarea></span><br />
 			</div>
 		</fieldset>
 <?php
