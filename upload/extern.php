@@ -53,7 +53,7 @@
             html - output as HTML (<li>'s)
 
     fid:    One or more forum ID's (comma-separated). If ignored,
-            topics from all guest-readable forums will be pulled.
+            topics from all readable forums will be pulled.
 
     nfid:   One or more forum ID's (comma-separated) that are to be
             excluded. E.g. the ID of a a test forum.
@@ -78,18 +78,30 @@ require FORUM_ROOT.'include/common.php';
 
 ($hook = get_hook('ex_start')) ? eval($hook) : null;
 
+// If we're a guest and we've sent a username/pass, we can try to authenticate using those details
+if ($forum_user['is_guest'] && isset($_SERVER['PHP_AUTH_USER']))
+	authenticate_user($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
 
-$query = array(
-	'SELECT'	=> 'g.g_read_board',
-	'FROM'		=> 'groups AS g',
-	'WHERE'		=> 'g.g_id='.FORUM_GUEST
-);
-
-($hook = get_hook('ex_qr_get_guest_read_board')) ? eval($hook) : null;
-$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-
-if ($forum_db->result($result) == '0')
+if ($forum_user['g_read_board'] == '0')
+{
+	http_authenticate_user();
 	exit($lang_common['No view']);
+}
+
+
+//
+// Sends the proper headers for Basic HTTP Authentication
+//
+function http_authenticate_user()
+{
+	global $forum_config, $forum_user;
+
+	if (!$forum_user['is_guest'])
+		return;
+
+	header('WWW-Authenticate: Basic realm="'.$forum_config['o_board_title'].' External Syndication"');
+	header('HTTP/1.0 401 Unauthorized');
+}
 
 
 //
@@ -284,7 +296,7 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 			'JOINS'		=> array(
 				array(
 					'LEFT JOIN'		=> 'forum_perms AS fp',
-					'ON'			=> '(fp.forum_id=t.forum_id AND fp.group_id='.FORUM_GUEST.')'
+					'ON'			=> '(fp.forum_id=t.forum_id AND fp.group_id='.$forum_user['g_id'].')'
 				)
 			),
 			'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND t.moved_to IS NULL and t.id='.$tid
@@ -293,7 +305,10 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 		($hook = get_hook('ex_qr_get_topic_data')) ? eval($hook) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if (!$forum_db->num_rows($result))
+		{
+			http_authenticate_user();
 			exit($lang_common['Bad request']);
+		}
 
 		$cur_topic = $forum_db->fetch_assoc($result);
 
@@ -394,7 +409,7 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 				),
 				array(
 					'LEFT JOIN'		=> 'forum_perms AS fp',
-					'ON'			=> '(fp.forum_id=f.id AND fp.group_id='.FORUM_GUEST.')'
+					'ON'			=> '(fp.forum_id=f.id AND fp.group_id='.$forum_user['g_id'].')'
 				)
 			),
 			'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND t.moved_to IS NULL',
