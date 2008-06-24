@@ -284,7 +284,7 @@ if (defined('FORUM_PAGE_TYPE'))
 
 // START SUBST - <!-- forum_main_head -->
 if (isset($forum_page['main_head']))
-	$tpl_main = str_replace('<!-- forum_main_head -->', '<div class="main-head">'."\n\t".'<h1 class="hn"><span>'.forum_htmlencode($forum_page['main_head']).'</span></h1>'."\n".'</div>', $tpl_main);
+	$tpl_main = str_replace('<!-- forum_main_head -->', '<div class="main-head">'."\n\t".'<h1 class="hn"><span>'.$forum_page['main_head'].'</span></h1>'."\n".'</div>', $tpl_main);
 // END SUBST - <!-- forum_main_head -->
 
 // START SUBST - <!-- forum_main_pagepost -->

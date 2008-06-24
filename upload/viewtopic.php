@@ -240,7 +240,7 @@ $forum_page['crumbs'] = array(
 );
 
 // Setup headers
-$forum_page['main_head'] = (($cur_topic['closed'] == '1') ? $lang_topic['Topic closed'].' ' : '').'<a class="permalink" href="'.forum_link($forum_url['topic'], array($id, sef_friendly($cur_topic['subject']))).'" rel="bookmark" title="'.$lang_topic['Permalink topic'].'">'.$cur_topic['subject'].'</a>';
+$forum_page['main_head'] = (($cur_topic['closed'] == '1') ? $lang_topic['Topic closed'].' ' : '').'<a class="permalink" href="'.forum_link($forum_url['topic'], array($id, sef_friendly($cur_topic['subject']))).'" rel="bookmark" title="'.$lang_topic['Permalink topic'].'">'.forum_htmlencode($cur_topic['subject']).'</a>';
 
 if ($forum_page['num_pages'] > 1)
 	$forum_page['main_head'] .= '<br /><small>'.sprintf($lang_topic['Paged info'], $forum_page['start_from'] + 1, $forum_page['finish_at'], $cur_topic['num_replies'] + 1).'</small>';

@@ -320,7 +320,7 @@ if (isset($_GET['tid']))
 		$lang_topic['Delete posts']
 	);
 
-	$forum_page['main_head'] = sprintf($lang_misc['Delete posts head'], $cur_topic['subject']);
+	$forum_page['main_head'] = sprintf($lang_misc['Delete posts head'], forum_htmlencode($cur_topic['subject']));
 
 	if ($forum_page['num_pages'] > 1)
 		$forum_page['main_head'] .= '<br /><small>'.sprintf($lang_misc['Paged info topics'], $forum_page['start_from'] + 1, $forum_page['finish_at'], $cur_topic['num_replies'] + 1).'</small>';
@@ -1070,7 +1070,7 @@ $forum_page['crumbs'] = array(
 );
 
 // Setup main heading
-$forum_page['main_head'] = sprintf($lang_misc['Moderate forum head'], $cur_forum['forum_name']);
+$forum_page['main_head'] = sprintf($lang_misc['Moderate forum head'], forum_htmlencode($cur_forum['forum_name']));
 
 if ($forum_page['num_pages'] > 1)
 	$forum_page['main_head'] .= '<br /><small>'.sprintf($lang_misc['Paged info forums'], $forum_page['start_from'] + 1, $forum_page['finish_at'], $cur_forum['num_topics']).'</small>';
