@@ -78,7 +78,17 @@ require FORUM_ROOT.'include/common.php';
 
 ($hook = get_hook('ex_start')) ? eval($hook) : null;
 
-if ($forum_user['g_read_board'] == '0')
+
+$query = array(
+	'SELECT'	=> 'g.g_read_board',
+	'FROM'		=> 'groups AS g',
+	'WHERE'		=> 'g.g_id='.FORUM_GUEST
+);
+
+($hook = get_hook('ex_qr_get_guest_read_board')) ? eval($hook) : null;
+$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+
+if ($forum_db->result($result) == '0')
 	exit($lang_common['No view']);
 
 
