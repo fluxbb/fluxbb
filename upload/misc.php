@@ -261,7 +261,7 @@ else if (isset($_GET['email']))
 		$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
 
 	// Setup main heading
-	$forum_page['main_head'] = sprintf($lang_misc['Send forum e-mail'], forum_htmlencode($recipient));
+	$forum_page['main_head'] = sprintf($lang_misc['Send forum e-mail'], $recipient);
 
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(

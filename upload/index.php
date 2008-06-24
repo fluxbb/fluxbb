@@ -68,7 +68,7 @@ if (!$forum_user['is_guest'])
 }
 
 // Setup headers
-$forum_page['main_head'] = forum_htmlencode($forum_config['o_board_title']);
+$forum_page['main_head'] = $forum_config['o_board_title'];
 
 // Setup main options
 $forum_page['main_options'] = array();

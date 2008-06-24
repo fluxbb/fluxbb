@@ -136,7 +136,7 @@ if ($action == 'change_pass')
 			);
 
 			// Setup headings
-			$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], sprintf($lang_profile['Users profile'], forum_htmlencode($user['username'])), end($forum_page['crumbs']));
+			$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], sprintf($lang_profile['Users profile'], $user['username']), end($forum_page['crumbs']));
 
 			($hook = get_hook('pf_change_pass_key_pre_header_load')) ? eval($hook) : null;
 
@@ -291,7 +291,7 @@ if ($action == 'change_pass')
 	);
 
 	// Setup headings
-	$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], sprintf($lang_profile['Users profile'], forum_htmlencode($user['username'])), end($forum_page['crumbs']));
+	$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], sprintf($lang_profile['Users profile'], $user['username']), end($forum_page['crumbs']));
 
 	($hook = get_hook('pf_change_pass_normal_pre_header_load')) ? eval($hook) : null;
 
@@ -527,7 +527,7 @@ else if ($action == 'change_email')
 	);
 
 	// Setup headings
-	$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], sprintf($lang_profile['Users profile'], forum_htmlencode($user['username'])), end($forum_page['crumbs']));
+	$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], sprintf($lang_profile['Users profile'], $user['username']), end($forum_page['crumbs']));
 
 	($hook = get_hook('pf_change_email_normal_pre_header_load')) ? eval($hook) : null;
 
@@ -649,7 +649,7 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 	);
 
 	// Setup headings
-	$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], sprintf($lang_profile['Users profile'], forum_htmlencode($user['username'])), end($forum_page['crumbs']));
+	$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], sprintf($lang_profile['Users profile'], $user['username']), end($forum_page['crumbs']));
 
 	($hook = get_hook('pf_delete_user_pre_header_load')) ? eval($hook) : null;
 
