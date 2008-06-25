@@ -98,8 +98,8 @@ if ($action == 'change_pass')
 			{
 				($hook = get_hook('pf_change_pass_key_form_submitted')) ? eval($hook) : null;
 
-				$new_password1 = trim($_POST['req_new_password1']);
-				$new_password2 = trim($_POST['req_new_password2']);
+				$new_password1 = forum_trim($_POST['req_new_password1']);
+				$new_password2 = forum_trim($_POST['req_new_password2']);
 
 				if (utf8_strlen($new_password1) < 4)
 					$errors[] = $lang_profile['Pass too short'];
@@ -209,7 +209,7 @@ if ($action == 'change_pass')
 
 <?php
 
-			$tpl_temp = trim(ob_get_contents());
+			$tpl_temp = forum_trim(ob_get_contents());
 			$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 			ob_end_clean();
 			// END SUBST - <!-- forum_main -->
@@ -228,9 +228,9 @@ if ($action == 'change_pass')
 	{
 		($hook = get_hook('pf_change_pass_normal_form_submitted')) ? eval($hook) : null;
 
-		$old_password = isset($_POST['req_old_password']) ? trim($_POST['req_old_password']) : '';
-		$new_password1 = trim($_POST['req_new_password1']);
-		$new_password2 = trim($_POST['req_new_password2']);
+		$old_password = isset($_POST['req_old_password']) ? forum_trim($_POST['req_old_password']) : '';
+		$new_password1 = forum_trim($_POST['req_new_password1']);
+		$new_password2 = forum_trim($_POST['req_new_password2']);
 
 		if (utf8_strlen($new_password1) < 4)
 			$errors[] = $lang_profile['Pass too short'];
@@ -370,7 +370,7 @@ if ($action == 'change_pass')
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -425,7 +425,7 @@ else if ($action == 'change_email')
 		require FORUM_ROOT.'include/email.php';
 
 		// Validate the email-address
-		$new_email = strtolower(trim($_POST['req_new_email']));
+		$new_email = strtolower(forum_trim($_POST['req_new_email']));
 		if (!is_valid_email($new_email))
 			$errors[] = $lang_common['Invalid e-mail'];
 
@@ -488,12 +488,12 @@ else if ($action == 'change_email')
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			// Load the "activate e-mail" template
-			$mail_tpl = trim(file_get_contents(FORUM_ROOT.'lang/'.$forum_user['language'].'/mail_templates/activate_email.tpl'));
+			$mail_tpl = forum_trim(file_get_contents(FORUM_ROOT.'lang/'.$forum_user['language'].'/mail_templates/activate_email.tpl'));
 
 			// The first row contains the subject
 			$first_crlf = strpos($mail_tpl, "\n");
-			$mail_subject = trim(substr($mail_tpl, 8, $first_crlf-8));
-			$mail_message = trim(substr($mail_tpl, $first_crlf));
+			$mail_subject = forum_trim(substr($mail_tpl, 8, $first_crlf-8));
+			$mail_message = forum_trim(substr($mail_tpl, $first_crlf));
 
 			$mail_message = str_replace('<username>', $forum_user['username'], $mail_message);
 			$mail_message = str_replace('<base_url>', $base_url.'/', $mail_message);
@@ -600,7 +600,7 @@ else if ($action == 'change_email')
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -685,7 +685,7 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -849,8 +849,8 @@ else if (isset($_POST['form_sent']))
 				// Are we allowed to change usernames?
 				if ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && $forum_user['g_mod_rename_users'] == '1'))
 				{
-					$form['username'] = trim($_POST['req_username']);
-					$old_username = trim($_POST['old_username']);
+					$form['username'] = forum_trim($_POST['req_username']);
+					$old_username = forum_trim($_POST['old_username']);
 
 					// Validate the new username
 					$errors = array_merge($errors, validate_username($form['username'], $id));
@@ -869,19 +869,19 @@ else if (isset($_POST['form_sent']))
 				require FORUM_ROOT.'include/email.php';
 
 				// Validate the email-address
-				$form['email'] = strtolower(trim($_POST['req_email']));
+				$form['email'] = strtolower(forum_trim($_POST['req_email']));
 				if (!is_valid_email($form['email']))
 					$errors[] = $lang_common['Invalid e-mail'];
 			}
 
 			if ($forum_user['is_admmod'])
-				$form['admin_note'] = trim($_POST['admin_note']);
+				$form['admin_note'] = forum_trim($_POST['admin_note']);
 
 			if ($forum_user['g_id'] == FORUM_ADMIN)
-				$form['title'] = trim($_POST['title']);
+				$form['title'] = forum_trim($_POST['title']);
 			else if ($forum_user['g_set_title'] == '1')
 			{
-				$form['title'] = trim($_POST['title']);
+				$form['title'] = forum_trim($_POST['title']);
 
 				if ($form['title'] != '')
 				{
@@ -961,7 +961,7 @@ else if (isset($_POST['form_sent']))
 			($hook = get_hook('pf_change_details_signature_validation')) ? eval($hook) : null;
 
 			// Clean up signature from POST
-			$form['signature'] = forum_linebreaks(trim($_POST['signature']));
+			$form['signature'] = forum_linebreaks(forum_trim($_POST['signature']));
 
 			// Validate signature
 			if (utf8_strlen($form['signature']) > $forum_config['p_sig_length'])
@@ -1382,7 +1382,7 @@ if ($forum_user['id'] != $id &&
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -1569,7 +1569,7 @@ else
 </div>
 <?php
 
-		$tpl_temp = trim(ob_get_contents());
+		$tpl_temp = forum_trim(ob_get_contents());
 		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 		ob_end_clean();
 		// END SUBST - <!-- forum_main -->
@@ -1736,7 +1736,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 </div>
 <?php
 
-		$tpl_temp = trim(ob_get_contents());
+		$tpl_temp = forum_trim(ob_get_contents());
 		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 		ob_end_clean();
 		// END SUBST - <!-- forum_main -->
@@ -2012,7 +2012,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 </div>
 <?php
 
-		$tpl_temp = trim(ob_get_contents());
+		$tpl_temp = forum_trim(ob_get_contents());
 		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 		ob_end_clean();
 		// END SUBST - <!-- forum_main -->
@@ -2113,7 +2113,7 @@ if (!empty($forum_page['text_options']))
 </div>
 <?php
 
-		$tpl_temp = trim(ob_get_contents());
+		$tpl_temp = forum_trim(ob_get_contents());
 		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 		ob_end_clean();
 		// END SUBST - <!-- forum_main -->
@@ -2227,7 +2227,7 @@ if (!empty($forum_page['text_options']))
 </div>
 <?php
 
-		$tpl_temp = trim(ob_get_contents());
+		$tpl_temp = forum_trim(ob_get_contents());
 		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 		ob_end_clean();
 		// END SUBST - <!-- forum_main -->
@@ -2410,7 +2410,7 @@ if (!empty($forum_page['text_options']))
 	</div>
 <?php
 
-		$tpl_temp = trim(ob_get_contents());
+		$tpl_temp = forum_trim(ob_get_contents());
 		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 		ob_end_clean();
 		// END SUBST - <!-- forum_main -->

@@ -66,7 +66,7 @@ function split_words($text)
 	$text = str_replace($noise_match, $noise_replace, $text);
 
 	// Strip out extra whitespace between words
-	$text = trim(preg_replace('#\s+#', ' ', $text));
+	$text = forum_trim(preg_replace('#\s+#', ' ', $text));
 
 	// Fill an array with all the words
 	$words = explode(' ', $text);
@@ -75,7 +75,7 @@ function split_words($text)
 	{
 		while (list($i, $word) = @each($words))
 		{
-			$words[$i] = trim($word, '.');
+			$words[$i] = forum_trim($word, '.');
 			$num_chars = utf8_strlen($word);
 
 			if ($num_chars < 3 || $num_chars > 20 || in_array($words[$i], $stopwords))

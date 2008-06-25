@@ -107,7 +107,7 @@ else if ($forum_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_P
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -134,20 +134,20 @@ else if (isset($_POST['form_sent']))
 	// Did everything go according to plan so far?
 	if (empty($errors))
 	{
-		$username = trim($_POST['req_username']);
-		$email1 = strtolower(trim($_POST['req_email1']));
+		$username = forum_trim($_POST['req_username']);
+		$email1 = strtolower(forum_trim($_POST['req_email1']));
 
 		if ($forum_config['o_regs_verify'] == '1')
 		{
-			$email2 = strtolower(trim($_POST['req_email2']));
+			$email2 = strtolower(forum_trim($_POST['req_email2']));
 
 			$password1 = random_key(8, true);
 			$password2 = $password1;
 		}
 		else
 		{
-			$password1 = trim($_POST['req_password1']);
-			$password2 = trim($_POST['req_password2']);
+			$password1 = forum_trim($_POST['req_password1']);
+			$password2 = forum_trim($_POST['req_password2']);
 		}
 
 		// Validate the username
@@ -479,7 +479,7 @@ ob_start();
 
 ($hook = get_hook('rg_end')) ? eval($hook) : null;
 
-$tpl_temp = trim(ob_get_contents());
+$tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 ob_end_clean();
 // END SUBST - <!-- forum_main -->

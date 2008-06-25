@@ -131,7 +131,7 @@ ob_start();
 // Include stylesheets
 require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php';
 
-$head_temp = trim(ob_get_contents());
+$head_temp = forum_trim(ob_get_contents());
 $num_temp = 0;
 
 foreach (explode("\n", $head_temp) as $style_temp)

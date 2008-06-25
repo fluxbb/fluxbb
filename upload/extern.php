@@ -256,7 +256,7 @@ function output_html($feed)
 			$feed['items'][$i]['title'] = censor_words($feed['items'][$i]['title']);
 
 		if (utf8_strlen($feed['items'][$i]['title']) > MAX_SUBJECT_LENGTH)
-			$subject_truncated = forum_htmlencode(trim(utf8_substr($feed['items'][$i]['title'], 0, (MAX_SUBJECT_LENGTH-5)))).' …';
+			$subject_truncated = forum_htmlencode(forum_trim(utf8_substr($feed['items'][$i]['title'], 0, (MAX_SUBJECT_LENGTH-5)))).' …';
 		else
 			$subject_truncated = forum_htmlencode($feed['items'][$i]['title']);
 
@@ -362,7 +362,7 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 		// Was any specific forum ID's supplied?
 		if (isset($_GET['fid']) && is_scalar($_GET['fid']) && $_GET['fid'] != '')
 		{
-			$fids = explode(',', trim($_GET['fid']));
+			$fids = explode(',', forum_trim($_GET['fid']));
 			$fids = array_map('intval', $fids);
 
 			if (!empty($fids))
@@ -372,7 +372,7 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 		// Any forum ID's to exclude?
 		if (isset($_GET['nfid']) && is_scalar($_GET['nfid']) && $_GET['nfid'] != '')
 		{
-			$nfids = explode(',', trim($_GET['nfid']));
+			$nfids = explode(',', forum_trim($_GET['nfid']));
 			$nfids = array_map('intval', $nfids);
 
 			if (!empty($nfids))

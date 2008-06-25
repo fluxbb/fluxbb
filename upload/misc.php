@@ -81,7 +81,7 @@ if ($action == 'rules')
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -202,8 +202,8 @@ else if (isset($_GET['email']))
 		($hook = get_hook('mi_email_form_submitted')) ? eval($hook) : null;
 
 		// Clean up message and subject from POST
-		$subject = trim($_POST['req_subject']);
-		$message = trim($_POST['req_message']);
+		$subject = forum_trim($_POST['req_subject']);
+		$message = forum_trim($_POST['req_message']);
 
 		if ($subject == '')
 			$errors[] = $lang_misc['No e-mail subject'];
@@ -218,12 +218,12 @@ else if (isset($_GET['email']))
 		if (empty($errors))
 		{
 			// Load the "form e-mail" template
-			$mail_tpl = trim(file_get_contents(FORUM_ROOT.'lang/'.$forum_user['language'].'/mail_templates/form_email.tpl'));
+			$mail_tpl = forum_trim(file_get_contents(FORUM_ROOT.'lang/'.$forum_user['language'].'/mail_templates/form_email.tpl'));
 
 			// The first row contains the subject
 			$first_crlf = strpos($mail_tpl, "\n");
-			$mail_subject = trim(substr($mail_tpl, 8, $first_crlf-8));
-			$mail_message = trim(substr($mail_tpl, $first_crlf));
+			$mail_subject = forum_trim(substr($mail_tpl, 8, $first_crlf-8));
+			$mail_message = forum_trim(substr($mail_tpl, $first_crlf));
 
 			$mail_subject = str_replace('<mail_subject>', $subject, $mail_subject);
 			$mail_message = str_replace('<sender>', $forum_user['username'], $mail_message);
@@ -344,7 +344,7 @@ else if (isset($_GET['email']))
 	</div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -379,7 +379,7 @@ else if (isset($_GET['report']))
 			message(sprintf($lang_misc['Report flood'], $forum_user['g_email_flood']));
 
 		// Clean up reason from POST
-		$reason = forum_linebreaks(trim($_POST['req_reason']));
+		$reason = forum_linebreaks(forum_trim($_POST['req_reason']));
 		if ($reason == '')
 			message($lang_misc['No reason']);
 
@@ -503,7 +503,7 @@ else if (isset($_GET['report']))
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->

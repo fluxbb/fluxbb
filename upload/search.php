@@ -63,8 +63,8 @@ else if (isset($_GET['action']))
 	// If it's a regular search (keywords and/or author)
 	if ($action == 'search')
 	{
-		$keywords = (isset($_GET['keywords'])) ? utf8_strtolower(trim($_GET['keywords'])) : null;
-		$author = (isset($_GET['author'])) ? utf8_strtolower(trim($_GET['author'])) : null;
+		$keywords = (isset($_GET['keywords'])) ? utf8_strtolower(forum_trim($_GET['keywords'])) : null;
+		$author = (isset($_GET['author'])) ? utf8_strtolower(forum_trim($_GET['author'])) : null;
 		$sort_dir = (isset($_GET['sort_dir'])) ? (($_GET['sort_dir'] == 'DESC') ? 'DESC' : 'ASC') : 'DESC';
 		$show_as = (isset($_GET['show_as'])) ? $_GET['show_as'] : 'posts';
 		$sort_by = (isset($_GET['sort_by'])) ? intval($_GET['sort_by']) : null;
@@ -377,7 +377,7 @@ if (isset($query))
 	</div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -544,7 +544,7 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 
 ($hook = get_hook('se_end')) ? eval($hook) : null;
 
-$tpl_temp = trim(ob_get_contents());
+$tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 ob_end_clean();
 // END SUBST - <!-- forum_main -->

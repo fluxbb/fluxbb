@@ -44,8 +44,8 @@ $errors = array();
 // Login
 if (isset($_POST['form_sent']) && $action == 'in')
 {
-	$form_username = trim($_POST['req_username']);
-	$form_password = trim($_POST['req_password']);
+	$form_username = forum_trim($_POST['req_username']);
+	$form_password = forum_trim($_POST['req_password']);
 	$save_pass = isset($_POST['save_pass']);
 
 	($hook = get_hook('li_login_form_submitted')) ? eval($hook) : null;
@@ -194,7 +194,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 		require FORUM_ROOT.'include/email.php';
 
 		// Validate the email-address
-		$email = strtolower(trim($_POST['req_email']));
+		$email = strtolower(forum_trim($_POST['req_email']));
 		if (!is_valid_email($email))
 			$errors[] = $lang_common['Invalid e-mail'];
 
@@ -215,12 +215,12 @@ else if ($action == 'forget' || $action == 'forget_2')
 				($hook = get_hook('li_forgot_pass_pre_email')) ? eval($hook) : null;
 
 				// Load the "activate password" template
-				$mail_tpl = trim(file_get_contents(FORUM_ROOT.'lang/'.$forum_user['language'].'/mail_templates/activate_password.tpl'));
+				$mail_tpl = forum_trim(file_get_contents(FORUM_ROOT.'lang/'.$forum_user['language'].'/mail_templates/activate_password.tpl'));
 
 				// The first row contains the subject
 				$first_crlf = strpos($mail_tpl, "\n");
-				$mail_subject = trim(substr($mail_tpl, 8, $first_crlf-8));
-				$mail_message = trim(substr($mail_tpl, $first_crlf));
+				$mail_subject = forum_trim(substr($mail_tpl, 8, $first_crlf-8));
+				$mail_message = forum_trim(substr($mail_tpl, $first_crlf));
 
 				// Do the generic replacements first (they apply to all e-mails sent out here)
 				$mail_message = str_replace('<base_url>', $base_url.'/', $mail_message);
@@ -334,7 +334,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -437,7 +437,7 @@ ob_start();
 
 ($hook = get_hook('li_end')) ? eval($hook) : null;
 
-$tpl_temp = trim(ob_get_contents());
+$tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 ob_end_clean();
 // END SUBST - <!-- forum_main -->

@@ -316,17 +316,17 @@ else
 
 
 	$db_type = $_POST['req_db_type'];
-	$db_host = trim($_POST['req_db_host']);
-	$db_name = trim($_POST['req_db_name']);
-	$db_username = unescape(trim($_POST['db_username']));
-	$db_password = unescape(trim($_POST['db_password']));
-	$db_prefix = trim($_POST['db_prefix']);
-	$username = unescape(trim($_POST['req_username']));
-	$email = unescape(strtolower(trim($_POST['req_email'])));
-	$password1 = unescape(trim($_POST['req_password1']));
-	$password2 = unescape(trim($_POST['req_password2']));
-	$board_title = unescape(trim($_POST['board_title']));
-	$board_descrip = unescape(trim($_POST['board_descrip']));
+	$db_host = forum_trim($_POST['req_db_host']);
+	$db_name = forum_trim($_POST['req_db_name']);
+	$db_username = unescape(forum_trim($_POST['db_username']));
+	$db_password = unescape(forum_trim($_POST['db_password']));
+	$db_prefix = forum_trim($_POST['db_prefix']);
+	$username = unescape(forum_trim($_POST['req_username']));
+	$email = unescape(strtolower(forum_trim($_POST['req_email'])));
+	$password1 = unescape(forum_trim($_POST['req_password1']));
+	$password2 = unescape(forum_trim($_POST['req_password2']));
+	$board_title = unescape(forum_trim($_POST['board_title']));
+	$board_descrip = unescape(forum_trim($_POST['board_descrip']));
 
 
 	// Make sure base_url doesn't end with a slash

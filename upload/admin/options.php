@@ -81,7 +81,7 @@ if (isset($_POST['form_sent']))
 			$form['disp_posts_default'] = (intval($form['disp_posts_default']) > 0) ? intval($form['disp_posts_default']) : 1;
 
 			if ($form['additional_navlinks'] != '')
-				$form['additional_navlinks'] = trim(forum_linebreaks($form['additional_navlinks']));
+				$form['additional_navlinks'] = forum_trim(forum_linebreaks($form['additional_navlinks']));
 
 			break;
 		}
@@ -1261,7 +1261,7 @@ $forum_page['set_count'] = 0;
 
 ($hook = get_hook('aop_new_section')) ? eval($hook) : null;
 
-$tpl_temp = trim(ob_get_contents());
+$tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 ob_end_clean();
 // END SUBST - <!-- forum_main -->

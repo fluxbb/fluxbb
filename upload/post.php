@@ -129,7 +129,7 @@ if (isset($_POST['form_sent']))
 	// If it's a new topic
 	if ($fid)
 	{
-		$subject = trim($_POST['req_subject']);
+		$subject = forum_trim($_POST['req_subject']);
 
 		if ($subject == '')
 			$errors[] = $lang_post['No subject'];
@@ -148,8 +148,8 @@ if (isset($_POST['form_sent']))
 	// Otherwise it should be in $_POST
 	else
 	{
-		$username = trim($_POST['req_username']);
-		$email = strtolower(trim(($forum_config['p_force_guest_email'] == '1') ? $_POST['req_email'] : $_POST['email']));
+		$username = forum_trim($_POST['req_username']);
+		$email = strtolower(forum_trim(($forum_config['p_force_guest_email'] == '1') ? $_POST['req_email'] : $_POST['email']));
 
 		// Load the profile.php language file
 		require FORUM_ROOT.'lang/'.$forum_user['language'].'/profile.php';
@@ -170,7 +170,7 @@ if (isset($_POST['form_sent']))
 		$errors[] = $lang_post['CSRF token mismatch'];
 
 	// Clean up message from POST
-	$message = forum_linebreaks(trim($_POST['req_message']));
+	$message = forum_linebreaks(forum_trim($_POST['req_message']));
 
 	if ($message == '')
 		$errors[] = $lang_post['No message'];
@@ -358,7 +358,7 @@ if (isset($_POST['preview']) && empty($errors))
 {
 	if (!defined('FORUM_PARSER_LOADED'))
 		require FORUM_ROOT.'include/parser.php';
-	$forum_page['preview_message'] = parse_message(trim($message), $hide_smilies);
+	$forum_page['preview_message'] = parse_message(forum_trim($message), $hide_smilies);
 
 	$forum_page['preview_username'] = '<strong class="username">'.forum_htmlencode($forum_user['username']).'</strong>';
 
@@ -615,7 +615,7 @@ $forum_id = $cur_posting['id'];
 
 ($hook = get_hook('po_end')) ? eval($hook) : null;
 
-$tpl_temp = trim(ob_get_contents());
+$tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 ob_end_clean();
 // END SUBST - <!-- forum_main -->

@@ -64,7 +64,7 @@ $forum_db->end_transaction();
 
 ($hook = get_hook('ft_about_end')) ? eval($hook) : null;
 
-$tpl_temp = trim(ob_get_contents());
+$tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_about -->', $tpl_temp, $tpl_main);
 ob_end_clean();
 // END SUBST - <!-- forum_about -->
@@ -91,7 +91,7 @@ if (defined('FORUM_DEBUG') || defined('FORUM_SHOW_QUERIES'))
 
 	($hook = get_hook('ft_debug_end')) ? eval($hook) : null;
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_debug -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 }

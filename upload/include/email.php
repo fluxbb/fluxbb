@@ -74,14 +74,14 @@ function forum_mail($to, $subject, $message, $reply_to = '')
 	$from = '"'.sprintf($lang_common['Forum mailer'], str_replace('"', '', $forum_config['o_board_title'])).'" <'.$forum_config['o_webmaster_email'].'>';
 
 	// Do a little spring cleaning
-	$to = trim(preg_replace('#[\n\r]+#s', '', $to));
-	$subject = trim(preg_replace('#[\n\r]+#s', '', $subject));
-	$from = trim(preg_replace('#[\n\r:]+#s', '', $from));
+	$to = forum_trim(preg_replace('#[\n\r]+#s', '', $to));
+	$subject = forum_trim(preg_replace('#[\n\r]+#s', '', $subject));
+	$from = forum_trim(preg_replace('#[\n\r:]+#s', '', $from));
 
 	$headers = 'From: '.$from."\r\n".'Date: '.gmdate('r')."\r\n".'MIME-Version: 1.0'."\r\n".'Content-transfer-encoding: 8bit'."\r\n".'Content-type: text/plain; charset=utf-8'."\r\n".'X-Mailer: FluxBB Mailer';
 
 	if (!empty($reply_to))
-		$headers .= "\r\n".'Reply-To: '.trim(preg_replace('#[\n\r:]+#s', '', $reply_to));
+		$headers .= "\r\n".'Reply-To: '.forum_trim(preg_replace('#[\n\r:]+#s', '', $reply_to));
 
 	// Make sure all linebreaks are CRLF in message (and strip out any NULL bytes)
 	$message = str_replace(array("\n", "\0"), array("\r\n", ''), forum_linebreaks($message));

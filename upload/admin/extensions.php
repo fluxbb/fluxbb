@@ -108,14 +108,14 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 		($hook = get_hook('aex_install_comply_form_submitted')) ? eval($hook) : null;
 
 		// Is there some uninstall code to store in the db?
-		$uninstall_code = (isset($ext_data['extension']['uninstall']) && trim($ext_data['extension']['uninstall']) != '') ? '\''.$forum_db->escape(trim($ext_data['extension']['uninstall'])).'\'' : 'NULL';
+		$uninstall_code = (isset($ext_data['extension']['uninstall']) && forum_trim($ext_data['extension']['uninstall']) != '') ? '\''.$forum_db->escape(forum_trim($ext_data['extension']['uninstall'])).'\'' : 'NULL';
 
 		// Is there an uninstall note to store in the db?
 		$uninstall_note = 'NULL';
 		foreach ($ext_data['extension']['note'] as $cur_note)
 		{
-			if ($cur_note['attributes']['type'] == 'uninstall' && trim($cur_note['content']) != '')
-				$uninstall_note = '\''.$forum_db->escape(trim($cur_note['content'])).'\'';
+			if ($cur_note['attributes']['type'] == 'uninstall' && forum_trim($cur_note['content']) != '')
+				$uninstall_note = '\''.$forum_db->escape(forum_trim($cur_note['content'])).'\'';
 		}
 
 		$notices = array();
@@ -135,7 +135,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 			define('EXT_CUR_VERSION', $forum_db->result($result));
 
 			// Run the author supplied install code
-			if (isset($ext_data['extension']['install']) && trim($ext_data['extension']['install']) != '')
+			if (isset($ext_data['extension']['install']) && forum_trim($ext_data['extension']['install']) != '')
 				eval($ext_data['extension']['install']);
 
 			// Update the existing extension
@@ -160,7 +160,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 		else
 		{
 			// Run the author supplied install code
-			if (isset($ext_data['extension']['install']) && trim($ext_data['extension']['install']) != '')
+			if (isset($ext_data['extension']['install']) && forum_trim($ext_data['extension']['install']) != '')
 				eval($ext_data['extension']['install']);
 
 			// Add the new extension
@@ -183,7 +183,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 				$query = array(
 					'INSERT'	=> 'id, extension_id, code, installed, priority',
 					'INTO'		=> 'extension_hooks',
-					'VALUES'	=> '\''.$forum_db->escape(trim($cur_hook)).'\', \''.$forum_db->escape($id).'\', \''.$forum_db->escape(trim($ext_hook['content'])).'\', '.time().', '.(isset($ext_hook['attributes']['priority']) ? $ext_hook['attributes']['priority'] : 5)
+					'VALUES'	=> '\''.$forum_db->escape(forum_trim($cur_hook)).'\', \''.$forum_db->escape($id).'\', \''.$forum_db->escape(forum_trim($ext_hook['content'])).'\', '.time().', '.(isset($ext_hook['attributes']['priority']) ? $ext_hook['attributes']['priority'] : 5)
 				);
 
 				($hook = get_hook('aex_qr_add_hook')) ? eval($hook) : null;
@@ -241,7 +241,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 </div>
 <?php
 
-			$tpl_temp = trim(ob_get_contents());
+			$tpl_temp = forum_trim(ob_get_contents());
 			$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 			ob_end_clean();
 			// END SUBST - <!-- forum_main -->
@@ -320,7 +320,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -456,7 +456,7 @@ else if (isset($_GET['uninstall']))
 </div>
 <?php
 
-			$tpl_temp = trim(ob_get_contents());
+			$tpl_temp = forum_trim(ob_get_contents());
 			$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 			ob_end_clean();
 			// END SUBST - <!-- forum_main -->
@@ -515,7 +515,7 @@ else if (isset($_GET['uninstall']))
 </div>
 <?php
 
-		$tpl_temp = trim(ob_get_contents());
+		$tpl_temp = forum_trim(ob_get_contents());
 		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 		ob_end_clean();
 		// END SUBST - <!-- forum_main -->
@@ -775,7 +775,7 @@ if ($section == 'install')
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -862,7 +862,7 @@ else
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->

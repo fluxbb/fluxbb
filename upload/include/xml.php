@@ -99,7 +99,7 @@ function xml_to_array($raw_xml)
 			$add = '['.$multi_key2[$x_tag][$x_level].']';
 		}
 
-		if (isset($xml_elem['value']) && trim($xml_elem['value']) != '' && !array_key_exists('attributes', $xml_elem))
+		if (isset($xml_elem['value']) && forum_trim($xml_elem['value']) != '' && !array_key_exists('attributes', $xml_elem))
 		{
 			if ($x_type == 'open')
 				$php_stmt_main = $php_stmt.'[$x_type]'.$add.'[\'content\'] = $xml_elem[\'value\'];';

@@ -98,7 +98,7 @@ if (isset($_POST['form_sent']))
 	// If it is a topic it must contain a subject
 	if ($can_edit_subject)
 	{
-		$subject = trim($_POST['req_subject']);
+		$subject = forum_trim($_POST['req_subject']);
 
 		if ($subject == '')
 			$errors[] = $lang_post['No subject'];
@@ -109,7 +109,7 @@ if (isset($_POST['form_sent']))
 	}
 
 	// Clean up message from POST
-	$message = forum_linebreaks(trim($_POST['req_message']));
+	$message = forum_linebreaks(forum_trim($_POST['req_message']));
 
 	if ($message == '')
 		$errors[] = $lang_post['No message'];
@@ -356,7 +356,7 @@ $forum_id = $cur_post['fid'];
 
 ($hook = get_hook('ed_end')) ? eval($hook) : null;
 
-$tpl_temp = trim(ob_get_contents());
+$tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 ob_end_clean();
 // END SUBST - <!-- forum_main -->

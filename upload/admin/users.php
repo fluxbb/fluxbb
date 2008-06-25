@@ -138,7 +138,7 @@ if (isset($_GET['ip_stats']))
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -320,7 +320,7 @@ else if (isset($_GET['show_users']))
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -435,7 +435,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -475,8 +475,8 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 
 	if (isset($_POST['ban_users_comply']))
 	{
-		$ban_message = trim($_POST['ban_message']);
-		$ban_expire = trim($_POST['ban_expire']);
+		$ban_message = forum_trim($_POST['ban_message']);
+		$ban_expire = forum_trim($_POST['ban_expire']);
 
 		($hook = get_hook('aus_ban_users_form_submitted')) ? eval($hook) : null;
 
@@ -607,7 +607,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -753,7 +753,7 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -769,16 +769,16 @@ else if (isset($_POST['find_user']))
 
 	($hook = get_hook('aus_find_user_selected')) ? eval($hook) : null;
 
-	// trim() all elements in $form
+	// forum_trim() all elements in $form
 	$form = array_map('trim', $form);
 	$conditions = array();
 
-	$posts_greater = trim($_POST['posts_greater']);
-	$posts_less = trim($_POST['posts_less']);
-	$last_post_after = trim($_POST['last_post_after']);
-	$last_post_before = trim($_POST['last_post_before']);
-	$registered_after = trim($_POST['registered_after']);
-	$registered_before = trim($_POST['registered_before']);
+	$posts_greater = forum_trim($_POST['posts_greater']);
+	$posts_less = forum_trim($_POST['posts_less']);
+	$last_post_after = forum_trim($_POST['last_post_after']);
+	$last_post_before = forum_trim($_POST['last_post_before']);
+	$registered_after = forum_trim($_POST['registered_after']);
+	$registered_before = forum_trim($_POST['registered_before']);
 	$order_by = $_POST['order_by'];
 	$direction = $_POST['direction'];
 	$user_group = $_POST['user_group'];
@@ -966,7 +966,7 @@ if (!empty($forum_page['main_submit']))
 </div>
 <?php
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -1229,7 +1229,7 @@ $forum_page['set_count'] = 0;
 </div>
 <?php
 
-$tpl_temp = trim(ob_get_contents());
+$tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 ob_end_clean();
 // END SUBST - <!-- forum_main -->

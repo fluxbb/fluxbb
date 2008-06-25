@@ -267,7 +267,7 @@ if (isset($_GET['tid']))
 
 		$forum_id = $fid;
 
-		$tpl_temp = trim(ob_get_contents());
+		$tpl_temp = forum_trim(ob_get_contents());
 		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 		ob_end_clean();
 		// END SUBST - <!-- forum_main -->
@@ -465,7 +465,7 @@ $forum_page['mod_options']['del_topic'] = '<span'.(empty($forum_page['mod_option
 
 	$forum_id = $fid;
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -711,7 +711,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 
 	$forum_id = $fid;
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -867,7 +867,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 
 	$forum_id = $fid;
 
-	$tpl_temp = trim(ob_get_contents());
+	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
@@ -1260,7 +1260,7 @@ $forum_id = $fid;
 
 ($hook = get_hook('mr_end')) ? eval($hook) : null;
 
-$tpl_temp = trim(ob_get_contents());
+$tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 ob_end_clean();
 // END SUBST - <!-- forum_main -->

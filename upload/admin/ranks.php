@@ -42,7 +42,7 @@ require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin.php';
 // Add a rank
 if (isset($_POST['add_rank']))
 {
-	$rank = trim($_POST['new_rank']);
+	$rank = forum_trim($_POST['new_rank']);
 	$min_posts = intval($_POST['new_min_posts']);
 
 	if ($rank == '')
@@ -87,7 +87,7 @@ else if (isset($_POST['update']))
 {
 	$id = intval(key($_POST['update']));
 
-	$rank = trim($_POST['rank'][$id]);
+	$rank = forum_trim($_POST['rank'][$id]);
 	$min_posts = intval($_POST['min_posts'][$id]);
 
 	if ($rank == '')
@@ -299,7 +299,7 @@ else
 </div>
 <?php
 
-$tpl_temp = trim(ob_get_contents());
+$tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 ob_end_clean();
 // END SUBST - <!-- forum_main -->

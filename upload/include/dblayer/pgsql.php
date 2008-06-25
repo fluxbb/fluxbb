@@ -323,12 +323,12 @@ class DBLayer
 /*
 		if (!empty($this->query_result))
 		{
-			$result['error_msg'] = trim(@pg_result_error($this->query_result));
+			$result['error_msg'] = forum_trim(@pg_result_error($this->query_result));
 			if ($result['error_msg'] != '')
 				return $result;
 		}
 
-		$result['error_msg'] = (!empty($this->link_id)) ? trim(@pg_last_error($this->link_id)) : trim(@pg_last_error());
+		$result['error_msg'] = (!empty($this->link_id)) ? forum_trim(@pg_last_error($this->link_id)) : forum_trim(@pg_last_error());
 */
 		$result['error_msg'] = $this->error_msg;
 

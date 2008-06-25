@@ -79,7 +79,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = -1
 		$keywords = str_replace($noise_match, $noise_replace, $keywords);
 
 		// Strip out excessive whitespace
-		$keywords = trim(preg_replace('#\s+#', ' ', $keywords));
+		$keywords = forum_trim(preg_replace('#\s+#', ' ', $keywords));
 
 		// Fill an array with all the words
 		$keywords_array = explode(' ', $keywords);

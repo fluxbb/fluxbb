@@ -277,7 +277,7 @@ else
 
 ($hook = get_hook('in_end')) ? eval($hook) : null;
 
-$tpl_temp = trim(ob_get_contents());
+$tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 ob_end_clean();
 // END SUBST - <!-- forum_main -->
@@ -337,7 +337,7 @@ $stats_list['no_of_posts'] = '<li class="st-activity"><span>'.$lang_index['No of
 
 ($hook = get_hook('in_stats_end')) ? eval($hook) : null;
 
-$tpl_temp = trim(ob_get_contents());
+$tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_stats -->', $tpl_temp, $tpl_main);
 ob_end_clean();
 // END SUBST - <!-- forum_stats -->
@@ -387,7 +387,7 @@ if ($forum_config['o_users_online'] == '1')
 
 ($hook = get_hook('in_online_end')) ? eval($hook) : null;
 
-$tpl_temp = trim(ob_get_contents());
+$tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_online -->', $tpl_temp, $tpl_main);
 ob_end_clean();
 // END SUBST - <!-- forum_online -->
