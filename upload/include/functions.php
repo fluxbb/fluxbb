@@ -556,22 +556,26 @@ function generate_avatar_markup($user_id)
 	global $forum_config, $base_url;
 
 	$filetypes = array('jpg', 'gif', 'png');
+	$avatar_markup = '';
 
-	($hook = get_hook('fn_generate_avatar_markup_start')) ? eval($hook) : null;
+	$return = ($hook = get_hook('fn_generate_avatar_markup_start')) ? eval($hook) : null;
+	if ($return != null)
+		return $return;
 
 	foreach ($filetypes as $cur_type)
 	{
 		$path = $forum_config['o_avatars_dir'].'/'.$user_id.'.'.$cur_type;
 
 		if (file_exists(FORUM_ROOT.$path) && $img_size = @getimagesize(FORUM_ROOT.$path))
-			return '<img src="'.$base_url.'/'.$path.'" '.$img_size[3].' alt="" />';
+		{
+			$avatar_markup = '<img src="'.$base_url.'/'.$path.'" '.$img_size[3].' alt="" />';
+			break;
+		}
 	}
 
-	$return = ($hook = get_hook('fn_generate_avatar_markup_end')) ? eval($hook) : null;
-	if ($return != null)
-		return $return;
+	($hook = get_hook('fn_generate_avatar_markup_end')) ? eval($hook) : null;
 
-	return '';
+	return $avatar_markup;
 }
 
 
