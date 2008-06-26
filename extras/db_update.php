@@ -82,6 +82,7 @@ require FORUM_ROOT.'include/functions.php';
 // Load UTF-8 functions
 require FORUM_ROOT.'include/utf8/utf8.php';
 require FORUM_ROOT.'include/utf8/ucwords.php';
+require FORUM_ROOT.'include/utf8/trim.php';
 
 // Instruct DB abstraction layer that we don't want it to "SET NAMES". If we need to, we'll do it ourselves below.
 define('FORUM_NO_SET_NAMES', 1);
