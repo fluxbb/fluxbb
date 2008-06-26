@@ -359,7 +359,7 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 	}
 	else
 	{
-		// Was any specific forum ID's supplied?
+		// Were any forum ID's supplied?
 		if (isset($_GET['fid']) && is_scalar($_GET['fid']) && $_GET['fid'] != '')
 		{
 			$fids = explode(',', forum_trim($_GET['fid']));
