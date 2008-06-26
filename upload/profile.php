@@ -626,7 +626,7 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 	{
 		($hook = get_hook('pf_delete_user_form_submitted')) ? eval($hook) : null;
 
-		delete_user($id);
+		delete_user($id, isset($_POST['delete_posts']));
 
 		redirect(forum_link($forum_url['index']), $lang_profile['User delete redirect']);
 	}

@@ -886,7 +886,7 @@ function add_user($user_info, &$new_uid)
 //
 // Delete a user and all information associated with it
 //
-function delete_user($user_id)
+function delete_user($user_id, $delete_posts = false)
 {
 	global $forum_db, $db_type, $forum_config;
 
@@ -928,7 +928,7 @@ function delete_user($user_id)
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Should we delete all posts made by this user?
-	if (isset($_POST['delete_posts']))
+	if ($delete_posts)
 	{
 		@set_time_limit(0);
 

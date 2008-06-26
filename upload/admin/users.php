@@ -370,7 +370,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 		{
 			// We don't want to delete the Guest user
 			if ($id > 1)
-				delete_user($id, true);
+				delete_user($id, isset($_POST['delete_posts']));
 		}
 
 		redirect(forum_link($forum_url['admin_users']), $lang_admin['Users deleted'].' '.$lang_admin['Redirect']);
