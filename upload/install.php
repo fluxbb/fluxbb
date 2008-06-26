@@ -54,6 +54,7 @@ require FORUM_ROOT.'include/functions.php';
 // Load UTF-8 functions
 require FORUM_ROOT.'include/utf8/utf8.php';
 require FORUM_ROOT.'include/utf8/ucwords.php';
+require FORUM_ROOT.'include/utf8/trim.php';
 
 //
 // Generate output to be used for config.php
