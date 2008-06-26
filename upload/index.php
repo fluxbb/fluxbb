@@ -346,7 +346,7 @@ ob_end_clean();
 // START SUBST - <!-- forum_online -->
 ob_start();
 
-($hook = get_hook('in_pre_users_online')) ? eval($hook) : null;
+($hook = get_hook('in_online_output_start')) ? eval($hook) : null;
 
 if ($forum_config['o_users_online'] == '1')
 {
@@ -382,8 +382,6 @@ if ($forum_config['o_users_online'] == '1')
 <?php
 
 }
-
-($hook = get_hook('in_post_users_online')) ? eval($hook) : null;
 
 ($hook = get_hook('in_online_end')) ? eval($hook) : null;
 
