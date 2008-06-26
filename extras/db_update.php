@@ -1038,9 +1038,9 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		}
 
 		// Check if there is more work to do
-		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'reports WHERE id>='.$end_at) or error(__FILE__, __LINE__);
+		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'reports WHERE id>='.$end_at.' ORDER BY id ASC LIMIT 1') or error(__FILE__, __LINE__);
 		if ($forum_db->num_rows($result))
-			$query_str = '?stage=conv_reports&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$end_at;
+			$query_str = '?stage=conv_reports&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$forum_db->result($result);
 		else
 			$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
 		break;
@@ -1068,9 +1068,9 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		}
 
 		// Check if there is more work to do
-		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'search_words WHERE id>='.$end_at) or error(__FILE__, __LINE__);
+		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'search_words WHERE id>='.$end_at.' ORDER BY id ASC LIMIT 1') or error(__FILE__, __LINE__);
 		if ($forum_db->num_rows($result))
-			$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$end_at;
+			$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$forum_db->result($result);
 		else
 			$query_str = '?stage=conv_users&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
 		break;
@@ -1102,9 +1102,9 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		}
 
 		// Check if there is more work to do
-		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'users WHERE id>='.$end_at) or error(__FILE__, __LINE__);
+		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'users WHERE id>='.$end_at.' ORDER BY id ASC LIMIT 1') or error(__FILE__, __LINE__);
 		if ($forum_db->num_rows($result))
-			$query_str = '?stage=conv_users&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$end_at;
+			$query_str = '?stage=conv_users&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$forum_db->result($result);
 		else
 			$query_str = '?stage=conv_topics&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
 		break;
@@ -1132,9 +1132,9 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		}
 
 		// Check if there is more work to do
-		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'topics WHERE id>='.$end_at) or error(__FILE__, __LINE__);
+		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'topics WHERE id>='.$end_at.' ORDER BY id ASC LIMIT 1') or error(__FILE__, __LINE__);
 		if ($forum_db->num_rows($result))
-			$query_str = '?stage=conv_topics&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$end_at;
+			$query_str = '?stage=conv_topics&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$forum_db->result($result);
 		else
 			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
 		break;
@@ -1166,9 +1166,9 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		}
 
 		// Check if there is more work to do
-		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'posts WHERE id>='.$end_at) or error(__FILE__, __LINE__);
+		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'posts WHERE id>='.$end_at.' ORDER BY id ASC LIMIT 1') or error(__FILE__, __LINE__);
 		if ($forum_db->num_rows($result))
-			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$end_at;
+			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$forum_db->result($result);
 		else
 			$query_str = '?stage=conv_tables';
 		break;
@@ -1242,13 +1242,13 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		{
 			echo 'Preparsing post '.$cur_item['id'].' …<br />'."\n";
 			$temp = array();
-			$forum_db->query('UPDATE '.$forum_db->prefix.'posts SET message=\''.$forum_db->escape(preparse_bbcode($cur_item['message'],$temp)).'\' WHERE id='.$cur_item['id']) or error(__FILE__, __LINE__);
+			$forum_db->query('UPDATE '.$forum_db->prefix.'posts SET message=\''.$forum_db->escape(preparse_bbcode($cur_item['message'], $temp)).'\' WHERE id='.$cur_item['id']) or error(__FILE__, __LINE__);
 		}
 
 		// Check if there is more work to do
-		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'posts WHERE id>='.$end_at) or error(__FILE__, __LINE__);
+		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'posts WHERE id>='.$end_at.' ORDER BY id ASC LIMIT 1') or error(__FILE__, __LINE__);
 		if ($forum_db->num_rows($result))
-			$query_str = '?stage=preparse_posts&req_per_page='.PER_PAGE.'&start_at='.$end_at;
+			$query_str = '?stage=preparse_posts&req_per_page='.PER_PAGE.'&start_at='.$forum_db->result($result);
 		else
 			$query_str = '?stage=preparse_sigs';
 		break;
@@ -1270,13 +1270,13 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		{
 			echo 'Preparsing signature '.$cur_item['id'].' …<br />'."\n";
 			$temp = array();
-			$forum_db->query('UPDATE '.$forum_db->prefix.'users SET signature=\''.$forum_db->escape(preparse_bbcode($cur_item['signature'],$temp,true)).'\' WHERE id='.$cur_item['id']) or error(__FILE__, __LINE__);
+			$forum_db->query('UPDATE '.$forum_db->prefix.'users SET signature=\''.$forum_db->escape(preparse_bbcode($cur_item['signature'], $temp, true)).'\' WHERE id='.$cur_item['id']) or error(__FILE__, __LINE__);
 		}
 
 		// Check if there is more work to do
-		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'users WHERE id>='.$end_at) or error(__FILE__, __LINE__);
+		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'users WHERE id>='.$end_at.' ORDER BY id ASC LIMIT 1') or error(__FILE__, __LINE__);
 		if ($forum_db->num_rows($result))
-			$query_str = '?stage=preparse_sigs&req_per_page='.PER_PAGE.'&start_at='.$end_at;
+			$query_str = '?stage=preparse_sigs&req_per_page='.PER_PAGE.'&start_at='.$forum_db->result($result);
 		else
 			$query_str = '?stage=finish';
 		break;
