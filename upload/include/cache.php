@@ -294,7 +294,7 @@ function generate_hooks_cache()
 
 	// Get the hooks from the DB
 	$query = array(
-		'SELECT'	=> 'eh.id, eh.code, eh.extension_id',
+		'SELECT'	=> 'eh.id, eh.code, eh.extension_id, e.dependencies',
 		'FROM'		=> 'extension_hooks AS eh',
 		'JOINS'		=> array(
 			array(
@@ -313,10 +313,25 @@ function generate_hooks_cache()
 	while ($cur_hook = $forum_db->fetch_assoc($result))
 	{
 		$load_ext_info = '$ext_info_stack[] = array('."\n".
-			'\'id\'		=> \''.$cur_hook['extension_id'].'\','."\n".
-			'\'path\'	=> FORUM_ROOT.\'extensions/'.$cur_hook['extension_id'].'\','."\n".
-			'\'url\'	=> $GLOBALS[\'base_url\'].\'/extensions/'.$cur_hook['extension_id'].'\');'."\n".'
-			$ext_info = $ext_info_stack[count($ext_info_stack) - 1];';
+			'\'id\'				=> \''.$cur_hook['extension_id'].'\','."\n".
+			'\'path\'			=> FORUM_ROOT.\'extensions/'.$cur_hook['extension_id'].'\','."\n".
+			'\'url\'			=> $GLOBALS[\'base_url\'].\'/extensions/'.$cur_hook['extension_id'].'\','."\n".
+			'\'dependencies\'	=> array ('."\n";
+
+		$dependencies = explode('|', substr($cur_hook['dependencies'], 1, -1));
+		foreach ($dependencies as $cur_dependency)
+		{
+			// This happens if there are no dependencies because explode ends up returning an array with one empty element
+			if (empty($cur_dependency))
+				continue;
+
+			$load_ext_info .= '\''.$cur_dependency.'\'	=> array('."\n".
+				'\'id\'				=> \''.$cur_dependency.'\','."\n".
+				'\'path\'			=> FORUM_ROOT.\'extensions/'.$cur_dependency.'\','."\n".
+				'\'url\'			=> $GLOBALS[\'base_url\'].\'/extensions/'.$cur_dependency.'\'),'."\n";
+		}
+
+		$load_ext_info .= ')'."\n".');'."\n".'$ext_info = $ext_info_stack[count($ext_info_stack) - 1];';
 		$unload_ext_info = 'array_pop($ext_info_stack);'."\n".'$ext_info = empty($ext_info_stack) ? array() : $ext_info_stack[count($ext_info_stack) - 1];';
 
 		$output[$cur_hook['id']][] = $load_ext_info."\n\n".$cur_hook['code']."\n\n".$unload_ext_info."\n";
