@@ -670,10 +670,10 @@ function no_search_results($action = 'search')
 			message($lang_search['No recent posts'], $forum_page['search_again'], $lang_search['Recently active topics']);
 
 		case 'show_user_posts':
-			message($lang_search['No user posts'], $forum_page['search_again'], sprintf($lang_search['Posts by'], $search_set[0]['pposter']));
+			message($lang_search['No user posts'], $forum_page['search_again'], $lang_search['Search results']);
 
 		case 'show_user_topics':
-			message($lang_search['No user topics'], $forum_page['search_again'], sprintf($lang_search['Topics by'], $search_set[0]['poster']));
+			message($lang_search['No user topics'], $forum_page['search_again'], $lang_search['Search results']);
 
 		case 'show_subscriptions':
 			message($lang_search['No subscriptions'], $forum_page['search_again'], $lang_search['Subscriptions']);
