@@ -1750,7 +1750,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		$forum_page['d'] = dir(FORUM_ROOT.'style');
 		while (($forum_page['entry'] = $forum_page['d']->read()) !== false)
 		{
-			if ($forum_page['entry'] != '.' && $forum_page['entry'] != '..' && is_dir(FORUM_ROOT.'style/'.$forum_page['entry']) && file_exists(FORUM_ROOT.'style/'.$forum_page['entry'].'/'.$forum_page['entry'].'.css'))
+			if ($forum_page['entry'] != '.' && $forum_page['entry'] != '..' && is_dir(FORUM_ROOT.'style/'.$forum_page['entry']) && file_exists(FORUM_ROOT.'style/'.$forum_page['entry'].'/'.$forum_page['entry'].'.php'))
 				$forum_page['styles'][] = $forum_page['entry'];
 		}
 		$forum_page['d']->close();

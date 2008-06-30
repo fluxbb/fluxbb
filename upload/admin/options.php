@@ -328,7 +328,7 @@ if (!$section || $section == 'setup')
 		$d = dir(FORUM_ROOT.'style');
 		while (($entry = $d->read()) !== false)
 		{
-			if ($entry != '.' && $entry != '..' && is_dir(FORUM_ROOT.'style/'.$entry) && file_exists(FORUM_ROOT.'style/'.$entry.'/'.$entry.'.css'))
+			if ($entry != '.' && $entry != '..' && is_dir(FORUM_ROOT.'style/'.$entry) && file_exists(FORUM_ROOT.'style/'.$entry.'/'.$entry.'.php'))
 				$styles[] = $entry;
 		}
 		$d->close();
