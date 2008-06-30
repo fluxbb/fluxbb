@@ -282,6 +282,8 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 			$type = 'xml';
 	}
 
+	($hook = get_hook('ex_set_syndication_type')) ? eval($hook) : null;
+
 	$forum_sql = '';
 
 	// Was a topic ID supplied?
