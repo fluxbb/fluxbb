@@ -71,7 +71,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 		message(isset($_GET['install']) ? $lang_common['Bad request'] : $lang_admin['Hotfix download failed']);
 
 	// Make sure we have an array of dependencies
-	if (!isset($ext_data['extension']['dependencies']))
+	if (!isset($ext_data['extension']['dependencies']['dependency']))
 		$ext_data['extension']['dependencies'] = array();
 	else if (!is_array(current($ext_data['extension']['dependencies'])))
 		$ext_data['extension']['dependencies'] = array($ext_data['extension']['dependencies']['dependency']);
