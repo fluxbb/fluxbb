@@ -856,7 +856,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		}
 
 		// We need to add a unique index to avoid users having multiple rows in the online table
-		if (!$forum_db->index_exists('online', $forum_db->prefix.'online_user_id_ident_idx'))
+		if (!$forum_db->index_exists('online', 'user_id_ident_idx'))
 		{
 			$forum_db->query('DELETE FROM '.$forum_db->prefix.'online') or error(__FILE__, __LINE__);
 
@@ -872,6 +872,25 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 					break;
 			}
 		}
+
+		// Remove the redundant user_id_idx on the online table
+		$forum_db->drop_index('online', 'user_id_idx');
+
+		// Add an index to ident on the online table
+		switch ($db_type)
+		{
+			case 'mysql':
+			case 'mysqli':
+				$forum_db->add_index('online', 'ident_idx', array('ident(25)'));
+				break;
+
+			default:
+				$forum_db->add_index('online', 'ident_idx', array('ident'));
+				break;
+		}
+
+		// Add an index to logged on the online table
+		$forum_db->add_index('online', 'logged_idx', array('logged'));
 
 		// Add an index on last_post in the topics table
 		$forum_db->add_index('topics', 'last_post_idx', array('last_post'));

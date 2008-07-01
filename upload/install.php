@@ -866,13 +866,17 @@ else
 			'user_id_ident_idx'	=> array('user_id', 'ident')
 		),
 		'INDEXES'		=> array(
-			'user_id_idx'	=> array('user_id')
+			'ident_idx'		=> array('ident'),
+			'logged_idx'	=> array('logged')
 		),
 		'ENGINE'		=> 'HEAP'
 	);
 
 	if ($db_type == 'mysql' || $db_type == 'mysqli')
+	{
 		$schema['UNIQUE KEYS']['user_id_ident_idx'] = array('user_id', 'ident(25)');
+		$schema['INDEXES']['ident_idx'] = array('ident(25)');
+	}
 
 	$forum_db->create_table('online', $schema);
 
