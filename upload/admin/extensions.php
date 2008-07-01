@@ -107,6 +107,23 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 	{
 		($hook = get_hook('aex_install_comply_form_submitted')) ? eval($hook) : null;
 
+		// $ext_info contains some information about the extension being installed
+		$ext_info = array(
+			'id'			=> $id,
+			'path'			=> FORUM_ROOT.'extensions/'.$id,
+			'url'			=> $base_url.'/extensions/'.$id,
+			'dependencies'	=> array()
+		);
+
+		foreach ($ext_data['extension']['dependencies'] as $dependency)
+		{
+			$ext_info['dependencies'][$dependency] = array(
+				'id'	=> $dependency,
+				'path'	=> FORUM_ROOT.'extensions/'.$dependency,
+				'url'	=> $base_url.'/extensions/'.$dependency,
+			);
+		}
+
 		// Is there some uninstall code to store in the db?
 		$uninstall_code = (isset($ext_data['extension']['uninstall']) && forum_trim($ext_data['extension']['uninstall']) != '') ? '\''.$forum_db->escape(forum_trim($ext_data['extension']['uninstall'])).'\'' : 'NULL';
 
