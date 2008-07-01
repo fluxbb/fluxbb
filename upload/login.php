@@ -203,7 +203,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 		{
 			// Fetch user matching $email
 			$query = array(
-				'SELECT'	=> 'u.id, u.username, u.salt',
+				'SELECT'	=> 'u.id, u.username, u.salt, u.last_email_sent',
 				'FROM'		=> 'users AS u',
 				'WHERE'		=> 'u.email=\''.$forum_db->escape($email).'\''
 			);
@@ -229,12 +229,19 @@ else if ($action == 'forget' || $action == 'forget_2')
 				// Loop through users we found
 				while ($cur_hit = $forum_db->fetch_assoc($result))
 				{
+					$forgot_pass_timeout = 3600;
+
+					($hook = get_hook('li_forgot_pass_pre_flood_check')) ? eval($hook) : null;
+
+					if ($cur_hit['last_email_sent'] != '' && (time() - $cur_hit['last_email_sent']) < $forgot_pass_timeout && (time() - $cur_hit['last_email_sent']) >= 0)
+						message(sprintf($lang_login['Email flood'], $forgot_pass_timeout));
+
 					// Generate a new password activation key
 					$new_password_key = random_key(8, true);
 
 					$query = array(
 						'UPDATE'	=> 'users',
-						'SET'		=> 'activate_key=\''.$new_password_key.'\'',
+						'SET'		=> 'activate_key=\''.$new_password_key.'\', last_email_sent = '.time(),
 						'WHERE'		=> 'id='.$cur_hit['id']
 					);
 

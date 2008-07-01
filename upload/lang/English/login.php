@@ -17,6 +17,7 @@ $lang_login = array(
 'Login options legend'		=>	'Optional setting:',
 'Logout redirect'			=>	'Logged out. Redirecting …',
 'No e-mail match'			=>	'There is no user registered with the e-mail address %s.',
+'Email flood'				=>	'This account has already requested a new password in the past %s seconds. Please wait a while before requesting a new password again.',
 'Request pass'				=>	'I forgot my password',
 'New password request'		=>	'New password request',
 'New password errors'		=>	'<strong>Warning!</strong> The following errors must be corrected before a new password can be sent:',
