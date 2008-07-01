@@ -299,15 +299,13 @@ $query = array(
 ($hook = get_hook('vt_qr_get_posts')) ? eval($hook) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-$signature_cache = array();
-$avatar_cache = array();
+$user_data_cache = array();
 while ($cur_post = $forum_db->fetch_assoc($result))
 {
 	($hook = get_hook('vt_post_loop_start')) ? eval($hook) : null;
 
 	++$forum_page['item_count'];
 
-	$signature = '';
 	$forum_page['user_ident'] = array();
 	$forum_page['user_info'] = array();
 	$forum_page['post_options'] = array();
@@ -325,57 +323,66 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 
 	$forum_page['item_head'] = '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.implode(' ', $forum_page['item_ident']).'</a>';
 
-	// Generate author identification
-	if ($cur_post['poster_id'] > 1 && $forum_config['o_avatars'] == '1' && $forum_user['show_avatars'] != '0')
-	{
-		if (!isset($avatar_cache[$cur_post['poster_id']]))
-			$avatar_cache[$cur_post['poster_id']] = generate_avatar_markup($cur_post['poster_id']);
-
-		if (!empty($avatar_cache[$cur_post['poster_id']]))
-			$forum_page['user_ident']['avatar'] = $avatar_cache[$cur_post['poster_id']];
-	}
-
-	if ($cur_post['poster_id'] > 1)
-	{
-		$forum_page['user_ident']['username'] = ($forum_user['g_view_users'] == '1') ? '<strong class="username"><a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a></strong>' : '<strong class="username">'.forum_htmlencode($cur_post['username']).'</strong>';
-		$forum_page['user_ident']['usertitle'] = '<span class="usertitle">'.get_title($cur_post).'</span>';
-
-		if ($cur_post['is_online'] == $cur_post['poster_id'])
-			$forum_page['user_status'] = $lang_topic['Online'];
-		else
-			$forum_page['user_status'] = $lang_topic['Offline'];
-
-		$forum_page['user_ident']['status'] = '<small class="userstatus">'.$forum_page['user_status'].'</small>';
-	}
+	if (isset($user_data_cache[$cur_post['poster_id']]['user_ident']))
+		$forum_page['user_ident'] = $user_data_cache[$cur_post['poster_id']]['user_ident'];
 	else
 	{
-		$forum_page['user_ident']['username'] = '<strong class="username">'.forum_htmlencode($cur_post['username']).'</strong>';
-		$forum_page['user_ident']['usertitle'] = '<span class="usertitle">'.get_title($cur_post).'</span>';
+		// Generate author identification
+		if ($cur_post['poster_id'] > 1 && $forum_config['o_avatars'] == '1' && $forum_user['show_avatars'] != '0')
+		{
+			$forum_page['avatar_markup'] = generate_avatar_markup($cur_post['poster_id']);
+
+			if (!empty($forum_page['avatar_markup']))
+				$forum_page['user_ident']['avatar'] = $forum_page['avatar_markup'];
+		}
+	
+		if ($cur_post['poster_id'] > 1)
+		{
+			$forum_page['user_ident']['username'] = ($forum_user['g_view_users'] == '1') ? '<strong class="username"><a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a></strong>' : '<strong class="username">'.forum_htmlencode($cur_post['username']).'</strong>';
+			$forum_page['user_ident']['usertitle'] = '<span class="usertitle">'.get_title($cur_post).'</span>';
+
+			if ($cur_post['is_online'] == $cur_post['poster_id'])
+				$forum_page['user_status'] = $lang_topic['Online'];
+			else
+				$forum_page['user_status'] = $lang_topic['Offline'];
+
+			$forum_page['user_ident']['status'] = '<small class="userstatus">'.$forum_page['user_status'].'</small>';
+		}
+		else
+		{
+			$forum_page['user_ident']['username'] = '<strong class="username">'.forum_htmlencode($cur_post['username']).'</strong>';
+			$forum_page['user_ident']['usertitle'] = '<span class="usertitle">'.get_title($cur_post).'</span>';
+		}
 	}
 
-	// Generate author information
-	if ($cur_post['poster_id'] > 1)
+	if (isset($user_data_cache[$cur_post['poster_id']]['user_info']))
+		$forum_page['user_info'] = $user_data_cache[$cur_post['poster_id']]['user_info'];
+	else
 	{
-		if ($forum_config['o_show_user_info'] == '1')
+		// Generate author information
+		if ($cur_post['poster_id'] > 1)
 		{
-			if ($cur_post['location'] != '')
+			if ($forum_config['o_show_user_info'] == '1')
 			{
-				if ($forum_config['o_censoring'] == '1')
-					$cur_post['location'] = censor_words($cur_post['location']);
+				if ($cur_post['location'] != '')
+				{
+					if ($forum_config['o_censoring'] == '1')
+						$cur_post['location'] = censor_words($cur_post['location']);
 
-				$forum_page['user_info']['from'] = '<li><span><strong>'.$lang_topic['From'].'</strong> '.forum_htmlencode($cur_post['location']).'</span></li>';
+					$forum_page['user_info']['from'] = '<li><span><strong>'.$lang_topic['From'].'</strong> '.forum_htmlencode($cur_post['location']).'</span></li>';
+				}
+
+				$forum_page['user_info']['registered'] = '<li><span><strong>'.$lang_topic['Registered'].'</strong> '.format_time($cur_post['registered'], true).'</span></li>';
+
+				if ($forum_config['o_show_post_count'] == '1' || $forum_user['is_admmod'])
+					$forum_page['user_info']['posts'] = '<li><span><strong>'.$lang_topic['Posts'].'</strong> '.$cur_post['num_posts'].'</span></li>';
 			}
 
-			$forum_page['user_info']['registered'] = '<li><span><strong>'.$lang_topic['Registered'].'</strong> '.format_time($cur_post['registered'], true).'</span></li>';
-
-			if ($forum_config['o_show_post_count'] == '1' || $forum_user['is_admmod'])
-				$forum_page['user_info']['posts'] = '<li><span><strong>'.$lang_topic['Posts'].'</strong> '.$cur_post['num_posts'].'</span></li>';
-		}
-
-		if ($forum_user['is_admmod'])
-		{
-			if ($cur_post['admin_note'] != '')
-				$forum_page['user_info']['note'] = '<li><span><strong>'.$lang_topic['Note'].'</strong> '.forum_htmlencode($cur_post['admin_note']).'</span></li>';
+			if ($forum_user['is_admmod'])
+			{
+				if ($cur_post['admin_note'] != '')
+					$forum_page['user_info']['note'] = '<li><span><strong>'.$lang_topic['Note'].'</strong> '.forum_htmlencode($cur_post['admin_note']).'</span></li>';
+			}
 		}
 	}
 
@@ -386,19 +393,24 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 	// Generate author contact details
 	if ($forum_config['o_show_user_info'] == '1')
 	{
-		if ($cur_post['poster_id'] > 1)
-		{
-			if ($cur_post['url'] != '')
-				$forum_page['post_contacts']['url'] = '<a class="external" href="'.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($cur_post['url']) : $cur_post['url']).'"><span>'.sprintf($lang_topic['Visit website'], forum_htmlencode($cur_post['username'])).'</span></a>';
-			if ((($cur_post['email_setting'] == '0' && !$forum_user['is_guest']) || $forum_user['is_admmod']) && $forum_user['g_send_email'] == '1')
-				$forum_page['post_contacts']['email'] = '<a href="mailto:'.$cur_post['email'].'"><span>'.$lang_topic['E-mail'].'<span>&#160;'.forum_htmlencode($cur_post['username']).'</span></span></a>';
-			else if ($cur_post['email_setting'] == '1' && !$forum_user['is_guest'] && $forum_user['g_send_email'] == '1')
-				$forum_page['post_contacts']['email'] = '<a href="'.forum_link($forum_url['email'], $cur_post['poster_id']).'"><span>'.$lang_topic['E-mail'].'<span>&#160;'.forum_htmlencode($cur_post['username']).'</span></span></a>';
-		}
+		if (isset($user_data_cache[$cur_post['poster_id']]['post_contacts']))
+			$forum_page['post_contacts'] = $user_data_cache[$cur_post['poster_id']]['post_contacts'];
 		else
 		{
-			if ($cur_post['poster_email'] != '' && !$forum_user['is_guest'] && $forum_user['g_send_email'] == '1')
-				$forum_page['post_contacts']['email'] = '<a href="mailto:'.$cur_post['poster_email'].'"><span>'.$lang_topic['E-mail'].'<span>&#160;'.forum_htmlencode($cur_post['username']).'</span></span></a>';
+			if ($cur_post['poster_id'] > 1)
+			{
+				if ($cur_post['url'] != '')
+					$forum_page['post_contacts']['url'] = '<a class="external" href="'.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($cur_post['url']) : $cur_post['url']).'"><span>'.sprintf($lang_topic['Visit website'], forum_htmlencode($cur_post['username'])).'</span></a>';
+				if ((($cur_post['email_setting'] == '0' && !$forum_user['is_guest']) || $forum_user['is_admmod']) && $forum_user['g_send_email'] == '1')
+					$forum_page['post_contacts']['email'] = '<a href="mailto:'.$cur_post['email'].'"><span>'.$lang_topic['E-mail'].'<span>&#160;'.forum_htmlencode($cur_post['username']).'</span></span></a>';
+				else if ($cur_post['email_setting'] == '1' && !$forum_user['is_guest'] && $forum_user['g_send_email'] == '1')
+					$forum_page['post_contacts']['email'] = '<a href="'.forum_link($forum_url['email'], $cur_post['poster_id']).'"><span>'.$lang_topic['E-mail'].'<span>&#160;'.forum_htmlencode($cur_post['username']).'</span></span></a>';
+			}
+			else
+			{
+				if ($cur_post['poster_email'] != '' && !$forum_user['is_guest'] && $forum_user['g_send_email'] == '1')
+					$forum_page['post_contacts']['email'] = '<a href="mailto:'.$cur_post['poster_email'].'"><span>'.$lang_topic['E-mail'].'<span>&#160;'.forum_htmlencode($cur_post['username']).'</span></span></a>';
+			}
 		}
 	}
 
@@ -487,6 +499,18 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 	}
 
 	($hook = get_hook('vt_row_pre_display')) ? eval($hook) : null;
+
+	// Do user data caching for the post
+	if ($cur_post['poster_id'] > 1 && !isset($user_data_cache[$cur_post['poster_id']]))
+	{
+		$user_data_cache[$cur_post['poster_id']] = array(
+			'user_ident'	=> $forum_page['user_ident'],
+			'user_info'		=> $forum_page['user_info'],
+			'post_contacts'	=> $forum_page['post_contacts']
+		);
+
+		($hook = get_hook('vt_row_add_user_data_cache')) ? eval($hook) : null;
+	}
 
 ?>
 	<div class="<?php echo implode(' ', $forum_page['item_status']) ?>">
