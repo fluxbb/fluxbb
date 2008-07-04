@@ -74,6 +74,7 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE_SECTION', 'management');
 define('FORUM_PAGE', 'admin-reports');
+define('FORUM_PAGE_TYPE', 'sectioned');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
@@ -82,18 +83,10 @@ ob_start();
 ($hook = get_hook('arp_main_output_start')) ? eval($hook) : null;
 
 ?>
-<div id="brd-main" class="main sectioned admin">
-
-<?php echo generate_admin_menu(); ?>
-
-	<div class="main-head">
-		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin['New reports heading'] ?></span></h2>
 	</div>
-
-	<div class="main-content frm">
-		<div class="frm-head">
-			<h2><span><?php echo $lang_admin['New reports heading'] ?></span></h2>
-		</div>
+	<div class="main-content main-frm">
 <?php
 
 // Fetch any unread reports
@@ -147,12 +140,14 @@ if ($forum_db->num_rows($result))
 		($hook = get_hook('arp_new_report_pre_display')) ? eval($hook) : null;
 
 ?>
-			<div class="rep-item databox">
-				<h3 class="legend"><span><?php printf($lang_admin['Reported by'], format_time($cur_report['created']), $reporter) ?></span></h3>
-				<div class="radbox checkbox item-select"><label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_admin['Select report'] ?></span><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="reports[<?php echo $cur_report['id'] ?>]" value="1" /> <?php echo ++$forum_page['num_items'] ?></label></div>
-				<p><?php echo $forum ?>&#160;»&#160;<?php echo $topic ?>&#160;»&#160;<?php echo $post_id ?></p>
-				<p><?php echo $message ?></p>
+			<div class="pair data-pair">
+			<div class="box data-box">
+				<h3 class="hn reporthead"><span><?php echo ++$forum_page['num_items'] ?></span> <strong class="username legend">By <?php echo $reporter ?> </strong>Re: <?php echo $forum ?>&#160;-&#160;<?php echo $topic ?>&#160;-&#160;<?php echo $post_id ?></h3>
+				<p class="item-select" style="margin-top: -2.5em"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="reports[<?php echo $cur_report['id'] ?>]" value="1" /> <label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Select report'] ?></span> <?php echo $forum_page['num_items'] ?></label></p>
+				<h4 class="hn legend">Report</h4>
+				<p><strong style="display: block"><?php echo format_time($cur_report['created']) ?></strong> <?php echo $message ?></p>
 <?php ($hook = get_hook('arp_new_report_new_block')) ? eval($hook) : null; ?>
+			</div>
 			</div>
 <?php
 
@@ -180,7 +175,7 @@ else
 ?>
 	</div>
 
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php echo $lang_admin['Read reports heading'] ?></span></h2>
 		</div>
@@ -237,7 +232,7 @@ if ($forum_db->num_rows($result))
 ?>
 		<div class="rep-item databox">
 			<h3 class="legend"><span><strong><?php echo ++$forum_page['num_items'] ?></strong> <?php printf($lang_admin['Reported by'], format_time($cur_report['created']), $reporter) ?></span></h3>
-			<p><?php echo $forum ?>&#160;»&#160;<?php echo $topic ?>&#160;»&#160;<?php echo $post_id ?></p>
+			<p><?php echo $forum ?>&#160;�&#160;<?php echo $topic ?>&#160;�&#160;<?php echo $post_id ?></p>
 			<p><?php echo $message ?></p>
 			<p><?php printf($lang_admin['Marked read by'], format_time($cur_report['zapped']), $zapped_by) ?></p>
 <?php ($hook = get_hook('arp_report_new_block')) ? eval($hook) : null; ?>

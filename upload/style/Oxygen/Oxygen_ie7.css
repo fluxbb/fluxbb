@@ -1,25 +1,38 @@
-.frm .frm-set div,
-.frm .frm-group,
-.brd #req-msg:after,
-.brd #brd-online,
-.brd .main-pagepost,
-.brd .main-menu,
-.brd .cbox,
-.brd .main-head,
-.brd .main-menu ul,
-.brd #req-msg,
-#brd-about,
-#brd-stats ul,
-#brd-online,
+/*************************************************************
+IE7 - FIXES
+**************************************************************/
+	
+/* Float Clearing and Has Layout Fixes
+-------------------------------------------------------------*/
+
+.brd-page,
+#brd-index .main-subhead,
+#brd-index .forum-item,
+.brd .main,
+.brd .gen-content,
+.brd .main-content,
+.brd .content-box,
+.brd .content-box *,
+.brd fieldset div,
+.brd fieldset fieldset,
 .brd .post,
-.brd .posthead h3,
 .brd .postbody,
-.brd .main-content {
+.brd .postbody-inner,
+.brd .postfoot p {
+	max-height: 100%;
 	zoom: 1;
-	min-height: 1px;
 	}
 	
-.brd legend {
+
+
+/* Forms
+-------------------------------------------------------------*/
+
+#brd-wrap fieldset {
+	padding-top: 1px;
+	position: relative;
+	}
+
+.brd fieldset legend {
 	margin-left: -7px;
 	}
-	

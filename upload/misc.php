@@ -72,7 +72,7 @@ if ($action == 'rules')
 		<h2><span><?php echo $lang_common['Forum rules'] ?></span></h2>
 	</div>
 
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="userbox">
 			<?php echo $forum_config['o_rules_message']."\n" ?>
 		</div>
@@ -250,7 +250,7 @@ else if (isset($_GET['email']))
 	}
 
 	// Setup form
-	$forum_page['set_count'] = $forum_page['fld_count'] = 0;
+	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 	$forum_page['form_action'] = forum_link($forum_url['email'], $recipient_id);
 
 	$forum_page['hidden_fields'] = array(
@@ -269,9 +269,6 @@ else if (isset($_GET['email']))
 		sprintf($lang_misc['Send forum e-mail'], forum_htmlencode($recipient))
 	);
 
-	// Setup main heading
-	$forum_page['main_head'] = end($forum_page['crumbs']);
-
 	($hook = get_hook('mi_email_pre_header_load')) ? eval($hook) : null;
 
 	define('FORUM_PAGE', 'formemail');
@@ -284,8 +281,8 @@ else if (isset($_GET['email']))
 	($hook = get_hook('mi_email_output_start')) ? eval($hook) : null;
 
 ?>
-	<div class="main-content frm">
-		<div class="cbox info-box">
+	<div class="main-content main-frm">
+		<div class="content-box warn-box">
 			<p class="important"><?php echo $lang_misc['E-mail disclosure note'] ?></p>
 		</div>
 <?php
@@ -300,7 +297,7 @@ else if (isset($_GET['email']))
 		($hook = get_hook('mi_pre_email_errors')) ? eval($hook) : null;
 
 ?>
-		<div class="frm-error">
+		<div class="content-box error-box">
 			<h2 class="warn"><?php echo $lang_misc['Form e-mail errors'] ?></h2>
 			<ul>
 				<?php echo implode("\n\t\t\t\t\t", $forum_page['errors'])."\n" ?>
@@ -314,25 +311,25 @@ else if (isset($_GET['email']))
 		<div id="req-msg" class="req-warn">
 			<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Reqmark'].'</em>') ?></p>
 		</div>
-		<form id="afocus" class="frm-newform" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+		<form id="afocus" class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
 <?php ($hook = get_hook('mi_email_pre_fieldset')) ? eval($hook) : null; ?>
-			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="frm-legend"><strong><?php echo $lang_misc['Write e-mail'] ?></strong></legend>
-				<div class="frm-text required longtext">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-						<span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_misc['E-mail subject'] ?></span>
-					</label><br />
-					<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_subject" value="<?php echo(isset($_POST['req_subject']) ? forum_htmlencode($_POST['req_subject']) : '') ?>" size="75" maxlength="70" /></span>
+				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="frm-box text required longtext">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_misc['E-mail subject'] ?></span></label><br />
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_subject" value="<?php echo(isset($_POST['req_subject']) ? forum_htmlencode($_POST['req_subject']) : '') ?>" size="75" maxlength="70" /></span>
+					</div>
 				</div>
 <?php ($hook = get_hook('mi_email_pre_message_contents')) ? eval($hook) : null; ?>
-				<div class="frm-textarea required">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-						<span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_misc['E-mail message'] ?></span>
-					</label><br />
-					<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_message" rows="10" cols="95"><?php echo(isset($_POST['req_message']) ? forum_htmlencode($_POST['req_message']) : '') ?></textarea></span>
+				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="frm-box textarea required">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_misc['E-mail message'] ?></span></label><br />
+						<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_message" rows="10" cols="95"><?php echo(isset($_POST['req_message']) ? forum_htmlencode($_POST['req_message']) : '') ?></textarea></span>
+					</div>
 				</div>
 			</fieldset>
 <?php ($hook = get_hook('mi_email_post_fieldset')) ? eval($hook) : null; ?>
@@ -447,7 +444,7 @@ else if (isset($_GET['report']))
 	}
 
 	// Setup form
-	$forum_page['set_count'] = $forum_page['fld_count'] = 0;
+	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 	$forum_page['form_action'] = forum_link($forum_url['report'], $post_id);
 
 	$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
@@ -475,23 +472,22 @@ else if (isset($_GET['report']))
 	($hook = get_hook('mi_report_output_start')) ? eval($hook) : null;
 
 ?>
-<div class="main-content frm">
+<div class="main-content main-frm">
 	<div id="req-msg" class="req-warn">
 		<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Reqmark'].'</em>') ?></p>
 	</div>
-	<form id="afocus" class="frm-newform" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+	<form id="afocus" class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 		<div class="hidden">
 			<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 		</div>
 <?php ($hook = get_hook('mi_report_pre_fieldset')) ? eval($hook) : null; ?>
-		<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+		<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
 			<legend class="frm-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
-			<div class="frm-textarea required">
-				<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-					<span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_misc['Reason'] ?></span>
-					<small><?php echo $lang_misc['Reason help'] ?></small>
-				</label><br />
-				<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_reason" rows="5" cols="60"></textarea></span><br />
+			<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="frm-box textarea required">
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_misc['Reason'] ?></span><small><?php echo $lang_misc['Reason help'] ?></small></label><br />
+					<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_reason" rows="5" cols="60"></textarea></span>
+				</div>
 			</div>
 		</fieldset>
 <?php ($hook = get_hook('mi_report_post_fieldset')) ? eval($hook) : null; ?>

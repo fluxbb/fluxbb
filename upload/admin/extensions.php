@@ -222,6 +222,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 
 			define('FORUM_PAGE_SECTION', 'extensions');
 			define('FORUM_PAGE', 'admin-extensions-install');
+			define('FORUM_PAGE_TYPE', 'sectioned');
 			require FORUM_ROOT.'header.php';
 
 			// START SUBST - <!-- forum_main -->
@@ -232,12 +233,10 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 ?>
 <div id="brd-main" class="main sectioned admin">
 
-<?php echo generate_admin_menu(); ?>
-
 	<div class="main-head">
 		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php echo end($forum_page['crumbs']) ?> "<?php echo forum_htmlencode($ext_data['extension']['title']) ?>"</span></h2>
 		</div>
@@ -274,6 +273,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 
 	define('FORUM_PAGE_SECTION', 'extensions');
 	define('FORUM_PAGE', 'admin-extensions-install');
+	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -283,13 +283,11 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 ?>
 <div id="brd-main" class="main sectioned admin">
 
-<?php echo generate_admin_menu(); ?>
-
 	<div class="main-head">
 		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php echo end($forum_page['crumbs']) ?> "<?php echo forum_htmlencode($ext_data['extension']['title']) ?>"</span></h2>
 		</div>
@@ -436,6 +434,7 @@ else if (isset($_GET['uninstall']))
 
 			define('FORUM_PAGE_SECTION', 'extensions');
 			define('FORUM_PAGE', 'admin-extensions-manage');
+			define('FORUM_PAGE_TYPE', 'sectioned');
 			require FORUM_ROOT.'header.php';
 
 			// START SUBST - <!-- forum_main -->
@@ -446,13 +445,11 @@ else if (isset($_GET['uninstall']))
 ?>
 <div id="brd-main" class="main sectioned admin">
 
-<?php echo generate_admin_menu(); ?>
-
 	<div class="main-head">
 		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php echo end($forum_page['crumbs']) ?> "<?php echo forum_htmlencode($ext_data['title']) ?>"</span></h2>
 		</div>
@@ -489,6 +486,7 @@ else if (isset($_GET['uninstall']))
 
 		define('FORUM_PAGE_SECTION', 'extensions');
 		define('FORUM_PAGE', 'admin-extensions-manage');
+		define('FORUM_PAGE_TYPE', 'sectioned');
 		require FORUM_ROOT.'header.php';
 
 		// START SUBST - <!-- forum_main -->
@@ -499,13 +497,11 @@ else if (isset($_GET['uninstall']))
 ?>
 <div id="brd-main" class="main sectioned admin">
 
-<?php echo generate_admin_menu(); ?>
-
 	<div class="main-head">
 		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php echo end($forum_page['crumbs']) ?> "<?php echo forum_htmlencode($ext_data['title']) ?>"</span></h2>
 		</div>
@@ -665,6 +661,7 @@ if ($section == 'install')
 
 	define('FORUM_PAGE_SECTION', 'extensions');
 	define('FORUM_PAGE', 'admin-extensions-install');
+	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -675,13 +672,11 @@ if ($section == 'install')
 ?>
 <div id="brd-main" class="main sectioned admin">
 
-<?php echo generate_admin_menu(); ?>
-
 	<div class="main-head">
 		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php echo $lang_admin['Extensions available'] ?></span></h2>
 		</div>
@@ -812,6 +807,7 @@ else
 
 	define('FORUM_PAGE_SECTION', 'extensions');
 	define('FORUM_PAGE', 'admin-extensions-manage');
+	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -822,13 +818,11 @@ else
 ?>
 <div id="brd-main" class="main sectioned admin">
 
-<?php echo generate_admin_menu(); ?>
-
 	<div class="main-head">
 		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php echo $lang_admin['Installed extensions'] ?></span></h2>
 		</div>

@@ -99,6 +99,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 
 	define('FORUM_PAGE_SECTION', 'users');
 	define('FORUM_PAGE', 'admin-groups');
+	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -109,8 +110,6 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 ?>
 <div id="brd-main" class="main sectioned admin">
 
-
-<?php echo generate_admin_menu(); ?>
 
 	<div class="main-head">
 		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
@@ -133,7 +132,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 <?php ($hook = get_hook('agr_add_edit_group_pre_title_part')) ? eval($hook) : null; ?>
 			<div class="frm-part part<?php echo ++ $forum_page['part_count'] ?>">
 				<h3><span><?php printf($lang_admin['Group title head'], $forum_page['part_count']) ?></span></h3>
-				<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+				<fieldset class="frm-fset fset<?php echo ++$forum_page['set_count'] ?>">
 					<legend class="frm-legend"><span><?php echo $lang_admin['Options'] ?></span></legend>
 					<div class="frm-fld text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
@@ -167,9 +166,9 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 <?php if ($mode == 'edit' && $forum_config['o_default_user_group'] == $group['g_id']): ?>				<div class="frm-info">
 					<p class="warn"><?php echo $lang_admin['Moderator default group'] ?></p>
 				</div>
-<?php endif; ?>				<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+<?php endif; ?>				<fieldset class="frm-fset fset<?php echo ++$forum_page['set_count'] ?>">
 					<legend class="frm-legend"><strong><?php echo $lang_admin['Permissions'] ?></strong></legend>
-<?php if ($group['g_id'] != FORUM_GUEST): if ($mode != 'edit' || $forum_config['o_default_user_group'] != $group['g_id']): ?><fieldset class="frm-group">
+<?php if ($group['g_id'] != FORUM_GUEST): if ($mode != 'edit' || $forum_config['o_default_user_group'] != $group['g_id']): ?><fieldset class="frm-radset">
 						<legend><span><?php echo $lang_admin['Mod permissions'] ?></span></legend>
 						<div class="radbox"><label for="fld<?php echo ++$forum_page['fld_count'] ?>"><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="moderator" value="1"<?php if ($group['g_moderator'] == '1') echo ' checked="checked"' ?> /> <?php echo $lang_admin['Allow moderate'] ?> <em class="field-info"><?php echo $lang_admin['Mods warning'] ?></em></label></div>
 						<div class="radbox"><label for="fld<?php echo ++$forum_page['fld_count'] ?>"><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="mod_edit_users" value="1"<?php if ($group['g_mod_edit_users'] == '1') echo ' checked="checked"' ?> /> <?php echo $lang_admin['Allow mod edit profiles'] ?></label></div>
@@ -177,7 +176,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 						<div class="radbox"><label for="fld<?php echo ++$forum_page['fld_count'] ?>"><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="mod_change_passwords" value="1"<?php if ($group['g_mod_change_passwords'] == '1') echo ' checked="checked"' ?> /> <?php echo $lang_admin['Allow mod change pass'] ?></label></div>
 						<div class="radbox"><label for="fld<?php echo ++$forum_page['fld_count'] ?>"><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="mod_ban_users" value="1"<?php if ($group['g_mod_ban_users'] == '1') echo ' checked="checked"' ?> /> <?php echo $lang_admin['Allow mod bans'] ?></label></div>
 					</fieldset>
-<?php endif; endif; ?>					<fieldset class="frm-group">
+<?php endif; endif; ?>					<fieldset class="frm-radset">
 						<legend><span><?php echo $lang_admin['User permissions'] ?></span></legend>
 						<div class="radbox"><label for="fld<?php echo ++$forum_page['fld_count'] ?>"><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="read_board" value="1"<?php if ($group['g_read_board'] == '1') echo ' checked="checked"' ?> /> <?php echo $lang_admin['Allow read board'] ?></label><br /> <em class="field-info"><?php echo $lang_admin['Allow read board info'] ?></em></div>
 						<div class="radbox"><label for="fld<?php echo ++$forum_page['fld_count'] ?>"><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="view_users" value="1"<?php if ($group['g_view_users'] == '1') echo ' checked="checked"' ?> /> <?php echo $lang_admin['Allow view users'] ?></label></div>
@@ -207,7 +206,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 <?php ($hook = get_hook('agr_add_edit_group_pre_flood_part')) ? eval($hook) : null; ?>
 			<div class="frm-part part<?php echo ++ $forum_page['part_count'] ?>">
 				<h3><span><?php printf($lang_admin['Group flood head'], $forum_page['part_count']) ?></span></h3>
-				<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+				<fieldset class="frm-fset fset<?php echo ++$forum_page['set_count'] ?>">
 					<legend class="frm-legend"><span><?php echo $lang_admin['Restrictions'] ?></span></legend>
 					<div class="frm-fld text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
@@ -525,6 +524,7 @@ else if (isset($_GET['del_group']))
 
 	define('FORUM_PAGE_SECTION', 'users');
 	define('FORUM_PAGE', 'admin-groups');
+	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -535,13 +535,11 @@ else if (isset($_GET['del_group']))
 ?>
 <div id="brd-main" class="main sectioned admin">
 
-<?php echo generate_admin_menu(); ?>
-
 	<div class="main-head">
 		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php printf($lang_admin['Remove group head'], forum_htmlencode($group_title), $num_members) ?></span></h2>
 		</div>
@@ -549,7 +547,7 @@ else if (isset($_GET['del_group']))
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_groups']).'?del_group='.$group_id) ?>" />
 			</div>
-			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+			<fieldset class="frm-fset fset<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><span><?php echo $lang_admin['Options'] ?></span></legend>
 				<div class="frm-fld select">
 					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
@@ -614,6 +612,7 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE_SECTION', 'users');
 define('FORUM_PAGE', 'admin-groups');
+define('FORUM_PAGE_TYPE', 'sectioned');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
@@ -624,13 +623,11 @@ ob_start();
 ?>
 <div id="brd-main" class="main sectioned admin">
 
-<?php echo generate_admin_menu(); ?>
-
 	<div class="main-head">
 		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php echo $lang_admin['Add group heading'] ?></span></h2>
 		</div>
@@ -638,7 +635,7 @@ ob_start();
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_groups']).'?action=foo') ?>" />
 			</div>
-			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+			<fieldset class="frm-fset fset<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><span><?php echo $lang_admin['Options'] ?></span></legend>
 				<div class="frm-fld select">
 					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
@@ -679,7 +676,7 @@ while ($cur_group = $forum_db->fetch_assoc($result))
 	$forum_page['set_count'] = 0;
 
 ?>
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php echo $lang_admin['Default group heading'] ?></span></h2>
 		</div>
@@ -687,7 +684,7 @@ while ($cur_group = $forum_db->fetch_assoc($result))
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_groups']).'?action=foo') ?>" />
 			</div>
-			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+			<fieldset class="frm-fset fset<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><span><?php echo $lang_admin['Options'] ?></span></legend>
 				<div class="frm-fld select">
 					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
@@ -722,7 +719,7 @@ while ($cur_group = $forum_db->fetch_assoc($result))
 			</div>
 		</form>
 	</div>
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php echo $lang_admin['Existing groups heading'] ?></span></h2>
 		</div>

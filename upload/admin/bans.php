@@ -143,7 +143,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 
 
 	// Setup the form
-	$forum_page['fld_count'] = $forum_page['set_count'] = 0;
+	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
@@ -157,6 +157,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 
 	define('FORUM_PAGE_SECTION', 'users');
 	define('FORUM_PAGE', 'admin-bans');
+	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -165,19 +166,11 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 	($hook = get_hook('aba_add_edit_ban_output_start')) ? eval($hook) : null;
 
 ?>
-<div id="brd-main" class="main admin sectioned">
-
-<?php echo generate_admin_menu(); ?>
-
-	<div class="main-head">
-		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin['Ban advanced heading'] ?></span></h2>
 	</div>
-
-	<div class="main-content frm">
-		<div class="frm-head">
-			<h2><span><?php echo $lang_admin['Ban advanced heading'] ?></span></h2>
-		</div>
-		<div class="frm-info">
+	<div class="main-content main-frm">
+		<div class="content-box">
 			<p class="warn"><?php echo $lang_admin['Ban IP warning'] ?></p>
 		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_bans']) ?>">
@@ -187,50 +180,41 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 <?php if ($mode == 'edit'): ?>				<input type="hidden" name="ban_id" value="<?php echo $ban_id ?>" />
 <?php endif; ?>			</div>
 <?php ($hook = get_hook('aba_add_edit_ban_pre_criteria_fieldset')) ? eval($hook) : null; ?>
-			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="frm-legend"><span><?php echo $lang_admin['Ban criteria legend'] ?></span></legend>
 <?php ($hook = get_hook('aba_add_edit_ban_pre_username')) ? eval($hook) : null; ?>
-				<div class="frm-fld text">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-						<span class="fld-label"><?php echo $lang_admin['Username to ban'] ?></span><br />
+				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="frm-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Username to ban'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_user" size="25" maxlength="25" value="<?php if (isset($ban_user)) echo forum_htmlencode($ban_user); ?>" /></span>
-					</label>
+					</div>
 				</div>
-				<div class="frm-fld text">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-						<span class="fld-label"><?php echo $lang_admin['E-mail/domain to ban'] ?></span><br />
+				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="frm-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['E-mail/domain to ban'] ?></span> <small><?php echo $lang_admin['E-mail/domain info'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_email" size="40" maxlength="80" value="<?php if (isset($ban_email)) echo strtolower($ban_email); ?>" /></span>
-						<span class="fld-help"><?php echo $lang_admin['E-mail/domain info'] ?></span>
-					</label>
+					</div>
 				</div>
-				<div class="frm-fld text">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-						<span class="fld-label"><?php echo $lang_admin['IP-addresses to ban'] ?></span><br />
+				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="frm-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['IP-addresses to ban'] ?></span> <small><?php echo $lang_admin['IP-addresses info']; if ($ban_user != '' && isset($user_id)) echo ' '.$lang_admin['IP-addresses info 2'].'<a href="'.forum_link($forum_url['admin_users']).'?ip_stats='.$user_id.'">'.$lang_admin['IP-addresses info link'].'</a>' ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_ip" size="45" maxlength="255" value="<?php if (isset($ban_ip)) echo $ban_ip; ?>" /></span>
-						<span class="fld-help"><?php echo $lang_admin['IP-addresses info']; if ($ban_user != '' && isset($user_id)) echo ' '.$lang_admin['IP-addresses info 2'].'<a href="'.forum_link($forum_url['admin_users']).'?ip_stats='.$user_id.'">'.$lang_admin['IP-addresses info link'].'</a>' ?></span>
-					</label>
+					</div>
+				</div>
+<?php ($hook = get_hook('aba_add_edit_ban_pre_message')) ? eval($hook) : null; ?>
+				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="frm-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Ban message'] ?></span> <small><?php echo $lang_admin['Ban message info'] ?></small></label><br />
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_message" size="50" maxlength="255" value="<?php if (isset($ban_message)) echo forum_htmlencode($ban_message); ?>" /></span>
+					</div>
+				</div>
+				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="frm-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Expire date'] ?></span> <small><?php echo $lang_admin['Expire date info'] ?></small></label><br />
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_expire" size="17" maxlength="10" value="<?php if (isset($ban_expire)) echo $ban_expire; ?>" /></span>
+					</div>
 				</div>
 <?php ($hook = get_hook('aba_add_edit_ban_criteria_end')) ? eval($hook) : null; ?>
-			</fieldset>
-<?php ($hook = get_hook('aba_add_edit_ban_pre_settings_fieldset')) ? eval($hook) : null; ?>
-			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
-				<legend class="frm-legend"><span><?php echo $lang_admin['Ban settings legend'] ?></span></legend>
-<?php ($hook = get_hook('aba_add_edit_ban_pre_message')) ? eval($hook) : null; ?>
-				<div class="frm-fld text">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-						<span class="fld-label"><?php echo $lang_admin['Ban message'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_message" size="50" maxlength="255" value="<?php if (isset($ban_message)) echo forum_htmlencode($ban_message); ?>" /></span>
-						<span class="fld-help"><?php echo $lang_admin['Ban message info'] ?></span>
-					</label>
-				</div>
-				<div class="frm-fld text">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-						<span class="fld-label"><?php echo $lang_admin['Expire date'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_expire" size="17" maxlength="10" value="<?php if (isset($ban_expire)) echo $ban_expire; ?>" /></span>
-						<span class="fld-help"><?php echo $lang_admin['Expire date info'] ?></span>
-					</label>
-				</div>
-<?php ($hook = get_hook('aba_add_edit_ban_settings_end')) ? eval($hook) : null; ?>
 			</fieldset>
 <?php ($hook = get_hook('aba_add_edit_ban_pre_buttons')) ? eval($hook) : null; ?>
 			<div class="frm-buttons">
@@ -394,7 +378,7 @@ else if (isset($_GET['del_ban']))
 
 
 // Setup the form
-$forum_page['part_count'] = $forum_page['fld_count'] = $forum_page['set_count'] = 0;
+$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
@@ -407,6 +391,7 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE_SECTION', 'users');
 define('FORUM_PAGE', 'admin-bans');
+define('FORUM_PAGE_TYPE', 'sectioned');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
@@ -415,32 +400,24 @@ ob_start();
 ($hook = get_hook('aba_main_output_start')) ? eval($hook) : null;
 
 ?>
-<div id="brd-main" class="main sectioned admin">
-
-<?php echo generate_admin_menu(); ?>
-
-	<div class="main-head">
-		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin['New ban heading'] ?></span></h2>
 	</div>
-
-	<div class="main-content frm">
-		<div class="frm-head">
-			<h2><span><?php echo $lang_admin['New ban heading'] ?></span></h2>
-		</div>
-		<div class="frm-info">
+	<div class="main-content main-frm">
+		<div class="content-box">
 			<p><?php echo $lang_admin['Advanced ban info'] ?></p>
 		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_bans']) ?>?action=more">
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_bans']).'?action=more') ?>" />
 			</div>
-			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="frm-legend"><strong><?php echo $lang_admin['New ban legend'] ?></strong></legend>
-				<div class="frm-fld text">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-						<span class="fld-label"><?php echo $lang_admin['Username to ban'] ?></span><br />
+				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="frm-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Username to ban'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="new_ban_user" size="25" maxlength="25" /></span>
-					</label>
+					</div>
 				</div>
 			</fieldset>
 			<div class="frm-buttons">
@@ -450,18 +427,23 @@ ob_start();
 	</div>
 <?php
 
-// Reset fieldset counter
-$forum_page['set_count'] = 0;
+// Reset counters
+$forum_page['group_count'] = $forum_page['item_count'] = 0;
 
 ?>
-	<div class="main-content frm">
-		<div class="frm-head">
-			<h2><span><?php echo $lang_admin['Existing bans heading'] ?></span></h2>
-		</div>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin['Existing bans heading'] ?></span></h2>
+	</div>
+	<div class="main-content main-frm">
 <?php
 
 if (!empty($forum_bans))
 {
+
+?>
+		<div class="content-group">
+<?php
+
 	$forum_page['item_num'] = 0;
 	foreach ($forum_bans as $ban_key => $cur_ban)
 	{
@@ -469,37 +451,44 @@ if (!empty($forum_bans))
 		$forum_page['ban_creator'] = ($cur_ban['ban_creator_username'] != '') ? '<a href="'.forum_link($forum_url['user'], $cur_ban['ban_creator']).'">'.forum_htmlencode($cur_ban['ban_creator_username']).'</a>' : $lang_admin['Unknown'];
 
 		if ($cur_ban['username'] != '')
-			$forum_page['ban_info']['username'] = '<span>'.$lang_admin['Username'].': '.forum_htmlencode($cur_ban['username']).'</span>';
+			$forum_page['ban_info']['username'] = '<li><span>'.$lang_admin['Username'].': </span><strong>'.forum_htmlencode($cur_ban['username']).'</strong></li>';
 
 		if ($cur_ban['email'] != '')
-			$forum_page['ban_info']['email'] = '<span>'.$lang_admin['E-mail'].': '.$cur_ban['email'].'</span>';
+			$forum_page['ban_info']['email'] = '<li><span>'.$lang_admin['E-mail'].': </span><strong>'.$cur_ban['email'].'</strong></li>';
 
 		if ($cur_ban['ip'] != '')
-			$forum_page['ban_info']['ip'] = '<span>'.$lang_admin['IP-ranges'].': '.$cur_ban['ip'].'</span>';
+			$forum_page['ban_info']['ip'] = '<li><span>'.$lang_admin['IP-ranges'].': </span><strong>'.$cur_ban['ip'].'</strong></li>';
 
 		if ($cur_ban['expire'] != '')
-			$forum_page['ban_info']['expire'] = '<span>'.$lang_admin['Expire date'].': '.format_time($cur_ban['expire'], true).'</span>';
+			$forum_page['ban_info']['expire'] = '<span>'.$lang_admin['Expire date'].': </span><strong>'.format_time($cur_ban['expire'], true).'</strong></li>';
 
 		($hook = get_hook('aba_view_ban_pre_display')) ? eval($hook) : null;
 
 ?>
-		<div class="ban-item databox db<?php echo ++$forum_page['item_num'] ?>">
-			<h3 class="legend"><span><?php printf($lang_admin['Current ban head'], $forum_page['ban_creator']) ?></span></h3>
-<?php if (!empty($forum_page['ban_info'])): ?>			<p class="data">
-				<?php echo implode('<br />', $forum_page['ban_info'])."\n" ?>
-			</p>
+			<div class="content-set group-item<?php echo ++$forum_page['item_num'] ?>">
+				<div class="content-box">
+					<h3 class="legend hn"><span><?php printf($lang_admin['Current ban head'], $forum_page['ban_creator']) ?></span></h3>
+<?php if (!empty($forum_page['ban_info'])): ?>				<ul>
+					<?php echo implode("\n", $forum_page['ban_info'])."\n" ?>
+					</ul>
 <?php endif; if ($cur_ban['message'] != ''): ?>			<p><?php echo $lang_admin['Reason'].': '.forum_htmlencode($cur_ban['message']) ?></p>
 <?php endif; ?>		<p class="actions"><a href="<?php echo forum_link($forum_url['admin_bans']).'?edit_ban='.$cur_ban['id'] ?>"><?php echo $lang_admin['Edit'] ?></a> <a href="<?php echo forum_link($forum_url['admin_bans']).'?del_ban='.$cur_ban['id'].'&amp;csrf_token='.generate_form_token('del_ban'.$cur_ban['id']) ?>"><?php echo $lang_admin['Remove'] ?></a></p>
-</div>
+				</div>
+			</div>
 <?php
 
 	}
+
+?>
+		</div>
+<?php
+
 }
 else
 {
 
 ?>
-		<div class="frm-info">
+		<div class="content-box">
 			<p><?php echo $lang_admin['No bans'] ?></p>
 		</div>
 <?php
@@ -508,8 +497,6 @@ else
 
 ?>
 	</div>
-
-</div>
 <?php
 
 $tpl_temp = trim(ob_get_contents());

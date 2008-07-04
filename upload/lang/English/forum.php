@@ -3,9 +3,11 @@
 // Language definitions used in viewforum.php
 $lang_forum = array(
 
+'Topic'						=>	'Topic',
+'Topics'					=>	'Topics',
 'Post topic'				=>	'Post new topic',
 'Login to post'				=>	'You must %1$s or %2$s to post a new topic',
-'No posting allowed'		=>	'You do not have permission to post a new topic',
+'No permission'				=>	'Sorry! no permission to post new topics',
 'Views'						=>	'Views',
 'Moved'						=>	'Topic moved',
 'Sticky'					=>	'[Sticky]',

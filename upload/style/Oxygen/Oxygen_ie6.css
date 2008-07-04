@@ -1,134 +1,31 @@
 /*************************************************************
-A - SETUP
+IE6 - FIXES
 **************************************************************/
 	
-/* Start from scratch
-----------------------------------------------------------=--*/
-
-* html .main table {
-	border-collapse: collapse
-	}
-
-* html .brd legend {
-	margin-left: -7px;
-	}
-
-	
-/* Make the skip link work
-----------------------------------------------------------=--*/
-
-.ietabfix:active, #brd-main {
-	zoom: 1;
-	}
-
-/* Welcome Box
-----------------------------------------------------------=--*/
-
-#brd-visit {
-	zoom: 1;
-	}
-	
-
-/* Statistics
+/* Float Clearing and Has Layout Fixes
 -------------------------------------------------------------*/
 
- #brd-info {
- 	height: 1px;
- 	}
- 
- #brd-info #stats ul, #brd-info #onlinelist {
- 	zoom: 1;
- 	}
-	
-/* About Box (Footer / Copyright / Jump Menu)
-----------------------------------------------------------=--*/
-
-#brd-about,
-.brd .userbox {
+#brd-index .main-subhead,
+#brd-index .forum-item,
+.brd .gen-content,
+.brd .content-box,
+.brd .content-set,
+.brd .content-box *,
+.brd fieldset div,
+.brd fieldset .fld-label,
+.brd fieldset fieldset {
 	zoom: 1;
 	}
-
-/* Paging and Posting
-----------------------------------------------------------=--*/
-	
-.brd .crumbs,
-.brd .main-pagepost,
-.main .paged-foot .submitting {
-	zoom: 1;
-	}
-	
-/* Main Headings
-----------------------------------------------------------=--*/
-	
-.brd .main-head {
-	zoom: 1;
-	}
-	
-/* Tabbed Navigation
--------------------------------------------------------------*/
-	
-.brd .main-menu {
-	zoom: 1;
-	}
-	
 
 /* Forms
 -------------------------------------------------------------*/
-	
-.frm .frm-set div,
-.frm .link,
-.frm .frm-group,
-.frm .radbox {
-	height: 1px;
-	}
-	
-* html .radbox input,
-* html .post-select input {
-	height: 13px;
-	width: 13px;
-	}
-	
-.brd span.submit input,
-.brd span.cancel input {
-	padding-bottom: 0;
-	}
 
-.brd .frm,
-.frm .profile {
-	height: 1px
-	}
-
-.frm .profile .sig-demo {
-	zoom: 1;
-	}
-
-.frm .radbox label {
-	float: left;
-	}
-	
-.main .dataset, .main .datagrid {
-	height: 1%;
-	}
-	
-.brd .frm-textarea textarea {
-	width: 95%;
-	}
-
-/* Posts
--------------------------------------------------------------*/
-
-.main .topic, .main .post, .main .post .postbody, .main .topic .post .postfoot {
-	zoom: 1;
-	position: relative;
-	}
-	
-.main .post .user {
-	zoom: 1;
+#brd-wrap fieldset {
+	padding-top: 1px;
 	position: relative;
 	}
 
-* html #brd-wrap .entry-content .codebox pre { /* 6 Only */
-	overflow: visible;
-	overflow-x:auto;
-	padding-bottom: 1.5em;
+.brd fieldset legend {
+	margin-left: -7px;
 	}
+

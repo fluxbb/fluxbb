@@ -11,46 +11,41 @@
 <div id="brd-wrap" class="brd">
 
 <div id="brd-head" class="gen-content">
-<!-- forum_skip -->
-<!-- forum_title -->
-<!-- forum_desc -->
+	<!-- forum_skip -->
+	<!-- forum_title -->
+	<!-- forum_desc -->
 </div>
 
-<!-- forum_navlinks -->
+<div id="brd-navlinks" class="gen-content">
+	<!-- forum_navlinks -->
+	<!-- forum_admod -->
+</div>
 
-<!-- forum_visit -->
+<div id="brd-visit" class="gen-content">
+	<!-- forum_welcome -->
+	<!-- forum_visit -->
+</div>
 
 <!-- forum_announcement -->
 
-<div class="divider"><hr /></div>
+<div class="hr"><hr /></div>
 
 <div id="brd-main" class="main <!-- forum_page_type -->">
-
-<!-- forum_crumbs_top -->
-
-<!-- forum_main_menu -->
-
-<!-- forum_main_pagepost_top -->
-
-<!-- forum_main_head -->
-
-<!-- forum_main -->
-
-<!-- forum_main_options -->
-
-<!-- forum_main_pagepost_end -->
-
-<!-- forum_stats -->
-
-<!-- forum_online -->
-
-<!-- forum_crumbs_end -->
-
-<!-- forum_qpost -->
-
+	<!-- forum_crumbs_top -->
+	<!-- forum_main_menu -->
+	<!-- forum_main_pagepost_top -->
+	<!-- forum_main_head -->
+	<!-- forum_main -->
+	<!-- forum_main_options -->
+	<!-- forum_main_pagepost_end -->
+	<!-- forum_crumbs_end -->
+	<!-- forum_qpost -->
 </div>
 
-<div class="divider"><hr /></div>
+
+<!-- forum_info -->
+
+<div class="hr"><hr /></div>
 
 <!-- forum_about -->
 

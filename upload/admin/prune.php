@@ -140,6 +140,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 
 	define('FORUM_PAGE_SECTION', 'management');
 	define('FORUM_PAGE', 'admin-prune');
+	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -151,13 +152,11 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 <div id="brd-main" class="main sectioned admin">
 
 
-<?php echo generate_admin_menu(); ?>
-
 	<div class="main-head">
 		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php printf($lang_admin['Prune details head'], ($forum == 'all forums') ? $lang_admin['All forums'] : $forum ) ?></span></h2>
 		</div>
@@ -207,6 +206,7 @@ else
 
 	define('FORUM_PAGE_SECTION', 'management');
 	define('FORUM_PAGE', 'admin-prune');
+	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -217,13 +217,11 @@ else
 ?>
 <div id="brd-main" class="main sectioned admin">
 
-<?php echo generate_admin_menu(); ?>
-
 	<div class="main-head">
 		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2 class="prefix"><span><?php echo $lang_admin['Prune settings head'] ?></span></h2>
 		</div>
@@ -240,7 +238,7 @@ else
 				<input type="hidden" name="form_sent" value="1" />
 			</div>
 <?php ($hook = get_hook('apr_pre_prune_fieldset')) ? eval($hook) : null; ?>
-			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+			<fieldset class="frm-fset fset<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><span><?php echo $lang_admin['Prune legend'] ?></span></legend>
 <?php ($hook = get_hook('apr_pre_prune_from')) ? eval($hook) : null; ?>
 				<div class="frm-fld select">

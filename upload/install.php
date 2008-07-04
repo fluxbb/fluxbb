@@ -145,11 +145,11 @@ if (!isset($_POST['form_sent']))
 		<h1 class="hn"><span><?php printf($lang_install['Install FluxBB'], FORUM_VERSION) ?></span></h1>
 	</div>
 
-	<form class="frm-newform" method="post" accept-charset="utf-8" action="install.php">
+	<form class="frm-form" method="post" accept-charset="utf-8" action="install.php">
 	<div class="hidden">
 		<input type="hidden" name="form_sent" value="1" />
 	</div>
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="content-head">
 			<h2 class="hn"><span><?php echo $lang_install['Part1'] ?></span></h2>
 		</div>
@@ -166,9 +166,9 @@ if (!isset($_POST['form_sent']))
 		<div id="req-msg" class="req-warn">
 			<p class="important"><?php printf($lang_install['Required warn'], '<em>'.$lang_install['Reqmark'].'</em>') ?></p>
 		</div>
-		<fieldset class="frm-set set1">
+		<fieldset class="frm-fset fset1">
 			<legend class="frm-legend"><strong><?php echo $lang_install['Part1 legend'] ?></strong></legend>
-			<div class="frm-select required">
+			<div class="frm-fld frm-select required">
 				<label for="fld1">
 					<span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Database type'] ?></span>
 					<small class="fld-help"><?php echo $lang_install['Database type help'] ?></small>
@@ -182,35 +182,35 @@ if (!isset($_POST['form_sent']))
 ?>
 				</select></span>
 			</div>
-			<div class="frm-text required">
+			<div class="frm-fld frm-text required">
 				<label for="fld2">
 					<span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Database server'] ?></span>
 					<small><?php echo $lang_install['Database server help'] ?></small>
 				</label><br />
 				<span class="fld-input"><input id="fld2" type="text" name="req_db_host" value="localhost" size="50" maxlength="100" /></span>
 			</div>
-			<div class="frm-text required">
+			<div class="frm-fld frm-text required">
 				<label for="fld3">
 					<span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Database name'] ?></span>
 					<small><?php echo $lang_install['Database name help'] ?></small>
 				</label><br />
 				<span class="fld-input"><input id="fld3" type="text" name="req_db_name" size="35" maxlength="50" /></span>
 			</div>
-			<div class="frm-text">
+			<div class="frm-fld frm-text">
 				<label for="fld4">
 					<span><?php echo $lang_install['Database username'] ?></span>
 					<small><?php echo $lang_install['Database username help'] ?></small>
 				</label><br />
 				<span class="fld-input"><input id="fld4" type="text" name="db_username" size="35" maxlength="50" /></span>
 			</div>
-			<div class="frm-text">
+			<div class="frm-fld frm-text">
 				<label for="fld5">
 					<span><?php echo $lang_install['Database password'] ?></span>
 					<small><?php echo $lang_install['Database password help'] ?></small>
 				</label><br />
 				<span class="fld-input"><input id="fld5" type="password" name="db_password" size="35" /></span>
 			</div>
-			<div class="frm-text">
+			<div class="frm-fld frm-text">
 				<label for="fld6">
 					<span><?php echo $lang_install['Table prefix'] ?></span>
 					<small><?php echo $lang_install['Table prefix help'] ?></small>
@@ -219,37 +219,37 @@ if (!isset($_POST['form_sent']))
 			</div>
 		</fieldset>
 	</div>
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="content-head">
 			<h2 class="hn"><span><?php echo $lang_install['Part2'] ?></span></h2>
 		</div>
 		<div class="cbox info-box">
 			<p><?php echo $lang_install['Part2 intro'] ?></p>
 		</div>
-		<fieldset class="frm-set set1">
+		<fieldset class="frm-fset fset1">
 			<legend class="frm-legend"><strong><?php echo $lang_install['Part2 legend'] ?></strong></legend>
-			<div class="frm-text required">
+			<div class="frm-fld frm-text required">
 				<label for="fld7">
 					<span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Admin username'] ?></span>
 					<small><?php echo $lang_install['Username help'] ?></small>
 				</label><br />
 				<span class="fld-input"><input id="fld7" type="text" name="req_username" size="35" maxlength="25" /></span>
 			</div>
-			<div class="frm-text required">
+			<div class="frm-fld frm-text required">
 				<label for="fld8">
 					<span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Admin password'] ?></span>
 					<small><?php echo $lang_install['Password help'] ?></small>
 				</label><br />
 				<span class="fld-input"><input id="fld8" type="password" name="req_password1" size="35" /></span>
 			</div>
-			<div class="frm-text required">
+			<div class="frm-fld frm-text required">
 				<label for="fld9">
 					<span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Admin confirm password'] ?></span>
 					<small><?php echo $lang_install['Confirm password help'] ?></small>
 				</label><br />
 				<span class="fld-input"><input id="fld9" type="password" name="req_password2" size="35" /></span>
 			</div>
-			<div class="frm-text required">
+			<div class="frm-fld frm-text required">
 				<label for="fld10">
 					<span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Admin e-mail'] ?></span>
 					<small><?php echo $lang_install['E-mail address help'] ?></small>
@@ -258,7 +258,7 @@ if (!isset($_POST['form_sent']))
 			</div>
 		</fieldset>
 	</div>
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="content-head">
 			<h2 class="hn"><span><?php echo $lang_install['Part3'] ?></span></h2>
 		</div>
@@ -269,21 +269,21 @@ if (!isset($_POST['form_sent']))
 				<li><span><strong><?php echo $lang_install['Base URL'] ?></strong> <?php echo $lang_install['Base URL info'] ?></span></li>
 			</ul>
 		</div>
-		<fieldset class="frm-set set1">
+		<fieldset class="frm-fset fset1">
 			<legend class="frm-legend"><strong><?php echo $lang_install['Part3 legend'] ?></strong></legend>
-			<div class="frm-text">
+			<div class="frm-fld frm-text">
 				<label for="fld11">
 					<span><?php echo $lang_install['Board title'] ?></span>
 				</label><br />
 				<span class="fld-input"><input id="fld11" type="text" name="board_title" size="50" maxlength="255" /></span>
 			</div>
-			<div class="frm-text">
+			<div class="frm-fld frm-text">
 				<label for="fld12">
 					<span><?php echo $lang_install['Board description'] ?></span>
 				</label><br />
 				<span class="fld-input"><input id="fld12" type="text" name="board_descrip" size="50" maxlength="255" /></span>
 			</div>
-			<div class="frm-text required">
+			<div class="frm-fld frm-text required">
 				<label for="fld13">
 					<span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Base URL'] ?></span>
 					<small><?php echo $lang_install['Base URL help'] ?></small>
@@ -1606,7 +1606,7 @@ else
 		<h1 class="hn"><span><?php echo $lang_install['Final instructions'] ?></span></h1>
 	</div>
 
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 <?php
 
 if (!$written)
@@ -1623,7 +1623,7 @@ if (!$written)
 				<?php echo implode("\n\t\t\t\t", $alerts)."\n" ?>
 			</ul>
 		</div>
-<?php endif; ?>		<form class="frm-newform" method="post" accept-charset="utf-8" action="install.php">
+<?php endif; ?>		<form class="frm-form" method="post" accept-charset="utf-8" action="install.php">
 			<div class="hidden">
 			<input type="hidden" name="generate_config" value="1" />
 			<input type="hidden" name="db_type" value="<?php echo $db_type; ?>" />

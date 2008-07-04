@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" <!-- forum_local -->>
 <head>
@@ -8,28 +8,49 @@
 <body>
 
 <div <!-- forum_page --> class="brd-page">
-<div class="brd">
-<!-- forum_skip -->
-<!-- forum_title -->
-<!-- forum_desc -->
-<!-- forum_navlinks -->
-<!-- forum_visit -->
+<div id="brd-wrap" class="brd">
 
-<!-- forum_alert -->
+<div id="brd-head" class="gen-content">
+	<!-- forum_skip -->
+	<!-- forum_title -->
+	<!-- forum_desc -->
+</div>
 
-<!-- forum_announcement -->
+<div id="brd-navlinks" class="gen-content">
+	<!-- forum_navlinks -->
+	<!-- forum_admod -->
+</div>
 
-<!-- forum_crumbs -->
+<div id="brd-visit" class="gen-content">
+	<!-- forum_welcome -->
+	<!-- forum_visit -->
+</div>
 
-<div class="divider"><hr /></div>
+<div class="hr"><hr /></div>
+
+<div id="brd-main" class="main <!-- forum_page_type -->">
+
+<!-- forum_crumbs_top -->
+
+<!-- forum_main_pagepost_top -->
+
+<!-- forum_admin_menu -->
+
+<!-- forum_main_head -->
+
+<!-- forum_admin_submenu -->
 
 <!-- forum_main -->
 
-<div class="divider"><hr /></div>
+<!-- forum_main_options -->
 
-<!-- forum_crumbs -->
+<!-- forum_main_pagepost_end -->
 
-<!-- forum_stats -->
+<!-- forum_crumbs_end -->
+
+</div>
+
+<div class="hr"><hr /></div>
 
 <!-- forum_about -->
 

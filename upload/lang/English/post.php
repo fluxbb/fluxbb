@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 // Language definitions used in post.php and edit.php
 $lang_post = array(
@@ -31,8 +31,10 @@ $lang_post = array(
 'Permalink post'		=>	'Permanent link to this post',
 'Optional legend'		=>	'Optional',
 'Post settings'			=>	'Post settings:',
+'Post preview'			=>	'Preview',
 'Preview reply'			=>	'Preview of your reply',
 'Preview new topic'		=>	'Preview of your new topic',
+'Username'				=>	'Username',
 
 // Edit post
 'Edit post legend'		=>	'Edit message',

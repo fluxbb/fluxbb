@@ -176,6 +176,7 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE_SECTION', 'users');
 define('FORUM_PAGE', 'admin-ranks');
+define('FORUM_PAGE_TYPE', 'sectioned');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
@@ -186,13 +187,11 @@ ob_start();
 ?>
 <div id="brd-main" class="main sectioned admin">
 
-<?php echo generate_admin_menu(); ?>
-
 	<div class="main-head">
 		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php echo $lang_admin['Add new rank'] ?></span></h2>
 		</div>
@@ -203,7 +202,7 @@ ob_start();
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_ranks']).'?action=foo') ?>" />
 			</div>
-			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+			<fieldset class="frm-fset fset<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><strong><?php echo $lang_admin['Add rank legend'] ?></strong></legend>
 <?php ($hook = get_hook('ark_add_rank_pre_rank')) ? eval($hook) : null; ?>
 				<div class="frm-fld text">
@@ -234,7 +233,7 @@ if (!empty($forum_ranks))
 	$forum_page['set_count'] = 0;
 
 ?>
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php echo $lang_admin['Existing ranks intro'] ?></span></h2>
 		</div>
@@ -248,7 +247,7 @@ if (!empty($forum_ranks))
 	{
 
 	?>
-			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+			<fieldset class="frm-fset fset<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><span><?php echo $lang_admin['Rank'].' '.($rank_key + 1) ?></span></legend>
 <?php ($hook = get_hook('ark_edit_rank_pre_rank')) ? eval($hook) : null; ?>
 				<div class="frm-fld text">
@@ -281,7 +280,7 @@ else
 {
 
 ?>
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php echo $lang_admin['Existing ranks intro'] ?></span></h2>
 		</div>

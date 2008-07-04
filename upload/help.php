@@ -64,13 +64,13 @@ if (!$section || $section == 'bbcode')
 	<div class="main-head">
 		<h2><span><?php printf($lang_help['Help with'], $lang_common['BBCode']) ?></span></h2>
 	</div>
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-info">
 			<p><?php echo $lang_help['BBCode info 1'] ?></p>
 			<p><?php echo $lang_help['BBCode info 2'] ?></p>
 		</div>
 		<div class="frm-form">
-			<div class="frm-set set1">
+			<div class="frm-fset fset1">
 				<h3><?php echo $lang_help['Text style'] ?></h3>
 				<ul class="example">
 					<li>
@@ -185,7 +185,7 @@ else if ($section == 'img')
 	<div class="main-head">
 		<h2><span><?php printf($lang_help['Help with'], $lang_common['Images']) ?></span></h2>
 	</div>
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-info">
 			<p><?php echo $lang_help['Image info 1'] ?></p>
 			<p><?php echo $lang_help['Image info 2'] ?></p>
@@ -210,7 +210,7 @@ else if ($section == 'smilies')
 		<h2><span><?php printf($lang_help['Help with'], $lang_common['Smilies']) ?></span></h2>
 	</div>
 
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-info">
 			<p><?php echo $lang_help['Smilies info'] ?></p>
 		</div>

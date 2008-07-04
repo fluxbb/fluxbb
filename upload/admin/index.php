@@ -180,7 +180,10 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE_SECTION', 'start');
 define('FORUM_PAGE', 'admin-information');
+define('FORUM_PAGE_TYPE', 'sectioned');
 require FORUM_ROOT.'header.php';
+
+$forum_page['item_count'] = 0;
 
 // START SUBST - <!-- forum_main -->
 ob_start();
@@ -188,62 +191,58 @@ ob_start();
 ($hook = get_hook('ain_main_output_start')) ? eval($hook) : null;
 
 ?>
-<div id="brd-main" class="main sectioned admin">
-
-<?php echo generate_admin_menu(); ?>
-
-	<div class="main-head">
-		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin['Information head'] ?></span></h2>
 	</div>
-
-	<div class="main-content frm">
-		<div class="frm-head">
-			<h2><span><?php echo $lang_admin['Information head'] ?></span></h2>
+	<div class="main-content main-frm">
+<?php if (!empty($alert_items)): ?>		<div id="admin-alerts" class="content-set warn-set">
+			<div class="content-box">
+				<h3 class="set-legend hn warn"><span><?php echo $lang_admin['Alerts'] ?></span></h3>
+				<?php echo implode(' ',$alert_items)."\n" ?>
+			</div>
 		</div>
-<?php if (!empty($alert_items)): ?>		<div class="datagrid">
-			<div id="admin-alerts" class="idx-item databox db1">
-				<h3 class="legend warn"><span><?php echo $lang_admin['Alerts'] ?></span></h3>
-				<div class="data">
-					<?php echo implode(' ',$alert_items) ?>
+<?php endif; ?>		<div class="content-group">
+<?php ($hook = get_hook('ain_pre_version')) ? eval($hook) : null; ?>
+			<div class="content-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="content-box">
+					<h3 class="set-legend hn"><span><?php echo $lang_admin['FluxBB version'] ?></span></h3>
+					<ul class="data-list">
+						<li><span>FluxBB <?php echo $forum_config['o_cur_version'] ?></span></li>
+						<li><span>&copy; Copyright 2008 <a href="http://fluxbb.org/">FluxBB.org</a></span></li>
+<?php if (isset($fluxbb_updates)): ?>						<li><span><?php echo $fluxbb_updates ?></span></li>
+<?php endif; ?>					</ul>
 				</div>
 			</div>
-		</div>
-<?php endif; ?>		<div class="datagrid">
-<?php ($hook = get_hook('ain_pre_version')) ? eval($hook) : null; ?>
-			<div class="idx-item databox db1">
-				<h3 class="legend"><span><?php echo $lang_admin['FluxBB version'] ?></span></h3>
-				<ul class="data">
-					<li><span>FluxBB <?php echo $forum_config['o_cur_version'] ?></span></li>
-					<li><span>&copy; Copyright 2008 <a href="http://fluxbb.org/">FluxBB.org</a></span></li>
-<?php if (isset($fluxbb_updates)): ?>					<li><span><?php echo $fluxbb_updates ?></span></li>
-<?php endif; ?>				</ul>
-			</div>
 <?php ($hook = get_hook('ain_pre_server_load')) ? eval($hook) : null; ?>
-			<div class="idx-item databox">
-				<h3 class="legend"><span><?php echo $lang_admin['Server load'] ?></span></h3>
-				<p class="data"><?php echo $server_load ?> (<?php echo $num_online.' '.$lang_admin['users online']?>)</p>
+			<div class="content-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="content-box">
+					<h3 class="set-legend hn"><span><?php echo $lang_admin['Server load'] ?></span></h3>
+					<p><span><?php echo $server_load ?> (<?php echo $num_online.' '.$lang_admin['users online']?>)</span></p>
+				</div>
 			</div>
-<?php ($hook = get_hook('ain_pre_environment')) ? eval($hook) : null; if ($forum_user['g_id'] == FORUM_ADMIN): ?>					<div class="idx-item databox">
-				<h3 class="legend"><span><?php echo $lang_admin['Environment'] ?></span></h3>
-				<ul class="data">
-					<li><span><?php echo $lang_admin['Operating system'] ?>: <?php echo PHP_OS ?></span></li>
-					<li><span>PHP: <?php echo PHP_VERSION ?> - <a href="<?php echo forum_link($forum_url['admin_index']) ?>?action=phpinfo"><?php echo $lang_admin['Show info'] ?></a></span></li>
-					<li><span><?php echo $lang_admin['Accelerator'] ?>: <?php echo $php_accelerator ?></span></li>
-				</ul>
+<?php ($hook = get_hook('ain_pre_environment')) ? eval($hook) : null; if ($forum_user['g_id'] == FORUM_ADMIN): ?>			<div class="content-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="content-box">
+					<h3 class="set-legend hn"><span><?php echo $lang_admin['Environment'] ?></span></h3>
+					<ul class="data-list">
+						<li><span><?php echo $lang_admin['Operating system'] ?>: <?php echo PHP_OS ?></span></li>
+						<li><span>PHP: <?php echo PHP_VERSION ?> - <a href="<?php echo forum_link($forum_url['admin_index']) ?>?action=phpinfo"><?php echo $lang_admin['Show info'] ?></a></span></li>
+						<li><span><?php echo $lang_admin['Accelerator'] ?>: <?php echo $php_accelerator ?></span></li>
+					</ul>
+				</div>
 			</div>
 <?php ($hook = get_hook('ain_pre_database')) ? eval($hook) : null; ?>
-			<div class="idx-item databox">
-				<h3 class="legend"><span><?php echo $lang_admin['Database'] ?></span></h3>
-				<ul class="data">
-					<li><span><?php echo $db_version ?></span></li>
-<?php if (isset($total_records) && isset($total_size)): ?>						<li><span><?php echo $lang_admin['Rows'] ?>: <?php echo $total_records ?></span></li>
-					<li><span><?php echo $lang_admin['Size'] ?>: <?php echo $total_size ?></span></li>
-				</ul>
+			<div class="content-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="content-box">
+					<h3 class="set-legend hn"><span><?php echo $lang_admin['Database'] ?></span></h3>
+					<ul class="data-list">
+						<li><span><?php echo $db_version ?></span></li>
+<?php if (isset($total_records) && isset($total_size)): ?>							<li><span><?php echo $lang_admin['Rows'] ?>: <?php echo $total_records ?></span></li>
+						<li><span><?php echo $lang_admin['Size'] ?>: <?php echo $total_size ?></span></li>
+					</ul>
+				</div>
 			</div>
-<?php endif; endif; ($hook = get_hook('ain_items_end')) ? eval($hook) : null; ?>			</div>
+<?php endif; endif; ($hook = get_hook('ain_items_end')) ? eval($hook) : null; ?>		</div>
 	</div>
-
-</div>
 <?php
 
 $tpl_temp = forum_trim(ob_get_contents());

@@ -181,6 +181,7 @@ $forum_page['num_pages'] = ceil(($cur_topic['num_replies'] + 1) / $forum_user['d
 $forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
 $forum_page['start_from'] = $forum_user['disp_posts'] * ($forum_page['page'] - 1);
 $forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_posts']), ($cur_topic['num_replies'] + 1));
+$forum_page['page_info'] =  generate_page_info($lang_topic['Posts'], ($forum_page['start_from'] + 1), ($cur_topic['num_replies'] + 1));
 
 ($hook = get_hook('vt_modify_page_details')) ? eval($hook) : null;
 
@@ -239,11 +240,8 @@ $forum_page['crumbs'] = array(
 	$cur_topic['subject']
 );
 
-// Setup headers
+// Setup main heading
 $forum_page['main_head'] = (($cur_topic['closed'] == '1') ? $lang_topic['Topic closed'].' ' : '').'<a class="permalink" href="'.forum_link($forum_url['topic'], array($id, sef_friendly($cur_topic['subject']))).'" rel="bookmark" title="'.$lang_topic['Permalink topic'].'">'.forum_htmlencode($cur_topic['subject']).'</a>';
-
-if ($forum_page['num_pages'] > 1)
-	$forum_page['main_head'] .= '<br /><small>'.sprintf($lang_topic['Paged info'], $forum_page['start_from'] + 1, $forum_page['finish_at'], $cur_topic['num_replies'] + 1).'</small>';
 
 ($hook = get_hook('vt_pre_header_load')) ? eval($hook) : null;
 
@@ -261,11 +259,10 @@ ob_start();
 ($hook = get_hook('vt_main_output_start')) ? eval($hook) : null;
 
 ?>
-<div id="forum<?php echo $cur_topic['forum_id'] ?>" class="main-content topic">
-	<div class="content-head">
-		<h2 class="hn"><span><?php printf($lang_topic['Topic head'], forum_htmlencode($cur_topic['poster']), format_time($cur_topic['posted'])) ?></span></h2>
-	</div>
-
+<div class="main-pagehead">
+	<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
+</div>
+<div id="forum<?php echo $cur_topic['forum_id'] ?>" class="main-content main-topic">
 <?php
 
 if (!defined('FORUM_PARSER_LOADED'))
@@ -335,7 +332,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 			if (!empty($forum_page['avatar_markup']))
 				$forum_page['user_ident']['avatar'] = $forum_page['avatar_markup'];
 		}
-	
+
 		if ($cur_post['poster_id'] > 1)
 		{
 			$forum_page['user_ident']['username'] = ($forum_user['g_view_users'] == '1') ? '<strong class="username"><a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a></strong>' : '<strong class="username">'.forum_htmlencode($cur_post['username']).'</strong>';
@@ -515,27 +512,27 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 ?>
 	<div class="<?php echo implode(' ', $forum_page['item_status']) ?>">
 		<div id="p<?php echo $cur_post['id'] ?>" class="posthead">
-			<h3><?php echo $forum_page['item_head'] ?></h3>
+			<h3 class="hn"><?php echo $forum_page['item_head'] ?></h3>
 		</div>
 		<div class="postbody">
 			<div class="user<?php if ($cur_post['is_online'] == $cur_post['poster_id']) echo ' online' ?>">
 				<h4 class="user-ident"><?php echo implode('<br />', $forum_page['user_ident']) ?></h4>
 				<ul class="user-info">
-					<?php echo implode("\n\t\t\t\t\t", $forum_page['user_info'])."\n" ?>
+					<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_info'])."\n" ?>
 				</ul>
 			</div>
 			<div class="post-entry">
-				<h4 class="entry-title"><?php echo $forum_page['item_subject'] ?></h4>
+				<h4 class="entry-title hn"><?php echo $forum_page['item_subject'] ?></h4>
 				<div class="entry-content">
-					<?php echo implode("\n\t\t\t\t\t", $forum_page['message'])."\n" ?>
+					<?php echo implode("\n\t\t\t\t\t\t", $forum_page['message'])."\n" ?>
 				</div>
 			</div>
 		</div>
 <?php if (!empty($forum_page['post_options']) || !empty($forum_page['post_contacts'])): ?>		<div class="postfoot">
-			<div class="postfoot-inner">
-<?php if (!empty($forum_page['post_contacts'])): ?>				<p class="post-contacts"><?php echo implode(' ', $forum_page['post_contacts']) ?></p>
-<?php endif; if (!empty($forum_page['post_contacts'])): ?>				<p class="post-options"><?php echo implode(' ', $forum_page['post_options']) ?></p>
-<?php endif; ?>			</div>
+			<p>
+<?php if (!empty($forum_page['post_contacts'])): ?>				<span class="post-contacts"><?php echo implode(' ', $forum_page['post_contacts']) ?></span>
+<?php endif; if (!empty($forum_page['post_contacts'])): ?>				<span class="post-options"><?php echo implode(' ', $forum_page['post_options']) ?></span>
+<?php endif; ?>			</p>
 		</div>
 <?php endif; ?>	</div>
 <?php
@@ -594,29 +591,29 @@ if ($forum_config['o_smilies'] == '1')
 ($hook = get_hook('vt_quickpost_pre_display')) ? eval($hook) : null;
 
 ?>
-<div id="brd-qpost" class="main-content frm">
-	<div class="content-head">
-		<h2 class="hn"><span><?php echo $lang_topic['Quick post'] ?></span></h2>
-	</div>
-<?php if (!empty($forum_page['text_options'])) echo "\t".'<p class="text-options options">'.sprintf($lang_common['You may use'], implode(' ', $forum_page['text_options'])).'</p>'."\n" ?>
+<div class="main-subhead">
+	<h2 class="hn"><span><?php echo $lang_topic['Quick post'] ?></span></h2>
+</div>
+<div id="brd-qpost" class="main-content main-frm">
+<?php if (!empty($forum_page['text_options'])) echo "\t".'<p class="content-options options">'.sprintf($lang_common['You may use'], implode(' ', $forum_page['text_options'])).'</p>'."\n" ?>
 	<div id="req-msg" class="req-warn">
 		<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Reqmark'].'</em>') ?></p>
 	</div>
-	<form class="frm-newform" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>"<?php if (!empty($forum_page['form_attributes'])) echo ' '.implode(' ', $forum_page['form_attributes']) ?>>
+	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>"<?php if (!empty($forum_page['form_attributes'])) echo ' '.implode(' ', $forum_page['form_attributes']) ?>>
 		<div class="hidden">
 			<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 		</div>
 <?php ($hook = get_hook('vt_quickpost_pre_fieldset')) ? eval($hook) : null; ?>
-		<fieldset class="frm-set set1">
+		<fieldset class="frm-fset fset1">
 			<legend class="frm-legend"><strong><?php echo $lang_common['Write message legend'] ?></strong></legend>
 <?php ($hook = get_hook('vt_quickpost_fieldset_start')) ? eval($hook) : null; ?>
-			<div class="frm-textarea required">
-				<label for="fld1">
-					<span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_common['Write message'] ?></span>
-				</label><br />
-				<span class="fld-input"><textarea id="fld1" name="req_message" rows="7" cols="95"></textarea></span>
+			<div class="frm-set">
+				<div class="frm-box textarea required">
+					<label for="fld1"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_common['Write message'] ?></span></label><br />
+					<span class="fld-input"><textarea id="fld1" name="req_message" rows="7" cols="95"></textarea></span>
+				</div>
 			</div>
-			</fieldset>
+		</fieldset>
 <?php ($hook = get_hook('vt_quickpost_post_fieldset')) ? eval($hook) : null; ?>
 		<div class="frm-buttons">
 			<span class="submit"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" /></span>

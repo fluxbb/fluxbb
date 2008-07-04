@@ -211,13 +211,11 @@ ob_start();
 ?>
 <div id="brd-main" class="main sectioned admin">
 
-<?php echo generate_admin_menu(); ?>
-
 	<div class="main-head">
 		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
 	</div>
 
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-head">
 			<h2><span><?php echo $lang_admin['Reindex heading'] ?></span></h2>
 		</div>
@@ -229,7 +227,7 @@ ob_start();
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token('reindex'.$forum_user['id']) ?>" />
 			</div>
 <?php ($hook = get_hook('ari_pre_rebuild_fieldset')) ? eval($hook) : null; ?>
-			<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+			<fieldset class="frm-fset fset<?php echo ++$forum_page['set_count'] ?>">
 				<legend class="frm-legend"><span><?php echo $lang_admin['Rebuild index legend'] ?></span></legend>
 <?php ($hook = get_hook('ari_pre_per_page')) ? eval($hook) : null; ?>
 				<div class="frm-fld text">

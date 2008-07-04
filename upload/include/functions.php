@@ -492,7 +492,7 @@ function update_users_online()
 //
 function generate_navlinks()
 {
-	global $forum_config, $lang_common, $forum_url, $forum_user, $new_reports;
+	global $forum_config, $lang_common, $forum_url, $forum_user;
 
 	// Index should always be displayed
 	$links['index'] = '<li id="navindex"'.((FORUM_PAGE == 'index') ? ' class="isactive"' : '').'><a href="'.forum_link($forum_url['index']).'"><span>'.$lang_common['Index'].'</span></a></li>';
@@ -1720,6 +1720,28 @@ function get_title($user)
 	return $user_title;
 }
 
+//
+// Generate a string with page and item information for multipage headings)
+//
+
+function generate_page_info($label, $first, $total)
+{
+	global $forum_page, $lang_common;
+
+	if ($forum_page['num_pages'] == 1)
+	{
+		$page_info = '';
+		$item_info =  '<span class="item-info">'.sprintf($lang_common['Item info single'], $label, $total).'</span>';
+	}
+	else
+	{
+		$page_info = '<span class="page-info">'.sprintf($lang_common['Page info'], $forum_page['page'], $forum_page['num_pages']).$lang_common['Info separator'].'</span>';
+		$item_info = '<span class="item-info">'.sprintf($lang_common['Item info plural'], $label, $first, $forum_page['finish_at'], $total).'</span>';
+	}
+
+	return $page_info.$item_info;
+}
+
 
 //
 // Generate a string with numbered links (for multipage scripts)
@@ -1753,7 +1775,7 @@ function paginate($num_pages, $cur_page, $link, $separator, $args = null)
 			$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.forum_sublink($link, $forum_url['page'], 1, $args).'">1</a>';
 
 			if ($cur_page > 5)
-				$pages[] = '<span>…</span>';
+				$pages[] = '<span>â€¦</span>';
 		}
 
 		// Don't ask me how the following works. It just does, OK? :-)
@@ -1770,7 +1792,7 @@ function paginate($num_pages, $cur_page, $link, $separator, $args = null)
 		if ($cur_page <= ($num_pages-3))
 		{
 			if ($cur_page != ($num_pages-3) && $cur_page != ($num_pages-4))
-				$pages[] = '<span>…</span>';
+				$pages[] = '<span>â€¦</span>';
 
 			$pages[] = '<a'.(empty($pages) ? ' class="item1" ' : '').' href="'.forum_sublink($link, $forum_url['page'], $num_pages, $args).'">'.$num_pages.'</a>';
 		}
@@ -1815,9 +1837,6 @@ function message($message, $link = '', $heading = '')
 			$heading
 		);
 
-		//Setup headings
-		$forum_page['main_head'] = end($forum_page['crumbs']);
-
 		define('FORUM_PAGE', 'message');
 		define('FORUM_PAGE_TYPE', 'basic');
 		require FORUM_ROOT.'header.php';
@@ -1827,13 +1846,13 @@ function message($message, $link = '', $heading = '')
 	}
 
 ?>
-<div class="main-content message">
-	<p><?php echo $message ?><?php if ($link != '') echo ' <span>'.$link.'</span>' ?></p>
-</div>
+	<div class="main-content main-message">
+		<p><?php echo $message ?><?php if ($link != '') echo ' <span>'.$link.'</span>' ?></p>
+	</div>
 <?php
 
 	$tpl_temp = forum_trim(ob_get_contents());
-	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	$tpl_main = str_replace('<!-- forum_main -->', "\t".$tpl_temp, $tpl_main);
 	ob_end_clean();
 	// END SUBST - <!-- forum_main -->
 
@@ -1919,7 +1938,7 @@ function csrf_confirm_form()
 	<div class="main-head">
 		<h2><span><?php echo $lang_common['Confirm action head'] ?></span></h2>
 	</div>
-	<div class="main-content frm">
+	<div class="main-content main-frm">
 		<div class="frm-info">
 			<p><?php echo $lang_common['CSRF token mismatch'] ?></p>
 		</div>

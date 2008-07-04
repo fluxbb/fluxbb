@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 $lang_profile = array(
 
@@ -20,22 +20,21 @@ $lang_profile = array(
 'Group membership redirect'	=>	'Group membership saved. Redirecting …',
 'Ban redirect'				=>	'Redirecting …',
 'Ban user'					=>	'Ban user',
-'Ban user info'				=>	'[ via the administration console ]',
-'Delete user info'			=>	'[ following confirmation via a separate form ]',
-'User management'			=>	'User management:',
-'Group membership'			=>	'Make member of:',
-'User group'				=>	'User group:',
+'Ban user info'				=>	'Ban this user via the administration console.',
+'Delete user info'			=>	'Permanently delete this user and, optionally, all their posts.',
+'User management'			=>	'Administration : User management',
+'Group membership'			=>	'Group membership',
+'User group'				=>	'Assign user to group:',
+'Moderator heading'			=>	'Administration : Assign moderators to specific forums',
 'Moderator assignment'		=>	'Moderator assignment',
-'Manage ban'				=>	'You may ban this user via the advanced ban settings page in the administration console.',
-'Manage delete'				=>	'You may delete this user and, optionally, you may delete all their posts.',
 'Manage groups'				=>	'This user is an administrator. In order to delete or ban them you must first assign them to a different group.',
 'Cannot delete admin'		=>	'Administrators cannot be deleted. In order to delete this user, you must first move him/her to a different user group.',
 'Save'						=>	'Save',
-'Moderator in info'			=>	'Below you can choose which forums this user should be allowed to moderate.',
-'Moderator in info 2'		=>	'Your choice will only apply to moderators. Administrators always have full permissions in all forums.',
 'Update forums'				=>	'Update forums',
 
 // Avatar stuff
+'Avatar welcome'			=>	'Set an avatar image to enhance your forum identity',
+'Avatar welcome user'		=>	'Set an avatar image to enhance  %s\'s forum identity',
 'Avatar deleted redirect'	=>	'Avatar deleted. Redirecting …',
 'Avatars disabled'			=>	'The administrator has disabled avatar support.',
 'No file'					=>	'You did not select a file for upload.',
@@ -48,13 +47,15 @@ $lang_profile = array(
 'Too wide or high'			=>	'The file you tried to upload is wider and/or higher than the maximum allowed %sx%s pixels.',
 'Unknown failure'			=>	'An unknown error occurred. Please try again.',
 'Avatar'					=>	'Avatar',
-'Avatar info change'		=>	'You can replace your avatar simply by uploading a new one.',
-'No Avatar'					=>	'No Avatar',
-'Avatar info delete'		=>	'%s if you no longer wish to display an avatar.',
+'Current avatar'			=>	'Current Avatar',
+'No Avatar'					=>	'Avatar preview goes here.',
+'No avatar info'			=>	'No avatar is currently uploaded.',
+'Avatar info replace'		=>	'Uploading a new avatar will replace your existing avatar.',
 'Avatar info none'			=>	'To display an avatar you first need to upload one.',
 'Avatar info type'			=>	'The allowed image file types are gif, jpeg and png.',
 'Avatar info size'			=>	'The maximum image size allowed is %sx%s pixels and %s bytes (%s KB).',
-'Delete avatar'				=>	'Delete your avatar',
+'Avatar display'			=>	'Avatar display',
+'Delete avatar info'		=>	'Delete avatar to cease displaying any avatar.',
 'Upload avatar file'		=>	'Upload avatar file:',
 'Avatar upload help'		=>	'Select file then update your profile to install.',
 'No upload warn'			=>	'<strong>IMPORTANT! </strong> You must choose a file to upload before updating your profile.',
@@ -62,9 +63,13 @@ $lang_profile = array(
 // About and Identity sections
 'Users profile'				=>	'%s\'s profile',
 'Section about'				=>	'Introduction',
+'Profile welcome'			=>	'Welcome to your profile',
+'Profile welcome user'		=>	'Welcome to %s\'s profile',
+'Identity welcome'			=>	'Modify your personal and contact details',
+'Identity welcome user'		=>	'Modify %s\'s pesonal and contact details',
 'Show posts'				=>	'Show all posts',
 'Show topics'				=>	'Show all topics',
-'Show subscriptions'		=>	'Show all subscriptions',
+'Show subscriptions'		=>	'View subscriptions',
 'Realname'					=>	'Real name:',
 'Location'					=>	'Location:',
 'From'						=>	'From:',
@@ -83,6 +88,7 @@ $lang_profile = array(
 'Forbidden title'			=>	'The title you entered contains a forbidden word. You must choose a different title.',
 'Bad ICQ'					=>	'You entered an invalid ICQ UIN.',
 'Yahoo'						=>	'Yahoo! Messenger:',
+'Posts and topics'			=>	'Posts and topics',
 'Private info'				=>	'Private information',
 'Current signature'			=>	'Current signature',
 'Section identity'			=>	'Identity',
@@ -99,6 +105,8 @@ $lang_profile = array(
 
 // Settings section
 'Local settings'			=>	'Local settings',
+'Settings welcome'			=>	'Modify your localization, display and e-mail settings',
+'Settings welcome user'		=>	'Modify %s\'s localization, display and e-mail settings',
 'Timezone info'				=>	'Must be set for correct time display.',
 'Time format'				=>  'Time format:',
 'Default'					=>  'default',
@@ -182,6 +190,8 @@ $lang_profile = array(
 'New e-mail'				=>	'New e-mail address:',
 
 // Signatures
+'Sig welcome'				=>	'Create or modify a signature for display in your posts',
+'Sig welcome user'			=>	'Create or modify a signature for display in %s\'s posts',
 'Signatures disabled'		=>	'The administrator has disabled signatures support.',
 'Sig too long'				=>	'Signatures cannot be longer than %s characters.',
 'Sig too many lines'		=>	'Signatures cannot have more than %s lines.',

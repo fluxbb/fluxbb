@@ -50,7 +50,8 @@ $lang_misc = array(
 'Show more users'			=>	'Show more users for this IP',
 
 // Moderate forum
-'Moderate forum head'		=>	'Moderate forum : %s',
+'Moderate forum head'		=>	'Moderate : %s',
+'Topics'					=>	'Topics',
 'Move topic'				=>	'Move topic',
 'Move topics'				=>	'Move topics',
 'Delete topics'				=>	'Delete topics',
@@ -73,6 +74,7 @@ $lang_misc = array(
 'Unstick topic redirect'	=>	'Topic no longer sticky. Redirecting …',
 
 // Delete multiple posts in topic
+'Posts'						=>	'Posts',
 'Delete posts'				=>	'Delete selected posts',
 'Delete whole topic'		=>	'Delete whole topic',
 'Delete posts head'			=>	'Delete posts from : %s',

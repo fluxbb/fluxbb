@@ -124,7 +124,7 @@ if (!defined('FORUM_PARSER_LOADED'))
 $cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 
 // Setup form
-$forum_page['set_count'] = $forum_page['fld_count'] = 0;
+$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 $forum_page['form_action'] = forum_link($forum_url['delete'], $id);
 
 $forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
@@ -146,9 +146,6 @@ $forum_page['crumbs'] = array(
 	(($cur_post['is_topic']) ? $lang_delete['Delete topic'] : $lang_delete['Delete post'])
 );
 
-// Setup Main Heading
-$forum_page['main_head'] = end($forum_page['crumbs']);
-
 ($hook = get_hook('dl_pre_header_load')) ? eval($hook) : null;
 
 define ('FORUM_PAGE', 'postdelete');
@@ -161,23 +158,28 @@ ob_start();
 ($hook = get_hook('dl_main_output_start')) ? eval($hook) : null;
 
 ?>
-<div class="main-content frm">
-	<div class="cbox data-box">
+<div class="main-content main-frm">
+	<div class="content-box">
 		<ul>
 			<?php echo implode("\n\t\t\t\t", $forum_page['frm_info'])."\n" ?>
 		</ul>
+	</div>
+	<div class="content-box">
 		<div class="entry-content">
 			<?php echo $cur_post['message']."\n" ?>
 		</div>
 	</div>
-	<form class="frm-newform" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 		<div class="hidden">
 			<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 		</div>
-		<fieldset class="frm-set set<?php echo ++$forum_page['set_count'] ?>">
+		<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
 			<legend class="frm-legend"><strong><?php echo $lang_delete['Delete post'] ?></strong></legend>
-			<div class="frm-radbox">
-				<input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /> <label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_common['Please confirm'] ?></span> <?php printf(((($cur_post['is_topic'])) ? $lang_delete['Delete topic head'] : $lang_delete['Delete post head']), forum_htmlencode($cur_post['poster']), format_time($cur_post['posted'])) ?></label>
+			<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="frm-box radio">
+					<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /></span>
+					<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_common['Please confirm'] ?></span> <?php printf(((($cur_post['is_topic'])) ? $lang_delete['Delete topic head'] : $lang_delete['Delete post head']), forum_htmlencode($cur_post['poster']), format_time($cur_post['posted'])) ?></label>
+				</div>
 			</div>
 		</fieldset>
 		<div class="frm-buttons">

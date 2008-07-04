@@ -670,10 +670,10 @@ function no_search_results($action = 'search')
 			message($lang_search['No recent posts'], $forum_page['search_again'], $lang_search['Recently active topics']);
 
 		case 'show_user_posts':
-			message($lang_search['No user posts'], $forum_page['search_again'], $lang_search['Search results']);
+			message($lang_search['No user posts'], $forum_page['search_again'], $lang_search['Posts by user']);
 
 		case 'show_user_topics':
-			message($lang_search['No user topics'], $forum_page['search_again'], $lang_search['Search results']);
+			message($lang_search['No user topics'], $forum_page['search_again'], $lang_search['Topics by user']);
 
 		case 'show_subscriptions':
 			message($lang_search['No subscriptions'], $forum_page['search_again'], $lang_search['Subscriptions']);
@@ -702,66 +702,44 @@ function generate_search_crumbs($action = null)
 	{
 		case 'show_new':
 			$forum_page['crumbs'][] = $lang_search['Topics with new'];
-			$forum_page['results_info'] = sprintf((($num_hits == 1) ? $lang_search['Topic results single'] : $lang_search['Topic results plural']), $lang_search['Topics with new'], $num_hits);
-			if ($forum_page['num_pages'] > 1)
-				$forum_page['results_info'] .= '<br /><small>'.sprintf($lang_search['Paged info topics'], $forum_page['start_from'] + 1, $forum_page['finish_at'], $num_hits).'</small>';
+			$forum_page['results_info'] = generate_page_info($lang_search['Topics found'], ($forum_page['start_from'] + 1), $num_hits);
 			$forum_page['posting_info'] = '<p class="posting options"><span class="item1"><a href="'.forum_link($forum_url['search']).'">'.$lang_search['User defined search'].'</a></span> <span><a href="'.forum_link($forum_url['mark_read'], generate_form_token('markread'.$forum_user['id'])).'">'.$lang_common['Mark all as read'].'</a></span></p>';
 			break;
 
 		case 'show_recent':
 			$forum_page['crumbs'][] = $lang_search['Recently active topics'];
-			$forum_page['results_info'] = sprintf((($num_hits == 1) ? $lang_search['Topic results single'] : $lang_search['Topic results plural']), $lang_search['Recently active topics'], $num_hits);
-			if ($forum_page['num_pages'] > 1)
-				$forum_page['results_info'] .= '<br /><small>'.sprintf($lang_search['Paged info topics'], $forum_page['start_from'] + 1, $forum_page['finish_at'], $num_hits).'</small>';
+			$forum_page['results_info'] = generate_page_info($lang_search['Topics found'], ($forum_page['start_from'] + 1), $num_hits);
 			$forum_page['posting_info'] = '<p class="posting options"><span class="item1"><a href="'.forum_link($forum_url['search']).'">'.$lang_search['User defined search'].'</a></span></p>';
 			break;
 
 		case 'show_unanswered':
 			$forum_page['crumbs'][] = $lang_search['Unanswered topics'];
-			$forum_page['results_info'] = sprintf((($num_hits == 1) ? $lang_search['Topic results single'] : $lang_search['Topic results plural']), $lang_search['Unanswered topics'], $num_hits);
-			if ($forum_page['num_pages'] > 1)
-				$forum_page['results_info'] .= '<br /><small>'.sprintf($lang_search['Paged info topics'], $forum_page['start_from'] + 1, $forum_page['finish_at'], $num_hits).'</small>';
+			$forum_page['results_info'] = generate_page_info($lang_search['Topics found'], ($forum_page['start_from'] + 1), $num_hits);
 			$forum_page['posting_info'] = '<p class="posting options"><span class="item1"><a href="'.forum_link($forum_url['search']).'">'.$lang_search['User defined search'].'</a></span></p>';
 			break;
 
 		case 'show_user_posts':
-			$forum_page['crumbs'][] = sprintf($lang_search['Posts by'], $search_set[0]['pposter']);
-			$forum_page['results_info'] = sprintf((($num_hits == 1) ? $lang_search['Post results single'] : $lang_search['Post results plural']), sprintf($lang_search['Posts by'], $search_set[0]['pposter']), $num_hits);
-			if ($forum_page['num_pages'] > 1)
-				$forum_page['results_info'] .= '<br /><small>'.sprintf($lang_search['Paged info posts'], $forum_page['start_from'] + 1, $forum_page['finish_at'], $num_hits).'</small>';
+			$forum_page['crumbs'][] = sprintf($lang_search['Posts by'], $search_set[0]['pposter'], ($forum_page['start_from'] + 1), $num_hits);
+			$forum_page['results_info'] = generate_page_info($lang_search['Posts found'], ($forum_page['start_from'] + 1), $num_hits);
 			$forum_page['posting_info'] = '<p class="posting options"><span class="item1"><a href="'.forum_link($forum_url['search']).'">'.$lang_search['User defined search'].'</a></span> <span><a href="'.forum_link($forum_url['search_user_topics'], $search_id).'">'.sprintf($lang_search['Topics by'], $search_set[0]['pposter']).'</a></p>';
 			break;
 
 		case 'show_user_topics':
 			$forum_page['crumbs'][] = sprintf($lang_search['Topics by'], $search_set[0]['poster']);
-			$forum_page['results_info'] = sprintf((($num_hits == 1) ? $lang_search['Topic results single'] : $lang_search['Topic results plural']), sprintf($lang_search['Topics by'], $search_set[0]['poster']), $num_hits);
-			if ($forum_page['num_pages'] > 1)
-				$forum_page['results_info'] .= '<br /><small>'.sprintf($lang_search['Paged info topics'], $forum_page['start_from'] + 1, $forum_page['finish_at'], $num_hits).'</small>';
+			$forum_page['results_info'] = generate_page_info($lang_search['Topics found'], ($forum_page['start_from'] + 1), $num_hits);
 			$forum_page['posting_info'] = '<p class="posting options"><span class="item1"><a href="'.forum_link($forum_url['search']).'">'.$lang_search['User defined search'].'</a></span> <span><a href="'.forum_link($forum_url['search_user_posts'], $search_id).'">'.sprintf($lang_search['Posts by'], $search_set[0]['poster']).'</a></p>';
 			break;
 
 		case 'show_subscriptions':
 			$forum_page['crumbs'][] = $lang_search['Subscriptions'];
-			$forum_page['results_info'] = sprintf((($num_hits == 1) ? $lang_search['Topic results single'] : $lang_search['Topic results plural']), $lang_search['Subscriptions'], $num_hits);
-			if ($forum_page['num_pages'] > 1)
-				$forum_page['results_info'] .= '<br /><small>'.sprintf($lang_search['Paged info topics'], $forum_page['start_from'] + 1, $forum_page['finish_at'], $num_hits).'</small>';
+			$forum_page['results_info'] = generate_page_info($lang_search['Topics found'], ($forum_page['start_from'] + 1), $num_hits);
 			$forum_page['posting_info'] = '<p class="posting options"><span class="item1"><a href="'.forum_link($forum_url['search']).'">'.$lang_search['User defined search'].'</a></span></p>';
 			break;
 
 		default:
 			$forum_page['crumbs'][] = $lang_search['Search results'];
-			if ($show_as == 'topics')
-			{
-				$forum_page['results_info'] = sprintf((($num_hits == 1) ? $lang_search['Topic results single'] : $lang_search['Topic results plural']), $lang_search['Search results'], $num_hits);
-				if ($forum_page['num_pages'] > 1)
-					$forum_page['results_info'] .= '<br /><small>'.sprintf($lang_search['Paged info topics'], $forum_page['start_from'] + 1, $forum_page['finish_at'], $num_hits).'</small>';
-			}
-			else
-			{
-				$forum_page['results_info'] = sprintf((($num_hits == 1) ? $lang_search['Post results single'] : $lang_search['Post results plural']), $lang_search['Search results'], $num_hits);
-				if ($forum_page['num_pages'] > 1)
-					$forum_page['results_info'] .= '<br /><small>'.sprintf($lang_search['Paged info posts'], $forum_page['start_from'] + 1, $forum_page['finish_at'], $num_hits).'</small>';
-			}
+			$forum_page['results_info'] = generate_page_info((($show_as == 'topics') ? $lang_search['Topics found'] : $lang_search['Posts found']), ($forum_page['start_from'] + 1), $num_hits);
+
 			break;
 	}
 }

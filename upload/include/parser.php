@@ -161,7 +161,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		if (substr($current, 0, 1) != '[' || substr($current, -1, 1) != ']')
 		{
 			// Its not a bbcode tag so we put it on the end and continue
-			
+
 			// If we are nested too deeply don't add to the end
 			if ($current_nest)
 				continue;
@@ -180,7 +180,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 					{
 						$temp_tag = array_pop($open_tags);
 						$temp_arg = array_pop($open_args);
-						
+
 						if (in_array($temp_tag , $tags_inline))
 						{
 							array_push($temp_opened, $temp_tag);
@@ -216,7 +216,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 				$new_text .= forum_trim($current);
 			else
 				$new_text .= $current;
-		
+
 			continue;
 		}
 
@@ -620,7 +620,7 @@ function handle_img_tag($url, $is_signature = false, $alt = null)
 	if ($is_signature && $forum_user['show_img_sig'] != '0')
 		$img_tag = '<img class="sigimage" src="'.$url.'" alt="'.forum_htmlencode($alt).'" />';
 	else if (!$is_signature && $forum_user['show_img'] != '0')
-		$img_tag = '<span class="postimg"><img src="'.$url.'" alt="'.forum_htmlencode($alt).'" /></span>';
+		$img_tag = '<span class="postimg"><a href="'.$url.'"><img src="'.$url.'" alt="'.forum_htmlencode($alt).'" /></a></span>';
 
 	$return = ($hook = get_hook('ps_handle_img_tag_end')) ? eval($hook) : null;
 	if ($return != null)
@@ -666,7 +666,7 @@ function do_bbcode($text, $is_signature = false)
 		$text = preg_replace('#\[quote=(&quot;|"|\'|)(.*)\\1\]#seU', '"</p><div class=\"quotebox\"><cite>".str_replace(array(\'[\', \'\\"\'), array(\'&#91;\', \'"\'), \'$2\')." ".$lang_common[\'wrote\'].":</cite><blockquote><p>"', $text);
 		$text = preg_replace('#\s*\[\/quote\]#', '</p></blockquote></div><p>', $text);
 	}
-	
+
 	if (!$is_signature)
 	{
 		$pattern[] = '#\[list=([1a\*])\](.*?)\[/list\]*#ems';
@@ -795,7 +795,7 @@ function parse_message($text, $hide_smilies)
 
 	if ($forum_config['p_message_bbcode'] == '1' && strpos($text, '[') !== false && strpos($text, ']') !== false)
 		$text = do_bbcode($text);
-		
+
 	if ($forum_config['o_smilies'] == '1' && $forum_user['show_smilies'] == '1' && $hide_smilies == '0')
 		$text = do_smilies($text);
 
@@ -872,7 +872,7 @@ function parse_signature($text)
 
 	if ($forum_config['p_sig_bbcode'] == '1' && strpos($text, '[') !== false && strpos($text, ']') !== false)
 		$text = do_bbcode($text, true);
-		
+
 	if ($forum_config['o_smilies_sig'] == '1' && $forum_user['show_smilies'] == '1')
 		$text = do_smilies($text);
 

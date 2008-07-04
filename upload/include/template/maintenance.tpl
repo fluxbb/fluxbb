@@ -7,8 +7,8 @@
 </head>
 <body>
 
-<div id="brd-maint">
-<div class="brd">
+<div id="brd-maint" class="brd-page">
+<div id="brd-wrap class="brd">
 
 <!-- forum_maint_main -->
 

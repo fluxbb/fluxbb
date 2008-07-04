@@ -45,6 +45,8 @@ $forum_url = array(
 	'forum_atom'					=>	'extern.php?action=feed&amp;fid=$1&amp;type=atom',
 	'help'							=>	'help.php?section=$1',
 	'index'							=>	'',
+	'index_rss'						=>	'extern.php?action=feed&amp;type=rss',
+	'index_atom'					=>	'extern.php?action=feed&amp;type=atom',
 	'login'							=>	'login.php',
 	'logout'						=>	'login.php?action=out&amp;id=$1&amp;csrf_token=$2',
 	'mark_read'						=>	'misc.php?action=markread&amp;csrf_token=$1',
