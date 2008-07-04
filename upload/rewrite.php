@@ -39,6 +39,10 @@ $path_to_script = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
 if (substr($path_to_script, -1) != '/')
 	$path_to_script  = $path_to_script.'/';
 
+// Deal with IIS rewriting oddness
+if (isset($_SERVER['HTTP_X_ORIGINAL_URL']))
+	$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
+
 // We create our own request URI with the path removed and only the parts to rewrite included
 $request_uri = substr($_SERVER['REQUEST_URI'], strlen($path_to_script));
 if (strpos($request_uri, '?') !== false)
