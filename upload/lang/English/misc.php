@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 // Language definitions used in various scripts
 $lang_misc = array(

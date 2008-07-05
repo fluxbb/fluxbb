@@ -82,7 +82,7 @@ body {
 #brd-stats .hn,
 #brd-online .hn,
 #qjump label,
-#brd-index .forum-item li span,
+#brd-index .forum-item li .label,
 #brd-index .main-subhead p.category-info .forums,
 .brd .frm-legend,
 .brd .frm-legend span,
@@ -663,9 +663,12 @@ E - MAIN CONTENT - INDEX
  	}
  	
  #brd-index .forum-item li.lastpost strong,
- #brd-index .forum-item li.lastpost cite {
+ #brd-index .forum-item li.lastpost cite,
+ #brd-index .forum-item li.lastpost span {
  	display: block;
  	padding: 0 1em;
+ 	font-style: normal;
+ 	font-weight: normal;
  	}
  	
 /*************************************************************

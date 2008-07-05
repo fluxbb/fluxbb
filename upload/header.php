@@ -293,7 +293,7 @@ $main_elements['<!-- forum_crumbs_end -->'] = (FORUM_PAGE != 'index') ? '<div id
 $main_elements['<!-- forum_page_type -->'] = (defined('FORUM_PAGE_TYPE')) ? FORUM_PAGE_TYPE : ((substr(FORUM_PAGE, 0, 5) == 'admin') ? 'admin' : 'basic');
 
 // Main section heading
-$main_elements['<!-- forum_main_head -->'] =  '<div class="main-head">'."\n\t".'<h1 class="hn"><span>'.((isset($forum_page['main_head'])) ? $forum_page['main_head'] : end($forum_page['crumbs'])).'</span></h1>'."\n".'</div>';
+$main_elements['<!-- forum_main_head -->'] =  '<div class="main-head">'."\n\t\t".'<h1 class="hn"><span>'.((isset($forum_page['main_head'])) ? $forum_page['main_head'] : end($forum_page['crumbs'])).'</span></h1>'."\n\t".'</div>';
 
 // Top pagination and post links
 $main_elements['<!-- forum_main_pagepost_top -->'] = (!empty($forum_page['page_post'])) ? '<div id="brd-pagepost-top" class="main-pagepost gen-content">'."\n\t".implode("\n\t", $forum_page['page_post'])."\n".'</div>' : '';
@@ -314,11 +314,11 @@ if (substr(FORUM_PAGE, 0, 5) == 'admin' && FORUM_PAGE_TYPE != 'paged')
 }
 
 // Main section options bar
-$main_elements['<!-- forum_main_options -->'] = (!empty($forum_page['main_options'])) ? '<div class="main-options gen-content">'."\n\t".'<p class="options">'.implode(' ', $forum_page['main_options']).'</p>'."\n".'</div>' : '';
+$main_elements['<!-- forum_main_options -->'] = (!empty($forum_page['main_options'])) ? '<div class="main-options gen-content">'."\n\t\t".'<p class="options">'.implode(' ', $forum_page['main_options']).'</p>'."\n\t".'</div>' : '';
 
 ($hook = get_hook('hd_mainelements')) ? eval($hook) : null;
 
-$tpl_main = str_replace(array_keys($main_elements), array_values($main_elements), $tpl_main);
+$tpl_main = str_replace(array_keys($main_elements),  array_values($main_elements), $tpl_main);
 unset($main_elements);
 
 // END MAIN SECTION INTERFACE ELEMENT SUBSTITUTION

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 // Language definitions used in post.php and edit.php
 $lang_post = array(
