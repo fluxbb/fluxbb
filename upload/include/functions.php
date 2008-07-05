@@ -2142,16 +2142,6 @@ function get_current_url($max_length = 0)
 	if (strlen($url) <= $max_length || $max_length == 0)
 		return $url;
 
-	// If we have a $max_length and the actual url is too long, try to find an alternative
-	$get = '?';
-	foreach ($_GET as $key => $string)
-		$get .= $key.'='.$string.'&amp;';
-
-	$url = substr($protocol.$_SERVER['HTTP_HOST'].$port.$_SERVER['PHP_SELF'].$get, 0, -1);
-
-	if (strlen($url) <= $max_length)
-		return $url;
-
 	// We can't find a short enough url
 	return null;
 }
