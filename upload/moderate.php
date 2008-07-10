@@ -141,7 +141,7 @@ if (isset($_GET['tid']))
 				<fieldset>
 					<legend><?php echo $lang_misc['Confirm delete legend'] ?></legend>
 					<div class="infldset">
-						<input type="hidden" name="posts" value="<?php echo implode(',', array_keys($posts)) ?>" />
+						<input type="hidden" name="posts" value="<?php echo implode(',', array_map('intval', array_keys($posts))) ?>" />
 						<p><?php echo $lang_misc['Delete posts comply'] ?></p>
 					</div>
 				</fieldset>
@@ -334,7 +334,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		if (empty($topics))
 			message($lang_misc['No topics selected']);
 
-		$topics = implode(',', array_keys($topics));
+		$topics = implode(',', array_map('intval', array_keys($topics)));
 		$action = 'multi';
 	}
 	else
@@ -457,7 +457,7 @@ if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply']))
 	<h2><?php echo $lang_misc['Delete topics'] ?></h2>
 	<div class="box">
 		<form method="post" action="moderate.php?fid=<?php echo $fid ?>">
-			<input type="hidden" name="topics" value="<?php echo implode(',', array_keys($topics)) ?>" />
+			<input type="hidden" name="topics" value="<?php echo implode(',', array_map('intval', array_keys($topics))) ?>" />
 			<div class="inform">
 				<fieldset>
 					<legend><?php echo $lang_misc['Confirm delete legend'] ?></legend>
