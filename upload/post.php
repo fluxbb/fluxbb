@@ -24,6 +24,7 @@
 
 ************************************************************************/
 
+define('FORUM_SKIP_CSRF_CONFIRM', 1);
 
 if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
