@@ -178,7 +178,7 @@ else if (isset($_POST['form_sent']))
 		$query = array(
 			'SELECT'	=> 'u.username',
 			'FROM'		=> 'users AS u',
-			'WHERE'		=> 'u.email=\''.$email1.'\''
+			'WHERE'		=> 'u.email=\''.$forum_db->escape($email1).'\''
 		);
 
 		($hook = get_hook('rg_qr_check_email_dupe')) ? eval($hook) : null;
