@@ -100,6 +100,11 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 			message($lang_prof_reg['Signature quote/code']);
 	}
 
+	if (preg_match('#\[url\](.*?)([\[]+?)(.*?)\[/url\]#', $text) || preg_match('#\[url=(.*?)([\[]+?)(.*?)\](.*?)\[/url\]#', $text) || preg_match('#\[url=(.*?)\](.*?)([\[]+?)(.*?)\[/url\]#', $text))
+		message('BBCode can not be nested within [url] tags.');
+	if (preg_match('#\[email\](.*?)([\[]+?)(.*?)\[/email\]#', $text) || preg_match('#\[email=(.*?)([\[]+?)(.*?)\](.*?)\[/email\]#', $text) || preg_match('#\[email=(.*?)\](.*?)([\[]+?)(.*?)\[/email\]#', $text))
+		message('BBCode can not be nested within [email] tags.');
+
 	return trim($text);
 }
 
