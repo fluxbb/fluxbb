@@ -170,7 +170,7 @@ else if ($action == 'out')
 	}
 
 	$expire = time() + 1209600;
-	forum_setcookie($cookie_name, base64_encode('1|'.random_key(8, true).'|'.$expire.'|'.random_key(8, true)), $expire);
+	forum_setcookie($cookie_name, base64_encode('1|'.random_key(8, false, true).'|'.$expire.'|'.random_key(8, false, true)), $expire);
 
 	// Reset tracked topics
 	set_tracked_topics(null);

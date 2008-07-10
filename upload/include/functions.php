@@ -112,7 +112,7 @@ function cookie_login(&$forum_user)
 		// If we got back the default user, the login failed
 		if ($forum_user['id'] == '1')
 		{
-			forum_setcookie($cookie_name, base64_encode('1|'.random_key(8, true).'|'.$expire.'|'.random_key(8, true)), $expire);
+			forum_setcookie($cookie_name, base64_encode('1|'.random_key(8, false, true).'|'.$expire.'|'.random_key(8, false, true)), $expire);
 			return;
 		}
 
