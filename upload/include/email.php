@@ -123,6 +123,10 @@ function smtp_mail($to, $subject, $message, $headers = '')
 
 	$recipients = explode(',', $to);
 
+	// Sanitize the message
+	$message = str_replace("\r\n.", "\r\n..", $message);
+	$message = (substr($message, 0, 1) == '.' ? '.'.$message : $message);
+
 	// Are we using port 25 or a custom port?
 	if (strpos($pun_config['o_smtp_host'], ':') !== false)
 		list($smtp_host, $smtp_port) = explode(':', $pun_config['o_smtp_host']);
