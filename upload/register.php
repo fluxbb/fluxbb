@@ -123,7 +123,7 @@ else if (isset($_POST['form_sent']))
 	$query = array(
 		'SELECT'	=> '1',
 		'FROM'		=> 'users AS u',
-		'WHERE'		=> 'u.registration_ip=\''.get_remote_address().'\' AND u.registered>'.(time() - 3600)
+		'WHERE'		=> 'u.registration_ip=\''.$forum_db->escape(get_remote_address()).'\' AND u.registered>'.(time() - 3600)
 	);
 
 	($hook = get_hook('rg_qr_check_register_flood')) ? eval($hook) : null;

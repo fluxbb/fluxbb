@@ -241,7 +241,7 @@ function set_default_user()
 			),
 			array(
 				'LEFT JOIN'		=> 'online AS o',
-				'ON'			=> 'o.ident=\''.$remote_addr.'\''
+				'ON'			=> 'o.ident=\''.$forum_db->escape($remote_addr).'\''
 			)
 		),
 		'WHERE'		=> 'u.id=1'
@@ -1317,7 +1317,7 @@ function add_topic($post_info, &$new_tid, &$new_pid)
 	$query = array(
 		'INSERT'	=> 'poster, poster_id, poster_ip, message, hide_smilies, posted, topic_id',
 		'INTO'		=> 'posts',
-		'VALUES'	=> '\''.$forum_db->escape($post_info['poster']).'\', '.$post_info['poster_id'].', \''.get_remote_address().'\', \''.$forum_db->escape($post_info['message']).'\', '.$post_info['hide_smilies'].', '.$post_info['posted'].', '.$new_tid
+		'VALUES'	=> '\''.$forum_db->escape($post_info['poster']).'\', '.$post_info['poster_id'].', \''.$forum_db->escape(get_remote_address()).'\', \''.$forum_db->escape($post_info['message']).'\', '.$post_info['hide_smilies'].', '.$post_info['posted'].', '.$new_tid
 	);
 
 	// If it's a guest post, there might be an e-mail address we need to include
@@ -1364,7 +1364,7 @@ function add_post($post_info, &$new_pid)
 	$query = array(
 		'INSERT'	=> 'poster, poster_id, poster_ip, message, hide_smilies, posted, topic_id',
 		'INTO'		=> 'posts',
-		'VALUES'	=> '\''.$forum_db->escape($post_info['poster']).'\', '.$post_info['poster_id'].', \''.get_remote_address().'\', \''.$forum_db->escape($post_info['message']).'\', '.$post_info['hide_smilies'].', '.$post_info['posted'].', '.$post_info['topic_id']
+		'VALUES'	=> '\''.$forum_db->escape($post_info['poster']).'\', '.$post_info['poster_id'].', \''.$forum_db->escape(get_remote_address()).'\', \''.$forum_db->escape($post_info['message']).'\', '.$post_info['hide_smilies'].', '.$post_info['posted'].', '.$post_info['topic_id']
 	);
 
 	// If it's a guest post, there might be an e-mail address we need to include
