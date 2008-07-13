@@ -546,6 +546,10 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 			if ($forum_user['is_guest'])
 				message($lang_common['Bad request']);
 
+			// Check we're allowed to see the subscriptions we're trying to look at
+			if ($forum_user['g_id'] != FORUM_ADMIN && $forum_user['id'] != $value)
+				message($lang_common['Bad request']);
+
 			$query = array(
 				'SELECT'	=> 't.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.forum_id, f.forum_name',
 				'FROM'		=> 'topics AS t',
