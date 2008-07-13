@@ -30,6 +30,7 @@
 // the root directory.
 
 define('UPDATE_TO', '1.3 Beta');
+define('UPDATE_TO_DB_REVISION', 1);
 
 // An array of hotfix extensions that this version supersedes and replaces
 $supersedes_ext = array('hotfix_13svn_test');
@@ -749,6 +750,10 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		if (!array_key_exists('o_quote_depth', $forum_config))
 			$forum_db->query('INSERT INTO '.$forum_db->prefix.'config (conf_name, conf_value) VALUES(\'o_quote_depth\', \'3\')') or error(__FILE__, __LINE__);
 
+		// Add database revision number
+		if (!array_key_exists('o_database_revision', $forum_config))
+			$forum_db->query('INSERT INTO '.$forum_db->prefix.'config (conf_name, conf_value) VALUES(\'o_database_revision\', \'0\')') or error(__FILE__, __LINE__);
+
 		// Make sure we have o_additional_navlinks (was added in 1.2.1)
 		if (!array_key_exists('o_additional_navlinks', $forum_config))
 			$forum_db->query('INSERT INTO '.$forum_db->prefix.'config (conf_name, conf_value) VALUES(\'o_additional_navlinks\', \'\')') or error(__FILE__, __LINE__);
@@ -1304,6 +1309,9 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 	case 'finish':
 		// We update the version number
 		$forum_db->query('UPDATE '.$forum_db->prefix.'config SET conf_value=\''.UPDATE_TO.'\' WHERE conf_name=\'o_cur_version\'') or error(__FILE__, __LINE__);
+
+		// And the database revision number
+		$forum_db->query('UPDATE '.$forum_db->prefix.'config SET conf_value=\''.UPDATE_TO_DB_REVISION.'\' WHERE conf_name=\'o_database_revision\'') or error(__FILE__, __LINE__);
 
 		// This feels like a good time to synchronize the forums
 		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'forums') or error(__FILE__, __LINE__);

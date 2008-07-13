@@ -31,6 +31,9 @@ define('FORUM_DEBUG', 1);
 if (!defined('FORUM_ROOT'))
 	exit('The constant FORUM_ROOT must be defined and point to a valid FluxBB installation root directory.');
 
+// Define the version and database revision that this code was written for
+define('FORUM_VERSION', '1.3 Beta');
+define('FORUM_DB_REVISION', 1);
 
 // Load the functions script
 require FORUM_ROOT.'include/functions.php';
@@ -97,6 +100,11 @@ if (!defined('FORUM_CONFIG_LOADED'))
 	generate_config_cache();
 	require FORUM_CACHE_DIR.'cache_config.php';
 }
+
+
+// Verify that we are running the proper database schema revision
+if (!isset($forum_config['o_database_revision']) || $forum_config['o_database_revision'] < FORUM_DB_REVISION || version_compare($forum_config['o_cur_version'], FORUM_VERSION, '<'))
+	error('Your FluxBB database is out-of-date and must be upgraded in order to continue. Please upload and run <a href="'.FORUM_ROOT.'db_update.php">db_update.php</a> in order to complete the upgrade process.');
 
 
 // Load hooks

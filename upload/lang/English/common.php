@@ -146,6 +146,8 @@ $lang_common = array(
 'Update script'				=>	'Database update script uploaded:',
 'Update script alert'		=>	'FluxBB\'s database update script (db_update.php) is currently uploaded to the forum root. Once it has been used to update the forum, it should be deleted or moved out of the forum root for security reasons.',
 'Maint script'				=>	'Maintenance mode disabling script uploaded:',
+'Database mismatch'			=>	'Database version mismatch:',
+'Database mismatch alert'	=>	'Your FluxBB database is meant to be used in conjunction with a newer version of the FluxBB code. This mismatch can lead to your forum not working properly. It is suggested that you upgrade your forum to the newest version of FluxBB.',
 
 // Stuff for Search links and jump menu
 'Go'						=>	'Go',		// submit button in forum jump

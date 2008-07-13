@@ -26,6 +26,7 @@
 
 
 define('FORUM_VERSION', '1.3 Beta');
+define('FORUM_DB_REVISION', 1);
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
 
@@ -1441,6 +1442,7 @@ else
 	// Insert config data
 	$config = array(
 		'o_cur_version'				=> "'".FORUM_VERSION."'",
+		'o_database_revision'		=> "'".FORUM_DB_REVISION."'",
 		'o_board_title'				=> "'".$forum_db->escape($board_title)."'",
 		'o_board_desc'				=> "'".$forum_db->escape($board_descrip)."'",
 		'o_default_timezone'		=> "'0'",
