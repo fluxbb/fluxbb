@@ -6,9 +6,9 @@ IE7 - FIXES
 -------------------------------------------------------------*/
 
 .brd-page,
+.brd .main,
 #brd-index .main-subhead,
 #brd-index .forum-item,
-.brd .main,
 .brd .gen-content,
 .brd .main-content,
 .brd .content-box,
@@ -17,8 +17,9 @@ IE7 - FIXES
 .brd fieldset fieldset,
 .brd .post,
 .brd .postbody,
-.brd .postbody-inner,
-.brd .postfoot p {
+.brd .post-entry,
+.brd .postfoot p,
+#brd-stats ul {
 	max-height: 100%;
 	zoom: 1;
 	}

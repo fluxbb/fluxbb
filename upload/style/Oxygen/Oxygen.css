@@ -56,10 +56,12 @@ body {
 /* Float Clearing
 -------------------------------------------------------------*/
 	
+.brd-page:after,
 .brd .gen-content:after,
 .brd .content-box:after,
-#brd-index .category-info:after,
-#brd-index .forum-item:after,
+#brd-index .item-header:after,
+#brd-index .item-body:after,
+#brd-index ul.item-info:after,
 .brd fieldset:after,
 .brd fieldset div:after,
 .brd fieldset label:after,
@@ -82,11 +84,15 @@ body {
 #brd-stats .hn,
 #brd-online .hn,
 #qjump label,
-#brd-index .forum-item li .label,
-#brd-index .main-subhead p.category-info .forums,
+.brd .item-body .item-info li span.label,
+.brd .item-body .item-info li label,
+.brd .item-body .you-posted,
+.brd .item-body .item-num,
+#brd-index .item-header .subject-title,
 .brd .frm-legend,
 .brd .frm-legend span,
 .brd .posthead .hn cite,
+.brd p.item-select label,
 .brd .entry-title {
  	font-size: 0;
  	left: -9999px;
@@ -567,108 +573,208 @@ D - COMMON INTERFACE ELEMENTS
 	}
 	
 /*************************************************************
-E - MAIN CONTENT - INDEX
+E - INDEX, FORUMS, SEARCH RESULTS, MODERATE FORUMS
 **************************************************************/
 	
-/* Header setup
+/* Header setup generally
 -------------------------------------------------------------*/
 
-#brd-index .main-subhead p {
+.brd .main-content .item-header {
+	height: 2.5em;
+	border-style: none none solid none;
+	border-width: 1px;
+	}
+
+#brd-index .main-content .item-header {
+	margin-top: -2.5em;
+	background: transparent;
+	border: none;
+	}
+
+.brd .main-content .item-header p {
 	width: 100%;
 	position: absolute;
-	left: -9999px;
-	text-indent: -9999px;
+	left: -999em;
+	text-indent: -999em;
 	}
 
-#brd-index .main-subhead p span {
+.brd .main-content .item-header strong {
 	position: absolute;
-	left: 9999px;
+	left: 999em;
 	text-indent: 0;
-	top: -2em;
 	white-space: nowrap;
+	font-weight: normal;
 	}
 
-#brd-index .main-subhead p .topics {
-	margin-left: 50%;
-	text-align: center;
-	width: 10%;
-	}
-	
-#brd-index .main-subhead p .posts {
-	margin-left: 60%;
-	text-align: center;
-	width: 10%;
-	}
-	
-#brd-index .main-subhead p .last {
-	margin-left: 70%;
-	padding-left: 1em;
+.brd .main-content .item-header .subject-title {
+	padding-left: 1.417em;
 	}
 
-/* Content setup
+.brd .main-content .item-header .info-topics,
+.brd .main-content .item-header .info-views {
+	margin-left: 100%;
+	text-align: center;
+	width: 7em;
+	left: 965em;
+	}
+	
+.brd .main-content .item-header .info-posts,
+.brd .main-content .item-header .info-replies {
+	margin-left: 100%;
+	text-align: center;
+	width: 7em;
+	left: 972em;
+	}
+	
+.brd .main-content .item-header  .info-lastpost {
+	margin-left: 100%;
+	left: 980em;
+	}
+
+/* Content setup generally
 -------------------------------------------------------------*/
 
-#brd-index .main-category {
+.brd .main-content .item-body {
+	border-top-style: solid;
+	border-top-width: 1px;
 	overflow: hidden;
-	zoom: 1;
+	position: relative;
+	line-height: 1.4em;
 	}
 
-#brd-index .forum-item {
-	border-top: 1px solid #ddd;
-	overflow: hidden;
+.brd .main-content .item-body1 {
+	border-top: none;
 	}
- 
- #brd-index .forum-item ul, #brd-index .forum-item p,
- #brd-index .forum-item h3 {
- 	list-style: none;
+
+.brd .main-content .item-body ul {
+	float: right;
+	position: relative;
+	padding: 0;
+	list-style: none;
+	}
+
+ .brd .main-content .item-body p,
+ .brd .main-content .item-body .hn {
  	padding: 0;
- 	margin: 0;
- 	}
- 
- #brd-index .forum-item li {
- 	padding-bottom: 50em;
- 	margin-bottom: -49.5em;
- 	padding-top: 0.5em;
- 	}
- 
- #brd-index .forum-item .item-title {
- 	float: left;
- 	width: 50%;
- 	padding: 0.5em 0;
- 	}
- 	
- #brd-index .forum-item .no-desc {
- 	padding-top: 1.25em;
- 	}
- 	
- #brd-index .forum-item .item-title h3,
- #brd-index .forum-item .item-title p {
- 	padding: 0 1em 0 1.417em;
  	}
 
-#brd-index .forum-item li.topics, #brd-index .forum-item li.posts {
+ .brd .main-content .item-body .item-subject,
+ .brd .main-content .item-body li {
  	float: left;
- 	width: 10%;
- 	border-left: 1px solid #ccc;
- 	margin-left: -1px;
- 	text-align: center;
- 	padding-top: 1.25em;
+ 	border-left-style: solid;
+ 	border-left-width: 1px;
+ 	padding-bottom: 10em;
+ 	margin: 0 -1px -9.7em 0;
+ 	position: relative;
  	}
 
-#brd-index .forum-item li.lastpost {
- 	float: left;
- 	border-left: 1px solid #ccc;
- 	margin-left: -1px;
- 	width: 28%;
+.brd .main-content .item-body .item-subject {
+  	padding-top: 0.4em;
+ 	overflow: hidden;
+ 	width: 100%;
+  	}
+
+ .brd .main-content .item-body li.info-topics,
+ .brd .main-content .item-body li.info-posts,
+ .brd .main-content .item-body li.info-views,
+ .brd .main-content .item-body li.info-replies {
+ 	width: 7em;
+ 	text-align:center;
+ 	padding-top: 1em;
  	}
+
+.brd .main-content .item-body li.info-lastpost {
+  	padding-top: 0.4em;
+  	width: 20em;
+  	}
+
+.brd .main-content .redirect li.info-lastpost {
+  	padding-top: 1em;
+  	}
+
+/* Setup for Index and Forums (with views)
+-------------------------------------------------------------*/
+
+.brd .main-content .item-body {
+	padding-right: 35em;
+	padding-left: 3.75em;
+	}
+	
+.brd .main-content .item-body ul {
+	width: 34em;
+	right: -35em;
+	margin-left: -34em;
+	}
+	
+.brd .forum-noview .item-body {
+	padding-right: 28em;
+	}
+	
+.brd .forum-noview .item-body ul {
+	width: 27em;
+	right: -28em;
+	margin-left: -27em;
+	}
+	
+ .brd .main-content .item-body .item-subject span.modlist {
+ 	display: block;
+ 	font-size: 0.917em;
+ 	}
+ 
+.brd .main-content .item-body .hn strong {
+  	font-weight: bold;
+  	font-size: 1.084em;
+  	}
+
+ #brd-index .main-content .item-body .hn span {
+ 	font-size: 1.167em;
+ 	font-weight: bold;
+ 	}
+
+.brd .main-content .item-body span.item-nav,
+.brd .main-content .item-body span.item-nav * {
+	white-space: nowrap;
+	font-style: normal;
+	}
+
+ .brd .main-content .item-body .item-subject .hn,
+ .brd .main-content .item-body .item-subject p {
+	margin: 0 1em 0 1.5em;
+ 	}
+
  	
- #brd-index .forum-item li.lastpost strong,
- #brd-index .forum-item li.lastpost cite,
- #brd-index .forum-item li.lastpost span {
+ .brd .main-content .item-body li.info-lastpost strong,
+ .brd .main-content .item-body li.info-lastpost cite,
+ .brd .main-content .item-body li.info-lastpost span {
  	display: block;
  	padding: 0 1em;
  	font-style: normal;
  	font-weight: normal;
+ 	}
+ 	
+ .brd .main-content .item-body li.info-select {
+ 	position: absolute;
+ 	right: 0;
+ 	top: 0;
+ 	padding: 0.3em;
+ 	border-style: none none solid solid;
+ 	border-width: 1px;
+ 	}
+ 	
+ .brd .main-content .item-body .icon {
+ 	border-style: solid;
+ 	border-width: 0.6em;
+ 	height: 0;
+ 	width: 0;
+ 	float: left;
+ 	margin-top: 0.35em;
+ 	margin-left: -2.417em;
+ 	}
+ 	
+ .brd .main-content .item-body .hn .posted-mark {
+ 	position: absolute;
+ 	font-size: 2em;
+ 	margin-left: -0.5em;
  	}
  	
 /*************************************************************
@@ -697,7 +803,7 @@ F - MAIN CONTENT - FORMS
 	}
 	
 .brd .frm-box label small {
-	float: left;
+	display: block;
 	text-align: left;
 	position: relative;
 	margin: 2em 1em 0 -1px;
@@ -817,7 +923,14 @@ F - MAIN CONTENT - FORMS
 	
 .brd .frm-form label span em, .brd #req-msg p em {
 	position: relative;
-	bottom: -0.15em;
+	bottom: -0.1em;
+	font-size: 1.167em;
+	font-weight: bold;
+	}
+	
+.brd .frm-form label span em {
+	position: absolute;
+	right: 0;
 	}
 
 .brd div#req-msg {
@@ -864,8 +977,20 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	margin-left: 18em;
 	}
 	
-.brd .posthead .hn strong {
+.brd .posthead .hn strong, .brd .search-posthead .hn strong {
 	float:right;
+	}
+	
+.brd .posthead p.item-select {
+	position: absolute;
+	top: 2.5em;
+	right: 1em;
+	}
+	
+.brd .search-posthead {
+	border-style: none none dashed none;
+	border-width: 1px;
+	padding: 0 1.5em 0 1.5em;
 	}
 	
 .brd .postbody {
@@ -897,6 +1022,10 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	padding: 0 0 0.5em 0.5em;
 	display: inline;
 	position: relative;
+	}
+	
+#brd-searchposts .postbody .user {
+	margin-top: 0;
 	}
 	
 .brd .postbody .user ul {
@@ -1000,31 +1129,11 @@ H - MAIN TABLES
 	vertical-align: middle;
 	}
 
-.main table .tc0 {
-	width: 50%;
-	text-align: left;
-	}
-
-.main table .tc1,
-.main table .tc2,
-#brd-modforum .tc4 {
-	width: 10%;
-	text-align: center;
-	}
-
-.main table .tc3 {
-	width: 30%;
-	text-align: left;
-	}
-	
-#brd-userlist table .tc0,
-#brd-searchtopics table .tc0,
-#brd-modforum table .tc0 {
+#brd-userlist table .tc0 {
 	width: 40%
 	}
 	
-#brd-userlist table .tc1,
-#brd-searchtopics table .tc1 {
+#brd-userlist table .tc1 {
 	width: 20%;
 	text-align: left;
 	}
@@ -1090,17 +1199,6 @@ H - MAIN TABLES
 	
 /* Table Cell Styling
 -------------------------------------------------------------*/
-
-.main table .tcl span.topic-nav,
-.main table .tcl span.topic-nav *,
-.main table .tcr a {
-	white-space: nowrap;
-	}
-	
-.main table .tcl .modlist {
-	display: block;
-	padding-top: 0.3em
-	}
 	
 .brd .main-content th {
 	font-size: 1.084em;
@@ -1122,26 +1220,6 @@ H - MAIN TABLES
 .main table th {
 	padding: 0.5em 1.3em;
 	border-style: none;
-	}
-
-.main table tbody.statused td.tc0 {
-	padding-left: 3.4em;
-	}
-	
-.main table tbody.statused span.status {
-	margin-left: -2.4em;
-	position: absolute;
-	}
-
-.main table .tc0 img {
-	border-style: solid;
-	border-width: 0.6em;
-	display: inline;
-	height: 0;
-	width: 0;
-	float: left;
-	margin-right: 0.4em;
-	margin-top: 0.1em;
 	}
 
 .main table td.actions, .main table th.actions {

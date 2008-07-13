@@ -42,7 +42,7 @@ $lang_misc = array(
 'Open'						=>  'Open',
 'Close'						=>  'Close',
 'Paged info forums'			=>	'Forum %1$s to %2$s of %3$s',
-'Paged info topics'			=>	'Topics %1$s to %1$s of %3$s',
+'Paged info topics'			=>	'Topics %1$s to %2$s of %3$s',
 
 
 // Hostname lookup

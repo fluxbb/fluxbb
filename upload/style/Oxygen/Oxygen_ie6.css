@@ -5,15 +5,22 @@ IE6 - FIXES
 /* Float Clearing and Has Layout Fixes
 -------------------------------------------------------------*/
 
+.brd-page,
+.brd .main,
 #brd-index .main-subhead,
-#brd-index .forum-item,
+.brd .main-content .item-body,
+.brd .main-content .item-body ul,
 .brd .gen-content,
+.brd .main-content,
 .brd .content-box,
-.brd .content-set,
 .brd .content-box *,
 .brd fieldset div,
-.brd fieldset .fld-label,
-.brd fieldset fieldset {
+.brd fieldset fieldset,
+.brd .post,
+.brd .postbody,
+.brd .post-entry,
+.brd .postfoot p {
+	height: 100%;
 	zoom: 1;
 	}
 

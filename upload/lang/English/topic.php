@@ -5,6 +5,7 @@ $lang_topic = array(
 
 'Topic by'				=>	'Topic by %s:',
 'Reply by'				=>	'Reply by %s:',
+'Search replies'		=>	'(%s replies)',
 'Post reply'			=>	'Post reply',
 'Topic closed'			=>	'[ Closed ]',
 'No permission'			=>	'Sorry! no have permission to post a reply',
@@ -41,5 +42,6 @@ $lang_topic = array(
 'Unstick'				=>  'Unstick topic',
 'Stick'					=>  'Stick topic',
 'Delete posts'			=>	'Delete posts',
-
+'Search started by'		=>	'Topic by %s %s',
+'Search reply to'		=>	'Reply by %s %s',
 );

@@ -450,6 +450,9 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 				'ORDER BY'	=> 't.last_post DESC'
 			);
 
+			if ($value != -1)
+				$query['WHERE'] .= ' AND f.id='.$value;
+
 			$url_type = $forum_url['search_new'];
 
 			($hook = get_hook('sf_qr_get_new')) ? eval($hook) : null;
