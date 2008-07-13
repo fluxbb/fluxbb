@@ -75,6 +75,8 @@ $cur_post = $forum_db->fetch_assoc($result);
 $mods_array = ($cur_post['moderators'] != '') ? unserialize($cur_post['moderators']) : array();
 $forum_page['is_admmod'] = ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && array_key_exists($forum_user['username'], $mods_array))) ? true : false;
 
+($hook = get_hook('ed_pre_permission_check')) ? eval($hook) : null;
+
 // Do we have permission to edit this post?
 if (($forum_user['g_edit_posts'] == '0' ||
 	$cur_post['poster_id'] != $forum_user['id'] ||

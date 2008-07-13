@@ -77,6 +77,8 @@ $forum_page['is_admmod'] = ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['
 
 $cur_post['is_topic'] = ($id == $cur_post['first_post_id']) ? true : false;
 
+($hook = get_hook('dl_pre_permission_check')) ? eval($hook) : null;
+
 // Do we have permission to delete this post?
 if (($forum_user['g_delete_posts'] == '0' ||
 	($forum_user['g_delete_topics'] == '0' && $cur_post['is_topic']) ||

@@ -103,6 +103,8 @@ if ($cur_forum['redirect_url'] != '')
 // Setup the array of moderators
 $mods_array = ($cur_forum['moderators'] != '') ? unserialize($cur_forum['moderators']) : array();
 
+($hook = get_hook('dl_pre_permission_check')) ? eval($hook) : null;
+
 if ($forum_user['g_id'] != FORUM_ADMIN && ($forum_user['g_moderator'] != '1' || !array_key_exists($forum_user['username'], $mods_array)))
 	message($lang_common['No permission']);
 
