@@ -205,17 +205,19 @@ if (isset($_POST['form_sent']))
 		if ($tid)
 		{
 			$post_info = array(
-				'is_guest'		=>	$forum_user['is_guest'],
-				'poster'		=>	$username,
-				'poster_id'		=>	$forum_user['id'],	// Always 1 for guest posts
-				'poster_email'	=>	($forum_user['is_guest'] && $email != '') ? $email : null,	// Always null for non-guest posts
-				'subject'		=>	$cur_posting['subject'],
-				'message'		=>	$message,
-				'hide_smilies'	=>	$hide_smilies,
-				'posted'		=>	$now,
-				'subscr_action'	=>	($forum_config['o_subscriptions'] == '1' && $subscribe && !$is_subscribed) ? 1 : (($forum_config['o_subscriptions'] == '1' && !$subscribe && $is_subscribed) ? 2 : 0),
-				'topic_id'		=>	$tid,
-				'forum_id'		=>	$cur_posting['id']
+				'is_guest'		=> $forum_user['is_guest'],
+				'poster'		=> $username,
+				'poster_id'		=> $forum_user['id'],	// Always 1 for guest posts
+				'poster_email'	=> ($forum_user['is_guest'] && $email != '') ? $email : null,	// Always null for non-guest posts
+				'subject'		=> $cur_posting['subject'],
+				'message'		=> $message,
+				'hide_smilies'	=> $hide_smilies,
+				'posted'		=> $now,
+				'subscr_action'	=> ($forum_config['o_subscriptions'] == '1' && $subscribe && !$is_subscribed) ? 1 : (($forum_config['o_subscriptions'] == '1' && !$subscribe && $is_subscribed) ? 2 : 0),
+				'topic_id'		=> $tid,
+				'forum_id'		=> $cur_posting['id'],
+				'update_user'	=> true,
+				'update_unread'	=> true
 			);
 
 			($hook = get_hook('po_pre_add_post')) ? eval($hook) : null;
@@ -225,38 +227,22 @@ if (isset($_POST['form_sent']))
 		else if ($fid)
 		{
 			$post_info = array(
-				'is_guest'		=>	$forum_user['is_guest'],
-				'poster'		=>	$username,
-				'poster_id'		=>	$forum_user['id'],	// Always 1 for guest posts
-				'poster_email'	=>	($forum_user['is_guest'] && $email != '') ? $email : null,	// Always null for non-guest posts
-				'subject'		=>	$subject,
-				'message'		=>	$message,
-				'hide_smilies'	=>	$hide_smilies,
-				'posted'		=>	$now,
-				'subscribe'		=>	($forum_config['o_subscriptions'] == '1' && (isset($_POST['subscribe']) && $_POST['subscribe'] == '1')),
-				'forum_id'		=>	$fid
+				'is_guest'		=> $forum_user['is_guest'],
+				'poster'		=> $username,
+				'poster_id'		=> $forum_user['id'],	// Always 1 for guest posts
+				'poster_email'	=> ($forum_user['is_guest'] && $email != '') ? $email : null,	// Always null for non-guest posts
+				'subject'		=> $subject,
+				'message'		=> $message,
+				'hide_smilies'	=> $hide_smilies,
+				'posted'		=> $now,
+				'subscribe'		=> ($forum_config['o_subscriptions'] == '1' && (isset($_POST['subscribe']) && $_POST['subscribe'] == '1')),
+				'forum_id'		=> $fid,
+				'update_user'	=> true,
+				'update_unread'	=> true
 			);
 
 			($hook = get_hook('po_pre_add_topic')) ? eval($hook) : null;
 			add_topic($post_info, $new_tid, $new_pid);
-		}
-
-		if (!$forum_user['is_guest'])
-		{
-			// If the posting user is logged in, increment his/her post count
-			$query = array(
-				'UPDATE'	=> 'users',
-				'SET'		=> 'num_posts=num_posts+1, last_post='.$now,
-				'WHERE'		=> 'id='.$forum_user['id'],
-			);
-
-			($hook = get_hook('po_qr_increment_num_posts')) ? eval($hook) : null;
-			$forum_db->query_build($query) or error(__FILE__, __LINE__);
-
-			// Add/update the topic in our list of tracked topics
-			$tracked_topics = get_tracked_topics();
-			$tracked_topics['topics'][$tid ? $tid : $new_tid] = time();
-			set_tracked_topics($tracked_topics);
 		}
 
 		($hook = get_hook('po_pre_posted_redirect')) ? eval($hook) : null;
