@@ -1426,6 +1426,8 @@ else
 
 	if ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && $forum_user['g_mod_ban_users'] == '1' && $forum_user['id'] != $id))
 		$forum_page['main_menu']['admin'] = '<li'.(($section == 'admin') ? ' class="active"' : '').'><a href="'.forum_link($forum_url['profile_admin'], $id).'"><span>'.$lang_profile['Section admin'].'</span></a></li>';
+
+	($hook = get_hook('pf_change_details_modify_main_menu')) ? eval($hook) : null;
 	// End navigation menu
 
 	if ($section == 'about')
@@ -2132,17 +2134,17 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 <div class="main-content main-frm">
 <?php
 
-if (!empty($forum_page['text_options']))
-	echo "\t".'<p class="content-options options">'.sprintf($lang_common['You may use'], implode(' ', $forum_page['text_options'])).'</p>'."\n";
+		if (!empty($forum_page['text_options']))
+			echo "\t".'<p class="content-options options">'.sprintf($lang_common['You may use'], implode(' ', $forum_page['text_options'])).'</p>'."\n";
 
-	// If there were any errors, show them
-	if (!empty($errors))
-	{
-		$forum_page['errors'] = array();
-		while (list(, $cur_error) = each($errors))
-			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
+		// If there were any errors, show them
+		if (!empty($errors))
+		{
+			$forum_page['errors'] = array();
+			while (list(, $cur_error) = each($errors))
+				$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
-		($hook = get_hook('pf_pre_change_details_signature_errors')) ? eval($hook) : null;
+			($hook = get_hook('pf_pre_change_details_signature_errors')) ? eval($hook) : null;
 
 ?>
 	<div class="content-box error-box">
@@ -2153,7 +2155,7 @@ if (!empty($forum_page['text_options']))
 	</div>
 <?php
 
-	}
+		}
 
 ?>
 	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
@@ -2262,14 +2264,14 @@ if (!empty($forum_page['text_options']))
 	</div>
 <?php
 
-	// If there were any errors, show them
-	if (!empty($errors))
-	{
-		$forum_page['errors'] = array();
-		while (list(, $cur_error) = each($errors))
-			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
+		// If there were any errors, show them
+		if (!empty($errors))
+		{
+			$forum_page['errors'] = array();
+			while (list(, $cur_error) = each($errors))
+				$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
-		($hook = get_hook('pf_pre_change_details_avatar_errors')) ? eval($hook) : null;
+			($hook = get_hook('pf_pre_change_details_avatar_errors')) ? eval($hook) : null;
 
 ?>
 	<div class="content-box error-box">
@@ -2280,7 +2282,7 @@ if (!empty($forum_page['text_options']))
 	</div>
 <?php
 
-	}
+		}
 
 ?>
 	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>" enctype="multipart/form-data">
@@ -2360,8 +2362,8 @@ if (!empty($forum_page['text_options']))
 	</div>
 <?php
 
-if (!empty($forum_page['user_management']))
-{
+		if (!empty($forum_page['user_management']))
+		{
 
 ?>
 <div class="main-subhead">
@@ -2373,11 +2375,11 @@ if (!empty($forum_page['user_management']))
 	</div>
 <?php
 
-		($hook = get_hook('pf_change_details_admin_pre_group_membership')) ? eval($hook) : null;
+			($hook = get_hook('pf_change_details_admin_pre_group_membership')) ? eval($hook) : null;
 
-		if ($forum_user['g_moderator'] != '1' && $forum_user['id'] != $id)
-		{
-			$forum_page['item_count'] = 0;
+			if ($forum_user['g_moderator'] != '1' && $forum_user['id'] != $id)
+			{
+				$forum_page['item_count'] = 0;
 
 ?>
 	<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
@@ -2414,17 +2416,18 @@ if (!empty($forum_page['user_management']))
 		<span class="submit"><input type="submit" name="update_group_membership" value="<?php echo $lang_profile['Update profile'] ?>" /></span> <span><?php echo $lang_profile['Instructions'] ?></span>
 	</div>
 <?php
-		}
+
+			}
 
 ?>
 </div>
 <?php
 
-}
+		}
 
-if ($forum_user['g_id'] == FORUM_ADMIN)
-{
-	$forum_page['group_count'] = $forum_page['item_count'] = 0;
+		if ($forum_user['g_id'] == FORUM_ADMIN)
+		{
+			$forum_page['group_count'] = $forum_page['item_count'] = 0;
 
 ?>
 <div class="main-subhead">
@@ -2435,38 +2438,38 @@ if ($forum_user['g_id'] == FORUM_ADMIN)
 		<legend class="frm-legend"><strong><?php echo $lang_profile['Moderator assignment'] ?></strong></legend>
 <?php
 
-				$query = array(
-					'SELECT'	=> 'c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.moderators',
-					'FROM'		=> 'categories AS c',
-					'JOINS'		=> array(
-						array(
-							'INNER JOIN'	=> 'forums AS f',
-							'ON'			=> 'c.id=f.cat_id'
-						)
-					),
-					'WHERE'		=> 'f.redirect_url IS NULL',
-					'ORDER BY'	=> 'c.disp_position, c.id, f.disp_position'
-				);
+			$query = array(
+				'SELECT'	=> 'c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.moderators',
+				'FROM'		=> 'categories AS c',
+				'JOINS'		=> array(
+					array(
+						'INNER JOIN'	=> 'forums AS f',
+						'ON'			=> 'c.id=f.cat_id'
+					)
+				),
+				'WHERE'		=> 'f.redirect_url IS NULL',
+				'ORDER BY'	=> 'c.disp_position, c.id, f.disp_position'
+			);
 
-				($hook = get_hook('pf_qr_get_cats_and_forums')) ? eval($hook) : null;
-				$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+			($hook = get_hook('pf_qr_get_cats_and_forums')) ? eval($hook) : null;
+			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-				$cur_category = 0;
-				while ($cur_forum = $forum_db->fetch_assoc($result))
+			$cur_category = 0;
+			while ($cur_forum = $forum_db->fetch_assoc($result))
+			{
+				if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
 				{
-					if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
-					{
-						if ($cur_category)
-							echo "\n\t\t\t\t\t".'</fieldset>'."\n";
+					if ($cur_category)
+						echo "\n\t\t\t\t\t".'</fieldset>'."\n";
 
-						echo "\t\t\t".'<fieldset class="frm-set group-item'.(++$forum_page['item_count']).'">'."\n\t\t\t\t".'<legend><span>'.$cur_forum['cat_name'].':</span></legend>'."\n";
-						$cur_category = $cur_forum['cid'];
-					}
-
-					$moderators = ($cur_forum['moderators'] != '') ? unserialize($cur_forum['moderators']) : array();
-
-					echo "\t\t\t\t".'<div class="frm-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="moderator_in['.$cur_forum['fid'].']" value="1"'.((in_array($id, $moderators)) ? ' checked="checked"' : '').' /></span> <label for="fld'.$forum_page['fld_count'].'">'.forum_htmlencode($cur_forum['forum_name']).'</label></div>'."\n";
+					echo "\t\t\t".'<fieldset class="frm-set group-item'.(++$forum_page['item_count']).'">'."\n\t\t\t\t".'<legend><span>'.$cur_forum['cat_name'].':</span></legend>'."\n";
+					$cur_category = $cur_forum['cid'];
 				}
+
+				$moderators = ($cur_forum['moderators'] != '') ? unserialize($cur_forum['moderators']) : array();
+
+				echo "\t\t\t\t".'<div class="frm-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="moderator_in['.$cur_forum['fid'].']" value="1"'.((in_array($id, $moderators)) ? ' checked="checked"' : '').' /></span> <label for="fld'.$forum_page['fld_count'].'">'.forum_htmlencode($cur_forum['forum_name']).'</label></div>'."\n";
+			}
 
 ?>
 		</fieldset>
@@ -2476,13 +2479,13 @@ if ($forum_user['g_id'] == FORUM_ADMIN)
 	</div>
 <?php
 
-		($hook = get_hook('pf_change_details_admin_form_end')) ? eval($hook) : null;
+			($hook = get_hook('pf_change_details_admin_form_end')) ? eval($hook) : null;
 
 ?>
 </div>
 <?php
 
-}
+		}
 
 ?>
 </form>
