@@ -24,9 +24,6 @@
 
 ************************************************************************/
 
-// Load the search.php language file
-require FORUM_ROOT.'lang/'.$forum_user['language'].'/search.php';
-
 //
 // Cache the results of a search and redirect the user to the results page
 //

@@ -29,9 +29,14 @@ if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
 require FORUM_ROOT.'include/common.php';
 
+($hook = get_hook('se_start')) ? eval($hook) : null;
+
+// Load the search.php language file
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/search.php';
+
+// Load the necessary search functions
 require FORUM_ROOT.'include/search_functions.php';
 
-($hook = get_hook('se_start')) ? eval($hook) : null;
 
 if ($forum_user['g_read_board'] == '0')
 	message($lang_common['No view']);
