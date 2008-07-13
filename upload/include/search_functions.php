@@ -319,7 +319,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = -1
 //
 function generate_cached_search_query($search_id, &$show_as)
 {
-	global $forum_db, $db_type, $forum_user;
+	global $forum_db, $db_type, $forum_user, $forum_config;
 
 	$return = ($hook = get_hook('sf_generate_cached_search_query')) ? eval($hook) : null;
 	if ($return != null)
@@ -408,6 +408,18 @@ function generate_cached_search_query($search_id, &$show_as)
 			'WHERE'		=> 't.id IN('.$search_results.')',
 			'ORDER BY'	=> $sort_by_sql . ' ' . $sort_dir
 		);
+
+		// With "has posted" indication
+		if (!$forum_user['is_guest'] && $forum_config['o_show_dot'] == '1')
+		{
+			$subquery = array(
+				'SELECT'	=> 'COUNT(p.id)',
+				'FROM'		=> 'posts AS p',
+				'WHERE'		=> 'p.poster_id='.$forum_user['id'].' AND p.topic_id=t.id'
+			);
+		
+			$query['SELECT'] .= ', ('.$forum_db->query_build($subquery, true).') AS has_posted';
+		}
 
 		($hook = get_hook('sf_qr_get_cached_hits_as_topics')) ? eval($hook) : null;
 	}

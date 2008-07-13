@@ -314,6 +314,13 @@ if (isset($query))
 			$forum_page['item_subject'] = $forum_page['item_body'] = $forum_page['item_status'] = $forum_page['item_nav'] = $forum_page['item_title'] = $forum_page['item_title_status'] = array();
 			$forum_page['item_indicator'] = '';
 
+			// Should we display the dot or not? :)
+			if (!$forum_user['is_guest'] && $forum_config['o_show_dot'] == '1' && $search_set[$i]['has_posted'] > 0)
+			{
+				$forum_page['item_title']['posted'] = '<span class="posted-mark">'.$lang_forum['You posted indicator'].'</span>';
+				$forum_page['item_status']['posted'] = 'posted';
+			}
+
 			if ($search_set[$i]['closed'] != '0')
 			{
 				$forum_page['item_title_status']['closed'] = $lang_forum['Closed'];

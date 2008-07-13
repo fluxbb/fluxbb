@@ -119,19 +119,13 @@ $query = array(
 // With "has posted" indication
 if (!$forum_user['is_guest'] && $forum_config['o_show_dot'] == '1')
 {
-	$query['SELECT'] .= ', p.poster_id AS has_posted';
-	$query['JOINS'][] = array(
-		'LEFT JOIN'	=> 'posts AS p',
-		'ON'		=> 't.id=p.topic_id AND p.poster_id='.$forum_user['id']
+	$subquery = array(
+		'SELECT'	=> 'COUNT(p.id)',
+		'FROM'		=> 'posts AS p',
+		'WHERE'		=> 'p.poster_id='.$forum_user['id'].' AND p.topic_id=t.id'
 	);
 
-	if ($db_type == 'sqlite')
-	{
-		$query['WHERE'] = 't.id IN(SELECT id FROM '.$forum_db->prefix.'topics WHERE forum_id='.$id.' ORDER BY sticky DESC, '.(($cur_forum['sort_by'] == '1') ? 'posted' : 'last_post').' DESC LIMIT '.$forum_page['start_from'].', '.$forum_user['disp_topics'].')';
-		$query['ORDER BY'] = 't.sticky DESC, t.last_post DESC';
-	}
-
-	$query['GROUP BY'] = ($db_type != 'pgsql') ? 't.id' : 't.id, t.subject, t.poster, t.posted, t.first_post_id, t.last_post, t.last_post_id, t.last_poster, t.num_views, t.num_replies, t.closed, t.sticky, t.moved_to, p.poster_id';
+	$query['SELECT'] .= ', ('.$forum_db->query_build($subquery, true).') AS has_posted';
 }
 
 ($hook = get_hook('vf_qr_get_topics')) ? eval($hook) : null;
@@ -246,7 +240,7 @@ if ($forum_db->num_rows($result))
 			// First assemble the Topic heading
 
 			// Should we display the dot or not? :)
-			if (!$forum_user['is_guest'] && $forum_config['o_show_dot'] == '1' && $cur_topic['has_posted'] == $forum_user['id'])
+			if (!$forum_user['is_guest'] && $forum_config['o_show_dot'] == '1' && $cur_topic['has_posted'] > 0)
 			{
 				$forum_page['item_title']['posted'] = '<span class="posted-mark">'.$lang_forum['You posted indicator'].'</span>';
 				$forum_page['item_status']['posted'] = 'posted';
