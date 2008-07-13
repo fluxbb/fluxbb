@@ -34,7 +34,10 @@ $lang_post = array(
 'Post preview'			=>	'Preview',
 'Preview reply'			=>	'Preview of your reply',
 'Preview new topic'		=>	'Preview of your new topic',
+'Not yet posted'		=>	'Not yet posted',
+'Preview'				=>	'Preview', // For preview button
 'Username'				=>	'Username',
+'Posted by'				=>	'Posted by',
 
 // Edit post
 'Edit post legend'		=>	'Edit message',
