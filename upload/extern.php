@@ -129,9 +129,9 @@ function output_rss($feed)
 	echo '<?xml version="1.0" encoding="utf-8"?>'."\r\n";
 	echo '<rss version="2.0">'."\r\n";
 	echo "\t".'<channel>'."\r\n";
-	echo "\t\t".'<title>'.forum_htmlencode($feed['title']).'</title>'."\r\n";
+	echo "\t\t".'<title><![CDATA['.escape_cdata($feed['title']).']]></title>'."\r\n";
 	echo "\t\t".'<link>'.$feed['link'].'</link>'."\r\n";
-	echo "\t\t".'<description>'.forum_htmlencode($feed['description']).'</description>'."\r\n";
+	echo "\t\t".'<description><![CDATA['.escape_cdata($feed['description']).']]></description>'."\r\n";
 	echo "\t\t".'<lastBuildDate>'.gmdate('r', count($feed['items']) ? $feed['items'][0]['pubdate'] : time()).'</lastBuildDate>'."\r\n";
 
 	if ($forum_config['o_show_version'] == '1')
@@ -143,10 +143,10 @@ function output_rss($feed)
 	for ($i = 0; $i < $num_items; ++$i)
 	{
 		echo "\t\t".'<item>'."\r\n";
-		echo "\t\t\t".'<title>'.forum_htmlencode($feed['items'][$i]['title']).'</title>'."\r\n";
+		echo "\t\t\t".'<title><![CDATA['.escape_cdata($feed['items'][$i]['title']).']]></title>'."\r\n";
 		echo "\t\t\t".'<link>'.$feed['items'][$i]['link'].'</link>'."\r\n";
-		echo "\t\t\t".'<description>'.forum_htmlencode($feed['items'][$i]['description']).'</description>'."\r\n";
-		echo "\t\t\t".'<author>dummy@example.com ('.forum_htmlencode($feed['items'][$i]['author']).')</author>'."\r\n";
+		echo "\t\t\t".'<description><![CDATA['.escape_cdata($feed['items'][$i]['description']).']]></description>'."\r\n";
+		echo "\t\t\t".'<author>dummy@example.com (<![CDATA['.escape_cdata($feed['items'][$i]['author']).']]>)</author>'."\r\n";
 		echo "\t\t\t".'<pubDate>'.gmdate('r', $feed['items'][$i]['pubdate']).'</pubDate>'."\r\n";
 		echo "\t\t\t".'<guid>'.$feed['items'][$i]['link'].'</guid>'."\r\n";
 		echo "\t\t".'</item>'."\r\n";
@@ -173,8 +173,8 @@ function output_atom($feed)
 	echo '<?xml version="1.0" encoding="utf-8"?>'."\r\n";
 	echo '<feed xmlns="http://www.w3.org/2005/Atom">'."\r\n";
 
-	echo "\t".'<title type="html">'.forum_htmlencode($feed['title']).'</title>'."\r\n";
-	echo "\t".'<link rel="self" href="'.forum_htmlencode($_SERVER['SCRIPT_NAME'].($_SERVER['QUERY_STRING'] != '' ? '?'.$_SERVER['QUERY_STRING'] :'')).'"/>'."\r\n";
+	echo "\t".'<title type="html"><![CDATA['.escape_cdata($feed['title']).']]></title>'."\r\n";
+	echo "\t".'<link rel="self" href="'.get_current_url().'"/>'."\r\n";
 	echo "\t".'<updated>'.gmdate('Y-m-d\TH:i:s\Z', count($feed['items']) ? $feed['items'][0]['pubdate'] : time()).'</updated>'."\r\n";
 
 	if ($forum_config['o_show_version'] == '1')
@@ -190,11 +190,11 @@ function output_atom($feed)
 	for ($i = 0; $i < $num_items; ++$i)
 	{
 		echo "\t\t".'<entry>'."\r\n";
-		echo "\t\t\t".'<title type="html">'.forum_htmlencode($feed['items'][$i]['title']).'</title>'."\r\n";
+		echo "\t\t\t".'<title type="html"><![CDATA['.escape_cdata($feed['items'][$i]['title']).']]></title>'."\r\n";
 		echo "\t\t\t".'<link rel="alternate" href="'.$feed['items'][$i]['link'].'"/>'."\r\n";
-		echo "\t\t\t".'<'.$content_tag.' type="html">'.forum_htmlencode($feed['items'][$i]['description']).'</'.$content_tag.'>'."\r\n";
+		echo "\t\t\t".'<'.$content_tag.' type="html"><![CDATA['.escape_cdata($feed['items'][$i]['description']).']]></'.$content_tag.'>'."\r\n";
 		echo "\t\t\t".'<author>'."\r\n";
-		echo "\t\t\t\t".'<name>'.forum_htmlencode($feed['items'][$i]['author']).'</name>'."\r\n";
+		echo "\t\t\t\t".'<name><![CDATA['.escape_cdata($feed['items'][$i]['author']).']]></name>'."\r\n";
 		echo "\t\t\t".'</author>'."\r\n";
 		echo "\t\t\t".'<updated>'.gmdate('Y-m-d\TH:i:s\Z', $feed['items'][$i]['pubdate']).'</updated>'."\r\n";
 		echo "\t\t\t".'<id>'.$feed['items'][$i]['link'].'</id>'."\r\n";
@@ -229,10 +229,10 @@ function output_xml($feed)
 	{
 		echo "\t".'<'.$forum_tag.' id="'.$feed['items'][$i]['id'].'">'."\r\n";
 
-		echo "\t\t".'<title>'.forum_htmlencode($feed['items'][$i]['title']).'</title>'."\r\n";
+		echo "\t\t".'<title><![CDATA['.escape_cdata($feed['items'][$i]['title']).']]></title>'."\r\n";
 		echo "\t\t".'<link>'.$feed['items'][$i]['link'].'</link>'."\r\n";
-		echo "\t\t".'<content>'.forum_htmlencode($feed['items'][$i]['description']).'</content>'."\r\n";
-		echo "\t\t".'<author>'.forum_htmlencode($feed['items'][$i]['author']).'</author>'."\r\n";
+		echo "\t\t".'<content><![CDATA['.escape_cdata($feed['items'][$i]['description']).']]></content>'."\r\n";
+		echo "\t\t".'<author><![CDATA['.escape_cdata($feed['items'][$i]['author']).']]></author>'."\r\n";
 		echo "\t\t".'<posted>'.gmdate('r', $feed['items'][$i]['pubdate']).'</posted>'."\r\n";
 
 		echo "\t".'</'.$forum_tag.'>'."\r\n";
