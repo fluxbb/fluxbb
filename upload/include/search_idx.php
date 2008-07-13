@@ -54,6 +54,8 @@ function split_words($text)
 
 		$stopwords = (array)@file(FORUM_ROOT.'lang/'.$forum_user['language'].'/stopwords.txt');
 		$stopwords = array_map('trim', $stopwords);
+
+		($hook = get_hook('si_split_words_modify_noise_matches')) ? eval($hook) : null;
 	}
 
 	// Clean up
