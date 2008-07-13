@@ -135,8 +135,8 @@ if ($forum_user['is_admmod'])
 
 // Setup form information
 $forum_page['frm_info'] = array(
-	'<li><span>'.$lang_common['Forum'].':<strong> '.forum_htmlencode($cur_post['forum_name']).'</strong></span></li>',
-	'<li><span>'.$lang_common['Topic'].':<strong> '.forum_htmlencode($cur_post['subject']).'</strong></span></li>',
+	'<li><span>'.$lang_delete['Forum'].':<strong> '.forum_htmlencode($cur_post['forum_name']).'</strong></span></li>',
+	'<li><span>'.$lang_delete['Topic'].':<strong> '.forum_htmlencode($cur_post['subject']).'</strong></span></li>',
 	'<li><span>'.sprintf((($cur_post['is_topic']) ? $lang_delete['Delete topic info'] : $lang_delete['Delete post info']), forum_htmlencode($cur_post['poster']), format_time($cur_post['posted'])).'</span></li>'
 );
 
@@ -160,36 +160,36 @@ ob_start();
 ($hook = get_hook('dl_main_output_start')) ? eval($hook) : null;
 
 ?>
-<div class="main-content main-frm">
-	<div class="content-box">
-		<ul>
-			<?php echo implode("\n\t\t\t\t", $forum_page['frm_info'])."\n" ?>
-		</ul>
-	</div>
-	<div class="content-box">
-		<div class="entry-content">
-			<?php echo $cur_post['message']."\n" ?>
+	<div class="main-content main-frm">
+		<div class="content-box">
+			<ul>
+				<?php echo implode("\n\t\t\t\t", $forum_page['frm_info'])."\n" ?>
+			</ul>
 		</div>
-	</div>
-	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
-		<div class="hidden">
-			<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
-		</div>
-		<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-			<legend class="frm-legend"><strong><?php echo $lang_delete['Delete post'] ?></strong></legend>
-			<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-				<div class="frm-box radio">
-					<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /></span>
-					<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_common['Please confirm'] ?></span> <?php printf(((($cur_post['is_topic'])) ? $lang_delete['Delete topic head'] : $lang_delete['Delete post head']), forum_htmlencode($cur_post['poster']), format_time($cur_post['posted'])) ?></label>
-				</div>
+		<div class="content-box parsed-box">
+			<div class="entry-content">
+				<?php echo $cur_post['message']."\n" ?>
 			</div>
-		</fieldset>
-		<div class="frm-buttons">
-			<span class="submit"><input type="submit" name="delete" value="<?php echo $lang_delete['Delete'] ?>" /></span>
-			<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
 		</div>
-	</form>
-</div>
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+			<div class="hidden">
+				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
+			</div>
+			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<legend class="frm-legend"><strong><?php echo $lang_delete['Delete post'] ?></strong></legend>
+				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="frm-box radio">
+						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /></span>
+						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_delete['Please confirm'] ?></span> <?php printf(((($cur_post['is_topic'])) ? $lang_delete['Delete topic label'] : $lang_delete['Delete post label']), forum_htmlencode($cur_post['poster']), format_time($cur_post['posted'])) ?></label>
+					</div>
+				</div>
+			</fieldset>
+			<div class="frm-buttons">
+				<span class="submit"><input type="submit" name="delete" value="<?php echo $lang_delete['Delete'] ?>" /></span>
+				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_delete['Cancel'] ?>" /></span>
+			</div>
+		</form>
+	</div>
 <?php
 
 $forum_id = $cur_post['fid'];
