@@ -266,9 +266,6 @@ if ($forum_user['g_id'] == FORUM_ADMIN)
 	if (file_exists(FORUM_ROOT.'db_update.php'))
 		$alert_items['db_update'] = '<p><strong>'.$lang_common['Update script'].'</strong> '.$lang_common['Update script alert'].'</p>';
 
-	if ($forum_config['o_maintenance'] == '1')
-		$main_alert = '<p id="maint-alert" class="warn">'.sprintf($lang_common['Maintenance warning'], '<a href="'.forum_link($forum_url['admin_options_maintenance']).'">'.$lang_common['Maintenance mode'].'</a>').'</p>';
-
 	if (!empty($alert_items))
 		$admod_links['alert'] = '<span id="alert"><a href="'.forum_link($forum_url['admin_index']).'"><strong>'.$lang_common['New alerts'].'</strong></a></span>';
 
