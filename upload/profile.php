@@ -973,7 +973,7 @@ else if (isset($_POST['form_sent']))
 
 			// Validate signature
 			if (utf8_strlen($form['signature']) > $forum_config['p_sig_length'])
-				$errors[] = sprintf($lang_profile['Sig too long'], $forum_config['p_sig_length']);
+				$errors[] = sprintf($lang_profile['Sig too long'], $forum_config['p_sig_length'], utf8_strlen($form['signature']) - $forum_config['p_sig_length']);
 			if (substr_count($form['signature'], "\n") > ($forum_config['p_sig_lines'] - 1))
 				$errors[] = sprintf($lang_profile['Sig too many lines'], $forum_config['p_sig_lines']);
 
