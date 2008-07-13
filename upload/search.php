@@ -321,6 +321,12 @@ if (isset($query))
 				$forum_page['item_status']['posted'] = 'posted';
 			}
 
+			if ($search_set[$i]['sticky'] == '1')
+			{
+				$forum_page['item_title_status']['sticky'] = $lang_forum['Sticky'];
+				$forum_page['item_status']['sticky'] = 'sticky';
+			}
+
 			if ($search_set[$i]['closed'] != '0')
 			{
 				$forum_page['item_title_status']['closed'] = $lang_forum['Closed'];

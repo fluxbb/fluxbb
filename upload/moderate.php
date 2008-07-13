@@ -1069,6 +1069,18 @@ $query = array(
 	'LIMIT'		=>	$forum_page['start_from'].', '.$forum_user['disp_topics']
 );
 
+// With "has posted" indication
+if (!$forum_user['is_guest'] && $forum_config['o_show_dot'] == '1')
+{
+	$subquery = array(
+		'SELECT'	=> 'COUNT(p.id)',
+		'FROM'		=> 'posts AS p',
+		'WHERE'		=> 'p.poster_id='.$forum_user['id'].' AND p.topic_id=t.id'
+	);
+
+	$query['SELECT'] .= ', ('.$forum_db->query_build($subquery, true).') AS has_posted';
+}
+
 ($hook = get_hook('mr_qr_get_topics')) ? eval($hook) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
@@ -1171,6 +1183,13 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 			$forum_page['ghost_topic'] = false;
 
 			// First assemble the Topic heading
+
+			// Should we display the dot or not? :)
+			if (!$forum_user['is_guest'] && $forum_config['o_show_dot'] == '1' && $cur_topic['has_posted'] > 0)
+			{
+				$forum_page['item_title']['posted'] = '<span class="posted-mark">'.$lang_forum['You posted indicator'].'</span>';
+				$forum_page['item_status']['posted'] = 'posted';
+			}
 
 			if ($cur_topic['sticky'] == '1')
 			{
