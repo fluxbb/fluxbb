@@ -67,9 +67,6 @@
 
 /***********************************************************************/
 
-// The length at which topic subjects will be truncated (for HTML output)
-define('MAX_SUBJECT_LENGTH', 30);
-
 define('FORUM_QUIET_VISIT', 1);
 
 if (!defined('FORUM_ROOT'))
@@ -77,6 +74,10 @@ if (!defined('FORUM_ROOT'))
 require FORUM_ROOT.'include/common.php';
 
 ($hook = get_hook('ex_start')) ? eval($hook) : null;
+
+// The length at which topic subjects will be truncated (for HTML output)
+if (!defined('FORUM_EXTERN_MAX_SUBJECT_LENGTH'))
+    define('FORUM_EXTERN_MAX_SUBJECT_LENGTH', 30);
 
 // If we're a guest and we've sent a username/pass, we can try to authenticate using those details
 if ($forum_user['is_guest'] && isset($_SERVER['PHP_AUTH_USER']))
@@ -255,8 +256,8 @@ function output_html($feed)
 		if ($forum_config['o_censoring'] == '1')
 			$feed['items'][$i]['title'] = censor_words($feed['items'][$i]['title']);
 
-		if (utf8_strlen($feed['items'][$i]['title']) > MAX_SUBJECT_LENGTH)
-			$subject_truncated = forum_htmlencode(forum_trim(utf8_substr($feed['items'][$i]['title'], 0, (MAX_SUBJECT_LENGTH-5)))).' …';
+		if (utf8_strlen($feed['items'][$i]['title']) > FORUM_EXTERN_MAX_SUBJECT_LENGTH)
+			$subject_truncated = forum_htmlencode(forum_trim(utf8_substr($feed['items'][$i]['title'], 0, (FORUM_EXTERN_MAX_SUBJECT_LENGTH-5)))).' …';
 		else
 			$subject_truncated = forum_htmlencode($feed['items'][$i]['title']);
 
