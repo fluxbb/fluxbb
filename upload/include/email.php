@@ -75,13 +75,13 @@ function forum_mail($to, $subject, $message, $reply_to = '')
 
 	// Do a little spring cleaning
 	$to = forum_trim(preg_replace('#[\n\r]+#s', '', $to));
-	$subject = forum_trim(preg_replace('#[\n\r]+#s', '', $subject));
-	$from = forum_trim(preg_replace('#[\n\r:]+#s', '', $from));
+	$subject = "=?UTF-8?B?".base64_encode(forum_trim(preg_replace('#[\n\r]+#s', '', $subject)))."?=";
+	$from = "=?UTF-8?B?".base64_encode(forum_trim(preg_replace('#[\n\r:]+#s', '', $from)))."?=";
 
 	$headers = 'From: '.$from."\r\n".'Date: '.gmdate('r')."\r\n".'MIME-Version: 1.0'."\r\n".'Content-transfer-encoding: 8bit'."\r\n".'Content-type: text/plain; charset=utf-8'."\r\n".'X-Mailer: FluxBB Mailer';
 
 	if (!empty($reply_to))
-		$headers .= "\r\n".'Reply-To: '.forum_trim(preg_replace('#[\n\r:]+#s', '', $reply_to));
+		$headers .= "\r\n".'Reply-To: =?UTF-8?B?'.base64_encode(forum_trim(preg_replace('#[\n\r:]+#s', '', $reply_to))).'?=';
 
 	// Make sure all linebreaks are CRLF in message (and strip out any NULL bytes)
 	$message = str_replace(array("\n", "\0"), array("\r\n", ''), forum_linebreaks($message));
