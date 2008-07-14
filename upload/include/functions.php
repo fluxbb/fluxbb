@@ -2436,12 +2436,13 @@ function maintenance_message()
 	ob_start();
 
 ?>
-<div id="brd-main" class="main">
+<div id="brd-main" class="main basic">
 
-	<h1><span><?php echo $lang_common['Maintenance'] ?></span></h1>
-
+	<div class="main-head">
+		<h1 class="hn"><span><?php echo $lang_common['Maintenance mode'] ?></span></h1>
+	</div>
 	<div class="main-content message">
-		<div class="userbox">
+		<div class="content-box user-box">
 			<?php echo $message."\n" ?>
 		</div>
 	</div>
@@ -2565,7 +2566,7 @@ function redirect($destination_url, $message)
 		<h1 class="hn"><span><?php echo $message ?></span></h1>
 	</div>
 
-	<div class="main-content message">
+	<div class="main-content main-message">
 		<p><?php printf($lang_common['Forwarding info'], $forum_config['o_redirect_delay'], intval($forum_config['o_redirect_delay']) == 1 ? $lang_common['second'] : $lang_common['seconds']) ?><span> <a href="<?php echo $destination_url ?>"><?php echo $lang_common['Click redirect'] ?></a></span></p>
 	</div>
 
