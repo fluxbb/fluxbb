@@ -30,7 +30,7 @@
 // the root directory.
 
 define('UPDATE_TO', '1.3 Beta');
-define('UPDATE_TO_DB_REVISION', 1);
+define('UPDATE_TO_DB_REVISION', 2);
 
 // An array of hotfix extensions that this version supersedes and replaces
 $supersedes_ext = array('hotfix_13svn_test');
@@ -753,6 +753,10 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		// Add database revision number
 		if (!array_key_exists('o_database_revision', $forum_config))
 			$forum_db->query('INSERT INTO '.$forum_db->prefix.'config (conf_name, conf_value) VALUES(\'o_database_revision\', \'0\')') or error(__FILE__, __LINE__);
+
+		// Add default email setting option
+		if (!array_key_exists('o_default_email_setting', $forum_config))
+			$forum_db->query('INSERT INTO '.$forum_db->prefix.'config (conf_name, conf_value) VALUES(\'o_default_email_setting\', \'1\')') or error(__FILE__, __LINE__);
 
 		// Make sure we have o_additional_navlinks (was added in 1.2.1)
 		if (!array_key_exists('o_additional_navlinks', $forum_config))

@@ -218,7 +218,7 @@ else if (isset($_POST['form_sent']))
 				'password'				=>	$password1,
 				'password_hash'			=>	$password_hash,
 				'email'					=>	$email1,
-				'email_setting'			=>	'1',
+				'email_setting'			=>	$forum_config['o_default_email_setting'],
 				'timezone'				=>	$_POST['timezone'],
 				'dst'					=>	isset($_POST['dst']) ? '1' : '0',
 				'language'				=>	$language,

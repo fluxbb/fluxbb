@@ -1110,6 +1110,21 @@ else if ($section == 'registration')
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Report new reg'] ?></span> <?php echo $lang_admin['Report new reg label'] ?></label>
 					</div>
 				</div>
+				<fieldset class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<legend><span><?php echo $lang_admin['E-mail setting group'] ?></span></legend>
+					<div class="frm-box radio">
+						<span class="fld-input"><input type="radio" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="form[default_email_setting]" value="0"<?php if ($forum_config['o_default_email_setting'] == '0') echo ' checked="checked"' ?> /></span>
+						<label for="fld<?php echo $forum_page['fld_count'] ?>"><?php echo $lang_admin['Display e-mail label'] ?></label>
+					</div>
+					<div class="frm-box radio">
+						<span class="fld-input"><input type="radio" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="form[default_email_setting]" value="1"<?php if ($forum_config['o_default_email_setting'] == '1') echo ' checked="checked"' ?> /></span>
+						<label for="fld<?php echo $forum_page['fld_count'] ?>"><?php echo $lang_admin['Allow form e-mail label'] ?></label>
+					</div>
+					<div class="frm-box radio">
+						<span class="fld-input"><input type="radio" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="form[default_email_setting]" value="2"<?php if ($forum_config['o_default_email_setting'] == '2') echo ' checked="checked"' ?> /></span>
+						<label for="fld<?php echo $forum_page['fld_count'] ?>"><?php echo $lang_admin['Disallow form e-mail label'] ?></label>
+					</div>
+				</fieldset>
 <?php ($hook = get_hook('aop_registration_new_regs_end')) ? eval($hook) : null; ?>
 				</fieldset>
 <?php

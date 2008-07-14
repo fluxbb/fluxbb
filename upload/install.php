@@ -26,7 +26,7 @@
 
 
 define('FORUM_VERSION', '1.3 Beta');
-define('FORUM_DB_REVISION', 1);
+define('FORUM_DB_REVISION', 2);
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
 
@@ -1468,6 +1468,7 @@ else
 		'o_additional_navlinks'		=> "''",
 		'o_report_method'			=> "'0'",
 		'o_regs_report'				=> "'0'",
+		'o_default_email_setting'	=> "'1'",
 		'o_mailing_list'			=> "'$email'",
 		'o_avatars'					=> "'$avatars'",
 		'o_avatars_dir'				=> "'img/avatars'",
