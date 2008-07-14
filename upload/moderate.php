@@ -247,26 +247,26 @@ if (isset($_GET['tid']))
 		($hook = get_hook('mr_confirm_delete_posts_output_start')) ? eval($hook) : null;
 
 ?>
-<div class="main-content main-frm">
-	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
-		<div class="hidden">
-			<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
-		</div>
-		<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-			<legend class="frm-legend"><strong><?php echo $lang_misc['Delete posts'] ?></strong></legend>
-			<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-				<div class="frm-box checkbox">
-					<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /></span>
-					<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_common['Please confirm'] ?></span> <?php echo $lang_misc['Confirm post delete'] ?>.</label>
-				</div>
+	<div class="main-content main-frm">
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+			<div class="hidden">
+				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-		</fieldset>
-		<div class="frm-buttons">
-			<span class="submit"><input type="submit" name="delete_posts_comply" value="<?php echo $lang_common['Delete'] ?>" /></span>
-			<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
-		</div>
-	</form>
-</div>
+			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<legend class="frm-legend"><strong><?php echo $lang_misc['Delete posts'] ?></strong></legend>
+				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="frm-box checkbox">
+						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /></span>
+						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_common['Please confirm'] ?></span> <?php echo $lang_misc['Confirm post delete'] ?>.</label>
+					</div>
+				</div>
+			</fieldset>
+			<div class="frm-buttons">
+				<span class="submit"><input type="submit" name="delete_posts_comply" value="<?php echo $lang_common['Delete'] ?>" /></span>
+				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
+			</div>
+		</form>
+	</div>
 <?php
 
 		$forum_id = $fid;
@@ -340,14 +340,15 @@ if (isset($_GET['tid']))
 	($hook = get_hook('mr_post_actions_output_start')) ? eval($hook) : null;
 
 ?>
-<div class="hidden">
-	<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
-</div>
-<div class="main-pagehead">
-	<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
-</div>
-<form class="newform" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
-<div class="main-content main-topic">
+	<form class="newform" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+	<div class="main-pagehead">
+		<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
+	</div>
+	<div class="main-content main-topic">
+		<div class="hidden">
+			<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
+		</div>
+
 <?php
 
 	if (!defined('FORUM_PARSER_LOADED'))
@@ -430,29 +431,29 @@ if (isset($_GET['tid']))
 		($hook = get_hook('mr_post_actions_row_pre_display')) ? eval($hook) : null;
 
 ?>
-		<div class="<?php echo implode(' ', $forum_page['item_status']) ?>">
-			<div id="p<?php echo $cur_post['id'] ?>" class="posthead">
-				<h3 class="hn"><?php echo $forum_page['item_head'] ?></h3>
+			<div class="<?php echo implode(' ', $forum_page['item_status']) ?>">
+				<div id="p<?php echo $cur_post['id'] ?>" class="posthead">
+					<h3 class="hn"><?php echo $forum_page['item_head'] ?></h3>
 <?php if (isset($forum_page['item_select'])) echo "\t\t\t\t".$forum_page['item_select']."\n" ?>
-			</div>
-			<div class="postbody">
-				<div class="user">
-					<h4 class="user-ident"><?php echo implode('<br />', $forum_page['user_ident']) ?></h4>
 				</div>
-				<div class="post-entry">
-					<h4 class="entry-title"><?php echo $forum_page['item_subject'] ?></h4>
-					<div class="entry-content">
-						<?php echo implode("\n\t\t\t\t\t\t\t", $forum_page['message'])."\n" ?>
+				<div class="postbody">
+					<div class="user">
+						<h4 class="user-ident"><?php echo implode('<br />', $forum_page['user_ident']) ?></h4>
+					</div>
+					<div class="post-entry">
+						<h4 class="entry-title"><?php echo $forum_page['item_subject'] ?></h4>
+						<div class="entry-content">
+							<?php echo implode("\n\t\t\t\t\t\t\t", $forum_page['message'])."\n" ?>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 <?php
 
 	}
 
 ?>
-</div>
+	</div>
 <?php
 
 $forum_page['mod_options'] = array();
@@ -462,10 +463,10 @@ $forum_page['mod_options']['del_topic'] = '<span'.(empty($forum_page['mod_option
 ($hook = get_hook('mr_post_actions_pre_mod_options')) ? eval($hook) : null;
 
 ?>
-<div class="main-options mod-options">
-	<p class="options"><?php echo implode(' ', $forum_page['mod_options']) ?></p>
-</div>
-</form>
+	<div class="main-options mod-options">
+		<p class="options"><?php echo implode(' ', $forum_page['mod_options']) ?></p>
+	</div>
+	</form>
 <?php
 
 	$forum_id = $fid;
@@ -670,17 +671,17 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	($hook = get_hook('mr_move_topics_output_start')) ? eval($hook) : null;
 
 ?>
-<div class="main-content main-frm">
-	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
-		<div class="hidden">
-			<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
-		</div>
-		<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-			<legend class="frm-legend"><strong><?php echo $lang_misc['Move topic'] ?></strong></legend>
-			<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-				<div class="frm-box select">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_misc['Move to'] ?></span></label><br />
-					<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="move_to_forum">
+	<div class="main-content main-frm">
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+			<div class="hidden">
+				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
+			</div>
+			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<legend class="frm-legend"><strong><?php echo $lang_misc['Move topic'] ?></strong></legend>
+				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="frm-box select">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_misc['Move to'] ?></span></label><br />
+						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="move_to_forum">
 <?php
 
 	$forum_page['cur_category'] = 0;
@@ -700,23 +701,23 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	}
 
 ?>
-					</optgroup>
-					</select></span>
+						</optgroup>
+						</select></span>
+					</div>
 				</div>
-			</div>
-			<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-				<div class="frm-box checkbox">
-					<span class="fld-input"><input type="checkbox" id="fld<?php echo (++$forum_page['fld_count']) ?>" name="with_redirect" value="1"<?php if ($action == 'single') echo ' checked="checked"' ?> /></span>
-					<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_misc['Redirect topic'] ?></span> <?php echo ($action == 'single') ? $lang_misc['Leave redirect'] : $lang_misc['Leave redirects'] ?></label>
+				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="frm-box checkbox">
+						<span class="fld-input"><input type="checkbox" id="fld<?php echo (++$forum_page['fld_count']) ?>" name="with_redirect" value="1"<?php if ($action == 'single') echo ' checked="checked"' ?> /></span>
+						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_misc['Redirect topic'] ?></span> <?php echo ($action == 'single') ? $lang_misc['Leave redirect'] : $lang_misc['Leave redirects'] ?></label>
+					</div>
 				</div>
+			</fieldset>
+			<div class="frm-buttons">
+				<span class="submit"><input type="submit" name="move_topics_to" value="<?php echo $lang_misc['Move'] ?>" /></span>
+				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
 			</div>
-		</fieldset>
-		<div class="frm-buttons">
-			<span class="submit"><input type="submit" name="move_topics_to" value="<?php echo $lang_misc['Move'] ?>" /></span>
-			<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
-		</div>
-	</form>
-</div>
+		</form>
+	</div>
 <?php
 
 	$forum_id = $fid;
@@ -855,26 +856,26 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 	($hook = get_hook('mr_delete_topics_output_start')) ? eval($hook) : null;
 
 ?>
-<div class="main-content main-frm">
-	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
-		<div class="hidden">
-			<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
-		</div>
-		<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-			<legend class="frm-legend"><strong><?php echo $lang_misc['Delete topics'] ?></strong></legend>
-			<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-				<div class="frm-box checkbox">
-					<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /></span>
-					<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_common['Please confirm'] ?></span> <?php echo $lang_misc['Delete topics comply'] ?></label>
-				</div>
+	<div class="main-content main-frm">
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+			<div class="hidden">
+				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-		</fieldset>
-		<div class="frm-buttons">
-			<span class="submit"><input type="submit" name="delete_topics_comply" value="<?php echo $lang_common['Delete'] ?>" /></span>
-			<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
-		</div>
-	</form>
-</div>
+			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<legend class="frm-legend"><strong><?php echo $lang_misc['Delete topics'] ?></strong></legend>
+				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="frm-box checkbox">
+						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /></span>
+						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_common['Please confirm'] ?></span> <?php echo $lang_misc['Delete topics comply'] ?></label>
+					</div>
+				</div>
+			</fieldset>
+			<div class="frm-buttons">
+				<span class="submit"><input type="submit" name="delete_topics_comply" value="<?php echo $lang_common['Delete'] ?>" /></span>
+				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
+			</div>
+		</form>
+	</div>
 <?php
 
 	$forum_id = $fid;
@@ -1131,17 +1132,17 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 ($hook = get_hook('mr_topic_actions_output_start')) ? eval($hook) : null;
 
 ?>
-<div class="main-pagehead">
-	<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
-</div>
-<form method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
-<div id="forum<?php echo $fid ?>" class="main-content main-forum<?php echo ($forum_config['o_topic_views'] == '1') ? ' forum-views' : ' forum-noview' ?>">
-	<div class="hidden">
-		<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
+	<div class="main-pagehead">
+		<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
 	</div>
-	<div class="item-header">
-		<p><span><?php printf($lang_forum['Forum subtitle'], implode(' ', $forum_page['item_header']['subject']), implode(', ', $forum_page['item_header']['info'])) ?></span></p>
-	</div>
+	<form method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+	<div id="forum<?php echo $fid ?>" class="main-content main-forum<?php echo ($forum_config['o_topic_views'] == '1') ? ' forum-views' : ' forum-noview' ?>">
+		<div class="hidden">
+			<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
+		</div>
+		<div class="item-header">
+			<p><span><?php printf($lang_forum['Forum subtitle'], implode(' ', $forum_page['item_header']['subject']), implode(', ', $forum_page['item_header']['info'])) ?></span></p>
+		</div>
 <?php
 
 	$forum_page['item_count'] = 0;
@@ -1249,21 +1250,21 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 		($hook = get_hook('mr_topic_actions_row_pre_display')) ? eval($hook) : null;
 
 ?>
-		<div id="topic<?php echo $cur_topic['id'] ?>" class="item-body<?php echo $forum_page['item_style'] ?>">
-			<span class="icon <?php echo implode(' ', $forum_page['item_status']) ?>"><!-- --></span>
-			<div class="item-subject">
-				<?php echo implode("\n\t\t\t\t", $forum_page['item_body']['subject'])."\n" ?>
+			<div id="topic<?php echo $cur_topic['id'] ?>" class="item-body<?php echo $forum_page['item_style'] ?>">
+				<span class="icon <?php echo implode(' ', $forum_page['item_status']) ?>"><!-- --></span>
+				<div class="item-subject">
+					<?php echo implode("\n\t\t\t\t\t", $forum_page['item_body']['subject'])."\n" ?>
+				</div>
+				<ul class="item-info">
+					<?php echo implode("\n\t\t\t\t\t", $forum_page['item_body']['info'])."\n" ?>
+				</ul>
 			</div>
-			<ul class="item-info">
-				<?php echo implode("\n\t\t\t\t", $forum_page['item_body']['info'])."\n" ?>
-			</ul>
-		</div>
 <?php
 
 	}
 
 ?>
-</div>
+	</div>
 <?php
 
 	($hook = get_hook('mr_topic_actions_post_topic_list')) ? eval($hook) : null;
@@ -1276,10 +1277,10 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 	$forum_page['mod_options']['mod_close'] = '<span class="submit'.(empty($forum_page['mod_options']) ? ' item1' : '').'"><input type="submit" name="close" value="'.$lang_misc['Close'].'" /></span>';
 
 ?>
-<div class="main-options gen-content mod-options">
-	<p class="options"><?php echo implode(' ', $forum_page['mod_options']) ?></p>
-</div>
-</form>
+	<div class="main-options gen-content mod-options">
+		<p class="options"><?php echo implode(' ', $forum_page['mod_options']) ?></p>
+	</div>
+	</form>
 <?php
 
 $forum_id = $fid;
