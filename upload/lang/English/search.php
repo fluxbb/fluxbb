@@ -32,23 +32,16 @@ $lang_search = array(
 
 // Results
 'Search results'			=>	'Search results',
-'Posts results head'		=>	'Topics and replies matching your search criteria.',
 'Topics with new'			=>	'Topics with new posts',
 'Recently active topics'	=>	'Recently active topics',
 'Unanswered topics'			=>	'Unanswered topics',
 'Subscriptions'				=>	'Subscriptions',
-'Topic'						=>	'Topic',
 'Topics found'				=>	'Topics found',
-'Post'						=>	'Post',
 'Posts found'				=>	'Posts found',
 'Topics by'					=>	'Topics by %s',
 'Posts by'					=>	'Posts by %s',
 'Topics by user'			=>	'Topics by this user',
 'Posts by user'				=>	'Posts by this user',
-'Topic results single'		=>	'%1$s : %2$s topic found',
-'Topic results plural'		=>	'%1$s : %2$s topics found',
-'Post results single'		=>	'%1$s : %2$s post found',
-'Post results plural'		=>	'%1$s : %2$s posts found',
 'Perform new search'		=>	'Perform new search',
 'No terms'					=>	'You have to enter at least one keyword and/or an author to search for.',
 'No hits'					=>	'Your search returned no hits.',
@@ -61,9 +54,6 @@ $lang_search = array(
 'Go to post'				=>	'Go to post',
 'Go to forum'				=>	'Go to forum',
 'Go to topic'				=>	'Go to topic',
-'Topic replies'				=>	'(%s replies)',
-'Table summary'				=>	'Search results listed by topic',
-'Posted in'					=>	'Posted in:',
 'Go to profile'				=>	'Go to %s\'s profile'
 
 );
