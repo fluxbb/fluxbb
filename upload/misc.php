@@ -64,21 +64,11 @@ if ($action == 'rules')
 	($hook = get_hook('mi_rules_output_start')) ? eval($hook) : null;
 
 ?>
-<div id="brd-main" class="main">
-
-	<h1><span><?php echo end($forum_page['crumbs']) ?></span></h1>
-
-	<div class="main-head">
-		<h2><span><?php echo $lang_common['Forum rules'] ?></span></h2>
-	</div>
-
 	<div class="main-content main-frm">
-		<div class="userbox">
+		<div class="content-box user-box">
 			<?php echo $forum_config['o_rules_message']."\n" ?>
 		</div>
 	</div>
-
-</div>
 <?php
 
 	$tpl_temp = forum_trim(ob_get_contents());
@@ -300,7 +290,7 @@ else if (isset($_GET['email']))
 		<div class="content-box error-box">
 			<h2 class="warn"><?php echo $lang_misc['Form e-mail errors'] ?></h2>
 			<ul>
-				<?php echo implode("\n\t\t\t\t\t", $forum_page['errors'])."\n" ?>
+				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
 			</ul>
 		</div>
 <?php
@@ -472,31 +462,31 @@ else if (isset($_GET['report']))
 	($hook = get_hook('mi_report_output_start')) ? eval($hook) : null;
 
 ?>
-<div class="main-content main-frm">
-	<div id="req-msg" class="req-warn">
-		<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Reqmark'].'</em>') ?></p>
-	</div>
-	<form id="afocus" class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
-		<div class="hidden">
-			<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
+	<div class="main-content main-frm">
+		<div id="req-msg" class="req-warn">
+			<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Reqmark'].'</em>') ?></p>
 		</div>
-<?php ($hook = get_hook('mi_report_pre_fieldset')) ? eval($hook) : null; ?>
-		<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-			<legend class="frm-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
-			<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-				<div class="frm-box textarea required">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_misc['Reason'] ?></span><small><?php echo $lang_misc['Reason help'] ?></small></label><br />
-					<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_reason" rows="5" cols="60"></textarea></span>
-				</div>
+		<form id="afocus" class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+			<div class="hidden">
+				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-		</fieldset>
+<?php ($hook = get_hook('mi_report_pre_fieldset')) ? eval($hook) : null; ?>
+			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<legend class="frm-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
+				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="frm-box textarea required">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_misc['Reason'] ?></span><small><?php echo $lang_misc['Reason help'] ?></small></label><br />
+						<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_reason" rows="5" cols="60"></textarea></span>
+					</div>
+				</div>
+			</fieldset>
 <?php ($hook = get_hook('mi_report_post_fieldset')) ? eval($hook) : null; ?>
-		<div class="frm-buttons">
-			<span class="submit"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" /></span>
-			<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
-		</div>
-	</form>
-</div>
+			<div class="frm-buttons">
+				<span class="submit"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" /></span>
+				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
+			</div>
+		</form>
+	</div>
 <?php
 
 	$tpl_temp = forum_trim(ob_get_contents());

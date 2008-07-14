@@ -58,6 +58,10 @@ else if (isset($_GET['agree']) && !isset($_GET['req_agreement']))
 // Show the rules
 else if ($forum_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POST['form_sent']))
 {
+
+	// Setup form
+	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
+
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
 		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
@@ -68,6 +72,7 @@ else if ($forum_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_P
 	($hook = get_hook('rg_rules_pre_header_load')) ? eval($hook) : null;
 
 	define('FORUM_PAGE', 'rules');
+	define('FORUM_PAGE_TYPE', 'basic');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -78,23 +83,21 @@ else if ($forum_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_P
 	$forum_page['set_count'] = $forum_page['fld_count'] = 0;
 
 ?>
-<div id="brd-main" class="main">
-
-	<h1><span><?php echo end($forum_page['crumbs']) ?></span></h1>
-
-	<div class="main-head">
-		<h2><span><?php echo $lang_common['Forum rules'].'. '.$lang_profile['Agree to rules'] ?></span></h2>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_profile['Reg rules head'] ?></span></h2>
 	</div>
-
 	<div class="main-content main-frm">
-		<div class="userbox">
+		<div class="content-box user-box">
 			<?php echo $forum_config['o_rules_message'] ?>
 		</div>
 		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo $base_url ?>/register.php">
-			<fieldset class="frm-fset fset<?php echo ++$forum_page['set_count'] ?>">
+			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="frm-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
-				<div class="checkbox">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_profile['Agreement'] ?></span><br /><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_agreement" value="1" /> <?php echo $lang_profile['Agreement label'] ?></label>
+				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="frm-box checkbox">
+						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_agreement" value="1" /></span>
+						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Agreement'] ?></span> <?php echo $lang_profile['Agreement label'] ?></label>
+					</div>
 				</div>
 			</fieldset>
 			<div class="frm-buttons">
@@ -103,8 +106,6 @@ else if ($forum_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_P
 			</div>
 		</form>
 	</div>
-
-</div>
 <?php
 
 	$tpl_temp = forum_trim(ob_get_contents());
@@ -468,7 +469,7 @@ ob_start();
 			</fieldset>
 <?php ($hook = get_hook('rg_register_post_optional_fieldset')) ? eval($hook) : null; ?>
 			<div class="frm-buttons">
-				<span class="submit"><input type="submit" name="register" value="<?php echo $lang_common['Register'] ?>" /></span>
+				<span class="submit"><input type="submit" name="register" value="<?php echo $lang_profile['Register'] ?>" /></span>
 			</div>
 		</form>
 	</div>
