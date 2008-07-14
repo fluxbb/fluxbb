@@ -421,9 +421,10 @@ D - COMMON INTERFACE ELEMENTS
 	padding-bottom: 0;
 	}
 	
-#brd-title a {
+#brd-title a, #brd-title strong {
 	font-size: 1.5em;
 	text-decoration: none;
+	font-weight: normal;
 	}
 
 #brd-desc {
