@@ -37,12 +37,9 @@ $lang_misc = array(
 // General forum and topic moderation
 'Moderate forum'			=>	'Moderate forum',
 'Select'					=>	'Select',	// the header of a column of checkboxes
-'Select topics'				=>	'Select topics to move, delete, open or close',
 'Move'						=>	'Move',
 'Open'						=>  'Open',
 'Close'						=>  'Close',
-'Paged info forums'			=>	'Forum %1$s to %2$s of %3$s',
-'Paged info topics'			=>	'Topics %1$s to %2$s of %3$s',
 
 
 // Hostname lookup
