@@ -14,8 +14,6 @@ $lang_common = array(
 'CSRF token mismatch'		=>	'Unable to confirm security token. A likely cause for this is that some time passed between when you first entered the page and when you submitted a form or clicked a link. If that is the case and you would like to continue with your action, please click the Confirm button. Otherwise, you should click the Cancel button to return to where you were.',
 'No cookie'					=>	'You appear to have logged in successfully, however a cookie has not been set. Please check your settings and if applicable, enable cookies for this website.',
 
-// Topic/forum indicators
-'Closed'					=>	'[Closed]',
 
 // Miscellaneous
 'Forum index'				=>	'Forum index',
@@ -27,7 +25,6 @@ $lang_common = array(
 'Ban message 2'				=>	'The ban expires at the end of %s.',
 'Ban message 3'				=>	'The administrator or moderator that banned you left the following message:',
 'Ban message 4'				=>	'Please direct any inquiries to the forum administrator at %s.',
-'Unknown'					=>	'Unknown',
 'Never'						=>	'Never',
 'Today'						=>	'Today',
 'Yesterday'					=>	'Yesterday',
@@ -40,10 +37,6 @@ $lang_common = array(
 'seconds'					=>	'seconds',	// plural
 'Click redirect'			=>	'Click here if you do not want to wait any longer (or if your browser does not automatically forward you)',
 'Invalid e-mail'			=>	'The e-mail address you entered is invalid.',
-'Last post'					=>	'Last post',
-'By user'					=>	'by&#160;%s',
-'Posted by'					=>	'Posted by',
-'View'						=>	'View:',
 'New posts'					=>	'New posts',	// the link that leads to the first new post
 'New posts title'			=>	'Find topics containing posts made since your last visit.',	// the popup text for new posts links
 'Active topics'				=>	'Active topics',
@@ -53,11 +46,8 @@ $lang_common = array(
 'Username'					=>	'Username',
 'Registered'				=>	'Registered',
 'Write message'				=>	'Write message:',
-'Topic'						=>	'Topic',
-'Topics'					=>	'Topics',
 'Forum'						=>	'Forum',
 'Posts'						=>	'Posts',
-'Replies'					=>	'Replies',
 'Pages'						=>	'Pages:',
 'Page'						=>	'Page',
 'BBCode'					=>	'BBCode',	// You probably shouldn't change this
@@ -85,7 +75,6 @@ $lang_common = array(
 'Please confirm'			=>	'Please confirm:',
 'Help page'					=>	'Help with: %s',
 'Re'						=>	'Re:',
-'Forum rules'				=>	'Forum rules',
 'Page info'					=>	'Page [ %1$s of %2$s ]',
 'Item info single'			=>	'%s [ %s ]',
 'Item info plural'			=>	'%s [ %s to %s of %s ]', // e.g. Topics [ 10 to 20 of 30 ]
@@ -132,7 +121,6 @@ $lang_common = array(
 'Mark all as read'			=>	'Mark all topics as read',
 'Login nag'					=>	'Please login or register.',
 'New reports'				=>	'New reports',
-'Welcome admin'				=>	'Welcome to the Administration Console.',
 
 // Alerts
 'New alerts'				=>	'New Alerts',
@@ -146,11 +134,10 @@ $lang_common = array(
 'Install script alert'		=>	'FluxBB\'s installation script (install.php) is currently uploaded to the forum root. Since FluxBB is already installed, the file should be deleted or moved out of the forum root for security reasons.',
 'Update script'				=>	'Database update script uploaded:',
 'Update script alert'		=>	'FluxBB\'s database update script (db_update.php) is currently uploaded to the forum root. Once it has been used to update the forum, it should be deleted or moved out of the forum root for security reasons.',
-'Maint script'				=>	'Maintenance mode disabling script uploaded:',
 'Database mismatch'			=>	'Database version mismatch:',
 'Database mismatch alert'	=>	'Your FluxBB database is meant to be used in conjunction with a newer version of the FluxBB code. This mismatch can lead to your forum not working properly. It is suggested that you upgrade your forum to the newest version of FluxBB.',
 
-// Stuff for Search links and jump menu
+// Stuff for Jump Menu and Debug
 'Go'						=>	'Go',		// submit button in forum jump
 'Jump to'					=>	'Jump to forum:',
 'Debug table'				=>	'Debug information',
