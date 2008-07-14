@@ -76,6 +76,7 @@ $lang_common = array(
 'Crumb separator'			=>	' »&#160;', // The character or text that separates links in breadcrumbs
 'Title separator'			=>	' - ',
 'Page separator'			=>	'&#160;', //The character or text that separates page numbers
+'Spacer'					=>	'…', // Ellipsis for paginate
 'Paging separator'			=>	' ', //The character or text that separates page numbers for page navigation generally
 'Previous'					=>	'Previous',
 'Next'						=>	'Next',
