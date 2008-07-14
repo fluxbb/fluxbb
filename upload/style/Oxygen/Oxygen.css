@@ -977,6 +977,10 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	padding: 0 1.5em 0 1em;
 	margin-left: 18em;
 	}
+
+#brd-modtopic .posthead {
+	padding-right: 2.7em;
+	}
 	
 .brd .posthead .hn strong, .brd .search-posthead .hn strong {
 	float:right;
@@ -984,11 +988,9 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	
 .brd .posthead p.item-select {
 	position: absolute;
-	top: 2.5em;
-	right: 0;
-	width: 2.5em;
+	top: 0;
+	right: 0.75em;
 	height; 2.5em;
-	z-index: 100;
 	}
 	
 .brd .search-posthead {
