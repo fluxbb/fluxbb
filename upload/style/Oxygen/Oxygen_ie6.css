@@ -35,4 +35,11 @@ IE6 - FIXES
 .brd fieldset legend {
 	margin-left: -7px;
 	}
+	
+#brd-wrap .checklist {
+	height: 11em;
+	width: 30em;
+	overflow: auto;
+	}
+	
 

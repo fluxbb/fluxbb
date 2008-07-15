@@ -66,6 +66,7 @@ body {
 .brd fieldset div:after,
 .brd fieldset label:after,
 .brd fieldset fieldset:after,
+.brd fieldset span.fld-input:after,
 .brd .postbody:after,
 .brd .postfoot p:after {
 	content: "";
@@ -836,6 +837,11 @@ F - MAIN CONTENT - FORMS
 .brd .frm-short input {
 	width: 4em;
 	}
+	
+#brd-wrap optgroup {
+	font-weight: bold;
+	font-style: normal;
+	}
 
 
 /* Form Content (Adjustments for Checkboxes/Radiobuttons)
@@ -879,6 +885,60 @@ F - MAIN CONTENT - FORMS
 	height: 1.55em;
 	width: 1.55em;
 	}
+
+/* Multi Checkbox Widget
+-------------------------------------------------------------*/
+
+#brd-wrap .checklist {
+	min-height: 6em;
+	max-height: 11em;
+	max-width: 30em;
+	overflow: auto;
+	border-style: solid;
+	border-width: 1px;
+	position: relative;
+	padding: 0.25em 0.5em;
+	margin: 0 1em;
+	}
+
+#brd-wrap .checklist fieldset {
+	height: auto;
+	}
+
+#brd-wrap .checklist legend,
+#brd-wrap .checklist legend span {
+	font-weight: bold;
+	position: static;
+	padding: 0;
+	}
+
+#brd-wrap .checklist .checklist-item {
+	position: relative;
+	}
+	
+#brd-wrap .checklist div.checklist-item label {
+	display: block !important;
+	padding: 0 0 0 2.25em;
+	float: none;
+	}
+	
+#brd-wrap .checklist .checklist-item .fld-input {
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding: 0;
+	margin: 0;
+	}
+	
+#brd-wrap .checklist .checklist-item input {
+	margin: 0;
+	height: 1.55em;
+	width: 1.55em;
+	}
+	
+#brd-wrap .checklist .checklist-item label:hover {
+	background: aqua;
+	}
 	
 /* Form Content (Adjustments for Textareas)
 -------------------------------------------------------------*/
@@ -887,17 +947,33 @@ F - MAIN CONTENT - FORMS
 	position: relative;
 	display: block;
 	padding: 0.5em 1em;
+	left: 0;
 	top: -1.75em;
 	margin-bottom: -2em;
 	}
 	
-.brd .frm-set .textarea label small {
+.brd .frm-set .mselect .fld-input {
+	position: relative;
+	display: block;
+	padding: 0 1em 0.5em 1em;
+	clear:both;
+	left: 0;
+	top: -1.75em;
+	margin-bottom: -2em;
+	width: 100%;
+	}	
+
+.brd .frm-set .textarea label small, .brd .frm-set .mselect label small {
 	margin-top: 0;
 	padding-bottom: 2em;
 	}
 	
 .brd .frm-set .textarea textarea {
 	width: 100%;
+	}
+	
+.brd .frm-set .mselect select {
+	height: 11em !important;
 	}
 	
 /* Form Content (Submit Buttons)

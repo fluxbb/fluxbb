@@ -2434,8 +2434,10 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 	<h2 class="hn"><span><?php echo $lang_profile['Moderator heading'] ?></span></h2>
 </div>
 <div class="main-content main-frm">
-	<fieldset class="frm-group frm-group<?php echo ++$forum_page['group_count'] ?>">
-		<legend class="frm-legend"><strong><?php echo $lang_profile['Moderator assignment'] ?></strong></legend>
+	<fieldset class="frm-set group-item<?php echo ++$forum_page['group_count'] ?>">
+		<legend><span><?php echo $lang_profile['Moderator assignment'] ?></span></legend>
+		<div class="frm-box">
+			<div class="checklist">
 <?php
 
 			$query = array(
@@ -2460,19 +2462,21 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 				if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
 				{
 					if ($cur_category)
-						echo "\n\t\t\t\t\t".'</fieldset>'."\n";
+						echo "\n\t\t\t\t".'</fieldset>'."\n";
 
-					echo "\t\t\t".'<fieldset class="frm-set group-item'.(++$forum_page['item_count']).'">'."\n\t\t\t\t".'<legend><span>'.$cur_forum['cat_name'].':</span></legend>'."\n";
+					echo "\t\t\t\t".'<fieldset>'."\n\t\t\t\t\t".'<legend><span>'.$cur_forum['cat_name'].':</span></legend>'."\n";
 					$cur_category = $cur_forum['cid'];
 				}
 
 				$moderators = ($cur_forum['moderators'] != '') ? unserialize($cur_forum['moderators']) : array();
 
-				echo "\t\t\t\t".'<div class="frm-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="moderator_in['.$cur_forum['fid'].']" value="1"'.((in_array($id, $moderators)) ? ' checked="checked"' : '').' /></span> <label for="fld'.$forum_page['fld_count'].'">'.forum_htmlencode($cur_forum['forum_name']).'</label></div>'."\n";
+				echo "\t\t\t\t\t".'<div class="checklist-item"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="moderator_in['.$cur_forum['fid'].']" value="1"'.((in_array($id, $moderators)) ? ' checked="checked"' : '').' /></span> <label for="fld'.$forum_page['fld_count'].'">'.forum_htmlencode($cur_forum['forum_name']).'</label></div>'."\n";
 			}
 
 ?>
-		</fieldset>
+				</fieldset>
+			</div>
+		</div>
 	</fieldset>
 	<div class="frm-buttons">
 		<span class="submit"><input type="submit" name="update_forums" value="<?php echo $lang_profile['Update profile'] ?>" /> <?php echo $lang_profile['Instructions'] ?></span>
