@@ -74,7 +74,7 @@ else if (isset($_GET['action']))
 		$show_as = (isset($_GET['show_as'])) ? $_GET['show_as'] : 'posts';
 		$sort_by = (isset($_GET['sort_by'])) ? intval($_GET['sort_by']) : null;
 		$search_in = (!isset($_GET['search_in']) || $_GET['search_in'] == 'all') ? 0 : (($_GET['search_in'] == 'message') ? 1 : -1);
-		$forum = (isset($_GET['forum']) && is_array($_GET['forum'])) ? array_map('intval', $_GET['forum']) : array(-1);
+		$forum = (isset($_GET['forum']) && is_array($_GET['forum'])) ? array_map('intval', $_GET['forum']) : array();
 
 		if (preg_match('#^[\*%]+$#', $keywords))
 			$keywords = '';
@@ -84,6 +84,9 @@ else if (isset($_GET['action']))
 
 		if (!$keywords && !$author)
 			message($lang_search['No terms']);
+
+		if (empty($forum))
+			message($lang_search['No forum selected']);
 
 		// Create a cache of the results and redirect the user to the results
 		create_search_cache($keywords, $author, $search_in, $forum, $show_as, $sort_by, $sort_dir);
