@@ -373,15 +373,11 @@ function check_bans()
 			$num_ips = count($cur_ban_ips);
 			for ($i = 0; $i < $num_ips; ++$i)
 			{
-				// Both the ban and the IP match IPv4
-				if (strpos($cur_ban_ips[$i], '.') !== false && strpos($user_ip, '.') !== false)
+				// Add the proper ending to the ban
+				if (strpos($user_ip, '.') !== false)
 					$cur_ban_ips[$i] = $cur_ban_ips[$i].'.';
-				// Both the ban and the IP match IPv6
-				else if (strpos($cur_ban_ips[$i], ':') !== false && strpos($user_ip, ':') !== false)
-					$cur_ban_ips[$i] = $cur_ban_ips[$i].':';
-				// The ban and the IP are not using the same system
 				else
-					continue;
+					$cur_ban_ips[$i] = $cur_ban_ips[$i].':';
 
 				if (substr($user_ip, 0, strlen($cur_ban_ips[$i])) == $cur_ban_ips[$i])
 				{
