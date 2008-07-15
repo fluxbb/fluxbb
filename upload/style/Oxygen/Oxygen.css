@@ -565,6 +565,7 @@ D - COMMON INTERFACE ELEMENTS
 .brd .main-options span.feed {
 	padding-left: 20px;
 	background: url(feed-icon.png) center left no-repeat;
+	padding-top: 2px;
 	}
 	
 .brd .content-options {
@@ -917,10 +918,11 @@ F - MAIN CONTENT - FORMS
 	height: auto;
 	}
 	
-#brd-wrap .checklist div.checklist-item label {
-	display: block !important;
+#brd-wrap .checklist .checklist-item label {
+	display: block;
 	padding: 0 0 0 2.25em;
 	float: none;
+	height: 100%;
 	}
 	
 #brd-wrap .checklist .checklist-item .fld-input {
