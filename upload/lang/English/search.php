@@ -45,7 +45,6 @@ $lang_search = array(
 'Posts by user'				=>	'Posts by this user',
 'Perform new search'		=>	'Perform new search',
 'No terms'					=>	'You have to enter at least one keyword and/or an author to search for.',
-'No forum selected'			=>	'You have to select at least one forum to search in.',
 'No hits'					=>	'Your search returned no hits.',
 'No user posts'				=>	'There are no posts by this user in this forum.',
 'No user topics'			=>	'There are no topics by this user in this forum.',
