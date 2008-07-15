@@ -476,7 +476,7 @@ ob_start();
 <?php
 
 if ($forum_config['o_search_all_forums'] == '1' || $forum_user['is_admmod'])
-	echo "\t\t\t\t\t\t\t".'<div class="checklist-item"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" value="1" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_search['All forums'].'</label></div>'."\n";
+	echo "\t\t\t\t\t\t\t".'<div class="checklist-item"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="forum[]" value="-1" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_search['All forums'].'</label></div>'."\n";
 
 // Get the list of categories and forums
 $query = array(
@@ -513,7 +513,7 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 		$cur_category = $cur_forum['cid'];
 	}
 
-	echo "\t\t\t\t\t\t\t\t".'<div class="checklist-item"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'"  name="'.$cur_forum['fid'].'" value="1" /></span> <label for="fld'.$forum_page['fld_count'].'">'.forum_htmlencode($cur_forum['forum_name']).'</label></div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="checklist-item"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'"  name="forum[]" value="'.$cur_forum['fid'].'" /></span> <label for="fld'.$forum_page['fld_count'].'">'.forum_htmlencode($cur_forum['forum_name']).'</label></div>'."\n";
 }
 
 ?>
