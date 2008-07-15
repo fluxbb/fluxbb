@@ -861,6 +861,12 @@ F - MAIN CONTENT - FORMS
 	top: 0;
 	}
 	
+.brd fieldset.frm-set legend span em {
+	display: block;
+	font-style: normal;
+	}
+	
+	
 .brd .frm-set .fld-group {
 	float: left;
 	position: relative;

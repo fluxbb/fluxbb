@@ -402,7 +402,7 @@ echo "\t".'</div>'."\n";
 }
 
 //
-// Display the search forum
+// Display the search form
 //
 
 // Setup form information
@@ -410,6 +410,11 @@ $forum_page['frm-info'] = array('search' => '<li><span>'.$lang_search['Search in
 $forum_page['frm-info']['keywords'] = '<li><span>'.$lang_search['Keywords info'].'</span></li>';
 $forum_page['frm-info']['refine'] = '<li><span>'.$lang_search['Refine info'].'</span></li>';
 $forum_page['frm-info']['wildcard'] = '<li><span>'.$lang_search['Wildcard info'].'</span></li>';
+
+if ($forum_config['o_search_all_forums'] == '1' || $forum_user['is_admmod'])
+	$forum_page['frm-info']['forums'] = '<li><span>'.$lang_search['Forum default info'].'</span></li>';
+else
+	$forum_page['frm-info']['forums'] = '<li><span>'.$lang_search['Forum require info'].'</span></li>';
 
 // Setup sort by options
 $forum_page['frm-sort'] = array();
@@ -467,16 +472,11 @@ ob_start();
 					</div>
 				</div>
 <?php ($hook = get_hook('se_criteria_pre_forum_field')) ? eval($hook) : null; ?>
-
-
 				<fieldset class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<legend><span><?php echo $lang_search['Forum search'] ?></span></legend>
+					<legend><span><?php echo $lang_search['Forum search'] ?> <em><?php echo ($forum_config['o_search_all_forums'] == '1' || $forum_user['is_admmod']) ? $lang_search['Forum search default'] : $lang_search['Forum search require'] ?></em></span></legend>
 					<div class="frm-box">
 						<div class="checklist">
 <?php
-
-if ($forum_config['o_search_all_forums'] == '1' || $forum_user['is_admmod'])
-	echo "\t\t\t\t\t\t\t".'<div class="checklist-item"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="forum[]" value="-1" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_search['All forums'].'</label></div>'."\n";
 
 // Get the list of categories and forums
 $query = array(

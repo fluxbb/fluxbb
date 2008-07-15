@@ -196,7 +196,7 @@ ob_start();
 			<h2><span><?php echo $lang_admin['Add new rank'] ?></span></h2>
 		</div>
 		<div class="frm-info">
-			<p><?php printf($lang_admin['Add rank intro'], '<strong><a href="'.forum_link($forum_url['admin_options_features']).'">'.$lang_admin['Settings'].' - '.$lang_admin['Features'].'</a></strong>') ?></p>
+			<p><?php printf($lang_admin['Add rank intro'], '<strong><a href="'.forum_link($forum_url['admin_settings_features']).'">'.$lang_admin['Settings'].' - '.$lang_admin['Features'].'</a></strong>') ?></p>
 		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_ranks']) ?>?action=foo">
 			<div class="hidden">

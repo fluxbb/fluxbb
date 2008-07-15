@@ -35,8 +35,9 @@ require FORUM_ROOT.'include/common_admin.php';
 if (!$forum_user['is_admmod'])
 	message($lang_common['No permission']);
 
-// Load the admin.php language file
-require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin.php';
+// Load the admin.php language files
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin_common.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin_index.php';
 
 
 // Show phpinfo() output
@@ -46,7 +47,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'phpinfo' && $forum_user['g_id'
 
 	// Is phpinfo() a disabled function?
 	if (strpos(strtolower((string)@ini_get('disable_functions')), 'phpinfo') !== false)
-		message($lang_admin['phpinfo disabled']);
+		message($lang_admin_index['phpinfo disabled']);
 
 	phpinfo();
 	exit;
@@ -57,7 +58,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'phpinfo' && $forum_user['g_id'
 if ($forum_user['g_id'] == FORUM_ADMIN)
 {
 	if ($forum_config['o_check_for_updates'] == '1')
-		$fluxbb_updates = $lang_admin['Check for updates enabled'];
+		$fluxbb_updates = $lang_admin_index['Check for updates enabled'];
 	else
 	{
 		// Get a list of installed hotfix extensions
@@ -75,7 +76,7 @@ if ($forum_user['g_id'] == FORUM_ADMIN)
 		for ($i = 0; $i < $num_hotfixes; ++$i)
 			$hotfixes[] = urlencode($forum_db->result($result, $i));
 
-		$fluxbb_updates = '<a href="http://fluxbb.org/update/?version='.urlencode($forum_config['o_cur_version']).'&amp;hotfixes='.implode(',', $hotfixes).'">'.$lang_admin['Check for updates manual'].'</a>';
+		$fluxbb_updates = '<a href="http://fluxbb.org/update/?version='.urlencode($forum_config['o_cur_version']).'&amp;hotfixes='.implode(',', $hotfixes).'">'.$lang_admin_index['Check for updates manual'].'</a>';
 	}
 }
 
@@ -100,7 +101,7 @@ else if (@file_exists('/proc/loadavg') && is_readable('/proc/loadavg'))
 else if (!in_array(PHP_OS, array('WINNT', 'WIN32')) && preg_match('/averages?: ([0-9\.]+),[\s]+([0-9\.]+),[\s]+([0-9\.]+)/i', @exec('uptime'), $load_averages))
 	$server_load = $load_averages[1].' '.$load_averages[2].' '.$load_averages[3];
 else
-	$server_load = $lang_admin['Not available'];
+	$server_load = $lang_admin_index['Not available'];
 
 
 // Get number of current visitors
@@ -167,13 +168,13 @@ else if (ini_get('eaccelerator.enable'))
 else if (ini_get('xcache.cacher'))
 	$php_accelerator = '<a href="http://trac.lighttpd.net/xcache/">XCache</a>';
 else
-	$php_accelerator = $lang_admin['Not applicable'];
+	$php_accelerator = $lang_admin_index['Not applicable'];
 
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
 	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-	array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
-	$lang_admin['Information']
+	array($lang_admin_common['Forum administration'], forum_link($forum_url['admin_index'])),
+	$lang_admin_common['Information']
 );
 
 ($hook = get_hook('ain_pre_header_load')) ? eval($hook) : null;
@@ -192,12 +193,12 @@ ob_start();
 
 ?>
 	<div class="main-subhead">
-		<h2 class="hn"><span><?php echo $lang_admin['Information head'] ?></span></h2>
+		<h2 class="hn"><span><?php echo $lang_admin_index['Information head'] ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
 <?php if (!empty($alert_items)): ?>		<div id="admin-alerts" class="content-set warn-set">
 			<div class="content-box">
-				<h3 class="set-legend hn warn"><span><?php echo $lang_admin['Alerts'] ?></span></h3>
+				<h3 class="set-legend hn warn"><span><?php echo $lang_admin_index['Alerts'] ?></span></h3>
 				<?php echo implode(' ',$alert_items)."\n" ?>
 			</div>
 		</div>
@@ -205,7 +206,7 @@ ob_start();
 <?php ($hook = get_hook('ain_pre_version')) ? eval($hook) : null; ?>
 			<div class="content-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="content-box">
-					<h3 class="set-legend hn"><span><?php echo $lang_admin['FluxBB version'] ?></span></h3>
+					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['FluxBB version'] ?></span></h3>
 					<ul class="data-list">
 						<li><span>FluxBB <?php echo $forum_config['o_cur_version'] ?></span></li>
 						<li><span>&copy; Copyright 2008 <a href="http://fluxbb.org/">FluxBB.org</a></span></li>
@@ -216,28 +217,28 @@ ob_start();
 <?php ($hook = get_hook('ain_pre_server_load')) ? eval($hook) : null; ?>
 			<div class="content-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="content-box">
-					<h3 class="set-legend hn"><span><?php echo $lang_admin['Server load'] ?></span></h3>
-					<p><span><?php echo $server_load ?> (<?php echo $num_online.' '.$lang_admin['users online']?>)</span></p>
+					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['Server load'] ?></span></h3>
+					<p><span><?php echo $server_load ?> (<?php echo $num_online.' '.$lang_admin_index['users online']?>)</span></p>
 				</div>
 			</div>
 <?php ($hook = get_hook('ain_pre_environment')) ? eval($hook) : null; if ($forum_user['g_id'] == FORUM_ADMIN): ?>			<div class="content-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="content-box">
-					<h3 class="set-legend hn"><span><?php echo $lang_admin['Environment'] ?></span></h3>
+					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['Environment'] ?></span></h3>
 					<ul class="data-list">
-						<li><span><?php echo $lang_admin['Operating system'] ?>: <?php echo PHP_OS ?></span></li>
-						<li><span>PHP: <?php echo PHP_VERSION ?> - <a href="<?php echo forum_link($forum_url['admin_index']) ?>?action=phpinfo"><?php echo $lang_admin['Show info'] ?></a></span></li>
-						<li><span><?php echo $lang_admin['Accelerator'] ?>: <?php echo $php_accelerator ?></span></li>
+						<li><span><?php echo $lang_admin_index['Operating system'] ?>: <?php echo PHP_OS ?></span></li>
+						<li><span>PHP: <?php echo PHP_VERSION ?> - <a href="<?php echo forum_link($forum_url['admin_index']) ?>?action=phpinfo"><?php echo $lang_admin_index['Show info'] ?></a></span></li>
+						<li><span><?php echo $lang_admin_index['Accelerator'] ?>: <?php echo $php_accelerator ?></span></li>
 					</ul>
 				</div>
 			</div>
 <?php ($hook = get_hook('ain_pre_database')) ? eval($hook) : null; ?>
 			<div class="content-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="content-box">
-					<h3 class="set-legend hn"><span><?php echo $lang_admin['Database'] ?></span></h3>
+					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['Database'] ?></span></h3>
 					<ul class="data-list">
 						<li><span><?php echo $db_version ?></span></li>
-<?php if (isset($total_records) && isset($total_size)): ?>							<li><span><?php echo $lang_admin['Rows'] ?>: <?php echo $total_records ?></span></li>
-						<li><span><?php echo $lang_admin['Size'] ?>: <?php echo $total_size ?></span></li>
+<?php if (isset($total_records) && isset($total_size)): ?>							<li><span><?php echo $lang_admin_index['Rows'] ?>: <?php echo $total_records ?></span></li>
+						<li><span><?php echo $lang_admin_index['Size'] ?>: <?php echo $total_size ?></span></li>
 					</ul>
 				</div>
 			</div>
