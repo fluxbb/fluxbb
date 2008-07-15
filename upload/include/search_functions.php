@@ -27,7 +27,7 @@
 //
 // Cache the results of a search and redirect the user to the results page
 //
-function create_search_cache($keywords, $author, $search_in = false, $forum = -1, $show_as = 'topics', $sort_by = null, $sort_dir = 'DESC')
+function create_search_cache($keywords, $author, $search_in = false, $forum = array(-1), $show_as = 'topics', $sort_by = null, $sort_dir = 'DESC')
 {
 	global $forum_db, $forum_user, $forum_config, $forum_url, $lang_search, $lang_common, $db_type;
 
@@ -237,8 +237,8 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = -1
 	);
 
 	// Search a specific forum?
-	if ($forum != -1 || ($forum == -1 && $forum_config['o_search_all_forums'] == '0' && !$forum_user['is_admmod']))
-		$query['WHERE'] .= ' AND t.forum_id = '.$forum;
+	if (!in_array(-1, $forum) || ($forum_config['o_search_all_forums'] == '0' && !$forum_user['is_admmod']))
+		$query['WHERE'] .= ' AND t.forum_id IN('.implode(',', $forum).')';
 
 	// Adjust the query if show_as posts
 	if ($show_as == 'posts')

@@ -74,7 +74,7 @@ else if (isset($_GET['action']))
 		$show_as = (isset($_GET['show_as'])) ? $_GET['show_as'] : 'posts';
 		$sort_by = (isset($_GET['sort_by'])) ? intval($_GET['sort_by']) : null;
 		$search_in = (!isset($_GET['search_in']) || $_GET['search_in'] == 'all') ? 0 : (($_GET['search_in'] == 'message') ? 1 : -1);
-		$forum = (isset($_GET['forum'])) ? intval($_GET['forum']) : -1;
+		$forum = (isset($_GET['forum']) && is_array($_GET['forum'])) ? array_map('intval', $_GET['forum']) : array(-1);
 
 		if (preg_match('#^[\*%]+$#', $keywords))
 			$keywords = '';
@@ -467,14 +467,16 @@ ob_start();
 					</div>
 				</div>
 <?php ($hook = get_hook('se_criteria_pre_forum_field')) ? eval($hook) : null; ?>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box select">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_search['Forum search'] ?></span></label><br />
-						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="forum">
+
+
+				<fieldset class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<legend><span><?php echo $lang_search['Forum search'] ?></span></legend>
+					<div class="frm-box">
+						<div class="checklist">
 <?php
 
 if ($forum_config['o_search_all_forums'] == '1' || $forum_user['is_admmod'])
-	echo "	\t\t\t\t\t".'<option value="-1">'.$lang_search['All forums'].'</option>'."\n";
+	echo "\t\t\t\t\t\t\t".'<div class="checklist-item"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" value="1" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_search['All forums'].'</label></div>'."\n";
 
 // Get the list of categories and forums
 $query = array(
@@ -505,20 +507,20 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 	if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
 	{
 		if ($cur_category)
-			echo "\t\t\t\t\t\t".'</optgroup>'."\n";
+			echo "\t\t\t\t\t\t\t".'</fieldset>'."\n";
 
-		echo "\t\t\t\t\t\t".'<optgroup label="'.forum_htmlencode($cur_forum['cat_name']).'">'."\n";
+		echo "\t\t\t\t\t\t\t".'<fieldset>'."\n\t\t\t\t\t\t\t\t".'<legend><span>'.forum_htmlencode($cur_forum['cat_name']).':</span></legend>'."\n";
 		$cur_category = $cur_forum['cid'];
 	}
 
-	echo "\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'">'.forum_htmlencode($cur_forum['forum_name']).'</option>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="checklist-item"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'"  name="'.$cur_forum['fid'].'" value="1" /></span> <label for="fld'.$forum_page['fld_count'].'">'.forum_htmlencode($cur_forum['forum_name']).'</label></div>'."\n";
 }
 
 ?>
-						</optgroup>
-						</select></span>
+							</fieldset>
+						</div>
 					</div>
-				</div>
+				</fieldset>
 <?php ($hook = get_hook('se_criteria_end')) ? eval($hook) : null; ?>
 			</fieldset>
 <?php $forum_page['item_count'] = 0; ?>

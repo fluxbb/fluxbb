@@ -891,7 +891,7 @@ F - MAIN CONTENT - FORMS
 
 #brd-wrap .checklist {
 	min-height: 6em;
-	max-height: 11em;
+	max-height: 9em;
 	max-width: 30em;
 	overflow: auto;
 	border-style: solid;
@@ -914,6 +914,7 @@ F - MAIN CONTENT - FORMS
 
 #brd-wrap .checklist .checklist-item {
 	position: relative;
+	height: auto;
 	}
 	
 #brd-wrap .checklist div.checklist-item label {
@@ -952,28 +953,13 @@ F - MAIN CONTENT - FORMS
 	margin-bottom: -2em;
 	}
 	
-.brd .frm-set .mselect .fld-input {
-	position: relative;
-	display: block;
-	padding: 0 1em 0.5em 1em;
-	clear:both;
-	left: 0;
-	top: -1.75em;
-	margin-bottom: -2em;
-	width: 100%;
-	}	
-
-.brd .frm-set .textarea label small, .brd .frm-set .mselect label small {
+.brd .frm-set .textarea label small {
 	margin-top: 0;
 	padding-bottom: 2em;
 	}
 	
 .brd .frm-set .textarea textarea {
 	width: 100%;
-	}
-	
-.brd .frm-set .mselect select {
-	height: 11em !important;
 	}
 	
 /* Form Content (Submit Buttons)

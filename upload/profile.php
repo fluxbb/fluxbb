@@ -2434,7 +2434,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 	<h2 class="hn"><span><?php echo $lang_profile['Moderator heading'] ?></span></h2>
 </div>
 <div class="main-content main-frm">
-	<fieldset class="frm-set group-item<?php echo ++$forum_page['group_count'] ?>">
+	<fieldset class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
 		<legend><span><?php echo $lang_profile['Moderator assignment'] ?></span></legend>
 		<div class="frm-box">
 			<div class="checklist">
