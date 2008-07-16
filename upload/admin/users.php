@@ -548,7 +548,9 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 		}
 
 		// Regenerate the bans cache
-		require_once FORUM_ROOT.'include/cache.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/cache.php';
+
 		generate_bans_cache();
 
 		redirect(forum_link($forum_url['admin_users']), $lang_admin['Users banned'].' '.$lang_admin['Redirect']);

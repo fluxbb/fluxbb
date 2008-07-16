@@ -191,7 +191,8 @@ else if ($action == 'forget' || $action == 'forget_2')
 
 	if (isset($_POST['form_sent']))
 	{
-		require FORUM_ROOT.'include/email.php';
+		if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/email.php';
 
 		// Validate the email-address
 		$email = strtolower(forum_trim($_POST['req_email']));

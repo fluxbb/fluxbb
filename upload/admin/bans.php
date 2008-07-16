@@ -295,7 +295,9 @@ else if (isset($_POST['add_edit_ban']))
 		$ban_ip = implode(' ', $addresses);
 	}
 
-	require FORUM_ROOT.'include/email.php';
+	if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/email.php';
+
 	if ($ban_email != '' && !is_valid_email($ban_email))
 	{
 		if (!preg_match('/^[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/', $ban_email))
@@ -341,7 +343,9 @@ else if (isset($_POST['add_edit_ban']))
 	}
 
 	// Regenerate the bans cache
-	require_once FORUM_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/cache.php';
+
 	generate_bans_cache();
 
 	redirect(forum_link($forum_url['admin_bans']), (($_POST['mode'] == 'edit') ? $lang_admin['Ban edited'] : $lang_admin['Ban added']).' '.$lang_admin['Redirect']);
@@ -370,7 +374,9 @@ else if (isset($_GET['del_ban']))
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the bans cache
-	require_once FORUM_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/cache.php';
+
 	generate_bans_cache();
 
 	redirect(forum_link($forum_url['admin_bans']), $lang_admin['Ban removed'].' '. $lang_admin['Redirect']);

@@ -123,6 +123,7 @@ if (isset($_POST['form_sent']))
 	{
 		if (!defined('FORUM_PARSER_LOADED'))
 			require FORUM_ROOT.'include/parser.php';
+
 		$message = preparse_bbcode($message, $errors);
 	}
 
@@ -138,7 +139,8 @@ if (isset($_POST['form_sent']))
 	{
 		($hook = get_hook('ed_pre_post_edited')) ? eval($hook) : null;
 
-		require FORUM_ROOT.'include/search_idx.php';
+		if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/search_idx.php';
 
 		if ($can_edit_subject)
 		{
@@ -228,6 +230,7 @@ if (isset($_POST['preview']) && empty($forum_page['errors']))
 {
 	if (!defined('FORUM_PARSER_LOADED'))
 		require FORUM_ROOT.'include/parser.php';
+
 	$forum_page['preview_message'] = parse_message($message, $hide_smilies);
 
 	$forum_page['preview_poster'] = '<strong class="username">'.forum_htmlencode($cur_post['poster']).'</strong>';

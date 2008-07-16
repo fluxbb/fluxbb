@@ -47,7 +47,9 @@ if ($forum_user['g_read_board'] == '1' && $forum_config['o_quickjump'] == '1')
 
 	if (!defined('FORUM_QJ_LOADED'))
 	{
-		require_once FORUM_ROOT.'include/cache.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/cache.php';
+
 		generate_quickjump_cache($forum_user['g_id']);
 		require FORUM_CACHE_DIR.'cache_quickjump_'.$forum_user['g_id'].'.php';
 	}

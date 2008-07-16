@@ -220,3 +220,5 @@ function validate_manifest($xml_array, $folder_name)
 
 	return $errors;
 }
+
+define('FORUM_XML_FUNCTIONS_LOADED', 1);

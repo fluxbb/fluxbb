@@ -185,7 +185,9 @@ if (isset($_GET['tid']))
 			($hook = get_hook('mr_qr_delete_posts')) ? eval($hook) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-			require FORUM_ROOT.'include/search_idx.php';
+			if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
+				require FORUM_ROOT.'include/search_idx.php';
+
 			strip_search_index($posts);
 
 			// Get last_post, last_post_id, and last_poster for the topic after deletion
@@ -808,7 +810,9 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		// Strip the search index provided we're not just deleting redirect topics
 		if ($post_ids != '')
 		{
-			require FORUM_ROOT.'include/search_idx.php';
+			if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
+				require FORUM_ROOT.'include/search_idx.php';
+
 			strip_search_index($post_ids);
 		}
 

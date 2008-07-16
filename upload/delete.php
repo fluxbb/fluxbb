@@ -123,6 +123,7 @@ else if (isset($_POST['delete']))
 // Run the post through the parser
 if (!defined('FORUM_PARSER_LOADED'))
 	require FORUM_ROOT.'include/parser.php';
+
 $cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 
 // Setup form

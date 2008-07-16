@@ -75,7 +75,9 @@ if (isset($_POST['add_rank']))
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the ranks cache
-	require_once FORUM_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/cache.php';
+
 	generate_ranks_cache();
 
 	redirect(forum_link($forum_url['admin_ranks']), $lang_admin['Rank added'].' '.$lang_admin['Redirect']);
@@ -120,7 +122,9 @@ else if (isset($_POST['update']))
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the ranks cache
-	require_once FORUM_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/cache.php';
+
 	generate_ranks_cache();
 
 	redirect(forum_link($forum_url['admin_ranks']), $lang_admin['Rank updated'].' '.$lang_admin['Redirect']);
@@ -143,7 +147,9 @@ else if (isset($_POST['remove']))
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the ranks cache
-	require_once FORUM_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/cache.php';
+
 	generate_ranks_cache();
 
 	redirect(forum_link($forum_url['admin_ranks']), $lang_admin['Rank removed'].' '.$lang_admin['Redirect']);
@@ -156,7 +162,9 @@ if (file_exists(FORUM_CACHE_DIR.'cache_ranks.php'))
 
 if (!defined('FORUM_RANKS_LOADED'))
 {
-	require_once FORUM_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/cache.php';
+
 	generate_ranks_cache();
 	require FORUM_CACHE_DIR.'cache_ranks.php';
 }

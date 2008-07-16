@@ -162,7 +162,9 @@ if (isset($_POST['form_sent']))
 
 		if ($forum_config['p_force_guest_email'] == '1' || $email != '')
 		{
-			require FORUM_ROOT.'include/email.php';
+			if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
+				require FORUM_ROOT.'include/email.php';
+
 			if (!is_valid_email($email))
 				$errors[] = $lang_common['Invalid e-mail'];
 		}
@@ -185,6 +187,7 @@ if (isset($_POST['form_sent']))
 	{
 		if (!defined('FORUM_PARSER_LOADED'))
 			require FORUM_ROOT.'include/parser.php';
+
 		$message = preparse_bbcode($message, $errors);
 	}
 
@@ -345,6 +348,7 @@ if (isset($_POST['preview']) && empty($errors))
 {
 	if (!defined('FORUM_PARSER_LOADED'))
 		require FORUM_ROOT.'include/parser.php';
+
 	$forum_page['preview_message'] = parse_message(forum_trim($message), $hide_smilies);
 
 	$forum_page['preview_poster'] = '<strong class="username">'.forum_htmlencode($forum_user['username']).'</strong>';

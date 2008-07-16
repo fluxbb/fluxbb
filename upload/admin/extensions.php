@@ -29,7 +29,9 @@ if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', '../');
 require FORUM_ROOT.'include/common.php';
 require FORUM_ROOT.'include/common_admin.php';
-require_once FORUM_ROOT.'include/xml.php';
+
+if (!defined('FORUM_XML_FUNCTIONS_LOADED'))
+	require FORUM_ROOT.'include/xml.php';
 
 ($hook = get_hook('aex_start')) ? eval($hook) : null;
 
@@ -212,7 +214,9 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 		forum_clear_cache();
 
 		// Regenerate the hooks cache
-		require_once FORUM_ROOT.'include/cache.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/cache.php';
+
 		generate_hooks_cache();
 
 		// Display notices if there are any
@@ -424,7 +428,9 @@ else if (isset($_GET['uninstall']))
 		forum_clear_cache();
 
 		// Regenerate the hooks cache
-		require_once FORUM_ROOT.'include/cache.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/cache.php';
+
 		generate_hooks_cache();
 
 		// Display notices if there are any
@@ -625,7 +631,9 @@ else if (isset($_GET['flip']))
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the hooks cache
-	require_once FORUM_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/cache.php';
+
 	generate_hooks_cache();
 
 	redirect(forum_link($forum_url['admin_extensions_manage']), ($disable ? $lang_admin['Extension disabled'] : $lang_admin['Extension enabled']).' '.$lang_admin['Redirect']);

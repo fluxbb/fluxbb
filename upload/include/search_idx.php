@@ -285,3 +285,5 @@ function strip_search_index($post_ids)
 	($hook = get_hook('si_qr_delete_matches')) ? eval($hook) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 }
+
+define('FORUM_SEARCH_IDX_FUNCTIONS_LOADED', 1);

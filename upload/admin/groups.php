@@ -380,7 +380,9 @@ else if (isset($_POST['add_edit_group']))
 	}
 
 	// Regenerate the quickjump cache
-	require_once FORUM_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/cache.php';
+
 	generate_quickjump_cache();
 
 	redirect(forum_link($forum_url['admin_groups']), (($_POST['mode'] == 'edit') ? $lang_admin['Group edited'] : $lang_admin['Group added']).' '.$lang_admin['Redirect']);
@@ -421,7 +423,9 @@ else if (isset($_POST['set_default_group']))
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the config cache
-	require_once FORUM_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/cache.php';
+
 	generate_config_cache();
 
 	redirect(forum_link($forum_url['admin_groups']), $lang_admin['Default group set'].' '.$lang_admin['Redirect']);
@@ -500,7 +504,9 @@ else if (isset($_GET['del_group']))
 		clean_forum_moderators();
 
 		// Regenerate the quickjump cache
-		require_once FORUM_ROOT.'include/cache.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/cache.php';
+
 		generate_quickjump_cache();
 
 		redirect(forum_link($forum_url['admin_groups']), $lang_admin['Group removed'].' '.$lang_admin['Redirect']);

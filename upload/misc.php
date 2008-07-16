@@ -221,7 +221,8 @@ else if (isset($_GET['email']))
 			$mail_message = str_replace('<mail_message>', $message, $mail_message);
 			$mail_message = str_replace('<board_mailer>', sprintf($lang_common['Forum mailer'], $forum_config['o_board_title']), $mail_message);
 
-			require_once FORUM_ROOT.'include/email.php';
+			if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
+				require FORUM_ROOT.'include/email.php';
 
 			forum_mail($recipient_email, $mail_subject, $mail_message, '"'.str_replace('"', '', $forum_user['username']).'" <'.$forum_user['email'].'>');
 
@@ -414,7 +415,8 @@ else if (isset($_GET['report']))
 				$mail_subject = 'Report('.$forum_id.') - \''.$subject.'\'';
 				$mail_message = 'User \''.$forum_user['username'].'\' has reported the following message:'."\n".forum_link($forum_url['post'], $post_id)."\n\n".'Reason:'."\n".$reason;
 
-				require FORUM_ROOT.'include/email.php';
+				if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
+					require FORUM_ROOT.'include/email.php';
 
 				forum_mail($forum_config['o_mailing_list'], $mail_subject, $mail_message);
 			}

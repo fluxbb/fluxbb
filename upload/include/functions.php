@@ -404,7 +404,9 @@ function check_bans()
 	// If we removed any expired bans during our run-through, we need to regenerate the bans cache
 	if ($bans_altered)
 	{
-		require_once FORUM_ROOT.'include/cache.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/cache.php';
+
 		generate_bans_cache();
 	}
 }
@@ -983,7 +985,9 @@ function delete_user($user_id, $delete_posts = false)
 		clean_forum_moderators();
 
 		// Regenerate the bans cache
-		require_once FORUM_ROOT.'include/cache.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/cache.php';
+
 		generate_bans_cache();
 	}
 
@@ -1191,7 +1195,9 @@ function delete_topic($topic_id, $forum_id)
 		($hook = get_hook('fn_qr_delete_topic_posts')) ? eval($hook) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-		require FORUM_ROOT.'include/search_idx.php';
+		if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/search_idx.php';
+
 		strip_search_index($post_ids);
 	}
 
@@ -1242,7 +1248,9 @@ function delete_post($post_id, $topic_id, $forum_id)
 	($hook = get_hook('fn_qr_delete_post')) ? eval($hook) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	require FORUM_ROOT.'include/search_idx.php';
+	if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/search_idx.php';
+
 	strip_search_index($post_id);
 
 	// Count number of replies in the topic
@@ -1337,7 +1345,9 @@ function add_topic($post_info, &$new_tid, &$new_pid)
 	($hook = get_hook('fn_qr_update_topic3')) ? eval($hook) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	require FORUM_ROOT.'include/search_idx.php';
+	if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/search_idx.php';
+
 	update_search_index('post', $new_pid, $post_info['message'], $post_info['subject']);
 
 	sync_forum($post_info['forum_id']);
@@ -1447,7 +1457,9 @@ function add_post($post_info, &$new_pid)
 
 	sync_forum($post_info['forum_id']);
 
-	require FORUM_ROOT.'include/search_idx.php';
+	if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/search_idx.php';
+
 	update_search_index('post', $new_pid, $post_info['message']);
 
 	send_subscriptions($post_info, $new_pid);
@@ -1536,7 +1548,8 @@ function send_subscriptions($post_info, $new_pid)
 
 	if ($forum_db->num_rows($result))
 	{
-		require_once FORUM_ROOT.'include/email.php';
+		if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/email.php';
 
 		$notification_emails = array();
 
@@ -1647,7 +1660,9 @@ function censor_words($text)
 
 		if (!defined('FORUM_CENSORS_LOADED'))
 		{
-			require_once FORUM_ROOT.'include/cache.php';
+			if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+				require FORUM_ROOT.'include/cache.php';
+
 			generate_censors_cache();
 			require FORUM_CACHE_DIR.'cache_censors.php';
 		}
@@ -1724,7 +1739,9 @@ function get_title($user)
 
 		if (!defined('FORUM_RANKS_LOADED'))
 		{
-			require_once FORUM_ROOT.'include/cache.php';
+			if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+				require FORUM_ROOT.'include/cache.php';
+
 			generate_ranks_cache();
 			require FORUM_CACHE_DIR.'cache_ranks.php';
 		}

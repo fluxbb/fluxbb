@@ -116,7 +116,8 @@ body {
 
 <?php
 
-	require FORUM_ROOT.'include/search_idx.php';
+	if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/search_idx.php';
 
 	// Fetch posts to process
 	$query = array(

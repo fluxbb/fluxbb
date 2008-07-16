@@ -96,7 +96,9 @@ if (file_exists(FORUM_CACHE_DIR.'cache_config.php'))
 
 if (!defined('FORUM_CONFIG_LOADED'))
 {
-	require_once FORUM_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/cache.php';
+
 	generate_config_cache();
 	require FORUM_CACHE_DIR.'cache_config.php';
 }
@@ -113,7 +115,9 @@ if (file_exists(FORUM_CACHE_DIR.'cache_hooks.php'))
 
 if (!defined('FORUM_HOOKS_LOADED'))
 {
-	require_once FORUM_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/cache.php';
+
 	generate_hooks_cache();
 	require FORUM_CACHE_DIR.'cache_hooks.php';
 }

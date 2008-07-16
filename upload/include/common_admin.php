@@ -185,7 +185,9 @@ function prune($forum_id, $prune_sticky, $prune_date)
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// We removed a bunch of posts, so now we have to update the search index
-		require_once FORUM_ROOT.'include/search_idx.php';
+		if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/search_idx.php';
+
 		strip_search_index($post_ids);
 	}
 }

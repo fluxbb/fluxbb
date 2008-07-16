@@ -76,7 +76,9 @@ if (isset($_POST['add_forum']))
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the quickjump cache
-	require_once FORUM_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/cache.php';
+
 	generate_quickjump_cache();
 
 	redirect(forum_link($forum_url['admin_forums']), $lang_admin['Forum added'].' '.$lang_admin['Redirect']);
@@ -123,7 +125,9 @@ else if (isset($_GET['del_forum']))
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Regenerate the quickjump cache
-		require_once FORUM_ROOT.'include/cache.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/cache.php';
+
 		generate_quickjump_cache();
 
 		redirect(forum_link($forum_url['admin_forums']), $lang_admin['Forum deleted'].' '.$lang_admin['Redirect']);
@@ -244,7 +248,9 @@ else if (isset($_POST['update_positions']))
 	}
 
 	// Regenerate the quickjump cache
-	require_once FORUM_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/cache.php';
+
 	generate_quickjump_cache();
 
 	redirect(forum_link($forum_url['admin_forums']), $lang_admin['Forums updated'].' '.$lang_admin['Redirect']);
@@ -392,7 +398,9 @@ else if (isset($_GET['edit_forum']))
 		}
 
 		// Regenerate the quickjump cache
-		require_once FORUM_ROOT.'include/cache.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/cache.php';
+
 		generate_quickjump_cache();
 
 		redirect(forum_link($forum_url['admin_forums']), $lang_admin['Forum updated'].' '.$lang_admin['Redirect']);
@@ -410,7 +418,9 @@ else if (isset($_GET['edit_forum']))
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Regenerate the quickjump cache
-		require_once FORUM_ROOT.'include/cache.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/cache.php';
+
 		generate_quickjump_cache();
 
 		redirect(forum_link($forum_url['admin_forums']).'?edit_forum='.$forum_id, $lang_admin['Permissions reverted'].' '.$lang_admin['Redirect']);

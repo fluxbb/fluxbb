@@ -161,7 +161,8 @@ else if (isset($_POST['form_sent']))
 			$errors[] = $lang_profile['Pass not match'];
 
 		// ... and the e-mail address
-		require FORUM_ROOT.'include/email.php';
+		if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/email.php';
 
 		if (!is_valid_email($email1))
 			$errors[] = $lang_common['Invalid e-mail'];
