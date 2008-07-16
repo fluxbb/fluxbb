@@ -346,6 +346,7 @@ if (!$section || $section == 'setup')
 ?>
 							</select></span>
 						</div>
+					</div>
 <?php ($hook = get_hook('aop_setup_personal_end')) ? eval($hook) : null; ?>
 				</fieldset>
 <?php
@@ -558,7 +559,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
 ?>
 				<div class="content-head">
-					<h2 class="hn"><span><?php printf($lang_admin_settings['Setup head'], $lang_admin_settings['Setup URL']) ?></span></h3>
+					<h2 class="hn"><span><?php printf($lang_admin_settings['Setup head'], $lang_admin_settings['Setup URL']) ?></span></h2>
 				</div>
 				<div class="content-box">
 					<p class="warn"><?php echo $lang_admin_settings['URL scheme info'] ?></p>
@@ -927,7 +928,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
 ?>
 			<div class="content-head">
-				<h2 class="hn"><span><?php printf($lang_admin_settings['Features head'], $lang_admin_settings['Features update']) ?></span></h3>
+				<h2 class="hn"><span><?php printf($lang_admin_settings['Features head'], $lang_admin_settings['Features update']) ?></span></h2>
 			</div>
 <?php if (function_exists('curl_init') || function_exists('fsockopen') || in_array(strtolower(@ini_get('allow_url_fopen')), array('on', 'true', '1'))): ?>				<div class="content-box">
 					<p><?php echo $lang_admin_settings['Features update info'] ?></p>
@@ -1107,7 +1108,7 @@ else if ($section == 'registration')
 				</fieldset>
 				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="frm-box checkbox">
-						<span class="fld-input"><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[regs_report]" value="1"<?php if ($forum_config['o_regs_report'] == '1') echo ' checked="checked"' ?> /></span>
+						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="form[regs_report]" value="1"<?php if ($forum_config['o_regs_report'] == '1') echo ' checked="checked"' ?> /></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['Report new reg'] ?></span> <?php echo $lang_admin_settings['Report new reg label'] ?></label>
 					</div>
 				</div>

@@ -224,7 +224,7 @@ if (!empty($forum_censors))
 <?php ($hook = get_hook('acs_edit_word_pre_replace_with')) ? eval($hook) : null; ?>
 				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_censoring['Replaced by label'] ?></span><br />
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_censoring['Replaced by label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="replace_with[<?php echo $cur_word['id'] ?>]" value="<?php echo forum_htmlencode($cur_word['replace_with']) ?>" size="24" maxlength="60" /></span>
 					</div>
 					<span class="submit"><input type="submit" name="update[<?php echo $cur_word['id'] ?>]" value="<?php echo $lang_admin_common['Update'] ?>" /> <input type="submit" name="remove[<?php echo $cur_word['id'] ?>]" value="<?php echo $lang_admin_common['Remove'] ?>" /></span>
@@ -258,10 +258,6 @@ else
 <?php
 
 }
-
-?>
-</div>
-<?php
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
