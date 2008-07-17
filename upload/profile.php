@@ -279,9 +279,10 @@ if ($action == 'change_pass')
 	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 	$forum_page['form_action'] = forum_link($forum_url['change_password'], $id);
 
-	$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
-	if ($forum_user['is_admmod'])
-		$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+	$forum_page['hidden_fields'] = array(
+		'form_sent'		=> '<input type="hidden" name="form_sent" value="1" />',
+		'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />'
+	);
 
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
@@ -512,9 +513,10 @@ else if ($action == 'change_email')
 	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 	$forum_page['form_action'] = forum_link($forum_url['change_email'], $id);
 
-	$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
-	if ($forum_user['is_admmod'])
-		$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+	$forum_page['hidden_fields'] = array(
+		'form_sent'		=> '<input type="hidden" name="form_sent" value="1" />',
+		'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />'
+	);
 
 	// Setup form information
 	$forum_page['frm_info'] = '<p class="important"><span>'.$lang_profile['E-mail info'].'</span></p>';
@@ -1618,9 +1620,11 @@ else
 		$forum_page['set_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 		$forum_page['form_action'] = forum_link($forum_url['profile_identity'], $id);
 
-		$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
-		if ($forum_user['is_admmod'])
-			$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+		$forum_page['hidden_fields'] = array(
+			'form_sent'		=> '<input type="hidden" name="form_sent" value="1" />',
+			'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />'
+		);
+
 		if ($forum_user['is_admmod'] && ($forum_user['g_id'] == FORUM_ADMIN || $forum_user['g_mod_rename_users'] == '1'))
 			$forum_page['hidden_fields']['old_username'] = '<input type="hidden" name="old_username" value="'.forum_htmlencode($user['username']).'" />';
 
@@ -1795,9 +1799,10 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		$forum_page['set_count'] = $forum_page['fld_count'] = $forum_page['item_count'] = 0;
 		$forum_page['form_action'] = forum_link($forum_url['profile_settings'], $id);
 
-		$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
-		if ($forum_user['is_admmod'])
-			$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+		$forum_page['hidden_fields'] = array(
+			'form_sent'		=> '<input type="hidden" name="form_sent" value="1" />',
+			'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />'
+		);
 
 		// Setup headings
 		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], forum_htmlencode(end($forum_page['crumbs'])), $lang_profile['Section settings']);
@@ -2105,9 +2110,10 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		$forum_page['set_count'] = $forum_page['fld_count'] = 0;
 		$forum_page['form_action'] = forum_link($forum_url['profile_signature'], $id);
 
-		$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
-		if ($forum_user['is_admmod'])
-			$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+		$forum_page['hidden_fields'] = array(
+			'form_sent'		=> '<input type="hidden" name="form_sent" value="1" />',
+			'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />'
+		);
 
 		// Setup help
 		$forum_page['text_options'] = array();
@@ -2208,11 +2214,10 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		$forum_page['form_action'] = forum_link($forum_url['profile_avatar'], $id);
 
 		$forum_page['hidden_fields'] = array(
-			'<input type="hidden" name="form_sent" value="1" />',
-			'<input type="hidden" name="MAX_FILE_SIZE" value="'.$forum_config['o_avatars_size'].'" />'
+			'form_sent'		=> '<input type="hidden" name="form_sent" value="1" />',
+			'max_file_size'	=> '<input type="hidden" name="MAX_FILE_SIZE" value="'.$forum_config['o_avatars_size'].'" />',
+			'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />'
 		);
-		if ($forum_user['is_admmod'])
-			$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
 
 		// Setup form information
 		$forum_page['frm_info'] = array();
@@ -2330,9 +2335,10 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 		$forum_page['form_action'] = forum_link($forum_url['profile_admin'], $id);
 
-		$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
-		if ($forum_user['is_admmod'])
-			$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+		$forum_page['hidden_fields'] = array(
+			'form_sent'		=> '<input type="hidden" name="form_sent" value="1" />',
+			'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />'
+		);
 
 		// Setup ban and delete options
 		$forum_page['user_management'] = array();

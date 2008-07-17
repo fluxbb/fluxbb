@@ -226,8 +226,8 @@ if (isset($_GET['tid']))
 		$forum_page['form_action'] = forum_link($forum_url['delete_multiple'], array($fid, $tid));
 
 		$forum_page['hidden_fields'] = array(
-			'<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />',
-			'<input type="hidden" name="posts" value="'.implode(',', array_keys($posts)).'" />'
+			'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />',
+			'posts'			=> '<input type="hidden" name="posts" value="'.implode(',', array_keys($posts)).'" />'
 		);
 
 		// Setup breadcrumbs
@@ -645,8 +645,8 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	$forum_page['form_action'] = forum_link($forum_url['moderate_forum'], $fid);
 
 	$forum_page['hidden_fields'] = array(
-		'<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />',
-		'<input type="hidden" name="topics" value="'.$topics.'" />'
+		'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />',
+		'topics'		=> '<input type="hidden" name="topics" value="'.$topics.'" />'
 	);
 
 	// Setup breadcrumbs
@@ -837,8 +837,8 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 	$forum_page['form_action'] = forum_link($forum_url['moderate_forum'], $fid);
 
 	$forum_page['hidden_fields'] = array(
-		'<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />',
-		'<input type="hidden" name="topics" value="'.implode(',', array_keys($topics)).'" />'
+		'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />',
+		'topics'		=> '<input type="hidden" name="topics" value="'.implode(',', array_keys($topics)).'" />'
 	);
 
 	// Setup breadcrumbs

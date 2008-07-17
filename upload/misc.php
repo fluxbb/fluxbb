@@ -245,11 +245,10 @@ else if (isset($_GET['email']))
 	$forum_page['form_action'] = forum_link($forum_url['email'], $recipient_id);
 
 	$forum_page['hidden_fields'] = array(
-		'<input type="hidden" name="form_sent" value="1" />',
-		'<input type="hidden" name="redirect_url" value="'.forum_htmlencode($forum_user['prev_url']).'" />'
+		'form_sent'		=> '<input type="hidden" name="form_sent" value="1" />',
+		'redirect_url'	=> '<input type="hidden" name="redirect_url" value="'.forum_htmlencode($forum_user['prev_url']).'" />',
+		'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />'
 	);
-	if ($forum_user['is_admmod'])
-		$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
 
 	// Setup main heading
 	$forum_page['main_head'] = sprintf($lang_misc['Send forum e-mail'], forum_htmlencode($recipient));
@@ -439,9 +438,10 @@ else if (isset($_GET['report']))
 	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 	$forum_page['form_action'] = forum_link($forum_url['report'], $post_id);
 
-	$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
-	if ($forum_user['is_admmod'])
-		$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+	$forum_page['hidden_fields'] = array(
+		'form_sent'		=> '<input type="hidden" name="form_sent" value="1" />',
+		'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />'
+	);
 
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(

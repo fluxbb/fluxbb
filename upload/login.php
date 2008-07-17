@@ -318,6 +318,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 		<form id="afocus" class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 			<div class="hidden">
 				<input type="hidden" name="form_sent" value="1" />
+				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
 			</div>
 <?php ($hook = get_hook('li_forgot_pass_pre_fieldset')) ? eval($hook) : null; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
@@ -354,8 +355,9 @@ $forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'
 $forum_page['form_action'] = $base_url.'/login.php?action=in';
 
 $forum_page['hidden_fields'] = array(
-	'<input type="hidden" name="form_sent" value="1" />',
-	'<input type="hidden" name="redirect_url" value="'.forum_htmlencode($forum_user['prev_url']).'" />'
+	'form_sent'		=> '<input type="hidden" name="form_sent" value="1" />',
+	'redirect_url'	=> '<input type="hidden" name="redirect_url" value="'.forum_htmlencode($forum_user['prev_url']).'" />',
+	'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />'
 );
 
 // Setup breadcrumbs

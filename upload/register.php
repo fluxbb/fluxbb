@@ -331,6 +331,7 @@ ob_start();
 		<form class="frm-form" id="afocus" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 			<div class="hidden">
 				<input type="hidden" name="form_sent" value="1" />
+				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
 			</div>
 <?php ($hook = get_hook('rg_register_pre_req_info_fieldset')) ? eval($hook) : null; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">

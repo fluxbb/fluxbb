@@ -1970,8 +1970,8 @@ function csrf_confirm_form()
 	$forum_page['form_action'] = get_current_url();
 
 	$forum_page['hidden_fields'] = array(
-		'<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />',
-		'<input type="hidden" name="prev_url" value="'.forum_htmlencode($forum_user['prev_url']).'" />'
+		'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />',
+		'prev_url'		=> '<input type="hidden" name="prev_url" value="'.forum_htmlencode($forum_user['prev_url']).'" />'
 	);
 
 	foreach ($_POST as $submitted_key => $submitted_val)

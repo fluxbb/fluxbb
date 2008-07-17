@@ -130,9 +130,10 @@ $cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smili
 $forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 $forum_page['form_action'] = forum_link($forum_url['delete'], $id);
 
-$forum_page['hidden_fields']['form_sent'] = '<input type="hidden" name="form_sent" value="1" />';
-if ($forum_user['is_admmod'])
-	$forum_page['hidden_fields']['csrf_token'] = '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />';
+$forum_page['hidden_fields'] = array(
+	'form_sent'		=> '<input type="hidden" name="form_sent" value="1" />',
+	'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />'
+);
 
 // Setup form information
 $forum_page['frm_info'] = array(
