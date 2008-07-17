@@ -595,7 +595,7 @@ function generate_crumbs($reverse)
 	if ($reverse)
 	{
 		for ($i = ($num_crumbs - 1); $i >= 0; --$i)
-			$crumbs .= (is_array($forum_page['crumbs'][$i]) ? forum_htmlencode($forum_page['crumbs'][$i][0]) : forum_htmlencode($forum_page['crumbs'][$i])).((isset($forum_page['page']) && $i == ($num_crumbs - 1)) ? ' ('.$lang_common['Page'].' '.$forum_page['page'].')' : '').($i > 0 ? $lang_common['Title separator'] : '');
+			$crumbs .= (is_array($forum_page['crumbs'][$i]) ? forum_htmlencode($forum_page['crumbs'][$i][0]) : forum_htmlencode($forum_page['crumbs'][$i])).((isset($forum_page['page']) && $i == ($num_crumbs - 1)) ? ' ('.$lang_common['Page'].' '.forum_number_format($forum_page['page']).')' : '').($i > 0 ? $lang_common['Title separator'] : '');
 	}
 	else
 	{
@@ -1782,10 +1782,10 @@ function get_title($user)
 	return $user_title;
 }
 
-//
-// Generate a string with page and item information for multipage headings)
-//
 
+//
+// Generate a string with page and item information for multipage headings
+//
 function generate_page_info($label, $first, $total)
 {
 	global $forum_page, $lang_common;
@@ -1793,12 +1793,12 @@ function generate_page_info($label, $first, $total)
 	if ($forum_page['num_pages'] == 1)
 	{
 		$page_info = '';
-		$item_info =  '<span class="item-info">'.sprintf($lang_common['Item info single'], $label, $total).'</span>';
+		$item_info =  '<span class="item-info">'.sprintf($lang_common['Item info single'], $label, forum_number_format($total)).'</span>';
 	}
 	else
 	{
-		$page_info = '<span class="page-info">'.sprintf($lang_common['Page info'], $forum_page['page'], $forum_page['num_pages']).$lang_common['Info separator'].'</span>';
-		$item_info = '<span class="item-info">'.sprintf($lang_common['Item info plural'], $label, $first, $forum_page['finish_at'], $total).'</span>';
+		$page_info = '<span class="page-info">'.sprintf($lang_common['Page info'], forum_number_format($forum_page['page']), forum_number_format($forum_page['num_pages'])).$lang_common['Info separator'].'</span>';
+		$item_info = '<span class="item-info">'.sprintf($lang_common['Item info plural'], $label, forum_number_format($first), forum_number_format($forum_page['finish_at']), forum_number_format($total)).'</span>';
 	}
 
 	return $page_info.$item_info;
@@ -1846,9 +1846,9 @@ function paginate($num_pages, $cur_page, $link, $separator, $args = null)
 			if ($current < 1 || $current > $num_pages)
 				continue;
 			else if ($current != $cur_page || $link_to_all)
-				$pages[] = '<a'.(empty($pages) ? ' class="item1" ' : '').' href="'.forum_sublink($link, $forum_url['page'], $current, $args).'">'.$current.'</a>';
+				$pages[] = '<a'.(empty($pages) ? ' class="item1" ' : '').' href="'.forum_sublink($link, $forum_url['page'], $current, $args).'">'.forum_number_format($current).'</a>';
 			else
-				$pages[] = '<strong'.(empty($pages) ? ' class="item1"' : '').'>'.$current.'</strong>';
+				$pages[] = '<strong'.(empty($pages) ? ' class="item1"' : '').'>'.forum_number_format($current).'</strong>';
 		}
 
 		if ($cur_page <= ($num_pages-3))
@@ -1856,7 +1856,7 @@ function paginate($num_pages, $cur_page, $link, $separator, $args = null)
 			if ($cur_page != ($num_pages-3) && $cur_page != ($num_pages-4))
 				$pages[] = '<span>'.$lang_common['Spacer'].'</span>';
 
-			$pages[] = '<a'.(empty($pages) ? ' class="item1" ' : '').' href="'.forum_sublink($link, $forum_url['page'], $num_pages, $args).'">'.$num_pages.'</a>';
+			$pages[] = '<a'.(empty($pages) ? ' class="item1" ' : '').' href="'.forum_sublink($link, $forum_url['page'], $num_pages, $args).'">'.forum_number_format($num_pages).'</a>';
 		}
 
 		// Add a next page link
@@ -2110,6 +2110,17 @@ function format_time($timestamp, $date_only = false)
 		$date .= ' '.gmdate($forum_time_formats[$forum_user['time_format']], $timestamp);
 
 	return $date;
+}
+
+
+//
+// A wrapper for PHP's number_format function
+//
+function forum_number_format($number, $decimals = 0)
+{
+	global $lang_common;
+
+	return number_format($number, $decimals, $lang_common['lang_decimal_point'], $lang_common['lang_thousands_sep']);
 }
 
 
@@ -2802,7 +2813,7 @@ function get_saved_queries()
 
 		$output .= '
 				<tr>
-					<td class="tcl">'.(($cur_query[1] != 0) ? $cur_query[1] : '&#160;').'</td>
+					<td class="tcl">'.(($cur_query[1] != 0) ? forum_number_format($cur_query[1], 5) : '&#160;').'</td>
 					<td class="tcr">'.forum_htmlencode($cur_query[0]).'</td>
 				</tr>
 ';
@@ -2811,7 +2822,7 @@ function get_saved_queries()
 
 	$output .= '
 				<tr class="totals">
-					<td class="tcl"><em>'.$query_time_total.'</em></td>
+					<td class="tcl"><em>'.forum_number_format($query_time_total, 5).'</em></td>
 					<td class="tcr"><em>Total query time</em></td>
 				</tr>
 			</tbody>

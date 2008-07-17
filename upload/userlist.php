@@ -240,7 +240,7 @@ if ($forum_db->num_rows($result))
 		$forum_page['table_row']['username'] = '<td class="tc'.count($forum_page['table_row']).'"><a href="'.forum_link($forum_url['user'], $user_data['id']).'">'.forum_htmlencode($user_data['username']).'</a></td>';
 		$forum_page['table_row']['title'] = '<td class="tc'.count($forum_page['table_row']).'">'.get_title($user_data).'</td>';
 		if ($forum_page['show_post_count'])
-			$forum_page['table_row']['posts'] = '<td class="tc'.count($forum_page['table_row']).'">'.$user_data['num_posts'].'</td>';
+			$forum_page['table_row']['posts'] = '<td class="tc'.count($forum_page['table_row']).'">'.forum_number_format($user_data['num_posts']).'</td>';
 		$forum_page['table_row']['registered'] = '<td class="tc'.count($forum_page['table_row']).'">'.format_time($user_data['registered'], true).'</td>';
 
 		++$forum_page['item_count'];

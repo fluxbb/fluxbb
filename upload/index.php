@@ -210,8 +210,8 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 		$forum_page['item_body']['subject']['desc'] = '<p>'.implode(' ', $forum_page['item_subject']).'</p>';
 
 		// Forum topics, post count and last post
-		$forum_page['item_body']['info']['topics'] = '<li class="info-topics"><strong>'.$cur_forum['num_topics'].'</strong> <span class="label">'.(($cur_forum['num_topics'] == 1) ? $lang_index['topic'] : $lang_index['topics']).'</span></li>';
-		$forum_page['item_body']['info']['posts'] = '<li class="info-posts"><strong>'.$cur_forum['num_posts'].'</strong> <span class="label">'.(($cur_forum['num_posts'] == 1) ? $lang_index['post'] : $lang_index['posts']).'</span></li>';
+		$forum_page['item_body']['info']['topics'] = '<li class="info-topics"><strong>'.(is_numeric($cur_forum['num_topics']) ? forum_number_format($cur_forum['num_topics']) : $cur_forum['num_topics']).'</strong> <span class="label">'.(($cur_forum['num_topics'] == 1) ? $lang_index['topic'] : $lang_index['topics']).'</span></li>';
+		$forum_page['item_body']['info']['posts'] = '<li class="info-posts"><strong>'.(is_numeric($cur_forum['num_posts']) ? forum_number_format($cur_forum['num_posts']) : $cur_forum['num_posts']).'</strong> <span class="label">'.(($cur_forum['num_posts'] == 1) ? $lang_index['post'] : $lang_index['posts']).'</span></li>';
 
 		if ($cur_forum['last_post'] != '')
 			$forum_page['item_body']['info']['lastpost'] = '<li class="info-lastpost"><span class="label">'.$lang_index['Last post was'].'</span> <strong><a href="'.forum_link($forum_url['post'], $cur_forum['last_post_id']).'">'.format_time($cur_forum['last_post']).'</a></strong> <cite>'.sprintf($lang_index['Last poster'], forum_htmlencode($cur_forum['last_poster'])).'</cite></li>';
@@ -296,10 +296,10 @@ $query = array(
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 list($stats['total_topics'], $stats['total_posts']) = $forum_db->fetch_row($result);
 
-$stats_list['no_of_users'] = '<li class="st-users"><span>'.$lang_index['No of users'].':</span> <strong>'. $stats['total_users'].'</strong></li>';
+$stats_list['no_of_users'] = '<li class="st-users"><span>'.$lang_index['No of users'].':</span> <strong>'.forum_number_format($stats['total_users']).'</strong></li>';
 $stats_list['newest_user'] = '<li class="st-users"><span>'.$lang_index['Newest user'].':</span> <strong>'.($forum_user['g_view_users'] == '1' ? '<a href="'.forum_link($forum_url['user'], $stats['last_user']['id']).'">'.forum_htmlencode($stats['last_user']['username']).'</a>' : forum_htmlencode($stats['last_user']['username'])).'</strong></li>';
-$stats_list['no_of_topics'] = '<li class="st-activity"><span>'.$lang_index['No of topics'].':</span> <strong>'.intval($stats['total_topics']).'</strong></li>';
-$stats_list['no_of_posts'] = '<li class="st-activity"><span>'.$lang_index['No of posts'].':</span> <strong>'.intval($stats['total_posts']).'</strong></li>';
+$stats_list['no_of_topics'] = '<li class="st-activity"><span>'.$lang_index['No of topics'].':</span> <strong>'.forum_number_format($stats['total_topics']).'</strong></li>';
+$stats_list['no_of_posts'] = '<li class="st-activity"><span>'.$lang_index['No of posts'].':</span> <strong>'.forum_number_format($stats['total_posts']).'</strong></li>';
 
 ($hook = get_hook('in_pre_stats_info_output')) ? eval($hook) : null;
 
@@ -344,7 +344,7 @@ if ($forum_config['o_users_online'] == '1')
 ?>
 <div id="brd-online" class="gen-content">
 	<h3 class="hn"><span><?php echo $lang_index['Currently online'] ?></span></h3>
-	<p><?php (($num_guests != 1) ? printf($lang_index['Guests plural'], $num_guests) : printf($lang_index['Guest single'], $num_guests)) ?> <?php ((count($users) != 1) ? printf($lang_index['Users plural'], count($users)) : printf($lang_index['User single'], count($users))) ?> <?php echo ((count($users) > 0) ? implode(', ', $users) : '') ?></p>
+	<p><?php (($num_guests != 1) ? printf($lang_index['Guests plural'], forum_number_format($num_guests)) : printf($lang_index['Guest single'], $num_guests)) ?> <?php ((count($users) != 1) ? printf($lang_index['Users plural'], forum_number_format(count($users))) : printf($lang_index['User single'], count($users))) ?> <?php echo ((count($users) > 0) ? implode(', ', $users) : '') ?></p>
 </div>
 <?php
 

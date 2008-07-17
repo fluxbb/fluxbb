@@ -265,7 +265,7 @@ else if (isset($_GET['show_users']))
 				$forum_page['table_row'] = array();
 				$forum_page['table_row']['username'] = '<td class="tc'.count($forum_page['table_row']).'"><span>'.$lang_admin['Username'].' <a href="'.forum_link($forum_url['user'], $user_data['id']).'">'.forum_htmlencode($user_data['username']).'</a></span> <span class="usermail">'.$lang_admin['E-mail'].' <a href="mailto:'.$user_data['email'].'">'.$user_data['email'].'</a></span>'.(($user_data['admin_note'] != '') ? '<span class="usernote">'.$lang_admin['Admin note'].' '.forum_htmlencode($user_data['admin_note']).'</span>' : '').'</td>';
 				$forum_page['table_row']['title'] = '<td class="tc'.count($forum_page['table_row']).'">'.get_title($user_data).'</td>';
-				$forum_page['table_row']['posts'] = '<td class="tc'.count($forum_page['table_row']).'">'.$user_data['num_posts'].'</td>';
+				$forum_page['table_row']['posts'] = '<td class="tc'.count($forum_page['table_row']).'">'.forum_number_format($user_data['num_posts']).'</td>';
 				$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"><span><a href="'.forum_link($forum_url['admin_users']).'?ip_stats='.$user_data['id'].'">'.$lang_admin['View IP stats'].'</a></span> <span><a href="'.forum_link($forum_url['search_user_posts'], $user_data['id']).'">'.$lang_admin['Show posts'].'</a></span></td>';
 				$forum_page['table_row']['select'] = '<td class="tc'.count($forum_page['table_row']).'"><input type="checkbox" name="users['.$user_data['id'].']" value="1" /></td>';
 			}
@@ -914,7 +914,7 @@ else if (isset($_POST['find_user']))
 			$forum_page['table_row'] = array();
 			$forum_page['table_row']['username'] = '<td class="tc'.count($forum_page['table_row']).'"><span>'.$lang_admin['Username'].' <a href="'.forum_link($forum_url['user'], $user_data['id']).'">'.forum_htmlencode($user_data['username']).'</a></span> <span class="usermail">'.$lang_admin['E-mail'].' <a href="mailto:'.$user_data['email'].'">'.$user_data['email'].'</a></span>'.(($user_data['admin_note'] != '') ? '<span class="usernote">'.$lang_admin['Admin note'].' '.forum_htmlencode($user_data['admin_note']).'</span>' : '').'</td>';
 			$forum_page['table_row']['title'] = '<td class="tc'.count($forum_page['table_row']).'">'.$user_title.'</td>';
-			$forum_page['table_row']['posts'] = '<td class="tc'.count($forum_page['table_row']).'">'.$user_data['num_posts'].'</td>';
+			$forum_page['table_row']['posts'] = '<td class="tc'.count($forum_page['table_row']).'">'.forum_number_format($user_data['num_posts']).'</td>';
 			$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"><span><a href="'.forum_link($forum_url['admin_users']).'?ip_stats='.$user_data['id'].'">'.$lang_admin['View IP stats'].'</a></span> <span><a href="'.forum_link($forum_url['search_user_posts'], $user_data['id']).'">'.$lang_admin['Show posts'].'</a></span></td>';
 			$forum_page['table_row']['select'] = '<td class="tc'.count($forum_page['table_row']).'"><input type="checkbox" name="users['.$user_data['id'].']" value="1" /></td>';
 

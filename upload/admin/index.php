@@ -148,9 +148,9 @@ if ($db_type == 'mysql' || $db_type == 'mysqli')
 	$total_size = $total_size / 1024;
 
 	if ($total_size > 1024)
-		$total_size = round($total_size / 1024, 2).' MB';
+		$total_size = forum_number_format($total_size / 1024, 2).' MB';
 	else
-		$total_size = round($total_size, 2).' KB';
+		$total_size = forum_number_format($total_size, 2).' KB';
 }
 
 
@@ -237,7 +237,7 @@ ob_start();
 					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['Database'] ?></span></h3>
 					<ul class="data-list">
 						<li><span><?php echo $db_version ?></span></li>
-<?php if (isset($total_records) && isset($total_size)): ?>							<li><span><?php echo $lang_admin_index['Rows'] ?>: <?php echo $total_records ?></span></li>
+<?php if (isset($total_records) && isset($total_size)): ?>							<li><span><?php echo $lang_admin_index['Rows'] ?>: <?php echo forum_number_format($total_records) ?></span></li>
 						<li><span><?php echo $lang_admin_index['Size'] ?>: <?php echo $total_size ?></span></li>
 					</ul>
 				</div>

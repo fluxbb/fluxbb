@@ -311,7 +311,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 
 	// Generate the post heading
 	$forum_page['item_ident'] = array(
-		'num'	=> '<strong>'.($forum_page['start_from'] + $forum_page['item_count']).'</strong>',
+		'num'	=> '<strong>'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</strong>',
 		'user'	=> '<cite>'.($cur_topic['posted'] == $cur_post['posted'] ? sprintf($lang_topic['Topic by'], forum_htmlencode($cur_post['username'])) : sprintf($lang_topic['Reply by'], forum_htmlencode($cur_post['username']))).'</cite>',
 		'date'	=> '<span>'.format_time($cur_post['posted']).'</span>'
 	);
@@ -372,7 +372,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 				$forum_page['user_info']['registered'] = '<li><span><strong>'.$lang_topic['Registered'].'</strong> '.format_time($cur_post['registered'], true).'</span></li>';
 
 				if ($forum_config['o_show_post_count'] == '1' || $forum_user['is_admmod'])
-					$forum_page['user_info']['posts'] = '<li><span><strong>'.$lang_topic['Posts'].'</strong> '.$cur_post['num_posts'].'</span></li>';
+					$forum_page['user_info']['posts'] = '<li><span><strong>'.$lang_topic['Posts'].'</strong> '.forum_number_format($cur_post['num_posts']).'</span></li>';
 			}
 
 			if ($forum_user['is_admmod'])
@@ -414,7 +414,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 	// Generate the post options links
 	if (!$forum_user['is_guest'])
 	{
-		$forum_page['post_options']['report'] = '<a href="'.forum_link($forum_url['report'], $cur_post['id']).'"><span>'.$lang_topic['Report'].'<span>&#160;'.$lang_topic['Post'].' '.($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
+		$forum_page['post_options']['report'] = '<a href="'.forum_link($forum_url['report'], $cur_post['id']).'"><span>'.$lang_topic['Report'].'<span>&#160;'.$lang_topic['Post'].' '.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
 
 		if (!$forum_page['is_admmod'])
 		{
@@ -425,13 +425,13 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 					if (($forum_page['start_from'] + $forum_page['item_count']) == 1 && $forum_user['g_delete_topics'] == '1')
 						$forum_page['post_options']['delete'] = '<a href="'.forum_link($forum_url['delete'], $cur_topic['first_post_id']).'"><span>'.$lang_topic['Delete topic'].'</span></a>';
 					if (($forum_page['start_from'] + $forum_page['item_count']) > 1 && $forum_user['g_delete_posts'] == '1')
-						$forum_page['post_options']['delete'] = '<a href="'.forum_link($forum_url['delete'], $cur_post['id']).'"><span>'.$lang_topic['Delete'].'<span>&#160;'.$lang_topic['Post'].' '.($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
+						$forum_page['post_options']['delete'] = '<a href="'.forum_link($forum_url['delete'], $cur_post['id']).'"><span>'.$lang_topic['Delete'].'<span>&#160;'.$lang_topic['Post'].' '.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
 					if ($forum_user['g_edit_posts'] == '1')
-						$forum_page['post_options']['edit'] = '<a href="'.forum_link($forum_url['edit'], $cur_post['id']).'"><span>'.$lang_topic['Edit'].'<span>&#160;'.$lang_topic['Post'].' '.($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
+						$forum_page['post_options']['edit'] = '<a href="'.forum_link($forum_url['edit'], $cur_post['id']).'"><span>'.$lang_topic['Edit'].'<span>&#160;'.$lang_topic['Post'].' '.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
 				}
 
 				if (($cur_topic['post_replies'] == '' && $forum_user['g_post_replies'] == '1') || $cur_topic['post_replies'] == '1')
-					$forum_page['post_options']['quote'] = '<a href="'.forum_link($forum_url['quote'], array($id, $cur_post['id'])).'"><span>'.$lang_topic['Quote'].'<span>&#160;'.$lang_topic['Post'].' '.($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
+					$forum_page['post_options']['quote'] = '<a href="'.forum_link($forum_url['quote'], array($id, $cur_post['id'])).'"><span>'.$lang_topic['Quote'].'<span>&#160;'.$lang_topic['Post'].' '.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
 			}
 		}
 		else
@@ -439,10 +439,10 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 			if (($forum_page['start_from'] + $forum_page['item_count']) == 1)
 				$forum_page['post_options']['delete'] = '<a href="'.forum_link($forum_url['delete'], $cur_topic['first_post_id']).'">'.$lang_topic['Delete topic'].'</a>';
 			else
-				$forum_page['post_options']['delete'] = '<a href="'.forum_link($forum_url['delete'], $cur_post['id']).'"><span>'.$lang_topic['Delete'].'<span>&#160;'.$lang_topic['Post'].' '.($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
+				$forum_page['post_options']['delete'] = '<a href="'.forum_link($forum_url['delete'], $cur_post['id']).'"><span>'.$lang_topic['Delete'].'<span>&#160;'.$lang_topic['Post'].' '.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
 
-			$forum_page['post_options']['edit'] = '<a href="'.forum_link($forum_url['edit'], $cur_post['id']).'"><span>'.$lang_topic['Edit'].'<span>&#160;'.$lang_topic['Post'].' '.($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
-			$forum_page['post_options']['quote'] = '<a href="'.forum_link($forum_url['quote'], array($id, $cur_post['id'])).'"><span>'.$lang_topic['Quote'].'<span>&#160;'.$lang_topic['Post'].' '.($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
+			$forum_page['post_options']['edit'] = '<a href="'.forum_link($forum_url['edit'], $cur_post['id']).'"><span>'.$lang_topic['Edit'].'<span>&#160;'.$lang_topic['Post'].' '.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
+			$forum_page['post_options']['quote'] = '<a href="'.forum_link($forum_url['quote'], array($id, $cur_post['id'])).'"><span>'.$lang_topic['Quote'].'<span>&#160;'.$lang_topic['Post'].' '.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
 		}
 	}
 	else
@@ -450,7 +450,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 		if ($cur_topic['closed'] == '0')
 		{
 			if (($cur_topic['post_replies'] == '' && $forum_user['g_post_replies'] == '1') || $cur_topic['post_replies'] == '1')
-				$forum_page['post_options']['quote'] = '<a href="'.forum_link($forum_url['quote'], array($id, $cur_post['id'])).'"><span>'.$lang_topic['Quote'].'<span>&#160;'.$lang_topic['Post'].' '.($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
+				$forum_page['post_options']['quote'] = '<a href="'.forum_link($forum_url['quote'], array($id, $cur_post['id'])).'"><span>'.$lang_topic['Quote'].'<span>&#160;'.$lang_topic['Post'].' '.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span></span></a>';
 		}
 	}
 

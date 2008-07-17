@@ -486,12 +486,12 @@ else if ($_GET['action'] == 'online' || $_GET['action'] == 'online_full')
 
 	($hook = get_hook('ex_pre_online_output')) ? eval($hook) : null;
 
-	echo $lang_index['Guests online'].': '.$num_guests.'<br />';
+	echo $lang_index['Guests online'].': '.forum_number_format($num_guests).'<br />';
 
 	if ($_GET['action'] == 'online_full')
 		echo $lang_index['Users online'].': '.implode(', ', $users).'<br />';
 	else
-		echo $lang_index['Users online'].': '.$num_users.'<br />';
+		echo $lang_index['Users online'].': '.forum_number_format($num_users).'<br />';
 
 	return;
 }
@@ -537,10 +537,10 @@ else if ($_GET['action'] == 'stats')
 
 	($hook = get_hook('ex_pre_stats_output')) ? eval($hook) : null;
 
-	echo $lang_index['No of users'].': '.$stats['total_users'].'<br />';
+	echo $lang_index['No of users'].': '.forum_number_format($stats['total_users']).'<br />';
 	echo $lang_index['Newest user'].': <a href="'.forum_link($forum_url['user'], $stats['last_user']['id']).'">'.forum_htmlencode($stats['last_user']['username']).'</a><br />';
-	echo $lang_index['No of topics'].': '.intval($stats['total_topics']).'<br />';
-	echo $lang_index['No of posts'].': '.intval($stats['total_posts']);
+	echo $lang_index['No of topics'].': '.forum_number_format($stats['total_topics']).'<br />';
+	echo $lang_index['No of posts'].': '.forum_number_format($stats['total_posts']);
 
 	return;
 }

@@ -390,7 +390,7 @@ if (isset($_GET['tid']))
 
 		// Generate the post heading
 		$forum_page['item_ident'] = array();
-		$forum_page['item_ident']['num'] = '<strong>'.($forum_page['start_from'] + $forum_page['item_count']).'</strong>';
+		$forum_page['item_ident']['num'] = '<strong>'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</strong>';
 		$forum_page['item_ident']['user'] = '<cite>'.($cur_topic['posted'] == $cur_post['posted'] ? sprintf($lang_topic['Topic by'], forum_htmlencode($cur_post['username'])) : sprintf($lang_topic['Reply by'], forum_htmlencode($cur_post['username']))).'</cite>';
 		$forum_page['item_ident']['date'] = '<span>'.format_time($cur_post['posted']).'</span>';
 
@@ -398,7 +398,7 @@ if (isset($_GET['tid']))
 
 		// Generate the checkbox field
 		if ($cur_post['id'] != $cur_topic['first_post_id'])
-			$forum_page['item_select'] = '<p class="item-select"><input type="checkbox" id="fld'.$cur_post['id'].'" name="posts['.$cur_post['id'].']" value="1" /> <label for="fld'.$cur_post['id'].'">'.$lang_misc['Select post'].' '.($forum_page['start_from'] + $forum_page['item_count']).'</label></p>';
+			$forum_page['item_select'] = '<p class="item-select"><input type="checkbox" id="fld'.$cur_post['id'].'" name="posts['.$cur_post['id'].']" value="1" /> <label for="fld'.$cur_post['id'].'">'.$lang_misc['Select post'].' '.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</label></p>';
 
 		// Generate author identification
 		$forum_page['user_ident']['username'] = (($cur_post['poster_id'] > 1) ? '<strong class="username"><a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a></strong>' : '<strong class="username">'.forum_htmlencode($cur_post['username']).'</strong>');
@@ -1245,9 +1245,9 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 		$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? ' odd' : ' even').(($forum_page['item_count'] == 1) ? ' item-body1' : '').((!empty($forum_page['item_status'])) ? ' '.implode(' ', $forum_page['item_status']) : '');
 
 		if ($forum_config['o_topic_views'] == '1')
-			$forum_page['item_body']['info']['views'] = '<li class="info-views"><strong>'.$cur_topic['num_views'].'</strong> <span class="label">'.(($cur_topic['num_views'] == 1) ? $lang_forum['View'] : $lang_forum['Views']).'</span></li>';
+			$forum_page['item_body']['info']['views'] = '<li class="info-views"><strong>'.forum_number_format($cur_topic['num_views']).'</strong> <span class="label">'.(($cur_topic['num_views'] == 1) ? $lang_forum['View'] : $lang_forum['Views']).'</span></li>';
 
-		$forum_page['item_body']['info']['replies'] = '<li class="info-replies"><strong>'.$cur_topic['num_replies'].'</strong> <span class="label">'.(($cur_topic['num_replies'] == 1) ? $lang_forum['Reply'] : $lang_forum['Replies']).'</span></li>';
+		$forum_page['item_body']['info']['replies'] = '<li class="info-replies"><strong>'.forum_number_format($cur_topic['num_replies']).'</strong> <span class="label">'.(($cur_topic['num_replies'] == 1) ? $lang_forum['Reply'] : $lang_forum['Replies']).'</span></li>';
 		$forum_page['item_body']['info']['lastpost'] = '<li class="info-lastpost"><span class="label">'.$lang_forum['Last post was'].'</span> <strong><a href="'.forum_link($forum_url['post'], $cur_topic['last_post_id']).'">'.format_time($cur_topic['last_post']).'</a></strong> <cite>'.sprintf($lang_forum['by poster'], forum_htmlencode($cur_topic['last_poster'])).'</cite></li>';
 		$forum_page['item_body']['info']['select'] = '<li class="info-select"><input id="fld'.++$forum_page['fld_count'].'" type="checkbox" name="topics['.$cur_topic['id'].']" value="1" /> <label for="fld'.$forum_page['fld_count'].'">'.sprintf($lang_forum['Select topic'], $cur_topic['subject']).'</label></li>';
 

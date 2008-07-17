@@ -977,9 +977,9 @@ else if (isset($_POST['form_sent']))
 
 			// Validate signature
 			if (utf8_strlen($form['signature']) > $forum_config['p_sig_length'])
-				$errors[] = sprintf($lang_profile['Sig too long'], $forum_config['p_sig_length'], utf8_strlen($form['signature']) - $forum_config['p_sig_length']);
+				$errors[] = sprintf($lang_profile['Sig too long'], forum_number_format($forum_config['p_sig_length']), forum_number_format(utf8_strlen($form['signature']) - $forum_config['p_sig_length']));
 			if (substr_count($form['signature'], "\n") > ($forum_config['p_sig_lines'] - 1))
-				$errors[] = sprintf($lang_profile['Sig too many lines'], $forum_config['p_sig_lines']);
+				$errors[] = sprintf($lang_profile['Sig too many lines'], forum_number_format($forum_config['p_sig_lines']));
 
 			if ($form['signature'] != '' && $forum_config['p_sig_all_caps'] == '0' && utf8_strtoupper($form['signature']) == $form['signature'] && !$forum_user['is_admmod'])
 				$form['signature'] = utf8_ucwords(utf8_strtolower($form['signature']));
@@ -1053,7 +1053,7 @@ else if (isset($_POST['form_sent']))
 				{
 					// Make sure the file isn't too big
 					if ($uploaded_file['size'] > $forum_config['o_avatars_size'])
-						$errors[] = sprintf($lang_profile['Too large'], $forum_config['o_avatars_size']);
+						$errors[] = sprintf($lang_profile['Too large'], forum_number_format($forum_config['o_avatars_size']));
 				}
 
 				if (empty($errors))
@@ -1297,7 +1297,7 @@ if ($forum_user['id'] != $id &&
 	$forum_page['user_info']['lastpost'] = '<li><span>'.$lang_profile['Last post'].' <strong> '.format_time($user['last_post']).'</strong></span></li>';
 
 	if ($forum_config['o_show_post_count'] == '1' || $forum_user['is_admmod'])
-		$forum_page['user_info']['posts'] = '<li><span>'.$lang_profile['Posts'].' <strong>'.$user['num_posts'].'</strong></span></li>';
+		$forum_page['user_info']['posts'] = '<li><span>'.$lang_profile['Posts'].' <strong>'.forum_number_format($user['num_posts']).'</strong></span></li>';
 
 	// Setup user address
 	$forum_page['user_contact'] = array();
@@ -1470,9 +1470,9 @@ else
 
 
  		if ($forum_config['o_show_post_count'] == '1' || $forum_user['is_admmod'])
-			$forum_page['user_info']['posts'] = '<li><span>'.$lang_profile['Posts'].' <strong>'.$user['num_posts'].'</strong></span></li>';
+			$forum_page['user_info']['posts'] = '<li><span>'.$lang_profile['Posts'].' <strong>'.forum_number_format($user['num_posts']).'</strong></span></li>';
 		else
-			$forum_page['user_private']['posts'] = '<li><span>'.$lang_profile['Posts'].' <strong>'.$user['num_posts'].'</strong></span></li>';
+			$forum_page['user_private']['posts'] = '<li><span>'.$lang_profile['Posts'].' <strong>'.forum_number_format($user['num_posts']).'</strong></span></li>';
 
 		if ($forum_user['is_admmod'] && $user['admin_note'] != '')
 				$forum_page['user_private']['note'] = '<li><span>'.$lang_profile['Note'].' <strong>'.forum_htmlencode($user['admin_note']).'</strong></span></li>';
@@ -2179,7 +2179,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 <?php ($hook = get_hook('pf_change_details_signature_fieldset_start')) ? eval($hook) : null; ?>
 			<div class="frm-set">
 				<div class="frm-box textarea">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Compose signature'] ?></span> <small><?php printf($lang_profile['Sig max size'], $forum_config['p_sig_length'], $forum_config['p_sig_lines']) ?></small></label><br />
+					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Compose signature'] ?></span> <small><?php printf($lang_profile['Sig max size'], forum_number_format($forum_config['p_sig_length']), forum_number_format($forum_config['p_sig_lines'])) ?></small></label><br />
 					<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="signature" rows="4" cols="65"><?php echo(isset($_POST['signature']) ? forum_htmlencode($_POST['signature']) : forum_htmlencode($user['signature'])) ?></textarea></span>
 				</div>
 			</div>
@@ -2226,14 +2226,14 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		{
 			$forum_page['frm_info']['avatar_replace'] = '<li><span>'.$lang_profile['Avatar info replace'].'</span></li>';
 			$forum_page['frm_info']['avatar_type'] = '<li><span>'.$lang_profile['Avatar info type'].'</span></li>';
-			$forum_page['frm_info']['avatar_size'] = '<li><span>'.sprintf($lang_profile['Avatar info size'], $forum_config['o_avatars_width'], $forum_config['o_avatars_height'], $forum_config['o_avatars_size'], ceil($forum_config['o_avatars_size'] / 1024)).'</span></li>';
+			$forum_page['frm_info']['avatar_size'] = '<li><span>'.sprintf($lang_profile['Avatar info size'], $forum_config['o_avatars_width'], $forum_config['o_avatars_height'], forum_number_format($forum_config['o_avatars_size']), forum_number_format(ceil($forum_config['o_avatars_size'] / 1024))).'</span></li>';
 			$forum_page['avatar_demo'] = $forum_page['avatar_markup'];
 		}
 		else
 		{
 			$forum_page['frm_info']['avatar_none'] = '<li><span>'.$lang_profile['Avatar info none'].'</span></li>';
 			$forum_page['frm_info']['avatar_info'] = '<li><span>'.$lang_profile['Avatar info type'].'</span></li>';
-			$forum_page['frm_info']['avatar_size'] = '<li><span>'.sprintf($lang_profile['Avatar info size'], $forum_config['o_avatars_width'], $forum_config['o_avatars_height'], $forum_config['o_avatars_size'], ceil($forum_config['o_avatars_size'] / 1024)).'</span></li>';
+			$forum_page['frm_info']['avatar_size'] = '<li><span>'.sprintf($lang_profile['Avatar info size'], $forum_config['o_avatars_width'], $forum_config['o_avatars_height'], forum_number_format($forum_config['o_avatars_size']), forum_number_format(ceil($forum_config['o_avatars_size'] / 1024))).'</span></li>';
 		}
 
 		// Setup headings
@@ -2445,10 +2445,8 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 	<h2 class="hn"><span><?php echo $lang_profile['Moderator heading'] ?></span></h2>
 </div>
 <div class="main-content main-frm">
-	<fieldset class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-		<legend><span><?php echo $lang_profile['Moderator assignment'] ?></span></legend>
-		<div class="frm-box">
-			<div class="checklist">
+	<fieldset class="frm-group frm-group<?php echo ++$forum_page['group_count'] ?>">
+		<legend class="frm-legend"><strong><?php echo $lang_profile['Moderator assignment'] ?></strong></legend>
 <?php
 
 			$query = array(
@@ -2473,21 +2471,19 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 				if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
 				{
 					if ($cur_category)
-						echo "\n\t\t\t\t".'</fieldset>'."\n";
+						echo "\n\t\t\t\t\t".'</fieldset>'."\n";
 
-					echo "\t\t\t\t".'<fieldset>'."\n\t\t\t\t\t".'<legend><span>'.$cur_forum['cat_name'].':</span></legend>'."\n";
+					echo "\t\t\t".'<fieldset class="frm-set group-item'.(++$forum_page['item_count']).'">'."\n\t\t\t\t".'<legend><span>'.$cur_forum['cat_name'].':</span></legend>'."\n";
 					$cur_category = $cur_forum['cid'];
 				}
 
 				$moderators = ($cur_forum['moderators'] != '') ? unserialize($cur_forum['moderators']) : array();
 
-				echo "\t\t\t\t\t".'<div class="checklist-item"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="moderator_in['.$cur_forum['fid'].']" value="1"'.((in_array($id, $moderators)) ? ' checked="checked"' : '').' /></span> <label for="fld'.$forum_page['fld_count'].'">'.forum_htmlencode($cur_forum['forum_name']).'</label></div>'."\n";
+				echo "\t\t\t\t".'<div class="frm-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="moderator_in['.$cur_forum['fid'].']" value="1"'.((in_array($id, $moderators)) ? ' checked="checked"' : '').' /></span> <label for="fld'.$forum_page['fld_count'].'">'.forum_htmlencode($cur_forum['forum_name']).'</label></div>'."\n";
 			}
 
 ?>
-				</fieldset>
-			</div>
-		</div>
+		</fieldset>
 	</fieldset>
 	<div class="frm-buttons">
 		<span class="submit"><input type="submit" name="update_forums" value="<?php echo $lang_profile['Update profile'] ?>" /> <?php echo $lang_profile['Instructions'] ?></span>
