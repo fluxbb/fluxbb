@@ -175,7 +175,7 @@ function output_atom($feed)
 	echo '<feed xmlns="http://www.w3.org/2005/Atom">'."\r\n";
 
 	echo "\t".'<title type="html"><![CDATA['.escape_cdata($feed['title']).']]></title>'."\r\n";
-	echo "\t".'<link rel="self" href="'.get_current_url().'"/>'."\r\n";
+	echo "\t".'<link rel="self" href="'.forum_htmlencode(get_current_url()).'"/>'."\r\n";
 	echo "\t".'<updated>'.gmdate('Y-m-d\TH:i:s\Z', count($feed['items']) ? $feed['items'][0]['pubdate'] : time()).'</updated>'."\r\n";
 
 	if ($forum_config['o_show_version'] == '1')
