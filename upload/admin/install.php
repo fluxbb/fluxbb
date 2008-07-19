@@ -30,12 +30,12 @@ define('FORUM_DB_REVISION', 2);
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
 
-define('FORUM_ROOT', './');
+define('FORUM_ROOT', '../');
 define('FORUM', 1);
 define('FORUM_DEBUG', 1);
 
 if (file_exists(FORUM_ROOT.'config.php'))
-	exit('The file \'config.php\' already exists which would mean that FluxBB is already installed. You should go <a href="index.php">here</a> instead.');
+	exit('The file \'config.php\' already exists which would mean that FluxBB is already installed. You should go <a href="'.FORUM_ROOT.'index.php">here</a> instead.');
 
 
 // Make sure we are running at least MIN_PHP_VERSION
@@ -125,10 +125,10 @@ if (!isset($_POST['form_sent']))
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>FluxBB Installation</title>
-<link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen.css" />
-<link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen_cs.css" />
-<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen_ie6.css" /><![endif]-->
-<!--[if IE 7]><link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen_ie7.css" /><![endif]-->
+<link rel="stylesheet" type="text/css" href="<?php echo FORUM_ROOT ?>style/Oxygen/Oxygen.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo FORUM_ROOT ?>style/Oxygen/Oxygen_cs.css" />
+<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="<?php echo FORUM_ROOT ?>style/Oxygen/Oxygen_ie6.css" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" type="text/css" href="<?php echo FORUM_ROOT ?>style/Oxygen/Oxygen_ie7.css" /><![endif]-->
 </head>
 <body>
 

@@ -26,9 +26,6 @@
 
 
 // This script updates the forum database to the latest version.
-// Copy this file to the forum root directory and run it. Then remove it from
-// the root directory.
-
 define('UPDATE_TO', '1.3 Beta');
 define('UPDATE_TO_DB_REVISION', 2);
 
@@ -46,8 +43,11 @@ if (!function_exists('version_compare') || version_compare(PHP_VERSION, '4.3.0',
 	exit('You are running PHP version '.PHP_VERSION.'. '.UPDATE_TO.' requires at least PHP 4.3.0 to run properly. You must upgrade your PHP installation before you can continue.');
 
 
-define('FORUM_ROOT', './');
-@include FORUM_ROOT.'config.php';
+define('FORUM_ROOT', '../');
+
+// Attempt to load the configuration file config.php
+if (file_exists(FORUM_ROOT.'config.php'))
+	include FORUM_ROOT.'config.php';
 
 
 if (defined('PUN'))
@@ -116,6 +116,10 @@ if ($db_type == 'mysql' || $db_type == 'mysqli')
 $result = $forum_db->query('SELECT * FROM '.$forum_db->prefix.'config');
 while ($cur_config_item = $forum_db->fetch_row($result))
 	$forum_config[$cur_config_item[0]] = $cur_config_item[1];
+
+// Check the database revision and the current version
+if (isset($forum_config['o_database_revision']) && $forum_config['o_database_revision'] >= PDATE_TO_DB_REVISION && version_compare($forum_config['o_cur_version'], UPDATE_TO, '>='))
+	error('Your database is already as up-to-date as this script can make it.');
 
 // If $base_url isn't set, use o_base_url from config
 if (!isset($base_url))
@@ -401,7 +405,7 @@ require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php'
 				<li><span> Did you read the update instructions in the documentation? If not, start there.</span></li>
 <?php
 
-if (!$db_seems_utf8 || isset($_GET['force']))
+if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'])))
 {
 	if (!function_exists('iconv') && !function_exists('mb_convert_encoding'))
 	{
@@ -413,7 +417,7 @@ if (!$db_seems_utf8 || isset($_GET['force']))
 	}
 }
 
-if ($db_seems_utf8 && !isset($_GET['force']))
+if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']))
 {
 
 ?>
@@ -431,7 +435,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 			</div>
 <?php
 
-		if (!$db_seems_utf8 || isset($_GET['force']))
+		if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'])))
 		{
 
 ?>
@@ -964,7 +968,7 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 		}
 
 		// Should we do charset conversion or not?
-		if (isset($_GET['convert_charset']))
+		if (strpos($cur_version, '1.2') === 0 && isset($_GET['convert_charset']))
 			$query_str = '?stage=conv_misc&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
 		else
 			$query_str = '?stage=conv_tables';
@@ -973,6 +977,12 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 
 	// Convert config, categories, forums, groups, ranks and censor words
 	case 'conv_misc':
+		if (strpos($cur_version, '1.2') !== 0)
+		{
+			$query_str = '?stage=conv_tables';
+			break;
+		}
+
 		// Convert config
 		echo 'Converting configuration …'."<br />\n";
 		foreach ($forum_config as $conf_name => $conf_value)
@@ -1049,6 +1059,12 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 
 	// Convert reports
 	case 'conv_reports':
+		if (strpos($cur_version, '1.2') !== 0)
+		{
+			$query_str = '?stage=conv_tables';
+			break;
+		}
+
 		// Determine where to start
 		if ($start_at == 0)
 		{
@@ -1079,6 +1095,12 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 
 	// Convert search words
 	case 'conv_search_words':
+		if (strpos($cur_version, '1.2') !== 0)
+		{
+			$query_str = '?stage=conv_tables';
+			break;
+		}
+
 		// Determine where to start
 		if ($start_at == 0)
 		{
@@ -1109,6 +1131,12 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 
 	// Convert users
 	case 'conv_users':
+		if (strpos($cur_version, '1.2') !== 0)
+		{
+			$query_str = '?stage=conv_tables';
+			break;
+		}
+
 		// Determine where to start
 		if ($start_at == 0)
 			$start_at = 2;
@@ -1143,6 +1171,12 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 
 	// Convert topics
 	case 'conv_topics':
+		if (strpos($cur_version, '1.2') !== 0)
+		{
+			$query_str = '?stage=conv_tables';
+			break;
+		}
+
 		// Determine where to start
 		if ($start_at == 0)
 		{
@@ -1173,6 +1207,12 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 
 	// Convert posts
 	case 'conv_posts':
+		if (strpos($cur_version, '1.2') !== 0)
+		{
+			$query_str = '?stage=conv_tables';
+			break;
+		}
+
 		// Determine where to start
 		if ($start_at == 0)
 		{
@@ -1337,6 +1377,24 @@ if ($db_seems_utf8 && !isset($_GET['force']))
 			// Generate new config file
 			$new_config = "<?php\n\n\$db_type = '$db_type';\n\$db_host = '$db_host';\n\$db_name = '".addslashes($db_name)."';\n\$db_username = '".addslashes($db_username)."';\n\$db_password = '".addslashes($db_password)."';\n\$db_prefix = '".addslashes($db_prefix)."';\n\$p_connect = ".($p_connect ? 'true' : 'false').";\n\n\$base_url = '$base_url';\n\n\$cookie_name = '$cookie_name';\n\$cookie_domain = '$cookie_domain';\n\$cookie_path = '$cookie_path';\n\$cookie_secure = $cookie_secure;\n\ndefine('FORUM', 1);";
 
+			// Attempt to write config.php and display it if writing fails
+			$written = false;
+			if (is_writable(FORUM_ROOT))
+			{
+				// We rename the old config.php file just in case
+				if (rename(FORUM_ROOT.'config.php', FORUM_ROOT.'config.old.php'))
+				{
+					$fh = @fopen(FORUM_ROOT.'config.php', 'wb');
+					if ($fh)
+					{
+						fwrite($fh, $new_config);
+						fclose($fh);
+
+						$written = true;
+					}
+				}
+			}
+
 			$forum_db->query('DELETE FROM '.$forum_db->prefix.'config WHERE conf_name=\'o_base_url\'') or error(__FILE__, __LINE__);
 		}
 
@@ -1374,10 +1432,9 @@ require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php'
 	<div class="main-content frm">
 		<div class="content-box">
 			<p>Your forum database was updated successfully.</p>
-<?php if (isset($new_config)): ?>					<p>In order to complete the process, you must now update your config.php script. <strong>Copy and paste the text in the text box below into the file called config.php in the root directory of your FluxBB installation</strong>. The file already exists, so you must edit/overwrite the contents of the old file.</p>
-<?php endif; ?>					<p class="important"><strong>Important!</strong> Once the update is completed you should remove this script from the forum root directory and follow the rest of the instructions in the update documentation.</p>
-</div>
-<?php if (isset($new_config)): ?>		<form class="frm-form" action="foo">
+<?php if (isset($new_config) && !$written): ?>					<p>In order to complete the process, you must now update your config.php script. <strong>Copy and paste the text in the text box below into the file called config.php in the root directory of your FluxBB installation</strong>. The file already exists, so you must edit/overwrite the contents of the old file.</p>
+<?php endif; ?>		</div>
+<?php if (isset($new_config) && !$written): ?>		<form class="frm-form" action="foo">
 			<fieldset class="frm-group frm-item1">
 				<legend class="frm-legend"><span>New config.php contents</span></legend>
 				<div class="frm-set group-item1">

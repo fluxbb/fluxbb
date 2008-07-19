@@ -134,10 +134,6 @@ $lang_common = array(
 'Updates version n hf'		=>	'A newer version of FluxBB, version %s, is available for download at <a href="http://FluxBB.org/">FluxBB.org</a>. Furthermore, one or more hotfix extensions are available for install on the Extensions tab of the admin interface.',
 'Updates version'			=>	'A newer version of FluxBB, version %s, is available for download at <a href="http://FluxBB.org/">FluxBB.org</a>.',
 'Updates hf'				=>	'One or more hotfix extensions are available for install on the Extensions tab of the admin interface.',
-'Install script'			=>	'Install script uploaded:',
-'Install script alert'		=>	'FluxBB\'s installation script (install.php) is currently uploaded to the forum root. Since FluxBB is already installed, the file should be deleted or moved out of the forum root for security reasons.',
-'Update script'				=>	'Database update script uploaded:',
-'Update script alert'		=>	'FluxBB\'s database update script (db_update.php) is currently uploaded to the forum root. Once it has been used to update the forum, it should be deleted or moved out of the forum root for security reasons.',
 'Database mismatch'			=>	'Database version mismatch:',
 'Database mismatch alert'	=>	'Your FluxBB database is meant to be used in conjunction with a newer version of the FluxBB code. This mismatch can lead to your forum not working properly. It is suggested that you upgrade your forum to the newest version of FluxBB.',
 

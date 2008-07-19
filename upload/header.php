@@ -258,14 +258,6 @@ if ($forum_user['g_id'] == FORUM_ADMIN)
 			$alert_items['update_hotfix'] = '<p><strong>'.$lang_common['Updates'].'</strong> '.$lang_common['Updates hf'].'</p>';
 	}
 
-	// Warn the admin that the install script is accessible
-	if (file_exists(FORUM_ROOT.'install.php'))
-		$alert_items['install'] = '<p><strong>'.$lang_common['Install script'].'</strong> '.$lang_common['Install script alert'].'</p>';
-
-	// Warn the admin that the database update script is accessible
-	if (file_exists(FORUM_ROOT.'db_update.php'))
-		$alert_items['db_update'] = '<p><strong>'.$lang_common['Update script'].'</strong> '.$lang_common['Update script alert'].'</p>';
-
 	// Warn the admin that their version of the database is newer than the version supported by the code
 	if ($forum_config['o_database_revision'] > FORUM_DB_REVISION)
 		$alert_items['newer_database'] = '<p><strong>'.$lang_common['Database mismatch'].'</strong> '.$lang_common['Database mismatch alert'].'</p>';
