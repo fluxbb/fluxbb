@@ -108,6 +108,10 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	return forum_trim($text);
 }
 
+
+//
+// Check the structure of bbcode tags and fix simple mistakes where possible
+//
 function preparse_tags($text, &$errors, $is_signature = false)
 {
 	global $lang_common, $forum_config;
@@ -673,10 +677,10 @@ function do_bbcode($text, $is_signature = false)
 		$replace[] = 'handle_list_tag(\'$2\', \'$1\')';
 	}
 
-	$pattern[] = '#\[b\](.*?)\[/b\]#s';
-	$pattern[] = '#\[i\](.*?)\[/i\]#s';
-	$pattern[] = '#\[u\](.*?)\[/u\]#s';
-	$pattern[] = '#\[colou?r=([a-zA-Z]{3,20}|\#[0-9a-fA-F]{6}|\#[0-9a-fA-F]{3})](.*?)\[/colou?r\]#s';
+	$pattern[] = '#\[b\](.*?)\[/b\]#';
+	$pattern[] = '#\[i\](.*?)\[/i\]#';
+	$pattern[] = '#\[u\](.*?)\[/u\]#';
+	$pattern[] = '#\[colou?r=([a-zA-Z]{3,20}|\#[0-9a-fA-F]{6}|\#[0-9a-fA-F]{3})](.*?)\[/colou?r\]#';
 
 	$replace[] = '<strong>$1</strong>';
 	$replace[] = '<em>$1</em>';
