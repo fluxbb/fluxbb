@@ -344,7 +344,7 @@ function generate_hooks_cache()
 		if (!$fh)
 			error('Unable to write hooks cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'.', __FILE__, __LINE__);
 
-		fwrite($fh, '<?php'."\n\n".'if (!defined(\'FORUM\'))'."\n\t".'exit;'."\n\n".implode("\n", $hooks));
+		fwrite($fh, '<?php'."\n\n".'if (!defined(\'FORUM\'))'."\n\t".'exit;'."\n\n".implode("\n", $hooks)."\n\n".'return null;');
 
 		fclose($fh);
 	}
