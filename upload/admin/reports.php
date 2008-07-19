@@ -126,7 +126,6 @@ if ($forum_db->num_rows($result))
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_reports']).'?action=zap') ?>" />
 			</div>
-			<ol class="new-reports">
 <?php
 
 	$forum_page['item_num'] = 0;
@@ -142,21 +141,20 @@ if ($forum_db->num_rows($result))
 		($hook = get_hook('arp_new_report_pre_display')) ? eval($hook) : null;
 
 ?>
-			<li class="ct-set report">
+			<div class="ct-set report">
 				<div class="ct-box">
-					<h3 class="set-legend hn"><cite class="username"><?php echo $reporter ?></cite> <span><?php echo format_time($cur_report['created']) ?></span></h3>
+					<h3 class="set-legend hn"><strong><?php echo ++$forum_page['item_num'] ?></strong> <cite class="username"><?php echo $reporter ?></cite> <span><?php echo format_time($cur_report['created']) ?></span></h3>
 					<h4 class="hn"><?php echo $forum ?> : <?php echo $topic ?> : <?php echo $post_id ?></h4>
 					<p><?php echo $message ?></p>
 					<p class="item-select"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="reports[<?php echo $cur_report['id'] ?>]" value="1" /> <label for="fld<?php echo $forum_page['fld_count'] ?>"><?php echo $lang_admin_reports['Select report'] ?></label></p>
 <?php ($hook = get_hook('arp_new_report_new_block')) ? eval($hook) : null; ?>
 				</div>
-			</li>
+			</div>
 <?php
 
 	}
 
 ?>
-			</ol>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="mark_as_read" value="<?php echo $lang_admin_reports['Mark read'] ?>" /></span>
 			</div>
@@ -211,12 +209,8 @@ $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 if ($forum_db->num_rows($result))
 {
 	$i = 1;
-	$forum_page['group_count'] = $forum_page['item_count'] = 0;
+	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['item_num'] = 0;
 	$forum_page['old_reports'] = true;
-
-?>
-		<ol class="old-reports">
-<?php
 
 	while ($cur_report = $forum_db->fetch_assoc($result))
 	{
@@ -230,20 +224,19 @@ if ($forum_db->num_rows($result))
 		($hook = get_hook('arp_report_pre_display')) ? eval($hook) : null;
 
 ?>
-			<li class="ct-set report group-item<?php echo ++$forum_page['item_count'] ?>">
+			<div class="ct-set report group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
-					<h3 class="set-legend hn"><cite class="username"><?php printf($lang_admin_reports['Reported by'], $reporter) ?></cite> <span><?php echo format_time($cur_report['created']) ?></span></h3>
+					<h3 class="set-legend hn"><strong><?php echo ++$forum_page['item_num'] ?></strong> <cite class="username"><?php printf($lang_admin_reports['Reported by'], $reporter) ?></cite> <span><?php echo format_time($cur_report['created']) ?></span></h3>
 					<h4 class="hn"><?php echo $forum ?> : <?php echo $topic ?> : <?php echo $post_id ?></h4>
 					<p><?php echo $message ?> <strong><?php printf($lang_admin_reports['Marked read by'], format_time($cur_report['zapped']), $zapped_by) ?></strong></p>
 				</div>
-			</li>
+			</div>
 <?php ($hook = get_hook('arp_report_new_block')) ? eval($hook) : null; ?>
 <?php
 
 	}
 
 ?>
-		</ol>
 	</div>
 <?php
 

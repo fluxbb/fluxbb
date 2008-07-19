@@ -1170,7 +1170,7 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	float:right;
 	}
 	
-.brd .posthead p.item-select, .brd .report .item-select {
+.brd .posthead p.item-select {
 	position: absolute;
 	top: 0;
 	right: 0.75em;
@@ -1235,44 +1235,6 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	text-align: right;
 	display: block;
 	float: right;
-	}
-
-.brd .new-reports li, .brd .old-reports li {
-	font-weight: bold;
-	vertical-align: middle;
-	}
-	
-.brd .new-reports li div, .brd .old-reports li div {
-	font-weight: normal;
-	}
-	
-.brd .report h3 span {
-	display: block;
-	font-style: normal;
-	}
-	
-.brd .report h3 cite {
-	font-style: normal;
-	font-size: 1.084em;
-	font-weight: bold;
-	}
-	
-.brd .report p strong {
-	display: block;
-	font-weight: normal;
-	}
-	
-.brd .report h4 {
-	border-bottom-style: dashed;
-	border-bottom-width: 1px;
-	margin: 0 -1em;
-	position: relative;
-	padding-right: 3em;
-	}
-	
-#brd-admin-reports .frm-buttons {
-	margin-left: 3.5em;
-	margin-top: 0;
 	}
 	
 /* Content
@@ -1457,5 +1419,56 @@ H - MAIN TABLES
 	display: block;
 	}
 	
+
+/*************************************************************
+H - MAIN CONTENT - ADMIN SPECIFIC
+**************************************************************/
+
+/* Reports
+-------------------------------------------------------------*/
+
+.brd .report {
+	margin-left: 4em;
+	}
 	
+.brd .report h3 span {
+	display: block;
+	font-style: normal;
+	}
+	
+.brd .report h3 cite {
+	font-style: normal;
+	font-size: 1.084em;
+	font-weight: bold;
+	}
+	
+.brd .report h3 strong {
+	position: absolute;
+	left: -3.1em;
+	width: 1.5em;
+	text-align: right;
+	font-size: 1.167em;
+	}
+	
+.brd .report p strong {
+	display: block;
+	font-weight: normal;
+	}
+	
+.brd .report h4 {
+	border-bottom-style: dashed;
+	border-bottom-width: 1px;
+	}
+	
+#brd-admin-reports .frm-buttons {
+	margin-left: 3.5em;
+	margin-top: 0;
+	}
+	
+.brd .report .item-select {
+	position: absolute;
+	top: 0;
+	right: 0.75em;
+	height; 2.5em;
+	}
 	
