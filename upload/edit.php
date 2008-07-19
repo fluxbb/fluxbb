@@ -201,11 +201,11 @@ $forum_page['hidden_fields'] = array(
 // Setup help
 $forum_page['main_head_options'] = array();
 if ($forum_config['p_message_bbcode'] == '1')
-	$forum_page['main_head_options']['bbcode'] = '<a class="exthelp" href="'.forum_link($forum_url['help'], 'bbcode').'" title="'.sprintf($lang_common['Help page'], $lang_common['BBCode']).'">'.$lang_common['BBCode'].'</a>';
+	$forum_page['text_options']['bbcode'] = '<a class="exthelp" href="'.forum_link($forum_url['help'], 'bbcode').'" title="'.sprintf($lang_common['Help page'], $lang_common['BBCode']).'">'.$lang_common['BBCode'].'</a>';
 if ($forum_config['p_message_img_tag'] == '1')
-	$forum_page['main_head_options']['img'] = '<a class="exthelp" href="'.forum_link($forum_url['help'], 'img').'" title="'.sprintf($lang_common['Help page'], $lang_common['Images']).'">'.$lang_common['Images'].'</a>';
+	$forum_page['text_options']['img'] = '<a class="exthelp" href="'.forum_link($forum_url['help'], 'img').'" title="'.sprintf($lang_common['Help page'], $lang_common['Images']).'">'.$lang_common['Images'].'</a>';
 if ($forum_config['o_smilies'] == '1')
-	$forum_page['main_head_options']['smilies'] = '<a class="exthelp" href="'.forum_link($forum_url['help'], 'smilies').'" title="'.sprintf($lang_common['Help page'], $lang_common['Smilies']).'">'.$lang_common['Smilies'].'</a>';
+	$forum_page['text_options']['smilies'] = '<a class="exthelp" href="'.forum_link($forum_url['help'], 'smilies').'" title="'.sprintf($lang_common['Help page'], $lang_common['Smilies']).'">'.$lang_common['Smilies'].'</a>';
 
 
 // Setup breadcrumbs
@@ -233,7 +233,6 @@ if (isset($_POST['preview']) && empty($forum_page['errors']))
 		require FORUM_ROOT.'include/parser.php';
 
 	$forum_page['preview_message'] = parse_message($message, $hide_smilies);
-
 	$forum_page['preview_poster'] = '<strong class="username">'.forum_htmlencode($cur_post['poster']).'</strong>';
 
 	($hook = get_hook('ed_pre_preview_display')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
@@ -242,10 +241,10 @@ if (isset($_POST['preview']) && empty($forum_page['errors']))
 	<div class="main-subhead">
 		<h2 class="hn"><span><?php echo $id == $cur_post['first_post_id'] ? $lang_post['Preview edited topic'] : $lang_post['Preview edited reply'] ?></span></h2>
 	</div>
-	<div id="post-preview" class="main-content main-topic">
+	<div id="post-preview" class="main-content main-frm">
 		<div class="post firstpost">
 			<div class="posthead">
-				<h3 class="hn"><strong>#</strong><?php echo $lang_post['Not yet posted'] ?></h3>
+				<h3 class="hn"><strong>0</strong><?php echo $lang_post['Not yet posted'] ?></h3>
 			</div>
 			<div class="postbody">
 				<div class="user">
@@ -265,10 +264,13 @@ if (isset($_POST['preview']) && empty($forum_page['errors']))
 
 ?>
 	<div class="main-subhead">
-		<h2 class="hn"><span><?php echo end($forum_page['crumbs']) ?></span></h2>
+		<h2 class="hn"><span><?php echo ($id != $cur_post['first_post_id']) ? $lang_post['Compose edited reply'] : $lang_post['Compose edited topic'] ?></span></h2>
 	</div>
-	<div id="post-edit" class="main-content main-frm">
+	<div id="post-form" class="main-content main-frm">
 <?php
+
+	if (!empty($forum_page['text_options']))
+		echo "\t\t".'<p class="ct-options options">'.sprintf($lang_common['You may use'], implode(' ', $forum_page['text_options'])).'</p>'."\n";
 
 // If there were any errors, show them
 if (isset($forum_page['errors']))
@@ -315,17 +317,17 @@ $forum_page['checkboxes'] = array();
 if ($forum_config['o_smilies'] == '1')
 {
 	if (isset($_POST['hide_smilies']) || $cur_post['hide_smilies'] == '1')
-		$forum_page['checkboxes']['hide_smilies'] = '<div class="sf-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="hide_smilies" value="1" checked="checked" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Hide smilies'].'</label></div>';
+		$forum_page['checkboxes']['hide_smilies'] = '<div class="mf-item"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="hide_smilies" value="1" checked="checked" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Hide smilies'].'</label></div>';
 	else
-		$forum_page['checkboxes']['hide_smilies'] = '<div class="sf-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="hide_smilies" value="1" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Hide smilies'].'</label></div>';
+		$forum_page['checkboxes']['hide_smilies'] = '<div class="mf-item"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="hide_smilies" value="1" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Hide smilies'].'</label></div>';
 }
 
 if ($forum_page['is_admmod'])
 {
 	if ((isset($_POST['form_sent']) && isset($_POST['silent'])) || !isset($_POST['form_sent']))
-		$forum_page['checkboxes']['silent'] = '<div class="sf-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="silent" value="1" checked="checked" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Silent edit'].'</label></div>';
+		$forum_page['checkboxes']['silent'] = '<div class="mf-item"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="silent" value="1" checked="checked" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Silent edit'].'</label></div>';
 	else
-		$forum_page['checkboxes']['silent'] = '<div class="sf-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="silent" value="1" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Silent edit'].'</label></div>';
+		$forum_page['checkboxes']['silent'] = '<div class="mf-item"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="silent" value="1" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Silent edit'].'</label></div>';
 }
 
 ($hook = get_hook('ed_pre_checkbox_display')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
@@ -334,14 +336,12 @@ if (!empty($forum_page['checkboxes']))
 {
 
 ?>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="group-legend"><strong><?php echo $lang_post['Optional legend'] ?></strong></legend>
-				<fieldset class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<legend><span><?php echo $lang_post['Post settings'] ?></span></legend>
+			<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<legend><span><?php echo $lang_post['Post settings'] ?></span></legend>
+				<div class="mf-box checkbox">
 					<?php echo implode("\n\t\t\t\t\t", $forum_page['checkboxes'])."\n"; ?>
-				</fieldset>
+				</div>
 			</fieldset>
-
 <?php
 
 }
@@ -350,8 +350,8 @@ if (!empty($forum_page['checkboxes']))
 
 ?>
 			<div class="frm-buttons">
-				<span class="submit"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" /></span>
-				<span class="submit"><input type="submit" name="preview" value="<?php echo $lang_post['Preview'] ?>"/></span>
+				<span class="submit"><input type="submit" name="submit" value="<?php echo ($id != $cur_post['first_post_id']) ? $lang_post['Submit reply'] : $lang_post['Submit topic'] ?>" /></span>
+				<span class="submit"><input type="submit" name="preview" value="<?php echo ($id != $cur_post['first_post_id']) ? $lang_post['Preview reply'] : $lang_post['Preview topic'] ?>" /></span>
 			</div>
 		</form>
 	</div>

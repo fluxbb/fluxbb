@@ -287,6 +287,10 @@ C - COMMON CONTENT TYPES (RE-USABLE FORMATS)
 	border-top: 0;
 	}
 
+.brd .ct-group .set1 {
+	border-top: 0;
+	}
+
 .brd .ct-set .set-legend {
 	float: left;
 	margin-left: -18em;
@@ -572,7 +576,7 @@ D - COMMON INTERFACE ELEMENTS
 	padding-top: 2px;
 	}
 	
-.brd .content-options {
+.brd .content-options, .brd .ct-options {
 	float: right;
 	margin-top: -2.7em;
 	padding: 0.5em 1.417em;
@@ -725,7 +729,6 @@ E - INDEX, FORUMS, SEARCH RESULTS, MODERATE FORUMS
 	
  .brd .main-content .item-body .item-subject span.modlist {
  	display: block;
- 	font-size: 0.917em;
  	}
  
 .brd .main-content .item-body .hn strong {
@@ -737,6 +740,9 @@ E - INDEX, FORUMS, SEARCH RESULTS, MODERATE FORUMS
  	font-size: 1.167em;
  	font-weight: bold;
  	}
+#brd-index .main-content .item-body .hn small {
+	font-size: 1em;
+	}
 
 .brd .main-content .item-body span.item-nav,
 .brd .main-content .item-body span.item-nav * {
@@ -749,7 +755,6 @@ E - INDEX, FORUMS, SEARCH RESULTS, MODERATE FORUMS
 	margin: 0 1em 0 1.5em;
  	}
 
- 	
  .brd .main-content .item-body li.info-lastpost strong,
  .brd .main-content .item-body li.info-lastpost cite,
  .brd .main-content .item-body li.info-lastpost span {
@@ -801,6 +806,10 @@ F - MAIN CONTENT - FORMS
 	border-top: 0;
 	}
 
+.brd .frm-group .set1 {
+	border-top: 0;
+	}
+
 .brd .sf-box, .brd .mf-box {
 	border-style: solid;
 	border-width: 1px;
@@ -831,7 +840,6 @@ F - MAIN CONTENT - FORMS
 	font-size: 1.084em;
 	}
 	
-	
 .brd .frm-form .frm-buttons {
 	padding: 1em 0 0 18em;
 	margin: 0.75em 1.417em 1em 1.417em;
@@ -840,8 +848,7 @@ F - MAIN CONTENT - FORMS
 	border-width: 3px;
 	}
 	
-.brd span.submit input,
-.brd span.cancel input {
+.brd span.submit input, .brd span.cancel input {
 	overflow: visible;
 	padding-left: 0.5em;
 	padding-right: 0.5em;
@@ -1146,12 +1153,23 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 -------------------------------------------------------------*/
 	
 .brd .post {
-	border-style: solid none;
+	border-style: solid;
 	border-width: 1px;
 	position: relative;
+	margin: 1.417em;
+	margin-top: -1.417em;
 	}
 	
 .brd .firstpost {
+	margin-top: 1.417em;
+	}
+
+.brd .main-topic .post {
+	border-style: solid none;
+	margin: 0;
+	}
+	
+.brd  .main-topic .firstpost {
 	border-top: 0;
 	}
 

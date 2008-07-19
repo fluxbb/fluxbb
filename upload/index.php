@@ -147,7 +147,8 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 		$forum_page['cur_category'] = $cur_forum['cid'];
 	}
 
-	$forum_page['item_status'] = $forum_page['item_subject'] = $forum_page['item_body'] = array();
+	// Reset arrays and globals for each forum
+	$forum_page['item_status'] = $forum_page['item_subject'] = $forum_page['item_body'] = $forum_page['item_title'] = array();
 	$forum_page['item_indicator'] = '';
 
 	// Is this a redirect forum?
@@ -171,12 +172,8 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 	}
 	else
 	{
-		// Setup the link to the forum
-		$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><a href="'.forum_link($forum_url['forum'], array($cur_forum['fid'], sef_friendly($cur_forum['forum_name']))).'"><span>'.forum_htmlencode($cur_forum['forum_name']).'</span></a></h3>';
-
-		// Setup the forum description and mod list
-		if ($cur_forum['forum_desc'] != '')
-			$forum_page['item_subject']['desc'] = $cur_forum['forum_desc'];
+		// Setup the title and link to the forum
+		$forum_page['item_title']['title'] = '<a href="'.forum_link($forum_url['forum'], array($cur_forum['fid'], sef_friendly($cur_forum['forum_name']))).'"><span>'.forum_htmlencode($cur_forum['forum_name']).'</span></a>';
 
 		// Are there new posts since our last visit?
 		if (!$forum_user['is_guest'] && $cur_forum['last_post'] > $forum_user['last_visit'] && (empty($tracked_topics['forums'][$cur_forum['fid']]) || $cur_forum['last_post'] > $tracked_topics['forums'][$cur_forum['fid']]))
@@ -187,11 +184,19 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 				if ((empty($tracked_topics['topics'][$check_topic_id]) || $tracked_topics['topics'][$check_topic_id] < $check_last_post) && (empty($tracked_topics['forums'][$cur_forum['fid']]) || $tracked_topics['forums'][$cur_forum['fid']] < $check_last_post))
 				{
 					$forum_page['item_status']['new'] = 'new';
-					$forum_page['item_subject']['status'] = '<strong class="status" title="'.$lang_index['New posts title'].'">'.$lang_index['Forum has new'].'</strong>';
+					$forum_page['item_title']['status'] = '<small>'.sprintf($lang_index['Forum has new'], '<a href="'.forum_link($forum_url['search_new_results'], $cur_forum['fid']).'" title="'.$lang_index['New posts title'].'">'.$lang_index['Forum new posts'].'</a>').'</small>';
+
 					break;
 				}
 			}
 		}
+
+		$forum_page['item_body']['subject']['title'] = '<h3 class="hn">'.implode(' ', $forum_page['item_title']).'</h3>';
+
+
+		// Setup the forum description and mod list
+		if ($cur_forum['forum_desc'] != '')
+			$forum_page['item_subject']['desc'] = $cur_forum['forum_desc'];
 
 		if ($cur_forum['moderators'] != '')
 		{
@@ -209,7 +214,8 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 		if (!empty($forum_page['item_subject']))
 		$forum_page['item_body']['subject']['desc'] = '<p>'.implode(' ', $forum_page['item_subject']).'</p>';
 
-		// Forum topics, post count and last post
+
+		// Setup forum topics, post count and last post
 		$forum_page['item_body']['info']['topics'] = '<li class="info-topics"><strong>'.forum_number_format($cur_forum['num_topics']).'</strong> <span class="label">'.(($cur_forum['num_topics'] == 1) ? $lang_index['topic'] : $lang_index['topics']).'</span></li>';
 		$forum_page['item_body']['info']['posts'] = '<li class="info-posts"><strong>'.forum_number_format($cur_forum['num_posts']).'</strong> <span class="label">'.(($cur_forum['num_posts'] == 1) ? $lang_index['post'] : $lang_index['posts']).'</span></li>';
 
@@ -221,6 +227,7 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 
 	($hook = get_hook('in_row_pre_item_merge')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
+	// Generate classes for this forum depending on its status
 	$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? ' odd' : ' even').(($forum_page['item_count'] == 1) ? ' item-body1' : '').((!empty($forum_page['item_status'])) ? ' '.implode(' ', $forum_page['item_status']) : '');
 
 	($hook = get_hook('in_item_pre_display')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;

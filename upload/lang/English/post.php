@@ -9,17 +9,19 @@ $lang_post = array(
 'No message'			=>	'You must enter a message.',
 'Too long message'		=>	'Posts cannot be longer than '.FORUM_MAX_POSTSIZE.' characters.',
 'CSRF token mismatch'	=>	'Unable to confirm security token. A likely cause for this is that some time passed between when you first entered the page and when you posted the form. Clicking "Submit" again should solve the problem.',
+'Invalid e-mail'		=>	'The e-mail address you entered is invalid.',
 
 // Posting
-'Compose your'			=>	'Compose your',
-'New topic'				=>	'new topic',
-'New reply'				=>	'new reply',
+'Compose your reply'	=>	'Compose and post your new reply',
+'Compose your topic'	=>	'Compose and post your new topic',
+'Compose edited reply'	=>	'Compose and post your edited reply',
+'Compose edited topic'	=>	'Compose and post your edited topic',
 'Guest post legend'		=>	'Required information for guests',
 'Post errors'			=>	'<strong>Warning!</strong> The following errors must be corrected before your message can be posted:',
 'Guest name'			=>	'Guest name:',	// For guests (instead of Username)
 'Guest e-mail'			=>	'Guest e-mail:',
 'Post redirect'			=>	'Post entered. Redirecting …',
-'Post reply'			=>	'Post reply',
+'Post reply'			=>	'Post new reply',
 'Post new topic'		=>	'Post new topic',
 'Topic subject'			=>	'Topic subject:',
 'Write message'			=>	'Write message:',
@@ -29,12 +31,14 @@ $lang_post = array(
 'Topic review'			=>	'Topic review (newest first)',
 'Flood'					=>	'At least %s seconds have to pass between posts. Please wait a while and try posting again.',
 'Permalink post'		=>	'Permanent link to this post',
-'Optional legend'		=>	'Optional',
-'Post settings'			=>	'Post settings:',
-'Preview reply'			=>	'Preview of your reply',
-'Preview new topic'		=>	'Preview of your new topic',
+'Post settings'			=>	'Optional post settings:',
+'Preview reply'			=>	'Preview your new reply',
+'Preview new topic'		=>	'Preview your new topic',
 'Not yet posted'		=>	'Not yet posted',
-'Preview'				=>	'Preview', // For preview button
+'Preview reply'			=>	'Preview reply', // For preview button
+'Preview topic'			=>	'Preview topic', // For preview button
+'Submit reply'			=>	'Submit reply', // For submit button
+'Submit topic'			=>	'Submit topic', // For submit button
 'Posted by'				=>	'Posted by',
 
 // Edit post
