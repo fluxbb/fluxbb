@@ -40,7 +40,9 @@ if ($forum_user['g_id'] != FORUM_ADMIN)
 	message($lang_common['No permission']);
 
 // Load the admin.php language file
-require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin_common.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin_reindex.php';
+
 
 if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 {
@@ -91,7 +93,7 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
 		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-		$lang_admin['Rebuilding index title']
+		$lang_admin_reindex['Rebuilding index title']
 	);
 
 ?>
@@ -112,7 +114,7 @@ body {
 </head>
 <body>
 
-<p><?php echo $lang_admin['Rebuilding index'] ?></p>
+<p><?php echo $lang_admin_reindex['Rebuilding index'] ?></p>
 
 <?php
 
@@ -141,7 +143,7 @@ body {
 	echo '<p>';
 	while ($cur_post = $forum_db->fetch_row($result))
 	{
-		echo sprintf($lang_admin['Processing post'], $cur_post[0], $cur_post[2]).'<br />'."\n";
+		echo sprintf($lang_admin_reindex['Processing post'], $cur_post[0], $cur_post[2]).'<br />'."\n";
 
 		if ($cur_post[0] == $cur_post[4])	// This is the "topic post" so we have to index the subject as well
 			update_search_index('post', $cur_post[0], $cur_post[1], $cur_post[3]);
@@ -171,7 +173,7 @@ body {
 	$forum_db->end_transaction();
 	$forum_db->close();
 
-	exit('<script type="text/javascript">window.location="'.forum_link($forum_url['admin_reindex']).$query_str.'"</script><br />'.$lang_admin['Javascript redirect'].' <a href="'.forum_link($forum_url['admin_reindex']).$query_str.'">'.$lang_admin['Click to continue'].'</a>.');
+	exit('<script type="text/javascript">window.location="'.forum_link($forum_url['admin_reindex']).$query_str.'"</script><br />'.$lang_admin_reindex['Javascript redirect'].' <a href="'.forum_link($forum_url['admin_reindex']).$query_str.'">'.$lang_admin_reindex['Click to continue'].'</a>.');
 }
 
 
@@ -189,18 +191,19 @@ if ($forum_db->num_rows($result))
 	$first_id = $forum_db->result($result);
 
 // Setup form
-$forum_page['set_count'] = $forum_page['fld_count'] = 0;
+$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
 	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-	array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
-	$lang_admin['Rebuild index']
+	array($lang_admin_common['Forum administration'], forum_link($forum_url['admin_index'])),
+	$lang_admin_common['Rebuild index']
 );
 
 ($hook = get_hook('ari_pre_header_load')) ? eval($hook) : null;
 
 define('FORUM_PAGE_SECTION', 'management');
+define('FORUM_PAGE_TYPE', 'sectioned');
 define('FORUM_PAGE', 'admin-reindex');
 require FORUM_ROOT.'header.php';
 
@@ -210,58 +213,51 @@ ob_start();
 ($hook = get_hook('ari_main_output_start')) ? eval($hook) : null;
 
 ?>
-<div id="brd-main" class="main sectioned admin">
-
-	<div class="main-head">
-		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
+	<div class="frm-head">
+		<h2><span><?php echo $lang_admin_reindex['Reindex heading'] ?></span></h2>
 	</div>
-
 	<div class="main-content main-frm">
-		<div class="frm-head">
-			<h2><span><?php echo $lang_admin['Reindex heading'] ?></span></h2>
-		</div>
-		<div class="frm-info">
-			<p><?php echo $lang_admin['Reindex info'] ?></p>
+		<div class="ct-box">
+			<p><?php echo $lang_admin_reindex['Reindex info'] ?></p>
 		</div>
 		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_reindex']) ?>">
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token('reindex'.$forum_user['id']) ?>" />
 			</div>
 <?php ($hook = get_hook('ari_pre_rebuild_fieldset')) ? eval($hook) : null; ?>
-			<fieldset class="frm-fset fset<?php echo ++$forum_page['set_count'] ?>">
-				<legend class="frm-legend"><span><?php echo $lang_admin['Rebuild index legend'] ?></span></legend>
+			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<legend class="group-legend"><span><?php echo $lang_admin_reindex['Rebuild index legend'] ?></span></legend>
 <?php ($hook = get_hook('ari_pre_per_page')) ? eval($hook) : null; ?>
-				<div class="frm-fld text">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-						<span class="fld-label"><?php echo $lang_admin['Posts per cycle'] ?></span><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_reindex['Posts per cycle'] ?></span> <small><?php echo $lang_admin_reindex['Posts per cycle info'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="i_per_page" size="7" maxlength="7" value="100" /></span>
-						<span class="fld-help"><?php echo $lang_admin['Posts per cycle info'] ?></span>
-					</label>
+					</div>
 				</div>
-				<div class="frm-fld text">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-						<span class="fld-label"><?php echo $lang_admin['Starting post'] ?></span><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_admin_reindex['Starting post'] ?></span> <small><?php echo $lang_admin_reindex['Starting post info'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="i_start_at" size="7" maxlength="7" value="<?php echo (isset($first_id)) ? $first_id : 0 ?>" /></span>
-						<span class="fld-help"><?php echo $lang_admin['Starting post info'] ?></span>
-					</label>
+					</div>
 				</div>
-				<div class="radbox checkbox">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_admin['Empty index'] ?></span><br /><input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="i_empty_index" value="1" checked="checked" /> <?php echo $lang_admin['Empty index info'] ?></label>
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box checkbox">
+						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="i_empty_index" value="1" checked="checked" /></span>
+						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin_reindex['Empty index'] ?></span> <?php echo $lang_admin_reindex['Empty index info'] ?></label>
+					</div>
 				</div>
 <?php ($hook = get_hook('ari_rebuild_end')) ? eval($hook) : null; ?>
 			</fieldset>
 <?php ($hook = get_hook('ari_pre_infobox')) ? eval($hook) : null; ?>
-			<div class="frm-info">
-				<p class="important"><?php echo $lang_admin['Reindex warning'] ?></p>
-				<p class="warn"><?php echo $lang_admin['Empty index warning'] ?></p>
+			<div class="ct-box warn-box">
+				<p class="important"><?php echo $lang_admin_reindex['Reindex warning'] ?></p>
+				<p class="warn"><?php echo $lang_admin_reindex['Empty index warning'] ?></p>
 			</div>
 			<div class="frm-buttons">
-				<span class="submit"><input type="submit" name="rebuild_index" value="<?php echo $lang_admin['Rebuild index'] ?>" /></span>
+				<span class="submit"><input type="submit" name="rebuild_index" value="<?php echo $lang_admin_reindex['Rebuild index'] ?>" /></span>
 			</div>
 		</form>
 	</div>
-
-</div>
 <?php
 
 $tpl_temp = forum_trim(ob_get_contents());

@@ -196,16 +196,16 @@ ob_start();
 		<h2 class="hn"><span><?php echo $lang_admin_index['Information head'] ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
-<?php if (!empty($alert_items)): ?>		<div id="admin-alerts" class="content-set warn-set">
-			<div class="content-box">
+<?php if (!empty($alert_items)): ?>		<div id="admin-alerts" class="ct-set warn-set">
+			<div class="ct-box">
 				<h3 class="set-legend hn warn"><span><?php echo $lang_admin_index['Alerts'] ?></span></h3>
 				<?php echo implode(' ',$alert_items)."\n" ?>
 			</div>
 		</div>
-<?php endif; ?>		<div class="content-group">
+<?php endif; ?>		<div class="ct-group">
 <?php ($hook = get_hook('ain_pre_version')) ? eval($hook) : null; ?>
-			<div class="content-set group-item<?php echo ++$forum_page['item_count'] ?>">
-				<div class="content-box">
+			<div class="ct-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box">
 					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['FluxBB version'] ?></span></h3>
 					<ul class="data-list">
 						<li><span>FluxBB <?php echo $forum_config['o_cur_version'] ?></span></li>
@@ -215,14 +215,14 @@ ob_start();
 				</div>
 			</div>
 <?php ($hook = get_hook('ain_pre_server_load')) ? eval($hook) : null; ?>
-			<div class="content-set group-item<?php echo ++$forum_page['item_count'] ?>">
-				<div class="content-box">
+			<div class="ct-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box">
 					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['Server load'] ?></span></h3>
 					<p><span><?php echo $server_load ?> (<?php echo $num_online.' '.$lang_admin_index['users online']?>)</span></p>
 				</div>
 			</div>
-<?php ($hook = get_hook('ain_pre_environment')) ? eval($hook) : null; if ($forum_user['g_id'] == FORUM_ADMIN): ?>			<div class="content-set group-item<?php echo ++$forum_page['item_count'] ?>">
-				<div class="content-box">
+<?php ($hook = get_hook('ain_pre_environment')) ? eval($hook) : null; if ($forum_user['g_id'] == FORUM_ADMIN): ?>			<div class="ct-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box">
 					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['Environment'] ?></span></h3>
 					<ul class="data-list">
 						<li><span><?php echo $lang_admin_index['Operating system'] ?>: <?php echo PHP_OS ?></span></li>
@@ -232,8 +232,8 @@ ob_start();
 				</div>
 			</div>
 <?php ($hook = get_hook('ain_pre_database')) ? eval($hook) : null; ?>
-			<div class="content-set group-item<?php echo ++$forum_page['item_count'] ?>">
-				<div class="content-box">
+			<div class="ct-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box">
 					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['Database'] ?></span></h3>
 					<ul class="data-list">
 						<li><span><?php echo $db_version ?></span></li>

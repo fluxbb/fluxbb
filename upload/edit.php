@@ -275,7 +275,7 @@ if (isset($forum_page['errors']))
 {
 
 ?>
-		<div class="content-box error-box">
+		<div class="ct-box error-box">
 			<h3 class="warn hn"><span><?php echo $lang_post['Post errors'] ?></span></h3>
 			<ul>
 				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
@@ -295,15 +295,15 @@ if (isset($forum_page['errors']))
 			</div>
 <?php ($hook = get_hook('ed_pre_main_fieldset')) ? eval($hook) : null; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_post['Edit post legend'] ?></strong></legend>
-<?php if ($can_edit_subject): ?>				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text required">
+				<legend class="group-legend"><strong><?php echo $lang_post['Edit post legend'] ?></strong></legend>
+<?php if ($can_edit_subject): ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text required">
 						<label for="fld<?php echo ++ $forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_post['Topic subject'] ?></span></label><br />
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="req_subject" size="80" maxlength="70" value="<?php echo forum_htmlencode(isset($_POST['req_subject']) ? $_POST['req_subject'] : $cur_post['subject']) ?>" /></span>
 					</div>
 				</div>
-<?php endif; ($hook = get_hook('ed_pre_message_box')) ? eval($hook) : null; ?>				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box textarea required">
+<?php endif; ($hook = get_hook('ed_pre_message_box')) ? eval($hook) : null; ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box textarea required">
 						<label for="fld<?php echo ++ $forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_post['Write message'] ?></span></label><br />
 						<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_message" rows="14" cols="95"><?php echo forum_htmlencode(isset($_POST['req_message']) ? $message : $cur_post['message']) ?></textarea></span>
 					</div>
@@ -315,17 +315,17 @@ $forum_page['checkboxes'] = array();
 if ($forum_config['o_smilies'] == '1')
 {
 	if (isset($_POST['hide_smilies']) || $cur_post['hide_smilies'] == '1')
-		$forum_page['checkboxes']['hide_smilies'] = '<div class="frm-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="hide_smilies" value="1" checked="checked" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Hide smilies'].'</label></div>';
+		$forum_page['checkboxes']['hide_smilies'] = '<div class="sf-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="hide_smilies" value="1" checked="checked" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Hide smilies'].'</label></div>';
 	else
-		$forum_page['checkboxes']['hide_smilies'] = '<div class="frm-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="hide_smilies" value="1" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Hide smilies'].'</label></div>';
+		$forum_page['checkboxes']['hide_smilies'] = '<div class="sf-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="hide_smilies" value="1" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Hide smilies'].'</label></div>';
 }
 
 if ($forum_page['is_admmod'])
 {
 	if ((isset($_POST['form_sent']) && isset($_POST['silent'])) || !isset($_POST['form_sent']))
-		$forum_page['checkboxes']['silent'] = '<div class="frm-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="silent" value="1" checked="checked" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Silent edit'].'</label></div>';
+		$forum_page['checkboxes']['silent'] = '<div class="sf-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="silent" value="1" checked="checked" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Silent edit'].'</label></div>';
 	else
-		$forum_page['checkboxes']['silent'] = '<div class="frm-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="silent" value="1" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Silent edit'].'</label></div>';
+		$forum_page['checkboxes']['silent'] = '<div class="sf-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="silent" value="1" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Silent edit'].'</label></div>';
 }
 
 ($hook = get_hook('ed_pre_checkbox_display')) ? eval($hook) : null;
@@ -335,7 +335,7 @@ if (!empty($forum_page['checkboxes']))
 
 ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_post['Optional legend'] ?></strong></legend>
+				<legend class="group-legend"><strong><?php echo $lang_post['Optional legend'] ?></strong></legend>
 				<fieldset class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<legend><span><?php echo $lang_post['Post settings'] ?></span></legend>
 					<?php echo implode("\n\t\t\t\t\t", $forum_page['checkboxes'])."\n"; ?>

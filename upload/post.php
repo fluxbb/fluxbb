@@ -399,7 +399,7 @@ if (isset($_POST['preview']) && empty($errors))
 		($hook = get_hook('po_pre_post_errors')) ? eval($hook) : null;
 
 ?>
-		<div class="content-box error-box">
+		<div class="ct-box error-box">
 			<h3 class="warn"><?php echo $lang_post['Post errors'] ?></h3>
 			<ul>
 				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
@@ -427,17 +427,17 @@ if ($forum_user['is_guest'])
 
 ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_post['Guest post legend'] ?></strong></legend>
+				<legend class="group-legend"><strong><?php echo $lang_post['Guest post legend'] ?></strong></legend>
 <?php ($hook = get_hook('po_guest_info_start')) ? eval($hook) : null; ?>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text required">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_post['Guest name'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_username" value="<?php if (isset($_POST['req_username'])) echo forum_htmlencode($username); ?>" size="35" maxlength="25" /></span>
 					</div>
 				</div>
 <?php ($hook = get_hook('po_post_guest_name_div')) ? eval($hook) : null; ?>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text<?php if ($forum_config['p_force_guest_email'] == '1') echo ' required' ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text<?php if ($forum_config['p_force_guest_email'] == '1') echo ' required' ?>">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php if ($forum_config['p_force_guest_email'] == '1') echo '<em>'.$lang_common['Reqmark'].'</em>' ?> <?php echo $lang_post['Guest e-mail'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="<?php echo $forum_page['email_form_name'] ?>" value="<?php if (isset($_POST[$forum_page['email_form_name']])) echo forum_htmlencode($email); ?>" size="35" maxlength="80" /></span>
 					</div>
@@ -452,7 +452,7 @@ if ($forum_user['is_guest'])
 
 ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
+				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
 <?php
 
 ($hook = get_hook('po_req_info_fieldset_start')) ? eval($hook) : null;
@@ -461,8 +461,8 @@ if ($fid)
 {
 
 ?>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text required longtext">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text required longtext">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_post['Topic subject'] ?></span></label><br />
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="req_subject" value="<?php if (isset($_POST['req_subject'])) echo forum_htmlencode($subject); ?>" size="80" maxlength="70" /></span>
 					</div>
@@ -474,8 +474,8 @@ if ($fid)
 ($hook = get_hook('po_pre_post_contents')) ? eval($hook) : null;
 
 ?>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box textarea required">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box textarea required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_post['Write message'] ?></span></label><br />
 						<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_message" rows="14" cols="95"><?php echo isset($_POST['req_message']) ? forum_htmlencode($message) : (isset($forum_page['quote']) ? forum_htmlencode($forum_page['quote']) : ''); ?></textarea></span><br />
 					</div>
@@ -485,7 +485,7 @@ if ($fid)
 
 $forum_page['checkboxes'] = array();
 if ($forum_config['o_smilies'] == '1')
-	$forum_page['checkboxes']['hide_smilies'] = '<div class="frm-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="hide_smilies" value="1"'.(isset($_POST['hide_smilies']) ? ' checked="checked"' : '').' /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Hide smilies'].'</label></div>';
+	$forum_page['checkboxes']['hide_smilies'] = '<div class="sf-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="hide_smilies" value="1"'.(isset($_POST['hide_smilies']) ? ' checked="checked"' : '').' /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Hide smilies'].'</label></div>';
 
 // Check/uncheck the checkbox for subscriptions depending on scenario
 if (!$forum_user['is_guest'] && $forum_config['o_subscriptions'] == '1')
@@ -502,7 +502,7 @@ if (!$forum_user['is_guest'] && $forum_config['o_subscriptions'] == '1')
 	else if ($is_subscribed)
 		$subscr_checked = true;
 
-	$forum_page['checkboxes']['subscribe'] = '<div class="frm-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="subscribe" value="1"'.($subscr_checked ? ' checked="checked"' : '').' /></span> <label for="fld'.$forum_page['fld_count'].'">'.($is_subscribed ? $lang_post['Stay subscribed'] : $lang_post['Subscribe']).'</label></div>';
+	$forum_page['checkboxes']['subscribe'] = '<div class="sf-box checkbox"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="subscribe" value="1"'.($subscr_checked ? ' checked="checked"' : '').' /></span> <label for="fld'.$forum_page['fld_count'].'">'.($is_subscribed ? $lang_post['Stay subscribed'] : $lang_post['Subscribe']).'</label></div>';
 }
 
 ($hook = get_hook('po_pre_optional_fieldset')) ? eval($hook) : null;
@@ -513,7 +513,7 @@ if (!empty($forum_page['checkboxes']))
 
 ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_post['Optional legend'] ?></strong></legend>
+				<legend class="group-legend"><strong><?php echo $lang_post['Optional legend'] ?></strong></legend>
 				<fieldset class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<legend><span><?php echo $lang_post['Post settings'] ?></span></legend>
 					<?php echo implode("\n\t\t\t\t\t", $forum_page['checkboxes'])."\n"; ?>

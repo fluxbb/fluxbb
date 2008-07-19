@@ -87,14 +87,14 @@ else if ($forum_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_P
 		<h2 class="hn"><span><?php echo $lang_profile['Reg rules head'] ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
-		<div class="content-box user-box">
+		<div class="ct-box user-box">
 			<?php echo $forum_config['o_rules_message'] ?>
 		</div>
 		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo $base_url ?>/register.php">
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box checkbox">
+				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_agreement" value="1" /></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Agreement'] ?></span> <?php echo $lang_profile['Agreement label'] ?></label>
 					</div>
@@ -299,7 +299,7 @@ ob_start();
 
 ?>
 	<div class="main-content main-frm">
-		<div class="content-box">
+		<div class="ct-box">
 			<?php echo implode("\n\t\t\t", $forum_page['frm_info'])."\n" ?>
 		</div>
 <?php
@@ -314,7 +314,7 @@ ob_start();
 		($hook = get_hook('rg_pre_register_errors')) ? eval($hook) : null;
 
 ?>
-		<div class="content-box error-box">
+		<div class="ct-box error-box">
 			<h2 class="warn"><?php echo $lang_profile['Register errors'] ?></h2>
 			<ul>
 				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
@@ -335,33 +335,33 @@ ob_start();
 			</div>
 <?php ($hook = get_hook('rg_register_pre_req_info_fieldset')) ? eval($hook) : null; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text required">
+				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['Username'] ?></span> <small><?php echo $lang_profile['Username help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_username" value="<?php echo(isset($_POST['req_username']) ? forum_htmlencode($_POST['req_username']) : '') ?>" size="35" maxlength="25" /></span>
 					</div>
 				</div>
-<?php if ($forum_config['o_regs_verify'] == '0'): ?>				<div class="frm-set group-item<?php echo ++$forum_page['group_count'] ?>">
-					<div class="frm-box text required">
+<?php if ($forum_config['o_regs_verify'] == '0'): ?>				<div class="sf-set group-item<?php echo ++$forum_page['group_count'] ?>">
+					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['Password'] ?></span> <small><?php echo $lang_profile['Password help'] ?></small></label><br />
 						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_password1" size="35" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text required">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['Confirm password'] ?></span> <small><?php echo $lang_profile['Confirm password help'] ?></small></label><br />
 						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_password2" size="35" /></span>
 					</div>
 				</div>
-<?php endif; ($hook = get_hook('rg_register_pre_email_field')) ? eval($hook) : null; ?>				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text required">
+<?php endif; ($hook = get_hook('rg_register_pre_email_field')) ? eval($hook) : null; ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['E-mail'] ?></span> <small><?php echo $lang_profile['E-mail help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_email1" value="<?php echo(isset($_POST['req_email1']) ? forum_htmlencode($_POST['req_email1']) : '') ?>" size="35" maxlength="80" /></span>
 					</div>
 				</div>
-<?php if ($forum_config['o_regs_verify'] == '1'): ?>				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text required">
+<?php if ($forum_config['o_regs_verify'] == '1'): ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['Confirm e-mail'] ?></span> <small><?php echo $lang_profile['Confirm e-mail help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_email2" value="<?php echo(isset($_POST['req_email2']) ? forum_htmlencode($_POST['req_email2']) : '') ?>" size="35" maxlength="80" /></span>
 					</div>
@@ -370,7 +370,7 @@ ob_start();
 <?php $forum_page['item_count'] = 0; ?>
 <?php ($hook = get_hook('rg_register_post_req_info_fieldset')) ? eval($hook) : null; ?>
 			<fieldset class="frm-group group-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_profile['Optional legend'] ?></strong></legend>
+				<legend class="group-legend"><strong><?php echo $lang_profile['Optional legend'] ?></strong></legend>
 <?php
 
 		$languages = array();
@@ -388,8 +388,8 @@ ob_start();
 			natcasesort($languages);
 
 ?>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box select">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box select">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Language'] ?></span></label><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="language">
 <?php
@@ -415,8 +415,8 @@ ob_start();
 		$select_timezone = isset($_POST['timezone']) ? $_POST['timezone'] : $forum_config['o_default_timezone'];
 
 ?>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box select">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box select">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Timezone'] ?></span></label><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="timezone">
 						<option value="-12"<?php if ($select_timezone == -12) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC-12:00'] ?></option>
@@ -461,8 +461,8 @@ ob_start();
 						</select></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box checkbox">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="dst" <?php echo(isset($_POST['dst']) ? 'checked="checked" ' : '') ?>/></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Adjust for DST'] ?></span> <?php echo $lang_profile['DST label'] ?></label>
 					</div>

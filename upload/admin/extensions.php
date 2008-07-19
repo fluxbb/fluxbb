@@ -39,11 +39,12 @@ if ($forum_user['g_id'] != FORUM_ADMIN)
 	message($lang_common['No permission']);
 
 // Load the admin.php language file
-require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin_common.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin_ext.php';
 
 // Make sure we have XML support
 if (!function_exists('xml_parser_create'))
-	message($lang_admin['No XML support']);
+	message($lang_admin_ext['No XML support']);
 
 $section = isset($_GET['section']) ? $_GET['section'] : null;
 
@@ -55,7 +56,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 
 	// User pressed the cancel button
 	if (isset($_POST['install_cancel']))
-		redirect(forum_link($forum_url['admin_extensions_install']), $lang_admin['Cancel redirect']);
+		redirect(forum_link($forum_url['admin_extensions_install']), $lang_admin_common['Cancel redirect']);
 
 	$id = preg_replace('/[^0-9a-z_]/', '', isset($_GET['install']) ? $_GET['install'] : $_GET['install_hotfix']);
 
@@ -70,7 +71,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 	$errors = validate_manifest($ext_data, $id);
 
 	if (!empty($errors))
-		message(isset($_GET['install']) ? $lang_common['Bad request'] : $lang_admin['Hotfix download failed']);
+		message(isset($_GET['install']) ? $lang_common['Bad request'] : $lang_admin_ext['Hotfix download failed']);
 
 	// Make sure we have an array of dependencies
 	if (!isset($ext_data['extension']['dependencies']['dependency']))
@@ -94,15 +95,15 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 	foreach ($ext_data['extension']['dependencies'] as $dependency)
 	{
 		if (!in_array($dependency, $installed_ext))
-			message(sprintf($lang_admin['Missing dependency'], $dependency));
+			message(sprintf($lang_admin_ext['Missing dependency'], $dependency));
 	}
 
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
 		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-		array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
-		array($lang_admin['Install extensions'], forum_link($forum_url['admin_extensions_install'])),
-		$lang_admin['Install extension']
+		array($lang_admin_common['Forum administration'], forum_link($forum_url['admin_index'])),
+		array($lang_admin_common['Install extensions'], forum_link($forum_url['admin_extensions_install'])),
+		$lang_admin_ext['Install extension']
 	);
 
 	if (isset($_POST['install_comply']))
@@ -235,17 +236,12 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 			($hook = get_hook('aex_install_notices_output_start')) ? eval($hook) : null;
 
 ?>
-<div id="brd-main" class="main sectioned admin">
-
-	<div class="main-head">
-		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo end($forum_page['crumbs']) ?> "<?php echo forum_htmlencode($ext_data['extension']['title']) ?>"</span></h2>
 	</div>
 	<div class="main-content main-frm">
-		<div class="frm-head">
-			<h2><span><?php echo end($forum_page['crumbs']) ?> "<?php echo forum_htmlencode($ext_data['extension']['title']) ?>"</span></h2>
-		</div>
 		<div class="frm-info">
-			<p><?php echo $lang_admin['Extension installed info'] ?></p>
+			<p><?php echo $lang_admin_ext['Extension installed info'] ?></p>
 			<ul>
 <?php
 
@@ -254,11 +250,9 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 
 ?>
 			</ul>
-			<p><a href="<?php echo forum_link($forum_url['admin_extensions_manage']) ?>"><?php echo $lang_admin['Manage extensions'] ?></a></p>
+			<p><a href="<?php echo forum_link($forum_url['admin_extensions_manage']) ?>"><?php echo $lang_admin_common['Manage extensions'] ?></a></p>
 		</div>
 	</div>
-
-</div>
 <?php
 
 			$tpl_temp = forum_trim(ob_get_contents());
@@ -269,7 +263,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 			require FORUM_ROOT.'footer.php';
 		}
 		else
-			redirect(forum_link($forum_url['admin_extensions_manage']), $lang_admin['Extension installed'].' '.$lang_admin['Redirect']);
+			redirect(forum_link($forum_url['admin_extensions_manage']), $lang_admin_ext['Extension installed'].' '.$lang_admin_common['Redirect']);
 	}
 
 
@@ -285,23 +279,17 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 
 	($hook = get_hook('aex_install_output_start')) ? eval($hook) : null;
 ?>
-<div id="brd-main" class="main sectioned admin">
-
-	<div class="main-head">
-		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo end($forum_page['crumbs']) ?> "<?php echo forum_htmlencode($ext_data['extension']['title']) ?>"</span></h2>
 	</div>
-
 	<div class="main-content main-frm">
-		<div class="frm-head">
-			<h2><span><?php echo end($forum_page['crumbs']) ?> "<?php echo forum_htmlencode($ext_data['extension']['title']) ?>"</span></h2>
-		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $base_url.'/admin/extensions.php'.(isset($_GET['install']) ? '?install=' : '?install_hotfix=').$id ?>">
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($base_url.'/admin/extensions.php'.(isset($_GET['install']) ? '?install=' : '?install_hotfix=').$id) ?>" />
 			</div>
 			<div class="ext-item databox">
 				<h3 class="legend"><span><?php echo forum_htmlencode($ext_data['extension']['title']).((strpos($id, 'hotfix_') !== 0) ? ' v'.$ext_data['extension']['version'] : '') ?></span></h3>
-				<p><span><?php printf($lang_admin['Extension by'], forum_htmlencode($ext_data['extension']['author'])) ?></span><br /><span><?php echo forum_htmlencode($ext_data['extension']['description']) ?></span></p>
+				<p><span><?php printf($lang_admin_ext['Extension by'], forum_htmlencode($ext_data['extension']['author'])) ?></span><br /><span><?php echo forum_htmlencode($ext_data['extension']['description']) ?></span></p>
 <?php
 
 	// Setup an array of warnings to display in the form
@@ -315,13 +303,13 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 	}
 
 	if (version_compare(clean_version($forum_config['o_cur_version']), clean_version($ext_data['extension']['maxtestedon']), '>'))
-		$form_warnings[] = '<p>'.++$forum_page['num_items'].'. '.$lang_admin['Maxtestedon warning'].'</p>';
+		$form_warnings[] = '<p>'.++$forum_page['num_items'].'. '.$lang_admin_ext['Maxtestedon warning'].'</p>';
 
 	if (!empty($form_warnings))
 	{
 
 ?>
-				<h4 class="note"><?php echo $lang_admin['Install note'] ?></h4>
+				<h4 class="note"><?php echo $lang_admin_ext['Install note'] ?></h4>
 <?php
 
 		echo implode("\n\t\t\t\t\t", $form_warnings)."\n";
@@ -330,13 +318,11 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 ?>
 			</div>
 			<div class="frm-buttons">
-				<span class="submit"><input type="submit" name="install_comply" value="<?php echo ((strpos($id, 'hotfix_') !== 0) ? $lang_admin['Install extension'] : $lang_admin['Install hotfix']) ?>" /></span>
-				<span class="cancel"><input type="submit" name="install_cancel" value="<?php echo $lang_admin['Cancel'] ?>" /></span>
+				<span class="submit"><input type="submit" name="install_comply" value="<?php echo ((strpos($id, 'hotfix_') !== 0) ? $lang_admin_ext['Install extension'] : $lang_admin_ext['Install hotfix']) ?>" /></span>
+				<span class="cancel"><input type="submit" name="install_cancel" value="<?php echo $lang_admin_common['Cancel'] ?>" /></span>
 			</div>
 		</form>
 	</div>
-
-</div>
 <?php
 
 	$tpl_temp = forum_trim(ob_get_contents());
@@ -353,7 +339,7 @@ else if (isset($_GET['uninstall']))
 {
 	// User pressed the cancel button
 	if (isset($_POST['uninstall_cancel']))
-		redirect(forum_link($forum_url['admin_extensions_manage']), $lang_admin['Cancel redirect']);
+		redirect(forum_link($forum_url['admin_extensions_manage']), $lang_admin_common['Cancel redirect']);
 
 	($hook = get_hook('aex_uninstall_selected')) ? eval($hook) : null;
 
@@ -386,15 +372,15 @@ else if (isset($_GET['uninstall']))
 	if ($forum_db->num_rows($result) != 0)
 	{
 		$dependency = $forum_db->fetch_assoc($result);
-		message(sprintf($lang_admin['Uninstall dependency'], $dependency['id']));
+		message(sprintf($lang_admin_ext['Uninstall dependency'], $dependency['id']));
 	}
 
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
 		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-		array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
-		array($lang_admin['Manage extensions'], forum_link($forum_url['admin_extensions_manage'])),
-		$lang_admin['Uninstall extension']
+		array($lang_admin_common['Forum administration'], forum_link($forum_url['admin_index'])),
+		array($lang_admin_common['Manage extensions'], forum_link($forum_url['admin_extensions_manage'])),
+		$lang_admin_ext['Uninstall extension']
 	);
 
 	// If the user has confirmed the uninstall
@@ -449,18 +435,12 @@ else if (isset($_GET['uninstall']))
 			($hook = get_hook('aex_uninstall_notices_output_start')) ? eval($hook) : null;
 
 ?>
-<div id="brd-main" class="main sectioned admin">
-
-	<div class="main-head">
-		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo end($forum_page['crumbs']) ?> "<?php echo forum_htmlencode($ext_data['title']) ?>"</span></h2>
 	</div>
-
 	<div class="main-content main-frm">
-		<div class="frm-head">
-			<h2><span><?php echo end($forum_page['crumbs']) ?> "<?php echo forum_htmlencode($ext_data['title']) ?>"</span></h2>
-		</div>
 		<div class="frm-info">
-			<p><?php echo $lang_admin['Extension uninstalled info'] ?></p>
+			<p><?php echo $lang_admin_ext['Extension uninstalled info'] ?></p>
 			<ul>
 <?php
 
@@ -469,11 +449,9 @@ else if (isset($_GET['uninstall']))
 
 ?>
 			</ul>
-			<p><a href="<?php echo forum_link($forum_url['admin_extensions_manage']) ?>"><?php echo $lang_admin['Manage extensions'] ?></a></p>
+			<p><a href="<?php echo forum_link($forum_url['admin_extensions_manage']) ?>"><?php echo $lang_admin_common['Manage extensions'] ?></a></p>
 		</div>
 	</div>
-
-</div>
 <?php
 
 			$tpl_temp = forum_trim(ob_get_contents());
@@ -484,7 +462,7 @@ else if (isset($_GET['uninstall']))
 			require FORUM_ROOT.'footer.php';
 		}
 		else
-			redirect(forum_link($forum_url['admin_extensions_manage']), $lang_admin['Extension uninstalled'].' '.$lang_admin['Redirect']);
+			redirect(forum_link($forum_url['admin_extensions_manage']), $lang_admin_ext['Extension uninstalled'].' '.$lang_admin_common['Redirect']);
 	}
 	else	// If the user hasn't confirmed the uninstall
 	{
@@ -501,37 +479,29 @@ else if (isset($_GET['uninstall']))
 		($hook = get_hook('aex_uninstall_output_start')) ? eval($hook) : null;
 
 ?>
-<div id="brd-main" class="main sectioned admin">
-
-	<div class="main-head">
-		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo end($forum_page['crumbs']) ?> "<?php echo forum_htmlencode($ext_data['title']) ?>"</span></h2>
 	</div>
-
 	<div class="main-content main-frm">
-		<div class="frm-head">
-			<h2><span><?php echo end($forum_page['crumbs']) ?> "<?php echo forum_htmlencode($ext_data['title']) ?>"</span></h2>
-		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $base_url ?>/admin/extensions.php?section=manage&amp;uninstall=<?php echo $id ?>">
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($base_url.'/admin/extensions.php?section=manage&amp;uninstall='.$id) ?>" />
 			</div>
 			<div class="ext-item databox">
 				<h3 class="legend"><span><?php echo forum_htmlencode($ext_data['title']).((strpos($id, 'hotfix_') !== 0) ? ' v'.$ext_data['version'] : '') ?></span></h3>
-				<p><span><?php printf($lang_admin['Extension by'], forum_htmlencode($ext_data['author'])) ?></span><br /><span><?php echo forum_htmlencode($ext_data['description']) ?></span></p>
-<?php if ($ext_data['uninstall_note'] != ''): ?>				<h4><?php echo $lang_admin['Uninstall note'] ?></h4>
+				<p><span><?php printf($lang_admin_ext['Extension by'], forum_htmlencode($ext_data['author'])) ?></span><br /><span><?php echo forum_htmlencode($ext_data['description']) ?></span></p>
+<?php if ($ext_data['uninstall_note'] != ''): ?>				<h4><?php echo $lang_admin_ext['Uninstall note'] ?></h4>
 				<p><?php echo forum_htmlencode($ext_data['uninstall_note']) ?></p>
 <?php endif; ?>			</div>
 			<div class="frm-info">
-				<p class="warn"><?php echo $lang_admin['Installed extensions warn'] ?></p>
+				<p class="warn"><?php echo $lang_admin_ext['Installed extensions warn'] ?></p>
 			</div>
 			<div class="frm-buttons">
-				<span class="submit"><input type="submit" class="button" name="uninstall_comply" value="<?php echo $lang_admin['Uninstall'] ?>" /></span>
-				<span class="cancel"><input type="submit" class="button" name="uninstall_cancel" value="<?php echo $lang_admin['Cancel'] ?>" /></span>
+				<span class="submit"><input type="submit" class="button" name="uninstall_comply" value="<?php echo $lang_admin_ext['Uninstall'] ?>" /></span>
+				<span class="cancel"><input type="submit" class="button" name="uninstall_cancel" value="<?php echo $lang_admin_common['Cancel'] ?>" /></span>
 			</div>
 		</form>
 	</div>
-
-</div>
 <?php
 
 		$tpl_temp = forum_trim(ob_get_contents());
@@ -586,7 +556,7 @@ else if (isset($_GET['flip']))
 		if ($forum_db->num_rows($result) != 0)
 		{
 			$dependency = $forum_db->fetch_assoc($result);
-			message(sprintf($lang_admin['Disable dependency'], $dependency['id']));
+			message(sprintf($lang_admin_ext['Disable dependency'], $dependency['id']));
 		}
 	}
 	else
@@ -617,7 +587,7 @@ else if (isset($_GET['flip']))
 		foreach ($dependencies as $dependency)
 		{
 			if (!empty($dependency) && !in_array($dependency, $installed_ext))
-				message(sprintf($lang_admin['Disabled dependency'], $dependency));
+				message(sprintf($lang_admin_ext['Disabled dependency'], $dependency));
 		}
 	}
 
@@ -636,7 +606,7 @@ else if (isset($_GET['flip']))
 
 	generate_hooks_cache();
 
-	redirect(forum_link($forum_url['admin_extensions_manage']), ($disable ? $lang_admin['Extension disabled'] : $lang_admin['Extension enabled']).' '.$lang_admin['Redirect']);
+	redirect(forum_link($forum_url['admin_extensions_manage']), ($disable ? $lang_admin_ext['Extension disabled'] : $lang_admin_ext['Extension enabled']).' '.$lang_admin_common['Redirect']);
 }
 
 ($hook = get_hook('aex_new_action')) ? eval($hook) : null;
@@ -661,8 +631,8 @@ if ($section == 'install')
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
 		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-		array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
-		$lang_admin['Install extensions']
+		array($lang_admin_common['Forum administration'], forum_link($forum_url['admin_index'])),
+		$lang_admin_common['Install extensions']
 	);
 
 	($hook = get_hook('aex_section_install_pre_header_load')) ? eval($hook) : null;
@@ -678,16 +648,10 @@ if ($section == 'install')
 	($hook = get_hook('aex_section_install_output_start')) ? eval($hook) : null;
 
 ?>
-<div id="brd-main" class="main sectioned admin">
-
-	<div class="main-head">
-		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin_ext['Extensions available'] ?></span></h2>
 	</div>
-
 	<div class="main-content main-frm">
-		<div class="frm-head">
-			<h2><span><?php echo $lang_admin['Extensions available'] ?></span></h2>
-		</div>
 <?php
 
 	$num_exts = 0;
@@ -707,7 +671,7 @@ if ($section == 'install')
 		{
 			if (!array_key_exists($hotfix['attributes']['id'], $inst_exts))
 			{
-				$forum_page['ext_item'][] = '<div class="hotfix-item databox">'."\n\t\t\t".'<h3 class="legend"><span>'.forum_htmlencode($hotfix['content']).'</span></h3>'."\n\t\t\t".'<p><span>'.sprintf($lang_admin['Extension by'], 'FluxBB').'</span><br /><span>'.$lang_admin['Hotfix description'].'</span></p>'."\n\t\t\t".'<p class="actions"><a href="'.$base_url.'/admin/extensions.php?install_hotfix='.urlencode($hotfix['attributes']['id']).'">'.$lang_admin['Install hotfix'].'</a></p>'."\n\t\t".'</div>';
+				$forum_page['ext_item'][] = '<div class="hotfix-item databox">'."\n\t\t\t".'<h3 class="legend"><span>'.forum_htmlencode($hotfix['content']).'</span></h3>'."\n\t\t\t".'<p><span>'.sprintf($lang_admin_ext['Extension by'], 'FluxBB').'</span><br /><span>'.$lang_admin_ext['Hotfix description'].'</span></p>'."\n\t\t\t".'<p class="actions"><a href="'.$base_url.'/admin/extensions.php?install_hotfix='.urlencode($hotfix['attributes']['id']).'">'.$lang_admin_ext['Install hotfix'].'</a></p>'."\n\t\t".'</div>';
 				++$num_exts;
 			}
 		}
@@ -720,13 +684,13 @@ if ($section == 'install')
 		{
 			if (preg_match('/[^0-9a-z_]/', $entry))
 			{
-				$forum_page['ext_error'][] = '<div class="ext-error databox db'.++$forum_page['item_num'].'">'."\n\t\t\t\t".'<h3 class="legend"><span>'.sprintf($lang_admin['Extension loading error'], forum_htmlencode($entry)).'<span></h3>'."\n\t\t\t\t".'<p>'.$lang_admin['Illegal ID'].'</p>'."\n\t\t\t".'</div>';
+				$forum_page['ext_error'][] = '<div class="ext-error databox db'.++$forum_page['item_num'].'">'."\n\t\t\t\t".'<h3 class="legend"><span>'.sprintf($lang_admin_ext['Extension loading error'], forum_htmlencode($entry)).'<span></h3>'."\n\t\t\t\t".'<p>'.$lang_admin_ext['Illegal ID'].'</p>'."\n\t\t\t".'</div>';
 				++$num_failed;
 				continue;
 			}
 			else if (!file_exists(FORUM_ROOT.'extensions/'.$entry.'/manifest.xml'))
 			{
-				$forum_page['ext_error'][] = '<div class="ext-error databox db'.++$forum_page['item_num'].'">'."\n\t\t\t\t".'<h3 class="legend"><span>'.sprintf($lang_admin['Extension loading error'], forum_htmlencode($entry)).'<span></h3>'."\n\t\t\t\t".'<p>'.$lang_admin['Missing manifest'].'</p>'."\n\t\t\t".'</div>';
+				$forum_page['ext_error'][] = '<div class="ext-error databox db'.++$forum_page['item_num'].'">'."\n\t\t\t\t".'<h3 class="legend"><span>'.sprintf($lang_admin_ext['Extension loading error'], forum_htmlencode($entry)).'<span></h3>'."\n\t\t\t\t".'<p>'.$lang_admin_ext['Missing manifest'].'</p>'."\n\t\t\t".'</div>';
 				++$num_failed;
 				continue;
 			}
@@ -735,7 +699,7 @@ if ($section == 'install')
 			$ext_data = xml_to_array(@file_get_contents(FORUM_ROOT.'extensions/'.$entry.'/manifest.xml'));
 			if (empty($ext_data))
 			{
-				$forum_page['ext_error'][] = '<div class="ext-error databox db'.++$forum_page['item_num'].'">'."\n\t\t\t\t".'<h3 class="legend"><span>'.sprintf($lang_admin['Extension loading error'], forum_htmlencode($entry)).'<span></h3>'."\n\t\t\t\t".'<p>'.$lang_admin['Failed parse manifest'].'</p>'."\n\t\t\t".'</div>';
+				$forum_page['ext_error'][] = '<div class="ext-error databox db'.++$forum_page['item_num'].'">'."\n\t\t\t\t".'<h3 class="legend"><span>'.sprintf($lang_admin_ext['Extension loading error'], forum_htmlencode($entry)).'<span></h3>'."\n\t\t\t\t".'<p>'.$lang_admin_ext['Failed parse manifest'].'</p>'."\n\t\t\t".'</div>';
 				++$num_failed;
 				continue;
 			}
@@ -744,14 +708,14 @@ if ($section == 'install')
 			$errors = validate_manifest($ext_data, $entry);
 			if (!empty($errors))
 			{
-				$forum_page['ext_error'][] = '<div class="ext-error databox db'.++$forum_page['item_num'].'">'."\n\t\t\t\t".'<h3 class="legend"><span>'.sprintf($lang_admin['Extension loading error'], forum_htmlencode($entry)).'</span></h3>'."\n\t\t\t\t".'<p>'.implode(' ', $errors).'</p>'."\n\t\t\t".'</div>';
+				$forum_page['ext_error'][] = '<div class="ext-error databox db'.++$forum_page['item_num'].'">'."\n\t\t\t\t".'<h3 class="legend"><span>'.sprintf($lang_admin_ext['Extension loading error'], forum_htmlencode($entry)).'</span></h3>'."\n\t\t\t\t".'<p>'.implode(' ', $errors).'</p>'."\n\t\t\t".'</div>';
 				++$num_failed;
 			}
 			else
 			{
 				if (!array_key_exists($entry, $inst_exts) || version_compare($inst_exts[$entry]['version'], $ext_data['extension']['version'], '!='))
 				{
-					$forum_page['ext_item'][] = '<div class="ext-item databox">'."\n\t\t\t".'<h3 class="legend"><span>'.forum_htmlencode($ext_data['extension']['title']).' v'.$ext_data['extension']['version'].'</span></h3>'."\n\t\t\t".'<p><span>'.sprintf($lang_admin['Extension by'], forum_htmlencode($ext_data['extension']['author'])).'</span>'.(($ext_data['extension']['description'] != '') ? '<br /><span>'.forum_htmlencode($ext_data['extension']['description']).'</span>' : '').'</p>'."\n\t\t\t".'<p class="actions"><a href="'.$base_url.'/admin/extensions.php?install='.urlencode($entry).'">'.$lang_admin['Install extension'].'</a></p>'."\n\t\t".'</div>';
+					$forum_page['ext_item'][] = '<div class="ext-item databox">'."\n\t\t\t".'<h3 class="legend"><span>'.forum_htmlencode($ext_data['extension']['title']).' v'.$ext_data['extension']['version'].'</span></h3>'."\n\t\t\t".'<p><span>'.sprintf($lang_admin_ext['Extension by'], forum_htmlencode($ext_data['extension']['author'])).'</span>'.(($ext_data['extension']['description'] != '') ? '<br /><span>'.forum_htmlencode($ext_data['extension']['description']).'</span>' : '').'</p>'."\n\t\t\t".'<p class="actions"><a href="'.$base_url.'/admin/extensions.php?install='.urlencode($entry).'">'.$lang_admin_ext['Install extension'].'</a></p>'."\n\t\t".'</div>';
 					++$num_exts;
 				}
 			}
@@ -768,7 +732,7 @@ if ($section == 'install')
 
 ?>
 		<div class="frm-info">
-			<p><?php echo $lang_admin['No available extensions'] ?></p>
+			<p><?php echo $lang_admin_ext['No available extensions'] ?></p>
 		</div>
 <?php
 
@@ -781,7 +745,7 @@ if ($section == 'install')
 ?>
 		<div class="dataset">
 			<div class="ext-error databox db1">
-				<p class="important"><?php echo $lang_admin['Invalid extensions'] ?></p>
+				<p class="important"><?php echo $lang_admin_ext['Invalid extensions'] ?></p>
 			</div>
 			<?php echo implode("\n\t\t\t", $forum_page['ext_error'])."\n" ?>
 		</div>
@@ -791,8 +755,6 @@ if ($section == 'install')
 
 ?>
 	</div>
-
-</div>
 <?php
 
 	$tpl_temp = forum_trim(ob_get_contents());
@@ -807,8 +769,8 @@ else
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
 		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-		array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
-		$lang_admin['Manage extensions']
+		array($lang_admin_common['Forum administration'], forum_link($forum_url['admin_index'])),
+		$lang_admin_common['Manage extensions']
 	);
 
 	($hook = get_hook('aex_section_manage_pre_header_load')) ? eval($hook) : null;
@@ -824,16 +786,10 @@ else
 	($hook = get_hook('aex_section_manage_output_start')) ? eval($hook) : null;
 
 ?>
-<div id="brd-main" class="main sectioned admin">
-
-	<div class="main-head">
-		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin_ext['Installed extensions'] ?></span></h2>
 	</div>
-
 	<div class="main-content main-frm">
-		<div class="frm-head">
-			<h2><span><?php echo $lang_admin['Installed extensions'] ?></span></h2>
-		</div>
 <?php
 
 	if (!empty($inst_exts))
@@ -841,23 +797,23 @@ else
 
 ?>
 		<div class="frm-info">
-			<p class="warn"><?php echo $lang_admin['Installed extensions warn'] ?></p>
+			<p class="warn"><?php echo $lang_admin_ext['Installed extensions warn'] ?></p>
 		</div>
 <?php
 
 		while (list($id, $ext) = @each($inst_exts))
 		{
 			$forum_page['ext_actions'] = array(
-				'<a href="'.$base_url.'/admin/extensions.php?section=manage&amp;flip='.$id.'&amp;csrf_token='.generate_form_token('flip'.$id).'">'.($ext['disabled'] != '1' ? $lang_admin['Disable'] : $lang_admin['Enable']).'</a>',
-				'<a href="'.$base_url.'/admin/extensions.php?section=manage&amp;uninstall='.$id.'">'.$lang_admin['Uninstall'].'</a>'
+				'<a href="'.$base_url.'/admin/extensions.php?section=manage&amp;flip='.$id.'&amp;csrf_token='.generate_form_token('flip'.$id).'">'.($ext['disabled'] != '1' ? $lang_admin_ext['Disable'] : $lang_admin_ext['Enable']).'</a>',
+				'<a href="'.$base_url.'/admin/extensions.php?section=manage&amp;uninstall='.$id.'">'.$lang_admin_ext['Uninstall'].'</a>'
 			);
 
 			($hook = get_hook('aex_section_manage_pre_ext_actions')) ? eval($hook) : null;
 
 ?>
 		<div class="ext-item databox<?php if ($ext['disabled'] == '1') echo ' extdisabled' ?>">
-			<h3 class="legend"><span><?php echo forum_htmlencode($ext['title']).((strpos($id, 'hotfix_') !== 0) ? ' v'.$ext['version'] : '') ?><?php if ($ext['disabled'] == '1') echo ' ( <span>'.$lang_admin['Extension disabled'].'</span> )' ?></span></h3>
-			<p><span><?php printf($lang_admin['Extension by'], forum_htmlencode($ext['author'])) ?></span><?php if ($ext['description'] != ''): ?><br /><span><?php echo forum_htmlencode($ext['description']) ?></span><?php endif; ?></p>
+			<h3 class="legend"><span><?php echo forum_htmlencode($ext['title']).((strpos($id, 'hotfix_') !== 0) ? ' v'.$ext['version'] : '') ?><?php if ($ext['disabled'] == '1') echo ' ( <span>'.$lang_admin_ext['Extension disabled'].'</span> )' ?></span></h3>
+			<p><span><?php printf($lang_admin_ext['Extension by'], forum_htmlencode($ext['author'])) ?></span><?php if ($ext['description'] != ''): ?><br /><span><?php echo forum_htmlencode($ext['description']) ?></span><?php endif; ?></p>
 			<p class="actions"><?php echo implode('', $forum_page['ext_actions']) ?></p>
 		</div>
 <?php
@@ -869,7 +825,7 @@ else
 
 ?>
 		<div class="frm-info">
-			<p><?php echo $lang_admin['No installed extensions'] ?></p>
+			<p><?php echo $lang_admin_ext['No installed extensions'] ?></p>
 		</div>
 <?php
 
@@ -877,8 +833,6 @@ else
 
 ?>
 	</div>
-
-</div>
 <?php
 
 	$tpl_temp = forum_trim(ob_get_contents());

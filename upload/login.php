@@ -286,7 +286,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 
 ?>
 	<div class="main-content main-frm">
-		<div class="content-box">
+		<div class="ct-box">
 			<p class="important"><?php echo $lang_login['New password info'] ?></p>
 		</div>
 <?php
@@ -301,7 +301,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 		($hook = get_hook('li_pre_new_password_errors')) ? eval($hook) : null;
 
 ?>
-		<div class="content-box error-box">
+		<div class="ct-box error-box">
 			<h2 class="warn"><?php echo $lang_login['New password errors'] ?></h2>
 			<ul>
 				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
@@ -322,9 +322,9 @@ else if ($action == 'forget' || $action == 'forget_2')
 			</div>
 <?php ($hook = get_hook('li_forgot_pass_pre_fieldset')) ? eval($hook) : null; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text required">
+				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_login['E-mail address'] ?></span><small><?php echo $lang_login['E-mail address help'] ?></small></label><br />
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="req_email" value="<?php echo isset($_POST['req_email']) ? forum_htmlencode($_POST['req_email']) : '' ?>" size="35" maxlength="80" /></span>
 					</div>
@@ -394,7 +394,7 @@ ob_start();
 		($hook = get_hook('li_pre_login_errors')) ? eval($hook) : null;
 
 ?>
-		<div class="content-box error-box">
+		<div class="ct-box error-box">
 			<h2 class="warn"><?php echo $lang_login['Login errors'] ?></h2>
 			<ul>
 				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
@@ -414,15 +414,15 @@ ob_start();
 			</div>
 <?php ($hook = get_hook('li_login_pre_fieldset')) ? eval($hook) : null; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_login['Login legend'] ?></strong></legend>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text required">
+				<legend class="group-legend"><strong><?php echo $lang_login['Login legend'] ?></strong></legend>
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_login['Username'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_username" value="<?php echo isset($_POST['req_username']) ? forum_htmlencode($_POST['req_username']) : '' ?>" size="35" maxlength="25" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text required">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_login['Password'] ?></span></label><br />
 						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_password" value="<?php echo isset($_POST['req_password']) ? ($_POST['req_password']) : '' ?>" size="35" /></span>
 					</div>
@@ -430,9 +430,9 @@ ob_start();
 			</fieldset>
 <?php $forum_page['item_count'] = 0; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_login['Login options legend'] ?></strong></legend>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box checkbox">
+				<legend class="group-legend"><strong><?php echo $lang_login['Login options legend'] ?></strong></legend>
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="save_pass" value="1" /></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_login['Remember me'] ?></span> <?php echo $lang_login['Persistent login'] ?></label>
 					</div>

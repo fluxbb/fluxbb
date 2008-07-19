@@ -163,12 +163,12 @@ ob_start();
 
 ?>
 	<div class="main-content main-frm">
-		<div class="content-box">
+		<div class="ct-box">
 			<ul>
 				<?php echo implode("\n\t\t\t\t", $forum_page['frm_info'])."\n" ?>
 			</ul>
 		</div>
-		<div class="content-box parsed-box">
+		<div class="ct-box parsed-box">
 			<div class="entry-content">
 				<?php echo $cur_post['message']."\n" ?>
 			</div>
@@ -178,9 +178,9 @@ ob_start();
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_delete['Delete post'] ?></strong></legend>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box radio">
+				<legend class="group-legend"><strong><?php echo $lang_delete['Delete post'] ?></strong></legend>
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="mf-item">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_delete['Please confirm'] ?></span> <?php printf(((($cur_post['is_topic'])) ? $lang_delete['Delete topic label'] : $lang_delete['Delete post label']), forum_htmlencode($cur_post['poster']), format_time($cur_post['posted'])) ?></label>
 					</div>

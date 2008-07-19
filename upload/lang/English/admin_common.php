@@ -21,8 +21,7 @@ $lang_admin_common = array(
 'Cancel'						=>	'Cancel',
 'Cancel redirect'				=>	'Operation cancelled. Redirecting …',
 'Unknown'						=>	'Unknown',
-
-
+'Delete help'					=>	'Requires confirmation via separate form.',
 
 // Main Admin Menu Items and Title
 'Forum administration'			=>	'Administration',

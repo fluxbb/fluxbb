@@ -36,14 +36,15 @@ if (!$forum_user['is_admmod'])
 	message($lang_common['No permission']);
 
 // Load the admin.php language file
-require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin_common.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin_reports.php';
 
 
 // Mark reports as read
 if (isset($_POST['mark_as_read']))
 {
 	if (empty($_POST['reports']))
-		message($lang_admin['No reports selected']);
+		message($lang_admin_reports['No reports selected']);
 
 	($hook = get_hook('arp_mark_as_read_form_submitted')) ? eval($hook) : null;
 
@@ -58,16 +59,16 @@ if (isset($_POST['mark_as_read']))
 	($hook = get_hook('arp_qr_mark_reports_as_read')) ? eval($hook) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	redirect(forum_link($forum_url['admin_reports']), $lang_admin['Reports marked read'].' '.$lang_admin['Redirect']);
+	redirect(forum_link($forum_url['admin_reports']), $lang_admin_reports['Reports marked read'].' '.$lang_admin_common['Redirect']);
 }
 
-$forum_page['fld_count'] = $forum_page['set_count'] = 0;
+$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
 	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-	array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
-	$lang_admin['Reports']
+	array($lang_admin_common['Forum administration'], forum_link($forum_url['admin_index'])),
+	$lang_admin_common['Reports']
 );
 
 ($hook = get_hook('arp_pre_header_load')) ? eval($hook) : null;
@@ -81,13 +82,6 @@ require FORUM_ROOT.'header.php';
 ob_start();
 
 ($hook = get_hook('arp_main_output_start')) ? eval($hook) : null;
-
-?>
-	<div class="main-subhead">
-		<h2 class="hn"><span><?php echo $lang_admin['New reports heading'] ?></span></h2>
-	</div>
-	<div class="main-content main-frm">
-<?php
 
 // Fetch any unread reports
 $query = array(
@@ -116,69 +110,67 @@ $query = array(
 );
 
 ($hook = get_hook('arp_qr_get_new_reports')) ? eval($hook) : null;
+
+$forum_page['new_reports'] = false;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 if ($forum_db->num_rows($result))
 {
+	$forum_page['new_reports'] = true;
 
 ?>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin_reports['New reports heading'] ?></span></h2>
+	</div>
+	<div class="main-content main-frm">
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_reports']) ?>?action=zap">
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_reports']).'?action=zap') ?>" />
 			</div>
+			<ol class="new-reports">
 <?php
 
-	$forum_page['num_items'] = 0;
+	$forum_page['item_num'] = 0;
 
 	while ($cur_report = $forum_db->fetch_assoc($result))
 	{
-		$reporter = ($cur_report['reporter'] != '') ? '<a href="'.forum_link($forum_url['user'], $cur_report['reported_by']).'">'.forum_htmlencode($cur_report['reporter']).'</a>' : $lang_admin['Deleted user'];
-		$forum = ($cur_report['forum_name'] != '') ? '<a href="'.forum_link($forum_url['forum'], array($cur_report['forum_id'], sef_friendly($cur_report['forum_name']))).'">'.forum_htmlencode($cur_report['forum_name']).'</a>' : $lang_admin['Deleted forum'];
-		$topic = ($cur_report['subject'] != '') ? '<a href="'.forum_link($forum_url['topic'], array($cur_report['topic_id'], sef_friendly($cur_report['subject']))).'">'.forum_htmlencode($cur_report['subject']).'</a>' : $lang_admin['Deleted topic'];
+		$reporter = ($cur_report['reporter'] != '') ? '<a href="'.forum_link($forum_url['user'], $cur_report['reported_by']).'">'.forum_htmlencode($cur_report['reporter']).'</a>' : $lang_admin_reports['Deleted user'];
+		$forum = ($cur_report['forum_name'] != '') ? '<a href="'.forum_link($forum_url['forum'], array($cur_report['forum_id'], sef_friendly($cur_report['forum_name']))).'">'.forum_htmlencode($cur_report['forum_name']).'</a>' : $lang_admin_reports['Deleted forum'];
+		$topic = ($cur_report['subject'] != '') ? '<a href="'.forum_link($forum_url['topic'], array($cur_report['topic_id'], sef_friendly($cur_report['subject']))).'">'.forum_htmlencode($cur_report['subject']).'</a>' : $lang_admin_reports['Deleted topic'];
 		$message = str_replace("\n", '<br />', forum_htmlencode($cur_report['message']));
-		$post_id = ($cur_report['pid'] != '') ? '<a href="'.forum_link($forum_url['post'], $cur_report['pid']).'">Post #'.$cur_report['pid'].'</a>' : $lang_admin['Deleted post'];
+		$post_id = ($cur_report['pid'] != '') ? '<a href="'.forum_link($forum_url['post'], $cur_report['pid']).'">Post #'.$cur_report['pid'].'</a>' : $lang_admin_reports['Deleted post'];
 
 		($hook = get_hook('arp_new_report_pre_display')) ? eval($hook) : null;
 
 ?>
-			<div class="pair data-pair">
-			<div class="box data-box">
-				<h3 class="hn reporthead"><span><?php echo ++$forum_page['num_items'] ?></span> <strong class="username legend">By <?php echo $reporter ?> </strong>Re: <?php echo $forum ?>&#160;-&#160;<?php echo $topic ?>&#160;-&#160;<?php echo $post_id ?></h3>
-				<p class="item-select" style="margin-top: -2.5em"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="reports[<?php echo $cur_report['id'] ?>]" value="1" /> <label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Select report'] ?></span> <?php echo $forum_page['num_items'] ?></label></p>
-				<h4 class="hn legend">Report</h4>
-				<p><strong style="display: block"><?php echo format_time($cur_report['created']) ?></strong> <?php echo $message ?></p>
+			<li class="ct-set report">
+				<div class="ct-box">
+					<h3 class="set-legend hn"><cite class="username"><?php echo $reporter ?></cite> <span><?php echo format_time($cur_report['created']) ?></span></h3>
+					<h4 class="hn"><?php echo $forum ?> : <?php echo $topic ?> : <?php echo $post_id ?></h4>
+					<p><?php echo $message ?></p>
+					<p class="item-select"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="reports[<?php echo $cur_report['id'] ?>]" value="1" /> <label for="fld<?php echo $forum_page['fld_count'] ?>"><?php echo $lang_admin_reports['Select report'] ?></label></p>
 <?php ($hook = get_hook('arp_new_report_new_block')) ? eval($hook) : null; ?>
-			</div>
-			</div>
+				</div>
+			</li>
 <?php
 
 	}
 
 ?>
+			</ol>
 			<div class="frm-buttons">
-				<span class="submit"><input type="submit" name="mark_as_read" value="<?php echo $lang_admin['Mark read'] ?>" /></span>
+				<span class="submit"><input type="submit" name="mark_as_read" value="<?php echo $lang_admin_reports['Mark read'] ?>" /></span>
 			</div>
 		</form>
-<?php
-
-}
-else
-{
-
-?>
-		<div class="frm-info">
-			<p><?php echo $lang_admin['No new reports'] ?></p>
-		</div>
-<?php
-
-}
-
-?>
 	</div>
+<?php
 
+}
+
+?>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin_reports['Read reports heading'] ?><?php echo ($forum_db->num_rows($result)) ? '' : ' '.$lang_admin_reports['No new reports'] ?></span></h2>
+	</div>
 	<div class="main-content main-frm">
-		<div class="frm-head">
-			<h2><span><?php echo $lang_admin['Read reports heading'] ?></span></h2>
-		</div>
 <?php
 
 // Fetch the last 10 reports marked as read
@@ -213,50 +205,66 @@ $query = array(
 );
 
 ($hook = get_hook('arp_qr_get_last_zapped_reports')) ? eval($hook) : null;
+
+$forum_page['old_reports'] = false;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 if ($forum_db->num_rows($result))
 {
 	$i = 1;
-	$forum_page['num_items'] = 0;
+	$forum_page['group_count'] = $forum_page['item_count'] = 0;
+	$forum_page['old_reports'] = true;
+
+?>
+		<ol class="old-reports">
+<?php
+
 	while ($cur_report = $forum_db->fetch_assoc($result))
 	{
-		$reporter = ($cur_report['reporter'] != '') ? '<a href="'.forum_link($forum_url['user'], $cur_report['reported_by']).'">'.forum_htmlencode($cur_report['reporter']).'</a>' : $lang_admin['Deleted user'];
-		$forum = ($cur_report['forum_name'] != '') ? '<a href="'.forum_link($forum_url['forum'], array($cur_report['forum_id'], sef_friendly($cur_report['forum_name']))).'">'.forum_htmlencode($cur_report['forum_name']).'</a>' : $lang_admin['Deleted forum'];
-		$topic = ($cur_report['subject'] != '') ? '<a href="'.forum_link($forum_url['topic'], array($cur_report['topic_id'], sef_friendly($cur_report['subject']))).'">'.forum_htmlencode($cur_report['subject']).'</a>' : $lang_admin['Deleted topic'];
+		$reporter = ($cur_report['reporter'] != '') ? '<a href="'.forum_link($forum_url['user'], $cur_report['reported_by']).'">'.forum_htmlencode($cur_report['reporter']).'</a>' : $lang_admin_reports['Deleted user'];
+		$forum = ($cur_report['forum_name'] != '') ? '<a href="'.forum_link($forum_url['forum'], array($cur_report['forum_id'], sef_friendly($cur_report['forum_name']))).'">'.forum_htmlencode($cur_report['forum_name']).'</a>' : $lang_admin_reports['Deleted forum'];
+		$topic = ($cur_report['subject'] != '') ? '<a href="'.forum_link($forum_url['topic'], array($cur_report['topic_id'], sef_friendly($cur_report['subject']))).'">'.forum_htmlencode($cur_report['subject']).'</a>' : $lang_admin_reports['Deleted topic'];
 		$message = str_replace("\n", '<br />', forum_htmlencode($cur_report['message']));
-		$post_id = ($cur_report['pid'] != '') ? '<a href="'.forum_link($forum_url['post'], $cur_report['pid']).'">Post #'.$cur_report['pid'].'</a>' : $lang_admin['Deleted post'];
-		$zapped_by = ($cur_report['zapped_by'] != '') ? '<a href="'.forum_link($forum_url['user'], $cur_report['zapped_by_id']).'">'.forum_htmlencode($cur_report['zapped_by']).'</a>' : $lang_admin['Deleted user'];
+		$post_id = ($cur_report['pid'] != '') ? '<a href="'.forum_link($forum_url['post'], $cur_report['pid']).'">Post #'.$cur_report['pid'].'</a>' : $lang_admin_reports['Deleted post'];
+		$zapped_by = ($cur_report['zapped_by'] != '') ? '<a href="'.forum_link($forum_url['user'], $cur_report['zapped_by_id']).'">'.forum_htmlencode($cur_report['zapped_by']).'</a>' : $lang_admin_reports['Deleted user'];
 
 		($hook = get_hook('arp_report_pre_display')) ? eval($hook) : null;
 
 ?>
-		<div class="rep-item databox">
-			<h3 class="legend"><span><strong><?php echo ++$forum_page['num_items'] ?></strong> <?php printf($lang_admin['Reported by'], format_time($cur_report['created']), $reporter) ?></span></h3>
-			<p><?php echo $forum ?>&#160;»&#160;<?php echo $topic ?>&#160;»&#160;<?php echo $post_id ?></p>
-			<p><?php echo $message ?></p>
-			<p><?php printf($lang_admin['Marked read by'], format_time($cur_report['zapped']), $zapped_by) ?></p>
+			<li class="ct-set report group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box">
+					<h3 class="set-legend hn"><cite class="username"><?php printf($lang_admin_reports['Reported by'], $reporter) ?></cite> <span><?php echo format_time($cur_report['created']) ?></span></h3>
+					<h4 class="hn"><?php echo $forum ?> : <?php echo $topic ?> : <?php echo $post_id ?></h4>
+					<p><?php echo $message ?> <strong><?php printf($lang_admin_reports['Marked read by'], format_time($cur_report['zapped']), $zapped_by) ?></strong></p>
+				</div>
+			</li>
 <?php ($hook = get_hook('arp_report_new_block')) ? eval($hook) : null; ?>
-		</div>
 <?php
 
 	}
+
+?>
+		</ol>
+	</div>
+<?php
+
 }
-else
+
+if (!$forum_page['new_reports'] && !$forum_page['old_reports'])
 {
 
 ?>
-		<div class="frm-info">
-			<p><?php echo $lang_admin['No read reports'] ?></p>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin_reports['Empty reports heading'] ?></span></h2>
+	</div>
+	<div class="main-content main-frm">
+		<div class="ct-box">
+			<p><?php echo $lang_admin_reports['No reports'] ?></p>
 		</div>
+	</div>
 <?php
 
 }
 
-?>
-	</div>
-
-</div>
-<?php
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

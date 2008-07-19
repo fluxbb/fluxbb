@@ -100,7 +100,7 @@ if (!$section || $section == 'bbcode')
 <?php ($hook = get_hook('he_new_bbcode_text_style')) ? eval($hook) : null; ?>
 				</ul>
 			</div>
-			<div class="frm-set">
+			<div class="sf-set">
 				<h3><?php echo $lang_help['Links info'] ?></h3>
 				<ul class="example">
 					<li>
@@ -122,7 +122,7 @@ if (!$section || $section == 'bbcode')
 <?php ($hook = get_hook('he_new_bbcode_link')) ? eval($hook) : null; ?>
 				</ul>
 			</div>
-			<div class="frm-set">
+			<div class="sf-set">
 				<h3><span><?php echo $lang_help['Quotes info'] ?></span></h3>
 				<ul class="example">
 					<li><code>[quote=James]<?php echo $lang_help['Quote text'] ?>[/quote]</code> <span><?php echo $lang_help['produces named'] ?></span>
@@ -137,7 +137,7 @@ if (!$section || $section == 'bbcode')
 					</li>
 				</ul>
 			</div>
-			<div class="frm-set">
+			<div class="sf-set">
 				<h3><span><?php echo $lang_help['Code info'] ?></span></h3>
 				<ul class="example">
 					<li><code>[code]<?php echo $lang_help['Code text'] ?>[/code]</code> <span><?php echo $lang_help['produces code box'] ?></span>
@@ -152,7 +152,7 @@ if (!$section || $section == 'bbcode')
 					</li>
 				</ul>
 			</div>
-			<div class="frm-set">
+			<div class="sf-set">
 				<h3><span><?php echo $lang_help['List info'] ?></span></h3>
 				<ul class="example">
 					<li><code>[list][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code> <span><?php echo $lang_help['produces list'] ?></span>

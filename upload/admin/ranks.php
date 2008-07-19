@@ -36,7 +36,8 @@ if ($forum_user['g_id'] != FORUM_ADMIN)
 	message($lang_common['No permission']);
 
 // Load the admin.php language file
-require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin_common.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin_ranks.php';
 
 
 // Add a rank
@@ -46,10 +47,10 @@ if (isset($_POST['add_rank']))
 	$min_posts = intval($_POST['new_min_posts']);
 
 	if ($rank == '')
-		message($lang_admin['Title message']);
+		message($lang_admin_ranks['Title message']);
 
 	if ($min_posts < 0)
-		message($lang_admin['Min posts message']);
+		message($lang_admin_ranks['Min posts message']);
 
 	($hook = get_hook('ark_add_rank_form_submitted')) ? eval($hook) : null;
 
@@ -63,7 +64,7 @@ if (isset($_POST['add_rank']))
 	($hook = get_hook('ark_qr_check_rank_collision')) ? eval($hook) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if ($forum_db->num_rows($result))
-		message(sprintf($lang_admin['Min posts occupied message'], $min_posts));
+		message(sprintf($lang_admin_ranks['Min posts occupied message'], $min_posts));
 
 	$query = array(
 		'INSERT'	=> 'rank, min_posts',
@@ -80,7 +81,7 @@ if (isset($_POST['add_rank']))
 
 	generate_ranks_cache();
 
-	redirect(forum_link($forum_url['admin_ranks']), $lang_admin['Rank added'].' '.$lang_admin['Redirect']);
+	redirect(forum_link($forum_url['admin_ranks']), $lang_admin_ranks['Rank added'].' '.$lang_admin_common['Redirect']);
 }
 
 
@@ -93,10 +94,10 @@ else if (isset($_POST['update']))
 	$min_posts = intval($_POST['min_posts'][$id]);
 
 	if ($rank == '')
-		message($lang_admin['Title message']);
+		message($lang_admin_ranks['Title message']);
 
 	if ($min_posts < 0)
-		message($lang_admin['Min posts message']);
+		message($lang_admin_ranks['Min posts message']);
 
 	($hook = get_hook('ark_update_form_submitted')) ? eval($hook) : null;
 
@@ -110,7 +111,7 @@ else if (isset($_POST['update']))
 	($hook = get_hook('ark_qr_check_rank_collision2')) ? eval($hook) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if ($forum_db->num_rows($result))
-		message(sprintf($lang_admin['Min posts occupied message'], $min_posts));
+		message(sprintf($lang_admin_ranks['Min posts occupied message'], $min_posts));
 
 	$query = array(
 		'UPDATE'	=> 'ranks',
@@ -127,7 +128,7 @@ else if (isset($_POST['update']))
 
 	generate_ranks_cache();
 
-	redirect(forum_link($forum_url['admin_ranks']), $lang_admin['Rank updated'].' '.$lang_admin['Redirect']);
+	redirect(forum_link($forum_url['admin_ranks']), $lang_admin_ranks['Rank updated'].' '.$lang_admin_common['Redirect']);
 }
 
 
@@ -152,7 +153,7 @@ else if (isset($_POST['remove']))
 
 	generate_ranks_cache();
 
-	redirect(forum_link($forum_url['admin_ranks']), $lang_admin['Rank removed'].' '.$lang_admin['Redirect']);
+	redirect(forum_link($forum_url['admin_ranks']), $lang_admin_ranks['Rank removed'].' '.$lang_admin_common['Redirect']);
 }
 
 
@@ -171,13 +172,13 @@ if (!defined('FORUM_RANKS_LOADED'))
 
 
 // Setup the form
-$forum_page['fld_count'] = $forum_page['set_count'] = 0;
+$forum_page['fld_count'] = $forum_page['item_count'] = $forum_page['group_count'] = 0;
 
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
 	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-	array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
-	$lang_admin['Ranks']
+	array($lang_admin_common['Forum administration'], forum_link($forum_url['admin_index'])),
+	$lang_admin_common['Ranks']
 );
 
 ($hook = get_hook('ark_pre_header_load')) ? eval($hook) : null;
@@ -193,92 +194,85 @@ ob_start();
 ($hook = get_hook('ark_main_output_start')) ? eval($hook) : null;
 
 ?>
-<div id="brd-main" class="main sectioned admin">
-
-	<div class="main-head">
-		<h1><span>{ <?php echo end($forum_page['crumbs']) ?> }</span></h1>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin_ranks['Rank head'] ?></span></h2>
 	</div>
-
 	<div class="main-content main-frm">
-		<div class="frm-head">
-			<h2><span><?php echo $lang_admin['Add new rank'] ?></span></h2>
-		</div>
-		<div class="frm-info">
-			<p><?php printf($lang_admin['Add rank intro'], '<strong><a href="'.forum_link($forum_url['admin_settings_features']).'">'.$lang_admin['Settings'].' - '.$lang_admin['Features'].'</a></strong>') ?></p>
+		<div class="ct-box">
+			<p><?php printf($lang_admin_ranks['Add rank intro'], '<strong><a href="'.forum_link($forum_url['admin_settings_features']).'">'.$lang_admin_common['Settings'].' - '.$lang_admin_common['Features'].'</a></strong>') ?></p>
 		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_ranks']) ?>?action=foo">
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_ranks']).'?action=foo') ?>" />
 			</div>
-			<fieldset class="frm-fset fset<?php echo ++$forum_page['set_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_admin['Add rank legend'] ?></strong></legend>
+			<fieldset class="frm-group frm-hdgroup frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<legend class="group-legend"><strong><?php echo $lang_admin_ranks['Add rank legend'] ?></strong></legend>
 <?php ($hook = get_hook('ark_add_rank_pre_rank')) ? eval($hook) : null; ?>
-				<div class="frm-fld text">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-					<span class="fld-label"><?php echo $lang_admin['Rank title'] ?></span><br />
-					<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="new_rank" size="24" maxlength="50" /></span>
-					</label>
-				</div>
+				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?><?php echo ($forum_page['item_count'] == 1) ? ' mf-head' : ' mf-extra' ?>">
+					<legend><span><?php echo $lang_admin_ranks['New rank'] ?></span></legend>
+					<div class="mf-box">
+						<div class="mf-field mf-field1 text">
+							<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_admin_ranks['Rank title label'] ?></span></label><br />
+							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="new_rank" size="24" maxlength="50" /></span>
+						</div>
 <?php ($hook = get_hook('ark_add_rank_pre_min_posts')) ? eval($hook) : null; ?>
-				<div class="frm-fld">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-						<span class="fld-label"><?php echo $lang_admin['Min posts'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="new_min_posts" size="7" maxlength="7" /></span>
-					</label>
-				</div>
+						<div class="mf-field text">
+							<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_admin_ranks['Min posts label'] ?></span></label><br />
+							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="new_min_posts" size="7" maxlength="7" /></span>
+						</div>
+						<div class="mf-field text">
+							<span class="fld-input"><input type="submit" name="add_rank" value="<?php echo $lang_admin_ranks['Add rank'] ?>" /></span>
+						</div>
+					</div>
+				</fieldset>
 <?php ($hook = get_hook('ark_add_rank_end')) ? eval($hook) : null; ?>
 			</fieldset>
-			<div class="frm-buttons">
-				<span class="submit"><input type="submit" name="add_rank" value="<?php echo $lang_admin['Add rank'] ?>" /></span>
-			</div>
 		</form>
-	</div>
 <?php
 
 if (!empty($forum_ranks))
 {
 	// Reset fieldset counter
-	$forum_page['set_count'] = 0;
+	$forum_page['group_count'] = $forum_page['item_count'] = 0;
 
 ?>
-	<div class="main-content main-frm">
-		<div class="frm-head">
-			<h2><span><?php echo $lang_admin['Existing ranks intro'] ?></span></h2>
-		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_ranks']) ?>?action=foo">
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_ranks']).'?action=foo') ?>" />
 			</div>
+			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<legend class="group-legend"><span><?php echo $lang_admin_ranks['Existing ranks legend'] ?></span></legend>
 <?php
 
 	foreach ($forum_ranks as $rank_key => $cur_rank)
 	{
 
 	?>
-			<fieldset class="frm-fset fset<?php echo ++$forum_page['set_count'] ?>">
-				<legend class="frm-legend"><span><?php echo $lang_admin['Rank'].' '.($rank_key + 1) ?></span></legend>
 <?php ($hook = get_hook('ark_edit_rank_pre_rank')) ? eval($hook) : null; ?>
-				<div class="frm-fld text">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-						<span class="fld-label"><?php echo $lang_admin['Rank title'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="rank[<?php echo $cur_rank['id'] ?>]" value="<?php echo forum_htmlencode($cur_rank['rank']) ?>" size="24" maxlength="50" /></span>
-					</label>
-				</div>
+				<fieldset class="mf-set mf-extra group-item<?php echo ++$forum_page['item_count'] ?>">
+					<legend><span><?php echo $lang_admin_ranks['Existing rank'] ?></span></legend>
+					<div class="mf-box">
+						<div class="mf-field text mf-field1">
+							<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_ranks['Rank title label'] ?></span></label><br />
+							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="rank[<?php echo $cur_rank['id'] ?>]" value="<?php echo forum_htmlencode($cur_rank['rank']) ?>" size="24" maxlength="50" /></span>
+						</div>
 <?php ($hook = get_hook('ark_edit_rank_pre_min_posts')) ? eval($hook) : null; ?>
-				<div class="frm-fld text">
-					<label for="fld<?php echo ++$forum_page['fld_count'] ?>">
-						<span class="fld-label"><?php echo $lang_admin['Min posts'] ?></span><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="min_posts[<?php echo $cur_rank['id'] ?>]" value="<?php echo $cur_rank['min_posts'] ?>" size="7" maxlength="7" /></span>
-					</label>
-					<span class="submit"><input type="submit" name="update[<?php echo $cur_rank['id'] ?>]" value="<?php echo $lang_admin['Update'] ?>" /> <input type="submit" name="remove[<?php echo $cur_rank['id'] ?>]" value="<?php echo $lang_admin['Remove'] ?>" /></span>
-				</div>
+						<div class="mf-field text">
+							<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_admin_ranks['Min posts label'] ?></span></label><br />
+							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="min_posts[<?php echo $cur_rank['id'] ?>]" value="<?php echo $cur_rank['min_posts'] ?>" size="7" maxlength="7" /></span>
+						</div>
+						<div class="mf-field text">
+							<span class="fld-input"><input type="submit" name="update[<?php echo $cur_rank['id'] ?>]" value="<?php echo $lang_admin_ranks['Update'] ?>" /> <input type="submit" name="remove[<?php echo $cur_rank['id'] ?>]" value="<?php echo $lang_admin_ranks['Remove'] ?>" /></span>
+						</div>
+					</div>
 <?php ($hook = get_hook('ark_edit_rank_end')) ? eval($hook) : null; ?>
-			</fieldset>
+				</fieldset>
 	<?php
 
 	}
 
 ?>
+			</fieldset>
 		</form>
 	</div>
 <?php
@@ -290,21 +284,17 @@ else
 ?>
 	<div class="main-content main-frm">
 		<div class="frm-head">
-			<h2><span><?php echo $lang_admin['Existing ranks intro'] ?></span></h2>
+			<h2><span><?php echo $lang_admin_ranks['Existing ranks intro'] ?></span></h2>
 		</div>
 		<div class="frm-form">
 			<div class="frm-info">
-				<p><?php echo $lang_admin['No ranks'] ?></p>
+				<p><?php echo $lang_admin_ranks['No ranks'] ?></p>
 			</div>
 		</div>
 	</div>
 <?php
 
 }
-
-?>
-</div>
-<?php
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

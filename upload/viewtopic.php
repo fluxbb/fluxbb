@@ -602,11 +602,11 @@ if ($forum_config['o_smilies'] == '1')
 			<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 		</div>
 <?php ($hook = get_hook('vt_quickpost_pre_fieldset')) ? eval($hook) : null; ?>
-		<fieldset class="frm-fset fset1">
-			<legend class="frm-legend"><strong><?php echo $lang_common['Write message legend'] ?></strong></legend>
+		<fieldset class="frm-group fset1">
+			<legend class="group-legend"><strong><?php echo $lang_common['Write message legend'] ?></strong></legend>
 <?php ($hook = get_hook('vt_quickpost_fieldset_start')) ? eval($hook) : null; ?>
-			<div class="frm-set">
-				<div class="frm-box textarea required">
+			<div class="sf-set">
+				<div class="sf-box textarea required">
 					<label for="fld1"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_common['Write message'] ?></span></label><br />
 					<span class="fld-input"><textarea id="fld1" name="req_message" rows="7" cols="95"></textarea></span>
 				</div>

@@ -36,7 +36,8 @@ if (!$forum_user['is_admmod'])
 	message($lang_common['No permission']);
 
 // Load the admin.php language file
-require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin_common.php';
+require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin_users.php';
 
 
 // Show IP statistics for a certain user ID
@@ -63,9 +64,9 @@ if (isset($_GET['ip_stats']))
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
 		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-		array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
-		array($lang_admin['Searches'], forum_link($forum_url['admin_users'])),
-		$lang_admin['User search results']
+		array($lang_admin_common['Forum administration'], forum_link($forum_url['admin_index'])),
+		array($lang_admin_common['Searches'], forum_link($forum_url['admin_users'])),
+		$lang_admin_users['User search results']
 	);
 
 	($hook = get_hook('aus_ip_stats_pre_header_load')) ? eval($hook) : null;
@@ -81,15 +82,15 @@ if (isset($_GET['ip_stats']))
 	($hook = get_hook('aus_ip_stats_output_start')) ? eval($hook) : null;
 
 	$forum_page['table_header'] = array();
-	$forum_page['table_header']['ip'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin['IP address'].'</th>';
-	$forum_page['table_header']['lastused'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin['Last used'].'</th>';
-	$forum_page['table_header']['timesfound'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin['Times found'].'</th>';
-	$forum_page['table_header']['actions'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin['Actions'].'</th>';
+	$forum_page['table_header']['ip'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['IP address'].'</th>';
+	$forum_page['table_header']['lastused'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Last used'].'</th>';
+	$forum_page['table_header']['timesfound'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Times found'].'</th>';
+	$forum_page['table_header']['actions'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Actions'].'</th>';
 
 
 ?>
 	<div class="main-pagehead">
-		<h2 class="hn"><span><?php printf($lang_admin['IP addresses found'], $forum_page['num_users']) ?></span></h2>
+		<h2 class="hn"><span><?php printf($lang_admin_users['IP addresses found'], $forum_page['num_users']) ?></span></h2>
 	</div>
 	<div class="main-content main-forum">
 		<table cellspacing="0">
@@ -117,7 +118,7 @@ if (isset($_GET['ip_stats']))
 			$forum_page['table_row']['ip'] = '<td class="tc'.count($forum_page['table_row']).'"><a href="'.forum_link($forum_url['get_host'], $cur_ip['poster_ip']).'">'.$cur_ip['poster_ip'].'</a></td>';
 			$forum_page['table_row']['lastused'] = '<td class="tc'.count($forum_page['table_row']).'">'.format_time($cur_ip['last_used']).'</td>';
 			$forum_page['table_row']['timesfound'] = '<td class="tc'.count($forum_page['table_row']).'">'.$cur_ip['used_times'].'</td>';
-			$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"><a href="'.forum_link($forum_url['admin_users']).'?show_users='.$cur_ip['poster_ip'].'">'.$lang_admin['Find more users'].'</a></td>';
+			$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"><a href="'.forum_link($forum_url['admin_users']).'?show_users='.$cur_ip['poster_ip'].'">'.$lang_admin_users['Find more users'].'</a></td>';
 
 ?>
 				<tr class="<?php echo $forum_page['item_style'] ?>">
@@ -130,7 +131,7 @@ if (isset($_GET['ip_stats']))
 	else
 	{
 		$forum_page['table_row'] = array();
-		$forum_page['table_row']['ip'] = '<td class="tc'.count($forum_page['table_row']).'">'.$lang_admin['No posts by user'].'</td>';
+		$forum_page['table_row']['ip'] = '<td class="tc'.count($forum_page['table_row']).'">'.$lang_admin_users['No posts by user'].'</td>';
 		$forum_page['table_row']['lastused'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
 		$forum_page['table_row']['timesfound'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
 		$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
@@ -165,7 +166,7 @@ else if (isset($_GET['show_users']))
 	$ip = $_GET['show_users'];
 
 	if (!@preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $ip) && !@preg_match('/^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/', $ip))
-		message($lang_admin['Invalid IP address']);
+		message($lang_admin_users['Invalid IP address']);
 
 	($hook = get_hook('aus_show_users_selected')) ? eval($hook) : null;
 
@@ -186,9 +187,9 @@ else if (isset($_GET['show_users']))
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
 		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-		array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
-		array($lang_admin['Searches'], forum_link($forum_url['admin_users'])),
-		$lang_admin['User search results']
+		array($lang_admin_common['Forum administration'], forum_link($forum_url['admin_index'])),
+		array($lang_admin_common['Searches'], forum_link($forum_url['admin_users'])),
+		$lang_admin_users['User search results']
 	);
 
 	($hook = get_hook('aus_show_users_pre_header_load')) ? eval($hook) : null;
@@ -204,16 +205,16 @@ else if (isset($_GET['show_users']))
 	($hook = get_hook('aus_show_users_output_start')) ? eval($hook) : null;
 
 	$forum_page['table_header'] = array();
-	$forum_page['table_header']['username'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin['User information'].'</th>';
-	$forum_page['table_header']['title'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin['Title column'].'</th>';
-	$forum_page['table_header']['posts'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin['Posts'].'</th>';
-	$forum_page['table_header']['actions'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin['Actions'].'</th>';
+	$forum_page['table_header']['username'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['User information'].'</th>';
+	$forum_page['table_header']['title'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Title column'].'</th>';
+	$forum_page['table_header']['posts'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Posts'].'</th>';
+	$forum_page['table_header']['actions'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Actions'].'</th>';
 	$forum_page['table_header']['select'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_misc['Select'] .'</th>';
 
 
 ?>
 	<div class="main-pagehead">
-		<h2 class="hn"><span><?php printf($lang_admin['Users found'], $forum_page['num_users']) ?></span></h2>
+		<h2 class="hn"><span><?php printf($lang_admin_users['Users found'], $forum_page['num_users']) ?></span></h2>
 	</div>
 	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_users']) ?>?action=modify_users">
 	<div class="main-content main-frm">
@@ -263,17 +264,17 @@ else if (isset($_GET['show_users']))
 			if ($user_data = $forum_db->fetch_assoc($result2))
 			{
 				$forum_page['table_row'] = array();
-				$forum_page['table_row']['username'] = '<td class="tc'.count($forum_page['table_row']).'"><span>'.$lang_admin['Username'].' <a href="'.forum_link($forum_url['user'], $user_data['id']).'">'.forum_htmlencode($user_data['username']).'</a></span> <span class="usermail">'.$lang_admin['E-mail'].' <a href="mailto:'.$user_data['email'].'">'.$user_data['email'].'</a></span>'.(($user_data['admin_note'] != '') ? '<span class="usernote">'.$lang_admin['Admin note'].' '.forum_htmlencode($user_data['admin_note']).'</span>' : '').'</td>';
+				$forum_page['table_row']['username'] = '<td class="tc'.count($forum_page['table_row']).'"><span>'.$lang_admin_users['Username'].' <a href="'.forum_link($forum_url['user'], $user_data['id']).'">'.forum_htmlencode($user_data['username']).'</a></span> <span class="usermail">'.$lang_admin_users['E-mail'].' <a href="mailto:'.$user_data['email'].'">'.$user_data['email'].'</a></span>'.(($user_data['admin_note'] != '') ? '<span class="usernote">'.$lang_admin_users['Admin note'].' '.forum_htmlencode($user_data['admin_note']).'</span>' : '').'</td>';
 				$forum_page['table_row']['title'] = '<td class="tc'.count($forum_page['table_row']).'">'.get_title($user_data).'</td>';
 				$forum_page['table_row']['posts'] = '<td class="tc'.count($forum_page['table_row']).'">'.forum_number_format($user_data['num_posts']).'</td>';
-				$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"><span><a href="'.forum_link($forum_url['admin_users']).'?ip_stats='.$user_data['id'].'">'.$lang_admin['View IP stats'].'</a></span> <span><a href="'.forum_link($forum_url['search_user_posts'], $user_data['id']).'">'.$lang_admin['Show posts'].'</a></span></td>';
+				$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"><span><a href="'.forum_link($forum_url['admin_users']).'?ip_stats='.$user_data['id'].'">'.$lang_admin_users['View IP stats'].'</a></span> <span><a href="'.forum_link($forum_url['search_user_posts'], $user_data['id']).'">'.$lang_admin_users['Show posts'].'</a></span></td>';
 				$forum_page['table_row']['select'] = '<td class="tc'.count($forum_page['table_row']).'"><input type="checkbox" name="users['.$user_data['id'].']" value="1" /></td>';
 			}
 			else
 			{
 				$forum_page['table_row'] = array();
 				$forum_page['table_row']['username'] = '<td class="tc'.count($forum_page['table_row']).'">'.forum_htmlencode($poster).'</td>';
-				$forum_page['table_row']['title'] = '<td class="tc'.count($forum_page['table_row']).'">'.$lang_admin['Guest'].'</td>';
+				$forum_page['table_row']['title'] = '<td class="tc'.count($forum_page['table_row']).'">'.$lang_admin_users['Guest'].'</td>';
 				$forum_page['table_row']['posts'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
 				$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
 				$forum_page['table_row']['select'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
@@ -290,7 +291,7 @@ else if (isset($_GET['show_users']))
 	else
 	{
 			$forum_page['table_row'] = array();
-			$forum_page['table_row']['username'] = '<td class="tc'.count($forum_page['table_row']).'">'.$lang_admin['Cannot find IP'].'</td>';
+			$forum_page['table_row']['username'] = '<td class="tc'.count($forum_page['table_row']).'">'.$lang_admin_users['Cannot find IP'].'</td>';
 			$forum_page['table_row']['title'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
 			$forum_page['table_row']['posts'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
 			$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
@@ -317,12 +318,12 @@ else if (isset($_GET['show_users']))
 	if ($forum_page['num_users'] > 0)
 	{
 		if ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && $forum_user['g_mod_ban_users'] == '1'))
-			$forum_page['mod_options']['ban'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="ban_users" value="'.$lang_admin['Ban'].'" /></span>';
+			$forum_page['mod_options']['ban'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="ban_users" value="'.$lang_admin_users['Ban'].'" /></span>';
 
 		if ($forum_user['g_id'] == FORUM_ADMIN)
 		{
-			$forum_page['mod_options']['delete'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="delete_users" value="'.$lang_admin['Delete'].'" /></span>';
-			$forum_page['mod_options']['change_group'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="change_group" value="'.$lang_admin['Change group'].'" /></span>';
+			$forum_page['mod_options']['delete'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="delete_users" value="'.$lang_admin_common['Delete'].'" /></span>';
+			$forum_page['mod_options']['change_group'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="change_group" value="'.$lang_admin_users['Change group'].'" /></span>';
 		}
 	}
 
@@ -355,13 +356,13 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 {
 	// User pressed the cancel button
 	if (isset($_POST['delete_users_cancel']))
-		redirect(forum_link($forum_url['admin_users']), $lang_common['Cancel redirect']);
+		redirect(forum_link($forum_url['admin_users']), $lang_admin_common['Cancel redirect']);
 
 	if ($forum_user['g_id'] != FORUM_ADMIN)
 		message($lang_common['No permission']);
 
 	if (empty($_POST['users']))
-		message($lang_admin['No users selected']);
+		message($lang_admin_users['No users selected']);
 
 	($hook = get_hook('aus_delete_users_selected')) ? eval($hook) : null;
 
@@ -382,7 +383,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 	($hook = get_hook('aus_qr_check_for_admins')) ? eval($hook) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if ($forum_db->num_rows($result) > 0)
-		message($lang_admin['Delete admin message']);
+		message($lang_admin_users['Delete admin message']);
 
 	if (isset($_POST['delete_users_comply']))
 	{
@@ -395,7 +396,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 				delete_user($id, isset($_POST['delete_posts']));
 		}
 
-		redirect(forum_link($forum_url['admin_users']), $lang_admin['Users deleted'].' '.$lang_admin['Redirect']);
+		redirect(forum_link($forum_url['admin_users']), $lang_admin_users['Users deleted'].' '.$lang_admin_common['Redirect']);
 	}
 
 	// Setup form
@@ -404,9 +405,9 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
 		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-		array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
-		array($lang_admin['Searches'], forum_link($forum_url['admin_users'])),
-		$lang_admin['Delete users']
+		array($lang_admin_common['Forum administration'], forum_link($forum_url['admin_index'])),
+		array($lang_admin_common['Searches'], forum_link($forum_url['admin_users'])),
+		$lang_admin_users['Delete users']
 	);
 
 	($hook = get_hook('aus_delete_users_pre_header_load')) ? eval($hook) : null;
@@ -423,11 +424,11 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 
 ?>
 	<div class="main-subhead">
-		<h2 class="hn"><span><?php echo $lang_admin['Confirm delete'] ?></span></h2>
+		<h2 class="hn"><span><?php echo $lang_admin_users['Confirm delete'] ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
 		<div class="cbox info-box">
-			<p class="warn"><?php echo $lang_admin['Delete warning'] ?></p>
+			<p class="warn"><?php echo $lang_admin_users['Delete warning'] ?></p>
 		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_users']) ?>?action=modify_users">
 			<div class="hidden">
@@ -435,17 +436,17 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 				<input type="hidden" name="users" value="<?php echo implode(',', $users) ?>" />
 			</div>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><span><?php echo $lang_admin['Delete posts legend'] ?></span></legend>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box checkbox">
+				<legend class="group-legend"><span><?php echo $lang_admin_users['Delete posts legend'] ?></span></legend>
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="delete_posts" value="1" checked="checked" /></span>
-						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Delete posts'] ?></span> <?php echo $lang_admin['Delete posts label'] ?></label>
+						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Delete posts'] ?></span> <?php echo $lang_admin_users['Delete posts label'] ?></label>
 					</div>
 				</div>
 			</fieldset>
 			<div class="frm-buttons">
-				<span class="submit"><input type="submit" name="delete_users_comply" value="<?php echo $lang_admin['Delete'] ?>" /></span>
-				<span class="cancel"><input type="submit" name="delete_users_cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
+				<span class="submit"><input type="submit" name="delete_users_comply" value="<?php echo $lang_admin_users['Delete'] ?>" /></span>
+				<span class="cancel"><input type="submit" name="delete_users_cancel" value="<?php echo $lang_admin_common['Cancel'] ?>" /></span>
 			</div>
 		</form>
 	</div>
@@ -466,7 +467,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 		message($lang_common['No permission']);
 
 	if (empty($_POST['users']))
-		message($lang_admin['No users selected']);
+		message($lang_admin_users['No users selected']);
 
 	($hook = get_hook('aus_ban_users_selected')) ? eval($hook) : null;
 
@@ -487,7 +488,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 	($hook = get_hook('aus_qr_check_for_admins2')) ? eval($hook) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if ($forum_db->num_rows($result) > 0)
-		message($lang_admin['Ban admin message']);
+		message($lang_admin_users['Ban admin message']);
 
 	if (isset($_POST['ban_users_comply']))
 	{
@@ -501,7 +502,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 			$ban_expire = strtotime($ban_expire);
 
 			if ($ban_expire == -1 || $ban_expire <= time())
-				message($lang_admin['Invalid expire message']);
+				message($lang_admin_users['Invalid expire message']);
 		}
 		else
 			$ban_expire = 'NULL';
@@ -553,7 +554,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 
 		generate_bans_cache();
 
-		redirect(forum_link($forum_url['admin_users']), $lang_admin['Users banned'].' '.$lang_admin['Redirect']);
+		redirect(forum_link($forum_url['admin_users']), $lang_admin_users['Users banned'].' '.$lang_admin_common['Redirect']);
 	}
 
 	// Setup form
@@ -562,9 +563,9 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
 		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-		array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
-		array($lang_admin['Searches'], forum_link($forum_url['admin_users'])),
-		$lang_admin['Ban users']
+		array($lang_admin_common['Forum administration'], forum_link($forum_url['admin_index'])),
+		array($lang_admin_common['Searches'], forum_link($forum_url['admin_users'])),
+		$lang_admin_users['Ban users']
 	);
 
 	($hook = get_hook('aus_ban_users_pre_header_load')) ? eval($hook) : null;
@@ -581,11 +582,11 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 
 ?>
 	<div class="main-subhead">
-		<h2 class="hn"><span><?php echo $lang_admin['Ban advanced heading'] ?></span></h2>
+		<h2 class="hn"><span><?php echo $lang_admin_users['Ban advanced heading'] ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
-		<div class="content-box">
-			<p><?php echo $lang_admin['Mass ban info'] ?></p>
+		<div class="ct-box">
+			<p><?php echo $lang_admin_users['Mass ban info'] ?></p>
 		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_users']) ?>?action=modify_users">
 			<div class="hidden">
@@ -593,22 +594,22 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 				<input type="hidden" name="users" value="<?php echo implode(',', $users) ?>" />
 			</div>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><span><?php echo $lang_admin['Ban settings legend'] ?></span></legend>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Ban message'] ?></span> <small><?php echo $lang_admin['Ban message info'] ?></small></label><br />
+				<legend class="group-legend"><span><?php echo $lang_admin_users['Ban settings legend'] ?></span></legend>
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Ban message'] ?></span> <small><?php echo $lang_admin_users['Ban message info'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_message" size="50" maxlength="255" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Expire date'] ?></span> <small><?php echo $lang_admin['Expire date info'] ?></small></label><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Expire date'] ?></span> <small><?php echo $lang_admin_users['Expire date info'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_expire" size="17" maxlength="10" /></span>
 					</div>
 				</div>
 			</fieldset>
 			<div class="frm-buttons">
-				<span class="submit"><input type="submit" class="button" name="ban_users_comply" value="<?php echo $lang_admin['Ban'] ?>" /></span>
+				<span class="submit"><input type="submit" class="button" name="ban_users_comply" value="<?php echo $lang_admin_users['Ban'] ?>" /></span>
 			</div>
 		</form>
 	</div>
@@ -630,10 +631,10 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 
 	// User pressed the cancel button
 	if (isset($_POST['change_group_cancel']))
-		redirect(forum_link($forum_url['admin_users']), $lang_admin['Cancel redirect']);
+		redirect(forum_link($forum_url['admin_users']), $lang_admin_common['Cancel redirect']);
 
 	if (empty($_POST['users']))
-		message($lang_admin['No users selected']);
+		message($lang_admin_users['No users selected']);
 
 	($hook = get_hook('aus_change_group_selected')) ? eval($hook) : null;
 
@@ -677,7 +678,7 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 		if ($move_to_group != FORUM_ADMIN && $group_is_mod == '0')
 			clean_forum_moderators();
 
-		redirect(forum_link($forum_url['admin_users']), $lang_admin['User groups updated'].' '.$lang_admin['Redirect']);
+		redirect(forum_link($forum_url['admin_users']), $lang_admin_users['User groups updated'].' '.$lang_admin_common['Redirect']);
 	}
 
 	// Setup form
@@ -686,9 +687,9 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
 		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-		array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
-		array($lang_admin['Searches'], forum_link($forum_url['admin_users'])),
-		$lang_admin['Change group']
+		array($lang_admin_common['Forum administration'], forum_link($forum_url['admin_index'])),
+		array($lang_admin_common['Searches'], forum_link($forum_url['admin_users'])),
+		$lang_admin_users['Change group']
 	);
 
 	($hook = get_hook('aus_change_group_pre_header_load')) ? eval($hook) : null;
@@ -705,7 +706,7 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 
 ?>
 	<div class="main-subhead">
-		<h2 class="hn"><span><?php echo $lang_admin['Change group head'] ?></span></h2>
+		<h2 class="hn"><span><?php echo $lang_admin_users['Change group head'] ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_users']) ?>?action=modify_users">
@@ -714,10 +715,10 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 				<input type="hidden" name="users" value="<?php echo implode(',', $users) ?>" />
 			</div>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><span><?php echo $lang_admin['Move users legend'] ?></span></legend>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box select">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Move users to'] ?></span></label><br />
+				<legend class="group-legend"><span><?php echo $lang_admin_users['Move users legend'] ?></span></legend>
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box select">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Move users to label'] ?></span></label><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="move_to_group">
 <?php
 
@@ -744,8 +745,8 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 				</div>
 			</fieldset>
 			<div class="frm-buttons">
-				<span class="submit"><input type="submit" name="change_group_comply" value="<?php echo $lang_admin['Change group'] ?>" /></span>
-				<span class="cancel"><input type="submit" name="change_group_cancel" value="<?php echo $lang_admin['Cancel'] ?>" /></span>
+				<span class="submit"><input type="submit" name="change_group_comply" value="<?php echo $lang_admin_users['Change group'] ?>" /></span>
+				<span class="cancel"><input type="submit" name="change_group_cancel" value="<?php echo $lang_admin_common['Cancel'] ?>" /></span>
 			</div>
 		</form>
 	</div>
@@ -782,7 +783,7 @@ else if (isset($_POST['find_user']))
 	$user_group = $_POST['user_group'];
 
 	if ((!empty($posts_greater) || !empty($posts_less)) && !ctype_digit($posts_greater.$posts_less))
-		message($lang_admin['Non numeric value message']);
+		message($lang_admin_users['Non numeric value message']);
 
 	// Try to convert date/time to timestamps
 	if ($last_post_after != '')
@@ -795,7 +796,7 @@ else if (isset($_POST['find_user']))
 		$registered_before = strtotime($registered_before);
 
 	if ($last_post_after == -1 || $last_post_before == -1 || $registered_after == -1 || $registered_before == -1)
-		message($lang_admin['Invalid date/time message']);
+		message($lang_admin_users['Invalid date/time message']);
 
 	if ($last_post_after != '')
 		$conditions[] = 'u.last_post>'.$last_post_after;
@@ -822,7 +823,7 @@ else if (isset($_POST['find_user']))
 		$conditions[] = 'u.group_id='.intval($user_group);
 
 	if (empty($conditions))
-		message($lang_admin['No search terms message']);
+		message($lang_admin_users['No search terms message']);
 
 
 	// Load the misc.php language file
@@ -850,9 +851,9 @@ else if (isset($_POST['find_user']))
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
 		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-		array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
-		array($lang_admin['Searches'], forum_link($forum_url['admin_users'])),
-		$lang_admin['User search results']
+		array($lang_admin_common['Forum administration'], forum_link($forum_url['admin_index'])),
+		array($lang_admin_common['Searches'], forum_link($forum_url['admin_users'])),
+		$lang_admin_users['User search results']
 	);
 
 	($hook = get_hook('aus_find_user_pre_header_load')) ? eval($hook) : null;
@@ -868,15 +869,15 @@ else if (isset($_POST['find_user']))
 	($hook = get_hook('aus_find_user_output_start')) ? eval($hook) : null;
 
 	$forum_page['table_header'] = array();
-	$forum_page['table_header']['username'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin['User information'].'</th>';
-	$forum_page['table_header']['title'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin['Title column'].'</th>';
-	$forum_page['table_header']['posts'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin['Posts'].'</th>';
-	$forum_page['table_header']['actions'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin['Actions'].'</th>';
+	$forum_page['table_header']['username'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['User information'].'</th>';
+	$forum_page['table_header']['title'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Title column'].'</th>';
+	$forum_page['table_header']['posts'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Posts'].'</th>';
+	$forum_page['table_header']['actions'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Actions'].'</th>';
 	$forum_page['table_header']['select'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_misc['Select'] .'</th>';
 
 ?>
 	<div class="main-pagehead">
-		<h2 class="hn"><span><?php printf($lang_admin['Users found'], $forum_page['num_users']) ?></span></h2>
+		<h2 class="hn"><span><?php printf($lang_admin_users['Users found'], $forum_page['num_users']) ?></span></h2>
 	</div>
 	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_users']) ?>?action=modify_users">
 	<div class="main-content main-forum">
@@ -903,7 +904,7 @@ else if (isset($_POST['find_user']))
 
 			// This script is a special case in that we want to display "Not verified" for non-verified users
 			if (($user_data['g_id'] == '' || $user_data['g_id'] == FORUM_UNVERIFIED) && $user_title != $lang_common['Banned'])
-				$user_title = '<strong>'.$lang_admin['Not verified'].'</strong>';
+				$user_title = '<strong>'.$lang_admin_users['Not verified'].'</strong>';
 			else
 				$user_title = get_title($user_data);
 
@@ -912,10 +913,10 @@ else if (isset($_POST['find_user']))
 				$forum_page['item_style'] .= ' row1';
 
 			$forum_page['table_row'] = array();
-			$forum_page['table_row']['username'] = '<td class="tc'.count($forum_page['table_row']).'"><span>'.$lang_admin['Username'].' <a href="'.forum_link($forum_url['user'], $user_data['id']).'">'.forum_htmlencode($user_data['username']).'</a></span> <span class="usermail">'.$lang_admin['E-mail'].' <a href="mailto:'.$user_data['email'].'">'.$user_data['email'].'</a></span>'.(($user_data['admin_note'] != '') ? '<span class="usernote">'.$lang_admin['Admin note'].' '.forum_htmlencode($user_data['admin_note']).'</span>' : '').'</td>';
+			$forum_page['table_row']['username'] = '<td class="tc'.count($forum_page['table_row']).'"><span>'.$lang_admin_users['Username'].' <a href="'.forum_link($forum_url['user'], $user_data['id']).'">'.forum_htmlencode($user_data['username']).'</a></span> <span class="usermail">'.$lang_admin_users['E-mail'].' <a href="mailto:'.$user_data['email'].'">'.$user_data['email'].'</a></span>'.(($user_data['admin_note'] != '') ? '<span class="usernote">'.$lang_admin_users['Admin note'].' '.forum_htmlencode($user_data['admin_note']).'</span>' : '').'</td>';
 			$forum_page['table_row']['title'] = '<td class="tc'.count($forum_page['table_row']).'">'.$user_title.'</td>';
 			$forum_page['table_row']['posts'] = '<td class="tc'.count($forum_page['table_row']).'">'.forum_number_format($user_data['num_posts']).'</td>';
-			$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"><span><a href="'.forum_link($forum_url['admin_users']).'?ip_stats='.$user_data['id'].'">'.$lang_admin['View IP stats'].'</a></span> <span><a href="'.forum_link($forum_url['search_user_posts'], $user_data['id']).'">'.$lang_admin['Show posts'].'</a></span></td>';
+			$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"><span><a href="'.forum_link($forum_url['admin_users']).'?ip_stats='.$user_data['id'].'">'.$lang_admin_users['View IP stats'].'</a></span> <span><a href="'.forum_link($forum_url['search_user_posts'], $user_data['id']).'">'.$lang_admin_users['Show posts'].'</a></span></td>';
 			$forum_page['table_row']['select'] = '<td class="tc'.count($forum_page['table_row']).'"><input type="checkbox" name="users['.$user_data['id'].']" value="1" /></td>';
 
 ?>
@@ -930,7 +931,7 @@ else if (isset($_POST['find_user']))
 	{
 
 			$forum_page['table_row'] = array();
-			$forum_page['table_row']['username'] = '<td class="tc'.count($forum_page['table_row']).'">'.$lang_admin['No match'].'</td>';
+			$forum_page['table_row']['username'] = '<td class="tc'.count($forum_page['table_row']).'">'.$lang_admin_users['No match'].'</td>';
 			$forum_page['table_row']['title'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
 			$forum_page['table_row']['posts'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
 			$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
@@ -956,12 +957,12 @@ $forum_page['mod_options'] = array();
 if ($forum_page['num_users'] > 0)
 {
 	if ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && $forum_user['g_mod_ban_users'] == '1'))
-		$forum_page['mod_options']['ban'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="ban_users" value="'.$lang_admin['Ban'].'" /></span>';
+		$forum_page['mod_options']['ban'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="ban_users" value="'.$lang_admin_users['Ban'].'" /></span>';
 
 	if ($forum_user['g_id'] == FORUM_ADMIN)
 	{
-		$forum_page['mod_options']['deLete'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="delete_users" value="'.$lang_admin['Delete'].'" /></span>';
-		$forum_page['mod_options']['change_group'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="change_group" value="'.$lang_admin['Change group'].'" /></span>';
+		$forum_page['mod_options']['delete'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="delete_users" value="'.$lang_admin_common['Delete'].'" /></span>';
+		$forum_page['mod_options']['change_group'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="change_group" value="'.$lang_admin_users['Change group'].'" /></span>';
 	}
 }
 
@@ -1000,8 +1001,8 @@ $forum_page['form_action'] = '';
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
 	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-	array($lang_admin['Forum administration'], forum_link($forum_url['admin_index'])),
-	$lang_admin['Searches']
+	array($lang_admin_common['Forum administration'], forum_link($forum_url['admin_index'])),
+	$lang_admin_common['Searches']
 );
 
 ($hook = get_hook('aus_search_form_pre_header_load')) ? eval($hook) : null;
@@ -1017,8 +1018,8 @@ ob_start();
 ($hook = get_hook('aus_search_form_output_start')) ? eval($hook) : null;
 
 ?>
-	<div class="main-subhead" style="margin-top: 5px;">
-		<h2 class="hn"><span><?php echo $lang_admin['Search head'] ?></span></h2>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin_users['Search head'] ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_users']) ?>?action=find_user">
@@ -1027,88 +1028,88 @@ ob_start();
 			</div>
 <?php ($hook = get_hook('aus_search_pre_user_search_fieldset')) ? eval($hook) : null; ?>
 			<div class="content-head">
-				<h3 class="hn"><span><?php echo $lang_admin['User search head'] ?></span></h3>
+				<h3 class="hn"><span><?php echo $lang_admin_users['User search head'] ?></span></h3>
 			</div>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_admin['Searches personal legend'] ?></strong></legend>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Username label'] ?></span></label><br />
+				<legend class="group-legend"><strong><?php echo $lang_admin_users['Searches personal legend'] ?></strong></legend>
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Username label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="username" size="25" maxlength="25" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Title label'] ?></span></label><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Title label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[title]" size="30" maxlength="50" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Real name label'] ?></span></label><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Real name label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[realname]" size="30" maxlength="40" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Location label'] ?></span></label><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Location label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[location]" size="30" maxlength="30" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Signature label'] ?></span></label><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Signature label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[signature]" size="35" maxlength="512" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Admin note label'] ?></span></label><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Admin note label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[admin_note]" size="30" maxlength="30" /></span>
 					</div>
 				</div>
 			</fieldset>
 <?php $forum_page['item_count'] = 0; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_admin['Searches contact legend'] ?></strong></legend>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['E-mail address label'] ?></span></label><br />
+				<legend class="group-legend"><strong><?php echo $lang_admin_users['Searches contact legend'] ?></strong></legend>
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['E-mail address label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[email]" size="30" maxlength="80" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Website label'] ?></span></label><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Website label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[url]" size="35" maxlength="100" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span>Jabber</span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[jabber]" size="30" maxlength="80" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span>ICQ</span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[icq]" size="12" maxlength="12" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span>MSN Messenger</span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[msn]" size="30" maxlength="80" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span>AOL IM</span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[aim]" size="20" maxlength="20" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span>Yahoo! Messenger</span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[yahoo]" size="20" maxlength="20" /></span>
 					</div>
@@ -1116,40 +1117,40 @@ ob_start();
 			</fieldset>
 <?php $forum_page['item_count'] = 0; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_admin['Searches activity legend'] ?></strong></legend>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box frm-short text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['More posts label'] ?></span> <small><?php echo $lang_admin['Number of posts help'] ?></small></label><br />
+				<legend class="group-legend"><strong><?php echo $lang_admin_users['Searches activity legend'] ?></strong></legend>
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box frm-short text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['More posts label'] ?></span> <small><?php echo $lang_admin_users['Number of posts help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="posts_greater" size="5" maxlength="8" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box frm-short text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Less posts label'] ?></span> <small><?php echo $lang_admin['Number of posts help'] ?></small></label><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box frm-short text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Less posts label'] ?></span> <small><?php echo $lang_admin_users['Number of posts help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="posts_less" size="5" maxlength="8" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Last post after label'] ?></span> <small><?php echo $lang_admin['Date format help'] ?></small></label><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Last post after label'] ?></span> <small><?php echo $lang_admin_users['Date format help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="last_post_after" size="24" maxlength="19" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Last post before label'] ?></span><small><?php echo $lang_admin['Date format help'] ?></small></label><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Last post before label'] ?></span><small><?php echo $lang_admin_users['Date format help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="last_post_before" size="24" maxlength="19" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Registered after label'] ?></span> <small><?php echo $lang_admin['Date format help'] ?></small></label><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Registered after label'] ?></span> <small><?php echo $lang_admin_users['Date format help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="registered_after" size="24" maxlength="19" /></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Registered before label'] ?></span> <small><?php echo $lang_admin['Date format help'] ?></small></label><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Registered before label'] ?></span> <small><?php echo $lang_admin_users['Date format help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="registered_before" size="24" maxlength="19" /></span>
 					</div>
 				</div>
@@ -1162,38 +1163,38 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
 ?>
 			<div class="content-head">
-				<h3 class="hn"><span><?php echo $lang_admin['User results head'] ?></span></h3>
+				<h3 class="hn"><span><?php echo $lang_admin_users['User results head'] ?></span></h3>
 			</div>
 <?php ($hook = get_hook('aus_search_pre_results_fieldset')) ? eval($hook) : null; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_admin['User results legend'] ?></strong></legend>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box select">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Order by label'] ?></span></label><br />
+				<legend class="group-legend"><strong><?php echo $lang_admin_users['User results legend'] ?></strong></legend>
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box select">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Order by label'] ?></span></label><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="order_by">
-							<option value="username" selected="selected"><?php echo strtolower($lang_admin['Username']) ?></option>
-							<option value="email"><?php echo strtolower($lang_admin['E-mail']) ?></option>
-							<option value="num_posts"><?php echo strtolower($lang_admin['Posts']) ?></option>
-							<option value="last_post"><?php echo $lang_admin['Last post'] ?></option>
-							<option value="registered"><?php echo $lang_admin['Registered'] ?></option>
+							<option value="username" selected="selected"><?php echo strtolower($lang_admin_users['Username']) ?></option>
+							<option value="email"><?php echo strtolower($lang_admin_users['E-mail']) ?></option>
+							<option value="num_posts"><?php echo strtolower($lang_admin_users['Posts']) ?></option>
+							<option value="last_post"><?php echo $lang_admin_users['Last post'] ?></option>
+							<option value="registered"><?php echo $lang_admin_users['Registered'] ?></option>
 						</select></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box select">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['Sort order label'] ?></span></label><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box select">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Sort order label'] ?></span></label><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="direction">
-							<option value="ASC" selected="selected"><?php echo $lang_admin['Ascending'] ?></option>
-							<option value="DESC"><?php echo $lang_admin['Descending'] ?></option>
+							<option value="ASC" selected="selected"><?php echo $lang_admin_users['Ascending'] ?></option>
+							<option value="DESC"><?php echo $lang_admin_users['Descending'] ?></option>
 						</select></span>
 					</div>
 				</div>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box select">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['User group label'] ?></span></label><br />
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box select">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['User group label'] ?></span></label><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="user_group">
-							<option value="all" selected="selected"><?php echo $lang_admin['All groups'] ?></option>
-							<option value="<?php echo FORUM_UNVERIFIED ?>"><?php echo $lang_admin['Unverified users'] ?></option>
+							<option value="all" selected="selected"><?php echo $lang_admin_users['All groups'] ?></option>
+							<option value="<?php echo FORUM_UNVERIFIED ?>"><?php echo $lang_admin_users['Unverified users'] ?></option>
 <?php
 
 $query = array(
@@ -1215,7 +1216,7 @@ while ($cur_group = $forum_db->fetch_assoc($result))
 <?php ($hook = get_hook('aus_search_results_fieldset_end')) ? eval($hook) : null; ?>
 			</fieldset>
 			<div class="frm-buttons">
-				<span class="submit"><input type="submit" class="button" name="find_user" value="<?php echo $lang_admin['Submit search'] ?>" /></span>
+				<span class="submit"><input type="submit" class="button" name="find_user" value="<?php echo $lang_admin_users['Submit search'] ?>" /></span>
 			</div>
 		</form>
 	</div>
@@ -1228,22 +1229,22 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
 	<div class="main-content main-frm">
 		<div class="main-subhead">
-			<h2 class="hn"><span><?php echo $lang_admin['IP search head'] ?></span></h2>
+			<h2 class="hn"><span><?php echo $lang_admin_users['IP search head'] ?></span></h2>
 		</div>
 		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_users']) ?>">
 <?php ($hook = get_hook('aus_search_pre_ip_search_fieldset')) ? eval($hook) : null; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="frm-legend"><strong><?php echo $lang_admin['IP search legend'] ?></strong></legend>
-				<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="frm-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin['IP address label'] ?></span></label><br />
+				<legend class="group-legend"><strong><?php echo $lang_admin_users['IP search legend'] ?></strong></legend>
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box text">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['IP address label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="show_users" size="18" maxlength="15" /></span>
 					</div>
 				</div>
 <?php ($hook = get_hook('aus_search_ip_search_fieldset_end')) ? eval($hook) : null; ?>
 			</fieldset>
 			<div class="frm-buttons">
-				<span class="submit"><input type="submit" value=" <?php echo $lang_admin['Submit search'] ?> " /></span>
+				<span class="submit"><input type="submit" value=" <?php echo $lang_admin_users['Submit search'] ?> " /></span>
 			</div>
 		</form>
 	</div>

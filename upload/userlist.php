@@ -129,15 +129,15 @@ ob_start();
 <div class="main-content main-frm">
 	<form class="frm-form" id="afocus" method="get" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 		<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-			<legend class="frm-legend"><strong><?php echo $lang_ul['User find legend'] ?></strong></legend>
-<?php if ($forum_user['g_search_users'] == '1'): ?>			<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-				<div class="frm-box text">
+			<legend class="group-legend"><strong><?php echo $lang_ul['User find legend'] ?></strong></legend>
+<?php if ($forum_user['g_search_users'] == '1'): ?>			<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-box text">
 					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_ul['Search for username'] ?></span> <small><?php echo $lang_ul['Username help'] ?></small></label><br />
 					<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="username" value="<?php echo forum_htmlencode($forum_page['username']) ?>" size="35" maxlength="25" /></span>
 				</div>
 			</div>
-<?php endif; ?>			<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-				<div class="frm-box select">
+<?php endif; ?>			<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-box select">
 					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_ul['User group'] ?></span></label><br />
 					<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="show_group">
 					<option value="-1"<?php if ($forum_page['show_group'] == -1) echo ' selected="selected"' ?>><?php echo $lang_ul['All users'] ?></option>
@@ -166,8 +166,8 @@ while ($cur_group = $forum_db->fetch_assoc($result))
 					</select></span>
 				</div>
 			</div>
-			<div class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
-				<div class="frm-box select">
+			<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-box select">
 					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_search['Sort by'] ?></span></label><br />
 					<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="sort_by">
 					<option value="username"<?php if ($forum_page['sort_by'] == 'username') echo ' selected="selected"' ?>><?php echo $lang_common['Username'] ?></option>
@@ -176,11 +176,17 @@ while ($cur_group = $forum_db->fetch_assoc($result))
 <?php endif; ($hook = get_hook('ul_new_sort_by')) ? eval($hook) : null; ?>					</select></span>
 				</div>
 			</div>
-			<fieldset class="frm-set group-item<?php echo ++$forum_page['item_count'] ?>">
+			<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<legend><span><?php echo $lang_search['Sort order'] ?></span></legend>
-				<div class="frm-box radio">
-					<span class="fld-group"><input type="radio" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="sort_dir" value="ASC"<?php if ($forum_page['sort_dir'] == 'ASC') echo ' checked="checked"' ?> /> <label for="fld<?php echo $forum_page['fld_count'] ?>"><?php echo $lang_search['Ascending'] ?></label></span>
-					<span class="fld-group"><input type="radio" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="sort_dir" value="DESC"<?php if ($forum_page['sort_dir'] == 'DESC') echo ' checked="checked"' ?> /> <label for="fld<?php echo $forum_page['fld_count'] ?>"><?php echo $lang_search['Descending'] ?></label></span>
+				<div class="mf-box mf-yesno">
+					<div class="mf-item">
+						<span class="fld-input"><input type="radio" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="sort_dir" value="ASC"<?php if ($forum_page['sort_dir'] == 'ASC') echo ' checked="checked"' ?> /></span>
+						<label for="fld<?php echo $forum_page['fld_count'] ?>"><?php echo $lang_search['Ascending'] ?></label>
+					</div>
+					<div class="mf-item">
+						<span class="fld-input"><input type="radio" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="sort_dir" value="DESC"<?php if ($forum_page['sort_dir'] == 'DESC') echo ' checked="checked"' ?> /></span>
+						<label for="fld<?php echo $forum_page['fld_count'] ?>"><?php echo $lang_search['Descending'] ?></label>
+					</div>
 				</div>
 			</fieldset>
 		</fieldset>
