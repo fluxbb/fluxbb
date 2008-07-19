@@ -197,7 +197,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 		// Validate the email-address
 		$email = strtolower(forum_trim($_POST['req_email']));
 		if (!is_valid_email($email))
-			$errors[] = $lang_common['Invalid e-mail'];
+			$errors[] = $lang_login['Invalid e-mail'];
 
 		// Did everything go according to plan?
 		if (empty($errors))
@@ -321,18 +321,18 @@ else if ($action == 'forget' || $action == 'forget_2')
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
 			</div>
 <?php ($hook = get_hook('li_forgot_pass_pre_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
+				<legend class="group-legend"><strong><?php echo $lang_login['New pass legend'] ?></strong></legend>
+				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_login['E-mail address'] ?></span><small><?php echo $lang_login['E-mail address help'] ?></small></label><br />
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_login['E-mail address'] ?></span> <small><?php echo $lang_login['E-mail address help'] ?></small></label><br />
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="req_email" value="<?php echo isset($_POST['req_email']) ? forum_htmlencode($_POST['req_email']) : '' ?>" size="35" maxlength="80" /></span>
 					</div>
 				</div>
 			</fieldset>
 <?php ($hook = get_hook('li_forgot_pass_post_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
-				<span class="submit"><input type="submit" name="request_pass" value="<?php echo $lang_common['Submit'] ?>" /></span>
+				<span class="submit"><input type="submit" name="request_pass" value="<?php echo $lang_login['Submit password request'] ?>" /></span>
 				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
 			</div>
 		</form>
@@ -413,15 +413,15 @@ ob_start();
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
 <?php ($hook = get_hook('li_login_pre_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_login['Login legend'] ?></strong></legend>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_login['Username'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_username" value="<?php echo isset($_POST['req_username']) ? forum_htmlencode($_POST['req_username']) : '' ?>" size="35" maxlength="25" /></span>
 					</div>
 				</div>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_login['Password'] ?></span></label><br />
 						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_password" value="<?php echo isset($_POST['req_password']) ? ($_POST['req_password']) : '' ?>" size="35" /></span>
@@ -429,9 +429,9 @@ ob_start();
 				</div>
 			</fieldset>
 <?php $forum_page['item_count'] = 0; ?>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_login['Login options legend'] ?></strong></legend>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="save_pass" value="1" /></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_login['Remember me'] ?></span> <?php echo $lang_login['Persistent login'] ?></label>
@@ -440,7 +440,7 @@ ob_start();
 			</fieldset>
 <?php ($hook = get_hook('li_login_post_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons frm-options">
-				<span class="submit"><input type="submit" name="login" value="<?php echo $lang_common['Login'] ?>" /></span>
+				<span class="submit"><input type="submit" name="login" value="<?php echo $lang_login['Login'] ?>" /></span>
 			</div>
 		</form>
 	</div>

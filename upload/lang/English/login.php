@@ -4,7 +4,9 @@
 $lang_login = array(
 
 // Miscellaneous
+'Login'						=>	'Login',
 'Login info'				=>	'Login to %s',
+'New pass legend'			=>	'Required information',
 'Username'					=>	'Username:',
 'Password'					=>	'Password:',
 'Remember me'				=>	'Remember me:',
@@ -13,13 +15,15 @@ $lang_login = array(
 'Login errors'				=>	'<strong>Warning!</strong> The following errors must be corrected before you can login:',
 'Wrong user/pass'			=>	'Incorrect username and/or password.',
 'Login redirect'			=>	'Logged in successfully. Redirecting …',
-'Login legend'				=>	'Required information:',
+'Login legend'				=>	'Required login information:',
 'Login options legend'		=>	'Optional setting:',
 'Logout redirect'			=>	'Logged out. Redirecting …',
 'No e-mail match'			=>	'There is no user registered with the e-mail address %s.',
+'Invalid e-mail'			=>	'The e-mail address you entered is invalid.',
 'Login options'				=>	'Do you need to %1$s or obtain a %2$s before you login?',
 'Obtain pass'				=>	'new password',
 'register'					=>	'register',
+'Submit password request'	=>	'Submit requrest',
 'Email flood'				=>	'This account has already requested a new password in the past %s seconds. Please wait a while before requesting a new password again.',
 'New password request'		=>	'New password request',
 'New password errors'		=>	'<strong>Warning!</strong> The following errors must be corrected before a new password can be sent:',
