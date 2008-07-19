@@ -425,7 +425,7 @@ else if (isset($_POST['add_edit_group']))
 
 	generate_quickjump_cache();
 
-	redirect(forum_link($forum_url['admin_groups']), (($_POST['mode'] == 'edit') ? $lang_admin_groups['Group edited'] : $lang_admin_groups['Group added']).' '.$lang_admin_groups['Redirect']);
+	redirect(forum_link($forum_url['admin_groups']), (($_POST['mode'] == 'edit') ? $lang_admin_groups['Group edited'] : $lang_admin_groups['Group added']).' '.$lang_admin_common['Redirect']);
 }
 
 
