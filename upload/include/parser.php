@@ -249,21 +249,6 @@ function preparse_tags($text, &$errors, $is_signature = false)
 
 		// We definitely have a bbcode tag.
 
-		//This is if we are currently in a tag which escapes other bbcode such as code
-		if ($current_ignore)
-		{
-			if ('[/'.$current_ignore.']' == $current)
-			{
-				// We've finished the ignored section
-				$current = '[/'.$current_tag.']';
-				$current_ignore = '';
-			}
-
-			$new_text .= $current;
-
-			continue;
-		}
-
 		// Make the tag string lower case
 		if ($equalpos = strpos($current,'='))
 		{
@@ -278,6 +263,21 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		}
 		else
 			$current = strtolower($current);
+
+		//This is if we are currently in a tag which escapes other bbcode such as code
+		if ($current_ignore)
+		{
+			if ('[/'.$current_ignore.']' == $current)
+			{
+				// We've finished the ignored section
+				$current = '[/'.$current_tag.']';
+				$current_ignore = '';
+			}
+
+			$new_text .= $current;
+
+			continue;
+		}
 
 		// Check the current tag is allowed here
 		if (!in_array($current_tag, $limit_bbcode) && $current_tag != $open_tags[$opened_tag])
