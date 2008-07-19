@@ -30,7 +30,7 @@ if (!defined('FORUM_ROOT'))
 require FORUM_ROOT.'include/common.php';
 require FORUM_ROOT.'include/common_admin.php';
 
-($hook = get_hook('aop_start')) ? eval($hook) : null;
+($hook = get_hook('aop_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 if ($forum_user['g_id'] != FORUM_ADMIN)
 	message($lang_common['No permission']);
@@ -46,14 +46,14 @@ if (isset($_POST['form_sent']))
 {
 	$form = array_map('trim', $_POST['form']);
 
-	($hook = get_hook('aop_form_submitted')) ? eval($hook) : null;
+	($hook = get_hook('aop_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	// Validate input depending on section
 	switch ($section)
 	{
 		case 'setup':
 		{
-			($hook = get_hook('aop_setup_validation')) ? eval($hook) : null;
+			($hook = get_hook('aop_setup_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 			if ($form['board_title'] == '')
 				message($lang_admin_settings['Error no board title']);
@@ -89,7 +89,7 @@ if (isset($_POST['form_sent']))
 
 		case 'features':
 		{
-			($hook = get_hook('aop_features_validation')) ? eval($hook) : null;
+			($hook = get_hook('aop_features_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 			if (!isset($form['search_all_forums']) || $form['search_all_forums'] != '1') $form['search_all_forums'] = '0';
 			if (!isset($form['ranks']) || $form['ranks'] != '1') $form['ranks'] = '0';
@@ -143,7 +143,7 @@ if (isset($_POST['form_sent']))
 
 		case 'email':
 		{
-			($hook = get_hook('aop_email_validation')) ? eval($hook) : null;
+			($hook = get_hook('aop_email_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 			if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
 				require FORUM_ROOT.'include/email.php';
@@ -163,7 +163,7 @@ if (isset($_POST['form_sent']))
 
 		case 'announcements':
 		{
-			($hook = get_hook('aop_announcements_validation')) ? eval($hook) : null;
+			($hook = get_hook('aop_announcements_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 			if (!isset($form['announcement']) || $form['announcement'] != '1') $form['announcement'] = '0';
 
@@ -177,7 +177,7 @@ if (isset($_POST['form_sent']))
 
 		case 'registration':
 		{
-			($hook = get_hook('aop_registration_validation')) ? eval($hook) : null;
+			($hook = get_hook('aop_registration_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 			if (!isset($form['regs_allow']) || $form['regs_allow'] != '1') $form['regs_allow'] = '0';
 			if (!isset($form['regs_verify']) || $form['regs_verify'] != '1') $form['regs_verify'] = '0';
@@ -197,7 +197,7 @@ if (isset($_POST['form_sent']))
 
 		case 'maintenance':
 		{
-			($hook = get_hook('aop_maintenance_validation')) ? eval($hook) : null;
+			($hook = get_hook('aop_maintenance_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 			if (!isset($form['maintenance']) || $form['maintenance'] != '1') $form['maintenance'] = '0';
 
@@ -211,12 +211,12 @@ if (isset($_POST['form_sent']))
 
 		default:
 		{
-			($hook = get_hook('aop_new_section_validation')) ? eval($hook) : null;
+			($hook = get_hook('aop_new_section_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 			break;
 		}
 	}
 
-	($hook = get_hook('aop_pre_update_configuration')) ? eval($hook) : null;
+	($hook = get_hook('aop_pre_update_configuration')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	while (list($key, $input) = @each($form))
 	{
@@ -229,7 +229,7 @@ if (isset($_POST['form_sent']))
 				'WHERE'		=> 'conf_name=\'p_'.$forum_db->escape($key).'\''
 			);
 
-			($hook = get_hook('aop_qr_update_permission_conf')) ? eval($hook) : null;
+			($hook = get_hook('aop_qr_update_permission_conf')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 
@@ -247,7 +247,7 @@ if (isset($_POST['form_sent']))
 				'WHERE'		=> 'conf_name=\'o_'.$forum_db->escape($key).'\''
 			);
 
-			($hook = get_hook('aop_qr_update_permission_option')) ? eval($hook) : null;
+			($hook = get_hook('aop_qr_update_permission_option')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 	}
@@ -277,7 +277,7 @@ if (!$section || $section == 'setup')
 
 	$forum_page['main_head'] = $lang_admin_common['Settings'];
 
-	($hook = get_hook('aop_setup_pre_header_load')) ? eval($hook) : null;
+	($hook = get_hook('aop_setup_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE_SECTION', 'settings');
 	define('FORUM_PAGE', 'admin-settings-setup');
@@ -287,7 +287,7 @@ if (!$section || $section == 'setup')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('aop_setup_output_start')) ? eval($hook) : null;
+	($hook = get_hook('aop_setup_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -296,7 +296,7 @@ if (!$section || $section == 'setup')
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_settings_setup'])) ?>" />
 				<input type="hidden" name="form_sent" value="1" />
 			</div>
-<?php ($hook = get_hook('aop_setup_pre_personal_part')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_setup_pre_personal_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 
 				<div class="content-head">
 					<h2 class="hn"><span><?php printf($lang_admin_settings['Setup head'], $lang_admin_settings['Setup personal']) ?></span></h2>
@@ -350,14 +350,14 @@ if (!$section || $section == 'setup')
 							</select></span>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_setup_personal_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_setup_personal_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
-($hook = get_hook('aop_setup_pre_local_part')) ? eval($hook) : null;
+($hook = get_hook('aop_setup_pre_local_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 				<div class="content-head">
@@ -455,14 +455,14 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[date_format]" size="25" maxlength="25" value="<?php echo forum_htmlencode($forum_config['o_date_format']) ?>" /></span>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_setup_local_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_setup_local_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
-($hook = get_hook('aop_setup_pre_timeouts_part')) ? eval($hook) : null;
+($hook = get_hook('aop_setup_pre_timeouts_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 				<div class="content-head">
@@ -488,14 +488,14 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[redirect_delay]" size="5" maxlength="5" value="<?php echo $forum_config['o_redirect_delay'] ?>" /></span>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_setup_timeouts_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_setup_timeouts_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
-($hook = get_hook('aop_setup_pre_pagination_part')) ? eval($hook) : null;
+($hook = get_hook('aop_setup_pre_pagination_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 				<div class="content-head">
@@ -521,14 +521,14 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[topic_review]" size="3" maxlength="3" value="<?php echo $forum_config['o_topic_review'] ?>" /></span>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_setup_pagination_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_setup_pagination_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
-($hook = get_hook('aop_setup_pre_reports_part')) ? eval($hook) : null;
+($hook = get_hook('aop_setup_pre_reports_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 				<div class="content-head">
@@ -553,14 +553,14 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 							</div>
 						</div>
 					</fieldset>
-<?php ($hook = get_hook('aop_setup_reports_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_setup_reports_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
-($hook = get_hook('aop_setup_pre_url_scheme_part')) ? eval($hook) : null;
+($hook = get_hook('aop_setup_pre_url_scheme_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 				<div class="content-head">
@@ -601,14 +601,14 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 							</select></span>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_setup_url_scheme_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_setup_url_scheme_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
-($hook = get_hook('aop_setup_pre_links_part')) ? eval($hook) : null;
+($hook = get_hook('aop_setup_pre_links_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 				<div class="content-head">
@@ -625,7 +625,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 							<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="form[additional_navlinks]" rows="3" cols="55"><?php echo forum_htmlencode($forum_config['o_additional_navlinks']) ?></textarea></span>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_setup_links_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_setup_links_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="save" value="<?php echo $lang_admin_common['Save changes'] ?>" /></span>
@@ -650,7 +650,7 @@ else if ($section == 'features')
 		$lang_admin_common['Features']
 	);
 
-	($hook = get_hook('aop_features_pre_header_load')) ? eval($hook) : null;
+	($hook = get_hook('aop_features_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE_SECTION', 'settings');
 	define('FORUM_PAGE', 'admin-settings-features');
@@ -660,7 +660,7 @@ else if ($section == 'features')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('aop_features_output_start')) ? eval($hook) : null;
+	($hook = get_hook('aop_features_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -669,7 +669,7 @@ else if ($section == 'features')
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_settings_features'])) ?>" />
 				<input type="hidden" name="form_sent" value="1" />
 			</div>
-<?php ($hook = get_hook('aop_features_pre_general_part')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_features_pre_general_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				<div class="content-head">
 					<h2 class="hn"><span><?php printf($lang_admin_settings['Features head'], $lang_admin_settings['Features general']) ?></span></h2>
 				</div>
@@ -711,14 +711,14 @@ else if ($section == 'features')
 							<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['Online list'] ?></span> <?php echo $lang_admin_settings['Users online label'] ?></label>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_features_general_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_features_general_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
-($hook = get_hook('aop_features_pre_posting_part')) ? eval($hook) : null;
+($hook = get_hook('aop_features_pre_posting_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 				<div class="content-head">
@@ -768,14 +768,14 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 							<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['User info'] ?></span> <?php echo $lang_admin_settings['User info label'] ?></label>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_features_posting_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_features_posting_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
-($hook = get_hook('aop_features_pre_message_part')) ? eval($hook) : null;
+($hook = get_hook('aop_features_pre_message_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 				<div class="content-head">
@@ -829,14 +829,14 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[quote_depth]" size="3" maxlength="3" value="<?php echo $forum_config['o_quote_depth'] ?>" /></span>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_features_message_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_features_message_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
-($hook = get_hook('aop_features_pre_sigs_part')) ? eval($hook) : null;
+($hook = get_hook('aop_features_pre_sigs_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 			<div class="content-head">
@@ -883,14 +883,14 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[sig_lines]" size="5" maxlength="3" value="<?php echo $forum_config['p_sig_lines'] ?>" /></span>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_features_sigs_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_features_sigs_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
-($hook = get_hook('aop_features_pre_avatars_part')) ? eval($hook) : null;
+($hook = get_hook('aop_features_pre_avatars_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 			<div class="content-head">
@@ -928,14 +928,14 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[avatars_size]" size="6" maxlength="6" value="<?php echo $forum_config['o_avatars_size'] ?>" /></span>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_features_avatars_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_features_avatars_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
-($hook = get_hook('aop_features_pre_updates_part')) ? eval($hook) : null;
+($hook = get_hook('aop_features_pre_updates_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 			<div class="content-head">
@@ -956,13 +956,13 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 <?php else: ?>				<div class="ct-box">
 					<p><?php echo $lang_admin_settings['Features update disabled info'] ?></p>
 				</div>
-<?php endif; ($hook = get_hook('aop_features_updates_end')) ? eval($hook) : null; ?>
+<?php endif; ($hook = get_hook('aop_features_updates_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 <?php
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
-($hook = get_hook('aop_features_pre_gzip_part')) ? eval($hook) : null;
+($hook = get_hook('aop_features_pre_gzip_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 			<div class="content-head">
@@ -979,7 +979,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 							<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['Enable gzip'] ?></span> <?php echo $lang_admin_settings['Enable gzip label'] ?></label>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_features_gzip_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_features_gzip_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="save" value="<?php echo $lang_admin_common['Save changes'] ?>" /></span>
@@ -1002,7 +1002,7 @@ else if ($section == 'announcements')
 		$lang_admin_common['Announcements']
 	);
 
-	($hook = get_hook('aop_announcements_pre_header_load')) ? eval($hook) : null;
+	($hook = get_hook('aop_announcements_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE_SECTION', 'settings');
 	define('FORUM_PAGE', 'admin-settings-announcements');
@@ -1012,7 +1012,7 @@ else if ($section == 'announcements')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('aop_announcements_output_start')) ? eval($hook) : null;
+	($hook = get_hook('aop_announcements_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -1044,7 +1044,7 @@ else if ($section == 'announcements')
 						<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="form[announcement_message]" rows="5" cols="55"><?php echo forum_htmlencode($forum_config['o_announcement_message']) ?></textarea></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('aop_announcements_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_announcements_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="save" value="<?php echo $lang_admin_common['Save changes'] ?>" /></span>
@@ -1066,7 +1066,7 @@ else if ($section == 'registration')
 		$lang_admin_common['Registration']
 	);
 
-	($hook = get_hook('aop_registration_pre_header_load')) ? eval($hook) : null;
+	($hook = get_hook('aop_registration_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE_SECTION', 'settings');
 	define('FORUM_PAGE', 'admin-settings-registration');
@@ -1076,7 +1076,7 @@ else if ($section == 'registration')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('aop_registration_output_start')) ? eval($hook) : null;
+	($hook = get_hook('aop_registration_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -1085,7 +1085,7 @@ else if ($section == 'registration')
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_settings_registration'])) ?>" />
 				<input type="hidden" name="form_sent" value="1" />
 			</div>
-<?php ($hook = get_hook('aop_registration_pre_new_regs_part')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_registration_pre_new_regs_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="content-head">
 				<h2 class="hn"><span><?php printf($lang_admin_settings['Registration head'], $lang_admin_settings['Registration new']) ?></span></h2>
 			</div>
@@ -1142,14 +1142,14 @@ else if ($section == 'registration')
 						</div>
 					</div>
 				</fieldset>
-<?php ($hook = get_hook('aop_registration_new_regs_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_registration_new_regs_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
-($hook = get_hook('aop_registration_pre_rules_part')) ? eval($hook) : null;
+($hook = get_hook('aop_registration_pre_rules_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 			<div class="content-head">
@@ -1172,7 +1172,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 							<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="form[rules_message]" rows="10" cols="55"><?php echo forum_htmlencode($forum_config['o_rules_message']) ?></textarea></span>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_registration_rules_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_registration_rules_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 				<div class="frm-buttons">
 					<span class="submit"><input type="submit" name="save" value="<?php echo $lang_admin_common['Save changes'] ?>" /></span>
@@ -1196,7 +1196,7 @@ else if ($section == 'maintenance')
 		$lang_admin_common['Maintenance mode']
 	);
 
-	($hook = get_hook('aop_maintenance_pre_header_load')) ? eval($hook) : null;
+	($hook = get_hook('aop_maintenance_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE_SECTION', 'management');
 	define('FORUM_PAGE', 'admin-settings-maintenance');
@@ -1206,7 +1206,7 @@ else if ($section == 'maintenance')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('aop_maintenance_output_start')) ? eval($hook) : null;
+	($hook = get_hook('aop_maintenance_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -1236,7 +1236,7 @@ else if ($section == 'maintenance')
 						<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="form[maintenance_message]" rows="5" cols="55"><?php echo forum_htmlencode($forum_config['o_maintenance_message']) ?></textarea></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('aop_maintenance_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_maintenance_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="save" value="<?php echo $lang_admin_common['Save changes'] ?>" /></span>
@@ -1260,7 +1260,7 @@ else if ($section == 'email')
 		$lang_admin_common['E-mail']
 	);
 
-	($hook = get_hook('aop_email_pre_header_load')) ? eval($hook) : null;
+	($hook = get_hook('aop_email_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE_SECTION', 'settings');
 	define('FORUM_PAGE', 'admin-settings-email');
@@ -1270,7 +1270,7 @@ else if ($section == 'email')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('aop_email_output_start')) ? eval($hook) : null;
+	($hook = get_hook('aop_email_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content frm parted">
@@ -1279,7 +1279,7 @@ else if ($section == 'email')
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_settings_email'])) ?>" />
 				<input type="hidden" name="form_sent" value="1" />
 			</div>
-<?php ($hook = get_hook('aop_email_pre_addresses_part')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_email_pre_addresses_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="content-head">
 				<h2 class="hn"><span><?php printf($lang_admin_settings['E-mail head'], $lang_admin_settings['E-mail addresses']) ?></span></h2>
 			</div>
@@ -1303,14 +1303,14 @@ else if ($section == 'email')
 							<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="form[mailing_list]" rows="5" cols="55"><?php echo forum_htmlencode($forum_config['o_mailing_list']) ?></textarea></span>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_email_addresses_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_email_addresses_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
-($hook = get_hook('aop_email_pre_smtp_part')) ? eval($hook) : null;
+($hook = get_hook('aop_email_pre_smtp_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 			<div class="content-head">
@@ -1345,7 +1345,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 							<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['SMTP SSL'] ?></span> <?php echo $lang_admin_settings['SMTP SSL label'] ?></label>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_email_smtp_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('aop_email_smtp_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="save" value="<?php echo $lang_admin_common['Save changes'] ?>" /></span>
@@ -1356,7 +1356,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
 }
 
-($hook = get_hook('aop_new_section')) ? eval($hook) : null;
+($hook = get_hook('aop_new_section')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

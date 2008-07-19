@@ -68,7 +68,7 @@ function forum_mail($to, $subject, $message, $reply_to = '')
 {
 	global $forum_config, $lang_common;
 
-	($hook = get_hook('em_forum_mail_start')) ? eval($hook) : null;
+	($hook = get_hook('em_forum_mail_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	// Default sender address
 	$from = '"'.sprintf($lang_common['Forum mailer'], str_replace('"', '', $forum_config['o_board_title'])).'" <'.$forum_config['o_webmaster_email'].'>';
@@ -86,7 +86,7 @@ function forum_mail($to, $subject, $message, $reply_to = '')
 	// Make sure all linebreaks are CRLF in message (and strip out any NULL bytes)
 	$message = str_replace(array("\n", "\0"), array("\r\n", ''), forum_linebreaks($message));
 
-	($hook = get_hook('em_forum_mail_pre_send')) ? eval($hook) : null;
+	($hook = get_hook('em_forum_mail_pre_send')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	if ($forum_config['o_smtp_host'] != '')
 		smtp_mail($to, $subject, $message, $headers);

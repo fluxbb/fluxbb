@@ -29,7 +29,7 @@ if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
 require FORUM_ROOT.'include/common.php';
 
-($hook = get_hook('vf_start')) ? eval($hook) : null;
+($hook = get_hook('vf_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 if ($forum_user['g_read_board'] == '0')
 	message($lang_common['No view']);
@@ -56,19 +56,19 @@ $query = array(
 	'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$id
 );
 
-($hook = get_hook('vf_qr_get_forum_info')) ? eval($hook) : null;
+($hook = get_hook('vf_qr_get_forum_info')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 if (!$forum_db->num_rows($result))
 	message($lang_common['Bad request']);
 
 $cur_forum = $forum_db->fetch_assoc($result);
 
-($hook = get_hook('vf_modify_forum_info')) ? eval($hook) : null;
+($hook = get_hook('vf_modify_forum_info')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 // Is this a redirect forum? In that case, redirect!
 if ($cur_forum['redirect_url'] != '')
 {
-	($hook = get_hook('vf_redirect_forum_pre_redirect')) ? eval($hook) : null;
+	($hook = get_hook('vf_redirect_forum_pre_redirect')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	header('Location: '.$cur_forum['redirect_url']);
 	exit;
@@ -92,7 +92,7 @@ $forum_page['start_from'] = $forum_user['disp_topics'] * ($forum_page['page'] - 
 $forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_topics']), ($cur_forum['num_topics']));
 $forum_page['page_info'] = generate_page_info($lang_forum['Topics'], ($forum_page['start_from'] + 1), $cur_forum['num_topics']);
 
-($hook = get_hook('vf_modify_page_details')) ? eval($hook) : null;
+($hook = get_hook('vf_modify_page_details')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 // Navigation links for header and page numbering for title/meta description
 if ($forum_page['page'] < $forum_page['num_pages'])
@@ -128,7 +128,7 @@ if (!$forum_user['is_guest'] && $forum_config['o_show_dot'] == '1')
 	$query['SELECT'] .= ', ('.$forum_db->query_build($subquery, true).') AS has_posted';
 }
 
-($hook = get_hook('vf_qr_get_topics')) ? eval($hook) : null;
+($hook = get_hook('vf_qr_get_topics')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 // Generate paging/posting links
@@ -162,7 +162,7 @@ $forum_page['crumbs'] = array(
 // Setup main header
 $forum_page['main_head'] = '<a class="permalink" href="'.forum_link($forum_url['forum'], array($id, sef_friendly($cur_forum['forum_name']))).'" rel="bookmark" title="'.$lang_forum['Permalink forum'].'">'.forum_htmlencode($cur_forum['forum_name']).'</a>';
 
-($hook = get_hook('vf_pre_header_load')) ? eval($hook) : null;
+($hook = get_hook('vf_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 // Allow indexing if this isn't a link with p=1
 if (!isset($_GET['p']) || $forum_page['page'] != 1)
@@ -184,7 +184,7 @@ if ($forum_config['o_topic_views'] == '1')
 $forum_page['item_header']['info']['replies'] = '<strong class="info-replies">'.$lang_forum['Replies'].'</strong>';
 $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">'.$lang_forum['Last post'].'</strong>';
 
-($hook = get_hook('vf_main_output_start')) ? eval($hook) : null;
+($hook = get_hook('vf_main_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 // If there are topics in this forum
 if ($forum_db->num_rows($result))
@@ -200,13 +200,13 @@ if ($forum_db->num_rows($result))
 		</div>
 <?php
 
-	($hook = get_hook('vf_pre_topic_loop_start')) ? eval($hook) : null;
+	($hook = get_hook('vf_pre_topic_loop_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	$forum_page['item_count'] = 0;
 
 	while ($cur_topic = $forum_db->fetch_assoc($result))
 	{
-		($hook = get_hook('vf_topic_loop_start')) ? eval($hook) : null;
+		($hook = get_hook('vf_topic_loop_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 		++$forum_page['item_count'];
 
@@ -295,11 +295,11 @@ if ($forum_db->num_rows($result))
 			$forum_page['item_body']['info']['lastpost'] = '<li class="info-lastpost"><span class="label">'.$lang_forum['Last post was'].'</span> <strong><a href="'.forum_link($forum_url['post'], $cur_topic['last_post_id']).'">'.format_time($cur_topic['last_post']).'</a></strong> <cite>'.sprintf($lang_forum['by poster'], forum_htmlencode($cur_topic['last_poster'])).'</cite></li>';
 		}
 
-		($hook = get_hook('vf_row_pre_item_merge')) ? eval($hook) : null;
+		($hook = get_hook('vf_row_pre_item_merge')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 		$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? ' odd' : ' even').(($forum_page['item_count'] == 1) ? ' item-body1' : '').((!empty($forum_page['item_status'])) ? ' '.implode(' ', $forum_page['item_status']) : '');
 
-		($hook = get_hook('vf_row_pre_display')) ? eval($hook) : null;
+		($hook = get_hook('vf_row_pre_display')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div id="topic<?php echo $cur_topic['id'] ?>" class="item-body<?php echo $forum_page['item_style'] ?>">
@@ -347,7 +347,7 @@ else
 
 }
 
-($hook = get_hook('vf_end')) ? eval($hook) : null;
+($hook = get_hook('vf_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

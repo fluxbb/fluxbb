@@ -30,7 +30,7 @@ if (!defined('FORUM_ROOT'))
 require FORUM_ROOT.'include/common.php';
 require FORUM_ROOT.'include/common_admin.php';
 
-($hook = get_hook('agr_start')) ? eval($hook) : null;
+($hook = get_hook('agr_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 if ($forum_user['g_id'] != FORUM_ADMIN)
 	message($lang_common['No permission']);
@@ -45,7 +45,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 {
 	if (isset($_POST['add_group']))
 	{
-		($hook = get_hook('agr_add_group_form_submitted')) ? eval($hook) : null;
+		($hook = get_hook('agr_add_group_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 		$base_group = intval($_POST['base_group']);
 
@@ -55,7 +55,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 			'WHERE'		=> 'g.g_id='.$base_group
 		);
 
-		($hook = get_hook('agr_qr_get_base_group')) ? eval($hook) : null;
+		($hook = get_hook('agr_qr_get_base_group')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		$group = $forum_db->fetch_assoc($result);
 
@@ -63,7 +63,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 	}
 	else	// We are editing a group
 	{
-		($hook = get_hook('agr_edit_group_form_submitted')) ? eval($hook) : null;
+		($hook = get_hook('agr_edit_group_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 		$group_id = intval($_GET['edit_group']);
 		if ($group_id < 1)
@@ -75,7 +75,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 			'WHERE'		=> 'g.g_id='.$group_id
 		);
 
-		($hook = get_hook('agr_qr_get_group')) ? eval($hook) : null;
+		($hook = get_hook('agr_qr_get_group')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if (!$forum_db->num_rows($result))
 			message($lang_common['Bad request']);
@@ -96,7 +96,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 		$mode == 'edit' ? $lang_admin_groups['Edit group heading'] : $lang_admin_groups['Add group heading']
 	);
 
-	($hook = get_hook('agr_add_edit_group_pre_header_load')) ? eval($hook) : null;
+	($hook = get_hook('agr_add_edit_group_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE_SECTION', 'users');
 	define('FORUM_PAGE', 'admin-groups');
@@ -106,7 +106,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('agr_add_edit_group_output_start')) ? eval($hook) : null;
+	($hook = get_hook('agr_add_edit_group_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -123,7 +123,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 <?php if ($mode == 'edit'): ?>				<input type="hidden" name="group_id" value="<?php echo $group_id ?>" />
 <?php endif; if ($mode == 'add'): ?>				<input type="hidden" name="base_group" value="<?php echo $base_group ?>" />
 <?php endif; ?>			</div>
-<?php ($hook = get_hook('agr_add_edit_group_pre_title_part')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('agr_add_edit_group_pre_title_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="content-head">
 				<h3 class="hn"><span><?php echo $lang_admin_groups['Group title head'] ?></span></h3>
 			</div>
@@ -141,7 +141,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="user_title" size="25" maxlength="50" value="<?php echo forum_htmlencode($group['g_user_title']) ?>" /></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('agr_add_edit_group_title_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('agr_add_edit_group_title_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
 <?php
 
@@ -152,7 +152,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 		$forum_page['group_count'] = $forum_page['item_count'] = 0;
 
 ?>
-<?php ($hook = get_hook('agr_add_edit_group_pre_permissions_part')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('agr_add_edit_group_pre_permissions_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="content-head">
 				<h3 class="hn"><span><?php echo $lang_admin_groups['Group perms head'] ?></span></h3>
 			</div>
@@ -235,7 +235,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 							</div>
 <?php endif; ?>					</div>
 					</fieldset>
-<?php ($hook = get_hook('agr_add_edit_group_permissions_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('agr_add_edit_group_permissions_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
@@ -247,7 +247,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 		{
 
 ?>
-<?php ($hook = get_hook('agr_add_edit_group_pre_flood_part')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('agr_add_edit_group_pre_flood_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="content-head">
 				<h3 class="hn"><span><?php echo $lang_admin_groups['Group flood head'] ?></span></h3>
 			</div>
@@ -271,7 +271,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="email_flood" size="5" maxlength="4" value="<?php echo $group['g_email_flood'] ?>" /></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('agr_add_edit_group_flood_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('agr_add_edit_group_flood_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
 <?php
 
@@ -329,12 +329,12 @@ else if (isset($_POST['add_edit_group']))
 
 	$user_title = ($user_title != '') ? '\''.$forum_db->escape($user_title).'\'' : 'NULL';
 
-	($hook = get_hook('agr_add_edit_end_validation')) ? eval($hook) : null;
+	($hook = get_hook('agr_add_edit_end_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 
 	if ($_POST['mode'] == 'add')
 	{
-		($hook = get_hook('agr_add_group_form_submitted2')) ? eval($hook) : null;
+		($hook = get_hook('agr_add_group_form_submitted2')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 		$query = array(
 			'SELECT'	=> '1',
@@ -342,7 +342,7 @@ else if (isset($_POST['add_edit_group']))
 			'WHERE'		=> 'g_title=\''.$forum_db->escape($title).'\''
 		);
 
-		($hook = get_hook('agr_qr_check_group_title_collision')) ? eval($hook) : null;
+		($hook = get_hook('agr_qr_check_group_title_collision')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if ($forum_db->num_rows($result))
 			message(sprintf($lang_admin_groups['Already a group message'], forum_htmlencode($title)));
@@ -354,7 +354,7 @@ else if (isset($_POST['add_edit_group']))
 			'VALUES'	=> '\''.$forum_db->escape($title).'\', '.$user_title.', '.$moderator.', '.$mod_edit_users.', '.$mod_rename_users.', '.$mod_change_passwords.', '.$mod_ban_users.', '.$read_board.', '.$view_users.', '.$post_replies.', '.$post_topics.', '.$edit_posts.', '.$delete_posts.', '.$delete_topics.', '.$set_title.', '.$search.', '.$search_users.', '.$send_email.', '.$post_flood.', '.$search_flood.', '.$email_flood
 		);
 
-		($hook = get_hook('agr_qy_add_group')) ? eval($hook) : null;
+		($hook = get_hook('agr_qy_add_group')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		$new_group_id = $forum_db->insert_id();
 
@@ -365,7 +365,7 @@ else if (isset($_POST['add_edit_group']))
 			'WHERE'		=> 'group_id='.intval($_POST['base_group'])
 		);
 
-		($hook = get_hook('agr_qr_get_group_forum_perms')) ? eval($hook) : null;
+		($hook = get_hook('agr_qr_get_group_forum_perms')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		while ($cur_forum_perm = $forum_db->fetch_assoc($result))
 		{
@@ -375,7 +375,7 @@ else if (isset($_POST['add_edit_group']))
 				'VALUES'	=> $new_group_id.', '.$cur_forum_perm['forum_id'].', '.$cur_forum_perm['read_forum'].', '.$cur_forum_perm['post_replies'].', '.$cur_forum_perm['post_topics']
 			);
 
-			($hook = get_hook('agr_qy_add_group_forum_perms')) ? eval($hook) : null;
+			($hook = get_hook('agr_qy_add_group_forum_perms')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 	}
@@ -383,7 +383,7 @@ else if (isset($_POST['add_edit_group']))
 	{
 		$group_id = intval($_POST['group_id']);
 
-		($hook = get_hook('agr_edit_group_form_submitted2')) ? eval($hook) : null;
+		($hook = get_hook('agr_edit_group_form_submitted2')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 		// Make sure admins and guests don't get moderator privileges
 		if ($group_id == FORUM_ADMIN || $group_id == FORUM_GUEST)
@@ -399,7 +399,7 @@ else if (isset($_POST['add_edit_group']))
 			'WHERE'		=> 'g_title=\''.$forum_db->escape($title).'\' AND g_id!='.$group_id
 		);
 
-		($hook = get_hook('agr_qr_check_group_title_collision2')) ? eval($hook) : null;
+		($hook = get_hook('agr_qr_check_group_title_collision2')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if ($forum_db->num_rows($result))
 			message(sprintf($lang_admin_groups['Already a group message'], forum_htmlencode($title)));
@@ -411,7 +411,7 @@ else if (isset($_POST['add_edit_group']))
 			'WHERE'		=> 'g_id='.$group_id
 		);
 
-		($hook = get_hook('agr_qy_update_group')) ? eval($hook) : null;
+		($hook = get_hook('agr_qy_update_group')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// If the group doesn't have moderator privileges (it might have had before), remove its users from the moderator list in all forums
@@ -434,7 +434,7 @@ else if (isset($_POST['set_default_group']))
 {
 	$group_id = intval($_POST['default_group']);
 
-	($hook = get_hook('agr_set_default_group_form_submitted')) ? eval($hook) : null;
+	($hook = get_hook('agr_set_default_group_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	// Make sure it's not the admin or guest groups
 	if ($group_id == FORUM_ADMIN || $group_id == FORUM_GUEST)
@@ -448,7 +448,7 @@ else if (isset($_POST['set_default_group']))
 		'LIMIT'		=> '1'
 	);
 
-	($hook = get_hook('agr_qr_get_group_moderation_status')) ? eval($hook) : null;
+	($hook = get_hook('agr_qr_get_group_moderation_status')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if (!$forum_db->num_rows($result))
 		message($lang_common['Bad request']);
@@ -459,7 +459,7 @@ else if (isset($_POST['set_default_group']))
 		'WHERE'		=> 'conf_name=\'o_default_user_group\''
 	);
 
-	($hook = get_hook('agr_qy_set_default_group')) ? eval($hook) : null;
+	($hook = get_hook('agr_qy_set_default_group')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the config cache
@@ -487,7 +487,7 @@ else if (isset($_GET['del_group']))
 	if ($group_id == $forum_config['o_default_user_group'])
 		message($lang_admin_groups['Cannot remove default group']);
 
-	($hook = get_hook('agr_del_group_selected')) ? eval($hook) : null;
+	($hook = get_hook('agr_del_group_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 
 	// Check if this group has any members
@@ -504,13 +504,13 @@ else if (isset($_GET['del_group']))
 		'GROUP BY'	=> 'g.g_id, g.g_title'
 	);
 
-	($hook = get_hook('agr_qr_get_group_member_count')) ? eval($hook) : null;
+	($hook = get_hook('agr_qr_get_group_member_count')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// If the group doesn't have any members or if we've already selected a group to move the members to
 	if (!$forum_db->num_rows($result) || isset($_POST['del_group']))
 	{
-		($hook = get_hook('agr_del_group_form_submitted')) ? eval($hook) : null;
+		($hook = get_hook('agr_del_group_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 		if (isset($_POST['del_group']))	// Move users
 		{
@@ -520,7 +520,7 @@ else if (isset($_GET['del_group']))
 				'WHERE'		=> 'group_id='.$group_id
 			);
 
-			($hook = get_hook('agr_qy_move_users')) ? eval($hook) : null;
+			($hook = get_hook('agr_qy_move_users')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 
@@ -530,7 +530,7 @@ else if (isset($_GET['del_group']))
 			'WHERE'		=> 'g_id='.$group_id
 		);
 
-		($hook = get_hook('agr_qy_delete_group')) ? eval($hook) : null;
+		($hook = get_hook('agr_qy_delete_group')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$query = array(
@@ -538,7 +538,7 @@ else if (isset($_GET['del_group']))
 			'WHERE'		=> 'group_id='.$group_id
 		);
 
-		($hook = get_hook('agr_qy_delete_group_forum_perms')) ? eval($hook) : null;
+		($hook = get_hook('agr_qy_delete_group_forum_perms')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		clean_forum_moderators();
@@ -566,7 +566,7 @@ else if (isset($_GET['del_group']))
 		$lang_admin_groups['Remove group']
 	);
 
-	($hook = get_hook('agr_del_group_pre_header_load')) ? eval($hook) : null;
+	($hook = get_hook('agr_del_group_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE_SECTION', 'users');
 	define('FORUM_PAGE', 'admin-groups');
@@ -576,7 +576,7 @@ else if (isset($_GET['del_group']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('agr_del_group_output_start')) ? eval($hook) : null;
+	($hook = get_hook('agr_del_group_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -602,7 +602,7 @@ else if (isset($_GET['del_group']))
 		'ORDER BY'	=> 'g.g_title'
 	);
 
-	($hook = get_hook('agr_qr_get_groups')) ? eval($hook) : null;
+	($hook = get_hook('agr_qr_get_groups')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	while ($cur_group = $forum_db->fetch_assoc($result))
 	{
@@ -645,7 +645,7 @@ $forum_page['crumbs'] = array(
 	$lang_admin_common['Groups']
 );
 
-($hook = get_hook('agr_pre_header_load')) ? eval($hook) : null;
+($hook = get_hook('agr_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE_SECTION', 'users');
 define('FORUM_PAGE', 'admin-groups');
@@ -655,7 +655,7 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
-($hook = get_hook('agr_main_output_start')) ? eval($hook) : null;
+($hook = get_hook('agr_main_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -681,7 +681,7 @@ $query = array(
 	'ORDER BY'	=> 'g.g_title'
 );
 
-($hook = get_hook('agr_qr_get_groups2')) ? eval($hook) : null;
+($hook = get_hook('agr_qr_get_groups2')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 while ($cur_group = $forum_db->fetch_assoc($result))
 {
@@ -730,7 +730,7 @@ $query = array(
 	'ORDER BY'	=> 'g.g_title'
 );
 
-($hook = get_hook('agr_qr_get_groups3')) ? eval($hook) : null;
+($hook = get_hook('agr_qr_get_groups3')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 while ($cur_group = $forum_db->fetch_assoc($result))
 {
@@ -772,7 +772,7 @@ $query = array(
 	'ORDER BY'	=> 'g.g_title'
 );
 
-($hook = get_hook('agr_qr_get_groups4')) ? eval($hook) : null;
+($hook = get_hook('agr_qr_get_groups4')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 $forum_page['item_num'] = 0;
 while ($cur_group = $forum_db->fetch_assoc($result))

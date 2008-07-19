@@ -34,7 +34,7 @@ define('FORUM_DISABLE_BUFFERING', 1);
 require FORUM_ROOT.'include/common.php';
 require FORUM_ROOT.'include/common_admin.php';
 
-($hook = get_hook('ari_start')) ? eval($hook) : null;
+($hook = get_hook('ari_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 if ($forum_user['g_id'] != FORUM_ADMIN)
 	message($lang_common['No permission']);
@@ -56,7 +56,7 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 	if (!isset($_POST['csrf_token']) && (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== generate_form_token('reindex'.$forum_user['id'])))
 		csrf_confirm_form();
 
-	($hook = get_hook('ari_cycle_start')) ? eval($hook) : null;
+	($hook = get_hook('ari_cycle_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	@set_time_limit(0);
 
@@ -67,14 +67,14 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 			'DELETE'	=> 'search_matches'
 		);
 
-		($hook = get_hook('ari_qr_empty_search_matches')) ? eval($hook) : null;
+		($hook = get_hook('ari_qr_empty_search_matches')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$query = array(
 			'DELETE'	=> 'search_words'
 		);
 
-		($hook = get_hook('ari_qr_empty_search_words')) ? eval($hook) : null;
+		($hook = get_hook('ari_qr_empty_search_words')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Reset the sequence for the search words (not needed for SQLite)
@@ -136,7 +136,7 @@ body {
 		'LIMIT'		=> $per_page
 	);
 
-	($hook = get_hook('ari_qr_fetch_posts')) ? eval($hook) : null;
+	($hook = get_hook('ari_qr_fetch_posts')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$post_id = 0;
@@ -163,12 +163,12 @@ body {
 		'LIMIT'		=> '1'
 	);
 
-	($hook = get_hook('ari_qr_find_next_post')) ? eval($hook) : null;
+	($hook = get_hook('ari_qr_find_next_post')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$query_str = ($forum_db->num_rows($result)) ? '?i_per_page='.$per_page.'&i_start_at='.$forum_db->result($result).'&csrf_token='.generate_form_token('reindex'.$forum_user['id']) : '';
 
-	($hook = get_hook('ari_cycle_end')) ? eval($hook) : null;
+	($hook = get_hook('ari_cycle_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	$forum_db->end_transaction();
 	$forum_db->close();
@@ -185,7 +185,7 @@ $query = array(
 	'LIMIT'		=> '1'
 );
 
-($hook = get_hook('ari_qr_find_lowest_post_id')) ? eval($hook) : null;
+($hook = get_hook('ari_qr_find_lowest_post_id')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 if ($forum_db->num_rows($result))
 	$first_id = $forum_db->result($result);
@@ -200,7 +200,7 @@ $forum_page['crumbs'] = array(
 	$lang_admin_common['Rebuild index']
 );
 
-($hook = get_hook('ari_pre_header_load')) ? eval($hook) : null;
+($hook = get_hook('ari_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE_SECTION', 'management');
 define('FORUM_PAGE_TYPE', 'sectioned');
@@ -210,7 +210,7 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
-($hook = get_hook('ari_main_output_start')) ? eval($hook) : null;
+($hook = get_hook('ari_main_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="frm-head">
@@ -224,10 +224,10 @@ ob_start();
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token('reindex'.$forum_user['id']) ?>" />
 			</div>
-<?php ($hook = get_hook('ari_pre_rebuild_fieldset')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('ari_pre_rebuild_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_reindex['Rebuild index legend'] ?></span></legend>
-<?php ($hook = get_hook('ari_pre_per_page')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('ari_pre_per_page')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_reindex['Posts per cycle'] ?></span> <small><?php echo $lang_admin_reindex['Posts per cycle info'] ?></small></label><br />
@@ -246,9 +246,9 @@ ob_start();
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin_reindex['Empty index'] ?></span> <?php echo $lang_admin_reindex['Empty index info'] ?></label>
 					</div>
 				</div>
-<?php ($hook = get_hook('ari_rebuild_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('ari_rebuild_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
-<?php ($hook = get_hook('ari_pre_infobox')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('ari_pre_infobox')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="ct-box warn-box">
 				<p class="important"><?php echo $lang_admin_reindex['Reindex warning'] ?></p>
 				<p class="warn"><?php echo $lang_admin_reindex['Empty index warning'] ?></p>

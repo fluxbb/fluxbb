@@ -29,7 +29,7 @@ if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
 require FORUM_ROOT.'include/common.php';
 
-($hook = get_hook('rg_start')) ? eval($hook) : null;
+($hook = get_hook('rg_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 // If we are logged in, we shouldn't be here
 if (!$forum_user['is_guest'])
@@ -69,7 +69,7 @@ else if ($forum_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_P
 		$lang_common['Rules']
 	);
 
-	($hook = get_hook('rg_rules_pre_header_load')) ? eval($hook) : null;
+	($hook = get_hook('rg_rules_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'rules');
 	define('FORUM_PAGE_TYPE', 'basic');
@@ -78,7 +78,7 @@ else if ($forum_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_P
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('rg_rules_output_start')) ? eval($hook) : null;
+	($hook = get_hook('rg_rules_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	$forum_page['set_count'] = $forum_page['fld_count'] = 0;
 
@@ -118,7 +118,7 @@ else if ($forum_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_P
 
 else if (isset($_POST['form_sent']))
 {
-	($hook = get_hook('rg_register_form_submitted')) ? eval($hook) : null;
+	($hook = get_hook('rg_register_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	// Check that someone from this IP didn't register a user within the last hour (DoS prevention)
 	$query = array(
@@ -127,7 +127,7 @@ else if (isset($_POST['form_sent']))
 		'WHERE'		=> 'u.registration_ip=\''.$forum_db->escape(get_remote_address()).'\' AND u.registered>'.(time() - 3600)
 	);
 
-	($hook = get_hook('rg_qr_check_register_flood')) ? eval($hook) : null;
+	($hook = get_hook('rg_qr_check_register_flood')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if ($forum_db->num_rows($result))
 		$errors[] = $lang_profile['Registration flood'];
@@ -183,7 +183,7 @@ else if (isset($_POST['form_sent']))
 			'WHERE'		=> 'u.email=\''.$forum_db->escape($email1).'\''
 		);
 
-		($hook = get_hook('rg_qr_check_email_dupe')) ? eval($hook) : null;
+		($hook = get_hook('rg_qr_check_email_dupe')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if ($forum_db->num_rows($result) && empty($errors))
 		{
@@ -231,13 +231,13 @@ else if (isset($_POST['form_sent']))
 				'notify_admins'			=>	($forum_config['o_regs_report'] == '1')
 			);
 
-			($hook = get_hook('rg_register_pre_add_user')) ? eval($hook) : null;
+			($hook = get_hook('rg_register_pre_add_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 			add_user($user_info, $new_uid);
 
 			// If we previously found out that the e-mail was banned
 			if ($banned_email && $forum_config['o_mailing_list'] != '')
 			{
-				($hook = get_hook('rg_register_banned_email')) ? eval($hook) : null;
+				($hook = get_hook('rg_register_banned_email')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 				$mail_subject = 'Alert - Banned e-mail detected';
 				$mail_message = 'User \''.$username.'\' registered with banned e-mail address: '.$email1."\n\n".'User profile: '.forum_link($forum_url['user'], $new_uid)."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)';
@@ -248,7 +248,7 @@ else if (isset($_POST['form_sent']))
 			// If we previously found out that the e-mail was a dupe
 			if (!empty($dupe_list) && $forum_config['o_mailing_list'] != '')
 			{
-				($hook = get_hook('rg_register_dupe_email')) ? eval($hook) : null;
+				($hook = get_hook('rg_register_dupe_email')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 				$mail_subject = 'Alert - Duplicate e-mail detected';
 				$mail_message = 'User \''.$username.'\' registered with an e-mail address that also belongs to: '.implode(', ', $dupe_list)."\n\n".'User profile: '.forum_link($forum_url['user'], $new_uid)."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)';
@@ -256,7 +256,7 @@ else if (isset($_POST['form_sent']))
 				forum_mail($forum_config['o_mailing_list'], $mail_subject, $mail_message);
 			}
 
-			($hook = get_hook('rg_register_pre_login_redirect')) ? eval($hook) : null;
+			($hook = get_hook('rg_register_pre_login_redirect')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 			// Must the user verify the registration or do we log him/her in right now?
 			if ($forum_config['o_regs_verify'] == '1')
@@ -286,7 +286,7 @@ $forum_page['crumbs'] = array(
 	sprintf($lang_profile['Register at'], $forum_config['o_board_title'])
 );
 
-($hook = get_hook('rg_register_pre_header_load')) ? eval($hook) : null;
+($hook = get_hook('rg_register_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE', 'register');
 define('FORUM_PAGE_TYPE', 'basic');
@@ -295,7 +295,7 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
-($hook = get_hook('rg_register_output_start')) ? eval($hook) : null;
+($hook = get_hook('rg_register_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -311,7 +311,7 @@ ob_start();
 		while (list(, $cur_error) = each($errors))
 			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
-		($hook = get_hook('rg_pre_register_errors')) ? eval($hook) : null;
+		($hook = get_hook('rg_pre_register_errors')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ct-box error-box">
@@ -333,7 +333,7 @@ ob_start();
 				<input type="hidden" name="form_sent" value="1" />
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
 			</div>
-<?php ($hook = get_hook('rg_register_pre_req_info_fieldset')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('rg_register_pre_req_info_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
@@ -354,7 +354,7 @@ ob_start();
 						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_password2" size="35" /></span>
 					</div>
 				</div>
-<?php endif; ($hook = get_hook('rg_register_pre_email_field')) ? eval($hook) : null; ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+<?php endif; ($hook = get_hook('rg_register_pre_email_field')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['E-mail'] ?></span> <small><?php echo $lang_profile['E-mail help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_email1" value="<?php echo(isset($_POST['req_email1']) ? forum_htmlencode($_POST['req_email1']) : '') ?>" size="35" maxlength="80" /></span>
@@ -366,9 +366,9 @@ ob_start();
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_email2" value="<?php echo(isset($_POST['req_email2']) ? forum_htmlencode($_POST['req_email2']) : '') ?>" size="35" maxlength="80" /></span>
 					</div>
 				</div>
-<?php endif; ($hook = get_hook('rg_register_req_info_end')) ? eval($hook) : null; ?>		</fieldset>
+<?php endif; ($hook = get_hook('rg_register_req_info_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>		</fieldset>
 <?php $forum_page['item_count'] = 0; ?>
-<?php ($hook = get_hook('rg_register_post_req_info_fieldset')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('rg_register_post_req_info_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group-item<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_profile['Optional legend'] ?></strong></legend>
 <?php
@@ -467,9 +467,9 @@ ob_start();
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Adjust for DST'] ?></span> <?php echo $lang_profile['DST label'] ?></label>
 					</div>
 				</div>
-<?php ($hook = get_hook('rg_register_optional_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('rg_register_optional_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
-<?php ($hook = get_hook('rg_register_post_optional_fieldset')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('rg_register_post_optional_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="register" value="<?php echo $lang_profile['Register'] ?>" /></span>
 			</div>
@@ -478,7 +478,7 @@ ob_start();
 
 <?php
 
-($hook = get_hook('rg_end')) ? eval($hook) : null;
+($hook = get_hook('rg_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

@@ -30,7 +30,7 @@ if (!defined('FORUM_ROOT'))
 require FORUM_ROOT.'include/common.php';
 require FORUM_ROOT.'include/common_admin.php';
 
-($hook = get_hook('apr_start')) ? eval($hook) : null;
+($hook = get_hook('apr_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 if ($forum_user['g_id'] != FORUM_ADMIN)
 	message($lang_common['No permission']);
@@ -48,7 +48,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 		$prune_days = intval($_POST['prune_days']);
 		$prune_date = ($prune_days) ? time() - ($prune_days*86400) : -1;
 
-		($hook = get_hook('apr_prune_comply_form_submitted')) ? eval($hook) : null;
+		($hook = get_hook('apr_prune_comply_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 		@set_time_limit(0);
 
@@ -59,7 +59,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 				'FROM'		=> 'forums AS f'
 			);
 
-			($hook = get_hook('apr_qr_get_all_forums')) ? eval($hook) : null;
+			($hook = get_hook('apr_qr_get_all_forums')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 			$num_forums = $forum_db->num_rows($result);
 
@@ -102,7 +102,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 			'WHERE'		=> 'f.id='.$prune_from
 		);
 
-		($hook = get_hook('apr_qr_get_forum_name')) ? eval($hook) : null;
+		($hook = get_hook('apr_qr_get_forum_name')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		$forum = forum_htmlencode($forum_db->result($result));
 	}
@@ -121,7 +121,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 	if (!isset($_POST['prune_sticky']))
 		$query['WHERE'] .= ' AND t.sticky=0';
 
-	($hook = get_hook('apr_qr_get_topic_count')) ? eval($hook) : null;
+	($hook = get_hook('apr_qr_get_topic_count')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$num_topics = $forum_db->result($result);
 
@@ -137,7 +137,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 		$lang_admin_prune['Confirm prune heading']
 	);
 
-	($hook = get_hook('apr_prune_comply_pre_header_load')) ? eval($hook) : null;
+	($hook = get_hook('apr_prune_comply_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE_SECTION', 'management');
 	define('FORUM_PAGE', 'admin-prune');
@@ -147,7 +147,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('apr_prune_comply_output_start')) ? eval($hook) : null;
+	($hook = get_hook('apr_prune_comply_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -165,7 +165,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 				<p class="warn"><span><?php printf($lang_admin_prune['Prune topics info 1'], $num_topics, isset($_POST['prune_sticky']) ? ' ('.$lang_admin_prune['Include sticky'].')' : '') ?></span></p>
 				<p class="warn"><span><?php printf($lang_admin_prune['Prune topics info 2'], $prune_days) ?></span></p>
 			</div>
-<?php ($hook = get_hook('apr_prune_comply_pre_buttons')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('apr_prune_comply_pre_buttons')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="prune_comply" value="<?php echo $lang_admin_prune['Prune topics'] ?>" /></span>
 			</div>
@@ -194,7 +194,7 @@ else
 		$lang_admin_common['Prune topics']
 	);
 
-	($hook = get_hook('apr_pre_header_load')) ? eval($hook) : null;
+	($hook = get_hook('apr_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE_SECTION', 'management');
 	define('FORUM_PAGE', 'admin-prune');
@@ -204,7 +204,7 @@ else
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('apr_main_output_start')) ? eval($hook) : null;
+	($hook = get_hook('apr_main_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -223,10 +223,10 @@ else
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_prune']).'?action=foo') ?>" />
 				<input type="hidden" name="form_sent" value="1" />
 			</div>
-<?php ($hook = get_hook('apr_pre_prune_fieldset')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('apr_pre_prune_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_prune['Prune legend'] ?></span></legend>
-<?php ($hook = get_hook('apr_pre_prune_from')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('apr_pre_prune_from')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
 					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_admin_prune['Prune from'] ?></span></label><br />
@@ -247,7 +247,7 @@ else
 		'ORDER BY'	=> 'c.disp_position, c.id, f.disp_position'
 	);
 
-	($hook = get_hook('apr_qr_get_forum_list')) ? eval($hook) : null;
+	($hook = get_hook('apr_qr_get_forum_list')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$cur_category = 0;
@@ -282,9 +282,9 @@ else
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin_prune['Prune sticky'] ?></span> <?php echo $lang_admin_prune['Prune sticky enable'] ?></label>
 					</div>
 				</div>
-<?php ($hook = get_hook('apr_prune_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('apr_prune_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
-<?php ($hook = get_hook('apr_pre_buttons')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('apr_pre_buttons')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="prune" value="<?php echo $lang_admin_prune['Prune topics'] ?>" /></span>
 			</div>

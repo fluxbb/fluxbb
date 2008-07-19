@@ -30,7 +30,7 @@ if (!defined('FORUM_ROOT'))
 require FORUM_ROOT.'include/common.php';
 require FORUM_ROOT.'include/common_admin.php';
 
-($hook = get_hook('afo_start')) ? eval($hook) : null;
+($hook = get_hook('afo_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 if ($forum_user['g_id'] != FORUM_ADMIN)
 	message($lang_common['No permission']);
@@ -50,7 +50,7 @@ if (isset($_POST['add_forum']))
 	$forum_name = forum_trim($_POST['forum_name']);
 	$position = intval($_POST['position']);
 
-	($hook = get_hook('afo_add_forum_form_submitted')) ? eval($hook) : null;
+	($hook = get_hook('afo_add_forum_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	if ($forum_name == '')
 		message($lang_admin_forums['Must enter forum message']);
@@ -62,7 +62,7 @@ if (isset($_POST['add_forum']))
 		'WHERE'		=> 'c.id='.$add_to_cat
 	);
 
-	($hook = get_hook('afo_qr_validate_category_id')) ? eval($hook) : null;
+	($hook = get_hook('afo_qr_validate_category_id')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if (!$forum_db->num_rows($result))
 		message($lang_common['Bad request']);
@@ -73,7 +73,7 @@ if (isset($_POST['add_forum']))
 		'VALUES'	=> '\''.$forum_db->escape($forum_name).'\', '.$position.', '.$add_to_cat
 	);
 
-	($hook = get_hook('afo_qr_add_forum')) ? eval($hook) : null;
+	($hook = get_hook('afo_qr_add_forum')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the quickjump cache
@@ -97,7 +97,7 @@ else if (isset($_GET['del_forum']))
 	if (isset($_POST['del_forum_cancel']))
 		redirect(forum_link($forum_url['admin_forums']), $lang_admin_common['Cancel redirect']);
 
-	($hook = get_hook('afo_del_forum_form_submitted')) ? eval($hook) : null;
+	($hook = get_hook('afo_del_forum_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	if (isset($_POST['del_forum_comply']))	// Delete a forum with all posts
 	{
@@ -114,7 +114,7 @@ else if (isset($_GET['del_forum']))
 			'WHERE'		=> 'id='.$forum_to_delete
 		);
 
-		($hook = get_hook('afo_qr_delete_forum')) ? eval($hook) : null;
+		($hook = get_hook('afo_qr_delete_forum')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$query = array(
@@ -122,7 +122,7 @@ else if (isset($_GET['del_forum']))
 			'WHERE'		=> 'forum_id='.$forum_to_delete
 		);
 
-		($hook = get_hook('afo_qr_delete_forum_perms')) ? eval($hook) : null;
+		($hook = get_hook('afo_qr_delete_forum_perms')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Regenerate the quickjump cache
@@ -141,7 +141,7 @@ else if (isset($_GET['del_forum']))
 			'WHERE'		=> 'f.id='.$forum_to_delete
 		);
 
-		($hook = get_hook('afo_qr_get_forum_name')) ? eval($hook) : null;
+		($hook = get_hook('afo_qr_get_forum_name')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if (!$forum_db->num_rows($result))
 			message($lang_common['Bad request']);
@@ -157,7 +157,7 @@ else if (isset($_GET['del_forum']))
 			$lang_admin_forums['Delete forum']
 		);
 
-		($hook = get_hook('afo_del_forum_pre_header_load')) ? eval($hook) : null;
+		($hook = get_hook('afo_del_forum_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 		define('FORUM_PAGE_SECTION', 'start');
 		define('FORUM_PAGE', 'admin-forums');
@@ -167,7 +167,7 @@ else if (isset($_GET['del_forum']))
 		// START SUBST - <!-- forum_main -->
 		ob_start();
 
-		($hook = get_hook('afo_del_forum_output_start')) ? eval($hook) : null;
+		($hook = get_hook('afo_del_forum_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -206,7 +206,7 @@ else if (isset($_POST['update_positions']))
 {
 	$positions = array_map('intval', $_POST['position']);
 
-	($hook = get_hook('afo_update_positions_form_submitted')) ? eval($hook) : null;
+	($hook = get_hook('afo_update_positions_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	$query = array(
 		'SELECT'	=> 'f.id, f.disp_position',
@@ -220,7 +220,7 @@ else if (isset($_POST['update_positions']))
 		'ORDER BY'	=> 'c.disp_position, c.id, f.disp_position'
 	);
 
-	($hook = get_hook('afo_qr_get_forums')) ? eval($hook) : null;
+	($hook = get_hook('afo_qr_get_forums')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	while ($cur_forum = $forum_db->fetch_assoc($result))
 	{
@@ -242,7 +242,7 @@ else if (isset($_POST['update_positions']))
 					'WHERE'		=> 'id='.$cur_forum['id']
 				);
 
-				($hook = get_hook('afo_qr_update_forum_position')) ? eval($hook) : null;
+				($hook = get_hook('afo_qr_update_forum_position')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 				$forum_db->query_build($query) or error(__FILE__, __LINE__);
 			}
 		}
@@ -271,7 +271,7 @@ else if (isset($_GET['edit_forum']))
 		'WHERE'		=> 'f.id='.$forum_id
 	);
 
-	($hook = get_hook('afo_qr_get_forum_details')) ? eval($hook) : null;
+	($hook = get_hook('afo_qr_get_forum_details')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if (!$forum_db->num_rows($result))
 		message($lang_common['Bad request']);
@@ -281,7 +281,7 @@ else if (isset($_GET['edit_forum']))
 	// Update group permissions for $forum_id
 	if (isset($_POST['save']))
 	{
-		($hook = get_hook('afo_save_forum_form_submitted')) ? eval($hook) : null;
+		($hook = get_hook('afo_save_forum_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 		// Start with the forum details
 		$forum_name = forum_trim($_POST['forum_name']);
@@ -305,7 +305,7 @@ else if (isset($_GET['edit_forum']))
 			'WHERE'		=> 'id='.$forum_id
 		);
 
-		($hook = get_hook('afo_qr_update_forum')) ? eval($hook) : null;
+		($hook = get_hook('afo_qr_update_forum')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Now let's deal with the permissions
@@ -317,7 +317,7 @@ else if (isset($_GET['edit_forum']))
 				'WHERE'		=> 'g_id!='.FORUM_ADMIN
 			);
 
-			($hook = get_hook('afo_qr_get_groups')) ? eval($hook) : null;
+			($hook = get_hook('afo_qr_get_groups')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 			while ($cur_group = $forum_db->fetch_assoc($result))
 			{
@@ -342,7 +342,7 @@ else if (isset($_GET['edit_forum']))
 					'post_topics'	=>	isset($_POST['post_topics_new'][$cur_group['g_id']]) ? '1' : '0'
 				);
 
-				($hook = get_hook('afo_pre_perms_compare')) ? eval($hook) : null;
+				($hook = get_hook('afo_pre_perms_compare')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 				// Force all permissions values to integers
 				$perms_default = array_map('intval', $perms_default);
@@ -360,7 +360,7 @@ else if (isset($_GET['edit_forum']))
 							'WHERE'		=> 'group_id='.$cur_group['g_id'].' AND forum_id='.$forum_id
 						);
 
-						($hook = get_hook('afo_qr_delete_group_forum_perms')) ? eval($hook) : null;
+						($hook = get_hook('afo_qr_delete_group_forum_perms')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 						$forum_db->query_build($query) or error(__FILE__, __LINE__);
 					}
 					else
@@ -377,7 +377,7 @@ else if (isset($_GET['edit_forum']))
 
 						$query['SET'] = implode(', ', $temp);
 
-						($hook = get_hook('afo_qr_update_forum_perms')) ? eval($hook) : null;
+						($hook = get_hook('afo_qr_update_forum_perms')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 						$forum_db->query_build($query) or error(__FILE__, __LINE__);
 						if (!$forum_db->affected_rows())
 						{
@@ -390,7 +390,7 @@ else if (isset($_GET['edit_forum']))
 							$query['INSERT'] .= ', '.implode(', ', array_keys($perms_new));
 							$query['VALUES'] .= ', '.implode(', ', $perms_new);
 
-							($hook = get_hook('afo_qr_add_forum_perms')) ? eval($hook) : null;
+							($hook = get_hook('afo_qr_add_forum_perms')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 							$forum_db->query_build($query) or error(__FILE__, __LINE__);
 						}
 					}
@@ -408,14 +408,14 @@ else if (isset($_GET['edit_forum']))
 	}
 	else if (isset($_POST['revert_perms']))
 	{
-		($hook = get_hook('afo_revert_perms_form_submitted')) ? eval($hook) : null;
+		($hook = get_hook('afo_revert_perms_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 		$query = array(
 			'DELETE'	=> 'forum_perms',
 			'WHERE'		=> 'forum_id='.$forum_id
 		);
 
-		($hook = get_hook('afo_qr_revert_forum_perms')) ? eval($hook) : null;
+		($hook = get_hook('afo_qr_revert_forum_perms')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Regenerate the quickjump cache
@@ -447,7 +447,7 @@ else if (isset($_GET['edit_forum']))
 		$lang_admin_forums['Edit forum']
 	);
 
-	($hook = get_hook('afo_edit_forum_pre_header_load')) ? eval($hook) : null;
+	($hook = get_hook('afo_edit_forum_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE_SECTION', 'start');
 	define('FORUM_PAGE', 'admin-forums');
@@ -457,7 +457,7 @@ else if (isset($_GET['edit_forum']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('afo_edit_forum_output_start')) ? eval($hook) : null;
+	($hook = get_hook('afo_edit_forum_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -468,7 +468,7 @@ else if (isset($_GET['edit_forum']))
 		<div class="hidden">
 			<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_forums']).'?edit_forum='.$forum_id) ?>" />
 		</div>
-<?php ($hook = get_hook('afo_edit_forum_pre_details_part')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('afo_edit_forum_pre_details_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="content-head">
 				<h3 class="hn"><span><?php  echo $lang_admin_forums['Edit forum details head'] ?></span></h3>
 			</div>
@@ -498,7 +498,7 @@ else if (isset($_GET['edit_forum']))
 		'ORDER BY'	=> 'c.disp_position'
 	);
 
-	($hook = get_hook('afo_qr_get_categories')) ? eval($hook) : null;
+	($hook = get_hook('afo_qr_get_categories')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	while ($cur_cat = $forum_db->fetch_assoc($result))
 	{
@@ -516,7 +516,7 @@ else if (isset($_GET['edit_forum']))
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="sort_by">
 							<option value="0"<?php if ($cur_forum['sort_by'] == '0') echo ' selected="selected"' ?>><?php echo $lang_admin_forums['Sort last post'] ?></option>
 							<option value="1"<?php if ($cur_forum['sort_by'] == '1') echo ' selected="selected"' ?>><?php echo $lang_admin_forums['Sort topic start'] ?></option>
-<?php ($hook = get_hook('afo_edit_forum_modify_sort_by')) ? eval($hook) : null; ?>						</select></span>
+<?php ($hook = get_hook('afo_edit_forum_modify_sort_by')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>						</select></span>
 					</div>
 				</div>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
@@ -525,14 +525,14 @@ else if (isset($_GET['edit_forum']))
 						<span class="fld-input"><?php echo ($cur_forum['num_topics']) ? '<input type="text" id="fld'.$forum_page['fld_count'].'" name="redirect_url" size="45" maxlength="100" value="'.$lang_admin_forums['Only for empty forums'].'" disabled="disabled" />' : '<input type="text" id="fld'.$forum_page['fld_count'].'" name="redirect_url" size="45" maxlength="100" value="'.forum_htmlencode($cur_forum['redirect_url']).'" />'; ?></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('afo_edit_forum_details_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('afo_edit_forum_details_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
 <?php
 
 // Reset fieldset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
-($hook = get_hook('afo_edit_forum_pre_permissions_part')) ? eval($hook) : null;
+($hook = get_hook('afo_edit_forum_pre_permissions_part')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 			<div class="content-head">
@@ -562,7 +562,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 		'ORDER BY'	=> 'g.g_id'
 	);
 
-	($hook = get_hook('afo_qr_get_forum_perms')) ? eval($hook) : null;
+	($hook = get_hook('afo_qr_get_forum_perms')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	while ($cur_perm = $forum_db->fetch_assoc($result))
 	{
@@ -593,7 +593,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 							<input type="hidden" name="post_topics_old[<?php echo $cur_perm['g_id'] ?>]" value="<?php echo ($post_topics) ? '1' : '0'; ?>" />
 							<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="post_topics_new[<?php echo $cur_perm['g_id'] ?>]" value="1"<?php if ($post_topics) echo ' checked="checked"'; echo ($cur_forum['redirect_url'] != '') ? ' disabled="disabled"' : ''; ?> /></span>
 							<label for="fld<?php echo $forum_page['fld_count'] ?>"<?php if (!$post_topics_def) echo ' class="warn"'; ?>><?php echo $lang_admin_forums['Post topics'] ?> <?php if (!$post_topics_def) echo $lang_admin_forums['Not default'] ?></label>
-<?php ($hook = get_hook('afo_edit_forum_new_permission')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('afo_edit_forum_new_permission')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 						</div>
 					</div>
 				</fieldset>
@@ -603,7 +603,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 	}
 
 ?>
-<?php ($hook = get_hook('afo_edit_forum_permissions_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('afo_edit_forum_permissions_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="save" value="<?php echo $lang_admin_common['Save changes'] ?>" /></span>
@@ -631,7 +631,7 @@ $forum_page['crumbs'] = array(
 	$lang_admin_common['Forums']
 );
 
-($hook = get_hook('afo_pre_header_load')) ? eval($hook) : null;
+($hook = get_hook('afo_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE_SECTION', 'start');
 define('FORUM_PAGE', 'admin-forums');
@@ -641,7 +641,7 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
-($hook = get_hook('afo_main_output_start')) ? eval($hook) : null;
+($hook = get_hook('afo_main_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -678,7 +678,7 @@ ob_start();
 		'ORDER BY'	=> 'c.disp_position'
 	);
 
-	($hook = get_hook('afo_qr_get_categories2')) ? eval($hook) : null;
+	($hook = get_hook('afo_qr_get_categories2')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	while ($cur_cat = $forum_db->fetch_assoc($result))
 		echo "\t\t\t\t\t\t\t".'<option value="'.$cur_cat['id'].'">'.forum_htmlencode($cur_cat['cat_name']).'</option>'."\n";
@@ -687,7 +687,7 @@ ob_start();
 						</select></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('afo_add_forum_fieldset_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('afo_add_forum_fieldset_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" class="button" name="add_forum" value=" <?php echo $lang_admin_forums['Add forum'] ?> " /></span>
@@ -710,7 +710,7 @@ $query = array(
 	'ORDER BY'	=> 'c.disp_position, c.id, f.disp_position'
 );
 
-($hook = get_hook('afo_qr_get_cats_and_forums')) ? eval($hook) : null;
+($hook = get_hook('afo_qr_get_cats_and_forums')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 if ($forum_db->num_rows($result))

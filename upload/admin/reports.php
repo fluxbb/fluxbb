@@ -30,7 +30,7 @@ if (!defined('FORUM_ROOT'))
 require FORUM_ROOT.'include/common.php';
 require FORUM_ROOT.'include/common_admin.php';
 
-($hook = get_hook('arp_start')) ? eval($hook) : null;
+($hook = get_hook('arp_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 if (!$forum_user['is_admmod'])
 	message($lang_common['No permission']);
@@ -46,7 +46,7 @@ if (isset($_POST['mark_as_read']))
 	if (empty($_POST['reports']))
 		message($lang_admin_reports['No reports selected']);
 
-	($hook = get_hook('arp_mark_as_read_form_submitted')) ? eval($hook) : null;
+	($hook = get_hook('arp_mark_as_read_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	$reports_to_mark = array_map('intval', array_keys($_POST['reports']));
 
@@ -56,7 +56,7 @@ if (isset($_POST['mark_as_read']))
 		'WHERE'		=> 'id IN('.implode(',', $reports_to_mark).') AND zapped IS NULL'
 	);
 
-	($hook = get_hook('arp_qr_mark_reports_as_read')) ? eval($hook) : null;
+	($hook = get_hook('arp_qr_mark_reports_as_read')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	redirect(forum_link($forum_url['admin_reports']), $lang_admin_reports['Reports marked read'].' '.$lang_admin_common['Redirect']);
@@ -71,7 +71,7 @@ $forum_page['crumbs'] = array(
 	$lang_admin_common['Reports']
 );
 
-($hook = get_hook('arp_pre_header_load')) ? eval($hook) : null;
+($hook = get_hook('arp_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE_SECTION', 'management');
 define('FORUM_PAGE', 'admin-reports');
@@ -81,7 +81,7 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
-($hook = get_hook('arp_main_output_start')) ? eval($hook) : null;
+($hook = get_hook('arp_main_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 // Fetch any unread reports
 $query = array(
@@ -109,7 +109,7 @@ $query = array(
 	'ORDER BY'	=> 'r.created DESC'
 );
 
-($hook = get_hook('arp_qr_get_new_reports')) ? eval($hook) : null;
+($hook = get_hook('arp_qr_get_new_reports')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 $forum_page['new_reports'] = false;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
@@ -138,7 +138,7 @@ if ($forum_db->num_rows($result))
 		$message = str_replace("\n", '<br />', forum_htmlencode($cur_report['message']));
 		$post_id = ($cur_report['pid'] != '') ? '<a href="'.forum_link($forum_url['post'], $cur_report['pid']).'">Post #'.$cur_report['pid'].'</a>' : $lang_admin_reports['Deleted post'];
 
-		($hook = get_hook('arp_new_report_pre_display')) ? eval($hook) : null;
+		($hook = get_hook('arp_new_report_pre_display')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 			<div class="ct-set report">
@@ -147,7 +147,7 @@ if ($forum_db->num_rows($result))
 					<h4 class="hn"><?php echo $forum ?> : <?php echo $topic ?> : <?php echo $post_id ?></h4>
 					<p><?php echo $message ?></p>
 					<p class="item-select"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="reports[<?php echo $cur_report['id'] ?>]" value="1" /> <label for="fld<?php echo $forum_page['fld_count'] ?>"><?php echo $lang_admin_reports['Select report'] ?></label></p>
-<?php ($hook = get_hook('arp_new_report_new_block')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('arp_new_report_new_block')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				</div>
 			</div>
 <?php
@@ -202,7 +202,7 @@ $query = array(
 	'LIMIT'		=> '10'
 );
 
-($hook = get_hook('arp_qr_get_last_zapped_reports')) ? eval($hook) : null;
+($hook = get_hook('arp_qr_get_last_zapped_reports')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 $forum_page['old_reports'] = false;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
@@ -221,7 +221,7 @@ if ($forum_db->num_rows($result))
 		$post_id = ($cur_report['pid'] != '') ? '<a href="'.forum_link($forum_url['post'], $cur_report['pid']).'">Post #'.$cur_report['pid'].'</a>' : $lang_admin_reports['Deleted post'];
 		$zapped_by = ($cur_report['zapped_by'] != '') ? '<a href="'.forum_link($forum_url['user'], $cur_report['zapped_by_id']).'">'.forum_htmlencode($cur_report['zapped_by']).'</a>' : $lang_admin_reports['Deleted user'];
 
-		($hook = get_hook('arp_report_pre_display')) ? eval($hook) : null;
+		($hook = get_hook('arp_report_pre_display')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 			<div class="ct-set report group-item<?php echo ++$forum_page['item_count'] ?>">
@@ -231,7 +231,7 @@ if ($forum_db->num_rows($result))
 					<p><?php echo $message ?> <strong><?php printf($lang_admin_reports['Marked read by'], format_time($cur_report['zapped']), $zapped_by) ?></strong></p>
 				</div>
 			</div>
-<?php ($hook = get_hook('arp_report_new_block')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('arp_report_new_block')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 <?php
 
 	}

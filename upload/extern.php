@@ -73,7 +73,7 @@ if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
 require FORUM_ROOT.'include/common.php';
 
-($hook = get_hook('ex_start')) ? eval($hook) : null;
+($hook = get_hook('ex_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 // The length at which topic subjects will be truncated (for HTML output)
 if (!defined('FORUM_EXTERN_MAX_SUBJECT_LENGTH'))
@@ -283,7 +283,7 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 			$type = 'xml';
 	}
 
-	($hook = get_hook('ex_set_syndication_type')) ? eval($hook) : null;
+	($hook = get_hook('ex_set_syndication_type')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	$forum_sql = '';
 
@@ -305,7 +305,7 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 			'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND t.moved_to IS NULL and t.id='.$tid
 		);
 
-		($hook = get_hook('ex_qr_get_topic_data')) ? eval($hook) : null;
+		($hook = get_hook('ex_qr_get_topic_data')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if (!$forum_db->num_rows($result))
 		{
@@ -336,7 +336,7 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 			'LIMIT'		=> '15'
 		);
 
-		($hook = get_hook('ex_qr_get_posts')) ? eval($hook) : null;
+		($hook = get_hook('ex_qr_get_posts')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		while ($cur_post = $forum_db->fetch_assoc($result))
 		{
@@ -349,13 +349,13 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 				'pubdate'		=>	$cur_post['posted']
 			);
 
-			($hook = get_hook('ex_modify_cur_post_item')) ? eval($hook) : null;
+			($hook = get_hook('ex_modify_cur_post_item')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		}
 
 		if (intval($cur_topic['num_replies']) <= 14)
 			$feed['items'][count($feed['items'])-1]['title'] = $cur_topic['subject'];
 
-		($hook = get_hook('ex_pre_topic_output')) ? eval($hook) : null;
+		($hook = get_hook('ex_pre_topic_output')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 		$output_func = 'output_'.$type;
 		$output_func($feed);
@@ -423,7 +423,7 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 		if (isset($forum_sql))
 			$query['WHERE'] .= $forum_sql;
 
-		($hook = get_hook('ex_qr_get_topics')) ? eval($hook) : null;
+		($hook = get_hook('ex_qr_get_topics')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		while ($cur_topic = $forum_db->fetch_assoc($result))
 		{
@@ -439,10 +439,10 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 				'pubdate'		=>	$cur_topic['last_post']
 			);
 
-			($hook = get_hook('ex_modify_cur_topic_item')) ? eval($hook) : null;
+			($hook = get_hook('ex_modify_cur_topic_item')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		}
 
-		($hook = get_hook('ex_pre_forum_output')) ? eval($hook) : null;
+		($hook = get_hook('ex_pre_forum_output')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 		$output_func = 'output_'.$type;
 		$output_func($feed);
@@ -471,7 +471,7 @@ else if ($_GET['action'] == 'online' || $_GET['action'] == 'online_full')
 		'ORDER BY'	=> 'o.ident'
 	);
 
-	($hook = get_hook('ex_qr_get_users_online')) ? eval($hook) : null;
+	($hook = get_hook('ex_qr_get_users_online')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	while ($forum_user_online = $forum_db->fetch_assoc($result))
 	{
@@ -484,7 +484,7 @@ else if ($_GET['action'] == 'online' || $_GET['action'] == 'online_full')
 			++$num_guests;
 	}
 
-	($hook = get_hook('ex_pre_online_output')) ? eval($hook) : null;
+	($hook = get_hook('ex_pre_online_output')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	echo $lang_index['Guests online'].': '.forum_number_format($num_guests).'<br />';
 
@@ -511,7 +511,7 @@ else if ($_GET['action'] == 'stats')
 		'FROM'		=> 'users AS u'
 	);
 
-	($hook = get_hook('ex_qr_get_user_count')) ? eval($hook) : null;
+	($hook = get_hook('ex_qr_get_user_count')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$stats['total_users'] = $forum_db->result($result);
 
@@ -522,7 +522,7 @@ else if ($_GET['action'] == 'stats')
 		'LIMIT'		=> '1'
 	);
 
-	($hook = get_hook('ex_qr_get_newest_user')) ? eval($hook) : null;
+	($hook = get_hook('ex_qr_get_newest_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$stats['last_user'] = $forum_db->fetch_assoc($result);
 
@@ -531,11 +531,11 @@ else if ($_GET['action'] == 'stats')
 		'FROM'		=> 'forums AS f'
 	);
 
-	($hook = get_hook('ex_qr_get_post_stats')) ? eval($hook) : null;
+	($hook = get_hook('ex_qr_get_post_stats')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	list($stats['total_topics'], $stats['total_posts']) = $forum_db->fetch_row($result);
 
-	($hook = get_hook('ex_pre_stats_output')) ? eval($hook) : null;
+	($hook = get_hook('ex_pre_stats_output')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	echo $lang_index['No of users'].': '.forum_number_format($stats['total_users']).'<br />';
 	echo $lang_index['Newest user'].': <a href="'.forum_link($forum_url['user'], $stats['last_user']['id']).'">'.forum_htmlencode($stats['last_user']['username']).'</a><br />';
@@ -546,7 +546,7 @@ else if ($_GET['action'] == 'stats')
 }
 
 
-($hook = get_hook('ex_new_action')) ? eval($hook) : null;
+($hook = get_hook('ex_new_action')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 // If we end up here, the script was called with some wacky parameters
 exit($lang_common['Bad request']);

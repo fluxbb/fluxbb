@@ -61,11 +61,11 @@ else
 		$tpl_path = FORUM_ROOT.'include/template/main.tpl';
 }
 
-($hook = get_hook('hd_pre_template_loaded')) ? eval($hook) : null;
+($hook = get_hook('hd_pre_template_loaded')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 $tpl_main = file_get_contents($tpl_path);
 
-($hook = get_hook('hd_template_loaded')) ? eval($hook) : null;
+($hook = get_hook('hd_template_loaded')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 // START SUBST - <!-- forum_include "*" -->
 while (preg_match('#<!-- ?forum_include "([^/\\\\]*?)" ?-->#', $tpl_main, $cur_include))
@@ -147,9 +147,9 @@ ob_end_clean();
 
 $forum_head['commonjs'] = '<script type="text/javascript" src="'.$base_url.'/include/js/common.js"></script>';
 
-($hook = get_hook('hd_'.FORUM_PAGE.'_head')) ? eval($hook) : null;
+($hook = get_hook('hd_'.FORUM_PAGE.'_head')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
-($hook = get_hook('hd_head')) ? eval($hook) : null;
+($hook = get_hook('hd_head')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 $tpl_main = str_replace('<!-- forum_head -->', implode("\n",$forum_head), $tpl_main);
 unset($forum_head);
@@ -182,7 +182,7 @@ $gen_elements['<!-- forum_announcement -->'] = ($forum_config['o_announcement'] 
 // Maintenance Warning
 $gen_elements['<!-- forum_maint -->'] = ($forum_user['g_id'] == FORUM_ADMIN && $forum_config['o_maintenance'] == '1') ? '<p id="maint-alert" class="warn">'.sprintf($lang_common['Maintenance warning'], '<a href="'.forum_link($forum_url['admin_settings_maintenance']).'">'.$lang_common['Maintenance mode'].'</a>').'</p>' : '';
 
-($hook = get_hook('hd_genelements')) ? eval($hook) : null;
+($hook = get_hook('hd_genelements')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 $tpl_main = str_replace(array_keys($gen_elements), array_values($gen_elements), $tpl_main);
 unset($gen_elements);
@@ -211,7 +211,7 @@ if ($forum_user['g_read_board'] == '1' && $forum_user['g_search'] == '1')
 
 $visit_elements['<!-- forum_visit -->'] = (!empty($visit_links)) ? '<p id="visit-links" class="options">'.implode(' ', $visit_links).'</p>' : '';
 
-($hook = get_hook('hd_visitelements')) ? eval($hook) : null;
+($hook = get_hook('hd_visitelements')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 $tpl_main = str_replace(array_keys($visit_elements), array_values($visit_elements), $tpl_main);
 unset($visit_elements);
@@ -231,7 +231,7 @@ if ($forum_user['is_admmod'] && $forum_config['o_report_method'] != 1)
 		'WHERE'		=> 'r.zapped IS NULL',
 	);
 
-	($hook = get_hook('hd_qr_get_unread_reports_count')) ? eval($hook) : null;
+	($hook = get_hook('hd_qr_get_unread_reports_count')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result_header = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	if ($forum_db->result($result_header))
@@ -273,7 +273,7 @@ if ($forum_user['g_id'] == FORUM_ADMIN)
 	if (!empty($alert_items))
 		$admod_links['alert'] = '<span id="alert"><a href="'.forum_link($forum_url['admin_index']).'"><strong>'.$lang_common['New alerts'].'</strong></a></span>';
 
-	($hook = get_hook('hd_alert')) ? eval($hook) : null;
+	($hook = get_hook('hd_alert')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 }
 
 $tpl_main = str_replace('<!-- forum_admod -->', (!empty($admod_links)) ? '<p id="brd-admod">'.implode(' ', $admod_links).'</p>' : '', $tpl_main);
@@ -317,7 +317,7 @@ if (substr(FORUM_PAGE, 0, 5) == 'admin' && FORUM_PAGE_TYPE != 'paged')
 // Main section options bar
 $main_elements['<!-- forum_main_options -->'] = (!empty($forum_page['main_options'])) ? '<div class="main-options gen-content">'."\n\t\t".'<p class="options">'.implode(' ', $forum_page['main_options']).'</p>'."\n\t".'</div>' : '';
 
-($hook = get_hook('hd_mainelements')) ? eval($hook) : null;
+($hook = get_hook('hd_mainelements')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 $tpl_main = str_replace(array_keys($main_elements),  array_values($main_elements), $tpl_main);
 unset($main_elements);
@@ -325,6 +325,6 @@ unset($main_elements);
 // END MAIN SECTION INTERFACE ELEMENT SUBSTITUTION
 
 
-($hook = get_hook('hd_end')) ? eval($hook) : null;
+($hook = get_hook('hd_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 define('FORUM_HEADER', 1);

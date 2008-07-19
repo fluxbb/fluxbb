@@ -30,7 +30,7 @@ if (!defined('FORUM_ROOT'))
 require FORUM_ROOT.'include/common.php';
 require FORUM_ROOT.'include/common_admin.php';
 
-($hook = get_hook('acg_start')) ? eval($hook) : null;
+($hook = get_hook('acg_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 if ($forum_user['g_id'] != FORUM_ADMIN)
 	message($lang_common['No permission']);
@@ -49,7 +49,7 @@ if (isset($_POST['add_cat']))
 
 	$new_cat_pos = intval($_POST['position']);
 
-	($hook = get_hook('acg_add_cat_form_submitted')) ? eval($hook) : null;
+	($hook = get_hook('acg_add_cat_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	$query = array(
 		'INSERT'	=> 'cat_name, disp_position',
@@ -57,7 +57,7 @@ if (isset($_POST['add_cat']))
 		'VALUES'	=> '\''.$forum_db->escape($new_cat_name).'\', '.$new_cat_pos
 	);
 
-	($hook = get_hook('acg_qr_add_category')) ? eval($hook) : null;
+	($hook = get_hook('acg_qr_add_category')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	redirect(forum_link($forum_url['admin_categories']), $lang_admin_categories['Category added'].' '.$lang_admin_common['Redirect']);
@@ -75,7 +75,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 	if (isset($_POST['del_cat_cancel']))
 		redirect(forum_link($forum_url['admin_categories']), $lang_admin_common['Cancel redirect']);
 
-	($hook = get_hook('acg_del_cat_form_submitted')) ? eval($hook) : null;
+	($hook = get_hook('acg_del_cat_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	if (isset($_POST['del_cat_comply']))	// Delete a category with all forums and posts
 	{
@@ -87,7 +87,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 			'WHERE'		=> 'cat_id='.$cat_to_delete
 		);
 
-		($hook = get_hook('acg_qr_get_forums_to_delete')) ? eval($hook) : null;
+		($hook = get_hook('acg_qr_get_forums_to_delete')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		$num_forums = $forum_db->num_rows($result);
 
@@ -104,7 +104,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 				'WHERE'		=> 'id='.$cur_forum
 			);
 
-			($hook = get_hook('acg_qr_delete_forum')) ? eval($hook) : null;
+			($hook = get_hook('acg_qr_delete_forum')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 
@@ -116,7 +116,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 			'WHERE'		=> 'id='.$cat_to_delete
 		);
 
-		($hook = get_hook('acg_qr_delete_category')) ? eval($hook) : null;
+		($hook = get_hook('acg_qr_delete_category')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Regenerate the quickjump cache
@@ -135,7 +135,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 			'WHERE'		=> 'c.id='.$cat_to_delete
 		);
 
-		($hook = get_hook('acg_qr_get_category_name')) ? eval($hook) : null;
+		($hook = get_hook('acg_qr_get_category_name')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if (!$forum_db->num_rows($result))
 			message($lang_common['Bad request']);
@@ -151,7 +151,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 			$lang_admin_categories['Delete category']
 		);
 
-		($hook = get_hook('acg_del_cat_pre_header_load')) ? eval($hook) : null;
+		($hook = get_hook('acg_del_cat_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 		define('FORUM_PAGE_SECTION', 'start');
 		define('FORUM_PAGE', 'admin-categories');
@@ -161,7 +161,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 		// START SUBST - <!-- forum_main -->
 		ob_start();
 
-		($hook = get_hook('acg_delete_cat_output_start')) ? eval($hook) : null;
+		($hook = get_hook('acg_delete_cat_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -199,7 +199,7 @@ else if (isset($_POST['update']))	// Change position and name of the categories
 	$cat_order = array_map('intval', $_POST['cat_order']);
 	$cat_name = array_map('trim', $_POST['cat_name']);
 
-	($hook = get_hook('acg_update_cats_form_submitted')) ? eval($hook) : null;
+	($hook = get_hook('acg_update_cats_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	$query = array(
 		'SELECT'	=> 'c.id, c.cat_name, c.disp_position',
@@ -207,7 +207,7 @@ else if (isset($_POST['update']))	// Change position and name of the categories
 		'ORDER BY'	=> 'c.id'
 	);
 
-	($hook = get_hook('acg_qr_get_categories')) ? eval($hook) : null;
+	($hook = get_hook('acg_qr_get_categories')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	while ($cur_cat = $forum_db->fetch_assoc($result))
 	{
@@ -230,7 +230,7 @@ else if (isset($_POST['update']))	// Change position and name of the categories
 					'WHERE'		=> 'id='.$cur_cat['id']
 				);
 
-				($hook = get_hook('acg_qr_update_category')) ? eval($hook) : null;
+				($hook = get_hook('acg_qr_update_category')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 				$forum_db->query_build($query) or error(__FILE__, __LINE__);
 			}
 		}
@@ -253,7 +253,7 @@ $query = array(
 	'ORDER BY'	=> 'c.disp_position'
 );
 
-($hook = get_hook('acg_qr_get_categories2')) ? eval($hook) : null;
+($hook = get_hook('acg_qr_get_categories2')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 $num_cats = $forum_db->num_rows($result);
 
@@ -271,7 +271,7 @@ $forum_page['crumbs'] = array(
 	$lang_admin_common['Categories']
 );
 
-($hook = get_hook('acg_cat_header_load')) ? eval($hook) : null;
+($hook = get_hook('acg_cat_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE_SECTION', 'start');
 define('FORUM_PAGE', 'admin-categories');
@@ -281,7 +281,7 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
-($hook = get_hook('acg_main_output_start')) ? eval($hook) : null;
+($hook = get_hook('acg_main_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -310,7 +310,7 @@ ob_start();
 					</div>
 				</div>
 			</fieldset>
-<?php ($hook = get_hook('acg_add_cat_fieldset_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('acg_add_cat_fieldset_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="add_cat" value="<?php echo $lang_admin_categories['Add category'] ?>" /></span>
 			</div>
@@ -318,7 +318,7 @@ ob_start();
 	</div>
 <?php
 
-($hook = get_hook('acg_new_form')) ? eval($hook) : null;
+($hook = get_hook('acg_new_form')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
@@ -350,7 +350,7 @@ if ($num_cats)
 						</select></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('acg_del_cat_fieldset_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('acg_del_cat_fieldset_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="del_cat" value="<?php echo $lang_admin_categories['Delete category'] ?>" /></span>
@@ -395,7 +395,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 						</div>
 					</div>
 				</fieldset>
-<?php ($hook = get_hook('acg_edit_cat_fieldset_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('acg_edit_cat_fieldset_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 <?php
 
 	}
@@ -409,7 +409,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 	</div>
 <?php
 
-	($hook = get_hook('acg_has_cats_new_form')) ? eval($hook) : null;
+	($hook = get_hook('acg_has_cats_new_form')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 }
 
 $tpl_temp = forum_trim(ob_get_contents());

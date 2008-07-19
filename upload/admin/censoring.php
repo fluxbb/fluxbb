@@ -30,7 +30,7 @@ if (!defined('FORUM_ROOT'))
 require FORUM_ROOT.'include/common.php';
 require FORUM_ROOT.'include/common_admin.php';
 
-($hook = get_hook('acs_start')) ? eval($hook) : null;
+($hook = get_hook('acs_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 if (!$forum_user['is_admmod'])
 	message($lang_common['No permission']);
@@ -49,7 +49,7 @@ if (isset($_POST['add_word']))
 	if ($search_for == '' || $replace_with == '')
 		message($lang_admin_censoring['Must enter text message']);
 
-	($hook = get_hook('acs_add_word_form_submitted')) ? eval($hook) : null;
+	($hook = get_hook('acs_add_word_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	$query = array(
 		'INSERT'	=> 'search_for, replace_with',
@@ -57,7 +57,7 @@ if (isset($_POST['add_word']))
 		'VALUES'	=> '\''.$forum_db->escape($search_for).'\', \''.$forum_db->escape($replace_with).'\''
 	);
 
-	($hook = get_hook('acs_qr_add_censor')) ? eval($hook) : null;
+	($hook = get_hook('acs_qr_add_censor')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the censor cache
@@ -81,7 +81,7 @@ else if (isset($_POST['update']))
 	if ($search_for == '' || $replace_with == '')
 		message($lang_admin_censoring['Must enter text message']);
 
-	($hook = get_hook('acs_update_form_submitted')) ? eval($hook) : null;
+	($hook = get_hook('acs_update_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	$query = array(
 		'UPDATE'	=> 'censoring',
@@ -89,7 +89,7 @@ else if (isset($_POST['update']))
 		'WHERE'		=> 'id='.$id
 	);
 
-	($hook = get_hook('acs_qr_update_censor')) ? eval($hook) : null;
+	($hook = get_hook('acs_qr_update_censor')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the censor cache
@@ -107,14 +107,14 @@ else if (isset($_POST['remove']))
 {
 	$id = intval(key($_POST['remove']));
 
-	($hook = get_hook('acs_remove_form_submitted')) ? eval($hook) : null;
+	($hook = get_hook('acs_remove_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	$query = array(
 		'DELETE'	=> 'censoring',
 		'WHERE'		=> 'id='.$id
 	);
 
-	($hook = get_hook('acs_qr_delete_censor')) ? eval($hook) : null;
+	($hook = get_hook('acs_qr_delete_censor')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the censor cache
@@ -151,7 +151,7 @@ $forum_page['crumbs'] = array(
 	$lang_admin_common['Censoring']
 );
 
-($hook = get_hook('acs_pre_header_load')) ? eval($hook) : null;
+($hook = get_hook('acs_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE_SECTION', 'settings');
 define('FORUM_PAGE', 'admin-censoring');
@@ -161,7 +161,7 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
-($hook = get_hook('acs_main_output_start')) ? eval($hook) : null;
+($hook = get_hook('acs_main_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -177,7 +177,7 @@ ob_start();
 			</div>
 			<fieldset class="frm-group frm-hdgroup frm-item<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_censoring['Add censored word legend'] ?></span></legend>
-<?php ($hook = get_hook('acs_add_word_pre_search_for')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('acs_add_word_pre_search_for')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?><?php echo ($forum_page['item_count'] == 1) ? ' mf-head' : ' mf-extra' ?>">
 					<legend><span><?php echo $lang_admin_censoring['Add new word legend'] ?></span></legend>
 					<div class="mf-box">
@@ -185,7 +185,7 @@ ob_start();
 							<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_admin_censoring['Censored word label'] ?></span></label><br />
 							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="new_search_for" size="24" maxlength="60" /></span>
 						</div>
-<?php ($hook = get_hook('acs_add_word_pre_replace_with')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('acs_add_word_pre_replace_with')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 						<div class="mf-field">
 							<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_admin_censoring['Replacement label'] ?></span></label><br />
 							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="new_replace_with" size="24" maxlength="60" /></span>
@@ -195,7 +195,7 @@ ob_start();
 						</div>
 					</div>
 				</fieldset>
-<?php ($hook = get_hook('acs_add_word_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('acs_add_word_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
 		</form>
 <?php
@@ -218,7 +218,7 @@ if (!empty($forum_censors))
 	{
 
 	?>
-<?php ($hook = get_hook('acs_edit_word_pre_search_for')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('acs_edit_word_pre_search_for')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?><?php echo ($forum_page['item_count'] == 1) ? ' mf-head' : ' mf-extra' ?>">
 					<legend><span><?php echo $lang_admin_censoring['Existing censored word legend'] ?></span></legend>
 					<div class="mf-box">
@@ -226,7 +226,7 @@ if (!empty($forum_censors))
 							<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_censoring['Censored word label'] ?></span></label><br />
 							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="search_for[<?php echo $cur_word['id'] ?>]" value="<?php echo forum_htmlencode($cur_word['search_for']) ?>" size="24" maxlength="60" /></span>
 						</div>
-<?php ($hook = get_hook('acs_edit_word_pre_replace_with')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('acs_edit_word_pre_replace_with')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 						<div class="mf-field">
 							<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_censoring['Replacement label'] ?></span></label><br />
 							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="replace_with[<?php echo $cur_word['id'] ?>]" value="<?php echo forum_htmlencode($cur_word['replace_with']) ?>" size="24" maxlength="60" /></span>
@@ -236,7 +236,7 @@ if (!empty($forum_censors))
 						</div>
 					</div>
 				</fieldset>
-<?php ($hook = get_hook('acs_edit_word_end')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('acs_edit_word_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 	<?php
 
 	}

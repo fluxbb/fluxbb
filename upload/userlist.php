@@ -29,7 +29,7 @@ if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
 require FORUM_ROOT.'include/common.php';
 
-($hook = get_hook('ul_start')) ? eval($hook) : null;
+($hook = get_hook('ul_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 if ($forum_user['g_read_board'] == '0')
 	message($lang_common['No view']);
@@ -71,7 +71,7 @@ $query = array(
 if (!empty($where_sql))
 	$query['WHERE'] .= ' AND '.implode(' AND ', $where_sql);
 
-($hook = get_hook('ul_qr_get_user_count')) ? eval($hook) : null;
+($hook = get_hook('ul_qr_get_user_count')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 $forum_page['num_users'] = $forum_db->result($result);
 
@@ -107,7 +107,7 @@ $forum_page['crumbs'] = array(
 	array($forum_config['o_board_title'], forum_link($forum_url['index'])), $lang_common['User list']
 );
 
-($hook = get_hook('ul_pre_header_load')) ? eval($hook) : null;
+($hook = get_hook('ul_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 // Allow indexing if this isn't a link with p=1
 if (!isset($_GET['p']) || $forum_page['page'] != 1)
@@ -120,7 +120,7 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
-($hook = get_hook('ul_main_output_start')) ? eval($hook) : null;
+($hook = get_hook('ul_main_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 <div class="main-pagehead">
@@ -151,7 +151,7 @@ $query = array(
 	'ORDER BY'	=> 'g.g_id'
 );
 
-($hook = get_hook('ul_qr_get_groups')) ? eval($hook) : null;
+($hook = get_hook('ul_qr_get_groups')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 while ($cur_group = $forum_db->fetch_assoc($result))
@@ -173,7 +173,7 @@ while ($cur_group = $forum_db->fetch_assoc($result))
 					<option value="username"<?php if ($forum_page['sort_by'] == 'username') echo ' selected="selected"' ?>><?php echo $lang_common['Username'] ?></option>
 					<option value="registered"<?php if ($forum_page['sort_by'] == 'registered') echo ' selected="selected"' ?>><?php echo $lang_common['Registered'] ?></option>
 <?php if ($forum_page['show_post_count']): ?>					<option value="num_posts"<?php if ($forum_page['sort_by'] == 'num_posts') echo ' selected="selected"' ?>><?php echo $lang_ul['No of posts'] ?></option>
-<?php endif; ($hook = get_hook('ul_new_sort_by')) ? eval($hook) : null; ?>					</select></span>
+<?php endif; ($hook = get_hook('ul_new_sort_by')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>					</select></span>
 				</div>
 			</div>
 			<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
@@ -216,7 +216,7 @@ $query = array(
 if (!empty($where_sql))
 	$query['WHERE'] .= ' AND '.implode(' AND ', $where_sql);
 
-($hook = get_hook('ul_qr_get_users')) ? eval($hook) : null;
+($hook = get_hook('ul_qr_get_users')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 $forum_page['item_count'] = 0;
 
@@ -270,7 +270,7 @@ if ($forum_db->num_rows($result))
 </div>
 <?php
 
-($hook = get_hook('ul_end')) ? eval($hook) : null;
+($hook = get_hook('ul_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

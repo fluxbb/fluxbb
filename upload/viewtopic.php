@@ -29,7 +29,7 @@ if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
 require FORUM_ROOT.'include/common.php';
 
-($hook = get_hook('vt_start')) ? eval($hook) : null;
+($hook = get_hook('vt_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 if ($forum_user['g_read_board'] == '0')
 	message($lang_common['No view']);
@@ -54,7 +54,7 @@ if ($pid)
 		'WHERE'		=> 'p.id='.$pid
 	);
 
-	($hook = get_hook('vt_qr_get_post_info')) ? eval($hook) : null;
+	($hook = get_hook('vt_qr_get_post_info')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if (!$forum_db->num_rows($result))
 		message($lang_common['Bad request']);
@@ -68,7 +68,7 @@ if ($pid)
 		'WHERE'		=> 'p.topic_id='.$id.' AND p.posted<'.$posted
 	);
 
-	($hook = get_hook('vt_qr_get_post_page')) ? eval($hook) : null;
+	($hook = get_hook('vt_qr_get_post_page')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$num_posts = $forum_db->result($result) + 1;
 
@@ -82,7 +82,7 @@ else if ($action == 'new' && !$forum_user['is_guest'])
 	$tracked_topics = get_tracked_topics();
 	$last_viewed = isset($tracked_topics['topics'][$id]) ? $tracked_topics['topics'][$id] : $forum_user['last_visit'];
 
-	($hook = get_hook('vt_find_new_post')) ? eval($hook) : null;
+	($hook = get_hook('vt_find_new_post')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	$query = array(
 		'SELECT'	=> 'MIN(p.id)',
@@ -90,7 +90,7 @@ else if ($action == 'new' && !$forum_user['is_guest'])
 		'WHERE'		=> 'p.topic_id='.$id.' AND p.posted>'.$last_viewed
 	);
 
-	($hook = get_hook('vt_qr_get_first_new_post')) ? eval($hook) : null;
+	($hook = get_hook('vt_qr_get_first_new_post')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$first_new_post_id = $forum_db->result($result);
 
@@ -111,7 +111,7 @@ else if ($action == 'last')
 		'WHERE'		=> 't.id='.$id
 	);
 
-	($hook = get_hook('vt_qr_get_last_post')) ? eval($hook) : null;
+	($hook = get_hook('vt_qr_get_last_post')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$last_post_id = $forum_db->result($result);
 
@@ -149,14 +149,14 @@ if (!$forum_user['is_guest'])
 	);
 }
 
-($hook = get_hook('vt_qr_get_topic_info')) ? eval($hook) : null;
+($hook = get_hook('vt_qr_get_topic_info')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 if (!$forum_db->num_rows($result))
 	message($lang_common['Bad request']);
 
 $cur_topic = $forum_db->fetch_assoc($result);
 
-($hook = get_hook('vt_modify_topic_info')) ? eval($hook) : null;
+($hook = get_hook('vt_modify_topic_info')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 // Sort out who the moderators are and if we are currently a moderator (or an admin)
 $mods_array = ($cur_topic['moderators'] != '') ? unserialize($cur_topic['moderators']) : array();
@@ -183,7 +183,7 @@ $forum_page['start_from'] = $forum_user['disp_posts'] * ($forum_page['page'] - 1
 $forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_posts']), ($cur_topic['num_replies'] + 1));
 $forum_page['page_info'] =  generate_page_info($lang_topic['Posts'], ($forum_page['start_from'] + 1), ($cur_topic['num_replies'] + 1));
 
-($hook = get_hook('vt_modify_page_details')) ? eval($hook) : null;
+($hook = get_hook('vt_modify_page_details')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 // Navigation links for header and page numbering for title/meta description
 if ($forum_page['page'] < $forum_page['num_pages'])
@@ -243,7 +243,7 @@ $forum_page['crumbs'] = array(
 // Setup main heading
 $forum_page['main_head'] = (($cur_topic['closed'] == '1') ? $lang_topic['Topic closed'].' ' : '').'<a class="permalink" href="'.forum_link($forum_url['topic'], array($id, sef_friendly($cur_topic['subject']))).'" rel="bookmark" title="'.$lang_topic['Permalink topic'].'">'.forum_htmlencode($cur_topic['subject']).'</a>';
 
-($hook = get_hook('vt_pre_header_load')) ? eval($hook) : null;
+($hook = get_hook('vt_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 // Allow indexing if this isn't a permalink and it isn't a link with p=1
 if (!$pid && (!isset($_GET['p']) || $forum_page['page'] != 1))
@@ -256,7 +256,7 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
-($hook = get_hook('vt_main_output_start')) ? eval($hook) : null;
+($hook = get_hook('vt_main_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 <div class="main-pagehead">
@@ -293,13 +293,13 @@ $query = array(
 	'LIMIT'		=> $forum_page['start_from'].','.$forum_user['disp_posts']
 );
 
-($hook = get_hook('vt_qr_get_posts')) ? eval($hook) : null;
+($hook = get_hook('vt_qr_get_posts')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 $user_data_cache = array();
 while ($cur_post = $forum_db->fetch_assoc($result))
 {
-	($hook = get_hook('vt_post_loop_start')) ? eval($hook) : null;
+	($hook = get_hook('vt_post_loop_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	++$forum_page['item_count'];
 
@@ -316,7 +316,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 		'date'	=> '<span>'.format_time($cur_post['posted']).'</span>'
 	);
 
-	($hook = get_hook('vt_row_pre_item_head')) ? eval($hook) : null;
+	($hook = get_hook('vt_row_pre_item_head')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	$forum_page['item_head'] = '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.implode(' ', $forum_page['item_ident']).'</a>';
 
@@ -495,7 +495,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 		$forum_page['message']['signature'] = '<div class="sig-content"><span class="sig-line"><!-- --></span>'.$signature_cache[$cur_post['poster_id']].'</div>';
 	}
 
-	($hook = get_hook('vt_row_pre_display')) ? eval($hook) : null;
+	($hook = get_hook('vt_row_pre_display')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	// Do user data caching for the post
 	if ($cur_post['poster_id'] > 1 && !isset($user_data_cache[$cur_post['poster_id']]))
@@ -506,7 +506,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 			'post_contacts'	=> $forum_page['post_contacts']
 		);
 
-		($hook = get_hook('vt_row_add_user_data_cache')) ? eval($hook) : null;
+		($hook = get_hook('vt_row_add_user_data_cache')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	}
 
 ?>
@@ -543,7 +543,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 </div>
 <?php
 
-($hook = get_hook('vt_end')) ? eval($hook) : null;
+($hook = get_hook('vt_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -562,7 +562,7 @@ if ($forum_config['o_quickpost'] == '1' &&
 // START SUBST - <!-- forum_qpost -->
 ob_start();
 
-($hook = get_hook('vt_qpost_output_start')) ? eval($hook) : null;
+($hook = get_hook('vt_qpost_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 // Setup form
 $forum_page['form_action'] = forum_link($forum_url['new_reply'], $id);
@@ -586,7 +586,7 @@ if ($forum_config['p_message_img_tag'] == '1')
 if ($forum_config['o_smilies'] == '1')
 	$forum_page['text_options']['smilies'] = '<span><a class="exthelp" href="'.forum_link($forum_url['help'], 'smilies').'" title="'.sprintf($lang_common['Help page'], $lang_common['Smilies']).'">'.$lang_common['Smilies'].'</a></span>';
 
-($hook = get_hook('vt_quickpost_pre_display')) ? eval($hook) : null;
+($hook = get_hook('vt_quickpost_pre_display')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 <div class="main-subhead">
@@ -601,10 +601,10 @@ if ($forum_config['o_smilies'] == '1')
 		<div class="hidden">
 			<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 		</div>
-<?php ($hook = get_hook('vt_quickpost_pre_fieldset')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('vt_quickpost_pre_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 		<fieldset class="frm-group fset1">
 			<legend class="group-legend"><strong><?php echo $lang_common['Write message legend'] ?></strong></legend>
-<?php ($hook = get_hook('vt_quickpost_fieldset_start')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('vt_quickpost_fieldset_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="sf-set">
 				<div class="sf-box textarea required">
 					<label for="fld1"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_common['Write message'] ?></span></label><br />
@@ -612,7 +612,7 @@ if ($forum_config['o_smilies'] == '1')
 				</div>
 			</div>
 		</fieldset>
-<?php ($hook = get_hook('vt_quickpost_post_fieldset')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('vt_quickpost_post_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 		<div class="frm-buttons">
 			<span class="submit"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" /></span>
 			<span class="submit"><input type="submit" name="preview" value="<?php echo $lang_common['Preview'] ?>" /></span>
@@ -621,7 +621,7 @@ if ($forum_config['o_smilies'] == '1')
 </div>
 <?php
 
-($hook = get_hook('vt_quickpost_end')) ? eval($hook) : null;
+($hook = get_hook('vt_quickpost_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_qpost -->', $tpl_temp, $tpl_main);
@@ -639,7 +639,7 @@ if ($forum_config['o_topic_views'] == '1')
 		'WHERE'		=> 'id='.$id,
 	);
 
-	($hook = get_hook('vt_qr_increment_num_views')) ? eval($hook) : null;
+	($hook = get_hook('vt_qr_increment_num_views')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 }
 

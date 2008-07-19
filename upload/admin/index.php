@@ -30,7 +30,7 @@ if (!defined('FORUM_ROOT'))
 require FORUM_ROOT.'include/common.php';
 require FORUM_ROOT.'include/common_admin.php';
 
-($hook = get_hook('ain_start')) ? eval($hook) : null;
+($hook = get_hook('ain_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 if (!$forum_user['is_admmod'])
 	message($lang_common['No permission']);
@@ -43,7 +43,7 @@ require FORUM_ROOT.'lang/'.$forum_user['language'].'/admin_index.php';
 // Show phpinfo() output
 if (isset($_GET['action']) && $_GET['action'] == 'phpinfo' && $forum_user['g_id'] == FORUM_ADMIN)
 {
-	($hook = get_hook('ain_phpinfo_selected')) ? eval($hook) : null;
+	($hook = get_hook('ain_phpinfo_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	// Is phpinfo() a disabled function?
 	if (strpos(strtolower((string)@ini_get('disable_functions')), 'phpinfo') !== false)
@@ -68,7 +68,7 @@ if ($forum_user['g_id'] == FORUM_ADMIN)
 			'WHERE'		=> 'e.id LIKE \'hotfix_%\''
 		);
 
-		($hook = get_hook('ain_qr_get_hotfixes')) ? eval($hook) : null;
+		($hook = get_hook('ain_qr_get_hotfixes')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		$num_hotfixes = $forum_db->num_rows($result);
 
@@ -111,7 +111,7 @@ $query = array(
 	'WHERE'		=> 'o.idle=0'
 );
 
-($hook = get_hook('ain_qr_get_users_online')) ? eval($hook) : null;
+($hook = get_hook('ain_qr_get_users_online')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 $num_online = $forum_db->result($result);
 
@@ -177,7 +177,7 @@ $forum_page['crumbs'] = array(
 	$lang_admin_common['Information']
 );
 
-($hook = get_hook('ain_pre_header_load')) ? eval($hook) : null;
+($hook = get_hook('ain_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE_SECTION', 'start');
 define('FORUM_PAGE', 'admin-information');
@@ -189,7 +189,7 @@ $forum_page['item_count'] = 0;
 // START SUBST - <!-- forum_main -->
 ob_start();
 
-($hook = get_hook('ain_main_output_start')) ? eval($hook) : null;
+($hook = get_hook('ain_main_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -203,7 +203,7 @@ ob_start();
 			</div>
 		</div>
 <?php endif; ?>		<div class="ct-group">
-<?php ($hook = get_hook('ain_pre_version')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('ain_pre_version')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="ct-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
 					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['FluxBB version'] ?></span></h3>
@@ -214,14 +214,14 @@ ob_start();
 <?php endif; ?>					</ul>
 				</div>
 			</div>
-<?php ($hook = get_hook('ain_pre_server_load')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('ain_pre_server_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="ct-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
 					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['Server load'] ?></span></h3>
 					<p><span><?php echo $server_load ?> (<?php echo $num_online.' '.$lang_admin_index['users online']?>)</span></p>
 				</div>
 			</div>
-<?php ($hook = get_hook('ain_pre_environment')) ? eval($hook) : null; if ($forum_user['g_id'] == FORUM_ADMIN): ?>			<div class="ct-set group-item<?php echo ++$forum_page['item_count'] ?>">
+<?php ($hook = get_hook('ain_pre_environment')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; if ($forum_user['g_id'] == FORUM_ADMIN): ?>			<div class="ct-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
 					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['Environment'] ?></span></h3>
 					<ul class="data-list">
@@ -231,7 +231,7 @@ ob_start();
 					</ul>
 				</div>
 			</div>
-<?php ($hook = get_hook('ain_pre_database')) ? eval($hook) : null; ?>
+<?php ($hook = get_hook('ain_pre_database')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
 			<div class="ct-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
 					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['Database'] ?></span></h3>
@@ -242,7 +242,7 @@ ob_start();
 					</ul>
 				</div>
 			</div>
-<?php endif; endif; ($hook = get_hook('ain_items_end')) ? eval($hook) : null; ?>		</div>
+<?php endif; endif; ($hook = get_hook('ain_items_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>		</div>
 	</div>
 <?php
 
