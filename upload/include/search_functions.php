@@ -474,7 +474,8 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 				$query['SELECT'] .= ', ('.$forum_db->query_build($subquery, true).') AS has_posted';
 			}
 
-			$url_type = $forum_url['search_new'];
+			$url_type = $forum_url['search_new_results'];
+			$search_id = $value;
 
 			($hook = get_hook('sf_qr_get_new')) ? eval($hook) : null;
 
@@ -510,7 +511,8 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 				$query['SELECT'] .= ', ('.$forum_db->query_build($subquery, true).') AS has_posted';
 			}
 
-			$url_type = $forum_url['search_24h'];
+			$url_type = $forum_url['search_recent_results'];
+			$search_id = $value;
 
 			($hook = get_hook('sf_qr_get_recent')) ? eval($hook) : null;
 
