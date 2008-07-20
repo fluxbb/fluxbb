@@ -114,7 +114,7 @@ if (!isset($_POST['form_sent']))
 		error($lang_install['No database support']);
 
 	// Make an educated guess regarding base_url
-	$base_url_guess = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://').preg_replace('/:80$/', '', $_SERVER['HTTP_HOST']).str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+	$base_url_guess = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://').preg_replace('/:80$/', '', $_SERVER['HTTP_HOST']).substr(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), 0, -6);
 	if (substr($base_url_guess, -1) == '/')
 		$base_url_guess = substr($base_url_guess, 0, -1);
 
@@ -1410,23 +1410,86 @@ else
 	$now = time();
 
 	// Insert the four preset groups
-	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_id, g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES(1, 'Administrators', 'Administrator', 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)") or error(__FILE__, __LINE__);
-	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_id, g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES(2, 'Guest', NULL, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0)") or error(__FILE__, __LINE__);
-	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_id, g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES(3, 'Members', NULL, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 60, 30, 60)") or error(__FILE__, __LINE__);
-	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_id, g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES(4, 'Moderators', 'Moderator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)") or error(__FILE__, __LINE__);
+	$query = array(
+		'INSERT'	=> 'g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood',
+		'INTO'		=> 'groups',
+		'VALUES'	=> '\'Administrators\', \'Administrator\', 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0'
+	);
 
-	if ($db_type == 'pgsql')
-		$forum_db->query('SELECT setval(\''.$forum_db->prefix.'groups_g_id_seq\', 4)') or error(__FILE__, __LINE__);
+	if ($db_type != 'pgsql')
+	{
+		$query['INSERT'] .= ', g_id';
+		$query['VALUES'] .= ', 1';
+	}
+
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
+
+	$query = array(
+		'INSERT'	=> 'g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood',
+		'INTO'		=> 'groups',
+		'VALUES'	=> '\'Guest\', NULL, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0'
+	);
+
+	if ($db_type != 'pgsql')
+	{
+		$query['INSERT'] .= ', g_id';
+		$query['VALUES'] .= ', 2';
+	}
+
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
+
+	$query = array(
+		'INSERT'	=> 'g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood',
+		'INTO'		=> 'groups',
+		'VALUES'	=> '\'Members\', NULL, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 60, 30, 60'
+	);
+
+	if ($db_type != 'pgsql')
+	{
+		$query['INSERT'] .= ', g_id';
+		$query['VALUES'] .= ', 3';
+	}
+
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
+
+	$query = array(
+		'INSERT'	=> 'g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood',
+		'INTO'		=> 'groups',
+		'VALUES'	=> '\'Moderators\', \'Moderator\', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0'
+	);
+
+	if ($db_type != 'pgsql')
+	{
+		$query['INSERT'] .= ', g_id';
+		$query['VALUES'] .= ', 4';
+	}
+
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Insert guest and first admin user
-	$forum_db->query('INSERT INTO '.$db_prefix."users (id, group_id, username, password, email) VALUES(1, 2, 'Guest', 'Guest', 'Guest')") or error(__FILE__, __LINE__);
+	$query = array(
+		'INSERT'	=> 'group_id, username, password, email',
+		'INTO'		=> 'users',
+		'VALUES'	=> '2, \'Guest\', \'Guest\', \'Guest\''
+	);
 
-	if ($db_type == 'pgsql')
-		$forum_db->query('SELECT setval(\''.$forum_db->prefix.'users_id_seq\', 1)') or error(__FILE__, __LINE__);
+	if ($db_type != 'pgsql')
+	{
+		$query['INSERT'] .= ', id';
+		$query['VALUES'] .= ', 1';
+	}
+
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$salt = random_key(12);
 
-	$forum_db->query('INSERT INTO '.$db_prefix."users (group_id, username, password, email, num_posts, last_post, registered, registration_ip, last_visit, salt) VALUES(1, '".$forum_db->escape($username)."', '".forum_hash($password1, $salt)."', '$email', 1, ".$now.", ".$now.", '127.0.0.1', ".$now.", '".$forum_db->escape($salt)."')") or error(__FILE__, __LINE__);
+	$query = array(
+		'INSERT'	=> 'group_id, username, password, email, num_posts, last_post, registered, registration_ip, last_visit, salt',
+		'INTO'		=> 'users',
+		'VALUES'	=> '1, \''.$forum_db->escape($username).'\', \''.forum_hash($password1, $salt).'\', \''.$forum_db->escape($email).'\', 1, '.$now.', '.$now.', \'127.0.0.1\', '.$now.', \''.$forum_db->escape($salt).'\''
+	);
+
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$new_uid = $forum_db->insert_id();
 
 	// Enable/disable avatars depending on file_uploads setting in PHP configuration
@@ -1514,26 +1577,75 @@ else
 	);
 
 	while (list($conf_name, $conf_value) = @each($config))
-		$forum_db->query('INSERT INTO '.$db_prefix."config (conf_name, conf_value) VALUES('$conf_name', $conf_value)") or error(__FILE__, __LINE__);
+	{
+		$query = array(
+			'INSERT'	=> 'conf_name, conf_value',
+			'INTO'		=> 'config',
+			'VALUES'	=> '\''.$conf_name.'\', '.$conf_value.''
+		);
+
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
+	}
 
 	// Insert some other default data
-	$forum_db->query('INSERT INTO '.$db_prefix."categories (cat_name, disp_position) VALUES('".$lang_install['Default category name']."', 1)") or error(__FILE__, __LINE__);
+	$query = array(
+		'INSERT'	=> 'cat_name, disp_position',
+		'INTO'		=> 'categories',
+		'VALUES'	=> '\''.$lang_install['Default category name'].'\', 1'
+	);
 
-	$forum_db->query('INSERT INTO '.$db_prefix."forums (forum_name, forum_desc, num_topics, num_posts, last_post, last_post_id, last_poster, disp_position, cat_id) VALUES('".$lang_install['Default forum name']."', '".$lang_install['Default forum descrip']."', 1, 1, ".$now.", 1, '".$forum_db->escape($username)."', 1, ".$forum_db->insert_id().")") or error(__FILE__, __LINE__);
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	$forum_db->query('INSERT INTO '.$db_prefix.'topics (poster, subject, posted, first_post_id, last_post, last_post_id, last_poster, forum_id) VALUES(\''.$forum_db->escape($username).'\', \''.$lang_install['Default topic subject'].'\', '.$now.', 1, '.$now.', 1, \''.$forum_db->escape($username).'\', '.$forum_db->insert_id().')') or error(__FILE__, __LINE__);
+	$query = array(
+		'INSERT'	=> 'forum_name, forum_desc, num_topics, num_posts, last_post, last_post_id, last_poster, disp_position, cat_id',
+		'INTO'		=> 'forums',
+		'VALUES'	=> '\''.$lang_install['Default forum name'].'\', \''.$lang_install['Default forum descrip'].'\', 1, 1, '.$now.', 1, \''.$forum_db->escape($username).'\', 1, '.$forum_db->insert_id().''
+	);
 
-	$forum_db->query('INSERT INTO '.$db_prefix.'posts (id, poster, poster_id, poster_ip, message, posted, topic_id) VALUES(1, \''.$forum_db->escape($username).'\', '.$new_uid.', \'127.0.0.1\', \''.$lang_install['Default post contents'].'\', '.$now.', '.$forum_db->insert_id().')') or error(__FILE__, __LINE__);
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	if ($db_type == 'pgsql')
-		$forum_db->query('SELECT setval(\''.$forum_db->prefix.'posts_id_seq\', 1)') or error(__FILE__, __LINE__);
+	$query = array(
+		'INSERT'	=> 'poster, subject, posted, first_post_id, last_post, last_post_id, last_poster, forum_id',
+		'INTO'		=> 'topics',
+		'VALUES'	=> '\''.$forum_db->escape($username).'\', \''.$lang_install['Default topic subject'].'\', '.$now.', 1, '.$now.', 1, \''.$forum_db->escape($username).'\', '.$forum_db->insert_id().''
+	);
+
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
+
+	$query = array(
+		'INSERT'	=> 'poster, poster_id, poster_ip, message, posted, topic_id',
+		'INTO'		=> 'posts',
+		'VALUES'	=> '\''.$forum_db->escape($username).'\', '.$new_uid.', \'127.0.0.1\', \''.$lang_install['Default post contents'].'\', '.$now.', '.$forum_db->insert_id().''
+	);
+
+	if ($db_type != 'pgsql')
+	{
+		$query['INSERT'] .= ', id';
+		$query['VALUES'] .= ', 1';
+	}
+
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Add new post to search table
 	require FORUM_ROOT.'include/search_idx.php';
 	update_search_index('post', $forum_db->insert_id(), $lang_install['Default post contents'], $lang_install['Default topic subject']);
 
-	$forum_db->query('INSERT INTO '.$db_prefix."ranks (rank, min_posts) VALUES('".$lang_install['Default rank 1']."', 0)") or error(__FILE__, __LINE__);
-	$forum_db->query('INSERT INTO '.$db_prefix."ranks (rank, min_posts) VALUES('".$lang_install['Default rank 2']."', 10)") or error(__FILE__, __LINE__);
+	// Insert the default ranks
+	$query = array(
+		'INSERT'	=> 'rank, min_posts',
+		'INTO'		=> 'ranks',
+		'VALUES'	=> '\''.$lang_install['Default rank 1'].'\', 0'
+	);
+
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
+
+	$query = array(
+		'INSERT'	=> 'rank, min_posts',
+		'INTO'		=> 'ranks',
+		'VALUES'	=> '\''.$lang_install['Default rank 2'].'\', 10'
+	);
+
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$forum_db->end_transaction();
 
@@ -1617,7 +1729,7 @@ if (!$written)
 ?>
 		<div class="ct-box">
 			<p class="warn"><?php echo $lang_install['No write info 1'] ?></p>
-			<p class="warn"><?php printf($lang_install['No write info 2'], '<a href="index.php">'.$lang_install['Go to index'].'</a>') ?></p>
+			<p class="warn"><?php printf($lang_install['No write info 2'], '<a href="'.FORUM_ROOT.'index.php">'.$lang_install['Go to index'].'</a>') ?></p>
 		</div>
 <?php if (!empty($alerts)): ?>		<div class="ct-box error-box">
 			<?php echo $lang_install['Warning'] ?></p>
@@ -1649,7 +1761,7 @@ else
 
 ?>
 		<div class="ct-box">
-			<p class="warn"><?php printf($lang_install['Write info'], '<a href="index.php">'.$lang_install['Go to index'].'</a>') ?></p>
+			<p class="warn"><?php printf($lang_install['Write info'], '<a href="'.FORUM_ROOT.'index.php">'.$lang_install['Go to index'].'</a>') ?></p>
 		</div>
 <?php
 }
