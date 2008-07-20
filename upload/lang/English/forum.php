@@ -35,6 +35,7 @@ $lang_forum = array(
 'First topic nag'			=>	'Be the first to post a topic in this forum.',
 'You posted indicator'		=>	'·',
 'Permalink forum'			=>	'Permanent link to this forum.',
+'Forum options'				=>	'Forum options',
 'Moderate forum'			=>	'Moderate forum',
 'Mark forum read'			=>	'Mark forum as read',
 'RSS forum feed'			=>	'RSS Forum Feed',

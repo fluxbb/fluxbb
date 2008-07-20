@@ -71,6 +71,7 @@ if (!$forum_user['is_guest'])
 $forum_page['main_head'] = forum_htmlencode($forum_config['o_board_title']);
 
 // Setup main options
+$forum_page['main_options_head'] = $lang_index['Board options'];
 $forum_page['main_options'] = array();
 $forum_page['main_options']['feed'] = '<span class="feed'.(empty($forum_page['main_options']) ? ' item1' : '').'"><a class="feed" href="'.forum_link($forum_url['index_rss']).'">'.$lang_index['RSS active feed'].'</a></span>';
 if (!$forum_user['is_guest'])

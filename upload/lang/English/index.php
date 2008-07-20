@@ -36,6 +36,7 @@ $lang_index = array(
 'Forum has new'			=>	'( %s )',
 'Forum new posts'		=>	'New posts',
 'New posts title'		=>	'This forum contain posts made since your last visit.',
+'Board options'			=>	'Board options',
 'RSS active feed'		=>	'RSS active topics feed',
 'Mark all as read'		=>	'Mark all forums as read'
 

@@ -19,7 +19,7 @@ IE6 - FIXES
 .brd .post,
 .brd .postbody,
 .brd .post-entry,
-.brd .postfoot p {
+.brd .postfoot .post-options {
 	height: 100%;
 	zoom: 1;
 	}

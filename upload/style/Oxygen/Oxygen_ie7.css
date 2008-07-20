@@ -18,7 +18,7 @@ IE7 - FIXES
 .brd .post,
 .brd .postbody,
 .brd .post-entry,
-.brd .postfoot p,
+.brd .postfoot .post-options,
 #brd-stats ul {
 	max-height: 100%;
 	zoom: 1;

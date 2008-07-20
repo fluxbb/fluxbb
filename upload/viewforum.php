@@ -142,6 +142,7 @@ else
 	$forum_page['page_post']['posting'] = '<p class="posting">'.$lang_forum['No permission'].'</p>';
 
 // Setup main options
+$forum_page['main_options_head'] = $lang_forum['Forum options'];
 $forum_page['main_options'] = array();
 $forum_page['main_options']['feed'] = '<span class="feed'.(empty($forum_page['main_options']) ? ' item1' : '').'"><a class="feed" href="'.forum_link($forum_url['forum_rss'], $id).'">'.$lang_forum['RSS forum feed'].'</a></span>';
 

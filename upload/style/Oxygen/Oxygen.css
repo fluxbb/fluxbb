@@ -68,7 +68,7 @@ body {
 .brd fieldset fieldset:after,
 .brd fieldset span.fld-input:after,
 .brd .postbody:after,
-.brd .postfoot p:after {
+.brd .postfoot .post-options:after {
 	content: "";
 	display: block;
 	font-size: 0;
@@ -99,6 +99,8 @@ body {
 .brd .mf-extra .mf-field label,
 .brd .mf-extra .mf-field .aslabel,
 .brd .item-subject .item-nav span,
+.brd .post-options a span,
+.brd .main-options .hn,
 .brd .entry-title {
  	font-size: 0;
  	left: -999em;
@@ -1230,7 +1232,7 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	position: relative;
 	}
 	
-.brd .postfoot p {
+.brd .postfoot .post-options {
 	border-left-style: solid;
 	border-left-width: 1px;
 	}
@@ -1259,11 +1261,11 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	float: left;
 	margin-left: -18em;
 	width: 15.5em;
-	padding: 0 1em 0 1.5em;
+	padding: 0.5em 1em 0.5em 1.5em;
 	}
 	
-.brd .postfoot .post-options {
-	padding: 0 1.5em 0 1em;
+.brd .postfoot .post-actions {
+	padding: 0.5em 1.5em 0.5em 1em;
 	text-align: right;
 	display: block;
 	float: right;
@@ -1275,7 +1277,8 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 #brd-wrap .entry-content {
 	padding-bottom: 1px;
 	overflow: hidden;
-	width: 100%
+	width: 100%;
+	font-size: 1.084em;
 	}
 	
 #brd-wrap .entry-content ol {

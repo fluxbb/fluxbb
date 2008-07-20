@@ -307,7 +307,7 @@ if (substr(FORUM_PAGE, 0, 5) == 'admin' && FORUM_PAGE_TYPE != 'paged')
 }
 
 // Main section options bar
-$main_elements['<!-- forum_main_options -->'] = (!empty($forum_page['main_options'])) ? '<div class="main-options gen-content">'."\n\t\t".'<p class="options">'.implode(' ', $forum_page['main_options']).'</p>'."\n\t".'</div>' : '';
+$main_elements['<!-- forum_main_options -->'] = (!empty($forum_page['main_options'])) ? '<div class="main-options gen-content">'."\n\t\t".'<h2 class="hn"><span>'.$forum_page['main_options_head'].'</span></h2>'."\n\t\t".'<p class="options">'.implode(' ', $forum_page['main_options']).'</p>'."\n\t".'</div>' : '';
 
 ($hook = get_hook('hd_mainelements')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
