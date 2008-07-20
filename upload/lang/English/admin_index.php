@@ -5,6 +5,7 @@ $lang_admin_index = array(
 'Information head'				=>	'Welcome to FluxBB administration control panel',
 'Alerts'						=>	'Administrator Alerts',
 'Check for updates enabled'		=>	'This board is setup to automatically check for updates and hotfixes against the FluxBB.org updates service.',
+'Check for updates manual'		=>	'Check for updates',	// Link text
 'FluxBB version'				=>	'FluxBB version',
 'Not available'					=>	'Not available',
 'Not applicable'				=>	'N/A',
