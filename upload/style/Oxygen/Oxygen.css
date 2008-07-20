@@ -98,6 +98,7 @@ body {
 .brd p.item-select label,
 .brd .mf-extra .mf-field label,
 .brd .mf-extra .mf-field .aslabel,
+.brd .item-subject .item-nav span,
 .brd .entry-title {
  	font-size: 0;
  	left: -999em;
@@ -736,6 +737,10 @@ E - INDEX, FORUMS, SEARCH RESULTS, MODERATE FORUMS
   	font-weight: bold;
   	font-size: 1.084em;
   	}
+  	
+.brd .main-content .item-body .hn strong span {
+	font-weight: normal;
+	}
 
  #brd-index .main-content .item-body .hn span {
  	font-size: 1.167em;
@@ -745,6 +750,14 @@ E - INDEX, FORUMS, SEARCH RESULTS, MODERATE FORUMS
 	font-size: 1em;
 	}
 
+.brd .main-content .item-body .item-status {
+	font-weight: bold;
+	}
+	
+.brd .main-content .item-body cite {
+	font-style: normal;
+	}
+	
 .brd .main-content .item-body span.item-nav,
 .brd .main-content .item-body span.item-nav * {
 	white-space: nowrap;
