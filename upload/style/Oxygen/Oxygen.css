@@ -100,10 +100,11 @@ body {
 .brd .mf-extra .mf-field .aslabel,
 .brd .entry-title {
  	font-size: 0;
- 	left: -9999px;
- 	text-indent: -9999px;
+ 	left: -999em;
+ 	text-indent: -999em;
  	position:absolute;
  	line-height: 0em;
+ 	visibility: hidden;
  	}
 
 

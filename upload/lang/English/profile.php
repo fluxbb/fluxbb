@@ -246,5 +246,6 @@ $lang_profile = array(
 'Username too long'			=>	'Usernames must not be more than 25 characters long. Please choose another (shorter) username.',
 'Username too short'		=>	'Usernames must be at least 2 characters long. Please choose another (longer) username.',
 'Signature quote/code'		=>	'The quote and code BBCodes are not allowed in signatures.',
+'Invalid e-mail'			=>	'The e-mail address you entered is invalid.',
 
 );
