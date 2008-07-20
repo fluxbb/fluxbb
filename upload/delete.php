@@ -142,6 +142,23 @@ $forum_page['frm_info'] = array(
 	'<li><span>'.sprintf((($cur_post['is_topic']) ? $lang_delete['Delete topic info'] : $lang_delete['Delete post info']), forum_htmlencode($cur_post['poster']), format_time($cur_post['posted'])).'</span></li>'
 );
 
+// Generate the post heading
+$forum_page['item_ident'] = array(
+	'user'	=> '<cite>'.($cur_post['is_topic'] ? sprintf($lang_delete['Topic by'], forum_htmlencode($cur_post['poster'])) : sprintf($lang_delete['Reply by'], forum_htmlencode($cur_post['poster']))).'</cite>',
+	'date'	=> '<span>'.format_time($cur_post['posted']).'</span>'
+);
+
+$forum_page['item_head'] = '<a href="'.forum_link($forum_url['post'], $cur_post['tid']).'">'.implode(' ', $forum_page['item_ident']).'</a>';
+
+// Generate the post title
+if ($cur_post['is_topic'])
+	$forum_page['item_subject'] = sprintf($lang_delete['Topic title'], $cur_post['subject']);
+else
+	$forum_page['item_subject'] = sprintf($lang_delete['Reply title'], $cur_post['subject']);
+
+$forum_page['item_subject'] = forum_htmlencode($forum_page['item_subject']);
+
+
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
 	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
@@ -168,27 +185,38 @@ ob_start();
 				<?php echo implode("\n\t\t\t\t", $forum_page['frm_info'])."\n" ?>
 			</ul>
 		</div>
-		<div class="ct-box parsed-box">
-			<div class="entry-content">
-				<?php echo $cur_post['message']."\n" ?>
+		<div class="post firstpost">
+			<div class="posthead">
+				<h3 class="hn"><?php echo $forum_page['item_head'] ?></h3>
+			</div>
+			<div class="postbody">
+				<div class="user">
+					<h4 class="user-ident"><strong class="username"><?php echo forum_htmlencode($cur_post['poster']) ?></strong></h4>
+				</div>
+				<div class="post-entry">
+					<h4 class="entry-title hn"><?php echo $forum_page['item_subject'] ?></h4>
+					<div class="entry-content">
+						<?php echo $cur_post['message']."\n" ?>
+					</div>
+				</div>
 			</div>
 		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="group-legend"><strong><?php echo $lang_delete['Delete post'] ?></strong></legend>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="mf-item">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
+				<legend class="group-legend"><strong><?php echo ($cur_post['is_topic']) ? $lang_delete['Delete topic'] : $lang_delete['Delete post'] ?></strong></legend>
+				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_delete['Please confirm'] ?></span> <?php printf(((($cur_post['is_topic'])) ? $lang_delete['Delete topic label'] : $lang_delete['Delete post label']), forum_htmlencode($cur_post['poster']), format_time($cur_post['posted'])) ?></label>
 					</div>
 				</div>
 			</fieldset>
 			<div class="frm-buttons">
-				<span class="submit"><input type="submit" name="delete" value="<?php echo $lang_delete['Delete'] ?>" /></span>
-				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_delete['Cancel'] ?>" /></span>
+				<span class="submit"><input type="submit" name="delete" value="<?php echo ($cur_post['is_topic']) ? $lang_delete['Delete topic'] : $lang_delete['Delete post'] ?>" /></span>
+				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
 			</div>
 		</form>
 	</div>

@@ -29,7 +29,6 @@ $lang_forum = array(
 'Moved'						=>	'Moved:',
 'Sticky'					=>	'Sticky:',
 'Closed'					=>	'Closed:',
-'Never'						=>	'Never',
 'Empty forum'				=>	'Empty forum',
 'No topics'					=>	'No topics have been posted',
 'First topic nag'			=>	'Be the first to post a topic in this forum.',
