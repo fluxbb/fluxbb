@@ -570,7 +570,7 @@ D - COMMON INTERFACE ELEMENTS
 /* Main and Content Options
 -------------------------------------------------------------*/
 
-.brd .main-options .options {
+.brd .main-options .options, .brd .main-modoptions .options {
 	text-align: center;
 	}
 	

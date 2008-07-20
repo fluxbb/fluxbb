@@ -42,7 +42,6 @@
 	<!-- forum_qpost -->
 </div>
 
-
 <!-- forum_info -->
 
 <div class="hr"><hr /></div>
