@@ -118,7 +118,7 @@ while ($cur_config_item = $forum_db->fetch_row($result))
 	$forum_config[$cur_config_item[0]] = $cur_config_item[1];
 
 // Check the database revision and the current version
-if (isset($forum_config['o_database_revision']) && $forum_config['o_database_revision'] >= PDATE_TO_DB_REVISION && version_compare($forum_config['o_cur_version'], UPDATE_TO, '>='))
+if (isset($forum_config['o_database_revision']) && $forum_config['o_database_revision'] >= UPDATE_TO_DB_REVISION && version_compare($forum_config['o_cur_version'], UPDATE_TO, '>='))
 	error('Your database is already as up-to-date as this script can make it.');
 
 // If $base_url isn't set, use o_base_url from config
