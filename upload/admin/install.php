@@ -1416,7 +1416,7 @@ else
 	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_id, g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES(4, 'Moderators', 'Moderator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)") or error(__FILE__, __LINE__);
 
 	if ($db_type == 'pgsql')
-		$forum_db->query('SELECT setval(\''.$forum_db->prefix.'groups_id_seq\', 4)') or error(__FILE__, __LINE__);
+		$forum_db->query('SELECT setval(\''.$forum_db->prefix.'groups_g_id_seq\', 4)') or error(__FILE__, __LINE__);
 
 	// Insert guest and first admin user
 	$forum_db->query('INSERT INTO '.$db_prefix."users (id, group_id, username, password, email) VALUES(1, 2, 'Guest', 'Guest', 'Guest')") or error(__FILE__, __LINE__);
