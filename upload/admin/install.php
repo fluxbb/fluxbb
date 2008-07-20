@@ -1415,8 +1415,14 @@ else
 	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_id, g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES(3, 'Members', NULL, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 60, 30, 60)") or error(__FILE__, __LINE__);
 	$forum_db->query('INSERT INTO '.$forum_db->prefix."groups (g_id, g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES(4, 'Moderators', 'Moderator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)") or error(__FILE__, __LINE__);
 
+	if ($db_type == 'pgsql')
+		$forum_db->query('SELECT setval(\''.$forum_db->prefix."groups_id_seq\', 4") or error(__FILE__, __LINE__);
+
 	// Insert guest and first admin user
 	$forum_db->query('INSERT INTO '.$db_prefix."users (id, group_id, username, password, email) VALUES(1, 2, 'Guest', 'Guest', 'Guest')") or error(__FILE__, __LINE__);
+
+	if ($db_type == 'pgsql')
+		$forum_db->query('SELECT setval(\''.$forum_db->prefix."users_id_seq\', 1") or error(__FILE__, __LINE__);
 
 	$salt = random_key(12);
 
@@ -1518,6 +1524,9 @@ else
 	$forum_db->query('INSERT INTO '.$db_prefix.'topics (poster, subject, posted, first_post_id, last_post, last_post_id, last_poster, forum_id) VALUES(\''.$forum_db->escape($username).'\', \''.$lang_install['Default topic subject'].'\', '.$now.', 1, '.$now.', 1, \''.$forum_db->escape($username).'\', '.$forum_db->insert_id().')') or error(__FILE__, __LINE__);
 
 	$forum_db->query('INSERT INTO '.$db_prefix.'posts (id, poster, poster_id, poster_ip, message, posted, topic_id) VALUES(1, \''.$forum_db->escape($username).'\', '.$new_uid.', \'127.0.0.1\', \''.$lang_install['Default post contents'].'\', '.$now.', '.$forum_db->insert_id().')') or error(__FILE__, __LINE__);
+
+	if ($db_type == 'pgsql')
+		$forum_db->query('SELECT setval(\''.$forum_db->prefix."posts_id_seq\', 1") or error(__FILE__, __LINE__);
 
 	// Add new post to search table
 	require FORUM_ROOT.'include/search_idx.php';
