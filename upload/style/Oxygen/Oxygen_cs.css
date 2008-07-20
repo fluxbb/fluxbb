@@ -1,0 +1,26 @@
+body {
+	background: #fff;
+	color: #333;
+	}
+
+.brd a, .brd a:link, .brd a:visited {
+	color: #00579C;
+	text-decoration: none;
+	}
+	
+.brd a:hover, .brd a:active, .brd a:focus {
+	color: #b42000;
+	}
+
+.brd .main-content .item-body .icon {
+	border-color: #EDF1F5 #DDE0E4 #C6CBD3 #BABFC6
+	}
+	
+ .brd .main-content .redirect .icon {
+	border-color: #f4f4f4 #f4f4f4 #f4f4f4 #f4f4f4
+	}
+	
+ .brd .main-content .new .icon {
+	border-color: #2B75AD #235E8C #1F537B #266799
+	}
+	
