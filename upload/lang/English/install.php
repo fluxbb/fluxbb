@@ -1,6 +1,6 @@
 <?php
 
-// Language definitions used in delete.php
+// Language definitions used in install.php
 $lang_install = array(
 
 // Install Form
