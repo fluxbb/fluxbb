@@ -60,6 +60,6 @@ $lang_admin_common = array(
 
 // Extensions Submenu
 'Manage extensions'				=>	'Manage extensions',
-'Install extensions'			=>	'Install extensions'
+'Manage hotfixes'				=>	'Manage hotfixes',
 
 );

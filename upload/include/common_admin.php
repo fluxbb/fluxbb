@@ -91,7 +91,7 @@ function generate_admin_menu($submenu)
 			else if (FORUM_PAGE_SECTION == 'extensions')
 			{
 				$forum_page['admin_submenu']['extensions-manage'] = '<li class="'.((FORUM_PAGE == 'admin-extensions-manage') ? 'active' : 'normal').((empty($forum_page['admin_submenu'])) ? ' item1' : '').'"><a href="'.forum_link($forum_url['admin_extensions_manage']).'">'.$lang_admin_common['Manage extensions'].'</a></li>';
-				$forum_page['admin_submenu']['extensions-install'] = '<li class="'.((FORUM_PAGE == 'admin-extensions-install') ? 'active' : 'normal').((empty($forum_page['admin_submenu'])) ? ' item1' : '').'"><a href="'.forum_link($forum_url['admin_extensions_install']).'">'.$lang_admin_common['Install extensions'].'</a></li>';
+				$forum_page['admin_submenu']['extensions-hotfixes'] = '<li class="'.((FORUM_PAGE == 'admin-extensions-hotfixes') ? 'active' : 'normal').((empty($forum_page['admin_submenu'])) ? ' item1' : '').'"><a href="'.forum_link($forum_url['admin_extensions_hotfixes']).'">'.$lang_admin_common['Manage hotfixes'].'</a></li>';
 			}
 		}
 

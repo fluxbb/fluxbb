@@ -103,7 +103,7 @@ $forum_url = array(
 	'admin_categories'				=>	'admin/categories.php',
 	'admin_censoring'				=>	'admin/censoring.php',
 	'admin_extensions_manage'		=>	'admin/extensions.php?section=manage',
-	'admin_extensions_install'		=>	'admin/extensions.php?section=install',
+	'admin_extensions_hotfixes'		=>	'admin/extensions.php?section=hotfixes',
 	'admin_forums'					=>	'admin/forums.php',
 	'admin_groups'					=>	'admin/groups.php',
 	'admin_loader'					=>	'admin/loader.php',
