@@ -47,6 +47,7 @@ $lang_admin_ext = array(
 'No available hotfixes'			=>	'There are no hotfixes available for install or upgrade.',
 'Invalid extensions'			=>	'<strong>IMPORTANT!</strong> The extensions listed below were found in the extensions folder but are not available for install or upgrade because the errors displayed below were detected.',
 'Extension installed'			=>	'Extension installed.',
+'Hotfix installed'				=>	'Hotfix installed.',
 'Extension installed info'		=>	'The extension was successfully installed, but reported the following notices.',
 'Extension uninstalled'			=>	'Extension uninstalled.',
 'Hotfix uninstalled'			=>	'Hotfix uninstalled.',

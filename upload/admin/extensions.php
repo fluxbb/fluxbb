@@ -266,7 +266,12 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 			require FORUM_ROOT.'footer.php';
 		}
 		else
-			redirect(forum_link($forum_url['admin_extensions_manage']), $lang_admin_ext['Extension installed'].' '.$lang_admin_common['Redirect']);
+		{
+			if (strpos($id, 'hotfix_') === 0)
+				redirect(forum_link($forum_url['admin_extensions_hotfixes']), $lang_admin_ext['Hotfix installed'].' '.$lang_admin_common['Redirect']);
+			else
+				redirect(forum_link($forum_url['admin_extensions_manage']), $lang_admin_ext['Extension installed'].' '.$lang_admin_common['Redirect']);
+		}
 	}
 
 
