@@ -34,8 +34,8 @@ define('FORUM_ROOT', '../');
 define('FORUM', 1);
 define('FORUM_DEBUG', 1);
 
-if (file_exists(FORUM_ROOT.'config.php'))
-	exit('The file \'config.php\' already exists which would mean that FluxBB is already installed. You should go <a href="'.FORUM_ROOT.'index.php">here</a> instead.');
+//if (file_exists(FORUM_ROOT.'config.php'))
+//	exit('The file \'config.php\' already exists which would mean that FluxBB is already installed. You should go <a href="'.FORUM_ROOT.'index.php">here</a> instead.');
 
 
 // Make sure we are running at least MIN_PHP_VERSION
@@ -167,9 +167,9 @@ if (!isset($_POST['form_sent']))
 		<div id="req-msg" class="req-warn">
 			<p class="important"><?php printf($lang_install['Required warn'], '<em>'.$lang_install['Reqmark'].'</em>') ?></p>
 		</div>
-		<fieldset class="frm-group frm-item1">
+		<fieldset class="frm-group group1">
 			<legend class="group-legend"><strong><?php echo $lang_install['Part1 legend'] ?></strong></legend>
-			<div class="sf-set group-item1">
+			<div class="sf-set set1">
 				<div class="sf-box select required">
 					<label for="fld1"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Database type'] ?></span> <small><?php echo $lang_install['Database type help'] ?></small></label><br />
 					<span class="fld-input"><select id="fld1" name="req_db_type">
@@ -182,31 +182,31 @@ if (!isset($_POST['form_sent']))
 					</select></span>
 				</div>
 			</div>
-			<div class="sf-set group-item1">
+			<div class="sf-set set1">
 				<div class="sf-box text required">
 					<label for="fld2"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Database server'] ?></span> <small><?php echo $lang_install['Database server help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld2" type="text" name="req_db_host" value="localhost" size="50" maxlength="100" /></span>
 				</div>
 			</div>
-			<div class="sf-set group-item2">
+			<div class="sf-set set2">
 				<div class="sf-box text required">
 					<label for="fld3"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Database name'] ?></span> <small><?php echo $lang_install['Database name help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld3" type="text" name="req_db_name" size="35" maxlength="50" /></span>
 				</div>
 			</div>
-			<div class="sf-set group-item3">
+			<div class="sf-set set3">
 				<div class="sf-box text">
 					<label for="fld4"><span><?php echo $lang_install['Database username'] ?></span> <small><?php echo $lang_install['Database username help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld4" type="text" name="db_username" size="35" maxlength="50" /></span>
 				</div>
 			</div>
-			<div class="sf-set group-item4">
+			<div class="sf-set set4">
 				<div class="sf-box text">
 					<label for="fld5"><span><?php echo $lang_install['Database password'] ?></span> <small><?php echo $lang_install['Database password help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld5" type="password" name="db_password" size="35" /></span>
 				</div>
 			</div>
-			<div class="sf-set group-item5">
+			<div class="sf-set set5">
 				<div class="sf-box text">
 					<label for="fld6"><span><?php echo $lang_install['Table prefix'] ?></span> <small><?php echo $lang_install['Table prefix help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld6" type="text" name="db_prefix" size="20" maxlength="30" /></span>
@@ -222,27 +222,27 @@ if (!isset($_POST['form_sent']))
 		<div class="ct-box">
 			<p><?php echo $lang_install['Part2 intro'] ?></p>
 		</div>
-		<fieldset class="frm-group frm-item1">
+		<fieldset class="frm-group group1">
 			<legend class="group-legend"><strong><?php echo $lang_install['Part2 legend'] ?></strong></legend>
-			<div class="sf-set group-item1">
+			<div class="sf-set set1">
 				<div class="sf-box text required">
 					<label for="fld7"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Admin username'] ?></span> <small><?php echo $lang_install['Username help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld7" type="text" name="req_username" size="35" maxlength="25" /></span>
 				</div>
 			</div>
-			<div class="sf-set group-item2">
+			<div class="sf-set set2">
 				<div class="sf-box text required">
 					<label for="fld8"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Admin password'] ?></span> <small><?php echo $lang_install['Password help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld8" type="password" name="req_password1" size="35" /></span>
 				</div>
 			</div>
-			<div class="sf-set group-item3">
+			<div class="sf-set set3">
 				<div class="sf-box text required">
 					<label for="fld9"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Admin confirm password'] ?></span> <small><?php echo $lang_install['Confirm password help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld9" type="password" name="req_password2" size="35" /></span>
 				</div>
 			</div>
-			<div class="sf-set group-item4">
+			<div class="sf-set set4">
 				<div class="sf-box text required">
 					<label for="fld10"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Admin e-mail'] ?></span> <small><?php echo $lang_install['E-mail address help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld10" type="text" name="req_email" size="50" maxlength="80" /></span>
@@ -261,21 +261,21 @@ if (!isset($_POST['form_sent']))
 				<li><span><strong><?php echo $lang_install['Base URL'] ?></strong> <?php echo $lang_install['Base URL info'] ?></span></li>
 			</ul>
 		</div>
-		<fieldset class="frm-group frm-item1">
+		<fieldset class="frm-group group1">
 			<legend class="group-legend"><strong><?php echo $lang_install['Part3 legend'] ?></strong></legend>
-			<div class="sf-set group-item1">
+			<div class="sf-set set1">
 				<div class="sf-box text">
 					<label for="fld11"><span><?php echo $lang_install['Board title'] ?></span></label><br />
 					<span class="fld-input"><input id="fld11" type="text" name="board_title" size="50" maxlength="255" /></span>
 				</div>
 			</div>
-			<div class="sf-set group-item2">
+			<div class="sf-set set2">
 				<div class="sf-box text">
 					<label for="fld12"><span><?php echo $lang_install['Board description'] ?></span></label><br />
 					<span class="fld-input"><input id="fld12" type="text" name="board_descrip" size="50" maxlength="255" /></span>
 				</div>
 			</div>
-			<div class="sf-set group-item3">
+			<div class="sf-set set3">
 				<div class="sf-box text required">
 					<label for="fld13"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Base URL'] ?></span> <small><?php echo $lang_install['Base URL help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld13" type="text" name="req_base_url" value="<?php echo $base_url_guess ?>" size="60" maxlength="100" /></span>
@@ -1727,7 +1727,7 @@ if (!$written)
 {
 
 ?>
-		<div class="ct-box">
+		<div class="ct-box warn-box">
 			<p class="warn"><?php echo $lang_install['No write info 1'] ?></p>
 			<p class="warn"><?php printf($lang_install['No write info 2'], '<a href="'.FORUM_ROOT.'index.php">'.$lang_install['Go to index'].'</a>') ?></p>
 		</div>
