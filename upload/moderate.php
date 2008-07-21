@@ -1167,7 +1167,7 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 		++$forum_page['item_count'];
 
 		// Start from scratch
-		$forum_page['item_subject'] = $forum_page['item_body'] = $forum_page['item_status'] = $forum_page['item_nav'] = $forum_page['item_title'] = $forum_page['item_title_status'] = array();
+		$forum_page['item_subject'] = $forum_page['item_body'] = $forum_page['item_status'] = $forum_page['item_nav'] = $forum_page['item_title'] = $forum_page['item_subject_status'] = array();
 		$forum_page['item_indicator'] = '';
 
 		if ($forum_config['o_censoring'] == '1')

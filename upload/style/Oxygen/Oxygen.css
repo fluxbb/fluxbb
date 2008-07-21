@@ -1200,7 +1200,7 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	padding-right: 2.7em;
 	}
 	
-.brd .posthead .hn strong, .brd .search-posthead .hn strong {
+.brd .posthead .hn strong {
 	float:right;
 	}
 	
@@ -1209,12 +1209,6 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	top: 0;
 	right: 0.75em;
 	height; 2.5em;
-	}
-	
-.brd .search-posthead {
-	border-style: none none dashed none;
-	border-width: 1px;
-	padding: 0 1.5em 0 1.5em;
 	}
 	
 .brd .postbody {
@@ -1246,10 +1240,6 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	padding: 0 0 0.5em 0.5em;
 	display: inline;
 	position: relative;
-	}
-	
-#brd-searchposts .postbody .user {
-	margin-top: 0;
 	}
 	
 .brd .postbody .user ul {
