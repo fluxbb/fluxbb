@@ -85,6 +85,10 @@ function split_words($text)
 		}
 	}
 
+	$return = ($hook = get_hook('si_fn_split_words_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	if ($return != null)
+		return $return;
+
 	return array_unique($words);
 }
 
@@ -98,7 +102,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 	
 	$return = ($hook = get_hook('si_fn_update_search_index_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
-		return $return;
+		return;
 
 	// Split old and new post/subject to obtain array of 'words'
 	$words_message = split_words($message);
@@ -233,7 +237,7 @@ function strip_search_index($post_ids)
 
 	$return = ($hook = get_hook('si_fn_strip_search_index_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
-		return $return;
+		return;
 
 	$query = array(
 		'SELECT'	=> 'word_id',
@@ -284,6 +288,8 @@ function strip_search_index($post_ids)
 	);
 	($hook = get_hook('si_fn_strip_search_index_qr_delete_matches')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
+
+	($hook = get_hook('si_fn_strip_search_index_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 }
 
 define('FORUM_SEARCH_IDX_FUNCTIONS_LOADED', 1);

@@ -33,7 +33,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 
 	$return = ($hook = get_hook('sf_fn_create_search_cache_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
-		return $return;
+		return;
 
 	if (utf8_strlen(str_replace(array('*', '%'), '', $author)) < 2)
 		$author = '';
@@ -300,7 +300,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 
 	$return = ($hook = get_hook('sf_fn_create_search_cache_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
-		return $return;
+		return;
 
 	$forum_db->end_transaction();
 	$forum_db->close();
@@ -420,6 +420,8 @@ function generate_cached_search_query($search_id, &$show_as)
 
 		($hook = get_hook('sf_fn_generate_cached_search_query_qr_get_cached_hits_as_topics')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	}
+
+	($hook = get_hook('sf_fn_generate_cached_search_query_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	return $query;
 }
@@ -673,6 +675,8 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 			break;
 	}
 
+	($hook = get_hook('sf_fn_generate_action_search_query_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+
 	return $query;
 }
 
@@ -737,7 +741,7 @@ function no_search_results($action = 'search')
 
 	$return = ($hook = get_hook('sf_fn_no_search_results_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
-		return $return;
+		return;
 
 	switch ($action)
 	{
@@ -774,7 +778,7 @@ function generate_search_crumbs($action = null)
 
 	$return = ($hook = get_hook('sf_fn_generate_search_crumbs_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
-		return $return;
+		return;
 
 	switch ($action)
 	{

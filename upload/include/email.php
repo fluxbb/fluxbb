@@ -35,6 +35,10 @@ if (!defined('FORUM'))
 //
 function is_valid_email($email)
 {
+	$return = ($hook = get_hook('em_fn_is_valid_email_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	if ($return != null)
+		return $return;
+
 	if (strlen($email) > 80)
 		return false;
 
@@ -48,6 +52,10 @@ function is_valid_email($email)
 function is_banned_email($email)
 {
 	global $forum_db, $forum_bans;
+
+	$return = ($hook = get_hook('em_fn_is_banned_email_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	if ($return != null)
+		return $return;
 
 	foreach ($forum_bans as $cur_ban)
 	{

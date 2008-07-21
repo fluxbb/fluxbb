@@ -36,6 +36,10 @@ function generate_admin_menu($submenu)
 {
 	global $forum_config, $forum_url, $forum_user, $lang_admin_common, $db_type;
 
+	$return = ($hook = get_hook('ca_fn_generate_admin_menu_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	if ($return != null)
+		return $return;
+
 	if ($submenu)
 	{
 		$forum_page['admin_submenu'] = array();
@@ -121,6 +125,10 @@ function generate_admin_menu($submenu)
 function prune($forum_id, $prune_sticky, $prune_date)
 {
 	global $forum_db, $db_type;
+
+	$return = ($hook = get_hook('ca_fn_prune_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	if ($return != null)
+		return;
 
 	// Fetch topics to prune
 	$query = array(
