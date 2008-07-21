@@ -593,7 +593,7 @@ else if ($action == 'change_email')
 				</div>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['Password'] ?></span></label></span><br />
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['Password'] ?></span></label><br />
 						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_password" size="25" value="<?php echo(isset($_POST['req_password']) ? ($_POST['req_password']) : ''); ?>"/></span>
 					</div>
 				</div>
@@ -1341,8 +1341,8 @@ if ($forum_user['id'] != $id &&
 	if ($forum_user['g_search'] == '1')
 	{
 		$forum_page['user_activity'] = array();
-		$forum_page['user_activity']['search_posts'] = '<span'.(empty($forum_page['user_activity']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_user_posts'], $id).'">'.$lang_profile['Show posts'].'</a></span>';
-		$forum_page['user_activity']['search_topics'] = '<span'.(empty($forum_page['user_activity']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_user_topics'], $id).'">'.$lang_profile['Show topics'].'</a></span>';
+		$forum_page['user_activity']['search_posts'] = '<span'.(empty($forum_page['user_activity']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_user_posts'], $id).'">'.sprintf($lang_profile['View user posts'], forum_htmlencode($user['username'])).'</a></span>';
+		$forum_page['user_activity']['search_topics'] = '<span'.(empty($forum_page['user_activity']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_user_topics'], $id).'">'.sprintf($lang_profile['View user topics'], forum_htmlencode($user['username'])).'</a></span>';
 	}
 
 	// Setup breadcrumbs
@@ -1371,7 +1371,7 @@ if ($forum_user['id'] != $id &&
 		<div class="profile ct-group vcard">
 			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
-					<h2 class="user-ident legend"><?php echo implode('<br />', $forum_page['user_ident']) ?></h2>
+					<h2 class="user-ident set-legend"><?php echo implode('<br />', $forum_page['user_ident']) ?></h2>
 					<ul>
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_info'])."\n" ?>
 					</ul>
@@ -1379,7 +1379,7 @@ if ($forum_user['id'] != $id &&
 			</div>
 <?php if (!empty($forum_page['user_contact'])): ?>			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
-					<h3 class="legend hn"><span><?php echo $lang_profile['Contact info'] ?></span></h3>
+					<h3 class="set-legend hn"><span><?php echo $lang_profile['Contact info'] ?></span></h3>
 					<ul>
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_contact'])."\n" ?>
 					</ul>
@@ -1387,13 +1387,13 @@ if ($forum_user['id'] != $id &&
 			</div>
 <?php endif; if (!empty($forum_page['user_activity'])): ?>			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
-					<h3 class="legend"><?php echo $lang_profile['Posts and topics'] ?></h3>
+					<h3 class="set-legend hn"><?php echo $lang_profile['Posts and topics'] ?></h3>
 					<p class="options"><?php echo implode(' ', $forum_page['user_activity']) ?></p>
 				</div>
 			</div>
 <?php endif; if (isset($forum_page['sig_demo'])): ?>			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
-					<h3 class="legend hn"><span><?php echo $lang_profile['Current signature'] ?></span></h3>
+					<h3 class="set-legend hn"><span><?php echo $lang_profile['Current signature'] ?></span></h3>
 					<div class="sig-demo"><?php echo $forum_page['sig_demo']."\n" ?></div>
 				</div>
 			</div>
@@ -1530,21 +1530,21 @@ else
 		if ($forum_user['g_search'] == '1' || $forum_user['is_admmod'])
 		{
 			$forum_page['user_activity'] = array();
-			$forum_page['user_activity']['search_posts'] = '<span'.(empty($forum_page['user_activity']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_user_posts'], $id).'">'.(($forum_user['id'] == $id) ? $lang_profile['View your posts'] : sprintf($lang_profile['View user posts'], forum_htmlencode($user['username']))).'</a></span>';
-			$forum_page['user_activity']['search_topics'] = '<span'.(empty($forum_page['user_activity']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_user_topics'], $id).'">'.(($forum_user['id'] == $id) ? $lang_profile['View your topics'] : sprintf($lang_profile['View user topics'], forum_htmlencode($user['username']))).'</a></span>';
+			$forum_page['user_activity']['search_posts'] = '<span'.(empty($forum_page['user_activity']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_user_posts'], $id).'">'.(($forum_page['own_profile']) ? $lang_profile['View your posts'] : sprintf($lang_profile['View user posts'], forum_htmlencode($user['username']))).'</a></span>';
+			$forum_page['user_activity']['search_topics'] = '<span'.(empty($forum_page['user_activity']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_user_topics'], $id).'">'.(($forum_page['own_profile']) ? $lang_profile['View your topics'] : sprintf($lang_profile['View user topics'], forum_htmlencode($user['username']))).'</a></span>';
 		}
 
 		if (($forum_page['own_profile'] || $forum_user['is_admmod']) && $forum_config['o_subscriptions'] == '1')
-			 $forum_page['user_activity']['search_subs'] = '<span'.(empty($forum_page['user_activity']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_subscriptions'], $forum_user['id']).'">'.(($forum_user['id'] == $id) ? $lang_profile['View your subscriptions'] : sprintf($lang_profile['View user subscriptions'], forum_htmlencode($user['username']))).'</a></span>';
+			 $forum_page['user_activity']['search_subs'] = '<span'.(empty($forum_page['user_activity']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_subscriptions'], $id).'">'.(($forum_page['own_profile']) ? $lang_profile['View your subscriptions'] : sprintf($lang_profile['View user subscriptions'], forum_htmlencode($user['username']))).'</a></span>';
 
 		// Setup user options
 		$forum_page['user_options'] = array();
 
 		if ($forum_page['own_profile'] || $forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && $forum_user['g_mod_change_passwords'] == '1'))
-			$forum_page['user_options']['change_password'] = '<span'.(empty($forum_page['user_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['change_password'], $id).'">'.(($forum_user['id'] == $id) ? $lang_profile['Change your password'] : sprintf($lang_profile['Change user password'], forum_htmlencode($user['username']))).'</a></span>';
+			$forum_page['user_options']['change_password'] = '<span'.(empty($forum_page['user_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['change_password'], $id).'">'.(($forum_page['own_profile']) ? $lang_profile['Change your password'] : sprintf($lang_profile['Change user password'], forum_htmlencode($user['username']))).'</a></span>';
 
 		if (!$forum_user['is_admmod'] && $forum_config['o_regs_verify'] == '1')
-			$forum_page['user_options']['change_email'] = '<span'.(empty($forum_page['user_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['change_email'], $id).'">'.(($forum_user['id'] == $id) ? $lang_profile['Change your e-mail'] : sprintf($lang_profile['Change user e-mail'], forum_htmlencode($user['username']))).'</a></span>';
+			$forum_page['user_options']['change_email'] = '<span'.(empty($forum_page['user_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['change_email'], $id).'">'.(($forum_page['own_profile']) ? $lang_profile['Change your e-mail'] : sprintf($lang_profile['Change user e-mail'], forum_htmlencode($user['username']))).'</a></span>';
 
 		// Setup headings
 		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], forum_htmlencode(end($forum_page['crumbs'])), $lang_profile['Section about']);
