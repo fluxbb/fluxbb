@@ -587,7 +587,7 @@ else if ($action == 'change_email')
 				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['New e-mail'] ?></span><label><br />
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['New e-mail'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_new_email" size="50" maxlength="80" value="<?php echo(isset($_POST['req_new_email']) ? forum_htmlencode($_POST['req_new_email']) : ''); ?>"/></span>
 					</div>
 				</div>
@@ -2402,7 +2402,7 @@ $forum_page['item_count'] = 0;
 
 			($hook = get_hook('pf_change_details_admin_pre_group_membership')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
-			if ($forum_user['g_moderator'] != '1' && $forum_user['id'] != $id)
+			if ($forum_user['g_moderator'] != '1' && !$forum_page['own_profile'])
 			{
 				$forum_page['item_count'] = 0;
 
@@ -2450,7 +2450,7 @@ $forum_page['item_count'] = 0;
 
 		}
 
-		if ($forum_user['g_id'] == FORUM_ADMIN)
+		if ($forum_user['g_id'] == FORUM_ADMIN && ($user['g_id'] == FORUM_ADMIN || $user['g_moderator'] == '1'))
 		{
 			$forum_page['group_count'] = $forum_page['item_count'] = 0;
 
