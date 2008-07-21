@@ -47,7 +47,7 @@ function generate_config_cache()
 		'FROM'		=> 'config AS c'
 	);
 
-	($hook = get_hook('ch_qr_get_config')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('ch_fn_generate_config_cache_qr_get_config')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$output = array();
@@ -89,7 +89,7 @@ function generate_bans_cache()
 		'ORDER BY'	=> 'b.id'
 	);
 
-	($hook = get_hook('ch_qr_get_bans')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('ch_fn_generate_bans_cache_qr_get_bans')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$output = array();
@@ -125,7 +125,7 @@ function generate_ranks_cache()
 		'ORDER BY'	=> 'r.min_posts'
 	);
 
-	($hook = get_hook('ch_qr_get_ranks')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('ch_fn_generate_ranks_cache_qr_get_ranks')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$output = array();
@@ -161,7 +161,7 @@ function generate_censors_cache()
 		'ORDER BY'	=> 'c.search_for'
 	);
 
-	($hook = get_hook('ch_qr_get_censored_words')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('ch_fn_generate_censors_cache_qr_get_censored_words')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$output = array();
@@ -201,7 +201,7 @@ function generate_quickjump_cache($group_id = false)
 			'FROM'		=> 'groups AS g'
 		);
 
-		($hook = get_hook('ch_qr_get_groups')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('ch_fn_generate_quickjump_cache_qr_get_groups')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		$num_groups = $forum_db->num_rows($result);
 
@@ -238,7 +238,7 @@ function generate_quickjump_cache($group_id = false)
 			'ORDER BY'	=> 'c.disp_position, c.id, f.disp_position'
 		);
 
-		($hook = get_hook('ch_qr_get_cats_and_forums')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('ch_fn_generate_quickjump_cache_qr_get_cats_and_forums')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$cur_category = 0;
@@ -246,7 +246,7 @@ function generate_quickjump_cache($group_id = false)
 		$sef_friendly_names = array();
 		while ($cur_forum = $forum_db->fetch_assoc($result))
 		{
-			($hook = get_hook('ch_quickjump_forum_loop_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('ch_fn_generate_quickjump_cache_forum_loop_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 			if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
 			{
@@ -306,7 +306,7 @@ function generate_hooks_cache()
 		'ORDER BY'	=> 'eh.priority, eh.installed'
 	);
 
-	($hook = get_hook('ch_qr_get_hooks')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('ch_fn_generate_hooks_cache_qr_get_hooks')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$output = array();
@@ -378,7 +378,7 @@ function generate_updates_cache()
 		'WHERE'		=> 'e.id LIKE \'hotfix_%\''
 	);
 
-	($hook = get_hook('ch_qr_get_hotfixes')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('ch_fn_generate_updates_cache_qr_get_hotfixes')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$num_hotfixes = $forum_db->num_rows($result);
 
@@ -404,7 +404,7 @@ function generate_updates_cache()
 		$output = array('cached' => time(), 'fail' => true);
 
 	// This hook could potentially (and responsibly) be used by an extension to do its own little update check
-	($hook = get_hook('ch_generate_updates_cache_write')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('ch_fn_generate_updates_cache_write')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 	// Output update status as PHP code
 	$fh = @fopen(FORUM_CACHE_DIR.'cache_updates.php', 'wb');

@@ -43,7 +43,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 {
 	global $forum_config;
 
-	$return = ($hook = get_hook('ps_preparse_bbcode_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_preparse_bbcode_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -101,7 +101,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	if ($temp_text !== false)
 		$text = $temp_text;
 
-	$return = ($hook = get_hook('ps_preparse_bbcode_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_preparse_bbcode_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -141,7 +141,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	// Tags we can automatically fix bad nesting
 	$tags_fix = array('quote', 'b', 'i', 'u', 'color', 'colour', 'url', 'email');
 
-	$return = ($hook = get_hook('ps_preparse_tags_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_preparse_tags_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -499,7 +499,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		return false;
 	}
 
-	$return = ($hook = get_hook('ps_preparse_tags_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_preparse_tags_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -573,7 +573,7 @@ function split_text($text, $start, $end, &$errors, $retab = true)
 //
 function handle_url_tag($url, $link = '', $bbcode = false)
 {
-	$return = ($hook = get_hook('ps_handle_url_tag_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_handle_url_tag_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -589,7 +589,7 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 	if (!$bbcode)
 		$link = ($link == '' || $link == $url) ? ((utf8_strlen($url) > 55) ? utf8_substr($url, 0 , 39).' &#133; '.utf8_substr($url, -10) : $url) : stripslashes($link);
 
-	$return = ($hook = get_hook('ps_handle_url_tag_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_handle_url_tag_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -612,7 +612,7 @@ function handle_img_tag($url, $is_signature = false, $alt = null)
 {
 	global $lang_common, $forum_user;
 
-	$return = ($hook = get_hook('ps_handle_img_tag_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_handle_img_tag_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -626,7 +626,7 @@ function handle_img_tag($url, $is_signature = false, $alt = null)
 	else if (!$is_signature && $forum_user['show_img'] != '0')
 		$img_tag = '<span class="postimg"><a href="'.$url.'"><img src="'.$url.'" alt="'.forum_htmlencode($alt).'" /></a></span>';
 
-	$return = ($hook = get_hook('ps_handle_img_tag_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_handle_img_tag_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -660,7 +660,7 @@ function do_bbcode($text, $is_signature = false)
 {
 	global $lang_common, $forum_user, $forum_config;
 
-	$return = ($hook = get_hook('ps_do_bbcode_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_do_bbcode_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -713,14 +713,14 @@ function do_bbcode($text, $is_signature = false)
 	$replace[] = '<a href="mailto:$1">$1</a>';
 	$replace[] = '<a href="mailto:$1">$2</a>';
 
-	$return = ($hook = get_hook('ps_do_bbcode_replace')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_do_bbcode_replace')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
 	// This thing takes a while! :)
 	$text = preg_replace($pattern, $replace, $text);
 
-	$return = ($hook = get_hook('ps_do_bbcode_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_do_bbcode_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -768,21 +768,21 @@ function parse_message($text, $hide_smilies)
 {
 	global $forum_config, $lang_common, $forum_user;
 
-	$return = ($hook = get_hook('ps_parse_message_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_parse_message_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
 	if ($forum_config['o_censoring'] == '1')
 		$text = censor_words($text);
 
-	$return = ($hook = get_hook('ps_parse_message_post_censor')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_parse_message_post_censor')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
 	// Convert applicable characters to HTML entities
 	$text = forum_htmlencode($text);
 
-	$return = ($hook = get_hook('ps_parse_message_pre_split')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_parse_message_pre_split')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -793,7 +793,7 @@ function parse_message($text, $hide_smilies)
 		$text = implode("\0", $outside);
 	}
 
-	$return = ($hook = get_hook('ps_parse_message_post_split')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_parse_message_post_split')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -803,7 +803,7 @@ function parse_message($text, $hide_smilies)
 	if ($forum_config['o_smilies'] == '1' && $forum_user['show_smilies'] == '1' && $hide_smilies == '0')
 		$text = do_smilies($text);
 
-	$return = ($hook = get_hook('ps_parse_message_bbcode')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_parse_message_bbcode')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -812,7 +812,7 @@ function parse_message($text, $hide_smilies)
 	$replace = array('<br />', '&nbsp; &nbsp; ', '&nbsp; ', ' &nbsp;');
 	$text = str_replace($pattern, $replace, $text);
 
-	$return = ($hook = get_hook('ps_parse_message_pre_merge')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_parse_message_pre_merge')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -832,7 +832,7 @@ function parse_message($text, $hide_smilies)
 		}
 	}
 
-	$return = ($hook = get_hook('ps_parse_message_post_merge')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_parse_message_post_merge')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -841,7 +841,7 @@ function parse_message($text, $hide_smilies)
 	$text = str_replace('<p><br />', '<p>', $text);
 	$text = str_replace('<p></p>', '', '<p>'.$text.'</p>');
 
-	$return = ($hook = get_hook('ps_parse_message_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_parse_message_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -856,21 +856,21 @@ function parse_signature($text)
 {
 	global $forum_config, $lang_common, $forum_user;
 
-	$return = ($hook = get_hook('ps_parse_signature_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_parse_signature_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
 	if ($forum_config['o_censoring'] == '1')
 		$text = censor_words($text);
 
-	$return = ($hook = get_hook('ps_parse_signature_post_censor')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_parse_signature_post_censor')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
 	// Convert applicable characters to HTML entities
 	$text = forum_htmlencode($text);
 
-	$return = ($hook = get_hook('ps_parse_signature_pre_bbcode')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_parse_signature_pre_bbcode')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -880,7 +880,7 @@ function parse_signature($text)
 	if ($forum_config['o_smilies_sig'] == '1' && $forum_user['show_smilies'] == '1')
 		$text = do_smilies($text);
 
-	$return = ($hook = get_hook('ps_parse_signature_post_bbcode')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_parse_signature_post_bbcode')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -889,7 +889,7 @@ function parse_signature($text)
 	$replace = array('<br />', '&nbsp; &nbsp; ', '&nbsp; ', ' &nbsp;');
 	$text = str_replace($pattern, $replace, $text);
 
-	$return = ($hook = get_hook('ps_parse_signature_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ps_fn_parse_signature_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
