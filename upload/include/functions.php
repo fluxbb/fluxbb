@@ -31,7 +31,7 @@
 function get_hook($hook_id)
 {
 	global $forum_hooks;
-	
+
 	if (!defined('FORUM_USE_EVAL'))
 		return !defined('FORUM_DISABLE_HOOKS') && file_exists(FORUM_ROOT.'/cache/cache_hook_'.$hook_id.'.php') ? FORUM_ROOT.'/cache/cache_hook_'.$hook_id.'.php' : false;
 	else
@@ -408,7 +408,7 @@ function check_bans()
 			($hook = get_hook('fn_check_bans_qr_delete_online_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-			message($lang_common['Ban message'].(($cur_ban['expire'] != '') ? ' '.sprintf($lang_common['Ban message 2'], strtolower(format_time($cur_ban['expire'], true))) : '').(($cur_ban['message'] != '') ? ' '.$lang_common['Ban message 3'].'</p><p><strong>'.forum_htmlencode($cur_ban['message']).'</strong></p>' : '</p>').'<p>'.sprintf($lang_common['Ban message 4'], '<a href="mailto:'.$forum_config['o_admin_email'].'">'.$forum_config['o_admin_email'].'</a>'));
+			message($lang_common['Ban message'].(($cur_ban['expire'] != '') ? ' '.sprintf($lang_common['Ban message 2'], format_time($cur_ban['expire'], 1, null, null, true)) : '').(($cur_ban['message'] != '') ? ' '.$lang_common['Ban message 3'].'</p><p><strong>'.forum_htmlencode($cur_ban['message']).'</strong></p>' : '</p>').'<p>'.sprintf($lang_common['Ban message 4'], '<a href="mailto:'.$forum_config['o_admin_email'].'">'.$forum_config['o_admin_email'].'</a>'));
 		}
 	}
 
@@ -2156,9 +2156,10 @@ function forum_sublink($link, $sublink, $subarg, $args = null)
 
 
 //
-// Format a time string according to $time_format and timezones
+// Format a time string according to $date_format, $time_format, and timezones
+// $type: 0 = date/time, 1 = date, 2 = time
 //
-function format_time($timestamp, $date_only = false)
+function format_time($timestamp, $type = 0, $date_format = null, $time_format = null, $no_text = false)
 {
 	global $forum_config, $lang_common, $forum_user, $forum_time_formats, $forum_date_formats;
 
@@ -2167,26 +2168,44 @@ function format_time($timestamp, $date_only = false)
 		return $return;
 
 	if ($timestamp == '')
-		return $lang_common['Never'];
+		return ($no_text ? '' : $lang_common['Never']);
+
+	if ($date_format == null)
+		$date_format = $forum_date_formats[$forum_user['date_format']];
+
+	if ($time_format == null)
+		$time_format = $forum_time_formats[$forum_user['time_format']];
 
 	$diff = ($forum_user['timezone'] + $forum_user['dst']) * 3600;
 	$timestamp += $diff;
 	$now = time();
 
-	$date = gmdate($forum_date_formats[$forum_user['date_format']], $timestamp);
-	$base = gmdate('Y-m-d', $timestamp);
-	$today = gmdate('Y-m-d', $now+$diff);
-	$yesterday = gmdate('Y-m-d', $now+$diff-86400);
+	$formatted_time = '';
 
-	if ($base == $today)
-		$date = $lang_common['Today'];
-	else if ($base == $yesterday)
-		$date = $lang_common['Yesterday'];
+	if ($type == 0 || $type == 1)
+	{
+		$formatted_time = gmdate($date_format, $timestamp);
 
-	if (!$date_only)
-		$date .= ' '.gmdate($forum_time_formats[$forum_user['time_format']], $timestamp);
+		if (!$no_text)
+		{
+			$base = gmdate('Y-m-d', $timestamp);
+			$today = gmdate('Y-m-d', $now + $diff);
+			$yesterday = gmdate('Y-m-d', $now + $diff - 86400);
 
-	return $date;
+			if ($base == $today)
+				$formatted_time = $lang_common['Today'];
+			else if ($base == $yesterday)
+				$formatted_time = $lang_common['Yesterday'];
+		}
+	}
+
+	if ($type == 0)
+		$formatted_time .= ' ';
+ 
+	if ($type == 0 || $type == 2)
+		$formatted_time .= gmdate($time_format, $timestamp);
+
+	return $formatted_time;
 }
 
 

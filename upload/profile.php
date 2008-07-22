@@ -1296,7 +1296,7 @@ if ($forum_user['id'] != $id &&
 	if ($user['location'] !='')
 		$forum_page['user_info']['location'] = '<li><span>'.$lang_profile['From'].' <strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['location']) : $user['location']).'</strong></span></li>';
 
-	$forum_page['user_info']['registered'] = '<li><span>'.$lang_profile['Registered'].' <strong> '.format_time($user['registered'], true).'</strong></span></li>';
+	$forum_page['user_info']['registered'] = '<li><span>'.$lang_profile['Registered'].' <strong> '.format_time($user['registered'], 1).'</strong></span></li>';
 	$forum_page['user_info']['lastpost'] = '<li><span>'.$lang_profile['Last post'].' <strong> '.format_time($user['last_post']).'</strong></span></li>';
 
 	if ($forum_config['o_show_post_count'] == '1' || $forum_user['is_admmod'])
@@ -1471,7 +1471,7 @@ else
 		if ($user['location'] !='')
 			$forum_page['user_info']['location'] = '<li><span>'.$lang_profile['From'].' <strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['location']) : $user['location']).'</strong></span></li>';
 
-		$forum_page['user_info']['registered'] = '<li><span>'.$lang_profile['Registered'].' <strong> '.format_time($user['registered'], true).'</strong></span></li>';
+		$forum_page['user_info']['registered'] = '<li><span>'.$lang_profile['Registered'].' <strong> '.format_time($user['registered'], 1).'</strong></span></li>';
 		$forum_page['user_info']['lastpost'] = '<li><span>'.$lang_profile['Last post'].' <strong> '.format_time($user['last_post']).'</strong></span></li>';
 
 
@@ -1939,7 +1939,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 			echo "\t\t\t\t\t\t".'<option value="'.$key.'"';
 			if ($user['time_format'] == $key)
 				echo ' selected="selected"';
-			echo '>'. gmdate($time_format, time() + (($forum_user['timezone'] + $forum_user['dst']) * 3600));
+			echo '>'. format_time(time(), 2, null, $time_format);
 			if ($key == 0)
 				echo ' ('.$lang_profile['Default'].')';
 			echo "</option>\n";
@@ -1960,7 +1960,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 			echo "\t\t\t\t\t\t\t".'<option value="'.$key.'"';
 			if ($user['date_format'] == $key)
 				echo ' selected="selected"';
-			echo '>'. gmdate($date_format, time() + (($forum_user['timezone'] + $forum_user['dst']) * 3600));
+			echo '>'. format_time(time(), 1, $date_format, null, true);
 			if ($key == 0)
 				echo ' ('.$lang_profile['Default'].')';
 			echo "</option>\n";

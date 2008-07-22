@@ -371,7 +371,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 					$forum_page['user_info']['from'] = '<li><span>'.$lang_topic['From'].' <strong> '.forum_htmlencode($cur_post['location']).'</strong></span></li>';
 				}
 
-				$forum_page['user_info']['registered'] = '<li><span>'.$lang_topic['Registered'].' <strong> '.format_time($cur_post['registered'], true).'</strong></span></li>';
+				$forum_page['user_info']['registered'] = '<li><span>'.$lang_topic['Registered'].' <strong> '.format_time($cur_post['registered'], 1).'</strong></span></li>';
 
 				if ($forum_config['o_show_post_count'] == '1' || $forum_user['is_admmod'])
 					$forum_page['user_info']['posts'] = '<li><span>'.$lang_topic['Posts'].' <strong> '.forum_number_format($cur_post['num_posts']).'</strong></span></li>';
