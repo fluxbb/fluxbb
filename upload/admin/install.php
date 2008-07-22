@@ -348,7 +348,10 @@ else
 		error($lang_install['Username BBCode']);
 
 	// Validate email
-	if (strlen($email) > 80 || !preg_match('/^(([^<>()[\]\\.,;:\s@"\']+(\.[^<>()[\]\\.,;:\s@"\']+)*)|("[^"\']+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\d\-]+\.)+[a-zA-Z]{2,}))$/', $email))
+	if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
+		require FORUM_ROOT.'include/email.php';
+
+	if (!is_valid_email($email))
 		error($lang_install['Invalid email']);
 
 	// Make sure board title and description aren't left blank
@@ -1538,7 +1541,7 @@ else
 		'o_report_method'			=> "'0'",
 		'o_regs_report'				=> "'0'",
 		'o_default_email_setting'	=> "'1'",
-		'o_mailing_list'			=> "'$email'",
+		'o_mailing_list'			=> "'".$forum_db->escape($email)."'",
 		'o_avatars'					=> "'$avatars'",
 		'o_avatars_dir'				=> "'img/avatars'",
 		'o_avatars_width'			=> "'60'",
@@ -1546,8 +1549,8 @@ else
 		'o_avatars_size'			=> "'10240'",
 		'o_search_all_forums'		=> "'1'",
 		'o_sef'						=> "'Default'",
-		'o_admin_email'				=> "'$email'",
-		'o_webmaster_email'			=> "'$email'",
+		'o_admin_email'				=> "'".$forum_db->escape($email)."'",
+		'o_webmaster_email'			=> "'".$forum_db->escape($email)."'",
 		'o_subscriptions'			=> "'1'",
 		'o_smtp_host'				=> "NULL",
 		'o_smtp_user'				=> "NULL",

@@ -401,14 +401,14 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 				if ($cur_post['url'] != '')
 					$forum_page['post_contacts']['url'] = '<span class="user-url'.(!empty($forum_page['post_contacts']) ? ' item1' : '').'"><a class="external" href="'.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($cur_post['url']) : $cur_post['url']).'">'.sprintf($lang_topic['Visit website'], '<span>'.sprintf($lang_topic['User possessive'], forum_htmlencode($cur_post['username'])).'</span>').'</a></span>';
 				if ((($cur_post['email_setting'] == '0' && !$forum_user['is_guest']) || $forum_user['is_admmod']) && $forum_user['g_send_email'] == '1')
-					$forum_page['post_contacts']['email'] = '<span class="user-email'.(!empty($forum_page['post_contacts']) ? ' item1' : '').'"><a href="mailto:'.$cur_post['email'].'">'.$lang_topic['E-mail'].'<span>&#160;'.forum_htmlencode($cur_post['username']).'</span></a></span>';
+					$forum_page['post_contacts']['email'] = '<span class="user-email'.(!empty($forum_page['post_contacts']) ? ' item1' : '').'"><a href="mailto:'.forum_htmlencode($cur_post['email']).'">'.$lang_topic['E-mail'].'<span>&#160;'.forum_htmlencode($cur_post['username']).'</span></a></span>';
 				else if ($cur_post['email_setting'] == '1' && !$forum_user['is_guest'] && $forum_user['g_send_email'] == '1')
 					$forum_page['post_contacts']['email'] = '<span class="user-email'.(!empty($forum_page['post_contacts']) ? ' item1' : '').'"><a href="'.forum_link($forum_url['email'], $cur_post['poster_id']).'">'.$lang_topic['E-mail'].'<span>&#160;'.forum_htmlencode($cur_post['username']).'</span></a></span>';
 			}
 			else
 			{
 				if ($cur_post['poster_email'] != '' && !$forum_user['is_guest'] && $forum_user['g_send_email'] == '1')
-					$forum_page['post_contacts']['email'] = '<span class="user-email'.(!empty($forum_page['post_contacts']) ? ' item1' : '').'"><a href="mailto:'.$cur_post['poster_email'].'">'.$lang_topic['E-mail'].'<span>&#160;'.forum_htmlencode($cur_post['username']).'</span></a></span>';
+					$forum_page['post_contacts']['email'] = '<span class="user-email'.(!empty($forum_page['post_contacts']) ? ' item1' : '').'"><a href="mailto:'.forum_htmlencode($cur_post['poster_email']).'">'.$lang_topic['E-mail'].'<span>&#160;'.forum_htmlencode($cur_post['username']).'</span></a></span>';
 			}
 
 			if (!empty($forum_page['post_contacts']))

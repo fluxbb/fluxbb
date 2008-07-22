@@ -256,7 +256,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 					forum_mail($email, $mail_subject, $cur_mail_message);
 				}
 
-				message(sprintf($lang_login['Forget mail'], '<a href="mailto:'.$forum_config['o_admin_email'].'">'.$forum_config['o_admin_email'].'</a>'));
+				message(sprintf($lang_login['Forget mail'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>'));
 			}
 			else
 				$errors[] = sprintf($lang_login['No e-mail match'], forum_htmlencode($email));

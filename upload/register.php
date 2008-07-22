@@ -260,7 +260,7 @@ else if (isset($_POST['form_sent']))
 
 			// Must the user verify the registration or do we log him/her in right now?
 			if ($forum_config['o_regs_verify'] == '1')
-				message(sprintf($lang_profile['Reg e-mail'], '<a href="mailto:'.$forum_config['o_admin_email'].'">'.$forum_config['o_admin_email'].'</a>'));
+				message(sprintf($lang_profile['Reg e-mail'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>'));
 
 			$expire = time() + $forum_config['o_timeout_visit'];
 

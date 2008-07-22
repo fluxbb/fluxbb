@@ -408,7 +408,7 @@ function check_bans()
 			($hook = get_hook('fn_check_bans_qr_delete_online_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-			message($lang_common['Ban message'].(($cur_ban['expire'] != '') ? ' '.sprintf($lang_common['Ban message 2'], format_time($cur_ban['expire'], 1, null, null, true)) : '').(($cur_ban['message'] != '') ? ' '.$lang_common['Ban message 3'].'</p><p><strong>'.forum_htmlencode($cur_ban['message']).'</strong></p>' : '</p>').'<p>'.sprintf($lang_common['Ban message 4'], '<a href="mailto:'.$forum_config['o_admin_email'].'">'.$forum_config['o_admin_email'].'</a>'));
+			message($lang_common['Ban message'].(($cur_ban['expire'] != '') ? ' '.sprintf($lang_common['Ban message 2'], format_time($cur_ban['expire'], 1, null, null, true)) : '').(($cur_ban['message'] != '') ? ' '.$lang_common['Ban message 3'].'</p><p><strong>'.forum_htmlencode($cur_ban['message']).'</strong></p>' : '</p>').'<p>'.sprintf($lang_common['Ban message 4'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>'));
 		}
 	}
 
@@ -1381,7 +1381,7 @@ function add_topic($post_info, &$new_tid, &$new_pid)
 	if ($post_info['is_guest'] && $post_info['poster_email'] != null)
 	{
 		$query['INSERT'] .= ', poster_email';
-		$query['VALUES'] .= ', \''.$post_info['poster_email'].'\'';
+		$query['VALUES'] .= ', \''.$forum_db->escape($post_info['poster_email']).'\'';
 	}
 
 	($hook = get_hook('fn_add_topic_qr_add_topic_post')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
@@ -1456,7 +1456,7 @@ function add_post($post_info, &$new_pid)
 	if ($post_info['is_guest'] && $post_info['poster_email'] != null)
 	{
 		$query['INSERT'] .= ', poster_email';
-		$query['VALUES'] .= ', \''.$post_info['poster_email'].'\'';
+		$query['VALUES'] .= ', \''.$forum_db->escape($post_info['poster_email']).'\'';
 	}
 
 	($hook = get_hook('fn_add_post_qr_add_post')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;

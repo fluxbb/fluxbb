@@ -193,7 +193,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_bans['E-mail/domain to ban label'] ?></span> <small><?php echo $lang_admin_bans['E-mail/domain help'] ?></small></label><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_email" size="40" maxlength="80" value="<?php if (isset($ban_email)) echo strtolower($ban_email); ?>" /></span>
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_email" size="40" maxlength="80" value="<?php if (isset($ban_email)) echo forum_htmlencode(strtolower($ban_email)); ?>" /></span>
 					</div>
 				</div>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
@@ -459,7 +459,7 @@ if (!empty($forum_bans))
 			$forum_page['ban_info']['username'] = '<li><span>'.$lang_admin_bans['Username'].'</span> <strong>'.forum_htmlencode($cur_ban['username']).'</strong></li>';
 
 		if ($cur_ban['email'] != '')
-			$forum_page['ban_info']['email'] = '<li><span>'.$lang_admin_bans['E-mail'].'</span> <strong>'.$cur_ban['email'].'</strong></li>';
+			$forum_page['ban_info']['email'] = '<li><span>'.$lang_admin_bans['E-mail'].'</span> <strong>'.forum_htmlencode($cur_ban['email']).'</strong></li>';
 
 		if ($cur_ban['ip'] != '')
 			$forum_page['ban_info']['ip'] = '<li><span>'.$lang_admin_bans['IP-ranges'].'</span> <strong>'.$cur_ban['ip'].'</strong></li>';

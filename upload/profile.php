@@ -91,7 +91,7 @@ if ($action == 'change_pass')
 		$key = $_GET['key'];
 
 		if ($key == '' || $key != $user['activate_key'])
-			message(sprintf($lang_profile['Pass key bad'], '<a href="mailto:'.$forum_config['o_admin_email'].'">'.$forum_config['o_admin_email'].'</a>'));
+			message(sprintf($lang_profile['Pass key bad'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>'));
 		else
 		{
 			if (isset($_POST['form_sent']))
@@ -402,7 +402,7 @@ else if ($action == 'change_email')
 		($hook = get_hook('pf_change_email_key_supplied')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
 		if ($key == '' || $key != $user['activate_key'])
-			message(sprintf($lang_profile['E-mail key bad'], '<a href="mailto:'.$forum_config['o_admin_email'].'">'.$forum_config['o_admin_email'].'</a>'));
+			message(sprintf($lang_profile['E-mail key bad'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>'));
 		else
 		{
 			$query = array(
@@ -507,7 +507,7 @@ else if ($action == 'change_email')
 
 			forum_mail($new_email, $mail_subject, $mail_message);
 
-			message(sprintf($lang_profile['Activate e-mail sent'], '<a href="mailto:'.$forum_config['o_admin_email'].'">'.$forum_config['o_admin_email'].'</a>'));
+			message(sprintf($lang_profile['Activate e-mail sent'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>'));
 		}
 	}
 
@@ -1074,7 +1074,7 @@ else if (isset($_POST['form_sent']))
 
 					// Move the file to the avatar directory. We do this before checking the width/height to circumvent open_basedir restrictions.
 					if (!@move_uploaded_file($uploaded_file['tmp_name'], $forum_config['o_avatars_dir'].'/'.$id.'.tmp'))
-						$errors[] = sprintf($lang_profile['Move failed'], '<a href="mailto:'.$forum_config['o_admin_email'].'">'.$forum_config['o_admin_email'].'</a>');
+						$errors[] = sprintf($lang_profile['Move failed'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>');
 
 					if (empty($errors))
 					{
@@ -1306,7 +1306,7 @@ if ($forum_user['id'] != $id &&
 	$forum_page['user_contact'] = array();
 
 	if ($user['email_setting'] == '0' && !$forum_user['is_guest'] && $forum_user['g_send_email'] == '1')
-		$forum_page['user_contact']['email'] = '<li><span>'.$lang_profile['E-mail'].' <a href="mailto:'.$user['email'].'" class="email">'.($forum_config['o_censoring'] == '1' ? censor_words($user['email']) : $user['email']).'</a></span></li>';
+		$forum_page['user_contact']['email'] = '<li><span>'.$lang_profile['E-mail'].' <a href="mailto:'.forum_htmlencode($user['email']).'" class="email">'.forum_htmlencode(($forum_config['o_censoring'] == '1' ? censor_words($user['email']) : $user['email'])).'</a></span></li>';
 
 	if ($user['email_setting'] != '2' && !$forum_user['is_guest'] && $forum_user['g_send_email'] == '1')
 		$forum_page['user_contact']['forum-mail'] = '<li><span>'.$lang_profile['E-mail'].' <a href="'.forum_link($forum_url['email'], $id).'">'.$lang_profile['Send forum e-mail'].'</a></span></li>';
@@ -1487,9 +1487,9 @@ else
 		$forum_page['user_contact'] = array();
 
 		if (($user['email_setting'] == '0' && !$forum_user['is_guest']) && $forum_user['g_send_email'] == '1')
-			$forum_page['user_contact']['email'] = '<li><span>'.$lang_profile['E-mail'].' <a href="mailto:'.$user['email'].'" class="email">'.($forum_config['o_censoring'] == '1' ? censor_words($user['email']) : $user['email']).'</a></span></li>';
+			$forum_page['user_contact']['email'] = '<li><span>'.$lang_profile['E-mail'].' <a href="mailto:'.forum_htmlencode($user['email']).'" class="email">'.forum_htmlencode(($forum_config['o_censoring'] == '1' ? censor_words($user['email']) : $user['email'])).'</a></span></li>';
 		else if ($forum_page['own_profile'] || $forum_user['is_admmod'])
-				$forum_page['user_private']['email'] = '<li><span>'.$lang_profile['E-mail'].' <a href="mailto:'.$user['email'].'" class="email">'.($forum_config['o_censoring'] == '1' ? censor_words($user['email']) : $user['email']).'</a></span></li>';
+				$forum_page['user_private']['email'] = '<li><span>'.$lang_profile['E-mail'].' <a href="mailto:'.forum_htmlencode($user['email']).'" class="email">'.forum_htmlencode(($forum_config['o_censoring'] == '1' ? censor_words($user['email']) : $user['email'])).'</a></span></li>';
 
 		if ($user['email_setting'] != '2')
 			$forum_page['user_contact']['forum-mail'] = '<li><span>'.$lang_profile['E-mail'].' <a href="'.forum_link($forum_url['email'], $id).'">'.$lang_profile['Send forum e-mail'].'</a></span></li>';
@@ -1697,7 +1697,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 <?php endif; if ($forum_user['is_admmod'] || $forum_config['o_regs_verify'] != '1'): ?>				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['E-mail'] ?></span></label><br />
-						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_email" value="<?php echo(isset($_POST['req_username']) ? forum_htmlencode($_POST['req_email']) : $user['email']) ?>" size="35" maxlength="80" /></span>
+						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_email" value="<?php echo(isset($_POST['req_email']) ? forum_htmlencode($_POST['req_email']) : forum_htmlencode($user['email'])) ?>" size="35" maxlength="80" /></span>
 					</div>
 				</div>
 <?php endif; ($hook = get_hook('pf_change_details_identity_req_info_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>			</fieldset>
