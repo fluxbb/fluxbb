@@ -1,4 +1,4 @@
-﻿var Forum = {
+var Forum = {
 	/* attach FN to WINDOW.ONLOAD handler */
 	addLoadEvent: function(fn)
 	{
@@ -145,6 +145,18 @@
 		url = url.replace('$1', selected_forum_id);
 		url = url.replace('$2', forum_names[selected_forum_id]);
 		document.location = url;
+		return false;
+	},
+	/* toggle all checkboxes in the given form */
+	toggleCheckboxes: function(curForm)
+	{
+		var inputlist = curForm.getElementsByTagName("input");
+		for (i = 0; i < inputlist.length; i++)
+		{
+			if (inputlist[i].getAttribute("type") == 'checkbox')
+				inputlist[i].checked = !inputlist[i].checked;
+		}
+
 		return false;
 	},
 	/* attach form validation function to submit-type inputs */
