@@ -1327,11 +1327,11 @@ if ($forum_user['id'] != $id &&
 	if ($user['icq'] !='')
 		$forum_page['user_contact']['icq'] = '<li><span>'.$lang_profile['ICQ'].' <strong> '.forum_htmlencode($user['icq']).'</strong></span></li>';
 	if ($user['msn'] !='')
-		$forum_page['user_contact']['msn'] = '<li><span>'.$lang_profile['MSN'].' <strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['msn']) : $user['msn']).'<strong></span></li>';
+		$forum_page['user_contact']['msn'] = '<li><span>'.$lang_profile['MSN'].' <strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['msn']) : $user['msn']).'</strong></span></li>';
 	if ($user['aim'] !='')
-		$forum_page['user_contact']['aim'] = '<li><span>'.$lang_profile['AOL IM'].' <strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['aim']) : $user['aim']).'<strong></span></li>';
+		$forum_page['user_contact']['aim'] = '<li><span>'.$lang_profile['AOL IM'].' <strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['aim']) : $user['aim']).'</strong></span></li>';
 	if ($user['yahoo'] !='')
-		$forum_page['user_contact']['yahoo'] = '<li><span>'.$lang_profile['Yahoo'].' </strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['yahoo']) : $user['yahoo']).'</strong></span></li>';
+		$forum_page['user_contact']['yahoo'] = '<li><span>'.$lang_profile['Yahoo'].' <strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['yahoo']) : $user['yahoo']).'</strong></span></li>';
 
 	// Setup signature demo
 	if ($forum_config['o_signatures'] == '1' && isset($parsed_signature))
