@@ -76,7 +76,7 @@ $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 $forum_page['num_users'] = $forum_db->result($result);
 
 // Determine the user offset (based on $_GET['p'])
-$forum_page['num_pages'] = ceil($forum_page['num_users'] / 2);
+$forum_page['num_pages'] = ceil($forum_page['num_users'] / 50);
 $forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
 $forum_page['start_from'] = 50 * ($forum_page['page'] - 1);
 $forum_page['finish_at'] = min(($forum_page['start_from'] + 50), ($forum_page['num_users']));
