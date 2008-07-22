@@ -336,7 +336,17 @@ function generate_hooks_cache()
 
 		$output[$cur_hook['id']][] = $load_ext_info."\n\n".$cur_hook['code']."\n\n".$unload_ext_info."\n";
 	}
-	
+
+	// First, remove all existing cache_hook_hookname.php files
+	$d = dir(FORUM_CACHE_DIR);
+	while (($entry = $d->read()) !== false)
+	{
+		if (substr($entry, 0, 11) == 'cache_hook_' && substr($entry, strlen($entry) - 4) == '.php')
+			@unlink(FORUM_CACHE_DIR.$entry);
+	}
+	$d->close();
+
+	// Now, output the new cache_hook_hookname.php files
 	foreach ($output as $cur_hook => $hooks)
 	{
 		// Output include hook cache
