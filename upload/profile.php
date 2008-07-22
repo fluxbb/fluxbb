@@ -1419,9 +1419,6 @@ else
 		sprintf($lang_profile['Users profile'], $user['username'])
 	);
 
-	// Setup headings
-	$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], end($forum_page['crumbs']), $lang_profile['Section '.$section]);
-
 	// Is this users own profile
 	$forum_page['own_profile'] = ($forum_user['id'] == $id) ? true : false;
 
@@ -2364,7 +2361,6 @@ $forum_page['item_count'] = 0;
 			$forum_page['user_management']['ban'] = '<div class="ct-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box"><h3 class="set-legend hn">'.$lang_profile['Ban user'].'</h3>'."\n\t\t\t".'<p><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user info'].'</a></p></div></div>';
 			$forum_page['user_management']['delete'] = '<div class="ct-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box"><h3 class="set-legend hn">'.$lang_profile['Delete user'].'</h3>'."\n\t\t\t\t".'<p><a href="'.forum_link($forum_url['delete_user'], $id).'">'.$lang_profile['Delete user info'].'</a></p></div></div>';
 		}
-
 
 		// Setup headings
 		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], forum_htmlencode(end($forum_page['crumbs'])), $lang_profile['Section admin']);
