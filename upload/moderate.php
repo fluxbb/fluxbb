@@ -150,7 +150,9 @@ if (isset($_GET['tid']))
 	{
 		($hook = get_hook('mr_delete_posts_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
-		$posts = $_POST['posts'];
+		$posts = isset($_POST['posts']) && !empty($_POST['posts']) ? $_POST['posts'] : array();
+		$posts = array_map('intval', (is_array($posts) ? $posts : explode(',', $posts)));
+
 		if (empty($posts))
 			message($lang_misc['No posts selected']);
 
@@ -161,25 +163,22 @@ if (isset($_GET['tid']))
 
 			($hook = get_hook('mr_confirm_delete_posts_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
-			if (@preg_match('/[^0-9,]/', $posts))
-				message($lang_common['Bad request']);
-
 			// Verify that the post IDs are valid
 			$query = array(
 				'SELECT'	=> 'COUNT(p.id)',
 				'FROM'		=> 'posts AS p',
-				'WHERE'		=> 'p.id IN('.$posts.') AND p.id!='.$cur_topic['first_post_id'].' AND p.topic_id='.$tid
+				'WHERE'		=> 'p.id IN('.implode(',', $posts).') AND p.id!='.$cur_topic['first_post_id'].' AND p.topic_id='.$tid
 			);
 
 			($hook = get_hook('mr_qr_verify_post_ids')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-			if ($forum_db->result($result) != substr_count($posts, ',') + 1)
+			if ($forum_db->result($result) != count($posts))
 				message($lang_common['Bad request']);
 
 			// Delete the posts
 			$query = array(
 				'DELETE'	=> 'posts',
-				'WHERE'		=> 'id IN('.$posts.')'
+				'WHERE'		=> 'id IN('.implode(',', $posts).')'
 			);
 
 			($hook = get_hook('mr_qr_delete_posts')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
@@ -188,7 +187,7 @@ if (isset($_GET['tid']))
 			if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
 				require FORUM_ROOT.'include/search_idx.php';
 
-			strip_search_index($posts);
+			strip_search_index(implode(',', $posts));
 
 			// Get last_post, last_post_id, and last_poster for the topic after deletion
 			$query = array(
@@ -204,7 +203,7 @@ if (isset($_GET['tid']))
 			$last_post = $forum_db->fetch_assoc($result);
 
 			// How many posts did we just delete?
-			$num_posts_deleted = substr_count($posts, ',') + 1;
+			$num_posts_deleted = count($posts);
 
 			// Update the topic
 			$query = array(
@@ -227,7 +226,7 @@ if (isset($_GET['tid']))
 
 		$forum_page['hidden_fields'] = array(
 			'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />',
-			'posts'			=> '<input type="hidden" name="posts" value="'.implode(',', array_keys($posts)).'" />'
+			'posts'			=> '<input type="hidden" name="posts" value="'.implode(',', $posts).'" />'
 		);
 
 		// Setup breadcrumbs
@@ -402,7 +401,7 @@ if (isset($_GET['tid']))
 
 		// Generate the checkbox field
 		if ($cur_post['id'] != $cur_topic['first_post_id'])
-			$forum_page['item_select'] = '<p class="item-select"><input type="checkbox" id="fld'.$cur_post['id'].'" name="posts['.$cur_post['id'].']" value="1" /> <label for="fld'.$cur_post['id'].'">'.$lang_misc['Select post'].' '.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</label></p>';
+			$forum_page['item_select'] = '<p class="item-select"><input type="checkbox" id="fld'.$cur_post['id'].'" name="posts[]" value="'.$cur_post['id'].'" /> <label for="fld'.$cur_post['id'].'">'.$lang_misc['Select post'].' '.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</label></p>';
 
 		// Generate author identification
 		$forum_page['user_ident']['username'] = (($cur_post['poster_id'] > 1) ? '<strong class="username"><a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a></strong>' : '<strong class="username">'.forum_htmlencode($cur_post['username']).'</strong>');
@@ -498,10 +497,9 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	{
 		($hook = get_hook('mr_confirm_move_topics_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
-		if (@preg_match('/[^0-9,]/', $_POST['topics']))
-			message($lang_common['Bad request']);
+		$topics = isset($_POST['topics']) && !empty($_POST['topics']) ? explode(',', $_POST['topics']) : array();
+		$topics = array_map('intval', $topics);
 
-		$topics = explode(',', $_POST['topics']);
 		$move_to_forum = isset($_POST['move_to_forum']) ? intval($_POST['move_to_forum']) : 0;
 		if (empty($topics) || $move_to_forum < 1)
 			message($lang_common['Bad request']);
@@ -589,11 +587,13 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 
 	if (isset($_POST['move_topics']))
 	{
-		$topics = isset($_POST['topics']) ? $_POST['topics'] : array();
+		$topics = isset($_POST['topics']) && is_array($_POST['topics']) ? $_POST['topics'] : array();
+		$topics = array_map('intval', $topics);
+
 		if (empty($topics))
 			message($lang_misc['No topics selected']);
 
-		$topics = implode(',', array_keys($topics));
+		$topics = implode(',', $topics);
 		$action = 'multi';
 	}
 	else
@@ -745,7 +745,9 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 // Delete one or more topics
 else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply']))
 {
-	$topics = isset($_POST['topics']) ? $_POST['topics'] : array();
+	$topics = isset($_POST['topics']) && !empty($_POST['topics']) ? $_POST['topics'] : array();
+	$topics = array_map('intval', (is_array($topics) ? $topics : explode(',', $topics)));
+
 	if (empty($topics))
 		message($lang_misc['No topics selected']);
 
@@ -756,19 +758,16 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 
 		($hook = get_hook('mr_confirm_delete_topics_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 
-		if (@preg_match('/[^0-9,]/', $topics))
-			message($lang_common['Bad request']);
-
 		// Verify that the topic IDs are valid
 		$query = array(
 			'SELECT'	=> 'COUNT(t.id)',
 			'FROM'		=> 'topics AS t',
-			'WHERE'		=> 't.id IN('.$topics.') AND t.forum_id='.$fid
+			'WHERE'		=> 't.id IN('.implode(',', $topics).') AND t.forum_id='.$fid
 		);
 
 		($hook = get_hook('mr_qr_verify_topic_ids2')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-		if ($forum_db->result($result) != substr_count($topics, ',') + 1)
+		if ($forum_db->result($result) != count($topics))
 			message($lang_common['Bad request']);
 
 		// Create an array of forum IDs that need to be synced
@@ -776,7 +775,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		$query = array(
 			'SELECT'	=> 't.forum_id',
 			'FROM'		=> 'topics AS t',
-			'WHERE'		=> 't.moved_to IN('.$topics.')'
+			'WHERE'		=> 't.moved_to IN('.implode(',', $topics).')'
 		);
 
 		($hook = get_hook('mr_qr_get_forums_to_sync')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
@@ -787,7 +786,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		// Delete the topics and any redirect topics
 		$query = array(
 			'DELETE'	=> 'topics',
-			'WHERE'		=> 'id IN('.$topics.') OR moved_to IN('.$topics.')'
+			'WHERE'		=> 'id IN('.implode(',', $topics).') OR moved_to IN('.implode(',', $topics).')'
 		);
 
 		($hook = get_hook('mr_qr_delete_topics')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
@@ -796,7 +795,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		// Delete any subscriptions
 		$query = array(
 			'DELETE'	=> 'subscriptions',
-			'WHERE'		=> 'topic_id IN('.$topics.')'
+			'WHERE'		=> 'topic_id IN('.implode(',', $topics).')'
 		);
 
 		($hook = get_hook('mr_qr_delete_subscriptions')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
@@ -806,7 +805,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		$query = array(
 			'SELECT'	=> 'p.id',
 			'FROM'		=> 'posts AS p',
-			'WHERE'		=> 'p.topic_id IN('.$topics.')'
+			'WHERE'		=> 'p.topic_id IN('.implode(',', $topics).')'
 		);
 
 		($hook = get_hook('mr_qr_get_deleted_posts')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
@@ -828,7 +827,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		// Delete posts
 		$query = array(
 			'DELETE'	=> 'posts',
-			'WHERE'		=> 'topic_id IN('.$topics.')'
+			'WHERE'		=> 'topic_id IN('.implode(',', $topics).')'
 		);
 
 		($hook = get_hook('mr_qr_delete_topic_posts')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
@@ -847,7 +846,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 
 	$forum_page['hidden_fields'] = array(
 		'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />',
-		'topics'		=> '<input type="hidden" name="topics" value="'.implode(',', array_keys($topics)).'" />'
+		'topics'		=> '<input type="hidden" name="topics" value="'.implode(',', $topics).'" />'
 	);
 
 	// Setup breadcrumbs
@@ -912,7 +911,9 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 	// There could be an array of topic ID's in $_POST
 	if (isset($_POST['open']) || isset($_POST['close']))
 	{
-		$topics = isset($_POST['topics']) ? @array_map('intval', @array_keys($_POST['topics'])) : array();
+		$topics = isset($_POST['topics']) && is_array($_POST['topics']) ? $_POST['topics'] : array();
+		$topics = array_map('intval', $topics);
+
 		if (empty($topics))
 			message($lang_misc['No topics selected']);
 
@@ -1251,7 +1252,7 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 
 			$forum_page['item_body']['info']['replies'] = '<li class="info-replies"><strong>'.forum_number_format($cur_topic['num_replies']).'</strong> <span class="label">'.(($cur_topic['num_replies'] == 1) ? $lang_forum['Reply'] : $lang_forum['Replies']).'</span></li>';
 			$forum_page['item_body']['info']['lastpost'] = '<li class="info-lastpost"><span class="label">'.$lang_forum['Last post was'].'</span> <strong><a href="'.forum_link($forum_url['post'], $cur_topic['last_post_id']).'">'.format_time($cur_topic['last_post']).'</a></strong> <cite>'.sprintf($lang_forum['by poster'], forum_htmlencode($cur_topic['last_poster'])).'</cite></li>';
-			$forum_page['item_body']['info']['select'] = '<li class="info-select"><input id="fld'.++$forum_page['fld_count'].'" type="checkbox" name="topics['.$cur_topic['id'].']" value="1" /> <label for="fld'.$forum_page['fld_count'].'">'.sprintf($lang_forum['Select topic'], $cur_topic['subject']).'</label></li>';
+			$forum_page['item_body']['info']['select'] = '<li class="info-select"><input id="fld'.++$forum_page['fld_count'].'" type="checkbox" name="topics[]" value="'.$cur_topic['id'].'" /> <label for="fld'.$forum_page['fld_count'].'">'.sprintf($lang_forum['Select topic'], $cur_topic['subject']).'</label></li>';
 		}
 
 		($hook = get_hook('mr_topic_actions_row_pre_item_merge')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
