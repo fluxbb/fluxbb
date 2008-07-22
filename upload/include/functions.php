@@ -1277,19 +1277,6 @@ function delete_post($post_id, $topic_id, $forum_id)
 	if ($return != null)
 		return;
 
-	$query = array(
-		'SELECT'	=> 'p.id, p.poster, p.posted',
-		'FROM'		=> 'posts AS p',
-		'WHERE'		=> 'p.topic_id='.$topic_id,
-		'ORDER BY'	=> 'p.id DESC',
-		'LIMIT'		=> '2'
-	);
-
-	($hook = get_hook('fn_delete_post_qr_get_topic_lastposts_info')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
-	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-	list($last_id, ,) = $forum_db->fetch_row($result);
-	list($second_last_id, $second_poster, $second_posted) = $forum_db->fetch_row($result);
-
 	// Delete the post
 	$query = array(
 		'DELETE'	=> 'posts',
@@ -1304,31 +1291,7 @@ function delete_post($post_id, $topic_id, $forum_id)
 
 	strip_search_index($post_id);
 
-	// Count number of replies in the topic
-	$query = array(
-		'SELECT'	=> 'COUNT(p.id)',
-		'FROM'		=> 'posts AS p',
-		'WHERE'		=> 'p.topic_id='.$topic_id
-	);
-
-	($hook = get_hook('fn_delete_post_qr_get_topic_reply_count')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
-	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-	$num_replies = $forum_db->result($result, 0) - 1;
-
-	// Update the topic now that a post has been deleted
-	$query = array(
-		'UPDATE'	=> 'topics',
-		'SET'		=> 'num_replies='.$num_replies,
-		'WHERE'		=> 'id='.$topic_id
-	);
-
-	// If we deleted the most recent post, we need to sync up last post data as wel
-	if ($last_id == $post_id)
-		$query['SET'] .= ', last_post='.$second_posted.', last_post_id='.$second_last_id.', last_poster=\''.$forum_db->escape($second_poster).'\'';
-
-	($hook = get_hook('fn_delete_post_qr_update_topic')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
-	$forum_db->query_build($query) or error(__FILE__, __LINE__);
-
+	sync_topic($topic_id);
 	sync_forum($forum_id);
 
 	($hook = get_hook('fn_delete_post_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;

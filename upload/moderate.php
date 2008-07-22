@@ -189,32 +189,7 @@ if (isset($_GET['tid']))
 
 			strip_search_index(implode(',', $posts));
 
-			// Get last_post, last_post_id, and last_poster for the topic after deletion
-			$query = array(
-				'SELECT'	=> 'p.id, p.poster, p.posted',
-				'FROM'		=> 'posts AS p',
-				'WHERE'		=> 'p.topic_id='.$tid,
-				'ORDER BY'	=> 'p.id DESC',
-				'LIMIT'		=> '1'
-			);
-
-			($hook = get_hook('mr_qr_get_topic_last_post_data')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
-			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-			$last_post = $forum_db->fetch_assoc($result);
-
-			// How many posts did we just delete?
-			$num_posts_deleted = count($posts);
-
-			// Update the topic
-			$query = array(
-				'UPDATE'	=> 'topics',
-				'SET'		=> 'last_post='.$last_post['posted'].', last_post_id='.$last_post['id'].', last_poster=\''.$forum_db->escape($last_post['poster']).'\', num_replies=num_replies-'.$num_posts_deleted,
-				'WHERE'		=> 'id='.$tid
-			);
-
-			($hook = get_hook('mr_qr_update_topic')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
-			$forum_db->query_build($query) or error(__FILE__, __LINE__);
-
+			sync_topic($tid);
 			sync_forum($fid);
 
 			redirect(forum_link($forum_url['topic'], array($tid, sef_friendly($cur_topic['subject']))), $lang_misc['Delete posts redirect']);
