@@ -110,11 +110,11 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 
 ?>
 	<div class="main-subhead">
-		<h2><span><?php echo $lang_admin_groups['Group settings heading'] ?></span></h2>
+		<h2 class="hn"><span><?php echo $lang_admin_groups['Group settings heading'] ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
-		<div id="req-msg" class="frm-warn">
-			<p class="important"><?php printf($lang_common['Required warn'], '<em class="req-text">'.$lang_common['Reqmark'].'</em>') ?></p>
+		<div id="req-msg" class="req-warn">
+			<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Reqmark'].'</em>') ?></p>
 		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_groups']) ?>">
 			<div class="hidden">
@@ -164,24 +164,24 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 <?php if ($group['g_id'] != FORUM_GUEST): if ($mode != 'edit' || $forum_config['o_default_user_group'] != $group['g_id']): ?>				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<legend><span><?php echo $lang_admin_groups['Mod permissions'] ?></span></legend>
 						<div class="mf-box">
-							<div class="mf-item"><span class="fld-input">
-								<input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="moderator" value="1"<?php if ($group['g_moderator'] == '1') echo ' checked="checked"' ?> /></span>
+							<div class="mf-item">
+								<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="moderator" value="1"<?php if ($group['g_moderator'] == '1') echo ' checked="checked"' ?> /></span>
 								<label for="fld<?php echo $forum_page['fld_count'] ?>"><?php echo $lang_admin_groups['Allow moderate label'] ?> <?php echo $lang_admin_groups['Allow moderate help'] ?></label>
 							</div>
-							<div class="mf-item"><span class="fld-input">
-								<input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="mod_edit_users" value="1"<?php if ($group['g_mod_edit_users'] == '1') echo ' checked="checked"' ?> /></span>
+							<div class="mf-item">
+								<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="mod_edit_users" value="1"<?php if ($group['g_mod_edit_users'] == '1') echo ' checked="checked"' ?> /></span>
 								<label for="fld<?php echo $forum_page['fld_count'] ?>"><?php echo $lang_admin_groups['Allow mod edit profiles label'] ?></label>
 							</div>
-							<div class="mf-item"><span class="fld-input">
-								<input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="mod_rename_users" value="1"<?php if ($group['g_mod_rename_users'] == '1') echo ' checked="checked"' ?> /></span>
+							<div class="mf-item">
+								<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="mod_rename_users" value="1"<?php if ($group['g_mod_rename_users'] == '1') echo ' checked="checked"' ?> /></span>
 								<label for="fld<?php echo $forum_page['fld_count'] ?>"><?php echo $lang_admin_groups['Allow mod edit username label'] ?></label>
 							</div>
-							<div class="mf-item"><span class="fld-input">
-								<input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="mod_change_passwords" value="1"<?php if ($group['g_mod_change_passwords'] == '1') echo ' checked="checked"' ?> /></span>
+							<div class="mf-item">
+								<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="mod_change_passwords" value="1"<?php if ($group['g_mod_change_passwords'] == '1') echo ' checked="checked"' ?> /></span>
 								<label for="fld<?php echo $forum_page['fld_count'] ?>"><?php echo $lang_admin_groups['Allow mod change pass label'] ?></label>
 							</div>
-							<div class="mf-item"><span class="fld-input">
-								<input type="checkbox" id="fld<?php echo $forum_page['fld_count'] ?>" name="mod_ban_users" value="1"<?php if ($group['g_mod_ban_users'] == '1') echo ' checked="checked"' ?> />
+							<div class="mf-item">
+								<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="mod_ban_users" value="1"<?php if ($group['g_mod_ban_users'] == '1') echo ' checked="checked"' ?> /></span>
 								<label for="fld<?php echo $forum_page['fld_count'] ?>"><?php echo $lang_admin_groups['Allow mod bans label'] ?></label>
 							</div>
 						</div>
@@ -279,9 +279,8 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 	}
 
 ?>
-				<div class="frm-buttons">
-					<span class="submit"><input type="submit" class="button" name="add_edit_group" value=" <?php echo $lang_admin_groups['Update group'] ?> " /></span>
-				</div>
+			<div class="frm-buttons">
+				<span class="submit"><input type="submit" class="button" name="add_edit_group" value=" <?php echo $lang_admin_groups['Update group'] ?> " /></span>
 			</div>
 		</form>
 	</div>
