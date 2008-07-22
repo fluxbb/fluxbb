@@ -76,14 +76,14 @@ $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 $forum_page['num_users'] = $forum_db->result($result);
 
 // Determine the user offset (based on $_GET['p'])
-$forum_page['num_pages'] = ceil($forum_page['num_users'] / 50);
+$forum_page['num_pages'] = ceil($forum_page['num_users'] / 2);
 $forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
 $forum_page['start_from'] = 50 * ($forum_page['page'] - 1);
 $forum_page['finish_at'] = min(($forum_page['start_from'] + 50), ($forum_page['num_users']));
 $forum_page['page_info'] = generate_page_info( (($forum_user['g_search_users'] == '1' && $forum_page['username'] != '') || $forum_page['show_group'] > -1) ? $lang_ul['Users found'] : $lang_ul['Users'], ($forum_page['start_from'] + 1), $forum_page['num_users']);
 
 // Generate paging links
-$forum_page['page_post']['paging'] = '<p class="paging"><span class="pages">'.$lang_common['Pages'].'</span> '.paginate($forum_page['num_pages'], $forum_page['page'], $forum_url['users_browse'], $lang_common['Page separator'], array($forum_page['show_group'], $forum_page['sort_by'], strtoupper($forum_page['sort_dir']), ($forum_page['username'] != '') ? urlencode($forum_page['username']) : '-')).'</p>';
+$forum_page['page_post']['paging'] = '<p class="paging"><span class="pages">'.$lang_common['Pages'].'</span> '.paginate($forum_page['num_pages'], $forum_page['page'], $forum_url['users_browse'], $lang_common['Paging separator'], array($forum_page['show_group'], $forum_page['sort_by'], strtoupper($forum_page['sort_dir']), ($forum_page['username'] != '') ? urlencode($forum_page['username']) : '-')).'</p>';
 $forum_page['page_post']['posting'] = '<p class="posting"><a href="'.forum_link($forum_url['users']).'"><span>'.$lang_ul['Perform new search'].'</span></a></p>';
 
 // Navigation links for header and page numbering for title/meta description
