@@ -29,9 +29,6 @@
 define('UPDATE_TO', '1.3 Beta');
 define('UPDATE_TO_DB_REVISION', 2);
 
-// An array of hotfix extensions that this version supersedes and replaces
-$supersedes_ext = array('hotfix_13svn_test');
-
 // The number of items to process per pageview (lower this if the update script times out during UTF-8 conversion)
 define('PER_PAGE', 300);
 
@@ -961,10 +958,11 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 		$forum_db->add_field('bans', 'ban_creator', 'INT(10) UNSIGNED', false, 0);
 
 		// Remove any hotfix extensions this update supersedes
-		if (!empty($supersedes_ext))
+		$result = $forum_db->query('SELECT id FROM '.$forum_db->prefix.'extensions WHERE id LIKE \'hotfix_%\' AND version != \''.UPDATE_TO.'\'') or error(__FILE__, __LINE__);
+		while ($cur_ext = $forum_db->fetch_assoc($result))
 		{
-			$forum_db->query('DELETE FROM '.$forum_db->prefix.'extension_hooks WHERE extension_id IN(\''.implode('\',\'', $supersedes_ext).'\')') or error(__FILE__, __LINE__);
-			$forum_db->query('DELETE FROM '.$forum_db->prefix.'extensions WHERE id IN(\''.implode('\',\'', $supersedes_ext).'\')') or error(__FILE__, __LINE__);
+			$forum_db->query('DELETE FROM '.$forum_db->prefix.'extension_hooks WHERE extension_id = \''.$cur_ext['id'].'\'') or error(__FILE__, __LINE__);
+			$forum_db->query('DELETE FROM '.$forum_db->prefix.'extensions WHERE id = \''.$cur_ext['id'].'\'') or error(__FILE__, __LINE__);
 		}
 
 		// Should we do charset conversion or not?
