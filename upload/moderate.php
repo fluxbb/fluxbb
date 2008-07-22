@@ -194,7 +194,7 @@ if (isset($_GET['tid']))
 				'SELECT'	=> 'p.id, p.poster, p.posted',
 				'FROM'		=> 'posts AS p',
 				'WHERE'		=> 'p.topic_id='.$tid,
-				'ORDER BY'	=> 'p.id',
+				'ORDER BY'	=> 'p.id DESC',
 				'LIMIT'		=> '1'
 			);
 
