@@ -46,7 +46,7 @@ $lang_post = array(
 'Edit topic'			=>	'Edit topic',
 'Edit reply'			=>	'Edit reply',
 'Silent edit'			=>	'Silent edit (don\'t display "Last edited by …" in topic view for this edit).',
-'Preview edited topic'	=>	'Preview of you edited topic',
+'Preview edited topic'	=>	'Preview of your edited topic',
 'Preview edited reply'	=>	'Preview of your edited reply',
 'Edit redirect'			=>	'Post updated. Redirecting …'
 
