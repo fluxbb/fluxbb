@@ -100,7 +100,7 @@ else
 	require FORUM_ROOT.'include/url/Default.php';
 
 // A good place to modify the URL scheme
-($hook = get_hook('co_modify_url_scheme')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('co_modify_url_scheme')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 
 // Check if we are to display a maintenance message
@@ -154,7 +154,7 @@ if (!empty($_POST) && (isset($_POST['confirm_cancel']) || (!isset($_POST['csrf_t
 	csrf_confirm_form();
 
 
-($hook = get_hook('co_common')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('co_common')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 if (!defined('FORUM_MAX_POSTSIZE'))
 	define('FORUM_MAX_POSTSIZE', 65535);

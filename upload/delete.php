@@ -29,7 +29,7 @@ if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
 require FORUM_ROOT.'include/common.php';
 
-($hook = get_hook('dl_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('dl_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 if ($forum_user['g_read_board'] == '0')
 	message($lang_common['No view']);
@@ -64,7 +64,7 @@ $query = array(
 	'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND p.id='.$id
 );
 
-($hook = get_hook('dl_qr_get_post_info')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('dl_qr_get_post_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 if (!$forum_db->num_rows($result))
 	message($lang_common['Bad request']);
@@ -77,7 +77,7 @@ $forum_page['is_admmod'] = ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['
 
 $cur_post['is_topic'] = ($id == $cur_post['first_post_id']) ? true : false;
 
-($hook = get_hook('dl_pre_permission_check')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('dl_pre_permission_check')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // Do we have permission to delete this post?
 if (($forum_user['g_delete_posts'] == '0' ||
@@ -88,7 +88,7 @@ if (($forum_user['g_delete_posts'] == '0' ||
 	message($lang_common['No permission']);
 
 
-($hook = get_hook('dl_post_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('dl_post_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // User pressed the cancel button
 if (isset($_POST['cancel']))
@@ -97,7 +97,7 @@ if (isset($_POST['cancel']))
 // User pressed the delete button
 else if (isset($_POST['delete']))
 {
-	($hook = get_hook('dl_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('dl_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	if (isset($_POST['req_confirm']))
 	{
@@ -167,7 +167,7 @@ $forum_page['crumbs'] = array(
 	(($cur_post['is_topic']) ? $lang_delete['Delete topic'] : $lang_delete['Delete post'])
 );
 
-($hook = get_hook('dl_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('dl_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 define ('FORUM_PAGE', 'postdelete');
 define ('FORUM_PAGE_TYPE', 'basic');
@@ -176,7 +176,7 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
-($hook = get_hook('dl_main_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('dl_main_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -224,7 +224,7 @@ ob_start();
 
 $forum_id = $cur_post['fid'];
 
-($hook = get_hook('dl_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('dl_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

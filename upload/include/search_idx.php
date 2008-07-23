@@ -43,7 +43,7 @@ function split_words($text)
 	global $forum_user;
 	static $noise_match, $noise_replace, $stopwords;
 
-	$return = ($hook = get_hook('si_fn_split_words_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('si_fn_split_words_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -55,7 +55,7 @@ function split_words($text)
 		$stopwords = (array)@file(FORUM_ROOT.'lang/'.$forum_user['language'].'/stopwords.txt');
 		$stopwords = array_map('trim', $stopwords);
 
-		($hook = get_hook('si_fn_split_words_modify_noise_matches')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('si_fn_split_words_modify_noise_matches')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	}
 
 	// Clean up
@@ -85,7 +85,7 @@ function split_words($text)
 		}
 	}
 
-	$return = ($hook = get_hook('si_fn_split_words_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('si_fn_split_words_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -100,7 +100,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 {
 	global $db_type, $forum_db;
 	
-	$return = ($hook = get_hook('si_fn_update_search_index_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('si_fn_update_search_index_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -122,7 +122,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 			'WHERE'		=> 'm.post_id='.$post_id
 		);
 
-		($hook = get_hook('si_fn_update_search_index_qr_get_current_words')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('si_fn_update_search_index_qr_get_current_words')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		
 		// Declare here to stop array_keys() and array_diff() from complaining if not set
@@ -164,7 +164,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 			'WHERE'		=> 'word IN('.implode(',', preg_replace('#^(.*)$#', '\'\1\'', $unique_words)).')'
 		);
 
-		($hook = get_hook('si_fn_update_search_index_qr_get_existing_words')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('si_fn_update_search_index_qr_get_existing_words')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		
 		$word_ids = array();
@@ -184,7 +184,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 				'VALUES'	=> preg_replace('#^(.*)$#', '\'\1\'', $new_words)
 			);
 
-			($hook = get_hook('si_fn_update_search_index_qr_insert_words')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('si_fn_update_search_index_qr_insert_words')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 		unset($new_words);
@@ -206,7 +206,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 				'WHERE'		=> 'word_id IN('.$sql.') AND post_id='.$post_id.' AND subject_match='.$subject_match
 			);
 
-			($hook = get_hook('si_fn_update_search_index_qr_delete_matches')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('si_fn_update_search_index_qr_delete_matches')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 	}
@@ -219,7 +219,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 		if (!empty($wordlist))
 		{
 			$sql = 'INSERT INTO '.$forum_db->prefix.'search_matches (post_id, word_id, subject_match) SELECT '.$post_id.', id, '.$subject_match.' FROM '.$forum_db->prefix.'search_words WHERE word IN('.implode(',', preg_replace('#^(.*)$#', '\'\1\'', $wordlist)).')';
-			($hook = get_hook('si_fn_update_search_index_qr_delete_matches')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('si_fn_update_search_index_qr_delete_matches')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query($sql) or error(__FILE__, __LINE__);
 		}
 	}
@@ -235,7 +235,7 @@ function strip_search_index($post_ids)
 {
 	global $db_type, $forum_db;
 
-	$return = ($hook = get_hook('si_fn_strip_search_index_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('si_fn_strip_search_index_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -246,7 +246,7 @@ function strip_search_index($post_ids)
 		'GROUP BY'	=> 'word_id'
 	);
 
-	($hook = get_hook('si_fn_strip_search_index_qr_get_post_words')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('si_fn_strip_search_index_qr_get_post_words')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	if ($forum_db->num_rows($result))
@@ -263,7 +263,7 @@ function strip_search_index($post_ids)
 			'HAVING'	=> 'COUNT(word_id)=1'
 		);
 
-		($hook = get_hook('si_fn_strip_search_index_qr_get_removable_words')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('si_fn_strip_search_index_qr_get_removable_words')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		if ($forum_db->num_rows($result))
@@ -277,7 +277,7 @@ function strip_search_index($post_ids)
 				'WHERE'		=> 'id IN('.$word_ids.')'
 			);
 
-			($hook = get_hook('si_fn_strip_search_index_qr_delete_words')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('si_fn_strip_search_index_qr_delete_words')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 	}
@@ -286,10 +286,10 @@ function strip_search_index($post_ids)
 		'DELETE'	=> 'search_matches',
 		'WHERE'		=> 'post_id IN('.$post_ids.')'
 	);
-	($hook = get_hook('si_fn_strip_search_index_qr_delete_matches')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('si_fn_strip_search_index_qr_delete_matches')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	($hook = get_hook('si_fn_strip_search_index_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('si_fn_strip_search_index_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
 define('FORUM_SEARCH_IDX_FUNCTIONS_LOADED', 1);

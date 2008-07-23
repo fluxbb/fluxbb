@@ -32,7 +32,7 @@ if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
 require FORUM_ROOT.'include/common.php';
 
-($hook = get_hook('mi_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('mi_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // Load the misc.php language file
 require FORUM_ROOT.'lang/'.$forum_user['language'].'/misc.php';
@@ -53,7 +53,7 @@ if ($action == 'rules')
 		$lang_common['Rules']
 	);
 
-	($hook = get_hook('mi_rules_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_rules_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'rules');
 	require FORUM_ROOT.'header.php';
@@ -61,7 +61,7 @@ if ($action == 'rules')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('mi_rules_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_rules_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -91,7 +91,7 @@ else if ($action == 'markread')
 	if (!isset($_POST['csrf_token']) && (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== generate_form_token('markread'.$forum_user['id'])))
 		csrf_confirm_form();
 
-	($hook = get_hook('mi_markread_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_markread_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$query = array(
 		'UPDATE'	=> 'users',
@@ -99,7 +99,7 @@ else if ($action == 'markread')
 		'WHERE'		=> 'id='.$forum_user['id']
 	);
 
-	($hook = get_hook('mi_qr_update_last_visit')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_qr_update_last_visit')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Reset tracked topics
@@ -120,7 +120,7 @@ else if ($action == 'markforumread')
 	if (!isset($_POST['csrf_token']) && (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== generate_form_token('markforumread'.intval($_GET['fid']).$forum_user['id'])))
 		csrf_confirm_form();
 
-	($hook = get_hook('mi_markforumread_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_markforumread_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$fid = intval($_GET['fid']);
 	if ($fid < 1)
@@ -139,7 +139,7 @@ else if ($action == 'markforumread')
 		'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fid
 	);
 
-	($hook = get_hook('mi_qr_markforumread_get_forum_info')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_qr_markforumread_get_forum_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if (!$forum_db->num_rows($result))
 		message($lang_common['Bad request']);
@@ -160,7 +160,7 @@ else if (isset($_GET['email']))
 	if ($forum_user['is_guest'] || $forum_user['g_send_email'] == '0')
 		message($lang_common['No permission']);
 
-	($hook = get_hook('mi_email_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_email_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// User pressed the cancel button
 	if (isset($_POST['cancel']))
@@ -176,7 +176,7 @@ else if (isset($_GET['email']))
 		'WHERE'		=> 'u.id='.$recipient_id
 	);
 
-	($hook = get_hook('mi_qr_get_form_email_data')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_qr_get_form_email_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if (!$forum_db->num_rows($result))
 		message($lang_common['Bad request']);
@@ -189,7 +189,7 @@ else if (isset($_GET['email']))
 
 	if (isset($_POST['form_sent']))
 	{
-		($hook = get_hook('mi_email_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mi_email_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		// Clean up message and subject from POST
 		$subject = forum_trim($_POST['req_subject']);
@@ -233,7 +233,7 @@ else if (isset($_GET['email']))
 				'WHERE'		=> 'id='.$forum_user['id'],
 			);
 
-			($hook = get_hook('mi_qr_update_last_email_sent')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('mi_qr_update_last_email_sent')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			redirect(forum_htmlencode($_POST['redirect_url']), $lang_misc['E-mail sent redirect']);
@@ -259,7 +259,7 @@ else if (isset($_GET['email']))
 		sprintf($lang_misc['Send forum e-mail'], forum_htmlencode($recipient))
 	);
 
-	($hook = get_hook('mi_email_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_email_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'formemail');
 	define('FORUM_PAGE_TYPE', 'basic');
@@ -268,7 +268,7 @@ else if (isset($_GET['email']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('mi_email_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_email_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -284,7 +284,7 @@ else if (isset($_GET['email']))
 		while (list(, $cur_error) = each($errors))
 			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
-		($hook = get_hook('mi_pre_email_errors')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mi_pre_email_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ct-box error-box">
@@ -305,7 +305,7 @@ else if (isset($_GET['email']))
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-<?php ($hook = get_hook('mi_email_pre_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('mi_email_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_misc['Write e-mail'] ?></strong></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
@@ -314,7 +314,7 @@ else if (isset($_GET['email']))
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_subject" value="<?php echo(isset($_POST['req_subject']) ? forum_htmlencode($_POST['req_subject']) : '') ?>" size="75" maxlength="70" /></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('mi_email_pre_message_contents')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('mi_email_pre_message_contents')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box textarea required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_misc['E-mail message'] ?></span></label><br />
@@ -322,7 +322,7 @@ else if (isset($_GET['email']))
 					</div>
 				</div>
 			</fieldset>
-<?php ($hook = get_hook('mi_email_post_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('mi_email_post_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" /></span>
 				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
@@ -346,7 +346,7 @@ else if (isset($_GET['report']))
 	if ($forum_user['is_guest'])
 		message($lang_common['No permission']);
 
-	($hook = get_hook('mi_report_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_report_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$post_id = intval($_GET['report']);
 	if ($post_id < 1)
@@ -359,7 +359,7 @@ else if (isset($_GET['report']))
 
 	if (isset($_POST['form_sent']))
 	{
-		($hook = get_hook('mi_report_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mi_report_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		// Flood protection
 		if ($forum_user['last_email_sent'] != '' && (time() - $forum_user['last_email_sent']) < $forum_user['g_email_flood'] && (time() - $forum_user['last_email_sent']) >= 0)
@@ -383,14 +383,14 @@ else if (isset($_GET['report']))
 			'WHERE'		=> 'p.id='.$post_id
 		);
 
-		($hook = get_hook('mi_qr_get_report_topic_data')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mi_qr_get_report_topic_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if (!$forum_db->num_rows($result))
 			message($lang_common['Bad request']);
 
 		list($topic_id, $subject, $forum_id) = $forum_db->fetch_row($result);
 
-		($hook = get_hook('mi_report_pre_reports_sent')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mi_report_pre_reports_sent')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		// Should we use the internal report handling?
 		if ($forum_config['o_report_method'] == 0 || $forum_config['o_report_method'] == 2)
@@ -401,7 +401,7 @@ else if (isset($_GET['report']))
 				'VALUES'	=> $post_id.', '.$topic_id.', '.$forum_id.', '.$forum_user['id'].', '.time().', \''.$forum_db->escape($reason).'\''
 			);
 
-			($hook = get_hook('mi_add_report')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('mi_add_report')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 
@@ -428,7 +428,7 @@ else if (isset($_GET['report']))
 			'WHERE'		=> 'id='.$forum_user['id']
 		);
 
-		($hook = get_hook('mi_qr_update_reports_last_email_sent')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mi_qr_update_reports_last_email_sent')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		redirect(forum_link($forum_url['post'], $post_id), $lang_misc['Report redirect']);
@@ -452,7 +452,7 @@ else if (isset($_GET['report']))
 	// Setup main heading
 	$forum_page['main_head'] = end($forum_page['crumbs']);
 
-	($hook = get_hook('mi_report_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_report_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'report');
 	define('FORUM_PAGE_TYPE', 'report');
@@ -461,7 +461,7 @@ else if (isset($_GET['report']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('mi_report_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_report_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -472,7 +472,7 @@ else if (isset($_GET['report']))
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-<?php ($hook = get_hook('mi_report_pre_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('mi_report_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
@@ -482,7 +482,7 @@ else if (isset($_GET['report']))
 					</div>
 				</div>
 			</fieldset>
-<?php ($hook = get_hook('mi_report_post_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('mi_report_post_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" /></span>
 				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
@@ -511,7 +511,7 @@ else if (isset($_GET['subscribe']))
 	if (!isset($_POST['csrf_token']) && (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== generate_form_token('subscribe'.intval($_GET['subscribe']).$forum_user['id'])))
 		csrf_confirm_form();
 
-	($hook = get_hook('mi_subscribe_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_subscribe_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$topic_id = intval($_GET['subscribe']);
 	if ($topic_id < 1)
@@ -529,7 +529,7 @@ else if (isset($_GET['subscribe']))
 		),
 		'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$topic_id.' AND t.moved_to IS NULL'
 	);
-	($hook = get_hook('mi_qr_subscribe_topic_exists')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_qr_subscribe_topic_exists')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if (!$forum_db->num_rows($result))
 		message($lang_common['Bad request']);
@@ -542,7 +542,7 @@ else if (isset($_GET['subscribe']))
 		'WHERE'		=> 'user_id='.$forum_user['id'].' AND topic_id='.$topic_id
 	);
 
-	($hook = get_hook('mi_qr_check_subscribed')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_qr_check_subscribed')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if ($forum_db->num_rows($result))
 		message($lang_misc['Already subscribed']);
@@ -553,7 +553,7 @@ else if (isset($_GET['subscribe']))
 		'VALUES'	=> $forum_user['id'].' ,'.$topic_id
 	);
 
-	($hook = get_hook('mi_add_subscription')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_add_subscription')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	redirect(forum_link($forum_url['topic'], array($topic_id, sef_friendly($subject))), $lang_misc['Subscribe redirect']);
@@ -571,7 +571,7 @@ else if (isset($_GET['unsubscribe']))
 	if (!isset($_POST['csrf_token']) && (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== generate_form_token('unsubscribe'.intval($_GET['unsubscribe']).$forum_user['id'])))
 		csrf_confirm_form();
 
-	($hook = get_hook('mi_unsubscribe_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_unsubscribe_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$topic_id = intval($_GET['unsubscribe']);
 	if ($topic_id < 1)
@@ -589,7 +589,7 @@ else if (isset($_GET['unsubscribe']))
 		'WHERE'		=> 't.id='.$topic_id
 	);
 
-	($hook = get_hook('mi_qr_check_subscribed2')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_qr_check_subscribed2')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if (!$forum_db->num_rows($result))
 		message($lang_misc['Not subscribed']);
@@ -601,13 +601,13 @@ else if (isset($_GET['unsubscribe']))
 		'WHERE'		=> 'user_id='.$forum_user['id'].' AND topic_id='.$topic_id
 	);
 
-	($hook = get_hook('mi_qr_delete_subscription')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mi_qr_delete_subscription')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	redirect(forum_link($forum_url['topic'], array($topic_id, sef_friendly($subject))), $lang_misc['Unsubscribe redirect']);
 }
 
 
-($hook = get_hook('mi_new_action')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('mi_new_action')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 message($lang_common['Bad request']);

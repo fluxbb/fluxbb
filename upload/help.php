@@ -29,7 +29,7 @@ if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
 require FORUM_ROOT.'include/common.php';
 
-($hook = get_hook('he_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('he_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 $section = isset($_GET['section']) ? $_GET['section'] : null;
 
@@ -47,7 +47,7 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
-($hook = get_hook('he_main_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('he_main_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 
 ?>
@@ -97,7 +97,7 @@ if (!$section || $section == 'bbcode')
 						<code>[b][u]<?php echo $lang_help['Bold, underlined text'] ?>[/u][/b]</code> <span><?php echo $lang_help['produces'] ?></span>
 						<samp><em class="bbuline"><b><?php echo $lang_help['Bold, underlined text'] ?></b></em></samp>
 					</li>
-<?php ($hook = get_hook('he_new_bbcode_text_style')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('he_new_bbcode_text_style')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				</ul>
 			</div>
 			<div class="sf-set">
@@ -119,7 +119,7 @@ if (!$section || $section == 'bbcode')
 						<code>[email=name@example.com]<?php echo $lang_help['My e-mail address'] ?>[/email]</code><span><?php echo $lang_help['produces'] ?></span>
 						<samp><a href="mailto:name@example.com"><?php echo $lang_help['My e-mail address'] ?></a></samp>
 					</li>
-<?php ($hook = get_hook('he_new_bbcode_link')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('he_new_bbcode_link')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				</ul>
 			</div>
 			<div class="sf-set">
@@ -172,7 +172,7 @@ if (!$section || $section == 'bbcode')
 					</li>
 				</ul>
 			</div>
-<?php ($hook = get_hook('he_new_bbcode_section')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('he_new_bbcode_section')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 		</div>
 	</div>
 <?php
@@ -238,14 +238,14 @@ else if ($section == 'smilies')
 
 }
 
-($hook = get_hook('he_new_section')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('he_new_section')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 
 </div>
 <?php
 
-($hook = get_hook('he_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('he_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

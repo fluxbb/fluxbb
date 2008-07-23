@@ -32,7 +32,7 @@ if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
 require FORUM_ROOT.'include/common.php';
 
-($hook = get_hook('li_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('li_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // Load the login.php language file
 require FORUM_ROOT.'lang/'.$forum_user['language'].'/login.php';
@@ -48,7 +48,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	$form_password = forum_trim($_POST['req_password']);
 	$save_pass = isset($_POST['save_pass']);
 
-	($hook = get_hook('li_login_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('li_login_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// Get user info matching login attempt
 	$query = array(
@@ -61,7 +61,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	else
 		$query['WHERE'] = 'LOWER(username)=LOWER(\''.$forum_db->escape($form_username).'\')';
 
-	($hook = get_hook('li_qr_get_login_data')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('li_qr_get_login_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	list($user_id, $group_id, $db_password_hash, $salt) = $forum_db->fetch_row($result);
 
@@ -88,12 +88,12 @@ if (isset($_POST['form_sent']) && $action == 'in')
 				'WHERE'		=> 'id='.$user_id
 			);
 
-			($hook = get_hook('li_qr_update_user_hash')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('li_qr_update_user_hash')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 	}
 
-	($hook = get_hook('li_login_pre_auth_message')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('li_login_pre_auth_message')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	if (!$authorized)
 		$errors[] = sprintf($lang_login['Wrong user/pass']);
@@ -110,7 +110,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 				'WHERE'		=> 'id='.$user_id
 			);
 
-			($hook = get_hook('li_qr_update_user_group')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('li_qr_update_user_group')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 
@@ -120,7 +120,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 			'WHERE'		=> 'ident=\''.$forum_db->escape(get_remote_address()).'\''
 		);
 
-		($hook = get_hook('li_qr_delete_online_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('li_qr_delete_online_user')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$expire = ($save_pass) ? time() + 1209600 : time() + $forum_config['o_timeout_visit'];
@@ -145,7 +145,7 @@ else if ($action == 'out')
 	if (!isset($_POST['csrf_token']) && (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== generate_form_token('logout'.$forum_user['id'])))
 		csrf_confirm_form();
 
-	($hook = get_hook('li_logout_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('li_logout_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// Remove user from "users online" list.
 	$query = array(
@@ -153,7 +153,7 @@ else if ($action == 'out')
 		'WHERE'		=> 'user_id='.$forum_user['id']
 	);
 
-	($hook = get_hook('li_qr_delete_online_user2')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('li_qr_delete_online_user2')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Update last_visit (make sure there's something to update it with)
@@ -165,7 +165,7 @@ else if ($action == 'out')
 			'WHERE'		=> 'id='.$forum_user['id']
 		);
 
-		($hook = get_hook('li_qr_update_last_visit')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('li_qr_update_last_visit')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
 
@@ -175,7 +175,7 @@ else if ($action == 'out')
 	// Reset tracked topics
 	set_tracked_topics(null);
 
-	($hook = get_hook('li_logout_pre_redirect')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('li_logout_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	redirect(forum_link($forum_url['index']), $lang_login['Logout redirect']);
 }
@@ -187,7 +187,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 	if (!$forum_user['is_guest'])
 		header('Location: '.forum_link($forum_url['index']));
 
-	($hook = get_hook('li_forgot_pass_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('li_forgot_pass_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	if (isset($_POST['form_sent']))
 	{
@@ -209,11 +209,11 @@ else if ($action == 'forget' || $action == 'forget_2')
 				'WHERE'		=> 'u.email=\''.$forum_db->escape($email).'\''
 			);
 
-			($hook = get_hook('li_qr_get_user_data')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('li_qr_get_user_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 			if ($forum_db->num_rows($result))
 			{
-				($hook = get_hook('li_forgot_pass_pre_email')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('li_forgot_pass_pre_email')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 				// Load the "activate password" template
 				$mail_tpl = forum_trim(file_get_contents(FORUM_ROOT.'lang/'.$forum_user['language'].'/mail_templates/activate_password.tpl'));
@@ -232,7 +232,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 				{
 					$forgot_pass_timeout = 3600;
 
-					($hook = get_hook('li_forgot_pass_pre_flood_check')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+					($hook = get_hook('li_forgot_pass_pre_flood_check')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 					if ($cur_hit['last_email_sent'] != '' && (time() - $cur_hit['last_email_sent']) < $forgot_pass_timeout && (time() - $cur_hit['last_email_sent']) >= 0)
 						message(sprintf($lang_login['Email flood'], $forgot_pass_timeout));
@@ -246,7 +246,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 						'WHERE'		=> 'id='.$cur_hit['id']
 					);
 
-					($hook = get_hook('li_qr_set_activate_key')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+					($hook = get_hook('li_qr_set_activate_key')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 					$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 					// Do the user specific replacements to the template
@@ -273,7 +273,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 		$lang_login['New password request']
 	);
 
-	($hook = get_hook('li_forgot_pass_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('li_forgot_pass_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define ('FORUM_PAGE', 'reqpass');
 	define ('FORUM_PAGE_TYPE', 'basic');
@@ -282,7 +282,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('li_forgot_pass_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('li_forgot_pass_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -298,7 +298,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 		while (list(, $cur_error) = each($errors))
 			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
-		($hook = get_hook('li_pre_new_password_errors')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('li_pre_new_password_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ct-box error-box">
@@ -320,7 +320,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 				<input type="hidden" name="form_sent" value="1" />
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
 			</div>
-<?php ($hook = get_hook('li_forgot_pass_pre_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('li_forgot_pass_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_login['New pass legend'] ?></strong></legend>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
@@ -330,7 +330,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 					</div>
 				</div>
 			</fieldset>
-<?php ($hook = get_hook('li_forgot_pass_post_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('li_forgot_pass_post_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="request_pass" value="<?php echo $lang_login['Submit password request'] ?>" /></span>
 				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
@@ -366,7 +366,7 @@ $forum_page['crumbs'] = array(
 	sprintf($lang_login['Login info'], $forum_config['o_board_title'])
 );
 
-($hook = get_hook('li_login_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('li_login_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE', 'login');
 define('FORUM_PAGE_TYPE', 'basic');
@@ -375,7 +375,7 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
-($hook = get_hook('li_login_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('li_login_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -391,7 +391,7 @@ ob_start();
 		while (list(, $cur_error) = each($errors))
 			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
-		($hook = get_hook('li_pre_login_errors')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('li_pre_login_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ct-box error-box">
@@ -412,7 +412,7 @@ ob_start();
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-<?php ($hook = get_hook('li_login_pre_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('li_login_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_login['Login legend'] ?></strong></legend>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
@@ -438,7 +438,7 @@ ob_start();
 					</div>
 				</div>
 			</fieldset>
-<?php ($hook = get_hook('li_login_post_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('li_login_post_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons frm-options">
 				<span class="submit"><input type="submit" name="login" value="<?php echo $lang_login['Login'] ?>" /></span>
 			</div>
@@ -446,7 +446,7 @@ ob_start();
 	</div>
 <?php
 
-($hook = get_hook('li_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('li_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

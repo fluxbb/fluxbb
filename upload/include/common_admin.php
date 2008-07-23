@@ -36,7 +36,7 @@ function generate_admin_menu($submenu)
 {
 	global $forum_config, $forum_url, $forum_user, $lang_admin_common, $db_type;
 
-	$return = ($hook = get_hook('ca_fn_generate_admin_menu_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ca_fn_generate_admin_menu_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -95,7 +95,7 @@ function generate_admin_menu($submenu)
 			}
 		}
 
-		($hook = get_hook('ca_fn_generate_admin_menu_new_sublink')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('ca_fn_generate_admin_menu_new_sublink')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		return (!empty($forum_page['admin_submenu'])) ? implode("\n\t\t", $forum_page['admin_submenu']) : '';
 	}
@@ -112,7 +112,7 @@ function generate_admin_menu($submenu)
 			$forum_page['admin_menu']['extensions_manage'] = '<li class="'.((FORUM_PAGE_SECTION == 'extensions') ? 'active' : 'normal').((empty($forum_page['admin_menu'])) ? ' item1' : '').'"><a href="'.forum_link($forum_url['admin_extensions_manage']).'"><span>'.$lang_admin_common['Extensions'].'</span></a></li>';
 		}
 
-		($hook = get_hook('ca_fn_generate_admin_menu_new_link')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('ca_fn_generate_admin_menu_new_link')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		return implode("\n\t\t", $forum_page['admin_menu']);
 	}
@@ -126,7 +126,7 @@ function prune($forum_id, $prune_sticky, $prune_date)
 {
 	global $forum_db, $db_type;
 
-	$return = ($hook = get_hook('ca_fn_prune_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('ca_fn_prune_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -142,7 +142,7 @@ function prune($forum_id, $prune_sticky, $prune_date)
 	if (!$prune_sticky)
 		$query['WHERE'] .= ' AND sticky=\'0\'';
 
-	($hook = get_hook('ca_fn_prune_qr_get_topics_to_prune')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('ca_fn_prune_qr_get_topics_to_prune')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$topic_ids = '';
@@ -158,7 +158,7 @@ function prune($forum_id, $prune_sticky, $prune_date)
 			'WHERE'		=> 'p.topic_id IN('.$topic_ids.')'
 		);
 
-		($hook = get_hook('ca_fn_prune_qr_get_posts_to_prune')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('ca_fn_prune_qr_get_posts_to_prune')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$post_ids = '';
@@ -171,7 +171,7 @@ function prune($forum_id, $prune_sticky, $prune_date)
 			'WHERE'		=> 'id IN('.$topic_ids.')'
 		);
 
-		($hook = get_hook('ca_fn_prune_qr_prune_topics')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('ca_fn_prune_qr_prune_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Delete posts
@@ -180,7 +180,7 @@ function prune($forum_id, $prune_sticky, $prune_date)
 			'WHERE'		=> 'topic_id IN('.$topic_ids.')'
 		);
 
-		($hook = get_hook('ca_fn_prune_qr_prune_posts')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('ca_fn_prune_qr_prune_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Delete subscriptions
@@ -189,7 +189,7 @@ function prune($forum_id, $prune_sticky, $prune_date)
 			'WHERE'		=> 'topic_id IN('.$topic_ids.')'
 		);
 
-		($hook = get_hook('ca_fn_prune_qr_prune_subscriptions')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('ca_fn_prune_qr_prune_subscriptions')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// We removed a bunch of posts, so now we have to update the search index
@@ -200,4 +200,4 @@ function prune($forum_id, $prune_sticky, $prune_date)
 	}
 }
 
-($hook = get_hook('ca_new_function')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('ca_new_function')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;

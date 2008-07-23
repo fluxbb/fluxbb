@@ -32,7 +32,7 @@ require FORUM_ROOT.'include/essentials.php';
 require FORUM_ROOT.'include/rewrite_rules.php';
 
 // Allow extensions to create their own rewrite rules/modify existing rules
-($hook = get_hook('re_rewrite_rules')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('re_rewrite_rules')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // We determine the path to the script, since we need to separate the path from the data to be rewritten
 $path_to_script = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
@@ -95,7 +95,7 @@ if (empty($rewritten_url))
 	header('HTTP/1.x 404 Not Found');
 
 	// Allow an extension to override the "Bad request" message with a custom 404 page
-	($hook = get_hook('re_page_not_found')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('re_page_not_found')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	exit('Bad request');
 }

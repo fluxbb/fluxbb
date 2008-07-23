@@ -32,7 +32,7 @@ function get_hook($hook_id)
 {
 	global $forum_hooks;
 
-	if (!defined('FORUM_USE_EVAL'))
+	if (defined('FORUM_USE_INCLUDE'))
 		return !defined('FORUM_DISABLE_HOOKS') && file_exists(FORUM_ROOT.'/cache/cache_hook_'.$hook_id.'.php') ? FORUM_ROOT.'/cache/cache_hook_'.$hook_id.'.php' : false;
 	else
 		return !defined('FORUM_DISABLE_HOOKS') && isset($forum_hooks[$hook_id]) ? implode("\n", $forum_hooks[$hook_id]) : false;
@@ -48,7 +48,7 @@ function authenticate_user($user, $password, $password_is_hash = false)
 {
 	global $forum_db, $forum_user;
 
-	$return = ($hook = get_hook('fn_authenticate_user_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_authenticate_user_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -71,7 +71,7 @@ function authenticate_user($user, $password, $password_is_hash = false)
 	// Are we looking for a user ID or a username?
 	$query['WHERE'] = is_int($user) ? 'u.id='.intval($user) : 'u.username=\''.$forum_db->escape($user).'\'';
 
-	($hook = get_hook('fn_authenticate_user_qr_get_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_authenticate_user_qr_get_user')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$forum_user = $forum_db->fetch_assoc($result);
 
@@ -80,7 +80,7 @@ function authenticate_user($user, $password, $password_is_hash = false)
 		(!$password_is_hash && forum_hash($password, $forum_user['salt']) != $forum_user['password']))
 		set_default_user();
 
-	($hook = get_hook('fn_authenticate_user_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_authenticate_user_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
 
@@ -91,7 +91,7 @@ function cookie_login(&$forum_user)
 {
 	global $forum_db, $db_type, $forum_config, $cookie_name, $cookie_path, $cookie_domain, $cookie_secure, $forum_time_formats, $forum_date_formats;
 
-	$return = ($hook = get_hook('fn_cookie_login_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_cookie_login_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -105,7 +105,7 @@ function cookie_login(&$forum_user)
 	if (isset($_COOKIE[$cookie_name]))
 		@list($cookie['user_id'], $cookie['password_hash'], $cookie['expiration_time'], $cookie['expire_hash']) = @explode('|', base64_decode($_COOKIE[$cookie_name]));
 
-	($hook = get_hook('fn_cookie_login_fetch_cookie')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_cookie_login_fetch_cookie')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// If this a cookie for a logged in user and it shouldn't have already expired
 	if (intval($cookie['user_id']) > 1 && intval($cookie['expiration_time']) > $now)
@@ -170,7 +170,7 @@ function cookie_login(&$forum_user)
 					$query['VALUES'] .= ', \''.$forum_db->escape($forum_user['prev_url']).'\'';
 				}
 
-				($hook = get_hook('fn_cookie_login_qr_add_online_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('fn_cookie_login_qr_add_online_user')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 				// Reset tracked topics
@@ -187,7 +187,7 @@ function cookie_login(&$forum_user)
 						'WHERE'		=> 'id='.$forum_user['id']
 					);
 
-					($hook = get_hook('fn_cookie_login_qr_update_user_visit')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+					($hook = get_hook('fn_cookie_login_qr_update_user_visit')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 					$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 					$forum_user['last_visit'] = $forum_user['logged'];
@@ -207,7 +207,7 @@ function cookie_login(&$forum_user)
 				if ($forum_user['idle'] == '1')
 					$query['SET'] .= ', idle=0';
 
-				($hook = get_hook('fn_cookie_login_qr_update_online_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('fn_cookie_login_qr_update_online_user')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 				// Update tracked topics with the current expire time
@@ -222,7 +222,7 @@ function cookie_login(&$forum_user)
 	else
 		set_default_user();
 
-	($hook = get_hook('fn_cookie_login_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_cookie_login_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
 
@@ -233,7 +233,7 @@ function set_default_user()
 {
 	global $forum_db, $db_type, $forum_user, $forum_config;
 
-	$return = ($hook = get_hook('fn_set_default_user_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_set_default_user_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -256,7 +256,7 @@ function set_default_user()
 		'WHERE'		=> 'u.id=1'
 	);
 
-	($hook = get_hook('fn_set_default_user_qr_get_default_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_set_default_user_qr_get_default_user')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if (!$forum_db->num_rows($result))
 		exit('Unable to fetch guest information. The table \''.$forum_db->prefix.'users\' must contain an entry with id = 1 that represents anonymous users.');
@@ -284,7 +284,7 @@ function set_default_user()
 			$query['VALUES'] .= ', \''.$forum_db->escape($forum_user['prev_url']).'\'';
 		}
 
-		($hook = get_hook('fn_set_default_user_qr_add_online_guest_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('fn_set_default_user_qr_add_online_guest_user')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
 	else
@@ -299,7 +299,7 @@ function set_default_user()
 		if ($current_url != null)
 			$query['SET'] .= ', prev_url=\''.$forum_db->escape($current_url).'\'';
 
-		($hook = get_hook('fn_set_default_user_qr_update_online_guest_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('fn_set_default_user_qr_update_online_guest_user')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
 
@@ -320,7 +320,7 @@ function forum_setcookie($name, $value, $expire)
 {
 	global $cookie_path, $cookie_domain, $cookie_secure;
 
-	$return = ($hook = get_hook('fn_forum_setcookie_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_forum_setcookie_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -341,7 +341,7 @@ function check_bans()
 {
 	global $forum_db, $forum_config, $lang_common, $forum_user, $forum_bans;
 
-	$return = ($hook = get_hook('fn_check_bans_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_check_bans_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -367,7 +367,7 @@ function check_bans()
 				'WHERE'		=> 'id='.$cur_ban['id']
 			);
 
-			($hook = get_hook('fn_check_bans_qr_delete_expired_ban')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('fn_check_bans_qr_delete_expired_ban')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			$bans_altered = true;
@@ -405,7 +405,7 @@ function check_bans()
 				'WHERE'		=> 'ident=\''.$forum_db->escape($forum_user['username']).'\''
 			);
 
-			($hook = get_hook('fn_check_bans_qr_delete_online_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('fn_check_bans_qr_delete_online_user')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			message($lang_common['Ban message'].(($cur_ban['expire'] != '') ? ' '.sprintf($lang_common['Ban message 2'], format_time($cur_ban['expire'], 1, null, null, true)) : '').(($cur_ban['message'] != '') ? ' '.$lang_common['Ban message 3'].'</p><p><strong>'.forum_htmlencode($cur_ban['message']).'</strong></p>' : '</p>').'<p>'.sprintf($lang_common['Ban message 4'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>'));
@@ -432,7 +432,7 @@ function update_users_online()
 
 	$now = time();
 
-	$return = ($hook = get_hook('fn_update_users_online_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_update_users_online_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -443,7 +443,7 @@ function update_users_online()
 		'WHERE'		=> 'o.logged<'.($now-$forum_config['o_timeout_online'])
 	);
 
-	($hook = get_hook('fn_update_users_online_qr_get_old_online_users')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_update_users_online_qr_get_old_online_users')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	while ($cur_user = $forum_db->fetch_assoc($result))
 	{
@@ -455,7 +455,7 @@ function update_users_online()
 				'WHERE'		=> 'ident=\''.$forum_db->escape($cur_user['ident']).'\''
 			);
 
-			($hook = get_hook('fn_update_users_online_qr_delete_online_guest_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('fn_update_users_online_qr_delete_online_guest_user')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 		else
@@ -469,7 +469,7 @@ function update_users_online()
 					'WHERE'		=> 'id='.$cur_user['user_id']
 				);
 
-				($hook = get_hook('fn_update_users_online_qr_update_user_visit')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('fn_update_users_online_qr_update_user_visit')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 				$query = array(
@@ -477,7 +477,7 @@ function update_users_online()
 					'WHERE'		=> 'user_id='.$cur_user['user_id']
 				);
 
-				($hook = get_hook('fn_update_users_online_qr_delete_online_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('fn_update_users_online_qr_delete_online_user')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$forum_db->query_build($query) or error(__FILE__, __LINE__);
 			}
 			else if ($cur_user['idle'] == '0')
@@ -488,13 +488,13 @@ function update_users_online()
 					'WHERE'		=> 'user_id='.$cur_user['user_id']
 				);
 
-				($hook = get_hook('fn_update_users_online_qr_update_user_idle')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('fn_update_users_online_qr_update_user_idle')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$forum_db->query_build($query) or error(__FILE__, __LINE__);
 			}
 		}
 	}
 
-	($hook = get_hook('fn_update_users_online_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_update_users_online_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
 
@@ -505,7 +505,7 @@ function generate_navlinks()
 {
 	global $forum_config, $lang_common, $forum_url, $forum_user;
 
-	$return = ($hook = get_hook('fn_generate_navlinks_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_generate_navlinks_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -557,7 +557,7 @@ function generate_navlinks()
 		}
 	}
 
-	($hook = get_hook('fn_generate_navlinks_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_generate_navlinks_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	return implode("\n\t\t", $links);
 }
@@ -573,7 +573,7 @@ function generate_avatar_markup($user_id)
 	$filetypes = array('jpg', 'gif', 'png');
 	$avatar_markup = '';
 
-	$return = ($hook = get_hook('fn_generate_avatar_markup_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_generate_avatar_markup_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -588,7 +588,7 @@ function generate_avatar_markup($user_id)
 		}
 	}
 
-	($hook = get_hook('fn_generate_avatar_markup_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_generate_avatar_markup_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	return $avatar_markup;
 }
@@ -601,7 +601,7 @@ function generate_crumbs($reverse)
 {
 	global $lang_common, $forum_url, $forum_config, $forum_page;
 
-	$return = ($hook = get_hook('fn_generate_crumbs_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_generate_crumbs_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -627,7 +627,7 @@ function generate_crumbs($reverse)
 		}
 	}
 
-	($hook = get_hook('fn_generate_crumbs_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_generate_crumbs_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	return $crumbs;
 }
@@ -640,7 +640,7 @@ function set_tracked_topics($tracked_topics)
 {
 	global $cookie_name, $cookie_path, $cookie_domain, $cookie_secure, $forum_config;
 
-	$return = ($hook = get_hook('fn_set_tracked_topics_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_set_tracked_topics_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -677,7 +677,7 @@ function get_tracked_topics()
 {
 	global $cookie_name;
 
-	$return = ($hook = get_hook('fn_get_tracked_topics_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_get_tracked_topics_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -700,7 +700,7 @@ function get_tracked_topics()
 			$tracked_topics[$type][$id] = $timestamp;
 	}
 
-	($hook = get_hook('fn_get_tracked_topics_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_get_tracked_topics_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	return $tracked_topics;
 }
@@ -713,7 +713,7 @@ function sync_forum($forum_id)
 {
 	global $forum_db;
 
-	$return = ($hook = get_hook('fn_sync_forum_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_sync_forum_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -724,7 +724,7 @@ function sync_forum($forum_id)
 		'WHERE'		=> 't.forum_id='.$forum_id
 	);
 
-	($hook = get_hook('fn_sync_forum_qr_get_forum_stats')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_sync_forum_qr_get_forum_stats')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	list($num_topics, $num_posts) = $forum_db->fetch_row($result);
 
@@ -739,7 +739,7 @@ function sync_forum($forum_id)
 		'LIMIT'		=> '1'
 	);
 
-	($hook = get_hook('fn_sync_forum_qr_get_forum_last_post_data')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_sync_forum_qr_get_forum_last_post_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if ($forum_db->num_rows($result))
 	{
@@ -756,10 +756,10 @@ function sync_forum($forum_id)
 		'WHERE'		=> 'id='.$forum_id
 	);
 
-	($hook = get_hook('fn_sync_forum_qr_update_forum')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_sync_forum_qr_update_forum')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	($hook = get_hook('fn_sync_forum_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_sync_forum_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
 
@@ -770,7 +770,7 @@ function sync_topic($topic_id)
 {
 	global $forum_db;
 
-	$return = ($hook = get_hook('fn_sync_topic_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_sync_topic_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -781,7 +781,7 @@ function sync_topic($topic_id)
 		'WHERE'		=> 'p.topic_id='.$topic_id
 	);
 
-	($hook = get_hook('fn_sync_topic_qr_get_topic_reply_count')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_sync_topic_qr_get_topic_reply_count')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$num_replies = $forum_db->result($result, 0) - 1;
 
@@ -794,7 +794,7 @@ function sync_topic($topic_id)
 		'LIMIT'		=> '1'
 	);
 
-	($hook = get_hook('fn_sync_topic_qr_get_topic_last_post_data')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_sync_topic_qr_get_topic_last_post_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	list($last_post, $last_post_id, $last_poster) = $forum_db->fetch_row($result);
 
@@ -805,10 +805,10 @@ function sync_topic($topic_id)
 		'WHERE'		=> 'id='.$topic_id
 	);
 
-	($hook = get_hook('fn_sync_topic_qr_update_topic')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_sync_topic_qr_update_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	($hook = get_hook('fn_sync_topic_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_sync_topic_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
 
@@ -821,7 +821,7 @@ function validate_username($username, $exclude_id = null)
 
 	$errors = array();
 
-	$return = ($hook = get_hook('fn_validate_username_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_validate_username_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -851,7 +851,7 @@ function validate_username($username, $exclude_id = null)
 	if ($dupe !== false)
 		$errors[] = sprintf($lang_profile['Username dupe'], forum_htmlencode($dupe));
 
-	($hook = get_hook('fn_validate_username_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_validate_username_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	return $errors;
 }
@@ -864,7 +864,7 @@ function add_user($user_info, &$new_uid)
 {
 	global $forum_db, $base_url, $lang_common, $forum_config, $forum_user, $forum_url;
 
-	$return = ($hook = get_hook('fn_add_user_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_add_user_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -875,7 +875,7 @@ function add_user($user_info, &$new_uid)
 		'VALUES'	=> '\''.$forum_db->escape($user_info['username']).'\', '.$user_info['group_id'].', \''.$forum_db->escape($user_info['password_hash']).'\', \''.$forum_db->escape($user_info['email']).'\', '.$user_info['email_setting'].', '.floatval($user_info['timezone']).', '.$user_info['dst'].', \''.$forum_db->escape($user_info['language']).'\', \''.$forum_db->escape($user_info['style']).'\', '.$user_info['registered'].', \''.$forum_db->escape($user_info['registration_ip']).'\', '.$user_info['registered'].', \''.$forum_db->escape($user_info['salt']).'\', '.$user_info['activate_key'].''
 	);
 
-	($hook = get_hook('fn_add_user_qr_insert_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_add_user_qr_insert_user')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$new_uid = $forum_db->insert_id();
 
@@ -896,7 +896,7 @@ function add_user($user_info, &$new_uid)
 		$mail_message = str_replace('<activation_url>', str_replace('&amp;', '&', forum_link($forum_url['change_password_key'], array($new_uid, substr($user_info['activate_key'], 1, -1)))), $mail_message);
 		$mail_message = str_replace('<board_mailer>', sprintf($lang_common['Forum mailer'], $forum_config['o_board_title']), $mail_message);
 
-		($hook = get_hook('fn_add_user_send_verification')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('fn_add_user_send_verification')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		forum_mail($user_info['email'], $mail_subject, $mail_message);
 	}
@@ -910,7 +910,7 @@ function add_user($user_info, &$new_uid)
 		forum_mail($forum_config['o_mailing_list'], $mail_subject, $mail_message);
 	}
 
-	($hook = get_hook('fn_add_user_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_add_user_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
 
@@ -921,7 +921,7 @@ function delete_user($user_id, $delete_posts = false)
 {
 	global $forum_db, $db_type, $forum_config;
 
-	$return = ($hook = get_hook('fn_delete_user_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_delete_user_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -938,7 +938,7 @@ function delete_user($user_id, $delete_posts = false)
 		'WHERE'		=> 'u.id='.$user_id
 	);
 
-	($hook = get_hook('fn_delete_user_qr_get_user_data')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_delete_user_qr_get_user_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$user = $forum_db->fetch_assoc($result);
 
@@ -948,7 +948,7 @@ function delete_user($user_id, $delete_posts = false)
 		'WHERE'		=> 'user_id='.$user_id
 	);
 
-	($hook = get_hook('fn_delete_user_qr_delete_subscriptions')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_delete_user_qr_delete_subscriptions')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Remove him/her from the online list (if they happen to be logged in)
@@ -957,7 +957,7 @@ function delete_user($user_id, $delete_posts = false)
 		'WHERE'		=> 'user_id='.$user_id
 	);
 
-	($hook = get_hook('fn_delete_user_qr_delete_online')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_delete_user_qr_delete_online')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Should we delete all posts made by this user?
@@ -978,7 +978,7 @@ function delete_user($user_id, $delete_posts = false)
 			'WHERE'		=> 'p.poster_id='.$user_id
 		);
 
-		($hook = get_hook('fn_delete_user_qr_get_user_posts')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('fn_delete_user_qr_get_user_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		while ($cur_post = $forum_db->fetch_assoc($result))
 		{
@@ -997,7 +997,7 @@ function delete_user($user_id, $delete_posts = false)
 			'WHERE'		=> 'poster_id='.$user_id
 		);
 
-		($hook = get_hook('fn_delete_user_qr_reset_user_posts')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('fn_delete_user_qr_reset_user_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
 
@@ -1007,7 +1007,7 @@ function delete_user($user_id, $delete_posts = false)
 		'WHERE'		=> 'id='.$user_id
 	);
 
-	($hook = get_hook('fn_delete_user_qr_delete_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_delete_user_qr_delete_user')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Delete user avatar
@@ -1026,7 +1026,7 @@ function delete_user($user_id, $delete_posts = false)
 		generate_bans_cache();
 	}
 
-	($hook = get_hook('fn_delete_user_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_delete_user_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
 
@@ -1037,7 +1037,7 @@ function clean_forum_moderators()
 {
 	global $forum_db;
 
-	$return = ($hook = get_hook('fn_clean_forum_moderators_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_clean_forum_moderators_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -1048,7 +1048,7 @@ function clean_forum_moderators()
 		'WHERE'		=> 'f.moderators IS NOT NULL'
 	);
 
-	($hook = get_hook('fn_clean_forum_moderators_qr_get_forum_moderators')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_clean_forum_moderators_qr_get_forum_moderators')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	while ($cur_forum = $forum_db->fetch_assoc($result))
@@ -1071,7 +1071,7 @@ function clean_forum_moderators()
 				'WHERE'		=> '(g.g_moderator=1 OR u.group_id=1) AND u.id='.$user_id
 			);
 
-			($hook = get_hook('fn_clean_forum_moderators_qr_check_user_in_moderator_group')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('fn_clean_forum_moderators_qr_check_user_in_moderator_group')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$result2 = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			if (!$forum_db->num_rows($result2))	// If the user isn't in a moderator or admin group, remove him/her from the list
@@ -1089,12 +1089,12 @@ function clean_forum_moderators()
 				'WHERE'		=> 'id='.$cur_forum['id']
 			);
 
-			($hook = get_hook('fn_qr_clean_forum_moderators_set_forum_moderators')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('fn_qr_clean_forum_moderators_set_forum_moderators')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 	}
 
-	($hook = get_hook('fn_clean_forum_moderators_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_clean_forum_moderators_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
 
@@ -1103,7 +1103,7 @@ function clean_forum_moderators()
 //
 function forum_clear_cache()
 {
-	$return = ($hook = get_hook('fn_forum_clear_cache_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_forum_clear_cache_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -1126,7 +1126,7 @@ function delete_avatar($user_id)
 
 	$filetypes = array('jpg', 'gif', 'png');
 
-	$return = ($hook = get_hook('fn_delete_avatar_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_delete_avatar_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -1146,7 +1146,7 @@ function delete_orphans()
 {
 	global $forum_db;
 
-	$return = ($hook = get_hook('fn_delete_orphans_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_delete_orphans_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -1163,7 +1163,7 @@ function delete_orphans()
 		'WHERE'		=> 't2.id IS NULL AND t1.moved_to IS NOT NULL'
 	);
 
-	($hook = get_hook('fn_delete_orphans_qr_get_orphans')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_delete_orphans_qr_get_orphans')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$num_orphans = $forum_db->num_rows($result);
 
@@ -1178,11 +1178,11 @@ function delete_orphans()
 			'WHERE'		=> 'id IN('.implode(',', $orphans).')'
 		);
 
-		($hook = get_hook('fn_delete_orphans_qr_delete_orphan')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('fn_delete_orphans_qr_delete_orphan')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
 
-	($hook = get_hook('fn_delete_orphans_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_delete_orphans_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
 
@@ -1193,7 +1193,7 @@ function delete_topic($topic_id, $forum_id)
 {
 	global $forum_db, $db_type;
 
-	$return = ($hook = get_hook('fn_delete_topic_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_delete_topic_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -1205,7 +1205,7 @@ function delete_topic($topic_id, $forum_id)
 		'WHERE'		=> 't.moved_to='.$topic_id
 	);
 
-	($hook = get_hook('fn_delete_topic_qr_get_forums_to_sync')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_delete_topic_qr_get_forums_to_sync')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	while ($row = $forum_db->fetch_row($result))
 		$forum_ids[] = $row[0];
@@ -1216,7 +1216,7 @@ function delete_topic($topic_id, $forum_id)
 		'WHERE'		=> 'id='.$topic_id.' OR moved_to='.$topic_id
 	);
 
-	($hook = get_hook('fn_delete_topic_qr_delete_topic')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_delete_topic_qr_delete_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Create a list of the post ID's in this topic
@@ -1227,7 +1227,7 @@ function delete_topic($topic_id, $forum_id)
 		'WHERE'		=> 'p.topic_id='.$topic_id
 	);
 
-	($hook = get_hook('fn_delete_topic_qr_get_posts_to_delete')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_delete_topic_qr_get_posts_to_delete')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	while ($row = $forum_db->fetch_row($result))
 		$post_ids .= ($post_ids != '') ? ','.$row[0] : $row[0];
@@ -1241,7 +1241,7 @@ function delete_topic($topic_id, $forum_id)
 			'WHERE'		=> 'topic_id='.$topic_id
 		);
 
-		($hook = get_hook('fn_delete_topic_qr_delete_topic_posts')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('fn_delete_topic_qr_delete_topic_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
@@ -1256,13 +1256,13 @@ function delete_topic($topic_id, $forum_id)
 		'WHERE'		=> 'topic_id='.$topic_id
 	);
 
-	($hook = get_hook('fn_delete_topic_qr_delete_topic_subscriptions')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_delete_topic_qr_delete_topic_subscriptions')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	foreach ($forum_ids as $cur_forum_id)
 		sync_forum($cur_forum_id);
 
-	($hook = get_hook('fn_delete_topic_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_delete_topic_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
 
@@ -1273,7 +1273,7 @@ function delete_post($post_id, $topic_id, $forum_id)
 {
 	global $forum_db, $db_type;
 
-	$return = ($hook = get_hook('fn_delete_post_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_delete_post_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -1283,7 +1283,7 @@ function delete_post($post_id, $topic_id, $forum_id)
 		'WHERE'		=> 'id='.$post_id
 	);
 
-	($hook = get_hook('fn_delete_post_qr_delete_post')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_delete_post_qr_delete_post')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
@@ -1294,7 +1294,7 @@ function delete_post($post_id, $topic_id, $forum_id)
 	sync_topic($topic_id);
 	sync_forum($forum_id);
 
-	($hook = get_hook('fn_delete_post_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_delete_post_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
 
@@ -1305,7 +1305,7 @@ function add_topic($post_info, &$new_tid, &$new_pid)
 {
 	global $forum_db, $db_type, $forum_config, $lang_common;
 
-	$return = ($hook = get_hook('fn_add_topic_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_add_topic_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -1316,7 +1316,7 @@ function add_topic($post_info, &$new_tid, &$new_pid)
 		'VALUES'	=> '\''.$forum_db->escape($post_info['poster']).'\', \''.$forum_db->escape($post_info['subject']).'\', '.$post_info['posted'].', '.$post_info['posted'].', \''.$forum_db->escape($post_info['poster']).'\', '.$post_info['forum_id']
 	);
 
-	($hook = get_hook('fn_add_topic_qr_add_topic')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_add_topic_qr_add_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$new_tid = $forum_db->insert_id();
 
@@ -1329,7 +1329,7 @@ function add_topic($post_info, &$new_tid, &$new_pid)
 			'VALUES'	=> $post_info['poster_id'].' ,'.$new_tid
 		);
 
-		($hook = get_hook('fn_add_topic_qr_add_subscription')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('fn_add_topic_qr_add_subscription')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
 
@@ -1347,7 +1347,7 @@ function add_topic($post_info, &$new_tid, &$new_pid)
 		$query['VALUES'] .= ', \''.$forum_db->escape($post_info['poster_email']).'\'';
 	}
 
-	($hook = get_hook('fn_add_topic_qr_add_topic_post')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_add_topic_qr_add_topic_post')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$new_pid = $forum_db->insert_id();
 
@@ -1358,7 +1358,7 @@ function add_topic($post_info, &$new_tid, &$new_pid)
 		'WHERE'		=> 'id='.$new_tid
 	);
 
-	($hook = get_hook('fn_add_topic_qr_update_topic')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_add_topic_qr_update_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
@@ -1380,7 +1380,7 @@ function add_topic($post_info, &$new_tid, &$new_pid)
 				'WHERE'		=> 'id='.$post_info['poster_id']
 			);
 
-			($hook = get_hook('fn_add_topic_qr_increment_num_posts')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('fn_add_topic_qr_increment_num_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 
@@ -1393,7 +1393,7 @@ function add_topic($post_info, &$new_tid, &$new_pid)
 		}
 	}
 
-	($hook = get_hook('fn_add_topic_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_add_topic_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
 
@@ -1404,7 +1404,7 @@ function add_post($post_info, &$new_pid)
 {
 	global $forum_db, $db_type, $forum_config, $lang_common;
 
-	$return = ($hook = get_hook('fn_add_post_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_add_post_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -1422,7 +1422,7 @@ function add_post($post_info, &$new_pid)
 		$query['VALUES'] .= ', \''.$forum_db->escape($post_info['poster_email']).'\'';
 	}
 
-	($hook = get_hook('fn_add_post_qr_add_post')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_add_post_qr_add_post')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$new_pid = $forum_db->insert_id();
 
@@ -1437,7 +1437,7 @@ function add_post($post_info, &$new_pid)
 				'VALUES'	=> $post_info['poster_id'].' ,'.$post_info['topic_id']
 			);
 
-			($hook = get_hook('fn_add_post_qr_add_subscription')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('fn_add_post_qr_add_subscription')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 		else if ($post_info['subscr_action'] == 2)
@@ -1447,7 +1447,7 @@ function add_post($post_info, &$new_pid)
 				'WHERE'		=> 'topic_id='.$post_info['topic_id'].' AND user_id='.$post_info['poster_id']
 			);
 
-			($hook = get_hook('fn_add_post_qr_delete_subscription')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('fn_add_post_qr_delete_subscription')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 	}
@@ -1459,7 +1459,7 @@ function add_post($post_info, &$new_pid)
 		'WHERE'		=> 'p.topic_id='.$post_info['topic_id']
 	);
 
-	($hook = get_hook('fn_add_post_qr_get_topic_reply_count')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_add_post_qr_get_topic_reply_count')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$num_replies = $forum_db->result($result, 0) - 1;
 
@@ -1470,7 +1470,7 @@ function add_post($post_info, &$new_pid)
 		'WHERE'		=> 'id='.$post_info['topic_id']
 	);
 
-	($hook = get_hook('fn_add_post_qr_update_topic')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_add_post_qr_update_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	sync_forum($post_info['forum_id']);
@@ -1494,7 +1494,7 @@ function add_post($post_info, &$new_pid)
 				'WHERE'		=> 'id='.$post_info['poster_id']
 			);
 
-			($hook = get_hook('fn_add_post_qr_increment_num_posts')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('fn_add_post_qr_increment_num_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 
@@ -1507,7 +1507,7 @@ function add_post($post_info, &$new_pid)
 		}
 	}
 
-	($hook = get_hook('fn_add_post_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_add_post_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
 
@@ -1518,7 +1518,7 @@ function send_subscriptions($post_info, $new_pid)
 {
 	global $forum_config, $forum_db, $forum_url, $lang_common;
 
-	$return = ($hook = get_hook('fn_send_subscriptions_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_send_subscriptions_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -1534,7 +1534,7 @@ function send_subscriptions($post_info, $new_pid)
 		'LIMIT'		=> '1, 1'
 	);
 
-	($hook = get_hook('fn_send_subscriptions_qr_get_previous_post_time')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_send_subscriptions_qr_get_previous_post_time')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$previous_post_time = $forum_db->result($result);
 
@@ -1563,7 +1563,7 @@ function send_subscriptions($post_info, $new_pid)
 		'WHERE'		=> 'b.username IS NULL AND COALESCE(o.logged, u.last_visit)>'.$previous_post_time.' AND (fp.read_forum IS NULL OR fp.read_forum=1) AND s.topic_id='.$post_info['topic_id'].' AND u.id!='.$post_info['poster_id']
 	);
 
-	($hook = get_hook('fn_send_subscriptions_qr_get_users_to_notify')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_send_subscriptions_qr_get_users_to_notify')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	if ($forum_db->num_rows($result))
@@ -1635,7 +1635,7 @@ function send_subscriptions($post_info, $new_pid)
 		}
 	}
 
-	($hook = get_hook('fn_send_subscriptions_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_send_subscriptions_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
 
@@ -1650,7 +1650,7 @@ function sef_friendly($str)
 	if (!isset($lang_replace))
 		require FORUM_ROOT.'lang/'.$forum_user['language'].'/url_replace.php';
 
-	$return = ($hook = get_hook('fn_sef_friendly_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_sef_friendly_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -1670,7 +1670,7 @@ function censor_words($text)
 	global $forum_db;
 	static $search_for, $replace_with;
 
-	$return = ($hook = get_hook('fn_censor_words_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_censor_words_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -1697,7 +1697,7 @@ function censor_words($text)
 			$search_for[$censor_key] = '/\b('.str_replace('\*', '\w*?', preg_quote($cur_word['search_for'], '/')).')\b/iu';
 			$replace_with[$censor_key] = $cur_word['replace_with'];
 
-			($hook = get_hook('fn_censor_words_setup_regex')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('fn_censor_words_setup_regex')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		}
 	}
 
@@ -1715,7 +1715,7 @@ function check_username_dupe($username, $exclude_id = null)
 {
 	global $forum_db;
 
-	$return = ($hook = get_hook('fn_check_username_dupe_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_check_username_dupe_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -1728,7 +1728,7 @@ function check_username_dupe($username, $exclude_id = null)
 	if ($exclude_id)
 		$query['WHERE'] .= ' AND id!='.$exclude_id;
 
-	($hook = get_hook('fn_check_username_dupe_qr_check_username_dupe')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_check_username_dupe_qr_check_username_dupe')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	return $forum_db->num_rows($result) ? $forum_db->result($result) : false;
@@ -1744,7 +1744,7 @@ function get_title($user)
 	global $forum_db, $forum_config, $forum_bans, $lang_common;
 	static $ban_list, $forum_ranks;
 
-	$return = ($hook = get_hook('fn_get_title_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_get_title_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -1803,7 +1803,7 @@ function get_title($user)
 			$user_title = $lang_common['Member'];
 	}
 
-	($hook = get_hook('fn_get_title_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_get_title_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	return $user_title;
 }
@@ -1841,7 +1841,7 @@ function paginate($num_pages, $cur_page, $link, $separator, $args = null)
 	$pages = array();
 	$link_to_all = false;
 
-	$return = ($hook = get_hook('fn_paginate_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_paginate_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -1892,7 +1892,7 @@ function paginate($num_pages, $cur_page, $link, $separator, $args = null)
 			$pages[] = '<a'.(empty($pages) ? ' class="item1" ' : '').' href="'.forum_sublink($link, $forum_url['page'], ($cur_page + 1), $args).'">'.$lang_common['Next'].'</a>';
 	}
 
-	($hook = get_hook('fn_paginate_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_paginate_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	return implode($separator, $pages);
 }
@@ -1914,7 +1914,7 @@ function message($message, $link = '', $heading = '')
 {
 	global $forum_db, $forum_url, $lang_common, $forum_config, $base_url, $forum_start, $tpl_main, $forum_user, $forum_page, $forum_updates;
 
-	($hook = get_hook('fn_message_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_message_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	if (!defined('FORUM_HEADER'))
 	{
@@ -1987,7 +1987,7 @@ function csrf_confirm_form()
 		return $fields;
 	}
 
-	$return = ($hook = get_hook('fn_csrf_confirm_form_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_csrf_confirm_form_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
 
@@ -2020,7 +2020,7 @@ function csrf_confirm_form()
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('fn_csrf_confirm_form_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_csrf_confirm_form_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 <div id="brd-main" class="main">
@@ -2047,7 +2047,7 @@ function csrf_confirm_form()
 </div>
 <?php
 
-	($hook = get_hook('fn_csrf_confirm_form_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_csrf_confirm_form_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -2065,7 +2065,7 @@ function forum_link($link, $args = null)
 {
 	global $forum_config, $base_url;
 
-	$return = ($hook = get_hook('fn_forum_link_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_forum_link_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -2081,7 +2081,7 @@ function forum_link($link, $args = null)
 		$gen_link = $base_url.'/'.$gen_link;
 	}
 
-	($hook = get_hook('fn_forum_link_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_forum_link_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	return $gen_link;
 }
@@ -2094,7 +2094,7 @@ function forum_sublink($link, $sublink, $subarg, $args = null)
 {
 	global $forum_config, $forum_url, $base_url;
 
-	$return = ($hook = get_hook('fn_forum_sublink_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_forum_sublink_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -2112,7 +2112,7 @@ function forum_sublink($link, $sublink, $subarg, $args = null)
 	else
 		$gen_link = $base_url.'/'.$gen_link.str_replace('$1', $subarg, $sublink);
 
-	($hook = get_hook('fn_forum_sublink_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_forum_sublink_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	return $gen_link;
 }
@@ -2126,7 +2126,7 @@ function format_time($timestamp, $type = 0, $date_format = null, $time_format = 
 {
 	global $forum_config, $lang_common, $forum_user, $forum_time_formats, $forum_date_formats;
 
-	$return = ($hook = get_hook('fn_format_time_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_format_time_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -2179,7 +2179,7 @@ function forum_number_format($number, $decimals = 0)
 {
 	global $lang_common;
 
-	$return = ($hook = get_hook('fn_forum_number_format_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_forum_number_format_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -2194,7 +2194,7 @@ function random_key($len, $readable = false, $hash = false)
 {
 	$key = '';
 
-	$return = ($hook = get_hook('fn_random_key_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_random_key_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -2213,7 +2213,7 @@ function random_key($len, $readable = false, $hash = false)
 			$key .= chr(mt_rand(33, 126));
 	}
 
-	($hook = get_hook('fn_random_key_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_random_key_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	return $key;
 }
@@ -2229,7 +2229,7 @@ function generate_form_token($target_url)
 {
 	global $forum_user;
 
-	$return = ($hook = get_hook('fn_generate_form_token_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_generate_form_token_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -2242,7 +2242,7 @@ function generate_form_token($target_url)
 //
 function forum_hash($str, $salt)
 {
-	$return = ($hook = get_hook('fn_forum_hash_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_forum_hash_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -2255,7 +2255,7 @@ function forum_hash($str, $salt)
 //
 function get_remote_address()
 {
-	$return = ($hook = get_hook('fn_get_remote_address_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_get_remote_address_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -2270,7 +2270,7 @@ function get_current_url($max_length = 0)
 {
 	global $base_url;
 
-	$return = ($hook = get_hook('fn_get_current_url_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_get_current_url_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -2292,7 +2292,7 @@ function get_current_url($max_length = 0)
 //
 function forum_htmlencode($str)
 {
-	$return = ($hook = get_hook('fn_forum_htmlencode_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_forum_htmlencode_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -2477,7 +2477,7 @@ function maintenance_message()
 {
 	global $forum_db, $forum_config, $lang_common, $forum_user, $base_url;
 
-	$return = ($hook = get_hook('fn_maintenance_message_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_maintenance_message_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -2498,11 +2498,11 @@ function maintenance_message()
 	else
 		$tpl_path = FORUM_ROOT.'include/template/maintenance.tpl';
 
-	($hook = get_hook('fn_maintenance_message_pre_template_loaded')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_maintenance_message_pre_template_loaded')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_maint = forum_trim(file_get_contents($tpl_path));
 
-	($hook = get_hook('fn_maintenance_message_template_loaded')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_maintenance_message_template_loaded')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// START SUBST - <!-- forum_local -->
 	$tpl_maint = str_replace('<!-- forum_local -->', 'xml:lang="'.$lang_common['lang_identifier'].'" lang="'.$lang_common['lang_identifier'].'" dir="'.$lang_common['lang_direction'].'"', $tpl_maint);
@@ -2584,7 +2584,7 @@ function redirect($destination_url, $message)
 
 	define('FORUM_PAGE', 'redirect');
 
-	($hook = get_hook('fn_redirect_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_redirect_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// Prefix with base_url (unless it's there already)
 	if (strpos($destination_url, 'http://') !== 0 && strpos($destination_url, 'https://') !== 0 && strpos($destination_url, '/') !== 0)
@@ -2612,11 +2612,11 @@ function redirect($destination_url, $message)
 	else
 		$tpl_path = FORUM_ROOT.'include/template/redirect.tpl';
 
-	($hook = get_hook('fn_redirect_pre_template_loaded')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_redirect_pre_template_loaded')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_redir = forum_trim(file_get_contents($tpl_path));
 
-	($hook = get_hook('fn_redirect_template_loaded')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_redirect_template_loaded')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// START SUBST - <!-- forum_local -->
 	$tpl_redir = str_replace('<!-- forum_local -->', 'xml:lang="'.$lang_common['lang_identifier'].'" lang="'.$lang_common['lang_identifier'].'" dir="'.$lang_common['lang_direction'].'"', $tpl_redir);
@@ -2641,7 +2641,7 @@ function redirect($destination_url, $message)
 
 	ob_end_clean();
 
-	($hook = get_hook('fn_redirect_head')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_redirect_head')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_redir = str_replace('<!-- forum_head -->', implode("\n",$forum_head), $tpl_redir);
 	unset($forum_head);
@@ -2830,7 +2830,7 @@ function forum_remove_bad_characters()
 
 	$bad_utf8_chars = array("\0", "\xc2\xad", "\xcc\xb7", "\xcc\xb8", "\xe1\x85\x9F", "\xe1\x85\xA0", "\xe2\x80\x80", "\xe2\x80\x81", "\xe2\x80\x82", "\xe2\x80\x83", "\xe2\x80\x84", "\xe2\x80\x85", "\xe2\x80\x86", "\xe2\x80\x87", "\xe2\x80\x88", "\xe2\x80\x89", "\xe2\x80\x8a", "\xe2\x80\x8b", "\xe2\x80\x8e", "\xe2\x80\x8f", "\xe2\x80\xaa", "\xe2\x80\xab", "\xe2\x80\xac", "\xe2\x80\xad", "\xe2\x80\xae", "\xe2\x80\xaf", "\xe2\x81\x9f", "\xe3\x80\x80", "\xe3\x85\xa4", "\xef\xbb\xbf", "\xef\xbe\xa0", "\xef\xbf\xb9", "\xef\xbf\xba", "\xef\xbf\xbb");
 
-	($hook = get_hook('fn_remove_bad_characters_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('fn_remove_bad_characters_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	function _forum_remove_bad_characters($array)
 	{

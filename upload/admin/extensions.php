@@ -33,7 +33,7 @@ require FORUM_ROOT.'include/common_admin.php';
 if (!defined('FORUM_XML_FUNCTIONS_LOADED'))
 	require FORUM_ROOT.'include/xml.php';
 
-($hook = get_hook('aex_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('aex_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 if ($forum_user['g_id'] != FORUM_ADMIN)
 	message($lang_common['No permission']);
@@ -52,7 +52,7 @@ $section = isset($_GET['section']) ? $_GET['section'] : null;
 // Install an extension
 if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 {
-	($hook = get_hook('aex_install_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_install_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// User pressed the cancel button
 	if (isset($_POST['install_cancel']))
@@ -108,7 +108,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 
 	if (isset($_POST['install_comply']))
 	{
-		($hook = get_hook('aex_install_comply_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_install_comply_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		// $ext_info contains some information about the extension being installed
 		$ext_info = array(
@@ -147,7 +147,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 			'WHERE'		=> 'e.id=\''.$forum_db->escape($id).'\''
 		);
 
-		($hook = get_hook('aex_qr_get_current_ext_version')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_qr_get_current_ext_version')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if ($forum_db->num_rows($result))
 		{
@@ -165,7 +165,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 				'WHERE'		=> 'id=\''.$forum_db->escape($id).'\''
 			);
 
-			($hook = get_hook('aex_qr_update_ext')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('aex_qr_update_ext')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			// Delete the old hooks
@@ -174,7 +174,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 				'WHERE'		=> 'extension_id=\''.$forum_db->escape($id).'\''
 			);
 
-			($hook = get_hook('aex_qr_update_ext_delete_hooks')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('aex_qr_update_ext_delete_hooks')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 		else
@@ -190,7 +190,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 				'VALUES'	=> '\''.$forum_db->escape($ext_data['extension']['id']).'\', \''.$forum_db->escape($ext_data['extension']['title']).'\', \''.$forum_db->escape($ext_data['extension']['version']).'\', \''.$forum_db->escape($ext_data['extension']['description']).'\', \''.$forum_db->escape($ext_data['extension']['author']).'\', '.$uninstall_code.', '.$uninstall_note.', \'|'.implode('|', $ext_data['extension']['dependencies']).'|\'',
 			);
 
-			($hook = get_hook('aex_qr_add_ext')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('aex_qr_add_ext')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 
@@ -206,7 +206,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 					'VALUES'	=> '\''.$forum_db->escape(forum_trim($cur_hook)).'\', \''.$forum_db->escape($id).'\', \''.$forum_db->escape(forum_trim($ext_hook['content'])).'\', '.time().', '.(isset($ext_hook['attributes']['priority']) ? $ext_hook['attributes']['priority'] : 5)
 				);
 
-				($hook = get_hook('aex_qr_add_hook')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('aex_qr_add_hook')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$forum_db->query_build($query) or error(__FILE__, __LINE__);
 			}
 		}
@@ -223,7 +223,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 		// Display notices if there are any
 		if (!empty($notices))
 		{
-			($hook = get_hook('aex_install_notices_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('aex_install_notices_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			define('FORUM_PAGE_SECTION', 'extensions');
 			if (strpos($id, 'hotfix_') === 0)
@@ -236,7 +236,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 			// START SUBST - <!-- forum_main -->
 			ob_start();
 
-			($hook = get_hook('aex_install_notices_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('aex_install_notices_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -275,7 +275,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 	}
 
 
-	($hook = get_hook('aex_install_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_install_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE_SECTION', 'extensions');
 	if (strpos($id, 'hotfix_') === 0)
@@ -288,7 +288,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('aex_install_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_install_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 ?>
 	<div class="main-subhead">
 		<h2 class="hn"><span><?php echo end($forum_page['crumbs']) ?> "<?php echo forum_htmlencode($ext_data['extension']['title']) ?>"</span></h2>
@@ -352,7 +352,7 @@ else if (isset($_GET['uninstall']))
 	if (isset($_POST['uninstall_cancel']))
 		redirect(forum_link($forum_url['admin_extensions_manage']), $lang_admin_common['Cancel redirect']);
 
-	($hook = get_hook('aex_uninstall_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_uninstall_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$id = preg_replace('/[^0-9a-z_]/', '', $_GET['uninstall']);
 	
@@ -363,7 +363,7 @@ else if (isset($_GET['uninstall']))
 		'WHERE'		=> 'e.id=\''.$forum_db->escape($id).'\''
 	);
 
-	($hook = get_hook('aex_qr_get_extension')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_qr_get_extension')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if (!$forum_db->num_rows($result))
 		message($lang_common['Bad request']);
@@ -377,7 +377,7 @@ else if (isset($_GET['uninstall']))
 		'WHERE'		=> 'e.dependencies LIKE \'%|'.$forum_db->escape($id).'|%\''
 	);
 
-	($hook = get_hook('aex_qr_get_uninstall_dependencies')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_qr_get_uninstall_dependencies')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	if ($forum_db->num_rows($result) != 0)
@@ -397,7 +397,7 @@ else if (isset($_GET['uninstall']))
 	// If the user has confirmed the uninstall
 	if (isset($_POST['uninstall_comply']))
 	{
-		($hook = get_hook('aex_uninstall_comply_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_uninstall_comply_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		$notices = array();
 
@@ -410,7 +410,7 @@ else if (isset($_GET['uninstall']))
 			'WHERE'		=> 'extension_id=\''.$forum_db->escape($id).'\''
 		);
 
-		($hook = get_hook('aex_qr_uninstall_delete_hooks')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_qr_uninstall_delete_hooks')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$query = array(
@@ -418,7 +418,7 @@ else if (isset($_GET['uninstall']))
 			'WHERE'		=> 'id=\''.$forum_db->escape($id).'\''
 		);
 
-		($hook = get_hook('aex_qr_delete_extension')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_qr_delete_extension')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Empty the PHP cache
@@ -433,7 +433,7 @@ else if (isset($_GET['uninstall']))
 		// Display notices if there are any
 		if (!empty($notices))
 		{
-			($hook = get_hook('aex_uninstall_notices_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('aex_uninstall_notices_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			define('FORUM_PAGE_SECTION', 'extensions');
 			define('FORUM_PAGE', 'admin-extensions-manage');
@@ -443,7 +443,7 @@ else if (isset($_GET['uninstall']))
 			// START SUBST - <!-- forum_main -->
 			ob_start();
 
-			($hook = get_hook('aex_uninstall_notices_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('aex_uninstall_notices_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -482,7 +482,7 @@ else if (isset($_GET['uninstall']))
 	}
 	else	// If the user hasn't confirmed the uninstall
 	{
-		($hook = get_hook('aex_uninstall_pre_header_loaded')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_uninstall_pre_header_loaded')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		define('FORUM_PAGE_SECTION', 'extensions');
 		if (strpos($id, 'hotfix_') === 0)
@@ -495,7 +495,7 @@ else if (isset($_GET['uninstall']))
 		// START SUBST - <!-- forum_main -->
 		ob_start();
 
-		($hook = get_hook('aex_uninstall_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_uninstall_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -543,7 +543,7 @@ else if (isset($_GET['flip']))
 	if (!isset($_POST['csrf_token']) && (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== generate_form_token('flip'.$id)))
 		csrf_confirm_form();
 
-	($hook = get_hook('aex_flip_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_flip_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// Fetch the current status of the extension
 	$query = array(
@@ -552,7 +552,7 @@ else if (isset($_GET['flip']))
 		'WHERE'		=> 'e.id=\''.$forum_db->escape($id).'\''
 	);
 
-	($hook = get_hook('aex_qr_get_disabled_status')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_qr_get_disabled_status')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if (!$forum_db->num_rows($result))
 		message($lang_common['Bad request']);
@@ -569,7 +569,7 @@ else if (isset($_GET['flip']))
 			'WHERE'		=> 'e.disabled=0 AND e.dependencies LIKE \'%|'.$forum_db->escape($id).'|%\''
 		);
 
-		($hook = get_hook('aex_qr_get_disable_dependencies')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_qr_get_disable_dependencies')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		if ($forum_db->num_rows($result) != 0)
@@ -586,7 +586,7 @@ else if (isset($_GET['flip']))
 			'WHERE'		=> 'e.id=\''.$forum_db->escape($id).'\''
 		);
 
-		($hook = get_hook('aex_qr_get_enable_dependencies')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_qr_get_enable_dependencies')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$dependencies = $forum_db->fetch_assoc($result);
@@ -616,7 +616,7 @@ else if (isset($_GET['flip']))
 		'WHERE'		=> 'id=\''.$forum_db->escape($id).'\''
 	);
 
-	($hook = get_hook('aex_qr_update_disabled_status')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_qr_update_disabled_status')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the hooks cache
@@ -631,7 +631,7 @@ else if (isset($_GET['flip']))
 		redirect(forum_link($forum_url['admin_extensions_manage']), ($disable ? $lang_admin_ext['Extension disabled'] : $lang_admin_ext['Extension enabled']).' '.$lang_admin_common['Redirect']);
 }
 
-($hook = get_hook('aex_new_action')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('aex_new_action')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 
 // Generate an array of installed extensions
@@ -642,7 +642,7 @@ $query = array(
 	'ORDER BY'	=> 'e.title'
 );
 
-($hook = get_hook('aex_qr_get_all_extensions')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('aex_qr_get_all_extensions')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 while ($cur_ext = $forum_db->fetch_assoc($result))
 	$inst_exts[$cur_ext['id']] = $cur_ext;
@@ -657,7 +657,7 @@ if ($section == 'hotfixes')
 		$lang_admin_common['Manage hotfixes']
 	);
 
-	($hook = get_hook('aex_section_hotfixes_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_section_hotfixes_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE_SECTION', 'extensions');
 	define('FORUM_PAGE', 'admin-extensions-hotfixes');
@@ -667,7 +667,7 @@ if ($section == 'hotfixes')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('aex_section_hotfixes_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_section_hotfixes_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -699,7 +699,7 @@ if ($section == 'hotfixes')
 		}
 	}
 
-	($hook = get_hook('aex_section_hotfixes_pre_display_ext_list')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_section_hotfixes_pre_display_ext_list')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	if ($num_exts)
 		echo "\t\t".implode("\n\t\t", $forum_page['ext_item'])."\n";
@@ -718,7 +718,7 @@ if ($section == 'hotfixes')
 	</div>
 <?php
 
-	($hook = get_hook('aex_section_hotfixes_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_section_hotfixes_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -738,7 +738,7 @@ if ($section == 'hotfixes')
 			'<a href="'.$base_url.'/admin/extensions.php?section=hotfixese&amp;uninstall='.$id.'">'.$lang_admin_ext['Uninstall'].'</a>'
 		);
 
-		($hook = get_hook('aex_section_hotfixes_pre_ext_actions')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_section_hotfixes_pre_ext_actions')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ext-item databox<?php if ($ext['disabled'] == '1') echo ' extdisabled' ?>">
@@ -781,7 +781,7 @@ else
 		$lang_admin_common['Manage extensions']
 	);
 
-	($hook = get_hook('aex_section_manage_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_section_manage_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE_SECTION', 'extensions');
 	define('FORUM_PAGE', 'admin-extensions-manage');
@@ -791,7 +791,7 @@ else
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('aex_section_install_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_section_install_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -852,7 +852,7 @@ else
 	}
 	$d->close();
 
-	($hook = get_hook('aex_section_install_pre_display_ext_list')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_section_install_pre_display_ext_list')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	if ($num_exts)
 		echo "\t\t".implode("\n\t\t", $forum_page['ext_item'])."\n";
@@ -886,7 +886,7 @@ else
 	</div>
 <?php
 
-	($hook = get_hook('aex_section_manage_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_section_manage_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -907,7 +907,7 @@ else
 			'<a href="'.$base_url.'/admin/extensions.php?section=manage&amp;uninstall='.$id.'">'.$lang_admin_ext['Uninstall'].'</a>'
 		);
 
-		($hook = get_hook('aex_section_manage_pre_ext_actions')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_section_manage_pre_ext_actions')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		
 		$forum_page['ext_item'][] = '<div class="ext-item databox'.($ext['disabled'] == '1' ? ' extdisabled' : '').'">'."\n\t\t".'<h3 class="legend"><span>'.forum_htmlencode($ext['title']).' v'.$ext['version'].($ext['disabled'] == '1' ? ' ( <span>'.$lang_admin_ext['Extension disabled'].'</span> )' : '').'</span></h3>'."\n\t\t".'<p><span>'.sprintf($lang_admin_ext['Extension by'], forum_htmlencode($ext['author'])).'</span>'.($ext['description'] != '' ? '<br /><span>'.forum_htmlencode($ext['description']).'</span>' : '').'</p>'."\n\t\t".'<p class="actions">'.implode('', $forum_page['ext_actions']).'</p>'."\n\t".'</div>';
 

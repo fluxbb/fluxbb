@@ -29,7 +29,7 @@ if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
 require FORUM_ROOT.'include/common.php';
 
-($hook = get_hook('pf_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('pf_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 $section = isset($_GET['section']) ? $_GET['section'] : 'about';	// Default to section "about"
@@ -64,7 +64,7 @@ $query = array(
 	'WHERE'		=> 'u.id='.$id
 );
 
-($hook = get_hook('pf_qr_get_user_info')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('pf_qr_get_user_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 if (!$forum_db->num_rows($result))
 	message($lang_common['Bad request']);
@@ -74,7 +74,7 @@ $user = $forum_db->fetch_assoc($result);
 
 if ($action == 'change_pass')
 {
-	($hook = get_hook('pf_change_pass_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_change_pass_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// User pressed the cancel button
 	if (isset($_POST['cancel']))
@@ -86,7 +86,7 @@ if ($action == 'change_pass')
 		if (!$forum_user['is_guest'])
 			message($lang_profile['Pass logout']);
 
-		($hook = get_hook('pf_change_pass_key_supplied')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_pass_key_supplied')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		$key = $_GET['key'];
 
@@ -96,7 +96,7 @@ if ($action == 'change_pass')
 		{
 			if (isset($_POST['form_sent']))
 			{
-				($hook = get_hook('pf_change_pass_key_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('pf_change_pass_key_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 				$new_password1 = forum_trim($_POST['req_new_password1']);
 				$new_password2 = forum_trim($_POST['req_new_password2']);
@@ -117,7 +117,7 @@ if ($action == 'change_pass')
 						'WHERE'		=> 'id='.$id
 					);
 
-					($hook = get_hook('pf_qr_update_password')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+					($hook = get_hook('pf_qr_update_password')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 					$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 					redirect(forum_link($forum_url['index']), $lang_profile['Pass updated']);
@@ -141,7 +141,7 @@ if ($action == 'change_pass')
 			// Setup headings
 			$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], sprintf($lang_profile['Users profile'], forum_htmlencode($user['username'])), end($forum_page['crumbs']));
 
-			($hook = get_hook('pf_change_pass_key_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_change_pass_key_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			define('FORUM_PAGE', 'profile-changepass');
 			define('FORUM_PAGE_TYPE', 'basic');
@@ -150,7 +150,7 @@ if ($action == 'change_pass')
 			// START SUBST - <!-- forum_main -->
 			ob_start();
 
-			($hook = get_hook('pf_change_pass_key_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_change_pass_key_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -163,7 +163,7 @@ if ($action == 'change_pass')
 				while (list(, $cur_error) = each($errors))
 					$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
-				($hook = get_hook('pf_pre_change_pass_key_errors')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('pf_pre_change_pass_key_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ct-box error-box">
@@ -184,7 +184,7 @@ if ($action == 'change_pass')
 			<div class="hidden">
 				<input type="hidden" name="form_sent" value="1" />
 			</div>
-<?php ($hook = get_hook('pf_change_pass_key_pre_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_pass_key_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
@@ -200,7 +200,7 @@ if ($action == 'change_pass')
 					</div>
 				</div>
 			</fieldset>
-<?php ($hook = get_hook('pf_change_pass_key_post_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_pass_key_post_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /></span>
 				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
@@ -227,7 +227,7 @@ if ($action == 'change_pass')
 
 	if (isset($_POST['form_sent']))
 	{
-		($hook = get_hook('pf_change_pass_normal_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_pass_normal_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		$old_password = isset($_POST['req_old_password']) ? forum_trim($_POST['req_old_password']) : '';
 		$new_password1 = forum_trim($_POST['req_new_password1']);
@@ -261,7 +261,7 @@ if ($action == 'change_pass')
 				'WHERE'		=> 'id='.$id
 			);
 
-			($hook = get_hook('pf_qr_update_password2')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_qr_update_password2')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			if ($forum_user['id'] == $id)
@@ -298,7 +298,7 @@ if ($action == 'change_pass')
 	// Setup headings
 	$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], sprintf($lang_profile['Users profile'], forum_htmlencode($user['username'])), end($forum_page['crumbs']));
 
-	($hook = get_hook('pf_change_pass_normal_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_change_pass_normal_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'profile-changepass');
 	define('FORUM_PAGE_TYPE', 'basic');
@@ -307,7 +307,7 @@ if ($action == 'change_pass')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('pf_change_pass_normal_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_change_pass_normal_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -320,7 +320,7 @@ if ($action == 'change_pass')
 		while (list(, $cur_error) = each($errors))
 			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
-		($hook = get_hook('pf_pre_change_pass_errors')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_pre_change_pass_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ct-box error-box">
@@ -341,7 +341,7 @@ if ($action == 'change_pass')
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-<?php ($hook = get_hook('pf_change_pass_normal_pre_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_pass_normal_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
 <?php if (!$forum_user['is_admmod']): ?>								<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
@@ -363,7 +363,7 @@ if ($action == 'change_pass')
 					</div>
 				</div>
 			</fieldset>
-<?php ($hook = get_hook('pf_change_pass_normal_post_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_pass_normal_post_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /></span>
 				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
@@ -389,7 +389,7 @@ else if ($action == 'change_email')
 		($forum_user['g_moderator'] != '1' || $forum_user['g_mod_edit_users'] == '0' || $user['g_id'] == FORUM_ADMIN || $user['g_moderator'] == '1'))
 		message($lang_common['No permission']);
 
-	($hook = get_hook('pf_change_email_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_change_email_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// User pressed the cancel button
 	if (isset($_POST['cancel']))
@@ -399,7 +399,7 @@ else if ($action == 'change_email')
 	{
 		$key = $_GET['key'];
 
-		($hook = get_hook('pf_change_email_key_supplied')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_email_key_supplied')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		if ($key == '' || $key != $user['activate_key'])
 			message(sprintf($lang_profile['E-mail key bad'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>'));
@@ -411,7 +411,7 @@ else if ($action == 'change_email')
 				'WHERE'		=> 'id='.$id
 			);
 
-			($hook = get_hook('pf_qr_update_email')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_qr_update_email')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			message($lang_profile['E-mail updated']);
@@ -419,7 +419,7 @@ else if ($action == 'change_email')
 	}
 	else if (isset($_POST['form_sent']))
 	{
-		($hook = get_hook('pf_change_email_normal_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_email_normal_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		if (forum_hash($_POST['req_password'], $forum_user['salt']) !== $forum_user['password'])
 			$errors[] = $lang_profile['Wrong password'];
@@ -435,7 +435,7 @@ else if ($action == 'change_email')
 		// Check it it's a banned e-mail address
 		if (is_banned_email($new_email))
 		{
-			($hook = get_hook('pf_change_email_normal_banned_email')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_change_email_normal_banned_email')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			if ($forum_config['p_allow_banned_email'] == '0')
 				$errors[] = $lang_profile['Banned e-mail'];
@@ -455,11 +455,11 @@ else if ($action == 'change_email')
 			'WHERE'		=> 'u.email=\''.$forum_db->escape($new_email).'\''
 		);
 
-		($hook = get_hook('pf_qr_check_email_dupe')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_qr_check_email_dupe')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if ($forum_db->num_rows($result))
 		{
-			($hook = get_hook('pf_change_email_normal_dupe_email')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_change_email_normal_dupe_email')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			if ($forum_config['p_allow_dupe_email'] == '0')
 				$errors[] = $lang_profile['Dupe e-mail'];
@@ -487,7 +487,7 @@ else if ($action == 'change_email')
 				'WHERE'		=> 'id='.$id
 			);
 
-			($hook = get_hook('pf_qr_update_email_activation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_qr_update_email_activation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			// Load the "activate e-mail" template
@@ -503,7 +503,7 @@ else if ($action == 'change_email')
 			$mail_message = str_replace('<activation_url>', str_replace('&amp;', '&', forum_link($forum_url['change_email_key'], array($id, $new_email_key))), $mail_message);
 			$mail_message = str_replace('<board_mailer>', sprintf($lang_common['Forum mailer'], $forum_config['o_board_title']), $mail_message);
 
-			($hook = get_hook('pf_change_email_normal_pre_activation_email_sent')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_change_email_normal_pre_activation_email_sent')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			forum_mail($new_email, $mail_subject, $mail_message);
 
@@ -536,7 +536,7 @@ else if ($action == 'change_email')
 	// Setup headings
 	$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], sprintf($lang_profile['Users profile'], forum_htmlencode($user['username'])), end($forum_page['crumbs']));
 
-	($hook = get_hook('pf_change_email_normal_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_change_email_normal_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'profile-changemail');
 	define('FORUM_PAGE_TYPE', 'basic');
@@ -545,7 +545,7 @@ else if ($action == 'change_email')
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('pf_change_email_normal_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_change_email_normal_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -561,7 +561,7 @@ else if ($action == 'change_email')
 		while (list(, $cur_error) = each($errors))
 			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
-		($hook = get_hook('pf_pre_change_email_errors')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_pre_change_email_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ct-box error-box">
@@ -582,7 +582,7 @@ else if ($action == 'change_email')
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-<?php ($hook = get_hook('pf_change_email_normal_pre_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_email_normal_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
@@ -598,7 +598,7 @@ else if ($action == 'change_email')
 					</div>
 				</div>
 			</fieldset>
-<?php ($hook = get_hook('pf_change_email_normal_post_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_email_normal_post_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /></span>
 				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
@@ -621,7 +621,7 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 	if (isset($_POST['cancel']))
 		redirect(forum_link($forum_url['profile_admin'], $id), $lang_common['Cancel redirect']);
 
-	($hook = get_hook('pf_delete_user_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_delete_user_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	if ($forum_user['g_id'] != FORUM_ADMIN)
 		message($lang_common['No permission']);
@@ -631,7 +631,7 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 
 	if (isset($_POST['delete_user_comply']))
 	{
-		($hook = get_hook('pf_delete_user_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_delete_user_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		delete_user($id, isset($_POST['delete_posts']));
 
@@ -660,7 +660,7 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 		'head' => '<h1 class="hn"><span>'.sprintf($lang_profile['Subform heading'], sprintf($lang_profile['Users profile'], forum_htmlencode($user['username'])), end($forum_page['crumbs'])).'</span></h1>'
 	);
 
-	($hook = get_hook('pf_delete_user_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_delete_user_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'dialogue');
 	define('FORUM_PAGE_TYPE', 'single');
@@ -669,7 +669,7 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('pf_delete_user_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_delete_user_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
@@ -721,7 +721,7 @@ else if ($action == 'delete_avatar')
 	if (!isset($_POST['csrf_token']) && (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== generate_form_token('delete_avatar'.$id.$forum_user['id'])))
 		csrf_confirm_form();
 
-	($hook = get_hook('pf_delete_avatar_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_delete_avatar_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	delete_avatar($id);
 
@@ -734,7 +734,7 @@ else if (isset($_POST['update_group_membership']))
 	if ($forum_user['g_id'] != FORUM_ADMIN)
 		message($lang_common['No permission']);
 
-	($hook = get_hook('pf_change_group_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_change_group_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$new_group_id = intval($_POST['group_id']);
 
@@ -744,7 +744,7 @@ else if (isset($_POST['update_group_membership']))
 		'WHERE'		=> 'id='.$id
 	);
 
-	($hook = get_hook('pf_qr_update_group')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_qr_update_group')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$query = array(
@@ -753,7 +753,7 @@ else if (isset($_POST['update_group_membership']))
 		'WHERE'		=> 'g.g_id='.$new_group_id
 	);
 
-	($hook = get_hook('pf_qr_check_new_group_mod')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_qr_check_new_group_mod')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$new_group_mod = $forum_db->result($result);
 
@@ -770,7 +770,7 @@ else if (isset($_POST['update_forums']))
 	if ($forum_user['g_id'] != FORUM_ADMIN)
 		message($lang_common['No permission']);
 
-	($hook = get_hook('pf_forum_moderators_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_forum_moderators_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$moderator_in = (isset($_POST['moderator_in'])) ? array_keys($_POST['moderator_in']) : array();
 
@@ -780,7 +780,7 @@ else if (isset($_POST['update_forums']))
 		'FROM'		=> 'forums AS f'
 	);
 
-	($hook = get_hook('pf_qr_get_all_forum_mods')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_qr_get_all_forum_mods')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	while ($cur_forum = $forum_db->fetch_assoc($result))
 	{
@@ -804,7 +804,7 @@ else if (isset($_POST['update_forums']))
 			'WHERE'		=> 'id='.$cur_forum['id']
 		);
 
-		($hook = get_hook('pf_qr_update_forum_moderators')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_qr_update_forum_moderators')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
 
@@ -817,7 +817,7 @@ else if (isset($_POST['ban']))
 	if ($forum_user['g_id'] != FORUM_ADMIN && ($forum_user['g_moderator'] != '1' || $forum_user['g_mod_ban_users'] == '0'))
 		message($lang_common['No permission']);
 
-	($hook = get_hook('pf_ban_user_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_ban_user_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	redirect(forum_link($forum_url['admin_bans']).'?add_ban='.$id, $lang_profile['Ban redirect']);
 }
@@ -831,7 +831,7 @@ else if (isset($_POST['form_sent']))
 		($forum_user['g_moderator'] != '1' || $forum_user['g_mod_edit_users'] == '0' || $user['g_id'] == FORUM_ADMIN || $user['g_moderator'] == '1'))
 		message($lang_common['No permission']);
 
-	($hook = get_hook('pf_change_details_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_change_details_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// Extract allowed elements from $_POST['form']
 	function extract_elements($allowed_elements)
@@ -856,7 +856,7 @@ else if (isset($_POST['form_sent']))
 		{
 			$form = extract_elements(array('realname', 'url', 'location', 'jabber', 'icq', 'msn', 'aim', 'yahoo'));
 
-			($hook = get_hook('pf_change_details_identity_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_change_details_identity_validation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			if ($forum_user['is_admmod'])
 			{
@@ -924,7 +924,7 @@ else if (isset($_POST['form_sent']))
 		{
 			$form = extract_elements(array('dst', 'timezone', 'language', 'email_setting', 'notify_with_post', 'auto_notify', 'time_format', 'date_format', 'disp_topics', 'disp_posts', 'show_smilies', 'show_img', 'show_img_sig', 'show_avatars', 'show_sig', 'style'));
 
-			($hook = get_hook('pf_change_details_settings_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_change_details_settings_validation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			$form['dst'] = (isset($form['dst'])) ? 1 : 0;
 			$form['time_format'] = (isset($form['time_format'])) ? intval($form['time_format']) : 0;
@@ -973,7 +973,7 @@ else if (isset($_POST['form_sent']))
 			if ($forum_config['o_signatures'] == '0')
 				message($lang_profile['Signatures disabled']);
 
-			($hook = get_hook('pf_change_details_signature_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_change_details_signature_validation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			// Clean up signature from POST
 			$form['signature'] = forum_linebreaks(forum_trim($_POST['signature']));
@@ -1004,7 +1004,7 @@ else if (isset($_POST['form_sent']))
 			if ($forum_config['o_avatars'] == '0')
 				message($lang_profile['Avatars disabled']);
 
-			($hook = get_hook('pf_change_details_avatar_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_change_details_avatar_validation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			if (!isset($_FILES['req_file']))
 			{
@@ -1048,7 +1048,7 @@ else if (isset($_POST['form_sent']))
 			{
 				$allowed_types = array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png');
 
-				($hook = get_hook('pf_change_details_avatar_allowed_types')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('pf_change_details_avatar_allowed_types')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 				if (!in_array($uploaded_file['type'], $allowed_types))
 					$errors[] = $lang_profile['Bad type'];
@@ -1070,7 +1070,7 @@ else if (isset($_POST['form_sent']))
 					else
 						$extension = '.png';
 
-					($hook = get_hook('pf_change_details_avatar_determine_extension')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+					($hook = get_hook('pf_change_details_avatar_determine_extension')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 					// Move the file to the avatar directory. We do this before checking the width/height to circumvent open_basedir restrictions.
 					if (!@move_uploaded_file($uploaded_file['tmp_name'], $forum_config['o_avatars_dir'].'/'.$id.'.tmp'))
@@ -1091,7 +1091,7 @@ else if (isset($_POST['form_sent']))
 							$errors[] = $lang_profile['Bad type'];
 						}
 
-						($hook = get_hook('pf_change_details_avatar_validate_file')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+						($hook = get_hook('pf_change_details_avatar_validate_file')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 						if (empty($errors))
 						{
@@ -1113,19 +1113,19 @@ else if (isset($_POST['form_sent']))
 
 		default:
 		{
-			($hook = get_hook('pf_change_details_new_section_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_change_details_new_section_validation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			break;
 		}
 	}
 
 	$skip_db_update_sections = array('avatar');
 
-	($hook = get_hook('pf_change_details_pre_database_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_change_details_pre_database_validation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// All sections apart from avatar potentially affect the database
 	if (!in_array($section, $skip_db_update_sections) && empty($errors))
 	{
-		($hook = get_hook('pf_change_details_database_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_details_database_validation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		// Singlequotes around non-empty values and NULL for empty values
 		$temp = array();
@@ -1147,13 +1147,13 @@ else if (isset($_POST['form_sent']))
 			'WHERE'		=> 'id='.$id
 		);
 
-		($hook = get_hook('pf_qr_update_user')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_qr_update_user')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// If we changed the username we have to update some stuff
 		if ($username_updated)
 		{
-			($hook = get_hook('pf_change_details_username_changed')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_change_details_username_changed')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			$query = array(
 				'UPDATE'	=> 'posts',
@@ -1161,7 +1161,7 @@ else if (isset($_POST['form_sent']))
 				'WHERE'		=> 'poster_id='.$id
 			);
 
-			($hook = get_hook('pf_qr_update_username1')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_qr_update_username1')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			$query = array(
@@ -1170,7 +1170,7 @@ else if (isset($_POST['form_sent']))
 				'WHERE'		=> 'poster=\''.$forum_db->escape($old_username).'\''
 			);
 
-			($hook = get_hook('pf_qr_update_username2')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_qr_update_username2')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			$query = array(
@@ -1179,7 +1179,7 @@ else if (isset($_POST['form_sent']))
 				'WHERE'		=> 'last_poster=\''.$forum_db->escape($old_username).'\''
 			);
 
-			($hook = get_hook('pf_qr_update_username3')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_qr_update_username3')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			$query = array(
@@ -1188,7 +1188,7 @@ else if (isset($_POST['form_sent']))
 				'WHERE'		=> 'last_poster=\''.$forum_db->escape($old_username).'\''
 			);
 
-			($hook = get_hook('pf_qr_update_username4')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_qr_update_username4')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			$query = array(
@@ -1197,7 +1197,7 @@ else if (isset($_POST['form_sent']))
 				'WHERE'		=> 'ident=\''.$forum_db->escape($old_username).'\''
 			);
 
-			($hook = get_hook('pf_qr_update_username5')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_qr_update_username5')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			$query = array(
@@ -1206,7 +1206,7 @@ else if (isset($_POST['form_sent']))
 				'WHERE'		=> 'edited_by=\''.$forum_db->escape($old_username).'\''
 			);
 
-			($hook = get_hook('pf_qr_update_username6')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_qr_update_username6')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			// If the user is a moderator or an administrator we have to update the moderator lists and bans cache
@@ -1217,7 +1217,7 @@ else if (isset($_POST['form_sent']))
 					'FROM'		=> 'forums AS f'
 				);
 
-				($hook = get_hook('pf_qr_get_all_forum_mods2')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('pf_qr_get_all_forum_mods2')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 				while ($cur_forum = $forum_db->fetch_assoc($result))
 				{
@@ -1235,7 +1235,7 @@ else if (isset($_POST['form_sent']))
 							'WHERE'		=> 'id='.$cur_forum['id']
 						);
 
-						($hook = get_hook('pf_qr_update_forum_moderators2')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+						($hook = get_hook('pf_qr_update_forum_moderators2')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 						$forum_db->query_build($query) or error(__FILE__, __LINE__);
 					}
 				}
@@ -1248,13 +1248,13 @@ else if (isset($_POST['form_sent']))
 			}
 		}
 
-		($hook = get_hook('pf_change_details_pre_redirect')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_details_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		redirect(forum_link($forum_url['profile_'.$section], $id), $lang_profile['Profile redirect']);
 	}
 }
 
-($hook = get_hook('pf_new_action')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('pf_new_action')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 
 if ($user['signature'] != '')
@@ -1271,7 +1271,7 @@ if ($forum_user['id'] != $id &&
 	$forum_user['g_id'] != FORUM_ADMIN &&
 	($forum_user['g_moderator'] != '1' || $forum_user['g_mod_edit_users'] == '0' || $user['g_id'] == FORUM_ADMIN || $user['g_moderator'] == '1'))
 {
-	($hook = get_hook('pf_view_details_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_view_details_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// Setup user identification
 	$forum_page['user_ident'] = array();
@@ -1353,7 +1353,7 @@ if ($forum_user['id'] != $id &&
 
 	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 
-	($hook = get_hook('pf_view_details_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_view_details_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_ALLOW_INDEX', 1);
 	define('FORUM_PAGE', 'profile');
@@ -1363,11 +1363,11 @@ if ($forum_user['id'] != $id &&
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('pf_view_details_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_view_details_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-frm">
-<?php ($hook = get_hook('pf_view_details_pre_user_info')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_view_details_pre_user_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 		<div class="profile ct-group vcard">
 			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
@@ -1398,7 +1398,7 @@ if ($forum_user['id'] != $id &&
 				</div>
 			</div>
 <?php endif; ?>		</div>
-<?php ($hook = get_hook('pf_view_details_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_view_details_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 	</div>
 <?php
 
@@ -1437,7 +1437,7 @@ else
 	if ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && $forum_user['g_mod_ban_users'] == '1' && !$forum_page['own_profile']))
 		$forum_page['main_menu']['admin'] = '<li'.(($section == 'admin') ? ' class="active"' : '').'><a href="'.forum_link($forum_url['profile_admin'], $id).'"><span>'.$lang_profile['Section admin'].'</span></a></li>';
 
-	($hook = get_hook('pf_change_details_modify_main_menu')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_change_details_modify_main_menu')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	// End navigation menu
 
 	if ($section == 'about')
@@ -1548,7 +1548,7 @@ else
 
 		$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 
-		($hook = get_hook('pf_change_details_about_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_details_about_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		define('FORUM_PAGE', 'profile-about');
 		define('FORUM_PAGE_TYPE', 'sectioned');
@@ -1557,14 +1557,14 @@ else
 		// START SUBST - <!-- forum_main -->
 		ob_start();
 
-		($hook = get_hook('pf_change_details_about_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_details_about_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
 		<h2 class="hn"><span><?php printf(($forum_user['id'] == $id) ? $lang_profile['Profile welcome'] : $lang_profile['Profile welcome user'], forum_htmlencode($user['username'])) ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
-<?php ($hook = get_hook('pf_change_details_about_pre_user_info')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_about_pre_user_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 		<p class="content-options options"><?php echo implode(' ', $forum_page['user_options']) ?></p>
 		<div class="profile ct-group vcard">
 			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
@@ -1604,7 +1604,7 @@ else
 					</ul>
 				</div>
 			</div>
-<?php endif; ($hook = get_hook('pf_change_details_about_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php endif; ($hook = get_hook('pf_change_details_about_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 		</div>
 	</div>
 <?php
@@ -1637,7 +1637,7 @@ else
 		// Setup headings
 		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], forum_htmlencode(end($forum_page['crumbs'])), $lang_profile['Section identity']);
 
-		($hook = get_hook('pf_change_details_identity_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_details_identity_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		define('FORUM_PAGE', 'profile-identity');
 		define('FORUM_PAGE_TYPE', 'sectioned');
@@ -1646,7 +1646,7 @@ else
 		// START SUBST - <!-- forum_main -->
 		ob_start();
 
-		($hook = get_hook('pf_change_details_identity_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_details_identity_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -1662,7 +1662,7 @@ else
 		while (list(, $cur_error) = each($errors))
 			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
-		($hook = get_hook('pf_pre_change_details_identity_errors')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_pre_change_details_identity_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ct-box error-box">
@@ -1697,8 +1697,8 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_email" value="<?php echo(isset($_POST['req_email']) ? forum_htmlencode($_POST['req_email']) : forum_htmlencode($user['email'])) ?>" size="35" maxlength="80" /></span>
 					</div>
 				</div>
-<?php endif; ($hook = get_hook('pf_change_details_identity_req_info_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>			</fieldset>
-<?php endif; ($hook = get_hook('pf_change_details_identity_post_req_info_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?><?php $forum_page['item_count'] = 0; ?>			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
+<?php endif; ($hook = get_hook('pf_change_details_identity_req_info_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>			</fieldset>
+<?php endif; ($hook = get_hook('pf_change_details_identity_post_req_info_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?><?php $forum_page['item_count'] = 0; ?>			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_profile['Personal legend'] ?></strong></legend>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
@@ -1730,8 +1730,8 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="admin_note" value="<?php echo(isset($_POST['admin_note']) ? forum_htmlencode($_POST['admin_note']) : forum_htmlencode($user['admin_note'])) ?>" size="35" maxlength="30" /></span>
 					</div>
 				</div>
-<?php endif; ($hook = get_hook('pf_change_details_identity_personal_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>			</fieldset>
-<?php ($hook = get_hook('pf_change_details_identity_post_personal_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?><?php $forum_page['item_count'] = 0; ?>			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
+<?php endif; ($hook = get_hook('pf_change_details_identity_personal_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>			</fieldset>
+<?php ($hook = get_hook('pf_change_details_identity_post_personal_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?><?php $forum_page['item_count'] = 0; ?>			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_profile['Contact legend'] ?></strong></legend>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
@@ -1769,9 +1769,9 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="form[yahoo]" value="<?php echo(isset($form['yahoo']) ? forum_htmlencode($form['yahoo']) : forum_htmlencode($user['yahoo'])) ?>" size="20" maxlength="30" /></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('pf_change_details_identity_contact_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_identity_contact_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
-<?php ($hook = get_hook('pf_change_details_identity_post_contact_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_identity_post_contact_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="update" value="<?php echo $lang_profile['Update profile'] ?>" /> <?php echo $lang_profile['Instructions'] ?></span>
 			</div>
@@ -1810,7 +1810,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		// Setup headings
 		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], forum_htmlencode(end($forum_page['crumbs'])), $lang_profile['Section settings']);
 
-		($hook = get_hook('pf_change_details_settings_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_details_settings_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		define('FORUM_PAGE', 'profile-settings');
 		define('FORUM_PAGE_TYPE', 'sectioned');
@@ -1819,7 +1819,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		// START SUBST - <!-- forum_main -->
 		ob_start();
 
-		($hook = get_hook('pf_change_details_settings_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_details_settings_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -1830,7 +1830,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-<?php ($hook = get_hook('pf_change_details_settings_pre_local_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_settings_pre_local_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_profile['Local settings'] ?></strong></legend>
 <?php
@@ -1967,10 +1967,10 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 						</select></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('pf_change_details_settings_local_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_settings_local_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
 <?php $forum_page['item_count'] = 0; ?>
-<?php ($hook = get_hook('pf_change_details_settings_pre_display_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_settings_pre_display_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_profile['Display settings'] ?></strong></legend>
 <?php
@@ -2033,10 +2033,10 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Signature display'] ?></span> <?php echo $lang_profile['Show sigs'] ?></label>
 					</div>
 				</div>
-<?php ($hook = get_hook('pf_change_details_settings_display_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_settings_display_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 <?php endif; ?>			</fieldset>
 <?php $forum_page['item_count'] = 0; ?>
-<?php ($hook = get_hook('pf_change_details_settings_pre_pagination_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_settings_pre_pagination_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_profile['Pagination settings'] ?></strong></legend>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
@@ -2051,10 +2051,10 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[disp_posts]" value="<?php echo $user['disp_posts'] ?>" size="6" maxlength="3" /></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('pf_change_details_settings_pagination_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_settings_pagination_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
 <?php $forum_page['item_count'] = 0; ?>
-<?php ($hook = get_hook('pf_change_details_settings_pre_other_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_settings_pre_other_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_profile['E-mail and sub settings'] ?></strong></legend>
 				<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?>">
@@ -2088,10 +2088,10 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 					</div>
 				</fieldset>
 <?php endif; ?>
-<?php ($hook = get_hook('pf_change_details_settings_other_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_settings_other_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
 <?php $forum_page['item_count'] = 0; ?>
-<?php ($hook = get_hook('pf_change_details_settings_post_other_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_settings_post_other_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="update" value="<?php echo $lang_profile['Update profile'] ?>" /> <?php echo $lang_profile['Instructions'] ?></span>
 			</div>
@@ -2135,7 +2135,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		// Setup headings
 		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], forum_htmlencode(end($forum_page['crumbs'])), $lang_profile['Section signature']);
 
-		($hook = get_hook('pf_change_details_signature_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_details_signature_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		define('FORUM_PAGE', 'profile-signature');
 		define('FORUM_PAGE_TYPE', 'sectioned');
@@ -2144,7 +2144,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		// START SUBST - <!-- forum_main -->
 		ob_start();
 
-		($hook = get_hook('pf_change_details_signature_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_details_signature_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -2163,7 +2163,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 			while (list(, $cur_error) = each($errors))
 				$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
-			($hook = get_hook('pf_pre_change_details_signature_errors')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_pre_change_details_signature_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ct-box error-box">
@@ -2181,10 +2181,10 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-<?php ($hook = get_hook('pf_change_details_signature_pre_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_signature_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_profile['Signature'] ?></strong></legend>
-<?php ($hook = get_hook('pf_change_details_signature_fieldset_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_signature_fieldset_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box textarea">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Compose signature'] ?></span> <small><?php printf($lang_profile['Sig max size'], forum_number_format($forum_config['p_sig_length']), forum_number_format($forum_config['p_sig_lines'])) ?></small></label><br />
@@ -2198,7 +2198,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 					<div class="sig-demo"><?php echo $forum_page['sig_demo'] ?></div>
 				</div>
 			</div>
-<?php endif; ($hook = get_hook('pf_change_details_signature_pre_buttons')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>			<div class="frm-buttons">
+<?php endif; ($hook = get_hook('pf_change_details_signature_pre_buttons')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="update" value="<?php echo $lang_profile['Update profile'] ?>" /> <?php echo $lang_profile['Instructions'] ?></span>
 			</div>
 		</form>
@@ -2247,7 +2247,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		// Setup headings
 		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], forum_htmlencode(end($forum_page['crumbs'])), $lang_profile['Section avatar']);
 
-		($hook = get_hook('pf_change_details_avatar_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_details_avatar_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		define('FORUM_PAGE', 'profile-avatar');
 		define('FORUM_PAGE_TYPE', 'sectioned');
@@ -2256,7 +2256,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		// START SUBST - <!-- forum_main -->
 		ob_start();
 
-		($hook = get_hook('pf_change_details_avatar_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_details_avatar_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -2289,7 +2289,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 			while (list(, $cur_error) = each($errors))
 				$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
-			($hook = get_hook('pf_pre_change_details_avatar_errors')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_pre_change_details_avatar_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ct-box error-box">
@@ -2312,16 +2312,16 @@ $forum_page['item_count'] = 0;
 			</div>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_profile['Avatar'] ?></strong></legend>
-<?php ($hook = get_hook('pf_change_details_avatar_fieldset_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_avatar_fieldset_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Upload avatar file'] ?></span><small><?php echo $lang_profile['Avatar upload help'] ?></small></label><br />
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" name="req_file" type="file" size="40" /></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('pf_change_details_avatar_fieldset_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_avatar_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
-<?php ($hook = get_hook('pf_change_details_avatar_post_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('pf_change_details_avatar_post_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="update" value="<?php echo $lang_profile['Update profile'] ?>" /> <?php echo $lang_profile['Instructions'] ?></span>
 			</div>
@@ -2365,7 +2365,7 @@ $forum_page['item_count'] = 0;
 		// Setup headings
 		$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], forum_htmlencode(end($forum_page['crumbs'])), $lang_profile['Section admin']);
 
-		($hook = get_hook('pf_change_details_admin_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_details_admin_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		define('FORUM_PAGE', 'profile-admin');
 		define('FORUM_PAGE_TYPE', 'sectioned');
@@ -2374,7 +2374,7 @@ $forum_page['item_count'] = 0;
 		// START SUBST - <!-- forum_main -->
 		ob_start();
 
-		($hook = get_hook('pf_change_details_admin_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('pf_change_details_admin_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
@@ -2396,7 +2396,7 @@ $forum_page['item_count'] = 0;
 		</div>
 <?php
 
-			($hook = get_hook('pf_change_details_admin_pre_group_membership')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_change_details_admin_pre_group_membership')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			if ($forum_user['g_moderator'] != '1' && !$forum_page['own_profile'])
 			{
@@ -2418,7 +2418,7 @@ $forum_page['item_count'] = 0;
 					'ORDER BY'	=> 'g.g_title'
 				);
 
-				($hook = get_hook('pf_qr_get_groups')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('pf_qr_get_groups')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 				while ($cur_group = $forum_db->fetch_assoc($result))
 				{
@@ -2474,7 +2474,7 @@ $forum_page['item_count'] = 0;
 				'ORDER BY'	=> 'c.disp_position, c.id, f.disp_position'
 			);
 
-			($hook = get_hook('pf_qr_get_cats_and_forums')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_qr_get_cats_and_forums')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			$cur_category = 0;
@@ -2504,7 +2504,7 @@ $forum_page['item_count'] = 0;
 		</div>
 <?php
 
-			($hook = get_hook('pf_change_details_admin_form_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_change_details_admin_form_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	</div>
@@ -2524,7 +2524,7 @@ $forum_page['item_count'] = 0;
 		require FORUM_ROOT.'footer.php';
 	}
 
-	($hook = get_hook('pf_change_details_new_section')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('pf_change_details_new_section')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	message($lang_common['Bad request']);
 }

@@ -29,7 +29,7 @@ if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
 require FORUM_ROOT.'include/common.php';
 
-($hook = get_hook('ed_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('ed_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 if ($forum_user['g_read_board'] == '0')
 	message($lang_common['No view']);
@@ -64,7 +64,7 @@ $query = array(
 	'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND p.id='.$id
 );
 
-($hook = get_hook('ed_qr_get_post_info')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('ed_qr_get_post_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 if (!$forum_db->num_rows($result))
 	message($lang_common['Bad request']);
@@ -75,7 +75,7 @@ $cur_post = $forum_db->fetch_assoc($result);
 $mods_array = ($cur_post['moderators'] != '') ? unserialize($cur_post['moderators']) : array();
 $forum_page['is_admmod'] = ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && array_key_exists($forum_user['username'], $mods_array))) ? true : false;
 
-($hook = get_hook('ed_pre_permission_check')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('ed_pre_permission_check')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // Do we have permission to edit this post?
 if (($forum_user['g_edit_posts'] == '0' ||
@@ -87,7 +87,7 @@ if (($forum_user['g_edit_posts'] == '0' ||
 
 $can_edit_subject = $id == $cur_post['first_post_id'];
 
-($hook = get_hook('ed_post_selected')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('ed_post_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 
 // Start with a clean slate
@@ -95,7 +95,7 @@ $errors = array();
 
 if (isset($_POST['form_sent']))
 {
-	($hook = get_hook('ed_form_submitted')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('ed_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// If it is a topic it must contain a subject
 	if ($can_edit_subject)
@@ -132,12 +132,12 @@ if (isset($_POST['form_sent']))
 
 	$hide_smilies = isset($_POST['hide_smilies']) ? 1 : 0;
 
-	($hook = get_hook('ed_end_validation')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('ed_end_validation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// Did everything go according to plan?
 	if (empty($errors) && !isset($_POST['preview']))
 	{
-		($hook = get_hook('ed_pre_post_edited')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('ed_pre_post_edited')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
 			require FORUM_ROOT.'include/search_idx.php';
@@ -151,7 +151,7 @@ if (isset($_POST['form_sent']))
 				'WHERE'		=> 'id='.$cur_post['tid'].' OR moved_to='.$cur_post['tid']
 			);
 
-			($hook = get_hook('ed_qr_update_subject')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('ed_qr_update_subject')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			// We changed the subject, so we need to take that into account when we update the search words
@@ -170,10 +170,10 @@ if (isset($_POST['form_sent']))
 		if (!isset($_POST['silent']) || !$forum_page['is_admmod'])
 			$query['SET'] .= ', edited='.time().', edited_by=\''.$forum_db->escape($forum_user['username']).'\'';
 
-		($hook = get_hook('ed_qr_update_post')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('ed_qr_update_post')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-		($hook = get_hook('ed_pre_edited_redirect')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('ed_pre_edited_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		redirect(forum_link($forum_url['post'], $id), $lang_post['Edit redirect']);
 	}
@@ -216,7 +216,7 @@ $forum_page['crumbs'] = array(
 	(($id == $cur_post['first_post_id']) ? $lang_post['Edit topic'] : $lang_post['Edit reply'])
 );
 
-($hook = get_hook('ed_pre_header_load')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('ed_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE', 'postedit');
 require FORUM_ROOT.'header.php';
@@ -224,7 +224,7 @@ require FORUM_ROOT.'header.php';
 // START SUBST - <!-- forum_main -->
 ob_start();
 
-($hook = get_hook('ed_main_output_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('ed_main_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // If preview selected and there are no errors
 if (isset($_POST['preview']) && empty($forum_page['errors']))
@@ -235,7 +235,7 @@ if (isset($_POST['preview']) && empty($forum_page['errors']))
 	$forum_page['preview_message'] = parse_message($message, $hide_smilies);
 	$forum_page['preview_poster'] = '<strong class="username">'.forum_htmlencode($cur_post['poster']).'</strong>';
 
-	($hook = get_hook('ed_pre_preview_display')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('ed_pre_preview_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -295,7 +295,7 @@ if (isset($forum_page['errors']))
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
-<?php ($hook = get_hook('ed_pre_main_fieldset')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('ed_pre_main_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_post['Edit post legend'] ?></strong></legend>
 <?php if ($can_edit_subject): ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
@@ -304,7 +304,7 @@ if (isset($forum_page['errors']))
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="req_subject" size="80" maxlength="70" value="<?php echo forum_htmlencode(isset($_POST['req_subject']) ? $_POST['req_subject'] : $cur_post['subject']) ?>" /></span>
 					</div>
 				</div>
-<?php endif; ($hook = get_hook('ed_pre_message_box')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null; ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+<?php endif; ($hook = get_hook('ed_pre_message_box')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box textarea required">
 						<label for="fld<?php echo ++ $forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_post['Write message'] ?></span></label><br />
 						<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_message" rows="14" cols="95"><?php echo forum_htmlencode(isset($_POST['req_message']) ? $message : $cur_post['message']) ?></textarea></span>
@@ -330,7 +330,7 @@ if ($forum_page['is_admmod'])
 		$forum_page['checkboxes']['silent'] = '<div class="mf-item"><span class="fld-input"><input type="checkbox" id="fld'.(++$forum_page['fld_count']).'" name="silent" value="1" /></span> <label for="fld'.$forum_page['fld_count'].'">'.$lang_post['Silent edit'].'</label></div>';
 }
 
-($hook = get_hook('ed_pre_checkbox_display')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('ed_pre_checkbox_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 if (!empty($forum_page['checkboxes']))
 {
@@ -346,7 +346,7 @@ if (!empty($forum_page['checkboxes']))
 
 }
 
-($hook = get_hook('ed_post_checkbox_display')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('ed_post_checkbox_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 			<div class="frm-buttons">
@@ -359,7 +359,7 @@ if (!empty($forum_page['checkboxes']))
 
 $forum_id = $cur_post['fid'];
 
-($hook = get_hook('ed_end')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('ed_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

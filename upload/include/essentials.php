@@ -129,6 +129,6 @@ if (!defined('FORUM_HOOKS_LOADED'))
 
 
 // A good place to add common functions for your extension
-($hook = get_hook('es_essentials')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+($hook = get_hook('es_essentials')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 define('FORUM_ESSENTIALS_LOADED', 1);

@@ -35,7 +35,7 @@ if (!defined('FORUM'))
 //
 function is_valid_email($email)
 {
-	$return = ($hook = get_hook('em_fn_is_valid_email_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('em_fn_is_valid_email_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -53,7 +53,7 @@ function is_banned_email($email)
 {
 	global $forum_db, $forum_bans;
 
-	$return = ($hook = get_hook('em_fn_is_banned_email_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('em_fn_is_banned_email_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
@@ -76,7 +76,7 @@ function forum_mail($to, $subject, $message, $reply_to = '')
 {
 	global $forum_config, $lang_common;
 
-	($hook = get_hook('em_fn_forum_mail_start')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('em_fn_forum_mail_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// Default sender address
 	$from = '"'.sprintf($lang_common['Forum mailer'], str_replace('"', '', $forum_config['o_board_title'])).'" <'.$forum_config['o_webmaster_email'].'>';
@@ -94,7 +94,7 @@ function forum_mail($to, $subject, $message, $reply_to = '')
 	// Make sure all linebreaks are CRLF in message (and strip out any NULL bytes)
 	$message = str_replace(array("\n", "\0"), array("\r\n", ''), forum_linebreaks($message));
 
-	($hook = get_hook('em_fn_forum_mail_pre_send')) ? (!defined('FORUM_USE_EVAL') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('em_fn_forum_mail_pre_send')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	if ($forum_config['o_smtp_host'] != '')
 		smtp_mail($to, $subject, $message, $headers);
