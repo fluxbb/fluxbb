@@ -25,6 +25,7 @@ $lang_common = array(
 'Cancel'					=>	'Cancel', // "name" of cancel buttons
 'Preview'					=>	'Preview',	// submit button to preview message
 'Delete'					=>	'Delete',
+'Split'						=>	'Split',
 'Ban message'				=>	'You are banned from this forum.',
 'Ban message 2'				=>	'The ban expires at the end of %s.',
 'Ban message 3'				=>	'The administrator or moderator that banned you left the following message:',

@@ -43,6 +43,6 @@ $lang_topic = array(
 'Close'					=>  'Close topic',
 'Unstick'				=>  'Unstick topic',
 'Stick'					=>  'Stick topic',
-'Delete posts'			=>	'Delete posts',
+'Moderate topic'		=>	'Moderate topic',
 
 );

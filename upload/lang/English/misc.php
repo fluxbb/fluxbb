@@ -38,6 +38,7 @@ $lang_misc = array(
 'Moderate forum'			=>	'Moderate forum',
 'Select'					=>	'Select',	// the header of a column of checkboxes
 'Move'						=>	'Move',
+'Merge'						=>	'Merge',
 'Open'						=>  'Open',
 'Close'						=>  'Close',
 
@@ -51,6 +52,7 @@ $lang_misc = array(
 'Topics'					=>	'Topics',
 'Move topic'				=>	'Move topic',
 'Move topics'				=>	'Move topics',
+'Merge topics'				=>	'Merge topics',
 'Delete topics'				=>	'Delete topics',
 'To new forum'				=>	'to a new forum',
 'Move to'					=>	'Destination forum:',
@@ -58,8 +60,10 @@ $lang_misc = array(
 'Nowhere to move'			=>	'There are no forums into which you can move topics.',
 'Leave redirect'			=>	'Leave a redirect topic in the forum from which the topic was moved.',
 'Leave redirects'			=>	'Leave redirect topics in the forum from which topics were moved.',
+'Leave merge redirects'		=>	'Leave redirect topics for those topics which were merged.',
 'Move topic redirect'		=>	'Topic moved. Redirecting …',
 'Move topics redirect'		=>	'Topics moved. Redirecting …',
+'Merge topics redirect'		=>	'Topics merged. Redirecting …',
 'Delete topics comply'		=>	'Are you sure you want to delete all the selected topics?',
 'Delete topics redirect'	=>	'Topics deleted. Redirecting …',
 'Open topic redirect'		=>	'Topic opened. Redirecting …',
@@ -70,14 +74,18 @@ $lang_misc = array(
 'Stick topic redirect'		=>	'Topic is now sticky. Redirecting …',
 'Unstick topic redirect'	=>	'Topic no longer sticky. Redirecting …',
 
-// Delete multiple posts in topic
+// Moderate topic
 'Posts'						=>	'Posts',
 'Delete posts'				=>	'Delete selected posts',
+'Split posts'				=>	'Split selected posts from topic',
 'Delete whole topic'		=>	'Delete whole topic',
-'Delete posts head'			=>	'Delete posts from : %s',
+'Moderate topic head'		=>	'Moderate topic : %s',
+'New subject'				=>	'New topic subject:',
 'Select post'				=>	'Select post', // Label for checkbox
 'Confirm post delete'		=>	'Confirm deletion of all selected posts',
+'Confirm topic split'		=>	'Confirm splitting of all selected posts into a new topic',
 'Delete posts redirect'		=>	'Posts deleted. Redirecting …',
+'Split posts redirect'		=>	'Posts split into a new topic. Redirecting …',
 'No posts selected'			=>	'You must select at least one post.'
 
 );

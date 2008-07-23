@@ -98,7 +98,7 @@ $forum_url = array(
 	'close'							=>	'moderate.php?fid=$1&amp;close=$2&amp;csrf_token=$3',
 	'stick'							=>	'moderate.php?fid=$1&amp;stick=$2&amp;csrf_token=$3',
 	'unstick'						=>	'moderate.php?fid=$1&amp;unstick=$2&amp;csrf_token=$3',
-	'delete_multiple'				=>	'moderate.php?fid=$1&amp;tid=$2',
+	'moderate_topic'				=>	'moderate.php?fid=$1&amp;tid=$2',
 	'admin_index'					=>	'admin/index.php',
 	'admin_bans'					=>	'admin/bans.php',
 	'admin_categories'				=>	'admin/categories.php',

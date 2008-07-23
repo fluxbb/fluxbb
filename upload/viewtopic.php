@@ -231,7 +231,7 @@ if ($forum_page['is_admmod'])
 	$forum_page['main_options']['sticky'] = (($cur_topic['sticky'] == '1') ? '<span><a class="mod-option" href="'.forum_link($forum_url['unstick'], array($cur_topic['forum_id'], $id, generate_form_token('unstick'.$id))).'">'.$lang_topic['Unstick'].'</a></span>' : '<span><a class="mod-option" href="'.forum_link($forum_url['stick'], array($cur_topic['forum_id'], $id, generate_form_token('stick'.$id))).'">'.$lang_topic['Stick'].'</a></span>');
 
 	if ($cur_topic['num_replies'] != 0)
-		$forum_page['main_options']['delete_multiple'] = '<span><a class="mod-option" href="'.forum_sublink($forum_url['delete_multiple'], $forum_url['page'], $forum_page['page'], array($cur_topic['forum_id'], $id)).'">'.$lang_topic['Delete posts'].'</a></span>';
+		$forum_page['main_options']['moderate_topic'] = '<span><a class="mod-option" href="'.forum_sublink($forum_url['moderate_topic'], $forum_url['page'], $forum_page['page'], array($cur_topic['forum_id'], $id)).'">'.$lang_topic['Moderate topic'].'</a></span>';
 }
 
 // Setup breadcrumbs
