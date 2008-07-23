@@ -153,66 +153,66 @@ function xml_to_array($raw_xml)
 //
 function validate_manifest($xml_array, $folder_name)
 {
-	global $lang_admin, $forum_config;
+	global $lang_admin_ext, $forum_config;
 
 	$errors = array();
 
 	if (!isset($xml_array['extension']) || !is_array($xml_array['extension']))
-		$errors[] = $lang_admin['extension root error'];
+		$errors[] = $lang_admin_ext['extension root error'];
 	else
 	{
 		$ext = $xml_array['extension'];
 		if (!isset($ext['attributes']['engine']))
-			$errors[] = $lang_admin['extension/engine error'];
+			$errors[] = $lang_admin_ext['extension/engine error'];
 		else if ($ext['attributes']['engine'] != '1.0')
-			$errors[] = $lang_admin['extension/engine error2'];
+			$errors[] = $lang_admin_ext['extension/engine error2'];
 		if (!isset($ext['id']) || $ext['id'] == '')
-			$errors[] = $lang_admin['extension/id error'];
+			$errors[] = $lang_admin_ext['extension/id error'];
 		if ($ext['id'] != $folder_name)
-			$errors[] = $lang_admin['extension/id error2'];
+			$errors[] = $lang_admin_ext['extension/id error2'];
 		if (!isset($ext['title']) || $ext['title'] == '')
-			$errors[] = $lang_admin['extension/title error'];
+			$errors[] = $lang_admin_ext['extension/title error'];
 		if (!isset($ext['version']) || $ext['version'] == '' || preg_match('/[^a-z0-9\- \.]+/i', $ext['version']))
-			$errors[] = $lang_admin['extension/version error'];
+			$errors[] = $lang_admin_ext['extension/version error'];
 		if (!isset($ext['description']) || $ext['description'] == '')
-			$errors[] = $lang_admin['extension/description error'];
+			$errors[] = $lang_admin_ext['extension/description error'];
 		if (!isset($ext['author']) || $ext['author'] == '')
-			$errors[] = $lang_admin['extension/author error'];
+			$errors[] = $lang_admin_ext['extension/author error'];
 		if (!isset($ext['minversion']) || $ext['minversion'] == '')
-			$errors[] = $lang_admin['extension/minversion error'];
+			$errors[] = $lang_admin_ext['extension/minversion error'];
 		if (isset($ext['minversion']) && version_compare(clean_version($forum_config['o_cur_version']), clean_version($ext['minversion']), '<'))
-			$errors[] = sprintf($lang_admin['extension/minversion error2'], $ext['minversion']);
+			$errors[] = sprintf($lang_admin_ext['extension/minversion error2'], $ext['minversion']);
 		if (!isset($ext['maxtestedon']) || $ext['maxtestedon'] == '')
-			$errors[] = $lang_admin['extension/maxtestedon error'];
+			$errors[] = $lang_admin_ext['extension/maxtestedon error'];
 		if (isset($ext['note']))
 		{
 			foreach ($ext['note'] as $note)
 			{
 				if (!isset($note['content']) || $note['content'] == '')
-					$errors[] = $lang_admin['extension/note error'];
+					$errors[] = $lang_admin_ext['extension/note error'];
 				if (!isset($note['attributes']['type']) || $note['attributes']['type'] == '')
-					$errors[] = $lang_admin['extension/note error2'];
+					$errors[] = $lang_admin_ext['extension/note error2'];
 			}
 		}
 		if (isset($ext['hooks']) && is_array($ext['hooks']))
 		{
 			if (!isset($ext['hooks']['hook']) || !is_array($ext['hooks']['hook']))
-				$errors[] = $lang_admin['extension/hooks/hook error'];
+				$errors[] = $lang_admin_ext['extension/hooks/hook error'];
 			else
 			{
 				foreach ($ext['hooks']['hook'] as $hook)
 				{
 					if (!isset($hook['content']) || $hook['content'] == '')
-						$errors[] = $lang_admin['extension/hooks/hook error'];
+						$errors[] = $lang_admin_ext['extension/hooks/hook error'];
 					if (!isset($hook['attributes']['id']) || $hook['attributes']['id'] == '')
-						$errors[] = $lang_admin['extension/hooks/hook error2'];
+						$errors[] = $lang_admin_ext['extension/hooks/hook error2'];
 					if (isset($hook['attributes']['priority']) && (!ctype_digit($hook['attributes']['priority']) || $hook['attributes']['priority'] < 0 || $hook['attributes']['priority'] > 10))
-						$errors[] = $lang_admin['extension/hooks/hook error3'];
+						$errors[] = $lang_admin_ext['extension/hooks/hook error3'];
 
 					$tokenized_hook = token_get_all('<?php '.$hook['content']);
 					$last_element = array_pop($tokenized_hook);
 					if (is_array($last_element) && $last_element[0] == T_INLINE_HTML)
-						$errors[] = $lang_admin['extension/hooks/hook error4'];
+						$errors[] = $lang_admin_ext['extension/hooks/hook error4'];
 				}
 			}
 		}
