@@ -442,10 +442,10 @@ if (isset($_GET['tid']))
 	($hook = get_hook('mr_post_actions_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
-	<form class="newform" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 	<div class="main-pagehead">
 		<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
 	</div>
+	<form class="newform" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 	<div class="main-content main-topic">
 		<div class="hidden">
 			<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />

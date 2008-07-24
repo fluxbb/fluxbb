@@ -90,6 +90,10 @@ body {
 	color: #333;
 	}
 	
+.brd .ct-box .hn {
+	border-color: #DBE0E4;
+	}
+	
 .brd .frm-group, .brd .mf-set, .brd .sf-set, .brd .sf-box, .brd .mf-box {
 	background: #Fff
 	}
@@ -168,17 +172,26 @@ body {
 	border-right-color: #426482;
 	}
 
-#brd-wrap .main-menu a, #brd-wrap .admin-menu a {
-	color: #ddd !important;
+#brd-wrap .main-menu a:link, #brd-wrap .main-menu a:visited, #brd-wrap .admin-menu a {
+	color: #ddd;
+	text-decoration: none;
+	}
+	
+#brd-wrap .main-menu a:hover, #brd-wrap .main-menu a:active, #brd-wrap .main-menu a:focus,
+#brd-wrap .admin-menu a:hover, #brd-wrap .admin-menu a:active, #brd-wrap .admin-menu a:focus {
+	text-decoration: underline;
+	color: #fff;
+	}
+
+#brd-wrap .main-menu li.active a:hover, #brd-wrap .main-menu li.active a:active, #brd-wrap .main-menu li.active a:focus,
+#brd-wrap .admin-menu li.active a:hover, #brd-wrap .admin-menu li.active a:active, #brd-wrap .admin-menu li.active a:focus {
 	text-decoration: none;
 	}
 
+
 #brd-wrap .main-menu li.active a, #brd-wrap .admin-menu li.active a {
 	background: url(tab.png) bottom center no-repeat;
-	}
-	
-#brd-wrap .main-menu li.active a, #brd-wrap .admin-menu li.active a {
-	color: #fff !important;
+	color: #fff;
 	}
 
 #brd-admod #alert a {
