@@ -202,7 +202,7 @@ else if (isset($_GET['show_users']))
 	<div class="main-pagehead">
 		<h2 class="hn"><span><?php printf($lang_admin_users['Users found'], $forum_page['num_users']) ?></span></h2>
 	</div>
-	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_users']) ?>?action=modify_users">
+	<form id="aus-show-users-results-form" class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_users']) ?>?action=modify_users">
 	<div class="main-content main-frm">
 		<div class="hidden">
 			<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_users']).'?action=modify_users') ?>" />
@@ -319,7 +319,7 @@ else if (isset($_GET['show_users']))
 	{
 ?>
 	<div class="main-options gen-content mod-options">
-		<p id="select-all"><a href="#"><?php echo $lang_admin_common['Select all'] ?></a></p>
+		<p id="select-all"><a href="#" onclick="return Forum.toggleCheckboxes(document.getElementById('aus-show-users-results-form'))"><?php echo $lang_admin_common['Select all'] ?></a></p>
 		<p class="options"><?php echo implode(' ', $forum_page['mod_options']) ?></p>
 	</div>
 <?php
@@ -866,7 +866,7 @@ else if (isset($_POST['find_user']))
 	<div class="main-pagehead">
 		<h2 class="hn"><span><?php printf($lang_admin_users['Users found'], $forum_page['num_users']) ?></span></h2>
 	</div>
-	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_users']) ?>?action=modify_users">
+	<form id="aus-find-user-results-form" class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_users']) ?>?action=modify_users">
 	<div class="main-content main-forum">
 		<div class="hidden">
 			<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_users']).'?action=modify_users') ?>" />
@@ -959,7 +959,7 @@ if ($forum_page['num_users'] > 0)
 	{
 ?>
 	<div class="main-options gen-content mod-options">
-		<p id="select-all"><a href="#"><?php echo $lang_admin_common['Select all'] ?></a></p>
+		<p id="select-all"><a href="#" onclick="return Forum.toggleCheckboxes(document.getElementById('aus-find-user-results-form'))"><?php echo $lang_admin_common['Select all'] ?></a></p>
 		<p class="options"><?php echo implode(' ', $forum_page['mod_options']) ?></p>
 	</div>
 <?php

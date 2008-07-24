@@ -107,7 +107,7 @@ if ($forum_db->num_rows($result))
 		<h2 class="hn"><span><?php echo $lang_admin_reports['New reports heading'] ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
-		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_reports']) ?>?action=zap">
+		<form id="arp-new-report-form" class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_reports']) ?>?action=zap">
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_reports']).'?action=zap') ?>" />
 			</div>
@@ -141,7 +141,7 @@ if ($forum_db->num_rows($result))
 
 ?>
 			<div class="frm-buttons">
-				<span id="select-all"><a href="#"><?php echo $lang_admin_common['Select all'] ?></a></span>
+				<span id="select-all"><a href="#" onclick="return Forum.toggleCheckboxes(document.getElementById('arp-new-report-form'))"><?php echo $lang_admin_common['Select all'] ?></a></span>
 				<span class="submit"><input type="submit" name="mark_as_read" value="<?php echo $lang_admin_reports['Mark read'] ?>" /></span>
 			</div>
 		</form>

@@ -445,7 +445,7 @@ if (isset($_GET['tid']))
 	<div class="main-pagehead">
 		<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
 	</div>
-	<form class="newform" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+	<form id="mr-post-actions-form" class="newform" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 	<div class="main-content main-topic">
 		<div class="hidden">
 			<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
@@ -576,7 +576,7 @@ $forum_page['mod_options']['del_topic'] = '<span'.(empty($forum_page['mod_option
 
 ?>
 	<div class="main-options mod-options gen-content">
-		<p id="select-all"><a href="#"><?php echo $lang_misc['Select all'] ?></a></p>
+		<p id="select-all"><a href="#" onclick="return Forum.toggleCheckboxes(document.getElementById('mr-post-actions-form'))"><?php echo $lang_misc['Select all'] ?></a></p>
 		<p class="options"><?php echo implode(' ', $forum_page['mod_options']) ?></p>
 	</div>
 	</form>
@@ -1424,7 +1424,7 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 	<div class="main-subhead">
 		<p class="item-summary<?php echo ($forum_config['o_topic_views'] == '1') ? ' forum-views' : ' forum-noview' ?>"><span><?php printf($lang_forum['Forum subtitle'], implode(' ', $forum_page['item_header']['subject']), implode(', ', $forum_page['item_header']['info'])) ?></span></p>
 	</div>
-	<form method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+	<form id="mr-topic-actions-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 	<div id="forum<?php echo $fid ?>" class="main-content main-forum<?php echo ($forum_config['o_topic_views'] == '1') ? ' forum-views' : ' forum-noview' ?>">
 		<div class="hidden">
 			<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
@@ -1565,7 +1565,7 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 
 ?>
 	<div class="main-options mod-options gen-content">
-		<p id="select-all"><a href="#"><?php echo $lang_misc['Select all'] ?></a></p>
+		<p id="select-all"><a href="#" onclick="return Forum.toggleCheckboxes(document.getElementById('mr-topic-actions-form'))"><?php echo $lang_misc['Select all'] ?></a></p>
 		<p class="options"><?php echo implode(' ', $forum_page['mod_options']) ?></p>
 	</div>
 	</form>
