@@ -70,7 +70,7 @@ $lang_misc = array(
 'Open topics redirect'		=>	'Topics opened. Redirecting …',
 'Close topic redirect'		=>	'Topic closed. Redirecting …',
 'Close topics redirect'		=>	'Topics closed. Redirecting …',
-'No topics selected'		=>	'You must select at least one topic to move/delete/open/close.',
+'No topics selected'		=>	'You must select at least one topic to move/merge/delete/open/close.',
 'Stick topic redirect'		=>	'Topic is now sticky. Redirecting …',
 'Unstick topic redirect'	=>	'Topic no longer sticky. Redirecting …',
 

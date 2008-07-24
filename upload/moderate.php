@@ -850,6 +850,9 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 	$topics = isset($_POST['topics']) && !empty($_POST['topics']) ? $_POST['topics'] : array();
 	$topics = array_map('intval', (is_array($topics) ? $topics : explode(',', $topics)));
 
+	if (empty($topics))
+		message($lang_common['Bad request']);
+
 	if (isset($_POST['merge_topics_comply']))
 	{
 		($hook = get_hook('mr_confirm_merge_topics_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
