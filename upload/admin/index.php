@@ -199,7 +199,7 @@ ob_start();
 <?php if (!empty($alert_items)): ?>		<div id="admin-alerts" class="ct-set warn-set">
 			<div class="ct-box">
 				<h3 class="set-legend hn warn"><span><?php echo $lang_admin_index['Alerts'] ?></span></h3>
-				<?php echo implode(' ',$alert_items)."\n" ?>
+				<?php echo implode(' ', $alert_items)."\n" ?>
 			</div>
 		</div>
 <?php endif; ?>		<div class="ct-group">

@@ -151,7 +151,7 @@ $forum_head['commonjs'] = '<script type="text/javascript" src="'.$base_url.'/inc
 
 ($hook = get_hook('hd_head')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-$tpl_main = str_replace('<!-- forum_head -->', implode("\n",$forum_head), $tpl_main);
+$tpl_main = str_replace('<!-- forum_head -->', implode("\n", $forum_head), $tpl_main);
 unset($forum_head);
 
 // END SUBST - <!-- forum_head -->

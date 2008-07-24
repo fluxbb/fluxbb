@@ -462,7 +462,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 	($hook = get_hook('vt_row_modify_post_actions')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	if (!empty($forum_page['post_actions']))
-		$forum_page['post_options']['actions'] = '<p class="post-actions">'.implode(' ',$forum_page['post_actions']).'</p>';
+		$forum_page['post_options']['actions'] = '<p class="post-actions">'.implode(' ', $forum_page['post_actions']).'</p>';
 
 	// Give the post some class
 	$forum_page['item_status'] = array(

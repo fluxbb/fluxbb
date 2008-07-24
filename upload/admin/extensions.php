@@ -355,7 +355,7 @@ else if (isset($_GET['uninstall']))
 	($hook = get_hook('aex_uninstall_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$id = preg_replace('/[^0-9a-z_]/', '', $_GET['uninstall']);
-	
+
 	// Fetch info about the extension
 	$query = array(
 		'SELECT'	=> 'e.title, e.version, e.description, e.author, e.uninstall, e.uninstall_note',
@@ -749,7 +749,7 @@ if ($section == 'hotfixes')
 <?php
 		$installed_count++;
 	}
-	
+
 	if ($installed_count == 0)
 	{
 
@@ -908,12 +908,12 @@ else
 		);
 
 		($hook = get_hook('aex_section_manage_pre_ext_actions')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-		
+
 		$forum_page['ext_item'][] = '<div class="ext-item databox'.($ext['disabled'] == '1' ? ' extdisabled' : '').'">'."\n\t\t".'<h3 class="legend"><span>'.forum_htmlencode($ext['title']).' v'.$ext['version'].($ext['disabled'] == '1' ? ' ( <span>'.$lang_admin_ext['Extension disabled'].'</span> )' : '').'</span></h3>'."\n\t\t".'<p><span>'.sprintf($lang_admin_ext['Extension by'], forum_htmlencode($ext['author'])).'</span>'.($ext['description'] != '' ? '<br /><span>'.forum_htmlencode($ext['description']).'</span>' : '').'</p>'."\n\t\t".'<p class="actions">'.implode('', $forum_page['ext_actions']).'</p>'."\n\t".'</div>';
 
 		$installed_count++;
 	}
-		
+
 	if ($installed_count > 0)
 	{
 

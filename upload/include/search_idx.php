@@ -99,7 +99,7 @@ function split_words($text)
 function update_search_index($mode, $post_id, $message, $subject = null)
 {
 	global $db_type, $forum_db;
-	
+
 	$return = ($hook = get_hook('si_fn_update_search_index_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
@@ -124,7 +124,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 		($hook = get_hook('si_fn_update_search_index_qr_get_current_words')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-		
+
 		// Declare here to stop array_keys() and array_diff() from complaining if not set
 		$cur_words['post'] = array();
 		$cur_words['subject'] = array();
@@ -166,7 +166,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 		($hook = get_hook('si_fn_update_search_index_qr_get_existing_words')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-		
+
 		$word_ids = array();
 		while ($row = $forum_db->fetch_row($result))
 			$word_ids[$row[1]] = $row[0];
@@ -281,7 +281,7 @@ function strip_search_index($post_ids)
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 	}
-	
+
 	$query = array(
 		'DELETE'	=> 'search_matches',
 		'WHERE'		=> 'post_id IN('.$post_ids.')'
