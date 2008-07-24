@@ -41,6 +41,7 @@ $lang_misc = array(
 'Merge'						=>	'Merge',
 'Open'						=>  'Open',
 'Close'						=>  'Close',
+'Select all'				=>	'Select all',
 
 
 // Hostname lookup

@@ -141,6 +141,7 @@ if ($forum_db->num_rows($result))
 
 ?>
 			<div class="frm-buttons">
+				<span id="select-all"><a href="#"><?php echo $lang_admin_common['Select all'] ?></a></span>
 				<span class="submit"><input type="submit" name="mark_as_read" value="<?php echo $lang_admin_reports['Mark read'] ?>" /></span>
 			</div>
 		</form>

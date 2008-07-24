@@ -37,7 +37,7 @@ body {
 	}
 
 .brd-page {
-	font: 75%/1.5em verdana, 'Lucida Grande', helvetica, arial, sans-serif;
+	font: 75%/1.5em Verdana, Helvetica, Arial, sans-serif;
 	}
 
 .brd h1,.brd h2,.brd h3, .brd h4, .brd h5, .brd h6 {
@@ -48,7 +48,7 @@ body {
 .brd samp, .brd code, .brd pre, .brd option, .brd optgroup,
 .brd input, .brd select, .brd textarea, .brd td, .brd th {
 	font-size: 1em;
-	font-family: verdana, 'Lucida Grande',helvetica,arial,sans-serif; 
+	font-family: 'Lucida Grande',helvetica,arial,sans-serif; 
 	font-style: normal;
 	font-weight: normal;
 	}
@@ -637,6 +637,10 @@ D - COMMON INTERFACE ELEMENTS
 	margin-top: -2.7em;
 	padding: 0.5em 1.417em;
 	position: relative;
+	}
+	
+.brd #select-all {
+	float: right;
 	}
 	
 /*************************************************************

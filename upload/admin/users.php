@@ -319,6 +319,7 @@ else if (isset($_GET['show_users']))
 	{
 ?>
 	<div class="main-options gen-content mod-options">
+		<p id="select-all"><a href="#"><?php echo $lang_admin_common['Select all'] ?></a></p>
 		<p class="options"><?php echo implode(' ', $forum_page['mod_options']) ?></p>
 	</div>
 <?php
@@ -958,6 +959,7 @@ if ($forum_page['num_users'] > 0)
 	{
 ?>
 	<div class="main-options gen-content mod-options">
+		<p id="select-all"><a href="#"><?php echo $lang_admin_common['Select all'] ?></a></p>
 		<p class="options"><?php echo implode(' ', $forum_page['mod_options']) ?></p>
 	</div>
 <?php

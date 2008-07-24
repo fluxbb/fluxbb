@@ -575,7 +575,8 @@ $forum_page['mod_options']['del_topic'] = '<span'.(empty($forum_page['mod_option
 ($hook = get_hook('mr_post_actions_pre_mod_options')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
-	<div class="main-modoptions gen-content">
+	<div class="main-options mod-options gen-content">
+		<p id="select-all"><a href="#"><?php echo $lang_misc['Select all'] ?></a></p>
 		<p class="options"><?php echo implode(' ', $forum_page['mod_options']) ?></p>
 	</div>
 	</form>
@@ -1564,6 +1565,7 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 
 ?>
 	<div class="main-options mod-options gen-content">
+		<p id="select-all"><a href="#"><?php echo $lang_misc['Select all'] ?></a></p>
 		<p class="options"><?php echo implode(' ', $forum_page['mod_options']) ?></p>
 	</div>
 	</form>
