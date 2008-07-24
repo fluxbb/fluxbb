@@ -761,6 +761,10 @@ E - INDEX, FORUMS, SEARCH RESULTS, MODERATE FORUMS
   	width: 20em;
   	}
 
+.brd .main-item li strong {
+	font-weight: normal;
+	}
+
 .brd .main-content .redirect li.info-lastpost {
   	padding-top: 1em;
   	}
@@ -1304,6 +1308,10 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	padding: 0 0 0.5em 0.5em;
 	display: inline;
 	position: relative;
+	}
+	
+.brd .postbody .user li strong {
+	font-weight: normal;
 	}
 	
 .brd .postbody .user ul {

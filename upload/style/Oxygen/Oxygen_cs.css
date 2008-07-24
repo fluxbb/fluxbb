@@ -77,6 +77,19 @@ body {
 	border-color: #F4EBCE;
 	}
 	
+.brd .ct-box ul li {
+	color: #6A97BF;
+	}
+	
+.brd .ct-box ul li span {
+	color: #666;
+	}
+	
+.brd .ct-box ul li strong {
+	font-weight: normal;
+	color: #333;
+	}
+	
 .brd .frm-group, .brd .mf-set, .brd .sf-set, .brd .sf-box, .brd .mf-box {
 	background: #Fff
 	}
