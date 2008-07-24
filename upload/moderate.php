@@ -286,12 +286,12 @@ if (isset($_GET['tid']))
 			if ($forum_db->result($result) != count($posts))
 				message($lang_common['Bad request']);
 
-			$new_subject = isset($_POST['new_subject']) ? trim($_POST['new_subject']) : '';
+			$new_subject = isset($_POST['new_subject']) ? forum_trim($_POST['new_subject']) : '';
 
 			if ($new_subject == '')
-				$errors[] = $lang_post['No subject'];
+				message($lang_post['No subject']);
 			else if (utf8_strlen($new_subject) > 70)
-				$errors[] = $lang_post['Too long subject'];
+				message($lang_post['Too long subject']);
 
 			// Get data from the new first post
 			$query = array(
