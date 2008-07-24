@@ -183,7 +183,7 @@ else if ($section == 'smilies')
 		$smiley_groups[$smiley_img][] = $smiley_text;
 
 	foreach ($smiley_groups as $smiley_img => $smiley_texts)
-		echo "\t\t\t\t".'<p><code>'.implode(' '.$lang_common['and'].' ', $smiley_texts).' <span>'.$lang_help['produces'].'</span> <img src="'.$base_url.'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.$smiley_texts[0].'" /></code></p>'."\n";
+		echo "\t\t\t\t".'<p>'.implode(' '.$lang_common['and'].' ', $smiley_texts).' <span>'.$lang_help['produces'].'</span> <img src="'.$base_url.'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.$smiley_texts[0].'" /></p>'."\n";
 
 ?>
 			</div>

@@ -1527,7 +1527,7 @@ H - MAIN TABLES
 	
 
 /*************************************************************
-H - MAIN CONTENT - ADMIN SPECIFIC
+H - MAIN CONTENT - ODDMENTS
 **************************************************************/
 
 /* Reports
@@ -1577,4 +1577,28 @@ H - MAIN CONTENT - ADMIN SPECIFIC
 	right: 0.75em;
 	height; 2.5em;
 	}
+
+/* Help File
+-------------------------------------------------------------*/
+
+.brd .help-box samp {
+	display: block;
+	margin-left: 1.5em;
+	}
 	
+.brd .help-box code {
+	font-family: courier;
+	font-size: 1.084em;
+	}
+	
+.brd .help-box .entry-content {
+	padding: 0;
+	}
+	
+.brd .help-box .hn {
+	padding-bottom: 0.5em;
+	border-bottom-style: dashed;
+	border-bottom-width: 1px;
+	margin-bottom: 0.5em;
+	color: #294F6E
+	}

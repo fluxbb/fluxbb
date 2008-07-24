@@ -94,6 +94,10 @@ body {
 	border-color: #DBE0E4;
 	}
 	
+.brd .help-box {
+	background: #f4f4f4;
+	}
+	
 .brd .frm-group, .brd .mf-set, .brd .sf-set, .brd .sf-box, .brd .mf-box {
 	background: #Fff
 	}
@@ -126,6 +130,11 @@ body {
 
 #brd-wrap .frm-form .required label span em, #brd-wrap #req-msg em {
 	color: #b42000;
+	}
+	
+#brd-wrap .entry-content .quotebox, #brd-wrap .entry-content .codebox {
+	background: #fff;
+	border-color: #ddd;
 	}
 
 /* Menus
