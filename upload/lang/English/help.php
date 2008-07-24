@@ -7,17 +7,15 @@ $lang_help = array(
 'Help with'				=>	'Help with %s',
 'produces'				=>	'produces',
 
-'BBCode info 1'			=>	'Administrators have the ability to enable or disable BBCode. If BBCode is enabled a link to BBCode help will appear when you compose/edit a post or your signature.',
-'BBCode info 2'			=>	'BBCode is a collection of formatting tags that are used to change the look of text in this forum. BBCode is based on the same principal as, and is very similar to, HTML. Below is a list of all the available BBCodes and instructions on how to use them.',
-'Image info 1'			=>	'Administrators have the ability to enable or disable the display of images in posts and/or signatures. If image display is enabled a link to Image help will appear when you compose/edit a post or your signature.',
-'Image info 2'			=>	'Images are inserted using the BBCode [img] tag. The text appearing after the "=" sign in the opening tag is used for the alt attribute and should be included whenever possible.',
-
+'BBCode info'			=>	'Administrators have the ability to enable or disable BBCode. If BBCode is enabled a link to BBCode help will appear when you compose/edit a post or your signature. BBCode is a collection of formatting tags that are used to change the look of text in this forum. BBCode is based on the same principal as, and is very similar to, HTML. Below is a list of all the available BBCodes and instructions on how to use them.',
+'Image info'			=>	'Administrators have the ability to enable or disable the display of images in posts and/or signatures. If image display is enabled a link to Image help will appear when you compose/edit a post or your signature. Images are inserted using the BBCode [img] tag. The text appearing after the "=" sign in the opening tag is used for the alt attribute and should be included whenever possible.',
 'Text style'			=>	'Text appearance can be changed with the following tags which can be nested.',
 'Bold text'				=>	'Bold text',
 'Underlined text'		=>	'Underlined text',
 'Italic text'			=>	'Italic text',
 'Red text'				=>	'Red text',
 'Blue text'				=>	'Blue text',
+'Heading text'			=>	'Heading text',
 
 'Links info'			=>	'You can create links to other documents or to e-mail addresses using the following tags:',
 'My e-mail address'		=>	'My e-mail address',
