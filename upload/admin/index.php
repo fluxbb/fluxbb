@@ -182,7 +182,7 @@ ob_start();
 	</div>
 	<div class="main-content main-frm">
 <?php if (!empty($alert_items)): ?>		<div id="admin-alerts" class="ct-set warn-set">
-			<div class="ct-box">
+			<div class="ct-box warn-box">
 				<h3 class="set-legend hn warn"><span><?php echo $lang_admin_index['Alerts'] ?></span></h3>
 				<?php echo implode(' ', $alert_items)."\n" ?>
 			</div>

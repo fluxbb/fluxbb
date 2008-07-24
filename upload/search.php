@@ -161,8 +161,6 @@ if (isset($query))
 
 	($hook = get_hook('se_results_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-	$forum_page['cur_forum'] = 0;
-
 	if ($show_as == 'topics')
 	{
 		// Load the forum.php language file
@@ -170,17 +168,17 @@ if (isset($query))
 
 		$forum_page['item_header'] = array();
 		$forum_page['item_header']['subject']['title'] = '<strong class="subject-title">'.$lang_forum['Topics'].'</strong>';
-		$forum_page['item_header']['info']['replies'] = '<strong class="info-replies">'.$lang_forum['Replies'].'</strong>';
-		$forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">'.$lang_forum['Last post'].'</strong>';
+		$forum_page['item_header']['info']['replies'] = '<strong class="info-replies">'.$lang_forum['replies'].'</strong>';
+		$forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">'.$lang_forum['last post'].'</strong>';
 
 ?>
 	<div class="main-pagehead">
 		<h2 class="hn"><span><?php echo $forum_page['results_info'] ?></span></h2>
 	</div>
+	<div class="main-subhead">
+		<p class="item-summary forum-noview"><span><?php printf($lang_forum['Search subtitle'], implode(' ', $forum_page['item_header']['subject']), implode(', ', $forum_page['item_header']['info'])) ?></span></p>
+	</div>
 	<div class="main-content main-forum forum-noview">
-		<div class="item-header">
-			<p><span><?php printf($lang_forum['Search subtitle'], implode(' ', $forum_page['item_header']['subject']), implode(', ', $forum_page['item_header']['info'])) ?></span></p>
-		</div>
 <?php
 
 	}
@@ -215,18 +213,6 @@ if (isset($query))
 
 		if ($forum_config['o_censoring'] == '1')
 			$search_set[$i]['subject'] = censor_words($search_set[$i]['subject']);
-
-		if ($forum_page['cur_forum'] != $search_set[$i]['forum_id'])
-		{
-
-?>
-		<div class="content-head">
-			<h3 class="hn"><span><?php printf($lang_search['Location'], '<a href="'.forum_link($forum_url['forum'], array($search_set[$i]['forum_id'], sef_friendly($search_set[$i]['forum_name']))).'">'.forum_htmlencode($search_set[$i]['forum_name']).'</a>') ?></span></h3>
-		</div>
-<?php
-
-			$forum_page['cur_forum'] = $search_set[$i]['forum_id'];
-		}
 
 		if ($show_as == 'posts')
 		{
@@ -334,7 +320,7 @@ if (isset($query))
 			if (!empty($forum_page['item_nav']))
 				$forum_page['item_title']['nav'] = '<span class="item-nav">'.sprintf($lang_forum['Topic navigation'], implode('&#160;&#160;', $forum_page['item_nav'])).'</span>';
 
-			$forum_page['item_body']['subject']['title'] = '<h4 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span> '.implode(' ', $forum_page['item_title']).'</h4>';
+			$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span> '.implode(' ', $forum_page['item_title']).'</h3>';
 
 
 			if ($search_set[$i]['sticky'] == '1')
@@ -350,9 +336,10 @@ if (isset($query))
 			}
 
 			if (!empty($forum_page['item_subject_status']))
-				$forum_page['item_subject']['status'] = '<span class="item-status">'.sprintf($lang_forum['Item status'], implode(', ', $forum_page['item_subject_status'])).'</span>';
+				$forum_page['item_subject']['status'] = '<span class="item-status">'.sprintf($lang_forum['Item status'], implode(' ', $forum_page['item_subject_status'])).'</span>';
 
 			$forum_page['item_subject']['starter'] = '<span class="item-starter">'.sprintf($lang_forum['Topic starter'], format_time($search_set[$i]['posted'], 1), '<cite>'.sprintf($lang_forum['by poster'], forum_htmlencode($search_set[$i]['poster'])).'</cite>').'</span>';
+			$forum_page['item_subject']['location'] = '<span>'.sprintf($lang_search['Location'], '<a href="'.forum_link($forum_url['forum'], array($search_set[$i]['forum_id'], sef_friendly($search_set[$i]['forum_name']))).'">'.forum_htmlencode($search_set[$i]['forum_name']).'</a>').'</span>';
 			$forum_page['item_body']['subject']['desc'] = '<p>'.implode(' ', $forum_page['item_subject']).'</p>';
 
 			if (empty($forum_page['item_status']))
@@ -360,15 +347,15 @@ if (isset($query))
 
 			($hook = get_hook('se_results_topics_pre_item_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-			$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? ' odd' : ' even').(($forum_page['item_count'] == 1) ? ' item-body1' : '').((!empty($forum_page['item_status'])) ? ' '.implode(' ', $forum_page['item_status']) : '');
+			$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? ' odd' : ' even').(($forum_page['item_count'] == 1) ? ' main-item1' : '').((!empty($forum_page['item_status'])) ? ' '.implode(' ', $forum_page['item_status']) : '');
 
 			$forum_page['item_body']['info']['replies'] = '<li class="info-replies"><strong>'.forum_number_format($search_set[$i]['num_replies']).'</strong> <span class="label">'.(($search_set[$i]['num_replies'] == 1) ? $lang_forum['Reply'] : $lang_forum['Replies']).'</span></li>';
-			$forum_page['item_body']['info']['lastpost'] = '<li class="info-lastpost"><span class="label">'.$lang_forum['Last post was'].'</span> <strong><a href="'.forum_link($forum_url['post'], $search_set[$i]['last_post_id']).'">'.format_time($search_set[$i]['last_post']).'</a></strong> <cite>'.sprintf($lang_forum['by poster'], forum_htmlencode($search_set[$i]['last_poster'])).'</cite></li>';
+			$forum_page['item_body']['info']['lastpost'] = '<li class="info-lastpost"><span class="label">'.$lang_forum['Last post'].'</span> <strong><a href="'.forum_link($forum_url['post'], $search_set[$i]['last_post_id']).'">'.format_time($search_set[$i]['last_post']).'</a></strong> <cite>'.sprintf($lang_forum['by poster'], forum_htmlencode($search_set[$i]['last_poster'])).'</cite></li>';
 
 			($hook = get_hook('se_results_topics_row_pre_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
-		<div class="item-body<?php echo $forum_page['item_style'] ?>">
+		<div class="main-item<?php echo $forum_page['item_style'] ?>">
 			<span class="icon <?php echo implode(' ', $forum_page['item_status']) ?>"><!-- --></span>
 			<div class="item-subject">
 				<?php echo implode("\n\t\t\t\t", $forum_page['item_body']['subject'])."\n" ?>

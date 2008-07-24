@@ -1,3 +1,6 @@
+/* General colour scheme
+----------------------------------------------------------------*/
+
 body {
 	background: #fff;
 	color: #333;
@@ -5,14 +8,223 @@ body {
 
 .brd a, .brd a:link, .brd a:visited {
 	color: #00579C;
-	text-decoration: none;
 	}
 	
 .brd a:hover, .brd a:active, .brd a:focus {
 	color: #b42000;
+	text-decoration: underline;
 	}
 
-.brd .main-content .item-body .icon {
+.brd .gen-content, .brd .main-content {
+	background: #fbfbfb;
+	border-color: #DDE4EB;
+	}
+	
+.brd .main-pagepost {
+	background: #fff;
+	border-color: #DDE4EB;
+	}
+	
+.brd .crumbs {
+	background: #fff;
+	border-color: #fff;
+	}
+
+
+.brd .main-item, .brd .main-item li, .brd .main-item div, .brd td {
+	border-color: #DDE4EB;
+	}
+
+.brd .main-item li.info-posts,
+.brd .main-item li.info-replies,
+.brd .main-item li.info-views,
+.brd .main-item li.info-topics {
+	}
+
+.brd .post * {
+	border-color: #DDE4EB
+	}
+	
+.brd .post {
+	border-color: #DDE4EB;
+	border-top-color: #fff;
+	border-bottom-color: #ccc;
+	}
+	
+#topic-review .firstpost, #post-preview .firstpost {
+	border-top-color: #DDE4EB;
+	}
+
+.brd .post {
+	background: #EDF1F5;
+	}
+	
+.brd .postbody, .brd .post-options {
+	background: #f9f9f9;
+	}
+	
+.brd .posthead {
+	background: #EDF1F5;
+	}
+	
+.brd .ct-box, .brd .ct-set, .brd .ct-group {
+	background: #EDF1F5;
+	border-color: #DBE0E4;
+	}
+	
+.brd .warn-group, .brd .warn-set, .brd .warn-box {
+	background: #FEFFE6;
+	border-color: #F4EBCE;
+	}
+	
+.brd .frm-group, .brd .mf-set, .brd .sf-set, .brd .sf-box, .brd .mf-box {
+	background: #Fff
+	}
+	
+.brd .frm-group, .brd .mf-set, .brd .sf-set {
+	border-color: #DBE0E4;
+	}
+	
+.brd .frm-group .mf-set, .brd .frm-group .sf-set, .brd .sf-box, .brd .mf-box {
+	border-color: #E6E8EC;
+	}
+	
+.brd .frm-buttons {
+	border-color: #DBE0E4;
+	}
+	
+.brd .checklist {
+	background: #fff;
+	border-color: #ccc;
+	}
+	
+.brd label, .brd .aslabel, .brd .mf-set legend, .brd .set-legend {
+	color: #294F6E;
+	}
+	
+.brd .paging * {
+	border-color: #dedfdf;
+	}
+	
+
+#brd-wrap .frm-form .required label span em, #brd-wrap #req-msg em {
+	color: #b42000;
+	}
+
+/* Menus
+----------------------------------------------------------------*/
+
+#brd-navlinks {
+	background: #313D47;
+	border-color: #313D47;
+	color: #ddd;
+	}
+
+#brd-navlinks a:link, #brd-navlinks a:visited {
+	color: #ddd;
+	}
+
+#brd-navlinks a:hover, #brd-navlinks a:active, #brd-navlinks a:focus {
+	color: #fff;
+	text-decoration: underline;
+	}
+
+.brd .main-options, .brd .main-options span {
+	border-color: #CBD1D8;
+	background: #DDE4EB;
+	}
+
+.brd .options span {
+	border-color: #dedfdf;
+	}
+	
+.brd .main-options .options span {
+	border-color: #ABAFB6
+	}
+	
+.brd .main-menu, .brd .admin-menu {
+	background: #294F6E;
+	}
+
+.brd .main-menu ul, .brd .admin-menu ul {
+	border-right-color: #1A4566;
+	}
+
+.brd .main-menu li, .brd .admin-menu li {
+	border-left-color: #1A4566;
+	border-right-color: #426482;
+	}
+
+#brd-wrap .main-menu a, #brd-wrap .admin-menu a {
+	color: #ddd !important;
+	text-decoration: none;
+	}
+
+#brd-wrap .main-menu li.active a, #brd-wrap .admin-menu li.active a {
+	background: url(tab.png) bottom center no-repeat;
+	}
+	
+#brd-wrap .main-menu li.active a, #brd-wrap .admin-menu li.active a {
+	color: #fff !important;
+	}
+
+#brd-admod #alert a {
+	color: yellow;
+	}
+
+/* Logo and Headings
+----------------------------------------------------------------*/
+
+#brd-head {
+	background: #517CA1;
+	color: #ddd;
+	border-color: #517CA1;
+	}
+
+#brd-head a, #brd-head a:link, #brd-head a:visited {
+	color: #fff;
+	}
+
+.brd .main-head, .brd .main-pagehead {
+	background: #294F6E;
+	color: #ddd;
+	border-color: #1f537b;
+	}
+
+.brd .main-subhead {
+	border-color: #CBD1D8;
+	background: #DDE4EB;
+	}
+
+.brd .content-head, .brd th {
+	background: #EDF1F5;
+	border-bottom-color: #fff;
+	border-top-color: #ddd;
+	}
+
+.brd .content-head .hn {
+	border-bottom-color: #ddd;
+	}
+
+.brd .main-head a:link, .brd .main-head a:visited {
+	color: #ddd;
+	}
+
+.brd .main-head a:hover, .brd .main-head a:active, .brd .main-head a:focus {
+	color: #fff;
+	text-decoration: underline;
+	}
+
+
+
+
+
+
+
+/* Status indicators
+----------------------------------------------------------------*/
+
+.brd .main-content .main-item .icon {
 	border-color: #EDF1F5 #DDE0E4 #C6CBD3 #BABFC6
 	}
 	
@@ -23,4 +235,6 @@ body {
  .brd .main-content .new .icon {
 	border-color: #2B75AD #235E8C #1F537B #266799
 	}
+	
+	
 	

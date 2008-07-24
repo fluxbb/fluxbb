@@ -113,20 +113,18 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 
 		$forum_page['item_header'] = array();
 		$forum_page['item_header']['subject']['title'] = '<strong class="subject-title">'.$lang_index['Forums'].'</strong>';
-		$forum_page['item_header']['info']['topics'] = '<strong class="info-topics">'.$lang_index['Topics'].'</strong>';
-		$forum_page['item_header']['info']['post'] = '<strong class="info-posts">'.$lang_index['Posts'].'</strong>';
-		$forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">'.$lang_index['Last post'].'</strong>';
+		$forum_page['item_header']['info']['topics'] = '<strong class="info-topics">'.$lang_index['topics'].'</strong>';
+		$forum_page['item_header']['info']['post'] = '<strong class="info-posts">'.$lang_index['posts'].'</strong>';
+		$forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">'.$lang_index['last post'].'</strong>';
 
 		($hook = get_hook('in_forum_pre_cat_head')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
 		<h2 class="hn"><span><?php echo forum_htmlencode($cur_forum['cat_name']) ?></span></h2>
+		<p class="item-summary"><span><?php printf($lang_index['Category subtitle'], implode(' ', $forum_page['item_header']['subject']), implode(', ', $forum_page['item_header']['info'])) ?></span></p>
 	</div>
 	<div id="category<?php echo $forum_page['cat_count'] ?>" class="main-content main-category">
-		<div class="item-header">
-			<p><span><?php printf($lang_index['Category subtitle'], implode(' ', $forum_page['item_header']['subject']), implode(', ', $forum_page['item_header']['info'])) ?></span></p>
-		</div>
 <?php
 
 		$forum_page['cur_category'] = $cur_forum['cid'];
@@ -205,7 +203,7 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 		$forum_page['item_body']['info']['posts'] = '<li class="info-posts"><strong>'.forum_number_format($cur_forum['num_posts']).'</strong> <span class="label">'.(($cur_forum['num_posts'] == 1) ? $lang_index['post'] : $lang_index['posts']).'</span></li>';
 
 		if ($cur_forum['last_post'] != '')
-			$forum_page['item_body']['info']['lastpost'] = '<li class="info-lastpost"><span class="label">'.$lang_index['Last post was'].'</span> <strong><a href="'.forum_link($forum_url['post'], $cur_forum['last_post_id']).'">'.format_time($cur_forum['last_post']).'</a></strong> <cite>'.sprintf($lang_index['Last poster'], forum_htmlencode($cur_forum['last_poster'])).'</cite></li>';
+			$forum_page['item_body']['info']['lastpost'] = '<li class="info-lastpost"><span class="label">'.$lang_index['Last post'].'</span> <strong><a href="'.forum_link($forum_url['post'], $cur_forum['last_post_id']).'">'.format_time($cur_forum['last_post']).'</a></strong> <cite>'.sprintf($lang_index['Last poster'], forum_htmlencode($cur_forum['last_poster'])).'</cite></li>';
 		else
 			$forum_page['item_body']['info']['lastpost'] = '<li class="info-lastpost"><strong>'.$lang_index['Forum is empty'].'</strong> <span><a href="'.forum_link($forum_url['new_topic'], $cur_forum['fid']).'">'.$lang_index['First post nag'].'</a></span></li>';
 	}
@@ -213,12 +211,12 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 	($hook = get_hook('in_row_pre_item_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// Generate classes for this forum depending on its status
-	$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? ' odd' : ' even').(($forum_page['item_count'] == 1) ? ' item-body1' : '').((!empty($forum_page['item_status'])) ? ' '.implode(' ', $forum_page['item_status']) : '');
+	$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? ' odd' : ' even').(($forum_page['item_count'] == 1) ? ' main-item1' : '').((!empty($forum_page['item_status'])) ? ' '.implode(' ', $forum_page['item_status']) : '');
 
 	($hook = get_hook('in_item_pre_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
-		<div id="forum<?php echo $cur_forum['fid'] ?>" class="item-body<?php echo $forum_page['item_style'] ?>">
+		<div id="forum<?php echo $cur_forum['fid'] ?>" class="main-item<?php echo $forum_page['item_style'] ?>">
 			<span class="icon <?php echo implode(' ', $forum_page['item_status']) ?>"><!-- --></span>
 			<div class="item-subject">
 				<?php echo implode("\n\t\t\t\t", $forum_page['item_body']['subject'])."\n" ?>

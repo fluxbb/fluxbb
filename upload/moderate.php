@@ -1406,10 +1406,10 @@ $forum_page['item_header'] = array();
 $forum_page['item_header']['subject']['title'] = '<strong class="subject-title">'.$lang_forum['Topics'].'</strong>';
 
 if ($forum_config['o_topic_views'] == '1')
-	$forum_page['item_header']['info']['views'] = '<strong class="info-views">'.$lang_forum['Views'].'</strong>';
+	$forum_page['item_header']['info']['views'] = '<strong class="info-views">'.$lang_forum['views'].'</strong>';
 
-$forum_page['item_header']['info']['replies'] = '<strong class="info-replies">'.$lang_forum['Replies'].'</strong>';
-$forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">'.$lang_forum['Last post'].'</strong>';
+$forum_page['item_header']['info']['replies'] = '<strong class="info-replies">'.$lang_forum['replies'].'</strong>';
+$forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">'.$lang_forum['last post'].'</strong>';
 
 ($hook = get_hook('mr_topic_actions_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -1417,13 +1417,13 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 	<div class="main-pagehead">
 		<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
 	</div>
+	<div class="main-subhead">
+		<p class="item-summary<?php echo ($forum_config['o_topic_views'] == '1') ? ' forum-views' : ' forum-noview' ?>"><span><?php printf($lang_forum['Forum subtitle'], implode(' ', $forum_page['item_header']['subject']), implode(', ', $forum_page['item_header']['info'])) ?></span></p>
+	</div>
 	<form method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 	<div id="forum<?php echo $fid ?>" class="main-content main-forum<?php echo ($forum_config['o_topic_views'] == '1') ? ' forum-views' : ' forum-noview' ?>">
 		<div class="hidden">
 			<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
-		</div>
-		<div class="item-header">
-			<p><span><?php printf($lang_forum['Forum subtitle'], implode(' ', $forum_page['item_header']['subject']), implode(', ', $forum_page['item_header']['info'])) ?></span></p>
 		</div>
 <?php
 
@@ -1520,19 +1520,19 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 				$forum_page['item_body']['info']['views'] = '<li class="info-views"><strong>'.forum_number_format($cur_topic['num_views']).'</strong> <span class="label">'.(($cur_topic['num_views'] == 1) ? $lang_forum['View'] : $lang_forum['Views']).'</span></li>';
 
 			$forum_page['item_body']['info']['replies'] = '<li class="info-replies"><strong>'.forum_number_format($cur_topic['num_replies']).'</strong> <span class="label">'.(($cur_topic['num_replies'] == 1) ? $lang_forum['Reply'] : $lang_forum['Replies']).'</span></li>';
-			$forum_page['item_body']['info']['lastpost'] = '<li class="info-lastpost"><span class="label">'.$lang_forum['Last post was'].'</span> <strong><a href="'.forum_link($forum_url['post'], $cur_topic['last_post_id']).'">'.format_time($cur_topic['last_post']).'</a></strong> <cite>'.sprintf($lang_forum['by poster'], forum_htmlencode($cur_topic['last_poster'])).'</cite></li>';
+			$forum_page['item_body']['info']['lastpost'] = '<li class="info-lastpost"><span class="label">'.$lang_forum['Last post'].'</span> <strong><a href="'.forum_link($forum_url['post'], $cur_topic['last_post_id']).'">'.format_time($cur_topic['last_post']).'</a></strong> <cite>'.sprintf($lang_forum['by poster'], forum_htmlencode($cur_topic['last_poster'])).'</cite></li>';
 			$forum_page['item_body']['info']['select'] = '<li class="info-select"><input id="fld'.++$forum_page['fld_count'].'" type="checkbox" name="topics[]" value="'.$cur_topic['id'].'" /> <label for="fld'.$forum_page['fld_count'].'">'.sprintf($lang_forum['Select topic'], $cur_topic['subject']).'</label></li>';
 		}
 
 		($hook = get_hook('mr_topic_actions_row_pre_item_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-		$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? ' odd' : ' even').(($forum_page['item_count'] == 1) ? ' item-body1' : '').((!empty($forum_page['item_status'])) ? ' '.implode(' ', $forum_page['item_status']) : '');
+		$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? ' odd' : ' even').(($forum_page['item_count'] == 1) ? ' main-item1' : '').((!empty($forum_page['item_status'])) ? ' '.implode(' ', $forum_page['item_status']) : '');
 
 
 		($hook = get_hook('mr_topic_actions_row_pre_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
-			<div id="topic<?php echo $cur_topic['id'] ?>" class="item-body<?php echo $forum_page['item_style'] ?>">
+			<div id="topic<?php echo $cur_topic['id'] ?>" class="main-item<?php echo $forum_page['item_style'] ?>">
 				<span class="icon <?php echo implode(' ', $forum_page['item_status']) ?>"><!-- --></span>
 				<div class="item-subject">
 					<?php echo implode("\n\t\t\t\t\t", $forum_page['item_body']['subject'])."\n" ?>
@@ -1560,7 +1560,7 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 	$forum_page['mod_options']['mod_close'] = '<span class="submit'.(empty($forum_page['mod_options']) ? ' item1' : '').'"><input type="submit" name="close" value="'.$lang_misc['Close'].'" /></span>';
 
 ?>
-	<div class="main-modoptions gen-content">
+	<div class="main-options mod-options gen-content">
 		<p class="options"><?php echo implode(' ', $forum_page['mod_options']) ?></p>
 	</div>
 	</form>
