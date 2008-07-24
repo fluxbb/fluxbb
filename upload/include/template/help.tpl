@@ -8,7 +8,8 @@
 <body>
 
 <div <!-- forum_page --> class="brd-page">
-<div class="brd">
+<div id="brd-wrap" class="brd">
+
 
 <!-- forum_main -->
 

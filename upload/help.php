@@ -78,7 +78,7 @@ if (!$section || $section == 'bbcode')
 			</div>
 			<div class="entry-content">
 				<code>[b][u]<?php echo $lang_help['Bold, underlined text'] ?>[/u][/b]</code> <span><?php echo $lang_help['produces'] ?></span>
-				<samp><em class="bbuline"><b><?php echo $lang_help['Bold, underlined text'] ?></b></em></samp>
+				<samp><span class="bbu"><strong><?php echo $lang_help['Bold, underlined text'] ?></strong></span></samp>
 			</div>
 			<div class="entry-content">
 				<code>[h]<?php echo $lang_help['Heading text'] ?>[/h]</code> <span><?php echo $lang_help['produces'] ?></span>
@@ -111,8 +111,6 @@ if (!$section || $section == 'bbcode')
 			<div class="entry-content">
 				<code>[quote=James]<?php echo $lang_help['Quote text'] ?>[/quote]</code> <span><?php echo $lang_help['produces named'] ?></span>
 				<div class="quotebox"><cite>James <?php echo $lang_common['wrote'] ?>:</cite><blockquote><p><?php echo $lang_help['Quote text'] ?></p></blockquote></div>
-			</div>
-			<div class="entry-content">
 				<code>[quote]<?php echo $lang_help['Quote text'] ?>[/quote]</code> <span><?php echo $lang_help['produces unnamed'] ?></span>
 				<div class="quotebox"><blockquote><p><?php echo $lang_help['Quote text'] ?></p></blockquote></div>
 			</div>
@@ -122,8 +120,6 @@ if (!$section || $section == 'bbcode')
 			<div class="entry-content">
 				<code>[code]<?php echo $lang_help['Code text'] ?>[/code]</code> <span><?php echo $lang_help['produces code box'] ?></span>
 				<div class="codebox"><pre><code><?php echo $lang_help['Code text'] ?></code></pre></div>
-			</div>
-			<div class="entry-content">
 				<code>[code]<?php echo $lang_help['Code text long'] ?>[/code]</code> <span><?php echo $lang_help['produces scroll box'] ?></span>
 				<div class="codebox"><pre><code><?php echo $lang_help['Code text long'] ?></code></pre></div>
 			</div>
@@ -133,12 +129,8 @@ if (!$section || $section == 'bbcode')
 			<div class="entry-content">
 				<code>[list][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code> <span><?php echo $lang_help['produces list'] ?></span>
 				<ul><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ul>
-			</div>
-			<div class="entry-content">
 				<code>[list=1][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code> <span><?php echo $lang_help['produces decimal list'] ?></span>
 				<ol class="decimal"><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ol>
-			</div>
-			<div class="entry-content">
 				<code>[list=a][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code> <span><?php echo $lang_help['produces alpha list'] ?></span>
 				<ol class="alpha"><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ol>
 			</div>
