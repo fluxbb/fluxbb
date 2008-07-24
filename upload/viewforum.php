@@ -108,6 +108,7 @@ if (!$forum_user['is_guest'] && $forum_config['o_show_dot'] == '1')
 		'WHERE'		=> 'p.poster_id='.$forum_user['id'].' AND p.topic_id=t.id'
 	);
 
+	($hook = get_hook('vf_qr_get_has_posted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$query['SELECT'] .= ', ('.$forum_db->query_build($subquery, true).') AS has_posted';
 }
 

@@ -398,6 +398,7 @@ function generate_cached_search_query($search_id, &$show_as)
 				'WHERE'		=> 'p.poster_id='.$forum_user['id'].' AND p.topic_id=t.id'
 			);
 
+			($hook = get_hook('sf_fn_generate_cached_search_query_qr_get_has_posted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$query['SELECT'] .= ', ('.$forum_db->query_build($subquery, true).') AS has_posted';
 		}
 
@@ -456,6 +457,7 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 					'WHERE'		=> 'p.poster_id='.$forum_user['id'].' AND p.topic_id=t.id'
 				);
 
+				($hook = get_hook('sf_fn_generate_action_search_query_qr_get_new_topics_has_posted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$query['SELECT'] .= ', ('.$forum_db->query_build($subquery, true).') AS has_posted';
 			}
 
@@ -493,6 +495,7 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 					'WHERE'		=> 'p.poster_id='.$forum_user['id'].' AND p.topic_id=t.id'
 				);
 
+				($hook = get_hook('sf_fn_generate_action_search_query_qr_get_recent_topics_has_posted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$query['SELECT'] .= ', ('.$forum_db->query_build($subquery, true).') AS has_posted';
 			}
 
@@ -564,6 +567,7 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 					'WHERE'		=> 'p.poster_id='.$forum_user['id'].' AND p.topic_id=t.id'
 				);
 
+				($hook = get_hook('sf_fn_generate_action_search_query_qr_get_user_topics_has_posted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$query['SELECT'] .= ', ('.$forum_db->query_build($subquery, true).') AS has_posted';
 			}
 
@@ -612,6 +616,7 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 					'WHERE'		=> 'p.poster_id='.$forum_user['id'].' AND p.topic_id=t.id'
 				);
 
+				($hook = get_hook('sf_fn_generate_action_search_query_qr_get_subscriptions_has_posted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$query['SELECT'] .= ', ('.$forum_db->query_build($subquery, true).') AS has_posted';
 			}
 
@@ -649,6 +654,7 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 					'WHERE'		=> 'p.poster_id='.$forum_user['id'].' AND p.topic_id=t.id'
 				);
 
+				($hook = get_hook('sf_fn_generate_action_search_query_qr_get_unanswered_topics_has_posted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$query['SELECT'] .= ', ('.$forum_db->query_build($subquery, true).') AS has_posted';
 			}
 
