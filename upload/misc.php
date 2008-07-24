@@ -273,7 +273,7 @@ else if (isset($_GET['email']))
 ?>
 		<div class="ct-box error-box">
 			<h2 class="warn"><?php echo $lang_misc['Form e-mail errors'] ?></h2>
-			<ul>
+			<ul class="error-list">
 				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
 			</ul>
 		</div>

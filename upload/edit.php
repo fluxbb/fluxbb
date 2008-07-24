@@ -227,7 +227,7 @@ if (isset($_POST['preview']) && empty($forum_page['errors']))
 		<h2 class="hn"><span><?php echo $id == $cur_post['first_post_id'] ? $lang_post['Preview edited topic'] : $lang_post['Preview edited reply'] ?></span></h2>
 	</div>
 	<div id="post-preview" class="main-content main-frm">
-		<div class="post firstpost">
+		<div class="post singlepost">
 			<div class="posthead">
 				<h3 class="hn"><strong>0</strong><?php echo $lang_post['Not yet posted'] ?></h3>
 			</div>
@@ -264,7 +264,7 @@ if (isset($forum_page['errors']))
 ?>
 		<div class="ct-box error-box">
 			<h3 class="warn hn"><span><?php echo $lang_post['Post errors'] ?></span></h3>
-			<ul>
+			<ul class="error-list">
 				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
 			</ul>
 		</div>

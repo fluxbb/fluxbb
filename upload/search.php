@@ -423,8 +423,8 @@ ob_start();
 
 ?>
 	<div class="main-content main-frm">
-		<div class="ct-box">
-			<ul>
+		<div class="ct-box info-box">
+			<ul class="info-list">
 				<?php echo implode("\n\t\t\t\t", $forum_page['frm-info'])."\n" ?>
 			</ul>
 		</div>

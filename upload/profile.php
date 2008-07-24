@@ -532,7 +532,7 @@ else if ($action == 'change_email')
 
 ?>
 	<div class="main-content main-frm">
-		<div class="ct-box">
+		<div class="ct-box info-box">
 			<?php echo $forum_page['frm_info']."\n" ?>
 		</div>
 <?php
@@ -656,8 +656,8 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 
 ?>
 	<div class="main-content main-frm">
-		<div class="ct-box">
-			<ul>
+		<div class="ct-box warn-box">
+			<ul class="info-list">
 				<?php echo implode("\n\t\t\t\t", $forum_page['frm_info'])."\n" ?>
 			</ul>
 		</div>
@@ -1351,31 +1351,31 @@ if ($forum_user['id'] != $id &&
 ?>
 	<div class="main-content main-frm">
 <?php ($hook = get_hook('pf_view_details_pre_user_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-		<div class="profile ct-group vcard">
-			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
-				<div class="ct-box">
+		<div class="profile ct-group data-group vcard">
+			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box data-box">
 					<h2 class="user-ident set-legend"><?php echo implode('<br />', $forum_page['user_ident']) ?></h2>
-					<ul>
+					<ul class="data-list">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_info'])."\n" ?>
 					</ul>
 				</div>
 			</div>
-<?php if (!empty($forum_page['user_contact'])): ?>			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
-				<div class="ct-box">
+<?php if (!empty($forum_page['user_contact'])): ?>			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box data-box">
 					<h3 class="set-legend hn"><span><?php echo $lang_profile['Contact info'] ?></span></h3>
-					<ul>
+					<ul class="data-list">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_contact'])."\n" ?>
 					</ul>
 				</div>
 			</div>
-<?php endif; if (!empty($forum_page['user_activity'])): ?>			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
-				<div class="ct-box">
+<?php endif; if (!empty($forum_page['user_activity'])): ?>			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box data-box">
 					<h3 class="set-legend hn"><?php echo $lang_profile['Posts and topics'] ?></h3>
 					<p class="options"><?php echo implode(' ', $forum_page['user_activity']) ?></p>
 				</div>
 			</div>
-<?php endif; if (isset($forum_page['sig_demo'])): ?>			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
-				<div class="ct-box">
+<?php endif; if (isset($forum_page['sig_demo'])): ?>			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box data-box">
 					<h3 class="set-legend hn"><span><?php echo $lang_profile['Current signature'] ?></span></h3>
 					<div class="sig-demo"><?php echo $forum_page['sig_demo']."\n" ?></div>
 				</div>
@@ -1549,40 +1549,40 @@ else
 	<div class="main-content main-frm">
 <?php ($hook = get_hook('pf_change_details_about_pre_user_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 		<p class="content-options options"><?php echo implode(' ', $forum_page['user_options']) ?></p>
-		<div class="profile ct-group vcard">
-			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
-				<div class="ct-box">
+		<div class="profile ct-group data-group vcard">
+			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box data-box">
 					<h3 class="user-ident set-legend"><?php echo implode('<br />', $forum_page['user_ident']) ?></h3>
-					<ul>
+					<ul class="data-list">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_info'])."\n" ?>
 					</ul>
 				</div>
 			</div>
-<?php if (!empty($forum_page['user_contact'])): ?>			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
-				<div class="ct-box">
+<?php if (!empty($forum_page['user_contact'])): ?>			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box data-box">
 					<h4 class="set-legend hn"><span><?php echo $lang_profile['Contact info'] ?></span></h4>
-					<ul>
+					<ul class="data-box">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_contact'])."\n" ?>
 					</ul>
 				</div>
 			</div>
-<?php endif; if (!empty($forum_page['user_activity'])): ?>			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
-				<div class="ct-box">
+<?php endif; if (!empty($forum_page['user_activity'])): ?>			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box data-box">
 					<h4 class="set-legend hn"><?php echo $lang_profile['Posts and topics'] ?></h4>
 					<p class="options"><?php echo implode(' ', $forum_page['user_activity']) ?></p>
 				</div>
 			</div>
-<?php endif; if (isset($forum_page['sig_demo'])): ?>			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
-				<div class="ct-box">
+<?php endif; if (isset($forum_page['sig_demo'])): ?>			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box data-box">
 					<h4 class="set-legend hn"><span><?php echo $lang_profile['Current signature'] ?></span></h4>
 					<div class="sig-demo"><?php echo $forum_page['sig_demo'] ?></div>
 				</div>
 			</div>
 <?php endif; ?>
-<?php if (!empty($forum_page['user_private'])): ?>			<div id="private-profile" class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
-				<div class="ct-box">
+<?php if (!empty($forum_page['user_private'])): ?>			<div id="private-profile" class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box data-box">
 					<h3 class="set-legend hn"><span><?php echo $lang_profile['Private info'] ?></span></h3>
-					<ul>
+					<ul class="data-list">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_private'])."\n" ?>
 					</ul>
 				</div>
@@ -1650,7 +1650,7 @@ else
 ?>
 		<div class="ct-box error-box">
 			<h2 class="warn"><?php echo $lang_profile['Profile update errors'] ?></h2>
-			<ul>
+			<ul class="error-list">
 				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
 			</ul>
 		</div>
@@ -2175,8 +2175,8 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 					</div>
 				</div>
 			</fieldset>
-<?php if (isset($forum_page['sig_demo'])): ?>			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
-				<div class="ct-box">
+<?php if (isset($forum_page['sig_demo'])): ?>			<div class="ct-set info-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box info-box">
 					<h3 class="set-legend hn"><?php echo $lang_profile['Current signature'] ?></h3>
 					<div class="sig-demo"><?php echo $forum_page['sig_demo'] ?></div>
 				</div>
@@ -2246,17 +2246,17 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		<h2 class="hn"><span><?php printf(($forum_page['own_profile']) ? $lang_profile['Avatar welcome'] : $lang_profile['Avatar welcome user'], forum_htmlencode($user['username'])) ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
-		<div class="ct-group group<?php echo ++$forum_page['group_count'] ?>">
-			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
-				<div class="ct-box">
+		<div class="ct-group info-group group<?php echo ++$forum_page['group_count'] ?>">
+			<div class="ct-set info-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box info-box">
 					<h3 class="hn set-legend"><?php echo $lang_profile['Current avatar'] ?></h3>
 					<p><?php echo (isset($forum_page['avatar_demo'])) ? '<a href="'.forum_link($forum_url['delete_avatar'], array($id, generate_form_token('delete_avatar'.$id.$forum_user['id']))).'"><strong>'.$lang_profile['Delete avatar info'].'</strong></a>' : $lang_profile['No avatar info'] ?></p>
 				</div>
 			</div>
-			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
-				<div class="ct-box">
+			<div class="ct-set info-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="ct-box info-box">
 <?php if (isset($forum_page['avatar_demo'])): ?>					<h3 class="hn set-legend avatar-demo"><span><?php echo $forum_page['avatar_demo'] ?></span></h3>
-<?php endif; ?>					<ul>
+<?php endif; ?>					<ul class="info-list">
 						<?php echo implode("\n\t\t\t\t", $forum_page['frm_info'])."\n\t\t\t" ?>
 					</ul>
 					<p id="req-msg" class="req-warn important"><?php echo $lang_profile['No upload warn'] ?></p>
@@ -2277,7 +2277,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 ?>
 		<div class="ct-box error-box">
 			<h2 class="warn"><?php echo $lang_profile['Profile update errors'] ?></h2>
-			<ul>
+			<ul class="error-list">
 				<?php echo implode("\n\t\t\t", $forum_page['errors'])."\n" ?>
 			</ul>
 		</div>
@@ -2338,11 +2338,11 @@ $forum_page['item_count'] = 0;
 		$forum_page['user_management'] = array();
 
 		if ($forum_user['g_moderator'] == '1')
-			$forum_page['user_management']['ban'] = '<div class="ct-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box"><h3 class="set-legend hn">'.$lang_profile['Ban user'].'</h3>'."\n\t\t\t".'<p><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user info'].'</a></p></div></div>';
+			$forum_page['user_management']['ban'] = '<div class="ct-set info-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box info-box"><h3 class="set-legend hn">'.$lang_profile['Ban user'].'</h3>'."\n\t\t\t".'<p><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user info'].'</a></p></div></div>';
 		else if ($forum_user['g_moderator'] != '1' && $user['g_id'] != FORUM_ADMIN )
 		{
-			$forum_page['user_management']['ban'] = '<div class="ct-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box"><h3 class="set-legend hn">'.$lang_profile['Ban user'].'</h3>'."\n\t\t\t".'<p><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user info'].'</a></p></div></div>';
-			$forum_page['user_management']['delete'] = '<div class="ct-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box"><h3 class="set-legend hn">'.$lang_profile['Delete user'].'</h3>'."\n\t\t\t\t".'<p><a href="'.forum_link($forum_url['delete_user'], $id).'">'.$lang_profile['Delete user info'].'</a></p></div></div>';
+			$forum_page['user_management']['ban'] = '<div class="ct-set info-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box info-box"><h3 class="set-legend hn">'.$lang_profile['Ban user'].'</h3>'."\n\t\t\t".'<p><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user info'].'</a></p></div></div>';
+			$forum_page['user_management']['delete'] = '<div class="ct-set info-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box info-box"><h3 class="set-legend hn">'.$lang_profile['Delete user'].'</h3>'."\n\t\t\t\t".'<p><a href="'.forum_link($forum_url['delete_user'], $id).'">'.$lang_profile['Delete user info'].'</a></p></div></div>';
 		}
 
 		// Setup headings

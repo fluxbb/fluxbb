@@ -2,7 +2,7 @@
 /**
  * Post deletion page
  *
- * Deletes the specified post (and, if necessary, the topic it is in). 
+ * Deletes the specified post (and, if necessary, the topic it is in).
  *
  * @copyright Copyright (C) 2008 FluxBB.org, based on code copyright (C) 2002-2008 PunBB.org
  * @license http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
@@ -165,12 +165,12 @@ ob_start();
 
 ?>
 	<div class="main-content main-frm">
-		<div class="ct-box">
-			<ul>
+		<div class="ct-box info-box">
+			<ul class="info-list">
 				<?php echo implode("\n\t\t\t\t", $forum_page['frm_info'])."\n" ?>
 			</ul>
 		</div>
-		<div class="post firstpost">
+		<div class="post singlepost">
 			<div class="posthead">
 				<h3 class="hn"><?php echo $forum_page['item_head'] ?></h3>
 			</div>
