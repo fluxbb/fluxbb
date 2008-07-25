@@ -822,7 +822,7 @@ function validate_username($username, $exclude_id = null)
 		$errors[] = $lang_profile['Username IP'];
 	else if ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
 		$errors[] = $lang_profile['Username reserved chars'];
-	else if (preg_match('#\[b\]|\[/b\]|\[u\]|\[/u\]|\[i\]|\[/i\]|\[color|\[/color\]|\[quote\]|\[quote=|\[/quote\]|\[code\]|\[/code\]|\[img\]|\[/img\]|\[url|\[/url\]|\[email|\[/email\]|\[list\]|\[list=|\[/list\]#i', $username))
+	else if (preg_match('/(?:\[\/?(?:b|u|i|h|colou?r|quote|code|img|url|email|list)\]|\[(?:code|quote|list)=)/i', $username))
 		$errors[] = $lang_profile['Username BBCode'];
 
 	// Check username for any censored words
