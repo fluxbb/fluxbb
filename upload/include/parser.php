@@ -110,7 +110,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	// Inline tags, we do not allow new lines in these
 	$tags_inline = array('b', 'i', 'u', 'color', 'colour', 'h');
 	// Tags we trim interior space
-	$tags_trim = array('url', 'email', 'img', '*');
+	$tags_trim = array('img');
 	// Tags we remove quotes from the argument
 	$tags_quotes = array('url', 'email', 'img');
 	// Tags we limit bbcode in
