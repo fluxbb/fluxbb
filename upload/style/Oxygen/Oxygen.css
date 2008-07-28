@@ -603,6 +603,10 @@ D - COMMON INTERFACE ELEMENTS
  	display: block;
  	white-space: nowrap;
  	}
+ 	
+ #brd-stats li strong {
+ 	font-weight: bold;
+ 	}
 	
 /* Footer
 -------------------------------------------------------------*/
@@ -872,11 +876,11 @@ E - INDEX, FORUMS, SEARCH RESULTS, MODERATE FORUMS
  	
  .brd .main-content .main-item .icon {
  	border-style: solid;
- 	border-width: 0.6em;
+ 	border-width: 0.5833em;
  	height: 0;
  	width: 0;
  	float: left;
- 	margin-top: 0.5em;
+ 	margin-top: 0.667em;
  	margin-left: -2.417em;
  	}
  	
@@ -885,7 +889,7 @@ E - INDEX, FORUMS, SEARCH RESULTS, MODERATE FORUMS
  	font-size: 2em;
  	width: 1em;
  	left: -0.5em;
- 	top: -0.1em;
+ 	top: 0;
  	}
  	
 /*************************************************************
