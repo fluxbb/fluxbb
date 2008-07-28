@@ -1375,8 +1375,7 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	}
 	
 #brd-wrap .entry-content ol {
-	padding: 0 0 0 2.5em;
-	margin: 0 0 1em 0;
+	padding-left: 2.5em;
 	list-style-type: decimal;
 	}
 	
@@ -1384,9 +1383,10 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	list-style-type: upper-alpha;
 	}
 	
-#brd-wrap .entry-content h5 {
+#brd-wrap .entry-content h5, #brd-wrap .entry-content h5 * {
 	font-weight: bold;
 	font-size: 1.084em;
+	padding: 0.5em 0;
 	}
 	
 #brd-wrap .entry-content img {
@@ -1632,6 +1632,10 @@ H - MAIN CONTENT - ODDMENTS
 .brd .help-box samp {
 	display: block;
 	margin-left: 1.5em;
+	}
+	
+.brd .help-box h5 samp {
+	margin-left: 1.417em;
 	}
 	
 .brd .help-box code {

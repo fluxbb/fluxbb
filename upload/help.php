@@ -62,7 +62,7 @@ if (!$section || $section == 'bbcode')
 			</div>
 			<div class="entry-content">
 				<code>[u]<?php echo $lang_help['Underlined text'] ?>[/u]</code> <span><?php echo $lang_help['produces'] ?></span>
-				<samp><em class="bbuline"><?php echo $lang_help['Underlined text'] ?></em></samp>
+				<samp><span class="bbu"><?php echo $lang_help['Underlined text'] ?></span></samp>
 			</div>
 			<div class="entry-content">
 				<code>[i]<?php echo $lang_help['Italic text'] ?>[/i]</code> <span><?php echo $lang_help['produces'] ?></span>
@@ -125,7 +125,7 @@ if (!$section || $section == 'bbcode')
 			</div>
 		</div>
 		<div class="ct-box help-box">
-			<h3 class="span"><span><?php echo $lang_help['List info'] ?></span></h3>
+			<h3 class="hn"><span><?php echo $lang_help['List info'] ?></span></h3>
 			<div class="entry-content">
 				<code>[list][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code> <span><?php echo $lang_help['produces list'] ?></span>
 				<ul><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ul>

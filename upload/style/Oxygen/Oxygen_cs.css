@@ -63,8 +63,9 @@ body {
 	border-bottom-color: #ccc;
 	}
 	
-#topic-review .firstpost, #post-preview .singlepost {
+#topic-review .firstpost, .brd .singlepost {
 	border-top-color: #DDE4EB;
+	border-bottom-color: #DDE4EB;
 	}
 
 .brd .post {
