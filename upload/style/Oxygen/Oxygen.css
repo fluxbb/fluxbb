@@ -1411,8 +1411,8 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 #brd-wrap .entry-content .codebox {
 	border-style: solid;
 	border-width: 1px;
-	margin: 0.5em 1em 1.7em 1em;
-	padding: 1em 1em 0.3em 1em;
+	margin: 0.75em 1em;
+	padding: 1em 0.75em;
 	}
 	
 #brd-wrap .entry-content blockquote {
@@ -1424,7 +1424,6 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	display: block;
 	font-style: normal;
 	font-weight: bold;
-	padding-bottom: 0.2em;
 	}
 	
 #brd-wrap .entry-content pre {
