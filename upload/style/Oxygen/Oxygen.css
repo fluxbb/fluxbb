@@ -622,6 +622,11 @@ D - COMMON INTERFACE ELEMENTS
 	float: right;
 	}
 	
+#querytime {
+	text-align: center;
+	font-size: 0.9em;
+	}
+	
 /* Main and Content Options
 -------------------------------------------------------------*/
 
