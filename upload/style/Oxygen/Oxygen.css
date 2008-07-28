@@ -1384,6 +1384,11 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	list-style-type: decimal;
 	}
 	
+#brd-wrap .entry-content ol p,
+#brd-wrap .entry-content ul p {
+	padding: 0;
+	}
+	
 #brd-wrap .entry-content ol.alpha {
 	list-style-type: upper-alpha;
 	}
