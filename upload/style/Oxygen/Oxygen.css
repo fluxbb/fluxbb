@@ -48,7 +48,7 @@ body {
 .brd samp, .brd code, .brd pre, .brd option, .brd optgroup,
 .brd input, .brd select, .brd textarea, .brd td, .brd th {
 	font-size: 1em;
-	font-family: 'Lucida Grande',helvetica,arial,sans-serif; 
+	font-family: Verdana,Helvetica,Arial,sans-serif; 
 	font-style: normal;
 	font-weight: normal;
 	}
