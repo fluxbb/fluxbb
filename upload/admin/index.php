@@ -183,7 +183,7 @@ ob_start();
 	<div class="main-content main-frm">
 <?php if (!empty($alert_items)): ?>		<div id="admin-alerts" class="ct-set warn-set">
 			<div class="ct-box warn-box">
-				<h3 class="set-legend hn warn"><span><?php echo $lang_admin_index['Alerts'] ?></span></h3>
+				<h3 class="ct-legend hn warn"><span><?php echo $lang_admin_index['Alerts'] ?></span></h3>
 				<?php echo implode(' ', $alert_items)."\n" ?>
 			</div>
 		</div>
@@ -191,7 +191,7 @@ ob_start();
 <?php ($hook = get_hook('ain_pre_version')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="ct-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
-					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['FluxBB version'] ?></span></h3>
+					<h3 class="ct-legend hn"><span><?php echo $lang_admin_index['FluxBB version'] ?></span></h3>
 					<ul class="data-list">
 						<li><span>FluxBB <?php echo $forum_config['o_cur_version'] ?></span></li>
 						<li><span>&copy; Copyright 2008 <a href="http://fluxbb.org/">FluxBB.org</a></span></li>
@@ -202,13 +202,13 @@ ob_start();
 <?php ($hook = get_hook('ain_pre_server_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="ct-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
-					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['Server load'] ?></span></h3>
+					<h3 class="ct-legend hn"><span><?php echo $lang_admin_index['Server load'] ?></span></h3>
 					<p><span><?php echo $server_load ?> (<?php echo $num_online.' '.$lang_admin_index['users online']?>)</span></p>
 				</div>
 			</div>
 <?php ($hook = get_hook('ain_pre_environment')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; if ($forum_user['g_id'] == FORUM_ADMIN): ?>			<div class="ct-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
-					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['Environment'] ?></span></h3>
+					<h3 class="ct-legend hn"><span><?php echo $lang_admin_index['Environment'] ?></span></h3>
 					<ul class="data-list">
 						<li><span><?php echo $lang_admin_index['Operating system'] ?>: <?php echo PHP_OS ?></span></li>
 						<li><span>PHP: <?php echo PHP_VERSION ?> - <a href="<?php echo forum_link($forum_url['admin_index']) ?>?action=phpinfo"><?php echo $lang_admin_index['Show info'] ?></a></span></li>
@@ -219,7 +219,7 @@ ob_start();
 <?php ($hook = get_hook('ain_pre_database')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="ct-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
-					<h3 class="set-legend hn"><span><?php echo $lang_admin_index['Database'] ?></span></h3>
+					<h3 class="ct-legend hn"><span><?php echo $lang_admin_index['Database'] ?></span></h3>
 					<ul class="data-list">
 						<li><span><?php echo $db_version ?></span></li>
 <?php if (isset($total_records) && isset($total_size)): ?>							<li><span><?php echo $lang_admin_index['Rows'] ?>: <?php echo forum_number_format($total_records) ?></span></li>

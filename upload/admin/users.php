@@ -422,7 +422,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_users']).'?action=modify_users') ?>" />
 				<input type="hidden" name="users" value="<?php echo implode(',', $users) ?>" />
 			</div>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_users['Delete posts legend'] ?></span></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box checkbox">
@@ -580,7 +580,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_users']).'?action=modify_users') ?>" />
 				<input type="hidden" name="users" value="<?php echo implode(',', $users) ?>" />
 			</div>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_users['Ban settings legend'] ?></span></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
@@ -701,7 +701,7 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_users']).'?action=modify_users') ?>" />
 				<input type="hidden" name="users" value="<?php echo implode(',', $users) ?>" />
 			</div>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_users['Move users legend'] ?></span></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
@@ -1018,7 +1018,7 @@ ob_start();
 			<div class="content-head">
 				<h3 class="hn"><span><?php echo $lang_admin_users['User search head'] ?></span></h3>
 			</div>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_users['Searches personal legend'] ?></strong></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
@@ -1058,7 +1058,7 @@ ob_start();
 				</div>
 			</fieldset>
 <?php $forum_page['item_count'] = 0; ?>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_users['Searches contact legend'] ?></strong></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
@@ -1104,7 +1104,7 @@ ob_start();
 				</div>
 			</fieldset>
 <?php $forum_page['item_count'] = 0; ?>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_users['Searches activity legend'] ?></strong></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box frm-short text">
@@ -1154,7 +1154,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 				<h3 class="hn"><span><?php echo $lang_admin_users['User results head'] ?></span></h3>
 			</div>
 <?php ($hook = get_hook('aus_search_pre_results_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_users['User results legend'] ?></strong></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
@@ -1221,7 +1221,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 		</div>
 		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_users']) ?>">
 <?php ($hook = get_hook('aus_search_pre_ip_search_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_users['IP search legend'] ?></strong></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">

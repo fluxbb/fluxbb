@@ -73,7 +73,6 @@ else
 
 // Generate paging links
 $forum_page['page_post']['paging'] = '<p class="paging"><span class="pages">'.$lang_common['Pages'].'</span> '.paginate($forum_page['num_pages'], $forum_page['page'], $forum_url['users_browse'], $lang_common['Paging separator'], array($forum_page['show_group'], $forum_page['sort_by'], strtoupper($forum_page['sort_dir']), ($forum_page['username'] != '') ? urlencode($forum_page['username']) : '-')).'</p>';
-$forum_page['page_post']['posting'] = '<p class="posting"><a href="'.forum_link($forum_url['users']).'"><span>'.$lang_ul['Perform new search'].'</span></a></p>';
 
 // Navigation links for header and page numbering for title/meta description
 if ($forum_page['page'] < $forum_page['num_pages'])
@@ -86,6 +85,11 @@ if ($forum_page['page'] > 1)
 	$forum_page['nav']['prev'] = '<link rel="prev" href="'.forum_sublink($forum_url['users_browse'], $forum_url['page'], ($forum_page['page'] - 1), array($forum_page['show_group'], $forum_page['sort_by'], strtoupper($forum_page['sort_dir']), ($forum_page['username'] != '') ? urlencode($forum_page['username']) : '-')).'" title="'.$lang_common['Page'].' '.($forum_page['page'] - 1).'" />';
 	$forum_page['nav']['first'] = '<link rel="first" href="'.forum_link($forum_url['users_browse'], array($forum_page['show_group'], $forum_page['sort_by'], strtoupper($forum_page['sort_dir']), ($forum_page['username'] != '') ? urlencode($forum_page['username']) : '-')).'" title="'.$lang_common['Page'].' 1" />';
 }
+
+// Setup main options
+$forum_page['main_options_head'] = $lang_ul['User list options'];
+$forum_page['main_options'] = array();
+$forum_page['main_options']['new_search'] = '<span'.(empty($forum_page['main_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['users']).'">'.$lang_ul['Perform new search'].'</a></span>';
 
 // Setup form
 $forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
@@ -115,12 +119,10 @@ ob_start();
 	<div class="main-pagehead">
 		<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
 	</div>
-	<div class="main-subhead">
-		<h3 class="hn"><span><?php echo $lang_ul['User search head'] ?></span></h3>
-	</div>
 	<div class="main-content main-frm">
-		<form class="frm-form" id="afocus" method="get" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+		<form id="afocus" method="get" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+		<div class="frm-form">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_ul['User find legend'] ?></strong></legend>
 <?php if ($forum_user['g_search_users'] == '1'): ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
@@ -185,8 +187,8 @@ while ($cur_group = $forum_db->fetch_assoc($result))
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="search" value="<?php echo $lang_search['Submit search'] ?>" /></span>
 			</div>
+		</div>
 		</form>
-	</div>
 <?php
 
 // Grab the users
@@ -222,17 +224,14 @@ if ($forum_db->num_rows($result))
 
 
 ?>
-	<div class="main-subhead">
-		<h3 class="hn"><span><?php echo ($forum_page['users_searched']) ? $lang_ul['User results matching'] : $lang_ul['User results all'] ?></span></h3>
-	</div>
-	<div class="main-content main-frm">
-		<table cellspacing="0" summary="<?php echo $lang_ul['Table summary'] ?>">
-			<thead>
-				<tr>
-					<?php echo implode("\n\t\t\t\t", $forum_page['table_header'])."\n" ?>
-				</tr>
-			</thead>
-			<tbody>
+		<div class="ct-group">
+			<table cellspacing="0" summary="<?php echo $lang_ul['Table summary'] ?>">
+				<thead>
+					<tr>
+						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['table_header'])."\n" ?>
+					</tr>
+				</thead>
+				<tbody>
 <?php
 
 	while ($user_data = $forum_db->fetch_assoc($result))
@@ -248,15 +247,16 @@ if ($forum_db->num_rows($result))
 
 ?>
 				<tr class="<?php echo ($forum_page['item_count'] % 2 != 0) ? 'odd' : 'even' ?><?php echo ($forum_page['item_count'] == 1) ? ' row1' : '' ?>">
-					<?php echo implode("\n\t\t\t\t", $forum_page['table_row'])."\n" ?>
+					<?php echo implode("\n\t\t\t\t\t\t", $forum_page['table_row'])."\n" ?>
 				</tr>
 <?php
 
 	}
 
 ?>
-			</tbody>
-		</table>
+				</tbody>
+			</table>
+		</div>
 	</div>
 <?php
 

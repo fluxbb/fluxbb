@@ -436,21 +436,21 @@ ob_start();
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_search['Search legend'] ?></strong></legend>
 <?php ($hook = get_hook('se_criteria_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_search['Keyword search'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="keywords" size="40" maxlength="100" /></span>
 					</div>
 				</div>
 <?php ($hook = get_hook('se_criteria_pre_author_field')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_search['Author search'] ?></span></label><br />
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="author" size="25" maxlength="25" /></span>
 					</div>
 				</div>
 <?php ($hook = get_hook('se_criteria_pre_forum_field')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<legend><span><?php echo $lang_search['Forum search'] ?> <em><?php echo ($forum_config['o_search_all_forums'] == '1' || $forum_user['is_admmod']) ? $lang_search['Forum search default'] : $lang_search['Forum search require'] ?></em></span></legend>
 					<div class="mf-box">
 						<div class="checklist">
@@ -506,7 +506,7 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_search['Results legend'] ?></strong></legend>
 <?php ($hook = get_hook('se_results_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_search['Sort by'] ?></span></label><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="sort_by">
@@ -515,7 +515,7 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 					</div>
 				</div>
 <?php ($hook = get_hook('se_results_pre_sort_choices')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<legend><span><?php echo $lang_search['Sort order'] ?></span></legend>
 					<div class="mf-box mf-yesno">
 						<div class="mf-item">
@@ -529,7 +529,7 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 					</div>
 				</fieldset>
 <?php ($hook = get_hook('se_results_pre_display_choices')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<legend><span><?php echo $lang_search['Display results'] ?></span></legend>
 					<div class="mf-box mf-yesno">
 						<div class="mf-item">

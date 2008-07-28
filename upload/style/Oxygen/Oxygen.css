@@ -62,11 +62,15 @@ body {
 #brd-index .item-head:after,
 #brd-index .main-item:after,
 #brd-index ul.item-info:after,
+.brd .frm-group:after,
+.brd .mf-set:after,
+.brd .sf-set:after,
+.brd .mf-box:after,
+.brd .sf-box:after,
+.brd .mf-item:after,
+.brd .frm-form label:after,
 .brd fieldset:after,
-.brd fieldset div:after,
-.brd fieldset label:after,
-.brd fieldset fieldset:after,
-.brd fieldset span.fld-input:after,
+.brd span.fld-input:after,
 .brd .postbody:after,
 .brd .postfoot .post-options:after {
 	content: "";
@@ -85,6 +89,7 @@ body {
 #brd-stats .hn,
 #brd-online .hn,
 #qjump label,
+.admin .main-subhead,
 .brd .main-item .item-info li span.label,
 .brd .main-item .item-info li label,
 .brd .main-item .you-posted,
@@ -152,9 +157,6 @@ B - GLOBAL STYLES
 	margin-top: 1em;
 	}
 	
-.brd .main-content, .brd .main-options, .brd .main-subhead {
-	margin-top: 4px;
-	}
 
 /* Content Text (Default spacing for paragraphs and lists)
 -------------------------------------------------------------*/
@@ -201,7 +203,7 @@ B - GLOBAL STYLES
 	border-style: solid;
 	border-width: 1px;
 	position: relative;
-	margin-bottom: -5px;
+	margin-bottom: -1px;
 	}
 	
 .brd .main-subhead .hn {
@@ -285,8 +287,13 @@ C - COMMON CONTENT TYPES (RE-USABLE FORMATS)
 	margin: 0;
 	}
 	
-.brd .ct-group .ct-set {
+.brd .ct-group .ct-set, .frm-group .ct-set {
 	border-style: dashed none none none;
+	margin: 0;
+	}
+	
+.brd .ct-group .ct-box, .brd .frm-group .ct-box {
+	border-style: none;
 	margin: 0;
 	}
 
@@ -298,7 +305,7 @@ C - COMMON CONTENT TYPES (RE-USABLE FORMATS)
 	border-top: 0;
 	}
 
-.brd .ct-set .set-legend {
+.brd .ct-set .ct-legend {
 	float: left;
 	margin-left: -18em;
 	width: 18em;
@@ -385,10 +392,6 @@ C - COMMON CONTENT TYPES (RE-USABLE FORMATS)
 .brd .main-menu, .brd .admin-menu {
 	border: 0;
 	padding: 0.4em 0 0.4em 0.75em;
-	}
-	
-.brd .main-menu {
-	margin-bottom: 4px;
 	}
 	
 .brd .main-menu ul, .brd .admin-menu ul {
@@ -622,6 +625,10 @@ D - COMMON INTERFACE ELEMENTS
 /* Main and Content Options
 -------------------------------------------------------------*/
 
+.brd .main-options {
+	border-top: none;
+	}
+
 .brd .main-options .options, .brd .main-modoptions .options {
 	text-align: center;
 	}
@@ -780,6 +787,10 @@ E - INDEX, FORUMS, SEARCH RESULTS, MODERATE FORUMS
 	padding-right: 35em;
 	padding-left: 3.75em;
 	}
+
+.brd .main-content .main-item .hn {
+	position: relative;
+	}
 	
 .brd .main-content .main-item ul {
 	width: 34em;
@@ -867,7 +878,9 @@ E - INDEX, FORUMS, SEARCH RESULTS, MODERATE FORUMS
  .brd .main-content .main-item .hn .posted-mark {
  	position: absolute;
  	font-size: 2em;
- 	margin-left: -0.5em;
+ 	width: 1em;
+ 	left: -0.5em;
+ 	top: -0.1em;
  	}
  	
 /*************************************************************
@@ -921,12 +934,10 @@ F - MAIN CONTENT - FORMS
 	font-size: 1.084em;
 	}
 	
-.brd .frm-form .frm-buttons {
-	padding: 1em 0 0 18em;
+.brd .frm-buttons {
+	padding: 0 0 0 18em;
 	margin: 0.75em 1.417em 1em 1.417em;
 	position: relative;
-	border-top-style: double;
-	border-width: 3px;
 	}
 
 .brd .frm-buttons span.submit {
@@ -938,7 +949,15 @@ F - MAIN CONTENT - FORMS
 	padding-left: 0.5em;
 	padding-right: 0.5em;
 	font-size: 1.084em;
-	}	
+	}
+
+.brd .button-set {
+	border-top: 0;
+	}
+	
+.brd .button-set span.submit {
+	padding-left: 1em;
+	}
 
 /* Single Field Items (Text, Select, Checkbox)
 -------------------------------------------------------------*/
@@ -1244,7 +1263,7 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	margin-top: -1.417em;
 	}
 	
-.brd .firstpost {
+.brd .firstpost, .brd .singlepost {
 	margin-top: 1.417em;
 	}
 	
@@ -1337,6 +1356,14 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	float: right;
 	}
 	
+.brd .postfoot .post-actions span {
+	margin-left: 0.75em;
+	}
+	
+.brd .postfoot .post-contacts span {
+	margin-right: 0.75em;
+	}
+	
 /* Content
 -------------------------------------------------------------*/
 	
@@ -1407,6 +1434,18 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	display: inline;
 	}
 	
+.brd .sig-content {
+	padding-top: 1em;
+	}
+	
+.brd span.sig-line {
+	display: block;
+	width: 200px;
+	border-top-style: solid;
+	border-top-width: 1px;
+	padding-bottom: 0.5em;
+	}
+	
 	
 /*************************************************************
 H - MAIN TABLES
@@ -1429,12 +1468,17 @@ H - MAIN TABLES
 	}
 
 #brd-userlist table .tc0 {
-	width: 40%
+	width: 30%
 	}
 	
 #brd-userlist table .tc1 {
 	width: 20%;
 	text-align: left;
+	}
+	
+#brd-userlist table .tc2 {
+	width: 10%;
+	text-align: center;
 	}
 	
 #brd-debug  table .tc0 {

@@ -508,7 +508,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 				<h3 class="hn"><?php echo $forum_page['item_head'] ?></h3>
 			</div>
 			<div class="postbody">
-				<div class="post-author user<?php if ($cur_post['is_online'] == $cur_post['poster_id']) echo ' online' ?>">
+				<div class="post-author user<?php echo ($cur_post['is_online'] == $cur_post['poster_id']) ? ' online' : '' ?>">
 					<h4 class="user-ident"><?php echo implode('<br />', $forum_page['user_ident']) ?></h4>
 					<ul class="user-info">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_info'])."\n" ?>

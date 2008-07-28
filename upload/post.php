@@ -411,14 +411,14 @@ if ($forum_user['is_guest'])
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_post['Guest post legend'] ?></strong></legend>
 <?php ($hook = get_hook('po_guest_info_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_post['Guest name'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_username" value="<?php if (isset($_POST['req_username'])) echo forum_htmlencode($username); ?>" size="35" maxlength="25" /></span>
 					</div>
 				</div>
 <?php ($hook = get_hook('po_post_guest_name_div')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text<?php if ($forum_config['p_force_guest_email'] == '1') echo ' required' ?>">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php if ($forum_config['p_force_guest_email'] == '1') echo '<em>'.$lang_common['Reqmark'].'</em>' ?> <?php echo $lang_post['Guest e-mail'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="<?php echo $forum_page['email_form_name'] ?>" value="<?php if (isset($_POST[$forum_page['email_form_name']])) echo forum_htmlencode($email); ?>" size="35" maxlength="80" /></span>
@@ -446,7 +446,7 @@ if ($fid)
 {
 
 ?>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required longtext">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_post['Topic subject'] ?></span></label><br />
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="req_subject" value="<?php if (isset($_POST['req_subject'])) echo forum_htmlencode($subject); ?>" size="80" maxlength="70" /></span>
@@ -459,13 +459,12 @@ if ($fid)
 ($hook = get_hook('po_pre_post_contents')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box textarea required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_post['Write message'] ?></span></label><br />
 						<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_message" rows="14" cols="95"><?php echo isset($_POST['req_message']) ? forum_htmlencode($message) : (isset($forum_page['quote']) ? forum_htmlencode($forum_page['quote']) : ''); ?></textarea></span><br />
 					</div>
 				</div>
-			</fieldset>
 <?php
 
 $forum_page['checkboxes'] = array();
@@ -494,18 +493,21 @@ if (!$forum_user['is_guest'] && $forum_config['o_subscriptions'] == '1')
 
 if (!empty($forum_page['checkboxes']))
 {
-	$forum_page['item_count'] = 0;
 
 ?>
-			<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?>">
-				<legend><span><?php echo $lang_post['Post settings'] ?></span></legend>
-				<div class="mf-box checkbox">
-					<?php echo implode("\n\t\t\t\t\t", $forum_page['checkboxes'])."\n"; ?>
-				</div>
-			</fieldset>
+				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<legend><span><?php echo $lang_post['Post settings'] ?></span></legend>
+					<div class="mf-box checkbox">
+						<?php echo implode("\n\t\t\t\t\t", $forum_page['checkboxes'])."\n"; ?>
+					</div>
+				</fieldset>
 <?php
 
 }
+
+?>
+			</fieldset>
+<?php
 
 ($hook = get_hook('po_post_optional_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 

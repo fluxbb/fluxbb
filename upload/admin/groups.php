@@ -112,7 +112,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 			<div class="content-head">
 				<h3 class="hn"><span><?php echo $lang_admin_groups['Group title head'] ?></span></h3>
 			</div>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_groups['Group title legend'] ?></span></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
@@ -144,7 +144,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 <?php if ($mode == 'edit' && $forum_config['o_default_user_group'] == $group['g_id']): ?>				<div class="ct-box">
 					<p class="warn"><?php echo $lang_admin_groups['Moderator default group'] ?></p>
 				</div>
-<?php endif; ?>							<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+<?php endif; ?>							<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><strong><?php echo $lang_admin_groups['Permissions'] ?></strong></legend>
 <?php if ($group['g_id'] != FORUM_GUEST): if ($mode != 'edit' || $forum_config['o_default_user_group'] != $group['g_id']): ?>				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<legend><span><?php echo $lang_admin_groups['Mod permissions'] ?></span></legend>
@@ -236,7 +236,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 			<div class="content-head">
 				<h3 class="hn"><span><?php echo $lang_admin_groups['Group flood head'] ?></span></h3>
 			</div>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_groups['Restrictions'] ?></span></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
@@ -699,7 +699,7 @@ while ($cur_group = $forum_db->fetch_assoc($result))
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_groups']).'?action=foo') ?>" />
 			</div>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_groups['Default group legend'] ?></span></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
@@ -747,7 +747,7 @@ while ($cur_group = $forum_db->fetch_assoc($result))
 		<div class="ct-box">
 			<p><?php echo $lang_admin_groups['Existing groups intro'] ?></p>
 		</div>
-		<div class="ct-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+		<div class="ct-group group<?php echo ++$forum_page['group_count'] ?>">
 <?php
 
 $query = array(
@@ -778,7 +778,7 @@ while ($cur_group = $forum_db->fetch_assoc($result))
 ?>
 			<div class="ct-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
-					<h3 class="set-legend hn"><span><?php echo forum_htmlencode($cur_group['g_title']) ?> <?php echo ($cur_group['g_id'] == $forum_config['o_default_user_group']) ? $lang_admin_groups['default'] : '' ?></span></h3>
+					<h3 class="ct-legend hn"><span><?php echo forum_htmlencode($cur_group['g_title']) ?> <?php echo ($cur_group['g_id'] == $forum_config['o_default_user_group']) ? $lang_admin_groups['default'] : '' ?></span></h3>
 					<p class="options"><?php echo implode(' ', $forum_page['group_options']) ?></p>
 				</div>
 			</div>

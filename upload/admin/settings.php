@@ -286,7 +286,7 @@ if (!$section || $section == 'setup')
 				<div class="content-head">
 					<h2 class="hn"><span><?php printf($lang_admin_settings['Setup head'], $lang_admin_settings['Setup personal']) ?></span></h2>
 				</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><strong><?php echo $lang_admin_settings['Setup personal legend'] ?></strong></legend>
 					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box text">
@@ -348,7 +348,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 				<div class="content-head">
 					<h2 class="hn"><span><?php printf($lang_admin_settings['Setup head'], $lang_admin_settings['Setup local']) ?></span></h2>
 				</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><strong><?php echo $lang_admin_settings['Setup local legend'] ?></strong></legend>
 					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box select">
@@ -453,7 +453,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 				<div class="content-head">
 					<h2 class="hn"><span><?php printf($lang_admin_settings['Setup head'], $lang_admin_settings['Setup timeouts']) ?></span></h2>
 				</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><strong><?php echo $lang_admin_settings['Setup timeouts legend'] ?></strong></legend>
 					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box text">
@@ -486,7 +486,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 				<div class="content-head">
 					<h2 class="hn"><span><?php printf($lang_admin_settings['Setup head'], $lang_admin_settings['Setup pagination']) ?></span></h2>
 				</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><strong><?php echo $lang_admin_settings['Setup pagination legend'] ?></strong></legend>
 					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box text">
@@ -519,7 +519,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 				<div class="content-head">
 					<h2 class="hn"><span><?php printf($lang_admin_settings['Setup head'], $lang_admin_settings['Setup reports']) ?></span></h2>
 				</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><strong><?php echo $lang_admin_settings['Setup reports legend'] ?></strong></legend>
 					<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<legend><span><?php echo $lang_admin_settings['Reporting method'] ?></span></legend>
@@ -554,7 +554,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 				<div class="ct-box">
 					<p class="warn"><?php echo $lang_admin_settings['URL scheme info'] ?></p>
 				</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><strong><?php echo $lang_admin_settings['Setup URL legend'] ?></strong></legend>
 					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box select">
@@ -602,7 +602,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 				<div class="ct-box">
 					<p class="warn"><?php echo $lang_admin_settings['Setup links info'] ?></p>
 				</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><strong><?php echo $lang_admin_settings['Setup links legend'] ?></strong></legend>
 					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box textarea">
@@ -658,7 +658,7 @@ else if ($section == 'features')
 				<div class="content-head">
 					<h2 class="hn"><span><?php printf($lang_admin_settings['Features head'], $lang_admin_settings['Features general']) ?></span></h2>
 				</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><strong><?php echo $lang_admin_settings['Features general legend'] ?></strong></legend>
 					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box checkbox">
@@ -709,7 +709,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 				<div class="content-head">
 					<h2 class="hn"><span><?php printf($lang_admin_settings['Features head'], $lang_admin_settings['Features posting']) ?></span></h2>
 				</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><span><?php echo $lang_admin_settings['Features posting legend'] ?></span></legend>
 					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box checkbox">
@@ -766,7 +766,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 				<div class="content-head">
 					<h2 class="hn"><span><?php printf($lang_admin_settings['Features head'], $lang_admin_settings['Features posts']) ?></span></h2>
 				</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><span><?php echo $lang_admin_settings['Features posts legend'] ?></span></legend>
 					<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<legend><span><?php echo $lang_admin_settings['Post content group'] ?></span></legend>
@@ -827,7 +827,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 			<div class="content-head">
 				<h2 class="hn"><span><?php printf($lang_admin_settings['Features head'], $lang_admin_settings['Features sigs']) ?></span></h2>
 			</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><span><?php echo $lang_admin_settings['Features sigs legend'] ?></span></legend>
 					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box checkbox">
@@ -881,7 +881,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 			<div class="content-head">
 				<h2 class="hn"><span><?php printf($lang_admin_settings['Features head'], $lang_admin_settings['Features Avatars']) ?></span></h2>
 			</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><span><?php echo $lang_admin_settings['Features Avatars legend'] ?></span></legend>
 					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box checkbox">
@@ -929,7 +929,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 <?php if (function_exists('curl_init') || function_exists('fsockopen') || in_array(strtolower(@ini_get('allow_url_fopen')), array('on', 'true', '1'))): ?>				<div class="ct-box">
 					<p><?php echo $lang_admin_settings['Features update info'] ?></p>
 				</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><strong><?php echo $lang_admin_settings['Features update legend'] ?></strong></legend>
 					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box checkbox">
@@ -956,7 +956,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 				<div class="ct-box">
 					<p><?php echo $lang_admin_settings['Features gzip info'] ?></p>
 				</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><strong><?php echo $lang_admin_settings['Features gzip legend'] ?></strong></legend>
 					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box checkbox">
@@ -1009,7 +1009,7 @@ else if ($section == 'announcements')
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_settings_announcements'])) ?>" />
 				<input type="hidden" name="form_sent" value="1" />
 			</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_settings['Announcements legend'] ?></strong></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box checkbox">
@@ -1077,7 +1077,7 @@ else if ($section == 'registration')
 			<div class="ct-box">
 				<p><?php echo $lang_admin_settings['New reg info'] ?></p>
 			</div>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_settings['Registration new legend'] ?></span></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box checkbox">
@@ -1143,7 +1143,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 				<div class="ct-box">
 					<p><?php echo $lang_admin_settings['Registration rules info'] ?></p>
 				</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><span><?php echo $lang_admin_settings['Registration rules legend'] ?></span></legend>
 					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box checkbox">
@@ -1207,7 +1207,7 @@ else if ($section == 'maintenance')
 				<p class="important"><?php echo $lang_admin_settings['Maintenance mode info'] ?></p>
 				<p class="warn"><?php echo $lang_admin_settings['Maintenance mode warn'] ?></p>
 			</div>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_settings['Maintenance legend'] ?></strong></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box checkbox">
@@ -1268,7 +1268,7 @@ else if ($section == 'email')
 			<div class="content-head">
 				<h2 class="hn"><span><?php printf($lang_admin_settings['E-mail head'], $lang_admin_settings['E-mail addresses']) ?></span></h2>
 			</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><strong><?php echo $lang_admin_settings['E-mail addresses legend'] ?></strong></legend>
 					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box text">
@@ -1304,7 +1304,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 				<div class="ct-box">
 					<p><?php echo $lang_admin_settings['E-mail server info'] ?></p>
 				</div>
-				<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><strong><?php echo $lang_admin_settings['E-mail server legend'] ?></strong></legend>
 					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box text">

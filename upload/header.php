@@ -266,7 +266,7 @@ $main_elements['<!-- forum_crumbs_top -->'] = (FORUM_PAGE != 'index') ? '<div id
 $main_elements['<!-- forum_crumbs_end -->'] = (FORUM_PAGE != 'index') ? '<div id="brd-crumbs-end" class="crumbs gen-content">'."\n\t".'<p>'.generate_crumbs(false).'</p>'."\n".'</div>' : '';
 
 // Page type class
-$main_elements['<!-- forum_page_type -->'] = (defined('FORUM_PAGE_TYPE')) ? FORUM_PAGE_TYPE : ((substr(FORUM_PAGE, 0, 5) == 'admin') ? 'admin' : 'basic');
+$main_elements['<!-- forum_page_type -->'] = (defined('FORUM_PAGE_TYPE')) ? FORUM_PAGE_TYPE.((substr(FORUM_PAGE, 0, 5) == 'admin') ? ' admin' : '') : ((substr(FORUM_PAGE, 0, 5) == 'admin') ? 'admin' : 'basic');
 
 // Main section heading
 $main_elements['<!-- forum_main_head -->'] =  '<div class="main-head">'."\n\t\t".'<h1 class="hn"><span>'.((isset($forum_page['main_head'])) ? $forum_page['main_head'] : end($forum_page['crumbs'])).'</span></h1>'."\n\t".'</div>';

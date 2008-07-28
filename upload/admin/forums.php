@@ -457,7 +457,7 @@ else if (isset($_GET['edit_forum']))
 			<div class="content-head">
 				<h3 class="hn"><span><?php  echo $lang_admin_forums['Edit forum details head'] ?></span></h3>
 			</div>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_forums['Edit forum details legend'] ?></strong></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
@@ -528,7 +528,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 					<?php echo implode("\n\t\t\t\t\t", $forum_page['form_info'])."\n" ?>
 				</ul>
 			</div>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_forums['Edit forum perms legend'] ?></strong></legend>
 <?php
 
@@ -730,7 +730,7 @@ if ($forum_db->num_rows($result))
 			<div class="content-head">
 				<h3 class="hn"><span><?php printf($lang_admin_forums['Forums in category'], forum_htmlencode($cur_forum['cat_name'])) ?></span></h3>
 			</div>
-			<div class="frm-group frm-hdgroup frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<div class="frm-group frm-hdgroup group<?php echo ++$forum_page['group_count'] ?>">
 
 <?php
 

@@ -281,7 +281,7 @@ if (isset($forum_page['errors']))
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
 <?php ($hook = get_hook('ed_pre_main_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_post['Edit post legend'] ?></strong></legend>
 <?php if ($can_edit_subject): ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
@@ -295,7 +295,6 @@ if (isset($forum_page['errors']))
 						<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_message" rows="14" cols="95"><?php echo forum_htmlencode(isset($_POST['req_message']) ? $message : $cur_post['message']) ?></textarea></span>
 					</div>
 				</div>
-			</fieldset>
 <?php
 
 $forum_page['checkboxes'] = array();
@@ -321,15 +320,19 @@ if (!empty($forum_page['checkboxes']))
 {
 
 ?>
-			<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?>">
-				<legend><span><?php echo $lang_post['Post settings'] ?></span></legend>
-				<div class="mf-box checkbox">
-					<?php echo implode("\n\t\t\t\t\t", $forum_page['checkboxes'])."\n"; ?>
-				</div>
-			</fieldset>
+				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<legend><span><?php echo $lang_post['Post settings'] ?></span></legend>
+					<div class="mf-box checkbox">
+						<?php echo implode("\n\t\t\t\t\t", $forum_page['checkboxes'])."\n"; ?>
+					</div>
+				</fieldset>
 <?php
 
 }
+
+?>
+			</fieldset>
+<?php
 
 ($hook = get_hook('ed_post_checkbox_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 

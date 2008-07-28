@@ -3,7 +3,6 @@
 $lang_profile = array(
 
 // Navigation and sections
-'Update forums redirect'	=>	'Forum moderator rights updated. Redirecting …',
 'Profile redirect'			=>	'Profile updated. Redirecting …',
 'Instructions'				=>	'You will be redirected back to this page',
 'Update profile'			=>	'Update profile',
@@ -17,7 +16,8 @@ $lang_profile = array(
 'Delete posts info'			=>	'<strong>Warning!</strong> If you choose not to delete this user\'s posts they can only be deleted manually at a later time.',
 'Delete posts'				=>	'Delete posts:',
 'Delete posts label'		=>	'Delete any posts and topics %s has made.',
-'Group membership redirect'	=>	'Group membership saved. Redirecting …',
+'Group membership redirect'	=>	'Group membership updated. Redirecting …',
+'Moderate forums redirect'	=>	'Forum moderator rights updated. Redirecting …',
 'Ban redirect'				=>	'Redirecting …',
 'Ban user'					=>	'Ban user',
 'Ban user info'				=>	'Ban this user via the administration console.',
@@ -27,8 +27,10 @@ $lang_profile = array(
 'User group'				=>	'Assign user to group:',
 'Your moderator heading'	=>	'Administration : Select the forums where you wish to appear as a moderator',
 'User moderator heading'	=>	'Administration : Assign %s as a moderator to the selected forums',
-'Moderator assignment'		=>	'Moderator assignment',
+'Moderator assignment'		=>	'Moderator assignment:',
 'Cannot delete admin'		=>	'Administrators cannot be deleted. In order to delete this user, you must first move him/her to a different user group.',
+'Update groups'				=>	'Update user group',
+'Update forums'				=>	'Update moderator assignment',
 
 // Avatar stuff
 'Avatar welcome'			=>	'Set an avatar image to enhance your forum identity',

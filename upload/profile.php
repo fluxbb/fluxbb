@@ -170,13 +170,13 @@ if ($action == 'change_pass')
 <?php ($hook = get_hook('pf_change_pass_key_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['New password'] ?></span> <small><?php echo $lang_profile['Password help'] ?></small></label><br />
 						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_new_password1" size="35" value="<?php echo(isset($_POST['req_new_password1']) ? ($_POST['req_new_password1']) : ''); ?>"/></span><br />
 					</div>
 				</div>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['Confirm new password'] ?></span> <small><?php echo $lang_profile['Confirm password help'] ?></small></label><br />
 						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_new_password2" size="35" value="<?php echo(isset($_POST['req_new_password2']) ? ($_POST['req_new_password2']) : ''); ?>"/></span><br />
@@ -327,19 +327,19 @@ if ($action == 'change_pass')
 <?php ($hook = get_hook('pf_change_pass_normal_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
-<?php if (!$forum_user['is_admmod']): ?>								<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php if (!$forum_user['is_admmod']): ?>								<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['Old password'] ?></span> <small><?php echo $lang_profile['Old password help'] ?></small></label><br />
 						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_old_password" size="35" value="<?php echo(isset($_POST['req_old_password']) ? ($_POST['req_old_password']) : ''); ?>"/></span>
 					</div>
 				</div>
-<?php endif; ?>							<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php endif; ?>							<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['New password'] ?></span> <small><?php echo $lang_profile['Password help'] ?></small></label><br />
 						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_new_password1" size="35" value="<?php echo(isset($_POST['req_new_password1']) ? ($_POST['req_new_password1']) : ''); ?>"/></span><br />
 					</div>
 				</div>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['Confirm new password'] ?></span> <small><?php echo $lang_profile['Confirm password help'] ?></small></label><br />
 						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_new_password2" size="35" value="<?php echo(isset($_POST['req_new_password2']) ? ($_POST['req_new_password2']) : ''); ?>"/></span><br />
@@ -568,13 +568,13 @@ else if ($action == 'change_email')
 <?php ($hook = get_hook('pf_change_email_normal_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['New e-mail'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_new_email" size="50" maxlength="80" value="<?php echo(isset($_POST['req_new_email']) ? forum_htmlencode($_POST['req_new_email']) : ''); ?>"/></span>
 					</div>
 				</div>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['Password'] ?></span></label><br />
 						<span class="fld-input"><input type="password" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_password" size="25" value="<?php echo(isset($_POST['req_password']) ? ($_POST['req_password']) : ''); ?>"/></span>
@@ -667,7 +667,7 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 			</div>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="delete_posts" value="1" checked="checked" /></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Delete posts'] ?></span> <?php printf($lang_profile['Delete posts label'], forum_htmlencode($user['username'])) ?></label>
@@ -746,8 +746,6 @@ else if (isset($_POST['update_group_membership']))
 
 	redirect(forum_link($forum_url['profile_admin'], $id), $lang_profile['Group membership redirect']);
 }
-
-
 else if (isset($_POST['update_forums']))
 {
 	if ($forum_user['g_id'] != FORUM_ADMIN)
@@ -791,7 +789,7 @@ else if (isset($_POST['update_forums']))
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
 
-	redirect(forum_link($forum_url['profile_admin'], $id), $lang_profile['Update forums redirect']);
+	redirect(forum_link($forum_url['profile_admin'], $id), $lang_profile['Moderate forums redirect']);
 }
 
 
@@ -1352,31 +1350,31 @@ if ($forum_user['id'] != $id &&
 	<div class="main-content main-frm">
 <?php ($hook = get_hook('pf_view_details_pre_user_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 		<div class="profile ct-group data-group vcard">
-			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+			<div class="ct-set data-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
-					<h2 class="user-ident set-legend"><?php echo implode('<br />', $forum_page['user_ident']) ?></h2>
+					<h2 class="user-ident ct-legend"><?php echo implode('<br />', $forum_page['user_ident']) ?></h2>
 					<ul class="data-list">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_info'])."\n" ?>
 					</ul>
 				</div>
 			</div>
-<?php if (!empty($forum_page['user_contact'])): ?>			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php if (!empty($forum_page['user_contact'])): ?>			<div class="ct-set data-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
-					<h3 class="set-legend hn"><span><?php echo $lang_profile['Contact info'] ?></span></h3>
+					<h3 class="ct-legend hn"><span><?php echo $lang_profile['Contact info'] ?></span></h3>
 					<ul class="data-list">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_contact'])."\n" ?>
 					</ul>
 				</div>
 			</div>
-<?php endif; if (!empty($forum_page['user_activity'])): ?>			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php endif; if (!empty($forum_page['user_activity'])): ?>			<div class="ct-set data-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
-					<h3 class="set-legend hn"><?php echo $lang_profile['Posts and topics'] ?></h3>
+					<h3 class="ct-legend hn"><?php echo $lang_profile['Posts and topics'] ?></h3>
 					<p class="options"><?php echo implode(' ', $forum_page['user_activity']) ?></p>
 				</div>
 			</div>
-<?php endif; if (isset($forum_page['sig_demo'])): ?>			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php endif; if (isset($forum_page['sig_demo'])): ?>			<div class="ct-set data-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
-					<h3 class="set-legend hn"><span><?php echo $lang_profile['Current signature'] ?></span></h3>
+					<h3 class="ct-legend hn"><span><?php echo $lang_profile['Current signature'] ?></span></h3>
 					<div class="sig-demo"><?php echo $forum_page['sig_demo']."\n" ?></div>
 				</div>
 			</div>
@@ -1550,38 +1548,38 @@ else
 <?php ($hook = get_hook('pf_change_details_about_pre_user_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 		<p class="content-options options"><?php echo implode(' ', $forum_page['user_options']) ?></p>
 		<div class="profile ct-group data-group vcard">
-			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+			<div class="ct-set data-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
-					<h3 class="user-ident set-legend"><?php echo implode('<br />', $forum_page['user_ident']) ?></h3>
+					<h3 class="user-ident ct-legend"><?php echo implode('<br />', $forum_page['user_ident']) ?></h3>
 					<ul class="data-list">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_info'])."\n" ?>
 					</ul>
 				</div>
 			</div>
-<?php if (!empty($forum_page['user_contact'])): ?>			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php if (!empty($forum_page['user_contact'])): ?>			<div class="ct-set data-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
-					<h4 class="set-legend hn"><span><?php echo $lang_profile['Contact info'] ?></span></h4>
+					<h4 class="ct-legend hn"><span><?php echo $lang_profile['Contact info'] ?></span></h4>
 					<ul class="data-box">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_contact'])."\n" ?>
 					</ul>
 				</div>
 			</div>
-<?php endif; if (!empty($forum_page['user_activity'])): ?>			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php endif; if (!empty($forum_page['user_activity'])): ?>			<div class="ct-set data-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
-					<h4 class="set-legend hn"><?php echo $lang_profile['Posts and topics'] ?></h4>
+					<h4 class="ct-legend hn"><?php echo $lang_profile['Posts and topics'] ?></h4>
 					<p class="options"><?php echo implode(' ', $forum_page['user_activity']) ?></p>
 				</div>
 			</div>
-<?php endif; if (isset($forum_page['sig_demo'])): ?>			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php endif; if (isset($forum_page['sig_demo'])): ?>			<div class="ct-set data-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
-					<h4 class="set-legend hn"><span><?php echo $lang_profile['Current signature'] ?></span></h4>
+					<h4 class="ct-legend hn"><span><?php echo $lang_profile['Current signature'] ?></span></h4>
 					<div class="sig-demo"><?php echo $forum_page['sig_demo'] ?></div>
 				</div>
 			</div>
 <?php endif; ?>
-<?php if (!empty($forum_page['user_private'])): ?>			<div id="private-profile" class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php if (!empty($forum_page['user_private'])): ?>			<div id="private-profile" class="ct-set data-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
-					<h3 class="set-legend hn"><span><?php echo $lang_profile['Private info'] ?></span></h3>
+					<h3 class="ct-legend hn"><span><?php echo $lang_profile['Private info'] ?></span></h3>
 					<ul class="data-list">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_private'])."\n" ?>
 					</ul>
@@ -1668,13 +1666,13 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 <?php if ($forum_page['has_required']): ?>			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
 <?php if ($forum_user['is_admmod'] && ($forum_user['g_id'] == FORUM_ADMIN || $forum_user['g_mod_rename_users'] == '1')): ?>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['Username'] ?></span><small><?php echo $lang_profile['Username help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_username" value="<?php echo(isset($_POST['req_username']) ? forum_htmlencode($_POST['req_username']) : forum_htmlencode($user['username'])) ?>" size="35" maxlength="25" /></span>
 					</div>
 				</div>
-<?php endif; if ($forum_user['is_admmod'] || $forum_config['o_regs_verify'] != '1'): ?>				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php endif; if ($forum_user['is_admmod'] || $forum_config['o_regs_verify'] != '1'): ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_profile['E-mail'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_email" value="<?php echo(isset($_POST['req_email']) ? forum_htmlencode($_POST['req_email']) : forum_htmlencode($user['email'])) ?>" size="35" maxlength="80" /></span>
@@ -1683,31 +1681,31 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 <?php endif; ($hook = get_hook('pf_change_details_identity_req_info_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>			</fieldset>
 <?php endif; ($hook = get_hook('pf_change_details_identity_post_req_info_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?><?php $forum_page['item_count'] = 0; ?>			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_profile['Personal legend'] ?></strong></legend>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Realname'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[realname]" value="<?php echo(isset($form['realname']) ? forum_htmlencode($form['realname']) : forum_htmlencode($user['realname'])) ?>" size="35" maxlength="40" /></span>
 					</div>
 				</div>
-<?php if ($forum_user['g_set_title'] == '1'): ?>				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php if ($forum_user['g_set_title'] == '1'): ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Title'] ?></span><small><?php echo $lang_profile['Leave blank'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="title" value="<?php echo(isset($_POST['title']) ? forum_htmlencode($_POST['title']) : forum_htmlencode($user['title'])) ?>" size="35" maxlength="50" /></span><br />
 					</div>
 				</div>
-<?php endif; ?>				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php endif; ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Location'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[location]" value="<?php echo((isset($form['location']) ? forum_htmlencode($form['location']) : forum_htmlencode($user['location']))) ?>" size="35" maxlength="30" /></span>
 					</div>
 				</div>
-<?php if ($forum_user['g_id'] == FORUM_ADMIN): ?>				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php if ($forum_user['g_id'] == FORUM_ADMIN): ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Edit count'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="num_posts" value="<?php echo $user['num_posts'] ?>" size="8" maxlength="8" /></span>
 					</div>
 				</div>
-<?php endif; if ($forum_user['is_admmod']): ?>				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php endif; if ($forum_user['is_admmod']): ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Admin note'] ?></span></label><br />
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="admin_note" value="<?php echo(isset($_POST['admin_note']) ? forum_htmlencode($_POST['admin_note']) : forum_htmlencode($user['admin_note'])) ?>" size="35" maxlength="30" /></span>
@@ -1716,37 +1714,37 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 <?php endif; ($hook = get_hook('pf_change_details_identity_personal_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>			</fieldset>
 <?php ($hook = get_hook('pf_change_details_identity_post_personal_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?><?php $forum_page['item_count'] = 0; ?>			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_profile['Contact legend'] ?></strong></legend>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Website'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[url]" value="<?php echo(isset($form['url']) ? forum_htmlencode($form['url']) : forum_htmlencode($user['url'])) ?>" size="50" maxlength="80" /></span>
 					</div>
 				</div>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Jabber'] ?></span></label><br />
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="form[jabber]" value="<?php echo(isset($form['jabber']) ? forum_htmlencode($form['jabber']) : forum_htmlencode($user['jabber'])) ?>" size="40" maxlength="80" /></span>
 					</div>
 				</div>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['ICQ'] ?></span></label><br />
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="form[icq]" value="<?php echo(isset($form['icq']) ? forum_htmlencode($form['icq']) : $user['icq']) ?>" size="12" maxlength="12" /></span>
 					</div>
 				</div>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['MSN'] ?></span></label><br />
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="form[msn]" value="<?php echo(isset($form['msn']) ? forum_htmlencode($form['msn']) : forum_htmlencode($user['msn'])) ?>" size="40" maxlength="80" /></span>
 					</div>
 				</div>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['AOL IM'] ?></span></label><br />
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="form[aim]" value="<?php echo(isset($form['aim']) ? forum_htmlencode($form['aim']) : forum_htmlencode($user['aim'])) ?>" size="20" maxlength="30" /></span>
 					</div>
 				</div>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Yahoo'] ?></span></label><br />
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" type="text" name="form[yahoo]" value="<?php echo(isset($form['yahoo']) ? forum_htmlencode($form['yahoo']) : forum_htmlencode($user['yahoo'])) ?>" size="20" maxlength="30" /></span>
@@ -1833,7 +1831,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 			natcasesort($forum_page['languages']);
 
 ?>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Language'] ?></span></label><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="form[language]">
@@ -1856,7 +1854,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		}
 
 ?>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Timezone'] ?></span> <small><?php echo $lang_profile['Timezone info'] ?></small></label><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="form[timezone]">
@@ -1902,13 +1900,13 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 						</select></span>
 					</div>
 				</div>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="form[dst]" value="1" <?php if ($user['dst'] == 1) echo 'checked="checked" ' ?>/></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Adjust for DST'] ?></span> <?php echo $lang_profile['DST label'] ?></label>
 					</div>
 				</div>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Time format'] ?></span></label><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="form[time_format]">
@@ -1929,7 +1927,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 						</select></span>
 					</div>
 				</div>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="legend"><?php echo $lang_profile['Date format'] ?></span></label><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="form[date_format]">
@@ -1966,7 +1964,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 			natcasesort($forum_page['styles']);
 
 ?>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Styles'] ?></span></label><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="form[style]">
@@ -1989,7 +1987,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		}
 
 ?>
-				<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<legend><span><?php echo $lang_profile['Image display'] ?></span></legend>
 					<div class="mf-box">
 <?php if ($forum_config['o_smilies'] == '1' || $forum_config['o_smilies_sig'] == '1'): ?>						<div class="mf-item">
@@ -2010,7 +2008,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 						</div>
 <?php endif; ?>					</div>
 				</fieldset>
-<?php if ($forum_config['o_signatures'] == '1'): ?>				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php if ($forum_config['o_signatures'] == '1'): ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="form[show_sig]" value="1"<?php if ($user['show_sig'] == '1') echo ' checked="checked"' ?> /></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Signature display'] ?></span> <?php echo $lang_profile['Show sigs'] ?></label>
@@ -2022,13 +2020,13 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 <?php ($hook = get_hook('pf_change_details_settings_pre_pagination_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_profile['Pagination settings'] ?></strong></legend>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box sf-short text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Topics per page'] ?></span> <small><?php echo $lang_profile['Leave blank'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[disp_topics]" value="<?php echo $user['disp_topics'] ?>" size="6" maxlength="3" /></span>
 					</div>
 				</div>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box sf-short text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Posts per page'] ?></span>	<small><?php echo $lang_profile['Leave blank'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[disp_posts]" value="<?php echo $user['disp_posts'] ?>" size="6" maxlength="3" /></span>
@@ -2040,7 +2038,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 <?php ($hook = get_hook('pf_change_details_settings_pre_other_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_profile['E-mail and sub settings'] ?></strong></legend>
-				<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<legend><span><?php echo $lang_profile['E-mail settings'] ?></span></legend>
 					<div class="mf-box">
 						<div class="mf-item">
@@ -2057,7 +2055,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 						</div>
 					</div>
 				</fieldset>
-<?php if ($forum_config['o_subscriptions'] == '1'): ?>				<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php if ($forum_config['o_subscriptions'] == '1'): ?>				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<legend><span><?php echo $lang_profile['Subscription settings'] ?></span></legend>
 					<div class="mf-box">
 						<div class="mf-item">
@@ -2168,20 +2166,20 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_profile['Signature'] ?></strong></legend>
 <?php ($hook = get_hook('pf_change_details_signature_fieldset_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+<?php if (isset($forum_page['sig_demo'])): ?>				<div class="ct-set info-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="ct-box info-box">
+						<h3 class="ct-legend hn"><?php echo $lang_profile['Current signature'] ?></h3>
+						<div class="sig-demo"><?php echo $forum_page['sig_demo'] ?></div>
+					</div>
+				</div>
+<?php endif; ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box textarea">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Compose signature'] ?></span> <small><?php printf($lang_profile['Sig max size'], forum_number_format($forum_config['p_sig_length']), forum_number_format($forum_config['p_sig_lines'])) ?></small></label><br />
 						<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="signature" rows="4" cols="65"><?php echo(isset($_POST['signature']) ? forum_htmlencode($_POST['signature']) : forum_htmlencode($user['signature'])) ?></textarea></span>
 					</div>
 				</div>
 			</fieldset>
-<?php if (isset($forum_page['sig_demo'])): ?>			<div class="ct-set info-set set<?php echo ++$forum_page['item_count'] ?>">
-				<div class="ct-box info-box">
-					<h3 class="set-legend hn"><?php echo $lang_profile['Current signature'] ?></h3>
-					<div class="sig-demo"><?php echo $forum_page['sig_demo'] ?></div>
-				</div>
-			</div>
-<?php endif; ($hook = get_hook('pf_change_details_signature_pre_buttons')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>			<div class="frm-buttons">
+<?php ($hook = get_hook('pf_change_details_signature_pre_buttons')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="update" value="<?php echo $lang_profile['Update profile'] ?>" /> <?php echo $lang_profile['Instructions'] ?></span>
 			</div>
 		</form>
@@ -2246,23 +2244,6 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 		<h2 class="hn"><span><?php printf(($forum_page['own_profile']) ? $lang_profile['Avatar welcome'] : $lang_profile['Avatar welcome user'], forum_htmlencode($user['username'])) ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
-		<div class="ct-group info-group group<?php echo ++$forum_page['group_count'] ?>">
-			<div class="ct-set info-set set<?php echo ++$forum_page['item_count'] ?>">
-				<div class="ct-box info-box">
-					<h3 class="hn set-legend"><?php echo $lang_profile['Current avatar'] ?></h3>
-					<p><?php echo (isset($forum_page['avatar_demo'])) ? '<a href="'.forum_link($forum_url['delete_avatar'], array($id, generate_form_token('delete_avatar'.$id.$forum_user['id']))).'"><strong>'.$lang_profile['Delete avatar info'].'</strong></a>' : $lang_profile['No avatar info'] ?></p>
-				</div>
-			</div>
-			<div class="ct-set info-set set<?php echo ++$forum_page['item_count'] ?>">
-				<div class="ct-box info-box">
-<?php if (isset($forum_page['avatar_demo'])): ?>					<h3 class="hn set-legend avatar-demo"><span><?php echo $forum_page['avatar_demo'] ?></span></h3>
-<?php endif; ?>					<ul class="info-list">
-						<?php echo implode("\n\t\t\t\t", $forum_page['frm_info'])."\n\t\t\t" ?>
-					</ul>
-					<p id="req-msg" class="req-warn important"><?php echo $lang_profile['No upload warn'] ?></p>
-				</div>
-			</div>
-		</div>
 <?php
 
 		// If there were any errors, show them
@@ -2285,9 +2266,6 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn">
 
 		}
 
-// Reset counter
-$forum_page['item_count'] = 0;
-
 ?>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>" enctype="multipart/form-data">
 			<div class="hidden">
@@ -2295,8 +2273,23 @@ $forum_page['item_count'] = 0;
 			</div>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_profile['Avatar'] ?></strong></legend>
+				<div class="ct-set info-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="ct-box info-box">
+						<h3 class="hn ct-legend"><?php echo $lang_profile['Current avatar'] ?></h3>
+						<p><?php echo (isset($forum_page['avatar_demo'])) ? '<a href="'.forum_link($forum_url['delete_avatar'], array($id, generate_form_token('delete_avatar'.$id.$forum_user['id']))).'"><strong>'.$lang_profile['Delete avatar info'].'</strong></a>' : $lang_profile['No avatar info'] ?></p>
+					</div>
+				</div>
+				<div class="ct-set info-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="ct-box info-box">
+<?php if (isset($forum_page['avatar_demo'])): ?>						<h3 class="hn ct-legend avatar-demo"><span><?php echo $forum_page['avatar_demo'] ?></span></h3>
+<?php endif; ?>						<ul class="info-list">
+						<?php echo implode("\n\t\t\t\t", $forum_page['frm_info'])."\n\t\t\t" ?>
+						</ul>
+						<p id="req-msg" class="req-warn important"><?php echo $lang_profile['No upload warn'] ?></p>
+					</div>
+				</div>
 <?php ($hook = get_hook('pf_change_details_avatar_fieldset_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Upload avatar file'] ?></span><small><?php echo $lang_profile['Avatar upload help'] ?></small></label><br />
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" name="req_file" type="file" size="40" /></span>
@@ -2338,11 +2331,11 @@ $forum_page['item_count'] = 0;
 		$forum_page['user_management'] = array();
 
 		if ($forum_user['g_moderator'] == '1')
-			$forum_page['user_management']['ban'] = '<div class="ct-set info-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box info-box"><h3 class="set-legend hn">'.$lang_profile['Ban user'].'</h3>'."\n\t\t\t".'<p><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user info'].'</a></p></div></div>';
+			$forum_page['user_management']['ban'] = '<div class="ct-set info-set group-item'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box info-box"><h3 class="ct-legend hn">'.$lang_profile['Ban user'].'</h3>'."\n\t\t\t".'<p><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user info'].'</a></p></div></div>';
 		else if ($forum_user['g_moderator'] != '1' && $user['g_id'] != FORUM_ADMIN )
 		{
-			$forum_page['user_management']['ban'] = '<div class="ct-set info-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box info-box"><h3 class="set-legend hn">'.$lang_profile['Ban user'].'</h3>'."\n\t\t\t".'<p><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user info'].'</a></p></div></div>';
-			$forum_page['user_management']['delete'] = '<div class="ct-set info-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box info-box"><h3 class="set-legend hn">'.$lang_profile['Delete user'].'</h3>'."\n\t\t\t\t".'<p><a href="'.forum_link($forum_url['delete_user'], $id).'">'.$lang_profile['Delete user info'].'</a></p></div></div>';
+			$forum_page['user_management']['ban'] = '<div class="ct-set info-set group-item'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box info-box"><h3 class="ct-legend hn">'.$lang_profile['Ban user'].'</h3>'."\n\t\t\t".'<p><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user info'].'</a></p></div></div>';
+			$forum_page['user_management']['delete'] = '<div class="ct-set info-set group-item'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box info-box"><h3 class="ct-legend hn">'.$lang_profile['Delete user'].'</h3>'."\n\t\t\t\t".'<p><a href="'.forum_link($forum_url['delete_user'], $id).'">'.$lang_profile['Delete user info'].'</a></p></div></div>';
 		}
 
 		// Setup headings
@@ -2360,35 +2353,32 @@ $forum_page['item_count'] = 0;
 		($hook = get_hook('pf_change_details_admin_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_profile['User management'] ?></span></h2>
+	</div>
 	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 		<div class="hidden">
 			<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 		</div>
+		<div class="main-content main-frm">
+			<div class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
+
 <?php
 
 		if (!empty($forum_page['user_management']))
 		{
 
 ?>
-	<div class="main-subhead">
-		<h2 class="hn"><span><?php echo $lang_profile['User management'] ?></span></h2>
-	</div>
-	<div class="main-content main-frm">
-		<div class="ct-group group<?php echo ++$forum_page['group_count'] ?>">
 			<?php echo implode("\n\t\t\t", $forum_page['user_management'])."\n\t\t" ?>
-		</div>
 <?php
 
 			($hook = get_hook('pf_change_details_admin_pre_group_membership')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			if ($forum_user['g_moderator'] != '1' && !$forum_page['own_profile'])
 			{
-				$forum_page['item_count'] = 0;
 
 ?>
-		<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
-			<legend class="group-legend"><strong><?php echo $lang_profile['Group membership'] ?></strong></legend>
-			<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+			<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="sf-box select">
 					<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['User group'] ?></span></label><br />
 					<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="group_id">
@@ -2415,33 +2405,24 @@ $forum_page['item_count'] = 0;
 					</select></span>
 				</div>
 			</div>
-		</fieldset>
-		<div class="frm-buttons">
-			<span class="submit"><input type="submit" name="update_group_membership" value="<?php echo $lang_profile['Update profile'] ?>" /></span> <span><?php echo $lang_profile['Instructions'] ?></span>
-		</div>
+			<div class="sf-set button-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-box text">
+	 				<span class="submit"><input type="submit" name="update_group_membership" value="<?php echo $lang_profile['Update groups'] ?>" /></span>
+	 			</div>
+			</div>
 <?php
 
 			}
-
-?>
-	</div>
-<?php
-
 		}
 
 		if ($forum_user['g_id'] == FORUM_ADMIN && ($user['g_id'] == FORUM_ADMIN || $user['g_moderator'] == '1'))
 		{
-			$forum_page['group_count'] = $forum_page['item_count'] = 0;
 
 ?>
-	<div class="main-subhead">
-		<h2 class="hn"><span><?php echo ($forum_page['own_profile']) ? $lang_profile['Your moderator heading'] : sprintf($lang_profile['User moderator heading'], forum_htmlencode($user['username'])) ?></span></h2>
-	</div>
-	<div class="main-content main-frm">
-		<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?>">
-			<legend><span><?php echo $lang_profile['Moderator assignment'] ?></span></legend>
-			<div class="mf-box">
-				<div class="checklist">
+			<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<legend><span><?php echo $lang_profile['Moderator assignment'] ?></span></legend>
+				<div class="mf-box">
+					<div class="checklist">
 <?php
 
 			$query = array(
@@ -2478,24 +2459,27 @@ $forum_page['item_count'] = 0;
 			}
 
 ?>
-					</fieldset>
+						</fieldset>
+					</div>
+				</div>
+			</fieldset>
+			<div class="mf-set button-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="mf-box text">
+					<span class="submit"><input type="submit" name="update_forums" value="<?php echo $lang_profile['Update forums'] ?>" /></span>
 				</div>
 			</div>
-		</fieldset>
-		<div class="frm-buttons">
-			<span class="submit"><input type="submit" name="update_forums" value="<?php echo $lang_profile['Update profile'] ?>" /> <?php echo $lang_profile['Instructions'] ?></span>
-		</div>
 <?php
 
 			($hook = get_hook('pf_change_details_admin_form_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-?>
-	</div>
-<?php
-
 		}
 
 ?>
+		</div>
+		<div class="frm-buttons">
+			<span class="submit"><?php echo $lang_profile['Instructions'] ?></span>
+		</div>
+	</div>
 	</form>
 <?php
 

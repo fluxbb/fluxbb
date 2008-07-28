@@ -209,7 +209,7 @@ else
 				<input type="hidden" name="form_sent" value="1" />
 			</div>
 <?php ($hook = get_hook('apr_pre_prune_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-			<fieldset class="frm-group frm-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_prune['Prune legend'] ?></span></legend>
 <?php ($hook = get_hook('apr_pre_prune_from')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
