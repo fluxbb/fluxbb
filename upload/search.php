@@ -131,9 +131,6 @@ if (isset($query))
 	// Generate paging links
 	$forum_page['page_post']['paging'] = '<p class="paging"><span class="pages">'.$lang_common['Pages'].'</span> '.paginate($forum_page['num_pages'], $forum_page['page'], $url_type, $lang_common['Paging separator'], $search_id).'</p>';
 
-	if (isset($forum_page['posting_info']))
-		$forum_page['page_post']['posting'] = $forum_page['posting_info'];
-
 	// Get topic/forum tracking data
 	if (!$forum_user['is_guest'])
 		$tracked_topics = get_tracked_topics();
@@ -149,6 +146,10 @@ if (isset($query))
 		$forum_page['nav']['prev'] = '<link rel="prev" href="'.forum_sublink($url_type, $forum_url['page'], ($forum_page['page'] - 1), $search_id).'" title="'.$lang_common['Page'].' '.($forum_page['page'] - 1).'" />';
 		$forum_page['nav']['first'] = '<link rel="first" href="'.forum_link($url_type, $search_id).'" title="'.$lang_common['Page'].' 1" />';
 	}
+
+	// Setup main options header
+	$forum_page['main_options_head'] = $lang_search['Search options'];
+
 
 	($hook = get_hook('se_results_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
