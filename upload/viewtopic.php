@@ -376,7 +376,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 	if ($forum_config['o_show_user_info'] == '1')
 	{
 		if (isset($user_data_cache[$cur_post['poster_id']]['post_contacts']))
-			$forum_page['post_options']['contacts'] = '<p class="post-contacts">'.implode(' ', $user_data_cache[$cur_post['poster_id']]['post_contacts']).'</p>';
+			$forum_page['post_contacts'] = $user_data_cache[$cur_post['poster_id']]['post_contacts'];
 		else
 		{
 			if ($cur_post['poster_id'] > 1)
@@ -393,10 +393,10 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 				if ($cur_post['poster_email'] != '' && !$forum_user['is_guest'] && $forum_user['g_send_email'] == '1')
 					$forum_page['post_contacts']['email'] = '<span class="user-email'.(!empty($forum_page['post_contacts']) ? ' item1' : '').'"><a href="mailto:'.forum_htmlencode($cur_post['poster_email']).'">'.$lang_topic['E-mail'].'<span>&#160;'.forum_htmlencode($cur_post['username']).'</span></a></span>';
 			}
-
-			if (!empty($forum_page['post_contacts']))
-				$forum_page['post_options']['contacts'] = '<p class="post-contacts">'.implode(' ', $forum_page['post_contacts']).'</p>';
 		}
+
+		if (!empty($forum_page['post_contacts']))
+			$forum_page['post_options']['contacts'] = '<p class="post-contacts">'.implode(' ', $forum_page['post_contacts']).'</p>';
 	}
 
 	// Generate the post options links
