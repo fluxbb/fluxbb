@@ -887,6 +887,10 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 			'WHERE'		=> 'moved_to IN('.implode(',', $topics).')'
 		);
 
+		// Should we create redirect topics?
+		if (isset($_POST['with_redirect']))
+			$query['WHERE'] .= ' OR (id IN('.implode(',', $topics).') AND id != '.$merge_to_tid.')';
+
 		($hook = get_hook('mr_confirm_merge_topics_qr_delete_redirect_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
@@ -898,47 +902,6 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 		);
 
 		($hook = get_hook('mr_confirm_merge_topics_qr_merge_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-		$forum_db->query_build($query) or error(__FILE__, __LINE__);
-
-		// Should we create redirect topics?
-		if (isset($_POST['with_redirect']))
-		{
-			while (list(, $cur_topic) = @each($topics))
-			{
-				// We don't need a redirect topic for the topic we're merging into
-				if ($cur_topic == $merge_to_tid)
-					continue;
-
-				// Fetch info for the redirect topic
-				$query = array(
-					'SELECT'	=> 't.poster, t.subject, t.posted, t.last_post',
-					'FROM'		=> 'topics AS t',
-					'WHERE'		=> 't.id='.$cur_topic
-				);
-
-				($hook = get_hook('mr_confirm_merge_topics_qr_get_redirect_topic_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-				$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-				$merged = $forum_db->fetch_assoc($result);
-
-				// Create the redirect topic
-				$query = array(
-					'INSERT'	=> 'poster, subject, posted, last_post, moved_to, forum_id',
-					'INTO'		=> 'topics',
-					'VALUES'	=> '\''.$forum_db->escape($merged['poster']).'\', \''.$forum_db->escape($merged['subject']).'\', '.$merged['posted'].', '.$merged['last_post'].', '.$merge_to_tid.', '.$fid
-				);
-
-				($hook = get_hook('mr_confirm_merge_topics_qr_add_redirect_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-				$forum_db->query_build($query) or error(__FILE__, __LINE__);
-			}
-		}
-
-		// Delete the topics that have been merged
-		$query = array(
-			'DELETE'	=> 'topics',
-			'WHERE'		=> 'id IN('.implode(',', $topics).') AND id != '.$merge_to_tid
-		);
-
-		($hook = get_hook('mr_confirm_merge_topics_qr_delete_merged_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Synchronize the topic we merged to and the forum where the topics were merged
