@@ -53,6 +53,23 @@ body {
 .brd .main-item li.info-topics {
 	}
 
+.brd .main-content .main-item .hn,
+.brd .main-content .main-item .item-nav {
+	color: #5F90BE;
+	}
+
+.brd .main-content .sticky {
+	background: #F2F4FA;
+	}
+
+.brd .main-content .main-item .hn .item-status em.sticky {
+ 	color: #31669C;
+ 	}
+ 	
+.brd .main-content .main-item .hn .item-status em.closed {
+ 	color: #333;
+ 	}
+
 .brd .post * {
 	border-color: #DDE4EB
 	}
@@ -281,11 +298,6 @@ body {
 	background: #f5f5f5;
 	}
 
-
-
-
-
-
 /* Status indicators
 ----------------------------------------------------------------*/
 
@@ -297,9 +309,19 @@ body {
 	border-color: #f4f4f4 #f4f4f4 #f4f4f4 #f4f4f4
 	}
 	
+ .brd .main-content .sticky .icon {
+	border-color: #D7E5F3 #C3CFDC #9FB3C7 #90A2B4
+	}
+	
+ .brd .main-content .closed .icon {
+	border-color: #ACACAC #979797 #898989 #7A7A7A
+	}
+	
+ .brd .main-content .sticky .closed {
+	border-color: #D7E5F3 #C3CFDC #898989 #7A7A7A
+	}
+	
  .brd .main-content .new .icon {
 	border-color: #2B75AD #235E8C #1F537B #266799
 	}
-	
-	
 	

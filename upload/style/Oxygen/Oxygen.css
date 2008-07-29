@@ -750,6 +750,14 @@ E - INDEX, FORUMS, SEARCH RESULTS, MODERATE FORUMS
  .brd .main-content .main-item .hn {
  	padding: 0;
  	}
+ 	
+ .brd .main-content .main-item .hn .item-status {
+ 	font-weight:normal;
+ 	}
+
+ .brd .main-content .main-item .hn .item-status em {
+ 	font-style:normal;
+ 	}
 
  .brd .main-content .main-item .item-subject,
  .brd .main-content .main-item li {

@@ -196,7 +196,7 @@ if ($forum_db->num_rows($result))
 		++$forum_page['item_count'];
 
 		// Start from scratch
-		$forum_page['item_subject'] = $forum_page['item_body'] = $forum_page['item_status'] = $forum_page['item_nav'] = $forum_page['item_title'] = $forum_page['item_subject_status'] = array();
+		$forum_page['item_subject'] = $forum_page['item_body'] = $forum_page['item_status'] = $forum_page['item_nav'] = $forum_page['item_title'] = $forum_page['item_title_status'] = array();
 		$forum_page['item_indicator'] = '';
 
 		if ($forum_config['o_censoring'] == '1')
@@ -230,7 +230,31 @@ if ($forum_db->num_rows($result))
 				$forum_page['item_status']['posted'] = 'posted';
 			}
 
+			if ($cur_topic['sticky'] == '1')
+			{
+				$forum_page['item_title_status']['sticky'] = '<em class="sticky">'.$lang_forum['Sticky'].'</em>';
+				$forum_page['item_status']['sticky'] = 'sticky';
+			}
+
+			if ($cur_topic['closed'] == '1')
+			{
+				$forum_page['item_title_status']['closed'] = '<em class="closed">'.$lang_forum['Closed'].'</em>';
+				$forum_page['item_status']['closed'] = 'closed';
+			}
+
+			if (!empty($forum_page['item_title_status']))
+				$forum_page['item_title']['status'] = '<span class="item-status">'.sprintf($lang_forum['Item status'], implode(', ', $forum_page['item_title_status'])).'</span>';
+
 			$forum_page['item_title']['link'] = '<strong><a href="'.forum_link($forum_url['topic'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))).'">'.forum_htmlencode($cur_topic['subject']).'</a></strong>';
+
+			$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span> '.implode(' ', $forum_page['item_title']).'</h3>';
+
+			// Assemble the Topic subject
+
+			$forum_page['item_subject']['starter'] = '<span class="item-starter">'.sprintf($lang_forum['Topic starter'], '<cite>'.forum_htmlencode($cur_topic['poster']).'</cite>').'</span>';
+
+			if (empty($forum_page['item_status']))
+				$forum_page['item_status']['normal'] = 'normal';
 
 			$forum_page['item_pages'] = ceil(($cur_topic['num_replies'] + 1) / $forum_user['disp_posts']);
 
@@ -245,32 +269,9 @@ if ($forum_db->num_rows($result))
 			}
 
 			if (!empty($forum_page['item_nav']))
-				$forum_page['item_title']['nav'] = '<span class="item-nav">'.sprintf($lang_forum['Topic navigation'], implode('&#160;&#160;', $forum_page['item_nav'])).'</span>';
+				$forum_page['item_subject']['nav'] = '<span class="item-nav">'.sprintf($lang_forum['Topic navigation'], implode('&#160;&#160;', $forum_page['item_nav'])).'</span>';
 
-			$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span> '.implode(' ', $forum_page['item_title']).'</h3>';
-
-			// Assemble the Topic subject
-
-			if ($cur_topic['sticky'] == '1')
-			{
-				$forum_page['item_subject_status']['sticky'] = $lang_forum['Sticky'];
-				$forum_page['item_status']['sticky'] = 'sticky';
-			}
-
-			if ($cur_topic['closed'] == '1')
-			{
-				$forum_page['item_subject_status']['closed'] = $lang_forum['Closed'];
-				$forum_page['item_status']['closed'] = 'closed';
-			}
-
-			if (!empty($forum_page['item_subject_status']))
-				$forum_page['item_subject']['status'] = '<span class="item-status">'.sprintf($lang_forum['Item status'], implode(' ', $forum_page['item_subject_status'])).'</span>';
-
-			$forum_page['item_subject']['starter'] = '<span class="item-starter">'.sprintf($lang_forum['Topic starter'], format_time($cur_topic['posted'], 1), sprintf($lang_forum['by poster'], '<cite>'.forum_htmlencode($cur_topic['poster']).'</cite>')).'</span>';
 			$forum_page['item_body']['subject']['desc'] = '<p>'.implode(' ', $forum_page['item_subject']).'</p>';
-
-			if (empty($forum_page['item_status']))
-				$forum_page['item_status']['normal'] = 'normal';
 
 			$forum_page['item_body']['info']['replies'] = '<li class="info-replies"><strong>'.forum_number_format($cur_topic['num_replies']).'</strong> <span class="label">'.(($cur_topic['num_replies'] == 1) ? $lang_forum['reply'] : $lang_forum['replies']).'</span></li>';
 
