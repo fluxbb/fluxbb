@@ -334,7 +334,7 @@ if ($forum_config['o_users_online'] == '1')
 ?>
 <div id="brd-online" class="gen-content">
 	<h3 class="hn"><span><?php echo $lang_index['Currently online'] ?></span></h3>
-	<p><?php (($num_guests != 1) ? printf($lang_index['Guests plural'], forum_number_format($num_guests)) : printf($lang_index['Guest single'], $num_guests)) ?> <?php ((count($users) != 1) ? printf($lang_index['Users plural'], forum_number_format(count($users))) : printf($lang_index['User single'], count($users))) ?> <?php echo ((count($users) > 0) ? implode(', ', $users) : '') ?></p>
+	<p><?php (($num_guests != 1) ? printf($lang_index['Guests plural'], forum_number_format($num_guests)) : printf($lang_index['Guest single'], $num_guests)) ?> <?php ((count($users) > 1) ? printf($lang_index['Users plural'], forum_number_format(count($users))) : printf(((count($users) == 0) ? $lang_index['Users none'] : $lang_index['User single']), count($users))) ?> <?php echo ((count($users) > 0) ? implode(', ', $users) : '') ?></p>
 </div>
 <?php
 
