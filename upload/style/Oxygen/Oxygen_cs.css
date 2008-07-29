@@ -53,21 +53,22 @@ body {
 .brd .main-item li.info-topics {
 	}
 
-.brd .main-content .main-item .hn,
 .brd .main-content .main-item .item-nav {
-	color: #5F90BE;
+	color: #888;
 	}
-
+	
 .brd .main-content .sticky {
 	background: #F2F4FA;
 	}
 
 .brd .main-content .main-item .hn .item-status em.sticky {
- 	color: #31669C;
+ 	color: #314B60;
+ 	font-weight: bold;
  	}
  	
 .brd .main-content .main-item .hn .item-status em.closed {
- 	color: #333;
+ 	color: #314B60;
+ 	font-weight: bold;
  	}
 
 .brd .post * {

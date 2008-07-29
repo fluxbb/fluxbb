@@ -45,3 +45,5 @@ IE7 - FIXES
 .brd fieldset legend {
 	margin-left: -7px;
 	}
+	
+#brd-wrap .entry-content .codebox pre {min-height: 3em}	
