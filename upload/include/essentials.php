@@ -50,6 +50,13 @@ if (!defined('FORUM'))
 if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
 {
 	header('HTTP/1.1 403 Prefetching Forbidden');
+
+	// Send no-cache headers
+	header('Expires: Thu, 21 Jul 1977 07:30:00 GMT');	// When yours truly first set eyes on this world! :)
+	header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+	header('Cache-Control: post-check=0, pre-check=0', false);
+	header('Pragma: no-cache');		// For HTTP/1.0 compability
+
 	exit;
 }
 
