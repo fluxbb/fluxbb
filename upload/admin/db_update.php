@@ -14,7 +14,7 @@ define('UPDATE_TO', '1.3 Beta');
 define('UPDATE_TO_DB_REVISION', 2);
 
 // The number of items to process per pageview (lower this if the update script times out during UTF-8 conversion)
-define('PER_PAGE', 3000);
+define('PER_PAGE', 300);
 
 define('MIN_MYSQL_VERSION', '4.1.2');
 
