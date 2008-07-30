@@ -1364,7 +1364,7 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 			if (is_writable(FORUM_ROOT))
 			{
 				// We rename the old config.php file just in case
-				if (rename(FORUM_ROOT.'config.php', FORUM_ROOT.'config.old.php'))
+				if (rename(FORUM_ROOT.'config.php', FORUM_ROOT.'config.old.'.time().'.php'))
 				{
 					$fh = @fopen(FORUM_ROOT.'config.php', 'wb');
 					if ($fh)
