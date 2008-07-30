@@ -257,12 +257,9 @@ function utf8_callback_2($matches)
 //
 function db_seems_utf8()
 {
-	global $db_type, $forum_db, $cur_version;
+	global $db_type, $forum_db;
 
 	$seems_utf8 = true;
-
-	if (strpos($cur_version, '1.2') === 0 && $db_type != 'sqlite')
-		$forum_db->query('SET NAMES \'utf8\'') or error(__FILE__, __LINE__);
 
 	$result = $forum_db->query('SELECT MIN(id), MAX(id) FROM '.$forum_db->prefix.'posts') or error(__FILE__, __LINE__);
 	list($min_id, $max_id) = $forum_db->fetch_row($result);
@@ -281,9 +278,6 @@ function db_seems_utf8()
 			break;
 		}
 	}
-
-	if (strpos($cur_version, '1.2') === 0 && $db_type != 'sqlite')
-		$forum_db->query('SET NAMES \'latin1\'') or error(__FILE__, __LINE__);
 
 	return $seems_utf8;
 }
