@@ -76,7 +76,7 @@ $tpl_main = str_replace('<!-- forum_local -->', 'xml:lang="'.$lang_common['lang_
 if (!defined('FORUM_ALLOW_INDEX'))
 	$forum_head['robots'] = '<meta name="ROBOTS" content="NOINDEX, FOLLOW" />';
 else
-	$forum_head['descriptions'] =  '<meta name="description" content="'.generate_crumbs(true).' '.$lang_common['Title separator'].' '.forum_htmlencode($forum_config['o_board_desc']).'" />';
+	$forum_head['descriptions'] = '<meta name="description" content="'.generate_crumbs(true).' '.$lang_common['Title separator'].' '.forum_htmlencode($forum_config['o_board_desc']).'" />';
 
 // Should we output a MicroID? http://microid.org/
 if (strpos(FORUM_PAGE, 'profile') === 0)
@@ -130,8 +130,6 @@ ob_end_clean();
 
 $forum_head['commonjs'] = '<script type="text/javascript" src="'.$base_url.'/include/js/common.js"></script>';
 
-($hook = get_hook('hd_'.FORUM_PAGE.'_head')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
 ($hook = get_hook('hd_head')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 $tpl_main = str_replace('<!-- forum_head -->', implode("\n", $forum_head), $tpl_main);
@@ -165,7 +163,7 @@ $gen_elements['<!-- forum_announcement -->'] = ($forum_config['o_announcement'] 
 // Maintenance Warning
 $gen_elements['<!-- forum_maint -->'] = ($forum_user['g_id'] == FORUM_ADMIN && $forum_config['o_maintenance'] == '1') ? '<p id="maint-alert" class="warn">'.sprintf($lang_common['Maintenance warning'], '<a href="'.forum_link($forum_url['admin_settings_maintenance']).'">'.$lang_common['Maintenance mode'].'</a>').'</p>' : '';
 
-($hook = get_hook('hd_genelements')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+($hook = get_hook('hd_gen_elements')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 $tpl_main = str_replace(array_keys($gen_elements), array_values($gen_elements), $tpl_main);
 unset($gen_elements);
@@ -194,7 +192,7 @@ if ($forum_user['g_read_board'] == '1' && $forum_user['g_search'] == '1')
 
 $visit_elements['<!-- forum_visit -->'] = (!empty($visit_links)) ? '<p id="visit-links" class="options">'.implode(' ', $visit_links).'</p>' : '';
 
-($hook = get_hook('hd_visitelements')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+($hook = get_hook('hd_visit_elements')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 $tpl_main = str_replace(array_keys($visit_elements), array_values($visit_elements), $tpl_main);
 unset($visit_elements);
@@ -292,7 +290,7 @@ if (substr(FORUM_PAGE, 0, 5) == 'admin' && FORUM_PAGE_TYPE != 'paged')
 // Main section options bar
 $main_elements['<!-- forum_main_options -->'] = (!empty($forum_page['main_options'])) ? '<div class="main-options gen-content">'."\n\t\t".'<h2 class="hn"><span>'.$forum_page['main_options_head'].'</span></h2>'."\n\t\t".'<p class="options">'.implode(' ', $forum_page['main_options']).'</p>'."\n\t".'</div>' : '';
 
-($hook = get_hook('hd_mainelements')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+($hook = get_hook('hd_main_elements')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 $tpl_main = str_replace(array_keys($main_elements),  array_values($main_elements), $tpl_main);
 unset($main_elements);

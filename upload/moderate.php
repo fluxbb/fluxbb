@@ -42,13 +42,15 @@ if (isset($_GET['get_host']))
 			'WHERE'		=> 'p.id='.$get_host
 		);
 
-		($hook = get_hook('mr_qr_get_poster_ip')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_view_ip_qr_get_poster_ip')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if (!$forum_db->num_rows($result))
 			message($lang_common['Bad request']);
 
 		$ip = $forum_db->result($result);
 	}
+
+	($hook = get_hook('mr_view_ip_pre_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	message(sprintf($lang_misc['Hostname lookup'], $ip, @gethostbyaddr($ip), '<a href="'.forum_link($forum_url['admin_users']).'?show_users='.$ip.'">'.$lang_misc['Show more users'].'</a>'));
 }
@@ -101,7 +103,7 @@ if (isset($_POST['cancel']))
 	redirect(forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name']))), $lang_common['Cancel redirect']);
 
 
-// All other topic moderation features require a topic id in GET
+// All topic moderation features require a topic id in GET
 if (isset($_GET['tid']))
 {
 	($hook = get_hook('mr_post_actions_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -117,7 +119,7 @@ if (isset($_GET['tid']))
 		'WHERE'		=> 't.id='.$tid.' AND t.moved_to IS NULL'
 	);
 
-	($hook = get_hook('mr_qr_get_topic_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mr_post_actions_qr_get_topic_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if (!$forum_db->num_rows($result))
 		message($lang_common['Bad request']);
@@ -153,7 +155,7 @@ if (isset($_GET['tid']))
 				'WHERE'		=> 'p.id IN('.implode(',', $posts).') AND p.id!='.$cur_topic['first_post_id'].' AND p.topic_id='.$tid
 			);
 
-			($hook = get_hook('mr_qr_verify_post_ids')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('mr_confirm_delete_posts_qr_verify_post_ids')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 			if ($forum_db->result($result) != count($posts))
 				message($lang_common['Bad request']);
@@ -164,7 +166,7 @@ if (isset($_GET['tid']))
 				'WHERE'		=> 'id IN('.implode(',', $posts).')'
 			);
 
-			($hook = get_hook('mr_qr_delete_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('mr_confirm_delete_posts_qr_delete_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
@@ -211,15 +213,19 @@ if (isset($_GET['tid']))
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
+<?php ($hook = get_hook('mr_confirm_delete_posts_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_misc['Delete posts'] ?></strong></legend>
+<?php ($hook = get_hook('mr_confirm_delete_posts_pre_confirm_checkbox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_common['Please confirm'] ?></span> <?php echo $lang_misc['Confirm post delete'] ?>.</label>
 					</div>
 				</div>
+<?php ($hook = get_hook('mr_confirm_delete_posts_pre_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
+<?php ($hook = get_hook('mr_confirm_delete_posts_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="delete_posts_comply" value="<?php echo $lang_common['Delete'] ?>" /></span>
 				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
@@ -229,6 +235,8 @@ if (isset($_GET['tid']))
 <?php
 
 		$forum_id = $fid;
+
+		($hook = get_hook('mr_confirm_delete_posts_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		$tpl_temp = forum_trim(ob_get_contents());
 		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -285,6 +293,7 @@ if (isset($_GET['tid']))
 				'LIMIT'		=> '1'
 			);
 
+			($hook = get_hook('mr_confirm_split_posts_qr_get_first_post_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 			$first_post_data = $forum_db->fetch_assoc($result);
 
@@ -350,19 +359,24 @@ if (isset($_GET['tid']))
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
+<?php ($hook = get_hook('mr_confirm_split_posts_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_misc['Split posts'] ?></strong></legend>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
-<?php ($hook = get_hook('mr_confirm_split_posts_pre_subject_div')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>					<div class="sf-box text required">
+<?php ($hook = get_hook('mr_confirm_split_posts_pre_subject')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_misc['New subject'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="new_subject" value="" size="80" maxlength="70" /></span>
 					</div>
-<?php ($hook = get_hook('mr_confirm_split_posts_post_subject_div')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>					<div class="sf-box checkbox">
+<?php ($hook = get_hook('mr_confirm_split_posts_pre_confirm_checkbox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /></span>
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_common['Please confirm'] ?></span> <?php echo $lang_misc['Confirm topic split'] ?>.</label>
 					</div>
 				</div>
+<?php ($hook = get_hook('mr_confirm_split_posts_pre_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
+<?php ($hook = get_hook('mr_confirm_split_posts_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="split_posts_comply" value="<?php echo $lang_common['Split'] ?>" /></span>
 				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
@@ -372,6 +386,8 @@ if (isset($_GET['tid']))
 <?php
 
 		$forum_id = $fid;
+
+		($hook = get_hook('mr_confirm_split_posts_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		$tpl_temp = forum_trim(ob_get_contents());
 		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -477,11 +493,11 @@ if (isset($_GET['tid']))
 		'LIMIT'		=> $forum_page['start_from'].','.$forum_user['disp_posts']
 	);
 
-	($hook = get_hook('mr_qr_get_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mr_post_actions_qr_get_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	while ($cur_post = $forum_db->fetch_assoc($result))
 	{
-		($hook = get_hook('mr_post_loop_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_post_actions_loop_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		++$forum_page['item_count'];
 
@@ -496,7 +512,7 @@ if (isset($_GET['tid']))
 			'date'	=> '<span>'.format_time($cur_post['posted']).'</span>'
 		);
 
-		($hook = get_hook('mr_row_pre_item_head')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_row_pre_item_ident_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		$forum_page['item_head'] = '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.implode(' ', $forum_page['item_ident']).'</a>';
 
@@ -545,17 +561,21 @@ if (isset($_GET['tid']))
 			<div class="<?php echo implode(' ', $forum_page['item_status']) ?>">
 				<div id="p<?php echo $cur_post['id'] ?>" class="posthead">
 					<h3 class="hn"><?php echo $forum_page['item_head'] ?></h3>
+<?php ($hook = get_hook('mr_post_actions_pre_item_select')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 <?php if (isset($forum_page['item_select'])) echo "\t\t\t\t".$forum_page['item_select']."\n" ?>
+<?php ($hook = get_hook('mr_post_actions_new_post_head_option')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				</div>
 				<div class="postbody">
 					<div class="post-author user">
 						<h4 class="user-ident"><?php echo implode('<br />', $forum_page['user_ident']) ?></h4>
+<?php ($hook = get_hook('mr_post_actions_new_user_ident_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 					</div>
 					<div class="post-entry">
 						<h4 class="entry-title"><?php echo $forum_page['item_subject'] ?></h4>
 						<div class="entry-content">
 							<?php echo implode("\n\t\t\t\t\t\t\t", $forum_page['message'])."\n" ?>
 						</div>
+<?php ($hook = get_hook('mr_post_actions_new_post_entry_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 					</div>
 				</div>
 			</div>
@@ -583,6 +603,8 @@ $forum_page['mod_options']['del_topic'] = '<span'.(empty($forum_page['mod_option
 <?php
 
 	$forum_id = $fid;
+
+	($hook = get_hook('mr_post_actions_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -614,7 +636,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 			'WHERE'		=> 'f.id='.$move_to_forum
 		);
 
-		($hook = get_hook('mr_qr_get_move_to_forum_name')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_confirm_move_topics_qr_get_move_to_forum_name')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		if (!$forum_db->num_rows($result))
@@ -629,7 +651,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 			'WHERE'		=> 't.id IN('.implode(',', $topics).') AND t.forum_id='.$fid
 		);
 
-		($hook = get_hook('mr_qr_verify_topic_ids')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_confirm_move_topics_qr_verify_topic_ids')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if ($forum_db->result($result) != count($topics))
 			message($lang_common['Bad request']);
@@ -640,7 +662,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 			'WHERE'		=> 'forum_id='.$move_to_forum.' AND moved_to IN('.implode(',', $topics).')'
 		);
 
-		($hook = get_hook('mr_qr_delete_redirect_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_confirm_move_topics_qr_delete_redirect_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Move the topic(s)
@@ -650,7 +672,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 			'WHERE'		=> 'id IN('.implode(',', $topics).')'
 		);
 
-		($hook = get_hook('mr_qr_move_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_confirm_move_topics_qr_move_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Should we create redirect topics?
@@ -665,7 +687,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 					'WHERE'		=> 't.id='.$cur_topic
 				);
 
-				($hook = get_hook('mr_qr_get_redirect_topic_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('mr_confirm_move_topics_qr_get_redirect_topic_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 				$moved_to = $forum_db->fetch_assoc($result);
 
@@ -676,7 +698,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 					'VALUES'	=> '\''.$forum_db->escape($moved_to['poster']).'\', \''.$forum_db->escape($moved_to['subject']).'\', '.$moved_to['posted'].', '.$moved_to['last_post'].', '.$cur_topic.', '.$fid
 				);
 
-				($hook = get_hook('mr_qr_add_redirect_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('mr_confirm_move_topics_qr_add_redirect_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$forum_db->query_build($query) or error(__FILE__, __LINE__);
 			}
 		}
@@ -714,7 +736,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 			'WHERE'		=> 't.id='.$topics
 		);
 
-		($hook = get_hook('mr_qr_get_topic_to_move_subject')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_move_topics_qr_get_topic_to_move_subject')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		if (!$forum_db->num_rows($result))
@@ -741,7 +763,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		'ORDER BY'	=> 'c.disp_position, c.id, f.disp_position'
 	);
 
-	($hook = get_hook('mr_qr_get_target_forums')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mr_move_topics_qr_get_target_forums')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$num_forums = $forum_db->num_rows($result);
 
@@ -790,8 +812,10 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
+<?php ($hook = get_hook('mr_move_topics_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_misc['Move topic'] ?></strong></legend>
+<?php ($hook = get_hook('mr_move_topics_pre_move_to_forum')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_misc['Move to'] ?></span></label><br />
@@ -819,13 +843,16 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 						</select></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('mr_move_topics_pre_redirect_checkbox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo (++$forum_page['fld_count']) ?>" name="with_redirect" value="1"<?php if ($action == 'single') echo ' checked="checked"' ?> /></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_misc['Redirect topic'] ?></span> <?php echo ($action == 'single') ? $lang_misc['Leave redirect'] : $lang_misc['Leave redirects'] ?></label>
 					</div>
 				</div>
+<?php ($hook = get_hook('mr_move_topics_pre_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
+<?php ($hook = get_hook('mr_move_topics_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="move_topics_to" value="<?php echo $lang_misc['Move'] ?>" /></span>
 				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
@@ -835,6 +862,8 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 <?php
 
 	$forum_id = $fid;
+
+	($hook = get_hook('mr_move_topics_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -891,7 +920,7 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 		if (isset($_POST['with_redirect']))
 			$query['WHERE'] .= ' OR (id IN('.implode(',', $topics).') AND id != '.$merge_to_tid.')';
 
-		($hook = get_hook('mr_confirm_merge_topics_qr_delete_redirect_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_confirm_merge_topics_qr_fix_redirect_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Merge the posts into the topic
@@ -902,6 +931,15 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 		);
 
 		($hook = get_hook('mr_confirm_merge_topics_qr_merge_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
+
+		// Delete any subscriptions
+		$query = array(
+			'DELETE'	=> 'subscriptions',
+			'WHERE'		=> 'topic_id IN('.implode(',', $topics).') AND topic_id != '.$merge_to_tid
+		);
+
+		($hook = get_hook('mr_confirm_merge_topics_qr_delete_subscriptions')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Synchronize the topic we merged to and the forum where the topics were merged
@@ -948,15 +986,19 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
+<?php ($hook = get_hook('mr_merge_topics_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_misc['Merge topic'] ?></strong></legend>
+<?php ($hook = get_hook('mr_merge_topics_pre_redirect_checkbox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo (++$forum_page['fld_count']) ?>" name="with_redirect" value="1" /></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_misc['Redirect topic'] ?></span> <?php echo $lang_misc['Leave merge redirects'] ?></label>
 					</div>
 				</div>
+<?php ($hook = get_hook('mr_merge_topics_pre_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
+<?php ($hook = get_hook('mr_merge_topics_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="merge_topics_comply" value="<?php echo $lang_misc['Merge'] ?>" /></span>
 				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
@@ -966,6 +1008,8 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 <?php
 
 	$forum_id = $fid;
+
+	($hook = get_hook('mr_merge_topics_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -999,7 +1043,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 			'WHERE'		=> 't.id IN('.implode(',', $topics).') AND t.forum_id='.$fid
 		);
 
-		($hook = get_hook('mr_qr_verify_topic_ids2')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_confirm_delete_topics_qr_verify_topic_ids')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if ($forum_db->result($result) != count($topics))
 			message($lang_common['Bad request']);
@@ -1012,7 +1056,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 			'WHERE'		=> 't.moved_to IN('.implode(',', $topics).')'
 		);
 
-		($hook = get_hook('mr_qr_get_forums_to_sync')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_confirm_delete_topics_qr_get_forums_to_sync')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		while ($row = $forum_db->fetch_row($result))
 			$forum_ids[] = $row[0];
@@ -1023,7 +1067,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 			'WHERE'		=> 'id IN('.implode(',', $topics).') OR moved_to IN('.implode(',', $topics).')'
 		);
 
-		($hook = get_hook('mr_qr_delete_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_confirm_delete_topics_qr_delete_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Delete any subscriptions
@@ -1032,7 +1076,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 			'WHERE'		=> 'topic_id IN('.implode(',', $topics).')'
 		);
 
-		($hook = get_hook('mr_qr_delete_subscriptions')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_confirm_delete_topics_qr_delete_subscriptions')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Create a list of the post ID's in the deleted topic and strip the search index
@@ -1042,7 +1086,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 			'WHERE'		=> 'p.topic_id IN('.implode(',', $topics).')'
 		);
 
-		($hook = get_hook('mr_qr_get_deleted_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_confirm_delete_topics_qr_get_deleted_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$post_ids = '';
@@ -1064,7 +1108,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 			'WHERE'		=> 'topic_id IN('.implode(',', $topics).')'
 		);
 
-		($hook = get_hook('mr_qr_delete_topic_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_confirm_delete_topics_qr_delete_topic_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		foreach ($forum_ids as $cur_forum_id)
@@ -1107,15 +1151,19 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 			<div class="hidden">
 				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
+<?php ($hook = get_hook('mr_delete_topics_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_misc['Delete topics'] ?></strong></legend>
+<?php ($hook = get_hook('mr_delete_topics_pre_confirm_checkbox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_common['Please confirm'] ?></span> <?php echo $lang_misc['Delete topics comply'] ?></label>
 					</div>
 				</div>
+<?php ($hook = get_hook('mr_delete_topics_pre_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
+<?php ($hook = get_hook('mr_delete_topics_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="delete_topics_comply" value="<?php echo $lang_common['Delete'] ?>" /></span>
 				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
@@ -1125,6 +1173,8 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 <?php
 
 	$forum_id = $fid;
+
+	($hook = get_hook('mr_delete_topics_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -1157,7 +1207,7 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 			'WHERE'		=> 'id IN('.implode(',', $topics).') AND forum_id='.$fid
 		);
 
-		($hook = get_hook('mr_qr_open_close_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_open_close_topic_qr_open_close_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$forum_page['redirect_msg'] = ($action) ? $lang_misc['Close topics redirect'] : $lang_misc['Open topics redirect'];
@@ -1182,7 +1232,7 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 			'WHERE'		=> 't.id='.$topic_id.' AND forum_id='.$fid
 		);
 
-		($hook = get_hook('mr_qr_get_open_close_topic_subject')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_open_close_topic_qr_get_subject')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		if (!$forum_db->num_rows($result))
@@ -1196,7 +1246,7 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 			'WHERE'		=> 'id='.$topic_id.' AND forum_id='.$fid
 		);
 
-		($hook = get_hook('mr_qr_open_close_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_open_close_topic_qr_open_close_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$forum_page['redirect_msg'] = ($action) ? $lang_misc['Close topic redirect'] : $lang_misc['Open topic redirect'];
@@ -1226,7 +1276,7 @@ else if (isset($_GET['stick']))
 		'WHERE'		=> 't.id='.$stick.' AND forum_id='.$fid
 	);
 
-	($hook = get_hook('mr_qr_get_stick_topic_subject')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mr_stick_topic_qr_get_subject')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	if (!$forum_db->num_rows($result))
@@ -1240,7 +1290,7 @@ else if (isset($_GET['stick']))
 		'WHERE'		=> 'id='.$stick.' AND forum_id='.$fid
 	);
 
-	($hook = get_hook('mr_qr_stick_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mr_stick_topic_qr_stick_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	redirect(forum_link($forum_url['topic'], array($stick, sef_friendly($subject))), $lang_misc['Stick topic redirect']);
@@ -1268,7 +1318,7 @@ else if (isset($_GET['unstick']))
 		'WHERE'		=> 't.id='.$unstick.' AND forum_id='.$fid
 	);
 
-	($hook = get_hook('mr_qr_get_unstick_topic_subject')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mr_unstick_topic_qr_get_subject')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	if (!$forum_db->num_rows($result))
@@ -1282,7 +1332,7 @@ else if (isset($_GET['unstick']))
 		'WHERE'		=> 'id='.$unstick.' AND forum_id='.$fid
 	);
 
-	($hook = get_hook('mr_qr_unstick_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('mr_unstick_topic_qr_unstick_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	redirect(forum_link($forum_url['topic'], array($unstick, sef_friendly($subject))), $lang_misc['Unstick topic redirect']);
@@ -1418,6 +1468,9 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 			$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span> <strong>'.$forum_page['item_title']['link'].'</strong></h3>';
 
 			$forum_page['item_subject']['starter'] = '<span class="item-starter">'.sprintf($lang_forum['Topic starter'], format_time($cur_topic['posted'], 1), '<cite>'.sprintf($lang_forum['by poster'], forum_htmlencode($cur_topic['poster'])).'</cite>').'</span>';
+
+			($hook = get_hook('mr_topic_actions_moved_row_pre_item_subject_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 			$forum_page['item_body']['subject']['desc'] = '<p>'.implode(' ', $forum_page['item_subject']).'</p>';
 
 			if ($forum_config['o_topic_views'] == '1')
@@ -1426,6 +1479,8 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 			$forum_page['item_body']['info']['replies'] = '<li class="info-replies"><span class="label">'.$lang_forum['No replies info'].'</span></li>';
 			$forum_page['item_body']['info']['lastpost'] = '<li class="info-lastpost"><span class="label">'.$lang_forum['No lastpost info'].'</span></li>';
 			$forum_page['item_body']['info']['select'] = '<li class="info-select"><input id="fld'.++$forum_page['fld_count'].'" type="checkbox" name="topics[]" value="'.$cur_topic['id'].'" /> <label for="fld'.$forum_page['fld_count'].'">'.sprintf($lang_forum['Select topic'], $cur_topic['subject']).'</label></li>';
+
+			($hook = get_hook('mr_topic_actions_moved_row_pre_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		}
 		else
 		{
@@ -1440,12 +1495,11 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 				$forum_page['item_status']['posted'] = 'posted';
 			}
 
-
 			$forum_page['item_title']['link'] = '<strong><a href="'.forum_link($forum_url['topic'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))).'">'.forum_htmlencode($cur_topic['subject']).'</a></strong>';
 
 			$forum_page['item_pages'] = ceil(($cur_topic['num_replies'] + 1) / $forum_user['disp_posts']);
 
-					if ($forum_page['item_pages'] > 1)
+			if ($forum_page['item_pages'] > 1)
 				$forum_page['item_nav']['pages'] = '<span>'.$lang_forum['Pages'].'&#160;</span>'.paginate($forum_page['item_pages'], -1, $forum_url['topic'], $lang_common['Page separator'], array($cur_topic['id'], sef_friendly($cur_topic['subject'])));
 
 			// Does this topic contain posts we haven't read? If so, tag it accordingly.
@@ -1457,6 +1511,8 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 
 			if (!empty($forum_page['item_nav']))
 				$forum_page['item_title']['nav'] = '<span class="item-nav">'.sprintf($lang_forum['Topic navigation'], implode('&#160;&#160;', $forum_page['item_nav'])).'</span>';
+
+			($hook = get_hook('mr_topic_actions_moved_row_pre_item_title_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span> '.implode(' ', $forum_page['item_title']).'</h3>';
 
@@ -1474,6 +1530,8 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 				$forum_page['item_status']['closed'] = 'closed';
 			}
 
+			($hook = get_hook('mr_topic_actions_moved_row_pre_item_subject_status_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 			if (!empty($forum_page['item_subject_status']))
 				$forum_page['item_subject']['status'] = '<span class="item-status">'.sprintf($lang_forum['Item status'], implode(' ', $forum_page['item_subject_status'])).'</span>';
 
@@ -1489,12 +1547,11 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 			$forum_page['item_body']['info']['replies'] = '<li class="info-replies"><strong>'.forum_number_format($cur_topic['num_replies']).'</strong> <span class="label">'.(($cur_topic['num_replies'] == 1) ? $lang_forum['Reply'] : $lang_forum['Replies']).'</span></li>';
 			$forum_page['item_body']['info']['lastpost'] = '<li class="info-lastpost"><span class="label">'.$lang_forum['Last post'].'</span> <strong><a href="'.forum_link($forum_url['post'], $cur_topic['last_post_id']).'">'.format_time($cur_topic['last_post']).'</a></strong> <cite>'.sprintf($lang_forum['by poster'], forum_htmlencode($cur_topic['last_poster'])).'</cite></li>';
 			$forum_page['item_body']['info']['select'] = '<li class="info-select"><input id="fld'.++$forum_page['fld_count'].'" type="checkbox" name="topics[]" value="'.$cur_topic['id'].'" /> <label for="fld'.$forum_page['fld_count'].'">'.sprintf($lang_forum['Select topic'], $cur_topic['subject']).'</label></li>';
+
+			($hook = get_hook('mr_topic_actions_normal_row_pre_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		}
 
-		($hook = get_hook('mr_topic_actions_row_pre_item_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
 		$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? ' odd' : ' even').(($forum_page['item_count'] == 1) ? ' main-item1' : '').((!empty($forum_page['item_status'])) ? ' '.implode(' ', $forum_page['item_status']) : '');
-
 
 		($hook = get_hook('mr_topic_actions_row_pre_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -1525,6 +1582,8 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 	$forum_page['mod_options']['mod_merge'] = '<span class="submit'.(empty($forum_page['mod_options']) ? ' item1' : '').'"><input type="submit" name="merge_topics" value="'.$lang_misc['Merge'].'" /></span>';
 	$forum_page['mod_options']['mod_open'] = '<span class="submit'.(empty($forum_page['mod_options']) ? ' item1' : '').'"><input type="submit" name="open" value="'.$lang_misc['Open'].'" /></span>';
 	$forum_page['mod_options']['mod_close'] = '<span class="submit'.(empty($forum_page['mod_options']) ? ' item1' : '').'"><input type="submit" name="close" value="'.$lang_misc['Close'].'" /></span>';
+
+	($hook = get_hook('mr_topic_actions_pre_mod_option_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-options mod-options gen-content">

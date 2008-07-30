@@ -71,6 +71,8 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 		'FROM'		=> 'extensions AS e',
 		'WHERE'		=> 'e.disabled=0'
 	);
+
+	($hook = get_hook('aex_install_check_dependencies')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$installed_ext = array();
@@ -132,7 +134,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 			'WHERE'		=> 'e.id=\''.$forum_db->escape($id).'\''
 		);
 
-		($hook = get_hook('aex_qr_get_current_ext_version')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_install_comply_qr_get_current_ext_version')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if ($forum_db->num_rows($result))
 		{
@@ -150,7 +152,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 				'WHERE'		=> 'id=\''.$forum_db->escape($id).'\''
 			);
 
-			($hook = get_hook('aex_qr_update_ext')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('aex_install_comply_qr_update_ext')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			// Delete the old hooks
@@ -159,7 +161,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 				'WHERE'		=> 'extension_id=\''.$forum_db->escape($id).'\''
 			);
 
-			($hook = get_hook('aex_qr_update_ext_delete_hooks')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('aex_install_comply_qr_update_ext_delete_hooks')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 		else
@@ -175,7 +177,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 				'VALUES'	=> '\''.$forum_db->escape($ext_data['extension']['id']).'\', \''.$forum_db->escape($ext_data['extension']['title']).'\', \''.$forum_db->escape($ext_data['extension']['version']).'\', \''.$forum_db->escape($ext_data['extension']['description']).'\', \''.$forum_db->escape($ext_data['extension']['author']).'\', '.$uninstall_code.', '.$uninstall_note.', \'|'.implode('|', $ext_data['extension']['dependencies']).'|\'',
 			);
 
-			($hook = get_hook('aex_qr_add_ext')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('aex_install_comply_qr_add_ext')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 
@@ -191,7 +193,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 					'VALUES'	=> '\''.$forum_db->escape(forum_trim($cur_hook)).'\', \''.$forum_db->escape($id).'\', \''.$forum_db->escape(forum_trim($ext_hook['content'])).'\', '.time().', '.(isset($ext_hook['attributes']['priority']) ? $ext_hook['attributes']['priority'] : 5)
 				);
 
-				($hook = get_hook('aex_qr_add_hook')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('aex_install_comply_qr_add_hook')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$forum_db->query_build($query) or error(__FILE__, __LINE__);
 			}
 		}
@@ -242,6 +244,8 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 		</div>
 	</div>
 <?php
+
+			($hook = get_hook('aex_install_notices_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			$tpl_temp = forum_trim(ob_get_contents());
 			$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -325,6 +329,8 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 	</div>
 <?php
 
+	($hook = get_hook('aex_install_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
@@ -352,7 +358,7 @@ else if (isset($_GET['uninstall']))
 		'WHERE'		=> 'e.id=\''.$forum_db->escape($id).'\''
 	);
 
-	($hook = get_hook('aex_qr_get_extension')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_uninstall_qr_get_extension')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if (!$forum_db->num_rows($result))
 		message($lang_common['Bad request']);
@@ -366,7 +372,7 @@ else if (isset($_GET['uninstall']))
 		'WHERE'		=> 'e.dependencies LIKE \'%|'.$forum_db->escape($id).'|%\''
 	);
 
-	($hook = get_hook('aex_qr_get_uninstall_dependencies')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_uninstall_qr_check_dependencies')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	if ($forum_db->num_rows($result) != 0)
@@ -399,7 +405,7 @@ else if (isset($_GET['uninstall']))
 			'WHERE'		=> 'extension_id=\''.$forum_db->escape($id).'\''
 		);
 
-		($hook = get_hook('aex_qr_uninstall_delete_hooks')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_uninstall_comply_qr_uninstall_delete_hooks')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$query = array(
@@ -407,7 +413,7 @@ else if (isset($_GET['uninstall']))
 			'WHERE'		=> 'id=\''.$forum_db->escape($id).'\''
 		);
 
-		($hook = get_hook('aex_qr_delete_extension')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_uninstall_comply_qr_delete_extension')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Empty the PHP cache
@@ -454,6 +460,8 @@ else if (isset($_GET['uninstall']))
 	</div>
 <?php
 
+			($hook = get_hook('aex_uninstall_notices_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 			$tpl_temp = forum_trim(ob_get_contents());
 			$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 			ob_end_clean();
@@ -471,7 +479,7 @@ else if (isset($_GET['uninstall']))
 	}
 	else	// If the user hasn't confirmed the uninstall
 	{
-		($hook = get_hook('aex_uninstall_pre_header_loaded')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_uninstall_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		define('FORUM_PAGE_SECTION', 'extensions');
 		if (strpos($id, 'hotfix_') === 0)
@@ -515,6 +523,8 @@ else if (isset($_GET['uninstall']))
 	</div>
 <?php
 
+		($hook = get_hook('aex_uninstall_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		$tpl_temp = forum_trim(ob_get_contents());
 		$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 		ob_end_clean();
@@ -544,7 +554,7 @@ else if (isset($_GET['flip']))
 		'WHERE'		=> 'e.id=\''.$forum_db->escape($id).'\''
 	);
 
-	($hook = get_hook('aex_qr_get_disabled_status')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_flip_qr_get_disabled_status')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if (!$forum_db->num_rows($result))
 		message($lang_common['Bad request']);
@@ -561,7 +571,7 @@ else if (isset($_GET['flip']))
 			'WHERE'		=> 'e.disabled=0 AND e.dependencies LIKE \'%|'.$forum_db->escape($id).'|%\''
 		);
 
-		($hook = get_hook('aex_qr_get_disable_dependencies')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_flip_qr_get_disable_dependencies')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		if ($forum_db->num_rows($result) != 0)
@@ -578,7 +588,7 @@ else if (isset($_GET['flip']))
 			'WHERE'		=> 'e.id=\''.$forum_db->escape($id).'\''
 		);
 
-		($hook = get_hook('aex_qr_get_enable_dependencies')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aex_flip_qr_get_enable_dependencies')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$dependencies = $forum_db->fetch_assoc($result);
@@ -589,6 +599,8 @@ else if (isset($_GET['flip']))
 			'FROM'		=> 'extensions AS e',
 			'WHERE'		=> 'e.disabled=0'
 		);
+
+		($hook = get_hook('aex_flip_qr_check_dependencies')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$installed_ext = array();
@@ -608,7 +620,7 @@ else if (isset($_GET['flip']))
 		'WHERE'		=> 'id=\''.$forum_db->escape($id).'\''
 	);
 
-	($hook = get_hook('aex_qr_update_disabled_status')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aex_flip_qr_update_disabled_status')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the hooks cache
@@ -760,6 +772,8 @@ if ($section == 'hotfixes')
 ?>
 	</div>
 <?php
+
+	($hook = get_hook('aex_section_hotfixes_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -936,6 +950,8 @@ else
 ?>
 	</div>
 <?php
+
+	($hook = get_hook('aex_section_manage_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

@@ -127,8 +127,9 @@ else
 
 // Setup main options
 $forum_page['main_options_head'] = $lang_forum['Forum options'];
-$forum_page['main_options'] = array();
-$forum_page['main_options']['feed'] = '<span class="feed'.(empty($forum_page['main_options']) ? ' item1' : '').'"><a class="feed" href="'.forum_link($forum_url['forum_rss'], $id).'">'.$lang_forum['RSS forum feed'].'</a></span>';
+$forum_page['main_options'] = array(
+	'feed'	=> '<span class="feed'.(empty($forum_page['main_options']) ? ' item1' : '').'"><a class="feed" href="'.forum_link($forum_url['forum_rss'], $id).'">'.$lang_forum['RSS forum feed'].'</a></span>'
+);
 
 if (!$forum_user['is_guest'] && $forum_db->num_rows($result))
 {
@@ -211,6 +212,9 @@ if ($forum_db->num_rows($result))
 			$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span> <strong>'.$forum_page['item_title']['link'].'</strong></h3>';
 
 			$forum_page['item_subject']['starter'] = '<span class="item-starter">'.sprintf($lang_forum['Topic starter'], format_time($cur_topic['posted'], 1), '<cite>'.sprintf($lang_forum['by poster'], forum_htmlencode($cur_topic['poster'])).'</cite>').'</span>';
+
+			($hook = get_hook('vf_topic_loop_moved_topic_pre_item_subject_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 			$forum_page['item_body']['subject']['desc'] = '<p>'.implode(' ', $forum_page['item_subject']).'</p>';
 
 			if ($forum_config['o_topic_views'] == '1')
@@ -242,10 +246,14 @@ if ($forum_db->num_rows($result))
 				$forum_page['item_status']['closed'] = 'closed';
 			}
 
+			($hook = get_hook('vf_topic_loop_normal_topic_pre_item_title_status_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 			if (!empty($forum_page['item_title_status']))
 				$forum_page['item_title']['status'] = '<span class="item-status">'.sprintf($lang_forum['Item status'], implode(', ', $forum_page['item_title_status'])).'</span>';
 
 			$forum_page['item_title']['link'] = '<strong><a href="'.forum_link($forum_url['topic'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))).'">'.forum_htmlencode($cur_topic['subject']).'</a></strong>';
+
+			($hook = get_hook('vf_topic_loop_normal_topic_pre_item_title_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span> '.implode(' ', $forum_page['item_title']).'</h3>';
 
@@ -268,8 +276,12 @@ if ($forum_db->num_rows($result))
 				$forum_page['item_status']['new'] = 'new';
 			}
 
+			($hook = get_hook('vf_topic_loop_normal_topic_pre_item_nav_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 			if (!empty($forum_page['item_nav']))
 				$forum_page['item_subject']['nav'] = '<span class="item-nav">'.sprintf($lang_forum['Topic navigation'], implode('&#160;&#160;', $forum_page['item_nav'])).'</span>';
+
+			($hook = get_hook('vf_topic_loop_normal_topic_pre_item_subject_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			$forum_page['item_body']['subject']['desc'] = '<p>'.implode(' ', $forum_page['item_subject']).'</p>';
 
@@ -281,7 +293,7 @@ if ($forum_db->num_rows($result))
 			$forum_page['item_body']['info']['lastpost'] = '<li class="info-lastpost"><span class="label">'.$lang_forum['Last post'].'</span> <strong><a href="'.forum_link($forum_url['post'], $cur_topic['last_post_id']).'">'.format_time($cur_topic['last_post']).'</a></strong> <cite>'.sprintf($lang_forum['by poster'], forum_htmlencode($cur_topic['last_poster'])).'</cite></li>';
 		}
 
-		($hook = get_hook('vf_row_pre_item_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('vf_row_pre_item_status_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? ' odd' : ' even').(($forum_page['item_count'] == 1) ? ' main-item1' : '').((!empty($forum_page['item_status'])) ? ' '.implode(' ', $forum_page['item_status']) : '');
 
@@ -300,13 +312,19 @@ if ($forum_db->num_rows($result))
 <?php
 
 	}
-echo "\t".'</div>'."\n";
+
+?>
+	</div>
+<?php
+
 }
 // Else there are no topics in this forum
 else
 {
 	$forum_page['item_body']['subject']['title'] = '<h3 class="hn">'.$lang_forum['No topics'].'</h3>';
 	$forum_page['item_body']['subject']['desc'] = '<p>'.$lang_forum['First topic nag'].'</p>';
+
+	($hook = get_hook('vf_no_results_row_pre_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-pagehead">

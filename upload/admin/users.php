@@ -43,7 +43,7 @@ if (isset($_GET['ip_stats']))
 		'ORDER BY'	=> 'last_used DESC'
 	);
 
-	($hook = get_hook('aus_qr_get_user_ips')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aus_ip_stats_qr_get_user_ips')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$forum_page['num_users'] = $forum_db->num_rows($result);
 
@@ -65,14 +65,14 @@ if (isset($_GET['ip_stats']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('aus_ip_stats_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
+	// Set up table headers
 	$forum_page['table_header'] = array();
 	$forum_page['table_header']['ip'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['IP address'].'</th>';
 	$forum_page['table_header']['lastused'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Last used'].'</th>';
 	$forum_page['table_header']['timesfound'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Times found'].'</th>';
 	$forum_page['table_header']['actions'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Actions'].'</th>';
 
+	($hook = get_hook('aus_ip_stats_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-pagehead">
@@ -100,11 +100,15 @@ if (isset($_GET['ip_stats']))
 			if ($forum_page['item_count'] == 1)
 				$forum_page['item_style'] .= ' row1';
 
+			($hook = get_hook('aus_ip_stats_pre_row_generation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 			$forum_page['table_row'] = array();
 			$forum_page['table_row']['ip'] = '<td class="tc'.count($forum_page['table_row']).'"><a href="'.forum_link($forum_url['get_host'], $cur_ip['poster_ip']).'">'.$cur_ip['poster_ip'].'</a></td>';
 			$forum_page['table_row']['lastused'] = '<td class="tc'.count($forum_page['table_row']).'">'.format_time($cur_ip['last_used']).'</td>';
 			$forum_page['table_row']['timesfound'] = '<td class="tc'.count($forum_page['table_row']).'">'.$cur_ip['used_times'].'</td>';
 			$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"><a href="'.forum_link($forum_url['admin_users']).'?show_users='.$cur_ip['poster_ip'].'">'.$lang_admin_users['Find more users'].'</a></td>';
+
+			($hook = get_hook('aus_ip_stats_pre_row_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 				<tr class="<?php echo $forum_page['item_style'] ?>">
@@ -116,11 +120,15 @@ if (isset($_GET['ip_stats']))
 	}
 	else
 	{
+		($hook = get_hook('aus_ip_stats_pre_no_results_row_generation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		$forum_page['table_row'] = array();
 		$forum_page['table_row']['ip'] = '<td class="tc'.count($forum_page['table_row']).'">'.$lang_admin_users['No posts by user'].'</td>';
 		$forum_page['table_row']['lastused'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
 		$forum_page['table_row']['timesfound'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
 		$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
+
+		($hook = get_hook('aus_ip_stats_pre_no_results_row_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 				<tr class="odd row1">
@@ -136,6 +144,8 @@ if (isset($_GET['ip_stats']))
 		</table>
 	</div>
 <?php
+
+	($hook = get_hook('aus_ip_stats_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -166,7 +176,7 @@ else if (isset($_GET['show_users']))
 		'ORDER BY'	=> 'p.poster DESC'
 	);
 
-	($hook = get_hook('aus_qr_get_users_matching_ip')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aus_show_users_qr_get_users_matching_ip')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$forum_page['num_users'] = $forum_db->num_rows($result);
 
@@ -188,8 +198,7 @@ else if (isset($_GET['show_users']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('aus_show_users_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
+	// Set up table headers
 	$forum_page['table_header'] = array();
 	$forum_page['table_header']['username'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['User information'].'</th>';
 	$forum_page['table_header']['title'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Title column'].'</th>';
@@ -197,6 +206,7 @@ else if (isset($_GET['show_users']))
 	$forum_page['table_header']['actions'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Actions'].'</th>';
 	$forum_page['table_header']['select'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_misc['Select'] .'</th>';
 
+	($hook = get_hook('aus_show_users_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-pagehead">
@@ -238,7 +248,7 @@ else if (isset($_GET['show_users']))
 				'WHERE'		=> 'u.id>1 AND u.id='.$poster_id
 			);
 
-			($hook = get_hook('aus_qr_get_user_details')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('aus_show_users_qr_get_user_details')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$result2 = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			++$forum_page['item_count'];
@@ -246,6 +256,8 @@ else if (isset($_GET['show_users']))
 			$forum_page['item_style'] = (($forum_page['item_count'] % 2 != 0) ? 'odd' : 'even');
 			if ($forum_page['item_count'] == 1)
 				$forum_page['item_style'] .= ' row1';
+
+			($hook = get_hook('aus_show_users_pre_row_generation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			if ($user_data = $forum_db->fetch_assoc($result2))
 			{
@@ -266,6 +278,8 @@ else if (isset($_GET['show_users']))
 				$forum_page['table_row']['select'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
 			}
 
+			($hook = get_hook('aus_show_users_pre_row_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 ?>
 				<tr class="<?php echo $forum_page['item_style'] ?>">
 					<?php echo implode("\n\t\t\t\t", $forum_page['table_row'])."\n" ?>
@@ -276,6 +290,8 @@ else if (isset($_GET['show_users']))
 	}
 	else
 	{
+			($hook = get_hook('aus_show_users_pre_no_results_row_generation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 			$forum_page['table_row'] = array();
 			$forum_page['table_row']['username'] = '<td class="tc'.count($forum_page['table_row']).'">'.$lang_admin_users['Cannot find IP'].'</td>';
 			$forum_page['table_row']['title'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
@@ -283,10 +299,11 @@ else if (isset($_GET['show_users']))
 			$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
 			$forum_page['table_row']['select'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
 
+			($hook = get_hook('aus_show_users_pre_no_results_row_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 ?>
 				<tr class="odd row1">
 					<?php echo implode("\n\t\t\t\t", $forum_page['table_row'])."\n" ?>
-
 				</tr>
 <?php
 
@@ -313,7 +330,7 @@ else if (isset($_GET['show_users']))
 		}
 	}
 
-	($hook = get_hook('aus_show_user_pre_moderation_buttons')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aus_show_users_pre_moderation_buttons')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	if (!empty($forum_page['mod_options']))
 	{
@@ -329,6 +346,8 @@ else if (isset($_GET['show_users']))
 ?>
 	</form>
 <?php
+
+	($hook = get_hook('aus_show_users_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -367,7 +386,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 		'WHERE'		=> 'u.id IN ('.implode(',', $users).') AND u.group_id='.FORUM_ADMIN
 	);
 
-	($hook = get_hook('aus_qr_check_for_admins')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aus_delete_users_qr_check_for_admins')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if ($forum_db->num_rows($result) > 0)
 		message($lang_admin_users['Delete admin message']);
@@ -439,6 +458,8 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 	</div>
 <?php
 
+	($hook = get_hook('aus_delete_users_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
@@ -472,7 +493,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 		'WHERE'		=> 'u.id IN ('.implode(',', $users).') AND u.group_id='.FORUM_ADMIN
 	);
 
-	($hook = get_hook('aus_qr_check_for_admins2')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aus_ban_users_qr_check_for_admins')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	if ($forum_db->num_rows($result) > 0)
 		message($lang_admin_users['Ban admin message']);
@@ -505,7 +526,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 			'ORDER BY'	=> 'p.posted DESC'
 		);
 
-		($hook = get_hook('aus_qr_get_latest_user_ips')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aus_ban_users_qr_get_latest_user_ips')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$ips = array();
@@ -519,7 +540,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 			'WHERE'		=> 'id IN ('.implode(',', $users).') AND id>1'
 		);
 
-		($hook = get_hook('aus_qr_get_users')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aus_ban_users_qr_get_users')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		while ($cur_user = $forum_db->fetch_assoc($result))
 		{
@@ -531,7 +552,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 				'VALUES'	=> '\''.$forum_db->escape($cur_user['username']).'\', \''.$ban_ip.'\', \''.$forum_db->escape($cur_user['email']).'\', '.$ban_message.', '.$ban_expire.', '.$forum_user['id']
 			);
 
-			($hook = get_hook('aus_qr_add_ban')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('aus_ban_users_qr_add_ban')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 
@@ -602,6 +623,8 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 	</div>
 <?php
 
+	($hook = get_hook('aus_ban_users_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
 	ob_end_clean();
@@ -645,7 +668,7 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 			'WHERE'		=> 'g.g_id='.$move_to_group
 		);
 
-		($hook = get_hook('aus_qr_get_group_moderator_status')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aus_change_group_qr_get_group_moderator_status')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if ($move_to_group == FORUM_GUEST || !$forum_db->num_rows($result))
 			message($lang_common['Bad request']);
@@ -659,7 +682,7 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 			'WHERE'		=> 'id IN ('.implode(',', $users).') AND id>1'
 		);
 
-		($hook = get_hook('aus_qr_change_user_group')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aus_change_group_qr_change_user_group')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		if ($move_to_group != FORUM_ADMIN && $group_is_mod == '0')
@@ -716,7 +739,7 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 		'ORDER BY'	=> 'g.g_title'
 	);
 
-	($hook = get_hook('aus_qr_get_groups')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aus_change_group_qr_get_groups')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	while ($cur_group = $forum_db->fetch_assoc($result))
 	{
@@ -738,6 +761,8 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 		</form>
 	</div>
 <?php
+
+	($hook = get_hook('aus_change_group_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -830,7 +855,7 @@ else if (isset($_POST['find_user']))
 		'ORDER BY'	=> $forum_db->escape($order_by).' '.$forum_db->escape($direction)
 	);
 
-	($hook = get_hook('aus_qr_find_users')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aus_find_user_qr_find_users')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$forum_page['num_users'] = $forum_db->num_rows($result);
 
@@ -853,14 +878,15 @@ else if (isset($_POST['find_user']))
 	// START SUBST - <!-- forum_main -->
 	ob_start();
 
-	($hook = get_hook('aus_find_user_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
+	// Set up table headers
 	$forum_page['table_header'] = array();
 	$forum_page['table_header']['username'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['User information'].'</th>';
 	$forum_page['table_header']['title'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Title column'].'</th>';
 	$forum_page['table_header']['posts'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Posts'].'</th>';
 	$forum_page['table_header']['actions'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_admin_users['Actions'].'</th>';
 	$forum_page['table_header']['select'] = '<th class="tc'.count($forum_page['table_header']).'" scope="col">'.$lang_misc['Select'] .'</th>';
+
+	($hook = get_hook('aus_find_user_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-pagehead">
@@ -886,7 +912,6 @@ else if (isset($_POST['find_user']))
 
 		while ($user_data = $forum_db->fetch_assoc($result))
 		{
-
 			++$forum_page['item_count'];
 
 			// This script is a special case in that we want to display "Not verified" for non-verified users
@@ -899,12 +924,16 @@ else if (isset($_POST['find_user']))
 			if ($forum_page['item_count'] == 1)
 				$forum_page['item_style'] .= ' row1';
 
+			($hook = get_hook('aus_find_user_pre_row_generation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 			$forum_page['table_row'] = array();
 			$forum_page['table_row']['username'] = '<td class="tc'.count($forum_page['table_row']).'"><span>'.$lang_admin_users['Username'].' <a href="'.forum_link($forum_url['user'], $user_data['id']).'">'.forum_htmlencode($user_data['username']).'</a></span> <span class="usermail">'.$lang_admin_users['E-mail'].' <a href="mailto:'.forum_htmlencode($user_data['email']).'">'.forum_htmlencode($user_data['email']).'</a></span>'.(($user_data['admin_note'] != '') ? '<span class="usernote">'.$lang_admin_users['Admin note'].' '.forum_htmlencode($user_data['admin_note']).'</span>' : '').'</td>';
 			$forum_page['table_row']['title'] = '<td class="tc'.count($forum_page['table_row']).'">'.$user_title.'</td>';
 			$forum_page['table_row']['posts'] = '<td class="tc'.count($forum_page['table_row']).'">'.forum_number_format($user_data['num_posts']).'</td>';
 			$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"><span><a href="'.forum_link($forum_url['admin_users']).'?ip_stats='.$user_data['id'].'">'.$lang_admin_users['View IP stats'].'</a></span> <span><a href="'.forum_link($forum_url['search_user_posts'], $user_data['id']).'">'.$lang_admin_users['Show posts'].'</a></span></td>';
 			$forum_page['table_row']['select'] = '<td class="tc'.count($forum_page['table_row']).'"><input type="checkbox" name="users['.$user_data['id'].']" value="1" /></td>';
+
+			($hook = get_hook('aus_find_user_pre_row_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 				<tr class="<?php echo $forum_page['item_style'] ?>">
@@ -916,6 +945,7 @@ else if (isset($_POST['find_user']))
 	}
 	else
 	{
+			($hook = get_hook('aus_find_user_pre_no_results_row_generation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			$forum_page['table_row'] = array();
 			$forum_page['table_row']['username'] = '<td class="tc'.count($forum_page['table_row']).'">'.$lang_admin_users['No match'].'</td>';
@@ -923,6 +953,8 @@ else if (isset($_POST['find_user']))
 			$forum_page['table_row']['posts'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
 			$forum_page['table_row']['actions'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
 			$forum_page['table_row']['select'] = '<td class="tc'.count($forum_page['table_row']).'"> - </td>';
+
+			($hook = get_hook('aus_find_user_pre_no_results_row_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 				<tr class="odd row1">
@@ -938,22 +970,22 @@ else if (isset($_POST['find_user']))
 	</div>
 <?php
 
-// Setup control buttons
-$forum_page['mod_options'] = array();
+	// Setup control buttons
+	$forum_page['mod_options'] = array();
 
-if ($forum_page['num_users'] > 0)
-{
-	if ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && $forum_user['g_mod_ban_users'] == '1'))
-		$forum_page['mod_options']['ban'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="ban_users" value="'.$lang_admin_users['Ban'].'" /></span>';
-
-	if ($forum_user['g_id'] == FORUM_ADMIN)
+	if ($forum_page['num_users'] > 0)
 	{
-		$forum_page['mod_options']['delete'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="delete_users" value="'.$lang_admin_common['Delete'].'" /></span>';
-		$forum_page['mod_options']['change_group'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="change_group" value="'.$lang_admin_users['Change group'].'" /></span>';
-	}
-}
+		if ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && $forum_user['g_mod_ban_users'] == '1'))
+			$forum_page['mod_options']['ban'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="ban_users" value="'.$lang_admin_users['Ban'].'" /></span>';
 
-($hook = get_hook('aus_find_user_pre_moderation_buttons')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		if ($forum_user['g_id'] == FORUM_ADMIN)
+		{
+			$forum_page['mod_options']['delete'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="delete_users" value="'.$lang_admin_common['Delete'].'" /></span>';
+			$forum_page['mod_options']['change_group'] = '<span class="submit'.((empty($forum_page['mod_options'])) ? ' item1' : '').'"><input type="submit" name="change_group" value="'.$lang_admin_users['Change group'].'" /></span>';
+		}
+	}
+
+	($hook = get_hook('aus_find_user_pre_moderation_buttons')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	if (!empty($forum_page['mod_options']))
 	{
@@ -969,6 +1001,8 @@ if ($forum_page['num_users'] > 0)
 ?>
 	</form>
 <?php
+
+	($hook = get_hook('aus_find_user_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -1014,137 +1048,158 @@ ob_start();
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_users']).'?action=find_user') ?>" />
 			</div>
-<?php ($hook = get_hook('aus_search_pre_user_search_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="content-head">
 				<h3 class="hn"><span><?php echo $lang_admin_users['User search head'] ?></span></h3>
 			</div>
+<?php ($hook = get_hook('aus_search_form_pre_user_details_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_users['Searches personal legend'] ?></strong></legend>
+<?php ($hook = get_hook('aus_search_form_pre_username')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Username label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="username" size="25" maxlength="25" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aus_search_form_pre_user_title')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Title label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[title]" size="30" maxlength="50" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aus_search_form_pre_realname')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Real name label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[realname]" size="30" maxlength="40" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aus_search_form_pre_location')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Location label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[location]" size="30" maxlength="30" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aus_search_form_pre_signature')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Signature label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[signature]" size="35" maxlength="512" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aus_search_form_pre_admin_note')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Admin note label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[admin_note]" size="30" maxlength="30" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aus_search_form_pre_user_details_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
+<?php ($hook = get_hook('aus_search_form_user_details_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 <?php $forum_page['item_count'] = 0; ?>
+<?php ($hook = get_hook('aus_search_form_pre_user_contacts_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_users['Searches contact legend'] ?></strong></legend>
+<?php ($hook = get_hook('aus_search_form_pre_email')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['E-mail address label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[email]" size="30" maxlength="80" /></span>
 					</div>
 				</div>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+<?php ($hook = get_hook('aus_search_form_pre_website')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Website label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[url]" size="35" maxlength="100" /></span>
 					</div>
 				</div>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+<?php ($hook = get_hook('aus_search_form_pre_jabber')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Jabber label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[jabber]" size="30" maxlength="80" /></span>
 					</div>
 				</div>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+<?php ($hook = get_hook('aus_search_form_pre_icq')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['ICQ label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[icq]" size="12" maxlength="12" /></span>
 					</div>
 				</div>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+<?php ($hook = get_hook('aus_search_form_pre_msn')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['MSN Messenger label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[msn]" size="30" maxlength="80" /></span>
 					</div>
 				</div>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+<?php ($hook = get_hook('aus_search_form_pre_aim')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['AOL IM label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[aim]" size="20" maxlength="20" /></span>
 					</div>
 				</div>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+<?php ($hook = get_hook('aus_search_form_pre_yahoo')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Yahoo Messenger label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="form[yahoo]" size="20" maxlength="20" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aus_search_form_pre_user_contacts_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
+<?php ($hook = get_hook('aus_search_form_user_contacts_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 <?php $forum_page['item_count'] = 0; ?>
+<?php ($hook = get_hook('aus_search_form_pre_user_activity_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_users['Searches activity legend'] ?></strong></legend>
+<?php ($hook = get_hook('aus_search_form_pre_min_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box frm-short text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['More posts label'] ?></span> <small><?php echo $lang_admin_users['Number of posts help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="posts_greater" size="5" maxlength="8" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aus_search_form_pre_max_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box frm-short text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Less posts label'] ?></span> <small><?php echo $lang_admin_users['Number of posts help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="posts_less" size="5" maxlength="8" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aus_search_form_pre_last_post_after')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Last post after label'] ?></span> <small><?php echo $lang_admin_users['Date format help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="last_post_after" size="24" maxlength="19" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aus_search_form_pre_last_post_before')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Last post before label'] ?></span><small><?php echo $lang_admin_users['Date format help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="last_post_before" size="24" maxlength="19" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aus_search_form_pre_registered_after')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Registered after label'] ?></span> <small><?php echo $lang_admin_users['Date format help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="registered_after" size="24" maxlength="19" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aus_search_form_pre_registered_before')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Registered before label'] ?></span> <small><?php echo $lang_admin_users['Date format help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="registered_before" size="24" maxlength="19" /></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('aus_search_user_search_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('aus_search_form_pre_user_activity_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
 <?php
+
+($hook = get_hook('aus_search_form_user_activity_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // Reset counter
 $forum_page['group_count'] = $forum_page['item_count'] = 0;
@@ -1153,9 +1208,10 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 			<div class="content-head">
 				<h3 class="hn"><span><?php echo $lang_admin_users['User results head'] ?></span></h3>
 			</div>
-<?php ($hook = get_hook('aus_search_pre_results_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('aus_search_form_pre_results_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_users['User results legend'] ?></strong></legend>
+<?php ($hook = get_hook('aus_search_form_pre_sort_by')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Order by label'] ?></span></label><br />
@@ -1165,9 +1221,11 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 							<option value="num_posts"><?php echo $lang_admin_users['Posts'] ?></option>
 							<option value="last_post"><?php echo $lang_admin_users['Last post'] ?></option>
 							<option value="registered"><?php echo $lang_admin_users['Registered'] ?></option>
+<?php ($hook = get_hook('aus_search_form_new_sort_by_option')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 						</select></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aus_search_form_pre_sort_order')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['Sort order label'] ?></span></label><br />
@@ -1177,6 +1235,7 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 						</select></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aus_search_form_pre_filter_group')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['User group label'] ?></span></label><br />
@@ -1192,17 +1251,20 @@ $query = array(
 	'ORDER BY'	=> 'g.g_title'
 );
 
-($hook = get_hook('aus_qr_get_groups2')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+($hook = get_hook('aus_search_form_qr_get_groups')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 while ($cur_group = $forum_db->fetch_assoc($result))
 	echo "\t\t\t\t\t\t\t".'<option value="'.$cur_group['g_id'].'">'.forum_htmlencode($cur_group['g_title']).'</option>'."\n";
+
+($hook = get_hook('aus_search_form_new_filter_group_option')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 						</select></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('aus_search_results_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('aus_search_form_pre_results_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
+<?php ($hook = get_hook('aus_search_form_results_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" class="button" name="find_user" value="<?php echo $lang_admin_users['Submit search'] ?>" /></span>
 			</div>
@@ -1220,23 +1282,27 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 			<h2 class="hn"><span><?php echo $lang_admin_users['IP search head'] ?></span></h2>
 		</div>
 		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_users']) ?>">
-<?php ($hook = get_hook('aus_search_pre_ip_search_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('aus_search_form_pre_ip_search_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_users['IP search legend'] ?></strong></legend>
+<?php ($hook = get_hook('aus_search_form_pre_ip_address')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_users['IP address label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="show_users" size="18" maxlength="15" /></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('aus_search_ip_search_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('aus_search_form_pre_ip_search_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
+<?php ($hook = get_hook('aus_search_form_ip_search_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" value=" <?php echo $lang_admin_users['Submit search'] ?> " /></span>
 			</div>
 		</form>
 	</div>
 <?php
+
+($hook = get_hook('aus_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

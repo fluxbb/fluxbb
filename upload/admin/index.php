@@ -53,7 +53,7 @@ if ($forum_user['g_id'] == FORUM_ADMIN)
 			'WHERE'		=> 'e.id LIKE \'hotfix_%\''
 		);
 
-		($hook = get_hook('ain_qr_get_hotfixes')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('ain_update_check_qr_get_hotfixes')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		$num_hotfixes = $forum_db->num_rows($result);
 
@@ -230,6 +230,8 @@ ob_start();
 <?php endif; endif; ($hook = get_hook('ain_items_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>		</div>
 	</div>
 <?php
+
+($hook = get_hook('ain_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

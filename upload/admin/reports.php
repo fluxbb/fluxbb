@@ -41,7 +41,7 @@ if (isset($_POST['mark_as_read']))
 		'WHERE'		=> 'id IN('.implode(',', $reports_to_mark).') AND zapped IS NULL'
 	);
 
-	($hook = get_hook('arp_qr_mark_reports_as_read')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('arp_mark_as_read_qr_mark_reports_as_read')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	redirect(forum_link($forum_url['admin_reports']), $lang_admin_reports['Reports marked read'].' '.$lang_admin_common['Redirect']);
@@ -244,6 +244,7 @@ if (!$forum_page['new_reports'] && !$forum_page['old_reports'])
 
 }
 
+($hook = get_hook('arp_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

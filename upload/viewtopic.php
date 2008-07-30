@@ -301,7 +301,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 		'date'	=> '<span>'.format_time($cur_post['posted']).'</span>'
 	);
 
-	($hook = get_hook('vt_row_pre_item_head')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('vt_row_pre_item_ident_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$forum_page['item_head'] = '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.implode(' ', $forum_page['item_ident']).'</a>';
 
@@ -395,6 +395,8 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 			}
 		}
 
+		($hook = get_hook('vt_row_pre_post_contacts_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		if (!empty($forum_page['post_contacts']))
 			$forum_page['post_options']['contacts'] = '<p class="post-contacts">'.implode(' ', $forum_page['post_contacts']).'</p>';
 	}
@@ -442,7 +444,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 		}
 	}
 
-	($hook = get_hook('vt_row_modify_post_actions')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('vt_row_pre_post_actions_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	if (!empty($forum_page['post_actions']))
 		$forum_page['post_options']['actions'] = '<p class="post-actions">'.implode(' ', $forum_page['post_actions']).'</p>';
@@ -519,6 +521,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 					<div class="entry-content">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['message'])."\n" ?>
 					</div>
+<?php ($hook = get_hook('vt_row_new_post_entry_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				</div>
 			</div>
 <?php if (!empty($forum_page['post_options'])): ?>			<div class="postfoot">
@@ -596,15 +599,16 @@ if ($forum_config['o_smilies'] == '1')
 <?php ($hook = get_hook('vt_quickpost_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 		<fieldset class="frm-group group1">
 			<legend class="group-legend"><strong><?php echo $lang_common['Write message legend'] ?></strong></legend>
-<?php ($hook = get_hook('vt_quickpost_fieldset_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('vt_quickpost_pre_message_box')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="sf-set set1">
 				<div class="sf-box textarea required">
 					<label for="fld1"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_common['Write message'] ?></span></label><br />
 					<span class="fld-input"><textarea id="fld1" name="req_message" rows="7" cols="95"></textarea></span>
 				</div>
 			</div>
+<?php ($hook = get_hook('vt_quickpost_pre_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 		</fieldset>
-<?php ($hook = get_hook('vt_quickpost_post_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('vt_quickpost_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 		<div class="frm-buttons">
 			<span class="submit"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" /></span>
 			<span class="submit"><input type="submit" name="preview" value="<?php echo $lang_common['Preview'] ?>" /></span>

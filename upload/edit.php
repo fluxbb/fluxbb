@@ -220,7 +220,7 @@ if (isset($_POST['preview']) && empty($forum_page['errors']))
 	$forum_page['preview_message'] = parse_message($message, $hide_smilies);
 	$forum_page['preview_poster'] = '<strong class="username">'.forum_htmlencode($cur_post['poster']).'</strong>';
 
-	($hook = get_hook('ed_pre_preview_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('ed_preview_pre_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -230,15 +230,18 @@ if (isset($_POST['preview']) && empty($forum_page['errors']))
 		<div class="post singlepost">
 			<div class="posthead">
 				<h3 class="hn"><strong>0</strong><?php echo $lang_post['Not yet posted'] ?></h3>
+<?php ($hook = get_hook('ed_preview_new_post_head_option')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</div>
 			<div class="postbody">
 				<div class="user">
 					<h4 class="user-ident"><?php echo $forum_page['preview_poster'] ?></h4>
+<?php ($hook = get_hook('ed_preview_new_post_user_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				</div>
 				<div class="post-entry">
 					<div class="entry-content">
-					<?php echo $forum_page['preview_message']."\n" ?>
+						<?php echo $forum_page['preview_message']."\n" ?>
 					</div>
+<?php ($hook = get_hook('ed_preview_new_post_entry_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				</div>
 			</div>
 		</div>
@@ -283,6 +286,7 @@ if (isset($forum_page['errors']))
 <?php ($hook = get_hook('ed_pre_main_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_post['Edit post legend'] ?></strong></legend>
+<?php ($hook = get_hook('ed_pre_subject')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 <?php if ($can_edit_subject): ?>				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++ $forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_post['Topic subject'] ?></span></label><br />
@@ -325,16 +329,19 @@ if (!empty($forum_page['checkboxes']))
 					<div class="mf-box checkbox">
 						<?php echo implode("\n\t\t\t\t\t", $forum_page['checkboxes'])."\n"; ?>
 					</div>
+<?php ($hook = get_hook('ed_pre_checkbox_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
 }
 
+($hook = get_hook('ed_pre_main_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 ?>
 			</fieldset>
 <?php
 
-($hook = get_hook('ed_post_checkbox_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+($hook = get_hook('ed_main_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 			<div class="frm-buttons">

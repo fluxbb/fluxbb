@@ -47,7 +47,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 				'WHERE'		=> 'u.id='.$user_id
 			);
 
-			($hook = get_hook('aba_qr_get_user_by_id')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('aba_add_ban_qr_get_user_by_id')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 			if (!$forum_db->num_rows($result))
 				message($lang_admin_bans['No user id message']);
@@ -68,7 +68,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 					'WHERE'		=> 'u.username=\''.$forum_db->escape($ban_user).'\' AND u.id>1'
 				);
 
-				($hook = get_hook('aba_qr_get_user_by_username')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('aba_add_ban_qr_get_user_by_username')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 				if (!$forum_db->num_rows($result))
 					message($lang_admin_bans['No user username message']);
@@ -92,7 +92,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 				'LIMIT'		=> '1'
 			);
 
-			($hook = get_hook('aba_qr_get_last_known_ip')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('aba_add_ban_qr_get_last_known_ip')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 			$ban_ip = ($forum_db->num_rows($result)) ? $forum_db->result($result) : $ban_ip;
@@ -114,7 +114,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 			'WHERE'		=> 'b.id='.$ban_id
 		);
 
-		($hook = get_hook('aba_qr_get_ban_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aba_edit_ban_qr_get_ban_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		if ($forum_db->num_rows($result))
 			list($ban_user, $ban_ip, $ban_email, $ban_message, $ban_expire) = $forum_db->fetch_row($result);
@@ -175,12 +175,14 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_user" size="25" maxlength="25" value="<?php if (isset($ban_user)) echo forum_htmlencode($ban_user); ?>" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aba_add_edit_ban_pre_email')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_bans['E-mail/domain to ban label'] ?></span> <small><?php echo $lang_admin_bans['E-mail/domain help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_email" size="40" maxlength="80" value="<?php if (isset($ban_email)) echo forum_htmlencode(strtolower($ban_email)); ?>" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aba_add_edit_ban_pre_ip')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_bans['IP-addresses to ban label'] ?></span> <small><?php echo $lang_admin_bans['IP-addresses help']; if ($ban_user != '' && isset($user_id)) echo ' '.$lang_admin_bans['IP-addresses help stats'].'<a href="'.forum_link($forum_url['admin_users']).'?ip_stats='.$user_id.'">'.$lang_admin_bans['IP-addresses help link'].'</a>' ?></small></label><br />
@@ -194,21 +196,24 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_message" size="50" maxlength="255" value="<?php if (isset($ban_message)) echo forum_htmlencode($ban_message); ?>" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('aba_add_edit_ban_pre_expire')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_bans['Expire date label'] ?></span> <small><?php echo $lang_admin_bans['Expire date help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="ban_expire" size="17" maxlength="10" value="<?php if (isset($ban_expire)) echo $ban_expire; ?>" /></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('aba_add_edit_ban_criteria_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('aba_add_edit_ban_criteria_pre_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
-<?php ($hook = get_hook('aba_add_edit_ban_pre_buttons')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('aba_add_edit_ban_criteria_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" class="button" name="add_edit_ban" value=" <?php echo $lang_admin_bans['Save ban'] ?>" /></span>
 			</div>
 		</form>
 	</div>
 <?php
+
+	($hook = get_hook('aba_add_edit_ban_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_temp = trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -233,7 +238,7 @@ else if (isset($_POST['add_edit_ban']))
 	else if (strtolower($ban_user) == 'guest')
 		message($lang_admin_bans['Can\'t ban guest user']);
 
-	($hook = get_hook('aba_add_edit_ban_form_submitted2')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aba_add_edit_ban_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// Validate IP/IP range (it's overkill, I know)
 	if ($ban_ip != '')
@@ -311,7 +316,7 @@ else if (isset($_POST['add_edit_ban']))
 			'VALUES'	=> $ban_user.', '.$ban_ip.', '.$ban_email.', '.$ban_message.', '.$ban_expire.', '.$forum_user['id']
 		);
 
-		($hook = get_hook('aba_qr_add_ban')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aba_add_edit_ban_qr_add_ban')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
 	else
@@ -322,7 +327,7 @@ else if (isset($_POST['add_edit_ban']))
 			'WHERE'		=> 'id='.intval($_POST['ban_id'])
 		);
 
-		($hook = get_hook('aba_qr_update_ban')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('aba_add_edit_ban_qr_update_ban')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
 
@@ -347,14 +352,14 @@ else if (isset($_GET['del_ban']))
 	if (!isset($_POST['csrf_token']) && (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== generate_form_token('del_ban'.$ban_id)))
 		csrf_confirm_form();
 
-	($hook = get_hook('aba_del_ban_form_submitted2')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aba_del_ban_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$query = array(
 		'DELETE'	=> 'bans',
 		'WHERE'		=> 'id='.$ban_id
 	);
 
-	($hook = get_hook('aba_qr_delete_ban')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('aba_del_ban_qr_delete_ban')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Regenerate the bans cache
@@ -369,6 +374,11 @@ else if (isset($_GET['del_ban']))
 
 // Setup the form
 $forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
+$forum_page['form_action'] = forum_link($forum_url['admin_bans']).'?action=more';
+
+$forum_page['hidden_fields'] = array(
+	'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />'
+);
 
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
@@ -377,7 +387,7 @@ $forum_page['crumbs'] = array(
 	$lang_admin_common['Bans']
 );
 
-($hook = get_hook('aba_pre_header_loaded')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+($hook = get_hook('aba_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE_SECTION', 'users');
 define('FORUM_PAGE', 'admin-bans');
@@ -397,9 +407,9 @@ ob_start();
 		<div class="ct-box">
 			<p><?php echo $lang_admin_bans['Advanced ban info'] ?></p>
 		</div>
-		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_bans']) ?>?action=more">
+		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 			<div class="hidden">
-				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_bans']).'?action=more') ?>" />
+				<?php echo implode("\n\t\t\t\t", $forum_page['hidden_fields'])."\n" ?>
 			</div>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_bans['New ban legend'] ?></strong></legend>
@@ -492,6 +502,8 @@ else
 ?>
 	</div>
 <?php
+
+($hook = get_hook('aba_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 $tpl_temp = trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

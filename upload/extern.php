@@ -128,6 +128,8 @@ function output_rss($feed)
 	else
 		echo "\t\t".'<generator>FluxBB</generator>'."\r\n";
 
+	($hook = get_hook('ex_add_new_rss_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	$num_items = count($feed['items']);
 	for ($i = 0; $i < $num_items; ++$i)
 	{
@@ -138,6 +140,9 @@ function output_rss($feed)
 		echo "\t\t\t".'<author><![CDATA[dummy@example.com ('.escape_cdata($feed['items'][$i]['author']).')]]></author>'."\r\n";
 		echo "\t\t\t".'<pubDate>'.gmdate('r', $feed['items'][$i]['pubdate']).'</pubDate>'."\r\n";
 		echo "\t\t\t".'<guid>'.$feed['items'][$i]['link'].'</guid>'."\r\n";
+
+		($hook = get_hook('ex_add_new_rss_item_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		echo "\t\t".'</item>'."\r\n";
 	}
 
@@ -171,6 +176,8 @@ function output_atom($feed)
 	else
 		echo "\t".'<generator>FluxBB</generator>'."\r\n";
 
+	($hook = get_hook('ex_add_new_atom_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	echo "\t".'<id>'.$feed['link'].'</id>'."\r\n";
 
 	$content_tag = ($feed['type'] == 'posts') ? 'content' : 'summary';
@@ -186,6 +193,9 @@ function output_atom($feed)
 		echo "\t\t\t\t".'<name><![CDATA['.escape_cdata($feed['items'][$i]['author']).']]></name>'."\r\n";
 		echo "\t\t\t".'</author>'."\r\n";
 		echo "\t\t\t".'<updated>'.gmdate('Y-m-d\TH:i:s\Z', $feed['items'][$i]['pubdate']).'</updated>'."\r\n";
+
+		($hook = get_hook('ex_add_new_atom_item_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		echo "\t\t\t".'<id>'.$feed['items'][$i]['link'].'</id>'."\r\n";
 		echo "\t\t".'</entry>'."\r\n";
 	}
@@ -211,6 +221,8 @@ function output_xml($feed)
 	echo '<source>'."\r\n";
 	echo "\t".'<url>'.$feed['link'].'</url>'."\r\n";
 
+	($hook = get_hook('ex_add_new_xml_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	$forum_tag = ($feed['type'] == 'posts') ? 'post' : 'topic';
 
 	$num_items = count($feed['items']);
@@ -223,6 +235,8 @@ function output_xml($feed)
 		echo "\t\t".'<content><![CDATA['.escape_cdata($feed['items'][$i]['description']).']]></content>'."\r\n";
 		echo "\t\t".'<author><![CDATA['.escape_cdata($feed['items'][$i]['author']).']]></author>'."\r\n";
 		echo "\t\t".'<posted>'.gmdate('r', $feed['items'][$i]['pubdate']).'</posted>'."\r\n";
+
+		($hook = get_hook('ex_add_new_xml_item_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		echo "\t".'</'.$forum_tag.'>'."\r\n";
 	}
@@ -378,7 +392,6 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 			'items'			=>	array(),
 			'type'			=>	'topics'
 		);
-
 
 		if (isset($_GET['type']) && is_scalar($_GET['type']) && strtoupper($_GET['type']) == 'RSS')
 			$show = 15;

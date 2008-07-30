@@ -52,14 +52,14 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 			'DELETE'	=> 'search_matches'
 		);
 
-		($hook = get_hook('ari_qr_empty_search_matches')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('ari_cycle_qr_empty_search_matches')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$query = array(
 			'DELETE'	=> 'search_words'
 		);
 
-		($hook = get_hook('ari_qr_empty_search_words')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('ari_cycle_qr_empty_search_words')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Reset the sequence for the search words (not needed for SQLite)
@@ -121,7 +121,7 @@ body {
 		'LIMIT'		=> $per_page
 	);
 
-	($hook = get_hook('ari_qr_fetch_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('ari_cycle_qr_fetch_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$post_id = 0;
@@ -148,7 +148,7 @@ body {
 		'LIMIT'		=> '1'
 	);
 
-	($hook = get_hook('ari_qr_find_next_post')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('ari_cycle_qr_find_next_post')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	$query_str = ($forum_db->num_rows($result)) ? '?i_per_page='.$per_page.'&i_start_at='.$forum_db->result($result).'&csrf_token='.generate_form_token('reindex'.$forum_user['id']) : '';
@@ -212,28 +212,30 @@ ob_start();
 <?php ($hook = get_hook('ari_pre_rebuild_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_reindex['Rebuild index legend'] ?></span></legend>
-<?php ($hook = get_hook('ari_pre_per_page')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('ari_pre_rebuild_per_page')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_reindex['Posts per cycle'] ?></span> <small><?php echo $lang_admin_reindex['Posts per cycle info'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="i_per_page" size="7" maxlength="7" value="100" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('ari_pre_rebuild_start_post')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><?php echo $lang_admin_reindex['Starting post'] ?></span> <small><?php echo $lang_admin_reindex['Starting post info'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="i_start_at" size="7" maxlength="7" value="<?php echo (isset($first_id)) ? $first_id : 0 ?>" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('ari_pre_rebuild_empty_index')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="i_empty_index" value="1" checked="checked" /></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin_reindex['Empty index'] ?></span> <?php echo $lang_admin_reindex['Empty index info'] ?></label>
 					</div>
 				</div>
-<?php ($hook = get_hook('ari_rebuild_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('ari_pre_rebuild_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
-<?php ($hook = get_hook('ari_pre_infobox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('ari_rebuild_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="ct-box warn-box">
 				<p class="important"><?php echo $lang_admin_reindex['Reindex warning'] ?></p>
 				<p class="warn"><?php echo $lang_admin_reindex['Empty index warning'] ?></p>
@@ -244,6 +246,8 @@ ob_start();
 		</form>
 	</div>
 <?php
+
+($hook = get_hook('ari_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 $tpl_temp = forum_trim(ob_get_contents());
 $tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);

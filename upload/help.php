@@ -155,6 +155,7 @@ else if ($section == 'img')
 				<samp><img src="<?php echo $base_url ?>/img/test.png" alt="FluxBB bbcode test" /></samp>
 			</div>
 		</div>
+		<?php ($hook = get_hook('he_new_img_section')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 	</div>
 <?php
 

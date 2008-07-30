@@ -44,7 +44,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 				'FROM'		=> 'forums AS f'
 			);
 
-			($hook = get_hook('apr_qr_get_all_forums')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('apr_prune_comply_qr_get_all_forums')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 			$num_forums = $forum_db->num_rows($result);
 
@@ -73,7 +73,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 	if ($prune_days < 0)
 		message($lang_admin_prune['Days to prune message']);
 
-	$prune_date = time() - ($prune_days*86400);
+	$prune_date = time() - ($prune_days * 86400);
 	$prune_from = $_POST['prune_from'];
 
 	if ($prune_from != 'all')
@@ -87,7 +87,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 			'WHERE'		=> 'f.id='.$prune_from
 		);
 
-		($hook = get_hook('apr_qr_get_forum_name')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('apr_prune_comply_qr_get_forum_name')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		$forum = forum_htmlencode($forum_db->result($result));
 	}
@@ -106,7 +106,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 	if (!isset($_POST['prune_sticky']))
 		$query['WHERE'] .= ' AND t.sticky=0';
 
-	($hook = get_hook('apr_qr_get_topic_count')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('apr_prune_comply_qr_get_topic_count')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	$num_topics = $forum_db->result($result);
 
@@ -157,6 +157,8 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 		</form>
 	</div>
 <?php
+
+	($hook = get_hook('apr_prune_comply_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
@@ -255,21 +257,23 @@ else
 						</select></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('apr_pre_prune_days')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><em class="req-text"><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_admin_prune['Days old'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_prune_days" size="4" maxlength="4" /></span>
 					</div>
 				</div>
+<?php ($hook = get_hook('apr_pre_prune_sticky')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="prune_sticky" value="1" checked="checked" /></span>
 						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin_prune['Prune sticky'] ?></span> <?php echo $lang_admin_prune['Prune sticky enable'] ?></label>
 					</div>
 				</div>
-<?php ($hook = get_hook('apr_prune_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('apr_pre_prune_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
-<?php ($hook = get_hook('apr_pre_buttons')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('apr_prune_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-buttons">
 				<span class="submit"><input type="submit" name="prune" value="<?php echo $lang_admin_prune['Prune topics'] ?>" /></span>
 			</div>
@@ -277,10 +281,12 @@ else
 	</div>
 <?php
 
-$tpl_temp = forum_trim(ob_get_contents());
-$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
-ob_end_clean();
-// END SUBST - <!-- forum_main -->
+	($hook = get_hook('apr_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
+	$tpl_temp = forum_trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
 
 	require FORUM_ROOT.'footer.php';
 }

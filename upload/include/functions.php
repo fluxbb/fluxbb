@@ -74,15 +74,15 @@ function cookie_login(&$forum_user)
 {
 	global $forum_db, $db_type, $forum_config, $cookie_name, $cookie_path, $cookie_domain, $cookie_secure, $forum_time_formats, $forum_date_formats;
 
-	$return = ($hook = get_hook('fn_cookie_login_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-	if ($return != null)
-		return;
-
 	$now = time();
 	$expire = $now + 1209600;	// The cookie expires after 14 days
 
 	// We assume it's a guest
 	$cookie = array('user_id' => 1, 'password_hash' => 'Guest', 'expiration_time' => 0, 'expire_hash' => 'Guest');
+
+	$return = ($hook = get_hook('fn_cookie_login_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	if ($return != null)
+		return;
 
 	// If a cookie is set, we get the user_id and password hash from it
 	if (isset($_COOKIE[$cookie_name]))
@@ -216,11 +216,11 @@ function set_default_user()
 {
 	global $forum_db, $db_type, $forum_user, $forum_config;
 
+	$remote_addr = get_remote_address();
+
 	$return = ($hook = get_hook('fn_set_default_user_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;
-
-	$remote_addr = get_remote_address();
 
 	// Fetch guest user
 	$query = array(
@@ -1799,6 +1799,10 @@ function generate_page_info($label, $first, $total)
 {
 	global $forum_page, $lang_common;
 
+	$return = ($hook = get_hook('fn_generate_page_info_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	if ($return != null)
+		return $return;
+
 	if ($forum_page['num_pages'] == 1)
 	{
 		$page_info = '';
@@ -1809,6 +1813,8 @@ function generate_page_info($label, $first, $total)
 		$page_info = '<span class="page-info">'.sprintf($lang_common['Page info'], forum_number_format($forum_page['page']), forum_number_format($forum_page['num_pages'])).$lang_common['Info separator'].'</span>';
 		$item_info = '<span class="item-info">'.sprintf($lang_common['Item info plural'], $label, forum_number_format($first), forum_number_format($forum_page['finish_at']), forum_number_format($total)).'</span>';
 	}
+
+	($hook = get_hook('fn_generate_page_info_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	return $page_info.$item_info;
 }
@@ -1910,12 +1916,16 @@ function message($message, $link = '', $heading = '')
 			$heading
 		);
 
+		($hook = get_hook('fn_message_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		define('FORUM_PAGE', 'message');
 		define('FORUM_PAGE_TYPE', 'basic');
 		require FORUM_ROOT.'header.php';
 
 		// START SUBST - <!-- forum_main -->
 		ob_start();
+
+		($hook = get_hook('fn_message_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	}
 
 ?>
@@ -1923,6 +1933,8 @@ function message($message, $link = '', $heading = '')
 		<p><?php echo $message ?><?php if ($link != '') echo ' <span>'.$link.'</span>' ?></p>
 	</div>
 <?php
+
+	($hook = get_hook('fn_message_output_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_main = str_replace('<!-- forum_main -->', "\t".$tpl_temp, $tpl_main);
@@ -2618,9 +2630,8 @@ function redirect($destination_url, $message)
 
 	$head_temp = forum_trim(ob_get_contents());
 	$num_temp = 0;
-	foreach (explode("\n", $head_temp) as $style_temp) {
+	foreach (explode("\n", $head_temp) as $style_temp)
 		$forum_head['style'.$num_temp++] = $style_temp;
-	}
 
 	ob_end_clean();
 

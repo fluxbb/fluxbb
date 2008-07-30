@@ -50,6 +50,8 @@ if ($tid)
 		),
 		'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$tid
 	);
+
+	($hook = get_hook('po_qr_get_topic_forum_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 else
 {
@@ -64,9 +66,10 @@ else
 		),
 		'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fid
 	);
+
+	($hook = get_hook('po_qr_get_forum_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
 
-($hook = get_hook('po_qr_get_forum_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 if (!$forum_db->num_rows($result))
@@ -180,9 +183,9 @@ if (isset($_POST['form_sent']))
 	$hide_smilies = isset($_POST['hide_smilies']) ? 1 : 0;
 	$subscribe = isset($_POST['subscribe']) ? 1 : 0;
 
-	($hook = get_hook('po_end_validation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
 	$now = time();
+
+	($hook = get_hook('po_end_validation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// Did everything go according to plan?
 	if (empty($errors) && !isset($_POST['preview']))
@@ -311,7 +314,8 @@ if ($forum_config['o_smilies'] == '1')
 // Setup breadcrumbs
 $forum_page['crumbs'][] = array($forum_config['o_board_title'], forum_link($forum_url['index']));
 $forum_page['crumbs'][] = array($cur_posting['forum_name'], forum_link($forum_url['forum'], array($cur_posting['id'], sef_friendly($cur_posting['forum_name']))));
-if ($tid) $forum_page['crumbs'][] = array($cur_posting['subject'], forum_link($forum_url['topic'], array($tid, sef_friendly($cur_posting['subject']))));
+if ($tid)
+	$forum_page['crumbs'][] = array($cur_posting['subject'], forum_link($forum_url['topic'], array($tid, sef_friendly($cur_posting['subject']))));
 $forum_page['crumbs'][] = $tid ? $lang_post['Post reply'] : $lang_post['Post new topic'];
 
 ($hook = get_hook('po_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -334,7 +338,7 @@ if (isset($_POST['preview']) && empty($errors))
 	$forum_page['preview_message'] = parse_message(forum_trim($message), $hide_smilies);
 	$forum_page['preview_poster'] = '<strong class="username">'.forum_htmlencode($forum_user['username']).'</strong>';
 
-	($hook = get_hook('po_pre_preview_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('po_preview_pre_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-subhead">
@@ -344,15 +348,18 @@ if (isset($_POST['preview']) && empty($errors))
 		<div class="post singlepost">
 			<div class="posthead">
 				<h3 class="hn"><strong>0</strong><?php echo $lang_post['Not yet posted'] ?></h3>
+<?php ($hook = get_hook('po_preview_new_post_head_option')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</div>
 			<div class="postbody">
 				<div class="user">
 					<h4 class="user-ident"><?php echo $forum_page['preview_poster'] ?></h4>
+<?php ($hook = get_hook('po_preview_new_post_user_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				</div>
 				<div class="post-entry">
 					<div class="entry-content">
-					<?php echo $forum_page['preview_message']."\n" ?>
+						<?php echo $forum_page['preview_message']."\n" ?>
 					</div>
+<?php ($hook = get_hook('po_preview_new_post_entry_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				</div>
 			</div>
 		</div>
@@ -401,36 +408,37 @@ if (isset($_POST['preview']) && empty($errors))
 			</div>
 <?php
 
-($hook = get_hook('po_pre_guest_info_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
 if ($forum_user['is_guest'])
 {
 	$forum_page['email_form_name'] = ($forum_config['p_force_guest_email'] == '1') ? 'req_email' : 'email';
 
+	($hook = get_hook('po_pre_guest_info_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_post['Guest post legend'] ?></strong></legend>
-<?php ($hook = get_hook('po_guest_info_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('po_pre_guest_username')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_post['Guest name'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_username" value="<?php if (isset($_POST['req_username'])) echo forum_htmlencode($username); ?>" size="35" maxlength="25" /></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('po_post_guest_name_div')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('po_pre_guest_email')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text<?php if ($forum_config['p_force_guest_email'] == '1') echo ' required' ?>">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php if ($forum_config['p_force_guest_email'] == '1') echo '<em>'.$lang_common['Reqmark'].'</em>' ?> <?php echo $lang_post['Guest e-mail'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="<?php echo $forum_page['email_form_name'] ?>" value="<?php if (isset($_POST[$forum_page['email_form_name']])) echo forum_htmlencode($email); ?>" size="35" maxlength="80" /></span>
 					</div>
 				</div>
-<?php ($hook = get_hook('po_guest_info_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php ($hook = get_hook('po_pre_guest_info_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
 <?php
 
-// Reset counters
-$forum_page['group_count'] = $forum_page['item_count'] = 0;
+	($hook = get_hook('po_guest_info_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
+	// Reset counters
+	$forum_page['group_count'] = $forum_page['item_count'] = 0;
 }
 
 ($hook = get_hook('po_pre_req_info_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -440,10 +448,9 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
 <?php
 
-($hook = get_hook('po_req_info_fieldset_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
 if ($fid)
 {
+	($hook = get_hook('po_pre_req_subject')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
@@ -500,16 +507,19 @@ if (!empty($forum_page['checkboxes']))
 					<div class="mf-box checkbox">
 						<?php echo implode("\n\t\t\t\t\t", $forum_page['checkboxes'])."\n"; ?>
 					</div>
+<?php ($hook = get_hook('po_pre_checkbox_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				</fieldset>
 <?php
 
 }
 
+($hook = get_hook('po_pre_req_info_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 ?>
 			</fieldset>
 <?php
 
-($hook = get_hook('po_post_optional_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+($hook = get_hook('po_req_info_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 			<div class="frm-buttons">
@@ -536,7 +546,7 @@ if ($tid && $forum_config['o_topic_review'] != '0')
 		'LIMIT'		=>	$forum_config['o_topic_review']
 	);
 
-	($hook = get_hook('po_qr_get_topic_review_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('po_topic_review_qr_get_topic_review_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 ?>
@@ -560,6 +570,8 @@ if ($tid && $forum_config['o_topic_review'] != '0')
 			'date'	=> '<span>'.format_time($cur_post['posted']).'</span>'
 		);
 
+		($hook = get_hook('po_topic_review_pre_item_indent_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		$forum_page['item_head'] = '<a class="permalink" rel="bookmark" title="'.$lang_post['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.implode(' ', $forum_page['item_ident']).'</a>';
 		$forum_page['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 		$forum_page['poster'] = '<strong class="username">'.forum_htmlencode($cur_post['poster']).'</strong>';
@@ -570,14 +582,17 @@ if ($tid && $forum_config['o_topic_review'] != '0')
 		<div class="post<?php echo ($forum_page['item_count'] == 1) ? ' firstpost' : '' ?><?php echo ($forum_page['item_total'] == $forum_page['item_count']) ? ' lastpost' : '' ?>">
 			<div class="posthead">
 				<h3 class="hn"><?php echo $forum_page['item_head'] ?></h3>
+<?php ($hook = get_hook('po_topic_review_new_post_head_option')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</div>
 			<div class="postbody">
 				<div class="user">
 					<h4 class="user-ident"><?php echo $forum_page['poster'] ?></h4>
+<?php ($hook = get_hook('po_topic_review_new_post_user_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				</div>
 				<div class="post-entry">
 					<div class="entry-content">
-					<?php echo $forum_page['message']."\n" ?>
+						<?php echo $forum_page['message']."\n" ?>
+<?php ($hook = get_hook('po_topic_review_new_post_entry_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 					</div>
 				</div>
 			</div>
