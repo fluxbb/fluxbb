@@ -79,8 +79,13 @@ if (version_compare($cur_version, '1.2', '<'))
 	error('Version mismatch. The database \''.$db_name.'\' doesn\'t seem to be running a FluxBB database schema supported by this update script.', __FILE__, __LINE__);
 
 // If we've already done charset conversion in a previous update, we have to do SET NAMES
-if (strpos($cur_version, '1.3') === 0 && $db_type != 'sqlite')
-	$forum_db->query('SET NAMES \'utf8\'') or error(__FILE__, __LINE__);
+if ($db_type != 'sqlite')
+{
+	if (strpos($cur_version, '1.3') === 0)
+		$forum_db->query('SET NAMES \'utf8\'') or error(__FILE__, __LINE__);
+	else
+		$forum_db->query('SET NAMES \'latin1\'') or error(__FILE__, __LINE__);
+}
 
 
 // If MySQL, make sure it's at least 4.1.2
@@ -252,9 +257,12 @@ function utf8_callback_2($matches)
 //
 function db_seems_utf8()
 {
-	global $db_type, $forum_db;
+	global $db_type, $forum_db, $cur_version;
 
 	$seems_utf8 = true;
+
+	if (strpos($cur_version, '1.2') === 0 && $db_type != 'sqlite')
+		$forum_db->query('SET NAMES \'utf8\'') or error(__FILE__, __LINE__);
 
 	$result = $forum_db->query('SELECT MIN(id), MAX(id) FROM '.$forum_db->prefix.'posts') or error(__FILE__, __LINE__);
 	list($min_id, $max_id) = $forum_db->fetch_row($result);
@@ -273,6 +281,9 @@ function db_seems_utf8()
 			break;
 		}
 	}
+
+	if (strpos($cur_version, '1.2') === 0 && $db_type != 'sqlite')
+		$forum_db->query('SET NAMES \'latin1\'') or error(__FILE__, __LINE__);
 
 	return $seems_utf8;
 }
