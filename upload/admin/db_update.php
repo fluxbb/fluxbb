@@ -14,7 +14,7 @@ define('UPDATE_TO', '1.3 Beta');
 define('UPDATE_TO_DB_REVISION', 2);
 
 // The number of items to process per pageview (lower this if the update script times out during UTF-8 conversion)
-define('PER_PAGE', 300);
+define('PER_PAGE', 3000);
 
 define('MIN_MYSQL_VERSION', '4.1.2');
 
@@ -1290,6 +1290,10 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 		if (!defined('FORUM_PARSER_LOADED'))
 			require FORUM_ROOT.'include/parser.php';
 
+		// Now we're definitely using UTF-8, so we convert the output properly
+		if ($db_type != 'sqlite')
+			$forum_db->query('SET NAMES \'utf8\'') or error(__FILE__, __LINE__);
+
 		// Determine where to start
 		if ($start_at == 0)
 		{
@@ -1321,6 +1325,10 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 		if (!defined('FORUM_PARSER_LOADED'))
 			require FORUM_ROOT.'include/parser.php';
 
+		// Now we're definitely using UTF-8, so we convert the output properly
+		if ($db_type != 'sqlite')
+			$forum_db->query('SET NAMES \'utf8\'') or error(__FILE__, __LINE__);
+
 		// Determine where to start
 		if ($start_at == 0)
 		{
@@ -1347,6 +1355,10 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 
 	// Show results page
 	case 'finish':
+		// Now we're definitely using UTF-8, so we convert the output properly
+		if ($db_type != 'sqlite')
+			$forum_db->query('SET NAMES \'utf8\'') or error(__FILE__, __LINE__);
+
 		// We update the version number
 		$forum_db->query('UPDATE '.$forum_db->prefix.'config SET conf_value=\''.UPDATE_TO.'\' WHERE conf_name=\'o_cur_version\'') or error(__FILE__, __LINE__);
 
