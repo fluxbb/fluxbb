@@ -30,7 +30,7 @@ function generate_admin_menu($submenu)
 		if ($forum_user['g_id'] != FORUM_ADMIN)
 		{
 			$forum_page['admin_submenu']['index'] = '<li class="'.((FORUM_PAGE == 'admin-information') ? 'active' : 'normal').((empty($forum_page['admin_submenu'])) ? ' item1' : '').'"><a href="'.forum_link($forum_url['admin_index']).'">'.$lang_admin_common['Information'].'</span></a></li>';
-			$forum_page['admin_submenu']['users'] = '<li class="'.((FORUM_PAGE == 'admin-users') ? 'active' : 'normal').((empty($forum_page['admin_submenu'])) ? ' item1' : '').'"><a href="'.forum_link($forum_url['admin_users']).'">'.$lang_admin_common['User search'].'</a></li>';
+			$forum_page['admin_submenu']['users'] = '<li class="'.((FORUM_PAGE == 'admin-users') ? 'active' : 'normal').((empty($forum_page['admin_submenu'])) ? ' item1' : '').'"><a href="'.forum_link($forum_url['admin_users']).'">'.$lang_admin_common['Searches'].'</a></li>';
 
 			if ($forum_config['o_censoring'] == '1')
 				$forum_page['admin_submenu']['censoring'] = '<li class="'.((FORUM_PAGE == 'admin-censoring') ? 'active' : 'normal').((empty($forum_page['admin_submenu'])) ? ' item1' : '').'"><a href="'.forum_link($forum_url['admin_censoring']).'">'.$lang_admin_common['Censoring'].'</a></li>';
@@ -85,7 +85,7 @@ function generate_admin_menu($submenu)
 	else
 	{
 		if ($forum_user['g_id'] != FORUM_ADMIN)
-			$forum_page['admin_menu']['index'] = '<li class="active item1"><a href="'.forum_link($forum_url['admin_index']).'"><span>'.$lang_admin_common['Moderate'].'</span></a>'.$adnav_submenu."\n\t\t\t".'</li>';
+			$forum_page['admin_menu']['index'] = '<li class="active item1"><a href="'.forum_link($forum_url['admin_index']).'"><span>'.$lang_admin_common['Moderate'].'</span></a></li>';
 		else
 		{
 			$forum_page['admin_menu']['index'] = '<li class="'.((FORUM_PAGE_SECTION == 'start') ? 'active' : 'normal').((empty($forum_page['admin_menu'])) ? ' item1' : '').'"><a href="'.forum_link($forum_url['admin_index']).'"><span>'.$lang_admin_common['Start'].'</span></a></li>';
