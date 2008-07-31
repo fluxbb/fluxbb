@@ -153,7 +153,7 @@ var Forum = {
 		var inputlist = curForm.getElementsByTagName("input");
 		for (i = 0; i < inputlist.length; i++)
 		{
-			if (inputlist[i].getAttribute("type") == 'checkbox')
+			if (inputlist[i].getAttribute("type") == 'checkbox' && inputlist[i].getAttribute("disabled") == false)
 				inputlist[i].checked = !inputlist[i].checked;
 		}
 
