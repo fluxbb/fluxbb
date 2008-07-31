@@ -566,7 +566,7 @@ function generate_avatar_markup($user_id)
 
 		if (file_exists(FORUM_ROOT.$path) && $img_size = @getimagesize(FORUM_ROOT.$path))
 		{
-			$avatar_markup = '<img src="'.$base_url.'/'.$path.'" '.$img_size[3].' alt="" />';
+			$avatar_markup = '<img src="'.$base_url.'/'.$path.'?m='.filemtime(FORUM_ROOT.$path).'" '.$img_size[3].' alt="" />';
 			break;
 		}
 	}
