@@ -942,6 +942,18 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 		($hook = get_hook('mr_confirm_merge_topics_qr_delete_subscriptions')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
+		if (!isset($_POST['with_redirect']))
+		{
+			// Delete the topics that have been merged
+			$query = array(
+				'DELETE'	=> 'topics',
+				'WHERE'		=> 'id IN('.implode(',', $topics).') AND id != '.$merge_to_tid
+			);
+
+			($hook = get_hook('mr_confirm_merge_topics_qr_delete_merged_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+			$forum_db->query_build($query) or error(__FILE__, __LINE__);
+		}
+
 		// Synchronize the topic we merged to and the forum where the topics were merged
 		sync_topic($merge_to_tid);
 		sync_forum($fid);
