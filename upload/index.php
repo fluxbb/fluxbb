@@ -294,10 +294,10 @@ $query = array(
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 list($stats['total_topics'], $stats['total_posts']) = $forum_db->fetch_row($result);
 
-$stats_list['no_of_users'] = '<li class="st-users"><span>'.$lang_index['No of users'].':</span> <strong>'.forum_number_format($stats['total_users']).'</strong></li>';
-$stats_list['newest_user'] = '<li class="st-users"><span>'.$lang_index['Newest user'].':</span> <strong>'.($forum_user['g_view_users'] == '1' ? '<a href="'.forum_link($forum_url['user'], $stats['last_user']['id']).'">'.forum_htmlencode($stats['last_user']['username']).'</a>' : forum_htmlencode($stats['last_user']['username'])).'</strong></li>';
-$stats_list['no_of_topics'] = '<li class="st-activity"><span>'.$lang_index['No of topics'].':</span> <strong>'.forum_number_format($stats['total_topics']).'</strong></li>';
-$stats_list['no_of_posts'] = '<li class="st-activity"><span>'.$lang_index['No of posts'].':</span> <strong>'.forum_number_format($stats['total_posts']).'</strong></li>';
+$stats_list['no_of_users'] = '<li class="st-users"><span>'.sprintf($lang_index['No of users'], '<strong>'.forum_number_format($stats['total_users']).'</strong>').'</span></li>';
+$stats_list['newest_user'] = '<li class="st-users"><span>'.sprintf($lang_index['Newest user'], '<strong>'.($forum_user['g_view_users'] == '1' ? '<a href="'.forum_link($forum_url['user'], $stats['last_user']['id']).'">'.forum_htmlencode($stats['last_user']['username']).'</a>' : forum_htmlencode($stats['last_user']['username'])).'</strong>').'</span></li>';
+$stats_list['no_of_topics'] = '<li class="st-activity"><span>'.sprintf($lang_index['No of topics'], '<strong>'.forum_number_format($stats['total_topics']).'</strong>').'</span></li>';
+$stats_list['no_of_posts'] = '<li class="st-activity"><span>'.sprintf($lang_index['No of posts'], '<strong>'.forum_number_format($stats['total_posts']).'</strong>').'</span></li>';
 
 ($hook = get_hook('in_stats_pre_info_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -325,7 +325,7 @@ if ($forum_config['o_users_online'] == '1')
 
 	($hook = get_hook('in_users_online_qr_get_online_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-	$num_guests = 0;
+	$forum_page['num_guests'] = $forum_page['num_users'] = 0;
 	$users = array();
 
 	while ($forum_user_online = $forum_db->fetch_assoc($result))
@@ -333,16 +333,23 @@ if ($forum_config['o_users_online'] == '1')
 		($hook = get_hook('in_users_online_add_online_user_loop')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		if ($forum_user_online['user_id'] > 1)
+		{
 			$users[] = ($forum_user['g_view_users'] == '1') ? '<a href="'.forum_link($forum_url['user'], $forum_user_online['user_id']).'">'.forum_htmlencode($forum_user_online['ident']).'</a>' : forum_htmlencode($forum_user_online['ident']);
+			++$forum_page['num_users'];
+		}
 		else
-			++$num_guests;
+			++$forum_page['num_guests'];
 	}
+
+	$forum_page['online_info'] = array();
+	$forum_page['online_info']['guests'] = ($forum_page['num_guests'] == 0) ? $lang_index['Guests none'] : sprintf((($forum_page['num_guests'] == 1) ? $lang_index['Guests single'] : $lang_index['Guests plural']), $forum_page['num_guests']);
+	$forum_page['online_info']['users'] = ($forum_page['num_users'] == 0) ? $lang_index['Users none'] : sprintf((($forum_page['num_users'] == 1) ? $lang_index['Users single'] : $lang_index['Users plural']), $forum_page['num_users']);
 
 	($hook = get_hook('in_users_online_pre_online_info_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 ?>
 <div id="brd-online" class="gen-content">
-	<h3 class="hn"><span><?php echo $lang_index['Currently online'] ?></span></h3>
-	<p><?php (($num_guests != 1) ? printf($lang_index['Guests plural'], forum_number_format($num_guests)) : printf($lang_index['Guest single'], $num_guests)) ?> <?php ((count($users) > 1) ? printf($lang_index['Users plural'], forum_number_format(count($users))) : printf(((count($users) == 0) ? $lang_index['Users none'] : $lang_index['User single']), count($users))) ?> <?php echo ((count($users) > 0) ? implode(', ', $users) : '') ?></p>
+	<h3 class="hn"><span><?php printf($lang_index['Currently online'], implode($lang_index['Online stats separator'], $forum_page['online_info'])) ?></span></h3>
+	<p><?php echo implode($lang_index['Online list separator'], $users) ?></p>
 <?php ($hook = get_hook('in_new_online_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 </div>
 <?php
