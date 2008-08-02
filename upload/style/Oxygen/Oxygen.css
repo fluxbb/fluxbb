@@ -610,6 +610,7 @@ D - COMMON INTERFACE ELEMENTS
  #brd-online .hn {
  	float: left;
  	margin-right: 0.5em;
+ 	padding-bottom: 0;
  	}
 	
 /* Footer
@@ -769,7 +770,7 @@ E - INDEX, FORUMS, SEARCH RESULTS, MODERATE FORUMS
  	border-left-style: solid;
  	border-left-width: 1px;
  	padding-bottom: 10em;
- 	margin: 0 -1px -9.7em 0;
+ 	margin: 0 -2px -9.7em 0;
  	position: relative;
  	}
 
