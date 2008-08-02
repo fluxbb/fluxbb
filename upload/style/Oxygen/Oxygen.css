@@ -606,6 +606,11 @@ D - COMMON INTERFACE ELEMENTS
  #brd-stats li strong {
  	font-weight: bold;
  	}
+
+ #brd-online .hn {
+ 	float: left;
+ 	margin-right: 0.5em;
+ 	}
 	
 /* Footer
 -------------------------------------------------------------*/
