@@ -430,7 +430,7 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 				<p class="important"><strong>Current character set:</strong> If the primary language in your forum is English, you can leave this at the default value. However, if your forum is non-English, you should enter the character set of the primary language pack used in the forum.</p>
 			</div>
 			<div id="req-msg" class="req-warn ct-box error-box">
-				<p class="important"><strong>Important!</strong> All fields marked <em>*</em> must be completed before submitting this form.</p>
+				<p class="important"><strong>Important!</strong> All fields labelled <em>(Required)</em> must be completed before submitting this form.</p>
 			</div>
 			<fieldset class="frm-group frm-item1">
 				<legend class="frm-legend"><span>Charset conversion</span></legend>
@@ -442,7 +442,7 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 				</div>
 				<div class="frm-set group-item2">
 					<div class="frm-box text required">
-						<label for="fld2"><span><em>*</em> Current character set:</span></label><br />
+						<label for="fld2"><span>Current character set:</span> <small><em>(Required)</em> Accept default for English forums otherwise the character set of the primary langauge pack.</small></label><br />
 						<span class="fld-input"><input type="text" id="fld2" name="req_old_charset" size="12" maxlength="20" value="ISO-8859-1" /></span>
 					</div>
 				</div>
@@ -1436,10 +1436,10 @@ require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php'
 <?php if (isset($new_config) && !$written): ?>		<form class="frm-form" action="foo">
 			<fieldset class="frm-group frm-item1">
 				<legend class="frm-legend"><span>New config.php contents</span></legend>
-				<div class="frm-set group-item1">
-					<div class="frm-box textarea">
-						<label for="fld1"><span>Copy contents:</span></label><br />
-						<span class="frm-input"><textarea id="fld1" readonly="readonly" cols="80" rows="20"><?php echo forum_htmlencode($new_config) ?></textarea></span>
+				<div class="txt-set group-item1">
+					<div class="txt-box textarea">
+						<label for="fld1"><span>Copy contents:</span></label>
+						<div class="txt-input"><span class="frm-input"><textarea id="fld1" readonly="readonly" cols="80" rows="20"><?php echo forum_htmlencode($new_config) ?></textarea></span></div>
 					</div>
 				</div>
 			</fieldset>
