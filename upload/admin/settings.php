@@ -625,10 +625,10 @@ if (!$section || $section == 'setup')
 				<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><strong><?php echo $lang_admin_settings['Setup links legend'] ?></strong></legend>
 <?php ($hook = get_hook('aop_setup_pre_additional_navlinks')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
-						<div class="sf-box textarea">
-							<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['Enter links label'] ?></span></label><br />
-							<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="form[additional_navlinks]" rows="3" cols="55"><?php echo forum_htmlencode($forum_config['o_additional_navlinks']) ?></textarea></span>
+					<div class="txt-set group-item<?php echo ++$forum_page['item_count'] ?>">
+						<div class="txt-box textarea">
+							<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['Enter links label'] ?></span></label>
+							<div class="txt-input"><span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="form[additional_navlinks]" rows="3" cols="55"><?php echo forum_htmlencode($forum_config['o_additional_navlinks']) ?></textarea></span></div>
 						</div>
 					</div>
 <?php ($hook = get_hook('aop_setup_pre_links_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
@@ -1091,10 +1091,10 @@ else if ($section == 'announcements')
 					</div>
 				</div>
 <?php ($hook = get_hook('aop_announcements_pre_announcement_message')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="sf-box textarea">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['Announcement message label'] ?></span><small><?php echo $lang_admin_settings['Announcement message help'] ?></small></label><br />
-						<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="form[announcement_message]" rows="5" cols="55"><?php echo forum_htmlencode($forum_config['o_announcement_message']) ?></textarea></span>
+				<div class="txt-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="txt-box textarea">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['Announcement message label'] ?></span><small><?php echo $lang_admin_settings['Announcement message help'] ?></small></label>
+						<div class="txt-input"><span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="form[announcement_message]" rows="5" cols="55"><?php echo forum_htmlencode($forum_config['o_announcement_message']) ?></textarea></span></div>
 					</div>
 				</div>
 <?php ($hook = get_hook('aop_announcements_pre_announcement_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
@@ -1232,10 +1232,10 @@ else if ($section == 'registration')
 						</div>
 					</div>
 <?php ($hook = get_hook('aop_registration_pre_rules_text')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
-						<div class="sf-box textarea">
-							<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['Compose rules label'] ?></span><small><?php echo $lang_admin_settings['Compose rules help'] ?></small></label><br />
-							<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="form[rules_message]" rows="10" cols="55"><?php echo forum_htmlencode($forum_config['o_rules_message']) ?></textarea></span>
+					<div class="txt-set group-item<?php echo ++$forum_page['item_count'] ?>">
+						<div class="txt-box textarea">
+							<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['Compose rules label'] ?></span><small><?php echo $lang_admin_settings['Compose rules help'] ?></small></label>
+							<div class="txt-input"><span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="form[rules_message]" rows="10" cols="55"><?php echo forum_htmlencode($forum_config['o_rules_message']) ?></textarea></span></div>
 						</div>
 					</div>
 <?php ($hook = get_hook('aop_registration_pre_rules_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
@@ -1300,10 +1300,10 @@ else if ($section == 'maintenance')
 					</div>
 				</div>
 <?php ($hook = get_hook('aop_maintenance_pre_maintenance_message')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
-					<div class="sf-box textarea">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['Maintenance message label'] ?></span><small><?php echo $lang_admin_settings['Maintenance message help'] ?></small></label><br />
-						<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="form[maintenance_message]" rows="5" cols="55"><?php echo forum_htmlencode($forum_config['o_maintenance_message']) ?></textarea></span>
+				<div class="txt-set group-item<?php echo ++$forum_page['item_count'] ?>">
+					<div class="txt-box textarea">
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['Maintenance message label'] ?></span><small><?php echo $lang_admin_settings['Maintenance message help'] ?></small></label>
+						<div class="txt-input"><span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="form[maintenance_message]" rows="5" cols="55"><?php echo forum_htmlencode($forum_config['o_maintenance_message']) ?></textarea></span></div>
 					</div>
 				</div>
 <?php ($hook = get_hook('aop_maintenance_pre_maintenance_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
@@ -1371,10 +1371,10 @@ else if ($section == 'email')
 						</div>
 					</div>
 <?php ($hook = get_hook('aop_email_pre_mailing_list')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-					<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
-						<div class="sf-box textarea">
-							<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['Mailing list label'] ?></span><small><?php echo $lang_admin_settings['Mailing list help'] ?></small></label><br />
-							<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="form[mailing_list]" rows="5" cols="55"><?php echo forum_htmlencode($forum_config['o_mailing_list']) ?></textarea></span>
+					<div class="txt-set group-item<?php echo ++$forum_page['item_count'] ?>">
+						<div class="txt-box textarea">
+							<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['Mailing list label'] ?></span><small><?php echo $lang_admin_settings['Mailing list help'] ?></small></label>
+							<div class="txt-input"><span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="form[mailing_list]" rows="5" cols="55"><?php echo forum_htmlencode($forum_config['o_mailing_list']) ?></textarea></span></div>
 						</div>
 					</div>
 <?php ($hook = get_hook('aop_email_pre_addresses_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>

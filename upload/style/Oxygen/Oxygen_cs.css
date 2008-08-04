@@ -108,10 +108,15 @@ body {
 	border-color: #DBE0E4;
 	}
 	
-.brd .warn-group, .brd .warn-set, .brd .warn-box {
+.brd .warn-group, .brd .warn-set, .brd .warn-box, .brd .error-box {
 	background: #FEFFE6;
 	border-color: #F4EBCE;
 	}
+
+.brd .warn-group, .brd .warn-set, .brd .warn-box, .brd .error-box {
+	border-color: #E6D190;
+	}
+
 	
 .brd ul.info-list li {
 	color: #6A97BF;
@@ -134,7 +139,7 @@ body {
 	background: #f4f4f4;
 	}
 	
-.brd .frm-group, .brd .mf-set, .brd .sf-set, .brd .sf-box, .brd .mf-box {
+.brd .frm-group, .brd .mf-set, .brd .sf-set, .brd .sf-box, .brd .mf-box, .brd .txt-set, .brd .txt-box {
 	background: #F2F5F8;
 	border-color: #DBE0E4;
 	}
@@ -158,7 +163,7 @@ body {
 	}
 	
 
-#brd-wrap .frm-form .required label span em, #brd-wrap #req-msg em {
+#brd-wrap .required label small em, #brd-wrap #req-msg em {
 	color: #b42000;
 	}
 	

@@ -98,8 +98,8 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 		<h2 class="hn"><span><?php echo $lang_admin_groups['Group settings heading'] ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
-		<div id="req-msg" class="req-warn">
-			<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Reqmark'].'</em>') ?></p>
+		<div id="req-msg" class="req-warn ct-box error-box">
+			<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Required'].'</em>') ?></p>
 		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_groups']) ?>">
 			<div class="hidden">
@@ -117,7 +117,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 <?php ($hook = get_hook('agr_add_edit_group_pre_group_title')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em class="req-text"><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_admin_groups['Group title label'] ?></span></label><br />
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em class="req-text"><?php echo $lang_common['Required'] ?></em> <?php echo $lang_admin_groups['Group title label'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_title" size="25" maxlength="50" value="<?php if ($mode == 'edit') echo forum_htmlencode($group['g_title']); ?>" /></span>
 					</div>
 				</div>

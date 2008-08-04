@@ -203,7 +203,7 @@ else
 			<p class="important"><?php echo $lang_admin_prune['Prune caution'] ?></p>
 		</div>
 		<div id="req-msg" class="frm-warn">
-			<p class="important"><?php printf($lang_common['Required warn'], '<em class="req-text">'.$lang_common['Reqmark'].'</em>') ?></p>
+			<p class="important"><?php printf($lang_common['Required warn'], '<em class="req-text">'.$lang_common['Required'].'</em>') ?></p>
 		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_prune']) ?>?action=foo">
 			<div class="hidden">
@@ -260,7 +260,7 @@ else
 <?php ($hook = get_hook('apr_pre_prune_days')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><em class="req-text"><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_admin_prune['Days old'] ?></span></label><br />
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span class="fld-label"><em class="req-text"><?php echo $lang_common['Required'] ?></em> <?php echo $lang_admin_prune['Days old'] ?></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_prune_days" size="4" maxlength="4" /></span>
 					</div>
 				</div>

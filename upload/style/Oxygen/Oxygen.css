@@ -281,11 +281,6 @@ C - COMMON CONTENT TYPES (RE-USABLE FORMATS)
 	margin: 1.417em;
 	}
 	
-.brd .ct-set .ct-box {
-	border-style: none none none dashed;
-	margin: 0;
-	}
-	
 .brd .ct-group .ct-set, .frm-group .ct-set {
 	border-style: dashed none none none;
 	margin: 0;
@@ -295,6 +290,13 @@ C - COMMON CONTENT TYPES (RE-USABLE FORMATS)
 	border-style: none;
 	margin: 0;
 	}
+	
+.brd .ct-group .ct-set .ct-box,
+.brd .frm-group .ct-set .ct-box {
+	border-style: none none none dashed;
+	margin: 0;
+	}
+
 
 .brd .ct-group .group-item1 {
 	border-top: 0;
@@ -926,7 +928,7 @@ F - MAIN CONTENT - FORMS
 	border-top: 0;
 	}
 
-.brd .sf-box, .brd .mf-box {
+.brd .sf-box, .brd .mf-box, .brd .txt-box {
 	border-style: solid;
 	border-width: 1px;
 	margin: 1.417em;
@@ -934,7 +936,7 @@ F - MAIN CONTENT - FORMS
 	position: relative;
 	}
 
-.brd .sf-set, .brd .mf-set {
+.brd .sf-set, .brd .mf-set, .brd .txt-set {
 	border-style: solid;
 	border-width: 1px;
 	margin: 1.417em;
@@ -942,12 +944,12 @@ F - MAIN CONTENT - FORMS
 	position: relative;
 	}
 
-.brd .sf-set .sf-box, .brd .mf-set .mf-box {
+.brd .sf-set .sf-box, .brd .mf-set .mf-box, .brd .txt-set .txt-box {
 	border-style: none none none dashed;
 	margin: 0;
 	}
 
-.brd .frm-group .sf-set, .brd .frm-group .mf-set {
+.brd .frm-group .sf-set, .brd .frm-group .mf-set, .brd .frm-group .txt-set {
 	border-style: dashed none none none;
 	margin: 0;
 	}
@@ -986,7 +988,7 @@ F - MAIN CONTENT - FORMS
 
 .brd .sf-box label, .brd .sf-box .aslabel {
 	float: left;
-	padding: 0 1em;
+	padding: 0;
 	}
 	
 .brd .sf-set .checkbox label {
@@ -998,7 +1000,7 @@ F - MAIN CONTENT - FORMS
 	margin-left: -18em;
 	display: inline;
 	position: relative;
-	padding: 2px 0;
+	padding: 2px 1em;
 	width: 16em;
 	}
 
@@ -1007,16 +1009,16 @@ F - MAIN CONTENT - FORMS
 	margin-left: -18em;
 	display: inline;
 	position: relative;
-	padding: 0;
+	padding: 0 1em;
 	width: 16em;
-	left: -2em;
+	left: -3em;
 	}
 	
 .brd .sf-set .text label small, .brd .sf-set .select label small {
 	display: block;
 	text-align: left;
 	position: relative;
-	margin: 2em 1em 0 -1px;
+	margin: 2em 1em 0 1em;
 	font-size: 0.917em;
 	}
 
@@ -1074,6 +1076,9 @@ F - MAIN CONTENT - FORMS
 	
 .brd .mf-set legend span em {
 	display: block;
+	white-space: normal;
+	font-style: normal;
+	font-size: 0.917em;
 	}
 	
 .brd .mf-item .fld-input {
@@ -1198,77 +1203,66 @@ F - MAIN CONTENT - FORMS
 	}
 	
 	
-/* Textareas
+/* Single Field Textareas and Long Inputs (Flexi Width)
 -------------------------------------------------------------*/
+
+.brd .txt-box label {
+	float: left;
+	}
 	
-.brd .sf-set .textarea label span {
+.brd .txt-set label span {
 	float: left;
 	margin-left: -18em;
 	display: inline;
 	position: relative;
-	padding: 2px 0;
+	padding: 2px 1em;
 	width: 16em;
 	}
 	
-.brd .sf-set .textarea label small {
+.brd .txt-set label small {
 	display: block;
 	text-align: left;
 	position: relative;
-	margin: 2em 1em 0 -1px;
+	margin: 0 1em 0 -1px;
+	padding: 2px 1em;
 	font-size: 0.917em;
+	z-index: 100;
 	}
 	
-.brd .sf-set .textarea .fld-input {
+.brd .txt-set .txt-input {
 	position: relative;
-	display: block;
-	padding: 0.5em 1em;
-	left: 0;
-	top: -1.75em;
-	margin-bottom: -2em;
-	}
-	
-.brd .sf-set .textarea label small {
-	margin-top: 0;
-	padding-bottom: 2em;
-	}
-	
-.brd .sf-set .textarea textarea {
 	width: 100%;
 	}
 	
-/* Required Fields
--------------------------------------------------------------*/
-	
-.brd .frm-form label span em, .brd #req-msg p em {
-	position: relative;
-	bottom: -0.1em;
-	font-size: 1.167em;
-	font-weight: bold;
+.brd .txt-set .fld-input {
+	display: block;
+	padding: 0 2em 0 1em;
 	}
 	
-.brd .frm-form label span em {
-	position: absolute;
-	right: 0;
+
+.brd .txt-set textarea {
+	width: 100%;
+	}
+	
+/* Error handling
+-------------------------------------------------------------*/
+
+.brd .req-warn {
+	display: none;
 	}
 
-.brd div#req-msg {
-	padding-left: 18em;
-	margin: 0.5em 1.417em -1.3em 1.417em;
+.brd #req-msg p em, .brd .required label small em {
+	font-style: normal;
 	}
 	
-.brd .req-warn p {
-	font-size: 0.9em;
+.brd .req-error {
+	display: block;
+	}
+	
+.brd .required label span {
 	font-weight: bold;
 	}
 	
-.brd .req-error p {
-	font-weight: bold;
-	font-size: 1em;
-	}
-	
-.brd ul li.req-error {
-	font-weight: bold;
-	}	
 	
 /*************************************************************
 G - MAIN CONTENT - TOPICS AND PARSED CONTENT

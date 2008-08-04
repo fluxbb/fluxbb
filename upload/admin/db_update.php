@@ -429,7 +429,7 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 				<p class="important"><strong>Enable conversion:</strong> When enabled this update script will, after it has made the required structural changes to the database, convert all text in the database from the current character set to UTF-8. This conversion is required if you're upgrading from FluxBB 1.2 and you are not currently using an UTF-8 language pack.</p>
 				<p class="important"><strong>Current character set:</strong> If the primary language in your forum is English, you can leave this at the default value. However, if your forum is non-English, you should enter the character set of the primary language pack used in the forum.</p>
 			</div>
-			<div id="req-msg" class="req-warn">
+			<div id="req-msg" class="req-warn ct-box error-box">
 				<p class="important"><strong>Important!</strong> All fields marked <em>*</em> must be completed before submitting this form.</p>
 			</div>
 			<fieldset class="frm-group frm-item1">

@@ -149,7 +149,7 @@ if (!isset($_POST['form_sent']))
 				<li><span><strong><?php echo $lang_install['Table prefix'] ?></strong> <?php echo $lang_install['Table prefix info'] ?></span></li>
 			</ul>
 		</div>
-		<div id="req-msg" class="req-warn">
+		<div id="req-msg" class="req-warn ct-box error-box">
 			<p class="important"><?php printf($lang_install['Required warn'], '<em>'.$lang_install['Reqmark'].'</em>') ?></p>
 		</div>
 		<fieldset class="frm-group group1">

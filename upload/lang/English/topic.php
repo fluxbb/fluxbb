@@ -44,5 +44,6 @@ $lang_topic = array(
 'Unstick'				=>  'Unstick topic',
 'Stick'					=>  'Stick topic',
 'Moderate topic'		=>	'Moderate topic',
+'Required warn'			=>	'You cannot submit or preview an empty message.',
 
 );

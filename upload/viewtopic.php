@@ -589,8 +589,8 @@ if ($forum_config['o_smilies'] == '1')
 </div>
 <div id="brd-qpost" class="main-content main-frm">
 <?php if (!empty($forum_page['text_options'])) echo "\t".'<p class="content-options options">'.sprintf($lang_common['You may use'], implode(' ', $forum_page['text_options'])).'</p>'."\n" ?>
-	<div id="req-msg" class="req-warn">
-		<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Reqmark'].'</em>') ?></p>
+	<div id="req-msg" class="req-warn ct-box error-box">
+		<p class="important"><?php echo $lang_topic['Required warn'] ?></p>
 	</div>
 	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>"<?php if (!empty($forum_page['form_attributes'])) echo ' '.implode(' ', $forum_page['form_attributes']) ?>>
 		<div class="hidden">
@@ -600,10 +600,10 @@ if ($forum_config['o_smilies'] == '1')
 		<fieldset class="frm-group group1">
 			<legend class="group-legend"><strong><?php echo $lang_common['Write message legend'] ?></strong></legend>
 <?php ($hook = get_hook('vt_quickpost_pre_message_box')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-			<div class="sf-set set1">
-				<div class="sf-box textarea required">
-					<label for="fld1"><span><em><?php echo $lang_common['Reqmark'] ?></em> <?php echo $lang_common['Write message'] ?></span></label><br />
-					<span class="fld-input"><textarea id="fld1" name="req_message" rows="7" cols="95"></textarea></span>
+			<div class="txt-set set1">
+				<div class="txt-box textarea required">
+					<label for="fld1"><span><?php echo $lang_common['Write message'] ?></span></label>
+					<div class="txt-input"><span class="fld-input"><textarea id="fld1" name="req_message" rows="7" cols="95"></textarea></span></div>
 				</div>
 			</div>
 <?php ($hook = get_hook('vt_quickpost_pre_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
