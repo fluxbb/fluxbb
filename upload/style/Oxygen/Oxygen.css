@@ -291,7 +291,7 @@ C - COMMON CONTENT TYPES (RE-USABLE FORMATS)
 	margin: 0;
 	}
 	
-.brd .ct-group .ct-set .ct-box,
+.brd .ct-group .ct-set .ct-box, .brd .ct-set .ct-box,
 .brd .frm-group .ct-set .ct-box {
 	border-style: none none none dashed;
 	margin: 0;
