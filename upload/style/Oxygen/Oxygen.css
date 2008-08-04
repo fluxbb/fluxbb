@@ -1450,7 +1450,7 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	text-decoration: underline;
 	}
 	
-#brd-wrap .entry-content br {
+#brd-wrap .entry-content br, #brd-wrap .sig-demo br, #brd-wrap .user-box br {
 	display: inline;
 	}
 	
