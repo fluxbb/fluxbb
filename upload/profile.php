@@ -1081,6 +1081,8 @@ else if (isset($_POST['form_sent']))
 
 					if (empty($errors))
 					{
+						($hook = get_hook('pf_change_details_avatar_modify_size')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 						// Now check the width/height
 						list($width, $height, $type,) = getimagesize($forum_config['o_avatars_dir'].'/'.$id.'.tmp');
 						if (empty($width) || empty($height) || $width > $forum_config['o_avatars_width'] || $height > $forum_config['o_avatars_height'])
