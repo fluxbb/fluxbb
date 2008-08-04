@@ -400,7 +400,7 @@ if (isset($_POST['preview']) && empty($errors))
 
 ?>
 		<div id="req-msg" class="req-warn ct-box error-box">
-			<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Required'].'</em>') ?></p>
+			<p><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Required'].'</em>') ?></p>
 		</div>
 		<form id="afocus" class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>"<?php if (!empty($forum_page['form_attributes'])) echo ' '.implode(' ', $forum_page['form_attributes']) ?>>
 			<div class="hidden">
@@ -468,7 +468,7 @@ if ($fid)
 ?>
 				<div class="txt-set group-item<?php echo ++$forum_page['item_count'] ?>">
 					<div class="txt-box textarea required">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em><?php echo $lang_common['Required'] ?></em> <?php echo $lang_post['Write message'] ?></span></label>
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_post['Write message'] ?></span></label>
 						<div class="txt-input"><span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_message" rows="14" cols="95"><?php echo isset($_POST['req_message']) ? forum_htmlencode($message) : (isset($forum_page['quote']) ? forum_htmlencode($forum_page['quote']) : ''); ?></textarea></span></div>
 					</div>
 				</div>
