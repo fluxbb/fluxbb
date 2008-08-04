@@ -51,7 +51,8 @@ $lang_install = array(
 'Base URL help'				=>	'The URL (without trailing slash) of your FluxBB installation. Please read information above.',
 'Start install'				=>	'Start install', // Label for submit button
 'Reqmark'					=>	'*',
-'Required warn'				=>	'<strong>IMPORTANT! </strong>Fields marked %s must be completed.',
+'Required'					=>	'(Required)',
+'Required warn'				=>	'All fields labelled %s must be completed before this form is submitted.',
 
 // Install errors
 'No database support'		=>	'This PHP environment does not have support for any of the databases that FluxBB supports. PHP needs to have support for either MySQL, PostgreSQL or SQLite in order for FluxBB to be installed.',

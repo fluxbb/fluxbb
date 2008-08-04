@@ -150,13 +150,13 @@ if (!isset($_POST['form_sent']))
 			</ul>
 		</div>
 		<div id="req-msg" class="req-warn ct-box error-box">
-			<p class="important"><?php printf($lang_install['Required warn'], '<em>'.$lang_install['Reqmark'].'</em>') ?></p>
+			<p class="important"><?php printf($lang_install['Required warn'], '<em>'.$lang_install['Required'].'</em>') ?></p>
 		</div>
 		<fieldset class="frm-group group1">
 			<legend class="group-legend"><strong><?php echo $lang_install['Part1 legend'] ?></strong></legend>
 			<div class="sf-set set1">
 				<div class="sf-box select required">
-					<label for="fld1"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Database type'] ?></span> <small><?php echo $lang_install['Database type help'] ?></small></label><br />
+					<label for="fld1"><span><em><?php echo $lang_install['Required'] ?></em> <?php echo $lang_install['Database type'] ?></span> <small><?php echo $lang_install['Database type help'] ?></small></label><br />
 					<span class="fld-input"><select id="fld1" name="req_db_type">
 <?php
 
@@ -169,13 +169,13 @@ if (!isset($_POST['form_sent']))
 			</div>
 			<div class="sf-set set1">
 				<div class="sf-box text required">
-					<label for="fld2"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Database server'] ?></span> <small><?php echo $lang_install['Database server help'] ?></small></label><br />
+					<label for="fld2"><span><?php echo $lang_install['Database server'] ?></span> <small><em><?php echo $lang_install['Required'] ?></em> <?php echo $lang_install['Database server help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld2" type="text" name="req_db_host" value="localhost" size="50" maxlength="100" /></span>
 				</div>
 			</div>
 			<div class="sf-set set2">
 				<div class="sf-box text required">
-					<label for="fld3"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Database name'] ?></span> <small><?php echo $lang_install['Database name help'] ?></small></label><br />
+					<label for="fld3"><span><?php echo $lang_install['Database name'] ?></span> <small><em><?php echo $lang_install['Required'] ?></em> <?php echo $lang_install['Database name help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld3" type="text" name="req_db_name" size="35" maxlength="50" /></span>
 				</div>
 			</div>
@@ -211,25 +211,25 @@ if (!isset($_POST['form_sent']))
 			<legend class="group-legend"><strong><?php echo $lang_install['Part2 legend'] ?></strong></legend>
 			<div class="sf-set set1">
 				<div class="sf-box text required">
-					<label for="fld7"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Admin username'] ?></span> <small><?php echo $lang_install['Username help'] ?></small></label><br />
+					<label for="fld7"><span><?php echo $lang_install['Admin username'] ?></span> <small><em><?php echo $lang_install['Required'] ?></em> <?php echo $lang_install['Username help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld7" type="text" name="req_username" size="35" maxlength="25" /></span>
 				</div>
 			</div>
 			<div class="sf-set set2">
 				<div class="sf-box text required">
-					<label for="fld8"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Admin password'] ?></span> <small><?php echo $lang_install['Password help'] ?></small></label><br />
+					<label for="fld8"><span><?php echo $lang_install['Admin password'] ?></span> <small><em><?php echo $lang_install['Required'] ?></em> <?php echo $lang_install['Password help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld8" type="password" name="req_password1" size="35" /></span>
 				</div>
 			</div>
 			<div class="sf-set set3">
 				<div class="sf-box text required">
-					<label for="fld9"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Admin confirm password'] ?></span> <small><?php echo $lang_install['Confirm password help'] ?></small></label><br />
+					<label for="fld9"><span><?php echo $lang_install['Admin confirm password'] ?></span> <small><em><?php echo $lang_install['Required'] ?></em> <?php echo $lang_install['Confirm password help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld9" type="password" name="req_password2" size="35" /></span>
 				</div>
 			</div>
 			<div class="sf-set set4">
 				<div class="sf-box text required">
-					<label for="fld10"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Admin e-mail'] ?></span> <small><?php echo $lang_install['E-mail address help'] ?></small></label><br />
+					<label for="fld10"><span><?php echo $lang_install['Admin e-mail'] ?></span> <small><em><?php echo $lang_install['Required'] ?></em> <?php echo $lang_install['E-mail address help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld10" type="text" name="req_email" size="50" maxlength="80" /></span>
 				</div>
 			</div>
@@ -262,7 +262,7 @@ if (!isset($_POST['form_sent']))
 			</div>
 			<div class="sf-set set3">
 				<div class="sf-box text required">
-					<label for="fld13"><span><em><?php echo $lang_install['Reqmark'] ?></em> <?php echo $lang_install['Base URL'] ?></span> <small><?php echo $lang_install['Base URL help'] ?></small></label><br />
+					<label for="fld13"><span><em><?php echo $lang_install['Required'] ?></em> <?php echo $lang_install['Base URL'] ?></span> <small><?php echo $lang_install['Base URL help'] ?></small></label><br />
 					<span class="fld-input"><input id="fld13" type="text" name="req_base_url" value="<?php echo $base_url_guess ?>" size="60" maxlength="100" /></span>
 				</div>
 			</div>
