@@ -214,7 +214,7 @@ else if (isset($_GET['email']))
 			if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
 				require FORUM_ROOT.'include/email.php';
 
-			forum_mail($recipient_email, $mail_subject, $mail_message, '"'.str_replace('"', '', $forum_user['username']).'" <'.$forum_user['email'].'>');
+			forum_mail($recipient_email, $mail_subject, $mail_message, $forum_user['email'], $forum_user['username']);
 
 			// Set the user's last_email_sent time
 			$query = array(
