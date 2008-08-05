@@ -21,6 +21,8 @@ ob_start();
 <div id="brd-about" class="gen-content">
 <?php
 
+($hook = get_hook('ft_about_pre_quickjump')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 // Display the "Jump to" drop list
 if ($forum_user['g_read_board'] == '1' && $forum_config['o_quickjump'] == '1')
 {
@@ -38,6 +40,8 @@ if ($forum_user['g_read_board'] == '1' && $forum_config['o_quickjump'] == '1')
 	}
 }
 
+
+($hook = get_hook('ft_about_pre_copyright')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // End the transaction
 $forum_db->end_transaction();

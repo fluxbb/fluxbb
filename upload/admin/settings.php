@@ -243,6 +243,8 @@ if (isset($_POST['form_sent']))
 
 	generate_config_cache();
 
+	($hook = get_hook('aop_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	redirect(forum_link($forum_url['admin_settings_'.$section]), $lang_admin_settings['Settings updated'].' '.$lang_admin_common['Redirect']);
 }
 
