@@ -45,6 +45,8 @@ if (isset($_POST['add_cat']))
 	($hook = get_hook('acg_add_cat_qr_add_category')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
+	($hook = get_hook('acg_add_cat_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	redirect(forum_link($forum_url['admin_categories']), $lang_admin_categories['Category added'].' '.$lang_admin_common['Redirect']);
 }
 
@@ -109,6 +111,8 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 			require FORUM_ROOT.'include/cache.php';
 
 		generate_quickjump_cache();
+
+		($hook = get_hook('acg_del_cat_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		redirect(forum_link($forum_url['admin_categories']), $lang_admin_categories['Category deleted'].' '.$lang_admin_common['Redirect']);
 	}
@@ -235,6 +239,8 @@ else if (isset($_POST['update']))	// Change position and name of the categories
 		require FORUM_ROOT.'include/cache.php';
 
 	generate_quickjump_cache();
+
+	($hook = get_hook('acg_update_cats_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	redirect(forum_link($forum_url['admin_categories']), $lang_admin_categories['Categories updated'].' '.$lang_admin_common['Redirect']);
 }

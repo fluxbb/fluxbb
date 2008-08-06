@@ -434,6 +434,8 @@ else if (isset($_POST['add_edit_group']))
 
 	generate_quickjump_cache();
 
+	($hook = get_hook('agr_add_edit_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	redirect(forum_link($forum_url['admin_groups']), (($_POST['mode'] == 'edit') ? $lang_admin_groups['Group edited'] : $lang_admin_groups['Group added']).' '.$lang_admin_common['Redirect']);
 }
 
@@ -476,6 +478,8 @@ else if (isset($_POST['set_default_group']))
 		require FORUM_ROOT.'include/cache.php';
 
 	generate_config_cache();
+
+	($hook = get_hook('agr_set_default_group_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	redirect(forum_link($forum_url['admin_groups']), $lang_admin_groups['Default group set'].' '.$lang_admin_common['Redirect']);
 }
@@ -557,6 +561,8 @@ else if (isset($_GET['del_group']))
 			require FORUM_ROOT.'include/cache.php';
 
 		generate_quickjump_cache();
+
+		($hook = get_hook('agr_del_group_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		redirect(forum_link($forum_url['admin_groups']), $lang_admin_groups['Group removed'].' '.$lang_admin_common['Redirect']);
 	}

@@ -65,6 +65,8 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 
 		delete_orphans();
 
+		($hook = get_hook('apr_prune_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		redirect(forum_link($forum_url['admin_prune']), $lang_admin_prune['Prune done'].' '.$lang_admin_common['Redirect']);
 	}
 

@@ -84,25 +84,27 @@ else if (isset($_POST['delete']))
 {
 	($hook = get_hook('dl_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-	if (isset($_POST['req_confirm']))
+	if (!isset($_POST['req_confirm']))
+		redirect(forum_link($forum_url['post'], $id), $lang_common['No confirm redirect']);
+
+	if ($cur_post['is_topic'])
 	{
-		if ($cur_post['is_topic'])
-		{
-			// Delete the topic and all of it's posts
-			delete_topic($cur_post['tid'], $cur_post['fid']);
+		// Delete the topic and all of it's posts
+		delete_topic($cur_post['tid'], $cur_post['fid']);
 
-			redirect(forum_link($forum_url['forum'], array($cur_post['fid'], sef_friendly($cur_post['forum_name']))), $lang_delete['Topic del redirect']);
-		}
-		else
-		{
-			// Delete just this one post
-			delete_post($id, $cur_post['tid'], $cur_post['fid']);
+		($hook = get_hook('dl_topic_deleted_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-			redirect(forum_link($forum_url['topic'], array($cur_post['tid'], sef_friendly($cur_post['subject']))), $lang_delete['Post del redirect']);
-		}
+		redirect(forum_link($forum_url['forum'], array($cur_post['fid'], sef_friendly($cur_post['forum_name']))), $lang_delete['Topic del redirect']);
 	}
 	else
-		redirect(forum_link($forum_url['post'], $id), $lang_common['No confirm redirect']);
+	{
+		// Delete just this one post
+		delete_post($id, $cur_post['tid'], $cur_post['fid']);
+
+		($hook = get_hook('dl_post_deleted_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
+		redirect(forum_link($forum_url['topic'], array($cur_post['tid'], sef_friendly($cur_post['subject']))), $lang_delete['Post del redirect']);
+	}
 }
 
 // Run the post through the parser

@@ -234,7 +234,7 @@ if (isset($_POST['form_sent']))
 			add_topic($post_info, $new_tid, $new_pid);
 		}
 
-		($hook = get_hook('po_pre_posted_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('po_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		redirect(forum_link($forum_url['post'], $new_pid), $lang_post['Post redirect']);
 	}

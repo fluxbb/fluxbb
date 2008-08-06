@@ -103,6 +103,8 @@ if ($action == 'change_pass')
 					($hook = get_hook('pf_change_pass_key_qr_update_password')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 					$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
+					($hook = get_hook('pf_change_pass_key_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 					redirect(forum_link($forum_url['index']), $lang_profile['Pass updated']);
 				}
 			}
@@ -260,6 +262,8 @@ if ($action == 'change_pass')
 				$expire = ($cookie_data[2] > time() + $forum_config['o_timeout_visit']) ? time() + 1209600 : time() + $forum_config['o_timeout_visit'];
 				forum_setcookie($cookie_name, base64_encode($forum_user['id'].'|'.$new_password_hash.'|'.$expire.'|'.sha1($user['salt'].$new_password_hash.forum_hash($expire, $user['salt']))), $expire);
 			}
+
+			($hook = get_hook('pf_change_pass_normal_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			redirect(forum_link($forum_url['profile_about'], $id), $lang_profile['Pass updated redirect']);
 		}
@@ -635,6 +639,8 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 
 		delete_user($id, isset($_POST['delete_posts']));
 
+		($hook = get_hook('pf_delete_user_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		redirect(forum_link($forum_url['index']), $lang_profile['User delete redirect']);
 	}
 
@@ -731,6 +737,8 @@ else if ($action == 'delete_avatar')
 
 	delete_avatar($id);
 
+	($hook = get_hook('pf_delete_avatar_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	redirect(forum_link($forum_url['profile_avatar'], $id), $lang_profile['Avatar deleted redirect']);
 }
 
@@ -766,6 +774,8 @@ else if (isset($_POST['update_group_membership']))
 	// If the user was a moderator or an administrator (and no longer is), we remove him/her from the moderator list in all forums
 	if (($user['g_id'] == FORUM_ADMIN || $user['g_moderator'] == '1') && $new_group_id != FORUM_ADMIN && $new_group_mod != '1')
 		clean_forum_moderators();
+
+	($hook = get_hook('pf_change_group_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	redirect(forum_link($forum_url['profile_admin'], $id), $lang_profile['Group membership redirect']);
 }
@@ -811,6 +821,8 @@ else if (isset($_POST['update_forums']))
 		($hook = get_hook('pf_forum_moderators_qr_update_forum_moderators')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
+
+	($hook = get_hook('pf_forum_moderators_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	redirect(forum_link($forum_url['profile_admin'], $id), $lang_profile['Moderate forums redirect']);
 }

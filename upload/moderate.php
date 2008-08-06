@@ -177,6 +177,8 @@ if (isset($_GET['tid']))
 			sync_topic($tid);
 			sync_forum($fid);
 
+			($hook = get_hook('mr_confirm_delete_posts_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 			redirect(forum_link($forum_url['topic'], array($tid, sef_friendly($cur_topic['subject']))), $lang_misc['Delete posts redirect']);
 		}
 
@@ -322,6 +324,8 @@ if (isset($_GET['tid']))
 			sync_topic($new_tid);
 			sync_topic($tid);
 			sync_forum($fid);
+
+			($hook = get_hook('mr_confirm_split_posts_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			redirect(forum_link($forum_url['topic'], array($new_tid, sef_friendly($new_subject))), $lang_misc['Split posts redirect']);
 		}
@@ -707,6 +711,9 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		sync_forum($move_to_forum);	// Synchronize the forum TO which the topic was moved
 
 		$forum_page['redirect_msg'] = (count($topics) > 1) ? $lang_misc['Move topics redirect'] : $lang_misc['Move topic redirect'];
+
+		($hook = get_hook('mr_confirm_move_topics_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		redirect(forum_link($forum_url['forum'], array($move_to_forum, sef_friendly($move_to_forum_name))), $forum_page['redirect_msg']);
 	}
 
@@ -958,6 +965,8 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 		sync_topic($merge_to_tid);
 		sync_forum($fid);
 
+		($hook = get_hook('mr_confirm_merge_topics_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		redirect(forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name']))), $lang_misc['Merge topics redirect']);
 	}
 
@@ -1126,6 +1135,8 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		foreach ($forum_ids as $cur_forum_id)
 			sync_forum($cur_forum_id);
 
+		($hook = get_hook('mr_confirm_delete_topics_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		redirect(forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name']))), $lang_misc['Delete topics redirect']);
 	}
 
@@ -1219,10 +1230,13 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 			'WHERE'		=> 'id IN('.implode(',', $topics).') AND forum_id='.$fid
 		);
 
-		($hook = get_hook('mr_open_close_topic_qr_open_close_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_open_close_multi_topics_qr_open_close_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$forum_page['redirect_msg'] = ($action) ? $lang_misc['Close topics redirect'] : $lang_misc['Open topics redirect'];
+
+		($hook = get_hook('mr_open_close_multi_topics_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		redirect(forum_link($forum_url['moderate_forum'], $fid), $forum_page['redirect_msg']);
 	}
 	// Or just one in $_GET
@@ -1244,7 +1258,7 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 			'WHERE'		=> 't.id='.$topic_id.' AND forum_id='.$fid
 		);
 
-		($hook = get_hook('mr_open_close_topic_qr_get_subject')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_open_close_single_topic_qr_get_subject')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		if (!$forum_db->num_rows($result))
@@ -1258,10 +1272,13 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 			'WHERE'		=> 'id='.$topic_id.' AND forum_id='.$fid
 		);
 
-		($hook = get_hook('mr_open_close_topic_qr_open_close_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('mr_open_close_single_topic_qr_open_close_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		$forum_page['redirect_msg'] = ($action) ? $lang_misc['Close topic redirect'] : $lang_misc['Open topic redirect'];
+
+		($hook = get_hook('mr_open_close_single_topic_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		redirect(forum_link($forum_url['topic'], array($topic_id, sef_friendly($subject))), $forum_page['redirect_msg']);
 	}
 }
@@ -1305,6 +1322,8 @@ else if (isset($_GET['stick']))
 	($hook = get_hook('mr_stick_topic_qr_stick_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
+	($hook = get_hook('mr_stick_topic_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	redirect(forum_link($forum_url['topic'], array($stick, sef_friendly($subject))), $lang_misc['Stick topic redirect']);
 }
 
@@ -1346,6 +1365,8 @@ else if (isset($_GET['unstick']))
 
 	($hook = get_hook('mr_unstick_topic_qr_unstick_topic')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
+
+	($hook = get_hook('mr_unstick_topic_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	redirect(forum_link($forum_url['topic'], array($unstick, sef_friendly($subject))), $lang_misc['Unstick topic redirect']);
 }

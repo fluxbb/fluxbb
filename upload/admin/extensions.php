@@ -256,6 +256,8 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 		}
 		else
 		{
+			($hook = get_hook('aex_install_comply_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 			if (strpos($id, 'hotfix_') === 0)
 				redirect(forum_link($forum_url['admin_extensions_hotfixes']), $lang_admin_ext['Hotfix installed'].' '.$lang_admin_common['Redirect']);
 			else
@@ -471,6 +473,8 @@ else if (isset($_GET['uninstall']))
 		}
 		else
 		{
+			($hook = get_hook('aex_uninstall_comply_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 			if (strpos($id, 'hotfix_') === 0)
 				redirect(forum_link($forum_url['admin_extensions_hotfixes']), $lang_admin_ext['Hotfix uninstalled'].' '.$lang_admin_common['Redirect']);
 			else
@@ -628,6 +632,8 @@ else if (isset($_GET['flip']))
 		require FORUM_ROOT.'include/cache.php';
 
 	generate_hooks_cache();
+
+	($hook = get_hook('aex_flip_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	if ($section == 'hotfixes')
 		redirect(forum_link($forum_url['admin_extensions_hotfixes']), ($disable ? $lang_admin_ext['Hotfix disabled'] : $lang_admin_ext['Hotfix enabled']).' '.$lang_admin_common['Redirect']);

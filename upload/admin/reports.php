@@ -44,6 +44,8 @@ if (isset($_POST['mark_as_read']))
 	($hook = get_hook('arp_mark_as_read_qr_mark_reports_as_read')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
+	($hook = get_hook('arp_mark_as_read_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	redirect(forum_link($forum_url['admin_reports']), $lang_admin_reports['Reports marked read'].' '.$lang_admin_common['Redirect']);
 }
 

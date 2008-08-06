@@ -402,6 +402,8 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 				delete_user($id, isset($_POST['delete_posts']));
 		}
 
+		($hook = get_hook('aus_delete_users_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		redirect(forum_link($forum_url['admin_users']), $lang_admin_users['Users deleted'].' '.$lang_admin_common['Redirect']);
 	}
 
@@ -562,6 +564,8 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 
 		generate_bans_cache();
 
+		($hook = get_hook('aus_ban_users_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		redirect(forum_link($forum_url['admin_users']), $lang_admin_users['Users banned'].' '.$lang_admin_common['Redirect']);
 	}
 
@@ -687,6 +691,8 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 
 		if ($move_to_group != FORUM_ADMIN && $group_is_mod == '0')
 			clean_forum_moderators();
+
+		($hook = get_hook('aus_change_group_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		redirect(forum_link($forum_url['admin_users']), $lang_admin_users['User groups updated'].' '.$lang_admin_common['Redirect']);
 	}

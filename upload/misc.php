@@ -91,6 +91,8 @@ else if ($action == 'markread')
 	// Reset tracked topics
 	set_tracked_topics(null);
 
+	($hook = get_hook('mi_markread_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	redirect(forum_link($forum_url['index']), $lang_misc['Mark read redirect']);
 }
 
@@ -135,6 +137,8 @@ else if ($action == 'markforumread')
 	$tracked_topics = get_tracked_topics();
 	$tracked_topics['forums'][$fid] = time();
 	set_tracked_topics($tracked_topics);
+
+	($hook = get_hook('mi_markforumread_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	redirect(forum_link($forum_url['forum'], array($fid, sef_friendly($forum_name))), $lang_misc['Mark forum read redirect']);
 }
@@ -225,6 +229,8 @@ else if (isset($_GET['email']))
 
 			($hook = get_hook('mi_email_qr_update_last_email_sent')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
+
+			($hook = get_hook('mi_email_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			redirect(forum_htmlencode($_POST['redirect_url']), $lang_misc['E-mail sent redirect']);
 		}
@@ -427,6 +433,8 @@ else if (isset($_GET['report']))
 		($hook = get_hook('mi_report_qr_update_last_email_sent')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
+		($hook = get_hook('mi_report_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		redirect(forum_link($forum_url['post'], $post_id), $lang_misc['Report redirect']);
 	}
 
@@ -556,6 +564,8 @@ else if (isset($_GET['subscribe']))
 	($hook = get_hook('mi_subscribe_add_subscription')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
+	($hook = get_hook('mi_subscribe_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	redirect(forum_link($forum_url['topic'], array($topic_id, sef_friendly($subject))), $lang_misc['Subscribe redirect']);
 }
 
@@ -603,6 +613,8 @@ else if (isset($_GET['unsubscribe']))
 
 	($hook = get_hook('mi_unsubscribe_qr_delete_subscription')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+
+	($hook = get_hook('mi_unsubscribe_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	redirect(forum_link($forum_url['topic'], array($topic_id, sef_friendly($subject))), $lang_misc['Unsubscribe redirect']);
 }

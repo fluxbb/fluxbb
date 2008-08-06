@@ -67,6 +67,8 @@ if (isset($_POST['add_forum']))
 
 	generate_quickjump_cache();
 
+	($hook = get_hook('afo_add_forum_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	redirect(forum_link($forum_url['admin_forums']), $lang_admin_forums['Forum added'].' '.$lang_admin_common['Redirect']);
 }
 
@@ -115,6 +117,8 @@ else if (isset($_GET['del_forum']))
 			require FORUM_ROOT.'include/cache.php';
 
 		generate_quickjump_cache();
+
+		($hook = get_hook('afo_del_forum_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		redirect(forum_link($forum_url['admin_forums']), $lang_admin_forums['Forum deleted'].' '.$lang_admin_common['Redirect']);
 	}
@@ -229,7 +233,7 @@ else if (isset($_POST['update_positions']))
 					'WHERE'		=> 'id='.$cur_forum['id']
 				);
 
-				($hook = get_hook('afo_update_positions_ 	qr_update_forum_position')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+				($hook = get_hook('afo_update_positions_qr_update_forum_position')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$forum_db->query_build($query) or error(__FILE__, __LINE__);
 			}
 		}
@@ -240,6 +244,8 @@ else if (isset($_POST['update_positions']))
 		require FORUM_ROOT.'include/cache.php';
 
 	generate_quickjump_cache();
+
+	($hook = get_hook('afo_update_positions_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	redirect(forum_link($forum_url['admin_forums']), $lang_admin_forums['Forums updated'].' '.$lang_admin_common['Redirect']);
 }
@@ -393,6 +399,8 @@ else if (isset($_GET['edit_forum']))
 
 		generate_quickjump_cache();
 
+		($hook = get_hook('afo_save_forum_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 		redirect(forum_link($forum_url['admin_forums']), $lang_admin_forums['Forum updated'].' '.$lang_admin_common['Redirect']);
 	}
 	else if (isset($_POST['revert_perms']))
@@ -412,6 +420,8 @@ else if (isset($_GET['edit_forum']))
 			require FORUM_ROOT.'include/cache.php';
 
 		generate_quickjump_cache();
+
+		($hook = get_hook('afo_revert_perms_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		redirect(forum_link($forum_url['admin_forums']).'?edit_forum='.$forum_id, $lang_admin_forums['Permissions reverted'].' '.$lang_admin_common['Redirect']);
 	}

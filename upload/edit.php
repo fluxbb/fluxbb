@@ -158,7 +158,7 @@ if (isset($_POST['form_sent']))
 		($hook = get_hook('ed_qr_update_post')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-		($hook = get_hook('ed_pre_edited_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('ed_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		redirect(forum_link($forum_url['post'], $id), $lang_post['Edit redirect']);
 	}

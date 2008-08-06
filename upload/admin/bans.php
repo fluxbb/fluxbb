@@ -337,6 +337,8 @@ else if (isset($_POST['add_edit_ban']))
 
 	generate_bans_cache();
 
+	($hook = get_hook('aba_add_edit_ban_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 	redirect(forum_link($forum_url['admin_bans']), (($_POST['mode'] == 'edit') ? $lang_admin_bans['Ban edited'] : $lang_admin_bans['Ban added']).' '.$lang_admin_common['Redirect']);
 }
 
@@ -367,6 +369,8 @@ else if (isset($_GET['del_ban']))
 		require FORUM_ROOT.'include/cache.php';
 
 	generate_bans_cache();
+
+	($hook = get_hook('aba_del_ban_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	redirect(forum_link($forum_url['admin_bans']), $lang_admin_bans['Ban removed'].' '. $lang_admin_common['Redirect']);
 }
