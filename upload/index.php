@@ -349,8 +349,8 @@ if ($forum_config['o_users_online'] == '1')
 ?>
 <div id="brd-online" class="gen-content">
 	<h3 class="hn"><span><?php printf($lang_index['Currently online'], implode($lang_index['Online stats separator'], $forum_page['online_info'])) ?></span></h3>
-	<p><?php echo implode($lang_index['Online list separator'], $users) ?></p>
-<?php ($hook = get_hook('in_new_online_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php if (!empty($users)): ?>	<p><?php echo implode($lang_index['Online list separator'], $users) ?></p>
+<?php endif; ($hook = get_hook('in_new_online_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 </div>
 <?php
 

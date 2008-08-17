@@ -609,10 +609,19 @@ D - COMMON INTERFACE ELEMENTS
  	font-weight: bold;
  	}
 
+#brd-online {
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	}
+	
+#brd-online .hn, #brd-online p {
+	padding-bottom: 0;
+	padding-top: 0;
+	}
+
  #brd-online .hn {
  	float: left;
  	margin-right: 0.5em;
- 	padding-bottom: 0;
  	}
 	
 /* Footer
