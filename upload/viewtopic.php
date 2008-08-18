@@ -296,7 +296,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 
 	// Generate the post heading
 	$forum_page['item_ident'] = array(
-		'num'	=> '<span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).' </span>',
+		'num'	=> '<span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span>',
 		'user'	=> '<span class="username">'.sprintf($lang_topic['Posted by'], '<a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a>').'</span>',
 		'link'	=> '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.format_time($cur_post['posted']).'</a>'
 	);
