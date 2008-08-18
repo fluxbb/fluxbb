@@ -1294,16 +1294,16 @@ if ($forum_user['id'] != $id &&
 
 	($hook = get_hook('pf_view_details_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
+	$forum_page['user_ident']['username'] = '<li class="username'.(($user['realname'] =='') ? ' fn nickname' :  ' nickname').'"><strong>'.forum_htmlencode($user['username']).'</strong></li>';
+	$forum_page['user_ident']['usertitle'] = '<li class="usertitle"><span>'.get_title($user).'</span></li>';
+
 	if ($forum_config['o_avatars'] == '1')
 	{
 		$forum_page['avatar_markup'] = generate_avatar_markup($id);
 
 		if (!empty($forum_page['avatar_markup']))
-			$forum_page['user_ident']['avatar'] = $forum_page['avatar_markup'];
+			$forum_page['user_ident']['avatar'] = '<li class="useravatar">'.$forum_page['avatar_markup'].'</li>';
 	}
-
-	$forum_page['user_ident']['username'] = '<strong class="username'.(($user['realname'] =='') ? ' fn nickname' :  ' nickname').'">'.forum_htmlencode($user['username']).'</strong>';
-	$forum_page['user_ident']['usertitle'] =	'<small class="usertitle">'.get_title($user).'</small>';
 
 	// Setup user information
 	$forum_page['user_info'] = array();
@@ -1390,7 +1390,9 @@ if ($forum_user['id'] != $id &&
 <?php ($hook = get_hook('pf_view_details_pre_user_ident_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="ct-set data-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
-					<h2 class="user-ident ct-legend"><?php echo implode('<br />', $forum_page['user_ident']) ?></h2>
+					<ul class="user-ident ct-legend">
+						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_ident']) ?>
+					</ul>
 					<ul class="data-list">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_info'])."\n" ?>
 					</ul>
@@ -1408,7 +1410,7 @@ if ($forum_user['id'] != $id &&
 <?php ($hook = get_hook('pf_view_details_pre_user_activity_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 <?php endif; if (!empty($forum_page['user_activity'])): ?>			<div class="ct-set data-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
-					<h3 class="ct-legend hn"><?php echo $lang_profile['Posts and topics'] ?></h3>
+					<h3 class="ct-legend hn"><span><?php echo $lang_profile['Posts and topics'] ?></span></h3>
 					<p class="options"><?php echo implode(' ', $forum_page['user_activity']) ?></p>
 				</div>
 			</div>
@@ -1471,16 +1473,16 @@ else
 
 		($hook = get_hook('pf_change_details_about_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
+		$forum_page['user_ident']['username'] = '<li class="username'.(($user['realname'] =='') ? ' fn nickname' :  ' nickname').'"><strong>'.forum_htmlencode($user['username']).'</strong></li>';
+		$forum_page['user_ident']['usertitle'] = '<li class="usertitle"><span>'.get_title($user).'</span></li>';
+
 		if ($forum_config['o_avatars'] == '1')
 		{
 			$forum_page['avatar_markup'] = generate_avatar_markup($id);
 
 			if (!empty($forum_page['avatar_markup']))
-				$forum_page['user_ident']['avatar'] = $forum_page['avatar_markup'];
+				$forum_page['user_ident']['avatar'] = '<li class="useravatar">'.$forum_page['avatar_markup'].'</li>';
 		}
-
-		$forum_page['user_ident']['username'] = '<strong class="username'.(($user['realname'] =='') ? ' fn nickname' :  ' nickname').'">'.forum_htmlencode($user['username']).'</strong>';
-		$forum_page['user_ident']['usertitle'] = '<small class="usertitle">'.get_title($user).'</small>';
 
 		// Create array for private information
 		$forum_page['user_private'] = array();
@@ -1596,7 +1598,9 @@ else
 <?php ($hook = get_hook('pf_change_details_about_pre_user_ident_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="ct-set data-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
-					<h3 class="user-ident ct-legend"><?php echo implode('<br />', $forum_page['user_ident']) ?></h3>
+					<ul class="user-ident ct-legend">
+						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_ident']) ?>
+					</ul>
 					<ul class="data-list">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_info'])."\n" ?>
 					</ul>
@@ -1614,7 +1618,7 @@ else
 <?php ($hook = get_hook('pf_change_details_about_pre_user_activity_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 <?php endif; if (!empty($forum_page['user_activity'])): ?>			<div class="ct-set data-set group-item<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
-					<h4 class="ct-legend hn"><?php echo $lang_profile['Posts and topics'] ?></h4>
+					<h4 class="ct-legend hn"><span><?php echo $lang_profile['Posts and topics'] ?></span></h4>
 					<p class="options"><?php echo implode(' ', $forum_page['user_activity']) ?></p>
 				</div>
 			</div>

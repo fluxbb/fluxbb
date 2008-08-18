@@ -88,6 +88,10 @@ body {
 
 #brd-stats .hn,
 #qjump label,
+.brd .post .user .hn,
+.brd .post .skiplink,
+.brd .post .user-ident .username,
+.brd .post .posthead .username span,
 .admin .main-subhead,
 .brd .main-item .item-info li span.label,
 .brd .main-item .item-info li label,
@@ -99,7 +103,6 @@ body {
 .brd .sf-set legend,
 .brd .sf-set legend span,
 .brd .main-pagehead .page-info,
-.brd .posthead .hn cite,
 .brd p.item-select label,
 .brd .mf-extra .mf-field label,
 .brd .mf-extra .mf-field .aslabel,
@@ -326,52 +329,38 @@ C - COMMON CONTENT TYPES (RE-USABLE FORMATS)
  /* User Identity
 -------------------------------------------------------------*/
 	
-#brd-wrap .user-ident {
-	position: relative;
-	padding-bottom: 0.5em;
-	padding-top: 4em;
-	}
-	
-#brd-wrap .user-ident .username {
-	position: absolute;
-	display: block;
-	font-size: 1.25em;
-	top: 0.5em;
-	left: 0;
+.brd .user-ident {
+	padding-left: 0;
+	list-style: none;
 	}
 
-#brd-wrap .username a, #brd-wrap .username a:link, #brd-wrap username a:visited {
+.brd .user-ident .username a,
+.brd .user-ident .username strong {
+	font-size: 1.167em;
+	font-weight: bold;
+	}
+
+.brd .user-ident .username a,
+.brd .user-ident .username a:link,
+.brd .user-ident .username a:visited {
 	text-decoration: none;
 	}
 	
-#brd-wrap .username a:hover, #brd-wrap .username a:active, #brd-wrap .username a:focus {
+.brd .user-ident .username a:hover,
+.brd .user-ident .username a:active,
+.brd .user-ident .username a:focus {
 	text-decoration: underline;
 	}
-	
-#brd-wrap .user-ident .usertitle {
-	top: 2em;
-	left: 0;
-	font-weight: bold;
-	font-size: 1em;
-	position: absolute;
-	display: block;
-	}
-	
-#brd-wrap .user-ident .userstatus {
-	font-size: 1em;
-	display: block;
-	border-left-style: solid;
-	border-left-width: 0.7em;
-	line-height: 0.8em;
-	margin-top: 0.75em;
-	text-indent: 0.5em;
-	}
-	
-.brd .online .userstatus {
+
+.brd .user-ident .usertitle {
 	font-weight: bold;
 	}
-	
-#brd-wrap .user-ident img {
+
+.brd .user-ident .useravatar {
+	padding: 0.25em 0;
+	}
+
+.brd .user-ident .useravatar img {
 	display: block;
 	}
 
@@ -1251,6 +1240,8 @@ F - MAIN CONTENT - FORMS
 
 .brd .txt-set textarea {
 	width: 100%;
+	float: left;
+	margin-right: -6px;
 	}
 	
 /* Error handling
@@ -1316,8 +1307,23 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	padding-right: 2.7em;
 	}
 	
-.brd .posthead .hn strong {
+.brd .posthead .username {
+	float: left;
+	margin-left: -18em;
+	width: 16em;
+	padding: 0 0 0 0.5em;
+	overflow: hidden;
+	}
+	
+.brd .posthead .username a, .brd .posthead .username strong {
+	font-size: 1.167em;
+	font-weight: bold;
+	text-decoration: none;
+	}
+	
+.brd .posthead .hn .item-num {
 	float:right;
+	font-weight: bold;
 	}
 	
 .brd .posthead p.item-select {
@@ -1333,7 +1339,7 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	border-left-style: solid;
 	border-left-width: 1px;
 	padding: 0.5em 1.5em 0 1em;
-	}
+	}	
 
 .brd .postfoot {
 	padding-left: 18em;
@@ -1350,21 +1356,47 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 .brd .postbody .user {
 	float: left;
 	margin-left: -18em;
-	margin-top: -3.083em;
 	left: -1px;
 	width: 16em;
 	padding: 0 0 0.5em 0.5em;
 	display: inline;
 	position: relative;
+	margin-top: -1.5em;
+	overflow: hidden;
 	}
 	
-.brd .postbody .user li strong {
-	font-weight: normal;
-	}
-	
-.brd .postbody .user ul {
+.brd .postbody .user-info {
 	list-style: none;
 	padding: 0;
+	margin: 0;
+	}
+
+.brd .postbody .user-ident {
+	padding-top: 2em;
+	position: relative;
+	}
+	
+.brd .postbody .user-ident .usertitle {
+	position:absolute;
+	top: 0.33em;
+	left: 0;
+	}
+
+.brd .postbody .user-ident .userstatus {
+	padding: 1em 0 0 0;
+	line-height: 0.75em;
+	}
+	
+.brd .postbody .user-ident .userstatus span {
+	font-size: 1em;
+	display: block;
+	border-left-style: solid;
+	border-left-width: 0.7em;
+	text-indent: 0.5em;
+	}
+	
+.brd .postbody .online .user-ident .userstatus span {
+	font-weight: bold;
 	}
 	
 .brd .postfoot .post-contacts {

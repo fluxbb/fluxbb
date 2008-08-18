@@ -102,7 +102,6 @@ body {
 	border-color: #517CA1;
 	}
 	
-	
 .brd .ct-box, .brd .ct-set, .brd .ct-group {
 	background: #EDF1F5;
 	border-color: #DBE0E4;
@@ -154,7 +153,7 @@ body {
 	border-color: #ccc;
 	}
 	
-.brd label, .brd .aslabel, .brd .mf-set legend, .brd .ct-legend {
+.brd label, .brd .aslabel, .brd .mf-set legend, .brd .ct-legend * {
 	color: #294F6E;
 	}
 	

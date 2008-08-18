@@ -296,44 +296,38 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 
 	// Generate the post heading
 	$forum_page['item_ident'] = array(
-		'num'	=> '<strong>'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</strong>',
-		'user'	=> '<cite>'.($cur_topic['posted'] == $cur_post['posted'] ? sprintf($lang_topic['Topic by'], forum_htmlencode($cur_post['username'])) : sprintf($lang_topic['Reply by'], forum_htmlencode($cur_post['username']))).'</cite>',
-		'date'	=> '<span>'.format_time($cur_post['posted']).'</span>'
+		'num'	=> '<span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).' </span>',
+		'user'	=> '<span class="username">'.sprintf($lang_topic['Posted by'], '<a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a>').'</span>',
+		'link'	=> '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.format_time($cur_post['posted']).'</a>'
 	);
 
 	($hook = get_hook('vt_row_pre_item_ident_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
-	$forum_page['item_head'] = '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.implode(' ', $forum_page['item_ident']).'</a>';
 
 	if (isset($user_data_cache[$cur_post['poster_id']]['user_ident']))
 		$forum_page['user_ident'] = $user_data_cache[$cur_post['poster_id']]['user_ident'];
 	else
 	{
 		// Generate author identification
-		if ($cur_post['poster_id'] > 1 && $forum_config['o_avatars'] == '1' && $forum_user['show_avatars'] != '0')
-		{
-			$forum_page['avatar_markup'] = generate_avatar_markup($cur_post['poster_id']);
-
-			if (!empty($forum_page['avatar_markup']))
-				$forum_page['user_ident']['avatar'] = $forum_page['avatar_markup'];
-		}
-
 		if ($cur_post['poster_id'] > 1)
 		{
-			$forum_page['user_ident']['username'] = ($forum_user['g_view_users'] == '1') ? '<strong class="username"><a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a></strong>' : '<strong class="username">'.forum_htmlencode($cur_post['username']).'</strong>';
-			$forum_page['user_ident']['usertitle'] = '<span class="usertitle">'.get_title($cur_post).'</span>';
+			if ($forum_config['o_avatars'] == '1' && $forum_user['show_avatars'] != '0')
+				$forum_page['avatar_markup'] = generate_avatar_markup($cur_post['poster_id']);
+
+			if (!empty($forum_page['avatar_markup']))
+				$forum_page['user_ident']['avatar'] = '<li class="useravatar">'.$forum_page['avatar_markup'].'</li>';
+
+			$forum_page['user_ident']['username'] = '<li class="username">'.(($forum_user['g_view_users'] == '1') ? '<a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a>' : '<strong>'.forum_htmlencode($cur_post['username']).'</strong>').'</li>';
+			$forum_page['user_ident']['usertitle'] = '<li class="usertitle"><span>'.get_title($cur_post).'</span></li>';
 
 			if ($cur_post['is_online'] == $cur_post['poster_id'])
-				$forum_page['user_status'] = $lang_topic['Online'];
+				$forum_page['user_ident']['status'] = '<li class="userstatus"><span>'.$lang_topic['Online'].'</span></li>';
 			else
-				$forum_page['user_status'] = $lang_topic['Offline'];
-
-			$forum_page['user_ident']['status'] = '<small class="userstatus">'.$forum_page['user_status'].'</small>';
+				$forum_page['user_ident']['status'] = '<li class="userstatus"><span>'.$lang_topic['Offline'].'</span></li>';
 		}
 		else
 		{
-			$forum_page['user_ident']['username'] = '<strong class="username">'.forum_htmlencode($cur_post['username']).'</strong>';
-			$forum_page['user_ident']['usertitle'] = '<span class="usertitle">'.get_title($cur_post).'</span>';
+			$forum_page['user_ident']['username'] = '<li class="username"><strong>'.forum_htmlencode($cur_post['username']).'</strong></li>';
+			$forum_page['user_ident']['usertitle'] = '<li class="usertitle"><span>'.get_title($cur_post).'</span></li>';
 		}
 	}
 
@@ -357,7 +351,7 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 				$forum_page['user_info']['registered'] = '<li><span>'.$lang_topic['Registered'].' <strong> '.format_time($cur_post['registered'], 1).'</strong></span></li>';
 
 				if ($forum_config['o_show_post_count'] == '1' || $forum_user['is_admmod'])
-					$forum_page['user_info']['posts'] = '<li><span>'.$lang_topic['Posts'].' <strong> '.forum_number_format($cur_post['num_posts']).'</strong></span></li>';
+					$forum_page['user_info']['posts'] = '<li><span>'.$lang_topic['Posts info'].' <strong> '.forum_number_format($cur_post['num_posts']).'</strong></span></li>';
 			}
 
 			if ($forum_user['is_admmod'])
@@ -507,17 +501,21 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 ?>
 		<div class="<?php echo implode(' ', $forum_page['item_status']) ?>">
 			<div id="p<?php echo $cur_post['id'] ?>" class="posthead">
-				<h3 class="hn"><?php echo $forum_page['item_head'] ?></h3>
+				<h3 class="hn"><?php echo implode(' ', $forum_page['item_ident']) ?></h3>
+ 				<a class="skiplink" href="#pc<?php echo $cur_post['id'] ?>"><?php echo $lang_topic['Skip to content'] ?></a>
 			</div>
 			<div class="postbody">
 				<div class="post-author user<?php echo ($cur_post['is_online'] == $cur_post['poster_id']) ? ' online' : '' ?>">
-					<h4 class="user-ident"><?php echo implode('<br />', $forum_page['user_ident']) ?></h4>
+					<h4 class="hn"><span><?php echo $lang_topic['Author head'] ?></span></h4>
+					<ul class="user-ident">
+						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_ident'])."\n" ?>
+					</ul>
 					<ul class="user-info">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_info'])."\n" ?>
 					</ul>
 				</div>
 				<div class="post-entry">
-					<h4 class="entry-title hn"><?php echo $forum_page['item_subject'] ?></h4>
+					<h4 id="pc<?php echo $cur_post['id'] ?>" class="entry-title hn"><?php echo $forum_page['item_subject'] ?></h4>
 					<div class="entry-content">
 						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['message'])."\n" ?>
 					</div>

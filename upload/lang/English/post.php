@@ -39,7 +39,9 @@ $lang_post = array(
 'Preview topic'			=>	'Preview topic', // For preview button
 'Submit reply'			=>	'Submit reply', // For submit button
 'Submit topic'			=>	'Submit topic', // For submit button
-'Posted by'				=>	'Posted by',
+'Posted by'				=>	'<span>Posted by </span>%s',
+'Preview by'			=>	'<span>Preview of post by </span>%s',
+
 
 // Edit post
 'Edit post legend'		=>	'Edit message',

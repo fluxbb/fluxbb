@@ -217,6 +217,11 @@ if (isset($_POST['preview']) && empty($forum_page['errors']))
 	if (!defined('FORUM_PARSER_LOADED'))
 		require FORUM_ROOT.'include/parser.php';
 
+	$forum_page['preview_ident'] = array(
+		'user'	=> '<span class="username">'.sprintf($lang_post['Preview by'], '<strong>'.forum_htmlencode($cur_post['poster']).'</strong>').'</span>',
+		'link'	=> format_time(time())
+	);
+
 	$forum_page['preview_message'] = parse_message($message, $hide_smilies);
 	$forum_page['preview_poster'] = '<strong class="username">'.forum_htmlencode($cur_post['poster']).'</strong>';
 
@@ -229,14 +234,10 @@ if (isset($_POST['preview']) && empty($forum_page['errors']))
 	<div id="post-preview" class="main-content main-frm">
 		<div class="post singlepost">
 			<div class="posthead">
-				<h3 class="hn"><strong>0</strong><?php echo $lang_post['Not yet posted'] ?></h3>
+				<h3 class="hn"><?php echo implode(' ', $forum_page['preview_ident']) ?></h3>
 <?php ($hook = get_hook('ed_preview_new_post_head_option')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</div>
 			<div class="postbody">
-				<div class="user">
-					<h4 class="user-ident"><?php echo $forum_page['preview_poster'] ?></h4>
-<?php ($hook = get_hook('ed_preview_new_post_user_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				</div>
 				<div class="post-entry">
 					<div class="entry-content">
 						<?php echo $forum_page['preview_message']."\n" ?>
