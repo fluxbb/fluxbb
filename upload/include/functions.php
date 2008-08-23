@@ -1919,7 +1919,6 @@ function message($message, $link = '', $heading = '')
 		($hook = get_hook('fn_message_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		define('FORUM_PAGE', 'message');
-		define('FORUM_PAGE_TYPE', 'basic');
 		require FORUM_ROOT.'header.php';
 
 		// START SUBST - <!-- forum_main -->
@@ -2159,7 +2158,7 @@ function format_time($timestamp, $type = 0, $date_format = null, $time_format = 
 
 	if ($type == 0)
 		$formatted_time .= ' ';
- 
+
 	if ($type == 0 || $type == 2)
 		$formatted_time .= gmdate($time_format, $timestamp);
 

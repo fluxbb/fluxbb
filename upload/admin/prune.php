@@ -128,7 +128,6 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 
 	define('FORUM_PAGE_SECTION', 'management');
 	define('FORUM_PAGE', 'admin-prune');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -187,7 +186,6 @@ else
 
 	define('FORUM_PAGE_SECTION', 'management');
 	define('FORUM_PAGE', 'admin-prune');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->

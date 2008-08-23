@@ -62,7 +62,6 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE_SECTION', 'management');
 define('FORUM_PAGE', 'admin-reports');
-define('FORUM_PAGE_TYPE', 'sectioned');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->

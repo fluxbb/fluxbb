@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  * @package FluxBB
  */
- 
+
 
 if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', '../');
@@ -143,7 +143,6 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 
 	define('FORUM_PAGE_SECTION', 'users');
 	define('FORUM_PAGE', 'admin-bans');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -395,7 +394,6 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE_SECTION', 'users');
 define('FORUM_PAGE', 'admin-bans');
-define('FORUM_PAGE_TYPE', 'sectioned');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->

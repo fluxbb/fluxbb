@@ -150,7 +150,6 @@ else if (isset($_GET['del_forum']))
 
 		define('FORUM_PAGE_SECTION', 'start');
 		define('FORUM_PAGE', 'admin-forums');
-		define('FORUM_PAGE_TYPE', 'sectioned');
 		require FORUM_ROOT.'header.php';
 
 		// START SUBST - <!-- forum_main -->
@@ -450,7 +449,6 @@ else if (isset($_GET['edit_forum']))
 
 	define('FORUM_PAGE_SECTION', 'start');
 	define('FORUM_PAGE', 'admin-forums');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -650,7 +648,6 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE_SECTION', 'start');
 define('FORUM_PAGE', 'admin-forums');
-define('FORUM_PAGE_TYPE', 'sectioned');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->

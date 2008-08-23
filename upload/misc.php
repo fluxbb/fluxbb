@@ -258,7 +258,6 @@ else if (isset($_GET['email']))
 	($hook = get_hook('mi_email_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'formemail');
-	define('FORUM_PAGE_TYPE', 'basic');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -459,7 +458,6 @@ else if (isset($_GET['report']))
 	($hook = get_hook('mi_report_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'report');
-	define('FORUM_PAGE_TYPE', 'report');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->

@@ -85,7 +85,6 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 
 	define('FORUM_PAGE_SECTION', 'users');
 	define('FORUM_PAGE', 'admin-groups');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -585,7 +584,6 @@ else if (isset($_GET['del_group']))
 
 	define('FORUM_PAGE_SECTION', 'users');
 	define('FORUM_PAGE', 'admin-groups');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -670,7 +668,6 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE_SECTION', 'users');
 define('FORUM_PAGE', 'admin-groups');
-define('FORUM_PAGE_TYPE', 'sectioned');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->

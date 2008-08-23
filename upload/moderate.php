@@ -453,7 +453,6 @@ if (isset($_GET['tid']))
 	($hook = get_hook('mr_post_actions_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'modtopic');
-	define('FORUM_PAGE_TYPE','topic');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -805,7 +804,6 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	($hook = get_hook('mr_move_topics_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'dialogue');
-	define('FORUM_PAGE_TYPE', 'basic');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -993,7 +991,6 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 	($hook = get_hook('mr_merge_topics_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'dialogue');
-	define('FORUM_PAGE_TYPE', 'basic');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -1446,7 +1443,6 @@ $forum_page['crumbs'] = array(
 ($hook = get_hook('mr_topic_actions_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE', 'modforum');
-define('FORUM_PAGE_TYPE', 'forum');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->

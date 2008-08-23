@@ -234,7 +234,6 @@ if (!$pid && (!isset($_GET['p']) || $forum_page['page'] != 1))
 	define('FORUM_ALLOW_INDEX', 1);
 
 define('FORUM_PAGE', 'viewtopic');
-define('FORUM_PAGE_TYPE', 'topic');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->

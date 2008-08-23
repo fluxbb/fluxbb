@@ -147,7 +147,6 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE_SECTION', 'settings');
 define('FORUM_PAGE', 'admin-censoring');
-define('FORUM_PAGE_TYPE', 'sectioned');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->

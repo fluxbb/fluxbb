@@ -176,7 +176,6 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE_SECTION', 'users');
 define('FORUM_PAGE', 'admin-ranks');
-define('FORUM_PAGE_TYPE', 'sectioned');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->

@@ -159,7 +159,6 @@ $forum_page['crumbs'] = array(
 ($hook = get_hook('dl_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 define ('FORUM_PAGE', 'postdelete');
-define ('FORUM_PAGE_TYPE', 'basic');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->

@@ -154,7 +154,6 @@ if (isset($query))
 	($hook = get_hook('se_results_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', $show_as == 'topics' ? 'searchtopics' : 'searchposts');
-	define('FORUM_PAGE_TYPE', $show_as == 'topics' ? 'topic' : 'forum' );
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -434,7 +433,6 @@ $forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'
 ($hook = get_hook('se_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE', 'search');
-define('FORUM_PAGE_TYPE', 'basic');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->

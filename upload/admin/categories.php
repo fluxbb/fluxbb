@@ -152,7 +152,6 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 
 		define('FORUM_PAGE_SECTION', 'start');
 		define('FORUM_PAGE', 'admin-categories');
-		define('FORUM_PAGE_TYPE', 'sectioned');
 		require FORUM_ROOT.'header.php';
 
 		// START SUBST - <!-- forum_main -->
@@ -279,7 +278,6 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE_SECTION', 'start');
 define('FORUM_PAGE', 'admin-categories');
-define('FORUM_PAGE_TYPE', 'sectioned');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->

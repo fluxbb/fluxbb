@@ -321,7 +321,6 @@ $forum_page['crumbs'][] = $tid ? $lang_post['Post reply'] : $lang_post['Post new
 ($hook = get_hook('po_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE', 'post');
-define('FORUM_PAGE_TYPE', 'basic');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->

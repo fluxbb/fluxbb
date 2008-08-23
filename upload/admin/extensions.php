@@ -217,7 +217,6 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 				define('FORUM_PAGE', 'admin-extensions-hotfixes');
 			else
 				define('FORUM_PAGE', 'admin-extensions-manage');
-			define('FORUM_PAGE_TYPE', 'sectioned');
 			require FORUM_ROOT.'header.php';
 
 			// START SUBST - <!-- forum_main -->
@@ -273,7 +272,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 		define('FORUM_PAGE', 'admin-extensions-hotfixes');
 	else
 		define('FORUM_PAGE', 'admin-extensions-manage');
-	define('FORUM_PAGE_TYPE', 'sectioned');
+
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -434,7 +433,6 @@ else if (isset($_GET['uninstall']))
 
 			define('FORUM_PAGE_SECTION', 'extensions');
 			define('FORUM_PAGE', 'admin-extensions-manage');
-			define('FORUM_PAGE_TYPE', 'sectioned');
 			require FORUM_ROOT.'header.php';
 
 			// START SUBST - <!-- forum_main -->
@@ -490,7 +488,6 @@ else if (isset($_GET['uninstall']))
 			define('FORUM_PAGE', 'admin-extensions-hotfixes');
 		else
 			define('FORUM_PAGE', 'admin-extensions-manage');
-		define('FORUM_PAGE_TYPE', 'sectioned');
 		require FORUM_ROOT.'header.php';
 
 		// START SUBST - <!-- forum_main -->
@@ -671,7 +668,6 @@ if ($section == 'hotfixes')
 
 	define('FORUM_PAGE_SECTION', 'extensions');
 	define('FORUM_PAGE', 'admin-extensions-hotfixes');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -801,7 +797,6 @@ else
 
 	define('FORUM_PAGE_SECTION', 'extensions');
 	define('FORUM_PAGE', 'admin-extensions-manage');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->

@@ -166,7 +166,6 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE_SECTION', 'start');
 define('FORUM_PAGE', 'admin-information');
-define('FORUM_PAGE_TYPE', 'sectioned');
 require FORUM_ROOT.'header.php';
 
 $forum_page['item_count'] = 0;

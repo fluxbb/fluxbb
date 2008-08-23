@@ -268,7 +268,6 @@ if (!$section || $section == 'setup')
 
 	define('FORUM_PAGE_SECTION', 'settings');
 	define('FORUM_PAGE', 'admin-settings-setup');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -663,7 +662,6 @@ else if ($section == 'features')
 
 	define('FORUM_PAGE_SECTION', 'settings');
 	define('FORUM_PAGE', 'admin-settings-features');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -1057,7 +1055,6 @@ else if ($section == 'announcements')
 
 	define('FORUM_PAGE_SECTION', 'settings');
 	define('FORUM_PAGE', 'admin-settings-announcements');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -1126,7 +1123,6 @@ else if ($section == 'registration')
 
 	define('FORUM_PAGE_SECTION', 'settings');
 	define('FORUM_PAGE', 'admin-settings-registration');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -1269,7 +1265,6 @@ else if ($section == 'maintenance')
 
 	define('FORUM_PAGE_SECTION', 'management');
 	define('FORUM_PAGE', 'admin-settings-maintenance');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -1337,7 +1332,6 @@ else if ($section == 'email')
 
 	define('FORUM_PAGE_SECTION', 'settings');
 	define('FORUM_PAGE', 'admin-settings-email');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->

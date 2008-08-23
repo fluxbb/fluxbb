@@ -59,7 +59,6 @@ if (isset($_GET['ip_stats']))
 
 	define('FORUM_PAGE_SECTION', 'users');
 	define('FORUM_PAGE', 'admin-iresults');
-	define('FORUM_PAGE_TYPE', 'paged');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -192,7 +191,6 @@ else if (isset($_GET['show_users']))
 
 	define('FORUM_PAGE_SECTION', 'users');
 	define('FORUM_PAGE', 'admin-uresults');
-	define('FORUM_PAGE_TYPE', 'paged');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -422,7 +420,6 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 
 	define('FORUM_PAGE_SECTION', 'users');
 	define('FORUM_PAGE', 'admin-users');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -584,7 +581,6 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 
 	define('FORUM_PAGE_SECTION', 'users');
 	define('FORUM_PAGE', 'admin-users');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -712,7 +708,6 @@ else if (isset($_POST['change_group']) || isset($_POST['change_group_comply']) |
 
 	define('FORUM_PAGE_SECTION', 'users');
 	define('FORUM_PAGE', 'admin-users');
-	define('FORUM_PAGE_TYPE', 'sectioned');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -878,7 +873,6 @@ else if (isset($_POST['find_user']))
 
 	define('FORUM_PAGE_SECTION', 'users');
 	define('FORUM_PAGE', 'admin-uresults');
-	define('FORUM_PAGE_TYPE', 'paged');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -1037,7 +1031,6 @@ $forum_page['crumbs'] = array(
 
 define('FORUM_PAGE_SECTION', 'users');
 define('FORUM_PAGE', 'admin-users');
-define('FORUM_PAGE_TYPE', 'sectioned');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->

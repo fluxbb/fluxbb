@@ -110,7 +110,8 @@ body {
 .brd .post-options a span,
 .brd .main-options .hn,
 .brd .entry-title,
-.brd .sectioned .main-head {
+.brd .menu-page .main-head,
+.brd .admin-page .main-head {
  	font-size: 0;
  	left: -999em;
  	text-indent: -999em;
@@ -127,7 +128,7 @@ B - GLOBAL STYLES
 /* General Layout
 -------------------------------------------------------------*/
 
-.brd-page {
+.brd {
 	padding: 20px 30px;
 	}
 
@@ -136,7 +137,7 @@ B - GLOBAL STYLES
 	width: 60%;
 	}
 	
-.brd { /* Confines clearing behaviour within forum wrapper */
+.brd-page { /* Confines clearing behaviour within forum wrapper */
 	float: left;
 	width: 100%;
 	position: relative;
@@ -151,12 +152,12 @@ B - GLOBAL STYLES
 	padding: 0 1.5em;
 	}
 	
-.brd .main {
-	margin: 1em 0;
+#brd-index #brd-about, #brd-index #brd-stats {
+	margin-top: 1em;
 	}
 	
-#brd-about {
-	margin-top: 1em;
+#brd-index #brd-visit, #brd-qpost {
+	margin-bottom: 1em;
 	}
 	
 
@@ -566,8 +567,8 @@ D - COMMON INTERFACE ELEMENTS
 	white-space: nowrap;
 	}
 	
-#brd-crumbs-top {
-	margin-top: 0;
+.brd .crumbs {
+	padding: 0.5em 1.5em;
 	}
 	
 /* Statistics
@@ -1610,27 +1611,27 @@ H - MAIN TABLES
 	font-weight: normal;
 	}
 	
-.main table td {
+.brd table td {
 	padding: 0.5em 1.417em;
 	border-width: 1px;
 	border-style: solid none none solid;
 	}
 	
-.main table td.tc0 {
+.brd table td.tc0 {
 	border-left-style: none;
 	border-left-width: 0
 	} 
 	
-.main table th {
+.brd table th {
 	padding: 0.5em 1.3em;
 	border-style: none;
 	}
 
-.main table td.actions, .main table th.actions {
+.brd table td.actions, .brd table th.actions {
 	text-align: right;
 	}
 
-.main table td.actions span {
+.brd table td.actions span {
 	display: block;
 	}
 	
