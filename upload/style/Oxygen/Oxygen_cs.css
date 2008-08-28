@@ -90,11 +90,11 @@ body {
 	background: #EDF1F5;
 	}
 	
-.brd .postbody, .brd .post-options {
+.brd .posthead, .brd .postbody, .brd .post-options {
 	background: #f9f9f9;
 	}
 	
-.brd .posthead {
+.brd .posthead .hn {
 	background: #E9EBEE;
 	}
 	

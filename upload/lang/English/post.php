@@ -34,13 +34,16 @@ $lang_post = array(
 'Post settings'			=>	'Optional post settings:',
 'Preview reply'			=>	'Preview your new reply',
 'Preview new topic'		=>	'Preview your new topic',
-'Not yet posted'		=>	'Not yet posted',
 'Preview reply'			=>	'Preview reply', // For preview button
 'Preview topic'			=>	'Preview topic', // For preview button
 'Submit reply'			=>	'Submit reply', // For submit button
 'Submit topic'			=>	'Submit topic', // For submit button
-'Posted by'				=>	'<span>Posted by </span>%s',
-'Preview by'			=>	'<span>Preview of post by </span>%s',
+'Post byline'			=>	'<span>Post by </span>%s',
+'Topic byline'			=>	'<span>Topic by </span>%s',
+'Reply byline'			=>	'<span>Reply by </span>%s',
+'Post posted'			=>	'<span>Posted </span>%s',
+
+
 
 
 // Edit post

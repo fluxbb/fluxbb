@@ -3,15 +3,14 @@
 // Language definitions used in viewtopic.php
 $lang_topic = array(
 
-'Posted by'				=>	'<span>Posted by </span>%s',
-'Author head'			=>	'Author information',
-'Skip to content'		=>	'Skip to post content',
-'Search replies'		=>	': %s replies',
+'Topic byline'			=>	'<span>Topic by </span>%s',
+'Reply byline'			=>	'<span>Reply by </span>%s',
+'Search replies'		=>	'(%s replies, posted in %s)',
 'Post reply'			=>	'Post reply',
 'Topic closed'			=>	'[ Closed ]',
 'No permission'			=>	'Sorry! no permission to post a reply',
 'Topic title'			=>	'Topic: %s',
-'Reply title'			=>	'Reply to: %s',
+'Reply title'			=>	'Re: %s',
 'Login to post'			=>	'You must %1$s or %2$s to post a reply',
 'From'					=>	'From:',				// User location
 'Registered'			=>	'Registered:',

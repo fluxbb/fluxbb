@@ -7,8 +7,8 @@
 </head>
 <body>
 
-<div id="brd-redirect" class="brd-page">
-<div id="brd-wrap" class="brd">
+<div id="brd-wrap" class="brd-page">
+<div id="brd-redirect" class="brd">
 
 <!-- forum_redir_main -->
 

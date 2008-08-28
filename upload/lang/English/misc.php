@@ -78,7 +78,7 @@ $lang_misc = array(
 // Moderate topic
 'Posts'						=>	'Posts',
 'Delete posts'				=>	'Delete selected posts',
-'Split posts'				=>	'Split selected posts from topic',
+'Split posts'				=>	'Split selected posts',
 'Delete whole topic'		=>	'Delete whole topic',
 'Moderate topic head'		=>	'Moderate topic : %s',
 'New subject'				=>	'New topic subject:',
