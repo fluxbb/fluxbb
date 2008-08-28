@@ -73,7 +73,7 @@ $forum_page['num_pages'] = ceil($cur_forum['num_topics'] / $forum_user['disp_top
 $forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
 $forum_page['start_from'] = $forum_user['disp_topics'] * ($forum_page['page'] - 1);
 $forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_topics']), ($cur_forum['num_topics']));
-$forum_page['page_info'] = generate_page_info($lang_forum['Topics'], ($forum_page['start_from'] + 1), $cur_forum['num_topics']);
+$forum_page['items_info'] = generate_items_info($lang_forum['Topics'], ($forum_page['start_from'] + 1), $cur_forum['num_topics']);
 
 ($hook = get_hook('vf_modify_page_details')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -148,6 +148,9 @@ $forum_page['crumbs'] = array(
 // Setup main header
 $forum_page['main_head'] = '<a class="permalink" href="'.forum_link($forum_url['forum'], array($id, sef_friendly($cur_forum['forum_name']))).'" rel="bookmark" title="'.$lang_forum['Permalink forum'].'">'.forum_htmlencode($cur_forum['forum_name']).'</a>';
 
+if ($forum_page['num_pages'] > 1)
+	$forum_page['main_head_pages'] = sprintf($lang_common['Page info'], $forum_page['page'], $forum_page['num_pages']);
+
 ($hook = get_hook('vf_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // Allow indexing if this isn't a link with p=1
@@ -177,7 +180,7 @@ if ($forum_db->num_rows($result))
 
 ?>
 	<div class="main-pagehead">
-		<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
+		<h2 class="hn"><span><?php echo $forum_page['items_info'] ?></span></h2>
 	</div>
 	<div class="main-subhead">
 		<p class="item-summary<?php echo ($forum_config['o_topic_views'] == '1') ? ' forum-views' : ' forum-noview' ?>"><span><?php printf($lang_forum['Forum subtitle'], implode(' ', $forum_page['item_header']['subject']), implode(', ', $forum_page['item_header']['info'])) ?></span></p>

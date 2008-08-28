@@ -1795,7 +1795,7 @@ function get_title($user)
 //
 // Generate a string with page and item information for multipage headings
 //
-function generate_page_info($label, $first, $total)
+function generate_items_info($label, $first, $total)
 {
 	global $forum_page, $lang_common;
 
@@ -1804,19 +1804,13 @@ function generate_page_info($label, $first, $total)
 		return $return;
 
 	if ($forum_page['num_pages'] == 1)
-	{
-		$page_info = '';
 		$item_info =  '<span class="item-info">'.sprintf($lang_common['Item info single'], $label, forum_number_format($total)).'</span>';
-	}
 	else
-	{
-		$page_info = '<span class="page-info">'.sprintf($lang_common['Page info'], forum_number_format($forum_page['page']), forum_number_format($forum_page['num_pages'])).$lang_common['Info separator'].'</span>';
 		$item_info = '<span class="item-info">'.sprintf($lang_common['Item info plural'], $label, forum_number_format($first), forum_number_format($forum_page['finish_at']), forum_number_format($total)).'</span>';
-	}
 
 	($hook = get_hook('fn_generate_page_info_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-	return $page_info.$item_info;
+	return $item_info;
 }
 
 

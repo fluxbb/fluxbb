@@ -773,46 +773,46 @@ function generate_search_crumbs($action = null)
 	{
 		case 'show_new':
 			$forum_page['crumbs'][] = $lang_search['Topics with new'];
-			$forum_page['results_info'] = generate_page_info($lang_search['Topics found'], ($forum_page['start_from'] + 1), $num_hits);
+			$forum_page['items_info'] = generate_items_info($lang_search['Topics found'], ($forum_page['start_from'] + 1), $num_hits);
 			$forum_page['main_options']['defined_search'] = '<span'.(empty($forum_page['main_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search']).'">'.$lang_search['User defined search'].'</a></span>';
 			$forum_page['main_options']['mark_all'] = '<span'.(empty($forum_page['main_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['mark_read'], generate_form_token('markread'.$forum_user['id'])).'">'.$lang_common['Mark all as read'].'</a></span>';
 			break;
 
 		case 'show_recent':
 			$forum_page['crumbs'][] = $lang_search['Recently active topics'];
-			$forum_page['results_info'] = generate_page_info($lang_search['Topics found'], ($forum_page['start_from'] + 1), $num_hits);
+			$forum_page['items_info'] = generate_items_info($lang_search['Topics found'], ($forum_page['start_from'] + 1), $num_hits);
 			$forum_page['main_options']['defined_search'] = '<span'.(empty($forum_page['main_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search']).'">'.$lang_search['User defined search'].'</a></span>';
 			break;
 
 		case 'show_unanswered':
 			$forum_page['crumbs'][] = $lang_search['Unanswered topics'];
-			$forum_page['results_info'] = generate_page_info($lang_search['Topics found'], ($forum_page['start_from'] + 1), $num_hits);
+			$forum_page['items_info'] = generate_items_info($lang_search['Topics found'], ($forum_page['start_from'] + 1), $num_hits);
 			$forum_page['main_options']['defined_search'] = '<span'.(empty($forum_page['main_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search']).'">'.$lang_search['User defined search'].'</a></span>';
 			break;
 
 		case 'show_user_posts':
 			$forum_page['crumbs'][] = sprintf($lang_search['Posts by'], $search_set[0]['pposter'], ($forum_page['start_from'] + 1), $num_hits);
-			$forum_page['results_info'] = generate_page_info($lang_search['Posts found'], ($forum_page['start_from'] + 1), $num_hits);
+			$forum_page['items_info'] = generate_items_info($lang_search['Posts found'], ($forum_page['start_from'] + 1), $num_hits);
 			$forum_page['main_options']['user_topics'] = '<span'.(empty($forum_page['main_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_user_topics'], $search_id).'">'.sprintf($lang_search['Topics by'], $search_set[0]['pposter']).'</a></span>';
 			$forum_page['main_options']['defined_search'] = '<span'.(empty($forum_page['main_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search']).'">'.$lang_search['User defined search'].'</a></span>';
 			break;
 
 		case 'show_user_topics':
 			$forum_page['crumbs'][] = sprintf($lang_search['Topics by'], $search_set[0]['poster']);
-			$forum_page['results_info'] = generate_page_info($lang_search['Topics found'], ($forum_page['start_from'] + 1), $num_hits);
+			$forum_page['items_info'] = generate_items_info($lang_search['Topics found'], ($forum_page['start_from'] + 1), $num_hits);
 			$forum_page['main_options']['user_posts'] =  '<span'.(empty($forum_page['main_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_user_posts'], $search_id).'">'.sprintf($lang_search['Posts by'], $search_set[0]['poster']).'</a></span>';
 			$forum_page['main_options']['defined_search'] = '<span'.(empty($forum_page['main_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search']).'">'.$lang_search['User defined search'].'</a></span>';
 			break;
 
 		case 'show_subscriptions':
 			$forum_page['crumbs'][] = $lang_search['Subscriptions'];
-			$forum_page['results_info'] = generate_page_info($lang_search['Topics found'], ($forum_page['start_from'] + 1), $num_hits);
+			$forum_page['items_info'] = generate_items_info($lang_search['Topics found'], ($forum_page['start_from'] + 1), $num_hits);
 			$forum_page['main_options']['defined_search'] = '<span'.(empty($forum_page['main_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search']).'">'.$lang_search['User defined search'].'</a></span>';
 			break;
 
 		default:
 			$forum_page['crumbs'][] = $lang_search['Search results'];
-			$forum_page['results_info'] = generate_page_info((($show_as == 'topics') ? $lang_search['Topics found'] : $lang_search['Posts found']), ($forum_page['start_from'] + 1), $num_hits);
+			$forum_page['items_info'] = generate_items_info((($show_as == 'topics') ? $lang_search['Topics found'] : $lang_search['Posts found']), ($forum_page['start_from'] + 1), $num_hits);
 			$forum_page['main_options']['new_search'] = '<span'.(empty($forum_page['main_options']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search']).'">'.$lang_search['Perform new search'].'</a></span>';
 			break;
 	}

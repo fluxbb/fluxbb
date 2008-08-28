@@ -147,6 +147,10 @@ if (isset($query))
 		$forum_page['nav']['first'] = '<link rel="first" href="'.forum_link($url_type, $search_id).'" title="'.$lang_common['Page'].' 1" />';
 	}
 
+	// Setup main heading
+	if ($forum_page['num_pages'] > 1)
+		$forum_page['main_head_pages'] = sprintf($lang_common['Page info'], $forum_page['page'], $forum_page['num_pages']);
+
 	// Setup main options header
 	$forum_page['main_options_head'] = $lang_search['Search options'];
 
@@ -175,7 +179,7 @@ if (isset($query))
 
 ?>
 	<div class="main-pagehead">
-		<h2 class="hn"><span><?php echo $forum_page['results_info'] ?></span></h2>
+		<h2 class="hn"><span><?php echo $forum_page['items_info'] ?></span></h2>
 	</div>
 	<div class="main-subhead">
 		<p class="item-summary forum-noview"><span><?php printf($lang_forum['Search subtitle'], implode(' ', $forum_page['item_header']['subject']), implode(', ', $forum_page['item_header']['info'])) ?></span></p>
@@ -191,7 +195,7 @@ if (isset($query))
 
 ?>
 	<div class="main-pagehead">
-		<h2 class="hn"><span><?php echo $forum_page['results_info'] ?></span></h2>
+		<h2 class="hn"><span><?php echo $forum_page['items_info'] ?></span></h2>
 	</div>
 	<div class="main-content main-topic">
 <?php

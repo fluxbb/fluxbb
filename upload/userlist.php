@@ -63,9 +63,9 @@ $forum_page['finish_at'] = min(($forum_page['start_from'] + 50), ($forum_page['n
 $forum_page['users_searched'] = (($forum_user['g_search_users'] == '1' && $forum_page['username'] != '') || $forum_page['show_group'] > -1);
 
 if ($forum_page['num_users'] != 0)
-	$forum_page['page_info'] = generate_page_info( (($forum_page['users_searched']) ? $lang_ul['Users found'] : $lang_ul['Users']), ($forum_page['start_from'] + 1), $forum_page['num_users']);
+	$forum_page['items_info'] = generate_items_info( (($forum_page['users_searched']) ? $lang_ul['Users found'] : $lang_ul['Users']), ($forum_page['start_from'] + 1), $forum_page['num_users']);
 else
-	$forum_page['page_info'] = $lang_ul['No users found'];
+	$forum_page['items_info'] = $lang_ul['No users found'];
 
 // Generate paging links
 $forum_page['page_post']['paging'] = '<p class="paging"><span class="pages">'.$lang_common['Pages'].'</span> '.paginate($forum_page['num_pages'], $forum_page['page'], $forum_url['users_browse'], $lang_common['Paging separator'], array($forum_page['show_group'], $forum_page['sort_by'], strtoupper($forum_page['sort_dir']), ($forum_page['username'] != '') ? urlencode($forum_page['username']) : '-')).'</p>';
@@ -97,6 +97,10 @@ $forum_page['crumbs'] = array(
 	array($forum_config['o_board_title'], forum_link($forum_url['index'])), $lang_common['User list']
 );
 
+// Setup main heading
+if ($forum_page['num_pages'] > 1)
+	$forum_page['main_head_pages'] = sprintf($lang_common['Page info'], $forum_page['page'], $forum_page['num_pages']);
+
 ($hook = get_hook('ul_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // Allow indexing if this isn't a link with p=1
@@ -113,7 +117,7 @@ ob_start();
 
 ?>
 	<div class="main-pagehead">
-		<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
+		<h2 class="hn"><span><?php echo $forum_page['items_info'] ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
 		<form id="afocus" method="get" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
