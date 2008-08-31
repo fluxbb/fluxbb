@@ -164,7 +164,7 @@ $forum_page['num_pages'] = ceil(($cur_topic['num_replies'] + 1) / $forum_user['d
 $forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
 $forum_page['start_from'] = $forum_user['disp_posts'] * ($forum_page['page'] - 1);
 $forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_posts']), ($cur_topic['num_replies'] + 1));
-$forum_page['page_info'] =  generate_page_info($lang_topic['Posts'], ($forum_page['start_from'] + 1), ($cur_topic['num_replies'] + 1));
+$forum_page['items_info'] =  generate_items_info($lang_topic['Posts'], ($forum_page['start_from'] + 1), ($cur_topic['num_replies'] + 1));
 
 ($hook = get_hook('vt_modify_page_details')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -227,6 +227,9 @@ $forum_page['crumbs'] = array(
 // Setup main heading
 $forum_page['main_head'] = (($cur_topic['closed'] == '1') ? $lang_topic['Topic closed'].' ' : '').'<a class="permalink" href="'.forum_link($forum_url['topic'], array($id, sef_friendly($cur_topic['subject']))).'" rel="bookmark" title="'.$lang_topic['Permalink topic'].'">'.forum_htmlencode($cur_topic['subject']).'</a>';
 
+if ($forum_page['num_pages'] > 1)
+	$forum_page['main_head_pages'] = sprintf($lang_common['Page info'], $forum_page['page'], $forum_page['num_pages']);
+
 ($hook = get_hook('vt_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // Allow indexing if this isn't a permalink and it isn't a link with p=1
@@ -244,7 +247,7 @@ ob_start();
 
 ?>
 	<div class="main-pagehead">
-		<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
+		<h2 class="hn"><span><?php echo $forum_page['items_info'] ?></span></h2>
 	</div>
 	<div id="forum<?php echo $cur_topic['forum_id'] ?>" class="main-content main-topic">
 <?php

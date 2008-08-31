@@ -416,7 +416,7 @@ if (isset($_GET['tid']))
 	$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
 	$forum_page['start_from'] = $forum_user['disp_posts'] * ($forum_page['page'] - 1);
 	$forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_posts']), ($cur_topic['num_replies'] + 1));
-	$forum_page['page_info'] = generate_page_info($lang_misc['Posts'], ($forum_page['start_from'] + 1), ($cur_topic['num_replies'] + 1));
+	$forum_page['items_info'] = generate_items_info($lang_misc['Posts'], ($forum_page['start_from'] + 1), ($cur_topic['num_replies'] + 1));
 
 	// Generate paging links
 	$forum_page['page_post']['paging'] = '<p class="paging"><span class="pages">'.$lang_common['Pages'].'</span> '.paginate($forum_page['num_pages'], $forum_page['page'], $forum_url['moderate_topic'], $lang_common['Paging separator'], array($fid, $tid)).'</p>';
@@ -450,6 +450,9 @@ if (isset($_GET['tid']))
 	// Setup main heading
 	$forum_page['main_head'] = sprintf($lang_misc['Moderate topic head'], forum_htmlencode($cur_topic['subject']));
 
+	if ($forum_page['num_pages'] > 1)
+		$forum_page['main_head_pages'] = sprintf($lang_common['Page info'], $forum_page['page'], $forum_page['num_pages']);
+
 	($hook = get_hook('mr_post_actions_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'modtopic');
@@ -463,7 +466,7 @@ if (isset($_GET['tid']))
 
 ?>
 	<div class="main-pagehead">
-		<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
+		<h2 class="hn"><span><?php echo $forum_page['items_info'] ?></span></h2>
 	</div>
 	<form id="mr-post-actions-form" class="newform" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 	<div class="main-content main-topic">
@@ -1390,7 +1393,7 @@ $forum_page['num_pages'] = ceil($cur_forum['num_topics'] / $forum_user['disp_top
 $forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
 $forum_page['start_from'] = $forum_user['disp_topics'] * ($forum_page['page'] - 1);
 $forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_topics']), ($cur_forum['num_topics']));
-$forum_page['page_info'] = generate_page_info($lang_misc['Topics'], ($forum_page['start_from'] + 1), $cur_forum['num_topics']);
+$forum_page['items_info'] = generate_items_info($lang_misc['Topics'], ($forum_page['start_from'] + 1), $cur_forum['num_topics']);
 
 // Select topics
 $query = array(
@@ -1443,6 +1446,10 @@ $forum_page['crumbs'] = array(
 	sprintf($lang_misc['Moderate forum head'], forum_htmlencode($cur_forum['forum_name']))
 );
 
+// Setup main heading
+if ($forum_page['num_pages'] > 1)
+	$forum_page['main_head_pages'] = sprintf($lang_common['Page info'], $forum_page['page'], $forum_page['num_pages']);
+
 ($hook = get_hook('mr_topic_actions_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE', 'modforum');
@@ -1465,7 +1472,7 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 
 ?>
 	<div class="main-pagehead">
-		<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
+		<h2 class="hn"><span><?php echo $forum_page['items_info'] ?></span></h2>
 	</div>
 	<div class="main-subhead">
 		<p class="item-summary<?php echo ($forum_config['o_topic_views'] == '1') ? ' forum-views' : ' forum-noview' ?>"><span><?php printf($lang_forum['Forum subtitle'], implode(' ', $forum_page['item_header']['subject']), implode(', ', $forum_page['item_header']['info'])) ?></span></p>
