@@ -17,6 +17,7 @@ $lang_install = array(
 'Table prefix'				=>	'Table prefix:',
 'Database type info'		=>	'FluxBB currently supports MySQL, PostgreSQL and SQLite. If your database of choice is missing from the drop-down menu below, it means this PHP environment does not have support for that particular database. More information regarding support for particular versions of each database can be found in the FAQ.',
 'Mysql type info'			=>	'FluxBB has detected that your PHP environment supports two different ways of communicating with MySQL. The two options are called "<em>standard</em>" and "<em>improved</em>". If you are uncertain which one to use, start by trying improved and if that fails, try standard.',
+'MySQL InnoDB info'			=>	'FluxBB has detected that your MySQL server might support <a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-overview.html">InnoDB</a>. This would be a good choice if you are planning to run a large forum. If you are uncertain, it is recommended to not use InnoDB.',
 'Database server info'		=>	'Enter the address of the database server (example: <em>localhost</em>, <em>mysql1.example.com</em> or <em>208.77.188.166</em>). You can specify a custom port number if your database doesn\'t run on the default port (example: <em>localhost:3580</em>). For SQLite support, just enter anything or leave it at \'localhost\'.',
 'Database name info'		=>	'Enter the name of the database that FluxBB will be installed into. The database must exist. For SQLite, this is the relative path to the database file. If the SQLite database file does not exist, FluxBB will attempt to create it.',
 'Database username info'	=>	'Enter the username and password used for connecting to the selected database. Ignore for SQLite.',
@@ -72,6 +73,7 @@ $lang_install = array(
 'Invalid table prefix'		=>	'The table prefix \'%s\' contains illegal characters or is too long. The prefix may contain the letters a to z, any numbers and the underscore character. They must however not start with a number. The maximum length is 40 characters. Please choose a different prefix.',
 'SQLite prefix collision'	=>	'The table prefix \'sqlite_\' is reserved for use by the SQLite engine. Please choose a different prefix.',
 'FluxBB already installed'	=>	'A table called "%1$susers" is already present in the database "%2$s". This could mean that FluxBB is already installed or that another piece of software is installed and is occupying one or more of the table names FluxBB requires. If you want to install multiple copies of FluxBB in the same database, you must choose a different table prefix.',
+'InnoDB not enabled'		=>	'InnoDB does not seem to be enabled. Please choose a database layer that does not have InnoDB support, or enable InnoDB on your MySQL server.',
 
 // Used in the install
 'Default announce heading'	=>	'Sample announcement',

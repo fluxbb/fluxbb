@@ -164,7 +164,7 @@ $forum_page['num_pages'] = ceil(($cur_topic['num_replies'] + 1) / $forum_user['d
 $forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
 $forum_page['start_from'] = $forum_user['disp_posts'] * ($forum_page['page'] - 1);
 $forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_posts']), ($cur_topic['num_replies'] + 1));
-$forum_page['items_info'] =  generate_items_info($lang_topic['Posts'], ($forum_page['start_from'] + 1), ($cur_topic['num_replies'] + 1));
+$forum_page['page_info'] =  generate_page_info($lang_topic['Posts'], ($forum_page['start_from'] + 1), ($cur_topic['num_replies'] + 1));
 
 ($hook = get_hook('vt_modify_page_details')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -227,9 +227,6 @@ $forum_page['crumbs'] = array(
 // Setup main heading
 $forum_page['main_head'] = (($cur_topic['closed'] == '1') ? $lang_topic['Topic closed'].' ' : '').'<a class="permalink" href="'.forum_link($forum_url['topic'], array($id, sef_friendly($cur_topic['subject']))).'" rel="bookmark" title="'.$lang_topic['Permalink topic'].'">'.forum_htmlencode($cur_topic['subject']).'</a>';
 
-if ($forum_page['num_pages'] > 1)
-	$forum_page['main_head_pages'] = sprintf($lang_common['Page info'], $forum_page['page'], $forum_page['num_pages']);
-
 ($hook = get_hook('vt_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // Allow indexing if this isn't a permalink and it isn't a link with p=1
@@ -237,6 +234,7 @@ if (!$pid && (!isset($_GET['p']) || $forum_page['page'] != 1))
 	define('FORUM_ALLOW_INDEX', 1);
 
 define('FORUM_PAGE', 'viewtopic');
+define('FORUM_PAGE_TYPE', 'topic');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
@@ -246,7 +244,7 @@ ob_start();
 
 ?>
 	<div class="main-pagehead">
-		<h2 class="hn"><span><?php echo $forum_page['items_info'] ?></span></h2>
+		<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
 	</div>
 	<div id="forum<?php echo $cur_topic['forum_id'] ?>" class="main-content main-topic">
 <?php
@@ -289,28 +287,24 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 
 	++$forum_page['item_count'];
 
-	$forum_page['post_ident'] = array();
-	$forum_page['author_ident'] = array();
-	$forum_page['author_info'] = array();
+	$forum_page['user_ident'] = array();
+	$forum_page['user_info'] = array();
 	$forum_page['post_options'] = array();
 	$forum_page['post_contacts'] = array();
 	$forum_page['post_actions'] = array();
 	$forum_page['message'] = array();
 
 	// Generate the post heading
-	$forum_page['post_ident']['num'] = '<span class="post-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span>';
+	$forum_page['item_ident'] = array(
+		'num'	=> '<span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span>',
+		'user'	=> '<span class="username">'.sprintf($lang_topic['Posted by'], '<a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a>').'</span>',
+		'link'	=> '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.format_time($cur_post['posted']).'</a>'
+	);
 
-	if ($cur_post['poster_id'] > 1)
-		$forum_page['post_ident']['byline'] = '<span class="post-byline">'.sprintf((($cur_post['id'] == $cur_topic['first_post_id']) ? $lang_topic['Topic byline'] : $lang_topic['Reply byline']), (($forum_user['g_view_users'] == '1') ? '<a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a>' : '<strong>'.forum_htmlencode($cur_post['username']).'</strong>')).'</span>';
-	else
-		$forum_page['post_ident']['byline'] = '<span class="post-byline">'.sprintf((($cur_post['id'] == $cur_topic['first_post_id']) ? $lang_topic['Topic byline'] : $lang_topic['Reply byline']), '<strong>'.forum_htmlencode($cur_post['username']).'</strong>').'</span>';
+	($hook = get_hook('vt_row_pre_item_ident_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-	$forum_page['post_ident']['link'] = '<span class="post-link"><a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.format_time($cur_post['posted']).'</a></span>';
-
-	($hook = get_hook('vt_row_pre_post_ident_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
-	if (isset($user_data_cache[$cur_post['poster_id']]['author_ident']))
-		$forum_page['author_ident'] = $user_data_cache[$cur_post['poster_id']]['author_ident'];
+	if (isset($user_data_cache[$cur_post['poster_id']]['user_ident']))
+		$forum_page['user_ident'] = $user_data_cache[$cur_post['poster_id']]['user_ident'];
 	else
 	{
 		// Generate author identification
@@ -320,25 +314,25 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 				$forum_page['avatar_markup'] = generate_avatar_markup($cur_post['poster_id']);
 
 			if (!empty($forum_page['avatar_markup']))
-				$forum_page['author_ident']['avatar'] = '<li class="useravatar">'.$forum_page['avatar_markup'].'</li>';
+				$forum_page['user_ident']['avatar'] = '<li class="useravatar">'.$forum_page['avatar_markup'].'</li>';
 
-			$forum_page['author_ident']['username'] = '<li class="username">'.(($forum_user['g_view_users'] == '1') ? '<a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a>' : '<strong>'.forum_htmlencode($cur_post['username']).'</strong>').'</li>';
-			$forum_page['author_ident']['usertitle'] = '<li class="usertitle"><span>'.get_title($cur_post).'</span></li>';
+			$forum_page['user_ident']['username'] = '<li class="username">'.(($forum_user['g_view_users'] == '1') ? '<a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a>' : '<strong>'.forum_htmlencode($cur_post['username']).'</strong>').'</li>';
+			$forum_page['user_ident']['usertitle'] = '<li class="usertitle"><span>'.get_title($cur_post).'</span></li>';
 
 			if ($cur_post['is_online'] == $cur_post['poster_id'])
-				$forum_page['author_ident']['status'] = '<li class="userstatus"><span>'.$lang_topic['Online'].'</span></li>';
+				$forum_page['user_ident']['status'] = '<li class="userstatus"><span>'.$lang_topic['Online'].'</span></li>';
 			else
-				$forum_page['author_ident']['status'] = '<li class="userstatus"><span>'.$lang_topic['Offline'].'</span></li>';
+				$forum_page['user_ident']['status'] = '<li class="userstatus"><span>'.$lang_topic['Offline'].'</span></li>';
 		}
 		else
 		{
-			$forum_page['author_ident']['username'] = '<li class="username"><strong>'.forum_htmlencode($cur_post['username']).'</strong></li>';
-			$forum_page['author_ident']['usertitle'] = '<li class="usertitle"><span>'.get_title($cur_post).'</span></li>';
+			$forum_page['user_ident']['username'] = '<li class="username"><strong>'.forum_htmlencode($cur_post['username']).'</strong></li>';
+			$forum_page['user_ident']['usertitle'] = '<li class="usertitle"><span>'.get_title($cur_post).'</span></li>';
 		}
 	}
 
-	if (isset($user_data_cache[$cur_post['poster_id']]['author_info']))
-		$forum_page['author_info'] = $user_data_cache[$cur_post['poster_id']]['author_info'];
+	if (isset($user_data_cache[$cur_post['poster_id']]['user_info']))
+		$forum_page['user_info'] = $user_data_cache[$cur_post['poster_id']]['user_info'];
 	else
 	{
 		// Generate author information
@@ -351,26 +345,26 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 					if ($forum_config['o_censoring'] == '1')
 						$cur_post['location'] = censor_words($cur_post['location']);
 
-					$forum_page['author_info']['from'] = '<li><span>'.$lang_topic['From'].' <strong> '.forum_htmlencode($cur_post['location']).'</strong></span></li>';
+					$forum_page['user_info']['from'] = '<li><span>'.$lang_topic['From'].' <strong> '.forum_htmlencode($cur_post['location']).'</strong></span></li>';
 				}
 
-				$forum_page['author_info']['registered'] = '<li><span>'.$lang_topic['Registered'].' <strong> '.format_time($cur_post['registered'], 1).'</strong></span></li>';
+				$forum_page['user_info']['registered'] = '<li><span>'.$lang_topic['Registered'].' <strong> '.format_time($cur_post['registered'], 1).'</strong></span></li>';
 
 				if ($forum_config['o_show_post_count'] == '1' || $forum_user['is_admmod'])
-					$forum_page['author_info']['posts'] = '<li><span>'.$lang_topic['Posts info'].' <strong> '.forum_number_format($cur_post['num_posts']).'</strong></span></li>';
+					$forum_page['user_info']['posts'] = '<li><span>'.$lang_topic['Posts info'].' <strong> '.forum_number_format($cur_post['num_posts']).'</strong></span></li>';
 			}
 
 			if ($forum_user['is_admmod'])
 			{
 				if ($cur_post['admin_note'] != '')
-					$forum_page['author_info']['note'] = '<li><span>'.$lang_topic['Note'].' <strong> '.forum_htmlencode($cur_post['admin_note']).'</strong></span></li>';
+					$forum_page['user_info']['note'] = '<li><span>'.$lang_topic['Note'].' <strong> '.forum_htmlencode($cur_post['admin_note']).'</strong></span></li>';
 			}
 		}
 	}
 
 	// Generate IP information for moderators/administrators
 	if ($forum_user['is_admmod'])
-		$forum_page['author_info']['ip'] = '<li><span>'.$lang_topic['IP'].' <a href="'.forum_link($forum_url['get_host'], $cur_post['id']).'">'.$cur_post['poster_ip'].'</a></span></li>';
+		$forum_page['user_info']['ip'] = '<li><span>'.$lang_topic['IP'].' <a href="'.forum_link($forum_url['get_host'], $cur_post['id']).'">'.$cur_post['poster_ip'].'</a></span></li>';
 
 	// Generate author contact details
 	if ($forum_config['o_show_user_info'] == '1')
@@ -496,8 +490,8 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 	if ($cur_post['poster_id'] > 1 && !isset($user_data_cache[$cur_post['poster_id']]))
 	{
 		$user_data_cache[$cur_post['poster_id']] = array(
-			'author_ident'	=> $forum_page['author_ident'],
-			'author_info'	=> $forum_page['author_info'],
+			'user_ident'	=> $forum_page['user_ident'],
+			'user_info'		=> $forum_page['user_info'],
 			'post_contacts'	=> $forum_page['post_contacts']
 		);
 
@@ -507,15 +501,17 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 ?>
 		<div class="<?php echo implode(' ', $forum_page['item_status']) ?>">
 			<div id="p<?php echo $cur_post['id'] ?>" class="posthead">
-				<h3 class="hn post-ident"><?php echo implode(' ', $forum_page['post_ident']) ?></h3>
+				<h3 class="hn"><?php echo implode(' ', $forum_page['item_ident']) ?></h3>
+ 				<a class="skiplink" href="#pc<?php echo $cur_post['id'] ?>"><?php echo $lang_topic['Skip to content'] ?></a>
 			</div>
-			<div class="postbody<?php echo ($cur_post['is_online'] == $cur_post['poster_id']) ? ' online' : '' ?>">
-				<div class="post-author">
-					<ul class="author-ident">
-						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['author_ident'])."\n" ?>
+			<div class="postbody">
+				<div class="post-author user<?php echo ($cur_post['is_online'] == $cur_post['poster_id']) ? ' online' : '' ?>">
+					<h4 class="hn"><span><?php echo $lang_topic['Author head'] ?></span></h4>
+					<ul class="user-ident">
+						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_ident'])."\n" ?>
 					</ul>
-					<ul class="author-info">
-						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['author_info'])."\n" ?>
+					<ul class="user-info">
+						<?php echo implode("\n\t\t\t\t\t\t", $forum_page['user_info'])."\n" ?>
 					</ul>
 				</div>
 				<div class="post-entry">

@@ -89,7 +89,7 @@ if ($db_type != 'sqlite')
 
 
 // If MySQL, make sure it's at least 4.1.2
-if ($db_type == 'mysql' || $db_type == 'mysqli')
+if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 {
 	$result = $forum_db->query('SELECT VERSION()') or error(__FILE__, __LINE__);
 	$mysql_version = $forum_db->result($result);
@@ -473,7 +473,7 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 	// Start by updating the database structure
 	case 'start':
 		// Put back dropped search tables
-		if (!$forum_db->table_exists('search_cache') && ($db_type == 'mysql' || $db_type == 'mysqli'))
+		if (!$forum_db->table_exists('search_cache') && ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb'))
 		{
 			$schema = array(
 				'FIELDS'		=> array(
@@ -605,7 +605,7 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 		}
 
 		// Make sure the collation on "word" in the search_words table is utf8_bin
-		if ($db_type == 'mysql' || $db_type == 'mysqli')
+		if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 		{
 			$result = $forum_db->query('SHOW FULL COLUMNS FROM '.$forum_db->prefix.'search_words') or error(__FILE__, __LINE__);
 			while ($cur_column = $forum_db->fetch_assoc($result))
@@ -671,7 +671,7 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 		// Add priority field to extension_hooks
 		$forum_db->add_field('extension_hooks', 'priority', 'TINYINT(1)', false, 5, 'installed');
 
-		if ($db_type == 'mysql' || $db_type == 'mysqli')
+		if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 		{
 			// Make all e-mail fields VARCHAR(80)
 			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'bans CHANGE email email VARCHAR(80)') or error(__FILE__, __LINE__);
@@ -695,6 +695,8 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 		{
 			case 'mysql':
 			case 'mysqli':
+			case 'mysql_innodb':
+			case 'mysqli_innodb':
 				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'posts CHANGE poster_ip poster_ip VARCHAR(39)') or error(__FILE__, __LINE__);
 				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'users CHANGE registration_ip registration_ip VARCHAR(39) NOT NULL DEFAULT \'0.0.0.0\'') or error(__FILE__, __LINE__);
 				break;
@@ -866,6 +868,8 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 			{
 				case 'mysql':
 				case 'mysqli':
+				case 'mysql_innodb':
+				case 'mysqli_innodb':
 					$forum_db->add_index('online', 'user_id_ident_idx', array('user_id', 'ident(25)'), true);
 					break;
 
@@ -883,6 +887,8 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 		{
 			case 'mysql':
 			case 'mysqli':
+			case 'mysql_innodb':
+			case 'mysqli_innodb':
 				$forum_db->add_index('online', 'ident_idx', array('ident(25)'));
 				break;
 
@@ -952,6 +958,16 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 		{
 			$forum_db->query('DELETE FROM '.$forum_db->prefix.'extension_hooks WHERE extension_id = \''.$cur_ext['id'].'\'') or error(__FILE__, __LINE__);
 			$forum_db->query('DELETE FROM '.$forum_db->prefix.'extensions WHERE id = \''.$cur_ext['id'].'\'') or error(__FILE__, __LINE__);
+		}
+
+		// If the tables aren't already InnoDB, make it so
+		// This should only occur if config.php is manually changed to use InnoDB
+		if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+		{
+			$result = $forum_db->query('SHOW TABLE STATUS FROM `'.$db_name.'` LIKE \''.$db_prefix.'%\'');
+			while ($row = $forum_db->fetch_assoc($result))
+				if($row['Engine'] != 'InnoDB')
+					$forum_db->query('ALTER TABLE '.$row['Name'].' ENGINE = \'InnoDB\'');
 		}
 
 		// Should we do charset conversion or not?
@@ -1235,7 +1251,7 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 	// Convert table columns to utf8 (MySQL only)
 	case 'conv_tables':
 		// Do the cumbersome charset conversion of MySQL tables/columns
-		if ($db_type == 'mysql' || $db_type == 'mysqli')
+		if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 		{
 			echo 'Converting table '.$forum_db->prefix.'bans …<br />'."\n"; flush();
 			convert_table_utf8($forum_db->prefix.'bans');

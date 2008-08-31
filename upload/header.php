@@ -142,20 +142,8 @@ unset($forum_head);
 // Setup array of general elements
 $gen_elements = array();
 
-// Forum page id and classes
-if (substr(FORUM_PAGE, 0, 5) == 'admin')
-	define('FORUM_PAGE_TYPE', 'admin-page');
-else
-{
-	if (!empty($forum_page['page_post']))
-		define('FORUM_PAGE_TYPE', 'paged-page');
-	else if (!empty($forum_page['main_menu']))
-		define('FORUM_PAGE_TYPE', 'menu-page');
-	else
-		define('FORUM_PAGE_TYPE', 'basic-page');
-}
-
-$gen_elements['<!-- forum_page -->'] = 'id="brd-'.FORUM_PAGE.'" class="brd-page '.FORUM_PAGE_TYPE.'"';
+// Forum page class
+$gen_elements['<!-- forum_page -->'] = 'id="brd-'.FORUM_PAGE.'"';
 
 // Skip link
 $gen_elements['<!-- forum_skip -->'] = '<p id="brd-access"><a href="#brd-main">'.$lang_common['Skip to content'].'</a></p>';
@@ -275,8 +263,11 @@ $main_elements['<!-- forum_crumbs_top -->'] = (FORUM_PAGE != 'index') ? '<div id
 // Bottom breadcrumbs
 $main_elements['<!-- forum_crumbs_end -->'] = (FORUM_PAGE != 'index') ? '<div id="brd-crumbs-end" class="crumbs gen-content">'."\n\t".'<p>'.generate_crumbs(false).'</p>'."\n".'</div>' : '';
 
+// Page type class
+$main_elements['<!-- forum_page_type -->'] = (defined('FORUM_PAGE_TYPE')) ? FORUM_PAGE_TYPE.((substr(FORUM_PAGE, 0, 5) == 'admin') ? ' admin' : '') : ((substr(FORUM_PAGE, 0, 5) == 'admin') ? 'admin' : 'basic');
+
 // Main section heading
-$main_elements['<!-- forum_main_head -->'] =  '<div class="main-head">'."\n\t".'<h1 class="hn"><span>'.((isset($forum_page['main_head'])) ? $forum_page['main_head'] : end($forum_page['crumbs'])).(isset($forum_page['main_head_pages']) ? ' <small>'.$forum_page['main_head_pages'].'</small>' : '').'</span></h1>'."\n".'</div>';
+$main_elements['<!-- forum_main_head -->'] =  '<div class="main-head">'."\n\t\t".'<h1 class="hn"><span>'.((isset($forum_page['main_head'])) ? $forum_page['main_head'] : end($forum_page['crumbs'])).'</span></h1>'."\n\t".'</div>';
 
 // Top pagination and post links
 $main_elements['<!-- forum_main_pagepost_top -->'] = (!empty($forum_page['page_post'])) ? '<div id="brd-pagepost-top" class="main-pagepost gen-content">'."\n\t".implode("\n\t", $forum_page['page_post'])."\n".'</div>' : '';

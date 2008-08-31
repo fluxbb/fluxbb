@@ -116,7 +116,7 @@ switch ($db_type)
 
 
 // Collect some additional info about MySQL
-if ($db_type == 'mysql' || $db_type == 'mysqli')
+if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 {
 	$db_version = 'MySQL '.$db_version;
 

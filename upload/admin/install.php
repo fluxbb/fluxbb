@@ -81,13 +81,20 @@ if (!isset($_POST['form_sent']))
 	// Determine available database extensions
 	$dual_mysql = false;
 	$db_extensions = array();
+	$mysql_innodb = false;
 	if (function_exists('mysqli_connect'))
+	{
 		$db_extensions[] = array('mysqli', 'MySQL Improved');
+		$db_extensions[] = array('mysqli_innodb', 'MySQL Improved (InnoDB)');
+		$mysql_innodb = true;
+	}
 	if (function_exists('mysql_connect'))
 	{
 		$db_extensions[] = array('mysql', 'MySQL Standard');
+		$db_extensions[] = array('mysql_innodb', 'MySQL Standard (InnoDB)');
+		$mysql_innodb = true;
 
-		if (count($db_extensions) > 1)
+		if (count($db_extensions) > 2)
 			$dual_mysql = true;
 	}
 	if (function_exists('sqlite_open'))
@@ -142,7 +149,7 @@ if (!isset($_POST['form_sent']))
 		<div class="ct-box">
 			<p><?php echo $lang_install['Part1 intro'] ?></p>
 			<ul class="spaced">
-				<li><span><strong><?php echo $lang_install['Database type'] ?></strong> <?php echo $lang_install['Database type info'] ?><?php if ($dual_mysql) echo ' '.$lang_install['Mysql type info'] ?></span></li>
+				<li><span><strong><?php echo $lang_install['Database type'] ?></strong> <?php echo $lang_install['Database type info']; if ($dual_mysql) echo ' '.$lang_install['Mysql type info']; if ($mysql_innodb) echo ' '.$lang_install['MySQL InnoDB info'] ?></span></li>
 				<li><span><strong><?php echo $lang_install['Database server'] ?></strong> <?php echo $lang_install['Database server info'] ?></span></li>
 				<li><span><strong><?php echo $lang_install['Database name'] ?></strong> <?php echo $lang_install['Database name info'] ?></span></li>
 				<li><span><strong><?php echo $lang_install['Database user pass'] ?></strong> <?php echo $lang_install['Database username info'] ?></span></li>
@@ -360,6 +367,14 @@ else
 			require FORUM_ROOT.'include/dblayer/mysqli.php';
 			break;
 
+		case 'mysql_innodb':
+			require FORUM_ROOT.'include/dblayer/mysql_innodb.php';
+			break;
+
+		case 'mysqli_innodb':
+			require FORUM_ROOT.'include/dblayer/mysqli_innodb.php';
+			break;
+
 		case 'pgsql':
 			require FORUM_ROOT.'include/dblayer/pgsql.php';
 			break;
@@ -377,7 +392,7 @@ else
 
 
 	// If MySQL, make sure it's at least 4.1.2
-	if ($db_type == 'mysql' || $db_type == 'mysqli')
+	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 	{
 		$result = $forum_db->query('SELECT VERSION()') or error(__FILE__, __LINE__);
 		$mysql_version = $forum_db->result($result);
@@ -399,6 +414,13 @@ else
 	if ($forum_db->num_rows($result))
 		error(sprintf($lang_install['FluxBB already installed'], $db_prefix, $db_name));
 
+	// Check if InnoDB is available
+	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+	{
+		$result = $forum_db->query('SHOW VARIABLES LIKE \'have_innodb\'');
+		if((strtoupper($forum_db->result($result)) != 'YES'))
+			error($lang_install['InnoDB not enabled']);
+	}
 
 	// Start a transaction
 	$forum_db->start_transaction();
@@ -851,11 +873,14 @@ else
 		'ENGINE'		=> 'HEAP'
 	);
 
-	if ($db_type == 'mysql' || $db_type == 'mysqli')
+	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 	{
 		$schema['UNIQUE KEYS']['user_id_ident_idx'] = array('user_id', 'ident(25)');
 		$schema['INDEXES']['ident_idx'] = array('ident(25)');
 	}
+
+	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+		$schema['ENGINE'] = 'InnoDB';
 
 	$forum_db->create_table('online', $schema);
 
@@ -1021,7 +1046,7 @@ else
 		)
 	);
 
-	if ($db_type == 'mysql' || $db_type == 'mysqli')
+	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 		$schema['INDEXES']['ident_idx'] = array('ident(8)');
 
 	$forum_db->create_table('search_cache', $schema);
@@ -1388,7 +1413,7 @@ else
 		)
 	);
 
-	if ($db_type == 'mysql' || $db_type == 'mysqli')
+	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 		$schema['INDEXES']['username_idx'] = array('username(8)');
 
 	$forum_db->create_table('users', $schema);

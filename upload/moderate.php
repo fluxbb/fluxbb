@@ -416,7 +416,7 @@ if (isset($_GET['tid']))
 	$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
 	$forum_page['start_from'] = $forum_user['disp_posts'] * ($forum_page['page'] - 1);
 	$forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_posts']), ($cur_topic['num_replies'] + 1));
-	$forum_page['items_info'] = generate_items_info($lang_misc['Posts'], ($forum_page['start_from'] + 1), ($cur_topic['num_replies'] + 1));
+	$forum_page['page_info'] = generate_page_info($lang_misc['Posts'], ($forum_page['start_from'] + 1), ($cur_topic['num_replies'] + 1));
 
 	// Generate paging links
 	$forum_page['page_post']['paging'] = '<p class="paging"><span class="pages">'.$lang_common['Pages'].'</span> '.paginate($forum_page['num_pages'], $forum_page['page'], $forum_url['moderate_topic'], $lang_common['Paging separator'], array($fid, $tid)).'</p>';
@@ -450,12 +450,10 @@ if (isset($_GET['tid']))
 	// Setup main heading
 	$forum_page['main_head'] = sprintf($lang_misc['Moderate topic head'], forum_htmlencode($cur_topic['subject']));
 
-	if ($forum_page['num_pages'] > 1)
-		$forum_page['main_head_pages'] = sprintf($lang_common['Page info'], $forum_page['page'], $forum_page['num_pages']);
-
 	($hook = get_hook('mr_post_actions_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'modtopic');
+	define('FORUM_PAGE_TYPE','topic');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -465,7 +463,7 @@ if (isset($_GET['tid']))
 
 ?>
 	<div class="main-pagehead">
-		<h2 class="hn"><span><?php echo $forum_page['items_info'] ?></span></h2>
+		<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
 	</div>
 	<form id="mr-post-actions-form" class="newform" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
 	<div class="main-content main-topic">
@@ -507,31 +505,28 @@ if (isset($_GET['tid']))
 
 		++$forum_page['item_count'];
 
-		$forum_page['post_ident'] = array();
 		$forum_page['message'] = array();
-		$forum_page['author_title'] = '';
 		$forum_page['user_ident'] = array();
 		$cur_post['username'] = $cur_post['poster'];
 
 		// Generate the post heading
-		$forum_page['post_ident']['num'] = '<span class="post-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span>';
-
-		if ($cur_post['poster_id'] > 1)
-			$forum_page['post_ident']['byline'] = '<span class="post-byline">'.sprintf((($cur_post['id'] == $cur_topic['first_post_id']) ? $lang_topic['Topic byline'] : $lang_topic['Reply byline']), (($forum_user['g_view_users'] == '1') ? '<a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a>' : '<strong>'.forum_htmlencode($cur_post['username']).'</strong>')).'</span>';
-		else
-			$forum_page['post_ident']['byline'] = '<span class="post-byline">'.sprintf((($cur_post['id'] == $cur_topic['first_post_id']) ? $lang_topic['Topic byline'] : $lang_topic['Reply byline']), '<strong>'.forum_htmlencode($cur_post['username']).'</strong>').'</span>';
-
-		$forum_page['post_ident']['link'] = '<span class="post-link"><a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.format_time($cur_post['posted']).'</a></span>';
+		$forum_page['item_ident'] = array(
+			'num'	=> '<strong>'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</strong>',
+			'user'	=> '<cite>'.($cur_topic['posted'] == $cur_post['posted'] ? sprintf($lang_topic['Topic by'], forum_htmlencode($cur_post['username'])) : sprintf($lang_topic['Reply by'], forum_htmlencode($cur_post['username']))).'</cite>',
+			'date'	=> '<span>'.format_time($cur_post['posted']).'</span>'
+		);
 
 		($hook = get_hook('mr_row_pre_item_ident_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
+		$forum_page['item_head'] = '<a class="permalink" rel="bookmark" title="'.$lang_topic['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.implode(' ', $forum_page['item_ident']).'</a>';
 
 		// Generate the checkbox field
 		if ($cur_post['id'] != $cur_topic['first_post_id'])
 			$forum_page['item_select'] = '<p class="item-select"><input type="checkbox" id="fld'.$cur_post['id'].'" name="posts[]" value="'.$cur_post['id'].'" /> <label for="fld'.$cur_post['id'].'">'.$lang_misc['Select post'].' '.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</label></p>';
 
 		// Generate author identification
-		$forum_page['author_ident']['username'] = '<li class="username">'.(($cur_post['poster_id'] > '1') ? '<a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a>' : '<strong>'.forum_htmlencode($cur_post['username']).'</strong>').'</li>';
-		$forum_page['author_ident']['usertitle'] = '<li class="usertitle"><span>'.get_title($cur_post).'</span></li>';
+		$forum_page['user_ident']['username'] = (($cur_post['poster_id'] > 1) ? '<strong class="username"><a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a></strong>' : '<strong class="username">'.forum_htmlencode($cur_post['username']).'</strong>');
+		$forum_page['user_ident']['usertitle'] = '<span class="usertitle">'.get_title($cur_post).'</span>';
 
 		// Give the post some class
 		$forum_page['item_status'] = array(
@@ -569,16 +564,14 @@ if (isset($_GET['tid']))
 ?>
 			<div class="<?php echo implode(' ', $forum_page['item_status']) ?>">
 				<div id="p<?php echo $cur_post['id'] ?>" class="posthead">
-					<h3 class="hn post-ident"><?php echo implode(' ', $forum_page['post_ident']) ?></h3>
+					<h3 class="hn"><?php echo $forum_page['item_head'] ?></h3>
 <?php ($hook = get_hook('mr_post_actions_pre_item_select')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 <?php if (isset($forum_page['item_select'])) echo "\t\t\t\t".$forum_page['item_select']."\n" ?>
 <?php ($hook = get_hook('mr_post_actions_new_post_head_option')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				</div>
 				<div class="postbody">
-					<div class="post-author">
-						<ul class="author-ident">
-							<?php echo implode("\n\t\t\t\t\t\t", $forum_page['author_ident'])."\n" ?>
-						</ul>
+					<div class="post-author user">
+						<h4 class="user-ident"><?php echo implode('<br />', $forum_page['user_ident']) ?></h4>
 <?php ($hook = get_hook('mr_post_actions_new_user_ident_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 					</div>
 					<div class="post-entry">
@@ -812,6 +805,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	($hook = get_hook('mr_move_topics_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'dialogue');
+	define('FORUM_PAGE_TYPE', 'basic');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -999,6 +993,7 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 	($hook = get_hook('mr_merge_topics_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define('FORUM_PAGE', 'dialogue');
+	define('FORUM_PAGE_TYPE', 'basic');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -1395,7 +1390,7 @@ $forum_page['num_pages'] = ceil($cur_forum['num_topics'] / $forum_user['disp_top
 $forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
 $forum_page['start_from'] = $forum_user['disp_topics'] * ($forum_page['page'] - 1);
 $forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_topics']), ($cur_forum['num_topics']));
-$forum_page['items_info'] = generate_items_info($lang_misc['Topics'], ($forum_page['start_from'] + 1), $cur_forum['num_topics']);
+$forum_page['page_info'] = generate_page_info($lang_misc['Topics'], ($forum_page['start_from'] + 1), $cur_forum['num_topics']);
 
 // Select topics
 $query = array(
@@ -1448,13 +1443,10 @@ $forum_page['crumbs'] = array(
 	sprintf($lang_misc['Moderate forum head'], forum_htmlencode($cur_forum['forum_name']))
 );
 
-// Setup main heading
-if ($forum_page['num_pages'] > 1)
-	$forum_page['main_head_pages'] = sprintf($lang_common['Page info'], $forum_page['page'], $forum_page['num_pages']);
-
 ($hook = get_hook('mr_topic_actions_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE', 'modforum');
+define('FORUM_PAGE_TYPE', 'forum');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
@@ -1473,7 +1465,7 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 
 ?>
 	<div class="main-pagehead">
-		<h2 class="hn"><span><?php echo $forum_page['items_info'] ?></span></h2>
+		<h2 class="hn"><span><?php echo $forum_page['page_info'] ?></span></h2>
 	</div>
 	<div class="main-subhead">
 		<p class="item-summary<?php echo ($forum_config['o_topic_views'] == '1') ? ' forum-views' : ' forum-noview' ?>"><span><?php printf($lang_forum['Forum subtitle'], implode(' ', $forum_page['item_header']['subject']), implode(', ', $forum_page['item_header']['info'])) ?></span></p>

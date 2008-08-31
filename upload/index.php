@@ -65,6 +65,7 @@ if (!$forum_user['is_guest'])
 
 define('FORUM_ALLOW_INDEX', 1);
 define('FORUM_PAGE', 'index');
+define('FORUM_PAGE_TYPE', 'index');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
