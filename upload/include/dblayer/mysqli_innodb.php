@@ -21,6 +21,7 @@ class DBLayer
 
 	var $saved_queries = array();
 	var $num_queries = 0;
+	var $in_transaction = 0;
 
 	var $datatype_transformations = array(
 		'/^SERIAL$/'	=>	'INT(10) UNSIGNED AUTO_INCREMENT'
@@ -53,14 +54,17 @@ class DBLayer
 
 	function start_transaction()
 	{
+		++$this->in_transaction;
+
 		$this->query('START TRANSACTION');
-		$this->query('SET AUTOCOMMIT=0');
 		return;
 	}
 
 
 	function end_transaction()
 	{
+		--$this->in_transaction;
+
 		$this->query('COMMIT');
 		return;
 	}
@@ -90,8 +94,11 @@ class DBLayer
 			if (defined('FORUM_SHOW_QUERIES'))
 				$this->saved_queries[] = array($sql, 0);
 
-			// Rollback transaction
-			$this->query('ROLLBACK');
+			/ Rollback transaction
+			if ($this->in_transaction)
+				$this->query('ROLLBACK');
+
+			--$this->in_transaction;
 
 			return false;
 		}

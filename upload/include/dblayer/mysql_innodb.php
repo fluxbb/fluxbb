@@ -18,6 +18,7 @@ class DBLayer
 	var $prefix;
 	var $link_id;
 	var $query_result;
+	var $in_transaction = 0;
 
 	var $saved_queries = array();
 	var $num_queries = 0;
@@ -54,14 +55,17 @@ class DBLayer
 
 	function start_transaction()
 	{
+		++$this->in_transaction;
+
 		$this->query('START TRANSACTION');
-		$this->query('SET AUTOCOMMIT=0');
 		return;
 	}
 
 
 	function end_transaction()
 	{
+		--$this->in_transaction;
+
 		$this->query('COMMIT');
 		return;
 	}
@@ -95,7 +99,10 @@ class DBLayer
 				$this->saved_queries[] = array($sql, 0);
 
 			// Rollback transaction
-			$this->query('ROLLBACK');
+			if ($this->in_transaction)
+				$this->query('ROLLBACK');
+
+			--$this->in_transaction;
 
 			return false;
 		}
