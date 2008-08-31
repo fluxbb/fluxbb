@@ -158,7 +158,6 @@ if (!isset($_GET['p']) || $forum_page['page'] != 1)
 	define('FORUM_ALLOW_INDEX', 1);
 
 define('FORUM_PAGE', 'viewforum');
-define('FORUM_PAGE_TYPE', 'forum');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->

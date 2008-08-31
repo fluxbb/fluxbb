@@ -321,7 +321,6 @@ $forum_page['crumbs'][] = $tid ? $lang_post['Post reply'] : $lang_post['Post new
 ($hook = get_hook('po_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE', 'post');
-define('FORUM_PAGE_TYPE', 'basic');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
@@ -337,10 +336,11 @@ if (isset($_POST['preview']) && empty($errors))
 
 	$forum_page['preview_message'] = parse_message(forum_trim($message), $hide_smilies);
 
-	$forum_page['preview_ident'] = array(
-		'user'	=> '<span class="username">'.sprintf($lang_post['Preview by'], '<strong>'.forum_htmlencode($forum_user['username']).'</strong>').'</span>',
-		'link'	=> format_time(time())
-	);
+	// Generate the post heading
+	$forum_page['post_ident'] = array();
+	$forum_page['post_ident']['num'] = '<span class="post-num">#</span>';
+	$forum_page['post_ident']['byline'] = '<span class="post-byline">'.sprintf((($tid) ? $lang_post['Reply byline'] : $lang_post['Topic byline']), '<strong>'.forum_htmlencode($forum_user['username']).'</strong>').'</span>';
+	$forum_page['post_ident']['link'] = '<span class="post-link">'.format_time(time()).'</span>';
 
 	($hook = get_hook('po_preview_pre_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -351,7 +351,7 @@ if (isset($_POST['preview']) && empty($errors))
 	<div id="post-preview" class="main-content main-frm">
 		<div class="post singlepost">
 			<div class="posthead">
-				<h3 class="hn"><?php echo implode(' ', $forum_page['preview_ident']) ?></h3>
+				<h3 class="hn"><?php echo implode(' ', $forum_page['post_ident']) ?></h3>
 <?php ($hook = get_hook('po_preview_new_post_head_option')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</div>
 			<div class="postbody">
@@ -558,28 +558,34 @@ if ($tid && $forum_config['o_topic_review'] != '0')
 
 	$forum_page['item_count'] = 0;
 	$forum_page['item_total'] = $forum_db->num_rows($result);
+	$forum_page['author_title'] = '';
 
 	while ($cur_post = $forum_db->fetch_assoc($result))
 	{
 		++$forum_page['item_count'];
 
 		// Generate the post heading
-		$forum_page['item_ident'] = array(
-			'num'	=> '<span class="item-num">'.forum_number_format($forum_page['item_count']).'</span>',
-			'user'	=> '<span class="username">'.sprintf($lang_post['Posted by'], '<strong>'.forum_htmlencode($cur_post['poster']).'</strong>').'</span>',
-			'link'	=> '<a class="permalink" rel="bookmark" title="'.$lang_post['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.format_time($cur_post['posted']).'</a>'
+		$forum_page['post_ident'] = array(
+			'num'	=> '<span class="post-num">'.forum_number_format($forum_page['item_count']).'</span>',
+			'link'	=> '<span class="post-link">'.sprintf($lang_post['Post posted'], '<a class="permalink" rel="bookmark" title="'.$lang_post['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.format_time($cur_post['posted']).'</a>').'</span>'
 		);
 
 		($hook = get_hook('po_topic_review_pre_item_indent_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		$forum_page['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 
+		// Generate the post heading
+		$forum_page['post_ident'] = array();
+		$forum_page['post_ident']['num'] = '<span class="post-num">'.forum_number_format($forum_page['item_count']).'</span>';
+		$forum_page['post_ident']['byline'] = '<span class="post-byline">'.sprintf($lang_post['Post byline'], '<strong>'.forum_htmlencode($cur_post['poster']).'</strong>').'</span>';
+		$forum_page['post_ident']['link'] = '<span class="post-link"><a class="permalink" rel="bookmark" title="'.$lang_post['Permalink post'].'" href="'.forum_link($forum_url['post'], $cur_post['id']).'">'.format_time($cur_post['posted']).'</a></span>';
+
 		($hook = get_hook('po_topic_review_row_pre_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="post<?php echo ($forum_page['item_count'] == 1) ? ' firstpost' : '' ?><?php echo ($forum_page['item_total'] == $forum_page['item_count']) ? ' lastpost' : '' ?>">
 			<div class="posthead">
-				<h3 class="hn"><?php echo implode(' ', $forum_page['item_ident']) ?></h3>
+				<h3 class="hn post-ident"><?php echo implode(' ', $forum_page['post_ident']) ?></h3>
 <?php ($hook = get_hook('po_topic_review_new_post_head_option')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</div>
 			<div class="postbody">

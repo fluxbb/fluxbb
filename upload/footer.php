@@ -16,11 +16,6 @@ if (!defined('FORUM'))
 ob_start();
 
 ($hook = get_hook('ft_about_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
-?>
-<div id="brd-about" class="gen-content">
-<?php
-
 ($hook = get_hook('ft_about_pre_quickjump')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // Display the "Jump to" drop list
@@ -48,7 +43,6 @@ $forum_db->end_transaction();
 
 ?>
 	<p id="copyright">Powered by <strong><a href="http://fluxbb.org/">FluxBB</a><?php if ($forum_config['o_show_version'] == '1') echo ' '.$forum_config['o_cur_version']; ?></strong></p>
-</div>
 <?php
 
 ($hook = get_hook('ft_about_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;

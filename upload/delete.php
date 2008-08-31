@@ -130,14 +130,11 @@ $forum_page['frm_info'] = array(
 );
 
 // Generate the post heading
-$forum_page['item_ident'] = array(
-	'user'	=> '<cite>'.($cur_post['is_topic'] ? sprintf($lang_delete['Topic by'], forum_htmlencode($cur_post['poster'])) : sprintf($lang_delete['Reply by'], forum_htmlencode($cur_post['poster']))).'</cite>',
-	'date'	=> '<span>'.format_time($cur_post['posted']).'</span>'
-);
+$forum_page['post_ident'] = array();
+$forum_page['post_ident']['byline'] = '<span class="post-byline">'.sprintf((($cur_post['is_topic']) ? $lang_delete['Topic byline'] : $lang_delete['Reply byline']), '<strong>'.forum_htmlencode($cur_post['poster']).'</strong>').'</span>';
+$forum_page['post_ident']['link'] = '<span class="post-link"><a class="permalink" href="'.forum_link($forum_url['post'], $cur_post['tid']).'">'.format_time($cur_post['posted']).'</a></span>';
 
 ($hook = get_hook('dl_pre_item_ident_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
-$forum_page['item_head'] = '<a href="'.forum_link($forum_url['post'], $cur_post['tid']).'">'.implode(' ', $forum_page['item_ident']).'</a>';
 
 // Generate the post title
 if ($cur_post['is_topic'])
@@ -146,7 +143,6 @@ else
 	$forum_page['item_subject'] = sprintf($lang_delete['Reply title'], $cur_post['subject']);
 
 $forum_page['item_subject'] = forum_htmlencode($forum_page['item_subject']);
-
 
 // Setup breadcrumbs
 $forum_page['crumbs'] = array(
@@ -159,7 +155,6 @@ $forum_page['crumbs'] = array(
 ($hook = get_hook('dl_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 define ('FORUM_PAGE', 'postdelete');
-define ('FORUM_PAGE_TYPE', 'basic');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
@@ -177,14 +172,10 @@ ob_start();
 <?php ($hook = get_hook('dl_pre_post_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 		<div class="post singlepost">
 			<div class="posthead">
-				<h3 class="hn"><?php echo $forum_page['item_head'] ?></h3>
+				<h3 class="hn post-ident"><?php echo implode(' ', $forum_page['post_ident']) ?></h3>
 <?php ($hook = get_hook('dl_new_post_head_option')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</div>
 			<div class="postbody">
-				<div class="user">
-					<h4 class="user-ident"><strong class="username"><?php echo forum_htmlencode($cur_post['poster']) ?></strong></h4>
-<?php ($hook = get_hook('dl_new_post_user_data')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				</div>
 				<div class="post-entry">
 					<h4 class="entry-title hn"><?php echo $forum_page['item_subject'] ?></h4>
 					<div class="entry-content">

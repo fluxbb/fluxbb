@@ -267,7 +267,6 @@ else if ($action == 'forget' || $action == 'forget_2')
 	($hook = get_hook('li_forgot_pass_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	define ('FORUM_PAGE', 'reqpass');
-	define ('FORUM_PAGE_TYPE', 'basic');
 	require FORUM_ROOT.'header.php';
 
 	// START SUBST - <!-- forum_main -->
@@ -364,7 +363,6 @@ $forum_page['crumbs'] = array(
 ($hook = get_hook('li_login_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 define('FORUM_PAGE', 'login');
-define('FORUM_PAGE_TYPE', 'basic');
 require FORUM_ROOT.'header.php';
 
 // START SUBST - <!-- forum_main -->
