@@ -68,6 +68,8 @@ body {
 .brd .mf-box:after,
 .brd .sf-box:after,
 .brd .mf-item:after,
+.brd .txt-set:after,
+.brd .txt-box:after,
 .brd .frm-form label:after,
 .brd fieldset:after,
 .brd span.fld-input:after,
