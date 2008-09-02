@@ -432,17 +432,17 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 			<div id="req-msg" class="req-warn ct-box error-box">
 				<p class="important"><strong>Important!</strong> All fields labelled <em>(Required)</em> must be completed before submitting this form.</p>
 			</div>
-			<fieldset class="frm-group frm-item1">
+			<fieldset class="frm-group group1">
 				<legend class="frm-legend"><span>Charset conversion</span></legend>
-				<div class="frm-set group-item1">
-					<div class="frm-box checkbox">
+				<div class="sf-set set1">
+					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld1" name="convert_charset" value="1" checked="checked" /></span>
 						<label for="fld1"><span>Enable conversion:</span> Perform database charset conversion.</label>
 					</div>
 				</div>
-				<div class="frm-set group-item2">
-					<div class="frm-box text required">
-						<label for="fld2"><span>Current character set:</span> <small><em>(Required)</em> Accept default for English forums otherwise the character set of the primary langauge pack.</small></label><br />
+				<div class="sf-set set2">
+					<div class="sf-box text required">
+						<label for="fld2"><span>Current character set: <em>(Required)</em></span> <small>Accept default for English forums otherwise the character set of the primary langauge pack.</small></label><br />
 						<span class="fld-input"><input type="text" id="fld2" name="req_old_charset" size="12" maxlength="20" value="ISO-8859-1" /></span>
 					</div>
 				</div>
@@ -1450,9 +1450,9 @@ require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php'
 <?php if (isset($new_config) && !$written): ?>					<p>In order to complete the process, you must now update your config.php script. <strong>Copy and paste the text in the text box below into the file called config.php in the root directory of your FluxBB installation</strong>. The file already exists, so you must edit/overwrite the contents of the old file.</p>
 <?php endif; ?>		</div>
 <?php if (isset($new_config) && !$written): ?>		<form class="frm-form" action="foo">
-			<fieldset class="frm-group frm-item1">
+			<fieldset class="frm-group group1">
 				<legend class="frm-legend"><span>New config.php contents</span></legend>
-				<div class="txt-set group-item1">
+				<div class="txt-set set1">
 					<div class="txt-box textarea">
 						<label for="fld1"><span>Copy contents:</span></label>
 						<div class="txt-input"><span class="frm-input"><textarea id="fld1" readonly="readonly" cols="80" rows="20"><?php echo forum_htmlencode($new_config) ?></textarea></span></div>

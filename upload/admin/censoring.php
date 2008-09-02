@@ -169,7 +169,7 @@ ob_start();
 			<fieldset class="frm-group frm-hdgroup group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_censoring['Add censored word legend'] ?></span></legend>
 <?php ($hook = get_hook('acs_pre_add_word_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?><?php echo ($forum_page['item_count'] == 1) ? ' mf-head' : ' mf-extra' ?>">
+				<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?><?php echo ($forum_page['item_count'] == 1) ? ' mf-head' : ' mf-extra' ?>">
 					<legend><span><?php echo $lang_admin_censoring['Add new word legend'] ?></span></legend>
 					<div class="mf-box">
 <?php ($hook = get_hook('acs_pre_add_search_for')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
@@ -213,7 +213,7 @@ if (!empty($forum_censors))
 
 	?>
 <?php ($hook = get_hook('acs_pre_edit_word_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?><?php echo ($forum_page['item_count'] == 1) ? ' mf-head' : ' mf-extra' ?>">
+				<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?><?php echo ($forum_page['item_count'] == 1) ? ' mf-head' : ' mf-extra' ?>">
 					<legend><span><?php echo $lang_admin_censoring['Existing censored word legend'] ?></span></legend>
 					<div class="mf-box">
 <?php ($hook = get_hook('acs_pre_edit_search_for')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>

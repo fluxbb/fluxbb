@@ -302,7 +302,7 @@ C - COMMON CONTENT TYPES (RE-USABLE FORMATS)
 	}
 
 
-.brd .ct-group .group-item1 {
+.brd .ct-group .set1 {
 	border-top: 0;
 	}
 
@@ -915,6 +915,10 @@ E - INDEX, FORUMS, SEARCH RESULTS, MODERATE FORUMS
 F - MAIN CONTENT - FORMS
 **************************************************************/
 
+/*************************************************************
+F - MAIN CONTENT - FORMS
+**************************************************************/
+
 /* Generally
 -------------------------------------------------------------*/
 
@@ -924,7 +928,7 @@ F - MAIN CONTENT - FORMS
 	margin: 1.417em;
 	}
 	
-.brd .frm-group .group-item1 {
+.brd .frm-group .set1 {
 	border-top: 0;
 	}
 
@@ -1004,7 +1008,7 @@ F - MAIN CONTENT - FORMS
 	margin-left: -18em;
 	display: inline;
 	position: relative;
-	padding: 2px 1em;
+	padding: 2px 1em 2px 1em;
 	width: 16em;
 	}
 
@@ -1135,7 +1139,7 @@ F - MAIN CONTENT - FORMS
 	padding-top: 2em;
 	}
 	
-.brd .frm-hdgroup .group-item1 { 
+.brd .frm-hdgroup .set1 { 
 	border-top-style: solid;
 	border-top-width: 1px;
 	}
@@ -1240,14 +1244,11 @@ F - MAIN CONTENT - FORMS
 	
 .brd .txt-set .fld-input {
 	display: block;
-	padding: 0 2em 0 1em;
+	padding: 0 0 0 1em;
 	}
 	
-
 .brd .txt-set textarea {
-	width: 100%;
-	float: left;
-	margin-right: -6px;
+	width: 95%;
 	}
 	
 /* Error handling
@@ -1257,18 +1258,30 @@ F - MAIN CONTENT - FORMS
 	display: none;
 	}
 
-.brd #req-msg p em, .brd .required label small em {
+.brd #req-msg p em, .brd .required label span em {
 	font-style: normal;
+	font-weight: normal;
 	}
+
+.brd .required label span em {
+	float: left;
+	font-size: 0.917em;
+	line-height: 1.2em;
+	width: 16em;
+	position: relative;
+	}
+	
+.brd .txt-set .required label span em {
+	margin-bottom: -1.2em;
+	}	
 	
 .brd .req-error {
 	display: block;
 	}
 	
-.brd .required label span {
+.brd .required label span  {
 	font-weight: bold;
 	}
-	
 	
 /*************************************************************
 G - MAIN CONTENT - TOPICS AND PARSED CONTENT

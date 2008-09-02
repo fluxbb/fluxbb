@@ -198,7 +198,7 @@ ob_start();
 			<fieldset class="frm-group frm-hdgroup group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_admin_ranks['Add rank legend'] ?></strong></legend>
 <?php ($hook = get_hook('ark_pre_add_rank_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?><?php echo ($forum_page['item_count'] == 1) ? ' mf-head' : ' mf-extra' ?>">
+				<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?><?php echo ($forum_page['item_count'] == 1) ? ' mf-head' : ' mf-extra' ?>">
 					<legend><span><?php echo $lang_admin_ranks['New rank'] ?></span></legend>
 					<div class="mf-box">
 <?php ($hook = get_hook('ark_pre_add_rank_title')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
@@ -242,7 +242,7 @@ if (!empty($forum_ranks))
 
 	?>
 <?php ($hook = get_hook('ark_pre_edit_cur_rank_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<fieldset class="mf-set mf-extra group-item<?php echo ++$forum_page['item_count'] ?>">
+				<fieldset class="mf-set mf-extra set<?php echo ++$forum_page['item_count'] ?>">
 					<legend><span><?php echo $lang_admin_ranks['Existing rank'] ?></span></legend>
 					<div class="mf-box">
 <?php ($hook = get_hook('ark_pre_edit_cur_rank_title')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>

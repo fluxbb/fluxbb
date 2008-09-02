@@ -51,7 +51,6 @@ $lang_install = array(
 'Base URL info'				=>	'Please pay particular attention when entering your Base URL. You must set the correct Base URL or your forum will not work properly. The Base URL is the URL (without trailing slash) of your FluxBB forum (example: <em>http://forum.example.com</em> or <em>http://example.com/~myuser</em>). Please note that the preset value below is just an educated guess by FluxBB.',
 'Base URL help'				=>	'The URL (without trailing slash) of your FluxBB installation. Please read information above.',
 'Start install'				=>	'Start install', // Label for submit button
-'Reqmark'					=>	'*',
 'Required'					=>	'(Required)',
 'Required warn'				=>	'All fields labelled %s must be completed before this form is submitted.',
 

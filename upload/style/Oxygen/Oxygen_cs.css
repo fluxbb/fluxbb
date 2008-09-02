@@ -162,7 +162,7 @@ body {
 	}
 	
 
-#brd-wrap .required label small em, #brd-wrap #req-msg em {
+#brd-wrap .required label em, #brd-wrap #req-msg em {
 	color: #b42000;
 	}
 	

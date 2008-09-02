@@ -127,7 +127,7 @@ if ($forum_db->num_rows($result))
 		($hook = get_hook('arp_new_report_pre_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
-			<div class="ct-set warn-set report group-item<?php echo ++$forum_page['item_count'] ?>">
+			<div class="ct-set warn-set report set<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box warn-box">
 					<h3 class="ct-legend hn"><strong><?php echo ++$forum_page['item_num'] ?></strong> <cite class="username"><?php printf($lang_admin_reports['Reported by'], $reporter) ?></cite> <span><?php echo format_time($cur_report['created']) ?></span></h3>
 					<h4 class="hn"><?php echo $forum ?> : <?php echo $topic ?> : <?php echo $post_id ?></h4>
@@ -211,7 +211,7 @@ if ($forum_db->num_rows($result))
 		($hook = get_hook('arp_report_pre_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
-			<div class="ct-set report data-set group-item<?php echo ++$forum_page['item_count'] ?>">
+			<div class="ct-set report data-set set<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
 					<h3 class="ct-legend hn"><strong><?php echo ++$forum_page['item_num'] ?></strong> <cite class="username"><?php printf($lang_admin_reports['Reported by'], $reporter) ?></cite> <span><?php echo format_time($cur_report['created']) ?></span></h3>
 					<h4 class="hn"><?php echo $forum ?> : <?php echo $topic ?> : <?php echo $post_id ?></h4>

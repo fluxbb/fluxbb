@@ -98,7 +98,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 	</div>
 	<div class="main-content main-frm">
 		<div id="req-msg" class="req-warn ct-box error-box">
-			<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Required'].'</em>') ?></p>
+			<p class="important"><?php printf($lang_admin_common['Required warn'], '<em>'.$lang_admin_common['Required'].'</em>') ?></p>
 		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_groups']) ?>">
 			<div class="hidden">
@@ -114,16 +114,16 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_groups['Group title legend'] ?></span></legend>
 <?php ($hook = get_hook('agr_add_edit_group_pre_group_title')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><em class="req-text"><?php echo $lang_common['Required'] ?></em> <?php echo $lang_admin_groups['Group title label'] ?></span></label><br />
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_groups['Group title label'] ?> <em><?php echo $lang_admin_common['Required'] ?></em></span></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="req_title" size="25" maxlength="50" value="<?php if ($mode == 'edit') echo forum_htmlencode($group['g_title']); ?>" /></span>
 					</div>
 				</div>
 <?php ($hook = get_hook('agr_add_edit_group_pre_user_title')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text required">
-						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_groups['User title label'] ?></span> <small><?php echo $lang_admin_groups['User title help'] ?></small></label><br />
+						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_groups['User title label'] ?> <em><?php echo $lang_admin_common['Required'] ?></em></span> <small><?php echo $lang_admin_groups['User title help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="user_title" size="25" maxlength="50" value="<?php echo forum_htmlencode($group['g_user_title']) ?>" /></span>
 					</div>
 				</div>
@@ -148,7 +148,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 				</div>
 <?php endif; ($hook = get_hook('agr_add_edit_group_pre_permissions_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>							<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 					<legend class="group-legend"><strong><?php echo $lang_admin_groups['Permissions'] ?></strong></legend>
-<?php ($hook = get_hook('agr_add_edit_group_pre_mod_permissions_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; if ($group['g_id'] != FORUM_GUEST): if ($mode != 'edit' || $forum_config['o_default_user_group'] != $group['g_id']): ?>				<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+<?php ($hook = get_hook('agr_add_edit_group_pre_mod_permissions_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; if ($group['g_id'] != FORUM_GUEST): if ($mode != 'edit' || $forum_config['o_default_user_group'] != $group['g_id']): ?>				<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?>">
 						<legend><span><?php echo $lang_admin_groups['Mod permissions'] ?></span></legend>
 						<div class="mf-box">
 <?php ($hook = get_hook('agr_add_edit_group_pre_allow_moderate_checkbox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
@@ -179,7 +179,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 						</div>
 <?php ($hook = get_hook('agr_add_edit_group_pre_mod_permissions_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 					</fieldset>
-<?php ($hook = get_hook('agr_add_edit_group_mod_permissions_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; endif; endif; ?>					<fieldset class="mf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+<?php ($hook = get_hook('agr_add_edit_group_mod_permissions_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; endif; endif; ?>					<fieldset class="mf-set set<?php echo ++$forum_page['item_count'] ?>">
 						<legend><span><?php echo $lang_admin_groups['User permissions'] ?></span></legend>
 						<div class="mf-box">
 <?php ($hook = get_hook('agr_add_edit_group_pre_allow_read_board_checkbox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
@@ -256,21 +256,21 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_groups['Restrictions'] ?></span></legend>
 <?php ($hook = get_hook('agr_add_edit_group_pre_post_interval')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_groups['Flood interval label'] ?></span> <small><?php echo $lang_admin_groups['Flood interval help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="post_flood" size="5" maxlength="4" value="<?php echo $group['g_post_flood'] ?>" /></span>
 					</div>
 				</div>
 <?php ($hook = get_hook('agr_add_edit_group_pre_search_interval')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_groups['Search interval label'] ?></span> <small><?php echo $lang_admin_groups['Search interval help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="search_flood" size="5" maxlength="4" value="<?php echo $group['g_search_flood'] ?>" /></span>
 					</div>
 				</div>
 <?php ($hook = get_hook('agr_add_edit_group_pre_email_interval')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_groups['Email flood interval label'] ?></span> <small><?php echo $lang_admin_groups['Email flood interval help'] ?></small></label><br />
 						<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="email_flood" size="5" maxlength="4" value="<?php echo $group['g_email_flood'] ?>" /></span>
@@ -601,10 +601,10 @@ else if (isset($_GET['del_group']))
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_groups']).'?del_group='.$group_id) ?>" />
 			</div>
 <?php ($hook = get_hook('agr_del_group_pre_del_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-			<fieldset class="frm-group group-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group set<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_groups['Remove group legend'] ?></span></legend>
 <?php ($hook = get_hook('agr_del_group_pre_move_to_group')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_groups['Move users to'] ?></span> <small><?php echo $lang_admin_groups['Remove group help'] ?></small></label><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="move_to_group">
@@ -685,10 +685,10 @@ ob_start();
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_groups']).'?action=foo') ?>" />
 			</div>
 <?php ($hook = get_hook('agr_pre_add_group_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-			<fieldset class="frm-group group-item<?php echo ++$forum_page['group_count'] ?>">
+			<fieldset class="frm-group set<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_groups['Add group legend'] ?></span></legend>
 <?php ($hook = get_hook('agr_pre_add_base_group')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_groups['Base new group label'] ?></span></label><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="base_group">
@@ -741,7 +741,7 @@ while ($cur_group = $forum_db->fetch_assoc($result))
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><span><?php echo $lang_admin_groups['Default group legend'] ?></span></legend>
 <?php ($hook = get_hook('agr_pre_default_group')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_admin_groups['Default group label'] ?></span></label><br />
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="default_group">
@@ -819,7 +819,7 @@ while ($cur_group = $forum_db->fetch_assoc($result))
 	($hook = get_hook('agr_edit_group_row_pre_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
-			<div class="ct-set group-item<?php echo ++$forum_page['item_count'] ?>">
+			<div class="ct-set set<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box">
 					<h3 class="ct-legend hn"><span><?php echo forum_htmlencode($cur_group['g_title']) ?> <?php echo ($cur_group['g_id'] == $forum_config['o_default_user_group']) ? $lang_admin_groups['default'] : '' ?></span></h3>
 					<p class="options"><?php echo implode(' ', $forum_page['group_options']) ?></p>
