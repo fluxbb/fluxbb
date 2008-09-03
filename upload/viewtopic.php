@@ -604,7 +604,7 @@ if ($forum_config['o_smilies'] == '1')
 <?php ($hook = get_hook('vt_quickpost_pre_message_box')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="txt-set set1">
 				<div class="txt-box textarea required">
-					<label for="fld1"><span><?php echo $lang_common['Write message'] ?></span> <small>Here is a help string</small></label>
+					<label for="fld1"><span><?php echo $lang_common['Write message'] ?></span></label>
 					<div class="txt-input"><span class="fld-input"><textarea id="fld1" name="req_message" rows="7" cols="95"></textarea></span></div>
 				</div>
 			</div>
