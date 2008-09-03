@@ -94,7 +94,7 @@ class DBLayer
 			if (defined('FORUM_SHOW_QUERIES'))
 				$this->saved_queries[] = array($sql, 0);
 
-			/ Rollback transaction
+			// Rollback transaction
 			if ($this->in_transaction)
 				$this->query('ROLLBACK');
 
