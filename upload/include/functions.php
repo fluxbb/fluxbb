@@ -289,6 +289,7 @@ function set_default_user()
 	$forum_user['disp_topics'] = $forum_config['o_disp_topics_default'];
 	$forum_user['disp_posts'] = $forum_config['o_disp_posts_default'];
 	$forum_user['timezone'] = $forum_config['o_default_timezone'];
+	$forum_user['dst'] = $forum_config['o_default_dst'];
 	$forum_user['language'] = $forum_config['o_default_lang'];
 	$forum_user['style'] = $forum_config['o_default_style'];
 	$forum_user['is_guest'] = true;

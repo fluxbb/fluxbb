@@ -11,7 +11,7 @@
 
 
 define('UPDATE_TO', '1.3 Beta');
-define('UPDATE_TO_DB_REVISION', 3);
+define('UPDATE_TO_DB_REVISION', 4);
 
 // The number of items to process per pageview (lower this if the update script times out during UTF-8 conversion)
 define('PER_PAGE', 300);
@@ -790,6 +790,10 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 				$forum_db->query('INSERT INTO '.$forum_db->prefix.'config (conf_name, conf_value) VALUES(\'o_database_engine\', \'InnoDB\')') or error(__FILE__, __LINE__);
 			else
 				$forum_db->query('INSERT INTO '.$forum_db->prefix.'config (conf_name, conf_value) VALUES(\'o_database_engine\', \'MyISAM\')') or error(__FILE__, __LINE__);
+
+		// Insert new config option o_default_dst
+		if (!array_key_exists('o_default_dst', $forum_config))
+			$forum_db->query('INSERT INTO '.$forum_db->prefix.'config (conf_name, conf_value) VALUES(\'o_default_dst\', \'0\')') or error(__FILE__, __LINE__);
 
 		// Server timezone is now simply the default timezone
 		if (!array_key_exists('o_default_timezone', $forum_config))

@@ -56,6 +56,9 @@ if (isset($_POST['form_sent']))
 			if (!file_exists(FORUM_ROOT.'include/url/'.$form['sef'].'.php'))
 				message($lang_common['Bad request']);
 
+			if (!isset($form['default_dst']) || $form['default_dst'] != '1')
+				$form['default_dst'] = '0';
+
 			$form['timeout_visit'] = intval($form['timeout_visit']);
 			$form['timeout_online'] = intval($form['timeout_online']);
 			$form['redirect_delay'] = intval($form['redirect_delay']);
@@ -432,6 +435,13 @@ if (!$section || $section == 'setup')
 								<option value="13"<?php if ($forum_config['o_default_timezone'] == 13) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+13:00'] ?></option>
 								<option value="14"<?php if ($forum_config['o_default_timezone'] == 14) echo ' selected="selected"' ?>><?php echo $lang_profile['UTC+14:00'] ?></option>
 							</select></span>
+						</div>
+					</div>
+<?php ($hook = get_hook('aop_setup_pre_default_dst')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+					<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+						<div class="sf-box checkbox">
+							<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="form[default_dst]" value="1" <?php if ($forum_config['o_default_dst'] == 1) echo 'checked="checked" ' ?>/></span>
+							<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['Adjust for DST'] ?></span> <?php echo $lang_admin_settings['DST label'] ?></label>
 						</div>
 					</div>
 <?php ($hook = get_hook('aop_setup_pre_time_format')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
