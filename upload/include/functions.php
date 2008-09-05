@@ -1895,7 +1895,7 @@ function clean_version($version)
 //
 function message($message, $link = '', $heading = '')
 {
-	global $forum_db, $forum_url, $lang_common, $forum_config, $base_url, $forum_start, $tpl_main, $forum_user, $forum_page, $forum_updates;
+	global $forum_db, $forum_url, $lang_common, $forum_config, $base_url, $forum_start, $tpl_main, $forum_user, $forum_page, $forum_updates, $db_type;
 
 	($hook = get_hook('fn_message_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -1944,7 +1944,7 @@ function message($message, $link = '', $heading = '')
 //
 function csrf_confirm_form()
 {
-	global $forum_db, $forum_url, $lang_common, $forum_config, $base_url, $forum_start, $tpl_main, $forum_user, $forum_page, $forum_updates;
+	global $forum_db, $forum_url, $lang_common, $forum_config, $base_url, $forum_start, $tpl_main, $forum_user, $forum_page, $forum_updates, $db_type;
 
 	// If we've disabled the CSRF check for this page, we have nothing to do here.
 	if (defined('FORUM_DISABLE_CSRF_CONFIRM'))
@@ -2265,7 +2265,7 @@ function get_current_url($max_length = 0)
 	$protocol = (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') ? 'http://' : 'https://';
 	$port = (isset($_SERVER['SERVER_PORT']) && (($_SERVER['SERVER_PORT'] != '80' && $protocol == 'http://') || ($_SERVER['SERVER_PORT'] != '443' && $protocol == 'https://')) && strpos($_SERVER['HTTP_HOST'], ':') === false) ? ':'.$_SERVER['SERVER_PORT'] : '';
 
-	$url = $protocol.$_SERVER['HTTP_HOST'].$port.$_SERVER['REQUEST_URI'];
+	$url = urldecode($protocol.$_SERVER['HTTP_HOST'].$port.$_SERVER['REQUEST_URI']);
 
 	if (strlen($url) <= $max_length || $max_length == 0)
 		return $url;

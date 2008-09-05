@@ -87,6 +87,13 @@ $lang_misc = array(
 'Confirm topic split'		=>	'Confirm splitting of all selected posts into a new topic',
 'Delete posts redirect'		=>	'Posts deleted. Redirecting …',
 'Split posts redirect'		=>	'Posts split into a new topic. Redirecting …',
-'No posts selected'			=>	'You must select at least one post.'
+'No posts selected'			=>	'You must select at least one post.',
 
+// Change database engine
+'Change database engine'				=>	'Change database engine',
+'Perform engine conversion'				=>	'Perform database engine conversion:',
+'Perform engine conversion label'		=>	'Perform database engine conversion from %1$s to %2$s.',
+'Database engine conversion successful'	=>	'The database engine has been converted from %1$s to %2$s.',
+'Engine conversion not supported'		=>	'The database layer you selected does not support converting the engine.',
+'Engine already converted'				=>	'The database is already using the recommended engine.'
 );

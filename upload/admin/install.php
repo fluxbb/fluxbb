@@ -1589,6 +1589,11 @@ else
 		'p_force_guest_email'		=> "'1'"
 	);
 
+	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+		$config['o_database_engine'] = 'InnoDB';
+	else if ($db_type == 'mysql' || $db_type == 'mysqli')
+		$config['o_database_engine'] = 'MyISAM';
+
 	while (list($conf_name, $conf_value) = @each($config))
 	{
 		$query = array(

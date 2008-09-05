@@ -618,6 +618,101 @@ else if (isset($_GET['unsubscribe']))
 }
 
 
+// Change the database engine
+else if (isset($_GET['admin_action']) && $_GET['admin_action'] == 'change_engine')
+{
+	if ($forum_user['g_id'] != FORUM_ADMIN)
+		message($lang_common['No permission']);
+
+	$from = $forum_config['o_database_engine'];
+	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+		$to		= 'InnoDB';
+	else if ($db_type == 'mysql' || $db_type == 'mysqli')
+		$to		= 'MyISAM';
+	else
+		message($lang_misc['Engine conversion not supported']);
+
+	if($from == $to)
+		message($lang_misc['Engine already converted']);
+
+	if (isset($_POST['perform_engine_conversion_comply']))
+	{
+		$result = $forum_db->query('SHOW TABLE STATUS FROM `'.$db_name.'` LIKE \''.$db_prefix.'%\'') or error(__FILE__, __LINE__);
+		while ($row = $forum_db->fetch_assoc($result))
+			if($row['Engine'] != $to)
+				if($row['Name'] == $forum_db->prefix.'online' && $to == 'MyISAM')
+					$forum_db->query('ALTER TABLE '.$row['Name'].' ENGINE = \'HEAP\'') or error(__FILE__, __LINE__);
+				else
+					$forum_db->query('ALTER TABLE '.$row['Name'].' ENGINE = \''.$to.'\'') or error(__FILE__, __LINE__);
+
+		$query = array(
+			'UPDATE'	=> 'config',
+			'SET'		=> 'conf_value=\''.$to.'\'',
+			'WHERE'		=> 'conf_name=\'o_database_engine\''
+		);
+
+		$forum_db->query_build($query) or error(__FILE__, __LINE__);
+		
+		// Regenerate the config cache
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require FORUM_ROOT.'include/cache.php';
+
+		generate_config_cache();
+
+		redirect(forum_link($forum_url['admin_index']), sprintf($lang_misc['Database engine conversion successful'], $from, $to));
+	}
+
+	// Setup form
+	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
+	$forum_page['form_action'] = forum_link('misc.php?admin_action=change_engine');
+
+	// Setup breadcrumbs
+	$forum_page['crumbs'] = array(
+		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+		$lang_misc['Change database engine']
+	);
+
+	// Setup main heading
+	$forum_page['main_head'] = end($forum_page['crumbs']);
+
+	define('FORUM_PAGE', 'engine-change');
+	require FORUM_ROOT.'header.php';
+
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
+?>
+<div class="main-content main-frm">
+	<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
+		<div class="hidden">
+			<input type="hidden" name="form_sent" value="1" />
+			<input type="hidden" name="csrf_token" value="<?php echo generate_form_token($forum_page['form_action']) ?>" />
+		</div>
+		<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
+			<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
+			<div class="sf-set group-item<?php echo ++$forum_page['item_count'] ?>">
+				<div class="sf-box checkbox">
+					<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="perform_engine_conversion" value="1" checked="checked" /></span>
+					<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_misc['Perform engine conversion'] ?></span> <?php printf($lang_misc['Perform engine conversion label'], $from, $to) ?></label>
+				</div>
+			</div>
+		</fieldset>
+		<div class="frm-buttons">
+			<span class="submit"><input type="submit" name="perform_engine_conversion_comply" value="<?php echo $lang_common['Submit'] ?>" /></span>
+			<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
+		</div>
+	</form>
+</div>
+<?php
+
+	$tpl_temp = forum_trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
+
+	require FORUM_ROOT.'footer.php';
+}
+
 ($hook = get_hook('mi_new_action')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 message($lang_common['Bad request']);

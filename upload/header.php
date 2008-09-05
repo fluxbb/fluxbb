@@ -255,6 +255,12 @@ if ($forum_user['g_id'] == FORUM_ADMIN)
 	if ($forum_config['o_database_revision'] > FORUM_DB_REVISION)
 		$alert_items['newer_database'] = '<p><strong>'.$lang_common['Database mismatch'].'</strong> '.$lang_common['Database mismatch alert'].'</p>';
 
+	// Warn the admin that the engines used in the database don't correspond with the chosen DB layer
+	if (($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb') && $forum_config['o_database_engine'] != 'InnoDB')
+			$alert_items['update_fail'] = '<p><strong>'.$lang_common['Database engine mismatch'].'</strong> '.sprintf($lang_common['Database engine mismatch alert'], 'MyISAM', 'InnoDB', forum_link('misc.php?admin_action=change_engine')).'</p>';
+	else if (($db_type == 'mysql' || $db_type == 'mysqli') && $forum_config['o_database_engine'] != 'MyISAM')
+			$alert_items['update_fail'] = '<p><strong>'.$lang_common['Database engine mismatch'].'</strong> '.sprintf($lang_common['Database engine mismatch alert'], 'InnoDB', 'MyISAM', forum_link('misc.php?admin_action=change_engine')).'</p>';
+
 	if (!empty($alert_items))
 		$admod_links['alert'] = '<span id="alert"><a href="'.forum_link($forum_url['admin_index']).'"><strong>'.$lang_common['New alerts'].'</strong></a></span>';
 

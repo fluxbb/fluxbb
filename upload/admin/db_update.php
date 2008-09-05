@@ -11,7 +11,7 @@
 
 
 define('UPDATE_TO', '1.3 Beta');
-define('UPDATE_TO_DB_REVISION', 2);
+define('UPDATE_TO_DB_REVISION', 3);
 
 // The number of items to process per pageview (lower this if the update script times out during UTF-8 conversion)
 define('PER_PAGE', 300);
@@ -784,6 +784,13 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 		if (!array_key_exists('o_announcement_heading', $forum_config))
 			$forum_db->query('INSERT INTO '.$forum_db->prefix.'config (conf_name, conf_value) VALUES(\'o_announcement_heading\', \'\')') or error(__FILE__, __LINE__);
 
+		// Insert new config option o_database_engine
+		if (!array_key_exists('o_database_engine', $forum_config))
+			if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+				$forum_db->query('INSERT INTO '.$forum_db->prefix.'config (conf_name, conf_value) VALUES(\'o_database_engine\', \'InnoDB\')') or error(__FILE__, __LINE__);
+			else
+				$forum_db->query('INSERT INTO '.$forum_db->prefix.'config (conf_name, conf_value) VALUES(\'o_database_engine\', \'MyISAM\')') or error(__FILE__, __LINE__);
+
 		// Server timezone is now simply the default timezone
 		if (!array_key_exists('o_default_timezone', $forum_config))
 			$forum_db->query('UPDATE '.$forum_db->prefix.'config SET conf_name=\'o_default_timezone\' WHERE conf_name=\'o_server_timezone\'') or error(__FILE__, __LINE__);
@@ -958,16 +965,6 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 		{
 			$forum_db->query('DELETE FROM '.$forum_db->prefix.'extension_hooks WHERE extension_id = \''.$cur_ext['id'].'\'') or error(__FILE__, __LINE__);
 			$forum_db->query('DELETE FROM '.$forum_db->prefix.'extensions WHERE id = \''.$cur_ext['id'].'\'') or error(__FILE__, __LINE__);
-		}
-
-		// If the tables aren't already InnoDB, make it so
-		// This should only occur if config.php is manually changed to use InnoDB
-		if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
-		{
-			$result = $forum_db->query('SHOW TABLE STATUS FROM `'.$db_name.'` LIKE \''.$db_prefix.'%\'');
-			while ($row = $forum_db->fetch_assoc($result))
-				if($row['Engine'] != 'InnoDB')
-					$forum_db->query('ALTER TABLE '.$row['Name'].' ENGINE = \'InnoDB\'');
 		}
 
 		// Should we do charset conversion or not?
