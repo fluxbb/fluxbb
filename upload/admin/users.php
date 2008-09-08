@@ -450,7 +450,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']) |
 				</div>
 			</fieldset>
 			<div class="frm-buttons">
-				<span class="submit"><input type="submit" name="delete_users_comply" value="<?php echo $lang_admin_users['Delete'] ?>" /></span>
+				<span class="submit"><input type="submit" name="delete_users_comply" value="<?php echo $lang_admin_users['Confirm delete'] ?>" /></span>
 				<span class="cancel"><input type="submit" name="delete_users_cancel" value="<?php echo $lang_admin_common['Cancel'] ?>" /></span>
 			</div>
 		</form>
