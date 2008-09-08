@@ -693,7 +693,7 @@ function get_search_results($query, &$search_set)
 
 	// Work out the settings for pagination
 	$forum_page['num_pages'] = ceil($num_hits / $forum_page['per_page']);
-	$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : $_GET['p'];
+	$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : intval($_GET['p']);
 
 	// Determine the topic or post offset (based on $forum_page['page'])
 	$forum_page['start_from'] = $forum_page['per_page'] * ($forum_page['page'] - 1);
