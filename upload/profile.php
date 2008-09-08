@@ -1837,23 +1837,8 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 
 	else if ($section == 'settings')
 	{
-		$forum_page['styles'] = array();
-		$forum_page['d'] = dir(FORUM_ROOT.'style');
-		while (($forum_page['entry'] = $forum_page['d']->read()) !== false)
-		{
-			if ($forum_page['entry'] != '.' && $forum_page['entry'] != '..' && is_dir(FORUM_ROOT.'style/'.$forum_page['entry']) && file_exists(FORUM_ROOT.'style/'.$forum_page['entry'].'/'.$forum_page['entry'].'.php'))
-				$forum_page['styles'][] = $forum_page['entry'];
-		}
-		$forum_page['d']->close();
-
-		$forum_page['languages'] = array();
-		$forum_page['d'] = dir(FORUM_ROOT.'lang');
-		while (($forum_page['entry'] = $forum_page['d']->read()) !== false)
-		{
-			if ($forum_page['entry'] != '.' && $forum_page['entry'] != '..' && is_dir(FORUM_ROOT.'lang/'.$forum_page['entry']) && file_exists(FORUM_ROOT.'lang/'.$forum_page['entry'].'/common.php'))
-				$forum_page['languages'][] = $forum_page['entry'];
-		}
-		$forum_page['d']->close();
+		$forum_page['styles'] = get_style_packs();
+		$forum_page['languages'] = get_language_packs();
 
 		// Setup the form
 		$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
@@ -1896,7 +1881,6 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 		// Only display the language selection box if there's more than one language available
 		if (count($forum_page['languages']) > 1)
 		{
-			natcasesort($forum_page['languages']);
 
 ?>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
@@ -1905,7 +1889,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="form[language]">
 <?php
 
-			while (list(, $temp) = @each($forum_page['languages']))
+			foreach ($forum_page['languages'] as $temp)
 			{
 				if ($forum_user['language'] == $temp)
 					echo "\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.$temp.'</option>'."\n";
@@ -2037,8 +2021,6 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 			echo "\t\t\t\t".'<input type="hidden" name="form[style]" value="'.$forum_page['styles'][0].'" />'."\n";
 		else if (count($forum_page['styles']) > 1)
 		{
-			natcasesort($forum_page['styles']);
-
 ?>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box select">
@@ -2046,7 +2028,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="form[style]">
 <?php
 
-			while (list(, $temp) = @each($forum_page['styles']))
+			foreach ($forum_page['styles'] as $temp)
 			{
 				if ($user['style'] == $temp)
 					echo "\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.str_replace('_', ' ', $temp).'</option>'."\n";

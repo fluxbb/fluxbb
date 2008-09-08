@@ -6,7 +6,47 @@
  * @license http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  * @package FluxBB
  */
+ 
+ //
+ // Return a list of all URL schemes installed
+ //
+ function get_scheme_packs()
+ {
+  	$schemes = array();
+ 	foreach (glob(FORUM_ROOT.'include/url/*.php') as $filename)
+ 		$schemes[] = basename($filename, '.php');
+	
+	return $schemes;
+ }
+ 
+ //
+ // Return a list of all styles installed
+ //
+ function get_style_packs()
+ {
+ 	$styles = array();
+ 	foreach (glob(FORUM_ROOT.'style/*') as $dirname)
+ 	{
+ 		$tempname = basename($dirname);
+ 		if (is_dir($dirname) && file_exists($dirname.'/'.$tempname.'.php'))
+ 			$styles[] = $tempname;
+ 	}
+	
+	return $styles;
+ }
 
+//
+// Return a list of all language packs installed
+//
+function get_language_packs()
+{
+ 	$languages = array();
+ 	foreach (glob(FORUM_ROOT.'lang/*') as $dirname)
+ 		if (is_dir($dirname) && file_exists($dirname.'/common.php'))
+ 			$languages[] = basename($dirname);
+	
+	return $languages;
+}
 
 //
 // Return all code blocks that hook into $hook_id

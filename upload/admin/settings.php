@@ -318,18 +318,8 @@ if (!$section || $section == 'setup')
 							<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="form[default_style]">
 <?php
 
-	$styles = array();
-	$d = dir(FORUM_ROOT.'style');
-	while (($entry = $d->read()) !== false)
-	{
-		if ($entry != '.' && $entry != '..' && is_dir(FORUM_ROOT.'style/'.$entry) && file_exists(FORUM_ROOT.'style/'.$entry.'/'.$entry.'.php'))
-			$styles[] = $entry;
-	}
-	$d->close();
-
-	@natcasesort($styles);
-
-	while (list(, $temp) = @each($styles))
+	$styles = get_style_packs();
+	foreach ($styles as $temp)
 	{
 		if ($forum_config['o_default_style'] == $temp)
 			echo "\t\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.str_replace('_', ' ', $temp).'</option>'."\n";
@@ -364,18 +354,8 @@ if (!$section || $section == 'setup')
 							<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="form[default_lang]">
 <?php
 
-		$languages = array();
-		$d = dir(FORUM_ROOT.'lang');
-		while (($entry = $d->read()) !== false)
-		{
-			if ($entry != '.' && $entry != '..' && is_dir(FORUM_ROOT.'lang/'.$entry) && file_exists(FORUM_ROOT.'lang/'.$entry.'/common.php'))
-				$languages[] = $entry;
-		}
-		$d->close();
-
-		@natcasesort($languages);
-
-		while (list(, $temp) = @each($languages))
+		$languages = get_language_packs();
+		foreach ($languages as $temp)
 		{
 			if ($forum_config['o_default_lang'] == $temp)
 				echo "\t\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.$temp.'</option>'."\n";
@@ -592,20 +572,9 @@ if (!$section || $section == 'setup')
 							<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="form[sef]">
 <?php
 
-		$url_schemes = array();
-		$d = dir(FORUM_ROOT.'include/url');
-		while (($entry = $d->read()) !== false)
+		$url_schemes = get_scheme_packs();
+		foreach ($url_schemes as $temp)
 		{
-			if ($entry != '.' && $entry != '..' && substr($entry, strlen($entry)-4) == '.php')
-				$url_schemes[] = $entry;
-		}
-		$d->close();
-
-		@natcasesort($url_schemes);
-
-		while (list(, $temp) = @each($url_schemes))
-		{
-			$temp = substr($temp, 0, -4);
 			if ($forum_config['o_sef'] == $temp)
 				echo "\t\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.str_replace('_', ' ', $temp).'</option>'."\n";
 			else
