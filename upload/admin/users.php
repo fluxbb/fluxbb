@@ -915,7 +915,7 @@ else if (isset($_POST['find_user']))
 			++$forum_page['item_count'];
 
 			// This script is a special case in that we want to display "Not verified" for non-verified users
-			if (($user_data['g_id'] == '' || $user_data['g_id'] == FORUM_UNVERIFIED) && $user_title != $lang_common['Banned'])
+			if (($user_data['g_id'] == '' || $user_data['g_id'] == FORUM_UNVERIFIED) && $user_data['title'] != $lang_common['Banned'])
 				$user_title = '<strong>'.$lang_admin_users['Not verified'].'</strong>';
 			else
 				$user_title = get_title($user_data);
