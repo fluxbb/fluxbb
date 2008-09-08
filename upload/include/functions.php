@@ -2767,7 +2767,7 @@ function error()
 	while (@ob_end_clean());
 
 	// "Restart" output buffering if we are using ob_gzhandler (since the gzip header is already sent)
-	if (!empty($forum_config['o_gzip']) && extension_loaded('zlib') && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false || strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'deflate') !== false))
+	if ($forum_config['o_gzip'] && extension_loaded('zlib'))
 		ob_start('ob_gzhandler');
 
 ?>

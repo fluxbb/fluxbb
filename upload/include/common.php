@@ -47,11 +47,8 @@ define('FORUM_GUEST', 2);
 // Enable output buffering
 if (!defined('FORUM_DISABLE_BUFFERING'))
 {
-	// For some very odd reason, "Norton Internet Security" unsets this
-	$_SERVER['HTTP_ACCEPT_ENCODING'] = isset($_SERVER['HTTP_ACCEPT_ENCODING']) ? $_SERVER['HTTP_ACCEPT_ENCODING'] : '';
-
 	// Should we use gzip output compression?
-	if ($forum_config['o_gzip'] && extension_loaded('zlib') && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false || strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'deflate') !== false))
+	if ($forum_config['o_gzip'] && extension_loaded('zlib'))
 		ob_start('ob_gzhandler');
 	else
 		ob_start();
