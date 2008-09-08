@@ -611,7 +611,7 @@ function handle_img_tag($url, $is_signature = false, $alt = null)
 	if ($is_signature && $forum_user['show_img_sig'] != '0')
 		$img_tag = '<img class="sigimage" src="'.$url.'" alt="'.forum_htmlencode($alt).'" />';
 	else if (!$is_signature && $forum_user['show_img'] != '0')
-		$img_tag = '<span class="postimg"><a href="'.$url.'"><img src="'.$url.'" alt="'.forum_htmlencode($alt).'" /></a></span>';
+		$img_tag = '<span class="postimg"><img src="'.$url.'" alt="'.forum_htmlencode($alt).'" /></span>';
 
 	$return = ($hook = get_hook('ps_fn_handle_img_tag_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
