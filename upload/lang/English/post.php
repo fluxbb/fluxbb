@@ -6,8 +6,10 @@ $lang_post = array(
 // Post validation stuff (many are similar to those in edit.php)
 'No subject'			=>	'Topics must contain a subject.',
 'Too long subject'		=>	'Subjects cannot be longer than 70 characters.',
+'All caps subject'		=>	'Subjects cannot contain only capital letters.',
 'No message'			=>	'You must enter a message.',
 'Too long message'		=>	'Posts cannot be longer than '.FORUM_MAX_POSTSIZE.' characters.',
+'All caps message'		=>	'Posts cannot contain only capital letters.',
 'CSRF token mismatch'	=>	'Unable to confirm security token. A likely cause for this is that some time passed between when you first entered the page and when you posted the form. Clicking "Submit" again should solve the problem.',
 'Invalid e-mail'		=>	'The e-mail address you entered is invalid.',
 

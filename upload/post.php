@@ -125,7 +125,7 @@ if (isset($_POST['form_sent']))
 		else if (utf8_strlen($subject) > 70)
 			$errors[] = $lang_post['Too long subject'];
 		else if ($forum_config['p_subject_all_caps'] == '0' && utf8_strtoupper($subject) == $subject && !$forum_page['is_admmod'])
-			$subject = utf8_ucwords(utf8_strtolower($subject));
+			$errors[] = $lang_post['All caps subject'];
 	}
 
 	// If the user is logged in we get the username and e-mail from $forum_user
@@ -166,7 +166,7 @@ if (isset($_POST['form_sent']))
 	if (utf8_strlen($message) > FORUM_MAX_POSTSIZE)
 		$errors[] = $lang_post['Too long message'];
 	else if ($forum_config['p_message_all_caps'] == '0' && utf8_strtoupper($message) == $message && !$forum_page['is_admmod'])
-		$message = utf8_ucwords(utf8_strtolower($message));
+		$errors[] = $lang_post['All caps message'];
 
 	// Validate BBCode syntax
 	if ($forum_config['p_message_bbcode'] == '1' || $forum_config['o_make_links'] == '1')
