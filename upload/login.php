@@ -167,7 +167,7 @@ else if ($action == 'out')
 
 
 // New password
-else if ($action == 'forget' || $action == 'forget_2')
+else if ($action == 'forget')
 {
 	if (!$forum_user['is_guest'])
 		header('Location: '.forum_link($forum_url['index']));
@@ -176,6 +176,10 @@ else if ($action == 'forget' || $action == 'forget_2')
 
 	if (isset($_POST['form_sent']))
 	{
+		// User pressed the cancel button
+		if (isset($_POST['cancel']))
+			redirect(forum_link($forum_url['index']), $lang_login['Reset cancel redirect']);
+		
 		if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
 			require FORUM_ROOT.'include/email.php';
 
@@ -256,7 +260,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 
 	// Setup form
 	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
-	$forum_page['form_action'] = $base_url.'/login.php?action=forget_2';
+	$forum_page['form_action'] = $base_url.'/login.php?action=forget';
 
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(

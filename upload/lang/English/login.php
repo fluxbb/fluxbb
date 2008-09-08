@@ -1,6 +1,6 @@
 <?php
 
-// Language definitions used in delete.php
+// Language definitions used in login.php
 $lang_login = array(
 
 // Miscellaneous
@@ -27,6 +27,7 @@ $lang_login = array(
 'New password info'			=>	'<strong>Important!</strong> An e-mail will be sent to the specified address with instructions on how to change your password.',
 'Forget mail'				=>	'An e-mail has been sent to the specified address with instructions on how to change your password. If it does not arrive you can contact the forum administrator at %s.',
 'Remember me'				=>	'Remember me:',
-'Persistent login'			=>	'Log me in automatically each time I visit.'
+'Persistent login'			=>	'Log me in automatically each time I visit.',
+'Reset cancel redirect'		=>	'Password reset cancelled. Redirecting …',
 
 );
