@@ -52,9 +52,12 @@ function generate_config_file()
 	return '<?php'."\n\n".'$db_type = \''.$db_type."';\n".'$db_host = \''.$db_host."';\n".'$db_name = \''.addslashes($db_name)."';\n".'$db_username = \''.addslashes($db_username)."';\n".'$db_password = \''.addslashes($db_password)."';\n".'$db_prefix = \''.addslashes($db_prefix)."';\n".'$p_connect = false;'."\n\n".'$base_url = \''.$base_url.'\';'."\n\n".'$cookie_name = '."'".$cookie_name."';\n".'$cookie_domain = '."'';\n".'$cookie_path = '."'/';\n".'$cookie_secure = 0;'."\n\ndefine('FORUM', 1);";
 }
 
+$language = isset($_GET['lang']) ? preg_replace('#[\.\\\/]#', '', $_GET['lang']) : 'English';
+if (!file_exists(FORUM_ROOT.'lang/'.$language.'/install.php'))
+	exit('The language pack you have chosen doesn\'t seem to exist or is corrupt. Please recheck and try again.');
 
 // Load the language file
-require FORUM_ROOT.'lang/English/install.php';
+require FORUM_ROOT.'lang/'.$language.'/install.php';
 
 
 if (isset($_POST['generate_config']))
@@ -109,6 +112,9 @@ if (!isset($_POST['form_sent']))
 	$base_url_guess = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://').preg_replace('/:80$/', '', $_SERVER['HTTP_HOST']).substr(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), 0, -6);
 	if (substr($base_url_guess, -1) == '/')
 		$base_url_guess = substr($base_url_guess, 0, -1);
+	
+	// Check for available language packs
+	$languages = get_language_packs();
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -138,6 +144,42 @@ if (!isset($_POST['form_sent']))
 		<h1 class="hn"><span><?php printf($lang_install['Install FluxBB'], FORUM_VERSION) ?></span></h1>
 	</div>
 
+<?php
+	
+	if (count($languages) > 1) {
+
+?>
+	<form class="frm-form" method="get" accept-charset="utf-8" action="install.php">
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_install['Choose language'] ?></span></h2>
+	</div>
+	<div class="main-content main-frm">
+		<fieldset class="frm-group group1">
+			<legend class="group-legend"><strong><?php echo $lang_install['Choose language legend'] ?></strong></legend>
+			<div class="sf-set set1">
+				<div class="sf-box text">
+					<label for="fld0"><span><?php echo $lang_install['Installer language'] ?></span> <small><?php echo $lang_install['Choose language help'] ?></small></label><br />
+					<span class="fld-input"><select id="fld0" name="lang">
+<?php
+
+	foreach ($languages as $temp)
+		echo "\t\t\t\t\t".'<option value="'.$temp.'"'.($language == $temp ? ' selected="selected"' : '').'>'.$temp.'</option>'."\n";
+
+?>
+					</select></span>
+				</div>
+			</div>
+		</fieldset>
+		<div class="frm-buttons">
+			<span class="submit"><input type="submit" name="changelang" value="<?php echo $lang_install['Choose language'] ?>" /></span>
+		</div>
+	</div>
+	</form>
+<?php
+
+}
+
+?>
 	<form class="frm-form" method="post" accept-charset="utf-8" action="install.php">
 	<div class="hidden">
 		<input type="hidden" name="form_sent" value="1" />
@@ -273,6 +315,19 @@ if (!isset($_POST['form_sent']))
 					<span class="fld-input"><input id="fld13" type="text" name="req_base_url" value="<?php echo $base_url_guess ?>" size="60" maxlength="100" /></span>
 				</div>
 			</div>
+			<div class="sf-set set4">
+				<div class="sf-box text">
+					<label for="fld14"><span><?php echo $lang_install['Default language'] ?></span> <small><?php echo $lang_install['Default language help'] ?></small></label><br />
+					<span class="fld-input"><select id="fld14" name="req_language">
+<?php
+
+	foreach ($languages as $temp)
+		echo "\t\t\t\t\t".'<option value="'.$temp.'"'.($language == $temp ? ' selected="selected"' : '').'>'.$temp.'</option>'."\n";
+
+?>
+					</select></span>
+				</div>
+			</div>
 		</fieldset>
 		<div class="frm-buttons">
 			<span class="submit"><input type="submit" name="start" value="<?php echo $lang_install['Start install'] ?>" /></span>
@@ -311,7 +366,7 @@ else
 	$password2 = unescape(forum_trim($_POST['req_password2']));
 	$board_title = unescape(forum_trim($_POST['board_title']));
 	$board_descrip = unescape(forum_trim($_POST['board_descrip']));
-
+	$default_lang = preg_replace('#[\.\\\/]#', '', unescape(forum_trim($_POST['req_language'])));
 
 	// Make sure base_url doesn't end with a slash
 	if (substr($_POST['req_base_url'], -1) == '/')
@@ -354,7 +409,9 @@ else
 
 	if (utf8_strlen($base_url) == 0)
 		error($lang_install['Missing base url']);
-
+	
+	if (!file_exists(FORUM_ROOT.'lang/'.$default_lang.'/common.php'))
+		error($lang_install['Invalid language']);
 
 	// Load the appropriate DB layer class
 	switch ($db_type)
@@ -1531,7 +1588,7 @@ else
 		'o_smilies'					=> "'1'",
 		'o_smilies_sig'				=> "'1'",
 		'o_make_links'				=> "'1'",
-		'o_default_lang'			=> "'English'",
+		'o_default_lang'			=> "'".$forum_db->escape($default_lang)."'",
 		'o_default_style'			=> "'Oxygen'",
 		'o_default_user_group'		=> "'3'",
 		'o_topic_review'			=> "'15'",
