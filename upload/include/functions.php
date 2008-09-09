@@ -2385,6 +2385,11 @@ function get_remote_file($url, $timeout, $head_only = false)
 	if (function_exists('ini_set'))
 		@ini_set('default_socket_timeout', $timeout);
 
+	$return = ($hook = get_hook('fn_get_remote_file_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	if ($return != null)
+		return $return;
+	
+
 	// If we have cURL, we might as well use it
 	if (function_exists('curl_init'))
 	{
@@ -2397,6 +2402,8 @@ function get_remote_file($url, $timeout, $head_only = false)
 		curl_setopt($ch, CURLOPT_NOBODY, $head_only);
 		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
 		curl_setopt($ch, CURLOPT_USERAGENT, 'FluxBB');
+		
+		($hook = get_hook('fn_get_remote_file_curl_options')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		// Grab the page
 		$content = @curl_exec($ch);
@@ -2430,6 +2437,9 @@ function get_remote_file($url, $timeout, $head_only = false)
 			fwrite($remote, ($head_only ? 'HEAD' : 'GET').' '.(!empty($parsed_url['path']) ? $parsed_url['path'] : '/').(!empty($parsed_url['query']) ? '?'.$parsed_url['query'] : '').' HTTP/1.0'."\r\n");
 			fwrite($remote, 'Host: '.$parsed_url['host']."\r\n");
 			fwrite($remote, 'User-Agent: FluxBB'."\r\n");
+			
+			($hook = get_hook('fn_get_remote_file_socket_options')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+			
 			fwrite($remote, 'Connection: Close'."\r\n\r\n");
 
 			stream_set_timeout($remote, $timeout);
@@ -2469,18 +2479,18 @@ function get_remote_file($url, $timeout, $head_only = false)
 		if (version_compare(PHP_VERSION, '5.0.0', '>='))
 		{
 			// Setup a stream context
-			$stream_context = stream_context_create(
-				array(
-					'http' => array(
-						'method'		=> $head_only ? 'HEAD' : 'GET',
-						'user_agent'	=> 'FluxBB',
-						'max_redirects'	=> 3,		// PHP >=5.1.0 only
-						'timeout'		=> $timeout	// PHP >=5.2.1 only
-					)
+			$stream_context_options = array(
+				'http' => array(
+					'method'	=> $head_only ? 'HEAD' : 'GET',
+					'user_agent'	=> 'FluxBB',
+					'max_redirects'	=> 3,		// PHP >=5.1.0 only
+					'timeout'	=> $timeout	// PHP >=5.2.1 only
 				)
 			);
+			
+			($hook = get_hook('fn_get_remote_file_context_options')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-			$content = @file_get_contents($url, false, $stream_context);
+			$content = @file_get_contents($url, false, stream_context_create($stream_context_options));
 		}
 		else
 			$content = @file_get_contents($url);
