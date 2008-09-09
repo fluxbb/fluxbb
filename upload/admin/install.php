@@ -146,7 +146,8 @@ if (!isset($_POST['form_sent']))
 
 <?php
 	
-	if (count($languages) > 1) {
+	if (count($languages) > 1)
+	{
 
 ?>
 	<form class="frm-form" method="get" accept-charset="utf-8" action="install.php">
@@ -162,8 +163,8 @@ if (!isset($_POST['form_sent']))
 					<span class="fld-input"><select id="fld0" name="lang">
 <?php
 
-	foreach ($languages as $temp)
-		echo "\t\t\t\t\t".'<option value="'.$temp.'"'.($language == $temp ? ' selected="selected"' : '').'>'.$temp.'</option>'."\n";
+		foreach ($languages as $temp)
+			echo "\t\t\t\t\t".'<option value="'.$temp.'"'.($language == $temp ? ' selected="selected"' : '').'>'.$temp.'</option>'."\n";
 
 ?>
 					</select></span>
@@ -177,7 +178,7 @@ if (!isset($_POST['form_sent']))
 	</form>
 <?php
 
-}
+	}
 
 ?>
 	<form class="frm-form" method="post" accept-charset="utf-8" action="install.php">
