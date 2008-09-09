@@ -1938,29 +1938,36 @@ function message($message, $link = '', $heading = '')
 {
 	global $forum_db, $forum_url, $lang_common, $forum_config, $base_url, $forum_start, $tpl_main, $forum_user, $forum_page, $forum_updates, $db_type;
 
-	($hook = get_hook('fn_message_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	$return = ($hook = get_hook('fn_message_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	if ($return != null)
+		return $return;
 
-	if (!defined('FORUM_HEADER'))
-	{
-		if ($heading == '')
-			$heading = $lang_common['Forum message'];
+	if (defined('FORUM_HEADER'))
+		ob_end_clean();
 
-		// Setup breadcrumbs
-		$forum_page['crumbs'] = array(
-			array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-			$heading
-		);
+	if ($heading == '')
+		$heading = $lang_common['Forum message'];
 
-		($hook = get_hook('fn_message_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	// Remove any page settings
+	unset($forum_page);
 
+	// Setup breadcrumbs
+	$forum_page['crumbs'] = array(
+		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+		$heading
+	);
+
+	($hook = get_hook('fn_message_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
+	if (!defined('FORUM_PAGE'))
 		define('FORUM_PAGE', 'message');
-		require FORUM_ROOT.'header.php';
 
-		// START SUBST - <!-- forum_main -->
-		ob_start();
+	require FORUM_ROOT.'header.php';
 
-		($hook = get_hook('fn_message_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-	}
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
+	($hook = get_hook('fn_message_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 	<div class="main-content main-message">

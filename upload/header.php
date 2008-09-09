@@ -143,16 +143,19 @@ unset($forum_head);
 $gen_elements = array();
 
 // Forum page id and classes
-if (substr(FORUM_PAGE, 0, 5) == 'admin')
-	define('FORUM_PAGE_TYPE', 'admin-page');
-else
+if (!defined('FORUM_PAGE_TYPE'))
 {
-	if (!empty($forum_page['page_post']))
-		define('FORUM_PAGE_TYPE', 'paged-page');
-	else if (!empty($forum_page['main_menu']))
-		define('FORUM_PAGE_TYPE', 'menu-page');
+	if (substr(FORUM_PAGE, 0, 5) == 'admin')
+		define('FORUM_PAGE_TYPE', 'admin-page');
 	else
-		define('FORUM_PAGE_TYPE', 'basic-page');
+	{
+		if (!empty($forum_page['page_post']))
+			define('FORUM_PAGE_TYPE', 'paged-page');
+		else if (!empty($forum_page['main_menu']))
+			define('FORUM_PAGE_TYPE', 'menu-page');
+		else
+			define('FORUM_PAGE_TYPE', 'basic-page');
+	}
 }
 
 $gen_elements['<!-- forum_page -->'] = 'id="brd-'.FORUM_PAGE.'" class="brd-page '.FORUM_PAGE_TYPE.'"';
@@ -315,4 +318,5 @@ unset($main_elements);
 
 ($hook = get_hook('hd_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-define('FORUM_HEADER', 1);
+if (!defined('FORUM_HEADER'))
+	define('FORUM_HEADER', 1);

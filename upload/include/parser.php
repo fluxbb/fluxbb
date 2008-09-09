@@ -740,6 +740,7 @@ function do_clickable($text)
 	return substr($text, 1);
 }
 
+
 //
 // Convert a series of smilies to images
 //
