@@ -12,7 +12,10 @@ define('FORUM_ROOT', './');
 require FORUM_ROOT.'include/essentials.php';
 
 // Bring in all the rewrite rules
-require FORUM_ROOT.'include/rewrite_rules.php';
+if (file_exists(FORUM_ROOT.'include/url/'.$forum_config['o_sef'].'/rewrite_rules.php'))
+	require FORUM_ROOT.'include/url/'.$forum_config['o_sef'].'/rewrite_rules.php';
+else
+	require FORUM_ROOT.'include/url/Default/rewrite_rules.php';
 
 // Allow extensions to create their own rewrite rules/modify existing rules
 ($hook = get_hook('re_rewrite_rules')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;

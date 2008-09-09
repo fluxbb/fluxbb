@@ -74,10 +74,10 @@ else
 
 
 // Setup the URL rewriting scheme
-if (file_exists(FORUM_ROOT.'include/url/'.$forum_config['o_sef'].'.php'))
-	require FORUM_ROOT.'include/url/'.$forum_config['o_sef'].'.php';
+if (file_exists(FORUM_ROOT.'include/url/'.$forum_config['o_sef'].'/forum_urls.php'))
+	require FORUM_ROOT.'include/url/'.$forum_config['o_sef'].'/forum_urls.php';
 else
-	require FORUM_ROOT.'include/url/Default.php';
+	require FORUM_ROOT.'include/url/Default/forum_urls.php';
 
 // A good place to modify the URL scheme
 ($hook = get_hook('co_modify_url_scheme')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;

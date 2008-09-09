@@ -53,7 +53,7 @@ if (isset($_POST['form_sent']))
 				message($lang_common['Bad request']);
 			if (!file_exists(FORUM_ROOT.'lang/'.$form['default_lang'].'/common.php'))
 				message($lang_common['Bad request']);
-			if (!file_exists(FORUM_ROOT.'include/url/'.$form['sef'].'.php'))
+			if (!file_exists(FORUM_ROOT.'include/url/'.$form['sef'].'/forum_urls.php'))
 				message($lang_common['Bad request']);
 
 			if (!isset($form['default_dst']) || $form['default_dst'] != '1')

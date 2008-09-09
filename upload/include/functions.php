@@ -13,8 +13,9 @@
  function get_scheme_packs()
  {
   	$schemes = array();
- 	foreach (glob(FORUM_ROOT.'include/url/*.php') as $filename)
- 		$schemes[] = basename($filename, '.php');
+ 	foreach (glob(FORUM_ROOT.'include/url/*') as $dirname)
+ 		if (is_dir($dirname) && file_exists($dirname.'/forum_urls.php'))
+ 			$schemes[] = basename($dirname);
 	
 	return $schemes;
  }
