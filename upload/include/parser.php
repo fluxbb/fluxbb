@@ -157,12 +157,12 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			{
 				// Deal with new lines
 				$split_current = preg_split("/([\n\r]+)/", forum_trim($current, "\r\n"), -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
-				$current = $split_current[0];
+				$current = '';
 
 				for ($i = 1; $i < count($split_current); $i = $i + 2) {
 					$temp_opened = array();
 					$temp_opened_arg = array();
-					$temp = '';
+					$temp = $split_current[$i - 1];
 					while (!empty($open_tags))
 					{
 						$temp_tag = array_pop($open_tags);
