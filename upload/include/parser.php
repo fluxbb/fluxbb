@@ -153,13 +153,16 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			if ($current_nest)
 				continue;
 
-			if (in_array($open_tags[$opened_tag], $tags_inline) && strpos(forum_trim($current, "\r\n"), "\n") !== false)
+			if (in_array($open_tags[$opened_tag], $tags_inline) && strpos($current, "\n") !== false)
 			{
 				// Deal with new lines
-				$split_current = preg_split("/([\n\r]+)/", forum_trim($current, "\r\n"), -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+				$split_current = preg_split("/([\n\r]+)/", $current, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 				$current = '';
+				
+				if (!forum_trim($split_current[0], "\r\n")) // the first part is a linebreak so we need to handle any open tags first
+					array_unshift($split_current, '');
 
-				for ($i = 1; $i < count($split_current); $i = $i + 2) {
+				for ($i = 1; $i < count($split_current); $i += 2) {
 					$temp_opened = array();
 					$temp_opened_arg = array();
 					$temp = $split_current[$i - 1];
@@ -196,7 +199,9 @@ function preparse_tags($text, &$errors, $is_signature = false)
 					}
 					$current .= $temp;
 				}
-				$current .= $split_current[$i-1];
+				
+				if (array_key_exists($i - 1, $split_current))
+					$current .= $split_current[$i - 1];
 			}
 
 			if (in_array($open_tags[$opened_tag], $tags_trim))
