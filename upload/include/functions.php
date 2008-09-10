@@ -1670,9 +1670,9 @@ function send_subscriptions($post_info, $new_pid)
 function sef_friendly($str)
 {
 	global $forum_user;
-	static $lang_replace;
+	static $lang_url_replace;
 
-	if (!isset($lang_replace))
+	if (!isset($lang_url_replace))
 		require FORUM_ROOT.'lang/'.$forum_user['language'].'/url_replace.php';
 
 	$return = ($hook = get_hook('fn_sef_friendly_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
