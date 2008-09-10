@@ -11,7 +11,7 @@
 
 
 define('FORUM_VERSION', '1.3 Beta');
-define('FORUM_DB_REVISION', 4);
+define('FORUM_DB_REVISION', 5);
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
 
@@ -919,7 +919,15 @@ else
 			'prev_url'		=> array(
 				'datatype'		=> 'VARCHAR(255)',
 				'allow_null'	=> true
-			)
+			),
+			'last_post'			=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> true
+			),
+			'last_search'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> true
+			),
 		),
 		'UNIQUE KEYS'	=> array(
 			'user_id_ident_idx'	=> array('user_id', 'ident')
@@ -1498,7 +1506,7 @@ else
 	$query = array(
 		'INSERT'	=> 'g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood',
 		'INTO'		=> 'groups',
-		'VALUES'	=> '\'Guest\', NULL, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0'
+		'VALUES'	=> '\'Guest\', NULL, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 60, 30, 0'
 	);
 
 	if ($db_type != 'pgsql')

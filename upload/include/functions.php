@@ -265,7 +265,7 @@ function set_default_user()
 
 	// Fetch guest user
 	$query = array(
-		'SELECT'	=> 'u.*, g.*, o.logged, o.csrf_token, o.prev_url',
+		'SELECT'	=> 'u.*, g.*, o.logged, o.csrf_token, o.prev_url, o.last_post, o.last_search',
 		'FROM'		=> 'users AS u',
 		'JOINS'		=> array(
 			array(
@@ -1393,30 +1393,37 @@ function add_topic($post_info, &$new_tid, &$new_pid)
 
 	sync_forum($post_info['forum_id']);
 
-	// If the posting user is logged in...
-	if (!$post_info['is_guest'])
-	{
-		// ...increment his/her post count
-		if (isset($post_info['update_user']) && $post_info['update_user'])
-		{
-			$query = array(
-				'UPDATE'	=> 'users',
-				'SET'		=> 'num_posts=num_posts+1, last_post='.$post_info['posted'],
-				'WHERE'		=> 'id='.$post_info['poster_id']
-			);
+      	// Increment his/her post count & last post time
+      	if (isset($post_info['update_user']) && $post_info['update_user'])
+      	{
+      		if ($post_info['is_guest'])
+      		{
+      			$query = array(
+      				'UPDATE'	=> 'online',
+      				'SET'		=> 'last_post='.$post_info['posted'],
+      				'WHERE'		=> 'ident=\''.$forum_db->escape(get_remote_address()).'\''
+      			);
+      		}
+      		else
+      		{
+      			$query = array(
+      				'UPDATE'	=> 'users',
+      				'SET'		=> 'num_posts=num_posts+1, last_post='.$post_info['posted'],
+      				'WHERE'		=> 'id='.$post_info['poster_id']
+      			);
+      		}
+      		
+    		($hook = get_hook('fn_add_topic_qr_update_last_post')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+    		$forum_db->query_build($query) or error(__FILE__, __LINE__);
+      	}
 
-			($hook = get_hook('fn_add_topic_qr_increment_num_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-			$forum_db->query_build($query) or error(__FILE__, __LINE__);
-		}
-
-		// ...update his/her unread indicator
-		if (isset($post_info['update_unread']) && $post_info['update_unread'])
-		{
-			$tracked_topics = get_tracked_topics();
-			$tracked_topics['topics'][$new_tid] = time();
-			set_tracked_topics($tracked_topics);
-		}
-	}
+      	// If the posting user is logged in update his/her unread indicator
+      	if (!$post_info['is_guest'] && isset($post_info['update_unread']) && $post_info['update_unread'])
+      	{
+      		$tracked_topics = get_tracked_topics();
+      		$tracked_topics['topics'][$new_tid] = time();
+      		set_tracked_topics($tracked_topics);
+      	}
 
 	($hook = get_hook('fn_add_topic_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
@@ -1507,30 +1514,37 @@ function add_post($post_info, &$new_pid)
 
 	send_subscriptions($post_info, $new_pid);
 
-	// If the posting user is logged in...
-	if (!$post_info['is_guest'])
-	{
-		// ...increment his/her post count
-		if (isset($post_info['update_user']))
-		{
-			$query = array(
-				'UPDATE'	=> 'users',
-				'SET'		=> 'num_posts=num_posts+1, last_post='.$post_info['posted'],
-				'WHERE'		=> 'id='.$post_info['poster_id']
-			);
+      	// Increment his/her post count & last post time
+      	if (isset($post_info['update_user']))
+      	{
+      		if ($post_info['is_guest'])
+      		{
+      			$query = array(
+      				'UPDATE'	=> 'online',
+      				'SET'		=> 'last_post='.$post_info['posted'],
+      				'WHERE'		=> 'ident=\''.$forum_db->escape(get_remote_address()).'\''
+      			);
+      		}
+      		else
+      		{
+      			$query = array(
+      				'UPDATE'	=> 'users',
+      				'SET'		=> 'num_posts=num_posts+1, last_post='.$post_info['posted'],
+      				'WHERE'		=> 'id='.$post_info['poster_id']
+      			);
+      		}
 
-			($hook = get_hook('fn_add_post_qr_increment_num_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-			$forum_db->query_build($query) or error(__FILE__, __LINE__);
-		}
+      		($hook = get_hook('fn_add_post_qr_update_last_post')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+      		$forum_db->query_build($query) or error(__FILE__, __LINE__);
+      	}
 
-		// ...update his/her unread indicator
-		if (isset($post_info['update_unread']))
-		{
-			$tracked_topics = get_tracked_topics();
-			$tracked_topics['topics'][$post_info['topic_id']] = time();
-			set_tracked_topics($tracked_topics);
-		}
-	}
+      	// If the posting user is logged in update his/her unread indicator
+      	if (!$post_info['is_guest'] && isset($post_info['update_unread']) && $post_info['update_unread'])
+      	{
+      		$tracked_topics = get_tracked_topics();
+      		$tracked_topics['topics'][$post_info['topic_id']] = time();
+      		set_tracked_topics($tracked_topics);
+      	}
 
 	($hook = get_hook('fn_add_post_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }

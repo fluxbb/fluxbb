@@ -28,21 +28,28 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 		message($lang_search['No terms']);
 
 	// Flood protection
-	if (!$forum_user['is_guest'] && $forum_user['last_search'] != '' && (time() - $forum_user['last_search']) < $forum_user['g_search_flood'] && (time() - $forum_user['last_search']) >= 0)
+	if ($forum_user['last_search'] != '' && (time() - $forum_user['last_search']) < $forum_user['g_search_flood'] && (time() - $forum_user['last_search']) >= 0)
 		message(sprintf($lang_search['Search flood'], $forum_user['g_search_flood']));
 
-	if (!$forum_user['is_guest'])
+	if ($forum_user['is_guest'])
 	{
-		// Set the user's last_search time
+		$query = array(
+			'UPDATE'	=> 'online',
+			'SET'		=> 'last_search='.time(),
+			'WHERE'		=> 'ident=\''.$forum_db->escape(get_remote_address()).'\''
+		);
+	}
+	else
+	{
 		$query = array(
 			'UPDATE'	=> 'users',
 			'SET'		=> 'last_search='.time(),
 			'WHERE'		=> 'id='.$forum_user['id'],
 		);
-
-		($hook = get_hook('sf_fn_create_search_cache_qr_update_last_search_time')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 	}
+
+      	($hook = get_hook('sf_fn_create_search_cache_qr_update_last_search_time')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+      	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// We need to grab results, insert them into the cache and reload with a search id before showing them
 	$keyword_results = $author_results = array();

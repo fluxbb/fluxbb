@@ -112,7 +112,7 @@ if (isset($_POST['form_sent']))
 		message($lang_common['Bad request']);
 
 	// Flood protection
-	if (!$forum_user['is_guest'] && !isset($_POST['preview']) && $forum_user['last_post'] != '' && (time() - $forum_user['last_post']) < $forum_user['g_post_flood'] && (time() - $forum_user['last_post']) >= 0)
+	if (!isset($_POST['preview']) && $forum_user['last_post'] != '' && (time() - $forum_user['last_post']) < $forum_user['g_post_flood'] && (time() - $forum_user['last_post']) >= 0)
 		$errors[] = sprintf($lang_post['Flood'], $forum_user['g_post_flood']);
 
 	// If it's a new topic
