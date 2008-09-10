@@ -1972,7 +1972,7 @@ function message($message, $link = '', $heading = '')
 
 ?>
 	<div class="main-content main-message">
-		<p><?php echo $message ?><?php if ($link != '') echo ' <span>'.$link.'</span>' ?></p>
+		<p><?php echo $message.($link ? ' <span>'.$link.'</span>' : '') ?></p>
 	</div>
 <?php
 
