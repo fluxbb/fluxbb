@@ -501,6 +501,12 @@ class DBLayer
 	}
 
 
+	function alter_field($table_name, $field_name, $field_type, $allow_null, $default_value = null, $after_field = 0, $no_prefix = false)
+	{
+		return;
+	}
+
+
 	function drop_field($table_name, $field_name, $no_prefix = false)
 	{
 		if (!$this->field_exists($table_name, $field_name, $no_prefix))

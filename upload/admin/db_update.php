@@ -638,7 +638,7 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 			$schema = array(
 				'FIELDS'		=> array(
 					'id'			=> array(
-						'datatype'		=> 'VARCHAR(50)',
+						'datatype'		=> 'VARCHAR(150)',
 						'allow_null'	=> false,
 						'default'		=> '\'\''
 					),
@@ -671,51 +671,32 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 		// Add priority field to extension_hooks
 		$forum_db->add_field('extension_hooks', 'priority', 'TINYINT(1)', false, 5, 'installed');
 
+		// Extend id field in extension_hooks to 150
+		$forum_db->alter_field('extension_hooks', 'id', 'VARCHAR(150)', false, '');
+
+		// Make all e-mail fields VARCHAR(80)
+		$forum_db->alter_field('bans', 'email', 'VARCHAR(80)', true);
+		$forum_db->alter_field('posts', 'poster_email', 'VARCHAR(80)', true);
+		$forum_db->alter_field('users', 'email', 'VARCHAR(80)', false, '');
+		$forum_db->alter_field('users', 'jabber', 'VARCHAR(80)', true);
+		$forum_db->alter_field('users', 'msn', 'VARCHAR(80)', true);
+		$forum_db->alter_field('users', 'activate_string', 'VARCHAR(80)', true);
+
+		// Remove NOT NULL from TEXT fields for consistency. See http://dev.punbb.org/changeset/596
+		$forum_db->alter_field('posts', 'message', 'TEXT', true);
+		$forum_db->alter_field('reports', 'message', 'TEXT', true);
+
+
+		// Drop fulltext indexes  (should only apply to SVN installs)
 		if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 		{
-			// Make all e-mail fields VARCHAR(80)
-			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'bans CHANGE email email VARCHAR(80)') or error(__FILE__, __LINE__);
-			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'posts CHANGE poster_email poster_email VARCHAR(80)') or error(__FILE__, __LINE__);
-			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'users CHANGE email email VARCHAR(80) NOT NULL DEFAULT ""') or error(__FILE__, __LINE__);
-			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'users CHANGE jabber jabber VARCHAR(80)') or error(__FILE__, __LINE__);
-			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'users CHANGE msn msn VARCHAR(80)') or error(__FILE__, __LINE__);
-			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'users CHANGE activate_string activate_string VARCHAR(80)') or error(__FILE__, __LINE__);
-
-			// Remove NOT NULL from TEXT fields for consistency. See http://dev.punbb.org/changeset/596
-			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'posts CHANGE message message TEXT') or error(__FILE__, __LINE__);
-			$forum_db->query('ALTER TABLE '.$forum_db->prefix.'reports CHANGE message message TEXT') or error(__FILE__, __LINE__);
-
-			// Drop fulltext indexes  (should only apply to SVN installs)
 			$forum_db->drop_index('topics', 'subject_idx');
 			$forum_db->drop_index('posts', 'message_idx');
 		}
 
 		// Make all IP fields VARCHAR(39) to support IPv6
-		switch ($db_type)
-		{
-			case 'mysql':
-			case 'mysqli':
-			case 'mysql_innodb':
-			case 'mysqli_innodb':
-				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'posts CHANGE poster_ip poster_ip VARCHAR(39)') or error(__FILE__, __LINE__);
-				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'users CHANGE registration_ip registration_ip VARCHAR(39) NOT NULL DEFAULT \'0.0.0.0\'') or error(__FILE__, __LINE__);
-				break;
-
-			case 'pgsql':
-				$forum_db->add_field('posts', 'tmp_poster_ip', 'VARCHAR(39)', true, null, 'poster_ip');
-				$forum_db->query('UPDATE '.$forum_db->prefix.'posts SET tmp_poster_ip = poster_ip') or error(__FILE__, __LINE__);
-				$forum_db->drop_field('posts', 'poster_ip');
-				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'posts RENAME COLUMN tmp_poster_ip TO poster_ip') or error(__FILE__, __LINE__);
-
-				$forum_db->add_field('users', 'tmp_registration_ip', 'VARCHAR(39)', false, '0.0.0.0', 'registration_ip');
-				$forum_db->query('UPDATE '.$forum_db->prefix.'users SET tmp_registration_ip = registration_ip') or error(__FILE__, __LINE__);
-				$forum_db->drop_field('users', 'registration_ip');
-				$forum_db->query('ALTER TABLE '.$forum_db->prefix.'users RENAME COLUMN tmp_registration_ip TO registration_ip') or error(__FILE__, __LINE__);
-				break;
-
-			case 'sqlite':
-				break;
-		}
+		$forum_db->alter_field('posts', 'poster_ip', 'VARCHAR(39)', true);
+		$forum_db->alter_field('user', 'registration_ip', 'VARCHAR(39)', false, '0.0.0.0');
 
 		// Add the DST option to the users table
 		$forum_db->add_field('users', 'dst', 'TINYINT(1)', false, 0, 'timezone');

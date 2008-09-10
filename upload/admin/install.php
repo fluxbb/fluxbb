@@ -641,7 +641,7 @@ else
 	$schema = array(
 		'FIELDS'		=> array(
 			'id'			=> array(
-				'datatype'		=> 'VARCHAR(50)',
+				'datatype'		=> 'VARCHAR(150)',
 				'allow_null'	=> false,
 				'default'		=> '\'\''
 			),
