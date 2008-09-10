@@ -45,7 +45,6 @@ if (defined('PUN'))
 if (!defined('FORUM'))
 	error('The file \'config.php\' doesn\'t exist or is corrupt. Please run <a href="'.FORUM_ROOT.'admin/install.php">install.php</a> to install FluxBB first.');
 
-
 // Block prefetch requests
 if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
 {
@@ -74,17 +73,11 @@ setlocale(LC_CTYPE, 'C');
 if (!defined('FORUM_CACHE_DIR'))
 	define('FORUM_CACHE_DIR', FORUM_ROOT.'cache/');
 
-
-// Construct REQUEST_URI if it isn't set (or if it's set improperly)
-if (!isset($_SERVER['REQUEST_URI']) || (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']) && strpos($_SERVER['REQUEST_URI'], '?') === false))
-	$_SERVER['REQUEST_URI'] = (isset($_SERVER['PHP_SELF']) ? str_replace('%26', '&', str_replace('%3D', '=', str_replace('%2F', '/', rawurlencode($_SERVER['PHP_SELF'])))) : '').(isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']) ? '?'.$_SERVER['QUERY_STRING'] : '');
-
 // Load DB abstraction layer and connect
 require FORUM_ROOT.'include/dblayer/common_db.php';
 
 // Start a transaction
 $forum_db->start_transaction();
-
 
 // Load cached config
 if (file_exists(FORUM_CACHE_DIR.'cache_config.php'))
@@ -99,11 +92,9 @@ if (!defined('FORUM_CONFIG_LOADED'))
 	require FORUM_CACHE_DIR.'cache_config.php';
 }
 
-
 // Verify that we are running the proper database schema revision
 if (defined('PUN') || !isset($forum_config['o_database_revision']) || $forum_config['o_database_revision'] < FORUM_DB_REVISION || version_compare($forum_config['o_cur_version'], FORUM_VERSION, '<'))
 	error('Your FluxBB database is out-of-date and must be upgraded in order to continue. Please run <a href="'.FORUM_ROOT.'admin/db_update.php">db_update.php</a> in order to complete the upgrade process.');
-
 
 // Load hooks
 if (file_exists(FORUM_CACHE_DIR.'cache_hooks.php'))
@@ -118,8 +109,15 @@ if (!defined('FORUM_HOOKS_LOADED'))
 	require FORUM_CACHE_DIR.'cache_hooks.php';
 }
 
+// Define a few commonly used constants
+define('FORUM_UNVERIFIED', 0);
+define('FORUM_ADMIN', 1);
+define('FORUM_GUEST', 2);
 
 // A good place to add common functions for your extension
 ($hook = get_hook('es_essentials')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
+if (!defined('FORUM_MAX_POSTSIZE'))
+	define('FORUM_MAX_POSTSIZE', 65535);
 
 define('FORUM_ESSENTIALS_LOADED', 1);

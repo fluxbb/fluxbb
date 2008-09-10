@@ -14,6 +14,10 @@ if (!defined('FORUM_ROOT'))
 if (!defined('FORUM_ESSENTIALS_LOADED'))
 	require FORUM_ROOT.'include/essentials.php';
 
+// Construct REQUEST_URI if it isn't set (or if it's set improperly)
+if (!isset($_SERVER['REQUEST_URI']) || (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']) && strpos($_SERVER['REQUEST_URI'], '?') === false))
+	$_SERVER['REQUEST_URI'] = (isset($_SERVER['PHP_SELF']) ? str_replace('%26', '&', str_replace('%3D', '=', str_replace('%2F', '/', rawurlencode($_SERVER['PHP_SELF'])))) : '').(isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']) ? '?'.$_SERVER['QUERY_STRING'] : '');
+
 // Turn off magic_quotes_runtime
 if (get_magic_quotes_runtime())
 	set_magic_quotes_runtime(0);
@@ -38,12 +42,6 @@ forum_remove_bad_characters();
 if (empty($cookie_name))
 	$cookie_name = 'forum_cookie';
 
-// Define a few commonly used constants
-define('FORUM_UNVERIFIED', 0);
-define('FORUM_ADMIN', 1);
-define('FORUM_GUEST', 2);
-
-
 // Enable output buffering
 if (!defined('FORUM_DISABLE_BUFFERING'))
 {
@@ -53,7 +51,6 @@ if (!defined('FORUM_DISABLE_BUFFERING'))
 	else
 		ob_start();
 }
-
 
 // Define standard date/time formats
 $forum_time_formats = array($forum_config['o_time_format'], 'H:i:s', 'H:i', 'g:i:s a', 'g:i a');
@@ -72,7 +69,6 @@ if (file_exists(FORUM_ROOT.'lang/'.$forum_user['language'].'/common.php'))
 else
 	error('There is no valid language pack \''.forum_htmlencode($forum_user['language']).'\' installed. Please reinstall a language of that name.');
 
-
 // Setup the URL rewriting scheme
 if (file_exists(FORUM_ROOT.'include/url/'.$forum_config['o_sef'].'/forum_urls.php'))
 	require FORUM_ROOT.'include/url/'.$forum_config['o_sef'].'/forum_urls.php';
@@ -81,7 +77,6 @@ else
 
 // A good place to modify the URL scheme
 ($hook = get_hook('co_modify_url_scheme')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
 
 // Check if we are to display a maintenance message
 if ($forum_config['o_maintenance'] && $forum_user['g_id'] > FORUM_ADMIN && !defined('FORUM_TURN_OFF_MAINT'))
@@ -104,7 +99,6 @@ if ($forum_user['g_id'] == FORUM_ADMIN)
 	}
 }
 
-
 // Load cached bans
 if (file_exists(FORUM_CACHE_DIR.'cache_bans.php'))
 	include FORUM_CACHE_DIR.'cache_bans.php';
@@ -121,7 +115,6 @@ if (!defined('FORUM_BANS_LOADED'))
 // Check if current user is banned
 check_bans();
 
-
 // Update online list
 update_users_online();
 
@@ -133,8 +126,4 @@ if ($forum_user['is_guest'] && isset($_GET['login']))
 if (!empty($_POST) && (isset($_POST['confirm_cancel']) || (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== generate_form_token(get_current_url()))) && !defined('FORUM_SKIP_CSRF_CONFIRM'))
 	csrf_confirm_form();
 
-
 ($hook = get_hook('co_common')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
-if (!defined('FORUM_MAX_POSTSIZE'))
-	define('FORUM_MAX_POSTSIZE', 65535);
