@@ -9,8 +9,4 @@
  */
 
 
-$forum_reserved_strings = array(
-	''	=>	'view',
-	'rss'	=>	'view-rss',
-	'atom'	=>	'view-atom',
-);
+$forum_reserved_strings = array();

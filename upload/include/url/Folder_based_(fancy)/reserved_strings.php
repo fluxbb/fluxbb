@@ -10,7 +10,9 @@
 
 
 $forum_reserved_strings = array(
-	''	=>	'view',
-	'rss'	=>	'view-rss',
-	'atom'	=>	'view-atom',
+	''		=>	'view',
+	'rss'		=>	'view-rss',
+	'atom'		=>	'view-atom',
+	'newposts'	=>	'view-new-posts',
+	'lastpost'	=>	'view-last-post',
 );
