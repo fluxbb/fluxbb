@@ -9,7 +9,7 @@
 
 
 $forum_rewrite_rules = array(
-	'/^topic[\/_-]?([0-9]+).*(new|last)[\/_-]?(post)?s?(\.html?|\/)?$/i'													=>	'viewtopic.php?id=$1&action=$2',
+	'/^topic[\/_-]?([0-9]+).*(new|last)[\/_-]?(posts)?(\.html?|\/)?$/i'													=>	'viewtopic.php?id=$1&action=$2',
 	'/^post[\/_-]?([0-9]+)(\.html?|\/)?$/i'																					=>	'viewtopic.php?pid=$1',
 	'/^(forum|topic)[\/_-]?([0-9]+).*[\/_-]p(age)?[\/_-]?([0-9]+)(\.html?|\/)?$/i'											=>	'view$1.php?id=$2&p=$4',
 	'/^(f|t)(orum|opic)[\/_-]?([0-9]+)[\/_-](rss|atom)(\.xml?|\/)?$/i'														=>	'extern.php?action=feed&$1id=$3&type=$4',
