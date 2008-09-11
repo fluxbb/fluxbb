@@ -11,16 +11,14 @@
 
 $forum_reserved_strings = array(
 	''		=>	'view',
-	'rss'		=>	'rss-view',
-	'atom'		=>	'atom-view',
 	
-	'newpost'	=>	'newpost-view',
-	'newposts'	=>	'newposts-view',
-	'new-post'	=>	'new-post-view',
-	'new-posts'	=>	'new-posts-view',
+	'newpost'	=>	'view',
+	'newposts'	=>	'view',
+	'new-post'	=>	'view',
+	'new-posts'	=>	'view',
 	
-	'lastpost'	=>	'lastpost-view',
-	'lastposts'	=>	'lastposts-view',
-	'last-post'	=>	'last-post-view',
-	'last-posts'	=>	'last-posts-view',
+	'lastpost'	=>	'view',
+	'lastposts'	=>	'view',
+	'last-post'	=>	'view',
+	'last-posts'	=>	'view',
 );

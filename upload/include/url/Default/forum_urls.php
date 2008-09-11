@@ -73,7 +73,6 @@ $forum_url = array(
 	'users'							=>	'userlist.php',
 	'users_browse'					=>	'userlist.php?show_group=$1&amp;sort_by=$2&amp;sort_dir=$3&amp;username=$4',
 	'page'							=>	'&amp;p=$1',
-	'moderate'						=>	'moderate.php',
 	'moderate_forum'				=>	'moderate.php?fid=$1',
 	'get_host'						=>	'moderate.php?get_host=$1',
 	'move'							=>	'moderate.php?fid=$1&amp;move_topics=$2',
