@@ -153,13 +153,15 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			if ($current_nest)
 				continue;
 
+			$current = str_replace("\r\n", "\n", $current);
+			$current = str_replace("\r", "\n", $current);
 			if (in_array($open_tags[$opened_tag], $tags_inline) && strpos($current, "\n") !== false)
 			{
 				// Deal with new lines
-				$split_current = preg_split("/([\n\r]+)/", $current, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+				$split_current = preg_split("/(\n\n+)/", $current, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 				$current = '';
 				
-				if (!forum_trim($split_current[0], "\r\n")) // the first part is a linebreak so we need to handle any open tags first
+				if (!forum_trim($split_current[0], "\n")) // the first part is a linebreak so we need to handle any open tags first
 					array_unshift($split_current, '');
 
 				for ($i = 1; $i < count($split_current); $i += 2) {
@@ -679,11 +681,11 @@ function do_bbcode($text, $is_signature = false)
 		$replace[] = 'handle_list_tag(\'$2\', \'$1\')';
 	}
 
-	$pattern[] = '#\[b\](.*?)\[/b\]#';
-	$pattern[] = '#\[i\](.*?)\[/i\]#';
-	$pattern[] = '#\[u\](.*?)\[/u\]#';
-	$pattern[] = '#\[colou?r=([a-zA-Z]{3,20}|\#[0-9a-fA-F]{6}|\#[0-9a-fA-F]{3})](.*?)\[/colou?r\]#';
-	$pattern[] = '#\[h\](.*?)\[/h\]#';
+	$pattern[] = '#\[b\](.*?)\[/b\]#ms';
+	$pattern[] = '#\[i\](.*?)\[/i\]#ms';
+	$pattern[] = '#\[u\](.*?)\[/u\]#ms';
+	$pattern[] = '#\[colou?r=([a-zA-Z]{3,20}|\#[0-9a-fA-F]{6}|\#[0-9a-fA-F]{3})](.*?)\[/colou?r\]#ms';
+	$pattern[] = '#\[h\](.*?)\[/h\]#ms';
 
 	$replace[] = '<strong>$1</strong>';
 	$replace[] = '<em>$1</em>';
