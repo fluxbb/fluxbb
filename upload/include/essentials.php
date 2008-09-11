@@ -94,7 +94,7 @@ if (!defined('FORUM_CONFIG_LOADED'))
 
 // Verify that we are running the proper database schema revision
 if (defined('PUN') || !isset($forum_config['o_database_revision']) || $forum_config['o_database_revision'] < FORUM_DB_REVISION || version_compare($forum_config['o_cur_version'], FORUM_VERSION, '<'))
-	error('Your FluxBB database is out-of-date and must be upgraded in order to continue. Please run <a href="'.FORUM_ROOT.'admin/db_update.php">db_update.php</a> in order to complete the upgrade process.');
+	error('Your FluxBB database is out-of-date and must be upgraded in order to continue. Please run <a href="'.$base_url.'/admin/db_update.php">db_update.php</a> in order to complete the upgrade process.');
 
 // Load hooks
 if (file_exists(FORUM_CACHE_DIR.'cache_hooks.php'))
