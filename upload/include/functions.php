@@ -17,6 +17,8 @@
  		if (is_dir($dirname) && file_exists($dirname.'/forum_urls.php'))
  			$schemes[] = basename($dirname);
 	
+	($hook = get_hook('fn_get_scheme_packs_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	
 	return $schemes;
  }
  
@@ -32,6 +34,8 @@
  		if (is_dir($dirname) && file_exists($dirname.'/'.$tempname.'.php'))
  			$styles[] = $tempname;
  	}
+ 	
+ 	($hook = get_hook('fn_get_style_packs_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	
 	return $styles;
  }
@@ -45,6 +49,8 @@ function get_language_packs()
  	foreach (glob(FORUM_ROOT.'lang/*') as $dirname)
  		if (is_dir($dirname) && file_exists($dirname.'/common.php'))
  			$languages[] = basename($dirname);
+	
+	($hook = get_hook('fn_get_language_packs_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	
 	return $languages;
 }
