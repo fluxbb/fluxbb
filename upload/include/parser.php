@@ -409,10 +409,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			else
 				$limit_bbcode = $tags;
 
-			if (preg_match('/\['.preg_quote($current_tag).'(?:=[^\]]*?)?\]\s*$/', $new_text, $matches))
-				$new_text = substr($new_text, 0, 0 - strlen($matches[0]));
-			else
-				$new_text .= $current;
+			$new_text .= $current;
 
 			continue;
 		}
