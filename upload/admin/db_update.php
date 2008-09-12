@@ -822,7 +822,7 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 			$forum_db->query('UPDATE '.$forum_db->prefix.'forum_perms SET group_id=4 WHERE group_id='.$temp_id) or error(__FILE__, __LINE__);
 
 			// Update the default usergroup if it uses the old ID for the members group
-			$forum_db->query('UPDATE '.$forum_db->prefix.'config SET conf_value="3" WHERE conf_name="o_default_user_group" and conf_value="4"') or error(__FILE__, __LINE__);
+			$forum_db->query('UPDATE '.$forum_db->prefix.'config SET conf_value=\'3\' WHERE conf_name=\'o_default_user_group\' and conf_value=\'4\'') or error(__FILE__, __LINE__);
 		}
 
 		// Replace obsolete p_mod_edit_users config setting with new per-group permission
