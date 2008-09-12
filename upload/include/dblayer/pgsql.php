@@ -451,9 +451,9 @@ class DBLayer
 		$field_type = preg_replace(array_keys($this->datatype_transformations), array_values($this->datatype_transformations), $field_type);
 
 		$forum_db->add_field($table_name, 'tmp_'.$field_name, $field_type, $allow_null, $default_value, $after_field, $no_prefix);
-		$forum_db->query('UPDATE '.($no_prefix ? '' : $this->prefix).$table_name' SET tmp_'.$field_name.' = '.$field_name) or error(__FILE__, __LINE__);
+		$forum_db->query('UPDATE '.($no_prefix ? '' : $this->prefix).$table_name.' SET tmp_'.$field_name.' = '.$field_name) or error(__FILE__, __LINE__);
 		$forum_db->drop_field($table_name, $field_name, $no_prefix);
-		$forum_db->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name' RENAME COLUMN tmp_'.$field_name.' TO '.$field_name) or error(__FILE__, __LINE__);
+		$forum_db->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' RENAME COLUMN tmp_'.$field_name.' TO '.$field_name) or error(__FILE__, __LINE__);
 
 		// Set the default value
 		if ($default_value === null)
