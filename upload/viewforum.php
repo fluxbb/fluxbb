@@ -57,6 +57,9 @@ if ($cur_forum['redirect_url'] != '')
 	exit;
 }
 
+// Check for use of incorrect URLs
+confirm_current_url(forum_link($forum_url['forum'], array($id, sef_friendly($cur_forum['forum_name']))));
+
 // Sort out who the moderators are and if we are currently a moderator (or an admin)
 $mods_array = ($cur_forum['moderators'] != '') ? unserialize($cur_forum['moderators']) : array();
 $forum_page['is_admmod'] = ($forum_user['g_id'] == FORUM_ADMIN || ($forum_user['g_moderator'] == '1' && array_key_exists($forum_user['username'], $mods_array))) ? true : false;

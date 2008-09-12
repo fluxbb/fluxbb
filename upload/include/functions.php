@@ -2358,6 +2358,28 @@ function get_current_url($max_length = 0)
 
 
 //
+// Check current URL and redirect if required
+//
+function confirm_current_url($url)
+{
+	$return = ($hook = get_hook('fn_confirm_current_url_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	if ($return != null)
+		return $return;
+
+	if (strpos($url,'#') !== false)
+		$url = substr($url, 0, strpos($url,'#'));
+
+	$current_url = get_current_url();
+
+	if ($url != $current_url && $url.'?login=1' != $current_url && $url.'&login=1' != $current_url)
+	{
+		header('HTTP/1.1 301 Moved Permanently'); 
+		header('Location: '.$url);
+	}
+}
+
+
+//
 // Encodes the contents of $str so that they are safe to output on an (X)HTML page
 //
 function forum_htmlencode($str)

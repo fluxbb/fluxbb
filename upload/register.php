@@ -12,6 +12,9 @@ if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
 require FORUM_ROOT.'include/common.php';
 
+// Check for use of incorrect URLs
+confirm_current_url(forum_link($forum_url['register']));
+
 ($hook = get_hook('rg_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // If we are logged in, we shouldn't be here

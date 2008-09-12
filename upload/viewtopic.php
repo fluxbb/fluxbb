@@ -31,6 +31,9 @@ if ($id < 1 && $pid < 1)
 // If a post ID is specified we determine topic ID and page number so we can redirect to the correct message
 if ($pid)
 {
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['post'], $pid));
+
 	$query = array(
 		'SELECT'	=> 'p.topic_id, p.posted',
 		'FROM'		=> 'posts AS p',
@@ -140,6 +143,10 @@ if (!$forum_db->num_rows($result))
 $cur_topic = $forum_db->fetch_assoc($result);
 
 ($hook = get_hook('vt_modify_topic_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
+// Check for use of incorrect URLs
+if (!$pid)
+	confirm_current_url(forum_link($forum_url['topic'], array($id, sef_friendly($cur_topic['subject']))));
 
 // Sort out who the moderators are and if we are currently a moderator (or an admin)
 $mods_array = ($cur_topic['moderators'] != '') ? unserialize($cur_topic['moderators']) : array();

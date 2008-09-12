@@ -1285,6 +1285,9 @@ if ($forum_user['id'] != $id &&
 	$forum_user['g_id'] != FORUM_ADMIN &&
 	($forum_user['g_moderator'] != '1' || $forum_user['g_mod_edit_users'] == '0' || $user['g_id'] == FORUM_ADMIN || $user['g_moderator'] == '1'))
 {
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['user'], $id));
+
 	// Setup user identification
 	$forum_page['user_ident'] = array();
 
