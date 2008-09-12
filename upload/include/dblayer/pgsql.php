@@ -41,7 +41,7 @@ class DBLayer
 	{
 		$this->prefix = $db_prefix;
 
-		if ($db_host != '')
+		if ($db_host)
 		{
 			if (strpos($db_host, ':') !== false)
 			{
@@ -49,19 +49,16 @@ class DBLayer
 				$connect_str[] = 'host='.$db_host.' port='.$dbport;
 			}
 			else
-			{
-				if ($db_host != 'localhost')
-					$connect_str[] = 'host='.$db_host;
-			}
+				$connect_str[] = 'host='.$db_host;
 		}
 
 		if ($db_name)
 			$connect_str[] = 'dbname='.$db_name;
 
-		if ($db_username != '')
+		if ($db_username)
 			$connect_str[] = 'user='.$db_username;
 
-		if ($db_password != '')
+		if ($db_password)
 			$connect_str[] = 'password='.$db_password;
 
 		if ($p_connect)
