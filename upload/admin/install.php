@@ -316,19 +316,36 @@ if (!isset($_POST['form_sent']))
 					<span class="fld-input"><input id="fld13" type="text" name="req_base_url" value="<?php echo $base_url_guess ?>" size="60" maxlength="100" /></span>
 				</div>
 			</div>
+<?php
+	
+	if (count($languages) > 1)
+	{
+?>
 			<div class="sf-set set4">
 				<div class="sf-box text">
 					<label for="fld14"><span><?php echo $lang_install['Default language'] ?></span> <small><?php echo $lang_install['Default language help'] ?></small></label><br />
 					<span class="fld-input"><select id="fld14" name="req_language">
 <?php
 
-	foreach ($languages as $temp)
-		echo "\t\t\t\t\t".'<option value="'.$temp.'"'.($language == $temp ? ' selected="selected"' : '').'>'.$temp.'</option>'."\n";
+		foreach ($languages as $temp)
+			echo "\t\t\t\t\t".'<option value="'.$temp.'"'.($language == $temp ? ' selected="selected"' : '').'>'.$temp.'</option>'."\n";
 
 ?>
 					</select></span>
 				</div>
 			</div>
+<?php
+	}
+	else
+	{
+?>
+			<div class="hidden">
+				<input type="hidden" name="req_language" value="<?php echo $languages[0]; ?>" />
+			</div>
+<?php
+	}
+
+?>
 		</fieldset>
 		<div class="frm-buttons">
 			<span class="submit"><input type="submit" name="start" value="<?php echo $lang_install['Start install'] ?>" /></span>
