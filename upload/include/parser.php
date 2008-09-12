@@ -78,6 +78,15 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	if ($temp_text !== false)
 		$text = $temp_text;
 
+	// Remove empty tags
+	while ($new_text = preg_replace('/\[(b|u|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]\[\/\1\]/', '', $text))
+	{
+		if ($new_text != $text)
+			$text = $new_text;
+		else
+			break;
+	}
+
 	$return = ($hook = get_hook('ps_fn_preparse_bbcode_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
