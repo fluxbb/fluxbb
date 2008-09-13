@@ -260,7 +260,7 @@ else if ($action == 'forget')
 
 	// Setup form
 	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
-	$forum_page['form_action'] = $base_url.'/login.php?action=forget';
+	$forum_page['form_action'] = forum_link($forum_url['request_password']);
 
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
@@ -289,7 +289,7 @@ else if ($action == 'forget')
 	if (!empty($errors))
 	{
 		$forum_page['errors'] = array();
-		while (list(, $cur_error) = each($errors))
+		foreach($errors as $cur_error)
 			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
 		($hook = get_hook('li_forgot_pass_pre_new_password_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -380,14 +380,14 @@ ob_start();
 		</div>
 <?php
 
-	// If there were any errors, show them
-	if (!empty($errors))
-	{
-		$forum_page['errors'] = array();
-		while (list(, $cur_error) = each($errors))
-			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
+// If there were any errors, show them
+if (!empty($errors))
+{
+	$forum_page['errors'] = array();
+	foreach($errors as $cur_error)
+		$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
-		($hook = get_hook('li_pre_login_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	($hook = get_hook('li_pre_login_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ct-box error-box">
@@ -398,7 +398,7 @@ ob_start();
 		</div>
 <?php
 
-	}
+}
 
 ?>
 		<div id="req-msg" class="req-warn ct-box error-box">

@@ -16,14 +16,18 @@ require FORUM_ROOT.'include/common.php';
 
 ($hook = get_hook('he_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-$section = isset($_GET['section']) ? $_GET['section'] : null;
-
 if ($forum_user['g_read_board'] == '0')
 	message($lang_common['No view']);
 
 // Load the help.php language file
 require FORUM_ROOT.'lang/'.$forum_user['language'].'/help.php';
 
+$section = isset($_GET['section']) ? $_GET['section'] : null;
+if (!$section)
+	message($lang_common['Bad request']);
+
+// Check for use of incorrect URLs
+confirm_current_url(forum_link($forum_url['help'], $section));
 
 $page_title = forum_htmlencode($forum_config['o_board_title']).' - '.$lang_help['Help'];
 define('FORUM_PAGE', 'help');

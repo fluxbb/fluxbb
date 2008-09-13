@@ -298,7 +298,7 @@ ob_start();
 	if (!empty($errors))
 	{
 		$forum_page['errors'] = array();
-		while (list(, $cur_error) = each($errors))
+		foreach($errors as $cur_error)
 			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
 		($hook = get_hook('rg_pre_register_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -361,21 +361,13 @@ ob_start();
 				</div>
 <?php endif;
 
-		$languages = array();
-		$d = dir(FORUM_ROOT.'lang');
-		while (($entry = $d->read()) !== false)
-		{
-			if ($entry != '.' && $entry != '..' && is_dir(FORUM_ROOT.'lang/'.$entry) && file_exists(FORUM_ROOT.'lang/'.$entry.'/common.php'))
-				$languages[] = $entry;
-		}
-		$d->close();
+		$languages = get_language_packs();
 
 		($hook = get_hook('rg_register_pre_language')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		// Only display the language selection box if there's more than one language available
 		if (count($languages) > 1)
 		{
-			natcasesort($languages);
 
 ?>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
@@ -386,7 +378,7 @@ ob_start();
 
 			$select_lang = isset($_POST['language']) ? $_POST['language'] : $forum_config['o_default_lang'];
 
-			while (list(, $temp) = @each($languages))
+			foreach($temp as $languages)
 			{
 				if ($select_lang == $temp)
 					echo "\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.$temp.'</option>'."\n";

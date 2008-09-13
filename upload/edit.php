@@ -22,11 +22,12 @@ if ($forum_user['g_read_board'] == '0')
 // Load the post.php language file
 require FORUM_ROOT.'lang/'.$forum_user['language'].'/post.php';
 
-
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id < 1)
 	message($lang_common['Bad request']);
 
+// Check for use of incorrect URLs
+confirm_current_url(forum_link($forum_url['edit'], $id));
 
 // Fetch some info about the post, the topic and the forum
 $query = array(
@@ -169,7 +170,7 @@ if (!empty($errors))
 {
 	$forum_page['errors'] = array();
 
-	while (list(, $cur_error) = each($errors))
+	foreach($errors as $cur_error)
 		$forum_page['errors'][] = '<li><span>'.$cur_error.'</span></li>';
 }
 
