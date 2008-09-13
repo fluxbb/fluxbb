@@ -1466,7 +1466,7 @@ else
 
 	if ($section == 'about')
 	{
-		confirm_current_url(forum_link($forum_url['profile_about'], $id));
+		confirm_current_url(isset($_GET['section']) ? forum_link($forum_url['profile_about'], $id) : forum_link($forum_url['user'], $id));
 		
 		// Setup user identification
 		$forum_page['user_ident'] = array();
