@@ -16,6 +16,10 @@
 if (!defined('FORUM'))
 	exit;
 
+if (!defined('FORUM_SEARCH_MIN_WORD'))
+	define('FORUM_SEARCH_MIN_WORD', 3);
+if (!defined('FORUM_SEARCH_MAX_WORD'))
+	define('FORUM_SEARCH_MAX_WORD', 20);
 
 //
 // "Cleans up" a text string and returns an array of unique words
@@ -32,26 +36,16 @@ function split_words($text)
 
 	if (empty($noise_match))
 	{
-		$noise_match = 		array('[quote', '[code', '[url', '[img', '[email', '[color', '[colour', 'quote]', 'code]', 'url]', 'img]', 'email]', 'color]', 'colour]', '^', '$', '&', '(', ')', '<', '>', '`', '\'', '"', '|', ',', '@', '_', '?', '%', '~', '+', '[', ']', '{', '}', ':', '\\', '/', '=', '#', ';', '!', '*');
-		$noise_replace =	array('',       '',      '',     '',     '',       '',       '',        '',       '',      '',     '',     '',       '',       '',        ' ', ' ', ' ', ' ', ' ', ' ', ' ', '',  '',   ' ', ' ', ' ', ' ', '',  ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '' ,  ' ', ' ', ' ', ' ', ' ', ' ');
-
 		$stopwords = (array)@file(FORUM_ROOT.'lang/'.$forum_user['language'].'/stopwords.txt');
 		$stopwords = array_map('trim', $stopwords);
 
 		($hook = get_hook('si_fn_split_words_modify_noise_matches')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	}
 
-	// Clean up
-	$patterns[] = '#&[\#a-z0-9]+?;#i';
-	$patterns[] = '#\b[\w]+:\/\/[a-z0-9\.\-]+(\/[a-z0-9\?\.%_\-\+=&\/~]+)?#';
-	$patterns[] = '#\[\/?[a-z\*=\+\-]+(\:?[0-9a-z]+)?:[a-z0-9]{10,}(\:[a-z0-9]+)?=?.*?\]#';
-	$text = preg_replace($patterns, ' ', ' '.utf8_strtolower($text).' ');
-
-	// Filter out junk
-	$text = str_replace($noise_match, $noise_replace, $text);
-
-	// Strip out extra whitespace between words
-	$text = forum_trim(preg_replace('#\s+#', ' ', $text));
+	// Remove BBCode
+	$text = preg_replace('/\[\/?(b|u|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]/', ' ', $text);
+	// Remove symbols and multiple whitespace
+	$text = preg_replace('/[\^\$&\(\)<>`"\|,@_\?%~\+\[\]{}:=\/#\\\\;!\*\.\s]+/', ' ', $text);
 
 	// Fill an array with all the words
 	$words = explode(' ', $text);
@@ -60,10 +54,9 @@ function split_words($text)
 	{
 		while (list($i, $word) = @each($words))
 		{
-			$words[$i] = forum_trim($word, '.');
 			$num_chars = utf8_strlen($word);
 
-			if ($num_chars < 3 || $num_chars > 20 || in_array($words[$i], $stopwords))
+			if ($num_chars < FORUM_SEARCH_MIN_WORD || $num_chars > FORUM_SEARCH_MAX_WORD || in_array($words[$i], $stopwords))
 				unset($words[$i]);
 		}
 	}
@@ -138,13 +131,14 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 	// Get unique words from the above arrays
 	$unique_words = array_unique(array_merge($words['add']['post'], $words['add']['subject']));
+	$unique_words = array_map(array($forum_db, 'escape'), $unique_words);
 
 	if (!empty($unique_words))
 	{
 		$query = array(
 			'SELECT'	=> 'id, word',
 			'FROM'		=> 'search_words',
-			'WHERE'		=> 'word IN('.implode(',', preg_replace('#^(.*)$#', '\'\1\'', $unique_words)).')'
+			'WHERE'		=> 'word IN(\''.implode('\',\'', $unique_words).'\')'
 		);
 
 		($hook = get_hook('si_fn_update_search_index_qr_get_existing_words')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -152,11 +146,13 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 		$word_ids = array();
 		while ($row = $forum_db->fetch_row($result))
-			$word_ids[$row[1]] = $row[0];
+			$word_ids[] = $row[1];
 
 		$forum_db->free_result($result);
+		
+		$word_ids = array_map(array($forum_db, 'escape'), $word_ids);
 
-		$new_words = array_diff($unique_words, array_keys($word_ids));
+		$new_words = array_diff($unique_words, $word_ids);
 		unset($unique_words);
 
 		if (!empty($new_words))
@@ -176,6 +172,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 	// Delete matches (only if editing a post)
 	while (list($match_in, $wordlist) = @each($words['del']))
 	{
+		$wordlist = array_map(array($forum_db, 'escape'), $wordlist);
 		$subject_match = ($match_in == 'subject') ? 1 : 0;
 
 		if (!empty($wordlist))
@@ -197,11 +194,12 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 	// Add new matches
 	while (list($match_in, $wordlist) = @each($words['add']))
 	{
+		$wordlist = array_map(array($forum_db, 'escape'), $wordlist);
 		$subject_match = ($match_in == 'subject') ? 1 : 0;
 
 		if (!empty($wordlist))
 		{
-			$sql = 'INSERT INTO '.$forum_db->prefix.'search_matches (post_id, word_id, subject_match) SELECT '.$post_id.', id, '.$subject_match.' FROM '.$forum_db->prefix.'search_words WHERE word IN('.implode(',', preg_replace('#^(.*)$#', '\'\1\'', $wordlist)).')';
+			$sql = 'INSERT INTO '.$forum_db->prefix.'search_matches (post_id, word_id, subject_match) SELECT '.$post_id.', id, '.$subject_match.' FROM '.$forum_db->prefix.'search_words WHERE word IN(\''.implode('\',\'', $wordlist).'\')';
 			($hook = get_hook('si_fn_update_search_index_qr_delete_matches')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query($sql) or error(__FILE__, __LINE__);
 		}

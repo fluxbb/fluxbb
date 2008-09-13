@@ -6,6 +6,11 @@
  * @license http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  * @package FluxBB
  */
+ 
+if (!defined('FORUM_SEARCH_MIN_WORD'))
+	define('FORUM_SEARCH_MIN_WORD', 3);
+if (!defined('FORUM_SEARCH_MAX_WORD'))
+	define('FORUM_SEARCH_MAX_WORD', 20);
 
 //
 // Cache the results of a search and redirect the user to the results page
@@ -21,7 +26,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 	if (utf8_strlen(str_replace(array('*', '%'), '', $author)) < 2)
 		$author = '';
 
-	if (utf8_strlen(str_replace(array('*', '%'), '', $keywords)) < 3)
+	if (utf8_strlen(str_replace(array('*', '%'), '', $keywords)) < FORUM_SEARCH_MIN_WORD)
 		$keywords = '';
 
 	if (!$keywords && !$author)
@@ -60,13 +65,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 		$stopwords = (array)@file(FORUM_ROOT.'lang/'.$forum_user['language'].'/stopwords.txt');
 		$stopwords = array_map('trim', $stopwords);
 
-		// Filter out non-alphabetical chars
-		$noise_match = array('^', '$', '&', '(', ')', '<', '>', '`', '\'', '"', '|', ',', '@', '_', '?', '%', '~', '[', ']', '{', '}', ':', '\\', '/', '=', '#', '\'', ';', '!', '');
-		$noise_replace = array(' ', ' ', ' ', ' ', ' ', ' ', ' ', '',  '',   ' ', ' ', ' ', ' ', '',  ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '' ,  ' ', ' ', ' ', ' ',  ' ', ' ', ' ');
-		$keywords = str_replace($noise_match, $noise_replace, $keywords);
-
-		// Strip out excessive whitespace
-		$keywords = forum_trim(preg_replace('#\s+#', ' ', $keywords));
+		$keywords = preg_replace('/[\^\$&\(\)<>`"\|,@_\?%~\+\[\]{}:=\/#\\\\;!\*\.\s]+/', ' ', $keywords);
 
 		// Fill an array with all the words
 		$keywords_array = explode(' ', $keywords);
@@ -77,7 +76,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 		{
 			$num_chars = utf8_strlen($word);
 
-			if ($word !== 'or' && ($num_chars < 3 || $num_chars > 20 || in_array($word, $stopwords)))
+			if ($word !== 'or' && ($num_chars < FORUM_SEARCH_MIN_WORD || $num_chars > FORUM_SEARCH_MAX_WORD || in_array($word, $stopwords)))
 				unset($keywords_array[$i]);
 		}
 
