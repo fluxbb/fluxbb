@@ -57,8 +57,15 @@ if ($cur_forum['redirect_url'] != '')
 	exit;
 }
 
+// Determine the topic offset (based on $_GET['p'])
+$forum_page['num_pages'] = ceil($cur_forum['num_topics'] / $forum_user['disp_topics']);
+$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : intval($_GET['p']);
+$forum_page['start_from'] = $forum_user['disp_topics'] * ($forum_page['page'] - 1);
+$forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_topics']), ($cur_forum['num_topics']));
+$forum_page['items_info'] = generate_items_info($lang_forum['Topics'], ($forum_page['start_from'] + 1), $cur_forum['num_topics']);
+
 // Check for use of incorrect URLs
-confirm_current_url(forum_link($forum_url['forum'], array($id, sef_friendly($cur_forum['forum_name']))));
+confirm_current_url($forum_page['page'] == 1 ? forum_link($forum_url['forum'], array($id, sef_friendly($cur_forum['forum_name']))) : forum_sublink($forum_url['forum'], $forum_url['page'], $forum_page['page'], array($id, sef_friendly($cur_forum['forum_name']))));
 
 // Sort out who the moderators are and if we are currently a moderator (or an admin)
 $mods_array = ($cur_forum['moderators'] != '') ? unserialize($cur_forum['moderators']) : array();
@@ -70,13 +77,6 @@ $forum_user['may_post'] = (($cur_forum['post_topics'] == '' && $forum_user['g_po
 // Get topic/forum tracking data
 if (!$forum_user['is_guest'])
 	$tracked_topics = get_tracked_topics();
-
-// Determine the topic offset (based on $_GET['p'])
-$forum_page['num_pages'] = ceil($cur_forum['num_topics'] / $forum_user['disp_topics']);
-$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : intval($_GET['p']);
-$forum_page['start_from'] = $forum_user['disp_topics'] * ($forum_page['page'] - 1);
-$forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_topics']), ($cur_forum['num_topics']));
-$forum_page['items_info'] = generate_items_info($lang_forum['Topics'], ($forum_page['start_from'] + 1), $cur_forum['num_topics']);
 
 ($hook = get_hook('vf_modify_page_details')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 

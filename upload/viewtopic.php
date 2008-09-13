@@ -144,9 +144,16 @@ $cur_topic = $forum_db->fetch_assoc($result);
 
 ($hook = get_hook('vt_modify_topic_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
+// Determine the post offset (based on $_GET['p'])
+$forum_page['num_pages'] = ceil(($cur_topic['num_replies'] + 1) / $forum_user['disp_posts']);
+$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : intval($_GET['p']);
+$forum_page['start_from'] = $forum_user['disp_posts'] * ($forum_page['page'] - 1);
+$forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_posts']), ($cur_topic['num_replies'] + 1));
+$forum_page['items_info'] =  generate_items_info($lang_topic['Posts'], ($forum_page['start_from'] + 1), ($cur_topic['num_replies'] + 1));
+
 // Check for use of incorrect URLs
 if (!$pid)
-	confirm_current_url(forum_link($forum_url['topic'], array($id, sef_friendly($cur_topic['subject']))));
+	confirm_current_url($forum_page['page'] == 1 ? forum_link($forum_url['topic'], array($id, sef_friendly($cur_topic['subject']))) : forum_sublink($forum_url['topic'], $forum_url['page'], $forum_page['page'], array($id, sef_friendly($cur_topic['subject']))));
 
 // Sort out who the moderators are and if we are currently a moderator (or an admin)
 $mods_array = ($cur_topic['moderators'] != '') ? unserialize($cur_topic['moderators']) : array();
@@ -165,13 +172,6 @@ if (!$forum_user['is_guest'])
 	$tracked_topics['topics'][$id] = time();
 	set_tracked_topics($tracked_topics);
 }
-
-// Determine the post offset (based on $_GET['p'])
-$forum_page['num_pages'] = ceil(($cur_topic['num_replies'] + 1) / $forum_user['disp_posts']);
-$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : intval($_GET['p']);
-$forum_page['start_from'] = $forum_user['disp_posts'] * ($forum_page['page'] - 1);
-$forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_posts']), ($cur_topic['num_replies'] + 1));
-$forum_page['items_info'] =  generate_items_info($lang_topic['Posts'], ($forum_page['start_from'] + 1), ($cur_topic['num_replies'] + 1));
 
 ($hook = get_hook('vt_modify_page_details')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 

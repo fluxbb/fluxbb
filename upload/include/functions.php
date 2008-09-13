@@ -2366,11 +2366,11 @@ function confirm_current_url($url)
 	if ($return != null)
 		return $return;
 
-	if (strpos($url,'#') !== false)
-		$url = substr($url, 0, strpos($url,'#'));
+	$hash = strpos($url,'#');
+	if ($hash !== false)
+		$url = substr($url, 0, $hash);
 
 	$current_url = get_current_url();
-
 	if ($url != $current_url && $url.'?login=1' != $current_url && $url.'&login=1' != $current_url)
 	{
 		header('HTTP/1.1 301 Moved Permanently'); 
