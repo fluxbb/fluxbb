@@ -65,13 +65,16 @@ if ($action == 'change_pass')
 
 	if (isset($_GET['key']))
 	{
+		$key = $_GET['key'];
+		
+		// Check for use of incorrect URLs
+		confirm_current_url(forum_link($forum_url['change_password_key'], array($id, $key)));
+
 		// If the user is already logged in we shouldn't be here :)
 		if (!$forum_user['is_guest'])
 			message($lang_profile['Pass logout']);
 
 		($hook = get_hook('pf_change_pass_key_supplied')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
-		$key = $_GET['key'];
 
 		if ($key == '' || $key != $user['activate_key'])
 			message(sprintf($lang_profile['Pass key bad'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>'));
@@ -208,6 +211,9 @@ if ($action == 'change_pass')
 			require FORUM_ROOT.'footer.php';
 		}
 	}
+	
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['change_password'], $id));
 
 	// Make sure we are allowed to change this user's password
 	if ($forum_user['id'] != $id &&
@@ -396,6 +402,9 @@ else if ($action == 'change_email')
 	{
 		$key = $_GET['key'];
 
+		// Check for use of incorrect URLs
+		confirm_current_url(forum_link($forum_url['change_email_key'], array($id, $key)));
+
 		($hook = get_hook('pf_change_email_key_supplied')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		if ($key == '' || $key != $user['activate_key'])
@@ -414,7 +423,11 @@ else if ($action == 'change_email')
 			message($lang_profile['E-mail updated']);
 		}
 	}
-	else if (isset($_POST['form_sent']))
+	
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['change_email'], $id));
+	
+	if (isset($_POST['form_sent']))
 	{
 		($hook = get_hook('pf_change_email_normal_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -618,6 +631,9 @@ else if ($action == 'change_email')
 
 else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isset($_POST['cancel']))
 {
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['delete_user'], $id));
+	
 	// User pressed the cancel button
 	if (isset($_POST['cancel']))
 		redirect(forum_link($forum_url['profile_admin'], $id), $lang_common['Cancel redirect']);
@@ -718,6 +734,9 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 
 else if ($action == 'delete_avatar')
 {
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['delete_avatar'], array($id, isset($_GET['csrf_token']) ? $_GET['csrf_token'] : '')));
+	
 	// Make sure we are allowed to delete this user's avatar
 	if ($forum_user['id'] != $id &&
 		$forum_user['g_id'] != FORUM_ADMIN &&
@@ -741,6 +760,9 @@ else if ($action == 'delete_avatar')
 
 else if (isset($_POST['update_group_membership']))
 {
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['profile_admin'], $id));
+
 	if ($forum_user['g_id'] != FORUM_ADMIN)
 		message($lang_common['No permission']);
 
@@ -777,6 +799,9 @@ else if (isset($_POST['update_group_membership']))
 }
 else if (isset($_POST['update_forums']))
 {
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['profile_admin'], $id));
+
 	if ($forum_user['g_id'] != FORUM_ADMIN)
 		message($lang_common['No permission']);
 
@@ -826,6 +851,9 @@ else if (isset($_POST['update_forums']))
 
 else if (isset($_POST['ban']))
 {
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['profile_admin'], $id));
+
 	if ($forum_user['g_id'] != FORUM_ADMIN && ($forum_user['g_moderator'] != '1' || $forum_user['g_mod_ban_users'] == '0'))
 		message($lang_common['No permission']);
 
@@ -866,6 +894,9 @@ else if (isset($_POST['form_sent']))
 	{
 		case 'identity':
 		{
+			// Check for use of incorrect URLs
+			confirm_current_url(forum_link($forum_url['profile_identity'], $id));
+
 			$form = extract_elements(array('realname', 'url', 'location', 'jabber', 'icq', 'msn', 'aim', 'yahoo'));
 
 			($hook = get_hook('pf_change_details_identity_validation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -934,6 +965,9 @@ else if (isset($_POST['form_sent']))
 
 		case 'settings':
 		{
+			// Check for use of incorrect URLs
+			confirm_current_url(forum_link($forum_url['profile_settings'], $id));
+
 			$form = extract_elements(array('dst', 'timezone', 'language', 'email_setting', 'notify_with_post', 'auto_notify', 'time_format', 'date_format', 'disp_topics', 'disp_posts', 'show_smilies', 'show_img', 'show_img_sig', 'show_avatars', 'show_sig', 'style'));
 
 			($hook = get_hook('pf_change_details_settings_validation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -982,6 +1016,9 @@ else if (isset($_POST['form_sent']))
 
 		case 'signature':
 		{
+			// Check for use of incorrect URLs
+			confirm_current_url(forum_link($forum_url['profile_signature'], $id));
+
 			if ($forum_config['o_signatures'] == '0')
 				message($lang_profile['Signatures disabled']);
 
@@ -1013,6 +1050,9 @@ else if (isset($_POST['form_sent']))
 
 		case 'avatar':
 		{
+			// Check for use of incorrect URLs
+			confirm_current_url(forum_link($forum_url['profile_avatar'], $id));
+
 			if ($forum_config['o_avatars'] == '0')
 				message($lang_profile['Avatars disabled']);
 
@@ -1466,6 +1506,7 @@ else
 
 	if ($section == 'about')
 	{
+		// Check for use of incorrect URLs
 		confirm_current_url(isset($_GET['section']) ? forum_link($forum_url['profile_about'], $id) : forum_link($forum_url['user'], $id));
 		
 		// Setup user identification
@@ -1656,6 +1697,7 @@ else
 
 	else if ($section == 'identity')
 	{
+		// Check for use of incorrect URLs
 		confirm_current_url(forum_link($forum_url['profile_identity'], $id));
 		
 		// Setup the form
@@ -1844,6 +1886,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 
 	else if ($section == 'settings')
 	{
+		// Check for use of incorrect URLs
 		confirm_current_url(forum_link($forum_url['profile_settings'], $id));
 		
 		$forum_page['styles'] = get_style_packs();
@@ -2176,6 +2219,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 
 	else if ($section == 'signature' && $forum_config['o_signatures'] == '1')
 	{
+		// Check for use of incorrect URLs
 		confirm_current_url(forum_link($forum_url['profile_signature'], $id));
 		
 		$forum_page['sig_info'][] = '<li>'.$lang_profile['Signature info'].'</li>';
@@ -2286,6 +2330,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 
 	else if ($section == 'avatar' && $forum_config['o_avatars'] == '1')
 	{
+		// Check for use of incorrect URLs
 		confirm_current_url(forum_link($forum_url['profile_avatar'], $id));
 		
 		$forum_page['avatar_markup'] = generate_avatar_markup($id);
@@ -2411,10 +2456,11 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 
 	else if ($section == 'admin')
 	{
+		// Check for use of incorrect URLs
+		confirm_current_url(forum_link($forum_url['profile_admin'], $id));
+		
 		if ($forum_user['g_id'] != FORUM_ADMIN && ($forum_user['g_moderator'] != '1' || $forum_user['g_mod_ban_users'] == '0' || $forum_user['id'] == $id))
 			message($lang_common['Bad request']);
-		
-		confirm_current_url(forum_link($forum_url['profile_admin'], $id));
 
 		// Setup form
 		$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;

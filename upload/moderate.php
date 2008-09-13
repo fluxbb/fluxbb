@@ -26,9 +26,15 @@ if (isset($_GET['get_host']))
 		message($lang_common['No permission']);
 
 	($hook = get_hook('mr_view_ip_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	
+	if (!isset($_GET['get_host']))
+		message($lang_common['Bad request']);
+	
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['get_host']), $_GET['get_host']);
 
 	// Is get_host an IP address or a post ID?
-	if (@preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $_GET['get_host']) || @preg_match('/^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/', $_GET['get_host']))
+	if (preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $_GET['get_host']) || preg_match('/^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/', $_GET['get_host']))
 		$ip = $_GET['get_host'];
 	else
 	{
@@ -111,6 +117,11 @@ if (isset($_GET['tid']))
 	$tid = intval($_GET['tid']);
 	if ($tid < 1)
 		message($lang_common['Bad request']);
+	
+	$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1) ? 1 : intval($_GET['p']);
+	
+	// Check for use of incorrect URLs
+	confirm_current_url($forum_page['page'] == 1 ? forum_link($forum_url['moderate_topic'], array($fid, $tid)) : forum_sublink($forum_url['moderate_topic'], $forum_url['page'], $forum_page['page'], array($fid, $tid)));
 
 	// Fetch some info about the topic
 	$query = array(
@@ -401,7 +412,6 @@ if (isset($_GET['tid']))
 		require FORUM_ROOT.'footer.php';
 	}
 
-
 	// Show the moderate topic view
 
 	// Load the viewtopic.php language file
@@ -631,6 +641,9 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 {
 	if (isset($_POST['move_topics_to']))
 	{
+		// Check for use of incorrect URLs
+		confirm_current_url(forum_link($forum_url['moderate_forum'], $fid));
+		
 		($hook = get_hook('mr_confirm_move_topics_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		$topics = isset($_POST['topics']) && !empty($_POST['topics']) ? explode(',', $_POST['topics']) : array();
@@ -726,6 +739,9 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 
 	if (isset($_POST['move_topics']))
 	{
+		// Check for use of incorrect URLs
+		confirm_current_url(forum_link($forum_url['moderate_forum'], $fid));
+		
 		$topics = isset($_POST['topics']) && is_array($_POST['topics']) ? $_POST['topics'] : array();
 		$topics = array_map('intval', $topics);
 
@@ -740,6 +756,9 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		$topics = intval($_GET['move_topics']);
 		if ($topics < 1)
 			message($lang_common['Bad request']);
+		
+		// Check for use of incorrect URLs
+		confirm_current_url(forum_link($forum_url['move'], array($fid, $topics)));
 
 		$action = 'single';
 
@@ -890,6 +909,9 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 // Merge topics
 else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 {
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['moderate_forum'], $fid));
+
 	$topics = isset($_POST['topics']) && !empty($_POST['topics']) ? $_POST['topics'] : array();
 	$topics = array_map('intval', (is_array($topics) ? $topics : explode(',', $topics)));
 
@@ -1049,6 +1071,9 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 // Delete one or more topics
 else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply']))
 {
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['moderate_forum'], $fid));
+
 	$topics = isset($_POST['topics']) && !empty($_POST['topics']) ? $_POST['topics'] : array();
 	$topics = array_map('intval', (is_array($topics) ? $topics : explode(',', $topics)));
 
@@ -1223,6 +1248,9 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 	// There could be an array of topic ID's in $_POST
 	if (isset($_POST['open']) || isset($_POST['close']))
 	{
+		// Check for use of incorrect URLs
+		confirm_current_url(forum_link($forum_url['moderate_forum'], $fid));
+		
 		$topics = isset($_POST['topics']) && is_array($_POST['topics']) ? $_POST['topics'] : array();
 		$topics = array_map('intval', $topics);
 
@@ -1250,6 +1278,9 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 		$topic_id = ($action) ? intval($_GET['close']) : intval($_GET['open']);
 		if ($topic_id < 1)
 			message($lang_common['Bad request']);
+		
+		// Check for use of incorrect URLs
+		confirm_current_url(forum_link($forum_url[$action ? 'close' : 'open'], array($fid, $topic_id, isset($_GET['csrf_token']) ? $_GET['csrf_token'] : '')));
 
 		// We validate the CSRF token. If it's set in POST and we're at this point, the token is valid.
 		// If it's in GET, we need to make sure it's valid.
@@ -1295,6 +1326,9 @@ else if (isset($_GET['stick']))
 	$stick = intval($_GET['stick']);
 	if ($stick < 1)
 		message($lang_common['Bad request']);
+	
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['stick'], array($fid, $stick, isset($_GET['csrf_token']) ? $_GET['csrf_token'] : '')));
 
 	// We validate the CSRF token. If it's set in POST and we're at this point, the token is valid.
 	// If it's in GET, we need to make sure it's valid.
@@ -1339,6 +1373,9 @@ else if (isset($_GET['unstick']))
 	$unstick = intval($_GET['unstick']);
 	if ($unstick < 1)
 		message($lang_common['Bad request']);
+	
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['unstick'], array($fid, $unstick, isset($_GET['csrf_token']) ? $_GET['csrf_token'] : '')));
 
 	// We validate the CSRF token. If it's set in POST and we're at this point, the token is valid.
 	// If it's in GET, we need to make sure it's valid.
@@ -1376,11 +1413,13 @@ else if (isset($_GET['unstick']))
 	redirect(forum_link($forum_url['topic'], array($unstick, sef_friendly($subject))), $lang_misc['Unstick topic redirect']);
 }
 
-
 ($hook = get_hook('mr_new_action')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 
 // No specific forum moderation action was specified in the query string, so we'll display the moderate forum view
+
+// Check for use of incorrect URLs
+confirm_current_url(forum_link($forum_url['moderate_forum'], $fid));
 
 // If forum is empty
 if ($cur_forum['num_topics'] == 0)
