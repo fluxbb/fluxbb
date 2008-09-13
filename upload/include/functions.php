@@ -8,6 +8,14 @@
  */
  
  //
+// Converts the CDATA end sequence ]]> into ]]&gt;
+//
+function escape_cdata($str)
+{
+	return str_replace(']]>', ']]&gt;', $str);
+}
+ 
+ //
  // Return a list of all URL schemes installed
  //
  function get_scheme_packs()

@@ -49,8 +49,7 @@
     tid:    A topic ID from which to show posts. If a tid is supplied,
             fid and nfid are ignored.
 
-    show:   Any integer value between 1 and 50. This variables is
-            ignored for RSS/Atom output. The default is 15.
+    show:   Any integer value between 1 and 50. The default is 15.
 
 
 /***********************************************************************/
@@ -77,6 +76,7 @@ if ($forum_user['g_read_board'] == '0')
 	exit($lang_common['No view']);
 }
 
+$action = isset($_GET['action']) ? $_GET['action'] : 'feed';
 
 //
 // Sends the proper headers for Basic HTTP Authentication
@@ -91,16 +91,6 @@ function http_authenticate_user()
 	header('WWW-Authenticate: Basic realm="'.$forum_config['o_board_title'].' External Syndication"');
 	header('HTTP/1.0 401 Unauthorized');
 }
-
-
-//
-// Converts the CDATA end sequence ]]> into ]]&gt;
-//
-function escape_cdata($str)
-{
-	return str_replace(']]>', ']]&gt;', $str);
-}
-
 
 //
 // Output $feed as RSS 2.0
@@ -130,16 +120,15 @@ function output_rss($feed)
 
 	($hook = get_hook('ex_add_new_rss_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-	$num_items = count($feed['items']);
-	for ($i = 0; $i < $num_items; ++$i)
+	foreach ($feed['items'] as $item)
 	{
 		echo "\t\t".'<item>'."\r\n";
-		echo "\t\t\t".'<title><![CDATA['.escape_cdata($feed['items'][$i]['title']).']]></title>'."\r\n";
-		echo "\t\t\t".'<link>'.$feed['items'][$i]['link'].'</link>'."\r\n";
-		echo "\t\t\t".'<description><![CDATA['.escape_cdata($feed['items'][$i]['description']).']]></description>'."\r\n";
-		echo "\t\t\t".'<author><![CDATA[dummy@example.com ('.escape_cdata($feed['items'][$i]['author']).')]]></author>'."\r\n";
-		echo "\t\t\t".'<pubDate>'.gmdate('r', $feed['items'][$i]['pubdate']).'</pubDate>'."\r\n";
-		echo "\t\t\t".'<guid>'.$feed['items'][$i]['link'].'</guid>'."\r\n";
+		echo "\t\t\t".'<title><![CDATA['.escape_cdata($item['title']).']]></title>'."\r\n";
+		echo "\t\t\t".'<link>'.$item['link'].'</link>'."\r\n";
+		echo "\t\t\t".'<description><![CDATA['.escape_cdata($item['description']).']]></description>'."\r\n";
+		echo "\t\t\t".'<author><![CDATA[dummy@example.com ('.escape_cdata($item['author']).')]]></author>'."\r\n";
+		echo "\t\t\t".'<pubDate>'.gmdate('r', $item['pubdate']).'</pubDate>'."\r\n";
+		echo "\t\t\t".'<guid>'.$item['link'].'</guid>'."\r\n";
 
 		($hook = get_hook('ex_add_new_rss_item_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -182,21 +171,20 @@ function output_atom($feed)
 
 	$content_tag = ($feed['type'] == 'posts') ? 'content' : 'summary';
 
-	$num_items = count($feed['items']);
-	for ($i = 0; $i < $num_items; ++$i)
+	foreach ($feed['items'] as $item)
 	{
 		echo "\t\t".'<entry>'."\r\n";
-		echo "\t\t\t".'<title type="html"><![CDATA['.escape_cdata($feed['items'][$i]['title']).']]></title>'."\r\n";
-		echo "\t\t\t".'<link rel="alternate" href="'.$feed['items'][$i]['link'].'"/>'."\r\n";
-		echo "\t\t\t".'<'.$content_tag.' type="html"><![CDATA['.escape_cdata($feed['items'][$i]['description']).']]></'.$content_tag.'>'."\r\n";
+		echo "\t\t\t".'<title type="html"><![CDATA['.escape_cdata($item['title']).']]></title>'."\r\n";
+		echo "\t\t\t".'<link rel="alternate" href="'.$item['link'].'"/>'."\r\n";
+		echo "\t\t\t".'<'.$content_tag.' type="html"><![CDATA['.escape_cdata($item['description']).']]></'.$content_tag.'>'."\r\n";
 		echo "\t\t\t".'<author>'."\r\n";
-		echo "\t\t\t\t".'<name><![CDATA['.escape_cdata($feed['items'][$i]['author']).']]></name>'."\r\n";
+		echo "\t\t\t\t".'<name><![CDATA['.escape_cdata($item['author']).']]></name>'."\r\n";
 		echo "\t\t\t".'</author>'."\r\n";
-		echo "\t\t\t".'<updated>'.gmdate('Y-m-d\TH:i:s\Z', $feed['items'][$i]['pubdate']).'</updated>'."\r\n";
+		echo "\t\t\t".'<updated>'.gmdate('Y-m-d\TH:i:s\Z', $item['pubdate']).'</updated>'."\r\n";
 
 		($hook = get_hook('ex_add_new_atom_item_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-		echo "\t\t\t".'<id>'.$feed['items'][$i]['link'].'</id>'."\r\n";
+		echo "\t\t\t".'<id>'.$item['link'].'</id>'."\r\n";
 		echo "\t\t".'</entry>'."\r\n";
 	}
 
@@ -225,16 +213,15 @@ function output_xml($feed)
 
 	$forum_tag = ($feed['type'] == 'posts') ? 'post' : 'topic';
 
-	$num_items = count($feed['items']);
-	for ($i = 0; $i < $num_items; ++$i)
+	foreach ($feed['items'] as $item)
 	{
-		echo "\t".'<'.$forum_tag.' id="'.$feed['items'][$i]['id'].'">'."\r\n";
+		echo "\t".'<'.$forum_tag.' id="'.$item['id'].'">'."\r\n";
 
-		echo "\t\t".'<title><![CDATA['.escape_cdata($feed['items'][$i]['title']).']]></title>'."\r\n";
-		echo "\t\t".'<link>'.$feed['items'][$i]['link'].'</link>'."\r\n";
-		echo "\t\t".'<content><![CDATA['.escape_cdata($feed['items'][$i]['description']).']]></content>'."\r\n";
-		echo "\t\t".'<author><![CDATA['.escape_cdata($feed['items'][$i]['author']).']]></author>'."\r\n";
-		echo "\t\t".'<posted>'.gmdate('r', $feed['items'][$i]['pubdate']).'</posted>'."\r\n";
+		echo "\t\t".'<title><![CDATA['.escape_cdata($item['title']).']]></title>'."\r\n";
+		echo "\t\t".'<link>'.$item['link'].'</link>'."\r\n";
+		echo "\t\t".'<content><![CDATA['.escape_cdata($item['description']).']]></content>'."\r\n";
+		echo "\t\t".'<author><![CDATA['.escape_cdata($item['author']).']]></author>'."\r\n";
+		echo "\t\t".'<posted>'.gmdate('r', $item['pubdate']).'</posted>'."\r\n";
 
 		($hook = get_hook('ex_add_new_xml_item_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -250,44 +237,32 @@ function output_xml($feed)
 //
 function output_html($feed)
 {
-	global $forum_config;
 
-	$num_items = count($feed['items']);
-	for ($i = 0; $i < $num_items; ++$i)
+	// Send the Content-type header in case the web server is setup to send something else
+	header('Content-type: text/html; charset=utf-8');
+
+	foreach ($feed['items'] as $item)
 	{
-		if ($forum_config['o_censoring'] == '1')
-			$feed['items'][$i]['title'] = censor_words($feed['items'][$i]['title']);
-
-		if (utf8_strlen($feed['items'][$i]['title']) > FORUM_EXTERN_MAX_SUBJECT_LENGTH)
-			$subject_truncated = forum_htmlencode(forum_trim(utf8_substr($feed['items'][$i]['title'], 0, (FORUM_EXTERN_MAX_SUBJECT_LENGTH-5)))).' …';
+		if (utf8_strlen($item['title']) > FORUM_EXTERN_MAX_SUBJECT_LENGTH)
+			$subject_truncated = forum_htmlencode(forum_trim(utf8_substr($item['title'], 0, (FORUM_EXTERN_MAX_SUBJECT_LENGTH - 5)))).' …';
 		else
-			$subject_truncated = forum_htmlencode($feed['items'][$i]['title']);
+			$subject_truncated = forum_htmlencode($item['title']);
 
-		echo '<li><a href="'.$feed['items'][$i]['link'].'" title="'.forum_htmlencode($feed['items'][$i]['title']).'">'.$subject_truncated.'</a></li>'."\n";
+		echo '<li><a href="'.$item['link'].'" title="'.forum_htmlencode($item['title']).'">'.$subject_truncated.'</a></li>'."\n";
 	}
 }
 
-
-//
 // Show recent discussions
-//
-if (!isset($_GET['action']) || $_GET['action'] == 'feed')
+if ($action == 'feed')
 {
 	// Determine what type of feed to output
-	$type = 'html';
-	if (isset($_GET['type']) && is_scalar($_GET['type']))
-	{
-		if (strtolower($_GET['type']) == 'rss')
-			$type = 'rss';
-		else if (strtolower($_GET['type']) == 'atom')
-			$type = 'atom';
-		else if (strtolower($_GET['type']) == 'xml')
-			$type = 'xml';
-	}
+	$type = isset($_GET['type']) && in_array($_GET['type'], array('html', 'rss', 'atom', 'xml')) ? $_GET['type'] : 'html';
+
+	$show = isset($_GET['show']) ? intval($_GET['show']) : 15;
+	if ($show < 1 || $show > 50)
+		$show = 15;
 
 	($hook = get_hook('ex_set_syndication_type')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
-	$forum_sql = '';
 
 	// Was a topic ID supplied?
 	if (isset($_GET['tid']))
@@ -296,7 +271,7 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 
 		// Fetch topic subject
 		$query = array(
-			'SELECT'	=> 't.subject, t.num_replies',
+			'SELECT'	=> 't.subject, t.num_replies, t.first_post_id',
 			'FROM'		=> 'topics AS t',
 			'JOINS'		=> array(
 				array(
@@ -324,38 +299,38 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 		$feed = array(
 			'title' 		=>	$forum_config['o_board_title'].' - '.$cur_topic['subject'],
 			'link'			=>	forum_link($forum_url['topic'], array($tid, sef_friendly($cur_topic['subject']))),
-			'description'	=>	sprintf($lang_common['RSS description topic'], $cur_topic['subject']),
+			'description'		=>	sprintf($lang_common['RSS description topic'], $cur_topic['subject']),
 			'items'			=>	array(),
 			'type'			=>	'posts'
 		);
 
-		// Fetch 15 posts
+		// Fetch $show posts
 		$query = array(
 			'SELECT'	=> 'p.id, p.poster, p.message, p.posted',
 			'FROM'		=> 'posts AS p',
 			'WHERE'		=> 'p.topic_id='.$tid,
 			'ORDER BY'	=> 'p.posted DESC',
-			'LIMIT'		=> '15'
+			'LIMIT'		=> $show
 		);
 
 		($hook = get_hook('ex_qr_get_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		while ($cur_post = $forum_db->fetch_assoc($result))
 		{
+			if ($forum_config['o_censoring'] == '1')
+				$cur_post['subject'] = censor_words($cur_post['subject']);
+			
 			$feed['items'][] = array(
 				'id'			=>	$cur_post['id'],
-				'title'			=>	$lang_common['RSS reply'].$cur_topic['subject'],
+				'title'			=>	$cur_topic['first_post_id'] == $cur_post['id'] ? $cur_topic['subject'] : $lang_common['RSS reply'].$cur_topic['subject'],
 				'link'			=>	forum_link($forum_url['post'], $cur_post['id']),
-				'description'	=>	($forum_config['o_censoring'] == '1') ? censor_words($cur_post['message']) : $cur_post['message'],
+				'description'		=>	($forum_config['o_censoring'] == '1') ? censor_words($cur_post['message']) : $cur_post['message'],
 				'author'		=>	$cur_post['poster'],
 				'pubdate'		=>	$cur_post['posted']
 			);
 
 			($hook = get_hook('ex_modify_cur_post_item')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		}
-
-		if (intval($cur_topic['num_replies']) <= 14)
-			$feed['items'][count($feed['items'])-1]['title'] = $cur_topic['subject'];
 
 		($hook = get_hook('ex_pre_topic_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -388,19 +363,10 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 		$feed = array(
 			'title' 		=>	$forum_config['o_board_title'],
 			'link'			=>	forum_link($forum_url['index']),
-			'description'	=>	sprintf($lang_common['RSS description'], $forum_config['o_board_title']),
+			'description'		=>	sprintf($lang_common['RSS description'], $forum_config['o_board_title']),
 			'items'			=>	array(),
 			'type'			=>	'topics'
 		);
-
-		if (isset($_GET['type']) && is_scalar($_GET['type']) && strtoupper($_GET['type']) == 'RSS')
-			$show = 15;
-		else
-		{
-			$show = isset($_GET['show']) ? intval($_GET['show']) : 15;
-			if ($show < 1 || $show > 50)
-				$show = 15;
-		}
 
 		// Fetch $show topics
 		$query = array(
@@ -449,14 +415,11 @@ if (!isset($_GET['action']) || $_GET['action'] == 'feed')
 		$output_func($feed);
 	}
 
-	return;
+	exit;
 }
 
-
-//
 // Show users online
-//
-else if ($_GET['action'] == 'online' || $_GET['action'] == 'online_full')
+else if ($action == 'online' || $action == 'online_full')
 {
 	// Load the index.php language file
 	require FORUM_ROOT.'lang/'.$forum_config['o_default_lang'].'/index.php';
@@ -487,21 +450,18 @@ else if ($_GET['action'] == 'online' || $_GET['action'] == 'online_full')
 
 	($hook = get_hook('ex_pre_online_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-	echo $lang_index['Guests online'].': '.forum_number_format($num_guests).'<br />';
+	echo $lang_index['Guests online'].': '.forum_number_format($num_guests).'<br />'."\n";
 
 	if ($_GET['action'] == 'online_full')
-		echo $lang_index['Users online'].': '.implode(', ', $users).'<br />';
+		echo $lang_index['Users online'].': '.implode(', ', $users).'<br />'."\n";
 	else
-		echo $lang_index['Users online'].': '.forum_number_format($num_users).'<br />';
+		echo $lang_index['Users online'].': '.forum_number_format($num_users).'<br />'."\n";
 
-	return;
+	exit;
 }
 
-
-//
 // Show board statistics
-//
-else if ($_GET['action'] == 'stats')
+else if ($action == 'stats')
 {
 	// Load the index.php language file
 	require FORUM_ROOT.'lang/'.$forum_config['o_default_lang'].'/index.php';
@@ -538,12 +498,12 @@ else if ($_GET['action'] == 'stats')
 
 	($hook = get_hook('ex_pre_stats_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-	echo $lang_index['No of users'].': '.forum_number_format($stats['total_users']).'<br />';
-	echo $lang_index['Newest user'].': <a href="'.forum_link($forum_url['user'], $stats['last_user']['id']).'">'.forum_htmlencode($stats['last_user']['username']).'</a><br />';
-	echo $lang_index['No of topics'].': '.forum_number_format($stats['total_topics']).'<br />';
-	echo $lang_index['No of posts'].': '.forum_number_format($stats['total_posts']);
-
-	return;
+	echo $lang_index['No of users'].': '.forum_number_format($stats['total_users']).'<br />'."\n";
+	echo $lang_index['Newest user'].': <a href="'.forum_link($forum_url['user'], $stats['last_user']['id']).'">'.forum_htmlencode($stats['last_user']['username']).'</a><br />'."\n";
+	echo $lang_index['No of topics'].': '.forum_number_format($stats['total_topics']).'<br />'."\n";
+	echo $lang_index['No of posts'].': '.forum_number_format($stats['total_posts']).'<br />'."\n";
+	
+	exit;
 }
 
 
