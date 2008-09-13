@@ -174,14 +174,13 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 	// Delete matches (only if editing a post)
 	while (list($match_in, $wordlist) = @each($words['del']))
 	{
-		$wordlist = array_map(array($forum_db, 'escape'), $wordlist);
 		$subject_match = ($match_in == 'subject') ? 1 : 0;
 
 		if (!empty($wordlist))
 		{
 			$sql = '';
 			while (list(, $word) = @each($wordlist))
-				$sql .= (($sql != '') ? ',' : '').$cur_words[$match_in][$word];
+				$sql .= (($sql != '') ? ',' : '').$forum_db->escape($cur_words[$match_in][$word]);
 
 			$query = array(
 				'DELETE'	=> 'search_matches',
