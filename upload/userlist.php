@@ -28,7 +28,18 @@ $forum_page['username'] = (isset($_GET['username']) && $_GET['username'] != '-' 
 $forum_page['show_group'] = (!isset($_GET['show_group']) || intval($_GET['show_group']) < -1 && intval($_GET['show_group']) > 2) ? -1 : intval($_GET['show_group']);
 $forum_page['sort_by'] = (!isset($_GET['sort_by']) || $_GET['sort_by'] != 'username' && $_GET['sort_by'] != 'registered' && ($_GET['sort_by'] != 'num_posts' || !$forum_page['show_post_count'])) ? 'username' : $_GET['sort_by'];
 $forum_page['sort_dir'] = (!isset($_GET['sort_dir']) || $_GET['sort_dir'] != 'ASC' && $_GET['sort_dir'] != 'DESC') ? 'ASC' : strtoupper($_GET['sort_dir']);
+$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : intval($_GET['p']);
 
+// Check for use of incorrect URLs
+if (isset($_GET['username']) || isset($_GET['show_group']) || isset($_GET['sort_by']) || isset($_GET['sort_dir']) || $forum_page['page'] != 1)
+{
+	// We can't do it for page one due to the GET vars
+	//confirm_current_url(forum_link($forum_url['users_browse'], array($forum_page['show_group'], $forum_page['sort_by'], strtoupper($forum_page['sort_dir']), ($forum_page['username'] != '') ? urlencode($forum_page['username']) : '-')));
+	if ($forum_page['page'] != 1)
+		confirm_current_url(forum_sublink($forum_url['users_browse'], $forum_url['page'], ($forum_page['page']), array($forum_page['show_group'], $forum_page['sort_by'], strtoupper($forum_page['sort_dir']), ($forum_page['username'] != '') ? urlencode($forum_page['username']) : '-')));
+}
+else
+	confirm_current_url(forum_link($forum_url['users']));
 
 // Create any SQL for the WHERE clause
 $where_sql = array();
@@ -56,7 +67,6 @@ $forum_page['num_users'] = $forum_db->result($result);
 
 // Determine the user offset (based on $_GET['p'])
 $forum_page['num_pages'] = ceil($forum_page['num_users'] / 50);
-$forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $forum_page['num_pages']) ? 1 : intval($_GET['p']);
 $forum_page['start_from'] = 50 * ($forum_page['page'] - 1);
 $forum_page['finish_at'] = min(($forum_page['start_from'] + 50), ($forum_page['num_users']));
 
