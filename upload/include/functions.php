@@ -2167,6 +2167,9 @@ function forum_sublink($link, $sublink, $subarg, $args = null)
 	$return = ($hook = get_hook('fn_forum_sublink_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
+	
+	if ($sublink == $forum_url['page'] && $subarg == 1)
+		return forum_link($link, $args);
 
 	$gen_link = $link;
 	if (!is_array($args) && $args != null)
