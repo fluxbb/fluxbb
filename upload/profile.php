@@ -144,7 +144,7 @@ if ($action == 'change_pass')
 			if (!empty($errors))
 			{
 				$forum_page['errors'] = array();
-				while (list(, $cur_error) = each($errors))
+				foreach ($errors as $cur_error)
 					$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
 				($hook = get_hook('pf_change_pass_key_pre_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -308,7 +308,7 @@ if ($action == 'change_pass')
 	if (!empty($errors))
 	{
 		$forum_page['errors'] = array();
-		while (list(, $cur_error) = each($errors))
+		foreach ($errors as $cur_error)
 			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
 		($hook = get_hook('pf_change_pass_normal_pre_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -554,7 +554,7 @@ else if ($action == 'change_email')
 	if (!empty($errors))
 	{
 		$forum_page['errors'] = array();
-		while (list(, $cur_error) = each($errors))
+		foreach ($errors as $cur_error)
 			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
 		($hook = get_hook('pf_change_email_pre_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -850,7 +850,7 @@ else if (isset($_POST['form_sent']))
 	{
 		$form = array();
 
-		while (list($key, $value) = @each($_POST['form']))
+		foreach ($_POST['form'] as $key => $value)
 		{
 			if (in_array($key, $allowed_elements))
 				$form[$key] = $value;
@@ -1143,7 +1143,7 @@ else if (isset($_POST['form_sent']))
 
 		// Singlequotes around non-empty values and NULL for empty values
 		$temp = array();
-		while (list($key, $input) = @each($form))
+		foreach ($form as $key => $input)
 		{
 			$value = ($input !== '') ? '\''.$forum_db->escape($input).'\'' : 'NULL';
 
@@ -1466,6 +1466,8 @@ else
 
 	if ($section == 'about')
 	{
+		confirm_current_url(forum_link($forum_url['profile_about'], $id));
+		
 		// Setup user identification
 		$forum_page['user_ident'] = array();
 
@@ -1654,6 +1656,8 @@ else
 
 	else if ($section == 'identity')
 	{
+		confirm_current_url(forum_link($forum_url['profile_identity'], $id));
+		
 		// Setup the form
 		$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 		$forum_page['form_action'] = forum_link($forum_url['profile_identity'], $id);
@@ -1689,14 +1693,14 @@ else
 	<div class="main-content main-frm">
 <?php
 
-	// If there were any errors, show them
-	if (!empty($errors))
-	{
-		$forum_page['errors'] = array();
-		while (list(, $cur_error) = each($errors))
-			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
+		// If there were any errors, show them
+		if (!empty($errors))
+		{
+			$forum_page['errors'] = array();
+			foreach ($errors as $cur_error)
+				$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
-		($hook = get_hook('pf_change_details_identity_pre_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+			($hook = get_hook('pf_change_details_identity_pre_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ct-box error-box">
@@ -1707,7 +1711,7 @@ else
 		</div>
 <?php
 
-	}
+		}
 
 if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box error-box">
 			<p class="important"><?php printf($lang_common['Required warn'], '<em>'.$lang_common['Required'].'</em>') ?></p>
@@ -1840,6 +1844,8 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 
 	else if ($section == 'settings')
 	{
+		confirm_current_url(forum_link($forum_url['profile_settings'], $id));
+		
 		$forum_page['styles'] = get_style_packs();
 		$forum_page['languages'] = get_language_packs();
 
@@ -2170,6 +2176,8 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 
 	else if ($section == 'signature' && $forum_config['o_signatures'] == '1')
 	{
+		confirm_current_url(forum_link($forum_url['profile_signature'], $id));
+		
 		$forum_page['sig_info'][] = '<li>'.$lang_profile['Signature info'].'</li>';
 
 		if ($user['signature'] != '')
@@ -2220,7 +2228,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 		if (!empty($errors))
 		{
 			$forum_page['errors'] = array();
-			while (list(, $cur_error) = each($errors))
+			foreach ($errors as $cur_error)
 				$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
 			($hook = get_hook('pf_change_details_signature_pre_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -2278,6 +2286,8 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 
 	else if ($section == 'avatar' && $forum_config['o_avatars'] == '1')
 	{
+		confirm_current_url(forum_link($forum_url['profile_avatar'], $id));
+		
 		$forum_page['avatar_markup'] = generate_avatar_markup($id);
 
 		// Setup the form
@@ -2331,7 +2341,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 		if (!empty($errors))
 		{
 			$forum_page['errors'] = array();
-			while (list(, $cur_error) = each($errors))
+			foreach ($errors as $cur_error)
 				$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
 
 			($hook = get_hook('pf_change_details_avatar_pre_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -2403,6 +2413,8 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 	{
 		if ($forum_user['g_id'] != FORUM_ADMIN && ($forum_user['g_moderator'] != '1' || $forum_user['g_mod_ban_users'] == '0' || $forum_user['id'] == $id))
 			message($lang_common['Bad request']);
+		
+		confirm_current_url(forum_link($forum_url['profile_admin'], $id));
 
 		// Setup form
 		$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
