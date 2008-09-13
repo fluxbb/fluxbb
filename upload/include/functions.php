@@ -2365,6 +2365,8 @@ function get_current_url($max_length = 0)
 //
 function confirm_current_url($url)
 {
+	$url = str_replace('&amp;', '&', $url);
+	
 	$return = ($hook = get_hook('fn_confirm_current_url_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;

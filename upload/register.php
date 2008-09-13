@@ -377,8 +377,7 @@ ob_start();
 <?php
 
 			$select_lang = isset($_POST['language']) ? $_POST['language'] : $forum_config['o_default_lang'];
-
-			foreach($temp as $languages)
+			foreach($languages as $temp)
 			{
 				if ($select_lang == $temp)
 					echo "\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.$temp.'</option>'."\n";

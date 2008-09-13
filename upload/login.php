@@ -25,8 +25,11 @@ $action = isset($_GET['action']) ? $_GET['action'] : null;
 $errors = array();
 
 // Login
-if (isset($_POST['form_sent']) && $action == 'in')
+if (!$action && isset($_POST['form_sent']))
 {
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['login']));
+	
 	$form_username = forum_trim($_POST['req_username']);
 	$form_password = forum_trim($_POST['req_password']);
 	$save_pass = isset($_POST['save_pass']);
@@ -124,6 +127,9 @@ else if ($action == 'out')
 		header('Location: '.forum_link($forum_url['index']));
 		exit;
 	}
+	
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['logout'], array($forum_user['id'], isset($_GET['csrf_token']) ? $_GET['csrf_token'] : '')));
 
 	// We validate the CSRF token. If it's set in POST and we're at this point, the token is valid.
 	// If it's in GET, we need to make sure it's valid.
@@ -171,6 +177,9 @@ else if ($action == 'forget')
 {
 	if (!$forum_user['is_guest'])
 		header('Location: '.forum_link($forum_url['index']));
+	
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['request_password']));
 
 	($hook = get_hook('li_forgot_pass_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -347,9 +356,12 @@ else if ($action == 'forget')
 if (!$forum_user['is_guest'])
 	header('Location: '.forum_link($forum_url['index']));
 
+// Check for use of incorrect URLs
+confirm_current_url(forum_link($forum_url['login']));
+
 // Setup form
 $forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
-$forum_page['form_action'] = $base_url.'/login.php?action=in';
+$forum_page['form_action'] = forum_link($forum_url['login']);
 
 $forum_page['hidden_fields'] = array(
 	'form_sent'		=> '<input type="hidden" name="form_sent" value="1" />',

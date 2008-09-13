@@ -110,6 +110,9 @@ if (isset($_POST['form_sent']))
 	// Make sure form_user is correct
 	if (($forum_user['is_guest'] && $_POST['form_user'] != 'Guest') || (!$forum_user['is_guest'] && $_POST['form_user'] != $forum_user['username']))
 		message($lang_common['Bad request']);
+	
+	// Check for use of incorrect URLs
+	confirm_current_url($fid ? forum_link($forum_url['new_topic'], $fid) : forum_link($forum_url['new_reply'], $tid));
 
 	// Flood protection
 	if (!isset($_POST['preview']) && $forum_user['last_post'] != '' && (time() - $forum_user['last_post']) < $forum_user['g_post_flood'] && (time() - $forum_user['last_post']) >= 0)
@@ -247,6 +250,9 @@ if ($tid && isset($_GET['qid']))
 	$qid = intval($_GET['qid']);
 	if ($qid < 1)
 		message($lang_common['Bad request']);
+	
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['quote'], array($tid, $qid)));
 
 	// Get the quote and quote poster
 	$query = array(
@@ -289,6 +295,9 @@ if ($tid && isset($_GET['qid']))
 	else
 		$forum_page['quote'] = '> '.$q_poster.' '.$lang_common['wrote'].':'."\n\n".'> '.$q_message."\n";
 }
+
+if (!isset($_GET['qid']))
+	confirm_current_url($fid ? forum_link($forum_url['new_topic'], $fid) : forum_link($forum_url['new_reply'], $tid));
 
 
 // Setup form

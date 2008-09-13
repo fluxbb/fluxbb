@@ -30,6 +30,9 @@ if ($action == 'rules')
 {
 	if ($forum_config['o_rules'] == '0' || ($forum_user['is_guest'] && $forum_user['g_read_board'] == '0' && $forum_config['o_regs_allow'] == '0'))
 		message($lang_common['Bad request']);
+	
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['rules']));
 
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
@@ -71,6 +74,9 @@ else if ($action == 'markread')
 {
 	if ($forum_user['is_guest'])
 		message($lang_common['No permission']);
+	
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['mark_read'], isset($_GET['csrf_token']) ? $_GET['csrf_token'] : ''));
 
 	// We validate the CSRF token. If it's set in POST and we're at this point, the token is valid.
 	// If it's in GET, we need to make sure it's valid.
@@ -102,6 +108,13 @@ else if ($action == 'markforumread')
 {
 	if ($forum_user['is_guest'])
 		message($lang_common['No permission']);
+	
+	$fid = intval($_GET['fid']);
+	if ($fid < 1)
+		message($lang_common['Bad request']);
+	
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['mark_forum_read'], array($fid, isset($_GET['csrf_token']) ? $_GET['csrf_token'] : '')));
 
 	// We validate the CSRF token. If it's set in POST and we're at this point, the token is valid.
 	// If it's in GET, we need to make sure it's valid.
@@ -109,10 +122,6 @@ else if ($action == 'markforumread')
 		csrf_confirm_form();
 
 	($hook = get_hook('mi_markforumread_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
-	$fid = intval($_GET['fid']);
-	if ($fid < 1)
-		message($lang_common['Bad request']);
 
 	// Fetch some info about the forum
 	$query = array(
@@ -149,16 +158,19 @@ else if (isset($_GET['email']))
 {
 	if ($forum_user['is_guest'] || $forum_user['g_send_email'] == '0')
 		message($lang_common['No permission']);
+	
+	$recipient_id = intval($_GET['email']);
+	if ($recipient_id < 2)
+		message($lang_common['Bad request']);
+	
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['email'], $recipient_id));
 
 	($hook = get_hook('mi_email_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// User pressed the cancel button
 	if (isset($_POST['cancel']))
 		redirect(forum_htmlencode($_POST['redirect_url']), $lang_common['Cancel redirect']);
-
-	$recipient_id = intval($_GET['email']);
-	if ($recipient_id < 2)
-		message($lang_common['Bad request']);
 
 	$query = array(
 		'SELECT'	=> 'u.username, u.email, u.email_setting',
@@ -344,12 +356,15 @@ else if (isset($_GET['report']))
 {
 	if ($forum_user['is_guest'])
 		message($lang_common['No permission']);
-
-	($hook = get_hook('mi_report_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
+	
 	$post_id = intval($_GET['report']);
 	if ($post_id < 1)
 		message($lang_common['Bad request']);
+	
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['report'], $post_id));
+
+	($hook = get_hook('mi_report_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	// User pressed the cancel button
 	if (isset($_POST['cancel']))
@@ -511,6 +526,13 @@ else if (isset($_GET['subscribe']))
 {
 	if ($forum_user['is_guest'] || $forum_config['o_subscriptions'] != '1')
 		message($lang_common['No permission']);
+	
+	$topic_id = intval($_GET['subscribe']);
+	if ($topic_id < 1)
+		message($lang_common['Bad request']);
+	
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['subscribe'], array($topic_id, isset($_GET['csrf_token']) ? $_GET['csrf_token'] : '')));
 
 	// We validate the CSRF token. If it's set in POST and we're at this point, the token is valid.
 	// If it's in GET, we need to make sure it's valid.
@@ -518,10 +540,6 @@ else if (isset($_GET['subscribe']))
 		csrf_confirm_form();
 
 	($hook = get_hook('mi_subscribe_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
-	$topic_id = intval($_GET['subscribe']);
-	if ($topic_id < 1)
-		message($lang_common['Bad request']);
 
 	// Make sure the user can view the topic
 	$query = array(
@@ -573,6 +591,13 @@ else if (isset($_GET['unsubscribe']))
 {
 	if ($forum_user['is_guest'] || $forum_config['o_subscriptions'] != '1')
 		message($lang_common['No permission']);
+	
+	$topic_id = intval($_GET['unsubscribe']);
+	if ($topic_id < 1)
+		message($lang_common['Bad request']);
+	
+	// Check for use of incorrect URLs
+	confirm_current_url(forum_link($forum_url['unsubscribe'], array($topic_id, isset($_GET['csrf_token']) ? $_GET['csrf_token'] : '')));
 
 	// We validate the CSRF token. If it's set in POST and we're at this point, the token is valid.
 	// If it's in GET, we need to make sure it's valid.
@@ -580,10 +605,6 @@ else if (isset($_GET['unsubscribe']))
 		csrf_confirm_form();
 
 	($hook = get_hook('mi_unsubscribe_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
-	$topic_id = intval($_GET['unsubscribe']);
-	if ($topic_id < 1)
-		message($lang_common['Bad request']);
 
 	$query = array(
 		'SELECT'	=> 't.subject',
