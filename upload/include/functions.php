@@ -2417,7 +2417,7 @@ function forum_linebreaks($str)
 //
 // Trim whitespace including non-breaking space
 //
-function forum_trim($str, $charlist = " \t\n\r\x0b\xc2\xa0")
+function forum_trim($str, $charlist = " \t\n\r\x0b\xc2\xa0\x200d")
 {
 	return utf8_trim($str, $charlist);
 }
