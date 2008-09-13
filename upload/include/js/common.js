@@ -104,7 +104,8 @@ var Forum = {
 		flt = [];
 		for (var i=0,len=arr.length; i<len; i++)
 		{
-			if (typeof arr[i] == 'object' && arr.length) {
+			if (typeof arr[i] == 'object' && arr.length)
+			{
 				flt.concat(Forum.flatten(arr[i]))
 				alert('length1!!'+ arr.length);
 				//x.hasChildNodes()

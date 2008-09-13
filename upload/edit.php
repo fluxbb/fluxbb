@@ -170,7 +170,7 @@ if (!empty($errors))
 {
 	$forum_page['errors'] = array();
 
-	foreach($errors as $cur_error)
+	foreach ($errors as $cur_error)
 		$forum_page['errors'][] = '<li><span>'.$cur_error.'</span></li>';
 }
 

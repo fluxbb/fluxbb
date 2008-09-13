@@ -653,15 +653,15 @@ else if (isset($_GET['admin_action']) && $_GET['admin_action'] == 'change_engine
 	else
 		message($lang_misc['Engine conversion not supported']);
 
-	if($from == $to)
+	if ($from == $to)
 		message($lang_misc['Engine already converted']);
 
 	if (isset($_POST['perform_engine_conversion_comply']))
 	{
 		$result = $forum_db->query('SHOW TABLE STATUS FROM `'.$db_name.'` LIKE \''.$db_prefix.'%\'') or error(__FILE__, __LINE__);
 		while ($row = $forum_db->fetch_assoc($result))
-			if($row['Engine'] != $to)
-				if($row['Name'] == $forum_db->prefix.'online' && $to == 'MyISAM')
+			if ($row['Engine'] != $to)
+				if ($row['Name'] == $forum_db->prefix.'online' && $to == 'MyISAM')
 					$forum_db->query('ALTER TABLE '.$row['Name'].' ENGINE = \'HEAP\'') or error(__FILE__, __LINE__);
 				else
 					$forum_db->query('ALTER TABLE '.$row['Name'].' ENGINE = \''.$to.'\'') or error(__FILE__, __LINE__);

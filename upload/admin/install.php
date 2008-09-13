@@ -493,7 +493,7 @@ else
 	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 	{
 		$result = $forum_db->query('SHOW VARIABLES LIKE \'have_innodb\'');
-		if((strtoupper($forum_db->result($result)) != 'YES'))
+		if ((strtoupper($forum_db->result($result)) != 'YES'))
 			error($lang_install['InnoDB not enabled']);
 	}
 

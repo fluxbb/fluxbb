@@ -173,7 +173,8 @@ function preparse_tags($text, &$errors, $is_signature = false)
 				if (!forum_trim($split_current[0], "\n")) // the first part is a linebreak so we need to handle any open tags first
 					array_unshift($split_current, '');
 
-				for ($i = 1; $i < count($split_current); $i += 2) {
+				for ($i = 1; $i < count($split_current); $i += 2)
+				{
 					$temp_opened = array();
 					$temp_opened_arg = array();
 					$temp = $split_current[$i - 1];
