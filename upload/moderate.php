@@ -1087,6 +1087,8 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 	if (empty($topics))
 		message($lang_misc['No topics selected']);
 
+	$multi = count($topics) > 1;
+
 	if (isset($_POST['delete_topics_comply']))
 	{
 		if (!isset($_POST['req_confirm']))
@@ -1174,7 +1176,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 
 		($hook = get_hook('mr_confirm_delete_topics_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-		redirect(forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name']))), $lang_misc['Delete topics redirect']);
+		redirect(forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name']))), $multi ? $lang_misc['Delete topics redirect'] : $lang_misc['Delete topic redirect']);
 	}
 
 
@@ -1192,7 +1194,7 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
 		array($cur_forum['forum_name'], forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name'])))),
 		array($lang_misc['Moderate forum'], forum_link($forum_url['moderate_forum'], $fid)),
-		$lang_misc['Delete topics']
+		$multi ? $lang_misc['Delete topics'] : $lang_misc['Delete topic']
 	);
 
 	($hook = get_hook('mr_delete_topics_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -1213,12 +1215,12 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 			</div>
 <?php ($hook = get_hook('mr_delete_topics_pre_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
-				<legend class="group-legend"><strong><?php echo $lang_misc['Delete topics'] ?></strong></legend>
+				<legend class="group-legend"><strong><?php echo $multi ? $lang_misc['Delete topics'] : $lang_misc['Delete topics'] ?></strong></legend>
 <?php ($hook = get_hook('mr_delete_topics_pre_confirm_checkbox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box checkbox">
 						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_confirm" value="1" checked="checked" /></span>
-						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_common['Please confirm'] ?></span> <?php echo $lang_misc['Delete topics comply'] ?></label>
+						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_common['Please confirm'] ?></span> <?php echo $multi ? $lang_misc['Delete topics comply'] : $lang_misc['Delete topic comply'] ?></label>
 					</div>
 				</div>
 <?php ($hook = get_hook('mr_delete_topics_pre_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
@@ -1273,7 +1275,10 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 		($hook = get_hook('mr_open_close_multi_topics_qr_open_close_topics')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-		$forum_page['redirect_msg'] = ($action) ? $lang_misc['Close topics redirect'] : $lang_misc['Open topics redirect'];
+		if (count($topics) == 1)
+			$forum_page['redirect_msg'] = ($action) ? $lang_misc['Close topic redirect'] : $lang_misc['Open topic redirect'];
+		else
+			$forum_page['redirect_msg'] = ($action) ? $lang_misc['Close topics redirect'] : $lang_misc['Open topics redirect'];
 
 		($hook = get_hook('mr_open_close_multi_topics_pre_redirect')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
