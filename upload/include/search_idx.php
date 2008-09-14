@@ -16,11 +16,6 @@
 if (!defined('FORUM'))
 	exit;
 
-if (!defined('FORUM_SEARCH_MIN_WORD'))
-	define('FORUM_SEARCH_MIN_WORD', 3);
-if (!defined('FORUM_SEARCH_MAX_WORD'))
-	define('FORUM_SEARCH_MAX_WORD', 20);
-
 //
 // "Cleans up" a text string and returns an array of unique words
 // This function depends on the current locale setting

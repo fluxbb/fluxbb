@@ -130,4 +130,9 @@ define('FORUM_GUEST', 2);
 if (!defined('FORUM_MAX_POSTSIZE'))
 	define('FORUM_MAX_POSTSIZE', 65535);
 
+if (!defined('FORUM_SEARCH_MIN_WORD'))
+	define('FORUM_SEARCH_MIN_WORD', 3);
+if (!defined('FORUM_SEARCH_MAX_WORD'))
+	define('FORUM_SEARCH_MAX_WORD', 20);
+
 define('FORUM_ESSENTIALS_LOADED', 1);

@@ -6,11 +6,10 @@
  * @license http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  * @package FluxBB
  */
- 
-if (!defined('FORUM_SEARCH_MIN_WORD'))
-	define('FORUM_SEARCH_MIN_WORD', 3);
-if (!defined('FORUM_SEARCH_MAX_WORD'))
-	define('FORUM_SEARCH_MAX_WORD', 20);
+
+// Make sure no one attempts to run this script "directly"
+if (!defined('FORUM'))
+	exit;
 
 //
 // Cache the results of a search and redirect the user to the results page
