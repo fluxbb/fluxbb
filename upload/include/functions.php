@@ -1301,7 +1301,6 @@ function delete_topic($topic_id, $forum_id)
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Create a list of the post ID's in this topic
-	$post_ids = '';
 	$query = array(
 		'SELECT'	=> 'p.id',
 		'FROM'		=> 'posts AS p',
@@ -1310,11 +1309,13 @@ function delete_topic($topic_id, $forum_id)
 
 	($hook = get_hook('fn_delete_topic_qr_get_posts_to_delete')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+
+	$post_ids = array();
 	while ($row = $forum_db->fetch_row($result))
-		$post_ids .= ($post_ids != '') ? ','.$row[0] : $row[0];
+		$post_ids[] = $row[0];
 
 	// Make sure we have a list of post ID's
-	if ($post_ids != '')
+	if (!empty($post_ids))
 	{
 		// Delete posts in topic
 		$query = array(

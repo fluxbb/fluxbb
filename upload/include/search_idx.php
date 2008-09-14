@@ -195,6 +195,9 @@ function strip_search_index($post_ids)
 {
 	global $db_type, $forum_db;
 
+	if (is_array($post_ids))
+		$post_ids = implode(',', $post_ids);
+
 	$return = ($hook = get_hook('si_fn_strip_search_index_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return;

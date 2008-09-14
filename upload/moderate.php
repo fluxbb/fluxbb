@@ -183,7 +183,7 @@ if (isset($_GET['tid']))
 			if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
 				require FORUM_ROOT.'include/search_idx.php';
 
-			strip_search_index(implode(',', $posts));
+			strip_search_index($posts);
 
 			sync_topic($tid);
 			sync_forum($fid);
@@ -798,14 +798,13 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 
 	($hook = get_hook('mr_move_topics_qr_get_target_forums')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-	$num_forums = $forum_db->num_rows($result);
 
-	if (!$num_forums)
+	if (!$forum_db->num_rows($result))
 		message($lang_misc['Nowhere to move']);
 
 	$forum_list = array();
-	for ($i = 0; $i < $num_forums; ++$i)
-		$forum_list[] = $forum_db->fetch_assoc($result);
+	while ($cur_forum = $forum_db->fetch_assoc($result))
+		$forum_list[] = $cur_forum;
 
 	// Setup form
 	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
@@ -1140,12 +1139,12 @@ else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply
 		($hook = get_hook('mr_confirm_delete_topics_qr_get_deleted_posts')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-		$post_ids = '';
+		$post_ids = array();
 		while ($row = $forum_db->fetch_row($result))
-			$post_ids .= ($post_ids != '') ? ','.$row[0] : $row[0];
+			$post_ids[] = $row[0];
 
 		// Strip the search index provided we're not just deleting redirect topics
-		if ($post_ids != '')
+		if (!empty($post_ids))
 		{
 			if (!defined('FORUM_SEARCH_IDX_FUNCTIONS_LOADED'))
 				require FORUM_ROOT.'include/search_idx.php';

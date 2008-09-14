@@ -128,12 +128,14 @@ function prune($forum_id, $prune_sticky, $prune_date)
 	($hook = get_hook('ca_fn_prune_qr_get_topics_to_prune')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-	$topic_ids = '';
+	$topic_ids = array();
 	while ($row = $forum_db->fetch_row($result))
-		$topic_ids .= (($topic_ids != '') ? ',' : '').$row[0];
+		$topic_ids[] = $row[0];
 
-	if ($topic_ids != '')
+	if (!empty($topic_ids))
 	{
+		$topic_ids = implode(',', $topic_ids);
+
 		// Fetch posts to prune (used lated for updating the search index)
 		$query = array(
 			'SELECT'	=> 'p.id',
@@ -144,9 +146,9 @@ function prune($forum_id, $prune_sticky, $prune_date)
 		($hook = get_hook('ca_fn_prune_qr_get_posts_to_prune')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-		$post_ids = '';
+		$post_ids = array();
 		while ($row = $forum_db->fetch_row($result))
-			$post_ids .= (($post_ids != '') ? ',' : '').$row[0];
+			$post_ids[] = $row[0];
 
 		// Delete topics
 		$query = array(
