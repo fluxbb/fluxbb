@@ -1678,7 +1678,7 @@ else
 	else if ($db_type == 'mysql' || $db_type == 'mysqli')
 		$config['o_database_engine'] = "'MyISAM'";
 
-	while (list($conf_name, $conf_value) = @each($config))
+	foreach ($config as $conf_name => $conf_value)
 	{
 		$query = array(
 			'INSERT'	=> 'conf_name, conf_value',

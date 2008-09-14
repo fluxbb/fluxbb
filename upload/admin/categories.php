@@ -351,8 +351,11 @@ if ($num_cats)
 						<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="cat_to_delete">
 <?php
 
-	while (list(, list($cat_id, $cat_name, ,)) = @each($cat_list))
+	foreach ($cat_list as $cur_category)
+	{
+		list($cat_id, $cat_name, ,) = $cur_category;
 		echo "\t\t\t\t\t\t\t".'<option value="'.$cat_id.'">'.forum_htmlencode($cat_name).'</option>'."\n";
+	}
 
 ?>
 						</select></span>
@@ -386,10 +389,9 @@ $forum_page['group_count'] = $forum_page['item_count'] = 0;
 
 	($hook = get_hook('acg_edit_cat_fieldsets_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-	@reset($cat_list);
-	for ($i = 0; $i < $num_cats; ++$i)
+	foreach ($cat_list as $cur_category)
 	{
-		list(, list($cat_id, $cat_name, $position)) = @each($cat_list);
+		list($cat_id, $cat_name, $position) = $cur_category;
 
 		$forum_page['item_count'] = 0;
 

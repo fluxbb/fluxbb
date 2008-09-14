@@ -366,7 +366,7 @@ else if (isset($_GET['edit_forum']))
 						);
 
 						$temp = array();
-						while (list($key, $value) = @each($perms_new))
+						foreach ($perms_new as $key => $value)
 							$temp[] = $key.'='.$value;
 
 						$query['SET'] = implode(', ', $temp);

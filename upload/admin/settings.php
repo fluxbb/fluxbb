@@ -206,7 +206,7 @@ if (isset($_POST['form_sent']))
 
 	($hook = get_hook('aop_pre_update_configuration')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-	while (list($key, $input) = @each($form))
+	foreach ($form as $key => $input)
 	{
 		// Only update permission values that have changed
 		if (array_key_exists('p_'.$key, $forum_config) && $forum_config['p_'.$key] != $input)

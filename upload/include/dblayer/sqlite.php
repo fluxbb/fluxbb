@@ -228,7 +228,7 @@ class DBLayer
 			if ($cur_row)
 			{
 				// Horrible hack to get rid of table names and table aliases from the array keys
-				while (list($key, $value) = @each($cur_row))
+				foreach ($cur_row as $key => $value)
 				{
 					$dot_spot = strpos($key, '.');
 					if ($dot_spot !== false)

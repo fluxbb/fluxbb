@@ -234,7 +234,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 			<ul class="data-list">
 <?php
 
-			while (list(, $cur_notice) = each($notices))
+			foreach ($notices as $cur_notice)
 				echo "\t\t\t\t".'<li><span>'.$cur_notice.'</span></li>'."\n";
 
 ?>
@@ -450,7 +450,7 @@ else if (isset($_GET['uninstall']))
 			<ul class="info-list">
 <?php
 
-			while (list(, $cur_notice) = each($notices))
+			foreach ($notices as $cur_notice)
 				echo "\t\t\t\t".'<li><span>'.$cur_notice.'</span></li>'."\n";
 
 ?>
@@ -734,7 +734,7 @@ if ($section == 'hotfixes')
 <?php
 
 	$installed_count = 0;
-	while (list($id, $ext) = @each($inst_exts))
+	foreach ($inst_exts as $id => $ext)
 	{
 		if (strpos($id, 'hotfix_') !== 0)
 				continue;
@@ -906,7 +906,7 @@ else
 
 	$installed_count = 0;
 	$forum_page['ext_item'] = array();
-	while (list($id, $ext) = @each($inst_exts))
+	foreach ($inst_exts as $id => $ext)
 	{
 		if (strpos($id, 'hotfix_') === 0)
 			continue;

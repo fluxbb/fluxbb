@@ -168,7 +168,7 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 		if (!$forum_user['is_guest'] && $cur_forum['last_post'] > $forum_user['last_visit'] && (empty($tracked_topics['forums'][$cur_forum['fid']]) || $cur_forum['last_post'] > $tracked_topics['forums'][$cur_forum['fid']]))
 		{
 			// There are new posts in this forum, but have we read all of them already?
-			while (list($check_topic_id, $check_last_post) = @each($new_topics[$cur_forum['fid']]))
+			foreach ($new_topics[$cur_forum['fid']] as $check_topic_id => $check_last_post)
 			{
 				if ((empty($tracked_topics['topics'][$check_topic_id]) || $tracked_topics['topics'][$check_topic_id] < $check_last_post) && (empty($tracked_topics['forums'][$cur_forum['fid']]) || $tracked_topics['forums'][$cur_forum['fid']] < $check_last_post))
 				{
@@ -194,7 +194,7 @@ while ($cur_forum = $forum_db->fetch_assoc($result))
 			$forum_page['mods_array'] = unserialize($cur_forum['moderators']);
 			$forum_page['item_mods'] = array();
 
-			while (list($mod_username, $mod_id) = @each($forum_page['mods_array']))
+			foreach ($forum_page['mods_array'] as $mod_username => $mod_id)
 				$forum_page['item_mods'][] = ($forum_user['g_view_users'] == '1') ? '<a href="'.forum_link($forum_url['user'], $mod_id).'">'.forum_htmlencode($mod_username).'</a>' : forum_htmlencode($mod_username);
 
 			($hook = get_hook('in_row_modify_modlist')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;

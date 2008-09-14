@@ -1898,8 +1898,7 @@ function get_title($user)
 		// Are there any ranks?
 		if ($forum_config['o_ranks'] == '1' && !empty($forum_ranks))
 		{
-			@reset($forum_ranks);
-			while (list(, $cur_rank) = @each($forum_ranks))
+			foreach ($forum_ranks as $cur_rank)
 			{
 				if (intval($user['num_posts']) >= $cur_rank['min_posts'])
 					$user_title = forum_htmlencode($cur_rank['rank']);
@@ -3032,7 +3031,7 @@ function get_saved_queries()
 ';
 
 	$query_time_total = 0.0;
-	while (list(, $cur_query) = @each($saved_queries))
+	foreach ($saved_queries as $cur_query)
 	{
 		$query_time_total += $cur_query[1];
 

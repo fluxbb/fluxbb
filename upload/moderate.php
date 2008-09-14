@@ -702,7 +702,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		// Should we create redirect topics?
 		if (isset($_POST['with_redirect']))
 		{
-			while (list(, $cur_topic) = @each($topics))
+			foreach ($topics as $cur_topic)
 			{
 				// Fetch info for the redirect topic
 				$query = array(
