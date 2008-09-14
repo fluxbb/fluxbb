@@ -1577,15 +1577,15 @@ else
 			$forum_page['user_private']['ip']= '<li><span>'.$lang_profile['IP'].' <a href="'.forum_link($forum_url['get_host'], forum_htmlencode($user['registration_ip'])).'">'.forum_htmlencode($user['registration_ip']).'</a></span></li>';
 
 		// Setup user messaging
-		if ($user['jabber'] !='')
+		if ($user['jabber'] != '')
 			$forum_page['user_contact']['jabber'] = '<li><span><strong>'.$lang_profile['Jabber'].'</strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['jabber']) : $user['jabber']).'</span></li>';
-		if ($user['icq'] !='')
+		if ($user['icq'] != '')
 			$forum_page['user_contact']['icq'] = '<li><span><strong>'.$lang_profile['ICQ'].'</strong> '.forum_htmlencode($user['icq']).'</span></li>';
-		if ($user['msn'] !='')
+		if ($user['msn'] != '')
 			$forum_page['user_contact']['msn'] = '<li><span><strong>'.$lang_profile['MSN'].'</strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['msn']) : $user['msn']).'</span></li>';
-		if ($user['aim'] !='')
+		if ($user['aim'] != '')
 			$forum_page['user_contact']['aim'] = '<li><span><strong>'.$lang_profile['AOL IM'].'</strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['aim']) : $user['aim']).'</span></li>';
-		if ($user['yahoo'] !='')
+		if ($user['yahoo'] != '')
 			$forum_page['user_contact']['yahoo'] = '<li><span><strong>'.$lang_profile['Yahoo'].'</strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['yahoo']) : $user['yahoo']).'</span></li>';
 
 		// Setup signature demo

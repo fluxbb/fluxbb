@@ -580,7 +580,7 @@ function generate_action_search_query($action, $value, &$search_id, &$url_type, 
 				message($lang_common['Bad request']);
 
 			// Check we're allowed to see the subscriptions we're trying to look at
-			if ($forum_user['g_id'] != FORUM_ADMIN && $forum_user['id'] != $value)
+			if (!$forum_user['is_admmod'] && $forum_user['id'] != $value)
 				message($lang_common['Bad request']);
 
 			$query = array(
