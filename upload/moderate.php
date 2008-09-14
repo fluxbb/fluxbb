@@ -811,8 +811,8 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		message($lang_misc['Nowhere to move']);
 
 	$forum_list = array();
-	while ($cur_forum = $forum_db->fetch_assoc($result))
-		$forum_list[] = $cur_forum;
+	while ($temp = $forum_db->fetch_assoc($result))
+		$forum_list[] = $temp;
 
 	// Setup form
 	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
