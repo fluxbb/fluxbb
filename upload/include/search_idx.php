@@ -27,20 +27,9 @@ if (!defined('FORUM_SEARCH_MAX_WORD'))
 //
 function split_words($text)
 {
-	global $forum_user;
-	static $noise_match, $noise_replace, $stopwords;
-
 	$return = ($hook = get_hook('si_fn_split_words_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
-
-	if (empty($noise_match))
-	{
-		$stopwords = (array)@file(FORUM_ROOT.'lang/'.$forum_user['language'].'/stopwords.txt');
-		$stopwords = array_map('trim', $stopwords);
-
-		($hook = get_hook('si_fn_split_words_modify_noise_matches')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-	}
 
 	// Remove BBCode
 	$text = preg_replace('/\[\/?(b|u|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]/', ' ', $text);
@@ -50,24 +39,51 @@ function split_words($text)
 	$text = preg_replace('/[\^\$&\(\)<>`"\|,@_\?%~\+\[\]{}:=\/#\\\\;!\*\.\s]+/', ' ', $text);
 
 	// Fill an array with all the words
-	$words = explode(' ', $text);
-
-	if (!empty($words))
-	{
-		while (list($i, $word) = @each($words))
-		{
-			$num_chars = utf8_strlen($word);
-
-			if ($num_chars < FORUM_SEARCH_MIN_WORD || $num_chars > FORUM_SEARCH_MAX_WORD || in_array($words[$i], $stopwords))
-				unset($words[$i]);
-		}
-	}
+	$words = array_unique(explode(' ', $text));
+	// Remove any words that should not be indexed
+	$words = array_filter($words, 'validate_search_word');
 
 	$return = ($hook = get_hook('si_fn_split_words_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
 
-	return array_unique($words);
+	return $words;
+}
+
+
+//
+// Checks if a word that has been split should be indexed or not
+//
+function validate_search_word($word)
+{
+	global $forum_user;
+	static $stopwords;
+	
+	$return = ($hook = get_hook('si_fn_validate_search_word_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	if ($return != null)
+		return $return;
+
+	if (!isset($stopwords))
+	{
+		if (file_exists(FORUM_ROOT.'lang/'.$forum_user['language'].'/stopwords.txt'))
+		{
+			$stopwords = file(FORUM_ROOT.'lang/'.$forum_user['language'].'/stopwords.txt');
+			$stopwords = array_map('forum_trim', $stopwords);
+			$stopwords = array_filter($stopwords);
+		}
+		else
+			$stopwords = array();
+
+		($hook = get_hook('si_fn_validate_search_word_modify_stopwords')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	}
+
+	$num_chars = utf8_strlen($word);
+
+	$return = ($hook = get_hook('si_fn_validate_search_word_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	if ($return != null)
+		return $return;
+
+	return $num_chars >= FORUM_SEARCH_MIN_WORD && $num_chars <= FORUM_SEARCH_MAX_WORD && !in_array($word, $stopwords);
 }
 
 
@@ -104,87 +120,87 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 		// Declare here to stop array_keys() and array_diff() from complaining if not set
-		$cur_words['post'] = array();
-		$cur_words['subject'] = array();
+		$cur_words = array(
+			'post'		=> array(),
+			'subject'	=> array()
+		);
 
 		while ($row = $forum_db->fetch_row($result))
-		{
-			$match_in = ($row[2]) ? 'subject' : 'post';
-			$cur_words[$match_in][$row[1]] = $row[0];
-		}
+			$cur_words[$row[2] ? 'subject' : 'post'][$row[1]] = $row[0];
 
 		$forum_db->free_result($result);
 
-		$words['add']['post'] = array_diff($words_message, array_keys($cur_words['post']));
-		$words['add']['subject'] = array_diff($words_subject, array_keys($cur_words['subject']));
-		$words['del']['post'] = array_diff(array_keys($cur_words['post']), $words_message);
-		$words['del']['subject'] = array_diff(array_keys($cur_words['subject']), $words_subject);
+		$words = array(
+			'add'	=> array(
+				'post'		=> array_diff($words_message, array_keys($cur_words['post'])),
+				'subject'	=> array_diff($words_subject, array_keys($cur_words['subject']))
+			),
+			'del'	=> array(
+				'post'		=> array_diff(array_keys($cur_words['post']), $words_message),
+				'subject'	=> array_diff(array_keys($cur_words['subject']), $words_subject)
+			)
+		);
 	}
 	else
 	{
-		$words['add']['post'] = $words_message;
-		$words['add']['subject'] = $words_subject;
-		$words['del']['post'] = array();
-		$words['del']['subject'] = array();
+		$words = array(
+			'add'	=> array(
+				'post'		=> $words_message,
+				'subject'	=> $words_subject
+			),
+			'del'	=> array(
+				'post'		=> array(),
+				'subject'	=> array()
+			)
+		);
 	}
-
-	unset($words_message);
-	unset($words_subject);
 
 	// Get unique words from the above arrays
 	$unique_words = array_unique(array_merge($words['add']['post'], $words['add']['subject']));
-	$unique_words = array_map(array($forum_db, 'escape'), $unique_words);
 
 	if (!empty($unique_words))
 	{
 		$query = array(
 			'SELECT'	=> 'id, word',
 			'FROM'		=> 'search_words',
-			'WHERE'		=> 'word IN(\''.implode('\',\'', $unique_words).'\')'
+			'WHERE'		=> 'word IN(\''.implode('\',\'', array_map(array($forum_db, 'escape'), $unique_words)).'\')'
 		);
 
 		($hook = get_hook('si_fn_update_search_index_qr_get_existing_words')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-		$word_ids = array();
+		$existing_words = array();
 		while ($row = $forum_db->fetch_row($result))
-			$word_ids[] = $row[1];
+			$existing_words[] = $row[1];
 
 		$forum_db->free_result($result);
-		
-		$word_ids = array_map(array($forum_db, 'escape'), $word_ids);
 
-		$new_words = array_diff($unique_words, $word_ids);
-		unset($unique_words);
-
+		$new_words = array_diff($unique_words, $existing_words);
 		if (!empty($new_words))
 		{
 			$query = array(
 				'INSERT'	=> 'word',
 				'INTO'		=> 'search_words',
-				'VALUES'	=> preg_replace('#^(.*)$#', '\'\1\'', $new_words)
+				'VALUES'	=> preg_replace('#^(.*)$#', '\'\1\'', array_map(array($forum_db, 'escape'), $new_words))
 			);
 
 			($hook = get_hook('si_fn_update_search_index_qr_insert_words')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
-		unset($new_words);
 	}
 
 	// Delete matches (only if editing a post)
-	while (list($match_in, $wordlist) = @each($words['del']))
+	foreach ($words['del'] as $match_in => $wordlist)
 	{
-		$subject_match = ($match_in == 'subject') ? 1 : 0;
-
 		if (!empty($wordlist))
 		{
-			$sql = '';
-			while (list(, $word) = @each($wordlist))
-				$sql .= (($sql != '') ? ',' : '').$forum_db->escape($cur_words[$match_in][$word]);
+			$word_ids = array();
+			foreach ($wordlist as $word)
+				$word_ids[] = $cur_words[$match_in][$word];
 
 			$query = array(
 				'DELETE'	=> 'search_matches',
-				'WHERE'		=> 'word_id IN('.$sql.') AND post_id='.$post_id.' AND subject_match='.$subject_match
+				'WHERE'		=> 'word_id IN('.implode(',', $word_ids).') AND post_id='.$post_id.' AND subject_match='.($match_in == 'subject' ? '1' : '0')
 			);
 
 			($hook = get_hook('si_fn_update_search_index_qr_delete_matches')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -193,20 +209,23 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 	}
 
 	// Add new matches
-	while (list($match_in, $wordlist) = @each($words['add']))
+	foreach ($words['add'] as $match_in => $wordlist)
 	{
-		$wordlist = array_map(array($forum_db, 'escape'), $wordlist);
-		$subject_match = ($match_in == 'subject') ? 1 : 0;
-
 		if (!empty($wordlist))
 		{
-			$sql = 'INSERT INTO '.$forum_db->prefix.'search_matches (post_id, word_id, subject_match) SELECT '.$post_id.', id, '.$subject_match.' FROM '.$forum_db->prefix.'search_words WHERE word IN(\''.implode('\',\'', $wordlist).'\')';
+			$subquery = array(
+				'SELECT'	=> $post_id.', id, '.($match_in == 'subject' ? '1' : '0'),
+				'FROM'		=> 'search_words',
+				'WHERE'		=> 'word IN (\''.implode('\',\'', array_map(array($forum_db, 'escape'), $wordlist)).'\')'
+			);
+
+			// Really this should use the query builder too, though it doesn't currently support the syntax
+			$sql = 'INSERT INTO '.$forum_db->prefix.'search_matches (post_id, word_id, subject_match) '.$forum_db->query_build($subquery, true);
+
 			($hook = get_hook('si_fn_update_search_index_qr_delete_matches')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query($sql) or error(__FILE__, __LINE__);
 		}
 	}
-
-	unset($words);
 }
 
 
@@ -233,14 +252,14 @@ function strip_search_index($post_ids)
 
 	if ($forum_db->num_rows($result))
 	{
-		$word_ids = '';
+		$word_ids = array();
 		while ($row = $forum_db->fetch_row($result))
-			$word_ids .= ($word_ids != '') ? ','.$row[0] : $row[0];
+			$word_ids[] = $row[0];
 
 		$query = array(
 			'SELECT'	=> 'word_id',
 			'FROM'		=> 'search_matches',
-			'WHERE'		=> 'word_id IN('.$word_ids.')',
+			'WHERE'		=> 'word_id IN('.implode(',', $word_ids).')',
 			'GROUP BY'	=> 'word_id, subject_match',
 			'HAVING'	=> 'COUNT(word_id)=1'
 		);
@@ -250,13 +269,13 @@ function strip_search_index($post_ids)
 
 		if ($forum_db->num_rows($result))
 		{
-			$word_ids = '';
+			$word_ids = array();
 			while ($row = $forum_db->fetch_row($result))
-				$word_ids .= ($word_ids != '') ? ','.$row[0] : $row[0];
+				$word_ids[] = $row[0];
 
 			$query = array(
 				'DELETE'	=> 'search_words',
-				'WHERE'		=> 'id IN('.$word_ids.')'
+				'WHERE'		=> 'id IN('.implode(',', $word_ids).')'
 			);
 
 			($hook = get_hook('si_fn_strip_search_index_qr_delete_words')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -268,6 +287,7 @@ function strip_search_index($post_ids)
 		'DELETE'	=> 'search_matches',
 		'WHERE'		=> 'post_id IN('.$post_ids.')'
 	);
+
 	($hook = get_hook('si_fn_strip_search_index_qr_delete_matches')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
 
