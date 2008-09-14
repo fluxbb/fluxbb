@@ -748,8 +748,8 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		if (empty($topics))
 			message($lang_misc['No topics selected']);
 
-		$topics = implode(',', $topics);
-		$action = 'multi';
+		if (count($topics) == 1)
+			$topics = $topics[0];
 	}
 	else
 	{
@@ -759,7 +759,15 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		
 		// Check for use of incorrect URLs
 		confirm_current_url(forum_link($forum_url['move'], array($fid, $topics)));
-
+	}
+	
+	if (is_array($topics))
+	{
+		$action = 'multi';
+		$topics = implode(',', $topics);
+	}
+	else
+	{
 		$action = 'single';
 
 		// Fetch the topic subject
