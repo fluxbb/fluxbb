@@ -52,42 +52,6 @@ function split_words($text)
 
 
 //
-// Checks if a word that has been split should be indexed or not
-//
-function validate_search_word($word)
-{
-	global $forum_user;
-	static $stopwords;
-	
-	$return = ($hook = get_hook('si_fn_validate_search_word_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-	if ($return != null)
-		return $return;
-
-	if (!isset($stopwords))
-	{
-		if (file_exists(FORUM_ROOT.'lang/'.$forum_user['language'].'/stopwords.txt'))
-		{
-			$stopwords = file(FORUM_ROOT.'lang/'.$forum_user['language'].'/stopwords.txt');
-			$stopwords = array_map('forum_trim', $stopwords);
-			$stopwords = array_filter($stopwords);
-		}
-		else
-			$stopwords = array();
-
-		($hook = get_hook('si_fn_validate_search_word_modify_stopwords')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-	}
-
-	$num_chars = utf8_strlen($word);
-
-	$return = ($hook = get_hook('si_fn_validate_search_word_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-	if ($return != null)
-		return $return;
-
-	return $num_chars >= FORUM_SEARCH_MIN_WORD && $num_chars <= FORUM_SEARCH_MAX_WORD && !in_array($word, $stopwords);
-}
-
-
-//
 // Updates the search index with the contents of $post_id (and $subject)
 //
 function update_search_index($mode, $post_id, $message, $subject = null)

@@ -33,7 +33,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 		message($lang_search['No terms']);
 
 	// Flood protection
-	if ($forum_user['last_search'] != '' && (time() - $forum_user['last_search']) < $forum_user['g_search_flood'] && (time() - $forum_user['last_search']) >= 0)
+	if ($forum_user['last_search'] && (time() - $forum_user['last_search']) < $forum_user['g_search_flood'] && (time() - $forum_user['last_search']) >= 0)
 		message(sprintf($lang_search['Search flood'], $forum_user['g_search_flood']));
 
 	if ($forum_user['is_guest'])
@@ -62,29 +62,24 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 	// If it's a search for keywords
 	if ($keywords)
 	{
-		$stopwords = (array)@file(FORUM_ROOT.'lang/'.$forum_user['language'].'/stopwords.txt');
-		$stopwords = array_map('trim', $stopwords);
-
+		// Remove any apostrophes which aren't part of words
+		$keywords = substr(preg_replace('((?<=\W)\'|\'(?=\W))', '', ' '.$keywords.' '), 1, -1);
+		// Remove symbols and multiple whitespace
 		$keywords = preg_replace('/[\^\$&\(\)<>`"\|,@_\?%~\+\[\]{}:=\/#\\\\;!\*\.\s]+/', ' ', $keywords);
 
 		// Fill an array with all the words
-		$keywords_array = explode(' ', $keywords);
+		$keywords_array = array_unique(explode(' ', $keywords));
+		// Remove any words that are not indexed
+		$keywords_array = array_filter($keywords_array, 'validate_search_word');
+
 		if (empty($keywords_array))
-			message($lang_search['No hits']);
-
-		while (list($i, $word) = @each($keywords_array))
-		{
-			$num_chars = utf8_strlen($word);
-
-			if ($word !== 'or' && ($num_chars < FORUM_SEARCH_MIN_WORD || $num_chars > FORUM_SEARCH_MAX_WORD || in_array($word, $stopwords)))
-				unset($keywords_array[$i]);
-		}
+			no_search_results();
 
 		$word_count = 0;
 		$match_type = 'and';
 		$result_list = array();
-		@reset($keywords_array);
-		while (list(, $cur_word) = @each($keywords_array))
+
+		foreach ($keywords_array as $cur_word)
 		{
 			switch ($cur_word)
 			{
@@ -96,8 +91,6 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 
 				default:
 				{
-					$cur_word = $forum_db->escape(str_replace('*', '%', $cur_word));
-
 					$query = array(
 						'SELECT'	=> 'm.post_id',
 						'FROM'		=> 'search_words AS w',
@@ -107,7 +100,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 								'ON'			=> 'm.word_id=w.id'
 							)
 						),
-						'WHERE'		=> 'w.word LIKE \''.$cur_word.'\''
+						'WHERE'		=> 'w.word LIKE \''.$forum_db->escape(str_replace('*', '%', $cur_word)).'\''
 					);
 
 					// Search in what?
@@ -132,8 +125,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 
 					if ($match_type == 'and' && $word_count)
 					{
-						@reset($result_list);
-						while (list($post_id,) = @each($result_list))
+						foreach (array_keys($result_list) as $post_id)
 						{
 							if (!isset($row[$post_id]))
 								$result_list[$post_id] = 0;
@@ -148,8 +140,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 			}
 		}
 
-		@reset($result_list);
-		while (list($post_id, $matches) = @each($result_list))
+		foreach ($result_list as $post_id => $matches)
 		{
 			if ($matches)
 				$keyword_results[] = $post_id;
@@ -172,14 +163,14 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 
 		if ($forum_db->num_rows($result))
 		{
-			$user_ids = '';
+			$user_ids = array();
 			while ($row = $forum_db->fetch_row($result))
-				$user_ids .= (($user_ids != '') ? ',' : '').$row[0];
+				$user_ids[] = $row[0];
 
 			$query = array(
 				'SELECT'	=> 'p.id',
 				'FROM'		=> 'posts AS p',
-				'WHERE'		=> 'p.poster_id IN('.$user_ids.')'
+				'WHERE'		=> 'p.poster_id IN('.implode(',', $user_ids).')'
 			);
 
 			($hook = get_hook('sf_fn_create_search_cache_qr_get_author_hits')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -270,11 +261,12 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 	$search_results = implode(',', $search_ids);
 
 	// Fill an array with our results and search properties
-	$temp['search_results'] = $search_results;
-	$temp['sort_by'] = $sort_by;
-	$temp['sort_dir'] = $sort_dir;
-	$temp['show_as'] = $show_as;
-	$temp = serialize($temp);
+	$temp = serialize(array(
+		'search_results'	=> $search_results,
+		'sort_by'		=> $sort_by,
+		'sort_dir'		=> $sort_dir,
+		'show_as'		=> $show_as
+	));
 	$search_id = mt_rand(1, 2147483647);
 	$ident = ($forum_user['is_guest']) ? get_remote_address() : $forum_user['username'];
 
@@ -837,8 +829,5 @@ function validate_search_action($action)
 	if ($return != null)
 		return $return;
 
-	if (in_array($action, $valid_actions))
-		return true;
-	else
-		return false;
+	return in_array($action, $valid_actions);
 }
