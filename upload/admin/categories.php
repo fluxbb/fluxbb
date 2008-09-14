@@ -255,7 +255,9 @@ $query = array(
 ($hook = get_hook('acg_qr_get_categories')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-for ($cat_list = array();$cat_list[] = $forum_db->fetch_assoc($result););
+$cat_list = array();
+while ($cur_category = $forum_db->fetch_assoc($result))
+	$cat_list[] = $cur_category;
 
 // Setup the form
 $forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
