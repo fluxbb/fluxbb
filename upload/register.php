@@ -15,7 +15,7 @@ require FORUM_ROOT.'include/common.php';
 ($hook = get_hook('rg_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // Check for use of incorrect URLs
-if (!isset($_GET['agree']) && !isset($_POST['form_sent']))
+if (!isset($_GET['agree']) && !isset($_GET['cancel']) && !isset($_POST['form_sent']))
 	confirm_current_url(forum_link($forum_url['register']));
 
 // If we are logged in, we shouldn't be here
@@ -33,80 +33,7 @@ if ($forum_config['o_regs_allow'] == '0')
 
 $errors = array();
 
-
-// User pressed the cancel button
-if (isset($_GET['cancel']))
-	redirect(forum_link($forum_url['index']), $lang_profile['Reg cancel redirect']);
-
-// User pressed agree but failed to tick checkbox
-else if (isset($_GET['agree']) && !isset($_GET['req_agreement']))
-	redirect(forum_link($forum_url['index']), $lang_profile['Reg cancel redirect']);
-
-// Show the rules
-else if ($forum_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POST['form_sent']))
-{
-	// Setup form
-	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
-
-	// Setup breadcrumbs
-	$forum_page['crumbs'] = array(
-		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-		array($lang_common['Register'], forum_link($forum_url['register'])),
-		$lang_common['Rules']
-	);
-
-	($hook = get_hook('rg_rules_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
-	define('FORUM_PAGE', 'rules');
-	require FORUM_ROOT.'header.php';
-
-	// START SUBST - <!-- forum_main -->
-	ob_start();
-
-	($hook = get_hook('rg_rules_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
-	$forum_page['set_count'] = $forum_page['fld_count'] = 0;
-
-?>
-	<div class="main-subhead">
-		<h2 class="hn"><span><?php echo $lang_profile['Reg rules head'] ?></span></h2>
-	</div>
-	<div class="main-content main-frm">
-		<div class="ct-box user-box">
-			<?php echo $forum_config['o_rules_message'] ?>
-		</div>
-		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo $base_url ?>/register.php">
-<?php ($hook = get_hook('rg_rules_pre_group')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-			<div class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
-<?php ($hook = get_hook('rg_rules_pre_agree_checkbox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
-					<div class="sf-box checkbox">
-						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_agreement" value="1" /></span>
-						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Agreement'] ?></span> <?php echo $lang_profile['Agreement label'] ?></label>
-					</div>
-				</div>
-<?php ($hook = get_hook('rg_rules_pre_group_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-			</div>
-<?php ($hook = get_hook('rg_rules_group_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-			<div class="frm-buttons">
-				<span class="submit"><input type="submit" name="agree" value="<?php echo $lang_profile['Agree'] ?>" /></span>
-				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
-			</div>
-		</form>
-	</div>
-<?php
-
-	($hook = get_hook('rg_rules_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
-	$tpl_temp = forum_trim(ob_get_contents());
-	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
-	ob_end_clean();
-	// END SUBST - <!-- forum_main -->
-
-	require FORUM_ROOT.'footer.php';
-}
-
-else if (isset($_POST['form_sent']))
+if (isset($_POST['form_sent']))
 {
 	($hook = get_hook('rg_register_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -261,6 +188,99 @@ else if (isset($_POST['form_sent']))
 			redirect(forum_link($forum_url['index']), $lang_profile['Reg complete']);
 		}
 	}
+}
+else if ($forum_config['o_rules'] == '1' && (!isset($_GET['agree']) || !isset($_GET['req_agreement'])))
+{
+	// User pressed the cancel button
+	if (isset($_GET['cancel']))
+		redirect(forum_link($forum_url['index']), $lang_profile['Reg cancel redirect']);
+
+	// User pressed agree but failed to tick checkbox
+	if (isset($_GET['agree']) && !isset($_GET['req_agreement']))
+		$errors[] = $lang_profile['Reg agree fail'];
+
+	// Setup form
+	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
+
+	// Setup breadcrumbs
+	$forum_page['crumbs'] = array(
+		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
+		array($lang_common['Register'], forum_link($forum_url['register'])),
+		$lang_common['Rules']
+	);
+
+	($hook = get_hook('rg_rules_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
+	define('FORUM_PAGE', 'rules');
+	require FORUM_ROOT.'header.php';
+
+	// START SUBST - <!-- forum_main -->
+	ob_start();
+
+	($hook = get_hook('rg_rules_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
+	$forum_page['set_count'] = $forum_page['fld_count'] = 0;
+
+?>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_profile['Reg rules head'] ?></span></h2>
+	</div>
+	<div class="main-content main-frm">
+<?php
+
+	// If there were any errors, show them
+	if (!empty($errors))
+	{
+		$forum_page['errors'] = array();
+		foreach ($errors as $cur_error)
+			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
+
+		($hook = get_hook('rg_pre_register_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
+?>
+		<div class="ct-box error-box">
+			<h2 class="hn"><span><?php echo $lang_profile['Register errors'] ?></span></h2>
+			<ul>
+				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
+			</ul>
+		</div>
+<?php
+
+	}
+
+?>
+		<div class="ct-box user-box">
+			<?php echo $forum_config['o_rules_message']."\n" ?>
+		</div>
+		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo $base_url ?>/register.php">
+<?php ($hook = get_hook('rg_rules_pre_group')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+			<div class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
+<?php ($hook = get_hook('rg_rules_pre_agree_checkbox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
+					<div class="sf-box checkbox">
+						<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="req_agreement" value="1" /></span>
+						<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Agreement'] ?></span> <?php echo $lang_profile['Agreement label'] ?></label>
+					</div>
+				</div>
+<?php ($hook = get_hook('rg_rules_pre_group_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+			</div>
+<?php ($hook = get_hook('rg_rules_group_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+			<div class="frm-buttons">
+				<span class="submit"><input type="submit" name="agree" value="<?php echo $lang_profile['Agree'] ?>" /></span>
+				<span class="cancel"><input type="submit" name="cancel" value="<?php echo $lang_common['Cancel'] ?>" /></span>
+			</div>
+		</form>
+	</div>
+<?php
+
+	($hook = get_hook('rg_rules_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
+	$tpl_temp = forum_trim(ob_get_contents());
+	$tpl_main = str_replace('<!-- forum_main -->', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <!-- forum_main -->
+
+	require FORUM_ROOT.'footer.php';
 }
 
 // Setup form

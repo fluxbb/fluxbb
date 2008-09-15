@@ -208,6 +208,7 @@ $lang_profile = array(
 'Agreement'					=>	'Agreement:',
 'Agreement label'			=>	'I agree to the rules set out above and wish to register.',
 'Agree'						=>	'Agree',
+'Reg agree fail'			=>	'You must agree to the rules if you wish to register.',
 'Registration flood'		=>	'A new user was registered with the same IP address as you within the last hour. To prevent registration flooding, at least an hour has to pass between registrations from the same IP. Sorry for the inconvenience.',
 'Pass too short'			=>	'Passwords must be at least 4 characters long. Please choose another (longer) password.',
 'Pass not match'			=>	'Passwords do not match.',
