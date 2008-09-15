@@ -2887,9 +2887,12 @@ function error()
 	else if ($num_args == 1)
 		$message = func_get_arg(0);
 
-	// Set a default title if the script failed before $forum_config could be populated
+	// Set a default title and gzip setting if the script failed before $forum_config could be populated
 	if (empty($forum_config))
+	{
 		$forum_config['o_board_title'] = 'FluxBB';
+		$forum_config['o_gzip'] = '0';
+	}
 
 	// Empty all output buffers and stop buffering
 	while (@ob_end_clean());
