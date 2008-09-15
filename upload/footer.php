@@ -42,7 +42,7 @@ if ($forum_user['g_read_board'] == '1' && $forum_config['o_quickjump'] == '1')
 $forum_db->end_transaction();
 
 ?>
-	<p id="copyright">Powered by <strong><a href="http://fluxbb.org/">FluxBB</a><?php if ($forum_config['o_show_version'] == '1') echo ' '.$forum_config['o_cur_version']; ?></strong></p>
+	<p id="copyright"><?php echo sprintf($lang_common['Powered by'], '<a href="http://fluxbb.org/">FluxBB</a>'.($forum_config['o_show_version'] == '1' ? ' '.$forum_config['o_cur_version'] : '')); ?></p>
 <?php
 
 ($hook = get_hook('ft_about_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -66,7 +66,7 @@ if (defined('FORUM_DEBUG') || defined('FORUM_SHOW_QUERIES'))
 		// Calculate script generation time
 		list($usec, $sec) = explode(' ', microtime());
 		$time_diff = forum_number_format(((float)$usec + (float)$sec) - $forum_start, 3);
-		echo '<p id="querytime">[ Generated in '.$time_diff.' seconds, '.forum_number_format($forum_db->get_num_queries()).' queries executed ]</p>'."\n";
+		echo '<p id="querytime">[ '.sprintf($lang_common['Querytime'], $time_diff, forum_number_format($forum_db->get_num_queries())).' ]</p>'."\n";
 	}
 
 	if (defined('FORUM_SHOW_QUERIES'))

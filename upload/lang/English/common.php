@@ -85,6 +85,7 @@ $lang_common = array(
 'Item info single'					=>	'%s [ %s ]',
 'Item info plural'					=>	'%s [ %s to %s of %s ]', // e.g. Topics [ 10 to 20 of 30 ]
 'Info separator'					=>	' ', // e.g. 1 Page | 10 Topics
+'Powered by'						=>	'Powered by <strong>%s</strong>',
 
 // CSRF confirmation form
 'Confirm'							=>	'Confirm',	// Button
@@ -141,10 +142,9 @@ $lang_common = array(
 'Database engine mismatch'			=>	'Database engine mismatch:',
 'Database engine mismatch alert'	=>	'One or more tables in your database seem to be using %1$s as the engine while it is configured to use %2$s. You can run <a href="%3$s">this script</a> to convert your database engine.',
 
-// Stuff for Jump Menu and Debug
+// Stuff for Jump Menu
 'Go'								=>	'Go',		// submit button in forum jump
 'Jump to'							=>	'Jump to forum:',
-'Debug table'						=>	'Debug information',
 
 // For extern.php RSS feed
 'ATOM Feed'							=>	'Atom',
@@ -154,6 +154,14 @@ $lang_common = array(
 'RSS reply'							=>	'Re: ',	// The topic subject will be appended to this string (to signify a reply)
 
 // Accessibility
-'Skip to content'					=>	'Skip to forum content'
+'Skip to content'					=>	'Skip to forum content',
+
+// Debug information
+'Querytime'						=>	'Generated in %1$s seconds, %2$s queries executed',
+'Debug table'						=>	'Debug information',
+'Debug summary'						=>	'Database query performance information',
+'Query times'						=>	'Time (s)',
+'Query'							=>	'Query',
+'Total query time'					=>	'Total query time',
 
 );
