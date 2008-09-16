@@ -62,29 +62,34 @@ if ($pid)
 }
 
 // If action=new, we redirect to the first new post (if any)
-else if ($action == 'new' && !$forum_user['is_guest'])
+else if ($action == 'new')
 {
-	// We need to check if this topic has been viewed recently by the user
-	$tracked_topics = get_tracked_topics();
-	$last_viewed = isset($tracked_topics['topics'][$id]) ? $tracked_topics['topics'][$id] : $forum_user['last_visit'];
+	if (!$forum_user['is_guest'])
+	{
+		// We need to check if this topic has been viewed recently by the user
+		$tracked_topics = get_tracked_topics();
+		$last_viewed = isset($tracked_topics['topics'][$id]) ? $tracked_topics['topics'][$id] : $forum_user['last_visit'];
 
-	($hook = get_hook('vt_find_new_post')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		($hook = get_hook('vt_find_new_post')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-	$query = array(
-		'SELECT'	=> 'MIN(p.id)',
-		'FROM'		=> 'posts AS p',
-		'WHERE'		=> 'p.topic_id='.$id.' AND p.posted>'.$last_viewed
-	);
+		$query = array(
+			'SELECT'	=> 'MIN(p.id)',
+			'FROM'		=> 'posts AS p',
+			'WHERE'		=> 'p.topic_id='.$id.' AND p.posted>'.$last_viewed
+		);
 
-	($hook = get_hook('vt_qr_get_first_new_post')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-	$first_new_post_id = $forum_db->result($result);
+		($hook = get_hook('vt_qr_get_first_new_post')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+		$first_new_post_id = $forum_db->result($result);
 
-	if ($first_new_post_id)
-		header('Location: '.str_replace('&amp;', '&', forum_link($forum_url['post'], $first_new_post_id)));
-	else	// If there is no new post, we go to the last post
-		header('Location: '.str_replace('&amp;', '&', forum_link($forum_url['topic_last_post'], $id)));
+		if ($first_new_post_id)
+		{
+			header('Location: '.str_replace('&amp;', '&', forum_link($forum_url['post'], $first_new_post_id)));
+			exit;
+		}
+	}
 
+	header('Location: '.str_replace('&amp;', '&', forum_link($forum_url['topic_last_post'], $id)));
 	exit;
 }
 
@@ -239,7 +244,7 @@ if ($forum_page['num_pages'] > 1)
 
 ($hook = get_hook('vt_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-// Allow indexing if this isn't a permalink and it isn't a link with p=1
+// Allow indexing if this is a permalink
 if (!$pid)
 	define('FORUM_ALLOW_INDEX', 1);
 
