@@ -240,7 +240,7 @@ if ($forum_page['num_pages'] > 1)
 ($hook = get_hook('vt_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // Allow indexing if this isn't a permalink and it isn't a link with p=1
-if (!$pid && !$action)
+if (!$pid)
 	define('FORUM_ALLOW_INDEX', 1);
 
 define('FORUM_PAGE', 'viewtopic');
