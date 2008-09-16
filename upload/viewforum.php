@@ -131,7 +131,7 @@ else
 // Setup main options
 $forum_page['main_options_head'] = $lang_forum['Forum options'];
 $forum_page['main_options'] = array(
-	'feed'	=> '<span class="feed'.(empty($forum_page['main_options']) ? ' item1' : '').'"><a class="feed" href="'.forum_link($forum_url['forum_rss'], $id).'">'.$lang_forum['RSS forum feed'].'</a></span>'
+	'feed'	=> '<span class="feed'.(empty($forum_page['main_options']) ? ' item1' : '').'"><a class="feed" href="'.forum_link($forum_url['forum_rss'], array($id, $cur_forum['sort_by'] == '1' ? 'posted' : 'last_post')).'">'.$lang_forum['RSS forum feed'].'</a></span>'
 );
 
 if (!$forum_user['is_guest'] && $forum_db->num_rows($result))

@@ -92,8 +92,8 @@ if (FORUM_PAGE == 'index')
 }
 else if (FORUM_PAGE == 'viewforum')
 {
-	$forum_head['rss'] = '<link rel="alternate" type="application/rss+xml" href="'.forum_link($forum_url['forum_rss'], $id).'" title="RSS" />';
-	$forum_head['atom'] = '<link rel="alternate" type="application/atom+xml" href="'.forum_link($forum_url['forum_atom'], $id).'" title="ATOM" />';
+	$forum_head['rss'] = '<link rel="alternate" type="application/rss+xml" href="'.forum_link($forum_url['forum_rss'], array($id, $cur_forum['sort_by'] == '1' ? 'posted' : 'last_post')).'" title="RSS" />';
+	$forum_head['atom'] = '<link rel="alternate" type="application/atom+xml" href="'.forum_link($forum_url['forum_atom'], array($id, $cur_forum['sort_by'] == '1' ? 'posted' : 'last_post')).'" title="ATOM" />';
 }
 else if (FORUM_PAGE == 'viewtopic')
 {
