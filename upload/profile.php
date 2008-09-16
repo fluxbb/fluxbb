@@ -1600,7 +1600,7 @@ else
 			$forum_page['user_activity']['search_topics'] = '<span'.(empty($forum_page['user_activity']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_user_topics'], $id).'">'.(($forum_page['own_profile']) ? $lang_profile['View your topics'] : sprintf($lang_profile['View user topics'], forum_htmlencode($user['username']))).'</a></span>';
 		}
 
-		if (($forum_page['own_profile'] || $forum_user['is_admmod']) && $forum_config['o_subscriptions'] == '1')
+		if (($forum_page['own_profile'] || $forum_user['g_id'] == FORUM_ADMIN) && $forum_config['o_subscriptions'] == '1')
 			 $forum_page['user_activity']['search_subs'] = '<span'.(empty($forum_page['user_activity']) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['search_subscriptions'], $id).'">'.(($forum_page['own_profile']) ? $lang_profile['View your subscriptions'] : sprintf($lang_profile['View user subscriptions'], forum_htmlencode($user['username']))).'</a></span>';
 
 		// Setup user options
