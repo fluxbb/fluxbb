@@ -14,10 +14,6 @@ if (!defined('FORUM_ROOT'))
 if (!defined('FORUM_ESSENTIALS_LOADED'))
 	require FORUM_ROOT.'include/essentials.php';
 
-// Construct REQUEST_URI if it isn't set (or if it's set improperly)
-if (!isset($_SERVER['REQUEST_URI']) || (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']) && strpos($_SERVER['REQUEST_URI'], '?') === false))
-	$_SERVER['REQUEST_URI'] = (isset($_SERVER['PHP_SELF']) ? str_replace('%26', '&', str_replace('%3D', '=', str_replace('%2F', '/', rawurlencode($_SERVER['PHP_SELF'])))) : '').(isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']) ? '?'.$_SERVER['QUERY_STRING'] : '');
-
 // Turn off magic_quotes_runtime
 if (get_magic_quotes_runtime())
 	set_magic_quotes_runtime(0);

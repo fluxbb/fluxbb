@@ -405,9 +405,9 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']))
 {
-
+	$current_url = get_current_url();
 ?>
-				<li class="important"><span><strong>IMPORTANT!</strong> Based on a random selection of 100 posts, topic subjects, usernames and forum names from the database, it appears as if text in the database is currently UTF-8 encoded. This is a good thing. Based on this, the update process will not attempt to do charset conversion. If you have reason to believe that the charset conversion is required nonetheless, you can <a href="<?php echo get_current_url().((substr_count(get_current_url(), '?') == 1) ? '&amp;' : '?').'force=1' ?>">force the conversion to run</a>.</span></li>
+				<li class="important"><span><strong>IMPORTANT!</strong> Based on a random selection of 100 posts, topic subjects, usernames and forum names from the database, it appears as if text in the database is currently UTF-8 encoded. This is a good thing. Based on this, the update process will not attempt to do charset conversion. If you have reason to believe that the charset conversion is required nonetheless, you can <a href="<?php echo $current_url.((substr_count($current_url, '?') == 1) ? '&amp;' : '?').'force=1' ?>">force the conversion to run</a>.</span></li>
 <?php
 
 }
@@ -415,7 +415,7 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 ?>
 			</ul>
 		</div>
-		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo get_current_url() ?>">
+		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo $current_url ?>">
 			<div class="hidden">
 				<input type="hidden" name="stage" value="start" />
 			</div>
