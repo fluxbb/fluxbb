@@ -16,7 +16,6 @@ if (!defined('FORUM'))
 ob_start();
 
 ($hook = get_hook('ft_about_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-($hook = get_hook('ft_about_pre_quickjump')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 // Display the "Jump to" drop list
 if ($forum_user['g_read_board'] == '1' && $forum_config['o_quickjump'] == '1')
