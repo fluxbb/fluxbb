@@ -51,6 +51,11 @@
 
     show:   Any integer value between 1 and 50. The default is 15.
 
+    order:  last_post - show topics ordered by when they were last
+                        posted in, giving information about the reply.
+            posted - show topics ordered by when they were first
+                     posted, giving information about the original post.
+
 
 /***********************************************************************/
 
@@ -339,6 +344,8 @@ if ($action == 'feed')
 	}
 	else
 	{
+		$order_posted = isset($_GET['order']) && $_GET['order'] == 'posted';
+		
 		// Were any forum ID's supplied?
 		if (isset($_GET['fid']) && is_scalar($_GET['fid']) && $_GET['fid'] != '')
 		{
@@ -370,7 +377,7 @@ if ($action == 'feed')
 
 		// Fetch $show topics
 		$query = array(
-			'SELECT'	=> 't.id, t.poster, t.subject, t.last_post, t.last_poster, f.id AS fid, f.forum_name',
+			'SELECT'	=> 't.id, t.poster, t.subject, t.posted, t.last_post, t.last_poster, f.id AS fid, f.forum_name',
 			'FROM'		=> 'topics AS t',
 			'JOINS'		=> array(
 				array(
@@ -383,7 +390,7 @@ if ($action == 'feed')
 				)
 			),
 			'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND t.moved_to IS NULL',
-			'ORDER BY'	=> 't.last_post DESC',
+			'ORDER BY'	=> ($order_posted ? 't.posted' : 't.last_post').' DESC',
 			'LIMIT'		=> $show
 		);
 
@@ -400,10 +407,10 @@ if ($action == 'feed')
 			$feed['items'][] = array(
 				'id'			=>	$cur_topic['id'],
 				'title'			=>	$cur_topic['subject'],
-				'link'			=>	forum_link($forum_url['topic_new_posts'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))),
+				'link'			=>	$order_posted ? forum_link($forum_url['topic'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))) : forum_link($forum_url['topic_new_posts'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))),
 				'description'	=>	$lang_common['Forum'].': <a href="'.forum_link($forum_url['forum'], array($cur_topic['fid'], sef_friendly($cur_topic['forum_name']))).'">'.$cur_topic['forum_name'].'</a>',
-				'author'		=>	$cur_topic['last_poster'],
-				'pubdate'		=>	$cur_topic['last_post']
+				'author'		=>	$order_posted ? $cur_topic['poster'] : $cur_topic['last_poster'],
+				'pubdate'		=>	$order_posted ? $cur_topic['posted'] : $cur_topic['last_post']
 			);
 
 			($hook = get_hook('ex_modify_cur_topic_item')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
