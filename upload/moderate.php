@@ -1427,9 +1427,6 @@ else if (isset($_GET['unstick']))
 
 // No specific forum moderation action was specified in the query string, so we'll display the moderate forum view
 
-// Check for use of incorrect URLs
-confirm_current_url(forum_link($forum_url['moderate_forum'], $fid));
-
 // If forum is empty
 if ($cur_forum['num_topics'] == 0)
 	message($lang_common['Bad request']);
@@ -1444,6 +1441,9 @@ $forum_page['page'] = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $fo
 $forum_page['start_from'] = $forum_user['disp_topics'] * ($forum_page['page'] - 1);
 $forum_page['finish_at'] = min(($forum_page['start_from'] + $forum_user['disp_topics']), ($cur_forum['num_topics']));
 $forum_page['items_info'] = generate_items_info($lang_misc['Topics'], ($forum_page['start_from'] + 1), $cur_forum['num_topics']);
+
+// Check for use of incorrect URLs
+confirm_current_url($forum_page['page'] == 1 ? forum_link($forum_url['moderate_forum'], $fid) : forum_sublink($forum_url['moderate_forum'], $forum_url['page'], $forum_page['page'], $fid));
 
 // Select topics
 $query = array(
