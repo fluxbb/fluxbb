@@ -100,20 +100,8 @@ $query = array(
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 $num_online = $forum_db->result($result);
 
-
 // Get the database system version
-switch ($db_type)
-{
-	case 'sqlite':
-		$db_version = 'SQLite '.sqlite_libversion();
-		break;
-
-	default:
-		$result = $forum_db->query('SELECT VERSION()') or error(__FILE__, __LINE__);
-		$db_version = $forum_db->result($result);
-		break;
-}
-
+$db_version = $forum_db->get_version();
 
 // Collect some additional info about MySQL
 if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')

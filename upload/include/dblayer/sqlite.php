@@ -346,7 +346,7 @@ class DBLayer
 
 	function get_version()
 	{
-		return -1; // No idea how to check this for SQLite, and it isn't actually used anywhere in the core anyway
+		return sqlite_libversion();
 	}
 
 
