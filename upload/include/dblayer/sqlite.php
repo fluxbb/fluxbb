@@ -455,14 +455,15 @@ class DBLayer
 		$table['columns'] = array();
 		foreach ($table_lines as $table_line)
 		{
+			$table_line = forum_trim($table_line);
 			if (substr($table_line, 0, 12) == 'CREATE TABLE') 
 				continue;
-			else if	(substr($table_line, 0, 11) == 'PRIMARY KEY')
+			else if (substr($table_line, 0, 11) == 'PRIMARY KEY')
 				$table['primary_key'] = $table_line;
 			else if (substr($table_line, 0, 6) == 'UNIQUE')
 				$table['unique'] = $table_line;
-			else if (substr($table_line, -1) == ',')
-				$table['columns'][substr($table_line, 0, strpos($table_line, ' '))] = substr($table_line, strpos($table_line, ' '));
+			else if (substr($table_line, 0, strpos($table_line, ' ')) != '')
+				$table['columns'][substr($table_line, 0, strpos($table_line, ' '))] = forum_trim(substr($table_line, strpos($table_line, ' ')));
 		}
 
 		return $table;
@@ -487,7 +488,7 @@ class DBLayer
 		$query = $field_type;
 		if (!$allow_null)
 			$query .= ' NOT NULL';
-		if (isset($default_value))
+		if ($default_value)
 			$query .= ' DEFAULT '.$default_value;
 
 		$old_columns = array_keys($table['columns']);
@@ -504,7 +505,7 @@ class DBLayer
 		if (isset($table['primary_key']))
 			$new_table .= "\n".$table['primary_key'];
 			
-		$new_table .= "\n".');';
+		$new_table = trim($new_table, ',')."\n".');';
 
 		// Drop old table
 		$this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name));
@@ -561,7 +562,7 @@ class DBLayer
 		if (isset($table['primary_key']))
 			$new_table .= "\n".$table['primary_key'];
 			
-		$new_table .= "\n".');';
+		$new_table = trim($new_table, ',')."\n".');';
 
 		// Drop old table
 		$this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name));
