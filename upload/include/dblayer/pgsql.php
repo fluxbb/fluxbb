@@ -193,7 +193,7 @@ class DBLayer
 					foreach ($query['VALUES'] as $cur_values)
 					{
 						$new_query['VALUES'] = $cur_values;
-						$result_set = $this->query_build($new_query, $return_query_string, $unbuffered);
+						$result_set = $this->query_build($new_query, false, $unbuffered);
 					}
 
 					return $result_set;

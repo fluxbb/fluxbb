@@ -163,14 +163,28 @@ class DBLayer
 			if (is_array($query['VALUES']))
 			{
 				$new_query = $query;
-				$result_set = null;
-				foreach ($query['VALUES'] as $cur_values)
+				if ($return_query_string)
 				{
-					$new_query['VALUES'] = $cur_values;
-					$result_set = $this->query_build($new_query, $unbuffered);
-				}
+					$query_set = array();
+					foreach ($query['VALUES'] as $cur_values)
+					{
+						$new_query['VALUES'] = $cur_values;
+						$query_set[] = $this->query_build($new_query, true, $unbuffered);
+					}
 
-				return $result_set;
+					$sql = implode('; ', $query_set);
+				}
+				else
+				{
+					$result_set = null;
+					foreach ($query['VALUES'] as $cur_values)
+					{
+						$new_query['VALUES'] = $cur_values;
+						$result_set = $this->query_build($new_query, false, $unbuffered);
+					}
+	
+					return $result_set;
+				}
 			}
 			else
 				$sql .= ' VALUES('.$query['VALUES'].')';
