@@ -344,9 +344,6 @@ function convert_table_utf8($table)
 		'longtext'		=> 'longblob'
 	);
 
-	$convert_to_binary = array();
-	$convert_to_utf8 = array();
-
 	// Set table default charset to utf8
 	$forum_db->query('ALTER TABLE `'.$table.'` CHARACTER SET utf8') or error(__FILE__, __LINE__);
 
