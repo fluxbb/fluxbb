@@ -357,24 +357,11 @@ function convert_table_utf8($table)
 		list($type) = explode('(', $cur_column['Type']);
 		if (isset($types[$type]) && strpos($cur_column['Collation'], 'utf8') === false)
 		{
-			$names = 'CHANGE `'. $cur_column['Field'] .'` `'. $cur_column['Field'] .'` ';
+			$allow_null = ($cur_column['Null'] == 'YES');
 
-			$attributes = $cur_column['Null'] == 'YES' ? ' NULL' : ' NOT NULL';
-			// Only supply a default value if a default value is specified
-			if ($cur_column['Default'] !== null)
-				$attributes .= ' DEFAULT \''.$forum_db->escape($cur_column['Default']).'\'';
-
-			$convert_to_binary[] = $names.preg_replace('/'. $type .'/i', $types[$type], $cur_column['Type']) . $attributes;
-			$convert_to_utf8[] = $names.$cur_column['Type'] .' CHARACTER SET utf8'. $attributes;
+			$forum_db->alter_field($table, $cur_column['Field'], preg_replace('/'.$type.'/i', $types[$type], $cur_column['Type']), $allow_null, $cur_column['Default']);
+			$forum_db->alter_field($table, $cur_column['Field'], $cur_column['Type'].' CHARACTER SET utf8', $allow_null, $cur_column['Default']);
 		}
-	}
-
-	if (!empty($convert_to_binary))
-	{
-		// Convert text columns to binary
-		$forum_db->query('ALTER TABLE `'.$table.'` '.implode(', ', $convert_to_binary)) or error(__FILE__, __LINE__);
-		// Convert binary columns to utf8
-		$forum_db->query('ALTER TABLE `'.$table.'` '.implode(', ', $convert_to_utf8)) or error(__FILE__, __LINE__);
 	}
 }
 
