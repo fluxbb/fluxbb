@@ -47,7 +47,7 @@ class DBLayer
 
 		// Setup the client-server character set (UTF-8)
 		if (!defined('FORUM_NO_SET_NAMES'))
-			mysql_query('SET NAMES \'utf8\'', $this->link_id) or error(__FILE__, __LINE__);
+			$this->set_names('utf8');
 
 		return $this->link_id;
 	}
@@ -173,6 +173,12 @@ class DBLayer
 		}
 
 		return ($return_query_string) ? $sql : $this->query($sql, $unbuffered);
+	}
+
+
+	function set_names($names)
+	{
+		return $this->query('SET NAMES \''.$this->escape($names).'\'');
 	}
 
 

@@ -490,7 +490,13 @@ else
 
 
 	// Make sure FluxBB isn't already installed
-	$result = $forum_db->query('SELECT 1 FROM '.$db_prefix.'users WHERE id=1');
+	$query = array(
+		'SELECT'	=> '1',
+		'FROM'		=> 'users',
+		'WHERE'		=> 'id = 1'
+	);
+
+	$result = $forum_db->query_build($query);
 	if ($forum_db->num_rows($result))
 		error(sprintf($lang_install['FluxBB already installed'], $db_prefix, $db_name));
 
