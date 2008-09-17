@@ -172,12 +172,6 @@ class DBLayer
 	}
 
 
-	function set_names($names)
-	{
-		return $this->query('SET NAMES \''.$this->escape($names).'\'');
-	}
-
-
 	function result($query_id = 0, $row = 0, $col = 0)
 	{
 		if ($query_id)
@@ -268,6 +262,19 @@ class DBLayer
 		}
 		else
 			return false;
+	}
+
+
+	function set_names($names)
+	{
+		return $this->query('SET NAMES \''.$this->escape($names).'\'');
+	}
+
+
+	function get_version()
+	{
+		$result = $this->query('SELECT VERSION()');
+		return $this->result($result);
 	}
 
 

@@ -219,12 +219,6 @@ class DBLayer
 	}
 
 
-	function set_names($names)
-	{
-		return;
-	}
-
-
 	function result($query_id = 0, $row = 0, $col = 0)
 	{
 		if ($query_id)
@@ -341,6 +335,18 @@ class DBLayer
 		}
 		else
 			return false;
+	}
+
+
+	function set_names($names)
+	{
+		return;
+	}
+
+
+	function get_version()
+	{
+		return -1; // No idea how to check this for SQLite, and it isn't actually used anywhere in the core anyway
 	}
 
 

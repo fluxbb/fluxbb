@@ -474,8 +474,7 @@ else
 	// If MySQL, make sure it's at least 4.1.2
 	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 	{
-		$result = $forum_db->query('SELECT VERSION()') or error(__FILE__, __LINE__);
-		$mysql_version = $forum_db->result($result);
+		$mysql_version = $forum_db->get_version();
 		if (version_compare($mysql_version, MIN_MYSQL_VERSION, '<'))
 			error(sprintf($lang_install['Invalid MySQL version'], $mysql_version, MIN_MYSQL_VERSION));
 	}
