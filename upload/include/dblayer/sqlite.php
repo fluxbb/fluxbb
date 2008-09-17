@@ -488,8 +488,10 @@ class DBLayer
 		$query = $field_type;
 		if (!$allow_null)
 			$query .= ' NOT NULL';
-		if ($default_value)
-			$query .= ' DEFAULT '.$default_value;
+		if ($default_value === null || $default_value === '')
+			$default_value = '\'\'';
+
+		$query .= ' DEFAULT '.$default_value;
 
 		$old_columns = array_keys($table['columns']);
 		array_insert($table['columns'], $after_field, $query.',', $field_name);
