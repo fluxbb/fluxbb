@@ -2970,7 +2970,7 @@ function forum_fix_request_uri()
 		
 		// Otherwise I am not aware of a work around...
 		else
-			dump($_SERVER); // error('The web server you are using is not correctly setting the REQUEST_URI variable. This usually means you are using IIS6, or an unpatched IIS7. Please either disable SEF URLs, upgrade to IIS7 and install any available patches or try a different web server.');
+			error('The web server you are using is not correctly setting the REQUEST_URI variable. This usually means you are using IIS6, or an unpatched IIS7. Please either disable SEF URLs, upgrade to IIS7 and install any available patches or try a different web server.');
 	}
 }
 
