@@ -678,10 +678,7 @@ function get_search_results($query, &$search_set)
 	if ($return != null)
 		return $return;
 
-	if (is_array($query))
-		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-	else
-		$result = $forum_db->query($query) or error(__FILE__, __LINE__);
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
 	// Make sure we actually have some results
 	$num_hits = $forum_db->num_rows($result);
