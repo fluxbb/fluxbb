@@ -2952,6 +2952,29 @@ function error()
 
 
 //
+// Fix the REQUEST_URI if we can, since both IIS6 and IIS7 break it
+//
+function forum_fix_request_uri()
+{
+	global $forum_config;
+	
+	if (!isset($_SERVER['REQUEST_URI']) || (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']) && strpos($_SERVER['REQUEST_URI'], '?') === false))
+	{
+		// Workaround for a bug in IIS7
+		if (isset($_SERVER['HTTP_X_ORIGINAL_URL']))
+			$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
+		
+		// IIS6 also doesn't set REQUEST_URI, If we are using the default SEF URL scheme then we can work around it
+		else if (!isset($forum_config) || $forum_config['o_sef'] == 'Default')
+			$_SERVER['REQUEST_URI'] = str_replace(array('%26', '%3D', '%2F', '%3F'), array('&', '=', '/', '?'), rawurlencode($_SERVER['PHP_SELF'])).(isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']) ? '?'.$_SERVER['QUERY_STRING'] : '');
+		
+		// Otherwise I am not aware of a work around...
+		else
+			error('The web server you are using is not correctly setting the REQUEST_URI variable. This usually means you are using IIS6, or an unpatched IIS7. Please either disable SEF URLs, upgrade to IIS7 and install any available patches or try a different web server.');
+	}
+}
+
+//
 // Unset any variables instantiated as a result of register_globals being enabled
 //
 function forum_unregister_globals()

@@ -20,24 +20,23 @@ else
 // Allow extensions to create their own rewrite rules/modify existing rules
 ($hook = get_hook('re_rewrite_rules')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
+// Lighttpd's 404 handler does not pass query string, so we need to create one and set it properly in $_GET
+if ((!isset($_SERVER['QUERY_STRING']) || empty($_SERVER['QUERY_STRING'])) && strpos($_SERVER['REQUEST_URI'], '?') !== false)
+{
+	$_SERVER['QUERY_STRING'] = parse_url($_SERVER['REQUEST_URI']);
+	$_SERVER['QUERY_STRING'] = isset($_SERVER['QUERY_STRING']['query']) ? $_SERVER['QUERY_STRING']['query'] : '';
+	parse_str($_SERVER['QUERY_STRING'], $_GET);
+}
+
 // We determine the path to the script, since we need to separate the path from the data to be rewritten
 $path_to_script = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
 if (substr($path_to_script, -1) != '/')
 	$path_to_script  = $path_to_script.'/';
 
-// Deal with IIS rewriting oddness
-if (isset($_SERVER['HTTP_X_ORIGINAL_URL']))
-	$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
-
 // We create our own request URI with the path removed and only the parts to rewrite included
 $request_uri = substr($_SERVER['REQUEST_URI'], strlen($path_to_script));
 if (strpos($request_uri, '?') !== false)
 	$request_uri = substr($request_uri, 0, strpos($request_uri, '?'));
-
-// Lighttpd's 404 handler does not pass query string, so we need to create one and set it properly in $_GET
-$_SERVER['QUERY_STRING'] = parse_url($_SERVER['REQUEST_URI']);
-$_SERVER['QUERY_STRING'] = isset($_SERVER['QUERY_STRING']['query']) ? $_SERVER['QUERY_STRING']['query'] : '';
-parse_str($_SERVER['QUERY_STRING'], $_GET);
 
 $rewritten_url = '';
 $url_parts = array();

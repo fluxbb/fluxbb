@@ -92,6 +92,9 @@ if (!defined('FORUM_CONFIG_LOADED'))
 	require FORUM_CACHE_DIR.'cache_config.php';
 }
 
+// If the request_uri is invalid try fix it
+forum_fix_request_uri();
+
 if (!isset($base_url))
 {
 	// Make an educated guess regarding base_url

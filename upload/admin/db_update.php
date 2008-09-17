@@ -66,6 +66,12 @@ require FORUM_ROOT.'include/utf8/utf8.php';
 require FORUM_ROOT.'include/utf8/ucwords.php';
 require FORUM_ROOT.'include/utf8/trim.php';
 
+// Strip out "bad" UTF-8 characters
+forum_remove_bad_characters();
+
+// If the request_uri is invalid try fix it
+forum_fix_request_uri();
+
 // Instruct DB abstraction layer that we don't want it to "SET NAMES". If we need to, we'll do it ourselves below.
 define('FORUM_NO_SET_NAMES', 1);
 
