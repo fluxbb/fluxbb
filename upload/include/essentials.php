@@ -93,7 +93,8 @@ if (!defined('FORUM_CONFIG_LOADED'))
 }
 
 // If the request_uri is invalid try fix it
-forum_fix_request_uri();
+if (!defined('FORUM_IGNORE_REQUEST_URI'))
+	forum_fix_request_uri();
 
 if (!isset($base_url))
 {

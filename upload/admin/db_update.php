@@ -70,7 +70,8 @@ require FORUM_ROOT.'include/utf8/trim.php';
 forum_remove_bad_characters();
 
 // If the request_uri is invalid try fix it
-forum_fix_request_uri();
+if (!defined('FORUM_IGNORE_REQUEST_URI'))
+	forum_fix_request_uri();
 
 // Instruct DB abstraction layer that we don't want it to "SET NAMES". If we need to, we'll do it ourselves below.
 define('FORUM_NO_SET_NAMES', 1);
