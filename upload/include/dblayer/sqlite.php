@@ -346,7 +346,10 @@ class DBLayer
 
 	function get_version()
 	{
-		return sqlite_libversion();
+		return array(
+			'name'		=> 'SQLite',
+			'version'	=> sqlite_libversion()
+		);
 	}
 
 

@@ -361,7 +361,11 @@ class DBLayer
 	function get_version()
 	{
 		$result = $this->query('SELECT VERSION()');
-		return $this->result($result);
+
+		return array(
+			'name'		=> 'PostgreSQL',
+			'version'	=> preg_replace('/^[^0-9]+([^\s,-]+).*$/', '\\1', $this->result($result))
+		);
 	}
 
 

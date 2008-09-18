@@ -274,7 +274,11 @@ class DBLayer
 	function get_version()
 	{
 		$result = $this->query('SELECT VERSION()');
-		return $this->result($result);
+
+		return array(
+			'name'		=> 'MySQL Standard (InnoDB)',
+			'version'	=> preg_replace('/^([^-]+).*$/', '\\1', $this->result($result))
+		);
 	}
 
 

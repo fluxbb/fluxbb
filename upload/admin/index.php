@@ -100,14 +100,9 @@ $query = array(
 $result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 $num_online = $forum_db->result($result);
 
-// Get the database system version
-$db_version = $forum_db->get_version();
-
 // Collect some additional info about MySQL
 if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 {
-	$db_version = 'MySQL '.$db_version;
-
 	// Calculate total db size/row count
 	$result = $forum_db->query('SHOW TABLE STATUS FROM `'.$db_name.'` LIKE \''.$db_prefix.'%\'') or error(__FILE__, __LINE__);
 
@@ -208,7 +203,7 @@ ob_start();
 				<div class="ct-box">
 					<h3 class="ct-legend hn"><span><?php echo $lang_admin_index['Database'] ?></span></h3>
 					<ul class="data-list">
-						<li><span><?php echo $db_version ?></span></li>
+						<li><span><?php echo implode(' ', $forum_db->get_version()) ?></span></li>
 <?php if (isset($total_records) && isset($total_size)): ?>							<li><span><?php echo $lang_admin_index['Rows'] ?>: <?php echo forum_number_format($total_records) ?></span></li>
 						<li><span><?php echo $lang_admin_index['Size'] ?>: <?php echo $total_size ?></span></li>
 					</ul>

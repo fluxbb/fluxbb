@@ -98,7 +98,7 @@ $forum_db->set_names(strpos($cur_version, '1.3') === 0 ? 'utf8' : 'latin1');
 // If MySQL, make sure it's at least 4.1.2
 if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 {
-	$mysql_version = $forum_db->get_version();
+	list(, $mysql_version) = $forum_db->get_version();
 	if (version_compare($mysql_version, MIN_MYSQL_VERSION, '<'))
 		error('You are running MySQL version '.$mysql_version.'. FluxBB '.UPDATE_TO.' requires at least MySQL '.MIN_MYSQL_VERSION.' to run properly. You must upgrade your MySQL installation before you can continue.');
 }
