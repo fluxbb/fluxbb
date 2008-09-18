@@ -82,7 +82,7 @@ if (empty($rewritten_url))
 	// Allow an extension to override the "Bad request" message with a custom 404 page
 	($hook = get_hook('re_page_not_found')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-	exit('Bad request');
+	error('Page Not found (Error 404): The requested page <em>'.forum_htmlencode($request_uri).'</em> could not be found.');
 }
 
 // We change $_SERVER['PHP_SELF'] so that it reflects the file we're actually loading
