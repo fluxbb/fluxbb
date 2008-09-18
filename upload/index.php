@@ -13,10 +13,10 @@ if (!defined('FORUM_ROOT'))
 	define('FORUM_ROOT', './');
 require FORUM_ROOT.'include/common.php';
 
+($hook = get_hook('in_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
 // Check for use of incorrect URLs
 confirm_current_url(forum_link($forum_url['index']));
-
-($hook = get_hook('in_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 if ($forum_user['g_read_board'] == '0')
 	message($lang_common['No view']);
