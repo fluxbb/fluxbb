@@ -7,6 +7,10 @@
  * @package FluxBB
  */
 
+// Make sure no one attempts to run this script "directly"
+if (!defined('FORUM'))
+	exit;
+
 //
 // Checks if a word is a valid searchable word
 //
