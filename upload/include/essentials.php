@@ -19,6 +19,10 @@ if (!defined('FORUM_ROOT'))
 define('FORUM_VERSION', '1.3 Beta');
 define('FORUM_DB_REVISION', 5);
 
+// Attempt to load the configuration file config.php
+if (file_exists(FORUM_ROOT.'config.php'))
+	include FORUM_ROOT.'config.php';
+
 // Load the functions script
 require FORUM_ROOT.'include/functions.php';
 
@@ -32,10 +36,6 @@ forum_unregister_globals();
 
 // Ignore any user abort requests
 ignore_user_abort(true);
-
-// Attempt to load the configuration file config.php
-if (file_exists(FORUM_ROOT.'config.php'))
-	include FORUM_ROOT.'config.php';
 
 // If we have the 1.2 constant defined, define the proper 1.3 constant so we don't get
 // an incorrect "need to install" message
