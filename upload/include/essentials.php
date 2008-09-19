@@ -23,6 +23,11 @@ define('FORUM_DB_REVISION', 5);
 if (file_exists(FORUM_ROOT.'config.php'))
 	include FORUM_ROOT.'config.php';
 
+// If we have the 1.2 constant defined, define the proper 1.3 constant so we don't get
+// an incorrect "need to install" message
+if (defined('PUN'))
+	define('FORUM', 1);
+
 // Load the functions script
 require FORUM_ROOT.'include/functions.php';
 
@@ -36,11 +41,6 @@ forum_unregister_globals();
 
 // Ignore any user abort requests
 ignore_user_abort(true);
-
-// If we have the 1.2 constant defined, define the proper 1.3 constant so we don't get
-// an incorrect "need to install" message
-if (defined('PUN'))
-	define('FORUM', 1);
 
 if (!defined('FORUM'))
 	error('The file \'config.php\' doesn\'t exist or is corrupt. Please run <a href="'.FORUM_ROOT.'admin/install.php">install.php</a> to install FluxBB first.');
