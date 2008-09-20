@@ -810,6 +810,8 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 		if (!array_key_exists('o_default_dst', $forum_config))
 			$new_config[] = '\'o_default_dst\', \'0\'';
 
+		if (!empty($new_config))
+		{
       		$query = array(
       			'INSERT'	=> 'conf_name, conf_value',
       			'INTO'		=> 'config',
@@ -817,6 +819,7 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
       		);
 
       		$forum_db->query_build($query) or error(__FILE__, __LINE__);
+		}
 
 		// Server timezone is now simply the default timezone
 		if (!array_key_exists('o_default_timezone', $forum_config))
