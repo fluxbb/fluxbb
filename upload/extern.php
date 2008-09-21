@@ -507,10 +507,10 @@ else if ($action == 'stats')
 
 	($hook = get_hook('ex_pre_stats_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-	echo $lang_index['No of users'].': '.forum_number_format($stats['total_users']).'<br />'."\n";
-	echo $lang_index['Newest user'].': <a href="'.forum_link($forum_url['user'], $stats['last_user']['id']).'">'.forum_htmlencode($stats['last_user']['username']).'</a><br />'."\n";
-	echo $lang_index['No of topics'].': '.forum_number_format($stats['total_topics']).'<br />'."\n";
-	echo $lang_index['No of posts'].': '.forum_number_format($stats['total_posts']).'<br />'."\n";
+	echo sprintf($lang_index['No of users'], forum_number_format($stats['total_users'])).'<br />'."\n";
+	echo sprintf($lang_index['Newest user'], '<a href="'.forum_link($forum_url['user'], $stats['last_user']['id']).'">'.forum_htmlencode($stats['last_user']['username']).'</a>').'<br />'."\n";
+	echo sprintf($lang_index['No of topics'], forum_number_format($stats['total_topics'])).'<br />'."\n";
+	echo sprintf($lang_index['No of posts'], forum_number_format($stats['total_posts'])).'<br />'."\n";
 	
 	exit;
 }
