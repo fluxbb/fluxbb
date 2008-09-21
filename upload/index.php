@@ -267,8 +267,9 @@ ob_start();
 
 // Collect some statistics from the database
 $query = array(
-	'SELECT'	=> 'COUNT(u.id)-1',
-	'FROM'		=> 'users AS u'
+	'SELECT'	=> 'COUNT(u.id) - 1',
+	'FROM'		=> 'users AS u',
+	'WHERE'		=> 'u.group_id != '.FORUM_UNVERIFIED
 );
 
 ($hook = get_hook('in_stats_qr_get_user_count')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;

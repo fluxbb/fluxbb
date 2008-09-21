@@ -53,9 +53,9 @@ if ($forum_page['show_group'] > -1)
 
 // Fetch user count
 $query = array(
-	'SELECT'	=> 'COUNT(u.id)',
+	'SELECT'	=> 'COUNT(u.id) - 1',
 	'FROM'		=> 'users AS u',
-	'WHERE'		=> 'u.id>1'
+	'WHERE'		=> 'u.group_id != '.FORUM_UNVERIFIED
 );
 
 if (!empty($where_sql))
@@ -222,7 +222,7 @@ $query = array(
 			'ON'			=> 'g.g_id=u.group_id'
 		)
 	),
-	'WHERE'		=> 'u.id>1',
+	'WHERE'		=> 'u.id > 1 AND u.group_id != '.FORUM_UNVERIFIED,
 	'ORDER BY'	=> $forum_page['sort_by'].' '.$forum_page['sort_dir'].', u.id ASC',
 	'LIMIT'		=> $forum_page['start_from'].', 50'
 );
