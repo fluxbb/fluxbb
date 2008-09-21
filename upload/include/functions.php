@@ -2974,7 +2974,15 @@ function forum_fix_request_uri()
 		
 		// IIS6 also doesn't set REQUEST_URI, If we are using the default SEF URL scheme then we can work around it
 		else if (!isset($forum_config) || $forum_config['o_sef'] == 'Default')
-			$_SERVER['REQUEST_URI'] = str_replace(array('%26', '%3D', '%2F', '%3F'), array('&', '=', '/', '?'), rawurlencode($_SERVER['PHP_SELF'])).(isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']) ? '?'.$_SERVER['QUERY_STRING'] : '');
+		{
+			$requested_page = str_replace(array('%26', '%3D', '%2F', '%3F'), array('&', '=', '/', '?'), rawurlencode($_SERVER['PHP_SELF']));
+
+			// The Default scheme uses / for the index rather than index.php, so if we are on index.php we don't want to include this
+			if (basename($requested_page) == 'index.php')
+				$requested_page = dirname($requested_page).'/';
+
+			$_SERVER['REQUEST_URI'] = $requested_page.(isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']) ? '?'.$_SERVER['QUERY_STRING'] : '');
+		}
 		
 		// Otherwise I am not aware of a work around...
 		else
