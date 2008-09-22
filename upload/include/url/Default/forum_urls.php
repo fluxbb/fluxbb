@@ -27,7 +27,7 @@ $forum_url = array(
 	'forum_rss'						=>	'extern.php?action=feed&amp;fid=$1&amp;order=$2&amp;type=rss',
 	'forum_atom'					=>	'extern.php?action=feed&amp;fid=$1&amp;order=$2&amp;type=atom',
 	'help'							=>	'help.php?section=$1',
-	'index'							=>	'',
+	'index'							=>	'index.php',
 	'index_rss'						=>	'extern.php?action=feed&amp;type=rss',
 	'index_atom'					=>	'extern.php?action=feed&amp;type=atom',
 	'login'							=>	'login.php',

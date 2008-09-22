@@ -642,7 +642,7 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 				if ($cur_column['Field'] === 'word')
 				{
 					if ($cur_column['Collation'] !== 'utf8_bin')
-						$forum_db->alter_field('search_words', 'word', 'VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_bin', false, '""');
+						$forum_db->alter_field('search_words', 'word', 'VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_bin', false, '');
 
 					break;
 				}
@@ -812,14 +812,15 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 
 		if (!empty($new_config))
 		{
-      		$query = array(
-      			'INSERT'	=> 'conf_name, conf_value',
-      			'INTO'		=> 'config',
-      			'VALUES'	=> $new_config
-      		);
-
-      		$forum_db->query_build($query) or error(__FILE__, __LINE__);
+	      		$query = array(
+	      			'INSERT'	=> 'conf_name, conf_value',
+	      			'INTO'		=> 'config',
+	      			'VALUES'	=> $new_config
+	      		);
+	
+	      		$forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
+		unset($new_config);
 
 		// Server timezone is now simply the default timezone
 		if (!array_key_exists('o_default_timezone', $forum_config))
