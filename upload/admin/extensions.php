@@ -41,7 +41,7 @@ if (isset($_GET['install']) || isset($_GET['install_hotfix']))
 
 	// User pressed the cancel button
 	if (isset($_POST['install_cancel']))
-		redirect(forum_link($forum_url['admin_extensions_install']), $lang_admin_common['Cancel redirect']);
+		redirect(forum_link(isset($_GET['install']) ? $forum_url['admin_extensions_manage'] : $forum_url['admin_extensions_hotfixes']), $lang_admin_common['Cancel redirect']);
 
 	$id = preg_replace('/[^0-9a-z_]/', '', isset($_GET['install']) ? $_GET['install'] : $_GET['install_hotfix']);
 
