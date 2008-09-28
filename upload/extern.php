@@ -345,10 +345,7 @@ if ($action == 'feed')
 		while ($cur_post = $forum_db->fetch_assoc($result))
 		{
 			if ($forum_config['o_censoring'] == '1')
-			{
-				$cur_post['subject'] = censor_words($cur_post['subject']);
 				$cur_post['message'] = censor_words($cur_post['message']);
-			}
 
 			$item = array(
 				'id'			=>	$cur_post['id'],
