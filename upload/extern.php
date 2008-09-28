@@ -110,38 +110,38 @@ function output_rss($feed)
 	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 	header('Pragma: public');
 
-	echo '<?xml version="1.0" encoding="utf-8"?>'."\r\n";
-	echo '<rss version="2.0">'."\r\n";
-	echo "\t".'<channel>'."\r\n";
-	echo "\t\t".'<title><![CDATA['.escape_cdata($feed['title']).']]></title>'."\r\n";
-	echo "\t\t".'<link>'.$feed['link'].'</link>'."\r\n";
-	echo "\t\t".'<description><![CDATA['.escape_cdata($feed['description']).']]></description>'."\r\n";
-	echo "\t\t".'<lastBuildDate>'.gmdate('r', count($feed['items']) ? $feed['items'][0]['pubdate'] : time()).'</lastBuildDate>'."\r\n";
+	echo '<?xml version="1.0" encoding="utf-8"?>'."\n";
+	echo '<rss version="2.0">'."\n";
+	echo "\t".'<channel>'."\n";
+	echo "\t\t".'<title><![CDATA['.escape_cdata($feed['title']).']]></title>'."\n";
+	echo "\t\t".'<link>'.$feed['link'].'</link>'."\n";
+	echo "\t\t".'<description><![CDATA['.escape_cdata($feed['description']).']]></description>'."\n";
+	echo "\t\t".'<lastBuildDate>'.gmdate('r', count($feed['items']) ? $feed['items'][0]['pubdate'] : time()).'</lastBuildDate>'."\n";
 
 	if ($forum_config['o_show_version'] == '1')
-		echo "\t\t".'<generator>FluxBB '.$forum_config['o_cur_version'].'</generator>'."\r\n";
+		echo "\t\t".'<generator>FluxBB '.$forum_config['o_cur_version'].'</generator>'."\n";
 	else
-		echo "\t\t".'<generator>FluxBB</generator>'."\r\n";
+		echo "\t\t".'<generator>FluxBB</generator>'."\n";
 
 	($hook = get_hook('ex_add_new_rss_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	foreach ($feed['items'] as $item)
 	{
-		echo "\t\t".'<item>'."\r\n";
-		echo "\t\t\t".'<title><![CDATA['.escape_cdata($item['title']).']]></title>'."\r\n";
-		echo "\t\t\t".'<link>'.$item['link'].'</link>'."\r\n";
-		echo "\t\t\t".'<description><![CDATA['.escape_cdata($item['description']).']]></description>'."\r\n";
-		echo "\t\t\t".'<author><![CDATA[dummy@example.com ('.escape_cdata($item['author']).')]]></author>'."\r\n";
-		echo "\t\t\t".'<pubDate>'.gmdate('r', $item['pubdate']).'</pubDate>'."\r\n";
-		echo "\t\t\t".'<guid>'.$item['link'].'</guid>'."\r\n";
+		echo "\t\t".'<item>'."\n";
+		echo "\t\t\t".'<title><![CDATA['.escape_cdata($item['title']).']]></title>'."\n";
+		echo "\t\t\t".'<link>'.$item['link'].'</link>'."\n";
+		echo "\t\t\t".'<description><![CDATA['.escape_cdata($item['description']).']]></description>'."\n";
+		echo "\t\t\t".'<author><![CDATA['.(isset($item['author']['email']) ? escape_cdata($item['author']['email']) : 'dummy@example.com').' ('.escape_cdata($item['author']['name']).')]]></author>'."\n";
+		echo "\t\t\t".'<pubDate>'.gmdate('r', $item['pubdate']).'</pubDate>'."\n";
+		echo "\t\t\t".'<guid>'.$item['link'].'</guid>'."\n";
 
 		($hook = get_hook('ex_add_new_rss_item_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-		echo "\t\t".'</item>'."\r\n";
+		echo "\t\t".'</item>'."\n";
 	}
 
-	echo "\t".'</channel>'."\r\n";
-	echo '</rss>'."\r\n";
+	echo "\t".'</channel>'."\n";
+	echo '</rss>'."\n";
 }
 
 
@@ -158,42 +158,49 @@ function output_atom($feed)
 	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 	header('Pragma: public');
 
-	echo '<?xml version="1.0" encoding="utf-8"?>'."\r\n";
-	echo '<feed xmlns="http://www.w3.org/2005/Atom">'."\r\n";
+	echo '<?xml version="1.0" encoding="utf-8"?>'."\n";
+	echo '<feed xmlns="http://www.w3.org/2005/Atom">'."\n";
 
-	echo "\t".'<title type="html"><![CDATA['.escape_cdata($feed['title']).']]></title>'."\r\n";
-	echo "\t".'<link rel="self" href="'.forum_htmlencode(get_current_url()).'"/>'."\r\n";
-	echo "\t".'<updated>'.gmdate('Y-m-d\TH:i:s\Z', count($feed['items']) ? $feed['items'][0]['pubdate'] : time()).'</updated>'."\r\n";
+	echo "\t".'<title type="html"><![CDATA['.escape_cdata($feed['title']).']]></title>'."\n";
+	echo "\t".'<link rel="self" href="'.forum_htmlencode(get_current_url()).'"/>'."\n";
+	echo "\t".'<updated>'.gmdate('Y-m-d\TH:i:s\Z', count($feed['items']) ? $feed['items'][0]['pubdate'] : time()).'</updated>'."\n";
 
 	if ($forum_config['o_show_version'] == '1')
-		echo "\t".'<generator version="'.$forum_config['o_cur_version'].'">FluxBB</generator>'."\r\n";
+		echo "\t".'<generator version="'.$forum_config['o_cur_version'].'">FluxBB</generator>'."\n";
 	else
-		echo "\t".'<generator>FluxBB</generator>'."\r\n";
+		echo "\t".'<generator>FluxBB</generator>'."\n";
 
 	($hook = get_hook('ex_add_new_atom_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-	echo "\t".'<id>'.$feed['link'].'</id>'."\r\n";
+	echo "\t".'<id>'.$feed['link'].'</id>'."\n";
 
 	$content_tag = ($feed['type'] == 'posts') ? 'content' : 'summary';
 
 	foreach ($feed['items'] as $item)
 	{
-		echo "\t\t".'<entry>'."\r\n";
-		echo "\t\t\t".'<title type="html"><![CDATA['.escape_cdata($item['title']).']]></title>'."\r\n";
-		echo "\t\t\t".'<link rel="alternate" href="'.$item['link'].'"/>'."\r\n";
-		echo "\t\t\t".'<'.$content_tag.' type="html"><![CDATA['.escape_cdata($item['description']).']]></'.$content_tag.'>'."\r\n";
-		echo "\t\t\t".'<author>'."\r\n";
-		echo "\t\t\t\t".'<name><![CDATA['.escape_cdata($item['author']).']]></name>'."\r\n";
-		echo "\t\t\t".'</author>'."\r\n";
-		echo "\t\t\t".'<updated>'.gmdate('Y-m-d\TH:i:s\Z', $item['pubdate']).'</updated>'."\r\n";
+		echo "\t\t".'<entry>'."\n";
+		echo "\t\t\t".'<title type="html"><![CDATA['.escape_cdata($item['title']).']]></title>'."\n";
+		echo "\t\t\t".'<link rel="alternate" href="'.$item['link'].'"/>'."\n";
+		echo "\t\t\t".'<'.$content_tag.' type="html"><![CDATA['.escape_cdata($item['description']).']]></'.$content_tag.'>'."\n";
+		echo "\t\t\t".'<author>'."\n";
+		echo "\t\t\t\t".'<name><![CDATA['.escape_cdata($item['author']['name']).']]></name>'."\n";
+
+		if (isset($item['author']['email']))
+			echo "\t\t\t\t".'<email><![CDATA['.escape_cdata($item['author']['email']).']]></email>'."\n";
+
+		if (isset($item['author']['uri']))
+			echo "\t\t\t\t".'<uri>'.$item['author']['uri'].'</uri>'."\n";
+
+		echo "\t\t\t".'</author>'."\n";
+		echo "\t\t\t".'<updated>'.gmdate('Y-m-d\TH:i:s\Z', $item['pubdate']).'</updated>'."\n";
 
 		($hook = get_hook('ex_add_new_atom_item_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-		echo "\t\t\t".'<id>'.$item['link'].'</id>'."\r\n";
-		echo "\t\t".'</entry>'."\r\n";
+		echo "\t\t\t".'<id>'.$item['link'].'</id>'."\n";
+		echo "\t\t".'</entry>'."\n";
 	}
 
-	echo '</feed>'."\r\n";
+	echo '</feed>'."\n";
 }
 
 
@@ -210,9 +217,9 @@ function output_xml($feed)
 	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 	header('Pragma: public');
 
-	echo '<?xml version="1.0" encoding="utf-8"?>'."\r\n";
-	echo '<source>'."\r\n";
-	echo "\t".'<url>'.$feed['link'].'</url>'."\r\n";
+	echo '<?xml version="1.0" encoding="utf-8"?>'."\n";
+	echo '<source>'."\n";
+	echo "\t".'<url>'.$feed['link'].'</url>'."\n";
 
 	($hook = get_hook('ex_add_new_xml_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -220,20 +227,29 @@ function output_xml($feed)
 
 	foreach ($feed['items'] as $item)
 	{
-		echo "\t".'<'.$forum_tag.' id="'.$item['id'].'">'."\r\n";
+		echo "\t".'<'.$forum_tag.' id="'.$item['id'].'">'."\n";
 
-		echo "\t\t".'<title><![CDATA['.escape_cdata($item['title']).']]></title>'."\r\n";
-		echo "\t\t".'<link>'.$item['link'].'</link>'."\r\n";
-		echo "\t\t".'<content><![CDATA['.escape_cdata($item['description']).']]></content>'."\r\n";
-		echo "\t\t".'<author><![CDATA['.escape_cdata($item['author']).']]></author>'."\r\n";
-		echo "\t\t".'<posted>'.gmdate('r', $item['pubdate']).'</posted>'."\r\n";
+		echo "\t\t".'<title><![CDATA['.escape_cdata($item['title']).']]></title>'."\n";
+		echo "\t\t".'<link>'.$item['link'].'</link>'."\n";
+		echo "\t\t".'<content><![CDATA['.escape_cdata($item['description']).']]></content>'."\n";
+		echo "\t\t".'<author>'."\n";
+		echo "\t\t\t".'<name><![CDATA['.escape_cdata($item['author']['name']).']]></name>'."\n";
+
+		if (isset($item['author']['email']))
+			echo "\t\t\t".'<email><![CDATA['.escape_cdata($item['author']['email']).']]></email>'."\n";
+
+		if (isset($item['author']['uri']))
+			echo "\t\t\t".'<uri>'.$item['author']['uri'].'</uri>'."\n";
+
+		echo "\t\t".'</author>'."\n";
+		echo "\t\t".'<posted>'.gmdate('r', $item['pubdate']).'</posted>'."\n";
 
 		($hook = get_hook('ex_add_new_xml_item_info')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-		echo "\t".'</'.$forum_tag.'>'."\r\n";
+		echo "\t".'</'.$forum_tag.'>'."\n";
 	}
 
-	echo '</source>'."\r\n";
+	echo '</source>'."\n";
 }
 
 
@@ -311,8 +327,14 @@ if ($action == 'feed')
 
 		// Fetch $show posts
 		$query = array(
-			'SELECT'	=> 'p.id, p.poster, p.message, p.posted',
+			'SELECT'	=> 'p.id, p.poster, p.message, p.posted, p.poster_id, u.email_setting, u.email, p.poster_email',
 			'FROM'		=> 'posts AS p',
+			'JOINS'		=> array(
+				array(
+					'INNER JOIN'	=> 'users AS u',
+					'ON'		=> 'u.id = p.poster_id'
+				)
+			),
 			'WHERE'		=> 'p.topic_id='.$tid,
 			'ORDER BY'	=> 'p.posted DESC',
 			'LIMIT'		=> $show
@@ -328,14 +350,28 @@ if ($action == 'feed')
 				$cur_post['message'] = censor_words($cur_post['message']);
 			}
 
-			$feed['items'][] = array(
+			$item = array(
 				'id'			=>	$cur_post['id'],
 				'title'			=>	$cur_topic['first_post_id'] == $cur_post['id'] ? $cur_topic['subject'] : $lang_common['RSS reply'].$cur_topic['subject'],
 				'link'			=>	forum_link($forum_url['post'], $cur_post['id']),
 				'description'		=>	$cur_post['message'],
-				'author'		=>	$cur_post['poster'],
+				'author'		=>	array(
+					'name'	=> $cur_post['poster'],
+				),
 				'pubdate'		=>	$cur_post['posted']
 			);
+
+			if ($cur_post['poster_id'] > 1)
+			{
+				if ($cur_post['email_setting'] == '0')
+					$item['author']['email'] = $cur_post['email'];
+
+				$item['author']['uri'] = forum_link($forum_url['user'], $cur_post['poster_id']);
+			}
+			else if ($cur_post['poster_email'] != '')
+				$item['author']['email'] = $cur_post['poster_email'];
+
+			$feed['items'][] = $item;
 
 			($hook = get_hook('ex_modify_cur_post_item')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		}
@@ -380,12 +416,16 @@ if ($action == 'feed')
 
 		// Fetch $show topics
 		$query = array(
-			'SELECT'	=> 't.id, t.poster, t.subject, t.posted, t.last_post, t.last_poster, p.message',
+			'SELECT'	=> 't.id, t.poster, t.subject, t.posted, t.last_post, t.last_poster, p.message, u.email_setting, u.email, p.poster_id, p.poster_email',
 			'FROM'		=> 'topics AS t',
 			'JOINS'		=> array(
 				array(
 					'INNER JOIN'		=> 'posts AS p',
 					'ON'			=> 'p.id=t.first_post_id'
+				),
+				array(
+					'INNER JOIN'		=> 'users AS u',
+					'ON'			=> 'u.id = p.poster_id'
 				),
 				array(
 					'LEFT JOIN'		=> 'forum_perms AS fp',
@@ -410,14 +450,28 @@ if ($action == 'feed')
 				$cur_topic['message'] = censor_words($cur_topic['message']);
 			}
 
-			$feed['items'][] = array(
+			$item = array(
 				'id'			=>	$cur_topic['id'],
 				'title'			=>	$cur_topic['subject'],
 				'link'			=>	$order_posted ? forum_link($forum_url['topic'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))) : forum_link($forum_url['topic_new_posts'], array($cur_topic['id'], sef_friendly($cur_topic['subject']))),
 				'description'		=>	$cur_topic['message'],
-				'author'		=>	$order_posted ? $cur_topic['poster'] : $cur_topic['last_poster'],
+				'author'		=>	array(
+					'name'	=> $order_posted ? $cur_topic['poster'] : $cur_topic['last_poster']
+				),
 				'pubdate'		=>	$order_posted ? $cur_topic['posted'] : $cur_topic['last_post']
 			);
+
+			if ($cur_topic['poster_id'] > 1)
+			{
+				if ($cur_topic['email_setting'] == '0')
+					$item['author']['email'] = $cur_topic['email'];
+
+				$item['author']['uri'] = forum_link($forum_url['user'], $cur_topic['poster_id']);
+			}
+			else if ($cur_topic['poster_email'] != '')
+				$item['author']['email'] = $cur_topic['poster_email'];
+
+			$feed['items'][] = $item;
 
 			($hook = get_hook('ex_modify_cur_topic_item')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 		}
