@@ -2426,7 +2426,8 @@ function confirm_current_url($url)
 	if (defined('FORUM_DISABLE_URL_CONFIRM'))
 		return;
 
-	$url = urldecode($url);
+	// Clean up the URL so that it should match the rules we have
+	$url = str_replace('&amp;', '&', urldecode($url));
 	
 	$return = ($hook = get_hook('fn_confirm_current_url_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
