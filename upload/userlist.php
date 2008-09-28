@@ -53,9 +53,9 @@ if ($forum_page['show_group'] > -1)
 
 // Fetch user count
 $query = array(
-	'SELECT'	=> 'COUNT(u.id) - 1',
+	'SELECT'	=> 'COUNT(u.id)',
 	'FROM'		=> 'users AS u',
-	'WHERE'		=> 'u.group_id != '.FORUM_UNVERIFIED
+	'WHERE'		=> 'u.id > 1 AND u.group_id != '.FORUM_UNVERIFIED
 );
 
 if (!empty($where_sql))
