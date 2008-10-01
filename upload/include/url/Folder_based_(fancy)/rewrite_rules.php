@@ -44,7 +44,7 @@ $forum_rewrite_rules = array(
 	'/^search-k(.*)-(message|subject|all)-a(.*)-([0-9]+)-(ASC|DESC)-([0-9-]+)-(posts|topics)-p([0-9]+).html?$/i'			=>	'search.php?action=search&keywords=$1&author=$3&forum=$6&search_in=$2&sort_by=$4&sort_dir=$5&show_as=$7&p=$8',
 	'/^users(\.html?|\/)?$/i'																								=>	'userlist.php',
 	'/^users\/(.*)\/([0-9-]+)\/?([a-z_]+)[\/_-]([a-zA-Z]+)[\/_-]p(age)?[\/_-]?([0-9]+)(\.html?|\/)?$/i'						=>	'userlist.php?username=$1&show_group=$2&sort_by=$3&sort_dir=$4&p=$6',
-	'/^users\/(.*)\/([0-9-]+)\/?([a-z_]+)[\/_-]([a-zA-Z]+)[\/_-](\.html?|\/)?$/i'											=>	'userlist.php?username=$1&show_group=$2&sort_by=$3&sort_dir=$4',
+	'/^users\/(.*)\/([0-9-]+)\/?([a-z_]+)[\/_-]([a-zA-Z]+)(\.html?|\/)?$/i'											=>	'userlist.php?username=$1&show_group=$2&sort_by=$3&sort_dir=$4',
 	'/^(email|report|subscribe|unsubscribe)[\/_-]?([0-9]+)[\/_-]?([a-z0-9]+)?(\.html?|\/)?$/i'								=>	'misc.php?$1=$2&csrf_token=$3',
 	'/^(mark|rules)[\/_-]?(read)?[\/_-]?([a-z0-9]+)?(\.html?|\/)?$/i'														=>	'misc.php?action=$1$2&csrf_token=$3',
 	'/^mark[\/_-](forum)[\/_-]?([0-9]+)[\/_-](read)[\/_-]([a-z0-9]+)(\.html?|\/)?$/i'										=>	'misc.php?action=markforumread&fid=$2&csrf_token=$4',
