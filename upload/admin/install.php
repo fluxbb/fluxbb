@@ -1591,9 +1591,9 @@ else
 	$salt = random_key(12);
 
 	$query = array(
-		'INSERT'	=> 'group_id, username, password, email, num_posts, last_post, registered, registration_ip, last_visit, salt',
+		'INSERT'	=> 'group_id, username, password, email, language, num_posts, last_post, registered, registration_ip, last_visit, salt',
 		'INTO'		=> 'users',
-		'VALUES'	=> '1, \''.$forum_db->escape($username).'\', \''.forum_hash($password1, $salt).'\', \''.$forum_db->escape($email).'\', 1, '.$now.', '.$now.', \'127.0.0.1\', '.$now.', \''.$forum_db->escape($salt).'\''
+		'VALUES'	=> '1, \''.$forum_db->escape($username).'\', \''.forum_hash($password1, $salt).'\', \''.$forum_db->escape($email).'\', \''.$forum_db->escape($default_lang).'\', 1, '.$now.', '.$now.', \'127.0.0.1\', '.$now.', \''.$forum_db->escape($salt).'\''
 	);
 
 	$forum_db->query_build($query) or error(__FILE__, __LINE__);
