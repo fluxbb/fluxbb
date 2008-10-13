@@ -64,7 +64,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 		// Remove any apostrophes which aren't part of words
 		$keywords = substr(preg_replace('((?<=\W)\'|\'(?=\W))', '', ' '.$keywords.' '), 1, -1);
 		// Remove symbols and multiple whitespace
-		$keywords = preg_replace('/[\^\$&\(\)<>`"\|,@_\?%~\+\[\]{}:=\/#\\\\;!\*\.\s]+/', ' ', $keywords);
+		$keywords = preg_replace('/[\^\$&\(\)<>`"\|,@_\?%~\+\[\]{}:=\/#\\\\;!\.\s]+/', ' ', $keywords);
 
 		// Fill an array with all the words
 		$keywords_array = array_unique(explode(' ', $keywords));
