@@ -57,6 +57,9 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 	if ($return != null)
 		return;
 
+	$message = utf8_strtolower($message);
+	$subject = utf8_strtolower($subject);
+
 	// Split old and new post/subject to obtain array of 'words'
 	$words_message = split_words($message);
 	$words_subject = ($subject) ? split_words($subject) : array();

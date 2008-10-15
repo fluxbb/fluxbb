@@ -31,6 +31,9 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 	if (!$keywords && !$author)
 		message($lang_search['No terms']);
 
+	$keywords = utf8_strtolower($keywords);
+	$author = utf8_strtolower($author);
+
 	// Flood protection
 	if ($forum_user['last_search'] && (time() - $forum_user['last_search']) < $forum_user['g_search_flood'] && (time() - $forum_user['last_search']) >= 0)
 		message(sprintf($lang_search['Search flood'], $forum_user['g_search_flood']));
@@ -149,7 +152,7 @@ function create_search_cache($keywords, $author, $search_in = false, $forum = ar
 	}
 
 	// If it's a search for author name (and that author name isn't Guest)
-	if ($author && strtolower($author) != 'guest' && utf8_strtolower($author) != utf8_strtolower($lang_common['Guest']))
+	if ($author && $author != 'guest' && $author != utf8_strtolower($lang_common['Guest']))
 	{
 		$query = array(
 			'SELECT'	=> 'u.id',
