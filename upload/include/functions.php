@@ -1807,7 +1807,7 @@ function censor_words($text)
 
 		foreach ($forum_censors as $censor_key => $cur_word)
 		{
-			$search_for[$censor_key] = '/\b('.str_replace('\*', '\w*?', preg_quote($cur_word['search_for'], '/')).')\b/iu';
+			$search_for[$censor_key] = '/(?<=\W)('.str_replace('\*', '\w*?', preg_quote($cur_word['search_for'], '/')).')(?=\W)/iu';
 			$replace_with[$censor_key] = $cur_word['replace_with'];
 
 			($hook = get_hook('fn_censor_words_setup_regex')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
