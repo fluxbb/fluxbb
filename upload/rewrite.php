@@ -34,7 +34,7 @@ if (substr($path_to_script, -1) != '/')
 	$path_to_script  = $path_to_script.'/';
 
 // We create our own request URI with the path removed and only the parts to rewrite included
-$request_uri = substr($_SERVER['REQUEST_URI'], strlen($path_to_script));
+$request_uri = substr(urldecode($_SERVER['REQUEST_URI']), strlen($path_to_script));
 if (strpos($request_uri, '?') !== false)
 	$request_uri = substr($request_uri, 0, strpos($request_uri, '?'));
 
