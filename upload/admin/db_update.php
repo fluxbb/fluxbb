@@ -290,6 +290,9 @@ function db_seems_utf8()
 
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	list($min_id, $max_id) = $forum_db->fetch_row($result);
+	
+	if(empty($min_id) || empty($max_id))
+		return true;
 
 	// Get a random soup of data and check if it appears to be UTF-8
 	for ($i = 0; $i < 100; ++$i)
