@@ -989,7 +989,7 @@ function add_user($user_info, &$new_uid)
 	// Should we alert people on the admin mailing list that a new user has registered?
 	if ($user_info['notify_admins'] && $forum_config['o_mailing_list'] != '')
 	{
-		$mail_subject = 'Alert - New registration';
+		$mail_subject = $lang_admin_users['New User Notification'];
 		$mail_message = 'User \''.$user_info['username'].'\' registered in the forums at '.$base_url.'/'."\n\n".'User profile: '.forum_link($forum_url['user'], $new_uid)."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)';
 
 		forum_mail($forum_config['o_mailing_list'], $mail_subject, $mail_message);
