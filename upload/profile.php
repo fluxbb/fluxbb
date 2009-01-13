@@ -54,6 +54,7 @@ if (!$forum_db->num_rows($result))
 
 $user = $forum_db->fetch_assoc($result);
 
+$form = array();  // will hold extracted form elements that are allowed
 
 if ($action == 'change_pass')
 {
@@ -66,7 +67,7 @@ if ($action == 'change_pass')
 	if (isset($_GET['key']))
 	{
 		$key = $_GET['key'];
-		
+
 		// Check for use of incorrect URLs
 		confirm_current_url(forum_link($forum_url['change_password_key'], array($id, $key)));
 
@@ -211,7 +212,7 @@ if ($action == 'change_pass')
 			require FORUM_ROOT.'footer.php';
 		}
 	}
-	
+
 	// Check for use of incorrect URLs
 	confirm_current_url(forum_link($forum_url['change_password'], $id));
 
@@ -423,10 +424,10 @@ else if ($action == 'change_email')
 			message($lang_profile['E-mail updated']);
 		}
 	}
-	
+
 	// Check for use of incorrect URLs
 	confirm_current_url(forum_link($forum_url['change_email'], $id));
-	
+
 	if (isset($_POST['form_sent']))
 	{
 		($hook = get_hook('pf_change_email_normal_form_submitted')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -633,7 +634,7 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 {
 	// Check for use of incorrect URLs
 	confirm_current_url(forum_link($forum_url['delete_user'], $id));
-	
+
 	// User pressed the cancel button
 	if (isset($_POST['cancel']))
 		redirect(forum_link($forum_url['profile_admin'], $id), $lang_common['Cancel redirect']);
@@ -736,7 +737,7 @@ else if ($action == 'delete_avatar')
 {
 	// Check for use of incorrect URLs
 	confirm_current_url(forum_link($forum_url['delete_avatar'], array($id, isset($_GET['csrf_token']) ? $_GET['csrf_token'] : '')));
-	
+
 	// Make sure we are allowed to delete this user's avatar
 	if ($forum_user['id'] != $id &&
 		$forum_user['g_id'] != FORUM_ADMIN &&
@@ -876,7 +877,6 @@ else if (isset($_POST['form_sent']))
 	// Extract allowed elements from $_POST['form']
 	function extract_elements($allowed_elements)
 	{
-		$form = array();
 
 		foreach ($_POST['form'] as $key => $value)
 		{
@@ -1508,7 +1508,7 @@ else
 	{
 		// Check for use of incorrect URLs
 		confirm_current_url(isset($_GET['section']) ? forum_link($forum_url['profile_about'], $id) : forum_link($forum_url['user'], $id));
-		
+
 		// Setup user identification
 		$forum_page['user_ident'] = array();
 
@@ -1699,7 +1699,7 @@ else
 	{
 		// Check for use of incorrect URLs
 		confirm_current_url(forum_link($forum_url['profile_identity'], $id));
-		
+
 		// Setup the form
 		$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
 		$forum_page['form_action'] = forum_link($forum_url['profile_identity'], $id);
@@ -1888,7 +1888,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 	{
 		// Check for use of incorrect URLs
 		confirm_current_url(forum_link($forum_url['profile_settings'], $id));
-		
+
 		$forum_page['styles'] = get_style_packs();
 		$forum_page['languages'] = get_language_packs();
 
@@ -2221,7 +2221,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 	{
 		// Check for use of incorrect URLs
 		confirm_current_url(forum_link($forum_url['profile_signature'], $id));
-		
+
 		$forum_page['sig_info'][] = '<li>'.$lang_profile['Signature info'].'</li>';
 
 		if ($user['signature'] != '')
@@ -2332,7 +2332,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 	{
 		// Check for use of incorrect URLs
 		confirm_current_url(forum_link($forum_url['profile_avatar'], $id));
-		
+
 		$forum_page['avatar_markup'] = generate_avatar_markup($id);
 
 		// Setup the form
@@ -2458,7 +2458,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 	{
 		// Check for use of incorrect URLs
 		confirm_current_url(forum_link($forum_url['profile_admin'], $id));
-		
+
 		if ($forum_user['g_id'] != FORUM_ADMIN && ($forum_user['g_moderator'] != '1' || $forum_user['g_mod_ban_users'] == '0' || $forum_user['id'] == $id))
 			message($lang_common['Bad request']);
 
