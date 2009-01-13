@@ -496,7 +496,7 @@ else if (isset($_GET['report']))
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="sf-box textarea required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_misc['Reason'] ?>  <em><?php echo $lang_common['Required'] ?></em></span> <small><?php echo $lang_misc['Reason help'] ?></small></label><br />
-						<span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_reason" rows="5" cols="60"></textarea></span>
+						<span class="fld-report-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_reason" rows="5" cols="60"></textarea></span>
 					</div>
 				</div>
 <?php ($hook = get_hook('mi_report_pre_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
