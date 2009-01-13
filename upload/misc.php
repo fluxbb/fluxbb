@@ -30,7 +30,7 @@ if ($action == 'rules')
 {
 	if ($forum_config['o_rules'] == '0' || ($forum_user['is_guest'] && $forum_user['g_read_board'] == '0' && $forum_config['o_regs_allow'] == '0'))
 		message($lang_common['Bad request']);
-	
+
 	// Check for use of incorrect URLs
 	confirm_current_url(forum_link($forum_url['rules']));
 
@@ -74,7 +74,7 @@ else if ($action == 'markread')
 {
 	if ($forum_user['is_guest'])
 		message($lang_common['No permission']);
-	
+
 	// Check for use of incorrect URLs
 	confirm_current_url(forum_link($forum_url['mark_read'], isset($_GET['csrf_token']) ? $_GET['csrf_token'] : ''));
 
@@ -108,11 +108,11 @@ else if ($action == 'markforumread')
 {
 	if ($forum_user['is_guest'])
 		message($lang_common['No permission']);
-	
+
 	$fid = intval($_GET['fid']);
 	if ($fid < 1)
 		message($lang_common['Bad request']);
-	
+
 	// Check for use of incorrect URLs
 	confirm_current_url(forum_link($forum_url['mark_forum_read'], array($fid, isset($_GET['csrf_token']) ? $_GET['csrf_token'] : '')));
 
@@ -158,11 +158,11 @@ else if (isset($_GET['email']))
 {
 	if ($forum_user['is_guest'] || $forum_user['g_send_email'] == '0')
 		message($lang_common['No permission']);
-	
+
 	$recipient_id = intval($_GET['email']);
 	if ($recipient_id < 2)
 		message($lang_common['Bad request']);
-	
+
 	// Check for use of incorrect URLs
 	confirm_current_url(forum_link($forum_url['email'], $recipient_id));
 
@@ -356,11 +356,11 @@ else if (isset($_GET['report']))
 {
 	if ($forum_user['is_guest'])
 		message($lang_common['No permission']);
-	
+
 	$post_id = intval($_GET['report']);
 	if ($post_id < 1)
 		message($lang_common['Bad request']);
-	
+
 	// Check for use of incorrect URLs
 	confirm_current_url(forum_link($forum_url['report'], $post_id));
 
@@ -493,10 +493,10 @@ else if (isset($_GET['report']))
 			<fieldset class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 				<legend class="group-legend"><strong><?php echo $lang_common['Required information'] ?></strong></legend>
 <?php ($hook = get_hook('mi_report_pre_reason')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
-					<div class="sf-box textarea required">
+				<div class="txt-set set<?php echo ++$forum_page['item_count'] ?>">
+					<div class="txt-box textarea required">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_misc['Reason'] ?>  <em><?php echo $lang_common['Required'] ?></em></span> <small><?php echo $lang_misc['Reason help'] ?></small></label><br />
-						<span class="fld-report-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_reason" rows="5" cols="60"></textarea></span>
+						<div class="txt-input"><span class="fld-input"><textarea id="fld<?php echo $forum_page['fld_count'] ?>" name="req_reason" rows="5" cols="60"></textarea></span></div>
 					</div>
 				</div>
 <?php ($hook = get_hook('mi_report_pre_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
@@ -526,11 +526,11 @@ else if (isset($_GET['subscribe']))
 {
 	if ($forum_user['is_guest'] || $forum_config['o_subscriptions'] != '1')
 		message($lang_common['No permission']);
-	
+
 	$topic_id = intval($_GET['subscribe']);
 	if ($topic_id < 1)
 		message($lang_common['Bad request']);
-	
+
 	// Check for use of incorrect URLs
 	confirm_current_url(forum_link($forum_url['subscribe'], array($topic_id, isset($_GET['csrf_token']) ? $_GET['csrf_token'] : '')));
 
@@ -591,11 +591,11 @@ else if (isset($_GET['unsubscribe']))
 {
 	if ($forum_user['is_guest'] || $forum_config['o_subscriptions'] != '1')
 		message($lang_common['No permission']);
-	
+
 	$topic_id = intval($_GET['unsubscribe']);
 	if ($topic_id < 1)
 		message($lang_common['Bad request']);
-	
+
 	// Check for use of incorrect URLs
 	confirm_current_url(forum_link($forum_url['unsubscribe'], array($topic_id, isset($_GET['csrf_token']) ? $_GET['csrf_token'] : '')));
 
@@ -673,7 +673,7 @@ else if (isset($_GET['admin_action']) && $_GET['admin_action'] == 'change_engine
 		);
 
 		$forum_db->query_build($query) or error(__FILE__, __LINE__);
-		
+
 		// Regenerate the config cache
 		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
 			require FORUM_ROOT.'include/cache.php';
