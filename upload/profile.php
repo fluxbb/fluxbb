@@ -676,9 +676,7 @@ else if ($action == 'delete_user' || isset($_POST['delete_user_comply']) || isse
 	);
 
 	// Setup headings
-	$forum_page['main_head'] = array(
-		'head' => '<h1 class="hn"><span>'.sprintf($lang_profile['Subform heading'], sprintf($lang_profile['Users profile'], forum_htmlencode($user['username'])), end($forum_page['crumbs'])).'</span></h1>'
-	);
+	$forum_page['main_head'] = sprintf($lang_profile['Subform heading'], sprintf($lang_profile['Users profile'], forum_htmlencode($user['username'])), end($forum_page['crumbs']));
 
 	($hook = get_hook('pf_delete_user_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
