@@ -2474,12 +2474,15 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 		// Setup ban and delete options
 		$forum_page['user_management'] = array();
 
-		if ($forum_user['g_moderator'] == '1')
-			$forum_page['user_management']['ban'] = '<div class="ct-set info-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box info-box"><h3 class="ct-legend hn">'.$lang_profile['Ban user'].'</h3>'."\n\t\t\t".'<p><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user info'].'</a></p></div></div>';
-		else if ($forum_user['g_moderator'] != '1' && $user['g_id'] != FORUM_ADMIN )
+		if ($user['g_id'] != FORUM_ADMIN)
 		{
-			$forum_page['user_management']['ban'] = '<div class="ct-set info-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box info-box"><h3 class="ct-legend hn">'.$lang_profile['Ban user'].'</h3>'."\n\t\t\t".'<p><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user info'].'</a></p></div></div>';
-			$forum_page['user_management']['delete'] = '<div class="ct-set info-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box info-box"><h3 class="ct-legend hn">'.$lang_profile['Delete user'].'</h3>'."\n\t\t\t\t".'<p><a href="'.forum_link($forum_url['delete_user'], $id).'">'.$lang_profile['Delete user info'].'</a></p></div></div>';
+			if ($forum_user['g_moderator'] == '1')
+				$forum_page['user_management']['ban'] = '<div class="ct-set info-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box info-box"><h3 class="ct-legend hn">'.$lang_profile['Ban user'].'</h3>'."\n\t\t\t".'<p><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user info'].'</a></p></div></div>';
+			else
+			{
+				$forum_page['user_management']['ban'] = '<div class="ct-set info-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box info-box"><h3 class="ct-legend hn">'.$lang_profile['Ban user'].'</h3>'."\n\t\t\t".'<p><a href="'.forum_link($forum_url['admin_bans']).'?add_ban='.$id.'">'.$lang_profile['Ban user info'].'</a></p></div></div>';
+				$forum_page['user_management']['delete'] = '<div class="ct-set info-set set'.++$forum_page['item_count'].'">'."\n\t\t".'<div class="ct-box info-box"><h3 class="ct-legend hn">'.$lang_profile['Delete user'].'</h3>'."\n\t\t\t\t".'<p><a href="'.forum_link($forum_url['delete_user'], $id).'">'.$lang_profile['Delete user info'].'</a></p></div></div>';
+			}
 		}
 
 		// Setup headings
@@ -2511,18 +2514,14 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 		($hook = get_hook('pf_change_details_admin_pre_user_management')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 		if (!empty($forum_page['user_management']))
+			echo "\t\t\t".implode("\n\t\t\t", $forum_page['user_management'])."\n\t\t";
+
+		($hook = get_hook('pf_change_details_admin_pre_group_membership')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
+		if ($forum_user['g_id'] == FORUM_ADMIN && !$forum_page['own_profile'])
 		{
 
-?>
-			<?php echo implode("\n\t\t\t", $forum_page['user_management'])."\n\t\t" ?>
-<?php
-
 			($hook = get_hook('pf_change_details_admin_pre_group_membership')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
-			if ($forum_user['g_moderator'] != '1' && !$forum_page['own_profile'])
-			{
-
-				($hook = get_hook('pf_change_details_admin_pre_group_membership')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 			<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
@@ -2531,22 +2530,22 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 					<span class="fld-input"><select id="fld<?php echo $forum_page['fld_count'] ?>" name="group_id">
 <?php
 
-				$query = array(
-					'SELECT'	=> 'g.g_id, g.g_title',
-					'FROM'		=> 'groups AS g',
-					'WHERE'		=> 'g.g_id!='.FORUM_GUEST,
-					'ORDER BY'	=> 'g.g_title'
-				);
+      			$query = array(
+      				'SELECT'	=> 'g.g_id, g.g_title',
+      				'FROM'		=> 'groups AS g',
+      				'WHERE'		=> 'g.g_id!='.FORUM_GUEST,
+      				'ORDER BY'	=> 'g.g_title'
+      			);
 
-				($hook = get_hook('pf_change_details_admin_qr_get_groups')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-				$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-				while ($cur_group = $forum_db->fetch_assoc($result))
-				{
-					if ($cur_group['g_id'] == $user['g_id'] || ($cur_group['g_id'] == $forum_config['o_default_user_group'] && $user['g_id'] == ''))
-						echo "\t\t\t\t\t\t".'<option value="'.$cur_group['g_id'].'" selected="selected">'.forum_htmlencode($cur_group['g_title']).'</option>'."\n";
-					else
-						echo "\t\t\t\t\t\t".'<option value="'.$cur_group['g_id'].'">'.forum_htmlencode($cur_group['g_title']).'</option>'."\n";
-				}
+      			($hook = get_hook('pf_change_details_admin_qr_get_groups')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+      			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+      			while ($cur_group = $forum_db->fetch_assoc($result))
+      			{
+      				if ($cur_group['g_id'] == $user['g_id'] || ($cur_group['g_id'] == $forum_config['o_default_user_group'] && $user['g_id'] == ''))
+      					echo "\t\t\t\t\t\t".'<option value="'.$cur_group['g_id'].'" selected="selected">'.forum_htmlencode($cur_group['g_title']).'</option>'."\n";
+      				else
+      					echo "\t\t\t\t\t\t".'<option value="'.$cur_group['g_id'].'">'.forum_htmlencode($cur_group['g_title']).'</option>'."\n";
+      			}
 
 ?>
 					</select></span>
@@ -2560,7 +2559,6 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 			</div>
 <?php
 
-			}
 		}
 
 		($hook = get_hook('pf_change_details_admin_pre_mod_assignment')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
