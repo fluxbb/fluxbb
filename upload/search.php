@@ -217,6 +217,7 @@ if (isset($query))
 
 		++$forum_page['item_count'];
 
+
 		if ($forum_config['o_censoring'] == '1')
 			$search_set[$i]['subject'] = censor_words($search_set[$i]['subject']);
 
@@ -291,7 +292,7 @@ if (isset($query))
 		else
 		{
 			// Start from scratch
-			$forum_page['item_subject'] = $forum_page['item_body'] = $forum_page['item_status'] = $forum_page['item_nav'] = $forum_page['item_title'] = $forum_page['item_title_status'] = array();
+			$forum_page['item_subject'] = $forum_page['item_body'] = $forum_page['item_status'] = $forum_page['item_subject_status'] = $forum_page['item_nav'] = $forum_page['item_title'] = $forum_page['item_title_status'] = array();
 			$forum_page['item_indicator'] = '';
 
 			// Assemble the Topic heading
