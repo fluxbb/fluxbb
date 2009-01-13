@@ -427,7 +427,7 @@ else if (isset($_GET['edit_forum']))
 
 	$forum_page['form_info'] = array();
 	if ($cur_forum['redirect_url'])
-		$forum_page['form_info'][] = '<li><span>'.$lang_admin_forums['Forum perms info 2'].'</span></li>';
+		$forum_page['form_info'][] = '<li><span>'.$lang_admin_forums['Forum perms redirect info'].'</span></li>';
 
 	$forum_page['form_info']['read'] = '<li><span>'.$lang_admin_forums['Forum perms read info'].'</span></li>';
 	$forum_page['form_info']['restore'] = '<li><span>'.$lang_admin_forums['Forum perms restore info'].'</span></li>';

@@ -33,6 +33,7 @@ $lang_admin_forums = array(
 'Post topics'					=>	'Post topics',
 'User groups'					=>	'User groups',
 'Confirm delete forum'			=>	'You are deleting the forum "%s"',
+'Forum perms redirect info'		=>	'This forum redirects to an external URL. Only the "Read forum" permission is applicable.',
 'Forum perms read info'			=>	'The "Read forum" permission checkbox will be disabled if the group in question lacks the "Read board" permission.',
 'Forum perms restore info'		=>	'Permissions can be restored to default settings using the "Default permissions" button below.',
 'Forum perms groups info'		=>	'Permissions are the defaults as set in %s unless suffixed "(S)"',
