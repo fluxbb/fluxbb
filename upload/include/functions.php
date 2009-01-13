@@ -2687,11 +2687,11 @@ function maintenance_message()
 	ob_start();
 
 ?>
-<title><?php echo $lang_common['Maintenance'].' - '.forum_htmlencode($forum_config['o_board_title']) ?></title>
-<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $base_url ?>/style/<?php echo $forum_user['style'] ?>/<?php echo $forum_user['style'].'.css' ?>" />
-<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="<?php echo $base_url ?>/style/<?php echo $forum_user['style'] ?>/<?php echo $forum_user['style'].'_fix.css' ?>" /><![endif]-->
-<!--[if IE 7]><link rel="stylesheet" type="text/css" href="<?php echo $base_url ?>/style/<?php echo $forum_user['style'] ?>/<?php echo $forum_user['style'].'_fix7.css' ?>" /><![endif]-->
+<title><?php echo $lang_common['Maintenance mode'].' - '.forum_htmlencode($forum_config['o_board_title']) ?></title>
 <?php
+
+	// Include stylesheets
+	require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php';
 
 	$tpl_temp = forum_trim(ob_get_contents());
 	$tpl_maint = str_replace('<!-- forum_head -->', $tpl_temp, $tpl_maint);
