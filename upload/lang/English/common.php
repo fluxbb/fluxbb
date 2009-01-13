@@ -141,6 +141,9 @@ $lang_common = array(
 'Database mismatch alert'			=>	'Your FluxBB database is meant to be used in conjunction with a newer version of the FluxBB code. This mismatch can lead to your forum not working properly. It is suggested that you upgrade your forum to the newest version of FluxBB.',
 'Database engine mismatch'			=>	'Database engine mismatch:',
 'Database engine mismatch alert'	=>	'One or more tables in your database seem to be using %1$s as the engine while it is configured to use %2$s. You can run <a href="%3$s">this script</a> to convert your database engine.',
+'New user notification'					=>	'Alert - New registration',
+'New user message'					=>	'User \'%1$s\' registered in the forums at %2$s'."\n\n".'User profile: %3$s'."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)',
+
 
 // Stuff for Jump Menu
 'Go'								=>	'Go',		// submit button in forum jump
