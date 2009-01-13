@@ -47,8 +47,8 @@ body {
 	
 .brd samp, .brd code, .brd pre, .brd option, .brd optgroup,
 .brd input, .brd select, .brd textarea, .brd td, .brd th {
+	font-family: courier;
 	font-size: 1em;
-	font-family: Verdana,Helvetica,Arial,sans-serif; 
 	font-style: normal;
 	font-weight: normal;
 	}
