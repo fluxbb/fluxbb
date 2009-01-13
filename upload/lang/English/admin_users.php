@@ -43,6 +43,7 @@ $lang_admin_users = array(
 'Username'						=>	'Username',
 'E-mail'						=>	'E-mail',
 'Admin note'					=>	'Admin note:',
+'New User Notification'         =>  'Alert - New registration',
 
 'Invalid IP address'			=>	'The IP address you entered is not correctly formatted.',
 'Users matching criteria'		=>	'Results matching user search criteria',
