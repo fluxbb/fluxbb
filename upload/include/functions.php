@@ -8,6 +8,15 @@
  */
 
 //
+// Checks if a string is in all uppercase
+//
+
+function is_all_uppercase($string)
+{
+	return utf8_strtoupper($string) == $string && utf8_strtolower($string) != $string;
+}
+
+//
 // Checks if a word is a valid searchable word
 //
 function validate_search_word($word)

@@ -92,7 +92,7 @@ if (isset($_POST['form_sent']))
 			$errors[] = $lang_post['No subject'];
 		else if (utf8_strlen($subject) > 70)
 			$errors[] = $lang_post['Too long subject'];
-		else if ($forum_config['p_subject_all_caps'] == '0' && utf8_strtoupper($subject) == $subject && !$forum_page['is_admmod'])
+		else if ($forum_config['p_subject_all_caps'] == '0' && is_all_uppercase($subject) && !$forum_page['is_admmod'])
 			$subject = utf8_ucwords(utf8_strtolower($subject));
 	}
 
@@ -101,7 +101,7 @@ if (isset($_POST['form_sent']))
 
 	if (utf8_strlen($message) > FORUM_MAX_POSTSIZE)
 		$errors[] = $lang_post['Too long message'];
-	else if ($forum_config['p_message_all_caps'] == '0' && utf8_strtoupper($message) == $message && !$forum_page['is_admmod'])
+	else if ($forum_config['p_message_all_caps'] == '0' && is_all_uppercase($message) && !$forum_page['is_admmod'])
 		$message = utf8_ucwords(utf8_strtolower($message));
 
 	// Validate BBCode syntax
