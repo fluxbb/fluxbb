@@ -130,6 +130,10 @@ body {
 	color: #333;
 	}
 	
+.brd .post ul li strong {
+	font-weight: bold;
+	}
+	
 .brd .ct-box .hn {
 	border-color: #DBE0E4;
 	}
