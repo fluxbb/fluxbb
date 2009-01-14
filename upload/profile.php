@@ -1037,7 +1037,7 @@ else if (isset($_POST['form_sent']))
 			if (substr_count($form['signature'], "\n") > ($forum_config['p_sig_lines'] - 1))
 				$errors[] = sprintf($lang_profile['Sig too many lines'], forum_number_format($forum_config['p_sig_lines']));
 
-			if ($form['signature'] != '' && $forum_config['p_sig_all_caps'] == '0' && utf8_strtoupper($form['signature']) == $form['signature'] && !$forum_user['is_admmod'])
+			if ($form['signature'] != '' && $forum_config['p_sig_all_caps'] == '0' && is_all_uppercase($form['signature']) && !$forum_user['is_admmod'])
 				$form['signature'] = utf8_ucwords(utf8_strtolower($form['signature']));
 
 			// Validate BBCode syntax
