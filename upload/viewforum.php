@@ -102,8 +102,11 @@ $query = array(
 	'LIMIT'		=> $forum_page['start_from'].', '.$forum_user['disp_topics']
 );
 
+if ($dbtype == 'sqlite')
+	$forum_config['o_show_dot'] == '0';
+
 // With "has posted" indication
-if (!$forum_user['is_guest'] && $forum_config['o_show_dot'] == '1' && $db_type != 'sqlite')
+if (!$forum_user['is_guest'] && $forum_config['o_show_dot'] == '1')
 {
 	$subquery = array(
 		'SELECT'	=> 'COUNT(p.id)',
