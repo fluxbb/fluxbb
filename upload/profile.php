@@ -1582,15 +1582,15 @@ else
 
 		// Setup user messaging
 		if ($user['jabber'] != '')
-			$forum_page['user_contact']['jabber'] = '<li><span><strong>'.$lang_profile['Jabber'].'</strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['jabber']) : $user['jabber']).'</span></li>';
+			$forum_page['user_contact']['jabber'] = '<li><span>'.$lang_profile['Jabber'].' <strong>'.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['jabber']) : $user['jabber']).'</strong></span></li>';
 		if ($user['icq'] != '')
-			$forum_page['user_contact']['icq'] = '<li><span><strong>'.$lang_profile['ICQ'].'</strong> '.forum_htmlencode($user['icq']).'</span></li>';
+			$forum_page['user_contact']['icq'] = '<li><span>'.$lang_profile['ICQ'].' <strong>'.forum_htmlencode($user['icq']).'</strong></span></li>';
 		if ($user['msn'] != '')
-			$forum_page['user_contact']['msn'] = '<li><span><strong>'.$lang_profile['MSN'].'</strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['msn']) : $user['msn']).'</span></li>';
+			$forum_page['user_contact']['msn'] = '<li><span>'.$lang_profile['MSN'].' <strong>'.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['msn']) : $user['msn']).'</strong></span></li>';
 		if ($user['aim'] != '')
-			$forum_page['user_contact']['aim'] = '<li><span><strong>'.$lang_profile['AOL IM'].'</strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['aim']) : $user['aim']).'</span></li>';
+			$forum_page['user_contact']['aim'] = '<li><span>'.$lang_profile['AOL IM'].' <strong>'.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['aim']) : $user['aim']).'</strong></span></li>';
 		if ($user['yahoo'] != '')
-			$forum_page['user_contact']['yahoo'] = '<li><span><strong>'.$lang_profile['Yahoo'].'</strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['yahoo']) : $user['yahoo']).'</span></li>';
+			$forum_page['user_contact']['yahoo'] = '<li><span>'.$lang_profile['Yahoo'].' <strong>'.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['yahoo']) : $user['yahoo']).'</strong></span></li>';
 
 		// Setup signature demo
 		if ($forum_config['o_signatures'] == '1' && isset($parsed_signature))
@@ -2418,7 +2418,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 				<div class="ct-set info-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="ct-box info-box">
 						<h3 class="hn ct-legend"><?php echo $lang_profile['Current avatar'] ?></h3>
-						<p><?php echo (isset($forum_page['avatar_demo'])) ? '<a href="'.forum_link($forum_url['delete_avatar'], array($id, generate_form_token('delete_avatar'.$id.$forum_user['id']))).'"><strong>'.$lang_profile['Delete avatar info'].'</strong></a>' : $lang_profile['No avatar info'] ?></p>
+						<p><?php echo (isset($forum_page['avatar_demo'])) ? '<a href="'.forum_link($forum_url['delete_avatar'], array($id, generate_form_token('delete_avatar'.$id.$forum_user['id']))).'">'.$lang_profile['Delete avatar info'].'</a>' : $lang_profile['No avatar info'] ?></p>
 					</div>
 				</div>
 <?php ($hook = get_hook('pf_change_details_avatar_pre_avatar_demo')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
@@ -2433,7 +2433,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 				</div>
 <?php ($hook = get_hook('pf_change_details_avatar_pre_avatar_upload')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
-					<div class="sf-box text required">
+					<div class="sf-box text">
 						<label for="fld<?php echo ++$forum_page['fld_count'] ?>"><span><?php echo $lang_profile['Upload avatar file'] ?></span><small><?php echo $lang_profile['Avatar upload help'] ?></small></label><br />
 						<span class="fld-input"><input id="fld<?php echo $forum_page['fld_count'] ?>" name="req_file" type="file" size="40" /></span>
 					</div>
