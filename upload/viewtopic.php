@@ -363,19 +363,19 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 					if ($forum_config['o_censoring'] == '1')
 						$cur_post['location'] = censor_words($cur_post['location']);
 
-					$forum_page['author_info']['from'] = '<li><span>'.$lang_topic['From'].' <strong> '.forum_htmlencode($cur_post['location']).'</strong></span></li>';
+					$forum_page['author_info']['from'] = '<li><span>'.$lang_topic['From'].' <strong>'.forum_htmlencode($cur_post['location']).'</strong></span></li>';
 				}
 
-				$forum_page['author_info']['registered'] = '<li><span>'.$lang_topic['Registered'].' <strong> '.format_time($cur_post['registered'], 1).'</strong></span></li>';
+				$forum_page['author_info']['registered'] = '<li><span>'.$lang_topic['Registered'].' <strong>'.format_time($cur_post['registered'], 1).'</strong></span></li>';
 
 				if ($forum_config['o_show_post_count'] == '1' || $forum_user['is_admmod'])
-					$forum_page['author_info']['posts'] = '<li><span>'.$lang_topic['Posts info'].' <strong> '.forum_number_format($cur_post['num_posts']).'</strong></span></li>';
+					$forum_page['author_info']['posts'] = '<li><span>'.$lang_topic['Posts info'].' <strong>'.forum_number_format($cur_post['num_posts']).'</strong></span></li>';
 			}
 
 			if ($forum_user['is_admmod'])
 			{
 				if ($cur_post['admin_note'] != '')
-					$forum_page['author_info']['note'] = '<li><span>'.$lang_topic['Note'].' <strong> '.forum_htmlencode($cur_post['admin_note']).'</strong></span></li>';
+					$forum_page['author_info']['note'] = '<li><span>'.$lang_topic['Note'].' <strong>'.forum_htmlencode($cur_post['admin_note']).'</strong></span></li>';
 			}
 		}
 	}
