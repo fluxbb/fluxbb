@@ -243,7 +243,7 @@ if (!empty($forum_ranks))
 	?>
 <?php ($hook = get_hook('ark_pre_edit_cur_rank_fieldset')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 				<fieldset class="mf-set mf-extra set<?php echo ++$forum_page['item_count'] ?>">
-					<legend><span><?php echo $lang_admin_ranks['Existing rank'] ?></span></legend>
+					<legend><span><?php echo $lang_admin_ranks['Existing ranks'] ?></span></legend>
 					<div class="mf-box">
 <?php ($hook = get_hook('ark_pre_edit_cur_rank_title')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 						<div class="mf-field text mf-field1">
@@ -271,27 +271,13 @@ if (!empty($forum_ranks))
 ?>
 			</fieldset>
 		</form>
-	</div>
 <?php
 
 }
-else
-{
 
 ?>
-	<div class="main-content main-frm">
-		<div class="frm-head">
-			<h2><span><?php echo $lang_admin_ranks['Existing ranks intro'] ?></span></h2>
-		</div>
-		<div class="frm-form">
-			<div class="frm-info">
-				<p><?php echo $lang_admin_ranks['No ranks'] ?></p>
-			</div>
-		</div>
 	</div>
 <?php
-
-}
 
 ($hook = get_hook('ark_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 

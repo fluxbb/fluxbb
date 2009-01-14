@@ -19,7 +19,6 @@ $lang_admin_ranks = array(
 'Min posts label'				=>	'Minimum posts:',
 'Existing ranks'				=>	'Existing ranks',
 'Existing ranks legend'			=>	'Edit or remove existing user ranks',
-'No ranks'						=>	'No ranks in list.',
 'Update'						=>	'Update',
 'Remove'						=>	'Remove',
 'New rank'						=>	'Add new rank',
