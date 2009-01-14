@@ -2520,8 +2520,6 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 		if (!empty($forum_page['user_management']))
 			echo "\t\t\t".implode("\n\t\t\t", $forum_page['user_management'])."\n\t\t";
 
-		($hook = get_hook('pf_change_details_admin_pre_group_membership')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
 		if ($forum_user['g_id'] == FORUM_ADMIN && !$forum_page['own_profile'])
 		{
 
