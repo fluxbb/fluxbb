@@ -517,8 +517,8 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 	}
 
 ?>
-		<div class="<?php echo implode(' ', $forum_page['item_status']) ?>">
-			<div id="p<?php echo $cur_post['id'] ?>" class="posthead">
+		<div id="p<?php echo $cur_post['id'] ?>" class="<?php echo implode(' ', $forum_page['item_status']) ?>">
+			<div class="posthead">
 				<h3 class="hn post-ident"><?php echo implode(' ', $forum_page['post_ident']) ?></h3>
 			</div>
 			<div class="postbody<?php echo ($cur_post['is_online'] == $cur_post['poster_id']) ? ' online' : '' ?>">
