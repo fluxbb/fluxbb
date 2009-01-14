@@ -1277,10 +1277,6 @@ F - MAIN CONTENT - FORMS
 	position: relative;
 	}
 	
-.brd .txt-set .required label span em {
-	margin-bottom: -1.2em;
-	}	
-	
 .brd .req-error {
 	display: block;
 	}
@@ -1325,7 +1321,6 @@ G - MAIN CONTENT - TOPICS AND PARSED CONTENT
 	margin-left: 18em;
 	border-style: none none none solid;
 	border-width: 1px;
-	zoom: 1;
 	}
 
 .brd .posthead .hn {
