@@ -1384,15 +1384,15 @@ if ($forum_user['id'] != $id &&
 	}
 
 	if ($user['jabber'] !='')
-		$forum_page['user_contact']['jabber'] = '<li><span>'.$lang_profile['Jabber'].' <strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['jabber']) : $user['jabber']).'</strong></span></li>';
+		$forum_page['user_contact']['jabber'] = '<li><span>'.$lang_profile['Jabber'].' <strong>'.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['jabber']) : $user['jabber']).'</strong></span></li>';
 	if ($user['icq'] !='')
-		$forum_page['user_contact']['icq'] = '<li><span>'.$lang_profile['ICQ'].' <strong> '.forum_htmlencode($user['icq']).'</strong></span></li>';
+		$forum_page['user_contact']['icq'] = '<li><span>'.$lang_profile['ICQ'].' <strong>'.forum_htmlencode($user['icq']).'</strong></span></li>';
 	if ($user['msn'] !='')
-		$forum_page['user_contact']['msn'] = '<li><span>'.$lang_profile['MSN'].' <strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['msn']) : $user['msn']).'</strong></span></li>';
+		$forum_page['user_contact']['msn'] = '<li><span>'.$lang_profile['MSN'].' <strong>'.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['msn']) : $user['msn']).'</strong></span></li>';
 	if ($user['aim'] !='')
-		$forum_page['user_contact']['aim'] = '<li><span>'.$lang_profile['AOL IM'].' <strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['aim']) : $user['aim']).'</strong></span></li>';
+		$forum_page['user_contact']['aim'] = '<li><span>'.$lang_profile['AOL IM'].' <strong>'.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['aim']) : $user['aim']).'</strong></span></li>';
 	if ($user['yahoo'] !='')
-		$forum_page['user_contact']['yahoo'] = '<li><span>'.$lang_profile['Yahoo'].' <strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['yahoo']) : $user['yahoo']).'</strong></span></li>';
+		$forum_page['user_contact']['yahoo'] = '<li><span>'.$lang_profile['Yahoo'].' <strong>'.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['yahoo']) : $user['yahoo']).'</strong></span></li>';
 
 	// Setup signature demo
 	if ($forum_config['o_signatures'] == '1' && isset($parsed_signature))
@@ -1460,7 +1460,7 @@ if ($forum_user['id'] != $id &&
 <?php endif; if (isset($forum_page['sig_demo'])): ?>			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
 					<h3 class="ct-legend hn"><span><?php echo $lang_profile['Current signature'] ?></span></h3>
-					<div class="sig-demo"><?php echo $forum_page['sig_demo']."\n" ?></div>
+					<div class="sig-demo entry-content"><?php echo $forum_page['sig_demo']."\n" ?></div>
 				</div>
 			</div>
 <?php endif; ?>		</div>
@@ -1539,10 +1539,10 @@ else
 			$forum_page['user_info']['realname'] = '<li><span>'.$lang_profile['Realname'].' <strong class="fn">'.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['realname']) : $user['realname']).'</strong></span></li>';
 
 		if ($user['location'] !='')
-			$forum_page['user_info']['location'] = '<li><span>'.$lang_profile['From'].' <strong> '.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['location']) : $user['location']).'</strong></span></li>';
+			$forum_page['user_info']['location'] = '<li><span>'.$lang_profile['From'].' <strong>'.forum_htmlencode(($forum_config['o_censoring'] == '1') ? censor_words($user['location']) : $user['location']).'</strong></span></li>';
 
-		$forum_page['user_info']['registered'] = '<li><span>'.$lang_profile['Registered'].' <strong> '.format_time($user['registered'], 1).'</strong></span></li>';
-		$forum_page['user_info']['lastpost'] = '<li><span>'.$lang_profile['Last post'].' <strong> '.format_time($user['last_post']).'</strong></span></li>';
+		$forum_page['user_info']['registered'] = '<li><span>'.$lang_profile['Registered'].' <strong>'.format_time($user['registered'], 1).'</strong></span></li>';
+		$forum_page['user_info']['lastpost'] = '<li><span>'.$lang_profile['Last post'].' <strong>'.format_time($user['last_post']).'</strong></span></li>';
 
 
  		if ($forum_config['o_show_post_count'] == '1' || $forum_user['is_admmod'])
@@ -1670,7 +1670,7 @@ else
 <?php endif; if (isset($forum_page['sig_demo'])): ?>			<div class="ct-set data-set set<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
 					<h4 class="ct-legend hn"><span><?php echo $lang_profile['Current signature'] ?></span></h4>
-					<div class="sig-demo"><?php echo $forum_page['sig_demo'] ?></div>
+					<div class="sig-demo entry-content"><?php echo $forum_page['sig_demo'] ?></div>
 				</div>
 			</div>
 <?php endif; ?>
@@ -2304,7 +2304,7 @@ if ($forum_page['has_required']): ?>		<div id="req-msg" class="req-warn ct-box e
 <?php if (isset($forum_page['sig_demo'])): ?>				<div class="ct-set info-set set<?php echo ++$forum_page['item_count'] ?>">
 					<div class="ct-box info-box">
 						<h3 class="ct-legend hn"><?php echo $lang_profile['Current signature'] ?></h3>
-						<div class="sig-demo"><?php echo $forum_page['sig_demo'] ?></div>
+						<div class="sig-demo entry-content"><?php echo $forum_page['sig_demo'] ?></div>
 					</div>
 				</div>
 <?php endif; ($hook = get_hook('pf_change_details_signature_pre_signature_text')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>				<div class="txt-set set<?php echo ++$forum_page['item_count'] ?>">
