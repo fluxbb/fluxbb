@@ -173,7 +173,7 @@ if (isset($_POST['form_sent']))
 				$mail_subject = $lang_common['Duplicate email notification'];
 
 				$mail_message = sprintf($lang_common['Duplicate email register message'], $username, implode(', ', $dupe_list))."\n";
-				$mail_message .= springf($lang_common['User profile'], forum_link($forum_url['user'], $new_uid))."\n";
+				$mail_message .= sprintf($lang_common['User profile'], forum_link($forum_url['user'], $new_uid))."\n";
 				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 				($hook = get_hook('rg_register_dupe_email')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
