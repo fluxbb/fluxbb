@@ -103,7 +103,7 @@ $query = array(
 );
 
 if ($dbtype == 'sqlite')
-	$forum_config['o_show_dot'] == '0';
+	$forum_config['o_show_dot'] = '0';
 
 // With "has posted" indication
 if (!$forum_user['is_guest'] && $forum_config['o_show_dot'] == '1')
