@@ -897,10 +897,16 @@ function parse_signature($text)
 	if ($return != null)
 		return $return;
 
+
 	// Deal with newlines, tabs and multiple spaces
 	$pattern = array("\n", "\t", '  ', '  ');
 	$replace = array('<br />', '&nbsp; &nbsp; ', '&nbsp; ', ' &nbsp;');
 	$text = str_replace($pattern, $replace, $text);
+
+	// Add paragraph tag around post, but make sure there are no empty paragraphs
+	$text = preg_replace('#<br />\s*?<br />((\s*<br />)*)#i', "</p>$1<p>", $text);
+	$text = str_replace('<p><br />', '<p>', $text);
+	$text = str_replace('<p></p>', '', '<p>'.$text.'</p>');
 
 	$return = ($hook = get_hook('ps_fn_parse_signature_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
