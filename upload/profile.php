@@ -452,8 +452,11 @@ else if ($action == 'change_email')
 				$errors[] = $lang_profile['Banned e-mail'];
 			else if ($forum_config['o_mailing_list'] != '')
 			{
-				$mail_subject = 'Alert - Banned e-mail detected';
-				$mail_message = 'User \''.$forum_user['username'].'\' changed to banned e-mail address: '.$new_email."\n\n".'User profile: '.forum_link($forum_url['user'], $id)."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)';
+				$mail_subject = $lang_common['Banned email notification'];
+
+				$mail_message = sprintf($lang_common['Banned email change message'], $username, $email1)."\n";
+				$mail_message .= sprintf($lang_common['User profile'], forum_link($forum_url['user'], $new_uid))."\n";
+				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 				forum_mail($forum_config['o_mailing_list'], $mail_subject, $mail_message);
 			}
@@ -479,8 +482,11 @@ else if ($action == 'change_email')
 				while ($cur_dupe = $forum_db->fetch_assoc($result))
 					$dupe_list[] = $cur_dupe['username'];
 
-				$mail_subject = 'Alert - Duplicate e-mail detected';
-				$mail_message = 'User \''.$forum_user['username'].'\' changed to an e-mail address that also belongs to: '.implode(', ', $dupe_list)."\n\n".'User profile: '.forum_link($forum_url['user'], $id)."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)';
+				$mail_subject = $lang_common['Duplicate email notification'];
+
+				$mail_message = sprintf($lang_common['Duplicate email change message'], $username, implode(', ', $dupe_list))."\n";
+				$mail_message .= springf($lang_common['User profile'], forum_link($forum_url['user'], $new_uid))."\n";
+				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 				forum_mail($forum_config['o_mailing_list'], $mail_subject, $mail_message);
 			}

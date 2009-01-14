@@ -156,8 +156,11 @@ if (isset($_POST['form_sent']))
 			// If we previously found out that the e-mail was banned
 			if ($banned_email && $forum_config['o_mailing_list'] != '')
 			{
-				$mail_subject = 'Alert - Banned e-mail detected';
-				$mail_message = 'User \''.$username.'\' registered with banned e-mail address: '.$email1."\n\n".'User profile: '.forum_link($forum_url['user'], $new_uid)."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)';
+				$mail_subject = $lang_common['Banned email notification'];
+
+				$mail_message = sprintf($lang_common['Banned email register message'], $username, $email1)."\n";
+				$mail_message .= sprintf($lang_common['User profile'], forum_link($forum_url['user'], $new_uid))."\n";
+				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 				($hook = get_hook('rg_register_banned_email')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
@@ -167,8 +170,11 @@ if (isset($_POST['form_sent']))
 			// If we previously found out that the e-mail was a dupe
 			if (!empty($dupe_list) && $forum_config['o_mailing_list'] != '')
 			{
-				$mail_subject = 'Alert - Duplicate e-mail detected';
-				$mail_message = 'User \''.$username.'\' registered with an e-mail address that also belongs to: '.implode(', ', $dupe_list)."\n\n".'User profile: '.forum_link($forum_url['user'], $new_uid)."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)';
+				$mail_subject = $lang_common['Duplicate email notification'];
+
+				$mail_message = sprintf($lang_common['Duplicate email register message'], $username, implode(', ', $dupe_list))."\n";
+				$mail_message .= springf($lang_common['User profile'], forum_link($forum_url['user'], $new_uid))."\n";
+				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 				($hook = get_hook('rg_register_dupe_email')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 

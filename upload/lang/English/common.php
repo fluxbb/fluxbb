@@ -141,8 +141,22 @@ $lang_common = array(
 'Database mismatch alert'			=>	'Your FluxBB database is meant to be used in conjunction with a newer version of the FluxBB code. This mismatch can lead to your forum not working properly. It is suggested that you upgrade your forum to the newest version of FluxBB.',
 'Database engine mismatch'			=>	'Database engine mismatch:',
 'Database engine mismatch alert'	=>	'One or more tables in your database seem to be using %1$s as the engine while it is configured to use %2$s. You can run <a href="%3$s">this script</a> to convert your database engine.',
+
+// Email related notifications
 'New user notification'					=>	'Alert - New registration',
-'New user message'					=>	'User \'%1$s\' registered in the forums at %2$s'."\n\n".'User profile: %3$s'."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)',
+'New user message'					=>	'User \'%s\' registered in the forums at %s',
+'Banned email notification'				=>	'Alert - Banned e-mail detected',
+'Banned email register message'				=>	'User \'%s\' registered with banned e-mail address: %s',
+'Banned email change message'				=>	'User \'%s\' changed to banned e-mail address: %s',
+'Duplicate email notification'				=>	'Alert - Duplicate e-mail detected',
+'Duplicate email register message'			=>	'User \'%s\' registered with an e-mail address that also belongs to: %s',
+'Duplicate email change message'			=>	'User \'%s\' changed to an e-mail address that also belongs to: %s',
+'Report notification'					=>	'Report(%d) - \'%1$s\'',
+'Report message 1'					=>	'User \'%s\' has reported the following message: %s',
+'Report message 2'					=>	'Reason: %s',
+
+'User profile'						=>	'User profile: %s',
+'Email signature'					=>	'Forum Mailer'."\n".'(Do not reply to this message)',
 
 
 // Stuff for Jump Menu

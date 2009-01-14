@@ -999,7 +999,10 @@ function add_user($user_info, &$new_uid)
 	if ($user_info['notify_admins'] && $forum_config['o_mailing_list'] != '')
 	{
 		$mail_subject = $lang_common['New user notification'];
-		$mail_message = sprintf($lang_common['New user message'], $user_info['username'], $base_url.'/', forum_link($forum_url['user'], $new_uid));
+
+		$mail_message = sprintf($lang_common['New user message'], $user_info['username'], $base_url.'/')."\n";
+		$mail_message .= sprintf($lang_common['User profile'], forum_link($forum_url['user'], $new_uid))."\n";
+		$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 		forum_mail($forum_config['o_mailing_list'], $mail_subject, $mail_message);
 	}

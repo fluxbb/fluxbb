@@ -425,8 +425,11 @@ else if (isset($_GET['report']))
 			// We send it to the complete mailing-list in one swoop
 			if ($forum_config['o_mailing_list'] != '')
 			{
-				$mail_subject = 'Report('.$forum_id.') - \''.$subject.'\'';
-				$mail_message = 'User \''.$forum_user['username'].'\' has reported the following message:'."\n".forum_link($forum_url['post'], $post_id)."\n\n".'Reason:'."\n".$reason;
+				$mail_subject = sprintf($lang_common['Report notification'], $forum_id, $subject);
+
+				$mail_message = sprintf($lang_common['Report message 1'], $forum_user['username'], forum_link($forum_url['post'], $post_id))."\n";
+				$mail_message .= sprintf($lang_common['Report message 2'], $reason)."\n";
+				$mail_message .= $mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 				if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
 					require FORUM_ROOT.'include/email.php';
