@@ -1493,7 +1493,7 @@ $forum_page['form_action'] = forum_link($forum_url['moderate_forum'], $fid);
 $forum_page['crumbs'] = array(
 	array($forum_config['o_board_title'], forum_link($forum_url['index'])),
 	array($cur_forum['forum_name'], forum_link($forum_url['forum'], array($fid, sef_friendly($cur_forum['forum_name'])))),
-	sprintf($lang_misc['Moderate forum head'], forum_htmlencode($cur_forum['forum_name']))
+	sprintf($lang_misc['Moderate forum head'], $cur_forum['forum_name'])
 );
 
 // Setup main heading

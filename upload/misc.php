@@ -264,7 +264,7 @@ else if (isset($_GET['email']))
 	// Setup breadcrumbs
 	$forum_page['crumbs'] = array(
 		array($forum_config['o_board_title'], forum_link($forum_url['index'])),
-		sprintf($lang_misc['Send forum e-mail'], forum_htmlencode($recipient))
+		sprintf($lang_misc['Send forum e-mail'], $recipient)
 	);
 
 	($hook = get_hook('mi_email_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
