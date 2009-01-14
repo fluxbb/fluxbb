@@ -740,14 +740,22 @@ else if ($section == 'features')
 							<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['Guest posting'] ?></span> <?php echo $lang_admin_settings['Guest posting label'] ?></label>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_features_pre_show_dot_checkbox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php
+
+	($hook = get_hook('aop_features_pre_show_dot_checkbox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	if ($db_type != 'sqlite'):
+?>
 					<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box checkbox">
 							<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="form[show_dot]" value="1"<?php if ($forum_config['o_show_dot'] == '1') echo ' checked="checked"' ?> /></span>
 							<label for="fld<?php echo $forum_page['fld_count'] ?>"><span><?php echo $lang_admin_settings['User has posted'] ?></span> <?php echo $lang_admin_settings['User has posted label'] ?></label>
 						</div>
 					</div>
-<?php ($hook = get_hook('aop_features_pre_topic_views_checkbox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
+<?php
+	endif;
+	($hook = get_hook('aop_features_pre_topic_views_checkbox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
+?>
 					<div class="sf-set set<?php echo ++$forum_page['item_count'] ?>">
 						<div class="sf-box checkbox">
 							<span class="fld-input"><input type="checkbox" id="fld<?php echo ++$forum_page['fld_count'] ?>" name="form[topic_views]" value="1"<?php if ($forum_config['o_topic_views'] == '1') echo ' checked="checked"' ?> /></span>

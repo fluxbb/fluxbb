@@ -103,7 +103,7 @@ $query = array(
 );
 
 // With "has posted" indication
-if (!$forum_user['is_guest'] && $forum_config['o_show_dot'] == '1')
+if (!$forum_user['is_guest'] && $forum_config['o_show_dot'] == '1' && $db_type != 'sqlite')
 {
 	$subquery = array(
 		'SELECT'	=> 'COUNT(p.id)',
