@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<div <!-- forum_page --> class="brd-page">
+<div <!-- forum_page -->>
 <div id="brd-wrap" class="brd">
 
 
