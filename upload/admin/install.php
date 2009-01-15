@@ -22,13 +22,21 @@ define('FORUM_DEBUG', 1);
 define('FORUM_SEARCH_MIN_WORD', 3);
 define('FORUM_SEARCH_MAX_WORD', 20);
 
+$language = isset($_GET['lang']) ? preg_replace('#[\.\\\/]#', '', $_GET['lang']) : 'English';
+if (!file_exists(FORUM_ROOT.'lang/'.$language.'/install.php'))
+	exit($lang_install['Bad language pack']);
+
+// Load the language file
+require FORUM_ROOT.'lang/'.$language.'/install.php';
+
+
 if (file_exists(FORUM_ROOT.'config.php'))
-	exit('The file \'config.php\' already exists which would mean that FluxBB is already installed. You should go <a href="'.FORUM_ROOT.'index.php">here</a> instead.');
+	exit($lang_install['Check config']);
 
 
 // Make sure we are running at least MIN_PHP_VERSION
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
-	exit('You are running PHP version '.PHP_VERSION.'. FluxBB requires at least PHP '.MIN_PHP_VERSION.' to run properly. You must upgrade your PHP installation before you can continue.');
+	exit($lang_install['PHP min version']);
 
 // Disable error reporting for uninitialized variables
 error_reporting(E_ALL);
@@ -56,13 +64,6 @@ function generate_config_file()
 
 	return '<?php'."\n\n".'$db_type = \''.$db_type."';\n".'$db_host = \''.$db_host."';\n".'$db_name = \''.addslashes($db_name)."';\n".'$db_username = \''.addslashes($db_username)."';\n".'$db_password = \''.addslashes($db_password)."';\n".'$db_prefix = \''.addslashes($db_prefix)."';\n".'$p_connect = false;'."\n\n".'$base_url = \''.$base_url.'\';'."\n\n".'$cookie_name = '."'".$cookie_name."';\n".'$cookie_domain = '."'';\n".'$cookie_path = '."'/';\n".'$cookie_secure = 0;'."\n\ndefine('FORUM', 1);";
 }
-
-$language = isset($_GET['lang']) ? preg_replace('#[\.\\\/]#', '', $_GET['lang']) : 'English';
-if (!file_exists(FORUM_ROOT.'lang/'.$language.'/install.php'))
-	exit('The language pack you have chosen doesn\'t seem to exist or is corrupt. Please recheck and try again.');
-
-// Load the language file
-require FORUM_ROOT.'lang/'.$language.'/install.php';
 
 
 if (isset($_POST['generate_config']))
@@ -124,10 +125,10 @@ if (!isset($_POST['form_sent']))
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $lang_install['lang_identifier']; ?>" lang="<?php echo $lang_install['lang_identifier']; ?>" dir="<?php echo $lang_install['lang_direction']; ?>">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>FluxBB Installation</title>
+<title><?php echo $lang_install['Installation header']; ?></title>
 <link rel="stylesheet" type="text/css" href="<?php echo FORUM_ROOT ?>style/Oxygen/Oxygen.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo FORUM_ROOT ?>style/Oxygen/Oxygen_cs.css" />
 <!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="<?php echo FORUM_ROOT ?>style/Oxygen/Oxygen_ie6.css" /><![endif]-->
@@ -426,9 +427,9 @@ else
 
 	// Make sure board title and description aren't left blank
 	if ($board_title == '')
-		$board_title = 'My FluxBB forum';
+		$board_title = $lang_install['board_title'];
 	if ($board_descrip == '')
-		$board_descrip = 'Unfortunately no one can be told what FluxBB is - you have to see it for yourself.';
+		$board_descrip = $lang_install['board_descrip'];
 
 	if (utf8_strlen($base_url) == 0)
 		error($lang_install['Missing base url']);
@@ -1800,14 +1801,14 @@ else
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $lang_install['lang_identifier']; ?>" lang="<?php echo $lang_install['lang_identifier']; ?>" dir="<?php echo $lang_install['lang_direction']; ?>">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>FluxBB Installation</title>
+<title><?php echo $lang_install['Installation header']; ?></title>
 <link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen.css" />
-<link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen_forms.css" />
 <link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen_cs.css" />
-<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen_ie.css" /><![endif]-->
+<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="style/Oxygen_ie6.css" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen_ie7.css" /><![endif]-->
 </head>
 
 <body>

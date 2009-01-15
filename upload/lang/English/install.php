@@ -108,4 +108,15 @@ $lang_install = array(
 'File upload alert'			=>	'<strong>File uploads appear to be disallowed on this server!</strong> If you want users to be able to upload their own avatar images you must enable the file_uploads configuration setting in PHP. Once file uploads have been enabled, avatar uploads can be enabled in Administration/Settings/Features.',
 'Download config'			=>	'Download config.php file', // Label for submit button
 'Write info'				=>	'FluxBB has been fully installed! You may now %s.',
+
+// Other
+'Bad language pack'		=> 'The language pack you have chosen doesn\'t seem to exist or is corrupt. Please recheck and try again.',
+'Check config'			=> 'The file \'config.php\' already exists which would mean that FluxBB is already installed. You should go <a href="'.FORUM_ROOT.'index.php">here</a> instead.',
+'PHP min version'		=> 'You are running PHP version '.PHP_VERSION.'. FluxBB requires at least PHP '.MIN_PHP_VERSION.' to run properly. You must upgrade your PHP installation before you can continue.',
+'lang_direction'		=>	'ltr',	// ltr (Left-To-Right) or rtl (Right-To-Left)
+'lang_identifier'		=>	'en',
+'Installation header'	=>	'FluxBB Installation',
+'board_title'			=>	'My FluxBB forum',
+'board_descrip'			=>	'Unfortunately no one can be told what FluxBB is - you have to see it for yourself.'
+
 );
