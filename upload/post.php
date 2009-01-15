@@ -156,6 +156,9 @@ if (isset($_POST['form_sent']))
 
 			if (!is_valid_email($email))
 				$errors[] = $lang_post['Invalid e-mail'];
+
+			if (is_banned_email($email)) 
+				$errors[] = $lang_profile['Banned e-mail']; 
 		}
 	}
 
