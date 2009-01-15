@@ -848,7 +848,7 @@ function parse_message($text, $hide_smilies)
 	$return = ($hook = get_hook('ps_fn_parse_message_post_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	if ($return != null)
 		return $return;
-
+echo 'debugbr'.$text;
 	// Add paragraph tag around post, but make sure there are no empty paragraphs
 	$text = preg_replace('#<br />\s*?<br />((\s*<br />)*)#i', "</p>$1<p>", $text);
 	$text = str_replace('<p><br />', '<p>', $text);
