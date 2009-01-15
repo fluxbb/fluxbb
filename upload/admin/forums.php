@@ -176,7 +176,6 @@ else if (isset($_GET['del_forum']))
 		</form>
 	</div>
 
-</div>
 <?php
 
 		($hook = get_hook('afo_del_forum_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
