@@ -912,7 +912,7 @@ E - INDEX, FORUMS, SEARCH RESULTS, MODERATE FORUMS
  .brd .main-content .main-item .hn .posted-mark {
  	position: absolute;
  	font-size: 2em;
- 	width: 1em;
+ 	width: auto;
  	left: -0.5em;
  	top: 0;
  	}
