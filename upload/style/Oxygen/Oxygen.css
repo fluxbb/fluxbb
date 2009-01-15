@@ -53,7 +53,7 @@ body {
 	font-weight: normal;
 	}
 	
-.brd code, .codebox pre {
+.brd code, .codebox pre, #brd-debug table .tcl, #brd-debug table .tcr {
 	font-family: Consolas, courier, "lucida console", monospace;
 	}
 
@@ -1610,12 +1610,12 @@ H - MAIN TABLES
 	text-align: center;
 	}
 	
-#brd-debug  table .tc0 {
+#brd-debug table .tcl {
 	white-space:normal;
-	width: 15%;
+	width: 10%;
 	}
 
-#brd-debug table .tc1 {
+#brd-debug table .tcr {
 	white-space: normal;
 	width: 90%;
 	}
