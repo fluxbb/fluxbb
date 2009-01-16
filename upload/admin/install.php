@@ -9,7 +9,6 @@
  * @package FluxBB
  */
 
-
 define('FORUM_VERSION', '1.3 Beta');
 define('FORUM_DB_REVISION', 5);
 define('MIN_PHP_VERSION', '4.3.0');
@@ -24,15 +23,13 @@ define('FORUM_SEARCH_MAX_WORD', 20);
 
 $language = isset($_GET['lang']) ? preg_replace('#[\.\\\/]#', '', $_GET['lang']) : 'English';
 if (!file_exists(FORUM_ROOT.'lang/'.$language.'/install.php'))
-	exit($lang_install['Bad language pack']);
+	exit('The language pack you have chosen doesn\'t seem to exist or is corrupt. Please recheck and try again.');
 
 // Load the language file
 require FORUM_ROOT.'lang/'.$language.'/install.php';
 
-
 if (file_exists(FORUM_ROOT.'config.php'))
 	exit($lang_install['Check config']);
-
 
 // Make sure we are running at least MIN_PHP_VERSION
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))

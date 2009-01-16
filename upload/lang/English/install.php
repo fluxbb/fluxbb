@@ -110,7 +110,6 @@ $lang_install = array(
 'Write info'				=>	'FluxBB has been fully installed! You may now %s.',
 
 // Other
-'Bad language pack'		=> 'The language pack you have chosen doesn\'t seem to exist or is corrupt. Please recheck and try again.',
 'Check config'			=> 'The file \'config.php\' already exists which would mean that FluxBB is already installed. You should go <a href="'.FORUM_ROOT.'index.php">here</a> instead.',
 'PHP min version'		=> 'You are running PHP version '.PHP_VERSION.'. FluxBB requires at least PHP '.MIN_PHP_VERSION.' to run properly. You must upgrade your PHP installation before you can continue.',
 'lang_direction'		=>	'ltr',	// ltr (Left-To-Right) or rtl (Right-To-Left)
