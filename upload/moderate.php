@@ -1599,9 +1599,7 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 				$forum_page['item_status']['new'] = 'new';
 			}
 
-			if (!empty($forum_page['item_nav']))
-				$forum_page['item_title']['nav'] = '<span class="item-nav">'.sprintf($lang_forum['Topic navigation'], implode('&#160;&#160;', $forum_page['item_nav'])).'</span>';
-
+			
 			($hook = get_hook('mr_topic_actions_moved_row_pre_item_title_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span> '.implode(' ', $forum_page['item_title']).'</h3>';
@@ -1626,6 +1624,10 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 				$forum_page['item_subject']['status'] = '<span class="item-status">'.sprintf($lang_forum['Item status'], implode(' ', $forum_page['item_subject_status'])).'</span>';
 
 			$forum_page['item_subject']['starter'] = '<span class="item-starter">'.sprintf($lang_forum['Topic starter'], format_time($cur_topic['posted'], 1), forum_htmlencode($cur_topic['poster'])).'</span>';
+			
+			if (!empty($forum_page['item_nav']))
+				$forum_page['item_subject']['nav'] = '<span class="item-nav">'.sprintf($lang_forum['Topic navigation'], implode('&#160;&#160;', $forum_page['item_nav'])).'</span>';
+			
 			$forum_page['item_body']['subject']['desc'] = '<p>'.implode(' ', $forum_page['item_subject']).'</p>';
 
 			if (empty($forum_page['item_status']))
