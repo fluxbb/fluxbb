@@ -334,3 +334,11 @@ body {
 	border-color: #2B75AD #235E8C #1F537B #266799
 	}
 	
+/* Announcement box
+----------------------------------------------------------------*/
+
+#brd-announcement .msg-head {
+    background-color: #f4f9fd;
+    border-bottom: 1px dashed #bbb;
+    color: #113c5e;
+    }

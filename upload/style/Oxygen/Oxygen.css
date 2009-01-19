@@ -1783,3 +1783,17 @@ H - MAIN CONTENT - ODDMENTS
 	margin-bottom: 0.5em;
 	color: #294F6E
 	}
+
+/* Announcement box
+-------------------------------------------------------------*/
+
+#brd-announcement {
+    font-size: 1.1em;
+    margin: 10px 0 10px 0;
+    padding: 10px 14px;
+    }
+
+#brd-announcement .msg-head {
+    font-weight: bold;
+    padding-bottom: 0.5em;
+    }
