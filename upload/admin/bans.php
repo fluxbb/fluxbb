@@ -70,10 +70,8 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 
 				($hook = get_hook('aba_add_ban_qr_get_user_by_username')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 				$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
-				if (!$forum_db->num_rows($result))
-					message($lang_admin_bans['No user username message']);
-
-				list($user_id, $group_id, $ban_user, $ban_email, $ban_ip) = $forum_db->fetch_row($result);
+				if ($forum_db->num_rows($result))
+					list($user_id, $group_id, $ban_user, $ban_email, $ban_ip) = $forum_db->fetch_row($result);
 			}
 		}
 

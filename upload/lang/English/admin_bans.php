@@ -42,7 +42,6 @@ $lang_admin_bans = array(
 'Ban added'						=>	'Ban added.',
 'Ban edited'					=>	'Ban edited.',
 'No user id message'			=>	'No user by that ID registered.',
-'No user username message'		=>	'No user by that username registered. If you want to add a ban not tied to a specific username just leave the username blank.',
 'User is admin message'			=>	'The user is an administrator and can\'t be banned. If you want to ban an administrator, you must first move him/her to any other user group.',
 'Must enter message'			=>	'You must enter at least one of the following pieces of information: a username, an IP address or an e-mail address.',
 'Invalid IP message'			=>	'You entered an invalid IP/IP-range.',

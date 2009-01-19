@@ -911,7 +911,7 @@ function sync_topic($topic_id)
 //
 function validate_username($username, $exclude_id = null)
 {
-	global $lang_common, $lang_register, $lang_profile, $forum_config;
+	global $lang_common, $lang_register, $lang_profile, $forum_config, $forum_bans;
 
 	$errors = array();
 
@@ -944,6 +944,15 @@ function validate_username($username, $exclude_id = null)
 	$dupe = check_username_dupe($username, $exclude_id);
 	if ($dupe !== false)
 		$errors[] = sprintf($lang_profile['Username dupe'], forum_htmlencode($dupe));
+
+	foreach ($forum_bans as $cur_ban)
+	{
+		if ($cur_ban['username'] != '' && utf8_strtolower($username) == utf8_strtolower($cur_ban['username']))
+		{
+			$errors[] = $lang_profile['Banned username'];
+			break;
+		}
+	}
 
 	($hook = get_hook('fn_validate_username_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
