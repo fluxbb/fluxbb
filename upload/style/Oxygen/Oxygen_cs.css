@@ -337,8 +337,11 @@ body {
 /* Announcement box
 ----------------------------------------------------------------*/
 
-#brd-announcement .msg-head {
+#brd-announcement {
     background-color: #f4f9fd;
+	}
+
+#brd-announcement .msg-head {
     border-bottom: 1px dashed #bbb;
     color: #113c5e;
     }
