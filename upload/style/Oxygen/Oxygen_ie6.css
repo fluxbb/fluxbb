@@ -6,7 +6,7 @@ IE6 - FIXES
 -------------------------------------------------------------*/
 
 .brd-page,
-.brd .main,
+#brd-main,
 #brd-index .main-subhead,
 .brd .main-content .main-item,
 .brd .main-content .main-item ul,

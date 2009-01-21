@@ -29,6 +29,8 @@
 <div class="hr"><hr /></div>
 
 <!-- forum_crumbs_top -->
+
+<div id="brd-main" class="main-wrapper">
 <!-- forum_main_pagepost_top -->
 <!-- forum_admin_menu -->
 <!-- forum_main_head -->
@@ -36,6 +38,8 @@
 <!-- forum_main -->
 <!-- forum_main_options -->
 <!-- forum_main_pagepost_end -->
+</div>
+
 <!-- forum_crumbs_end -->
 
 <div class="hr"><hr /></div>

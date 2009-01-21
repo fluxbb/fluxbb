@@ -251,7 +251,13 @@ body {
 	}
 
 #brd-admod #alert a {
-	color: yellow;
+	color: #F6F8C7;
+	}
+	
+#brd-access a:hover, #brd-access a:active, #brd-access a:focus {
+	background: #000;
+	color: #fff;
+	text-decoration: underline;
 	}
 
 /* Logo and Headings

@@ -60,7 +60,10 @@ body {
 /* Float Clearing
 -------------------------------------------------------------*/
 	
+#brd-main {position: relative}	
+	
 .brd-page:after,
+#brd-main:after,
 .brd .gen-content:after,
 .brd .ct-box:after,
 #brd-index .item-head:after,
@@ -450,6 +453,7 @@ D - COMMON INTERFACE ELEMENTS
 #brd-head {
 	padding-bottom: 0.75em;
 	padding-top: 1em;
+	position: relative;
 	}
 
 #brd-title {
@@ -499,27 +503,27 @@ D - COMMON INTERFACE ELEMENTS
 #brd-access {
 	text-align: right;
 	padding: 0;
-	height: 0;
-	margin: 0;
-	position: absolute;
+	margin: -1em -1.5em 0 0;
 	background: transparent;
+	width: 15em;
+	position: relative;
+	float: right;
 	}
 	
 #brd-access a, #brd-access a:link, #brd-access a:visited {
 	height: 2em;
-	padding: 0 1.3em;
+	display: block;
+	padding: 0 1.5em;
 	line-height: 2em;
 	position: absolute;
 	left: -999em;
-	margin: 1px;
+	text-index: -999em;
 	width: 12em;
 	}
 	
 #brd-access a:hover, #brd-access a:active, #brd-access a:focus {
 	text-indent: 0;
-	background: #000;
 	position: static;
-	float: right;
 	}
 
 	
