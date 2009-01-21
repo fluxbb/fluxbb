@@ -677,9 +677,9 @@ function do_bbcode($text, $is_signature = false)
 
 	if (strpos($text, '[quote') !== false)
 	{
-		$text = preg_replace('#\[quote\]\s*#', '</p><div class="quotebox"><blockquote><p>', $text);
-		$text = preg_replace('#\[quote=(&quot;|"|\'|)(.*?)\\1\]#se', '"</p><div class=\"quotebox\"><cite>".str_replace(array(\'[\', \'\\"\'), array(\'&#91;\', \'"\'), \'$2\')." ".$lang_common[\'wrote\'].":</cite><blockquote><p>"', $text);
-		$text = preg_replace('#\s*\[\/quote\]#S', '</p></blockquote></div><p>', $text);
+		$text = preg_replace('#\[quote\]\s*#', '</p><div class="quotebox"><blockquote><div><p>', $text);
+		$text = preg_replace('#\[quote=(&quot;|"|\'|)(.*?)\\1\]#se', '"</p><div class=\"quotebox\"><cite>".str_replace(array(\'[\', \'\\"\'), array(\'&#91;\', \'"\'), \'$2\')." ".$lang_common[\'wrote\'].":</cite><blockquote><div><p>"', $text);
+		$text = preg_replace('#\s*\[\/quote\]#S', '</p></div></blockquote></div><p>', $text);
 	}
 
 	if (!$is_signature)
@@ -850,7 +850,7 @@ function parse_message($text, $hide_smilies)
 		return $return;
 
 	// Add paragraph tag around post, but make sure there are no empty paragraphs
-	$text = preg_replace('#<br />\s*?<br />((\s*<br />)*)#i', "</p><p>$1", $text);
+	$text = preg_replace('#<br />\s*?<br />((\s*<br />)*)#i', "</p>$1<p>", $text);
 	$text = str_replace('<p><br />', '<p>', $text);
 	$text = str_replace('<p></p>', '', '<p>'.$text.'</p>');
 
