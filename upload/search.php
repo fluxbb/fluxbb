@@ -323,31 +323,31 @@ if (isset($query))
 			if (!empty($forum_page['item_nav']))
 				$forum_page['item_title']['nav'] = '<span class="item-nav">'.sprintf($lang_forum['Topic navigation'], implode('&#160;&#160;', $forum_page['item_nav'])).'</span>';
 
-			($hook = get_hook('se_results_topics_row_pre_item_title_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
-			$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span> '.implode(' ', $forum_page['item_title']).'</h3>';
-
 
 			if ($search_set[$i]['sticky'] == '1')
 			{
-				$forum_page['item_subject_status']['sticky'] = $lang_forum['Sticky'];
+				$forum_page['item_subject_status']['sticky'] = '<em class="sticky">'.$lang_forum['Sticky'].'</em>';
 				$forum_page['item_status']['sticky'] = 'sticky';
 			}
 
 			if ($search_set[$i]['closed'] != '0')
 			{
-				$forum_page['item_subject_status']['closed'] = $lang_forum['Closed'];
+				$forum_page['item_subject_status']['closed'] = '<em class="closed">'.$lang_forum['Closed'].'</em>';
 				$forum_page['item_status']['closed'] = 'closed';
 			}
 
 			($hook = get_hook('se_results_topics_row_pre_item_subject_status_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			if (!empty($forum_page['item_subject_status']))
-				$forum_page['item_subject']['status'] = '<span class="item-status">'.sprintf($lang_forum['Item status'], implode(' ', $forum_page['item_subject_status'])).'</span>';
+				$forum_page['item_body']['status'] = '<span class="item-status">'.sprintf($lang_forum['Item status'], implode(' ', $forum_page['item_subject_status'])).'</span>';
 
 			$forum_page['item_subject']['starter'] = '<span class="item-starter">'.sprintf($lang_forum['Topic starter'], format_time($search_set[$i]['posted'], 1), forum_htmlencode($search_set[$i]['poster'])).'</span>';
 			$forum_page['item_subject']['location'] = '<span>'.sprintf($lang_search['Location'], '<a href="'.forum_link($forum_url['forum'], array($search_set[$i]['forum_id'], sef_friendly($search_set[$i]['forum_name']))).'">'.forum_htmlencode($search_set[$i]['forum_name']).'</a>').'</span>';
 
+			($hook = get_hook('se_results_topics_row_pre_item_title_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
+			$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span> '.$forum_page['item_body']['status'].' '.implode(' ', $forum_page['item_title']).'</h3>';
+			
 			($hook = get_hook('se_results_topics_row_pre_item_subject_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			$forum_page['item_body']['subject']['desc'] = '<p>'.implode(' ', $forum_page['item_subject']).'</p>';
