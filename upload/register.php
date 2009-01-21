@@ -255,7 +255,7 @@ else if ($forum_config['o_rules'] == '1' && (!isset($_GET['agree']) || !isset($_
 	}
 
 ?>
-		<div class="ct-box user-box">
+		<div class="user-box">
 			<?php echo $forum_config['o_rules_message']."\n" ?>
 		</div>
 		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo $base_url ?>/register.php">

@@ -102,9 +102,13 @@ body {
 	border-color: #517CA1;
 	}
 	
-.brd .ct-box, .brd .ct-set, .brd .ct-group {
+.brd .ct-box, .brd .ct-set, .brd .ct-group, .brd .user-box {
 	background: #EDF1F5;
 	border-color: #DBE0E4;
+	}
+	
+.brd #brd-announcement .user-box {
+	background: transparent;
 	}
 	
 .brd .warn-group, .brd .warn-set, .brd .warn-box, .brd .error-box {

@@ -178,7 +178,6 @@ B - GLOBAL STYLES
 	padding: 0.5em 0 0.5em 2em;
 	}
 
-	
 .brd ul.spaced {
 	padding: 0.25em 0 0.25em 2em;
 	}
@@ -186,7 +185,8 @@ B - GLOBAL STYLES
 .brd ul.spaced li {
 	padding: 0.25em 0;
 	}
-	
+
+
 /* Headings
 -------------------------------------------------------------*/
 
@@ -332,6 +332,20 @@ C - COMMON CONTENT TYPES (RE-USABLE FORMATS)
 .brd .ct-box div {
 	padding: 0.5em 0;
 	}
+	
+.brd .user-box {
+	border-style: solid;
+	border-width: 1px;
+	margin: 1.417em;
+	padding: 0.5em 1em;
+	}
+
+#brd-announcement .user-box {
+	border: 0;
+	margin: 0;
+	padding: 0;
+	}
+	
 	
  /* User Identity
 -------------------------------------------------------------*/
