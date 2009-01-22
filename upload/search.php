@@ -346,7 +346,12 @@ if (isset($query))
 
 			($hook = get_hook('se_results_topics_row_pre_item_title_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-			$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span> '.$forum_page['item_body']['status'].' '.implode(' ', $forum_page['item_title']).'</h3>';
+			if(isset($forum_page['item_body']['status']))
+			{
+				$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span> '.$forum_page['item_body']['status'].' '.implode(' ', $forum_page['item_title']).'</h3>';
+			} else {
+				$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span>'.implode(' ', $forum_page['item_title']).'</h3>';
+			}
 			
 			($hook = get_hook('se_results_topics_row_pre_item_subject_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
