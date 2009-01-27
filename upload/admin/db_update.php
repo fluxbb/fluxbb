@@ -11,7 +11,7 @@
 
 
 define('UPDATE_TO', '1.3 Beta');
-define('UPDATE_TO_DB_REVISION', 5);
+define('UPDATE_TO_DB_REVISION', 6);
 
 // The number of items to process per pageview (lower this if the update script times out during UTF-8 conversion)
 define('PER_PAGE', 300);
@@ -120,6 +120,20 @@ if (isset($forum_config['o_database_revision']) && $forum_config['o_database_rev
 // If $base_url isn't set, use o_base_url from config
 if (!isset($base_url))
 	$base_url = $forum_config['o_base_url'];
+
+// If we have show_dot enabled but are using SQLite (which doesn't fully support subqueries)
+if ($forum_config['o_show_dot'] == '1')
+{
+	$forum_user['o_show_dot'] = '0';
+
+	$query = array(
+		'UPDATE'	=> 'config',
+		'SET'		=> 'conf_value = \'0\'',
+		'WHERE'		=> 'conf_name = \'o_show_dot\''
+	);
+
+	$forum_db->query_build($query) or error(__FILE__, __LINE__);
+}
 
 // There's no $forum_user, but we need the style element
 // We default to Oxygen if the default style is invalid (a 1.2 to 1.3 upgrade most likely)

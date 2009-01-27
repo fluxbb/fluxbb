@@ -13,7 +13,7 @@ if (!defined('FORUM_ROOT'))
 
 // Define the version and database revision that this code was written for
 define('FORUM_VERSION', '1.3 Beta');
-define('FORUM_DB_REVISION', 5);
+define('FORUM_DB_REVISION', 6);
 
 // Attempt to load the configuration file config.php
 if (file_exists(FORUM_ROOT.'config.php'))
