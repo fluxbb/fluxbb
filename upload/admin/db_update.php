@@ -39,7 +39,8 @@ if (!defined('FORUM'))
 	exit('Cannot find config.php, are you sure it exists?');
 
 // Enable debug mode
-define('FORUM_DEBUG', 1);
+if (!defined('FORUM_DEBUG'))
+	define('FORUM_DEBUG', 1);
 
 // Turn on full PHP error reporting
 error_reporting(E_ALL);
