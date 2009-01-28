@@ -1998,6 +1998,10 @@ require FORUM_ROOT.'style/'.$forum_user['style'].'/'.$forum_user['style'].'.php'
 				</div>
 			</fieldset>
 		</form>
+<?php else: ?>
+		<div class="ct-box">
+			<p class="warn">FluxBB has been updated successfully. You may now <a href="<?php echo FORUM_ROOT ?>index.php">go to the forum index</a></p>
+		</div>
 <?php endif; ?>
 	</div>
 
