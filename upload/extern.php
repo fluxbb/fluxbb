@@ -122,6 +122,9 @@ error_reporting(E_ALL ^ E_NOTICE);
 // Turn off magic_quotes_runtime
 set_magic_quotes_runtime(0);
 
+// If the cache directory is not specified, we use the default setting
+if (!defined('FORUM_CACHE_DIR'))
+	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
 
 // Load the functions script
 require PUN_ROOT.'include/functions.php';
@@ -130,12 +133,16 @@ require PUN_ROOT.'include/functions.php';
 require PUN_ROOT.'include/dblayer/common_db.php';
 
 // Load cached config
-@include PUN_ROOT.'cache/cache_config.php';
+if (file_exists(FORUM_CACHE_DIR.'cache_config.php'))
+	include FORUM_CACHE_DIR.'cache_config.php';
+
 if (!defined('PUN_CONFIG_LOADED'))
 {
-    require PUN_ROOT.'include/cache.php';
-    generate_config_cache();
-    require PUN_ROOT.'cache/cache_config.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
+	generate_config_cache();
+	require FORUM_CACHE_DIR.'cache_config.php';
 }
 
 // Make sure we (guests) have permission to read the forums
@@ -207,7 +214,7 @@ if ($_GET['action'] == 'active' || $_GET['action'] == 'new')
 		header('Pragma: public');
 
 		// It's time for some syndication!
-		echo '<?xml version="1.0" encoding="'.$lang_common['lang_encoding'].'"?>'."\r\n";
+		echo '<?xml version="1.0" encoding="utf-8"?>'."\r\n";
 		echo '<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN" "http://my.netscape.com/publish/formats/rss-0.91.dtd">'."\r\n";
 		echo '<rss version="0.91">'."\r\n";
 		echo '<channel>'."\r\n";

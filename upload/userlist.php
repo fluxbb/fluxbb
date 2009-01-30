@@ -29,7 +29,8 @@ require PUN_ROOT.'include/common.php';
 
 if ($pun_user['g_read_board'] == '0')
 	message($lang_common['No view']);
-
+else if ($pun_user['g_view_users'] == '0')
+	message($lang_common['No permission']);
 
 // Load the userlist.php language file
 require PUN_ROOT.'lang/'.$pun_user['language'].'/userlist.php';
@@ -39,7 +40,7 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/search.php';
 
 
 // Determine if we are allowed to view post counts
-$show_post_count = ($pun_config['o_show_post_count'] == '1' || $pun_user['g_id'] < PUN_GUEST) ? true : false;
+$show_post_count = ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod']) ? true : false;
 
 $username = (isset($_GET['username']) && $pun_user['g_search_users'] == '1') ? pun_trim($_GET['username']) : '';
 $show_group = (!isset($_GET['show_group']) || intval($_GET['show_group']) < -1 && intval($_GET['show_group']) > 2) ? -1 : intval($_GET['show_group']);

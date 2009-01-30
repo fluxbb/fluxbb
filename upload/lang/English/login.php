@@ -14,9 +14,11 @@ $lang_login = array(
 'Request pass info'		=>	'A new password together with a link to activate the new password will be sent to that address.',
 'Not registered'		=>	'Not registered yet?',
 'Login legend'			=>	'Enter your username and password below',
+'Remember me'			=>	'Log me in automatically each time I visit.',
 'Login info'			=>	'If you have not registered or have forgotten your password click on the appropriate link below.',
 
 // Forget password mail stuff
-'Forget mail'			=>	'An e-mail has been sent to the specified address with instructions on how to change your password. If it does not arrive you can contact the forum administrator at'
+'Forget mail'			=>	'An e-mail has been sent to the specified address with instructions on how to change your password. If it does not arrive you can contact the forum administrator at',
+'Email flood'			=>	'This account has already requested a password reset in the past hour. Please wait a while before requesting a new password again.'
 
 );

@@ -8,6 +8,8 @@ $lang_prof_reg = array(
 'Localisation legend'		=>	'Set your localisation options',
 'Timezone'					=>	'Timezone',
 'Timezone info'				=>	'For the forum to display times correctly you must select your local timezone.',
+'DST'						=>	'Adjust for DST: this box should be checked properly so that the forum can display the correct time',
+'DST info'					=>	'Daylight savings is in effect (advance times by 1 hour)',
 'Language'					=>	'Language',
 'Language info'				=>	'You can choose which language you wish to use to view the forum.',
 'E-mail setting info'		=>	'Select whether you want your e-mail address to be viewable to other users or not and if you want other users to be able to send you e-mail via the forum (form e-mail) or not.',
@@ -15,8 +17,6 @@ $lang_prof_reg = array(
 'E-mail setting 2'			=>	'Hide your e-mail address but allow form e-mail.',
 'E-mail setting 3'			=>	'Hide your e-mail address and disallow form e-mail.',
 'Privacy options legend'	=>	'Set your privacy options',
-'Save user/pass'			=>	'Save username and password between visits.',
-'Save user/pass info'		=>	'This option sets whether the forum should "remember" you between visits. If enabled, you will not have to login every time you visit the forum. You will be logged in automatically. Recommended.',
 'Confirm pass'				=>	'Confirm password',
 
 'Username too short'		=>	'Usernames must be at least 2 characters long. Please choose another (longer) username.',

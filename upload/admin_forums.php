@@ -31,7 +31,7 @@ require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'include/common_admin.php';
 
 
-if ($pun_user['g_id'] > PUN_ADMIN)
+if ($pun_user['g_id'] != PUN_ADMIN)
 	message($lang_common['No permission']);
 
 
@@ -47,7 +47,9 @@ if (isset($_POST['add_forum']))
 	$db->query('INSERT INTO '.$db->prefix.'forums (cat_id) VALUES('.$add_to_cat.')') or error('Unable to create forum', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the quickjump cache
-	require_once PUN_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
 	generate_quickjump_cache();
 
 	redirect('admin_forums.php', 'Forum added. Redirecting &hellip;');
@@ -87,7 +89,9 @@ else if (isset($_GET['del_forum']))
 		$db->query('DELETE FROM '.$db->prefix.'forum_perms WHERE forum_id='.$forum_id) or error('Unable to delete group forum permissions', __FILE__, __LINE__, $db->error());
 
 		// Regenerate the quickjump cache
-		require_once PUN_ROOT.'include/cache.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require PUN_ROOT.'include/cache.php';
+
 		generate_quickjump_cache();
 
 		redirect('admin_forums.php', 'Forum deleted. Redirecting &hellip;');
@@ -144,7 +148,9 @@ else if (isset($_POST['update_positions']))
 	}
 
 	// Regenerate the quickjump cache
-	require_once PUN_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
 	generate_quickjump_cache();
 
 	redirect('admin_forums.php', 'Forums updated. Redirecting &hellip;');
@@ -208,7 +214,9 @@ else if (isset($_GET['edit_forum']))
 		}
 
 		// Regenerate the quickjump cache
-		require_once PUN_ROOT.'include/cache.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require PUN_ROOT.'include/cache.php';
+
 		generate_quickjump_cache();
 
 		redirect('admin_forums.php', 'Forum updated. Redirecting &hellip;');
@@ -220,7 +228,9 @@ else if (isset($_GET['edit_forum']))
 		$db->query('DELETE FROM '.$db->prefix.'forum_perms WHERE forum_id='.$forum_id) or error('Unable to delete group forum permissions', __FILE__, __LINE__, $db->error());
 
 		// Regenerate the quickjump cache
-		require_once PUN_ROOT.'include/cache.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require PUN_ROOT.'include/cache.php';
+
 		generate_quickjump_cache();
 
 		redirect('admin_forums.php?edit_forum='.$forum_id, 'Permissions reverted to defaults. Redirecting &hellip;');

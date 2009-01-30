@@ -68,7 +68,11 @@ if ($pid)
 // If action=new, we redirect to the first new post (if any)
 else if ($action == 'new' && !$pun_user['is_guest'])
 {
-	$result = $db->query('SELECT MIN(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id.' AND posted>'.$pun_user['last_visit']) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+	// We need to check if this topic has been viewed recently by the user
+	$tracked_topics = get_tracked_topics();
+	$last_viewed = isset($tracked_topics['topics'][$id]) ? $tracked_topics['topics'][$id] : $pun_user['last_visit'];
+
+	$result = $db->query('SELECT MIN(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id.' AND posted>'.$last_viewed) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 	$first_new_post_id = $db->result($result);
 
 	if ($first_new_post_id)
@@ -106,7 +110,7 @@ $cur_topic = $db->fetch_assoc($result);
 
 // Sort out who the moderators are and if we are currently a moderator (or an admin)
 $mods_array = ($cur_topic['moderators'] != '') ? unserialize($cur_topic['moderators']) : array();
-$is_admmod = ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_id'] == PUN_MOD && array_key_exists($pun_user['username'], $mods_array))) ? true : false;
+$is_admmod = ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1' && array_key_exists($pun_user['username'], $mods_array))) ? true : false;
 
 // Can we or can we not post replies?
 if ($cur_topic['closed'] == '0')
@@ -122,6 +126,15 @@ else
 
 	if ($is_admmod)
 		$post_link .= ' / <a href="post.php?tid='.$id.'">'.$lang_topic['Post reply'].'</a>';
+}
+
+
+// Add/update this topic in our list of tracked topics
+if (!$pun_user['is_guest'])
+{
+	$tracked_topics = get_tracked_topics();
+	$tracked_topics['topics'][$id] = time();
+	set_tracked_topics($tracked_topics);
 }
 
 
@@ -183,7 +196,7 @@ $bg_switch = true;	// Used for switching background color in posts
 $post_count = 0;	// Keep track of post numbers
 
 // Retrieve the posts (and their respective poster/online status)
-$result = $db->query('SELECT u.email, u.title, u.url, u.location, u.use_avatar, u.signature, u.email_setting, u.num_posts, u.registered, u.admin_note, p.id, p.poster AS username, p.poster_id, p.poster_ip, p.poster_email, p.message, p.hide_smilies, p.posted, p.edited, p.edited_by, g.g_id, g.g_user_title, o.user_id AS is_online FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON (o.user_id=u.id AND o.user_id!=1 AND o.idle=0) WHERE p.topic_id='.$id.' ORDER BY p.id LIMIT '.$start_from.','.$pun_user['disp_posts'], true) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT u.email, u.title, u.url, u.location, u.signature, u.email_setting, u.num_posts, u.registered, u.admin_note, p.id, p.poster AS username, p.poster_id, p.poster_ip, p.poster_email, p.message, p.hide_smilies, p.posted, p.edited, p.edited_by, g.g_id, g.g_user_title, o.user_id AS is_online FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON (o.user_id=u.id AND o.user_id!=1 AND o.idle=0) WHERE p.topic_id='.$id.' ORDER BY p.id LIMIT '.$start_from.','.$pun_user['disp_posts'], true) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 while ($cur_post = $db->fetch_assoc($result))
 {
 	$post_count++;
@@ -197,7 +210,11 @@ while ($cur_post = $db->fetch_assoc($result))
 	// If the poster is a registered user.
 	if ($cur_post['poster_id'] > 1)
 	{
-		$username = '<a href="profile.php?id='.$cur_post['poster_id'].'">'.pun_htmlspecialchars($cur_post['username']).'</a>';
+		if ($pun_user['g_view_users'] == '1')
+			$username = '<a href="profile.php?id='.$cur_post['poster_id'].'">'.pun_htmlspecialchars($cur_post['username']).'</a>';
+		else
+			$username = pun_htmlspecialchars($cur_post['username']);
+
 		$user_title = get_title($cur_post);
 
 		if ($pun_config['o_censoring'] == '1')
@@ -206,7 +223,7 @@ while ($cur_post = $db->fetch_assoc($result))
 		// Format the online indicator
 		$is_online = ($cur_post['is_online'] == $cur_post['poster_id']) ? '<strong>'.$lang_topic['Online'].'</strong>' : $lang_topic['Offline'];
 
-		if ($pun_config['o_avatars'] == '1' && $cur_post['use_avatar'] == '1' && $pun_user['show_avatars'] != '0')
+		if ($pun_config['o_avatars'] == '1' && $pun_user['show_avatars'] != '0')
 		{
 			if ($img_size = @getimagesize($pun_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.gif'))
 				$user_avatar = '<img src="'.$pun_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.gif" '.$img_size[3].' alt="" />';
@@ -231,20 +248,20 @@ while ($cur_post = $db->fetch_assoc($result))
 
 			$user_info[] = '<dd>'.$lang_common['Registered'].': '.date($pun_config['o_date_format'], $cur_post['registered']);
 
-			if ($pun_config['o_show_post_count'] == '1' || $pun_user['g_id'] < PUN_GUEST)
+			if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
 				$user_info[] = '<dd>'.$lang_common['Posts'].': '.$cur_post['num_posts'];
 
 			// Now let's deal with the contact links (E-mail and URL)
-			if (($cur_post['email_setting'] == '0' && !$pun_user['is_guest']) || $pun_user['g_id'] < PUN_GUEST)
+			if ((($cur_post['email_setting'] == '0' && !$pun_user['is_guest']) || $pun_user['is_admmod']) && $pun_user['g_send_email'] == '1')
 				$user_contacts[] = '<a href="mailto:'.$cur_post['email'].'">'.$lang_common['E-mail'].'</a>';
-			else if ($cur_post['email_setting'] == '1' && !$pun_user['is_guest'])
+			else if ($cur_post['email_setting'] == '1' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
 				$user_contacts[] = '<a href="misc.php?email='.$cur_post['poster_id'].'">'.$lang_common['E-mail'].'</a>';
 
 			if ($cur_post['url'] != '')
 				$user_contacts[] = '<a href="'.pun_htmlspecialchars($cur_post['url']).'">'.$lang_topic['Website'].'</a>';
 		}
 
-		if ($pun_user['g_id'] < PUN_GUEST)
+		if ($pun_user['is_admmod'])
 		{
 			$user_info[] = '<dd>IP: <a href="moderate.php?get_host='.$cur_post['id'].'">'.$cur_post['poster_ip'].'</a>';
 
@@ -258,10 +275,10 @@ while ($cur_post = $db->fetch_assoc($result))
 		$username = pun_htmlspecialchars($cur_post['username']);
 		$user_title = get_title($cur_post);
 
-		if ($pun_user['g_id'] < PUN_GUEST)
+		if ($pun_user['is_admmod'])
 			$user_info[] = '<dd>IP: <a href="moderate.php?get_host='.$cur_post['id'].'">'.$cur_post['poster_ip'].'</a>';
 
-		if ($pun_config['o_show_user_info'] == '1' && $cur_post['poster_email'] != '' && !$pun_user['is_guest'])
+		if ($pun_config['o_show_user_info'] == '1' && $cur_post['poster_email'] != '' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
 			$user_contacts[] = '<a href="mailto:'.$cur_post['poster_email'].'">'.$lang_common['E-mail'].'</a>';
 	}
 
@@ -298,7 +315,7 @@ while ($cur_post = $db->fetch_assoc($result))
 	$cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 
 	// Do signature parsing/caching
-	if ($cur_post['signature'] != '' && $pun_user['show_sig'] != '0')
+	if ($pun_config['o_signatures'] == '1' && $cur_post['signature'] != '' && $pun_user['show_sig'] != '0')
 	{
 		if (isset($signature_cache[$cur_post['poster_id']]))
 			$signature = $signature_cache[$cur_post['poster_id']];
@@ -369,7 +386,8 @@ if ($quickpost)
 					<div class="infldset txtarea">
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="form_user" value="<?php echo (!$pun_user['is_guest']) ? pun_htmlspecialchars($pun_user['username']) : 'Guest'; ?>" />
-						<label><textarea name="req_message" rows="7" cols="75" tabindex="1"></textarea></label>
+<?php if (!$pun_user['is_guest'] && $pun_config['o_subscriptions'] == '1' && $pun_user['auto_notify'] == '1'): ?>						<input type="hidden" name="subscribe" value="1" />';
+<?php endif; ?>						<label><textarea name="req_message" rows="7" cols="75" tabindex="1"></textarea></label>
 						<ul class="bblinks">
 							<li><a href="help.php#bbcode" onclick="window.open(this.href); return false;"><?php echo $lang_common['BBCode'] ?></a>: <?php echo ($pun_config['p_message_bbcode'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></li>
 							<li><a href="help.php#img" onclick="window.open(this.href); return false;"><?php echo $lang_common['img tag'] ?></a>: <?php echo ($pun_config['p_message_img_tag'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></li>
@@ -387,8 +405,8 @@ if ($quickpost)
 }
 
 // Increment "num_views" for topic
-$low_prio = ($db_type == 'mysql') ? 'LOW_PRIORITY ' : '';
-$db->query('UPDATE '.$low_prio.$db->prefix.'topics SET num_views=num_views+1 WHERE id='.$id) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+if ($pun_config['o_topic_views'] == '1')
+	$db->query('UPDATE '.$db->prefix.'topics SET num_views=num_views+1 WHERE id='.$id) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
 
 $forum_id = $cur_topic['forum_id'];
 $footer_style = 'viewtopic';

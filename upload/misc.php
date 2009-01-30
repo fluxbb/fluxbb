@@ -38,6 +38,9 @@ $action = isset($_GET['action']) ? $_GET['action'] : null;
 
 if ($action == 'rules')
 {
+	if ($pun_config['o_rules'] == '0' || ($pun_user['is_guest'] && $pun_user['g_read_board'] == '0' && $pun_config['o_regs_allow'] == '0'))
+		message($lang_common['Bad request']);
+
 	// Load the register.php language file
 	require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
 
@@ -66,13 +69,34 @@ else if ($action == 'markread')
 
 	$db->query('UPDATE '.$db->prefix.'users SET last_visit='.$pun_user['logged'].' WHERE id='.$pun_user['id']) or error('Unable to update user last visit data', __FILE__, __LINE__, $db->error());
 
+	// Reset tracked topics
+	set_tracked_topics(null);
+
 	redirect('index.php', $lang_misc['Mark read redirect']);
+}
+
+
+// Mark the topics/posts in a forum as read?
+else if ($action == 'markforumread')
+{
+	if ($pun_user['is_guest'])
+		message($lang_common['No permission']);
+
+	$fid = intval($_GET['fid']);
+	if ($fid < 1)
+		message($lang_common['Bad request']);
+
+	$tracked_topics = get_tracked_topics();
+	$tracked_topics['forums'][$fid] = time();
+	set_tracked_topics($tracked_topics);
+
+	redirect('viewforum.php?id='.$fid, $lang_misc['Mark forum read redirect']);
 }
 
 
 else if (isset($_GET['email']))
 {
-	if ($pun_user['is_guest'])
+	if ($pun_user['is_guest'] || $pun_user['g_send_email'] == '0')
 		message($lang_common['No permission']);
 
 	$recipient_id = intval($_GET['email']);
@@ -85,7 +109,7 @@ else if (isset($_GET['email']))
 
 	list($recipient, $recipient_email, $email_setting) = $db->fetch_row($result);
 
-	if ($email_setting == 2 && $pun_user['g_id'] > PUN_MOD)
+	if ($email_setting == 2 && !$pun_user['is_admmod'])
 		message($lang_misc['Form e-mail disabled']);
 
 
@@ -101,6 +125,9 @@ else if (isset($_GET['email']))
 			message($lang_misc['No e-mail message']);
 		else if (strlen($message) > 65535)
 			message($lang_misc['Too long e-mail message']);
+
+		if ($pun_user['last_email_sent'] != '' && (time() - $pun_user['last_email_sent']) < $pun_user['g_email_flood'] && (time() - $pun_user['last_email_sent']) >= 0)
+			$errors[] = sprintf($lang_misc['Email flood'], $pun_user['g_email_flood']);
 
 		// Load the "form e-mail" template
 		$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/form_email.tpl'));
@@ -118,7 +145,9 @@ else if (isset($_GET['email']))
 
 		require_once PUN_ROOT.'include/email.php';
 
-		pun_mail($recipient_email, $mail_subject, $mail_message, '"'.str_replace('"', '', $pun_user['username']).'" <'.$pun_user['email'].'>');
+		pun_mail($recipient_email, $mail_subject, $mail_message, $pun_user['email'], $pun_user['username']);
+
+		$db->query('UPDATE '.$db->prefix.'users SET last_email_sent='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 
 		redirect(htmlspecialchars($_POST['redirect_url']), $lang_misc['E-mail sent redirect']);
 	}

@@ -63,11 +63,6 @@ $tpl_main = str_replace('<pun_content_direction>', $lang_common['lang_direction'
 // END SUBST - <pun_content_direction>
 
 
-// START SUBST - <pun_char_encoding>
-$tpl_main = str_replace('<pun_char_encoding>', $lang_common['lang_encoding'], $tpl_main);
-// END SUBST - <pun_char_encoding>
-
-
 // START SUBST - <pun_head>
 ob_start();
 
@@ -172,7 +167,7 @@ else
 {
 	$tpl_temp = '<div id="brdwelcome" class="inbox">'."\n\t\t\t".'<ul class="conl">'."\n\t\t\t\t".'<li>'.$lang_common['Logged in as'].' <strong>'.pun_htmlspecialchars($pun_user['username']).'</strong></li>'."\n\t\t\t\t".'<li>'.$lang_common['Last visit'].': '.format_time($pun_user['last_visit']).'</li>';
 
-	if ($pun_user['g_id'] < PUN_GUEST)
+	if ($pun_user['is_admmod'])
 	{
 		$result_header = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'reports WHERE zapped IS NULL') or error('Unable to fetch reports info', __FILE__, __LINE__, $db->error());
 

@@ -33,7 +33,7 @@ if (!defined('PUN'))
 //
 function is_valid_email($email)
 {
-	if (strlen($email) > 50)
+	if (strlen($email) > 80)
 		return false;
 
 	return preg_match('/^(([^<>()[\]\\.,;:\s@"\']+(\.[^<>()[\]\\.,;:\s@"\']+)*)|("[^"\']+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\d\-]+\.)+[a-zA-Z]{2,}))$/', $email);
@@ -62,20 +62,35 @@ function is_banned_email($email)
 //
 // Wrapper for PHP's mail()
 //
-function pun_mail($to, $subject, $message, $from = '')
+function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name = '')
 {
 	global $pun_config, $lang_common;
 
 	// Default sender/return address
-	if (!$from)
-		$from = '"'.str_replace('"', '', $pun_config['o_board_title'].' '.$lang_common['Mailer']).'" <'.$pun_config['o_webmaster_email'].'>';
+	$from_name = str_replace('"', '', $pun_config['o_board_title'].' '.$lang_common['Mailer']);
+	$from_email = $pun_config['o_webmaster_email'];
 
 	// Do a little spring cleaning
-	$to = trim(preg_replace('#[\n\r]+#s', '', $to));
-	$subject = trim(preg_replace('#[\n\r]+#s', '', $subject));
-	$from = trim(preg_replace('#[\n\r:]+#s', '', $from));
+	$to = forum_trim(preg_replace('#[\n\r]+#s', '', $to));
+	$subject = forum_trim(preg_replace('#[\n\r]+#s', '', $subject));
+	$from_email = forum_trim(preg_replace('#[\n\r:]+#s', '', $from_email));
+	$from_name = forum_trim(preg_replace('#[\n\r:]+#s', '', str_replace('"', '', $from_name)));
+	$reply_to_email = forum_trim(preg_replace('#[\n\r:]+#s', '', $reply_to_email));
+	$reply_to_name = forum_trim(preg_replace('#[\n\r:]+#s', '', str_replace('"', '', $reply_to_name)));
 
-	$headers = 'From: '.$from."\r\n".'Date: '.date('r')."\r\n".'MIME-Version: 1.0'."\r\n".'Content-transfer-encoding: 8bit'."\r\n".'Content-type: text/plain; charset='.$lang_common['lang_encoding']."\r\n".'X-Mailer: FluxBB Mailer';
+	// Set up some headers to take advantage of UTF-8
+	$from = "=?UTF-8?B?".base64_encode($from_name)."?=".' <'.$from_email.'>';
+	$subject = "=?UTF-8?B?".base64_encode($subject)."?=";
+
+	$headers = 'From: '.$from."\r\n".'Date: '.gmdate('r')."\r\n".'MIME-Version: 1.0'."\r\n".'Content-transfer-encoding: 8bit'."\r\n".'Content-type: text/plain; charset=utf-8'."\r\n".'X-Mailer: FluxBB Mailer';
+
+	// If we specified a reply-to email, we deal with it here
+	if (!empty($reply_to_email))
+	{
+		$reply_to = "=?UTF-8?B?".base64_encode($reply_to_name)."?=".' <'.$reply_to_email.'>';
+
+		$headers .= "\r\n".'Reply-To: '.$reply_to;
+	}
 
 	// Make sure all linebreaks are CRLF in message (and strip out any NULL bytes)
 	$message = str_replace(array("\n", "\0"), array("\r\n", ''), pun_linebreaks($message));
@@ -97,7 +112,7 @@ function pun_mail($to, $subject, $message, $from = '')
 
 //
 // This function was originally a part of the phpBB Group forum software phpBB2 (http://www.phpbb.com).
-// They deserve all the credit for writing it. I made small modifications for it to suit FluxBB and it's coding standards.
+// They deserve all the credit for writing it. I made small modifications for it to suit PunBB and it's coding standards.
 //
 function server_parse($socket, $expected_response)
 {
@@ -115,7 +130,7 @@ function server_parse($socket, $expected_response)
 
 //
 // This function was originally a part of the phpBB Group forum software phpBB2 (http://www.phpbb.com).
-// They deserve all the credit for writing it. I made small modifications for it to suit FluxBB and it's coding standards.
+// They deserve all the credit for writing it. I made small modifications for it to suit PunBB and it's coding standards.
 //
 function smtp_mail($to, $subject, $message, $headers = '')
 {
@@ -135,6 +150,9 @@ function smtp_mail($to, $subject, $message, $headers = '')
 		$smtp_host = $pun_config['o_smtp_host'];
 		$smtp_port = 25;
 	}
+
+	if ($pun_config['o_smtp_ssl'] == '1')
+		$smtp_host = 'ssl://'.$smtp_host;
 
 	if (!($socket = fsockopen($smtp_host, $smtp_port, $errno, $errstr, 15)))
 		error('Could not connect to smtp host "'.$pun_config['o_smtp_host'].'" ('.$errno.') ('.$errstr.')', __FILE__, __LINE__);
@@ -164,21 +182,16 @@ function smtp_mail($to, $subject, $message, $headers = '')
 	fwrite($socket, 'MAIL FROM: <'.$pun_config['o_webmaster_email'].'>'."\r\n");
 	server_parse($socket, '250');
 
-	$to_header = 'To: ';
-
-	@reset($recipients);
 	while (list(, $email) = @each($recipients))
 	{
 		fwrite($socket, 'RCPT TO: <'.$email.'>'."\r\n");
 		server_parse($socket, '250');
-
-		$to_header .= '<'.$email.'>, ';
 	}
 
 	fwrite($socket, 'DATA'."\r\n");
 	server_parse($socket, '354');
 
-	fwrite($socket, 'Subject: '.$subject."\r\n".$to_header."\r\n".$headers."\r\n\r\n".$message."\r\n");
+	fwrite($socket, 'Subject: '.$subject."\r\n".'To: <'.implode('>, <', $recipients).'>'."\r\n".$headers."\r\n\r\n".$message."\r\n");
 
 	fwrite($socket, '.'."\r\n");
 	server_parse($socket, '250');

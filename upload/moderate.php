@@ -31,11 +31,11 @@ require PUN_ROOT.'include/common.php';
 // by all moderators and admins.
 if (isset($_GET['get_host']))
 {
-	if ($pun_user['g_id'] > PUN_MOD)
+	if (!$pun_user['is_admmod'])
 		message($lang_common['No permission']);
 
 	// Is get_host an IP address or a post ID?
-	if (@preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $_GET['get_host']))
+	if (@preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $_GET['get_host']) || @preg_match('/^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/', $_GET['get_host']))
 		$ip = $_GET['get_host'];
 	else
 	{
@@ -64,9 +64,12 @@ $result = $db->query('SELECT moderators FROM '.$db->prefix.'forums WHERE id='.$f
 $moderators = $db->result($result);
 $mods_array = ($moderators != '') ? unserialize($moderators) : array();
 
-if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_id'] != PUN_MOD || !array_key_exists($pun_user['username'], $mods_array)))
+if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] == '0' || !array_key_exists($pun_user['username'], $mods_array)))
 	message($lang_common['No permission']);
 
+// Get topic/forum tracking data
+if (!$pun_user['is_guest'])
+	$tracked_topics = get_tracked_topics();
 
 // Load the misc.php language file
 require PUN_ROOT.'lang/'.$pun_user['language'].'/misc.php';
@@ -209,7 +212,10 @@ if (isset($_GET['tid']))
 		// If the poster is a registered user.
 		if ($cur_post['poster_id'] > 1)
 		{
-			$poster = '<a href="profile.php?id='.$cur_post['poster_id'].'">'.pun_htmlspecialchars($cur_post['poster']).'</a>';
+			if ($pun_user['g_view_users'] == '1')
+				$poster = '<a href="profile.php?id='.$cur_post['poster_id'].'">'.pun_htmlspecialchars($cur_post['poster']).'</a>';
+			else
+				$poster = pun_htmlspecialchars($cur_post['poster']);
 
 			// get_title() requires that an element 'username' be present in the array
 			$cur_post['username'] = $cur_post['poster'];
@@ -589,8 +595,8 @@ $paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'moderate.ph
 				<tr>
 					<th class="tcl" scope="col"><?php echo $lang_common['Topic'] ?></th>
 					<th class="tc2" scope="col"><?php echo $lang_common['Replies'] ?></th>
-					<th class="tc3" scope="col"><?php echo $lang_forum['Views'] ?></th>
-					<th class="tcr"><?php echo $lang_common['Last post'] ?></th>
+<?php if ($pun_config['o_topic_views'] == '1'): ?>					<th class="tc3" scope="col"><?php echo $lang_forum['Views'] ?></th>
+<?php endif; ?>					<th class="tcr"><?php echo $lang_common['Last post'] ?></th>
 					<th class="tcmod" scope="col"><?php echo $lang_misc['Select'] ?></th>
 				</tr>
 			</thead>
@@ -637,7 +643,7 @@ if ($db->num_rows($result))
 			$item_status = 'iclosed';
 		}
 
-		if ($cur_topic['last_post'] > $pun_user['last_visit'] && !$ghost_topic)
+		if (!$ghost_topic && $cur_topic['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$cur_topic['id']]) || $tracked_topics['topics'][$cur_topic['id']] < $cur_topic['last_post']) && (!isset($tracked_topics['forums'][$fid]) || $tracked_topics['forums'][$fid] < $cur_topic['last_post']))
 		{
 			$icon_text .= ' '.$lang_common['New icon'];
 			$item_status .= ' inew';
@@ -682,8 +688,8 @@ if ($db->num_rows($result))
 						</div>
 					</td>
 					<td class="tc2"><?php echo (!$ghost_topic) ? $cur_topic['num_replies'] : '&nbsp;' ?></td>
-					<td class="tc3"><?php echo (!$ghost_topic) ? $cur_topic['num_views'] : '&nbsp;' ?></td>
-					<td class="tcr"><?php echo $last_post ?></td>
+<?php if ($pun_config['o_topic_views'] == '1'): ?>					<td class="tc3"><?php echo (!$ghost_topic) ? $cur_topic['num_views'] : '&nbsp;' ?></td>
+<?php endif; ?>					<td class="tcr"><?php echo $last_post ?></td>
 					<td class="tcmod"><input type="checkbox" name="topics[<?php echo $cur_topic['id'] ?>]" value="1" /></td>
 				</tr>
 <?php
@@ -692,8 +698,9 @@ if ($db->num_rows($result))
 }
 else
 {
+	$colspan = ($pun_config['o_topic_views'] == '1') ? 5 : 4;
 	$button_status = ' disabled';
-	echo "\t\t\t\t\t".'<tr><td class="tcl" colspan="5">'.$lang_forum['Empty forum'].'</td></tr>'."\n";
+	echo "\t\t\t\t\t".'<tr><td class="tcl" colspan="'.$colspan.'">'.$lang_forum['Empty forum'].'</td></tr>'."\n";
 }
 
 ?>

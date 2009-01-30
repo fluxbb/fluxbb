@@ -31,7 +31,7 @@ require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'include/common_admin.php';
 
 
-if ($pun_user['g_id'] > PUN_MOD)
+if (!$pun_user['is_admmod'])
 	message($lang_common['No permission']);
 
 

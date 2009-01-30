@@ -31,7 +31,7 @@ require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'include/common_admin.php';
 
 
-if ($pun_user['g_id'] > PUN_ADMIN)
+if ($pun_user['g_id'] != PUN_ADMIN)
 	message($lang_common['No permission']);
 
 
@@ -57,7 +57,9 @@ if (isset($_POST['add_rank']))
 	$db->query('INSERT INTO '.$db->prefix.'ranks (rank, min_posts) VALUES(\''.$db->escape($rank).'\', '.$min_posts.')') or error('Unable to add rank', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the ranks cache
-	require_once PUN_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
 	generate_ranks_cache();
 
 	redirect('admin_ranks.php', 'Rank added. Redirecting &hellip;');
@@ -88,7 +90,9 @@ else if (isset($_POST['update']))
 	$db->query('UPDATE '.$db->prefix.'ranks SET rank=\''.$db->escape($rank).'\', min_posts='.$min_posts.' WHERE id='.$id) or error('Unable to update rank', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the ranks cache
-	require_once PUN_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
 	generate_ranks_cache();
 
 	redirect('admin_ranks.php', 'Rank updated. Redirecting &hellip;');
@@ -105,7 +109,9 @@ else if (isset($_POST['remove']))
 	$db->query('DELETE FROM '.$db->prefix.'ranks WHERE id='.$id) or error('Unable to delete rank', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the ranks cache
-	require_once PUN_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
 	generate_ranks_cache();
 
 	redirect('admin_ranks.php', 'Rank removed. Redirecting &hellip;');

@@ -39,11 +39,12 @@ if (isset($_POST['form_sent']) && $action == 'in')
 {
 	$form_username = trim($_POST['req_username']);
 	$form_password = trim($_POST['req_password']);
+	$save_pass = isset($_POST['save_pass']);
 
 	$username_sql = ($db_type == 'mysql' || $db_type == 'mysqli') ? 'username=\''.$db->escape($form_username).'\'' : 'LOWER(username)=LOWER(\''.$db->escape($form_username).'\')';
 
-	$result = $db->query('SELECT id, group_id, password, save_pass FROM '.$db->prefix.'users WHERE '.$username_sql) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-	list($user_id, $group_id, $db_password_hash, $save_pass) = $db->fetch_row($result);
+	$result = $db->query('SELECT id, group_id, password FROM '.$db->prefix.'users WHERE '.$username_sql) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	list($user_id, $group_id, $db_password_hash) = $db->fetch_row($result);
 
 	$authorized = false;
 
@@ -75,8 +76,11 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	// Remove this users guest entry from the online list
 	$db->query('DELETE FROM '.$db->prefix.'online WHERE ident=\''.$db->escape(get_remote_address()).'\'') or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
 
-	$expire = ($save_pass == '1') ? time() + 31536000 : 0;
+	$expire = ($save_pass == '1') ? time() + 1209600 : time() + $pun_config['o_timeout_visit'];
 	pun_setcookie($user_id, $form_password_hash, $expire);
+
+	// Reset tracked topics
+	set_tracked_topics(null);
 
 	redirect(htmlspecialchars($_POST['redirect_url']), $lang_login['Login redirect']);
 }
@@ -117,7 +121,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 		if (!is_valid_email($email))
 			message($lang_common['Invalid e-mail']);
 
-		$result = $db->query('SELECT id, username FROM '.$db->prefix.'users WHERE email=\''.$db->escape($email).'\'') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT id, username, last_email_sent FROM '.$db->prefix.'users WHERE email=\''.$db->escape($email).'\'') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result))
 		{
@@ -136,11 +140,14 @@ else if ($action == 'forget' || $action == 'forget_2')
 			// Loop through users we found
 			while ($cur_hit = $db->fetch_assoc($result))
 			{
+				if ($cur_hit['last_email_sent'] != '' && (time() - $cur_hit['last_email_sent']) < 3600 && (time() - $cur_hit['last_email_sent']) >= 0)
+					message($lang_login['Email flood']);
+
 				// Generate a new password and a new password activation code
 				$new_password = random_pass(8);
 				$new_password_key = random_pass(8);
 
-				$db->query('UPDATE '.$db->prefix.'users SET activate_string=\''.pun_hash($new_password).'\', activate_key=\''.$new_password_key.'\' WHERE id='.$cur_hit['id']) or error('Unable to update activation data', __FILE__, __LINE__, $db->error());
+				$db->query('UPDATE '.$db->prefix.'users SET activate_string=\''.pun_hash($new_password).'\', activate_key=\''.$new_password_key.'\', last_email_sent = '.time().' WHERE id='.$cur_hit['id']) or error('Unable to update activation data', __FILE__, __LINE__, $db->error());
 
 				// Do the user specific replacements to the template
 				$cur_mail_message = str_replace('<username>', $cur_hit['username'], $mail_message);
@@ -211,6 +218,7 @@ require PUN_ROOT.'header.php';
 							<input type="hidden" name="redirect_url" value="<?php echo $redirect_url ?>" />
 							<label class="conl"><strong><?php echo $lang_common['Username'] ?></strong><br /><input type="text" name="req_username" size="25" maxlength="25" tabindex="1" /><br /></label>
 							<label class="conl"><strong><?php echo $lang_common['Password'] ?></strong><br /><input type="password" name="req_password" size="16" maxlength="16" tabindex="2" /><br /></label>
+							<p class="clearb"><?php echo $lang_login['Remember me'] ?> <input type="checkbox" name="save_pass" value="1" /></p>
 							<p class="clearb"><?php echo $lang_login['Login info'] ?></p>
 							<p><a href="register.php" tabindex="4"><?php echo $lang_login['Not registered'] ?></a>&nbsp;&nbsp;
 							<a href="login.php?action=forget" tabindex="5"><?php echo $lang_login['Forgotten pass'] ?></a></p>

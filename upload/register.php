@@ -116,7 +116,7 @@ else if (isset($_POST['form_sent']))
 		message($lang_prof_reg['Pass not match']);
 	else if (!strcasecmp($username, 'Guest') || !strcasecmp($username, $lang_common['Guest']))
 		message($lang_prof_reg['Username guest']);
-	else if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username))
+	else if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username) || preg_match('/((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))/', $username))
 		message($lang_prof_reg['Username IP']);
 	else if ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
 		message($lang_prof_reg['Username reserved chars']);
@@ -184,7 +184,9 @@ else if (isset($_POST['form_sent']))
 		$language = $pun_config['o_default_lang'];
 
 	$timezone = round($_POST['timezone'], 1);
-	$save_pass = (!isset($_POST['save_pass']) || $_POST['save_pass'] != '1') ? '0' : '1';
+
+	$dst = intval($_POST['dst']);
+	if ($dst < 0 || $dst > 1) $dst = 0;
 
 	$email_setting = intval($_POST['email_setting']);
 	if ($email_setting < 0 || $email_setting > 2) $email_setting = 1;
@@ -196,7 +198,7 @@ else if (isset($_POST['form_sent']))
 	$password_hash = pun_hash($password1);
 
 	// Add the user
-	$db->query('INSERT INTO '.$db->prefix.'users (username, group_id, password, email, email_setting, save_pass, timezone, language, style, registered, registration_ip, last_visit) VALUES(\''.$db->escape($username).'\', '.$intial_group_id.', \''.$password_hash.'\', \''.$email1.'\', '.$email_setting.', '.$save_pass.', '.$timezone.' , \''.$db->escape($language).'\', \''.$pun_config['o_default_style'].'\', '.$now.', \''.get_remote_address().'\', '.$now.')') or error('Unable to create user', __FILE__, __LINE__, $db->error());
+	$db->query('INSERT INTO '.$db->prefix.'users (username, group_id, password, email, email_setting, timezone, dst, language, style, registered, registration_ip, last_visit) VALUES(\''.$db->escape($username).'\', '.$intial_group_id.', \''.$password_hash.'\', \''.$email1.'\', '.$email_setting.', '.$timezone.' , '.$dst.', \''.$db->escape($language).'\', \''.$pun_config['o_default_style'].'\', '.$now.', \''.get_remote_address().'\', '.$now.')') or error('Unable to create user', __FILE__, __LINE__, $db->error());
 	$new_uid = $db->insert_id();
 
 
@@ -250,7 +252,7 @@ else if (isset($_POST['form_sent']))
 		message($lang_register['Reg e-mail'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
 	}
 
-	pun_setcookie($new_uid, $password_hash, ($save_pass != '0') ? $now + 31536000 : 0);
+	pun_setcookie($new_uid, $password_hash, time() + $pun_config['o_timeout_visit']);
 
 	redirect('index.php', $lang_register['Reg complete']);
 }
@@ -347,6 +349,10 @@ require PUN_ROOT.'header.php';
 							<option value="14"<?php if ($pun_config['o_server_timezone'] == 14 ) echo ' selected="selected"' ?>>+14</option>
 						</select>
 						<br /></label>
+						<p><?php echo $lang_prof_reg['DST'] ?></p>
+						<div class="rbox">
+							<label><input type="checkbox" name="dst" value="1"<?php if ($pun_config['o_default_dst'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['DST info'] ?><br /></label>
+						</div>
 <?php
 
 		$languages = array();
@@ -391,13 +397,9 @@ require PUN_ROOT.'header.php';
 					<div class="infldset">
 						<p><?php echo $lang_prof_reg['E-mail setting info'] ?></p>
 						<div class="rbox">
-							<label><input type="radio" name="email_setting" value="0" /><?php echo $lang_prof_reg['E-mail setting 1'] ?><br /></label>
-							<label><input type="radio" name="email_setting" value="1" checked="checked" /><?php echo $lang_prof_reg['E-mail setting 2'] ?><br /></label>
-							<label><input type="radio" name="email_setting" value="2" /><?php echo $lang_prof_reg['E-mail setting 3'] ?><br /></label>
-						</div>
-						<p><?php echo $lang_prof_reg['Save user/pass info'] ?></p>
-						<div class="rbox">
-							<label><input type="checkbox" name="save_pass" value="1" checked="checked" /><?php echo $lang_prof_reg['Save user/pass'] ?><br /></label>
+							<label><input type="radio" name="email_setting" value="0"<?php if ($pun_config['o_default_email_setting'] == '0') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['E-mail setting 1'] ?><br /></label>
+							<label><input type="radio" name="email_setting" value="1"<?php if ($pun_config['o_default_email_setting'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['E-mail setting 2'] ?><br /></label>
+							<label><input type="radio" name="email_setting" value="2"<?php if ($pun_config['o_default_email_setting'] == '2') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['E-mail setting 3'] ?><br /></label>
 						</div>
 					</div>
 				</fieldset>

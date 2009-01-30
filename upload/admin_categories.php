@@ -31,7 +31,7 @@ require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'include/common_admin.php';
 
 
-if ($pun_user['g_id'] > PUN_ADMIN)
+if ($pun_user['g_id'] != PUN_ADMIN)
 	message($lang_common['No permission']);
 
 
@@ -93,7 +93,9 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 		$db->query('DELETE FROM '.$db->prefix.'categories WHERE id='.$cat_to_delete) or error('Unable to delete category', __FILE__, __LINE__, $db->error());
 
 		// Regenerate the quickjump cache
-		require_once PUN_ROOT.'include/cache.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require PUN_ROOT.'include/cache.php';
+
 		generate_quickjump_cache();
 
 		redirect('admin_categories.php', 'Category deleted. Redirecting &hellip;');
@@ -160,7 +162,9 @@ else if (isset($_POST['update']))	// Change position and name of the categories
 	}
 
 	// Regenerate the quickjump cache
-	require_once PUN_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
 	generate_quickjump_cache();
 
 	redirect('admin_categories.php', 'Categories updated. Redirecting &hellip;');

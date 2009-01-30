@@ -31,7 +31,7 @@ require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'include/common_admin.php';
 
 
-if ($pun_user['g_id'] > PUN_ADMIN)
+if ($pun_user['g_id'] != PUN_ADMIN)
 	message($lang_common['No permission']);
 
 
@@ -98,11 +98,53 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 										<span>This title will override any rank users in this group have attained. Leave blank to use default title or rank.</span>
 									</td>
 								</tr>
-<?php if ($group['g_id'] != PUN_ADMIN): ?>								<tr>
+<?php if ($group['g_id'] != PUN_ADMIN): if ($group['g_id'] != PUN_GUEST): if ($mode != 'edit' || $pun_config['o_default_user_group'] != $group['g_id']): ?>								<tr>
+									<th scope="row"> Allow users moderator privileges</th>
+									<td>
+										<input type="radio" name="moderator" value="1"<?php if ($group['g_moderator'] == '1') echo ' checked="checked"' ?> tabindex="3" />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="moderator" value="0"<?php if ($group['g_moderator'] == '0') echo ' checked="checked"' ?> tabindex="4" />&nbsp;<strong>No</strong>
+										<span>In order for a user in this group to have moderator abilities, he/she must be assigned to moderate one or more forums. This is done via the user administration page of the user's profile.</span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">Allow moderators to edit user profiles</th>
+									<td>
+										<input type="radio" name="mod_edit_users" value="1"<?php if ($group['g_mod_edit_users'] == '1') echo ' checked="checked"' ?> tabindex="5" />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="mod_edit_users" value="0"<?php if ($group['g_mod_edit_users'] == '0') echo ' checked="checked"' ?> tabindex="6" />&nbsp;<strong>No</strong>
+										<span>If moderator privileges are enabled, allow users in this group to edit user profiles.</span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">Allow moderators to rename users</th>
+									<td>
+										<input type="radio" name="mod_rename_users" value="1"<?php if ($group['g_mod_rename_users'] == '1') echo ' checked="checked"' ?> tabindex="5" />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="mod_rename_users" value="0"<?php if ($group['g_mod_rename_users'] == '0') echo ' checked="checked"' ?> tabindex="6" />&nbsp;<strong>No</strong>
+										<span>If moderator privileges are enabled, allow users in this group to rename users.</span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">Allow moderators to change passwords</th>
+									<td>
+										<input type="radio" name="mod_change_passwords" value="1"<?php if ($group['g_mod_change_passwords'] == '1') echo ' checked="checked"' ?> tabindex="5" />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="mod_change_passwords" value="0"<?php if ($group['g_mod_change_passwords'] == '0') echo ' checked="checked"' ?> tabindex="6" />&nbsp;<strong>No</strong>
+										<span>If moderator privileges are enabled, allow users in this group to change user passwords.</span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">Allow moderators to ban users</th>
+									<td>
+										<input type="radio" name="mod_ban_users" value="1"<?php if ($group['g_mod_ban_users'] == '1') echo ' checked="checked"' ?> tabindex="5" />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="mod_ban_users" value="0"<?php if ($group['g_mod_ban_users'] == '0') echo ' checked="checked"' ?> tabindex="6" />&nbsp;<strong>No</strong>
+										<span>If moderator privileges are enabled, allow users in this group to ban users.</span>
+									</td>
+								</tr>
+<?php endif; endif; ?>								<tr>
 									<th scope="row">Read board</th>
 									<td>
 										<input type="radio" name="read_board" value="1"<?php if ($group['g_read_board'] == '1') echo ' checked="checked"' ?> tabindex="3" />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="read_board" value="0"<?php if ($group['g_read_board'] == '0') echo ' checked="checked"' ?> tabindex="4" />&nbsp;<strong>No</strong>
 										<span>Allow users in this group to view the board. This setting applies to every aspect of the board and can therefore not be overridden by forum specific settings. If this is set to "No", users in this group will only be able to login/logout and register.</span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">View user information</th>
+									<td>
+										<input type="radio" name="view_users" value="1"<?php if ($group['g_view_users'] == '1') echo ' checked="checked"' ?> tabindex="3" />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="view_users" value="0"<?php if ($group['g_view_users'] == '0') echo ' checked="checked"' ?> tabindex="4" />&nbsp;<strong>No</strong>
+										<span>Allow users to view the user list and user profiles.</span>
 									</td>
 								</tr>
 								<tr>
@@ -162,13 +204,13 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 									</td>
 								</tr>
 <?php if ($group['g_id'] != PUN_GUEST): ?>								<tr>
-									<th scope="row">Edit subjects interval</th>
+									<th scope="row">Send emails</th>
 									<td>
-										<input type="text" name="edit_subjects_interval" size="5" maxlength="5" value="<?php echo $group['g_edit_subjects_interval'] ?>" tabindex="23" />
-										<span>Number of seconds after post time that users in this group may edit the subject of topics they've posted. Set to 0 to allow edits indefinitely.</span>
+										<input type="radio" name="send_email" value="1"<?php if ($group['g_send_email'] == '1') echo ' checked="checked"' ?> tabindex="21" />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="send_email" value="0"<?php if ($group['g_send_email'] == '0') echo ' checked="checked"' ?> tabindex="22" />&nbsp;<strong>No</strong>
+										<span>Allow users in this group to send emails to other users.</span>
 									</td>
 								</tr>
-								<tr>
+<?php endif; ?>								<tr>
 									<th scope="row">Post flood interval</th>
 									<td>
 										<input type="text" name="post_flood" size="5" maxlength="4" value="<?php echo $group['g_post_flood'] ?>" tabindex="24" />
@@ -182,8 +224,15 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 										<span>Number of seconds that users in this group have to wait between searches. Set to 0 to disable.</span>
 									</td>
 								</tr>
-<?php endif; ?><?php endif; ?>							</table>
-<?php if ($group['g_id'] == PUN_MOD ): ?>							<p class="warntext">Please note that in order for a user in this group to have moderator abilities, he/she must be assigned to moderate one or more forums. This is done via the user administration page of the user's profile.</p>
+<?php if ($group['g_id'] != PUN_GUEST): ?>								<tr>
+									<th scope="row">Email flood interval</th>
+									<td>
+										<input type="text" name="email_flood" size="5" maxlength="4" value="<?php echo $group['g_email_flood'] ?>" tabindex="26" />
+										<span>Number of seconds that users in this group have to wait between e-mails. Set to 0 to disable.</span>
+									</td>
+								</tr>
+<?php endif; endif; ?>							</table>
+<?php if ($group['g_moderator'] == '1' ): ?>							<p class="warntext">Please note that in order for a user in this group to have moderator abilities, he/she must be assigned to moderate one or more forums. This is done via the user administration page of the user's profile.</p>
 <?php endif; ?>						</div>
 					</fieldset>
 				</div>
@@ -209,7 +258,13 @@ else if (isset($_POST['add_edit_group']))
 
 	$title = trim($_POST['req_title']);
 	$user_title = trim($_POST['user_title']);
+	$moderator = isset($_POST['moderator']) && $_POST['moderator'] == '1' ? '1' : '0';
+	$mod_edit_users = $moderator == '1' && isset($_POST['mod_edit_users']) && $_POST['mod_edit_users'] == '1' ? '1' : '0';
+	$mod_rename_users = $moderator == '1' && isset($_POST['mod_rename_users']) && $_POST['mod_rename_users'] == '1' ? '1' : '0';
+	$mod_change_passwords = $moderator == '1' && isset($_POST['mod_change_passwords']) && $_POST['mod_change_passwords'] == '1' ? '1' : '0';
+	$mod_ban_users = $moderator == '1' && isset($_POST['mod_ban_users']) && $_POST['mod_ban_users'] == '1' ? '1' : '0';
 	$read_board = isset($_POST['read_board']) ? intval($_POST['read_board']) : '1';
+	$view_users = (isset($_POST['view_users']) && $_POST['view_users'] == '1') || $is_admin_group ? '1' : '0';
 	$post_replies = isset($_POST['post_replies']) ? intval($_POST['post_replies']) : '1';
 	$post_topics = isset($_POST['post_topics']) ? intval($_POST['post_topics']) : '1';
 	$edit_posts = isset($_POST['edit_posts']) ? intval($_POST['edit_posts']) : ($is_admin_group) ? '1' : '0';
@@ -218,9 +273,10 @@ else if (isset($_POST['add_edit_group']))
 	$set_title = isset($_POST['set_title']) ? intval($_POST['set_title']) : ($is_admin_group) ? '1' : '0';
 	$search = isset($_POST['search']) ? intval($_POST['search']) : '1';
 	$search_users = isset($_POST['search_users']) ? intval($_POST['search_users']) : '1';
-	$edit_subjects_interval = isset($_POST['edit_subjects_interval']) ? intval($_POST['edit_subjects_interval']) : '0';
+	$send_email = (isset($_POST['send_email']) && $_POST['send_email'] == '1') || $is_admin_group ? '1' : '0';
 	$post_flood = isset($_POST['post_flood']) ? intval($_POST['post_flood']) : '0';
 	$search_flood = isset($_POST['search_flood']) ? intval($_POST['search_flood']) : '0';
+	$email_flood = isset($_POST['email_flood']) ? intval($_POST['email_flood']) : '0';
 
 	if ($title == '')
 		message('You must enter a group title.');
@@ -233,7 +289,7 @@ else if (isset($_POST['add_edit_group']))
 		if ($db->num_rows($result))
 			message('There is already a group with the title \''.pun_htmlspecialchars($title).'\'.');
 
-		$db->query('INSERT INTO '.$db->prefix.'groups (g_title, g_user_title, g_read_board, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_edit_subjects_interval, g_post_flood, g_search_flood) VALUES(\''.$db->escape($title).'\', '.$user_title.', '.$read_board.', '.$post_replies.', '.$post_topics.', '.$edit_posts.', '.$delete_posts.', '.$delete_topics.', '.$set_title.', '.$search.', '.$search_users.', '.$edit_subjects_interval.', '.$post_flood.', '.$search_flood.')') or error('Unable to add group', __FILE__, __LINE__, $db->error());
+		$db->query('INSERT INTO '.$db->prefix.'groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES(\''.$db->escape($title).'\', '.$user_title.', '.$moderator.', '.$mod_edit_users.', '.$mod_rename_users.', '.$mod_change_passwords.', '.$mod_ban_users.', '.$read_board.', '.$view_users.', '.$post_replies.', '.$post_topics.', '.$edit_posts.', '.$delete_posts.', '.$delete_topics.', '.$set_title.', '.$search.', '.$search_users.', '.$send_email.', '.$post_flood.', '.$search_flood.', '.$email_flood.')') or error('Unable to add group', __FILE__, __LINE__, $db->error());
 		$new_group_id = $db->insert_id();
 
 		// Now lets copy the forum specific permissions from the group which this group is based on
@@ -247,11 +303,13 @@ else if (isset($_POST['add_edit_group']))
 		if ($db->num_rows($result))
 			message('There is already a group with the title \''.pun_htmlspecialchars($title).'\'.');
 
-		$db->query('UPDATE '.$db->prefix.'groups SET g_title=\''.$db->escape($title).'\', g_user_title='.$user_title.', g_read_board='.$read_board.', g_post_replies='.$post_replies.', g_post_topics='.$post_topics.', g_edit_posts='.$edit_posts.', g_delete_posts='.$delete_posts.', g_delete_topics='.$delete_topics.', g_set_title='.$set_title.', g_search='.$search.', g_search_users='.$search_users.', g_edit_subjects_interval='.$edit_subjects_interval.', g_post_flood='.$post_flood.', g_search_flood='.$search_flood.' WHERE g_id='.intval($_POST['group_id'])) or error('Unable to update group', __FILE__, __LINE__, $db->error());
+		$db->query('UPDATE '.$db->prefix.'groups SET g_title=\''.$db->escape($title).'\', g_user_title='.$user_title.', g_moderator='.$moderator.', g_mod_edit_users='.$mod_edit_users.', g_mod_rename_users='.$mod_rename_users.', g_mod_change_passwords='.$mod_change_passwords.', g_mod_ban_users='.$mod_ban_users.', g_read_board='.$read_board.', g_view_users='.$view_users.', g_post_replies='.$post_replies.', g_post_topics='.$post_topics.', g_edit_posts='.$edit_posts.', g_delete_posts='.$delete_posts.', g_delete_topics='.$delete_topics.', g_set_title='.$set_title.', g_search='.$search.', g_search_users='.$search_users.', g_send_email='.$send_email.', g_post_flood='.$post_flood.', g_search_flood='.$search_flood.', g_email_flood='.$email_flood.' WHERE g_id='.intval($_POST['group_id'])) or error('Unable to update group', __FILE__, __LINE__, $db->error());
 	}
 
 	// Regenerate the quickjump cache
-	require_once PUN_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
 	generate_quickjump_cache();
 
 	redirect('admin_groups.php', 'Group '.(($_POST['mode'] == 'edit') ? 'edited' : 'added').'. Redirecting &hellip;');
@@ -264,13 +322,22 @@ else if (isset($_POST['set_default_group']))
 	confirm_referrer('admin_groups.php');
 
 	$group_id = intval($_POST['default_group']);
-	if ($group_id < 4)
+
+	// Make sure it's not the admin or guest groups
+	if ($group_id == PUN_ADMIN || $group_id == PUN_GUEST)
+		message($lang_common['Bad request']);
+
+	// Make sure it's not a moderator group
+	$result = $db->query('SELECT 1 FROM '.$db->prefix.'groups WHERE g_id='.$group_id.' AND g_moderator=0') or error('Unable to check group moderator status', __FILE__, __LINE__, $db->error());
+	if (!$db->num_rows($result))
 		message($lang_common['Bad request']);
 
 	$db->query('UPDATE '.$db->prefix.'config SET conf_value='.$group_id.' WHERE conf_name=\'o_default_user_group\'') or error('Unable to update board config', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the config cache
-	require_once PUN_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
 	generate_config_cache();
 
 	redirect('admin_groups.php', 'Default group set. Redirecting &hellip;');
@@ -308,7 +375,9 @@ else if (isset($_GET['del_group']))
 		$db->query('DELETE FROM '.$db->prefix.'forum_perms WHERE group_id='.$group_id) or error('Unable to delete group forum permissions', __FILE__, __LINE__, $db->error());
 
 		// Regenerate the quickjump cache
-		require_once PUN_ROOT.'include/cache.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require PUN_ROOT.'include/cache.php';
+
 		generate_quickjump_cache();
 
 		redirect('admin_groups.php', 'Group removed. Redirecting &hellip;');
@@ -415,7 +484,7 @@ while ($cur_group = $db->fetch_assoc($result))
 										<select id="default_group" name="default_group" tabindex="3">
 <?php
 
-$result = $db->query('SELECT g_id, g_title FROM '.$db->prefix.'groups WHERE g_id>'.PUN_GUEST.' ORDER BY g_title') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT g_id, g_title FROM '.$db->prefix.'groups WHERE g_id>'.PUN_GUEST.' AND g_moderator=0 ORDER BY g_title') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
 
 while ($cur_group = $db->fetch_assoc($result))
 {

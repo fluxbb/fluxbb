@@ -31,7 +31,7 @@ require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'include/common_admin.php';
 
 
-if ($pun_user['g_id'] > PUN_MOD)
+if (!$pun_user['is_admmod'])
 	message($lang_common['No permission']);
 
 
@@ -42,7 +42,7 @@ if (!@preg_match('/^AM?P_(\w*?)\.php$/i', $plugin))
 
 // AP_ == Admins only, AMP_ == admins and moderators
 $prefix = substr($plugin, 0, strpos($plugin, '_'));
-if ($pun_user['g_id'] == PUN_MOD && $prefix == 'AP')
+if ($pun_user['g_moderator'] == '1' && $prefix == 'AP')
 	message($lang_common['No permission']);
 
 // Make sure the file actually exists

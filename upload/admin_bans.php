@@ -30,8 +30,7 @@ define('PUN_ROOT', './');
 require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'include/common_admin.php';
 
-
-if ($pun_user['g_id'] > PUN_MOD || ($pun_user['g_id'] == PUN_MOD && $pun_config['p_mod_ban_users'] == '0'))
+if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_ban_users'] == '0'))
 	message($lang_common['No permission']);
 
 
@@ -204,18 +203,36 @@ else if (isset($_POST['add_edit_ban']))
 
 		for ($i = 0; $i < count($addresses); ++$i)
 		{
-			$octets = explode('.', $addresses[$i]);
-
-			for ($c = 0; $c < count($octets); ++$c)
+			if (strpos($addresses[$i], ':') !== false) 
 			{
-				$octets[$c] = (strlen($octets[$c]) > 1) ? ltrim($octets[$c], "0") : $octets[$c];
+				$octets = explode(':', $addresses[$i]);
 
-				if ($c > 3 || preg_match('/[^0-9]/', $octets[$c]) || intval($octets[$c]) > 255)
-					message('You entered an invalid IP/IP-range.');
+				for ($c = 0; $c < count($octets); ++$c)
+				{
+					$octets[$c] = ltrim($octets[$c], "0");
+
+					if ($c > 7 || (!empty($octets[$c]) && !ctype_xdigit($octets[$c])) || intval($octets[$c], 16) > 65535)
+						message('You entered an invalid IP/IP-range.');
+				}
+
+				$cur_address = implode(':', $octets);
+				$addresses[$i] = $cur_address;
 			}
+			else
+			{
+				$octets = explode('.', $addresses[$i]);
 
-			$cur_address = implode('.', $octets);
-			$addresses[$i] = $cur_address;
+				for ($c = 0; $c < count($octets); ++$c)
+				{
+					$octets[$c] = (strlen($octets[$c]) > 1) ? ltrim($octets[$c], "0") : $octets[$c];
+
+					if ($c > 3 || preg_match('/[^0-9]/', $octets[$c]) || intval($octets[$c]) > 255)
+						message('You entered an invalid IP/IP-range.');
+				}
+
+				$cur_address = implode('.', $octets);
+				$addresses[$i] = $cur_address;
+			}
 		}
 
 		$ban_ip = implode(' ', $addresses);
@@ -244,12 +261,14 @@ else if (isset($_POST['add_edit_ban']))
 	$ban_message = ($ban_message != '') ? '\''.$db->escape($ban_message).'\'' : 'NULL';
 
 	if ($_POST['mode'] == 'add')
-		$db->query('INSERT INTO '.$db->prefix.'bans (username, ip, email, message, expire) VALUES('.$ban_user.', '.$ban_ip.', '.$ban_email.', '.$ban_message.', '.$ban_expire.')') or error('Unable to add ban', __FILE__, __LINE__, $db->error());
+		$db->query('INSERT INTO '.$db->prefix.'bans (username, ip, email, message, expire, ban_creator) VALUES('.$ban_user.', '.$ban_ip.', '.$ban_email.', '.$ban_message.', '.$ban_expire.', '.$pun_user['id'].')') or error('Unable to add ban', __FILE__, __LINE__, $db->error());
 	else
 		$db->query('UPDATE '.$db->prefix.'bans SET username='.$ban_user.', ip='.$ban_ip.', email='.$ban_email.', message='.$ban_message.', expire='.$ban_expire.' WHERE id='.intval($_POST['ban_id'])) or error('Unable to update ban', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the bans cache
-	require_once PUN_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
 	generate_bans_cache();
 
 	redirect('admin_bans.php', 'Ban '.(($_POST['mode'] == 'edit') ? 'edited' : 'added').'. Redirecting &hellip;');
@@ -268,7 +287,9 @@ else if (isset($_GET['del_ban']))
 	$db->query('DELETE FROM '.$db->prefix.'bans WHERE id='.$ban_id) or error('Unable to delete ban', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the bans cache
-	require_once PUN_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
 	generate_bans_cache();
 
 	redirect('admin_bans.php', 'Ban removed. Redirecting &hellip;');
@@ -310,7 +331,7 @@ generate_admin_menu('bans');
 			<div class="fakeform">
 <?php
 
-$result = $db->query('SELECT id, username, ip, email, message, expire FROM '.$db->prefix.'bans ORDER BY id') or error('Unable to fetch ban list', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT b.id, b.username, b.ip, b.email, b.message, b.expire, b.ban_creator, u.username AS ban_creator_username FROM '.$db->prefix.'bans AS b LEFT JOIN '.$db->prefix.'users AS u ON b.ban_creator=u.id ORDER BY b.id') or error('Unable to fetch ban list', __FILE__, __LINE__, $db->error());
 if ($db->num_rows($result))
 {
 	while ($cur_ban = $db->fetch_assoc($result))
@@ -338,6 +359,10 @@ if ($db->num_rows($result))
 <?php endif; ?><?php if ($cur_ban['message'] != ''): ?>								<tr>
 									<th>Reason</th>
 									<td><?php echo pun_htmlspecialchars($cur_ban['message']) ?></td>
+								</tr>
+<?php endif; ?><?php if (!empty($cur_ban['ban_creator_username'])): ?>								<tr>
+									<th>Banned by</th>
+									<td><a href="profile.php?id=<?php echo $cur_ban['ban_creator'] ?>"><?php echo pun_htmlspecialchars($cur_ban['ban_creator_username']) ?></a></td>
 								</tr>
 <?php endif; ?>							</table>
 							<p class="linkactions"><a href="admin_bans.php?edit_ban=<?php echo $cur_ban['id'] ?>">Edit</a> - <a href="admin_bans.php?del_ban=<?php echo $cur_ban['id'] ?>">Remove</a></p>

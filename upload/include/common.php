@@ -22,29 +22,48 @@
 
 ************************************************************************/
 
-// Enable DEBUG mode by removing // from the following line
-//define('PUN_DEBUG', 1);
-
-// This displays all executed queries in the page footer.
-// DO NOT enable this in a production environment!
-//define('PUN_SHOW_QUERIES', 1);
-
 if (!defined('PUN_ROOT'))
 	exit('The constant PUN_ROOT must be defined and point to a valid FluxBB installation root directory.');
+
+
+// Define the version and database revision that this code was written for
+define('FORUM_VERSION', '1.3 Beta');
+define('FORUM_DB_REVISION', 0);
+
+
+// Attempt to load the configuration file config.php
+if (file_exists(PUN_ROOT.'config.php'))
+	include PUN_ROOT.'config.php';
+
+// If PUN isn't defined, config.php is missing or corrupt
+if (!defined('PUN'))
+	exit('The file \'config.php\' doesn\'t exist or is corrupt. Please run <a href="install.php">install.php</a> to install FluxBB first.');
 
 
 // Load the functions script
 require PUN_ROOT.'include/functions.php';
 
+// Load UTF-8 functions
+require PUN_ROOT.'include/utf8/utf8.php';
+require PUN_ROOT.'include/utf8/ucwords.php';
+require PUN_ROOT.'include/utf8/trim.php';
+
+// Block prefetch requests
+if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
+{
+	header('HTTP/1.1 403 Prefetching Forbidden');
+
+	// Send no-cache headers
+	header('Expires: Thu, 21 Jul 1977 07:30:00 GMT');	// When yours truly first set eyes on this world! :)
+	header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+	header('Cache-Control: post-check=0, pre-check=0', false);
+	header('Pragma: no-cache');		// For HTTP/1.0 compability
+
+	exit;
+}
+
 // Reverse the effect of register_globals
-unregister_globals();
-
-
-@include PUN_ROOT.'config.php';
-
-// If PUN isn't defined, config.php is missing or corrupt
-if (!defined('PUN'))
-	exit('The file \'config.php\' doesn\'t exist or is corrupt. Please run <a href="install.php">install.php</a> to install FluxBB first.');
+forum_unregister_globals();
 
 
 // Record the start time (will be used to calculate the generation time for the page)
@@ -55,7 +74,11 @@ $pun_start = ((float)$usec + (float)$sec);
 error_reporting(E_ALL ^ E_NOTICE);
 
 // Turn off magic_quotes_runtime
-set_magic_quotes_runtime(0);
+if (get_magic_quotes_runtime())
+	set_magic_quotes_runtime(0);
+
+// Force POSIX locale (to prevent functions such as strtolower() from messing up UTF-8 strings)
+setlocale(LC_CTYPE, 'C');
 
 // Strip slashes from GET/POST/COOKIE (if magic_quotes_gpc is enabled)
 if (get_magic_quotes_gpc())
@@ -70,16 +93,16 @@ if (get_magic_quotes_gpc())
 	$_COOKIE = stripslashes_array($_COOKIE);
 }
 
-// Seed the random number generator (PHP <4.2.0 only)
-if (version_compare(PHP_VERSION, '4.2.0', '<'))
-	mt_srand((double)microtime()*1000000);
-
-// If a cookie name is not specified in config.php, we use the default (forum_cookie)
+// If a cookie name is not specified in config.php, we use the default (pun_cookie)
 if (empty($cookie_name))
-	$cookie_name = 'forum_cookie';
+	$cookie_name = 'pun_cookie';
+
+// If the cache directory is not specified, we use the default setting
+if (!defined('FORUM_CACHE_DIR'))
+	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
 
 // Define a few commonly used constants
-define('PUN_UNVERIFIED', 32000);
+define('PUN_UNVERIFIED', 0);
 define('PUN_ADMIN', 1);
 define('PUN_MOD', 2);
 define('PUN_GUEST', 3);
@@ -93,57 +116,69 @@ require PUN_ROOT.'include/dblayer/common_db.php';
 $db->start_transaction();
 
 // Load cached config
-@include PUN_ROOT.'cache/cache_config.php';
+if (file_exists(FORUM_CACHE_DIR.'cache_config.php'))
+	include FORUM_CACHE_DIR.'cache_config.php';
+
 if (!defined('PUN_CONFIG_LOADED'))
 {
-	require PUN_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
 	generate_config_cache();
-	require PUN_ROOT.'cache/cache_config.php';
+	require FORUM_CACHE_DIR.'cache_config.php';
 }
 
+// Verify that we are running the proper database schema revision
+if (!isset($pun_config['o_database_revision']) || $pun_config['o_database_revision'] < FORUM_DB_REVISION || version_compare($pun_config['o_cur_version'], FORUM_VERSION, '<'))
+	exit('Your FluxBB database is out-of-date and must be upgraded in order to continue. Please run <a href="'.PUN_ROOT.'db_update.php">db_update.php</a> in order to complete the upgrade process.');
 
 // Enable output buffering
 if (!defined('PUN_DISABLE_BUFFERING'))
 {
-	// For some very odd reason, "Norton Internet Security" unsets this
-	$_SERVER['HTTP_ACCEPT_ENCODING'] = isset($_SERVER['HTTP_ACCEPT_ENCODING']) ? $_SERVER['HTTP_ACCEPT_ENCODING'] : '';
-
 	// Should we use gzip output compression?
-	if ($pun_config['o_gzip'] && extension_loaded('zlib') && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false || strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'deflate') !== false))
+	if ($pun_config['o_gzip'] && extension_loaded('zlib'))
 		ob_start('ob_gzhandler');
 	else
 		ob_start();
 }
 
+// Define standard date/time formats
+$forum_time_formats = array($pun_config['o_time_format'], 'H:i:s', 'H:i', 'g:i:s a', 'g:i a');
+$forum_date_formats = array($pun_config['o_date_format'], 'Y-m-d', 'Y-d-m', 'd-m-Y', 'm-d-Y', 'M j Y', 'jS M Y');
 
 // Check/update/set cookie and fetch user info
 $pun_user = array();
 check_cookie($pun_user);
 
 // Attempt to load the common language file
-@include PUN_ROOT.'lang/'.$pun_user['language'].'/common.php';
-if (!isset($lang_common))
-	exit('There is no valid language pack \''.pun_htmlspecialchars($pun_user['language']).'\' installed. Please reinstall a language of that name.');
+if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/common.php'))
+	include PUN_ROOT.'lang/'.$pun_user['language'].'/common.php';
+else
+	error('There is no valid language pack \''.pun_htmlspecialchars($pun_user['language']).'\' installed. Please reinstall a language of that name.');
 
 // Check if we are to display a maintenance message
 if ($pun_config['o_maintenance'] && $pun_user['g_id'] > PUN_ADMIN && !defined('PUN_TURN_OFF_MAINT'))
 	maintenance_message();
 
-
 // Load cached bans
-@include PUN_ROOT.'cache/cache_bans.php';
+if (file_exists(FORUM_CACHE_DIR.'cache_bans.php'))
+	include FORUM_CACHE_DIR.'cache_bans.php';
+
 if (!defined('PUN_BANS_LOADED'))
 {
-	require_once PUN_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
 	generate_bans_cache();
-	require PUN_ROOT.'cache/cache_bans.php';
+	require FORUM_CACHE_DIR.'cache_bans.php';
 }
 
 // Check if current user is banned
 check_bans();
 
-
 // Update online list
 update_users_online();
 
-
+// Check to see if we logged in without a cookie being set
+if ($pun_user['is_guest'] && isset($_GET['login']))
+	message($lang_common['No cookie']);

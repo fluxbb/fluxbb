@@ -31,7 +31,7 @@ require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'include/common_admin.php';
 
 
-if ($pun_user['g_id'] > PUN_ADMIN)
+if ($pun_user['g_id'] != PUN_ADMIN)
 	message($lang_common['No permission']);
 
 
@@ -135,7 +135,9 @@ if (isset($_POST['form_sent']))
 	}
 
 	// Regenerate the config cache
-	require_once PUN_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
 	generate_config_cache();
 
 	redirect('admin_options.php', 'Options updated. Redirecting &hellip;');
@@ -182,47 +184,54 @@ generate_admin_menu('options');
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Server timezone</th>
+									<th scope="row">Default timezone</th>
 									<td>
-										<select name="form[server_timezone]">
-											<option value="-12"<?php if ($pun_config['o_server_timezone'] == -12 ) echo ' selected="selected"' ?>>-12</option>
-											<option value="-11"<?php if ($pun_config['o_server_timezone'] == -11) echo ' selected="selected"' ?>>-11</option>
-											<option value="-10"<?php if ($pun_config['o_server_timezone'] == -10) echo ' selected="selected"' ?>>-10</option>
-											<option value="-9.5"<?php if ($pun_config['o_server_timezone'] == -9.5) echo ' selected="selected"' ?>>-09.5</option>
-											<option value="-9"<?php if ($pun_config['o_server_timezone'] == -9 ) echo ' selected="selected"' ?>>-09</option>
-											<option value="-8.5"<?php if ($pun_config['o_server_timezone'] == -8.5) echo ' selected="selected"' ?>>-08.5</option>
-											<option value="-8"<?php if ($pun_config['o_server_timezone'] == -8 ) echo ' selected="selected"' ?>>-08 PST</option>
-											<option value="-7"<?php if ($pun_config['o_server_timezone'] == -7 ) echo ' selected="selected"' ?>>-07 MST</option>
-											<option value="-6"<?php if ($pun_config['o_server_timezone'] == -6 ) echo ' selected="selected"' ?>>-06 CST</option>
-											<option value="-5"<?php if ($pun_config['o_server_timezone'] == -5 ) echo ' selected="selected"' ?>>-05 EST</option>
-											<option value="-4"<?php if ($pun_config['o_server_timezone'] == -4 ) echo ' selected="selected"' ?>>-04 AST</option>
-											<option value="-3.5"<?php if ($pun_config['o_server_timezone'] == -3.5) echo ' selected="selected"' ?>>-03.5</option>
-											<option value="-3"<?php if ($pun_config['o_server_timezone'] == -3 ) echo ' selected="selected"' ?>>-03 ADT</option>
-											<option value="-2"<?php if ($pun_config['o_server_timezone'] == -2 ) echo ' selected="selected"' ?>>-02</option>
-											<option value="-1"<?php if ($pun_config['o_server_timezone'] == -1) echo ' selected="selected"' ?>>-01</option>
-											<option value="0"<?php if ($pun_config['o_server_timezone'] == 0) echo ' selected="selected"' ?>>00 GMT</option>
-											<option value="1"<?php if ($pun_config['o_server_timezone'] == 1) echo ' selected="selected"' ?>>+01 CET</option>
-											<option value="2"<?php if ($pun_config['o_server_timezone'] == 2 ) echo ' selected="selected"' ?>>+02</option>
-											<option value="3"<?php if ($pun_config['o_server_timezone'] == 3 ) echo ' selected="selected"' ?>>+03</option>
-											<option value="3.5"<?php if ($pun_config['o_server_timezone'] == 3.5) echo ' selected="selected"' ?>>+03.5</option>
-											<option value="4"<?php if ($pun_config['o_server_timezone'] == 4 ) echo ' selected="selected"' ?>>+04</option>
-											<option value="4.5"<?php if ($pun_config['o_server_timezone'] == 4.5) echo ' selected="selected"' ?>>+04.5</option>
-											<option value="5"<?php if ($pun_config['o_server_timezone'] == 5 ) echo ' selected="selected"' ?>>+05</option>
-											<option value="5.5"<?php if ($pun_config['o_server_timezone'] == 5.5) echo ' selected="selected"' ?>>+05.5</option>
-											<option value="6"<?php if ($pun_config['o_server_timezone'] == 6 ) echo ' selected="selected"' ?>>+06</option>
-											<option value="6.5"<?php if ($pun_config['o_server_timezone'] == 6.5) echo ' selected="selected"' ?>>+06.5</option>
-											<option value="7"<?php if ($pun_config['o_server_timezone'] == 7 ) echo ' selected="selected"' ?>>+07</option>
-											<option value="8"<?php if ($pun_config['o_server_timezone'] == 8 ) echo ' selected="selected"' ?>>+08</option>
-											<option value="9"<?php if ($pun_config['o_server_timezone'] == 9 ) echo ' selected="selected"' ?>>+09</option>
-											<option value="9.5"<?php if ($pun_config['o_server_timezone'] == 9.5) echo ' selected="selected"' ?>>+09.5</option>
-											<option value="10"<?php if ($pun_config['o_server_timezone'] == 10) echo ' selected="selected"' ?>>+10</option>
-											<option value="10.5"<?php if ($pun_config['o_server_timezone'] == 10.5) echo ' selected="selected"' ?>>+10.5</option>
-											<option value="11"<?php if ($pun_config['o_server_timezone'] == 11) echo ' selected="selected"' ?>>+11</option>
-											<option value="11.5"<?php if ($pun_config['o_server_timezone'] == 11.5) echo ' selected="selected"' ?>>+11.5</option>
-											<option value="12"<?php if ($pun_config['o_server_timezone'] == 12 ) echo ' selected="selected"' ?>>+12</option>
-											<option value="13"<?php if ($pun_config['o_server_timezone'] == 13 ) echo ' selected="selected"' ?>>+13</option>
+										<select name="form[default_timezone]">
+											<option value="-12"<?php if ($pun_config['o_default_timezonezone'] == -12 ) echo ' selected="selected"' ?>>-12</option>
+											<option value="-11"<?php if ($pun_config['o_default_timezonezone'] == -11) echo ' selected="selected"' ?>>-11</option>
+											<option value="-10"<?php if ($pun_config['o_default_timezonezone'] == -10) echo ' selected="selected"' ?>>-10</option>
+											<option value="-9.5"<?php if ($pun_config['o_default_timezonezone'] == -9.5) echo ' selected="selected"' ?>>-09.5</option>
+											<option value="-9"<?php if ($pun_config['o_default_timezonezone'] == -9 ) echo ' selected="selected"' ?>>-09</option>
+											<option value="-8.5"<?php if ($pun_config['o_default_timezonezone'] == -8.5) echo ' selected="selected"' ?>>-08.5</option>
+											<option value="-8"<?php if ($pun_config['o_default_timezonezone'] == -8 ) echo ' selected="selected"' ?>>-08 PST</option>
+											<option value="-7"<?php if ($pun_config['o_default_timezonezone'] == -7 ) echo ' selected="selected"' ?>>-07 MST</option>
+											<option value="-6"<?php if ($pun_config['o_default_timezonezone'] == -6 ) echo ' selected="selected"' ?>>-06 CST</option>
+											<option value="-5"<?php if ($pun_config['o_default_timezonezone'] == -5 ) echo ' selected="selected"' ?>>-05 EST</option>
+											<option value="-4"<?php if ($pun_config['o_default_timezonezone'] == -4 ) echo ' selected="selected"' ?>>-04 AST</option>
+											<option value="-3.5"<?php if ($pun_config['o_default_timezonezone'] == -3.5) echo ' selected="selected"' ?>>-03.5</option>
+											<option value="-3"<?php if ($pun_config['o_default_timezonezone'] == -3 ) echo ' selected="selected"' ?>>-03 ADT</option>
+											<option value="-2"<?php if ($pun_config['o_default_timezonezone'] == -2 ) echo ' selected="selected"' ?>>-02</option>
+											<option value="-1"<?php if ($pun_config['o_default_timezonezone'] == -1) echo ' selected="selected"' ?>>-01</option>
+											<option value="0"<?php if ($pun_config['o_default_timezonezone'] == 0) echo ' selected="selected"' ?>>00 GMT</option>
+											<option value="1"<?php if ($pun_config['o_default_timezonezone'] == 1) echo ' selected="selected"' ?>>+01 CET</option>
+											<option value="2"<?php if ($pun_config['o_default_timezonezone'] == 2 ) echo ' selected="selected"' ?>>+02</option>
+											<option value="3"<?php if ($pun_config['o_default_timezonezone'] == 3 ) echo ' selected="selected"' ?>>+03</option>
+											<option value="3.5"<?php if ($pun_config['o_default_timezonezone'] == 3.5) echo ' selected="selected"' ?>>+03.5</option>
+											<option value="4"<?php if ($pun_config['o_default_timezonezone'] == 4 ) echo ' selected="selected"' ?>>+04</option>
+											<option value="4.5"<?php if ($pun_config['o_default_timezonezone'] == 4.5) echo ' selected="selected"' ?>>+04.5</option>
+											<option value="5"<?php if ($pun_config['o_default_timezonezone'] == 5 ) echo ' selected="selected"' ?>>+05</option>
+											<option value="5.5"<?php if ($pun_config['o_default_timezonezone'] == 5.5) echo ' selected="selected"' ?>>+05.5</option>
+											<option value="6"<?php if ($pun_config['o_default_timezonezone'] == 6 ) echo ' selected="selected"' ?>>+06</option>
+											<option value="6.5"<?php if ($pun_config['o_default_timezonezone'] == 6.5) echo ' selected="selected"' ?>>+06.5</option>
+											<option value="7"<?php if ($pun_config['o_default_timezonezone'] == 7 ) echo ' selected="selected"' ?>>+07</option>
+											<option value="8"<?php if ($pun_config['o_default_timezonezone'] == 8 ) echo ' selected="selected"' ?>>+08</option>
+											<option value="9"<?php if ($pun_config['o_default_timezonezone'] == 9 ) echo ' selected="selected"' ?>>+09</option>
+											<option value="9.5"<?php if ($pun_config['o_default_timezonezone'] == 9.5) echo ' selected="selected"' ?>>+09.5</option>
+											<option value="10"<?php if ($pun_config['o_default_timezonezone'] == 10) echo ' selected="selected"' ?>>+10</option>
+											<option value="10.5"<?php if ($pun_config['o_default_timezonezone'] == 10.5) echo ' selected="selected"' ?>>+10.5</option>
+											<option value="11"<?php if ($pun_config['o_default_timezonezone'] == 11) echo ' selected="selected"' ?>>+11</option>
+											<option value="11.5"<?php if ($pun_config['o_default_timezonezone'] == 11.5) echo ' selected="selected"' ?>>+11.5</option>
+											<option value="12"<?php if ($pun_config['o_default_timezonezone'] == 12 ) echo ' selected="selected"' ?>>+12</option>
+											<option value="13"<?php if ($pun_config['o_default_timezonezone'] == 13 ) echo ' selected="selected"' ?>>+13</option>
 										</select>
-										<span>The timezone of the server where FluxBB is installed.</span>
+										<span>The default timezone for guests and users attempting to register for the board.</span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">Adjust for DST</th>
+									<td>
+										<input type="radio" name="form[default_dst]" value="1"<?php if ($pun_config['o_default_dst'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[default_dst]" value="0"<?php if ($pun_config['o_default_dst'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
+										<span>Check if daylight savings is in effect (advances times by 1 hour)</span>
 									</td>
 								</tr>
 								<tr>
@@ -438,6 +447,13 @@ generate_admin_menu('options');
 									</td>
 								</tr>
 								<tr>
+									<th scope="row"><a name="signatures">Signatures</a></th>
+									<td>
+										<input type="radio" name="form[signatures]" value="1"<?php if ($pun_config['o_signatures'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[signatures]" value="0"<?php if ($pun_config['o_signatures'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
+										<span>Allow users to attach a signature to their posts.</span>
+									</td>
+								</tr>
+								<tr>
 									<th scope="row"><a name="ranks">User ranks</a></th>
 									<td>
 										<input type="radio" name="form[ranks]" value="1"<?php if ($pun_config['o_ranks'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[ranks]" value="0"<?php if ($pun_config['o_ranks'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
@@ -449,6 +465,13 @@ generate_admin_menu('options');
 									<td>
 										<input type="radio" name="form[show_dot]" value="1"<?php if ($pun_config['o_show_dot'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[show_dot]" value="0"<?php if ($pun_config['o_show_dot'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
 										<span>This feature displays a dot in front of topics in viewforum.php in case the currently logged in user has posted in that topic earlier. Disable if you are experiencing high server load.</span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">Topic views</th>
+									<td>
+										<input type="radio" name="form[topic_views]" value="1"<?php if ($pun_config['o_topic_views'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[topic_views]" value="0"<?php if ($pun_config['o_topic_views'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
+										<span>Keep track of the number of views a topic has. Disable if you are experiencing high server load in a busy forum.</span>
 									</td>
 								</tr>
 								<tr>
@@ -604,6 +627,13 @@ generate_admin_menu('options');
 										<span>Password for SMTP server. Only enter a password if it is required by the SMTP server (most servers <strong>do not</strong> require authentication).</span>
 									</td>
 								</tr>
+								<tr>
+									<th scope="row">Encrypt SMTP using SSL</th>
+									<td>
+										<input type="radio" name="form[smtp_ssl]" value="1"<?php if ($pun_config['o_smtp_ssl'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[smtp_ssl]" value="0"<?php if ($pun_config['o_smtp_ssl'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
+										<span>Encrypts the connection to the SMTP server using SSL. Should only be used if your SMTP server requires it and your version of PHP supports SSL.</span>
+									</td>
+								</tr>
 							</table>
 						</div>
 					</fieldset>
@@ -639,6 +669,15 @@ generate_admin_menu('options');
 									<td>
 										<textarea name="form[rules_message]" rows="10" cols="55"><?php echo pun_htmlspecialchars($pun_config['o_rules_message']) ?></textarea>
 										<span>Here you can enter any rules or other information that the user must review and accept when registering. If you enabled rules above you have to enter something here, otherwise it will be disabled. This text will not be parsed like regular posts and thus may contain HTML.</span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">Default e-mail setting</th>
+									<td>
+										<span>Choose the default privacy setting for new user registrations.</span>
+										<input type="radio" name="form[default_email_setting]" value="0"<?php if ($pun_config['o_default_email_setting'] == '0') echo ' checked="checked"' ?> />&nbsp;Display e-mail address to other users.<br />
+										<input type="radio" name="form[default_email_setting]" value="1"<?php if ($pun_config['o_default_email_setting'] == '1') echo ' checked="checked"' ?> />&nbsp;Hide e-mail address but allow form e-mail.<br />
+										<input type="radio" name="form[default_email_setting]" value="2"<?php if ($pun_config['o_default_email_setting'] == '2') echo ' checked="checked"' ?> />&nbsp;Hide e-mail address and disallow form e-mail.<br />
 									</td>
 								</tr>
 							</table>

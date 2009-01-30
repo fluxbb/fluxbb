@@ -34,6 +34,18 @@ if ($pun_user['g_read_board'] == '0')
 // Load the index.php language file
 require PUN_ROOT.'lang/'.$pun_user['language'].'/index.php';
 
+// Get list of forums and topics with new posts since last visit
+if (!$pun_user['is_guest'])
+{
+	$result = $db->query('SELECT t.forum_id, t.id, t.last_post FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.last_post>'.$pun_user['last_visit'].' AND t.moved_to IS NULL') or error('Unable to fetch new topics', __FILE__, __LINE__, $db->error());
+
+	$new_topics = array();
+	while ($cur_topic = $db->fetch_assoc($result))
+		$new_topics[$cur_topic['forum_id']][$cur_topic['id']] = $cur_topic['last_post'];
+
+	$tracked_topics = get_tracked_topics();
+}
+
 $page_title = pun_htmlspecialchars($pun_config['o_board_title']);
 define('PUN_ALLOW_INDEX', 1);
 require PUN_ROOT.'header.php';
@@ -78,12 +90,21 @@ while ($cur_forum = $db->fetch_assoc($result))
 	$icon_text = $lang_common['Normal icon'];
 	$icon_type = 'icon';
 
-	// Are there new posts?
-	if (!$pun_user['is_guest'] && $cur_forum['last_post'] > $pun_user['last_visit'])
+	// Are there new posts since our last visit?
+	if (!$pun_user['is_guest'] && $cur_forum['last_post'] > $pun_user['last_visit'] && (empty($tracked_topics['forums'][$cur_forum['fid']]) || $cur_forum['last_post'] > $tracked_topics['forums'][$cur_forum['fid']]))
 	{
-		$item_status = 'inew';
-		$icon_text = $lang_common['New icon'];
-		$icon_type = 'icon inew';
+		// There are new posts in this forum, but have we read all of them already?
+		foreach ($new_topics[$cur_forum['fid']] as $check_topic_id => $check_last_post)
+		{
+			if ((empty($tracked_topics['topics'][$check_topic_id]) || $tracked_topics['topics'][$check_topic_id] < $check_last_post) && (empty($tracked_topics['forums'][$cur_forum['fid']]) || $tracked_topics['forums'][$cur_forum['fid']] < $check_last_post))
+			{
+				$item_status = 'inew';
+				$icon_text = $lang_common['New icon'];
+				$icon_type = 'icon inew';
+
+				break;
+			}
+		}
 	}
 
 	// Is this a redirect forum?
@@ -118,7 +139,12 @@ while ($cur_forum = $db->fetch_assoc($result))
 		$moderators = array();
 
 		while (list($mod_username, $mod_id) = @each($mods_array))
-			$moderators[] = '<a href="profile.php?id='.$mod_id.'">'.pun_htmlspecialchars($mod_username).'</a>';
+		{
+			if ($pun_user['g_view_users'] == '1')
+				$moderators[] = '<a href="profile.php?id='.$mod_id.'">'.pun_htmlspecialchars($mod_username).'</a>';
+			else
+				$moderators[] = pun_htmlspecialchars($mod_username);
+		}
 
 		$moderators = "\t\t\t\t\t\t\t\t".'<p><em>('.$lang_common['Moderated by'].'</em> '.implode(', ', $moderators).')</p>'."\n";
 	}
@@ -158,6 +184,11 @@ $stats['last_user'] = $db->fetch_assoc($result);
 $result = $db->query('SELECT SUM(num_topics), SUM(num_posts) FROM '.$db->prefix.'forums') or error('Unable to fetch topic/post count', __FILE__, __LINE__, $db->error());
 list($stats['total_topics'], $stats['total_posts']) = $db->fetch_row($result);
 
+if ($pun_user['g_view_users'] == '1')
+	$stats['newest_user'] = '<a href="profile.php?id='.$stats['last_user']['id'].'">'.pun_htmlspecialchars($stats['last_user']['username']).'</a>';
+else
+	$stats['newest_user'] = pun_htmlspecialchars($stats['last_user']['username']);
+
 ?>
 <div id="brdstats" class="block">
 	<h2><span><?php echo $lang_index['Board info'] ?></span></h2>
@@ -171,7 +202,7 @@ list($stats['total_topics'], $stats['total_posts']) = $db->fetch_row($result);
 			</dl>
 			<dl class="conl">
 				<dt><strong><?php echo $lang_index['User info'] ?></strong></dt>
-				<dd><?php echo $lang_index['Newest user'] ?>: <a href="profile.php?id=<?php echo $stats['last_user']['id'] ?>"><?php echo pun_htmlspecialchars($stats['last_user']['username']) ?></a></dd>
+				<dd><?php echo $lang_index['Newest user'] ?>: <?php echo $stats['newest_user'] ?></dd>
 <?php
 
 if ($pun_config['o_users_online'] == '1')
@@ -184,7 +215,12 @@ if ($pun_config['o_users_online'] == '1')
 	while ($pun_user_online = $db->fetch_assoc($result))
 	{
 		if ($pun_user_online['user_id'] > 1)
-			$users[] = "\n\t\t\t\t".'<dd><a href="profile.php?id='.$pun_user_online['user_id'].'">'.pun_htmlspecialchars($pun_user_online['ident']).'</a>';
+		{
+			if ($pun_user['g_view_users'] == '1')
+				$users[] = "\n\t\t\t\t".'<dd><a href="profile.php?id='.$pun_user_online['user_id'].'">'.pun_htmlspecialchars($pun_user_online['ident']).'</a>';
+			else
+				$users[] = "\n\t\t\t\t".'<dd>'.pun_htmlspecialchars($pun_user_online['ident']);
+		}
 		else
 			++$num_guests;
 	}

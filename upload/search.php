@@ -41,10 +41,6 @@ else if ($pun_user['g_search'] == '0')
 	message($lang_search['No search permission']);
 
 
-// Detect two byte character sets
-$multibyte = (isset($lang_common['lang_multibyte']) && $lang_common['lang_multibyte']) ? true : false;
-
-
 // Figure out what to do :-)
 if (isset($_GET['action']) || isset($_GET['search_id']))
 {
@@ -122,51 +118,50 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		$keyword_results = $author_results = array();
 
 		// Search a specific forum?
-		$forum_sql = ($forum != -1 || ($forum == -1 && $pun_config['o_search_all_forums'] == '0' && $pun_user['g_id'] >= PUN_GUEST)) ? ' AND t.forum_id = '.$forum : '';
+		$forum_sql = ($forum != -1 || ($forum == -1 && $pun_config['o_search_all_forums'] == '0' && !$pun_user['is_admmod'])) ? ' AND t.forum_id = '.$forum : '';
 
 		if (!empty($author) || !empty($keywords))
 		{
+			// Flood protection
+			if ($pun_user['last_search'] && (time() - $pun_user['last_search']) < $pun_user['g_search_flood'] && (time() - $pun_user['last_search']) >= 0)
+				message(sprintf($lang_search['Search flood'], $pun_user['g_search_flood']));
+
+			if (!$pun_user['is_guest'])
+			{
+				$db->query('UPDATE '.$db->prefix.'users SET last_search='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
+			}
+			else
+			{
+				$db->query('UPDATE '.$db->prefix.'online SET last_search='.time().' WHERE ident=\''.$db->escape(get_remote_address()).'\'' ) or error('Unable to update user', __FILE__, __LINE__, $db->error());
+			}
+
 			// If it's a search for keywords
 			if ($keywords)
 			{
 				$stopwords = (array)@file(PUN_ROOT.'lang/'.$pun_user['language'].'/stopwords.txt');
 				$stopwords = array_map('trim', $stopwords);
 
-				// Are we searching for multibyte charset text?
-				if ($multibyte)
+				// Remove any apostrophes which aren't part of words
+				$keywords = substr(preg_replace('((?<=\W)\'|\'(?=\W))', '', ' '.$keywords.' '), 1, -1);
+				// Remove symbols and multiple whitespace
+				$keywords = preg_replace('/[\^\$&\(\)<>`"\|,@_\?%~\+\[\]{}:=\/#\\\\;!\.\s]+/', ' ', $keywords);
+
+				// Fill an array with all the words
+				$keywords_array = array_unique(explode(' ', $keywords));
+
+				if (empty($keywords_array))
+					message($lang_search['No hits']);
+
+				while (list($i, $word) = @each($keywords_array))
 				{
-					// Strip out excessive whitespace
-					$keywords = trim(preg_replace('#\s+#', ' ', $keywords));
+					$num_chars = pun_strlen($word);
 
-					$keywords_array = explode(' ', $keywords);
+					if ($word !== 'or' && ($num_chars < 3 || $num_chars > 20 || in_array($word, $stopwords)))
+						unset($keywords_array[$i]);
 				}
-				else
-				{
-					// Filter out non-alphabetical chars
-					$noise_match = array('^', '$', '&', '(', ')', '<', '>', '`', '\'', '"', '|', ',', '@', '_', '?', '%', '~', '[', ']', '{', '}', ':', '\\', '/', '=', '#', '\'', ';', '!', '¤');
-					$noise_replace = array(' ', ' ', ' ', ' ', ' ', ' ', ' ', '',  '',   ' ', ' ', ' ', ' ', '',  ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '' ,  ' ', ' ', ' ', ' ',  ' ', ' ', ' ');
-					$keywords = str_replace($noise_match, $noise_replace, $keywords);
 
-					// Strip out excessive whitespace
-					$keywords = trim(preg_replace('#\s+#', ' ', $keywords));
-
-					// Fill an array with all the words
-					$keywords_array = explode(' ', $keywords);
-
-					if (empty($keywords_array))
-						message($lang_search['No hits']);
-
-					while (list($i, $word) = @each($keywords_array))
-					{
-						$num_chars = pun_strlen($word);
-
-						if ($word !== 'or' && ($num_chars < 3 || $num_chars > 20 || in_array($word, $stopwords)))
-							unset($keywords_array[$i]);
-					}
-
-					// Should we search in message body or topic subject specifically?
-					$search_in_cond = ($search_in) ? (($search_in > 0) ? ' AND m.subject_match = 0' : ' AND m.subject_match = 1') : '';
-				}
+				// Should we search in message body or topic subject specifically?
+				$search_in_cond = ($search_in) ? (($search_in > 0) ? ' AND m.subject_match = 0' : ' AND m.subject_match = 1') : '';
 
 				$word_count = 0;
 				$match_type = 'and';
@@ -184,26 +179,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 						default:
 						{
-							// Are we searching for multibyte charset text?
-							if ($multibyte)
-							{
-								$cur_word = $db->escape('%'.str_replace('*', '', $cur_word).'%');
-								$cur_word_like = ($db_type == 'pgsql') ? 'ILIKE \''.$cur_word.'\'' : 'LIKE \''.$cur_word.'\'';
-
-								if ($search_in > 0)
-									$sql = 'SELECT id FROM '.$db->prefix.'posts WHERE message '.$cur_word_like;
-								else if ($search_in < 0)
-									$sql = 'SELECT p.id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id WHERE t.subject '.$cur_word_like.' GROUP BY p.id, t.id';
-								else
-									$sql = 'SELECT p.id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id WHERE p.message '.$cur_word_like.' OR t.subject '.$cur_word_like.' GROUP BY p.id, t.id';
-							}
-							else
-							{
-								$cur_word = $db->escape(str_replace('*', '%', $cur_word));
-								$sql = 'SELECT m.post_id FROM '.$db->prefix.'search_words AS w INNER JOIN '.$db->prefix.'search_matches AS m ON m.word_id = w.id WHERE w.word LIKE \''.$cur_word.'\''.$search_in_cond;
-							}
-
-							$result = $db->query($sql, true) or error('Unable to search for posts', __FILE__, __LINE__, $db->error());
+							$result = $db->query('SELECT m.post_id FROM '.$db->prefix.'search_words AS w INNER JOIN '.$db->prefix.'search_matches AS m ON m.word_id = w.id WHERE w.word LIKE \''.$cur_word.'\''.$search_in_cond, true) or error('Unable to search for posts', __FILE__, __LINE__, $db->error());
 
 							$row = array();
 							while ($temp = $db->fetch_row($result))
@@ -501,6 +477,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 		if ($show_as == 'topics')
 		{
+			// Get topic/forum tracking data
+			if (!$pun_user['is_guest'])
+				$tracked_topics = get_tracked_topics();
 
 ?>
 <div id="vf" class="blocktable">
@@ -558,7 +537,12 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$pposter = pun_htmlspecialchars($search_set[$i]['pposter']);
 
 				if ($search_set[$i]['poster_id'] > 1)
-					$pposter = '<strong><a href="profile.php?id='.$search_set[$i]['poster_id'].'">'.$pposter.'</a></strong>';
+				{
+					if ($pun_user['g_view_users'] == '1')
+						$pposter = '<strong><a href="profile.php?id='.$search_set[$i]['poster_id'].'">'.$pposter.'</a></strong>';
+					else
+						$pposter = '<strong>'.$pposter.'</strong>';
+				}
 
 				if (pun_strlen($message) >= 1000)
 					$message .= ' &hellip;';
@@ -612,7 +596,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					$item_status = 'iclosed';
 				}
 
-				if (!$pun_user['is_guest'] && $search_set[$i]['last_post'] > $pun_user['last_visit'])
+				if (!$pun_user['is_guest'] && $search_set[$i]['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$search_set[$i]['tid']]) || $tracked_topics['topics'][$search_set[$i]['tid']] < $search_set[$i]['last_post']) && (!isset($tracked_topics['forums'][$search_set[$i]['forum_id']]) || $tracked_topics['forums'][$search_set[$i]['forum_id']] < $search_set[$i]['last_post']))
 				{
 					$icon_text .= ' '.$lang_common['New icon'];
 					$item_status .= ' inew';
@@ -703,7 +687,7 @@ require PUN_ROOT.'header.php';
 						<br /><select id="forum" name="forum">
 <?php
 
-if ($pun_config['o_search_all_forums'] == '1' || $pun_user['g_id'] < PUN_GUEST)
+if ($pun_config['o_search_all_forums'] == '1' || $pun_user['is_admmod'])
 	echo "\t\t\t\t\t\t\t".'<option value="-1">'.$lang_search['All forums'].'</option>'."\n";
 
 $result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.redirect_url FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.redirect_url IS NULL ORDER BY c.disp_position, c.id, f.disp_position', true) or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());

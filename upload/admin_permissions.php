@@ -31,7 +31,7 @@ require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'include/common_admin.php';
 
 
-if ($pun_user['g_id'] > PUN_ADMIN)
+if ($pun_user['g_id'] != PUN_ADMIN)
 	message($lang_common['No permission']);
 
 
@@ -49,7 +49,9 @@ if (isset($_POST['form_sent']))
 	}
 
 	// Regenerate the config cache
-	require_once PUN_ROOT.'include/cache.php';
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
 	generate_config_cache();
 
 	redirect('admin_permissions.php', 'Permissions updated. Redirecting &hellip;');
@@ -149,43 +151,6 @@ generate_admin_menu('permissions');
 									<td>
 										<input type="text" name="form[sig_lines]" size="3" maxlength="3" value="<?php echo $pun_config['p_sig_lines'] ?>" />
 										<span>The maximum number of lines a user signature may contain.</span>
-									</td>
-								</tr>
-							</table>
-						</div>
-					</fieldset>
-				</div>
-				<div class="inform">
-					<fieldset>
-						<legend>Moderators</legend>
-						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
-								<tr>
-									<th scope="row">Edit user profiles</th>
-									<td>
-										<input type="radio" name="form[mod_edit_users]" value="1"<?php if ($pun_config['p_mod_edit_users'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[mod_edit_users]" value="0"<?php if ($pun_config['p_mod_edit_users'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Allow moderators to edit user profiles.</span>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row">Rename users</th>
-									<td>
-										<input type="radio" name="form[mod_rename_users]" value="1"<?php if ($pun_config['p_mod_rename_users'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[mod_rename_users]" value="0"<?php if ($pun_config['p_mod_rename_users'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Allow moderators to rename users. Other moderators and administrators are excluded.</span>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row">Change user passwords</th>
-									<td>
-										<input type="radio" name="form[mod_change_passwords]" value="1"<?php if ($pun_config['p_mod_change_passwords'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[mod_change_passwords]" value="0"<?php if ($pun_config['p_mod_change_passwords'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Allow moderators to change user passwords. Other moderators and administrators are excluded.</span>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row">Ban users</th>
-									<td>
-										<input type="radio" name="form[mod_ban_users]" value="1"<?php if ($pun_config['p_mod_ban_users'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[mod_ban_users]" value="0"<?php if ($pun_config['p_mod_ban_users'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Allow moderators to ban users (and edit/remove current bans).</span>
 									</td>
 								</tr>
 							</table>

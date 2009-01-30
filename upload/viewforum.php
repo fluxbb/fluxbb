@@ -57,13 +57,18 @@ $mods_array = array();
 if ($cur_forum['moderators'] != '')
 	$mods_array = unserialize($cur_forum['moderators']);
 
-$is_admmod = ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_id'] == PUN_MOD && array_key_exists($pun_user['username'], $mods_array))) ? true : false;
+$is_admmod = ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1' && array_key_exists($pun_user['username'], $mods_array))) ? true : false;
 
 // Can we or can we not post new topics?
 if (($cur_forum['post_topics'] == '' && $pun_user['g_post_topics'] == '1') || $cur_forum['post_topics'] == '1' || $is_admmod)
 	$post_link = "\t\t".'<p class="postlink conr"><a href="post.php?fid='.$id.'">'.$lang_forum['Post topic'].'</a></p>'."\n";
 else
 	$post_link = '';
+
+
+// Get topic/forum tracking data
+if (!$pun_user['is_guest'])
+	$tracked_topics = get_tracked_topics();
 
 
 // Determine the topic offset (based on $_GET['p'])
@@ -99,8 +104,8 @@ require PUN_ROOT.'header.php';
 				<tr>
 					<th class="tcl" scope="col"><?php echo $lang_common['Topic'] ?></th>
 					<th class="tc2" scope="col"><?php echo $lang_common['Replies'] ?></th>
-					<th class="tc3" scope="col"><?php echo $lang_forum['Views'] ?></th>
-					<th class="tcr" scope="col"><?php echo $lang_common['Last post'] ?></th>
+<?php if ($pun_config['o_topic_views'] == '1'): ?>					<th class="tc3" scope="col"><?php echo $lang_forum['Views'] ?></th>
+<?php endif; ?>					<th class="tcr" scope="col"><?php echo $lang_common['Last post'] ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -163,7 +168,7 @@ if ($db->num_rows($result))
 			$item_status = 'iclosed';
 		}
 
-		if (!$pun_user['is_guest'] && $cur_topic['last_post'] > $pun_user['last_visit'] && $cur_topic['moved_to'] == null)
+		if (!$pun_user['is_guest'] && $cur_topic['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$cur_topic['id']]) || $tracked_topics['topics'][$cur_topic['id']] < $cur_topic['last_post']) && (!isset($tracked_topics['forums'][$id]) || $tracked_topics['forums'][$id] < $cur_topic['last_post']))
 		{
 			$icon_text .= ' '.$lang_common['New icon'];
 			$item_status .= ' inew';
@@ -215,8 +220,8 @@ if ($db->num_rows($result))
 						</div>
 					</td>
 					<td class="tc2"><?php echo ($cur_topic['moved_to'] == null) ? $cur_topic['num_replies'] : '&nbsp;' ?></td>
-					<td class="tc3"><?php echo ($cur_topic['moved_to'] == null) ? $cur_topic['num_views'] : '&nbsp;' ?></td>
-					<td class="tcr"><?php echo $last_post ?></td>
+<?php if ($pun_config['o_topic_views'] == '1'): ?>					<td class="tc3"><?php echo ($cur_topic['moved_to'] == null) ? $cur_topic['num_views'] : '&nbsp;' ?></td>
+<?php endif; ?>					<td class="tcr"><?php echo $last_post ?></td>
 				</tr>
 <?php
 
@@ -224,10 +229,11 @@ if ($db->num_rows($result))
 }
 else
 {
+	$colspan = ($pun_config['o_topic_views'] == '1') ? 4 : 3;
 
 ?>
 				<tr>
-					<td class="tcl" colspan="4"><?php echo $lang_forum['Empty forum'] ?></td>
+					<td class="tcl" colspan="<?php echo $colspan ?>"><?php echo $lang_forum['Empty forum'] ?></td>
 				</tr>
 <?php
 

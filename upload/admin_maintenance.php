@@ -33,7 +33,7 @@ require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'include/common_admin.php';
 
 
-if ($pun_user['g_id'] > PUN_ADMIN)
+if ($pun_user['g_id'] != PUN_ADMIN)
 	message($lang_common['No permission']);
 
 
@@ -74,7 +74,7 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?> / Rebuilding search index &hellip;</title>
 <style type="text/css">
 body {

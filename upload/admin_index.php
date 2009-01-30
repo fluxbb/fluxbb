@@ -31,7 +31,7 @@ require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'include/common_admin.php';
 
 
-if ($pun_user['g_id'] > PUN_MOD)
+if (!$pun_user['is_admmod'])
 	message($lang_common['No permission']);
 
 
@@ -97,25 +97,9 @@ $result = $db->query('SELECT COUNT(user_id) FROM '.$db->prefix.'online WHERE idl
 $num_online = $db->result($result);
 
 
-// Get the database system version
-switch ($db_type)
-{
-	case 'sqlite':
-		$db_version = 'SQLite '.sqlite_libversion();
-		break;
-
-	default:
-		$result = $db->query('SELECT VERSION()') or error('Unable to fetch version info', __FILE__, __LINE__, $db->error());
-		$db_version = $db->result($result);
-		break;
-}
-
-
 // Collect some additional info about MySQL
 if ($db_type == 'mysql' || $db_type == 'mysqli')
 {
-	$db_version = 'MySQL '.$db_version;
-
 	// Calculate total db size/row count
 	$result = $db->query('SHOW TABLE STATUS FROM `'.$db_name.'`') or error('Unable to fetch table status', __FILE__, __LINE__, $db->error());
 
@@ -135,11 +119,19 @@ if ($db_type == 'mysql' || $db_type == 'mysqli')
 }
 
 
-// See if MMCache or PHPA is loaded
+// Check for the existance of various PHP opcode caches/optimizers
 if (function_exists('mmcache'))
 	$php_accelerator = '<a href="http://turck-mmcache.sourceforge.net/">Turck MMCache</a>';
 else if (isset($_PHPA))
 	$php_accelerator = '<a href="http://www.php-accelerator.co.uk/">ionCube PHP Accelerator</a>';
+else if (ini_get('apc.enabled'))
+	$php_accelerator ='<a href="http://www.php.net/apc/">Alternative PHP Cache (APC)</a>';
+else if (ini_get('zend_optimizer.optimization_level'))
+	$php_accelerator = '<a href="http://www.zend.com/products/zend_optimizer/">Zend Optimizer</a>';
+else if (ini_get('eaccelerator.enable'))
+	$php_accelerator = '<a href="http://eaccelerator.net/">eAccelerator</a>';
+else if (ini_get('xcache.cacher'))
+	$php_accelerator = '<a href="http://trac.lighttpd.net/xcache/">XCache</a>';
 else
 	$php_accelerator = 'N/A';
 
@@ -189,7 +181,7 @@ generate_admin_menu('index');
 					</dd>
 					<dt>Database</dt>
 					<dd>
-						<?php echo $db_version."\n" ?>
+						<?php echo implode(' ', $db->get_version())."\n" ?>
 <?php if (isset($total_records) && isset($total_size)): ?>						<br />Rows: <?php echo $total_records."\n" ?>
 						<br />Size: <?php echo $total_size."\n" ?>
 <?php endif; endif; ?>					</dd>

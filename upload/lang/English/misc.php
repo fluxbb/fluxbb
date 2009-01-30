@@ -4,12 +4,14 @@
 $lang_misc = array(
 
 'Mark read redirect'		=>	'All topics and forums have been marked as read. Redirecting &hellip;',
+'Mark forum read redirect'	=>	'All topics in the specified forum have been marked as read. Redirecting &hellip;',
 
 // Send e-mail
 'Form e-mail disabled'		=>	'The user you are trying to send an e-mail to has disabled form e-mail.',
 'No e-mail subject'			=>	'You must enter a subject.',
 'No e-mail message'			=>	'You must enter a message.',
 'Too long e-mail message'	=>	'Messages cannot be longer than 65535 characters (64 KB).',
+'Email flood'				=>	'At least %s seconds have to pass between sent emails. Please wait a while and try sending again.',
 'E-mail sent redirect'		=>	'E-mail sent. Redirecting &hellip;',
 'Send e-mail to'			=>	'Send e-mail to',
 'E-mail subject'			=>	'Subject',

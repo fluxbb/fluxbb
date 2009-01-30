@@ -86,7 +86,7 @@ function generate_config_cache()
 		$output[$cur_config_item[0]] = $cur_config_item[1];
 
 	// Output config as PHP code
-	$fh = @fopen(PUN_ROOT.'cache/cache_config.php', 'wb');
+	$fh = @fopen(FORUM_CACHE_DIR.'cache_config.php', 'wb');
 	if (!$fh)
 		error('Unable to write configuration cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'', __FILE__, __LINE__);
 
@@ -111,7 +111,7 @@ function generate_bans_cache()
 		$output[] = $cur_ban;
 
 	// Output ban list as PHP code
-	$fh = @fopen(PUN_ROOT.'cache/cache_bans.php', 'wb');
+	$fh = @fopen(FORUM_CACHE_DIR.'cache_bans.php', 'wb');
 	if (!$fh)
 		error('Unable to write bans cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'', __FILE__, __LINE__);
 
@@ -136,7 +136,7 @@ function generate_ranks_cache()
 		$output[] = $cur_rank;
 
 	// Output ranks list as PHP code
-	$fh = @fopen(PUN_ROOT.'cache/cache_ranks.php', 'wb');
+	$fh = @fopen(FORUM_CACHE_DIR.'cache_ranks.php', 'wb');
 	if (!$fh)
 		error('Unable to write ranks cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'', __FILE__, __LINE__);
 
@@ -170,7 +170,7 @@ function generate_quickjump_cache($group_id = false)
 	while (list(, $group_id) = @each($groups))
 	{
 		// Output quickjump as PHP code
-		$fh = @fopen(PUN_ROOT.'cache/cache_quickjump_'.$group_id.'.php', 'wb');
+		$fh = @fopen(FORUM_CACHE_DIR.'cache_quickjump_'.$group_id.'.php', 'wb');
 		if (!$fh)
 			error('Unable to write quickjump cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'', __FILE__, __LINE__);
 
@@ -203,3 +203,5 @@ function generate_quickjump_cache($group_id = false)
 		fclose($fh);
 	}
 }
+
+define('FORUM_CACHE_FUNCTIONS_LOADED', true);

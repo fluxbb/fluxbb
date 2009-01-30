@@ -24,7 +24,8 @@
 
 
 // The FluxBB version this script installs
-$fluxbb_version = '1.2.21';
+define('FORUM_VERSION', '4');
+define('FORUM_DB_REVISION', 0);
 
 
 define('PUN_ROOT', './');
@@ -41,6 +42,46 @@ error_reporting(E_ALL);
 
 // Turn off PHP time limit
 @set_time_limit(0);
+
+// We need some stuff from functions.php
+require PUN_ROOT.'include/functions.php';
+
+// Load UTF-8 functions
+require PUN_ROOT.'include/utf8/utf8.php';
+require PUN_ROOT.'include/utf8/ucwords.php';
+require PUN_ROOT.'include/utf8/trim.php';
+
+// Strip out "bad" UTF-8 characters
+forum_remove_bad_characters();
+
+//
+// Generate output to be used for config.php
+//
+function generate_config_file()
+{
+	global $db_type, $db_host, $db_name, $db_username, $db_password, $db_prefix, $cookie_name, $cookie_seed;
+
+	return '<?php'."\n\n".'$db_type = \''.$db_type."';\n".'$db_host = \''.$db_host."';\n".'$db_name = \''.addslashes($db_name)."';\n".'$db_username = \''.addslashes($db_username)."';\n".'$db_password = \''.addslashes($db_password)."';\n".'$db_prefix = \''.addslashes($db_prefix)."';\n".'$p_connect = false;'."\n\n".'$cookie_name = '."'".$cookie_name."';\n".'$cookie_domain = '."'';\n".'$cookie_path = '."'/';\n".'$cookie_secure = 0;'."\n".'$cookie_seed = \''.random_key(16, false, true)."';\n\ndefine('PUN', 1);\n";
+}
+
+
+if (isset($_POST['generate_config']))
+{
+	header('Content-Type: text/x-delimtext; name="config.php"');
+	header('Content-disposition: attachment; filename=config.php');
+
+	$db_type = $_POST['db_type'];
+	$db_host = $_POST['db_host'];
+	$db_name = $_POST['db_name'];
+	$db_username = $_POST['db_username'];
+	$db_password = $_POST['db_password'];
+	$db_prefix = $_POST['db_prefix'];
+	$cookie_name = $_POST['cookie_name'];
+	$cookie_seed = $_POST['cookie_seed'];
+
+	echo generate_config_file();
+	exit;
+}
 
 
 if (!isset($_POST['form_sent']))
@@ -70,7 +111,7 @@ if (!isset($_POST['form_sent']))
 
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>FluxBB Installation</title>
 <link rel="stylesheet" type="text/css" href="style/Oxygen.css" />
 <script type="text/javascript">
@@ -125,7 +166,7 @@ function process_form(the_form)
 </div>
 
 <div class="blockform">
-	<h2><span>Install FluxBB 1.2</span></h2>
+	<h2><span>Install FluxBB 1.4</span></h2>
 	<div class="box">
 		<form id="install" method="post" action="install.php" onsubmit="this.start.disabled=true;if(process_form(this)){return true;}else{this.start.disabled=false;return false;}">
 		<div><input type="hidden" name="form_sent" value="1" /></div>
@@ -176,7 +217,7 @@ function process_form(the_form)
 					<div class="infldset">
 						<p>Enter the username and password with which you connect to the database. Ignore for SQLite.</p>
 						<label class="conl">Database username<br /><input type="text" name="db_username" size="30" maxlength="50" /><br /></label>
-						<label class="conl">Database password<br /><input type="text" name="db_password" size="30" maxlength="50" /><br /></label>
+						<label class="conl">Database password<br /><input type="password" name="db_password" size="30" maxlength="50" /><br /></label>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
@@ -208,8 +249,8 @@ function process_form(the_form)
 					<legend>Enter and confirm Administrator password</legend>
 					<div class="infldset">
 					<p>Passwords can be between 4 and 16 characters long. Passwords are case sensitive.</p>
-						<label class="conl"><strong>Password</strong><br /><input id="req_password1" type="text" name="req_password1" size="16" maxlength="16" /><br /></label>
-						<label class="conl"><strong>Confirm password</strong><br /><input type="text" name="req_password2" size="16" maxlength="16" /><br /></label>
+						<label class="conl"><strong>Password</strong><br /><input id="req_password1" type="password" name="req_password1" size="16" maxlength="16" /><br /></label>
+						<label class="conl"><strong>Confirm password</strong><br /><input type="password" name="req_password2" size="16" maxlength="16" /><br /></label>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
@@ -255,42 +296,6 @@ else
 		return (get_magic_quotes_gpc() == 1) ? stripslashes($str) : $str;
 	}
 
-
-	//
-	// Compute a hash of $str.
-	// Uses sha1() if available. If not, SHA1 through mhash() if available. If not, fall back on md5().
-	//
-	function pun_hash($str)
-	{
-		if (function_exists('sha1'))	// Only in PHP 4.3.0+
-			return sha1($str);
-		else if (function_exists('mhash'))	// Only if Mhash library is loaded
-			return bin2hex(mhash(MHASH_SHA1, $str));
-		else
-			return md5($str);
-	}
-
-
-	//
-	// A temporary replacement for the full error handler found in functions.php.
-	// It's here because a function called error() must be callable in the database abstraction layer.
-	//
-	function error($message, $file = false, $line = false, $db_error = false)
-	{
-		if ($file !== false && $line !== false)
-			echo '<strong style="color: A00000">An error occured on line '.$line.' in file '.$file.'.</strong><br /><br />';
-		else
-			echo '<strong style="color: A00000">An error occured.</strong><br /><br />';
-
-		echo '<strong>FluxBB reported:</strong> '.htmlspecialchars($message).'<br /><br />';
-
-		if ($db_error !== false)
-			echo '<strong>Database reported:</strong> '.htmlspecialchars($db_error['error_msg']).(($db_error['error_no']) ? ' (Errno: '.$db_error['error_no'].')' : '');
-
-		exit;
-	}
-
-
 	$db_type = $_POST['req_db_type'];
 	$db_host = trim($_POST['req_db_host']);
 	$db_name = trim($_POST['req_db_name']);
@@ -319,12 +324,12 @@ else
 		error('Passwords do not match. Please go back and correct.');
 	if (!strcasecmp($username, 'Guest'))
 		error('The username guest is reserved. Please go back and correct.');
-	if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username))
+	if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username) || preg_match('/((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))/', $username))
 		error('Usernames may not be in the form of an IP address. Please go back and correct.');
 	if (preg_match('#\[b\]|\[/b\]|\[u\]|\[/u\]|\[i\]|\[/i\]|\[color|\[/color\]|\[quote\]|\[/quote\]|\[code\]|\[/code\]|\[img\]|\[/img\]|\[url|\[/url\]|\[email|\[/email\]#i', $username))
 		error('Usernames may not contain any of the text formatting tags (BBCode) that the forum uses. Please go back and correct.');
 
-	if (strlen($email) > 50 || !preg_match('/^(([^<>()[\]\\.,;:\s@"\']+(\.[^<>()[\]\\.,;:\s@"\']+)*)|("[^"\']+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\d\-]+\.)+[a-zA-Z]{2,}))$/', $email))
+	if (strlen($email) > 80 || !preg_match('/^(([^<>()[\]\\.,;:\s@"\']+(\.[^<>()[\]\\.,;:\s@"\']+)*)|("[^"\']+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\d\-]+\.)+[a-zA-Z]{2,}))$/', $email))
 		error('The administrator e-mail address you entered is invalid. Please go back and correct.');
 
 
@@ -381,902 +386,913 @@ else
 		error('A table called "'.$db_prefix.'users" is already present in the database "'.$db_name.'". This could mean that FluxBB is already installed or that another piece of software is installed and is occupying one or more of the table names FluxBB requires. If you want to install multiple copies of FluxBB in the same database, you must choose a different table prefix.');
 
 
+	// Start a transaction
+	$db->start_transaction();
+
+
 	// Create all tables
-	switch ($db_type)
+	$schema = array(
+		'FIELDS'		=> array(
+			'id'			=> array(
+				'datatype'		=> 'SERIAL',
+				'allow_null'	=> false
+			),
+			'username'		=> array(
+				'datatype'		=> 'VARCHAR(200)',
+				'allow_null'	=> true
+			),
+			'ip'			=> array(
+				'datatype'		=> 'VARCHAR(255)',
+				'allow_null'	=> true
+			),
+			'email'			=> array(
+				'datatype'		=> 'VARCHAR(80)',
+				'allow_null'	=> true
+			),
+			'message'		=> array(
+				'datatype'		=> 'VARCHAR(255)',
+				'allow_null'	=> true
+			),
+			'expire'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> true
+			),
+			'ban_creator'	=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			)
+		),
+		'PRIMARY KEY'	=> array('id')
+	);
+
+	$db->create_table('bans', $schema);
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'id'			=> array(
+				'datatype'		=> 'SERIAL',
+				'allow_null'	=> false
+			),
+			'cat_name'		=> array(
+				'datatype'		=> 'VARCHAR(80)',
+				'allow_null'	=> false,
+				'default'		=> '\'New Category\''
+			),
+			'disp_position'	=> array(
+				'datatype'		=> 'INT(10)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			)
+		),
+		'PRIMARY KEY'	=> array('id')
+	);
+
+	$db->create_table('categories', $schema);
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'id'			=> array(
+				'datatype'		=> 'SERIAL',
+				'allow_null'	=> false
+			),
+			'search_for'	=> array(
+				'datatype'		=> 'VARCHAR(60)',
+				'allow_null'	=> false,
+				'default'		=> '\'\''
+			),
+			'replace_with'	=> array(
+				'datatype'		=> 'VARCHAR(60)',
+				'allow_null'	=> false,
+				'default'		=> '\'\''
+			)
+		),
+		'PRIMARY KEY'	=> array('id')
+	);
+
+	$db->create_table('censoring', $schema);
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'conf_name'		=> array(
+				'datatype'		=> 'VARCHAR(255)',
+				'allow_null'	=> false,
+				'default'		=> '\'\''
+			),
+			'conf_value'	=> array(
+				'datatype'		=> 'TEXT',
+				'allow_null'	=> true
+			)
+		),
+		'PRIMARY KEY'	=> array('conf_name')
+	);
+
+	$db->create_table('config', $schema);
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'group_id'		=> array(
+				'datatype'		=> 'INT(10)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'forum_id'		=> array(
+				'datatype'		=> 'INT(10)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'read_forum'	=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'post_replies'	=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'post_topics'	=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			)
+		),
+		'PRIMARY KEY'	=> array('group_id', 'forum_id')
+	);
+
+	$db->create_table('forum_perms', $schema);
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'id'			=> array(
+				'datatype'		=> 'SERIAL',
+				'allow_null'	=> false
+			),
+			'forum_name'	=> array(
+				'datatype'		=> 'VARCHAR(80)',
+				'allow_null'	=> false,
+				'default'		=> '\'New forum\''
+			),
+			'forum_desc'	=> array(
+				'datatype'		=> 'TEXT',
+				'allow_null'	=> true
+			),
+			'redirect_url'	=> array(
+				'datatype'		=> 'VARCHAR(100)',
+				'allow_null'	=> true
+			),
+			'moderators'	=> array(
+				'datatype'		=> 'TEXT',
+				'allow_null'	=> true
+			),
+			'num_topics'	=> array(
+				'datatype'		=> 'MEDIUMINT(8) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'num_posts'		=> array(
+				'datatype'		=> 'MEDIUMINT(8) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'last_post'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> true
+			),
+			'last_post_id'	=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> true
+			),
+			'last_poster'	=> array(
+				'datatype'		=> 'VARCHAR(200)',
+				'allow_null'	=> true
+			),
+			'sort_by'		=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'disp_position'	=> array(
+				'datatype'		=> 'INT(10)',
+				'allow_null'	=> false,
+				'default'		=>	'0'
+			),
+			'cat_id'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=>	'0'
+			)
+		),
+		'PRIMARY KEY'	=> array('id')
+	);
+
+	$db->create_table('forums', $schema);
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'g_id'						=> array(
+				'datatype'		=> 'SERIAL',
+				'allow_null'	=> false
+			),
+			'g_title'					=> array(
+				'datatype'		=> 'VARCHAR(50)',
+				'allow_null'	=> false,
+				'default'		=> '\'\''
+			),
+			'g_user_title'				=> array(
+				'datatype'		=> 'VARCHAR(50)',
+				'allow_null'	=> true
+			),
+			'g_moderator'				=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'g_mod_edit_users'			=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'g_mod_rename_users'		=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'g_mod_change_passwords'	=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'g_mod_ban_users'			=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'g_read_board'				=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'g_view_users'				=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'g_post_replies'			=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'g_post_topics'				=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'g_edit_posts'				=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'g_delete_posts'			=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'g_delete_topics'			=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'g_set_title'				=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'g_search'					=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'g_search_users'			=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'g_send_email'				=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'g_post_flood'				=> array(
+				'datatype'		=> 'SMALLINT(6)',
+				'allow_null'	=> false,
+				'default'		=> '30'
+			),
+			'g_search_flood'			=> array(
+				'datatype'		=> 'SMALLINT(6)',
+				'allow_null'	=> false,
+				'default'		=> '30'
+			),
+			'g_email_flood'				=> array(
+				'datatype'		=> 'SMALLINT(6)',
+				'allow_null'	=> false,
+				'default'		=> '60'
+			)
+		),
+		'PRIMARY KEY'	=> array('g_id')
+	);
+
+	$db->create_table('groups', $schema);
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'user_id'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'ident'			=> array(
+				'datatype'		=> 'VARCHAR(200)',
+				'allow_null'	=> false,
+				'default'		=> '\'\''
+			),
+			'logged'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'idle'			=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'last_post'			=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> true
+			),
+			'last_search'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> true
+			),
+		),
+		'UNIQUE KEYS'	=> array(
+			'user_id_ident_idx'	=> array('user_id', 'ident')
+		),
+		'INDEXES'		=> array(
+			'ident_idx'		=> array('ident'),
+			'logged_idx'	=> array('logged')
+		),
+		'ENGINE'		=> 'HEAP'
+	);
+
+	if ($db_type == 'mysql' || $db_type == 'mysqli')
 	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."bans (
-					id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					username VARCHAR(200),
-					ip VARCHAR(255),
-					email VARCHAR(50),
-					message VARCHAR(255),
-					expire INT(10) UNSIGNED,
-					PRIMARY KEY (id)
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$db->start_transaction();
-
-			$sql = 'CREATE TABLE '.$db_prefix."bans (
-					id SERIAL,
-					username VARCHAR(200),
-					ip VARCHAR(255),
-					email VARCHAR(50),
-					message VARCHAR(255),
-					expire INT,
-					PRIMARY KEY (id)
-					)";
-			break;
-
-		case 'sqlite':
-			$db->start_transaction();
-
-			$sql = 'CREATE TABLE '.$db_prefix."bans (
-					id INTEGER NOT NULL,
-					username VARCHAR(200),
-					ip  VARCHAR(255),
-					email VARCHAR(50),
-					message VARCHAR(255),
-					expire INTEGER,
-					PRIMARY KEY (id)
-					)";
-			break;
-
+		$schema['UNIQUE KEYS']['user_id_ident_idx'] = array('user_id', 'ident(25)');
+		$schema['INDEXES']['ident_idx'] = array('ident(25)');
 	}
 
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'bans. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
+	$db->create_table('online', $schema);
 
 
-	switch ($db_type)
+	$schema = array(
+		'FIELDS'		=> array(
+			'id'			=> array(
+				'datatype'		=> 'SERIAL',
+				'allow_null'	=> false
+			),
+			'poster'		=> array(
+				'datatype'		=> 'VARCHAR(200)',
+				'allow_null'	=> false,
+				'default'		=> '\'\''
+			),
+			'poster_id'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'poster_ip'		=> array(
+				'datatype'		=> 'VARCHAR(39)',
+				'allow_null'	=> true
+			),
+			'poster_email'	=> array(
+				'datatype'		=> 'VARCHAR(80)',
+				'allow_null'	=> true
+			),
+			'message'		=> array(
+				'datatype'		=> 'TEXT',
+				'allow_null'	=> true
+			),
+			'hide_smilies'	=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'posted'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'edited'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> true
+			),
+			'edited_by'		=> array(
+				'datatype'		=> 'VARCHAR(200)',
+				'allow_null'	=> true
+			),
+			'topic_id'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			)
+		),
+		'PRIMARY KEY'	=> array('id'),
+		'INDEXES'		=> array(
+			'topic_id_idx'	=> array('topic_id'),
+			'multi_idx'		=> array('poster_id', 'topic_id')
+		)
+	);
+
+	$db->create_table('posts', $schema);
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'id'			=> array(
+				'datatype'		=> 'SERIAL',
+				'allow_null'	=> false
+			),
+			'rank'			=> array(
+				'datatype'		=> 'VARCHAR(50)',
+				'allow_null'	=> false,
+				'default'		=> '\'\''
+			),
+			'min_posts'		=> array(
+				'datatype'		=> 'MEDIUMINT(8) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			)
+		),
+		'PRIMARY KEY'	=> array('id')
+	);
+
+	$db->create_table('ranks', $schema);
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'id'			=> array(
+				'datatype'		=> 'SERIAL',
+				'allow_null'	=> false
+			),
+			'post_id'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'topic_id'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'forum_id'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'reported_by'	=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'created'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'message'		=> array(
+				'datatype'		=> 'TEXT',
+				'allow_null'	=> true
+			),
+			'zapped'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> true
+			),
+			'zapped_by'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> true
+			)
+		),
+		'PRIMARY KEY'	=> array('id'),
+		'INDEXES'		=> array(
+			'zapped_idx'	=> array('zapped')
+		)
+	);
+
+	$db->create_table('reports', $schema);
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'id'			=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'ident'			=> array(
+				'datatype'		=> 'VARCHAR(200)',
+				'allow_null'	=> false,
+				'default'		=> '\'\''
+			),
+			'search_data'	=> array(
+				'datatype'		=> 'TEXT',
+				'allow_null'	=> true
+			)
+		),
+		'PRIMARY KEY'	=> array('id'),
+		'INDEXES'		=> array(
+			'ident_idx'	=> array('ident')
+		)
+	);
+
+	if ($db_type == 'mysql' || $db_type == 'mysqli')
+		$schema['INDEXES']['ident_idx'] = array('ident(8)');
+
+	$db->create_table('search_cache', $schema);
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'post_id'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'word_id'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'subject_match'	=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			)
+		),
+		'INDEXES'		=> array(
+			'word_id_idx'	=> array('word_id'),
+			'post_id_idx'	=> array('post_id')
+		)
+	);
+
+	$db->create_table('search_matches', $schema);
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'id'			=> array(
+				'datatype'		=> 'SERIAL',
+				'allow_null'	=> false
+			),
+			'word'			=> array(
+				'datatype'		=> 'VARCHAR(20)',
+				'allow_null'	=> false,
+				'default'		=> '\'\'',
+				'collation'		=> 'bin'
+			)
+		),
+		'PRIMARY KEY'	=> array('word'),
+		'INDEXES'		=> array(
+			'id_idx'	=> array('id')
+		)
+	);
+
+	if ($db_type == 'sqlite')
 	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."categories (
-					id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					cat_name VARCHAR(80) NOT NULL DEFAULT 'New Category',
-					disp_position INT(10) NOT NULL DEFAULT 0,
-					PRIMARY KEY (id)
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."categories (
-					id SERIAL,
-					cat_name VARCHAR(80) NOT NULL DEFAULT 'New Category',
-					disp_position INT NOT NULL DEFAULT 0,
-					PRIMARY KEY (id)
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."categories (
-					id INTEGER NOT NULL,
-					cat_name VARCHAR(80) NOT NULL DEFAULT 'New Category',
-					disp_position INTEGER NOT NULL DEFAULT 0,
-					PRIMARY KEY (id)
-					)";
-			break;
+		$schema['PRIMARY KEY'] = array('id');
+		$schema['UNIQUE KEYS'] = array('word_idx'	=> array('word'));
 	}
 
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'categories. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."censoring (
-					id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					search_for VARCHAR(60) NOT NULL DEFAULT '',
-					replace_with VARCHAR(60) NOT NULL DEFAULT '',
-					PRIMARY KEY (id)
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."censoring (
-					id SERIAL,
-					search_for VARCHAR(60) NOT NULL DEFAULT '',
-					replace_with VARCHAR(60) NOT NULL DEFAULT '',
-					PRIMARY KEY (id)
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."censoring (
-					id INTEGER NOT NULL,
-					search_for VARCHAR(60) NOT NULL DEFAULT '',
-					replace_with VARCHAR(60) NOT NULL DEFAULT '',
-					PRIMARY KEY (id)
-					)";
-			break;
-	}
-
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'censoring. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."config (
-					conf_name VARCHAR(255) NOT NULL DEFAULT '',
-					conf_value TEXT,
-					PRIMARY KEY (conf_name)
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."config (
-					conf_name VARCHAR(255) NOT NULL DEFAULT '',
-					conf_value TEXT,
-					PRIMARY KEY (conf_name)
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."config (
-					conf_name VARCHAR(255) NOT NULL DEFAULT '',
-					conf_value TEXT,
-					PRIMARY KEY (conf_name)
-					)";
-			break;
-	}
-
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'config. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."forum_perms (
-					group_id INT(10) NOT NULL DEFAULT 0,
-					forum_id INT(10) NOT NULL DEFAULT 0,
-					read_forum TINYINT(1) NOT NULL DEFAULT 1,
-					post_replies TINYINT(1) NOT NULL DEFAULT 1,
-					post_topics TINYINT(1) NOT NULL DEFAULT 1,
-					PRIMARY KEY (group_id, forum_id)
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."forum_perms (
-					group_id INT NOT NULL DEFAULT 0,
-					forum_id INT NOT NULL DEFAULT 0,
-					read_forum SMALLINT NOT NULL DEFAULT 1,
-					post_replies SMALLINT NOT NULL DEFAULT 1,
-					post_topics SMALLINT NOT NULL DEFAULT 1,
-					PRIMARY KEY (group_id, forum_id)
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."forum_perms (
-					group_id INTEGER NOT NULL DEFAULT 0,
-					forum_id INTEGER NOT NULL DEFAULT 0,
-					read_forum INTEGER NOT NULL DEFAULT 1,
-					post_replies INTEGER NOT NULL DEFAULT 1,
-					post_topics INTEGER NOT NULL DEFAULT 1,
-					PRIMARY KEY (group_id, forum_id)
-					)";
-			break;
-	}
-
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'forum_perms. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."forums (
-					id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					forum_name VARCHAR(80) NOT NULL DEFAULT 'New forum',
-					forum_desc TEXT,
-					redirect_url VARCHAR(100),
-					moderators TEXT,
-					num_topics MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0,
-					num_posts MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0,
-					last_post INT(10) UNSIGNED,
-					last_post_id INT(10) UNSIGNED,
-					last_poster VARCHAR(200),
-					sort_by TINYINT(1) NOT NULL DEFAULT 0,
-					disp_position INT(10) NOT NULL DEFAULT 0,
-					cat_id INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					PRIMARY KEY (id)
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."forums (
-					id SERIAL,
-					forum_name VARCHAR(80) NOT NULL DEFAULT 'New forum',
-					forum_desc TEXT,
-					redirect_url VARCHAR(100),
-					moderators TEXT,
-					num_topics INT NOT NULL DEFAULT 0,
-					num_posts INT NOT NULL DEFAULT 0,
-					last_post INT,
-					last_post_id INT,
-					last_poster VARCHAR(200),
-					sort_by SMALLINT NOT NULL DEFAULT 0,
-					disp_position INT NOT NULL DEFAULT 0,
-					cat_id INT NOT NULL DEFAULT 0,
-					PRIMARY KEY (id)
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."forums (
-					id INTEGER NOT NULL,
-					forum_name VARCHAR(80) NOT NULL DEFAULT 'New forum',
-					forum_desc TEXT,
-					redirect_url VARCHAR(100),
-					moderators TEXT,
-					num_topics INTEGER NOT NULL DEFAULT 0,
-					num_posts INTEGER NOT NULL DEFAULT 0,
-					last_post INTEGER,
-					last_post_id INTEGER,
-					last_poster VARCHAR(200),
-					sort_by INTEGER NOT NULL DEFAULT 0,
-					disp_position INTEGER NOT NULL DEFAULT 0,
-					cat_id INTEGER NOT NULL DEFAULT 0,
-					PRIMARY KEY (id)
-					)";
-			break;
-	}
-
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'forums. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."groups (
-					g_id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					g_title VARCHAR(50) NOT NULL DEFAULT '',
-					g_user_title VARCHAR(50),
-					g_read_board TINYINT(1) NOT NULL DEFAULT 1,
-					g_post_replies TINYINT(1) NOT NULL DEFAULT 1,
-					g_post_topics TINYINT(1) NOT NULL DEFAULT 1,
-					g_post_polls TINYINT(1) NOT NULL DEFAULT 1,
-					g_edit_posts TINYINT(1) NOT NULL DEFAULT 1,
-					g_delete_posts TINYINT(1) NOT NULL DEFAULT 1,
-					g_delete_topics TINYINT(1) NOT NULL DEFAULT 1,
-					g_set_title TINYINT(1) NOT NULL DEFAULT 1,
-					g_search TINYINT(1) NOT NULL DEFAULT 1,
-					g_search_users TINYINT(1) NOT NULL DEFAULT 1,
-					g_edit_subjects_interval SMALLINT(6) NOT NULL DEFAULT 300,
-					g_post_flood SMALLINT(6) NOT NULL DEFAULT 30,
-					g_search_flood SMALLINT(6) NOT NULL DEFAULT 30,
-					PRIMARY KEY (g_id)
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."groups (
-					g_id SERIAL,
-					g_title VARCHAR(50) NOT NULL DEFAULT '',
-					g_user_title VARCHAR(50),
-					g_read_board SMALLINT NOT NULL DEFAULT 1,
-					g_post_replies SMALLINT NOT NULL DEFAULT 1,
-					g_post_topics SMALLINT NOT NULL DEFAULT 1,
-					g_post_polls SMALLINT NOT NULL DEFAULT 1,
-					g_edit_posts SMALLINT NOT NULL DEFAULT 1,
-					g_delete_posts SMALLINT NOT NULL DEFAULT 1,
-					g_delete_topics SMALLINT NOT NULL DEFAULT 1,
-					g_set_title SMALLINT NOT NULL DEFAULT 1,
-					g_search SMALLINT NOT NULL DEFAULT 1,
-					g_search_users SMALLINT NOT NULL DEFAULT 1,
-					g_edit_subjects_interval SMALLINT NOT NULL DEFAULT 300,
-					g_post_flood SMALLINT NOT NULL DEFAULT 30,
-					g_search_flood SMALLINT NOT NULL DEFAULT 30,
-					PRIMARY KEY (g_id)
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."groups (
-					g_id INTEGER NOT NULL,
-					g_title VARCHAR(50) NOT NULL DEFAULT '',
-					g_user_title VARCHAR(50),
-					g_read_board INTEGER NOT NULL DEFAULT 1,
-					g_post_replies INTEGER NOT NULL DEFAULT 1,
-					g_post_topics INTEGER NOT NULL DEFAULT 1,
-					g_post_polls INTEGER NOT NULL DEFAULT 1,
-					g_edit_posts INTEGER NOT NULL DEFAULT 1,
-					g_delete_posts INTEGER NOT NULL DEFAULT 1,
-					g_delete_topics INTEGER NOT NULL DEFAULT 1,
-					g_set_title INTEGER NOT NULL DEFAULT 1,
-					g_search INTEGER NOT NULL DEFAULT 1,
-					g_search_users INTEGER NOT NULL DEFAULT 1,
-					g_edit_subjects_interval INTEGER NOT NULL DEFAULT 300,
-					g_post_flood INTEGER NOT NULL DEFAULT 30,
-					g_search_flood INTEGER NOT NULL DEFAULT 30,
-					PRIMARY KEY (g_id)
-					)";
-			break;
-	}
-
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'groups. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."online (
-					user_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
-					ident VARCHAR(200) NOT NULL DEFAULT '',
-					logged INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					idle TINYINT(1) NOT NULL DEFAULT 0
-					) TYPE=HEAP;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."online (
-					user_id INT NOT NULL DEFAULT 1,
-					ident VARCHAR(200) NOT NULL DEFAULT '',
-					logged INT NOT NULL DEFAULT 0,
-					idle SMALLINT NOT NULL DEFAULT 0
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."online (
-					user_id INTEGER NOT NULL DEFAULT 1,
-					ident VARCHAR(200) NOT NULL DEFAULT '',
-					logged INTEGER NOT NULL DEFAULT 0,
-					idle INTEGER NOT NULL DEFAULT 0
-					)";
-			break;
-	}
-
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'online. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."posts (
-					id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					poster VARCHAR(200) NOT NULL DEFAULT '',
-					poster_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
-					poster_ip VARCHAR(15),
-					poster_email VARCHAR(50),
-					message TEXT,
-					hide_smilies TINYINT(1) NOT NULL DEFAULT 0,
-					posted INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					edited INT(10) UNSIGNED,
-					edited_by VARCHAR(200),
-					topic_id INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					PRIMARY KEY (id)
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."posts (
-					id SERIAL,
-					poster VARCHAR(200) NOT NULL DEFAULT '',
-					poster_id INT NOT NULL DEFAULT 1,
-					poster_ip VARCHAR(15),
-					poster_email VARCHAR(50),
-					message TEXT,
-					hide_smilies SMALLINT NOT NULL DEFAULT 0,
-					posted INT NOT NULL DEFAULT 0,
-					edited INT,
-					edited_by VARCHAR(200),
-					topic_id INT NOT NULL DEFAULT 0,
-					PRIMARY KEY (id)
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."posts (
-					id INTEGER NOT NULL,
-					poster VARCHAR(200) NOT NULL DEFAULT '',
-					poster_id INTEGER NOT NULL DEFAULT 1,
-					poster_ip VARCHAR(15),
-					poster_email VARCHAR(50),
-					message TEXT,
-					hide_smilies INTEGER NOT NULL DEFAULT 0,
-					posted INTEGER NOT NULL DEFAULT 0,
-					edited INTEGER,
-					edited_by VARCHAR(200),
-					topic_id INTEGER NOT NULL DEFAULT 0,
-					PRIMARY KEY (id)
-					)";
-			break;
-	}
-
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'posts. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."ranks (
-					id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					rank VARCHAR(50) NOT NULL DEFAULT '',
-					min_posts MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0,
-					PRIMARY KEY (id)
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."ranks (
-					id SERIAL,
-					rank VARCHAR(50) NOT NULL DEFAULT '',
-					min_posts INT NOT NULL DEFAULT 0,
-					PRIMARY KEY (id)
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."ranks (
-					id INTEGER NOT NULL,
-					rank VARCHAR(50) NOT NULL DEFAULT '',
-					min_posts INTEGER NOT NULL DEFAULT 0,
-					PRIMARY KEY (id)
-					)";
-			break;
-	}
-
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'titles. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."reports (
-					id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					post_id INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					topic_id INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					forum_id INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					reported_by INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					created INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					message TEXT,
-					zapped INT(10) UNSIGNED,
-					zapped_by INT(10) UNSIGNED,
-					PRIMARY KEY (id)
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."reports (
-					id SERIAL,
-					post_id INT NOT NULL DEFAULT 0,
-					topic_id INT NOT NULL DEFAULT 0,
-					forum_id INT NOT NULL DEFAULT 0,
-					reported_by INT NOT NULL DEFAULT 0,
-					created INT NOT NULL DEFAULT 0,
-					message TEXT,
-					zapped INT,
-					zapped_by INT,
-					PRIMARY KEY (id)
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."reports (
-					id INTEGER NOT NULL,
-					post_id INTEGER NOT NULL DEFAULT 0,
-					topic_id INTEGER NOT NULL DEFAULT 0,
-					forum_id INTEGER NOT NULL DEFAULT 0,
-					reported_by INTEGER NOT NULL DEFAULT 0,
-					created INTEGER NOT NULL DEFAULT 0,
-					message TEXT,
-					zapped INTEGER,
-					zapped_by INTEGER,
-					PRIMARY KEY (id)
-					)";
-			break;
-	}
-
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'reports. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."search_cache (
-					id INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					ident VARCHAR(200) NOT NULL DEFAULT '',
-					search_data TEXT,
-					PRIMARY KEY (id)
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."search_cache (
-					id INT NOT NULL DEFAULT 0,
-					ident VARCHAR(200) NOT NULL DEFAULT '',
-					search_data TEXT,
-					PRIMARY KEY (id)
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."search_cache (
-					id INTEGER NOT NULL DEFAULT 0,
-					ident VARCHAR(200) NOT NULL DEFAULT '',
-					search_data TEXT,
-					PRIMARY KEY (id)
-					)";
-			break;
-	}
-
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'search_cache. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."search_matches (
-					post_id INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					word_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0,
-					subject_match TINYINT(1) NOT NULL DEFAULT 0
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."search_matches (
-					post_id INT NOT NULL DEFAULT 0,
-					word_id INT NOT NULL DEFAULT 0,
-					subject_match SMALLINT NOT NULL DEFAULT 0
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."search_matches (
-					post_id INTEGER NOT NULL DEFAULT 0,
-					word_id INTEGER NOT NULL DEFAULT 0,
-					subject_match INTEGER NOT NULL DEFAULT 0
-					)";
-			break;
-	}
-
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'search_matches. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."search_words (
-					id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-					word VARCHAR(20) BINARY NOT NULL DEFAULT '',
-					PRIMARY KEY (word),
-					KEY ".$db_prefix."search_words_id_idx (id)
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."search_words (
-					id SERIAL,
-					word VARCHAR(20) NOT NULL DEFAULT '',
-					PRIMARY KEY (word)
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."search_words (
-					id INTEGER NOT NULL,
-					word VARCHAR(20) NOT NULL DEFAULT '',
-					PRIMARY KEY (id),
-					UNIQUE (word)
-					)";
-			break;
-	}
-
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'search_words. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."subscriptions (
-					user_id INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					topic_id INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					PRIMARY KEY (user_id, topic_id)
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."subscriptions (
-					user_id INT NOT NULL DEFAULT 0,
-					topic_id INT NOT NULL DEFAULT 0,
-					PRIMARY KEY (user_id, topic_id)
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."subscriptions (
-					user_id INTEGER NOT NULL DEFAULT 0,
-					topic_id INTEGER NOT NULL DEFAULT 0,
-					PRIMARY KEY (user_id, topic_id)
-					)";
-			break;
-	}
-
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'subscriptions. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."topics (
-					id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					poster VARCHAR(200) NOT NULL DEFAULT '',
-					subject VARCHAR(255) NOT NULL DEFAULT '',
-					posted INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					last_post INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					last_post_id INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					last_poster VARCHAR(200),
-					num_views MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0,
-					num_replies MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0,
-					closed TINYINT(1) NOT NULL DEFAULT 0,
-					sticky TINYINT(1) NOT NULL DEFAULT 0,
-					moved_to INT(10) UNSIGNED,
-					forum_id INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					PRIMARY KEY (id)
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."topics (
-					id SERIAL,
-					poster VARCHAR(200) NOT NULL DEFAULT '',
-					subject VARCHAR(255) NOT NULL DEFAULT '',
-					posted INT NOT NULL DEFAULT 0,
-					last_post INT NOT NULL DEFAULT 0,
-					last_post_id INT NOT NULL DEFAULT 0,
-					last_poster VARCHAR(200),
-					num_views INT NOT NULL DEFAULT 0,
-					num_replies INT NOT NULL DEFAULT 0,
-					closed SMALLINT NOT NULL DEFAULT 0,
-					sticky SMALLINT NOT NULL DEFAULT 0,
-					moved_to INT,
-					forum_id INT NOT NULL DEFAULT 0,
-					PRIMARY KEY (id)
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."topics (
-					id INTEGER NOT NULL,
-					poster VARCHAR(200) NOT NULL DEFAULT '',
-					subject VARCHAR(255) NOT NULL DEFAULT '',
-					posted INTEGER NOT NULL DEFAULT 0,
-					last_post INTEGER NOT NULL DEFAULT 0,
-					last_post_id INTEGER NOT NULL DEFAULT 0,
-					last_poster VARCHAR(200),
-					num_views INTEGER NOT NULL DEFAULT 0,
-					num_replies INTEGER NOT NULL DEFAULT 0,
-					closed INTEGER NOT NULL DEFAULT 0,
-					sticky INTEGER NOT NULL DEFAULT 0,
-					moved_to INTEGER,
-					forum_id INTEGER NOT NULL DEFAULT 0,
-					PRIMARY KEY (id)
-					)";
-			break;
-	}
-
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'topics. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			$sql = 'CREATE TABLE '.$db_prefix."users (
-					id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					group_id INT(10) UNSIGNED NOT NULL DEFAULT 4,
-					username VARCHAR(200) NOT NULL DEFAULT '',
-					password VARCHAR(40) NOT NULL DEFAULT '',
-					email VARCHAR(50) NOT NULL DEFAULT '',
-					title VARCHAR(50),
-					realname VARCHAR(40),
-					url VARCHAR(100),
-					jabber VARCHAR(75),
-					icq VARCHAR(12),
-					msn VARCHAR(50),
-					aim VARCHAR(30),
-					yahoo VARCHAR(30),
-					location VARCHAR(30),
-					use_avatar TINYINT(1) NOT NULL DEFAULT 0,
-					signature TEXT,
-					disp_topics TINYINT(3) UNSIGNED,
-					disp_posts TINYINT(3) UNSIGNED,
-					email_setting TINYINT(1) NOT NULL DEFAULT 1,
-					save_pass TINYINT(1) NOT NULL DEFAULT 1,
-					notify_with_post TINYINT(1) NOT NULL DEFAULT 0,
-					show_smilies TINYINT(1) NOT NULL DEFAULT 1,
-					show_img TINYINT(1) NOT NULL DEFAULT 1,
-					show_img_sig TINYINT(1) NOT NULL DEFAULT 1,
-					show_avatars TINYINT(1) NOT NULL DEFAULT 1,
-					show_sig TINYINT(1) NOT NULL DEFAULT 1,
-					timezone FLOAT NOT NULL DEFAULT 0,
-					language VARCHAR(25) NOT NULL DEFAULT 'English',
-					style VARCHAR(25) NOT NULL DEFAULT 'Oxygen',
-					num_posts INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					last_post INT(10) UNSIGNED,
-					registered INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					registration_ip VARCHAR(15) NOT NULL DEFAULT '0.0.0.0',
-					last_visit INT(10) UNSIGNED NOT NULL DEFAULT 0,
-					admin_note VARCHAR(30),
-					activate_string VARCHAR(50),
-					activate_key VARCHAR(8),
-					PRIMARY KEY (id)
-					) TYPE=MyISAM;";
-			break;
-
-		case 'pgsql':
-			$sql = 'CREATE TABLE '.$db_prefix."users (
-					id SERIAL,
-					group_id INT NOT NULL DEFAULT 4,
-					username VARCHAR(200) NOT NULL DEFAULT '',
-					password VARCHAR(40) NOT NULL DEFAULT '',
-					email VARCHAR(50) NOT NULL DEFAULT '',
-					title VARCHAR(50),
-					realname VARCHAR(40),
-					url VARCHAR(100),
-					jabber VARCHAR(75),
-					icq VARCHAR(12),
-					msn VARCHAR(50),
-					aim VARCHAR(30),
-					yahoo VARCHAR(30),
-					location VARCHAR(30),
-					use_avatar SMALLINT NOT NULL DEFAULT 0,
-					signature TEXT,
-					disp_topics SMALLINT,
-					disp_posts SMALLINT,
-					email_setting SMALLINT NOT NULL DEFAULT 1,
-					save_pass SMALLINT NOT NULL DEFAULT 1,
-					notify_with_post SMALLINT NOT NULL DEFAULT 0,
-					show_smilies SMALLINT NOT NULL DEFAULT 1,
-					show_img SMALLINT NOT NULL DEFAULT 1,
-					show_img_sig SMALLINT NOT NULL DEFAULT 1,
-					show_avatars SMALLINT NOT NULL DEFAULT 1,
-					show_sig SMALLINT NOT NULL DEFAULT 1,
-					timezone REAL NOT NULL DEFAULT 0,
-					language VARCHAR(25) NOT NULL DEFAULT 'English',
-					style VARCHAR(25) NOT NULL DEFAULT 'Oxygen',
-					num_posts INT NOT NULL DEFAULT 0,
-					last_post INT,
-					registered INT NOT NULL DEFAULT 0,
-					registration_ip VARCHAR(15) NOT NULL DEFAULT '0.0.0.0',
-					last_visit INT NOT NULL DEFAULT 0,
-					admin_note VARCHAR(30),
-					activate_string VARCHAR(50),
-					activate_key VARCHAR(8),
-					PRIMARY KEY (id)
-					)";
-			break;
-
-		case 'sqlite':
-			$sql = 'CREATE TABLE '.$db_prefix."users (
-					id INTEGER NOT NULL,
-					group_id INTEGER NOT NULL DEFAULT 4,
-					username VARCHAR(200) NOT NULL DEFAULT '',
-					password VARCHAR(40) NOT NULL DEFAULT '',
-					email VARCHAR(50) NOT NULL DEFAULT '',
-					title VARCHAR(50),
-					realname VARCHAR(40),
-					url VARCHAR(100),
-					jabber VARCHAR(75),
-					icq VARCHAR(12),
-					msn VARCHAR(50),
-					aim VARCHAR(30),
-					yahoo VARCHAR(30),
-					location VARCHAR(30),
-					use_avatar INTEGER NOT NULL DEFAULT 0,
-					signature TEXT,
-					disp_topics INTEGER,
-					disp_posts INTEGER,
-					email_setting INTEGER NOT NULL DEFAULT 1,
-					save_pass INTEGER NOT NULL DEFAULT 1,
-					notify_with_post INTEGER NOT NULL DEFAULT 0,
-					show_smilies INTEGER NOT NULL DEFAULT 1,
-					show_img INTEGER NOT NULL DEFAULT 1,
-					show_img_sig INTEGER NOT NULL DEFAULT 1,
-					show_avatars INTEGER NOT NULL DEFAULT 1,
-					show_sig INTEGER NOT NULL DEFAULT 1,
-					timezone FLOAT NOT NULL DEFAULT 0,
-					language VARCHAR(25) NOT NULL DEFAULT 'English',
-					style VARCHAR(25) NOT NULL DEFAULT 'Oxygen',
-					num_posts INTEGER NOT NULL DEFAULT 0,
-					last_post INTEGER,
-					registered INTEGER NOT NULL DEFAULT 0,
-					registration_ip VARCHAR(15) NOT NULL DEFAULT '0.0.0.0',
-					last_visit INTEGER NOT NULL DEFAULT 0,
-					admin_note VARCHAR(30),
-					activate_string VARCHAR(50),
-					activate_key VARCHAR(8),
-					PRIMARY KEY (id)
-					)";
-			break;
-	}
-
-	$db->query($sql) or error('Unable to create table '.$db_prefix.'users. Please check your settings and try again.',  __FILE__, __LINE__, $db->error());
-
-
-	// Add some indexes
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-			// We use MySQL's ALTER TABLE ... ADD INDEX syntax instead of CREATE INDEX to avoid problems with users lacking the INDEX privilege
-			$queries[] = 'ALTER TABLE '.$db_prefix.'online ADD UNIQUE INDEX '.$db_prefix.'online_user_id_ident_idx(user_id,ident)';
-			$queries[] = 'ALTER TABLE '.$db_prefix.'online ADD INDEX '.$db_prefix.'online_user_id_idx(user_id)';
-			$queries[] = 'ALTER TABLE '.$db_prefix.'posts ADD INDEX '.$db_prefix.'posts_topic_id_idx(topic_id)';
-			$queries[] = 'ALTER TABLE '.$db_prefix.'posts ADD INDEX '.$db_prefix.'posts_multi_idx(poster_id, topic_id)';
-			$queries[] = 'ALTER TABLE '.$db_prefix.'reports ADD INDEX '.$db_prefix.'reports_zapped_idx(zapped)';
-			$queries[] = 'ALTER TABLE '.$db_prefix.'search_matches ADD INDEX '.$db_prefix.'search_matches_word_id_idx(word_id)';
-			$queries[] = 'ALTER TABLE '.$db_prefix.'search_matches ADD INDEX '.$db_prefix.'search_matches_post_id_idx(post_id)';
-			$queries[] = 'ALTER TABLE '.$db_prefix.'topics ADD INDEX '.$db_prefix.'topics_forum_id_idx(forum_id)';
-			$queries[] = 'ALTER TABLE '.$db_prefix.'topics ADD INDEX '.$db_prefix.'topics_moved_to_idx(moved_to)';
-			$queries[] = 'ALTER TABLE '.$db_prefix.'users ADD INDEX '.$db_prefix.'users_registered_idx(registered)';
-			$queries[] = 'ALTER TABLE '.$db_prefix.'search_cache ADD INDEX '.$db_prefix.'search_cache_ident_idx(ident(8))';
-			$queries[] = 'ALTER TABLE '.$db_prefix.'users ADD INDEX '.$db_prefix.'users_username_idx(username(8))';
-			break;
-
-		default:
-			$queries[] = 'CREATE INDEX '.$db_prefix.'online_user_id_idx ON '.$db_prefix.'online(user_id)';
-			$queries[] = 'CREATE INDEX '.$db_prefix.'posts_topic_id_idx ON '.$db_prefix.'posts(topic_id)';
-			$queries[] = 'CREATE INDEX '.$db_prefix.'posts_multi_idx ON '.$db_prefix.'posts(poster_id, topic_id)';
-			$queries[] = 'CREATE INDEX '.$db_prefix.'reports_zapped_idx ON '.$db_prefix.'reports(zapped)';
-			$queries[] = 'CREATE INDEX '.$db_prefix.'search_matches_word_id_idx ON '.$db_prefix.'search_matches(word_id)';
-			$queries[] = 'CREATE INDEX '.$db_prefix.'search_matches_post_id_idx ON '.$db_prefix.'search_matches(post_id)';
-			$queries[] = 'CREATE INDEX '.$db_prefix.'topics_forum_id_idx ON '.$db_prefix.'topics(forum_id)';
-			$queries[] = 'CREATE INDEX '.$db_prefix.'topics_moved_to_idx ON '.$db_prefix.'topics(moved_to)';
-			$queries[] = 'CREATE INDEX '.$db_prefix.'users_registered_idx ON '.$db_prefix.'users(registered)';
-			$queries[] = 'CREATE INDEX '.$db_prefix.'users_username_idx ON '.$db_prefix.'users(username)';
-			$queries[] = 'CREATE INDEX '.$db_prefix.'search_cache_ident_idx ON '.$db_prefix.'search_cache(ident)';
-			$queries[] = 'CREATE INDEX '.$db_prefix.'search_words_id_idx ON '.$db_prefix.'search_words(id)';
-			break;
-	}
-
-	@reset($queries);
-	while (list(, $sql) = @each($queries))
-		$db->query($sql) or error('Unable to create indexes. Please check your configuration and try again.',  __FILE__, __LINE__, $db->error());
-
+	$db->create_table('search_words', $schema);
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'user_id'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'topic_id'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			)
+		),
+		'PRIMARY KEY'	=> array('user_id', 'topic_id')
+	);
+
+	$db->create_table('subscriptions', $schema);
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'id'			=> array(
+				'datatype'		=> 'SERIAL',
+				'allow_null'	=> false
+			),
+			'poster'		=> array(
+				'datatype'		=> 'VARCHAR(200)',
+				'allow_null'	=> false,
+				'default'		=> '\'\''
+			),
+			'subject'		=> array(
+				'datatype'		=> 'VARCHAR(255)',
+				'allow_null'	=> false,
+				'default'		=> '\'\''
+			),
+			'posted'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'first_post_id'	=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'last_post'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'last_post_id'	=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'last_poster'	=> array(
+				'datatype'		=> 'VARCHAR(200)',
+				'allow_null'	=> true
+			),
+			'num_views'		=> array(
+				'datatype'		=> 'MEDIUMINT(8) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'num_replies'	=> array(
+				'datatype'		=> 'MEDIUMINT(8) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'closed'		=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'sticky'		=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'moved_to'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> true
+			),
+			'forum_id'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			)
+		),
+		'PRIMARY KEY'	=> array('id'),
+		'INDEXES'		=> array(
+			'forum_id_idx'		=> array('forum_id'),
+			'moved_to_idx'		=> array('moved_to'),
+			'last_post_idx'		=> array('last_post'),
+			'first_post_id_idx'	=> array('first_post_id')
+		)
+	);
+
+	$db->create_table('topics', $schema);
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'id'				=> array(
+				'datatype'		=> 'SERIAL',
+				'allow_null'	=> false
+			),
+			'group_id'			=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '3'
+			),
+			'username'			=> array(
+				'datatype'		=> 'VARCHAR(200)',
+				'allow_null'	=> false,
+				'default'		=> '\'\''
+			),
+			'password'			=> array(
+				'datatype'		=> 'VARCHAR(40)',
+				'allow_null'	=> false,
+				'default'		=> '\'\''
+			),
+			'email'				=> array(
+				'datatype'		=> 'VARCHAR(80)',
+				'allow_null'	=> false,
+				'default'		=> '\'\''
+			),
+			'title'				=> array(
+				'datatype'		=> 'VARCHAR(50)',
+				'allow_null'	=> true
+			),
+			'realname'			=> array(
+				'datatype'		=> 'VARCHAR(40)',
+				'allow_null'	=> true
+			),
+			'url'				=> array(
+				'datatype'		=> 'VARCHAR(100)',
+				'allow_null'	=> true
+			),
+			'jabber'			=> array(
+				'datatype'		=> 'VARCHAR(80)',
+				'allow_null'	=> true
+			),
+			'icq'				=> array(
+				'datatype'		=> 'VARCHAR(12)',
+				'allow_null'	=> true
+			),
+			'msn'				=> array(
+				'datatype'		=> 'VARCHAR(80)',
+				'allow_null'	=> true
+			),
+			'aim'				=> array(
+				'datatype'		=> 'VARCHAR(30)',
+				'allow_null'	=> true
+			),
+			'yahoo'				=> array(
+				'datatype'		=> 'VARCHAR(30)',
+				'allow_null'	=> true
+			),
+			'location'			=> array(
+				'datatype'		=> 'VARCHAR(30)',
+				'allow_null'	=> true
+			),
+			'signature'			=> array(
+				'datatype'		=> 'TEXT',
+				'allow_null'	=> true
+			),
+			'disp_topics'		=> array(
+				'datatype'		=> 'TINYINT(3) UNSIGNED',
+				'allow_null'	=> true
+			),
+			'disp_posts'		=> array(
+				'datatype'		=> 'TINYINT(3) UNSIGNED',
+				'allow_null'	=> true
+			),
+			'email_setting'		=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'notify_with_post'	=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'auto_notify'		=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'show_smilies'		=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'show_img'			=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'show_img_sig'		=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'show_avatars'		=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'show_sig'			=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '1'
+			),
+			'timezone'			=> array(
+				'datatype'		=> 'FLOAT',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'dst'				=> array(
+				'datatype'		=> 'TINYINT(1)',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'time_format'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'date_format'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'language'			=> array(
+				'datatype'		=> 'VARCHAR(25)',
+				'allow_null'	=> false,
+				'default'		=> '\'English\''
+			),
+			'style'				=> array(
+				'datatype'		=> 'VARCHAR(25)',
+				'allow_null'	=> false,
+				'default'		=> '\'Oxygen\''
+			),
+			'num_posts'			=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'last_post'			=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> true
+			),
+			'last_search'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> true
+			),
+			'last_email_sent'	=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> true
+			),
+			'registered'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'registration_ip'	=> array(
+				'datatype'		=> 'VARCHAR(39)',
+				'allow_null'	=> false,
+				'default'		=> '\'0.0.0.0\''
+			),
+			'last_visit'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'admin_note'		=> array(
+				'datatype'		=> 'VARCHAR(30)',
+				'allow_null'	=> true
+			),
+			'activate_string'	=> array(
+				'datatype'		=> 'VARCHAR(80)',
+				'allow_null'	=> true
+			),
+			'activate_key'		=> array(
+				'datatype'		=> 'VARCHAR(8)',
+				'allow_null'	=> true
+			),
+		),
+		'PRIMARY KEY'	=> array('id'),
+		'INDEXES'		=> array(
+			'registered_idx'	=> array('registered'),
+			'username_idx'		=> array('username')
+		)
+	);
+
+	if ($db_type == 'mysql' || $db_type == 'mysqli')
+		$schema['INDEXES']['username_idx'] = array('username(8)');
+
+	$db->create_table('users', $schema);
 
 
 	$now = time();
 
 	// Insert the four preset groups
-	$db->query('INSERT INTO '.$db->prefix."groups (g_title, g_user_title, g_read_board, g_post_replies, g_post_topics, g_post_polls, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_edit_subjects_interval, g_post_flood, g_search_flood) VALUES('Administrators', 'Administrator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)") or error('Unable to add group', __FILE__, __LINE__, $db->error());
-	$db->query('INSERT INTO '.$db->prefix."groups (g_title, g_user_title, g_read_board, g_post_replies, g_post_topics, g_post_polls, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_edit_subjects_interval, g_post_flood, g_search_flood) VALUES('Moderators', 'Moderator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)") or error('Unable to add group', __FILE__, __LINE__, $db->error());
-	$db->query('INSERT INTO '.$db->prefix."groups (g_title, g_user_title, g_read_board, g_post_replies, g_post_topics, g_post_polls, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_edit_subjects_interval, g_post_flood, g_search_flood) VALUES('Guest', NULL, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0)") or error('Unable to add group', __FILE__, __LINE__, $db->error());
-	$db->query('INSERT INTO '.$db->prefix."groups (g_title, g_user_title, g_read_board, g_post_replies, g_post_topics, g_post_polls, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_edit_subjects_interval, g_post_flood, g_search_flood) VALUES('Members', NULL, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 300, 60, 30)") or error('Unable to add group', __FILE__, __LINE__, $db->error());
+	$db->query('INSERT INTO '.$db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES('Administrators', 'Administrator', 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)") or error('Unable to add group', __FILE__, __LINE__, $db->error());
+	$db->query('INSERT INTO '.$db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES('Moderators', 'Moderator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)") or error('Unable to add group', __FILE__, __LINE__, $db->error());
+	$db->query('INSERT INTO '.$db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES('Guest', NULL, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 60, 30, 0)") or error('Unable to add group', __FILE__, __LINE__, $db->error());
+	$db->query('INSERT INTO '.$db->prefix."groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES('Members', NULL, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 60, 30, 60)") or error('Unable to add group', __FILE__, __LINE__, $db->error());
 
 	// Insert guest and first admin user
 	$db->query('INSERT INTO '.$db_prefix."users (group_id, username, password, email) VALUES(3, 'Guest', 'Guest', 'Guest')")
@@ -1285,26 +1301,31 @@ else
 	$db->query('INSERT INTO '.$db_prefix."users (group_id, username, password, email, num_posts, last_post, registered, registration_ip, last_visit) VALUES(1, '".$db->escape($username)."', '".pun_hash($password1)."', '$email', 1, ".$now.", ".$now.", '127.0.0.1', ".$now.')')
 		or error('Unable to add administrator user. Please check your configuration and try again.');
 
+	// Enable/disable avatars depending on file_uploads setting in PHP configuration
+	$avatars = in_array(strtolower(@ini_get('file_uploads')), array('on', 'true', '1')) ? 1 : 0;
+
 	// Insert config data
 	$config = array(
-		'o_cur_version'				=> "'$fluxbb_version'",
+		'o_cur_version'				=> "'".FORUM_VERSION."'",
+		'o_database_revision'		=> "'".FORUM_DB_REVISION."'",
 		'o_board_title'				=> "'My FluxBB forum'",
 		'o_board_desc'				=> "'Unfortunately no one can be told what FluxBB is - you have to see it for yourself.'",
-		'o_server_timezone'			=> "'0'",
+		'o_default_timezone'		=> "'0'",
 		'o_time_format'				=> "'H:i:s'",
 		'o_date_format'				=> "'Y-m-d'",
-		'o_timeout_visit'			=> "'600'",
+		'o_timeout_visit'			=> "'1800'",
 		'o_timeout_online'			=> "'300'",
 		'o_redirect_delay'			=> "'1'",
 		'o_show_version'			=> "'0'",
 		'o_show_user_info'			=> "'1'",
 		'o_show_post_count'			=> "'1'",
+		'o_signatures'				=> "'1'",
 		'o_smilies'					=> "'1'",
 		'o_smilies_sig'				=> "'1'",
 		'o_make_links'				=> "'1'",
 		'o_default_lang'			=> "'English'",
 		'o_default_style'			=> "'Oxygen'",
-		'o_default_user_group'		=> "'4'",
+		'o_default_user_group'		=> "'3'",
 		'o_topic_review'			=> "'15'",
 		'o_disp_topics_default'		=> "'30'",
 		'o_disp_posts_default'		=> "'25'",
@@ -1314,13 +1335,15 @@ else
 		'o_censoring'				=> "'0'",
 		'o_ranks'					=> "'1'",
 		'o_show_dot'				=> "'0'",
+		'o_topic_views'				=> "'1'",
 		'o_quickjump'				=> "'1'",
 		'o_gzip'					=> "'0'",
 		'o_additional_navlinks'		=> "''",
 		'o_report_method'			=> "'0'",
 		'o_regs_report'				=> "'0'",
+		'o_default_email_setting'	=> "'1'",
 		'o_mailing_list'			=> "'$email'",
-		'o_avatars'					=> "'1'",
+		'o_avatars'					=> "'$avatars'",
 		'o_avatars_dir'				=> "'img/avatars'",
 		'o_avatars_width'			=> "'60'",
 		'o_avatars_height'			=> "'60'",
@@ -1333,6 +1356,7 @@ else
 		'o_smtp_host'				=> "NULL",
 		'o_smtp_user'				=> "NULL",
 		'o_smtp_pass'				=> "NULL",
+		'o_smtp_ssl'				=> "'0'",
 		'o_regs_allow'				=> "'1'",
 		'o_regs_verify'				=> "'0'",
 		'o_announcement'			=> "'0'",
@@ -1341,10 +1365,7 @@ else
 		'o_rules_message'			=> "'Enter your rules here.'",
 		'o_maintenance'				=> "'0'",
 		'o_maintenance_message'		=> "'The forums are temporarily down for maintenance. Please try again in a few minutes.<br />\\n<br />\\n/Administrator'",
-		'p_mod_edit_users'			=> "'1'",
-		'p_mod_rename_users'		=> "'0'",
-		'p_mod_change_passwords'	=> "'0'",
-		'p_mod_ban_users'			=> "'0'",
+		'o_default_dst'				=> "'0'",
 		'p_message_bbcode'			=> "'1'",
 		'p_message_img_tag'			=> "'1'",
 		'p_message_all_caps'		=> "'1'",
@@ -1372,7 +1393,7 @@ else
 	$db->query('INSERT INTO '.$db_prefix."forums (forum_name, forum_desc, num_topics, num_posts, last_post, last_post_id, last_poster, disp_position, cat_id) VALUES('Test forum', 'This is just a test forum', 1, 1, ".$now.", 1, '".$db->escape($username)."', 1, 1)")
 		or error('Unable to insert into table '.$db_prefix.'forums. Please check your configuration and try again.');
 
-	$db->query('INSERT INTO '.$db_prefix."topics (poster, subject, posted, last_post, last_post_id, last_poster, forum_id) VALUES('".$db->escape($username)."', 'Test post', ".$now.", ".$now.", 1, '".$db->escape($username)."', 1)")
+	$db->query('INSERT INTO '.$db_prefix."topics (poster, subject, posted, first_post_id, last_post, last_post_id, last_poster, forum_id) VALUES('".$db->escape($username)."', 'Test post', ".$now.", 1, ".$now.", 1, '".$db->escape($username)."', 1)")
 		or error('Unable to insert into table '.$db_prefix.'topics. Please check your configuration and try again.');
 
 	$db->query('INSERT INTO '.$db_prefix."posts (poster, poster_id, poster_ip, message, posted, topic_id) VALUES('".$db->escape($username)."', 2, '127.0.0.1', 'If you are looking at this (which I guess you are), the install of FluxBB appears to have worked! Now log in and head over to the administration control panel to configure your forum.', ".$now.', 1)')
@@ -1385,9 +1406,7 @@ else
 		or error('Unable to insert into table '.$db_prefix.'ranks. Please check your configuration and try again.');
 
 
-	if ($db_type == 'pgsql' || $db_type == 'sqlite')
-		$db->end_transaction();
-
+	$db->end_transaction();
 
 
 	$alerts = '';
@@ -1399,9 +1418,29 @@ else
 	if (!@is_writable('./img/avatars/'))
 		$alerts .= '<p style="font-size: 1.1em"><span style="color: #C03000"><strong>The avatar directory is currently not writable!</strong></span> If you want users to be able to upload their own avatar images you must see to it that the directory named <em>img/avatars</em> is writable by PHP. You can later choose to save avatar images in a different directory (see Admin/Options). Use chmod to set the appropriate directory permissions. If in doubt, chmod to 0777.</p>';
 
+	// Check if we disabled uploading avatars because file_uploads was disabled
+	if ($avatars == '0')
+		$alerts .= '<p style="font-size: 1.1em"><span style="color: #C03000"><strong>File uploads appear to be disallowed on this server!</strong></span> If you want users to be able to upload their own avatar images you must enable the file_uploads configuration setting in PHP. Once file uploads have been enabled, avatar uploads can be enabled in Administration/Options/Features.</p>';
 
-	/// Display config.php and give further instructions
-	$config = '<?php'."\n\n".'$db_type = \''.$db_type."';\n".'$db_host = \''.$db_host."';\n".'$db_name = \''.$db_name."';\n".'$db_username = \''.$db_username."';\n".'$db_password = \''.$db_password."';\n".'$db_prefix = \''.$db_prefix."';\n".'$p_connect = false;'."\n\n".'$cookie_name = '."'forum_cookie';\n".'$cookie_domain = '."'';\n".'$cookie_path = '."'/';\n".'$cookie_secure = 0;'."\n".'$cookie_seed = \''.substr(pun_hash(uniqid(rand(), true)), 0, 16)."';\n\ndefine('PUN', 1);";
+	// Add some random bytes at the end of the cookie name to prevent collisions
+	$cookie_name = 'pun_cookie_'.random_key(6, false, true);
+
+	/// Generate the config.php file data
+	$config = generate_config_file();
+
+	// Attempt to write config.php and serve it up for download if writing fails
+	$written = false;
+	if (is_writable(PUN_ROOT))
+	{
+		$fh = @fopen(PUN_ROOT.'config.php', 'wb');
+		if ($fh)
+		{
+			fwrite($fh, $config);
+			fclose($fh);
+
+			$written = true;
+		}
+	}
 
 
 ?>
@@ -1409,7 +1448,7 @@ else
 
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>FluxBB Installation</title>
 <link rel="stylesheet" type="text/css" href="style/Oxygen.css" />
 </head>
@@ -1422,24 +1461,52 @@ else
 	<h2>Final instructions</h2>
 	<div class="box">
 		<div class="fakeform">
+<?php
+
+if (!$written)
+{
+
+?>
 			<div class="inform">
 				<div class="forminfo">
-					<p>To finalize the installation all you need to do is to <strong>copy and paste the text in the text box below into a file called config.php and then upload this file to the root directory of your FluxBB installation</strong>. Make sure there are no linebreaks or spaces before &lt;?php. You can later edit config.php if you reconfigure your setup (e.g. change the database password or ).</p>
+					<p>Important! To finalize the installation, you need to click on the button below to download a file called config.php. You then need to upload this file to the root directory of your FluxBB installation.</p>
 <?php if ($alerts != ''): ?>					<?php echo $alerts."\n" ?>
 <?php endif; ?>				</div>
-				<fieldset>
-					<legend>Copy contents to config.php</legend>
-					<div class="infldset">
-						<textarea cols="80" rows="20"><?php echo htmlspecialchars($config) ?></textarea>
-					</div>
-				</fieldset>
+				<form method="post" action="install.php">
+				<input type="hidden" name="generate_config" value="1" />
+				<input type="hidden" name="db_type" value="<?php echo $db_type; ?>" />
+				<input type="hidden" name="db_host" value="<?php echo $db_host; ?>" />
+				<input type="hidden" name="db_name" value="<?php echo pun_htmlspecialchars($db_name); ?>" />
+				<input type="hidden" name="db_username" value="<?php echo pun_htmlspecialchars($db_username); ?>" />
+				<input type="hidden" name="db_password" value="<?php echo pun_htmlspecialchars($db_password); ?>" />
+				<input type="hidden" name="db_prefix" value="<?php echo pun_htmlspecialchars($db_prefix); ?>" />
+				<input type="hidden" name="cookie_name" value="<?php echo pun_htmlspecialchars($cookie_name); ?>" />
+				<input type="hidden" name="cookie_seed" value="<?php echo pun_htmlspecialchars($cookie_seed); ?>" />
+				<p><input type="submit" value="Download config.php file" /></p>
+				</form>
 			</div>
 			<div class="inform">
 				<div class="forminfo">
-					<p>Once you have created config.php with the contents above, FluxBB is installed!</p>
-					<p><a href="index.php">Go to forum index</a></p>
+					<p>Once you have uploaded config.php, FluxBB will be fully installed! At that point, you may <a href="index.php">go to the forum index</a>.</p>
 				</div>
 			</div>
+<?php
+
+}
+else
+{
+
+?>
+			<div class="inform">
+				<div class="forminfo">
+					<p>FluxBB has been fully installed! You may now <a href="index.php">go to the forum index</a></p>
+				</div>
+			</div>
+<?php
+
+}
+
+?>
 		</div>
 	</div>
 </div>
