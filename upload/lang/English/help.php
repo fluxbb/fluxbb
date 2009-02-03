@@ -36,8 +36,8 @@ $lang_help = array(
 'List text 2'			=>	'Example list item 2.',
 'List text 3'			=>	'Example list item 3.',
 'produces list'			=>	'produces a bulleted list.',
-'produces decimal list'	=>	'produces numbered list.',
-'produces alpha list'	=>	'produces alphabetically labelled list.',
+'produces decimal list'	=>	'produces a numbered list.',
+'produces alpha list'	=>	'produces an alphabetically labelled list.',
 'Bold, underlined text'	=>	'Bold, underlined text',
 'Smilies info'			=>	'If you like (and if it is enabled), the forum can convert a selection of smilies to image representations of those smilies. This forum recognizes the smilies listed below and replaces them with images.'
 

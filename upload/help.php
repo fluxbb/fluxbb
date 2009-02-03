@@ -105,7 +105,7 @@ if (!$section || $section == 'bbcode')
 				<samp><a href="mailto:name@example.com">name@example.com</a></samp>
 			</div>
 			<div class="entry-content">
-				<code>[email=name@example.com]<?php echo $lang_help['My e-mail address'] ?>[/email]</code><span><?php echo $lang_help['produces'] ?></span>
+				<code>[email=name@example.com]<?php echo $lang_help['My e-mail address'] ?>[/email]</code> <span><?php echo $lang_help['produces'] ?></span>
 				<samp><a href="mailto:name@example.com"><?php echo $lang_help['My e-mail address'] ?></a></samp>
 			</div>
 <?php ($hook = get_hook('he_new_bbcode_link')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
