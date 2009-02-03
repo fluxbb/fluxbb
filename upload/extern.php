@@ -516,7 +516,7 @@ else if ($action == 'online' || $action == 'online_full')
 
 	echo $lang_index['Guests online'].': '.forum_number_format($num_guests).'<br />'."\n";
 
-	if ($_GET['action'] == 'online_full')
+	if ($_GET['action'] == 'online_full' && count($users) > 0)
 		echo $lang_index['Users online'].': '.implode(', ', $users).'<br />'."\n";
 	else
 		echo $lang_index['Users online'].': '.forum_number_format($num_users).'<br />'."\n";

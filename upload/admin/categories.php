@@ -213,7 +213,7 @@ else if (isset($_POST['update']))	// Change position and name of the categories
 		if (isset($cat_name[$cur_cat['id']]) && isset($cat_order[$cur_cat['id']]))
 		{
 			if ($cat_name[$cur_cat['id']] == '')
-				message($lang_admin_categories['Must enter category']);
+				message($lang_admin_categories['Must name category']);
 
 			if ($cat_order[$cur_cat['id']] < 0)
 				message($lang_admin_categories['Must be integer']);

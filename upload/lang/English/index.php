@@ -42,6 +42,8 @@ $lang_index = array(
 'New posts title'			=>	'This forum contain posts made since your last visit.',
 'Board options'				=>	'Board options',
 'RSS active feed'			=>	'RSS active topics feed',
-'Mark all as read'			=>	'Mark all forums as read'
+'Mark all as read'			=>	'Mark all forums as read',
+'Guests online'			=>	'Guests online',
+'Users online'			=>	'Users online'
 
 );
