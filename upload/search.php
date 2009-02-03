@@ -339,7 +339,7 @@ if (isset($query))
 			($hook = get_hook('se_results_topics_row_pre_item_subject_status_merge')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 			if (!empty($forum_page['item_subject_status']))
-				$forum_page['item_body']['status'] = '<span class="item-status">'.sprintf($lang_forum['Item status'], implode(' ', $forum_page['item_subject_status'])).'</span>';
+				$forum_page['item_body']['status'] = '<span class="item-status">'.sprintf($lang_forum['Item status'], implode(', ', $forum_page['item_subject_status'])).'</span>';
 
 			$forum_page['item_subject']['starter'] = '<span class="item-starter">'.sprintf($lang_forum['Topic starter'], format_time($search_set[$i]['posted'], 1), forum_htmlencode($search_set[$i]['poster'])).'</span>';
 			$forum_page['item_subject']['location'] = '<span>'.sprintf($lang_search['Location'], '<a href="'.forum_link($forum_url['forum'], array($search_set[$i]['forum_id'], sef_friendly($search_set[$i]['forum_name']))).'">'.forum_htmlencode($search_set[$i]['forum_name']).'</a>').'</span>';
