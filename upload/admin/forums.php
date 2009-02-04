@@ -776,7 +776,7 @@ if ($forum_db->num_rows($result))
 					<div class="mf-box">
 <?php ($hook = get_hook('afo_pre_edit_cur_forum_name')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 						<div class="mf-field mf-field1 forum-field">
-							<span class="aslabel">Forum name:</span>
+							<span class="aslabel"><?php echo $lang_admin_forums['Forum name'] ?></span>
 							<span class="fld-input"><?php echo forum_htmlencode($cur_forum['forum_name']) ?></span>
 						</div>
 <?php ($hook = get_hook('afo_pre_edit_cur_forum_position')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>

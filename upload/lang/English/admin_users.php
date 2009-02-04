@@ -45,6 +45,7 @@ $lang_admin_users = array(
 'Admin note'					=>	'Admin note:',
 
 'Invalid IP address'			=>	'The IP address you entered is not correctly formatted.',
+'Invalid expire message'		=>	'You entered an invalid expire date. The format should be YYYY-MM-DD and the date must be at least one day in the future.',
 'Users matching criteria'		=>	'Results matching user search criteria',
 'User IP stats'					=>	'IP statistics for user',
 'IP matching criteria'			=>	'Results matching IP address',
