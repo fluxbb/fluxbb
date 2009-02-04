@@ -35,7 +35,7 @@ function generate_admin_menu($submenu)
 			if ($forum_config['o_censoring'] == '1')
 				$forum_page['admin_submenu']['censoring'] = '<li class="'.((FORUM_PAGE == 'admin-censoring') ? 'active' : 'normal').((empty($forum_page['admin_submenu'])) ? ' item1' : '').'"><a href="'.forum_link($forum_url['admin_censoring']).'">'.$lang_admin_common['Censoring'].'</a></li>';
 
-			$form_page['admin_submenu']['reports'] = '<li class="'.((FORUM_PAGE == 'admin-reports') ? 'active' : 'normal').((empty($forum_page['admin_submenu'])) ? ' item1' : '').'"><a href="'.forum_link($forum_url['admin_reports']).'">'.$lang_admin_common['Reports'].'</a></li>';
+			$forum_page['admin_submenu']['reports'] = '<li class="'.((FORUM_PAGE == 'admin-reports') ? 'active' : 'normal').((empty($forum_page['admin_submenu'])) ? ' item1' : '').'"><a href="'.forum_link($forum_url['admin_reports']).'">'.$lang_admin_common['Reports'].'</a></li>';
 
 			if ($forum_user['g_mod_ban_users'] == '1')
 				$forum_page['admin_submenu']['bans'] = '<li class="'.((FORUM_PAGE == 'admin-bans') ? 'active' : 'normal').((empty($forum_page['admin_submenu'])) ? ' item1' : '').'"><a href="'.forum_link($forum_url['admin_bans']).'">'.$lang_admin_common['Bans'].'</a></li>';

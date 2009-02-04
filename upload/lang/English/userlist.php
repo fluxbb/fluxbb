@@ -24,7 +24,6 @@ $lang_ul = array(
 'Perform new search'	=>	'Perform new user search',
 'Table summary'			=>	'List of users filtered and sorted according to the criteria (if any) you have chosen.',
 'User list options'		=>	'User list options',
-'Perform new search'	=>	'Perform new user search',
 'Submit user search'	=>	'Submit user criteria',
 'Title'					=>	'Title',
 'Posts'					=>	'Posts',
