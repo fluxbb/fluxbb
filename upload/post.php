@@ -395,13 +395,13 @@ if (isset($_POST['preview']) && empty($errors))
 	{
 		$forum_page['errors'] = array();
 		foreach ($errors as $cur_error)
-			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
+			$forum_page['errors'][] = '<li><span>'.$cur_error.'</span></li>';
 
 		($hook = get_hook('po_pre_post_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ct-box error-box">
-			<h3 class="warn"><?php echo $lang_post['Post errors'] ?></h3>
+			<h3 class="warn hn"><span><?php echo $lang_post['Post errors'] ?></span></h3>
 			<ul class="error-list">
 				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
 			</ul>

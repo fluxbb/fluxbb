@@ -239,14 +239,14 @@ else if ($forum_config['o_rules'] == '1' && (!isset($_GET['agree']) || !isset($_
 	{
 		$forum_page['errors'] = array();
 		foreach ($errors as $cur_error)
-			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
+			$forum_page['errors'][] = '<li><span>'.$cur_error.'</span></li>';
 
 		($hook = get_hook('rg_pre_register_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ct-box error-box">
-			<h2 class="hn"><span><?php echo $lang_profile['Register errors'] ?></span></h2>
-			<ul>
+			<h2 class="warn hn"><span><?php echo $lang_profile['Register errors'] ?></span></h2>
+			<ul class="error-list">
 				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
 			</ul>
 		</div>
@@ -326,14 +326,14 @@ ob_start();
 	{
 		$forum_page['errors'] = array();
 		foreach ($errors as $cur_error)
-			$forum_page['errors'][] = '<li class="warn"><span>'.$cur_error.'</span></li>';
+			$forum_page['errors'][] = '<li><span>'.$cur_error.'</span></li>';
 
 		($hook = get_hook('rg_pre_register_errors')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
 		<div class="ct-box error-box">
-			<h2 class="hn"><span><?php echo $lang_profile['Register errors'] ?></span></h2>
-			<ul>
+			<h2 class="warn hn"><span><?php echo $lang_profile['Register errors'] ?></span></h2>
+			<ul class="error-list">
 				<?php echo implode("\n\t\t\t\t", $forum_page['errors'])."\n" ?>
 			</ul>
 		</div>
