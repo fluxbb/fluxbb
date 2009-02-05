@@ -1764,15 +1764,15 @@ else
 	$alerts = array();
 	// Check if the cache directory is writable
 	if (!@is_writable('./cache/'))
-		$alerts[] = '<li>'.$lang_install['No cache write'].'</li>';
+		$alerts[] = '<li><span>'.$lang_install['No cache write'].'</span></li>';
 
 	// Check if default avatar directory is writable
 	if (!@is_writable('./img/avatars/'))
-		$alerts[] = '<li>'.$lang_install['No avatar write'].'</li>';
+		$alerts[] = '<li><span>'.$lang_install['No avatar write'].'</span></li>';
 
 	// Check if we disabled uploading avatars because file_uploads was disabled
 	if ($avatars == '0')
-		$alerts[] = '<li>'.$lang_install['File upload alert'].'</li>';
+		$alerts[] = '<li><span>'.$lang_install['File upload alert'].'</span></li>';
 
 	// Add some random bytes at the end of the cookie name to prevent collisions
 	$cookie_name = 'forum_cookie_'.random_key(6, false, true);
@@ -1802,10 +1802,10 @@ else
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo $lang_install['Installation header']; ?></title>
-<link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen.css" />
-<link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen_cs.css" />
-<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="style/Oxygen_ie6.css" /><![endif]-->
-<!--[if IE 7]><link rel="stylesheet" type="text/css" href="style/Oxygen/Oxygen_ie7.css" /><![endif]-->
+<link rel="stylesheet" type="text/css" href="<?php echo FORUM_ROOT ?>style/Oxygen/Oxygen.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo FORUM_ROOT ?>style/Oxygen/Oxygen_cs.css" />
+<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="<?php echo FORUM_ROOT ?>style/Oxygen_ie6.css" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" type="text/css" href="<?php echo FORUM_ROOT ?>style/Oxygen/Oxygen_ie7.css" /><![endif]-->
 </head>
 
 <body>
@@ -1843,8 +1843,8 @@ if (!$written)
 			<p class="warn"><?php printf($lang_install['No write info 2'], '<a href="'.FORUM_ROOT.'index.php">'.$lang_install['Go to index'].'</a>') ?></p>
 		</div>
 <?php if (!empty($alerts)): ?>		<div class="ct-box error-box">
-			<?php echo $lang_install['Warning'] ?></p>
-			<ul>
+			<h2 class="warn hn"><span><?php echo $lang_install['Warning'] ?></span></h2>
+			<ul class="error-list">
 				<?php echo implode("\n\t\t\t\t", $alerts)."\n" ?>
 			</ul>
 		</div>
