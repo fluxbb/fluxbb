@@ -791,8 +791,8 @@ else if (isset($_POST['find_user']))
 	$last_post_before = forum_trim($_POST['last_post_before']);
 	$registered_after = forum_trim($_POST['registered_after']);
 	$registered_before = forum_trim($_POST['registered_before']);
-	$order_by = $_POST['order_by'];
-	$direction = $_POST['direction'];
+	$order_by = (!isset($_POST['order_by']) || $_POST['order_by'] != 'username' && $_POST['order_by'] != 'email' && $_POST['order_by'] != 'num_posts' && $_POST['order_by'] != 'last_post' && $_POST['order_by'] != 'registered') ? 'username' : $_POST['order_by'];
+ 	$direction = (!isset($_POST['direction']) || ($_POST['direction'] != 'ASC' && $_POST['direction'] != 'DESC')) ? 'ASC' : $_POST['direction'];
 	$user_group = $_POST['user_group'];
 
 	if ((!empty($posts_greater) || !empty($posts_less)) && !ctype_digit($posts_greater.$posts_less))
@@ -853,7 +853,7 @@ else if (isset($_POST['find_user']))
 			)
 		),
 		'WHERE'		=> 'u.id>1 AND '.implode(' AND ', $conditions),
-		'ORDER BY'	=> $forum_db->escape($order_by).' '.$forum_db->escape($direction)
+		'ORDER BY'      => $order_by.' '.$direction 
 	);
 
 	($hook = get_hook('aus_find_user_qr_find_users')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
