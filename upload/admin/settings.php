@@ -213,7 +213,7 @@ if (isset($_POST['form_sent']))
 		{
 			$query = array(
 				'UPDATE'	=> 'config',
-				'SET'		=> 'conf_value='.$input,
+				'SET'		=> 'conf_value='.intval($input),
 				'WHERE'		=> 'conf_name=\'p_'.$forum_db->escape($key).'\''
 			);
 
