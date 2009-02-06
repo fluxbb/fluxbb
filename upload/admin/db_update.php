@@ -743,7 +743,7 @@ if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']
 
 		// Make all IP fields VARCHAR(39) to support IPv6
 		$forum_db->alter_field('posts', 'poster_ip', 'VARCHAR(39)', true);
-		$forum_db->alter_field('user', 'registration_ip', 'VARCHAR(39)', false, '0.0.0.0');
+		$forum_db->alter_field('users', 'registration_ip', 'VARCHAR(39)', false, '0.0.0.0');
 
 		// Add the DST option to the users table
 		$forum_db->add_field('users', 'dst', 'TINYINT(1)', false, 0, 'timezone');
