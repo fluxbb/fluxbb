@@ -53,6 +53,34 @@ function is_banned_email($email)
 
 
 //
+// Check if someone else has already registered with $email, optionally populate $dupe_list with a full list of duplicate usernames
+//
+function is_dupe_email($email, &$dupe_list = null)
+{
+	global $forum_db;
+
+	$query = array(
+		'SELECT'	=> 'u.username',
+		'FROM'		=> 'users AS u',
+		'WHERE'		=> 'u.email=\''.$forum_db->escape($email).'\''
+	);
+
+	($hook = get_hook('em_fn_qr_check_email_dupe')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+	if ($forum_db->num_rows($result))
+	{
+		if($dupe_list !== null)
+			while ($cur_dupe = $forum_db->fetch_assoc($result))
+				$dupe_list[] = $cur_dupe['username'];
+
+		return true;
+	}
+	else
+		return false;
+}
+
+
+//
 // Wrapper for PHP's mail()
 //
 function forum_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name = '')
