@@ -78,7 +78,7 @@ $lang_install = array(
 'Invalid table prefix'		=>	'The table prefix \'%s\' contains illegal characters or is too long. The prefix may contain the letters a to z, any numbers and the underscore character. They must however not start with a number. The maximum length is 40 characters. Please choose a different prefix.',
 'SQLite prefix collision'	=>	'The table prefix \'sqlite_\' is reserved for use by the SQLite engine. Please choose a different prefix.',
 'FluxBB already installed'	=>	'A table called "%1$susers" is already present in the database "%2$s". This could mean that FluxBB is already installed or that another piece of software is installed and is occupying one or more of the table names FluxBB requires. If you want to install multiple copies of FluxBB in the same database, you must choose a different table prefix.',
-'InnoDB not enabled'		=>	'InnoDB does not seem to be enabled. Please choose a database layer that does not have InnoDB support, or enable InnoDB on your MySQL server.',
+'InnoDB not enabled'		=>	'InnoDB does not seem to be enabled. Please choose a database layer that does not require InnoDB support, or enable InnoDB on your MySQL server.',
 'Invalid language'		=>	'The language pack you have chosen doesn\'t seem to exist or is corrupt. Please recheck and try again.',
 
 // Used in the install

@@ -261,6 +261,9 @@ function output_html($feed)
 
 	// Send the Content-type header in case the web server is setup to send something else
 	header('Content-type: text/html; charset=utf-8');
+	header('Expires: '.gmdate('D, d M Y H:i:s').' GMT');
+	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+	header('Pragma: public');
 
 	foreach ($feed['items'] as $item)
 	{
@@ -512,6 +515,12 @@ else if ($action == 'online' || $action == 'online_full')
 			++$num_guests;
 	}
 
+	// Send the Content-type header in case the web server is setup to send something else
+	header('Content-type: text/html; charset=utf-8');
+	header('Expires: '.gmdate('D, d M Y H:i:s').' GMT');
+	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+	header('Pragma: public');
+	
 	($hook = get_hook('ex_pre_online_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 	echo $lang_index['Guests online'].': '.forum_number_format($num_guests).'<br />'."\n";
@@ -561,6 +570,12 @@ else if ($action == 'stats')
 	($hook = get_hook('ex_qr_get_post_stats')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 	list($stats['total_topics'], $stats['total_posts']) = $forum_db->fetch_row($result);
+	
+	// Send the Content-type header in case the web server is setup to send something else
+	header('Content-type: text/html; charset=utf-8');
+	header('Expires: '.gmdate('D, d M Y H:i:s').' GMT');
+	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+	header('Pragma: public');
 
 	($hook = get_hook('ex_pre_stats_output')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
