@@ -429,7 +429,7 @@ else if (isset($_GET['report']))
 
 				$mail_message = sprintf($lang_common['Report message 1'], $forum_user['username'], forum_link($forum_url['post'], $post_id))."\n";
 				$mail_message .= sprintf($lang_common['Report message 2'], $reason)."\n";
-				$mail_message .= $mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
+				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 				if (!defined('FORUM_EMAIL_FUNCTIONS_LOADED'))
 					require FORUM_ROOT.'include/email.php';

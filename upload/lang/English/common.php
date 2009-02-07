@@ -151,7 +151,7 @@ $lang_common = array(
 'Duplicate email notification'				=>	'Alert - Duplicate e-mail detected',
 'Duplicate email register message'			=>	'User \'%s\' registered with an e-mail address that also belongs to: %s',
 'Duplicate email change message'			=>	'User \'%s\' changed to an e-mail address that also belongs to: %s',
-'Report notification'					=>	'Report(%d) - \'%1$s\'',
+'Report notification'					=>	'Report(%d) - \'%s\'',
 'Report message 1'					=>	'User \'%s\' has reported the following message: %s',
 'Report message 2'					=>	'Reason: %s',
 
