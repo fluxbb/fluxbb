@@ -75,6 +75,7 @@ $lang_misc = array(
 'Close topic redirect'		=>	'Topic closed. Redirecting …',
 'Close topics redirect'		=>	'Topics closed. Redirecting …',
 'No topics selected'		=>	'You must select at least one topic.',
+'Min topics selected'		=>	'You must select at least two topics.',
 'Stick topic redirect'		=>	'Topic is now sticky. Redirecting …',
 'Unstick topic redirect'	=>	'Topic no longer sticky. Redirecting …',
 

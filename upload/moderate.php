@@ -918,9 +918,9 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 
 	$topics = isset($_POST['topics']) && !empty($_POST['topics']) ? $_POST['topics'] : array();
 	$topics = array_map('intval', (is_array($topics) ? $topics : explode(',', $topics)));
-
-	if (empty($topics))
-		message($lang_misc['No topics selected']);
+		
+	if (count($topics) < 2)
+		message($lang_misc['Min topics selected']);
 
 	if (isset($_POST['merge_topics_comply']))
 	{
