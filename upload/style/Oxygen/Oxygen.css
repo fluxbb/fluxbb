@@ -322,7 +322,7 @@ C - COMMON CONTENT TYPES (RE-USABLE FORMATS)
 .brd .ct-set .ct-legend {
 	float: left;
 	margin-left: -18em;
-	width: 18em;
+	width: 15.5em;
 	display: inline;
 	position: relative;
 	}
@@ -964,7 +964,7 @@ F - MAIN CONTENT - FORMS
 	border-style: solid;
 	border-width: 1px;
 	margin: 1.417em;
-	padding: 0.5em 0;
+	padding: 0.5em 0.5em 0.5em 0;
 	position: relative;
 	}
 
