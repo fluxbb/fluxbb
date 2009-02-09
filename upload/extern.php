@@ -321,7 +321,7 @@ if ($action == 'feed')
 
 		// Setup the feed
 		$feed = array(
-			'title' 		=>	$forum_config['o_board_title'].' - '.$cur_topic['subject'],
+			'title' 		=>	$forum_config['o_board_title'].$lang_common['Title separator'].$cur_topic['subject'],
 			'link'			=>	forum_link($forum_url['topic'], array($tid, sef_friendly($cur_topic['subject']))),
 			'description'		=>	sprintf($lang_common['RSS description topic'], $cur_topic['subject']),
 			'items'			=>	array(),
@@ -384,6 +384,7 @@ if ($action == 'feed')
 	else
 	{
 		$order_posted = isset($_GET['order']) && $_GET['order'] == 'posted';
+		$forum_name = '';
 		
 		// Were any forum ID's supplied?
 		if (isset($_GET['fid']) && is_scalar($_GET['fid']) && $_GET['fid'] != '')
@@ -393,6 +394,26 @@ if ($action == 'feed')
 
 			if (!empty($fids))
 				$forum_sql = ' AND t.forum_id IN('.implode(',', $fids).')';
+
+			if (count($fids) == 1)
+			{
+			// Fetch forum name
+			$query = array(
+				'SELECT'	=> 'f.forum_name',
+				'FROM'		=> 'forums AS f',
+				'JOINS'		=> array(
+					array(
+						'LEFT JOIN'		=> 'forum_perms AS fp',
+						'ON'			=> '(fp.forum_id=f.id AND fp.group_id='.$forum_user['g_id'].')'
+					)
+				),
+				'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fids[0]
+			);
+
+			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
+			if ($forum_db->num_rows($result))
+				$forum_name = $lang_common['Title separator'].$forum_db->result($result);
+			}
 		}
 
 		// Any forum ID's to exclude?
@@ -407,7 +428,7 @@ if ($action == 'feed')
 
 		// Setup the feed
 		$feed = array(
-			'title' 		=>	$forum_config['o_board_title'],
+			'title' 		=>	$forum_config['o_board_title'].$forum_name,
 			'link'			=>	forum_link($forum_url['index']),
 			'description'		=>	sprintf($lang_common['RSS description'], $forum_config['o_board_title']),
 			'items'			=>	array(),
