@@ -363,12 +363,12 @@ if ($action == 'feed')
 
 			if ($cur_post['poster_id'] > 1)
 			{
-				if ($cur_post['email_setting'] == '0')
+				if ($cur_post['email_setting'] == '0' && !$forum_user['is_guest'])
 					$item['author']['email'] = $cur_post['email'];
 
 				$item['author']['uri'] = forum_link($forum_url['user'], $cur_post['poster_id']);
 			}
-			else if ($cur_post['poster_email'] != '')
+			else if ($cur_post['poster_email'] != '' && !$forum_user['is_guest'])
 				$item['author']['email'] = $cur_post['poster_email'];
 
 			$feed['items'][] = $item;
@@ -421,7 +421,7 @@ if ($action == 'feed')
 			'JOINS'		=> array(
 				array(
 					'INNER JOIN'		=> 'posts AS p',
-					'ON'			=> 'p.id=t.first_post_id'
+					'ON'			=> 'p.id='.($order_posted ? 't.first_post_id' : 't.last_post_id')
 				),
 				array(
 					'INNER JOIN'		=> 'users AS u',
@@ -463,12 +463,12 @@ if ($action == 'feed')
 
 			if ($cur_topic['poster_id'] > 1)
 			{
-				if ($cur_topic['email_setting'] == '0')
+				if ($cur_topic['email_setting'] == '0' && !$forum_user['is_guest'])
 					$item['author']['email'] = $cur_topic['email'];
 
 				$item['author']['uri'] = forum_link($forum_url['user'], $cur_topic['poster_id']);
 			}
-			else if ($cur_topic['poster_email'] != '')
+			else if ($cur_topic['poster_email'] != '' && !$forum_user['is_guest'])
 				$item['author']['email'] = $cur_topic['poster_email'];
 
 			$feed['items'][] = $item;
