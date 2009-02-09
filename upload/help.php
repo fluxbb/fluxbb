@@ -29,7 +29,11 @@ if (!$section)
 // Check for use of incorrect URLs
 confirm_current_url(forum_link($forum_url['help'], $section));
 
-$page_title = forum_htmlencode($forum_config['o_board_title']).' - '.$lang_help['Help'];
+$forum_page['crumbs'] = array(
+	array($forum_config['o_board_title'], forum_link($forum_url['help'])),
+	$lang_help['Help']
+);
+
 define('FORUM_PAGE', 'help');
 require FORUM_ROOT.'header.php';
 
