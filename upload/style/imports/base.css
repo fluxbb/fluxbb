@@ -76,7 +76,7 @@ but does no harm */
 /* 5. BOX CONTAINERS AND FLOATS */
 /****************************************************************/
 
-/* 5.1. Setup all left and right content using floats. */  
+/* 5.1. Setup all left and right content using floats. */
 
 .conr {
 	FLOAT: right;
@@ -162,7 +162,8 @@ DIV.blockmenu, #viewprofile DT {
 
 #users1 .tc3 {WIDTH: 10%; TEXT-ALIGN: center}
 
-#debug .tcr {WIDTH: 85%; WHITE-SPACE: normal}
+#debug .tcl {WIDTH: 10%}
+#debug .tcr {WIDTH: 90%; WHITE-SPACE: normal}
 
 #punindex TD.tcr SPAN.byuser {DISPLAY: block}
 
@@ -178,7 +179,7 @@ DIV.postleft, DIV.postfootleft {
 	OVERFLOW: hidden;
 	POSITION: relative;
 }
-	
+
 DIV.postright, DIV.postfootright {
 	BORDER-LEFT-WIDTH: 18em;
 	BORDER-LEFT-STYLE: solid

@@ -28,7 +28,7 @@
 
 /* 2.2 Set the font-size for preformatted text i.e in code boxes */
 
-.pun PRE {FONT-FAMILY: monaco, "Bitstream Vera Sans Mono", "Courier New", courier, monospace}
+#debug .tcr, .pun PRE {FONT-FAMILY: Consolas, monaco, "Bitstream Vera Sans Mono", "Courier New", courier, monospace}
 
 /* 2.3 Font size for headers */
 
@@ -37,7 +37,8 @@
 #brdtitle H1 {FONT-SIZE: 1.4em}
 
 /* 2.4 Larger text for particular items */
-DIV.postmsg P {LINE-HEIGHT: 1.4}
+
+DIV.postmsg P {LINE-HEIGHT: 1.4}
 DIV.postleft DT {FONT-SIZE: 1.1em}
 .pun PRE {FONT-SIZE: 1.2em}
 
@@ -226,7 +227,7 @@ DIV.blockform P INPUT {MARGIN-LEFT: 12px}
 /* 10. POST STATUS INDICATORS */
 /****************************************************************/
 
-/* 10.1 These are the post status indicators which appear at the left of some tables. 
+/* 10.1 These are the post status indicators which appear at the left of some tables.
 .inew = new posts, .iredirect = redirect forums, .iclosed = closed topics and
 .isticky = sticky topics. By default only .inew is different from the default.*/
 
@@ -245,14 +246,3 @@ DIV.searchposts DIV.icon {MARGIN-LEFT: 0}
 margin creates space for the post status indicator */
 
 TD DIV.tclcon {MARGIN-LEFT: 2.3em}
-
-
-
-
-
-
-
-
-
-
-
