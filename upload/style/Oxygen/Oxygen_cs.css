@@ -70,6 +70,11 @@ body {
  	color: #314B60;
  	font-weight: bold;
  	}
+	
+.brd .main-content .main-item .hn .item-status em.moved {
+ 	color: #314B60;
+ 	font-weight: bold;
+ 	}
 
 .brd .post * {
 	border-color: #DDE4EB

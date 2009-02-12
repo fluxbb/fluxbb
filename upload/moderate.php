@@ -1550,11 +1550,13 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 
 		if ($cur_topic['moved_to'] != null)
 		{
+			$forum_page['item_title_status']['moved'] = '<em class="moved">'.$lang_forum['Moved'].'</em>';
 			$forum_page['item_status']['moved'] = 'moved';
-			$forum_page['item_title']['link'] = '<a href="'.forum_link($forum_url['topic'], array($cur_topic['moved_to'], sef_friendly($cur_topic['subject']))).'"><span>'.$lang_forum['Moved'].'</span> '.forum_htmlencode($cur_topic['subject']).'</a>';
+			$forum_page['item_title']['status'] = '<span class="item-status">'.sprintf($lang_forum['Item status'], $forum_page['item_title_status']['moved']).'</span>';
+			$forum_page['item_title']['link'] = '<strong><a href="'.forum_link($forum_url['topic'], array($cur_topic['moved_to'], sef_friendly($cur_topic['subject']))).'">'.forum_htmlencode($cur_topic['subject']).'</a></strong>';
 
 			// Combine everything to produce the Topic heading
-			$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span> <strong>'.$forum_page['item_title']['link'].'</strong></h3>';
+			$forum_page['item_body']['subject']['title'] = '<h3 class="hn"><span class="item-num">'.forum_number_format($forum_page['start_from'] + $forum_page['item_count']).'</span> '.implode(' ', $forum_page['item_title']).'</h3>';
 
 			$forum_page['item_subject']['starter'] = '<span class="item-starter">'.sprintf($lang_forum['Topic starter'], format_time($cur_topic['posted'], 1), forum_htmlencode($cur_topic['poster'])).'</span>';
 
