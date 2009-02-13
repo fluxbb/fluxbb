@@ -116,7 +116,7 @@ else if ($action == 'last')
 
 // Fetch some info about the topic
 $query = array(
-	'SELECT'	=> 't.subject, t.posted, t.poster, t.first_post_id, t.closed, t.num_replies, t.sticky, f.id AS forum_id, f.forum_name, f.moderators, fp.post_replies',
+	'SELECT'	=> 't.subject, t.first_post_id, t.closed, t.num_replies, t.sticky, f.id AS forum_id, f.forum_name, f.moderators, fp.post_replies',
 	'FROM'		=> 'topics AS t',
 	'JOINS'		=> array(
 		array(
@@ -131,7 +131,7 @@ $query = array(
 	'WHERE'		=> '(fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$id.' AND t.moved_to IS NULL'
 );
 
-if (!$forum_user['is_guest'])
+if (!$forum_user['is_guest'] && $forum_config['o_subscriptions'] == '1')
 {
 	$query['SELECT'] .= ', s.user_id AS is_subscribed';
 	$query['JOINS'][] = array(
@@ -583,7 +583,7 @@ $forum_page['hidden_fields'] = array(
 	'csrf_token'	=> '<input type="hidden" name="csrf_token" value="'.generate_form_token($forum_page['form_action']).'" />'
 );
 
-if (!$forum_user['is_guest'] && $forum_config['o_subscriptions'] == '1' && ($forum_user['auto_notify'] == '1' || $cur_topic['is_subscribed']))
+if ($forum_config['o_subscriptions'] == '1' && ($forum_user['auto_notify'] == '1' || $cur_topic['is_subscribed']))
 	$forum_page['hidden_fields']['subscribe'] = '<input type="hidden" name="subscribe" value="1" />';
 
 // Setup help
