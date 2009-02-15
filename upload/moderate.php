@@ -516,7 +516,6 @@ if (isset($_GET['tid']))
 
 		$forum_page['post_ident'] = array();
 		$forum_page['message'] = array();
-		$forum_page['author_title'] = '';
 		$forum_page['user_ident'] = array();
 		$cur_post['username'] = $cur_post['poster'];
 
@@ -1543,7 +1542,6 @@ $forum_page['item_header']['info']['lastpost'] = '<strong class="info-lastpost">
 
 		// Start from scratch
 		$forum_page['item_subject'] = $forum_page['item_body'] = $forum_page['item_status'] = $forum_page['item_nav'] = $forum_page['item_title'] = $forum_page['item_title_status'] = array();
-		$forum_page['item_indicator'] = '';
 
 		if ($forum_config['o_censoring'] == '1')
 			$cur_topic['subject'] = censor_words($cur_topic['subject']);

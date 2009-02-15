@@ -570,7 +570,6 @@ if ($tid && $forum_config['o_topic_review'] != '0')
 
 	$forum_page['item_count'] = 0;
 	$forum_page['item_total'] = $forum_db->num_rows($result);
-	$forum_page['author_title'] = '';
 
 	while ($cur_post = $forum_db->fetch_assoc($result))
 	{

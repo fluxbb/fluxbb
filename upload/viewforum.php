@@ -201,7 +201,6 @@ if ($forum_db->num_rows($result))
 
 		// Start from scratch
 		$forum_page['item_subject'] = $forum_page['item_body'] = $forum_page['item_status'] = $forum_page['item_nav'] = $forum_page['item_title'] = $forum_page['item_title_status'] = array();
-		$forum_page['item_indicator'] = '';
 
 		if ($forum_config['o_censoring'] == '1')
 			$cur_topic['subject'] = censor_words($cur_topic['subject']);

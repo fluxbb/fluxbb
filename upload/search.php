@@ -42,7 +42,7 @@ if (isset($_GET['search_id']))
 // We aren't just grabbing a cached search
 else if (isset($_GET['action']))
 {
-	$action = (isset($_GET['action'])) ? $_GET['action'] : null;
+	$action = $_GET['action'];
 
 	// Validate action
 	if (!validate_search_action($action))
@@ -293,7 +293,6 @@ if (isset($query))
 		{
 			// Start from scratch
 			$forum_page['item_subject'] = $forum_page['item_body'] = $forum_page['item_status'] = $forum_page['item_nav'] = $forum_page['item_title'] = $forum_page['item_title_status'] = array();
-			$forum_page['item_indicator'] = '';
 
 			// Assemble the Topic heading
 
