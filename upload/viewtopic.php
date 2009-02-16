@@ -329,10 +329,12 @@ while ($cur_post = $forum_db->fetch_assoc($result))
 		if ($cur_post['poster_id'] > 1)
 		{
 			if ($forum_config['o_avatars'] == '1' && $forum_user['show_avatars'] != '0')
+			{
 				$forum_page['avatar_markup'] = generate_avatar_markup($cur_post['poster_id']);
-
-			if (!empty($forum_page['avatar_markup']))
-				$forum_page['author_ident']['avatar'] = '<li class="useravatar">'.$forum_page['avatar_markup'].'</li>';
+				
+				if (!empty($forum_page['avatar_markup']))
+					$forum_page['author_ident']['avatar'] = '<li class="useravatar">'.$forum_page['avatar_markup'].'</li>';
+			}
 
 			$forum_page['author_ident']['username'] = '<li class="username">'.(($forum_user['g_view_users'] == '1') ? '<a title="'.sprintf($lang_topic['Go to profile'], forum_htmlencode($cur_post['username'])).'" href="'.forum_link($forum_url['user'], $cur_post['poster_id']).'">'.forum_htmlencode($cur_post['username']).'</a>' : '<strong>'.forum_htmlencode($cur_post['username']).'</strong>').'</li>';
 			$forum_page['author_ident']['usertitle'] = '<li class="usertitle"><span>'.get_title($cur_post).'</span></li>';
