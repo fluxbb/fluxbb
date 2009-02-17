@@ -164,8 +164,6 @@ $lang_common = array(
 'Jump to'							=>	'Jump to forum:',
 
 // For extern.php RSS feed
-'ATOM Feed'							=>	'Atom',
-'RSS Feed'							=>	'RSS',
 'RSS description'					=>	'The most recent topics at %s.',
 'RSS description topic'				=>	'The most recent posts in %s.',
 'RSS reply'							=>	'Re: ',	// The topic subject will be appended to this string (to signify a reply)

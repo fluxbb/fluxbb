@@ -295,7 +295,7 @@ if ($action == 'feed')
 
 		// Fetch topic subject
 		$query = array(
-			'SELECT'	=> 't.subject, t.num_replies, t.first_post_id',
+			'SELECT'	=> 't.subject, t.first_post_id',
 			'FROM'		=> 'topics AS t',
 			'JOINS'		=> array(
 				array(
@@ -529,7 +529,7 @@ else if ($action == 'online' || $action == 'online_full')
 	{
 		if ($forum_user_online['user_id'] > 1)
 		{
-			$users[] = '<a href="'.forum_link($forum_url['user'], $forum_user_online['user_id']).'">'.forum_htmlencode($forum_user_online['ident']).'</a>';
+			$users[] = ($forum_user['g_view_users'] == '1') ? '<a href="'.forum_link($forum_url['user'], $forum_user_online['user_id']).'">'.forum_htmlencode($forum_user_online['ident']).'</a>' : forum_htmlencode($forum_user_online['ident']);
 			++$num_users;
 		}
 		else
@@ -546,8 +546,8 @@ else if ($action == 'online' || $action == 'online_full')
 
 	echo $lang_index['Guests online'].': '.forum_number_format($num_guests).'<br />'."\n";
 
-	if ($_GET['action'] == 'online_full' && count($users) > 0)
-		echo $lang_index['Users online'].': '.implode(', ', $users).'<br />'."\n";
+	if ($action == 'online_full' && !empty($users))
+		echo $lang_index['Users online'].': '.implode($lang_index['Online list separator'], $users).'<br />'."\n";
 	else
 		echo $lang_index['Users online'].': '.forum_number_format($num_users).'<br />'."\n";
 
