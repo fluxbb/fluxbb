@@ -191,7 +191,12 @@ ob_start();
 				</fieldset>
 <?php ($hook = get_hook('acs_add_word_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
-		</form>
+		</form
+	</div>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin_censoring['Edit censored word legend'] ?></span></h2>
+	</div>
+	<div class="main-content main-frm">	
 <?php
 
 if (!empty($forum_censors))
@@ -241,7 +246,6 @@ if (!empty($forum_censors))
 ?>
 			</fieldset>
 		</form>
-	</div>
 <?php
 
 }
@@ -249,19 +253,16 @@ else
 {
 
 ?>
-	<div class="main-subhead">
-		<h2 class="hn"><span><?php echo $lang_admin_censoring['Edit censored word legend'] ?></span></h2>
-	</div>
-	<div class="main-content main-frm">
-		<div class="frm-form">
-			<div class="ct-box">
-				<p><?php echo $lang_admin_censoring['No censored words'] ?></p>
-			</div>
+		<div class="ct-box">
+			<p><?php echo $lang_admin_censoring['No censored words'] ?></p>
 		</div>
-	</div>
 <?php
 
 }
+
+?>
+	</div>
+<?php
 
 ($hook = get_hook('acs_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 

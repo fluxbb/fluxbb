@@ -151,13 +151,6 @@ if ($forum_db->num_rows($result))
 
 }
 
-?>
-	<div class="main-subhead">
-		<h2 class="hn"><span><?php echo $lang_admin_reports['Read reports heading'] ?><?php echo ($forum_db->num_rows($result)) ? '' : ' '.$lang_admin_reports['No new reports'] ?></span></h2>
-	</div>
-	<div class="main-content main-frm">
-<?php
-
 // Fetch the last 10 reports marked as read
 $query = array(
 	'SELECT'	=> 'r.id, r.topic_id, r.forum_id, r.reported_by, r.created, r.message, r.zapped, r.zapped_by AS zapped_by_id, p.id AS pid, t.subject, f.forum_name, u.username AS reporter, u2.username AS zapped_by',
@@ -211,6 +204,10 @@ if ($forum_db->num_rows($result))
 		($hook = get_hook('arp_report_pre_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin_reports['Read reports heading'] ?><?php echo ($forum_db->num_rows($result)) ? '' : ' '.$lang_admin_reports['No new reports'] ?></span></h2>
+	</div>
+	<div class="main-content main-frm">
 			<div class="ct-set report data-set set<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
 					<h3 class="ct-legend hn"><strong><?php echo ++$forum_page['item_num'] ?></strong> <cite class="username"><?php printf($lang_admin_reports['Reported by'], $reporter) ?></cite> <span><?php echo format_time($cur_report['created']) ?></span></h3>
