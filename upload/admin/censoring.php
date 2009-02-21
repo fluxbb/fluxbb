@@ -191,7 +191,7 @@ ob_start();
 				</fieldset>
 <?php ($hook = get_hook('acs_add_word_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			</fieldset>
-		</form
+		</form>
 	</div>
 	<div class="main-subhead">
 		<h2 class="hn"><span><?php echo $lang_admin_censoring['Edit censored word legend'] ?></span></h2>
