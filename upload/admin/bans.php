@@ -153,7 +153,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		<h2 class="hn"><span><?php echo $lang_admin_bans['Ban advanced heading'] ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
-		<div class="ct-box">
+		<div class="ct-box warn-box">
 			<p class="warn"><?php echo $lang_admin_bans['Ban IP warning'] ?></p>
 		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_bans']) ?>">

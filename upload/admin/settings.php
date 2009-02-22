@@ -1260,16 +1260,16 @@ else if ($section == 'maintenance')
 	($hook = get_hook('aop_maintenance_output_start')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin_settings['Maintenance head'] ?></span></h2>
+	</div>
 	<div class="main-content main-frm">
-		<div class="content-head">
-			<h2 class="hn"><span><?php echo $lang_admin_settings['Maintenance head'] ?></span></h2>
-		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo forum_link($forum_url['admin_settings_maintenance']) ?>">
 			<div class="hidden">
 				<input type="hidden" name="csrf_token" value="<?php echo generate_form_token(forum_link($forum_url['admin_settings_maintenance'])) ?>" />
 				<input type="hidden" name="form_sent" value="1" />
 			</div>
-			<div class="ct-box">
+			<div class="ct-box warn-box">
 				<p class="important"><?php echo $lang_admin_settings['Maintenance mode info'] ?></p>
 				<p class="warn"><?php echo $lang_admin_settings['Maintenance mode warn'] ?></p>
 			</div>
