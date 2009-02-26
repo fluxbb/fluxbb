@@ -244,7 +244,7 @@ else if ($forum_config['o_rules'] == '1' && (!isset($_GET['agree']) || !isset($_
 		<div class="user-box">
 			<?php echo $forum_config['o_rules_message']."\n" ?>
 		</div>
-		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo $base_url ?>/register.php">
+		<form class="frm-form" method="get" accept-charset="utf-8" action="<?php echo forum_link($forum_url['register']) ?>">
 <?php ($hook = get_hook('rg_rules_pre_group')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
 			<div class="frm-group group<?php echo ++$forum_page['group_count'] ?>">
 <?php ($hook = get_hook('rg_rules_pre_agree_checkbox')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
@@ -277,7 +277,7 @@ else if ($forum_config['o_rules'] == '1' && (!isset($_GET['agree']) || !isset($_
 
 // Setup form
 $forum_page['group_count'] = $forum_page['item_count'] = $forum_page['fld_count'] = 0;
-$forum_page['form_action'] = $base_url.'/register.php?action=register';
+$forum_page['form_action'] = forum_link($forum_url['register']).'?action=register';
 
 // Setup form information
 $forum_page['frm_info']['intro'] = '<p>'.$lang_profile['Register intro'].'</p>';
