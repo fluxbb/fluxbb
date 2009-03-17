@@ -71,12 +71,12 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 	$from_email = $pun_config['o_webmaster_email'];
 
 	// Do a little spring cleaning
-	$to = forum_trim(preg_replace('#[\n\r]+#s', '', $to));
-	$subject = forum_trim(preg_replace('#[\n\r]+#s', '', $subject));
-	$from_email = forum_trim(preg_replace('#[\n\r:]+#s', '', $from_email));
-	$from_name = forum_trim(preg_replace('#[\n\r:]+#s', '', str_replace('"', '', $from_name)));
-	$reply_to_email = forum_trim(preg_replace('#[\n\r:]+#s', '', $reply_to_email));
-	$reply_to_name = forum_trim(preg_replace('#[\n\r:]+#s', '', str_replace('"', '', $reply_to_name)));
+	$to = pun_trim(preg_replace('#[\n\r]+#s', '', $to));
+	$subject = pun_trim(preg_replace('#[\n\r]+#s', '', $subject));
+	$from_email = pun_trim(preg_replace('#[\n\r:]+#s', '', $from_email));
+	$from_name = pun_trim(preg_replace('#[\n\r:]+#s', '', str_replace('"', '', $from_name)));
+	$reply_to_email = pun_trim(preg_replace('#[\n\r:]+#s', '', $reply_to_email));
+	$reply_to_name = pun_trim(preg_replace('#[\n\r:]+#s', '', str_replace('"', '', $reply_to_name)));
 
 	// Set up some headers to take advantage of UTF-8
 	$from = "=?UTF-8?B?".base64_encode($from_name)."?=".' <'.$from_email.'>';
