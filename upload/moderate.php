@@ -699,7 +699,7 @@ if ($db->num_rows($result))
 else
 {
 	$colspan = ($pun_config['o_topic_views'] == '1') ? 5 : 4;
-	$button_status = ' disabled';
+	$button_status = ' disabled="disabled"';
 	echo "\t\t\t\t\t".'<tr><td class="tcl" colspan="'.$colspan.'">'.$lang_forum['Empty forum'].'</td></tr>'."\n";
 }
 
