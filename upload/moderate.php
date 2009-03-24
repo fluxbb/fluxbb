@@ -406,9 +406,87 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	require PUN_ROOT.'footer.php';
 }
 
+// Merge two or more topics
+else if (isset($_REQUEST['merge_topics']) || isset($_POST['merge_topics_comply']))
+{
+	if (isset($_POST['merge_topics_comply']))
+	{
+		if (isset($_POST['topics']))
+			$topics = array_map('intval', explode(',', $_POST['topics']));
+		else
+			message($lang_misc['Not enough topics selected']);
+
+		// Verify that the topic IDs are valid (moved topics can not be merged?)
+		// $result = $db->query('SELECT 1 FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topics).') AND moved_to IS NULL AND forum_id='.$fid) or error('Unable to check topics', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topics).') AND forum_id='.$fid) or error('Unable to check topics', __FILE__, __LINE__, $db->error());
+		if ($db->num_rows($result) != count($topics))
+			message($lang_common['Bad request']);
+
+		// Fetch the topic that we're merging into
+		$result = $db->query('SELECT MIN(t.id) FROM '.$db->prefix.'topics AS t WHERE t.id IN('.implode(',', $topics).')') or error('Unable to get topic', __FILE__, __LINE__, $db->error());
+		$merge_to_tid = $db->result($result);
+
+		// Make any redirect topics point to our new, merged topic
+		$query = 'UPDATE '.$db->prefix.'topics SET moved_to='.$merge_to_tid.' WHERE moved_to IN('.implode(',', $topics).')';
+
+		// Should we create redirect topics?
+		if (isset($_POST['with_redirect']))
+			$query .= ' OR (id IN('.implode(',', $topics).') AND id != '.$merge_to_tid.')';
+
+		$db->query($query) or error('Unable to make redirection topics', __FILE__, __LINE__, $db->error());
+
+		// Merge the posts into the topic
+		$db->query('UPDATE '.$db->prefix.'posts SET topic_id='.$merge_to_tid.' WHERE topic_id IN('.implode(',', $topics).')') or error('Unable to merge the posts into the topic', __FILE__, __LINE__, $db->error());
+
+		// Delete any subscriptions
+		$db->query('DELETE FROM '.$db->prefix.'subscriptions WHERE topic_id IN('.implode(',', $topics).') AND topic_id != '.$merge_to_tid) or error('Unable to delete subscriptions', __FILE__, __LINE__, $db->error());
+
+		// Without redirection the old topics are removed
+		if (!isset($_POST['with_redirect']))
+			$db->query('DELETE FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topics).') AND id != '.$merge_to_tid) or error('Unable to delete old topics', __FILE__, __LINE__, $db->error());
+
+		// Update the forum FROM which the topic was moved and redirect
+		update_forum($fid);
+		redirect('viewforum.php?id='.$fid, $lang_misc['Merge topics redirect']);
+	}
+	else
+	{
+		if (isset($_POST['topics']) && count($_POST['topics']) > 1)
+			$topics = array_map('intval', array_keys($_POST['topics']));
+		else
+			message($lang_misc['Not enough topics selected']);
+	}
+
+	$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_misc['Moderate'];
+	require PUN_ROOT.'header.php';
+
+?>
+<div class="blockform">
+	<h2><?php echo $lang_misc['Merge topics'] ?></h2>
+	<div class="box">
+		<form method="post" action="moderate.php?fid=<?php echo $fid ?>">
+			<input type="hidden" name="topics" value="<?php echo implode(',', $topics); ?>" />
+			<div class="inform">
+				<fieldset>
+					<legend><?php echo $lang_misc['Confirm merge legend'] ?></legend>
+					<div class="infldset">
+						<div class="rbox">
+							<label><input type="checkbox" name="with_redirect" value="1"<?php if ($action == 'single') echo ' checked="checked"' ?> /><?php echo $lang_misc['Leave redirect'] ?><br /></label>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			<p><input type="submit" name="merge_topics_comply" value="<?php echo $lang_misc['Merge'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+		</form>
+	</div>
+</div>
+<?php
+
+	require PUN_ROOT.'footer.php';
+}
 
 // Delete one or more topics
-if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply']))
+else if (isset($_REQUEST['delete_topics']) || isset($_POST['delete_topics_comply']))
 {
 	$topics = isset($_POST['topics']) ? $_POST['topics'] : array();
 	if (empty($topics))
@@ -713,7 +791,7 @@ else
 <div class="linksb">
 	<div class="inbox">
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<p class="conr"><input type="submit" name="move_topics" value="<?php echo $lang_misc['Move'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="delete_topics" value="<?php echo $lang_misc['Delete'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="open" value="<?php echo $lang_misc['Open'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="close" value="<?php echo $lang_misc['Close'] ?>"<?php echo $button_status ?> /></p>
+		<p class="conr"><input type="submit" name="move_topics" value="<?php echo $lang_misc['Move'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="delete_topics" value="<?php echo $lang_misc['Delete'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="merge_topics" value="<?php echo $lang_misc['Merge'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="open" value="<?php echo $lang_misc['Open'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="close" value="<?php echo $lang_misc['Close'] ?>"<?php echo $button_status ?> /></p>
 		<div class="clearer"></div>
 	</div>
 </div>
