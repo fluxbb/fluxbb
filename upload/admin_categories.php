@@ -198,7 +198,7 @@ generate_admin_menu('categories');
 								<th scope="row">Add a new category<div><input type="submit" name="add_cat" value="Add New" tabindex="2" /></div></th>
 								<td>
 									<input type="text" name="new_cat_name" size="35" maxlength="80" tabindex="1" />
-									<span>The name of the new category you want to add. You can edit the name of the category later (see below).Go to <a href="admin_forums.php">Forums</a> to add forums to your new category.</span>
+									<span>The name of the new category you want to add. You can edit the name of the category later (see below). Go to <a href="admin_forums.php">Forums</a> to add forums to your new category.</span>
 								</td>
 							</tr>
 <?php if ($num_cats): ?>							<tr>

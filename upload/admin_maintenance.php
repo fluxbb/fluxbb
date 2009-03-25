@@ -164,7 +164,7 @@ generate_admin_menu('maintenance');
 									<th scope="row">Starting Topic ID</th>
 									<td>
 										<input type="text" name="i_start_at" size="7" maxlength="7" value="<?php echo (isset($first_id)) ? $first_id : 0 ?>" tabindex="2" />
-										<span>The topic ID to start rebuilding at. It's default value is the first available ID in the database. Normally you wouldn't want to change this.</span>
+										<span>The topic ID to start rebuilding at. The default value is the first available ID in the database. Normally you wouldn't want to change this.</span>
 									</td>
 								</tr>
 								<tr>
@@ -174,7 +174,7 @@ generate_admin_menu('maintenance');
 									</td>
 								</tr>
 							</table>
-							<p class="topspace">Once the process has completed you will be redirected back to this page. It is highly recommended that you have JavaScript enabled in your browser during rebuilding (for automatic redirect when a cycle has completed). If you are forced to abort the rebuild process, make a note of the last processed topic ID and enter that ID+1 in "Topic ID to start at" when/if you want to continue ("Empty index" must not be selected).</p>
+							<p class="topspace">Once the process has completed you will be redirected back to this page. It is highly recommended that you have JavaScript enabled in your browser during rebuilding (for automatic redirect when a cycle has completed). If you are forced to abort the rebuild process, make a note of the last processed topic ID and enter that ID+1 in "Starting Topic ID" when/if you want to continue ("Empty index" must not be selected).</p>
 							<div class="fsetsubmit"><input type="submit" name="rebuild_index" value="Rebuild index" tabindex="4" /></div>
 						</div>
 					</fieldset>

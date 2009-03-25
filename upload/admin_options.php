@@ -231,7 +231,7 @@ generate_admin_menu('options');
 									<th scope="row">Adjust for DST</th>
 									<td>
 										<input type="radio" name="form[default_dst]" value="1"<?php if ($pun_config['o_default_dst'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[default_dst]" value="0"<?php if ($pun_config['o_default_dst'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Check if daylight savings is in effect (advances times by 1 hour)</span>
+										<span>Check if daylight savings is in effect (advances times by 1 hour).</span>
 									</td>
 								</tr>
 								<tr>
@@ -385,7 +385,7 @@ generate_admin_menu('options');
 									<th scope="row">Make clickable links</th>
 									<td>
 										<input type="radio" name="form[make_links]" value="1"<?php if ($pun_config['o_make_links'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[make_links]" value="0"<?php if ($pun_config['o_make_links'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>When enabled, FluxBB will automatically detect any URL's in posts and make them clickable hyperlinks.</span>
+										<span>When enabled, FluxBB will automatically detect any URLs in posts and make them clickable hyperlinks.</span>
 									</td>
 								</tr>
 								<tr>
@@ -596,7 +596,7 @@ generate_admin_menu('options');
 									<th scope="row">Subscriptions</th>
 									<td>
 										<input type="radio" name="form[subscriptions]" value="1"<?php if ($pun_config['o_subscriptions'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[subscriptions]" value="0"<?php if ($pun_config['o_subscriptions'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Enable users to subscribe to topics (recieve e-mail when someone replies).</span>
+										<span>Enable users to subscribe to topics (receive e-mail when someone replies).</span>
 									</td>
 								</tr>
 								<tr>
