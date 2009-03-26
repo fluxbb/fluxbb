@@ -70,7 +70,7 @@ require PUN_ROOT.'header.php';
 		[email=myname@mydomain.com]<?php echo $lang_help['My e-mail address'] ?>[/email] <?php echo $lang_help['produces'] ?> <a href="mailto:myname@mydomain.com"><?php echo $lang_help['My e-mail address'] ?></a><br /><br />
 	</div>
 	<p><a name="img"></a><?php echo $lang_help['Images info'] ?></p>
-	<div>[img]http://www.punbb.org/img/small_logo.png[/img] <?php echo $lang_help['produces'] ?> <img src="http://www.punbb.org/img/small_logo.png" alt="http://www.punbb.org/img/small_logo.png" /></div>
+	<div>[img]<?php echo $pun_config['o_base_url'].'/' ?>img/test.png[/img] <?php echo $lang_help['produces'] ?> <img src="<?php echo $pun_config['o_base_url'].'/' ?>img/test.png" /></div>
 </div>
 <h2><?php echo $lang_help['Quotes'] ?></h2>
 <div class="box">
