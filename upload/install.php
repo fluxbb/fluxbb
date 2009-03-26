@@ -1325,7 +1325,7 @@ else
 		'o_make_links'				=> "'1'",
 		'o_default_lang'			=> "'English'",
 		'o_default_style'			=> "'Oxygen'",
-		'o_default_user_group'		=> "'3'",
+		'o_default_user_group'		=> "'4'",
 		'o_topic_review'			=> "'15'",
 		'o_disp_topics_default'		=> "'30'",
 		'o_disp_posts_default'		=> "'25'",
