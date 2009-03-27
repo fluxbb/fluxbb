@@ -205,6 +205,9 @@ else if (isset($_GET['report']))
 		$reason = pun_linebreaks(pun_trim($_POST['req_reason']));
 		if ($reason == '')
 			message($lang_misc['No reason']);
+			
+		if ($pun_user['last_email_sent'] != '' && (time() - $pun_user['last_email_sent']) < $pun_user['g_email_flood'] && (time() - $pun_user['last_email_sent']) >= 0)
+			message(sprintf($lang_misc['Report flood'], $pun_user['g_email_flood']));
 
 		// Get the topic ID
 		$result = $db->query('SELECT topic_id FROM '.$db->prefix.'posts WHERE id='.$post_id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
@@ -238,6 +241,8 @@ else if (isset($_GET['report']))
 				pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
 			}
 		}
+		
+		$db->query('UPDATE '.$db->prefix.'users SET last_email_sent='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 
 		redirect('viewtopic.php?pid='.$post_id.'#p'.$post_id, $lang_misc['Report redirect']);
 	}
