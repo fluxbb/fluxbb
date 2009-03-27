@@ -127,7 +127,7 @@ else if (isset($_GET['email']))
 			message($lang_misc['Too long e-mail message']);
 
 		if ($pun_user['last_email_sent'] != '' && (time() - $pun_user['last_email_sent']) < $pun_user['g_email_flood'] && (time() - $pun_user['last_email_sent']) >= 0)
-			$errors[] = sprintf($lang_misc['Email flood'], $pun_user['g_email_flood']);
+			message(sprintf($lang_misc['Email flood'], $pun_user['g_email_flood']));
 
 		// Load the "form e-mail" template
 		$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/form_email.tpl'));
