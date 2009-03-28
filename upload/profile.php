@@ -443,7 +443,7 @@ else if ($action == 'change_email')
 		if (!is_valid_email($new_email))
 			$errors[] = $lang_common['Invalid e-mail'];
 
-		// Check it it's a banned e-mail address
+		// Check if it's a banned e-mail address
 		if (is_banned_email($new_email))
 		{
 			($hook = get_hook('pf_change_email_normal_banned_email')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
@@ -454,8 +454,8 @@ else if ($action == 'change_email')
 			{
 				$mail_subject = $lang_common['Banned email notification'];
 
-				$mail_message = sprintf($lang_common['Banned email change message'], $username, $email1)."\n";
-				$mail_message .= sprintf($lang_common['User profile'], forum_link($forum_url['user'], $new_uid))."\n";
+				$mail_message = sprintf($lang_common['Banned email change message'], $forum_user['username'], $new_email)."\n";
+				$mail_message .= sprintf($lang_common['User profile'], forum_link($forum_url['user'], $id))."\n";
 				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 				forum_mail($forum_config['o_mailing_list'], $mail_subject, $mail_message);
@@ -484,8 +484,8 @@ else if ($action == 'change_email')
 
 				$mail_subject = $lang_common['Duplicate email notification'];
 
-				$mail_message = sprintf($lang_common['Duplicate email change message'], $username, implode(', ', $dupe_list))."\n";
-				$mail_message .= springf($lang_common['User profile'], forum_link($forum_url['user'], $new_uid))."\n";
+				$mail_message = sprintf($lang_common['Duplicate email change message'], $forum_user['username'], implode(', ', $dupe_list))."\n";
+				$mail_message .= sprintf($lang_common['User profile'], forum_link($forum_url['user'], $id))."\n";
 				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 				forum_mail($forum_config['o_mailing_list'], $mail_subject, $mail_message);
