@@ -8,6 +8,7 @@ $lang_register = array(
 'Reg cancel redirect'		=>	'Registration cancelled. Redirecting &hellip;',
 'Forum rules'				=>	'Forum rules',
 'Rules legend'				=>	'You must agree to the following in order to register',
+'Registration flood'		=>	'A new user was registered with the same IP address as you within the last hour. To prevent registration flooding, at least an hour has to pass between registrations from the same IP. Sorry for the inconvenience.',
 'Agree'						=>	'Agree',
 'Cancel'					=>	'Cancel',
 'Register'					=>	'Register',

@@ -83,7 +83,7 @@ else if (isset($_POST['form_sent']))
 	$result = $db->query('SELECT 1 FROM '.$db->prefix.'users WHERE registration_ip=\''.get_remote_address().'\' AND registered>'.(time() - 3600)) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
 	if ($db->num_rows($result))
-		message('A new user was registered with the same IP address as you within the last hour. To prevent registration flooding, at least an hour has to pass between registrations from the same IP. Sorry for the inconvenience.');
+		message($lang_register['Registration flood']);
 
 
 	$username = pun_trim($_POST['req_username']);
@@ -204,27 +204,33 @@ else if (isset($_POST['form_sent']))
 
 	// If we previously found out that the e-mail was banned
 	if ($banned_email && $pun_config['o_mailing_list'] != '')
-	{
-		$mail_subject = 'Alert - Banned e-mail detected';
-		$mail_message = 'User \''.$username.'\' registered with banned e-mail address: '.$email1."\n\n".'User profile: '.$pun_config['o_base_url'].'/profile.php?id='.$new_uid."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)';
+	{		
+		$mail_subject = $lang_common['Banned email notification'];
+		$mail_message = sprintf($lang_common['Banned email register message'], $username, $email1)."\n";
+		$mail_message .= sprintf($lang_common['User profile'], $pun_config['o_base_url'].'/profile.php?id='.$new_uid)."\n";
+		$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 		pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
 	}
 
 	// If we previously found out that the e-mail was a dupe
 	if (!empty($dupe_list) && $pun_config['o_mailing_list'] != '')
-	{
-		$mail_subject = 'Alert - Duplicate e-mail detected';
-		$mail_message = 'User \''.$username.'\' registered with an e-mail address that also belongs to: '.implode(', ', $dupe_list)."\n\n".'User profile: '.$pun_config['o_base_url'].'/profile.php?id='.$new_uid."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)';
+	{		
+		$mail_subject = $lang_common['Duplicate email notification'];
+		$mail_message = sprintf($lang_common['Duplicate email register message'], $username, implode(', ', $dupe_list))."\n";
+		$mail_message .= sprintf($lang_common['User profile'], $pun_config['o_base_url'].'/profile.php?id='.$new_uid)."\n";
+		$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 		pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
 	}
 
 	// Should we alert people on the admin mailing list that a new user has registered?
 	if ($pun_config['o_regs_report'] == '1')
-	{
-		$mail_subject = 'Alert - New registration';
-		$mail_message = 'User \''.$username.'\' registered in the forums at '.$pun_config['o_base_url']."\n\n".'User profile: '.$pun_config['o_base_url'].'/profile.php?id='.$new_uid."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)';
+	{	
+		$mail_subject = $lang_common['New user notification'];
+		$mail_message = sprintf($lang_common['New user message'], $username, $pun_config['o_base_url'].'/')."\n";
+		$mail_message .= sprintf($lang_common['User profile'], $pun_config['o_base_url'].'/profile.php?id='.$new_uid)."\n";
+		$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 		pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
 	}

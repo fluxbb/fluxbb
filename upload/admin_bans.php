@@ -135,7 +135,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 									<th scope="row">E-mail/domain</th>
 									<td>
 										<input type="text" name="ban_email" size="40" maxlength="50" value="<?php if (isset($ban_email)) echo strtolower($ban_email); ?>" tabindex="3" />
-										<span>The e-mail or e-mail domain you wish to ban (e.g. someone@somewhere.com or somewhere.com). See "Allow banned e-mail addresses" in Options for more info.</span>
+										<span>The e-mail or e-mail domain you wish to ban (e.g. someone@somewhere.com or somewhere.com). See "Allow banned e-mail addresses" in Permissions for more info.</span>
 									</td>
 								</tr>
 							</table>

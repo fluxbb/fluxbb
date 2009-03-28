@@ -143,6 +143,22 @@ $lang_common = array(
 'Delete posts'			=>	'Delete multiple posts',
 'Debug table'			=>	'Debug information',
 
+// Email related notifications
+'New user notification'					=>	'Alert - New registration',
+'New user message'					=>	'User \'%s\' registered in the forums at %s',
+'Banned email notification'				=>	'Alert - Banned e-mail detected',
+'Banned email register message'				=>	'User \'%s\' registered with banned e-mail address: %s',
+'Banned email change message'				=>	'User \'%s\' changed to banned e-mail address: %s',
+'Duplicate email notification'				=>	'Alert - Duplicate e-mail detected',
+'Duplicate email register message'			=>	'User \'%s\' registered with an e-mail address that also belongs to: %s',
+'Duplicate email change message'			=>	'User \'%s\' changed to an e-mail address that also belongs to: %s',
+'Report notification'					=>	'Report(%d) - \'%s\'',
+'Report message 1'					=>	'User \'%s\' has reported the following message: %s',
+'Report message 2'					=>	'Reason: %s',
+
+'User profile'						=>	'User profile: %s',
+'Email signature'					=>	'Forum Mailer'."\n".'(Do not reply to this message)',
+
 // For extern.php RSS feed
 'RSS Desc Active'		=>	'The most recently active topics at',	// board_title will be appended to this string
 'RSS Desc New'			=>	'The newest topics at',					// board_title will be appended to this string

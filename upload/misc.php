@@ -232,9 +232,11 @@ else if (isset($_GET['report']))
 		{
 			// We send it to the complete mailing-list in one swoop
 			if ($pun_config['o_mailing_list'] != '')
-			{
-				$mail_subject = 'Report('.$forum_id.') - \''.$subject.'\'';
-				$mail_message = 'User \''.$pun_user['username'].'\' has reported the following message:'."\n".$pun_config['o_base_url'].'/viewtopic.php?pid='.$post_id.'#p'.$post_id."\n\n".'Reason:'."\n".$reason;
+			{			
+				$mail_subject = sprintf($lang_common['Report notification'], $forum_id, $subject);
+				$mail_message = sprintf($lang_common['Report message 1'], $pun_user['username'], $pun_config['o_base_url'].'/viewtopic.php?pid='.$post_id.'#p'.$post_id)."\n";
+				$mail_message .= sprintf($lang_common['Report message 2'], $reason)."\n";
+				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 				require PUN_ROOT.'include/email.php';
 
