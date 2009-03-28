@@ -224,16 +224,12 @@ while ($cur_post = $db->fetch_assoc($result))
 		$is_online = ($cur_post['is_online'] == $cur_post['poster_id']) ? '<strong>'.$lang_topic['Online'].'</strong>' : $lang_topic['Offline'];
 
 		if ($pun_config['o_avatars'] == '1' && $pun_user['show_avatars'] != '0')
-		{
-			if ($img_size = @getimagesize($pun_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.gif'))
-				$user_avatar = '<img src="'.$pun_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.gif" '.$img_size[3].' alt="" />';
-			else if ($img_size = @getimagesize($pun_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.jpg'))
-				$user_avatar = '<img src="'.$pun_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.jpg" '.$img_size[3].' alt="" />';
-			else if ($img_size = @getimagesize($pun_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.png'))
-				$user_avatar = '<img src="'.$pun_config['o_avatars_dir'].'/'.$cur_post['poster_id'].'.png" '.$img_size[3].' alt="" />';
+		{			
+			if (isset($user_avatar_cache[$cur_post['poster_id']]))
+				$user_avatar = $user_avatar_cache[$cur_post['poster_id']];
+			else
+				$user_avatar = $user_avatar_cache[$cur_post['poster_id']] = generate_avatar_markup($cur_post['poster_id']);
 		}
-		else
-			$user_avatar = '';
 
 		// We only show location, register date, post count and the contact links if "Show user info" is enabled
 		if ($pun_config['o_show_user_info'] == '1')

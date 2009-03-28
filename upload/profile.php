@@ -364,13 +364,13 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 				message($lang_profile['Too large'].' '.$pun_config['o_avatars_size'].' '.$lang_profile['bytes'].'.');
 
 			// Determine type
-			$extensions = null;
+			$extension = null;
 			if ($uploaded_file['type'] == 'image/gif')
-				$extensions = array('.gif', '.jpg', '.png');
+				$extension = '.gif';
 			else if ($uploaded_file['type'] == 'image/jpeg' || $uploaded_file['type'] == 'image/pjpeg')
-				$extensions = array('.jpg', '.gif', '.png');
+				$extension = '.jpg';
 			else
-				$extensions = array('.png', '.gif', '.jpg');
+				$extension = '.png';
 
 			// Move the file to the avatar directory. We do this before checking the width/height to circumvent open_basedir restrictions.
 			if (!@move_uploaded_file($uploaded_file['tmp_name'], $pun_config['o_avatars_dir'].'/'.$id.'.tmp'))
@@ -390,11 +390,9 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 			}			
 
 			// Delete any old avatars and put the new one in place
-			@unlink($pun_config['o_avatars_dir'].'/'.$id.$extensions[0]);
-			@unlink($pun_config['o_avatars_dir'].'/'.$id.$extensions[1]);
-			@unlink($pun_config['o_avatars_dir'].'/'.$id.$extensions[2]);
-			@rename($pun_config['o_avatars_dir'].'/'.$id.'.tmp', $pun_config['o_avatars_dir'].'/'.$id.$extensions[0]);
-			@chmod($pun_config['o_avatars_dir'].'/'.$id.$extensions[0], 0644);
+			delete_avatar($id);
+			@rename($pun_config['o_avatars_dir'].'/'.$id.'.tmp', $pun_config['o_avatars_dir'].'/'.$id.$extension);
+			@chmod($pun_config['o_avatars_dir'].'/'.$id.$extension, 0644);
 		}
 		else
 			message($lang_profile['Unknown failure']);
@@ -440,9 +438,7 @@ else if ($action == 'delete_avatar')
 
 	confirm_referrer('profile.php');
 
-	@unlink($pun_config['o_avatars_dir'].'/'.$id.'.jpg');
-	@unlink($pun_config['o_avatars_dir'].'/'.$id.'.png');
-	@unlink($pun_config['o_avatars_dir'].'/'.$id.'.gif');
+	delete_avatar($id);
 
 	redirect('profile.php?section=personality&amp;id='.$id, $lang_profile['Avatar deleted redirect']);
 }
@@ -612,12 +608,7 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 		$db->query('DELETE FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to delete user', __FILE__, __LINE__, $db->error());
 
 		// Delete user avatar
-		if (file_exists($pun_config['o_avatars_dir'].'/'.$id.'.gif'))
-			@unlink($pun_config['o_avatars_dir'].'/'.$id.'.gif');
-		if (file_exists($pun_config['o_avatars_dir'].'/'.$id.'.jpg'))
-			@unlink($pun_config['o_avatars_dir'].'/'.$id.'.jpg');
-		if (file_exists($pun_config['o_avatars_dir'].'/'.$id.'.png'))
-			@unlink($pun_config['o_avatars_dir'].'/'.$id.'.png');
+		delete_avatar($id);
 
 		redirect('index.php', $lang_profile['User delete redirect']);
 	}
@@ -953,13 +944,8 @@ if ($pun_user['id'] != $id &&
 
 	if ($pun_config['o_avatars'] == '1')
 	{
-		if ($img_size = @getimagesize($pun_config['o_avatars_dir'].'/'.$id.'.gif'))
-			$avatar_field = '<img src="'.$pun_config['o_avatars_dir'].'/'.$id.'.gif" '.$img_size[3].' alt="" />';
-		else if ($img_size = @getimagesize($pun_config['o_avatars_dir'].'/'.$id.'.jpg'))
-			$avatar_field = '<img src="'.$pun_config['o_avatars_dir'].'/'.$id.'.jpg" '.$img_size[3].' alt="" />';
-		else if ($img_size = @getimagesize($pun_config['o_avatars_dir'].'/'.$id.'.png'))
-			$avatar_field = '<img src="'.$pun_config['o_avatars_dir'].'/'.$id.'.png" '.$img_size[3].' alt="" />';
-		else
+		$avatar_field = generate_avatar_markup($id);
+		if ($avatar_field == '')
 			$avatar_field = $lang_profile['No avatar'];
 	}
 
@@ -1298,18 +1284,12 @@ else
 			message($lang_common['Bad request']);
 
 		$avatar_field = '<a href="profile.php?action=upload_avatar&amp;id='.$id.'">'.$lang_profile['Change avatar'].'</a>';
-		if ($img_size = @getimagesize($pun_config['o_avatars_dir'].'/'.$id.'.gif'))
-			$avatar_format = 'gif';
-		else if ($img_size = @getimagesize($pun_config['o_avatars_dir'].'/'.$id.'.jpg'))
-			$avatar_format = 'jpg';
-		else if ($img_size = @getimagesize($pun_config['o_avatars_dir'].'/'.$id.'.png'))
-			$avatar_format = 'png';
+		
+		$user_avatar = generate_avatar_markup($id);
+		if ($user_avatar)
+			$avatar_field .= '&nbsp;&nbsp;&nbsp;<a href="profile.php?action=delete_avatar&amp;id='.$id.'">'.$lang_profile['Delete avatar'].'</a>';
 		else
 			$avatar_field = '<a href="profile.php?action=upload_avatar&amp;id='.$id.'">'.$lang_profile['Upload avatar'].'</a>';
-
-		// Display the delete avatar link?
-		if ($img_size)
-			$avatar_field .= '&nbsp;&nbsp;&nbsp;<a href="profile.php?action=delete_avatar&amp;id='.$id.'">'.$lang_profile['Delete avatar'].'</a>';
 
 		if ($user['signature'] != '')
 			$signature_preview = '<p>'.$lang_profile['Sig preview'].'</p>'."\n\t\t\t\t\t".'<div class="postsignature">'."\n\t\t\t\t\t\t".'<hr />'."\n\t\t\t\t\t\t".$parsed_signature."\n\t\t\t\t\t".'</div>'."\n";
@@ -1332,8 +1312,8 @@ else
 					<fieldset id="profileavatar">
 						<legend><?php echo $lang_profile['Avatar legend'] ?></legend>
 						<div class="infldset">
-<?php if (isset($avatar_format)): ?>					<img src="<?php echo $pun_config['o_avatars_dir'].'/'.$id.'.'.$avatar_format ?>" <?php echo $img_size[3] ?> alt="" />
-<?php endif; ?>					<p><?php echo $lang_profile['Avatar info'] ?></p>
+							<?php if ($user_avatar) echo $user_avatar ?>					
+							<p><?php echo $lang_profile['Avatar info'] ?></p>
 							<p class="clearb"><?php echo $avatar_field ?></p>
 						</div>
 					</fieldset>

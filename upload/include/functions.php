@@ -384,6 +384,31 @@ function generate_profile_menu($page = '')
 
 
 //
+// Outputs markup to display a user's avatar
+//
+function generate_avatar_markup($user_id)
+{
+	global $pun_config;
+
+	$filetypes = array('jpg', 'gif', 'png');
+	$avatar_markup = '';
+
+	foreach ($filetypes as $cur_type)
+	{
+		$path = $pun_config['o_avatars_dir'].'/'.$user_id.'.'.$cur_type;
+
+		if (file_exists(PUN_ROOT.$path) && $img_size = @getimagesize(PUN_ROOT.$path))
+		{
+			$avatar_markup = '<img src="'.$pun_config['o_base_url'].'/'.$path.'?m='.filemtime(PUN_ROOT.$path).'" '.$img_size[3].' alt="" />';
+			break;
+		}
+	}
+
+	return $avatar_markup;
+}
+
+
+//
 // Save array of tracked topics in cookie
 //
 function set_tracked_topics($tracked_topics)
@@ -467,6 +492,24 @@ function update_forum($forum_id)
 	}
 	else	// There are no topics
 		$db->query('UPDATE '.$db->prefix.'forums SET num_topics='.$num_topics.', num_posts='.$num_posts.', last_post=NULL, last_post_id=NULL, last_poster=NULL WHERE id='.$forum_id) or error('Unable to update last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
+}
+
+
+//
+// Deletes any avatars owned by the specified user ID
+//
+function delete_avatar($user_id)
+{
+	global $pun_config;
+
+	$filetypes = array('jpg', 'gif', 'png');
+
+	// Delete user avatar
+	foreach ($filetypes as $cur_type)
+	{
+		if (file_exists(PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$user_id.'.'.$cur_type))
+			@unlink(PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$user_id.'.'.$cur_type);
+	}
 }
 
 
