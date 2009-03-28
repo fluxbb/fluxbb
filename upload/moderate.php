@@ -445,6 +445,17 @@ else if (isset($_REQUEST['merge_topics']) || isset($_POST['merge_topics_comply']
 		if (!isset($_POST['with_redirect']))
 			$db->query('DELETE FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topics).') AND id != '.$merge_to_tid) or error('Unable to delete old topics', __FILE__, __LINE__, $db->error());
 
+		// Count number of replies in the topic
+		$result = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'posts WHERE topic_id='.$merge_to_tid) or error('Unable to fetch post count for topic', __FILE__, __LINE__, $db->error());
+		$num_replies = $db->result($result, 0) - 1;
+
+		// Get last_post, last_post_id and last_poster
+		$result = $db->query('SELECT posted, id, poster FROM '.$db->prefix.'posts WHERE topic_id='.$merge_to_tid.' ORDER BY id DESC LIMIT 1') or error('Unable to get last post info', __FILE__, __LINE__, $db->error());
+		list($last_post, $last_post_id, $last_poster) = $db->fetch_row($result);
+
+		// Update topic
+		$db->query('UPDATE '.$db->prefix.'topics SET num_replies='.$num_replies.', last_post='.$last_post.', last_post_id='.$last_post_id.', last_poster=\''.$db->escape($last_poster).'\' WHERE id='.$merge_to_tid) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+
 		// Update the forum FROM which the topic was moved and redirect
 		update_forum($fid);
 		redirect('viewforum.php?id='.$fid, $lang_misc['Merge topics redirect']);
