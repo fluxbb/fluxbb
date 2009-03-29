@@ -464,6 +464,7 @@ else
 									<td>
 										<select name="user_group" tabindex="22">
 												<option value="all" selected="selected">All groups</option>
+												<option value="0">Unverified users</option>
 <?php
 
 	$result = $db->query('SELECT g_id, g_title FROM '.$db->prefix.'groups WHERE g_id!='.PUN_GUEST.' ORDER BY g_title') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
