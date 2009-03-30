@@ -724,9 +724,9 @@ function paginate($num_pages, $cur_page, $link_to)
 			if ($current < 1 || $current > $num_pages)
 				continue;
 			else if ($current != $cur_page || $link_to_all)
-				$pages[] = '<a href="'.$link_to.'&amp;p='.$current.'">'.$current.'</a>';
+				$pages[] = '<a href="'.$link_to.'&amp;p='.$current.'">'.forum_number_format($current).'</a>';
 			else
-				$pages[] = '<strong>'.$current.'</strong>';
+				$pages[] = '<strong>'.forum_number_format($current).'</strong>';
 		}
 
 		if ($cur_page <= ($num_pages-3))
@@ -734,7 +734,7 @@ function paginate($num_pages, $cur_page, $link_to)
 			if ($cur_page != ($num_pages-3))
 				$pages[] = '&hellip;';
 
-			$pages[] = '<a href="'.$link_to.'&amp;p='.$num_pages.'">'.$num_pages.'</a>';
+			$pages[] = '<a href="'.$link_to.'&amp;p='.$num_pages.'">'.forum_number_format($num_pages).'</a>';
 		}
 	}
 
@@ -801,6 +801,17 @@ function format_time($timestamp, $date_only = false)
 		return $date.' '.gmdate($pun_config['o_time_format'], $timestamp);
 	else
 		return $date;
+}
+
+
+//
+// A wrapper for PHP's number_format function
+//
+function forum_number_format($number, $decimals = 0)
+{
+	global $lang_common;
+
+	return number_format($number, $decimals, $lang_common['lang_decimal_point'], $lang_common['lang_thousands_sep']);
 }
 
 

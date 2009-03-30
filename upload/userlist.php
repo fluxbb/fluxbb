@@ -166,7 +166,7 @@ if ($db->num_rows($result))
 				<tr>
 					<td class="tcl"><?php echo '<a href="profile.php?id='.$user_data['id'].'">'.pun_htmlspecialchars($user_data['username']).'</a>' ?></td>
 					<td class="tc2"><?php echo $user_title_field ?></td>
-<?php if ($show_post_count): ?>					<td class="tc3"><?php echo $user_data['num_posts'] ?></td>
+<?php if ($show_post_count): ?>					<td class="tc3"><?php echo forum_number_format($user_data['num_posts']) ?></td>
 <?php endif; ?>
 					<td class="tcr"><?php echo format_time($user_data['registered'], true) ?></td>
 				</tr>

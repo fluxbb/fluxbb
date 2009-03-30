@@ -245,7 +245,7 @@ while ($cur_post = $db->fetch_assoc($result))
 			$user_info[] = '<dd>'.$lang_common['Registered'].': '.date($pun_config['o_date_format'], $cur_post['registered']);
 
 			if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
-				$user_info[] = '<dd>'.$lang_common['Posts'].': '.$cur_post['num_posts'];
+				$user_info[] = '<dd>'.$lang_common['Posts'].': '.forum_number_format($cur_post['num_posts']);
 
 			// Now let's deal with the contact links (E-mail and URL)
 			if ((($cur_post['email_setting'] == '0' && !$pun_user['is_guest']) || $pun_user['is_admmod']) && $pun_user['g_send_email'] == '1')

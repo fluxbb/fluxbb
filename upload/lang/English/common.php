@@ -30,6 +30,10 @@ $lang_common = array(
 // Text orientation and encoding
 'lang_direction'		=>	'ltr',	// ltr (Left-To-Right) or rtl (Right-To-Left)
 
+// Number formatting
+'lang_decimal_point'				=>	'.',
+'lang_thousands_sep'				=>	',',
+
 // Notices
 'Bad request'			=>	'Bad request. The link you followed is incorrect or outdated.',
 'No view'				=>	'You do not have permission to view these forums.',

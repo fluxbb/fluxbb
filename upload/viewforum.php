@@ -219,8 +219,8 @@ if ($db->num_rows($result))
 							</div>
 						</div>
 					</td>
-					<td class="tc2"><?php echo ($cur_topic['moved_to'] == null) ? $cur_topic['num_replies'] : '&nbsp;' ?></td>
-<?php if ($pun_config['o_topic_views'] == '1'): ?>					<td class="tc3"><?php echo ($cur_topic['moved_to'] == null) ? $cur_topic['num_views'] : '&nbsp;' ?></td>
+					<td class="tc2"><?php echo ($cur_topic['moved_to'] == null) ? forum_number_format($cur_topic['num_replies']) : '&nbsp;' ?></td>
+<?php if ($pun_config['o_topic_views'] == '1'): ?>					<td class="tc3"><?php echo ($cur_topic['moved_to'] == null) ? forum_number_format($cur_topic['num_views']) : '&nbsp;' ?></td>
 <?php endif; ?>					<td class="tcr"><?php echo $last_post ?></td>
 				</tr>
 <?php

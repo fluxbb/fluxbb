@@ -159,8 +159,8 @@ while ($cur_forum = $db->fetch_assoc($result))
 							</div>
 						</div>
 					</td>
-					<td class="tc2"><?php echo $num_topics ?></td>
-					<td class="tc3"><?php echo $num_posts ?></td>
+					<td class="tc2"><?php echo forum_number_format($num_topics) ?></td>
+					<td class="tc3"><?php echo forum_number_format($num_posts) ?></td>
 					<td class="tcr"><?php echo $last_post ?></td>
 				</tr>
 <?php
@@ -196,9 +196,9 @@ else
 		<div class="inbox">
 			<dl class="conr">
 				<dt><strong><?php echo $lang_index['Board stats'] ?></strong></dt>
-				<dd><?php echo $lang_index['No of users'].': <strong>'. $stats['total_users'] ?></strong></dd>
-				<dd><?php echo $lang_index['No of topics'].': <strong>'.$stats['total_topics'] ?></strong></dd>
-				<dd><?php echo $lang_index['No of posts'].': <strong>'.$stats['total_posts'] ?></strong></dd>
+				<dd><?php echo $lang_index['No of users'].': <strong>'.forum_number_format($stats['total_users']) ?></strong></dd>
+				<dd><?php echo $lang_index['No of topics'].': <strong>'.forum_number_format($stats['total_topics']) ?></strong></dd>
+				<dd><?php echo $lang_index['No of posts'].': <strong>'.forum_number_format($stats['total_posts']) ?></strong></dd>
 			</dl>
 			<dl class="conl">
 				<dt><strong><?php echo $lang_index['User info'] ?></strong></dt>
@@ -226,7 +226,7 @@ if ($pun_config['o_users_online'] == '1')
 	}
 
 	$num_users = count($users);
-	echo "\t\t\t\t".'<dd>'. $lang_index['Users online'].': <strong>'.$num_users.'</strong></dd>'."\n\t\t\t\t".'<dd>'.$lang_index['Guests online'].': <strong>'.$num_guests.'</strong></dd>'."\n\t\t\t".'</dl>'."\n";
+	echo "\t\t\t\t".'<dd>'. $lang_index['Users online'].': <strong>'.forum_number_format($num_users).'</strong></dd>'."\n\t\t\t\t".'<dd>'.$lang_index['Guests online'].': <strong>'.forum_number_format($num_guests).'</strong></dd>'."\n\t\t\t".'</dl>'."\n";
 
 
 	if ($num_users > 0)

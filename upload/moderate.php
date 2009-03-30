@@ -776,8 +776,8 @@ if ($db->num_rows($result))
 							<?php echo $subject."\n" ?>
 						</div>
 					</td>
-					<td class="tc2"><?php echo (!$ghost_topic) ? $cur_topic['num_replies'] : '&nbsp;' ?></td>
-<?php if ($pun_config['o_topic_views'] == '1'): ?>					<td class="tc3"><?php echo (!$ghost_topic) ? $cur_topic['num_views'] : '&nbsp;' ?></td>
+					<td class="tc2"><?php echo (!$ghost_topic) ? forum_number_format($cur_topic['num_replies']) : '&nbsp;' ?></td>
+<?php if ($pun_config['o_topic_views'] == '1'): ?>					<td class="tc3"><?php echo (!$ghost_topic) ? forum_number_format($cur_topic['num_views']) : '&nbsp;' ?></td>
 <?php endif; ?>					<td class="tcr"><?php echo $last_post ?></td>
 					<td class="tcmod"><input type="checkbox" name="topics[<?php echo $cur_topic['id'] ?>]" value="1" /></td>
 				</tr>

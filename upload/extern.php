@@ -295,12 +295,12 @@ else if ($_GET['action'] == 'online' || $_GET['action'] == 'online_full')
 			++$num_guests;
 	}
 
-	echo $lang_index['Guests online'].': '.$num_guests.'<br />';
+	echo $lang_index['Guests online'].': '.forum_number_format($num_guests).'<br />';
 
 	if ($_GET['action'] == 'online_full')
 		echo $lang_index['Users online'].': '.implode(', ', $users).'<br />';
 	else
-		echo $lang_index['Users online'].': '.$num_users.'<br />';
+		echo $lang_index['Users online'].': '.forum_number_format($num_users).'<br />';
 
 	return;
 }
@@ -324,10 +324,10 @@ else if ($_GET['action'] == 'stats')
 	$result = $db->query('SELECT SUM(num_topics), SUM(num_posts) FROM '.$db->prefix.'forums') or error('Unable to fetch topic/post count', __FILE__, __LINE__, $db->error());
 	list($stats['total_topics'], $stats['total_posts']) = $db->fetch_row($result);
 
-	echo $lang_index['No of users'].': '.$stats['total_users'].'<br />';
+	echo $lang_index['No of users'].': '.forum_number_format($stats['total_users']).'<br />';
 	echo $lang_index['Newest user'].': <a href="'.$pun_config['o_base_url'].'/profile.php?id='.$stats['last_user']['id'].'">'.pun_htmlspecialchars($stats['last_user']['username']).'</a><br />';
-	echo $lang_index['No of topics'].': '.$stats['total_topics'].'<br />';
-	echo $lang_index['No of posts'].': '.$stats['total_posts'];
+	echo $lang_index['No of topics'].': '.forum_number_format($stats['total_topics']).'<br />';
+	echo $lang_index['No of posts'].': '.forum_number_format($stats['total_posts']);
 
 	return;
 }

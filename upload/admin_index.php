@@ -182,7 +182,7 @@ generate_admin_menu('index');
 					<dt>Database</dt>
 					<dd>
 						<?php echo implode(' ', $db->get_version())."\n" ?>
-<?php if (isset($total_records) && isset($total_size)): ?>						<br />Rows: <?php echo $total_records."\n" ?>
+<?php if (isset($total_records) && isset($total_size)): ?>						<br />Rows: <?php echo forum_number_format($total_records)."\n" ?>
 						<br />Size: <?php echo $total_size."\n" ?>
 <?php endif; endif; ?>					</dd>
 				</dl>

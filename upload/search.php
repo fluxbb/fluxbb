@@ -562,7 +562,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			<div class="postleft">
 				<dl>
 					<dt><?php echo $pposter ?></dt>
-					<dd>Replies: <?php echo $search_set[$i]['num_replies'] ?></dd>
+					<dd>Replies: <?php echo forum_number_format($search_set[$i]['num_replies']) ?></dd>
 					<dd><?php echo $icon; ?></dd>
 					<dd><p class="clearb"><a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo $lang_search['Go to post'] ?></a></p></dd>
 				</dl>
@@ -632,7 +632,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 						</div>
 					</td>
 					<td class="tc2"><?php echo $forum ?></td>
-					<td class="tc3"><?php echo $search_set[$i]['num_replies'] ?></td>
+					<td class="tc3"><?php echo forum_number_format($search_set[$i]['num_replies']) ?></td>
 					<td class="tcr"><?php echo '<a href="viewtopic.php?pid='.$search_set[$i]['last_post_id'].'#p'.$search_set[$i]['last_post_id'].'">'.format_time($search_set[$i]['last_post']).'</a> '.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($search_set[$i]['last_poster']) ?></td>
 				</tr>
 <?php

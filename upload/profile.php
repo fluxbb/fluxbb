@@ -365,7 +365,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 
 			// Make sure the file isn't too big
 			if ($uploaded_file['size'] > $pun_config['o_avatars_size'])
-				message($lang_profile['Too large'].' '.$pun_config['o_avatars_size'].' '.$lang_profile['bytes'].'.');
+				message($lang_profile['Too large'].' '.forum_number_format($pun_config['o_avatars_size']).' '.$lang_profile['bytes'].'.');
 
 			// Determine type
 			$extension = null;
@@ -421,7 +421,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $pun_config['o_avatars_size'] ?>" />
 						<label><strong><?php echo $lang_profile['File'] ?></strong><br /><input name="req_file" type="file" size="40" /><br /></label>
-						<p><?php echo $lang_profile['Avatar desc'].' '.$pun_config['o_avatars_width'].' x '.$pun_config['o_avatars_height'].' '.$lang_profile['pixels'].' '.$lang_common['and'].' '.$pun_config['o_avatars_size'].' '.$lang_profile['bytes'].' ('.ceil($pun_config['o_avatars_size'] / 1024) ?> KB).</p>
+						<p><?php echo $lang_profile['Avatar desc'].' '.$pun_config['o_avatars_width'].' x '.$pun_config['o_avatars_height'].' '.$lang_profile['pixels'].' '.$lang_common['and'].' '.forum_number_format($pun_config['o_avatars_size']).' '.$lang_profile['bytes'].' ('.forum_number_format(ceil($pun_config['o_avatars_size'] / 1024)) ?> KB).</p>
 					</div>
 				</fieldset>
 			</div>
@@ -955,7 +955,7 @@ if ($pun_user['id'] != $id &&
 
 	$posts_field = '';
 	if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
-		$posts_field = $user['num_posts'];
+		$posts_field = forum_number_format($user['num_posts']);
 	if ($pun_user['g_search'] == '1')
 		$posts_field .= (($posts_field != '') ? ' - ' : '').'<a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a>';
 
@@ -1074,7 +1074,7 @@ else
 		if ($pun_user['g_id'] == PUN_ADMIN)
 			$posts_field = '<label>'.$lang_common['Posts'].'<br /><input type="text" name="num_posts" value="'.$user['num_posts'].'" size="8" maxlength="8" /><br /></label><p><a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a></p>'."\n";
 		else if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
-			$posts_field = '<p>'.$lang_common['Posts'].': '.$user['num_posts'].' - <a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a></p>'."\n";
+			$posts_field = '<p>'.$lang_common['Posts'].': '.forum_number_format($user['num_posts']).' - <a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a></p>'."\n";
 		else
 			$posts_field = '<p><a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a></p>'."\n";
 
@@ -1328,7 +1328,7 @@ else
 						<div class="infldset">
 							<p><?php echo $lang_profile['Signature info'] ?></p>
 							<div class="txtarea">
-								<label><?php echo $lang_profile['Sig max length'] ?>: <?php echo $pun_config['p_sig_length'] ?> / <?php echo $lang_profile['Sig max lines'] ?>: <?php echo $pun_config['p_sig_lines'] ?><br />
+								<label><?php echo $lang_profile['Sig max length'] ?>: <?php echo forum_number_format($pun_config['p_sig_length']) ?> / <?php echo $lang_profile['Sig max lines'] ?>: <?php echo $pun_config['p_sig_lines'] ?><br />
 								<textarea name="signature" rows="4" cols="65"><?php echo pun_htmlspecialchars($user['signature']) ?></textarea><br /></label>
 							</div>
 							<ul class="bblinks">
