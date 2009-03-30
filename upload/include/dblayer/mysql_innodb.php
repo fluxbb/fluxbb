@@ -1,26 +1,11 @@
 <?php
-/***********************************************************************
-
-  Copyright (C) 2002-2005  Rickard Andersson (rickard@punbb.org)
-
-  This file is part of PunBB.
-
-  PunBB is free software; you can redistribute it and/or modify it
-  under the terms of the GNU General Public License as published
-  by the Free Software Foundation; either version 2 of the License,
-  or (at your option) any later version.
-
-  PunBB is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston,
-  MA  02111-1307  USA
-
-************************************************************************/
+/**
+ * A database layer class supporting transactions that relies on the MySQL PHP extension.
+ *
+ * @copyright Copyright (C) 2009 FluxBB.org, based on code copyright (C) 2002-2008 PunBB.org
+ * @license http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
+ * @package FluxBB
+ */
 
 
 // Make sure we have built in support for MySQL
@@ -33,6 +18,7 @@ class DBLayer
 	var $prefix;
 	var $link_id;
 	var $query_result;
+	var $in_transaction = 0;
 
 	var $saved_queries = array();
 	var $num_queries = 0;
@@ -69,12 +55,18 @@ class DBLayer
 
 	function start_transaction()
 	{
+		++$this->in_transaction;
+
+		$this->query('START TRANSACTION');
 		return;
 	}
 
 
 	function end_transaction()
 	{
+		--$this->in_transaction;
+
+		$this->query('COMMIT');
 		return;
 	}
 
@@ -105,6 +97,12 @@ class DBLayer
 		{
 			if (defined('PUN_SHOW_QUERIES'))
 				$this->saved_queries[] = array($sql, 0);
+
+			// Rollback transaction
+			if ($this->in_transaction)
+				$this->query('ROLLBACK');
+
+			--$this->in_transaction;
 
 			return false;
 		}
@@ -199,20 +197,23 @@ class DBLayer
 			return false;
 	}
 
+
 	function set_names($names)
 	{
 		return $this->query('SET NAMES \''.$this->escape($names).'\'');
 	}
+
 
 	function get_version()
 	{
 		$result = $this->query('SELECT VERSION()');
 
 		return array(
-			'name'		=> 'MySQL Standard',
+			'name'		=> 'MySQL Standard (InnoDB)',
 			'version'	=> preg_replace('/^([^-]+).*$/', '\\1', $this->result($result))
 		);
 	}
+
 
 	function table_exists($table_name, $no_prefix = false)
 	{
@@ -291,9 +292,9 @@ class DBLayer
 		}
 
 		// We remove the last two characters (a newline and a comma) and add on the ending
-		$query = substr($query, 0, strlen($query) - 2)."\n".') ENGINE = '.(isset($schema['ENGINE']) ? $schema['ENGINE'] : 'MyISAM').' CHARACTER SET utf8';
+		$query = substr($query, 0, strlen($query) - 2)."\n".') ENGINE = '.(isset($schema['ENGINE']) ? $schema['ENGINE'] : 'InnoDB').' CHARACTER SET utf8';
 
-		$this->query($query) or error('Unable to create table '.($no_prefix ? '' : $this->prefix).$table_name, __FILE__, __LINE__, $this->error());
+		$this->query($query) or error(__FILE__, __LINE__);
 	}
 
 
@@ -302,7 +303,7 @@ class DBLayer
 		if (!$this->table_exists($table_name, $no_prefix))
 			return;
 
-		$this->query('DROP TABLE '.($no_prefix ? '' : $this->prefix).$table_name) or $this->query($query) or error('Unable to drop table '.($no_prefix ? '' : $this->prefix).$table_name, __FILE__, __LINE__, $this->error());
+		$this->query('DROP TABLE '.($no_prefix ? '' : $this->prefix).$table_name) or error(__FILE__, __LINE__);
 	}
 
 
@@ -316,7 +317,7 @@ class DBLayer
 		if ($default_value !== null && !is_int($default_value) && !is_float($default_value))
 			$default_value = '\''.$this->escape($default_value).'\'';
 
-		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ADD '.$field_name.' '.$field_type.($allow_null ? ' ' : ' NOT NULL').($default_value !== null ? ' DEFAULT '.$default_value : ' ').($after_field != null ? ' AFTER '.$after_field : '')) or error('Unable to add field', __FILE__, __LINE__, $this->error());
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ADD '.$field_name.' '.$field_type.($allow_null ? ' ' : ' NOT NULL').($default_value !== null ? ' DEFAULT '.$default_value : ' ').($after_field != null ? ' AFTER '.$after_field : '')) or error(__FILE__, __LINE__);
 	}
 
 
@@ -330,7 +331,7 @@ class DBLayer
 		if ($default_value !== null && !is_int($default_value) && !is_float($default_value))
 			$default_value = '\''.$this->escape($default_value).'\'';
 
-		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' MODIFY '.$field_name.' '.$field_type.($allow_null ? ' ' : ' NOT NULL').($default_value !== null ? ' DEFAULT '.$default_value : ' ').($after_field != null ? ' AFTER '.$after_field : '')) or error('Unable to alter field', __FILE__, __LINE__, $this->error());
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' MODIFY '.$field_name.' '.$field_type.($allow_null ? ' ' : ' NOT NULL').($default_value !== null ? ' DEFAULT '.$default_value : ' ').($after_field != null ? ' AFTER '.$after_field : '')) or error(__FILE__, __LINE__);
 	}
 
 
@@ -339,7 +340,7 @@ class DBLayer
 		if (!$this->field_exists($table_name, $field_name, $no_prefix))
 			return;
 
-		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' DROP '.$field_name) or error('Unable to drop field', __FILE__, __LINE__, $this->error());
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' DROP '.$field_name) or error(__FILE__, __LINE__);
 	}
 
 
@@ -348,7 +349,7 @@ class DBLayer
 		if ($this->index_exists($table_name, $index_name, $no_prefix))
 			return;
 
-		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ADD '.($unique ? 'UNIQUE ' : '').'INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name.' ('.implode(',', $index_fields).')') or error('Unable to add index', __FILE__, __LINE__, $this->error());
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ADD '.($unique ? 'UNIQUE ' : '').'INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name.' ('.implode(',', $index_fields).')') or error(__FILE__, __LINE__);
 	}
 
 
@@ -357,6 +358,6 @@ class DBLayer
 		if (!$this->index_exists($table_name, $index_name, $no_prefix))
 			return;
 
-		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' DROP INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name) or error('Unable to drop index', __FILE__, __LINE__, $this->error());
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' DROP INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name) or error(__FILE__, __LINE__);
 	}
 }

@@ -1,31 +1,16 @@
 <?php
-/***********************************************************************
-
-  Copyright (C) 2002-2005  Rickard Andersson (rickard@punbb.org)
-
-  This file is part of PunBB.
-
-  PunBB is free software; you can redistribute it and/or modify it
-  under the terms of the GNU General Public License as published
-  by the Free Software Foundation; either version 2 of the License,
-  or (at your option) any later version.
-
-  PunBB is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston,
-  MA  02111-1307  USA
-
-************************************************************************/
+/**
+ * A database layer class supporting transactions that relies on the MySQLi PHP extension.
+ *
+ * @copyright Copyright (C) 2009 FluxBB.org, based on code copyright (C) 2002-2008 PunBB.org
+ * @license http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
+ * @package FluxBB
+ */
 
 
 // Make sure we have built in support for MySQL
-if (!function_exists('mysql_connect'))
-	exit('This PHP environment doesn\'t have MySQL support built in. MySQL support is required if you want to use a MySQL database to run this forum. Consult the PHP documentation for further assistance.');
+if (!function_exists('mysqli_connect'))
+	exit('This PHP environment doesn\'t have Improved MySQL (mysqli) support built in. Improved MySQL support is required if you want to use a MySQL 4.1 (or later) database to run this forum. Consult the PHP documentation for further assistance.');
 
 
 class DBLayer
@@ -36,28 +21,28 @@ class DBLayer
 
 	var $saved_queries = array();
 	var $num_queries = 0;
+	var $in_transaction = 0;
 
 	var $datatype_transformations = array(
 		'/^SERIAL$/'	=>	'INT(10) UNSIGNED AUTO_INCREMENT'
 	);
 
 
-	function DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
+	function DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $foo)
 	{
 		$this->prefix = $db_prefix;
 
-		if ($p_connect)
-			$this->link_id = @mysql_pconnect($db_host, $db_username, $db_password);
-		else
-			$this->link_id = @mysql_connect($db_host, $db_username, $db_password);
+		// Was a custom port supplied with $db_host?
+		if (strpos($db_host, ':') !== false)
+			list($db_host, $db_port) = explode(':', $db_host);
 
-		if ($this->link_id)
-		{
-			if (!@mysql_select_db($db_name, $this->link_id))
-				error('Unable to select database. MySQL reported: '.mysql_error(), __FILE__, __LINE__);
-		}
+		if (isset($db_port))
+			$this->link_id = @mysqli_connect($db_host, $db_username, $db_password, $db_name, $db_port);
 		else
-			error('Unable to connect to MySQL server. MySQL reported: '.mysql_error(), __FILE__, __LINE__);
+			$this->link_id = @mysqli_connect($db_host, $db_username, $db_password, $db_name);
+
+		if (!$this->link_id)
+			error('Unable to connect to MySQL and select database. MySQL reported: '.mysqli_connect_error(), __FILE__, __LINE__);
 
 		// Setup the client-server character set (UTF-8)
 		if (!defined('FORUM_NO_SET_NAMES'))
@@ -69,12 +54,18 @@ class DBLayer
 
 	function start_transaction()
 	{
+		++$this->in_transaction;
+
+		$this->query('START TRANSACTION');
 		return;
 	}
 
 
 	function end_transaction()
 	{
+		--$this->in_transaction;
+
+		$this->query('COMMIT');
 		return;
 	}
 
@@ -87,10 +78,7 @@ class DBLayer
 		if (defined('PUN_SHOW_QUERIES'))
 			$q_start = get_microtime();
 
-		if ($unbuffered)
-			$this->query_result = @mysql_unbuffered_query($sql, $this->link_id);
-		else
-			$this->query_result = @mysql_query($sql, $this->link_id);
+		$this->query_result = @mysqli_query($this->link_id, $sql);
 
 		if ($this->query_result)
 		{
@@ -106,44 +94,126 @@ class DBLayer
 			if (defined('PUN_SHOW_QUERIES'))
 				$this->saved_queries[] = array($sql, 0);
 
+			// Rollback transaction
+			if ($this->in_transaction)
+				$this->query('ROLLBACK');
+
+			--$this->in_transaction;
+
 			return false;
 		}
 	}
 
 
+	function query_build($query, $return_query_string = false, $unbuffered = false)
+	{
+		$sql = '';
+
+		if (isset($query['SELECT']))
+		{
+			$sql = 'SELECT '.$query['SELECT'].' FROM '.(isset($query['PARAMS']['NO_PREFIX']) ? '' : $this->prefix).$query['FROM'];
+
+			if (isset($query['JOINS']))
+			{
+				foreach ($query['JOINS'] as $cur_join)
+					$sql .= ' '.key($cur_join).' '.(isset($query['PARAMS']['NO_PREFIX']) ? '' : $this->prefix).current($cur_join).' ON '.$cur_join['ON'];
+			}
+
+			if (!empty($query['WHERE']))
+				$sql .= ' WHERE '.$query['WHERE'];
+			if (!empty($query['GROUP BY']))
+				$sql .= ' GROUP BY '.$query['GROUP BY'];
+			if (!empty($query['HAVING']))
+				$sql .= ' HAVING '.$query['HAVING'];
+			if (!empty($query['ORDER BY']))
+				$sql .= ' ORDER BY '.$query['ORDER BY'];
+			if (!empty($query['LIMIT']))
+				$sql .= ' LIMIT '.$query['LIMIT'];
+		}
+		else if (isset($query['INSERT']))
+		{
+			$sql = 'INSERT INTO '.(isset($query['PARAMS']['NO_PREFIX']) ? '' : $this->prefix).$query['INTO'];
+
+			if (!empty($query['INSERT']))
+				$sql .= ' ('.$query['INSERT'].')';
+
+			if (is_array($query['VALUES']))
+				$sql .= ' VALUES('.implode('),(', $query['VALUES']).')';
+			else
+				$sql .= ' VALUES('.$query['VALUES'].')';
+		}
+		else if (isset($query['UPDATE']))
+		{
+			$query['UPDATE'] = (isset($query['PARAMS']['NO_PREFIX']) ? '' : $this->prefix).$query['UPDATE'];
+
+			$sql = 'UPDATE '.$query['UPDATE'].' SET '.$query['SET'];
+
+			if (!empty($query['WHERE']))
+				$sql .= ' WHERE '.$query['WHERE'];
+		}
+		else if (isset($query['DELETE']))
+		{
+			$sql = 'DELETE FROM '.(isset($query['PARAMS']['NO_PREFIX']) ? '' : $this->prefix).$query['DELETE'];
+
+			if (!empty($query['WHERE']))
+				$sql .= ' WHERE '.$query['WHERE'];
+		}
+		else if (isset($query['REPLACE']))
+		{
+			$sql = 'REPLACE INTO '.(isset($query['PARAMS']['NO_PREFIX']) ? '' : $this->prefix).$query['INTO'];
+
+			if (!empty($query['REPLACE']))
+				$sql .= ' ('.$query['REPLACE'].')';
+
+			$sql .= ' VALUES('.$query['VALUES'].')';
+		}
+
+		return ($return_query_string) ? $sql : $this->query($sql, $unbuffered);
+	}
+
+
 	function result($query_id = 0, $row = 0, $col = 0)
 	{
-		return ($query_id) ? @mysql_result($query_id, $row, $col) : false;
+		if ($query_id)
+		{
+			if ($row)
+				@mysqli_data_seek($query_id, $row);
+
+			$cur_row = @mysqli_fetch_row($query_id);
+			return $cur_row[$col];
+		}
+		else
+			return false;
 	}
 
 
 	function fetch_assoc($query_id = 0)
 	{
-		return ($query_id) ? @mysql_fetch_assoc($query_id) : false;
+		return ($query_id) ? @mysqli_fetch_assoc($query_id) : false;
 	}
 
 
 	function fetch_row($query_id = 0)
 	{
-		return ($query_id) ? @mysql_fetch_row($query_id) : false;
+		return ($query_id) ? @mysqli_fetch_row($query_id) : false;
 	}
 
 
 	function num_rows($query_id = 0)
 	{
-		return ($query_id) ? @mysql_num_rows($query_id) : false;
+		return ($query_id) ? @mysqli_num_rows($query_id) : false;
 	}
 
 
 	function affected_rows()
 	{
-		return ($this->link_id) ? @mysql_affected_rows($this->link_id) : false;
+		return ($this->link_id) ? @mysqli_affected_rows($this->link_id) : false;
 	}
 
 
 	function insert_id()
 	{
-		return ($this->link_id) ? @mysql_insert_id($this->link_id) : false;
+		return ($this->link_id) ? @mysqli_insert_id($this->link_id) : false;
 	}
 
 
@@ -161,26 +231,21 @@ class DBLayer
 
 	function free_result($query_id = false)
 	{
-		return ($query_id) ? @mysql_free_result($query_id) : false;
+		return ($query_id) ? @mysqli_free_result($query_id) : false;
 	}
 
 
 	function escape($str)
 	{
-		if (is_array($str))
-			return '';
-		else if (function_exists('mysql_real_escape_string'))
-			return mysql_real_escape_string($str, $this->link_id);
-		else
-			return mysql_escape_string($str);
+		return is_array($str) ? '' : mysqli_real_escape_string($this->link_id, $str);
 	}
 
 
 	function error()
 	{
 		$result['error_sql'] = @current(@end($this->saved_queries));
-		$result['error_no'] = @mysql_errno($this->link_id);
-		$result['error_msg'] = @mysql_error($this->link_id);
+		$result['error_no'] = @mysqli_errno($this->link_id);
+		$result['error_msg'] = @mysqli_error($this->link_id);
 
 		return $result;
 	}
@@ -191,28 +256,31 @@ class DBLayer
 		if ($this->link_id)
 		{
 			if ($this->query_result)
-				@mysql_free_result($this->query_result);
+				@mysqli_free_result($this->query_result);
 
-			return @mysql_close($this->link_id);
+			return @mysqli_close($this->link_id);
 		}
 		else
 			return false;
 	}
+
 
 	function set_names($names)
 	{
 		return $this->query('SET NAMES \''.$this->escape($names).'\'');
 	}
 
+
 	function get_version()
 	{
 		$result = $this->query('SELECT VERSION()');
 
 		return array(
-			'name'		=> 'MySQL Standard',
+			'name'		=> 'MySQL Improved (InnoDB)',
 			'version'	=> preg_replace('/^([^-]+).*$/', '\\1', $this->result($result))
 		);
 	}
+
 
 	function table_exists($table_name, $no_prefix = false)
 	{
@@ -291,9 +359,9 @@ class DBLayer
 		}
 
 		// We remove the last two characters (a newline and a comma) and add on the ending
-		$query = substr($query, 0, strlen($query) - 2)."\n".') ENGINE = '.(isset($schema['ENGINE']) ? $schema['ENGINE'] : 'MyISAM').' CHARACTER SET utf8';
+		$query = substr($query, 0, strlen($query) - 2)."\n".') ENGINE = '.(isset($schema['ENGINE']) ? $schema['ENGINE'] : 'InnoDB').' CHARACTER SET utf8';
 
-		$this->query($query) or error('Unable to create table '.($no_prefix ? '' : $this->prefix).$table_name, __FILE__, __LINE__, $this->error());
+		$this->query($query) or error(__FILE__, __LINE__);
 	}
 
 
@@ -302,7 +370,7 @@ class DBLayer
 		if (!$this->table_exists($table_name, $no_prefix))
 			return;
 
-		$this->query('DROP TABLE '.($no_prefix ? '' : $this->prefix).$table_name) or $this->query($query) or error('Unable to drop table '.($no_prefix ? '' : $this->prefix).$table_name, __FILE__, __LINE__, $this->error());
+		$this->query('DROP TABLE '.($no_prefix ? '' : $this->prefix).$table_name) or error(__FILE__, __LINE__);
 	}
 
 
@@ -316,7 +384,7 @@ class DBLayer
 		if ($default_value !== null && !is_int($default_value) && !is_float($default_value))
 			$default_value = '\''.$this->escape($default_value).'\'';
 
-		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ADD '.$field_name.' '.$field_type.($allow_null ? ' ' : ' NOT NULL').($default_value !== null ? ' DEFAULT '.$default_value : ' ').($after_field != null ? ' AFTER '.$after_field : '')) or error('Unable to add field', __FILE__, __LINE__, $this->error());
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ADD '.$field_name.' '.$field_type.($allow_null ? ' ' : ' NOT NULL').($default_value !== null ? ' DEFAULT '.$default_value : ' ').($after_field != null ? ' AFTER '.$after_field : '')) or error(__FILE__, __LINE__);
 	}
 
 
@@ -330,7 +398,7 @@ class DBLayer
 		if ($default_value !== null && !is_int($default_value) && !is_float($default_value))
 			$default_value = '\''.$this->escape($default_value).'\'';
 
-		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' MODIFY '.$field_name.' '.$field_type.($allow_null ? ' ' : ' NOT NULL').($default_value !== null ? ' DEFAULT '.$default_value : ' ').($after_field != null ? ' AFTER '.$after_field : '')) or error('Unable to alter field', __FILE__, __LINE__, $this->error());
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' MODIFY '.$field_name.' '.$field_type.($allow_null ? ' ' : ' NOT NULL').($default_value !== null ? ' DEFAULT '.$default_value : ' ').($after_field != null ? ' AFTER '.$after_field : '')) or error(__FILE__, __LINE__);
 	}
 
 
@@ -339,7 +407,7 @@ class DBLayer
 		if (!$this->field_exists($table_name, $field_name, $no_prefix))
 			return;
 
-		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' DROP '.$field_name) or error('Unable to drop field', __FILE__, __LINE__, $this->error());
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' DROP '.$field_name) or error(__FILE__, __LINE__);
 	}
 
 
@@ -348,7 +416,7 @@ class DBLayer
 		if ($this->index_exists($table_name, $index_name, $no_prefix))
 			return;
 
-		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ADD '.($unique ? 'UNIQUE ' : '').'INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name.' ('.implode(',', $index_fields).')') or error('Unable to add index', __FILE__, __LINE__, $this->error());
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ADD '.($unique ? 'UNIQUE ' : '').'INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name.' ('.implode(',', $index_fields).')') or error(__FILE__, __LINE__);
 	}
 
 
@@ -357,6 +425,6 @@ class DBLayer
 		if (!$this->index_exists($table_name, $index_name, $no_prefix))
 			return;
 
-		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' DROP INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name) or error('Unable to drop index', __FILE__, __LINE__, $this->error());
+		$this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' DROP INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name) or error(__FILE__, __LINE__);
 	}
 }
