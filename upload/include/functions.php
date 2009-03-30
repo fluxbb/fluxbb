@@ -80,6 +80,8 @@ function check_cookie(&$pun_user)
 				{
 					case 'mysql':
 					case 'mysqli':
+					case 'mysql_innodb':
+					case 'mysqli_innodb':
 						$db->query('REPLACE INTO '.$db->prefix.'online (user_id, ident, logged) VALUES('.$pun_user['id'].', \''.$db->escape($pun_user['username']).'\', '.$pun_user['logged'].')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
 						break;
 
@@ -139,6 +141,8 @@ function set_default_user()
 		{
 			case 'mysql':
 			case 'mysqli':
+			case 'mysql_innodb':
+			case 'mysqli_innodb':
 				$db->query('REPLACE INTO '.$db->prefix.'online (user_id, ident, logged) VALUES(1, \''.$db->escape($remote_addr).'\', '.$pun_user['logged'].')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
 				break;
 

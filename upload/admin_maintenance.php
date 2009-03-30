@@ -61,6 +61,8 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 		{
 			case 'mysql':
 			case 'mysqli':
+			case 'mysql_innodb':
+			case 'mysqli_innodb':
 				$result = $db->query('ALTER TABLE '.$db->prefix.'search_words auto_increment=1') or error('Unable to update table auto_increment', __FILE__, __LINE__, $db->error());
 				break;
 
