@@ -533,6 +533,8 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 			{
 				case 'mysql':
 				case 'mysqli':
+				case 'mysql_innodb':
+				case 'mysqli_innodb':
 					$db->add_index('online', 'user_id_ident_idx', array('user_id', 'ident(25)'), true);
 					break;
 
@@ -550,6 +552,8 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		{
 			case 'mysql':
 			case 'mysqli':
+			case 'mysql_innodb':
+			case 'mysqli_innodb':
 				$db->add_index('online', 'ident_idx', array('ident(25)'));
 				break;
 
@@ -914,7 +918,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 	// Convert table columns to utf8 (MySQL only)
 	case 'conv_tables':
 		// Do the cumbersome charset conversion of MySQL tables/columns
-		if ($db_type == 'mysql' || $db_type == 'mysqli')
+		if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 		{
 			echo 'Converting table '.$db->prefix.'bans …<br />'."\n"; flush();
 			convert_table_utf8($db->prefix.'bans');

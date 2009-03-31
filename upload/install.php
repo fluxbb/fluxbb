@@ -89,13 +89,20 @@ if (!isset($_POST['form_sent']))
 	// Determine available database extensions
 	$dual_mysql = false;
 	$db_extensions = array();
+	$mysql_innodb = false;
 	if (function_exists('mysqli_connect'))
+	{
 		$db_extensions[] = array('mysqli', 'MySQL Improved');
+		$db_extensions[] = array('mysqli_innodb', 'MySQL Improved (InnoDB)');
+		$mysql_innodb = true;
+	}
 	if (function_exists('mysql_connect'))
 	{
 		$db_extensions[] = array('mysql', 'MySQL Standard');
+		$db_extensions[] = array('mysql_innodb', 'MySQL (InnoDB)');
+		$mysql_innodb = true;
 
-		if (count($db_extensions) > 1)
+		if (count($db_extensions) > 2)
 			$dual_mysql = true;
 	}
 	if (function_exists('sqlite_open'))
@@ -180,6 +187,7 @@ function process_form(the_form)
 					<div class="infldset">
 						<p>FluxBB currently supports MySQL, PostgreSQL and SQLite. If your database of choice is missing from the drop-down menu below, it means this PHP environment does not have support for that particular database. More information regarding support for particular versions of each database can be found in the FAQ.</p>
 <?php if ($dual_mysql): ?>						<p>FluxBB has detected that your PHP environment supports two different ways of communicating with MySQL. The two options are called standard and improved. If you are uncertain which one to use, start by trying improved and if that fails, try standard.</p>
+<?php endif; ?><?php if ($mysql_innodb): ?>					<p>FluxBB has detected that your MySQL server might support <a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-overview.html">InnoDB</a>. This would be a good choice if you are planning to run a large forum. If you are uncertain, it is recommended to not use InnoDB.</p>
 <?php endif; ?>						<label><strong>Database type</strong>
 						<br /><select name="req_db_type">
 <?php
@@ -339,9 +347,17 @@ else
 		case 'mysql':
 			require PUN_ROOT.'include/dblayer/mysql.php';
 			break;
+		
+		case 'mysql_innodb':
+			require PUN_ROOT.'include/dblayer/mysql_innodb.php';
+			break;
 
 		case 'mysqli':
 			require PUN_ROOT.'include/dblayer/mysqli.php';
+			break;
+		
+		case 'mysqli_innodb':
+			require PUN_ROOT.'include/dblayer/mysqli_innodb.php';
 			break;
 
 		case 'pgsql':
@@ -365,6 +381,8 @@ else
 	{
 		case 'mysql':
 		case 'mysqli':
+		case 'mysql_innodb':
+		case 'mysqli_innodb':
 			break;
 
 		case 'pgsql':
@@ -384,6 +402,14 @@ else
 	$result = $db->query('SELECT 1 FROM '.$db_prefix.'users WHERE id=1');
 	if ($db->num_rows($result))
 		error('A table called "'.$db_prefix.'users" is already present in the database "'.$db_name.'". This could mean that FluxBB is already installed or that another piece of software is installed and is occupying one or more of the table names FluxBB requires. If you want to install multiple copies of FluxBB in the same database, you must choose a different table prefix.');
+	
+	// Check if InnoDB is available 
+ 	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb') 
+ 	{ 
+		$result = $forum_db->query('SHOW VARIABLES LIKE \'have_innodb\''); 
+		if ((strtoupper($forum_db->result($result)) != 'YES')) 
+			error('InnoDB does not seem to be enabled. Please choose a database layer that does not have InnoDB support, or enable InnoDB on your MySQL server.'); 
+ 	}
 
 
 	// Start a transaction
@@ -752,11 +778,14 @@ else
 		'ENGINE'		=> 'HEAP'
 	);
 
-	if ($db_type == 'mysql' || $db_type == 'mysqli')
+	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 	{
 		$schema['UNIQUE KEYS']['user_id_ident_idx'] = array('user_id', 'ident(25)');
 		$schema['INDEXES']['ident_idx'] = array('ident(25)');
 	}
+	
+	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb') 
+		$schema['ENGINE'] = 'InnoDB';
 
 	$db->create_table('online', $schema);
 
@@ -922,7 +951,7 @@ else
 		)
 	);
 
-	if ($db_type == 'mysql' || $db_type == 'mysqli')
+	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 		$schema['INDEXES']['ident_idx'] = array('ident(8)');
 
 	$db->create_table('search_cache', $schema);
@@ -1280,7 +1309,7 @@ else
 		)
 	);
 
-	if ($db_type == 'mysql' || $db_type == 'mysqli')
+	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 		$schema['INDEXES']['username_idx'] = array('username(8)');
 
 	$db->create_table('users', $schema);
