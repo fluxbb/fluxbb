@@ -226,10 +226,7 @@ B - GLOBAL STYLES
 
 .brd .main-pagehead {
 	float: right;
-	padding: 0  1.5em;
-	border-style: none;
-	border-width: 1px;
-	margin-top: -2.7em;
+	margin: -2.7em 1.5em 0 0;
 	}
 
 .brd .main-pagehead .hn {
