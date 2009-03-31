@@ -1272,6 +1272,10 @@ F - MAIN CONTENT - FORMS
 	padding: 0 0 0 1em;
 	}
 
+.brd .text .fld-input input {
+	width: 100%;
+	}
+
 .brd .txt-set textarea {
 	width: 95%;
 	}
