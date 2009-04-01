@@ -33,6 +33,7 @@ html, body, /* remove this line if necessary for site integration */
 -------------------------------------------------------------*/
 
 body {
+	padding: 20px 30px;
 	font-size: 100%;
 	}
 
@@ -138,7 +139,6 @@ B - GLOBAL STYLES
 -------------------------------------------------------------*/
 
 .brd {
-	padding: 20px 30px;
 	overflow: auto;
 	}
 
