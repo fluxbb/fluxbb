@@ -139,6 +139,7 @@ B - GLOBAL STYLES
 
 .brd {
 	padding: 20px 30px;
+	overflow: auto;
 	}
 
 #brd-redirect, #brd-maint, #brd-util {
