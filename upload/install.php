@@ -406,8 +406,9 @@ else
 	// Check if InnoDB is available 
  	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb') 
  	{ 
-		$result = $forum_db->query('SHOW VARIABLES LIKE \'have_innodb\''); 
-		if ((strtoupper($forum_db->result($result)) != 'YES')) 
+		$result = $db->query('SHOW VARIABLES LIKE \'have_innodb\''); 
+		list (, $result) = $db->fetch_row($result); 
+		if ((strtoupper($result) != 'YES')) 
 			error('InnoDB does not seem to be enabled. Please choose a database layer that does not have InnoDB support, or enable InnoDB on your MySQL server.'); 
  	}
 
