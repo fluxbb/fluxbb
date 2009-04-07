@@ -30,7 +30,6 @@
 define('PUN_ROOT', './');
 require PUN_ROOT.'include/common.php';
 
-
 // Load the search.php language file
 require PUN_ROOT.'lang/'.$pun_user['language'].'/search.php';
 
@@ -431,8 +430,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 		if ($show_as == 'posts')
 		{
-			$substr_sql = ($db_type != 'sqlite') ? 'SUBSTRING' : 'SUBSTR';
-			$sql = 'SELECT p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, '.$substr_sql.'(p.message, 1, 1000) AS message, t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id WHERE p.id IN('.$search_results.') ORDER BY '.$sort_by_sql;
+			$sql = 'SELECT p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, p.message, p.hide_smilies, t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id WHERE p.id IN('.$search_results.') ORDER BY '.$sort_by_sql;
 		}
 		else
 			$sql = 'SELECT t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.forum_id FROM '.$db->prefix.'topics AS t WHERE t.id IN('.$search_results.') ORDER BY '.$sort_by_sql;
@@ -499,6 +497,11 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 <?php
 
 		}
+		
+		if ($show_as == 'posts')
+		{
+			require PUN_ROOT.'include/parser.php';
+		}		
 
 		// Fetch the list of forums
 		$result = $db->query('SELECT id, forum_name FROM '.$db->prefix.'forums') or error('Unable to fetch forum list', __FILE__, __LINE__, $db->error());
@@ -533,7 +536,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				if ($pun_config['o_censoring'] == '1')
 					$search_set[$i]['message'] = censor_words($search_set[$i]['message']);
 
-				$message = str_replace("\n", '<br />', pun_htmlspecialchars($search_set[$i]['message']));
+				$message = parse_message($search_set[$i]['message'], $search_set[$i]['hide_smilies']);
 				$pposter = pun_htmlspecialchars($search_set[$i]['pposter']);
 
 				if ($search_set[$i]['poster_id'] > 1)
@@ -555,7 +558,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 
 ?>
-<div class="blockpost searchposts<?php echo $vtbg ?>">
+<div class="blockpost<?php echo $vtbg ?>">
 	<h2><?php echo $forum ?>&nbsp;&raquo;&nbsp;<?php echo $subject ?>&nbsp;&raquo;&nbsp;<a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo format_time($search_set[$i]['pposted']) ?></a></h2>
 	<div class="box">
 		<div class="inbox">
