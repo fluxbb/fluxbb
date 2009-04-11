@@ -55,7 +55,7 @@ function is_banned_email($email)
 //
 // Check if someone else has already registered with $email, optionally populate $dupe_list with a full list of duplicate usernames
 //
-function is_dupe_email($email, &$dupe_list = null, $user_id = null)
+function is_dupe_email($email, $user_id = null, &$dupe_list = null)
 {
 	global $forum_db;
 
