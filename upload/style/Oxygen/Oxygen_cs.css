@@ -282,11 +282,16 @@ body {
 	color: #fff;
 	}
 
-.brd .main-head {
+.brd .main-head, .brd .main-pagehead {
 	background: #294F6E;
 	color: #ddd;
 	border-color: #1f537b;
 	}
+
+/* .brd #brd-admin-uresults .main-pagehead {
+	background: none;
+	color: #333;
+	} */
 
 .brd .main-subhead {
 	border-color: #DFE6ED #DFE6ED #CBD1D8 #DFE6ED;
