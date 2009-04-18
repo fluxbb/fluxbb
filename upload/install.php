@@ -304,14 +304,6 @@ else
 		return (get_magic_quotes_gpc() == 1) ? stripslashes($str) : $str;
 	}
 	
-	//
-	// Calls htmlspecialchars with a few options already set
-	//
-	function pun_htmlspecialchars($str)
-	{
-		return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
-	}
-
 	$db_type = $_POST['req_db_type'];
 	$db_host = trim($_POST['req_db_host']);
 	$db_name = trim($_POST['req_db_name']);
