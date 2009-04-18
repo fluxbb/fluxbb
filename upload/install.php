@@ -289,6 +289,15 @@ else
 
 		exit;
 	}
+	
+	
+	// 
+	// Calls htmlspecialchars with a few options already set 
+	// 
+	function pun_htmlspecialchars($str) 
+	{ 
+		return htmlspecialchars($str, ENT_QUOTES, 'UTF-8'); 
+	}
 
 
 	$db_type = $_POST['req_db_type'];
@@ -348,7 +357,7 @@ else
 			break;
 
 		default:
-			error('\''.$db_type.'\' is not a valid database type.');
+			error('\''.pun_htmlspecialchars($db_type).'\' is not a valid database type.');
 	}
 
 	// Create the database object (and connect/select db)
