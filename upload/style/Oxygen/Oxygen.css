@@ -227,7 +227,11 @@ B - GLOBAL STYLES
 
 .brd .main-pagehead {
 	float: right;
-	margin: -2.7em 1.5em 0 0;
+	margin: -2.5em 1.5em 0 0;
+	}
+
+.brd #brd-admin-uresults .main-pagehead {
+	margin-top: -5.3em;
 	}
 
 .brd .main-pagehead .hn {

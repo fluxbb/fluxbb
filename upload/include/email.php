@@ -55,7 +55,7 @@ function is_banned_email($email)
 //
 // Check if someone else has already registered with $email, optionally populate $dupe_list with a full list of duplicate usernames
 //
-function is_dupe_email($email, &$dupe_list = null)
+function is_dupe_email($email, $user_id = null, &$dupe_list = null)
 {
 	global $forum_db;
 
@@ -64,6 +64,9 @@ function is_dupe_email($email, &$dupe_list = null)
 		'FROM'		=> 'users AS u',
 		'WHERE'		=> 'u.email=\''.$forum_db->escape($email).'\''
 	);
+	
+	// don't match updated user e-mail
+	if ($user_id !== null) $query['WHERE'] .= ' AND u.id <> '.intval($user_id);
 
 	($hook = get_hook('em_fn_qr_check_email_dupe')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 	$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);

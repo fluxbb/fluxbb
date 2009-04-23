@@ -462,7 +462,7 @@ else
 			break;
 
 		default:
-			error(sprintf($lang_install['No such database type'], $db_type));
+			error(sprintf($lang_install['No such database type'], forum_htmlencode($db_type)));
 	}
 
 	// Create the database object (and connect/select db)

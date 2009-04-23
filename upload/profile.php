@@ -934,7 +934,7 @@ else if (isset($_POST['form_sent']))
 				$form['email'] = strtolower(forum_trim($_POST['req_email']));
 				if (!is_valid_email($form['email']))
 					$errors[] = $lang_common['Invalid e-mail'];
-				else if($forum_config['p_allow_dupe_email'] == '0' && is_dupe_email($form['email']))
+				else if($forum_config['p_allow_dupe_email'] == '0' && is_dupe_email($form['email'], $id))
 					$errors[] = $lang_profile['Dupe e-mail'];
 				else if ($forum_config['p_allow_banned_email'] == '0' && is_banned_email($form['email']))
 					$errors[] = $lang_profile['Banned e-mail'];
