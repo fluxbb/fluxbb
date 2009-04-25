@@ -104,6 +104,11 @@ function check_cookie(&$pun_user)
 				$db->query('UPDATE '.$db->prefix.'online SET logged='.$now.$idle_sql.' WHERE user_id='.$pun_user['id']) or error('Unable to update online list', __FILE__, __LINE__, $db->error());
 			}
 		}
+		else
+		{
+			if (!$pun_user['logged'])
+				$pun_user['logged'] = $pun_user['last_visit'];
+		}
 
 		$pun_user['is_guest'] = false;
 	}
