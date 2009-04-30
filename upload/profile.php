@@ -375,13 +375,13 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 			list($width, $height, $type,) = @getimagesize($pun_config['o_avatars_dir'].'/'.$id.'.tmp');
 
 			// Determine type
-			$extensions = null;
+			$extension = null;
 			if ($type == IMAGETYPE_GIF)
-				$extensions = array('.gif', '.jpg', '.png');
+				$extension = '.gif';
 			else if ($type == IMAGETYPE_JPEG)
-				$extensions = array('.jpg', '.gif', '.png');
+				$extension = '.jpg';
 			else if ($type == IMAGETYPE_PNG)
-				$extensions = array('.png', '.gif', '.jpg');
+				$extension = '.png';
 			else
 			{
 				// Invalid type
