@@ -347,6 +347,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 
 		if (is_uploaded_file($uploaded_file['tmp_name']))
 		{
+			// Preliminary file check, adequate in most cases
 			$allowed_types = array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png');
 			if (!in_array($uploaded_file['type'], $allowed_types))
 				message($lang_profile['Bad type']);
@@ -355,31 +356,33 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 			if ($uploaded_file['size'] > $pun_config['o_avatars_size'])
 				message($lang_profile['Too large'].' '.$pun_config['o_avatars_size'].' '.$lang_profile['bytes'].'.');
 
-			// Determine type
-			$extensions = null;
-			if ($uploaded_file['type'] == 'image/gif')
-				$extensions = array('.gif', '.jpg', '.png');
-			else if ($uploaded_file['type'] == 'image/jpeg' || $uploaded_file['type'] == 'image/pjpeg')
-				$extensions = array('.jpg', '.gif', '.png');
-			else
-				$extensions = array('.png', '.gif', '.jpg');
-
 			// Move the file to the avatar directory. We do this before checking the width/height to circumvent open_basedir restrictions.
 			if (!@move_uploaded_file($uploaded_file['tmp_name'], $pun_config['o_avatars_dir'].'/'.$id.'.tmp'))
 				message($lang_profile['Move failed'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
 
+			list($width, $height, $type,) = @getimagesize($pun_config['o_avatars_dir'].'/'.$id.'.tmp');
+
+			// Determine type
+			$extensions = null;
+			if ($type == IMAGETYPE_GIF)
+				$extensions = array('.gif', '.jpg', '.png');
+			else if ($type == IMAGETYPE_JPEG)
+				$extensions = array('.jpg', '.gif', '.png');
+			else if ($type == IMAGETYPE_PNG)
+				$extensions = array('.png', '.gif', '.jpg');
+			else
+			{
+				// Invalid type
+				@unlink($pun_config['o_avatars_dir'].'/'.$id.'.tmp');
+				message($lang_profile['Bad type']);
+			}
+
 			// Now check the width/height
-			list($width, $height, $type,) = getimagesize($pun_config['o_avatars_dir'].'/'.$id.'.tmp');
 			if (empty($width) || empty($height) || $width > $pun_config['o_avatars_width'] || $height > $pun_config['o_avatars_height'])
 			{
 				@unlink($pun_config['o_avatars_dir'].'/'.$id.'.tmp');
 				message($lang_profile['Too wide or high'].' '.$pun_config['o_avatars_width'].'x'.$pun_config['o_avatars_height'].' '.$lang_profile['pixels'].'.');
 			}
-			else if ($type == 1 && $uploaded_file['type'] != 'image/gif')	// Prevent dodgy uploads
-			{
-				@unlink($pun_config['o_avatars_dir'].'/'.$id.'.tmp');
-				message($lang_profile['Bad type']);
-			}			
 
 			// Delete any old avatars and put the new one in place
 			@unlink($pun_config['o_avatars_dir'].'/'.$id.$extensions[0]);
