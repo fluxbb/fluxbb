@@ -1121,17 +1121,6 @@ else if (isset($_POST['form_sent']))
 
 				if (empty($errors))
 				{
-					// Determine type
-					$extension = null;
-					if ($uploaded_file['type'] == 'image/gif')
-						$extension = '.gif';
-					else if ($uploaded_file['type'] == 'image/jpeg' || $uploaded_file['type'] == 'image/pjpeg')
-						$extension = '.jpg';
-					else
-						$extension = '.png';
-
-					($hook = get_hook('pf_change_details_avatar_determine_extension')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
-
 					// Move the file to the avatar directory. We do this before checking the width/height to circumvent open_basedir restrictions.
 					if (!@move_uploaded_file($uploaded_file['tmp_name'], $forum_config['o_avatars_dir'].'/'.$id.'.tmp'))
 						$errors[] = sprintf($lang_profile['Move failed'], '<a href="mailto:'.forum_htmlencode($forum_config['o_admin_email']).'">'.forum_htmlencode($forum_config['o_admin_email']).'</a>');
@@ -1141,16 +1130,30 @@ else if (isset($_POST['form_sent']))
 						($hook = get_hook('pf_change_details_avatar_modify_size')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 						// Now check the width/height
-						list($width, $height, $type,) = getimagesize($forum_config['o_avatars_dir'].'/'.$id.'.tmp');
+						list($width, $height, $type,) = @getimagesize($forum_config['o_avatars_dir'].'/'.$id.'.tmp');
+
+						// Determine type
+						$extension = null;
+						if ($type == IMAGETYPE_GIF)
+							$extension = '.gif';
+						else if ($type == IMAGETYPE_JPEG)
+							$extension = '.jpg';
+						else if ($type == IMAGETYPE_PNG)
+							$extension = '.png';
+
+						($hook = get_hook('pf_change_details_avatar_determine_extension')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
+
+						if($extension === null)
+						{
+							// Invalid type
+							@unlink($pun_config['o_avatars_dir'].'/'.$id.'.tmp');
+							$errors[] = $lang_profile['Bad type'];
+						}
+
 						if (empty($width) || empty($height) || $width > $forum_config['o_avatars_width'] || $height > $forum_config['o_avatars_height'])
 						{
 							@unlink($forum_config['o_avatars_dir'].'/'.$id.'.tmp');
 							$errors[] = sprintf($lang_profile['Too wide or high'], $forum_config['o_avatars_width'], $forum_config['o_avatars_height']);
-						}
-						else if ($type == 1 && $uploaded_file['type'] != 'image/gif')	// Prevent dodgy uploads
-						{
-							@unlink($forum_config['o_avatars_dir'].'/'.$id.'.tmp');
-							$errors[] = $lang_profile['Bad type'];
 						}
 
 						($hook = get_hook('pf_change_details_avatar_validate_file')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
