@@ -689,7 +689,7 @@ else if (isset($_POST['form_sent']))
 	{
 		case 'essentials':
 		{
-			$form = extract_elements(array('timezone', 'dst', 'language'));
+			$form = extract_elements(array('timezone', 'dst', 'language', 'time_format', 'date_format'));
 
 			if ($pun_user['is_admmod'])
 			{
@@ -743,6 +743,9 @@ else if (isset($_POST['form_sent']))
 				if (!file_exists(PUN_ROOT.'lang/'.$form['language'].'/common.php'))
 						message($lang_common['Bad request']);
 			}
+
+			$form['time_format'] = (isset($form['time_format'])) ? intval($form['time_format']) : 0;
+			$form['date_format'] = (isset($form['date_format'])) ? intval($form['date_format']) : 0;
 
 			if (!isset($form['dst']) || $form['dst'] != '1') $form['dst'] = '0';
 
@@ -907,7 +910,7 @@ else if (isset($_POST['form_sent']))
 }
 
 
-$result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.msn, u.aim, u.yahoo, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, g.g_id, g.g_user_title, g.g_moderator FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.msn, u.aim, u.yahoo, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, u.date_format, u.time_format, g.g_id, g.g_user_title, g.g_moderator FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 if (!$db->num_rows($result))
 	message($lang_common['Bad request']);
 
@@ -1115,7 +1118,8 @@ else
 						<legend><?php echo $lang_prof_reg['Localisation legend'] ?></legend>
 						<div class="infldset">
 							<label><?php echo $lang_prof_reg['Timezone'] ?>: <?php echo $lang_prof_reg['Timezone info'] ?>
-							<br /><select name="form[timezone]">
+
+								<br /><select name="form[timezone]">
 								<option value="-12"<?php if ($user['timezone'] == -12) echo ' selected="selected"' ?>>-12</option>
 								<option value="-11"<?php if ($user['timezone'] == -11) echo ' selected="selected"' ?>>-11</option>
 								<option value="-10"<?php if ($user['timezone'] == -10) echo ' selected="selected"' ?>>-10</option>
@@ -1159,6 +1163,41 @@ else
 							<div class="rbox">
 								<label><input type="checkbox" name="form[dst]" value="1"<?php if ($user['dst'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['DST info'] ?><br /></label>
 							</div>
+							<label><?php echo $lang_prof_reg['Time format'] ?>
+
+							<br /><select name="form[time_format]">
+<?php
+								foreach (array_unique($forum_time_formats) as $key => $time_format)
+								{
+									echo "\t\t\t\t\t\t\t\t".'<option value="'.$key.'"';
+									if ($user['time_format'] == $key)
+										echo ' selected="selected"';
+									echo '>'. format_time(time(), false, null, $time_format, true, true);
+									if ($key == 0)
+										echo ' ('.$lang_prof_reg['Default'].')';
+									echo "</option>\n";
+								}
+								?>
+							</select>
+							<br /></label>
+							<label><?php echo $lang_prof_reg['Date format'] ?>
+
+							<br /><select name="form[date_format]">
+<?php
+								foreach (array_unique($forum_date_formats) as $key => $date_format)
+								{
+									echo "\t\t\t\t\t\t\t\t".'<option value="'.$key.'"';
+									if ($user['date_format'] == $key)
+										echo ' selected="selected"';
+									echo '>'. format_time(time(), true, $date_format, null, false, true);
+									if ($key == 0)
+										echo ' ('.$lang_prof_reg['Default'].')';
+									echo "</option>\n";
+								}
+								?>
+							</select>
+							<br /></label>
+							
 <?php
 
 		$languages = array();

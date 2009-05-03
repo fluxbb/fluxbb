@@ -11,7 +11,7 @@
 
 
 define('UPDATE_TO', '1.4');
-define('UPDATE_TO_DB_REVISION', 0);
+define('UPDATE_TO_DB_REVISION', 1);
 
 // The number of items to process per pageview (lower this if the update script times out during UTF-8 conversion)
 define('PER_PAGE', 300);
@@ -604,6 +604,10 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 		// Add the ban_creator column to the bans table
 		$db->add_field('bans', 'ban_creator', 'INT(10) UNSIGNED', false, 0);
+
+		// Add the time/date format settings to the user table
+		$db->add_field('users', 'time_format', 'INT(10)', false, 0, 'dst');
+		$db->add_field('users', 'date_format', 'INT(10)', false, 0, 'dst');
 
 		// Should we do charset conversion or not?
 		if (strpos($cur_version, '1.2') === 0 && isset($_GET['convert_charset']))

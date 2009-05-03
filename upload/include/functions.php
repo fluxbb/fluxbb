@@ -786,9 +786,9 @@ function message($message, $no_back_link = false)
 //
 // Format a time string according to $time_format and timezones
 //
-function format_time($timestamp, $date_only = false)
+function format_time($timestamp, $date_only = false, $date_format = null, $time_format = null, $time_only = false, $no_text = false)
 {
-	global $pun_config, $lang_common, $pun_user;
+	global $pun_config, $lang_common, $pun_user, $forum_date_formats, $forum_time_formats;
 
 	if ($timestamp == '')
 		return $lang_common['Never'];
@@ -797,19 +797,30 @@ function format_time($timestamp, $date_only = false)
 	$timestamp += $diff;
 	$now = time();
 
-	$date = gmdate($pun_config['o_date_format'], $timestamp);
-	$today = gmdate($pun_config['o_date_format'], $now+$diff);
-	$yesterday = gmdate($pun_config['o_date_format'], $now+$diff-86400);
+	if($date_format == null)
+		$date_format = $forum_date_formats[$pun_user['date_format']];
 
-	if ($date == $today)
-		$date = $lang_common['Today'];
-	else if ($date == $yesterday)
-		$date = $lang_common['Yesterday'];
+	if($time_format == null)
+		$time_format = $forum_time_formats[$pun_user['time_format']];
 
-	if (!$date_only)
-		return $date.' '.gmdate($pun_config['o_time_format'], $timestamp);
-	else
+	$date = gmdate($date_format, $timestamp);
+	$today = gmdate($date_format, $now+$diff);
+	$yesterday = gmdate($date_format, $now+$diff-86400);
+
+	if(!$no_text)
+	{
+		if ($date == $today)
+			$date = $lang_common['Today'];
+		else if ($date == $yesterday)
+			$date = $lang_common['Yesterday'];
+	}
+
+	if ($date_only)
 		return $date;
+	else if ($time_only)
+		return gmdate($time_format, $timestamp);
+	else
+		return $date.' '.gmdate($time_format, $timestamp);
 }
 
 
@@ -877,7 +888,7 @@ function confirm_referrer($script)
 {
 	global $pun_config, $lang_common;
 
-	if (!preg_match('#^'.preg_quote(str_replace('www.', '', $pun_config['o_base_url']).'/'.$script, '#').'#i', str_replace('www.', '', (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''))))
+	if (!preg_match('#^'.preg_quote(str_replace('www.', '', $pun_config['o_base_url']).'/'.$script, '#').'#i', str_replace('www.', '', (isset($_SERVER['HTTP_REFERER']) ? urldecode($_SERVER['HTTP_REFERER']) : ''))))
 		message($lang_common['Bad referrer']);
 }
 
