@@ -242,7 +242,7 @@ while ($cur_post = $db->fetch_assoc($result))
 				$user_info[] = '<dd>'.$lang_topic['From'].': '.pun_htmlspecialchars($cur_post['location']);
 			}
 
-			$user_info[] = '<dd>'.$lang_common['Registered'].': '.date($pun_config['o_date_format'], $cur_post['registered']);
+			$user_info[] = '<dd>'.$lang_common['Registered'].': '.format_time($cur_post['registered'], true);
 
 			if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
 				$user_info[] = '<dd>'.$lang_common['Posts'].': '.forum_number_format($cur_post['num_posts']);
