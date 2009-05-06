@@ -191,6 +191,13 @@ if ($forum_db->num_rows($result))
 	$i = 1;
 	$forum_page['group_count'] = $forum_page['item_count'] = $forum_page['item_num'] = 0;
 	$forum_page['old_reports'] = true;
+	
+?>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_admin_reports['Read reports heading'] ?><?php echo ($forum_db->num_rows($result)) ? '' : ' '.$lang_admin_reports['No new reports'] ?></span></h2>
+	</div>
+	<div class="main-content main-frm">
+<?php
 
 	while ($cur_report = $forum_db->fetch_assoc($result))
 	{
@@ -204,10 +211,6 @@ if ($forum_db->num_rows($result))
 		($hook = get_hook('arp_report_pre_display')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
-	<div class="main-subhead">
-		<h2 class="hn"><span><?php echo $lang_admin_reports['Read reports heading'] ?><?php echo ($forum_db->num_rows($result)) ? '' : ' '.$lang_admin_reports['No new reports'] ?></span></h2>
-	</div>
-	<div class="main-content main-frm">
 			<div class="ct-set report data-set set<?php echo ++$forum_page['item_count'] ?>">
 				<div class="ct-box data-box">
 					<h3 class="ct-legend hn"><strong><?php echo ++$forum_page['item_num'] ?></strong> <cite class="username"><?php printf($lang_admin_reports['Reported by'], $reporter) ?></cite> <span><?php echo format_time($cur_report['created']) ?></span></h3>
