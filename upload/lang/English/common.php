@@ -138,13 +138,14 @@ $lang_common = array(
 'Show subscriptions'	=>	'Show your subscribed topics',
 'Jump to'				=>	'Jump to',
 'Go'					=>	' Go ',		// submit button in forum jump
+'Moderate topic'		=>	'Moderate topic',
 'Move topic'			=>  'Move topic',
 'Open topic'			=>  'Open topic',
 'Close topic'			=>  'Close topic',
 'Unstick topic'			=>  'Unstick topic',
 'Stick topic'			=>  'Stick topic',
 'Moderate forum'		=>	'Moderate forum',
-'Delete posts'			=>	'Delete multiple posts',
+'Delete posts'			=>	'Delete multiple posts', // Depreciated
 'Debug table'			=>	'Debug information',
 
 // Email related notifications

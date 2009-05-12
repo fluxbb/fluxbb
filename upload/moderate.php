@@ -89,7 +89,6 @@ if (isset($_GET['tid']))
 
 	$cur_topic = $db->fetch_assoc($result);
 
-
 	// Delete one or more posts
 	if (isset($_POST['delete_posts']) || isset($_POST['delete_posts_comply']))
 	{
@@ -157,9 +156,94 @@ if (isset($_GET['tid']))
 
 		require PUN_ROOT.'footer.php';
 	}
+	else if (isset($_POST['split_posts']) || isset($_POST['split_posts_comply']))
+	{
+		$posts = $_POST['posts'];
+		if (empty($posts))
+			message($lang_misc['No posts selected']);
+
+		if (isset($_POST['split_posts_comply']))
+		{
+			confirm_referrer('moderate.php');
+
+			if (@preg_match('/[^0-9,]/', $posts))
+				message($lang_common['Bad request']);
+
+			// How many posts did we just split off?
+			$num_posts_splitted = substr_count($posts, ',') + 1;
+
+			// Verify that the post IDs are valid
+			$result = $db->query('SELECT 1 FROM '.$db->prefix.'posts WHERE id IN('.$posts.') AND topic_id='.$tid) or error('Unable to check posts', __FILE__, __LINE__, $db->error());
+
+			if ($db->num_rows($result) != $num_posts_splitted)
+				message($lang_common['Bad request']);
+
+			// Load the post.php language file
+			require PUN_ROOT.'lang/'.$pun_user['language'].'/post.php';
+
+			// Check subject
+			$new_subject = isset($_POST['new_subject']) ? pun_trim($_POST['new_subject']) : '';
+
+			if ($new_subject == '')
+				message($lang_post['No subject']);
+			else if (pun_strlen($new_subject) > 70)
+				message($lang_post['Too long subject']);
+
+			// Get data from the new first post
+			$result = $db->query('SELECT p.id, p.poster, p.posted FROM '.$db->prefix.'posts AS p WHERE id IN('.$posts.') ORDER BY p.id ASC LIMIT 1') or error('Unable to get first post', __FILE__, __LINE__, $db->error());
+			$first_post_data = $db->fetch_assoc($result);
+
+			// Create the new topic
+			$db->query('INSERT INTO topics (poster, subject, posted, first_post_id, forum_id) VALUES (\''.$db->escape($first_post_data['poster']).'\', \''.$db->escape($new_subject).'\', '.$first_post_data['posted'].', '.$first_post_data['id'].', '.$fid.')') or error('Unable to create new topic', __FILE__, __LINE__, $db->error());
+			$new_tid = $db->insert_id();
+
+			// Move the posts to the new topic
+			$db->query('UPDATE posts SET topic_id='.$new_tid.' WHERE id IN('.$posts.')') or error('Unable to move posts into new topic', __FILE__, __LINE__, $db->error());
+
+			// Get last_post, last_post_id, and last_poster from the topic and update it
+			$result = $db->query('SELECT id, poster, posted FROM '.$db->prefix.'posts WHERE topic_id='.$tid.' ORDER BY id DESC LIMIT 1') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+			$last_post_data = $db->fetch_assoc($result);
+			$db->query('UPDATE '.$db->prefix.'topics SET last_post='.$last_post_data['posted'].', last_post_id='.$last_post_data['id'].', last_poster=\''.$db->escape($last_post_data['poster']).'\', num_replies=num_replies-'.$num_posts_splitted.' WHERE id='.$tid) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+
+			// Get last_post, last_post_id, and last_poster from the new topic and update it
+			$result = $db->query('SELECT id, poster, posted FROM '.$db->prefix.'posts WHERE topic_id='.$new_tid.' ORDER BY id DESC LIMIT 1') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+			$last_post_data = $db->fetch_assoc($result);
+			$db->query('UPDATE '.$db->prefix.'topics SET last_post='.$last_post_data['posted'].', last_post_id='.$last_post_data['id'].', last_poster=\''.$db->escape($last_post_data['poster']).'\', num_replies='.($num_posts_splitted-1).' WHERE id='.$new_tid) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+
+			update_forum($fid);
+
+			redirect('viewtopic.php?id='.$new_tid, $lang_misc['Split posts redirect']);
+		}
+
+		$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_misc['Moderate'];
+		require PUN_ROOT.'header.php';
+
+?>
+<div class="blockform">
+	<h2><span><?php echo $lang_misc['Split posts'] ?></span></h2>
+	<div class="box">
+		<form method="post" action="moderate.php?fid=<?php echo $fid ?>&amp;tid=<?php echo $tid ?>">
+			<div class="inform">
+				<fieldset>
+					<legend><?php echo $lang_misc['Confirm split legend'] ?></legend>
+					<div class="infldset">
+						<input type="hidden" name="posts" value="<?php echo implode(',', array_map('intval', array_keys($posts))) ?>" />
+						<label><strong><?php echo $lang_misc['New subject'] ?></strong><br /><input type="text" name="new_subject" size="80" maxlength="70" /><br /></label>
+						<p><?php echo $lang_misc['Split posts comply'] ?></p>
+					</div>
+				</fieldset>
+			</div>
+			<p><input type="submit" name="split_posts_comply" value="<?php echo $lang_misc['Split'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+		</form>
+	</div>
+</div>
+<?php
+
+		require PUN_ROOT.'footer.php';
+	}
 
 
-	// Show the delete multiple posts view
+	// Show the moderate posts view
 
 	// Load the viewtopic.php language file
 	require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
@@ -275,7 +359,10 @@ if (isset($_GET['tid']))
 <div class="postlinksb">
 	<div class="inbox">
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<p class="conr"><input type="submit" name="delete_posts" value="<?php echo $lang_misc['Delete'] ?>"<?php echo $button_status ?> /></p>
+		<p class="conr">
+			<input type="submit" name="split_posts" value="<?php echo $lang_misc['Split'] ?>"<?php echo $button_status ?> />
+			<input type="submit" name="delete_posts" value="<?php echo $lang_misc['Delete'] ?>"<?php echo $button_status ?> />
+		</p>
 		<div class="clearer"></div>
 	</div>
 </div>

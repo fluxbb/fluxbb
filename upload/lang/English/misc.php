@@ -37,6 +37,7 @@ $lang_misc = array(
 'Moderate'					=>	'Moderate',
 'Select'					=>	'Select',	// the header of a column of checkboxes
 'Move'						=>	'Move',
+'Split'						=>	'Split',
 'Delete'					=>	'Delete',
 'Merge'						=>	'Merge',
 
@@ -65,6 +66,13 @@ $lang_misc = array(
 'Merge topics'			=>	'Merge topics',
 'Merge topics redirect'		=>	'Topics merged. Redirecting &hellip;',
 'Confirm merge legend'		=>	'Please confirm merge',
+'New subject'			=>	'New subject',
+
+// Split multiple posts in topic
+'Confirm split legend'		=>	'Please confirm split of selected posts.',
+'Split posts'			=>	'Split posts',
+'Split posts comply'		=>	'Are you sure you want to split the selected posts?',
+'Split posts redirect'		=>	'Posts have been split. Redirecting &hellip;',
 
 // Delete multiple posts in topic
 'Delete posts'				=>	'Delete posts',
