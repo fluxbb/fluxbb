@@ -94,7 +94,7 @@ if (isset($_POST['form_sent']))
 		// Check if someone else already has registered with that e-mail address
 		$dupe_list = array();
 		
-		if (empty($errors) && ($dupe_list = ($email1, null)) && $forum_config['p_allow_dupe_email'] == '0')
+		if (empty($errors) && ($dupe_list = is_dupe_email($email1, null)) && $forum_config['p_allow_dupe_email'] == '0')
 			$errors[] = $lang_profile['Dupe e-mail'];
 
 		($hook = get_hook('rg_register_end_validation')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
