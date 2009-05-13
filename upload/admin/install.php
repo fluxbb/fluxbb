@@ -9,8 +9,8 @@
  * @package FluxBB
  */
 
-define('FORUM_VERSION', '1.3 Beta');
-define('FORUM_DB_REVISION', 5);
+define('FORUM_VERSION', '1.3 Legacy');
+define('FORUM_DB_REVISION', 6);
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
 
