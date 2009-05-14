@@ -256,8 +256,8 @@ if (!empty($forum_ranks))
 							<span class="fld-input"><input type="text" id="fld<?php echo $forum_page['fld_count'] ?>" name="min_posts[<?php echo $cur_rank['id'] ?>]" value="<?php echo $cur_rank['min_posts'] ?>" size="7" maxlength="7" /></span>
 						</div>
 <?php ($hook = get_hook('ark_pre_edit_cur_rank_submit')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
-						<div class="mf-field text">
-							<span class="fld-input"><input type="submit" name="update[<?php echo $cur_rank['id'] ?>]" value="<?php echo $lang_admin_ranks['Update'] ?>" /> <input type="submit" name="remove[<?php echo $cur_rank['id'] ?>]" value="<?php echo $lang_admin_ranks['Remove'] ?>" /></span>
+						<div class="mf-field">
+							<span class="submit"><input type="submit" name="update[<?php echo $cur_rank['id'] ?>]" value="<?php echo $lang_admin_ranks['Update'] ?>" /> <input type="submit" name="remove[<?php echo $cur_rank['id'] ?>]" value="<?php echo $lang_admin_ranks['Remove'] ?>" /></span>
 						</div>
 					</div>
 <?php ($hook = get_hook('ark_pre_edit_cur_rank_fieldset_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null; ?>
