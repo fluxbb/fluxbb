@@ -194,11 +194,11 @@ if (isset($_GET['tid']))
 			$first_post_data = $db->fetch_assoc($result);
 
 			// Create the new topic
-			$db->query('INSERT INTO topics (poster, subject, posted, first_post_id, forum_id) VALUES (\''.$db->escape($first_post_data['poster']).'\', \''.$db->escape($new_subject).'\', '.$first_post_data['posted'].', '.$first_post_data['id'].', '.$fid.')') or error('Unable to create new topic', __FILE__, __LINE__, $db->error());
+			$db->query('INSERT INTO '.$db->prefix.'topics (poster, subject, posted, first_post_id, forum_id) VALUES (\''.$db->escape($first_post_data['poster']).'\', \''.$db->escape($new_subject).'\', '.$first_post_data['posted'].', '.$first_post_data['id'].', '.$fid.')') or error('Unable to create new topic', __FILE__, __LINE__, $db->error());
 			$new_tid = $db->insert_id();
 
 			// Move the posts to the new topic
-			$db->query('UPDATE posts SET topic_id='.$new_tid.' WHERE id IN('.$posts.')') or error('Unable to move posts into new topic', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'posts SET topic_id='.$new_tid.' WHERE id IN('.$posts.')') or error('Unable to move posts into new topic', __FILE__, __LINE__, $db->error());
 
 			// Get last_post, last_post_id, and last_poster from the topic and update it
 			$result = $db->query('SELECT id, poster, posted FROM '.$db->prefix.'posts WHERE topic_id='.$tid.' ORDER BY id DESC LIMIT 1') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
@@ -347,9 +347,6 @@ if (isset($_GET['tid']))
 		</div>
 	</div>
 </div>
-
-
-
 
 <?php
 

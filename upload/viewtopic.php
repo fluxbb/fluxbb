@@ -224,7 +224,7 @@ while ($cur_post = $db->fetch_assoc($result))
 		$is_online = ($cur_post['is_online'] == $cur_post['poster_id']) ? '<strong>'.$lang_topic['Online'].'</strong>' : $lang_topic['Offline'];
 
 		if ($pun_config['o_avatars'] == '1' && $pun_user['show_avatars'] != '0')
-		{			
+		{
 			if (isset($user_avatar_cache[$cur_post['poster_id']]))
 				$user_avatar = $user_avatar_cache[$cur_post['poster_id']];
 			else
