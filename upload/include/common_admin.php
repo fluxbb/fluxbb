@@ -26,7 +26,6 @@
 if (!defined('PUN'))
 	exit;
 
-
 //
 // Display the admin navigation menu
 //

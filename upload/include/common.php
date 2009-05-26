@@ -45,8 +45,6 @@ require PUN_ROOT.'include/functions.php';
 
 // Load UTF-8 functions
 require PUN_ROOT.'include/utf8/utf8.php';
-require PUN_ROOT.'include/utf8/ucwords.php';
-require PUN_ROOT.'include/utf8/trim.php';
 
 // Block prefetch requests
 if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
