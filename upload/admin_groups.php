@@ -349,7 +349,7 @@ else if (isset($_GET['del_group']))
 {
 	confirm_referrer('admin_groups.php');
 
-	$group_id = intval($_GET['del_group']);
+	$group_id = isset($_POST['group_to_delete']) ? intval($_POST['group_to_delete']) : intval($_GET['del_group']);
 	if ($group_id < 5)
 		message($lang_common['Bad request']);
 
@@ -357,32 +357,68 @@ else if (isset($_GET['del_group']))
 	if ($group_id == $pun_config['o_default_user_group'])
 		message('The default group cannot be removed. In order to delete this group, you must first setup a different group as the default.');
 
-
 	// Check if this group has any members
 	$result = $db->query('SELECT g.g_title, COUNT(u.id) FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'users AS u ON g.g_id=u.group_id WHERE g.g_id='.$group_id.' GROUP BY g.g_id, g_title') or error('Unable to fetch group info', __FILE__, __LINE__, $db->error());
 
 	// If the group doesn't have any members or if we've already selected a group to move the members to
 	if (!$db->num_rows($result) || isset($_POST['del_group']))
 	{
-		if (isset($_POST['del_group']))
+		if (isset($_POST['del_group_comply']) || isset($_POST['del_group']))
 		{
-			$move_to_group = intval($_POST['move_to_group']);
-			$db->query('UPDATE '.$db->prefix.'users SET group_id='.$move_to_group.' WHERE group_id='.$group_id) or error('Unable to move users into group', __FILE__, __LINE__, $db->error());
+			if (isset($_POST['del_group']))
+			{
+				$move_to_group = intval($_POST['move_to_group']);
+				$db->query('UPDATE '.$db->prefix.'users SET group_id='.$move_to_group.' WHERE group_id='.$group_id) or error('Unable to move users into group', __FILE__, __LINE__, $db->error());
+			}
+
+			// Delete the group and any forum specific permissions
+			$db->query('DELETE FROM '.$db->prefix.'groups WHERE g_id='.$group_id) or error('Unable to delete group', __FILE__, __LINE__, $db->error());
+			$db->query('DELETE FROM '.$db->prefix.'forum_perms WHERE group_id='.$group_id) or error('Unable to delete group forum permissions', __FILE__, __LINE__, $db->error());
+
+			// Regenerate the quickjump cache
+			if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+				require PUN_ROOT.'include/cache.php';
+
+			generate_quickjump_cache();
+
+			redirect('admin_groups.php', 'Group removed. Redirecting &hellip;');
 		}
+		else
+		{
+			$result = $db->query('SELECT g_title FROM '.$db->prefix.'groups WHERE g_id='.$group_id) or error('Unable to fetch group title', __FILE__, __LINE__, $db->error());
+			$group_title = $db->result($result);
 
-		// Delete the group and any forum specific permissions
-		$db->query('DELETE FROM '.$db->prefix.'groups WHERE g_id='.$group_id) or error('Unable to delete group', __FILE__, __LINE__, $db->error());
-		$db->query('DELETE FROM '.$db->prefix.'forum_perms WHERE group_id='.$group_id) or error('Unable to delete group forum permissions', __FILE__, __LINE__, $db->error());
+			$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / Admin / User groups';
+			require PUN_ROOT.'header.php';
 
-		// Regenerate the quickjump cache
-		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-			require PUN_ROOT.'include/cache.php';
+			generate_admin_menu('groups');
 
-		generate_quickjump_cache();
+?>
+	<div class="blockform">
+		<h2><span>Group delete</span></h2>
+		<div class="box">
+			<form method="post" action="admin_groups.php?del_group=<?php echo $group_id ?>">
+				<div class="inform">
+				<input type="hidden" name="group_to_delete" value="<?php echo $group_id ?>" />
+					<fieldset>
+						<legend>Confirm delete group</legend>
+						<div class="infldset">
+							<p>Are you sure that you want to delete the group "<?php echo pun_htmlspecialchars($group_title) ?>"?</p>
+							<p>WARNING! After you deleted a group you can not restore it.</p>
+						</div>
+					</fieldset>
+				</div>
+				<p><input type="submit" name="del_group_comply" value="Delete" /><a href="javascript:history.go(-1)">Go back</a></p>
+			</form>
+		</div>
+	</div>
+	<div class="clearer"></div>
+</div>
+<?php
 
-		redirect('admin_groups.php', 'Group removed. Redirecting &hellip;');
+			require PUN_ROOT.'footer.php';
+		}
 	}
-
 
 	list($group_title, $group_members) = $db->fetch_row($result);
 
