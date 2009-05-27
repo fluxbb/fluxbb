@@ -894,7 +894,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$end_at = $start_at + PER_PAGE;
 
 		// Fetch posts to process this cycle
-		$result = $db->query('SELECT id, poster, message, edited_by FROM '.$db->prefix.'topics WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT id, poster, message, edited_by FROM '.$db->prefix.'posts WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
 
 		while ($cur_item = $db->fetch_assoc($result))
 		{
@@ -1003,7 +1003,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 	<div class="box">
 		<div class="fakeform">
 			<div class="inform">
-				<p style="font-size: 1.1em">Your forum database was successfully updated.</p>
+				<p style="font-size: 1.1em">Your forum database was successfully updated. You may now <a href="<?php echo PUN_ROOT ?>index.php">go to the forum index</a>.</p>
 			</div>
 		</div>
 	</div>
