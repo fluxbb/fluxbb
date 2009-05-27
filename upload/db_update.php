@@ -903,7 +903,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 			{
 				$cur_item['edited_by'] = $cur_item['edited_by'] != '' ? '\''.$db->escape($cur_item['edited_by']).'\'' : 'NULL';
 
-				$db->query('UPDATE '.$db->prefix.'topics SET poster = \''.$db->escape($cur_item['poster']).'\', message = \''.$db->escape($cur_item['message']).'\', edited_by = '.$cur_item['edited_by'].' WHERE id = '.$cur_item['id']) or error('Unable to update post', __FILE__, __LINE__, $db->error());
+				$db->query('UPDATE '.$db->prefix.'posts SET poster = \''.$db->escape($cur_item['poster']).'\', message = \''.$db->escape($cur_item['message']).'\', edited_by = '.$cur_item['edited_by'].' WHERE id = '.$cur_item['id']) or error('Unable to update post', __FILE__, __LINE__, $db->error());
 			}
 		}
 
