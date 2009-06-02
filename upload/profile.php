@@ -927,7 +927,7 @@ if ($user['signature'] != '')
 
 // View or edit?
 if ($pun_user['id'] != $id &&
-	(!$pun_user['is_admmod'] ||
+	(!$pun_user['is_admmod'] || $user['g_id'] == PUN_ADMIN ||
 	($pun_user['g_moderator'] == '1' && $pun_user['g_mod_edit_users'] == '0') ||
 	($pun_user['g_moderator'] == '1' && $user['g_moderator'] == '1')))
 {
