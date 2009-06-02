@@ -81,7 +81,7 @@ if ($action == 'change_pass')
 			message($lang_common['No permission']);
 		else if ($pun_user['g_moderator'] == '1')	// A moderator trying to change a users password?
 		{
-			$result = $db->query('SELECT g_id, g_moderator FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+			$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 			if (!$db->num_rows($result))
 				message($lang_common['Bad request']);
 
@@ -183,7 +183,7 @@ else if ($action == 'change_email')
 			message($lang_common['No permission']);
 		else if ($pun_user['g_moderator'] == '1')	// A moderator trying to change a users e-mail?
 		{
-			$result = $db->query('SELECT g_id, g_moderator FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+			$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 			if (!$db->num_rows($result))
 				message($lang_common['Bad request']);
 
