@@ -364,7 +364,7 @@ generate_admin_menu('options');
 									<th scope="row">User post count</th>
 									<td>
 										<input type="radio" name="form[show_post_count]" value="1"<?php if ($pun_config['o_show_post_count'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[show_post_count]" value="0"<?php if ($pun_config['o_show_post_count'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Show the number of posts a user has made (affects topic view, profile and userlist).</span>
+										<span>Show the number of posts a user has made (affects topic view, profile and user list).</span>
 									</td>
 								</tr>
 								<tr>
@@ -654,7 +654,7 @@ generate_admin_menu('options');
 									<th scope="row">Report new registrations</th>
 									<td>
 										<input type="radio" name="form[regs_report]" value="1"<?php if ($pun_config['o_regs_report'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[regs_report]" value="0"<?php if ($pun_config['o_regs_report'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>If enabled, FluxBB will notify users on the mailing list (see below) when a new user registers in the forums.</span>
+										<span>If enabled, FluxBB will notify users on the mailing list (see above) when a new user registers in the forums.</span>
 									</td>
 								</tr>
 								<tr>
