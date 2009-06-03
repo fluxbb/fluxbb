@@ -2168,15 +2168,11 @@ function csrf_confirm_form()
 	($hook = get_hook('fn_csrf_confirm_form_pre_header_load')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
 ?>
-<div id="brd-main" class="main">
-
-	<h1><span><?php echo end($forum_page['crumbs']) ?></span></h1>
-
-	<div class="main-head">
-		<h2><span><?php echo $lang_common['Confirm action head'] ?></span></h2>
+	<div class="main-subhead">
+		<h2 class="hn"><span><?php echo $lang_common['Confirm action head'] ?></span></h2>
 	</div>
 	<div class="main-content main-frm">
-		<div class="frm-info">
+		<div class="ct-box warn-box">
 			<p><?php echo $lang_common['CSRF token mismatch'] ?></p>
 		</div>
 		<form class="frm-form" method="post" accept-charset="utf-8" action="<?php echo $forum_page['form_action'] ?>">
@@ -2189,7 +2185,6 @@ function csrf_confirm_form()
 			</div>
 		</form>
 	</div>
-</div>
 <?php
 
 	($hook = get_hook('fn_csrf_confirm_form_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
