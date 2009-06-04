@@ -2454,6 +2454,11 @@ function confirm_current_url($url)
 	{
 		header('HTTP/1.1 301 Moved Permanently'); 
 		header('Location: '.$url);
+		
+		global $forum_db;
+		$forum_db->end_transaction();
+		
+		exit;
 	}
 }
 
