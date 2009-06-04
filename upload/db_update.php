@@ -895,7 +895,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 		// Fetch posts to process this cycle
 		$result = $db->query('SELECT id, poster, message, edited_by FROM '.$db->prefix.'posts WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
-
+		
 		while ($cur_item = $db->fetch_assoc($result))
 		{
 			echo 'Converting post '.$cur_item['id'].' …<br />'."\n";
