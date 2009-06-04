@@ -415,7 +415,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$db->add_field('online', 'last_search', 'INT(10) UNSIGNED', true, null, null);
 
 		// Add the last_search column to the users table
-		$db->add_field('users', 'last_search', 'INT(10)', true, null, 'last_post');
+		$db->add_field('users', 'last_search', 'INT(10) UNSIGNED', true, null, 'last_post');
 
 		// Drop use_avatar column from users table
 		$db->drop_field('users', 'use_avatar');
@@ -571,9 +571,9 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 		// Add the last_email_sent column to the users table and the g_send_email and
 		// g_email_flood columns to the groups table
-		$db->add_field('users', 'last_email_sent', 'INT(10)', true, null, 'last_search');
+		$db->add_field('users', 'last_email_sent', 'INT(10) UNSIGNED', true, null, 'last_search');
 		$db->add_field('groups', 'g_send_email', 'TINYINT(1)', false, 1, 'g_search_users');
-		$db->add_field('groups', 'g_email_flood', 'INT(10)', false, 60, 'g_search_flood');
+		$db->add_field('groups', 'g_email_flood', 'SMALLINT(6)', false, 60, 'g_search_flood');
 
 		// Set non-default g_send_email and g_flood_email values properly
 		$db->query('UPDATE '.$db->prefix.'groups SET g_send_email = 0 WHERE g_id = 3') or error('Unable to update group email permissions', __FILE__, __LINE__, $db->error());
@@ -604,8 +604,8 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$db->add_field('bans', 'ban_creator', 'INT(10) UNSIGNED', false, 0);
 
 		// Add the time/date format settings to the user table
-		$db->add_field('users', 'time_format', 'INT(10)', false, 0, 'dst');
-		$db->add_field('users', 'date_format', 'INT(10)', false, 0, 'dst');
+		$db->add_field('users', 'time_format', 'INT(10) UNSIGNED', false, 0, 'dst');
+		$db->add_field('users', 'date_format', 'INT(10) UNSIGNED', false, 0, 'dst');
 
 		// Should we do charset conversion or not?
 		if (strpos($cur_version, '1.2') === 0 && isset($_GET['convert_charset']))
