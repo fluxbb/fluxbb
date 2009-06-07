@@ -92,7 +92,7 @@ if (isset($_GET['tid']))
 	// Delete one or more posts
 	if (isset($_POST['delete_posts']) || isset($_POST['delete_posts_comply']))
 	{
-		$posts = $_POST['posts'];
+		$posts = isset($_POST['posts']) ? $_POST['posts'] : array();
 		if (empty($posts))
 			message($lang_misc['No posts selected']);
 
@@ -158,7 +158,7 @@ if (isset($_GET['tid']))
 	}
 	else if (isset($_POST['split_posts']) || isset($_POST['split_posts_comply']))
 	{
-		$posts = $_POST['posts'];
+		$posts = isset($_POST['posts']) ? $_POST['posts'] : array();
 		if (empty($posts))
 			message($lang_misc['No posts selected']);
 
@@ -216,13 +216,14 @@ if (isset($_GET['tid']))
 		}
 
 		$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_misc['Moderate'];
+		$focus_element = array('subject','new_subject');
 		require PUN_ROOT.'header.php';
 
 ?>
 <div class="blockform">
 	<h2><span><?php echo $lang_misc['Split posts'] ?></span></h2>
 	<div class="box">
-		<form method="post" action="moderate.php?fid=<?php echo $fid ?>&amp;tid=<?php echo $tid ?>">
+		<form id="subject" method="post" action="moderate.php?fid=<?php echo $fid ?>&amp;tid=<?php echo $tid ?>">
 			<div class="inform">
 				<fieldset>
 					<legend><?php echo $lang_misc['Confirm split legend'] ?></legend>
@@ -494,10 +495,14 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 {
 	if (isset($_POST['merge_topics_comply']))
-	{
-		if (isset($_POST['topics']))
-			$topics = array_map('intval', explode(',', $_POST['topics']));
-		else
+	{			
+		confirm_referrer('moderate.php');
+
+		if (@preg_match('/[^0-9,]/', $_POST['topics']))
+			message($lang_common['Bad request']);
+
+		$topics = explode(',', $_POST['topics']);
+		if (count($topics) < 2)
 			message($lang_misc['Not enough topics selected']);
 
 		// Verify that the topic IDs are valid (moved topics can not be merged?)
@@ -544,13 +549,10 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 		update_forum($fid);
 		redirect('viewforum.php?id='.$fid, $lang_misc['Merge topics redirect']);
 	}
-	else
-	{
-		if (isset($_POST['topics']) && count($_POST['topics']) > 1)
-			$topics = array_map('intval', array_keys($_POST['topics']));
-		else
-			message($lang_misc['Not enough topics selected']);
-	}
+	
+	$topics = isset($_POST['topics']) ? $_POST['topics'] : array();
+	if (count($topics) < 2)
+		message($lang_misc['Not enough topics selected']);
 
 	$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_misc['Moderate'];
 	require PUN_ROOT.'header.php';
@@ -560,13 +562,13 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 	<h2><?php echo $lang_misc['Merge topics'] ?></h2>
 	<div class="box">
 		<form method="post" action="moderate.php?fid=<?php echo $fid ?>">
-			<input type="hidden" name="topics" value="<?php echo implode(',', $topics); ?>" />
+			<input type="hidden" name="topics" value="<?php echo implode(',', array_map('intval', array_keys($topics))) ?>" />
 			<div class="inform">
 				<fieldset>
 					<legend><?php echo $lang_misc['Confirm merge legend'] ?></legend>
 					<div class="infldset">
 						<div class="rbox">
-							<label><input type="checkbox" name="with_redirect" value="1"<?php if ($action == 'single') echo ' checked="checked"' ?> /><?php echo $lang_misc['Leave redirect'] ?><br /></label>
+							<label><input type="checkbox" name="with_redirect" value="1" /><?php echo $lang_misc['Leave redirect'] ?><br /></label>
 						</div>
 					</div>
 				</fieldset>
