@@ -371,7 +371,7 @@ if (isset($_GET['tid']))
 
 
 // Move one or more topics
-if (isset($_POST['move_topics']) || isset($_POST['move_topics_to']))
+if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 {
 	if (isset($_POST['move_topics_to']))
 	{
@@ -656,11 +656,11 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 
 
 // Open or close one or more topics
-else if (isset($_POST['open']) || isset($_POST['close']))
+else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 {
-	$action = (isset($_POST['open'])) ? 0 : 1;
+	$action = (isset($_REQUEST['open'])) ? 0 : 1;
 
-	// There could be an array of topic ID's in $_POST
+	// There could be an array of topic IDs in $_POST
 	if (isset($_POST['open']) || isset($_POST['close']))
 	{
 		confirm_referrer('moderate.php');
