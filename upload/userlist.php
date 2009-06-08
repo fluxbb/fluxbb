@@ -124,7 +124,7 @@ $num_users = $db->result($result);
 // Determine the user offset (based on $_GET['p'])
 $num_pages = ceil($num_users / 50);
 
-$p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : $_GET['p'];
+$p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : intval($_GET['p']);
 $start_from = 50 * ($p - 1);
 
 // Generate paging links

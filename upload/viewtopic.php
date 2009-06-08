@@ -141,7 +141,7 @@ if (!$pun_user['is_guest'])
 // Determine the post offset (based on $_GET['p'])
 $num_pages = ceil(($cur_topic['num_replies'] + 1) / $pun_user['disp_posts']);
 
-$p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : $_GET['p'];
+$p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : intval($_GET['p']);
 $start_from = $pun_user['disp_posts'] * ($p - 1);
 
 // Generate paging links
