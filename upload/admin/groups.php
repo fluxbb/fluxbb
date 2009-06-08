@@ -510,7 +510,6 @@ else if (isset($_GET['del_group']))
 
 	($hook = get_hook('agr_del_group_selected')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 
-
 	// Check if this group has any members
 	$query = array(
 		'SELECT'	=> 'g.g_title, COUNT(u.id)',
@@ -543,6 +542,12 @@ else if (isset($_GET['del_group']))
 
 			($hook = get_hook('agr_del_group_qr_move_users')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			$forum_db->query_build($query) or error(__FILE__, __LINE__);
+		}
+		else
+		{
+			// Validate the CSRF token
+			if (!isset($_POST['csrf_token']) && (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== generate_form_token('del_group'.$group_id)))
+		csrf_confirm_form();	
 		}
 
 		// Delete the group and any forum specific permissions
@@ -818,7 +823,7 @@ while ($cur_group = $forum_db->fetch_assoc($result))
 	if ($cur_group['g_id'] > FORUM_GUEST)
 	{
 		if ($cur_group['g_id'] != $forum_config['o_default_user_group'])
-			$forum_page['group_options']['remove'] = '<span'.((empty($forum_page['group_options'])) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['admin_groups']).'?del_group='.$cur_group['g_id'].'">'.$lang_admin_groups['Remove group'].'</a></span>';
+			$forum_page['group_options']['remove'] = '<span'.((empty($forum_page['group_options'])) ? ' class="item1"' : '').'><a href="'.forum_link($forum_url['admin_groups']).'?del_group='.$cur_group['g_id'].'&amp;csrf_token='.generate_form_token('del_group'.$cur_group['g_id']).'">'.$lang_admin_groups['Remove group'].'</a></span>';
 		else
 			$forum_page['group_options']['remove'] = '<span'.((empty($forum_page['group_options'])) ? ' class="item1"' : '').'>'.$lang_admin_groups['Cannot remove default'].'</span>';
 	}
