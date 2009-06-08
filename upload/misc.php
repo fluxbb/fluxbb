@@ -82,7 +82,7 @@ else if ($action == 'markforumread')
 	if ($pun_user['is_guest'])
 		message($lang_common['No permission']);
 
-	$fid = intval($_GET['fid']);
+	$fid = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 	if ($fid < 1)
 		message($lang_common['Bad request']);
 
