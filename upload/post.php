@@ -176,6 +176,8 @@ if (isset($_POST['form_sent']))
 		{
 			if (!$pun_user['is_guest'])
 			{
+				$new_tid = $tid;
+				
 				// Insert the new post
 				$db->query('INSERT INTO '.$db->prefix.'posts (poster, poster_id, poster_ip, message, hide_smilies, posted, topic_id) VALUES(\''.$db->escape($username).'\', '.$pun_user['id'].', \''.get_remote_address().'\', \''.$db->escape($message).'\', \''.$hide_smilies.'\', '.$now.', '.$tid.')') or error('Unable to create post', __FILE__, __LINE__, $db->error());
 				$new_pid = $db->insert_id();
