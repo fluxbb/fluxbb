@@ -1507,7 +1507,13 @@ else
 								<label><input type="radio" name="form[email_setting]" value="1"<?php if ($user['email_setting'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['E-mail setting 2'] ?><br /></label>
 								<label><input type="radio" name="form[email_setting]" value="2"<?php if ($user['email_setting'] == '2') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['E-mail setting 3'] ?><br /></label>
 							</div>
-<?php if ($pun_config['o_subscriptions'] == '1'): ?>
+						</div>
+					</fieldset>
+				</div>
+<?php if ($pun_config['o_subscriptions'] == '1'): ?>				<div class="inform">
+					<fieldset>
+						<legend><?php echo $lang_profile['Subscription legend'] ?></legend>
+						<div class="infldset">
 							<p><?php echo $lang_profile['Notify full info'] ?></p>
 							<div class="rbox">
 								<label><input type="checkbox" name="form[notify_with_post]" value="1"<?php if ($user['notify_with_post'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_profile['Notify full'] ?><br /></label>
@@ -1516,11 +1522,10 @@ else
 							<div class="rbox">
 								<label><input type="checkbox" name="form[auto_notify]" value="1"<?php if ($user['auto_notify'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_profile['Auto notify full'] ?><br /></label>
 							</div>
-<?php endif; ?>
 						</div>
 					</fieldset>
 				</div>
-				<p><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /><?php echo $lang_profile['Instructions'] ?></p>
+<?php endif; ?>				<p><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /><?php echo $lang_profile['Instructions'] ?></p>
 			</form>
 		</div>
 	</div>
