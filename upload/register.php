@@ -185,7 +185,7 @@ else if (isset($_POST['form_sent']))
 
 	$timezone = round($_POST['timezone'], 1);
 
-	$dst = isset($_POST['dst']) ? 1 : 0;
+	$dst = isset($_POST['dst']) ? '1' : '0';
 
 	$email_setting = intval($_POST['email_setting']);
 	if ($email_setting < 0 || $email_setting > 2) $email_setting = $pun_config['o_default_email_setting'];

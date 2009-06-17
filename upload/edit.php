@@ -98,8 +98,7 @@ if (isset($_POST['form_sent']))
 	}
 
 
-	$hide_smilies = isset($_POST['hide_smilies']) ? intval($_POST['hide_smilies']) : 0;
-	if ($hide_smilies != '1') $hide_smilies = '0';
+	$hide_smilies = isset($_POST['hide_smilies']) ? '1' : '0';
 
 	// Did everything go according to plan?
 	if (empty($errors) && !isset($_POST['preview']))
