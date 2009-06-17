@@ -424,7 +424,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				break;
 
 			default:
-				$sort_by_sql = ($show_as == 'topics') ? 't.posted' : 'p.posted';
+				$sort_by_sql = ($show_as == 'topics') ? 't.last_post' : 'p.posted';
 				break;
 		}
 
