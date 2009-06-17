@@ -46,23 +46,23 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	$text = str_replace($a, $b, $text);
 
 	// Do the more complex BBCodes (also strip excessive whitespace and useless quotes)
-	$a = array( '#\[url=("|\'|)(.*?)\\1\]\s*#i',
-				'#\[url\]\s*#i',
-				'#\s*\[/url\]#i',
-				'#\[email=("|\'|)(.*?)\\1\]\s*#i',
-				'#\[email\]\s*#i',
-				'#\s*\[/email\]#i',
-				'#\[img\]\s*(.*?)\s*\[/img\]#is',
-				'#\[colou?r=("|\'|)(.*?)\\1\](.*?)\[/colou?r\]#is');
+	$a = array('#\[url=("|\'|)(.*?)\\1\]\s*#i',
+	           '#\[url\]\s*#i',
+	           '#\s*\[/url\]#i',
+	           '#\[email=("|\'|)(.*?)\\1\]\s*#i',
+	           '#\[email\]\s*#i',
+	           '#\s*\[/email\]#i',
+	           '#\[img\]\s*(.*?)\s*\[/img\]#is',
+	           '#\[colou?r=("|\'|)(.*?)\\1\](.*?)\[/colou?r\]#is');
 
-	$b = array(	'[url=$2]',
-				'[url]',
-				'[/url]',
-				'[email=$2]',
-				'[email]',
-				'[/email]',
-				'[img]$1[/img]',
-				'[color=$2]$3[/color]');
+	$b = array('[url=$2]',
+	           '[url]',
+	           '[/url]',
+	           '[email=$2]',
+	           '[email]',
+	           '[/email]',
+	           '[img]$1[/img]',
+	           '[color=$2]$3[/color]');
 
 	if (!$is_signature)
 	{
@@ -100,7 +100,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 			message($lang_prof_reg['Signature quote/code']);
 	}
 
-	return trim($text);
+	return pun_trim($text);
 }
 
 
@@ -262,8 +262,6 @@ function split_text($text, $start, $end)
 //
 function handle_url_tag($url, $link = '')
 {
-	global $pun_user;
-
 	$full_url = str_replace(array(' ', '\'', '`', '"'), array('%20', '', '', ''), $url);
 	if (strpos($url, 'www.') === 0)			// If it starts with www, we add http://
 		$full_url = 'http://'.$full_url;
@@ -284,7 +282,7 @@ function handle_url_tag($url, $link = '')
 //
 function handle_img_tag($url, $is_signature = false)
 {
-	global $lang_common, $pun_config, $pun_user;
+	global $lang_common, $pun_user;
 
 	$img_tag = '<a href="'.$url.'">&lt;'.$lang_common['Image link'].'&gt;</a>';
 
@@ -302,8 +300,6 @@ function handle_img_tag($url, $is_signature = false)
 //
 function do_bbcode($text)
 {
-	global $lang_common, $pun_user;
-
 	if (strpos($text, 'quote') !== false)
 	{
 		$text = str_replace('[quote]', '</p><blockquote><div class="incqbox"><p>', $text);
@@ -312,22 +308,22 @@ function do_bbcode($text)
 	}
 
 	$pattern = array('#\[b\](.*?)\[/b\]#s',
-					 '#\[i\](.*?)\[/i\]#s',
-					 '#\[u\](.*?)\[/u\]#s',
-					 '#\[url\]([^\[<]*?)\[/url\]#e',
-					 '#\[url=([^\[<]*?)\](.*?)\[/url\]#e',
-					 '#\[email\]([^\[<]*?)\[/email\]#',
-					 '#\[email=([^\[<]*?)\](.*?)\[/email\]#',
-					 '#\[color=([a-zA-Z]*|\#?[0-9a-fA-F]{6})](.*?)\[/color\]#s');
+	                 '#\[i\](.*?)\[/i\]#s',
+	                 '#\[u\](.*?)\[/u\]#s',
+	                 '#\[url\]([^\[<]*?)\[/url\]#e',
+	                 '#\[url=([^\[<]*?)\](.*?)\[/url\]#e',
+	                 '#\[email\]([^\[<]*?)\[/email\]#',
+	                 '#\[email=([^\[<]*?)\](.*?)\[/email\]#',
+	                 '#\[color=([a-zA-Z]*|\#?[0-9a-fA-F]{6})](.*?)\[/color\]#s');
 
 	$replace = array('<strong>$1</strong>',
-					 '<em>$1</em>',
-					 '<span class="bbu">$1</span>',
-					 'handle_url_tag(\'$1\')',
-					 'handle_url_tag(\'$1\', \'$2\')',
-					 '<a href="mailto:$1">$1</a>',
-					 '<a href="mailto:$1">$2</a>',
-					 '<span style="color: $1">$2</span>');
+	                 '<em>$1</em>',
+	                 '<span class="bbu">$1</span>',
+	                 'handle_url_tag(\'$1\')',
+	                 'handle_url_tag(\'$1\', \'$2\')',
+	                 '<a href="mailto:$1">$1</a>',
+	                 '<a href="mailto:$1">$2</a>',
+	                 '<span style="color: $1">$2</span>');
 
 	// This thing takes a while! :)
 	$text = preg_replace($pattern, $replace, $text);
@@ -341,8 +337,6 @@ function do_bbcode($text)
 //
 function do_clickable($text)
 {
-	global $pun_user;
-
 	$text = ' '.$text;
 
 	$text = preg_replace('#([\s\(\)])(https?|ftp|news){1}://([\w\-]+\.([\w\-]+\.)*[\w]+(:[0-9]+)?(/[^"\s\(\)<\[]*)?)#ie', '\'$1\'.handle_url_tag(\'$2://$3\')', $text);
