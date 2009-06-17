@@ -348,7 +348,7 @@ function generate_cached_search_query($search_id, &$show_as)
 			break;
 
 		default:
-			$sort_by_sql = ($show_as == 'topics') ? 't.posted' : 'p.posted';
+			$sort_by_sql = ($show_as == 'topics') ? 't.last_post' : 'p.posted';
 			($hook = get_hook('sf_fn_generate_cached_search_query_qr_cached_sort_by')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 			break;
 	}
