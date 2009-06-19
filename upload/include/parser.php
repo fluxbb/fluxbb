@@ -300,6 +300,8 @@ function handle_img_tag($url, $is_signature = false)
 //
 function do_bbcode($text)
 {
+	global $lang_common;
+	
 	if (strpos($text, 'quote') !== false)
 	{
 		$text = str_replace('[quote]', '</p><blockquote><div class="incqbox"><p>', $text);
