@@ -259,7 +259,7 @@ while ($cur_post = $db->fetch_assoc($result))
 
 		if ($pun_user['is_admmod'])
 		{
-			$user_info[] = '<dd>IP: <a href="moderate.php?get_host='.$cur_post['id'].'">'.$cur_post['poster_ip'].'</a>';
+			$user_info[] = '<dd>'.$lang_topic['IP'].': <a href="moderate.php?get_host='.$cur_post['id'].'">'.$cur_post['poster_ip'].'</a>';
 
 			if ($cur_post['admin_note'] != '')
 				$user_info[] = '<dd>'.$lang_topic['Note'].': <strong>'.pun_htmlspecialchars($cur_post['admin_note']).'</strong>';
@@ -272,7 +272,7 @@ while ($cur_post = $db->fetch_assoc($result))
 		$user_title = get_title($cur_post);
 
 		if ($pun_user['is_admmod'])
-			$user_info[] = '<dd>IP: <a href="moderate.php?get_host='.$cur_post['id'].'">'.$cur_post['poster_ip'].'</a>';
+			$user_info[] = '<dd>'.$lang_topic['IP'].': <a href="moderate.php?get_host='.$cur_post['id'].'">'.$cur_post['poster_ip'].'</a>';
 
 		if ($pun_config['o_show_user_info'] == '1' && $cur_post['poster_email'] != '' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
 			$user_contacts[] = '<a href="mailto:'.$cur_post['poster_email'].'">'.$lang_common['E-mail'].'</a>';
@@ -382,7 +382,7 @@ if ($quickpost)
 					<div class="infldset txtarea">
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="form_user" value="<?php echo (!$pun_user['is_guest']) ? pun_htmlspecialchars($pun_user['username']) : 'Guest'; ?>" />
-<?php if (!$pun_user['is_guest'] && $pun_config['o_subscriptions'] == '1' && $pun_user['auto_notify'] == '1'): ?>						<input type="hidden" name="subscribe" value="1" />';
+<?php if (!$pun_user['is_guest'] && $pun_config['o_subscriptions'] == '1' && $pun_user['auto_notify'] == '1'): ?>						<input type="hidden" name="subscribe" value="1" />
 <?php endif; ?>						<label><textarea name="req_message" rows="7" cols="75" tabindex="1"></textarea></label>
 						<ul class="bblinks">
 							<li><a href="help.php#bbcode" onclick="window.open(this.href); return false;"><?php echo $lang_common['BBCode'] ?></a>: <?php echo ($pun_config['p_message_bbcode'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></li>
