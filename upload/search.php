@@ -46,7 +46,6 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	$action = (isset($_GET['action'])) ? $_GET['action'] : null;
 	$forum = (isset($_GET['forum'])) ? intval($_GET['forum']) : -1;
 	$sort_dir = (isset($_GET['sort_dir'])) ? (($_GET['sort_dir'] == 'DESC') ? 'DESC' : 'ASC') : 'DESC';
-	if (isset($search_id)) unset($search_id);
 
 	// If a search_id was supplied
 	if (isset($_GET['search_id']))
@@ -64,7 +63,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		if (preg_match('#^[\*%]+$#', $keywords) || strlen(str_replace(array('*', '%'), '', $keywords)) < 3)
 			$keywords = '';
 
-		if (preg_match('#^[\*%]+$#', $author) || strlen(str_replace(array('*', '%'), '', $author)) < 3)
+		if (preg_match('#^[\*%]+$#', $author) || strlen(str_replace(array('*', '%'), '', $author)) < 2)
 			$author = '';
 
 		if (!$keywords && !$author)
@@ -80,7 +79,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	// If it's a user search (by id)
 	else if ($action == 'show_user')
 	{
-		$user_id = intval($_GET['user_id']);
+		$user_id = (isset($_GET['user_id'])) ? intval($_GET['user_id']) : 0;
 		if ($user_id < 2)
 			message($lang_common['Bad request']);
 	}
@@ -481,13 +480,13 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 ?>
 <div id="vf" class="blocktable">
-	<h2><span><?php echo $lang_search['Search results']; ?></span></h2>
+	<h2><span><?php echo $lang_search['Search results'] ?></span></h2>
 	<div class="box">
 		<div class="inbox">
 			<table cellspacing="0">
 			<thead>
 				<tr>
-					<th class="tcl" scope="col"><?php echo $lang_common['Topic']; ?></th>
+					<th class="tcl" scope="col"><?php echo $lang_common['Topic'] ?></th>
 					<th class="tc2" scope="col"><?php echo $lang_common['Forum'] ?></th>
 					<th class="tc3" scope="col"><?php echo $lang_common['Replies'] ?></th>
 					<th class="tcr" scope="col"><?php echo $lang_common['Last post'] ?></th>
@@ -547,9 +546,6 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 						$pposter = '<strong>'.$pposter.'</strong>';
 				}
 
-				if (pun_strlen($message) >= 1000)
-					$message .= ' &hellip;';
-
 				$vtpost1 = ($i == 0) ? ' vtp1' : '';
 
 				// Switch the background color for every message.
@@ -565,8 +561,8 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			<div class="postleft">
 				<dl>
 					<dt><?php echo $pposter ?></dt>
-					<dd>Replies: <?php echo forum_number_format($search_set[$i]['num_replies']) ?></dd>
-					<dd><?php echo $icon; ?></dd>
+					<dd><?php echo $lang_common['Replies'] ?>: <?php echo forum_number_format($search_set[$i]['num_replies']) ?></dd>
+					<dd><?php echo $icon ?></dd>
 					<dd><p class="clearb"><a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo $lang_search['Go to post'] ?></a></p></dd>
 				</dl>
 			</div>
