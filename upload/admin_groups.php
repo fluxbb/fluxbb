@@ -490,7 +490,7 @@ generate_admin_menu('groups');
 										<select id="base_group" name="base_group" tabindex="1">
 <?php
 
-$result = $db->query('SELECT g_id, g_title FROM '.$db->prefix.'groups WHERE g_id>'.PUN_GUEST.' ORDER BY g_title') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT g_id, g_title FROM '.$db->prefix.'groups WHERE g_id!='.PUN_ADMIN.' AND g_id!='.PUN_GUEST.' ORDER BY g_title') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
 
 while ($cur_group = $db->fetch_assoc($result))
 {
