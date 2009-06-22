@@ -110,7 +110,7 @@ else if ($footer_style == 'viewforum' || $footer_style == 'viewtopic')
 }
 
 ?>
-			<p class="conr">Powered by <a href="http://fluxbb.org/">FluxBB</a><?php if ($pun_config['o_show_version'] == '1') echo ' '.$pun_config['o_cur_version']; ?></p>
+			<p class="conr"><?php printf($lang_common['Powered by'], '<a href="http://fluxbb.org/">FluxBB</a>'.(($pun_config['o_show_version'] == '1') ? ' '.$pun_config['o_cur_version'] : '')) ?></p>
 <?php
 
 // Display debug info (if enabled/defined)
@@ -119,7 +119,7 @@ if (defined('PUN_DEBUG'))
 	// Calculate script generation time
 	list($usec, $sec) = explode(' ', microtime());
 	$time_diff = sprintf('%.3f', ((float)$usec + (float)$sec) - $pun_start);
-	echo "\t\t\t".'<p class="conr">[ Generated in '.$time_diff.' seconds, '.$db->get_num_queries().' queries executed ]</p>'."\n";
+	echo "\t\t\t".'<p class="conr">[ '.sprintf($lang_common['Querytime'], $time_diff, $db->get_num_queries()).' ]</p>'."\n";
 }
 
 ?>

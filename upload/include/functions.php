@@ -1270,8 +1270,8 @@ function display_saved_queries()
 			<table cellspacing="0">
 			<thead>
 				<tr>
-					<th class="tcl" scope="col">Time (s)</th>
-					<th class="tcr" scope="col">Query</th>
+					<th class="tcl" scope="col"><?php echo $lang_common['Query times'] ?></th>
+					<th class="tcr" scope="col"><?php echo $lang_common['Query'] ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -1293,7 +1293,7 @@ function display_saved_queries()
 
 ?>
 				<tr>
-					<td class="tcl" colspan="2">Total query time: <?php echo $query_time_total ?> s</td>
+					<td class="tcl" colspan="2"><?php printf($lang_common['Total query time'], $query_time_totals.' s') ?></td>
 				</tr>
 			</tbody>
 			</table>

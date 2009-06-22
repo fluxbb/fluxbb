@@ -146,8 +146,15 @@ $lang_common = array(
 'Unstick topic'			=>  'Unstick topic',
 'Stick topic'			=>  'Stick topic',
 'Moderate forum'		=>	'Moderate forum',
-'Delete posts'			=>	'Delete multiple posts', // Depreciated
+'Delete posts'			=>	'Delete multiple posts', // Deprecated
+'Powered by'			=> 'Powered by %s',
+
+// Debug information
 'Debug table'			=>	'Debug information',
+'Querytime'			=>    'Generated in %1$s seconds, %2$s queries executed',
+'Query times'			=>    'Time (s)',
+'Query'				=>    'Query',
+'Total query time'			=>    'Total query time: %s',
 
 // Email related notifications
 'New user notification'					=>	'Alert - New registration',
