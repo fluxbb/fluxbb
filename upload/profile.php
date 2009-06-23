@@ -842,7 +842,7 @@ else if (isset($_POST['form_sent']))
 			$form = extract_elements(array('email_setting', 'notify_with_post', 'auto_notify'));
 
 			$form['email_setting'] = intval($form['email_setting']);
-			if ($form['email_setting'] < 0 && $form['email_setting'] > 2) $form['email_setting'] = 1;
+			if ($form['email_setting'] < 0 || $form['email_setting'] > 2) $form['email_setting'] = $pun_config['o_default_email_setting'];
 
 			if (!isset($form['notify_with_post']) || $form['notify_with_post'] != '1') $form['notify_with_post'] = '0';
 			if (!isset($form['auto_notify']) || $form['auto_notify'] != '1') $form['auto_notify'] = '0';
