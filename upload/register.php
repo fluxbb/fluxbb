@@ -111,11 +111,7 @@ if (isset($_POST['form_sent']))
 	if (strlen($username) < 2)
 		$errors[] = $lang_prof_reg['Username too short'];
 	else if (pun_strlen($username) > 25)	// This usually doesn't happen since the form element only accepts 25 characters
-		$errors[] = $lang_common['Bad request'];
-	else if (strlen($password1) < 4)
-		$errors[] = $lang_prof_reg['Pass too short'];
-	else if ($password1 != $password2)
-		$errors[] = $lang_prof_reg['Pass not match'];
+		$errors[] = $lang_prof_reg['Username too long'];
 	else if (!strcasecmp($username, 'Guest') || !strcasecmp($username, $lang_common['Guest']))
 		$errors[] = $lang_prof_reg['Username guest'];
 	else if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username) || preg_match('/((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))/', $username))
@@ -124,7 +120,7 @@ if (isset($_POST['form_sent']))
 		$errors[] = $lang_prof_reg['Username reserved chars'];
 	else if (preg_match('#\[b\]|\[/b\]|\[u\]|\[/u\]|\[i\]|\[/i\]|\[color|\[/color\]|\[quote\]|\[quote=|\[/quote\]|\[code\]|\[/code\]|\[img\]|\[/img\]|\[url|\[/url\]|\[email|\[/email\]#i', $username))
 		$errors[] = $lang_prof_reg['Username BBCode'];
-
+		
 	// Check username for any censored words
 	if ($pun_config['o_censoring'] == '1')
 	{
@@ -142,6 +138,19 @@ if (isset($_POST['form_sent']))
 		$errors[] = $lang_register['Username dupe 1'].' '.pun_htmlspecialchars($busy).'. '.$lang_register['Username dupe 2'];
 	}
 
+	foreach ($pun_bans as $cur_ban)
+	{
+		if ($cur_ban['username'] != '' && utf8_strtolower($username) == utf8_strtolower($cur_ban['username']))
+		{
+			$errors[] = $lang_prof_reg['Banned username'];
+			break;
+		}
+	}
+	
+	if (strlen($password1) < 4)
+		$errors[] = $lang_prof_reg['Pass too short'];
+	else if ($password1 != $password2)
+		$errors[] = $lang_prof_reg['Pass not match'];	
 
 	// Validate e-mail
 	require PUN_ROOT.'include/email.php';
