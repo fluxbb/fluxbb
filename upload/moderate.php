@@ -250,7 +250,7 @@ if (isset($_GET['tid']))
 	require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
 
 	// Used to disable the Move and Delete buttons if there are no replies to this topic
-	$button_status = ($cur_topic['num_replies'] == 0) ? ' disabled' : '';
+	$button_status = ($cur_topic['num_replies'] == 0) ? ' disabled="disabled"' : '';
 
 
 	// Determine the post offset (based on $_GET['p'])
@@ -495,7 +495,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 {
 	if (isset($_POST['merge_topics_comply']))
-	{			
+	{
 		confirm_referrer('moderate.php');
 
 		if (@preg_match('/[^0-9,]/', $_POST['topics']))
@@ -549,7 +549,7 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 		update_forum($fid);
 		redirect('viewforum.php?id='.$fid, $lang_misc['Merge topics redirect']);
 	}
-	
+
 	$topics = isset($_POST['topics']) ? $_POST['topics'] : array();
 	if (count($topics) < 2)
 		message($lang_misc['Not enough topics selected']);
