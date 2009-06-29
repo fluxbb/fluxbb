@@ -48,7 +48,7 @@ $footer_style = isset($footer_style) ? $footer_style : NULL;
 
 if ($footer_style == 'index' || $footer_style == 'search')
 {
-	if (!$pun_user['is_guest'])
+	if (!$pun_user['is_guest'] && $pun_user['g_search'] == '1')
 	{
 		echo "\n\t\t\t".'<dl id="searchlinks" class="conl">'."\n\t\t\t\t".'<dt><strong>'.$lang_common['Search links'].'</strong></dt>'."\n\t\t\t\t".'<dd><a href="search.php?action=show_24h">'.$lang_common['Show recent posts'].'</a></dd>'."\n";
 		echo "\t\t\t\t".'<dd><a href="search.php?action=show_unanswered">'.$lang_common['Show unanswered posts'].'</a></dd>'."\n";

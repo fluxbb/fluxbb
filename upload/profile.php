@@ -1077,12 +1077,14 @@ else
 				$email_field = '<label><strong>'.$lang_common['E-mail'].'</strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="50" /><br /></label>'."\n";
 		}
 
+		$posts_field = '';
 		if ($pun_user['g_id'] == PUN_ADMIN)
 			$posts_field = '<label>'.$lang_common['Posts'].'<br /><input type="text" name="num_posts" value="'.$user['num_posts'].'" size="8" maxlength="8" /><br /></label><p><a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a></p>'."\n";
 		else if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
-			$posts_field = '<p>'.$lang_common['Posts'].': '.forum_number_format($user['num_posts']).' - <a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a></p>'."\n";
-		else
+			$posts_field = '<p>'.$lang_common['Posts'].': '.forum_number_format($user['num_posts']).($pun_user['g_search'] == '1' ? ' - <a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a></p>' : '')."\n";
+		else if ($pun_user['g_search'] == '1')
 			$posts_field = '<p><a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a></p>'."\n";
+		
 
 		$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_common['Profile'];
 		$required_fields = array('req_username' => $lang_common['Username'], 'req_email' => $lang_common['E-mail']);
