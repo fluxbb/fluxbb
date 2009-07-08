@@ -168,6 +168,8 @@ function authenticate_user($user, $password, $password_is_hash = false)
 		($password_is_hash && $password != $forum_user['password']) ||
 		(!$password_is_hash && forum_hash($password, $forum_user['salt']) != $forum_user['password']))
 		set_default_user();
+	else
+		$forum_user['is_guest'] = false;
 
 	($hook = get_hook('fn_authenticate_user_end')) ? (defined('FORUM_USE_INCLUDE') ? include $hook : eval($hook)) : null;
 }
