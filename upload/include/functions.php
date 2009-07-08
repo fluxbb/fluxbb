@@ -121,6 +121,57 @@ function check_cookie(&$pun_user)
 
 
 //
+// Converts the CDATA end sequence ]]> into ]]&gt;
+//
+function escape_cdata($str)
+{
+	return str_replace(']]>', ']]&gt;', $str);
+}
+
+
+//
+// Authenticates the provided username and password against the user database
+// $user can be either a user ID (integer) or a username (string)
+// $password can be either a plaintext password or a password hash including salt ($password_is_hash must be set accordingly)
+//
+function authenticate_user($user, $password, $password_is_hash = false)
+{
+	global $db, $pun_user;
+
+	// Check if there's a user matching $user and $password
+	$result = $db->query('SELECT u.*, g.*, o.logged, o.idle FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON o.user_id=u.id WHERE '.(is_int($user) ? 'u.id='.intval($user) : 'u.username=\''.$db->escape($user).'\'')) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	$pun_user = $db->fetch_assoc($result);
+	
+	if (!isset($pun_user['id']) ||
+		($password_is_hash && $password != $pun_user['password']) ||
+		(!$password_is_hash && pun_hash($password) != $pun_user['password']))
+		set_default_user();
+	else
+		$pun_user['is_guest'] = false;
+}
+
+
+//
+// Try to determine the current URL
+//
+function get_current_url($max_length = 0)
+{
+	global $base_url;
+
+	$protocol = (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') ? 'http://' : 'https://';
+	$port = (isset($_SERVER['SERVER_PORT']) && (($_SERVER['SERVER_PORT'] != '80' && $protocol == 'http://') || ($_SERVER['SERVER_PORT'] != '443' && $protocol == 'https://')) && strpos($_SERVER['HTTP_HOST'], ':') === false) ? ':'.$_SERVER['SERVER_PORT'] : '';
+
+	$url = urldecode($protocol.$_SERVER['HTTP_HOST'].$port.$_SERVER['REQUEST_URI']);
+
+	if (strlen($url) <= $max_length || $max_length == 0)
+		return $url;
+
+	// We can't find a short enough url
+	return null;
+}
+
+
+//
 // Fill $pun_user with default values (for guests)
 //
 function set_default_user()

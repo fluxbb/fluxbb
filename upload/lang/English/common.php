@@ -173,8 +173,8 @@ $lang_common = array(
 'Email signature'					=>	'Forum Mailer'."\n".'(Do not reply to this message)',
 
 // For extern.php RSS feed
-'RSS Desc Active'		=>	'The most recently active topics at',	// board_title will be appended to this string
-'RSS Desc New'			=>	'The newest topics at',					// board_title will be appended to this string
-'Posted'				=>	'Posted'	// The date/time a topic was started
+'RSS description'					=>	'The most recent topics at %s.',
+'RSS description topic'				=>	'The most recent posts in %s.',
+'RSS reply'							=>	'Re: '	// The topic subject will be appended to this string (to signify a reply)
 
 );
