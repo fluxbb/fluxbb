@@ -113,6 +113,7 @@ if (isset($_POST['form_sent']))
 	$form['disp_topics_default'] = intval($form['disp_topics_default']);
 	$form['disp_posts_default'] = intval($form['disp_posts_default']);
 	$form['indent_num_spaces'] = intval($form['indent_num_spaces']);
+	$form['quote_depth'] = intval($form['quote_depth']);
 	$form['avatars_width'] = intval($form['avatars_width']);
 	$form['avatars_height'] = intval($form['avatars_height']);
 	$form['avatars_size'] = intval($form['avatars_size']);
@@ -414,6 +415,13 @@ generate_admin_menu('options');
 									<td>
 										<input type="text" name="form[indent_num_spaces]" size="3" maxlength="3" value="<?php echo $pun_config['o_indent_num_spaces'] ?>" />
 										<span>If set to 8, a regular tab will be used when displaying text within the [code][/code] tag. Otherwise this many spaces will be used to indent the text.</span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">Maximum [quote] depth:</th>
+									<td>
+										<input type="text" name="form[quote_depth]" size="3" maxlength="3" value="<?php echo $pun_config['o_quote_depth'] ?>" />
+										<span>he maximum times a [quote] tag can go inside other [quote] tags, any tags deeper than this will be discarded.</span>
 									</td>
 								</tr>
 							</table>

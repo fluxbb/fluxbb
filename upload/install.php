@@ -301,7 +301,7 @@ else
 	{
 		return (get_magic_quotes_gpc() == 1) ? stripslashes($str) : $str;
 	}
-	
+
 	$db_type = $_POST['req_db_type'];
 	$db_host = trim($_POST['req_db_host']);
 	$db_name = trim($_POST['req_db_name']);
@@ -345,7 +345,7 @@ else
 		case 'mysql':
 			require PUN_ROOT.'include/dblayer/mysql.php';
 			break;
-		
+
 		case 'mysql_innodb':
 			require PUN_ROOT.'include/dblayer/mysql_innodb.php';
 			break;
@@ -353,7 +353,7 @@ else
 		case 'mysqli':
 			require PUN_ROOT.'include/dblayer/mysqli.php';
 			break;
-		
+
 		case 'mysqli_innodb':
 			require PUN_ROOT.'include/dblayer/mysqli_innodb.php';
 			break;
@@ -400,14 +400,14 @@ else
 	$result = $db->query('SELECT 1 FROM '.$db_prefix.'users WHERE id=1');
 	if ($db->num_rows($result))
 		error('A table called "'.$db_prefix.'users" is already present in the database "'.$db_name.'". This could mean that FluxBB is already installed or that another piece of software is installed and is occupying one or more of the table names FluxBB requires. If you want to install multiple copies of FluxBB in the same database, you must choose a different table prefix.');
-	
-	// Check if InnoDB is available 
- 	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb') 
- 	{ 
-		$result = $db->query('SHOW VARIABLES LIKE \'have_innodb\''); 
-		list (, $result) = $db->fetch_row($result); 
-		if ((strtoupper($result) != 'YES')) 
-			error('InnoDB does not seem to be enabled. Please choose a database layer that does not have InnoDB support, or enable InnoDB on your MySQL server.'); 
+
+	// Check if InnoDB is available
+ 	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+ 	{
+		$result = $db->query('SHOW VARIABLES LIKE \'have_innodb\'');
+		list (, $result) = $db->fetch_row($result);
+		if ((strtoupper($result) != 'YES'))
+			error('InnoDB does not seem to be enabled. Please choose a database layer that does not have InnoDB support, or enable InnoDB on your MySQL server.');
  	}
 
 
@@ -782,8 +782,8 @@ else
 		$schema['UNIQUE KEYS']['user_id_ident_idx'] = array('user_id', 'ident(25)');
 		$schema['INDEXES']['ident_idx'] = array('ident(25)');
 	}
-	
-	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb') 
+
+	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 		$schema['ENGINE'] = 'InnoDB';
 
 	$db->create_table('online', $schema);
@@ -1358,6 +1358,7 @@ else
 		'o_disp_topics_default'		=> "'30'",
 		'o_disp_posts_default'		=> "'25'",
 		'o_indent_num_spaces'		=> "'4'",
+		'o_quote_depth'				=> "'3'",
 		'o_quickpost'				=> "'1'",
 		'o_users_online'			=> "'1'",
 		'o_censoring'				=> "'0'",

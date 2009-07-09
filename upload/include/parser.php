@@ -112,12 +112,6 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 			break;
 	}
 
-	//echo '<pre>';
-	//print_r($text);
-	//echo '</pre>';
-
-	//exit;
-
 	return pun_trim($text);
 }
 
@@ -634,7 +628,7 @@ function handle_img_tag($url, $is_signature = false, $alt = null)
 
 	if ($is_signature && $pun_user['show_img_sig'] != '0')
 		$img_tag = '<img class="sigimage" src="'.$url.'" alt="'.pun_htmlspecialchars($alt).'" />';
-	else if (!$is_signature && $forum_user['show_img'] != '0')
+	else if (!$is_signature && $pun_user['show_img'] != '0')
 		$img_tag = '<span class="postimg"><img src="'.$url.'" alt="'.pun_htmlspecialchars($alt).'" /></span>';
 
 	return $img_tag;

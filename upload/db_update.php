@@ -220,7 +220,7 @@ function db_seems_utf8()
 
 	$result = $db->query('SELECT MIN(id), MAX(id) FROM '.$db->prefix.'posts') or error('Unable to fetch post IDs', __FILE__, __LINE__, $db->error());
 	list($min_id, $max_id) = $db->fetch_row($result);
-	
+
 	if (empty($min_id) || empty($max_id))
 		return true;
 
@@ -455,6 +455,9 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		// Insert new config option o_default_dst
 		if (!array_key_exists('o_default_dst', $pun_config))
 			$new_config[] = '\'o_default_dst\', \'0\'';
+
+		if (!array_key_exists('o_default_dst', $pun_config))
+			$new_config[] = '\'o_quote_depth\', \'3\'';
 
 		if (!empty($new_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES ('.implode('), (', $new_config).')') or error('Unable to insert config values', __FILE__, __LINE__, $db->error());
@@ -895,7 +898,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 		// Fetch posts to process this cycle
 		$result = $db->query('SELECT id, poster, message, edited_by FROM '.$db->prefix.'posts WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
-		
+
 		while ($cur_item = $db->fetch_assoc($result))
 		{
 			echo 'Converting post '.$cur_item['id'].' …<br />'."\n";
