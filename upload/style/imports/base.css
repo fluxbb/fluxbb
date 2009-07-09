@@ -192,6 +192,9 @@ DIV.blockpost>DIV>DIV.inbox {PADDING-BOTTOM: 1px}
 /* 7.3 This is the div which actually contains the post and is inside .postright */
 
 DIV.postmsg {WIDTH:100%}
+DIV.postmsg P {MARGIN: 0 0 1.5em}
+DIV.postmsg UL {MARGIN: 0 0.5em 1.5em;PADDING-LEFT: 1.5em}
+DIV.postmsg UL, DIV.postmsg LI {LIST-STYLE-TYPE: circle}
 
 /* 7.4 These items control overflow and scrolling within posts. */
 
