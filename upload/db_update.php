@@ -456,7 +456,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		if (!array_key_exists('o_default_dst', $pun_config))
 			$new_config[] = '\'o_default_dst\', \'0\'';
 
-		if (!array_key_exists('o_default_dst', $pun_config))
+		if (!array_key_exists('o_quote_depth', $pun_config))
 			$new_config[] = '\'o_quote_depth\', \'3\'';
 
 		if (!empty($new_config))
