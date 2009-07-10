@@ -418,10 +418,10 @@ generate_admin_menu('options');
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Maximum [quote] depth:</th>
+									<th scope="row">Maximum [quote] depth</th>
 									<td>
 										<input type="text" name="form[quote_depth]" size="3" maxlength="3" value="<?php echo $pun_config['o_quote_depth'] ?>" />
-										<span>he maximum times a [quote] tag can go inside other [quote] tags, any tags deeper than this will be discarded.</span>
+										<span>The maximum times a [quote] tag can go inside other [quote] tags, any tags deeper than this will be discarded.</span>
 									</td>
 								</tr>
 							</table>

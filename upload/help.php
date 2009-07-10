@@ -70,7 +70,7 @@ require PUN_ROOT.'header.php';
 		[email=myname@mydomain.com]<?php echo $lang_help['My e-mail address'] ?>[/email] <?php echo $lang_help['produces'] ?> <a href="mailto:myname@mydomain.com"><?php echo $lang_help['My e-mail address'] ?></a><br /><br />
 	</div>
 	<p><a name="img"></a><?php echo $lang_help['Images info'] ?></p>
-	<div>[img]<?php echo $pun_config['o_base_url'].'/' ?>img/test.png[/img] <?php echo $lang_help['produces'] ?> <img src="<?php echo $pun_config['o_base_url'].'/' ?>img/test.png" /></div>
+	<div>[img=FluxBB bbcode test]<?php echo $pun_config['o_base_url'].'/' ?>img/test.png[/img] <?php echo $lang_help['produces'] ?> <img src="<?php echo $pun_config['o_base_url'].'/' ?>img/test.png" alt="FluxBB bbcode test" /></div>
 </div>
 <h2><?php echo $lang_help['Quotes'] ?></h2>
 <div class="box">
@@ -101,6 +101,21 @@ require PUN_ROOT.'header.php';
 		</div>
 	</div>
 </div>
+<h2><?php echo $lang_help['Lists'] ?></h2>
+<div class="box">
+	<div style="padding-left: 4px">
+		<a name="lists"></a><?php echo $lang_help['List info'] ?><br /><br />
+
+		<p><code>[list][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code> <span><?php echo $lang_help['produces list'] ?></span></p>
+		<ul><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ul>
+
+		<p><code>[list=1][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code> <span><?php echo $lang_help['produces decimal list'] ?></span></p>
+		<ol class="decimal"><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ol>
+
+		<p><code>[list=a][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code> <span><?php echo $lang_help['produces alpha list'] ?></span></p>
+		<ol class="alpha"><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ol>
+	</div>
+</div>
 <h2><?php echo $lang_help['Nested tags'] ?></h2>
 <div class="box">
 	<div style="padding-left: 4px">
@@ -112,44 +127,23 @@ require PUN_ROOT.'header.php';
 <div class="box">
 	<div style="padding-left: 4px">
 		<a name="smilies"></a><?php echo $lang_help['Smilies info'] ?><br /><br />
+
+		<ul>
 <?php
 
 // Display the smiley set
 require PUN_ROOT.'include/parser.php';
 
-$num_smilies = count($smiley_text);
-for ($i = 0; $i < $num_smilies; ++$i)
-{
-	// Is there a smiley at the current index?
-	if (!isset($smiley_text[$i]))
-		continue;
+$smiley_groups = array();
 
-	echo "\t\t".'&nbsp;&nbsp;&nbsp;&nbsp;'.$smiley_text[$i];
+foreach ($smilies as $smiley_text => $smiley_img)
+	$smiley_groups[$smiley_img][] = $smiley_text;
 
-	// Save the current text and image
-	$cur_img = $smiley_img[$i];
-	$cur_text = $smiley_text[$i];
-
-	// Loop through the rest of the array and see if there are any duplicate images
-	// (more than one text representation for one image)
-	for ($next = $i + 1; $next < $num_smilies; ++$next)
-	{
-		// Did we find a dupe?
-		if (isset($smiley_img[$next]) && $smiley_img[$i] == $smiley_img[$next])
-		{
-			echo ' '.$lang_common['and'].' '.$smiley_text[$next];
-
-			// Remove the dupe so we won't display it twice
-			unset($smiley_text[$next]);
-			unset($smiley_img[$next]);
-		}
-	}
-
-	echo ' '.$lang_help['produces'].' <img src="img/smilies/'.$cur_img.'" width="15" height="15" alt="'.$cur_text.'" /><br />'."\n";
-}
+foreach ($smiley_groups as $smiley_img => $smiley_texts)
+	echo "\t\t\t".'<li>'.implode(' '.$lang_common['and'].' ', $smiley_texts).' <span>'.$lang_help['produces'].'</span> <img src="img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.$smiley_texts[0].'" /></li>'."\n";
 
 ?>
-		<br />
+		</ul>
 	</div>
 </div>
 <?php

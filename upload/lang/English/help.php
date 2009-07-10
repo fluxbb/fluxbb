@@ -20,7 +20,7 @@ $lang_help = array(
 'Links and images'		=>	'Links and images',
 'Links info'			=>	'You can create links to other documents or to e-mail addresses using the following tags:',
 'My e-mail address'		=>	'My e-mail address',
-'Images info'			=>	'If you want to display an image you can use the img tag.',
+'Images info'			=>	'If you want to display an image you can use the img tag. The text appearing after the "=" sign in the opening tag is used for the alt attribute and should be included whenever possible.',
 
 'Quotes'				=>	'Quotes',
 'Quotes info'			=>	'If you want to quote someone, you should use the quote tag.',
@@ -36,6 +36,15 @@ $lang_help = array(
 'Nested tags'			=>	'Nested tags',
 'Nested tags info'		=>	'BBCode can be nested to create more advanced formatting. For example:',
 'Bold, underlined text'	=>	'Bold, underlined text',
+
+'Lists'                    =>    'Lists',
+'List info'                =>    'To create a list you can use the list tag. You can create 3 types of lists using the list tag.',
+'List text 1'              =>    'Example list item 1.',
+'List text 2'              =>    'Example list item 2.',
+'List text 3'              =>    'Example list item 3.',
+'produces list'            =>    'produces a bulleted list.',
+'produces decimal list'    =>    'produces a numbered list.',
+'produces alpha list'      =>    'produces an alphabetically labelled list.',
 
 'Smilies info'			=>	'If you like (and if it is enabled), the forum can convert a series of smilies to images representations of that smiley. This forum recognizes the following smilies and replaces them with images:'
 

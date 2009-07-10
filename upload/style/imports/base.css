@@ -193,8 +193,11 @@ DIV.blockpost>DIV>DIV.inbox {PADDING-BOTTOM: 1px}
 
 DIV.postmsg {WIDTH:100%}
 DIV.postmsg P {MARGIN: 0 0 1.5em}
-DIV.postmsg UL {MARGIN: 0 0.5em 1.5em;PADDING-LEFT: 1.5em}
-DIV.postmsg UL, DIV.postmsg LI {LIST-STYLE-TYPE: circle}
+DIV.postmsg UL, DIV.postmsg OL {MARGIN: 0 0 1.5em 0.5em;PADDING-LEFT: 1.5em}
+DIV.postmsg OL {MARGIN: 0 0 1.5em 1em}
+DIV.postmsg UL LI {LIST-STYLE-TYPE: circle}
+DIV.postmsg OL.decimal LI {LIST-STYLE-TYPE: decimal}
+DIV.postmsg OL.alpha LI {LIST-STYLE-TYPE: lower-alpha}
 
 /* 7.4 These items control overflow and scrolling within posts. */
 
@@ -275,3 +278,12 @@ DIV.txtarea TEXTAREA, INPUT.longinput {WIDTH: 100%}
 /* 10.3 Other templates */
 
 #punredirect DIV.block, #punmaint DIV.block {MARGIN: 50px 20% 12px 20%}
+
+/* 10.4 Paragraphs and lists */
+
+#helpfile P {MARGIN: 0 0 1.5em}
+#helpfile UL, #helpfile OL {MARGIN: 0 0 1.5em 0.5em;PADDING-LEFT: 1.5em}
+#helpfile OL {MARGIN: 0 0 1.5em 1em}
+#helpfile UL LI {LIST-STYLE-TYPE: circle}
+#helpfile OL.decimal LI {LIST-STYLE-TYPE: decimal}
+#helpfile OL.alpha LI {LIST-STYLE-TYPE: lower-alpha}
