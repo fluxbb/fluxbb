@@ -812,7 +812,13 @@ else if (isset($_POST['form_sent']))
 				if ($pun_config['p_sig_bbcode'] == '1' && strpos($form['signature'], '[') !== false && strpos($form['signature'], ']') !== false)
 				{
 					require PUN_ROOT.'include/parser.php';
-					$form['signature'] = preparse_bbcode($form['signature'], $foo, true);
+
+					$errors = array();
+
+					$form['signature'] = preparse_bbcode($form['signature'], $errors, true);
+
+					if(count($errors) > 0)
+						message('<ul><li>'.implode('</li><li>', $errors).'</li></ul>');
 				}
 			}
 

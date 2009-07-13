@@ -59,7 +59,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	{
 		global $lang_profile;
 
-		if (preg_match('#\[quote(=(&quot;|"|\'|)(.*)\\1)?\]|\[/quote\]|\[code\]|\[/code\]|\[list(=([1a\*]))?\]|\[/list\]#i', $text))
+		if (preg_match('%\[/?(?:quote|code|list)\b[^\]]*\]%i', $text))
 			$errors[] = $lang_profile['Signature quote/code/list'];
 	}
 
@@ -71,7 +71,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	}
 
 	// Tidy up lists
-	$pattern = array('/\[list(?:=([1a\*]))?\]((?>(?:(?!\[list(?:=(?:[1a\*]))\]|\[\/list\]).+?)|(?R))*)\[\/list\]/ems');
+	$pattern = array('%\[list(?:=([1a*]))?+\]((?:(?:(?!\[list(?:=[1a*])?+\]|\[/list\]).)++|(?R))*+)\[/list\]%isxe');
 	$replace = array('preparse_list_tag(\'$2\', \'$1\', $errors)');
 	$text = preg_replace($pattern, $replace, $text);
 
