@@ -513,9 +513,6 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		return false;
 	}
 
-	if ($return != null)
-		return $return;
-
 	return $new_text;
 }
 
