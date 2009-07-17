@@ -97,6 +97,7 @@ $lang_common = array(
 'Write message legend'                            =>        'Write your message and submit',
 'Previous'                                        =>        'Previous',
 'Next'                                            =>        'Next',
+'Spacer'                                          =>        '&hellip;', // Ellipsis for paginate
 
 // Title
 'Title'                                           =>        'Title',
