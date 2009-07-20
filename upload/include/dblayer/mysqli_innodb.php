@@ -56,7 +56,7 @@ class DBLayer
 	{
 		++$this->in_transaction;
 
-		$this->query('START TRANSACTION');
+		mysqli_query($this->link_id, 'START TRANSACTION');
 		return;
 	}
 
@@ -65,7 +65,7 @@ class DBLayer
 	{
 		--$this->in_transaction;
 
-		$this->query('COMMIT');
+		mysqli_query($this->link_id, 'COMMIT');
 		return;
 	}
 
