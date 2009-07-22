@@ -354,7 +354,7 @@ if ($tid)
 
 		list($q_poster, $q_message) = $db->fetch_row($result);
 
-		$q_message = str_replace('[img]', '[url]', $q_message);
+		$q_message = preg_replace('%\[img(?:=.*?)?\]%', '[url]', $q_message);
 		$q_message = str_replace('[/img]', '[/url]', $q_message);
 		$q_message = pun_htmlspecialchars($q_message);
 
