@@ -808,7 +808,7 @@ function paginate($num_pages, $cur_page, $link)
 			$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p='.($cur_page +1).'">'.$lang_common['Next'].'</a>';
 	}
 
-	return implode('&nbsp;', $pages);
+	return implode(' ', $pages);
 }
 
 
