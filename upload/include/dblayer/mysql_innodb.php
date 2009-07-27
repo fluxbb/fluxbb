@@ -100,7 +100,7 @@ class DBLayer
 
 			// Rollback transaction
 			if ($this->in_transaction)
-				$this->query('ROLLBACK');
+				mysql_query('ROLLBACK', $this->link_id);
 
 			--$this->in_transaction;
 
