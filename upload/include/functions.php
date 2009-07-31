@@ -1195,9 +1195,12 @@ function error($message, $file, $line, $db_error = false)
 {
 	global $pun_config;
 
-	// Set a default title if the script failed before $pun_config could be populated
+	// Set some default settings if the script failed before $pun_config could be populated
 	if (empty($pun_config))
+	{
 		$pun_config['o_board_title'] = 'FluxBB';
+		$pun_config['o_gzip'] = '0';
+	}
 
 	// Empty all output buffers and stop buffering
 	while (@ob_end_clean());
