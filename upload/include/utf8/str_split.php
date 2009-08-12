@@ -1,11 +1,11 @@
 <?php
+
 /**
 * @version $Id: str_split.php,v 1.1 2006/02/25 13:50:17 harryf Exp $
 * @package utf8
 * @subpackage strings
 */
 
-//---------------------------------------------------------------
 /**
 * UTF-8 aware alternative to str_split
 * Convert a string to an array
@@ -18,18 +18,16 @@
 * @package utf8
 * @subpackage strings
 */
-function utf8_str_split($str, $split_len = 1) {
-    
-    if ( !preg_match('/^[0-9]+$/',$split_len) || $split_len < 1 ) {
-        return FALSE;
-    }
-    
-    $len = utf8_strlen($str);
-    if ( $len <= $split_len ) {
-        return array($str);
-    }
-    
-    preg_match_all('/.{'.$split_len.'}|[^\x00]{1,'.$split_len.'}$/us', $str, $ar);
-    return $ar[0];
-    
+function utf8_str_split($str, $split_len=1)
+{
+	if (!preg_match('/^[0-9]+$/',$split_len) || $split_len < 1)
+		return false;
+
+	$len = utf8_strlen($str);
+	if ($len <= $split_len)
+		return array($str);
+
+	preg_match_all('/.{'.$split_len.'}|[^\x00]{1,'.$split_len.'}$/us', $str, $ar);
+
+	return $ar[0];
 }

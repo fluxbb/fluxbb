@@ -1,4 +1,5 @@
 <?php
+
 /**
 * @version $Id: core.php,v 1.5 2006/02/28 22:12:25 harryf Exp $
 * @package utf8
@@ -8,11 +9,9 @@
 /**
 * Define UTF8_CORE as required
 */
-if ( !defined('UTF8_CORE') ) {
-    define('UTF8_CORE',TRUE);
-}
+if (!defined('UTF8_CORE'))
+	define('UTF8_CORE', true);
 
-//--------------------------------------------------------------------
 /**
 * Wrapper round mb_strlen
 * Assumes you have mb_internal_encoding to UTF-8 already
@@ -23,12 +22,11 @@ if ( !defined('UTF8_CORE') ) {
 * @package utf8
 * @subpackage strings
 */
-function utf8_strlen($str){
-    return mb_strlen($str);
+function utf8_strlen($str)
+{
+	return mb_strlen($str);
 }
 
-
-//--------------------------------------------------------------------
 /**
 * Assumes mbstring internal encoding is set to UTF-8
 * Wrapper around mb_strpos
@@ -40,15 +38,14 @@ function utf8_strlen($str){
 * @package utf8
 * @subpackage strings
 */
-function utf8_strpos($str, $search, $offset = FALSE){
-    if ( $offset === FALSE ) {
-        return mb_strpos($str, $search);
-    } else {
-        return mb_strpos($str, $search, $offset);
-    }
+function utf8_strpos($str, $search, $offset = false)
+{
+	if ($offset === false)
+		return mb_strpos($str, $search);
+	else
+		return mb_strpos($str, $search, $offset);
 }
 
-//--------------------------------------------------------------------
 /**
 * Assumes mbstring internal encoding is set to UTF-8
 * Wrapper around mb_strrpos
@@ -60,30 +57,33 @@ function utf8_strpos($str, $search, $offset = FALSE){
 * @package utf8
 * @subpackage strings
 */
-function utf8_strrpos($str, $search, $offset = FALSE){
-    if ( $offset === FALSE ) {
-        # Emulate behaviour of strrpos rather than raising warning
-        if ( empty($str) ) {
-            return FALSE;
-        }
-        return mb_strrpos($str, $search);
-    } else {
-        if ( !is_int($offset) ) {
-            trigger_error('utf8_strrpos expects parameter 3 to be long',E_USER_WARNING);
-            return FALSE;
-        }
-        
-        $str = mb_substr($str, $offset);
-        
-        if ( FALSE !== ( $pos = mb_strrpos($str, $search) ) ) {
-            return $pos + $offset;
-        }
-        
-        return FALSE;
-    }
+function utf8_strrpos($str, $search, $offset = false)
+{
+	if ($offset === false)
+	{
+		// Emulate behaviour of strrpos rather than raising warning
+		if (empty($str))
+			return false;
+
+		return mb_strrpos($str, $search);
+	}
+	else
+	{
+		if (!is_int($offset))
+		{
+			trigger_error('utf8_strrpos expects parameter 3 to be long', E_USER_WARNING);
+			return false;
+		}
+
+		$str = mb_substr($str, $offset);
+
+		if (false !== ($pos = mb_strrpos($str, $search)))
+			return $pos + $offset;
+
+		return false;
+	}
 }
 
-//--------------------------------------------------------------------
 /**
 * Assumes mbstring internal encoding is set to UTF-8
 * Wrapper around mb_substr
@@ -95,15 +95,14 @@ function utf8_strrpos($str, $search, $offset = FALSE){
 * @package utf8
 * @subpackage strings
 */
-function utf8_substr($str, $offset, $length = FALSE){
-    if ( $length === FALSE ) {
-        return mb_substr($str, $offset);
-    } else {
-        return mb_substr($str, $offset, $length);
-    }
+function utf8_substr($str, $offset, $length = false)
+{
+	if ($length === false)
+		return mb_substr($str, $offset);
+	else
+		return mb_substr($str, $offset, $length);
 }
 
-//--------------------------------------------------------------------
 /**
 * Assumes mbstring internal encoding is set to UTF-8
 * Wrapper around mb_strtolower
@@ -117,11 +116,11 @@ function utf8_substr($str, $offset, $length = FALSE){
 * @package utf8
 * @subpackage strings
 */
-function utf8_strtolower($str){
-    return mb_strtolower($str);
+function utf8_strtolower($str)
+{
+	return mb_strtolower($str);
 }
 
-//--------------------------------------------------------------------
 /**
 * Assumes mbstring internal encoding is set to UTF-8
 * Wrapper around mb_strtoupper
@@ -135,6 +134,7 @@ function utf8_strtolower($str){
 * @package utf8
 * @subpackage strings
 */
-function utf8_strtoupper($str){
-    return mb_strtoupper($str);
+function utf8_strtoupper($str)
+{
+	return mb_strtoupper($str);
 }
