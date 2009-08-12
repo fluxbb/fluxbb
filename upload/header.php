@@ -33,6 +33,8 @@ header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
 header('Cache-Control: post-check=0, pre-check=0', false);
 header('Pragma: no-cache');		// For HTTP/1.0 compability
 
+// Send the Content-type header in case the web server is setup to send something else
+header('Content-type: text/html; charset=utf-8');
 
 // Load the template
 if (defined('PUN_ADMIN_CONSOLE'))
