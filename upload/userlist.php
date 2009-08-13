@@ -42,7 +42,7 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/search.php';
 $show_post_count = ($pun_config['o_show_post_count'] == '1' || $pun_user['g_id'] < PUN_GUEST) ? true : false;
 
 $username = (isset($_GET['username']) && $pun_user['g_search_users'] == '1') ? pun_trim($_GET['username']) : '';
-$show_group = (!isset($_GET['show_group']) || intval($_GET['show_group']) < -1 && intval($_GET['show_group']) > 2) ? -1 : intval($_GET['show_group']);
+$show_group = !isset($_GET['show_group']) ? -1 : intval($_GET['show_group']);
 $sort_by = (!isset($_GET['sort_by']) || $_GET['sort_by'] != 'username' && $_GET['sort_by'] != 'registered' && ($_GET['sort_by'] != 'num_posts' || !$show_post_count)) ? 'username' : $_GET['sort_by'];
 $sort_dir = (!isset($_GET['sort_dir']) || $_GET['sort_dir'] != 'ASC' && $_GET['sort_dir'] != 'DESC') ? 'ASC' : strtoupper($_GET['sort_dir']);
 
