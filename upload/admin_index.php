@@ -43,20 +43,11 @@ if ($action == 'check_upgrade')
 	if (!ini_get('allow_url_fopen'))
 		message('Unable to check for upgrade since \'allow_url_fopen\' is disabled on this system.');
 
-	$fp = @fopen('http://fluxbb.org/latest_version', 'r');
-	$latest_version = trim(@fread($fp, 16));
-	@fclose($fp);
-
-	if ($latest_version == '')
+	$latest_version = trim(@file_get_contents('http://fluxbb.org/latest_version'));
+	if (empty($latest_version))
 		message('Check for upgrade failed for unknown reasons.');
 
-	$cur_version = str_replace(array('.', 'dev', 'beta', ' '), '', strtolower($pun_config['o_cur_version']));
-	$cur_version = (strlen($cur_version) == 2) ? intval($cur_version) * 10 : intval($cur_version);
-
-	$latest_version = str_replace('.', '', strtolower($latest_version));
-	$latest_version = (strlen($latest_version) == 2) ? intval($latest_version) * 10 : intval($latest_version);
-
-	if ($cur_version >= $latest_version)
+	if (version_compare($pun_config['o_cur_version'], $latest_version, '>='))
 		message('You are running the latest version of FluxBB.');
 	else
 		message('A new version of FluxBB has been released. You can download the latest version at <a href="http://fluxbb.org/">FluxBB.org</a>.');
