@@ -35,6 +35,8 @@
 
 DIV.blockpost DIV.box, DIV.postleft, DIV.postsignature, DIV.postmsg {OVERFLOW: hidden}
 
+.pun PRE {OVERFLOW: auto}
+
 /****************************************************************/
 /* 3. BUG FIXES - VERY IMPORTANT - DO NOT CHANGE */
 /****************************************************************/
