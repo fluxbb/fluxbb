@@ -11,7 +11,7 @@
 
 
 define('UPDATE_TO', '1.4');
-define('UPDATE_TO_DB_REVISION', 1);
+define('UPDATE_TO_DB_REVISION', 2);
 
 // The number of items to process per pageview (lower this if the update script times out during UTF-8 conversion)
 define('PER_PAGE', 300);
