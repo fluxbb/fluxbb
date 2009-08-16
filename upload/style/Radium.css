@@ -5,7 +5,7 @@
 /* Import the basic setup styles */
 @import url(imports/base.css);
 /* Import the colour scheme */
-@import url(imports/Radium_cs.css);
+@import url(imports/Oxygen_cs.css);
 
 /****************************************************************/
 /* 2. TEXT SETTINGS */
@@ -28,7 +28,7 @@
 
 /* 2.2 Set the font-size for preformatted text i.e in code boxes */
 
-#debug .tcr, .pun PRE {FONT-FAMILY: Consolas, monaco, "Bitstream Vera Sans Mono", "Courier New", courier, monospace}
+#debug .tcr, .pun PRE, .pun code {FONT-SIZE: 1em; FONT-FAMILY: Consolas, monaco, "Bitstream Vera Sans Mono", "Courier New", courier, monospace}
 
 /* 2.3 Font size for headers */
 
@@ -37,14 +37,17 @@
 #brdtitle H1 {FONT-SIZE: 1.4em}
 
 /* 2.4 Larger text for particular items */
+
 DIV.postmsg P {LINE-HEIGHT: 1.4}
 DIV.postleft DT {FONT-SIZE: 1.1em}
 .pun PRE {FONT-SIZE: 1.2em}
 
 /* 2.5 Bold text */
 
-DIV.postleft DT, DIV.postmsg H4, TD.tcl H3, DIV.forminfo H3, P.postlink, DIV.linkst LI,
+DIV.postleft DT, DIV.postmsg H4, TD.tcl H3, DIV.forminfo H3, P.postlink, DIV.linkst LI, .pun .quotebox cite,
 DIV.linksb LI, DIV.postlinksb LI, .blockmenu LI, #brdtitle H1, .pun SPAN.warntext, .pun P.warntext {FONT-WEIGHT: bold}
+
+.pun .quotebox cite {font-style: normal}
 
 /****************************************************************/
 /* 3. LINKS */
@@ -68,7 +71,7 @@ DIV.linksb LI, DIV.postlinksb LI, .blockmenu LI, #brdtitle H1, .pun SPAN.warntex
 
 /* 4.1 By default borders are 1px solid */
 
-DIV.box, .pun TD, .pun TH, .pun BLOCKQUOTE, DIV.codebox, DIV.forminfo, DIV.blockpost LABEL {
+DIV.box, .pun TD, .pun TH, DIV.codebox, DIV.quotebox, DIV.forminfo, DIV.blockpost LABEL {
 	BORDER-STYLE: solid;
 	BORDER-WIDTH: 1px
 }
@@ -168,7 +171,9 @@ DIV.postsignature, DIV.postmsg P.postedit {PADDING-TOP: 15px}
 /* 8.4 Spacing for code and quote boxes */
 
 DIV.postmsg H4 {MARGIN-BOTTOM: 10px}
-.pun BLOCKQUOTE, DIV.codebox {MARGIN: 5px 15px 15px 15px; PADDING: 8px}
+
+.pun .quotebox, .pun .codebox {margin: 0.75em 1em; padding: 1em 0.75em; }
+.pun .quotebox cite {display: block; padding-bottom: 0.5em}
 
 /* 8.5 Padding for the action links and online indicator in viewtopic */
 
