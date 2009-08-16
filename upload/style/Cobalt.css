@@ -5,7 +5,7 @@
 /* Import the basic setup styles */
 @import url(imports/base.css);
 /* Import the colour scheme */
-@import url(imports/Oxygen_cs.css);
+@import url(imports/Cobalt_cs.css);
 
 /****************************************************************/
 /* 2. TEXT SETTINGS */
