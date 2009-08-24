@@ -97,7 +97,7 @@ if (!isset($_POST['form_sent']))
 	if (function_exists('mysql_connect'))
 	{
 		$db_extensions[] = array('mysql', 'MySQL Standard');
-		$db_extensions[] = array('mysql_innodb', 'MySQL (InnoDB)');
+		$db_extensions[] = array('mysql_innodb', 'MySQL Standard (InnoDB)');
 		$mysql_innodb = true;
 
 		if (count($db_extensions) > 2)
