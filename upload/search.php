@@ -178,7 +178,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 						default:
 						{
-							$result = $db->query('SELECT m.post_id FROM '.$db->prefix.'search_words AS w INNER JOIN '.$db->prefix.'search_matches AS m ON m.word_id = w.id WHERE w.word LIKE \''.$cur_word.'\''.$search_in_cond, true) or error('Unable to search for posts', __FILE__, __LINE__, $db->error());
+							$result = $db->query('SELECT m.post_id FROM '.$db->prefix.'search_words AS w INNER JOIN '.$db->prefix.'search_matches AS m ON m.word_id = w.id WHERE w.word LIKE \''.str_replace('*', '%', $cur_word).'\''.$search_in_cond, true) or error('Unable to search for posts', __FILE__, __LINE__, $db->error());
 
 							$row = array();
 							while ($temp = $db->fetch_row($result))
