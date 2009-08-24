@@ -25,7 +25,7 @@
 
 // The FluxBB version this script installs
 define('FORUM_VERSION', '1.4');
-define('FORUM_DB_REVISION', 0);
+define('FORUM_DB_REVISION', 2);
 
 
 define('PUN_ROOT', './');
