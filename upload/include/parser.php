@@ -578,6 +578,7 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 	if ($return != null)
 		return $return;
 
+	$url = forum_trim($url);
 	$full_url = str_replace(array(' ', '\'', '`', '"'), array('%20', '', '', ''), $url);
 	if (strpos($url, 'www.') === 0)			// If it starts with www, we add http://
 		$full_url = 'http://'.$full_url;
