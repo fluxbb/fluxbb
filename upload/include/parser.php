@@ -587,6 +587,7 @@ function split_text($text, $start, $end, &$errors, $retab = true)
 //
 function handle_url_tag($url, $link = '', $bbcode = false)
 {
+	$url = pun_trim($url);
 	$full_url = str_replace(array(' ', '\'', '`', '"'), array('%20', '', '', ''), $url);
 	if (strpos($url, 'www.') === 0)			// If it starts with www, we add http://
 		$full_url = 'http://'.$full_url;
