@@ -1342,7 +1342,7 @@ function display_saved_queries()
 <?php
 
 	$query_time_total = 0.0;
-	while (list(, $cur_query) = @each($saved_queries))
+	foreach ($saved_queries as $cur_query)
 	{
 		$query_time_total += $cur_query[1];
 
@@ -1357,7 +1357,7 @@ function display_saved_queries()
 
 ?>
 				<tr>
-					<td class="tcl" colspan="2"><?php printf($lang_common['Total query time'], $query_time_totals.' s') ?></td>
+					<td class="tcl" colspan="2"><?php printf($lang_common['Total query time'], $query_time_total.' s') ?></td>
 				</tr>
 			</tbody>
 			</table>
