@@ -33,6 +33,7 @@ require PUN_ROOT.'include/common.php';
 
 // Load the search.php language file
 require PUN_ROOT.'lang/'.$pun_user['language'].'/search.php';
+require PUN_ROOT.'lang/'.$pun_user['language'].'/forum.php';
 
 
 if ($pun_user['g_read_board'] == '0')
@@ -459,8 +460,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			$sql = 'SELECT p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, '.$substr_sql.'(p.message, 1, 1000) AS message, t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id WHERE p.id IN('.$search_results.') ORDER BY '.$sort_by_sql;
 		}
 		else
-			$sql = 'SELECT t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.forum_id FROM '.$db->prefix.'topics AS t WHERE t.id IN('.$search_results.') ORDER BY '.$sort_by_sql;
-
+			$sql = 'SELECT t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.sticky, t.forum_id FROM '.$db->prefix.'topics AS t WHERE t.id IN('.$search_results.') ORDER BY '.$sort_by_sql;
 
 		// Determine the topic or post offset (based on $_GET['p'])
 		$per_page = ($show_as == 'posts') ? $pun_user['disp_posts'] : $pun_user['disp_topics'];
@@ -496,7 +496,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 <?php
 
-		//Set background switching on for show as posts
+		// Set background switching on for show as posts
 		$bg_switch = true;
 
 		if ($show_as == 'topics')
@@ -525,11 +525,11 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		$result = $db->query('SELECT id, forum_name FROM '.$db->prefix.'forums') or error('Unable to fetch forum list', __FILE__, __LINE__, $db->error());
 
 		$forum_list = array();
-		while ($forum_list[] = $db->fetch_row($result))
-			;
+		while ($forum_list[] = $db->fetch_row($result));
 
 		// Finally, lets loop through the results and output them
-		for ($i = 0; $i < count($search_set); ++$i)
+		$count_search_set = count($search_set);
+		for ($i = 0; $i < $count_search_set; ++$i)
 		{
 			@reset($forum_list);
 			while (list(, $temp) = @each($forum_list))
@@ -622,6 +622,13 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				}
 				else
 					$subject_new_posts = null;
+
+				if ($search_set[$i]['sticky'] == '1')
+				{
+					$subject = '<span class="stickytext">'.$lang_forum['Sticky'].': </span>'.$subject;
+					$item_status .= ' isticky';
+					$icon_text .= ' '.$lang_forum['Sticky'];
+				}
 
 				$num_pages_topic = ceil(($search_set[$i]['num_replies'] + 1) / $pun_user['disp_posts']);
 
