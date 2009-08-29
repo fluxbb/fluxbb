@@ -82,14 +82,14 @@ require PUN_ROOT.'header.php';
 		&nbsp;&nbsp;&nbsp;&nbsp;[quote=James]<?php echo $lang_help['Quote text'] ?>[/quote]<br /><br />
 		<?php echo $lang_help['produces quote box'] ?><br /><br />
 		<div class="postmsg">
-			<blockquote><div class="incqbox"><h4>James <?php echo $lang_common['wrote'] ?>:</h4><p><?php echo $lang_help['Quote text'] ?></p></div></blockquote>
+			<div class="quotebox"><cite>James <?php echo $lang_common['wrote'] ?>:</cite><blockquote><div><p><?php echo $lang_help['Quote text'] ?></p></div></blockquote></div>
 		</div>
 		<br />
 		<?php echo $lang_help['Quotes info 2'] ?><br /><br />
 		&nbsp;&nbsp;&nbsp;&nbsp;[quote]<?php echo $lang_help['Quote text'] ?>[/quote]<br /><br />
 		<?php echo $lang_help['produces quote box'] ?><br /><br />
 		<div class="postmsg">
-			<blockquote><div class="incqbox"><p><?php echo $lang_help['Quote text'] ?></p></div></blockquote>
+			<div class="quotebox"><blockquote><div><p><?php echo $lang_help['Quote text'] ?></p></div></blockquote></div>
 		</div>
 	</div>
 </div>
