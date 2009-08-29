@@ -59,8 +59,8 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	{
 		global $lang_profile;
 
-		if (preg_match('%\[/?(?:quote|code|list)\b[^\]]*\]%i', $text))
-			$errors[] = $lang_profile['Signature quote/code/list'];
+		if (preg_match('%\[/?(?:quote|code|list|h)\b[^\]]*\]%i', $text))
+			$errors[] = $lang_profile['Signature quote/code/list/h'];
 	}
 
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)

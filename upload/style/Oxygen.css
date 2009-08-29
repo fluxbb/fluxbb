@@ -29,11 +29,13 @@
 /* 2.2 Set the font-size for preformatted text i.e in code boxes */
 
 #debug .tcr, .pun PRE, .pun code {FONT-SIZE: 1em; FONT-FAMILY: Consolas, monaco, "Bitstream Vera Sans Mono", "Courier New", courier, monospace}
+#helpfile DIV.box code {FONT-SIZE: 1.2em; FONT-FAMILY: Consolas, monaco, "Bitstream Vera Sans Mono", "Courier New", courier, monospace}
 
 /* 2.3 Font size for headers */
 
 .pun H2, .pun H4 {FONT-SIZE: 1em}
 .pun H3 {FONT-SIZE: 1.1em}
+.pun H5 {FONT-SIZE: 1.2em}
 #brdtitle H1 {FONT-SIZE: 1.4em}
 
 /* 2.4 Larger text for particular items */
@@ -44,7 +46,7 @@ DIV.postleft DT {FONT-SIZE: 1.1em}
 
 /* 2.5 Bold text */
 
-DIV.postleft DT, DIV.postmsg H4, TD.tcl H3, DIV.forminfo H3, P.postlink, DIV.linkst LI, .pun .quotebox cite,
+DIV.postleft DT, DIV.postmsg H4, #helpfile H5, DIV.postmsg H5, TD.tcl H3, DIV.forminfo H3, P.postlink, DIV.linkst LI, .pun .quotebox cite,
 DIV.linksb LI, DIV.postlinksb LI, .blockmenu LI, #brdtitle H1, .pun SPAN.warntext, .pun P.warntext {FONT-WEIGHT: bold}
 
 .pun .quotebox cite {font-style: normal;}
@@ -103,7 +105,7 @@ DIV>FIELDSET {
 /* 5.1 Page margins */
 
 HTML, BODY {MARGIN: 0; PADDING: 0}
-#punwrap {margin:12px 20px}
+#punwrap {MARGIN: 12px 20px}
 
 /* 5.2 Creates vertical space between main board elements (Margins) */
 
@@ -130,6 +132,7 @@ have a 6px space beneath them */
 DIV.block DIV.inbox, DIV.blockmenu DIV.inbox {PADDING: 3px 6px}
 .pun P, .pun UL, .pun DL, DIV.blockmenu LI, .pun LABEL, #announce DIV.inbox DIV {PADDING: 3px 0}
 .pun H2 {PADDING: 4px 6px}
+.pun H5 {PADDING: 0 0 1.5em 0}
 
 /* 6.2 Special spacing for various elements */
 

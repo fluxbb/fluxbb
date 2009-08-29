@@ -3,7 +3,7 @@
 /****************************************************************/
 
 .pun TABLE, .pun DIV, .pun FORM, .pun P, .pun H1, .pun H2, .pun H3,
-.pun H4, .pun PRE, .pun BLOCKQUOTE, .pun UL, .pun OL, .pun LI, .pun DL,
+.pun H4, .pun H5, .pun PRE, .pun BLOCKQUOTE, .pun UL, .pun OL, .pun LI, .pun DL,
 .pun DT, .pun DD, .pun TH, .pun TD, .pun FIELDSET, .pun IMG {
 	MARGIN: 0px;
 	PADDING: 0px;
@@ -274,6 +274,7 @@ DIV.txtarea TEXTAREA, INPUT.longinput {WIDTH: 100%}
 /* 10.1 Put some space between sections of the help file */
 
 #helpfile H2 {MARGIN-TOP: 12px}
+#helpfile H5 {MARGIN-LEFT: 48px; PADDING-BOTTOM: 5px}
 
 /* 10.2 Internal padding */
 
@@ -285,9 +286,9 @@ DIV.txtarea TEXTAREA, INPUT.longinput {WIDTH: 100%}
 
 /* 10.4 Paragraphs and lists */
 
-#helpfile P {MARGIN: 0 0 1.5em}
-#helpfile UL, #helpfile OL {MARGIN: 0 0 1.5em 0.5em;PADDING-LEFT: 1.5em}
-#helpfile OL {MARGIN: 0 0 1.5em 1em}
+#helpfile P {MARGIN: 0 0 0.5em}
+#helpfile UL, #helpfile OL {MARGIN: 0 0 1em 0.5em; PADDING-LEFT: 1.5em}
+#helpfile OL {MARGIN: 0 0 1em 1em}
 #helpfile UL LI {LIST-STYLE-TYPE: circle}
 #helpfile OL.decimal LI {LIST-STYLE-TYPE: decimal}
 #helpfile OL.alpha LI {LIST-STYLE-TYPE: lower-alpha}

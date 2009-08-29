@@ -45,49 +45,48 @@ require PUN_ROOT.'header.php';
 <h2><?php echo $lang_common['BBCode'] ?></h2>
 <div class="box">
 	<div class="inbox">
-		<a name="bbcode"></a><?php echo $lang_help['BBCode info 1'] ?><br /><br />
-		<?php echo $lang_help['BBCode info 2'] ?>
+		<p><a name="bbcode"></a><?php echo $lang_help['BBCode info 1'] ?></p>
+		<p><?php echo $lang_help['BBCode info 2'] ?></p>
 	</div>
 </div>
 <h2><?php echo $lang_help['Text style'] ?></h2>
 <div class="box">
 	<div class="inbox">
-		<?php echo $lang_help['Text style info'] ?><br /><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;[b]<?php echo $lang_help['Bold text'] ?>[/b] <?php echo $lang_help['produces'] ?> <strong><?php echo $lang_help['Bold text'] ?></strong><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;[u]<?php echo $lang_help['Underlined text'] ?>[/u] <?php echo $lang_help['produces'] ?> <span class="bbu"><?php echo $lang_help['Underlined text'] ?></span><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;[i]<?php echo $lang_help['Italic text'] ?>[/i] <?php echo $lang_help['produces'] ?> <i><?php echo $lang_help['Italic text'] ?></i><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;[color=#FF0000]<?php echo $lang_help['Red text'] ?>[/color] <?php echo $lang_help['produces'] ?> <span style="color: #ff0000"><?php echo $lang_help['Red text'] ?></span><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;[color=blue]<?php echo $lang_help['Blue text'] ?>[/color] <?php echo $lang_help['produces'] ?> <span style="color: blue"><?php echo $lang_help['Blue text'] ?></span>
+		<p><?php echo $lang_help['Text style info'] ?></p>
+		<p><code>[b]<?php echo $lang_help['Bold text'] ?>[/b]</code> <?php echo $lang_help['produces'] ?> <strong><?php echo $lang_help['Bold text'] ?></strong><br />
+		<code>[u]<?php echo $lang_help['Underlined text'] ?>[/u]</code> <?php echo $lang_help['produces'] ?> <span class="bbu"><?php echo $lang_help['Underlined text'] ?></span><br />
+		<code>[i]<?php echo $lang_help['Italic text'] ?>[/i]</code> <?php echo $lang_help['produces'] ?> <i><?php echo $lang_help['Italic text'] ?></i><br />
+		<code>[color=#FF0000]<?php echo $lang_help['Red text'] ?>[/color]</code> <?php echo $lang_help['produces'] ?> <span style="color: #ff0000"><?php echo $lang_help['Red text'] ?></span><br />
+		<code>[color=blue]<?php echo $lang_help['Blue text'] ?>[/color]</code> <?php echo $lang_help['produces'] ?> <span style="color: blue"><?php echo $lang_help['Blue text'] ?></span><br />
+		<code>[h]<?php echo $lang_help['Heading text'] ?>[/h]</code> <?php echo $lang_help['produces'] ?></p><h5><?php echo $lang_help['Heading text'] ?></h5>
 	</div>
 </div>
 <h2><?php echo $lang_help['Links and images'] ?></h2>
 <div class="box">
 	<div class="inbox">
-		<?php echo $lang_help['Links info'] ?><br /><br />		
-		&nbsp;&nbsp;&nbsp;&nbsp;[url=<?php echo $pun_config['o_base_url'].'/' ?>]<?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?>[/url] <?php echo $lang_help['produces'] ?> <a href="<?php echo $pun_config['o_base_url'].'/' ?>"><?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?></a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;[url]<?php echo $pun_config['o_base_url'].'/' ?>[/url] <?php echo $lang_help['produces'] ?> <a href="<?php echo $pun_config['o_base_url'] ?>"><?php echo $pun_config['o_base_url'].'/' ?></a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;[email]myname@mydomain.com[/email] <?php echo $lang_help['produces'] ?> <a href="mailto:myname@mydomain.com">myname@mydomain.com</a><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;[email=myname@mydomain.com]<?php echo $lang_help['My e-mail address'] ?>[/email] <?php echo $lang_help['produces'] ?> <a href="mailto:myname@mydomain.com"><?php echo $lang_help['My e-mail address'] ?></a>
+		<p><?php echo $lang_help['Links info'] ?></p>		
+		<p><code>[url=<?php echo $pun_config['o_base_url'].'/' ?>]<?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?>[/url]</code> <?php echo $lang_help['produces'] ?> <a href="<?php echo $pun_config['o_base_url'].'/' ?>"><?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?></a><br />
+		<code>[url]<?php echo $pun_config['o_base_url'].'/' ?>[/url]</code> <?php echo $lang_help['produces'] ?> <a href="<?php echo $pun_config['o_base_url'] ?>"><?php echo $pun_config['o_base_url'].'/' ?></a><br />
+		<code>[email]myname@mydomain.com[/email]</code> <?php echo $lang_help['produces'] ?> <a href="mailto:myname@mydomain.com">myname@mydomain.com</a><br />
+		<code>[email=myname@mydomain.com]<?php echo $lang_help['My e-mail address'] ?>[/email]</code> <?php echo $lang_help['produces'] ?> <a href="mailto:myname@mydomain.com"><?php echo $lang_help['My e-mail address'] ?></a></p>
 	</div>
-	<br /><br />
 	<div class="inbox">
-		<a name="img"></a><?php echo $lang_help['Images info'] ?><br /><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;[img=FluxBB bbcode test]<?php echo $pun_config['o_base_url'].'/' ?>img/test.png[/img] <?php echo $lang_help['produces'] ?> <img src="<?php echo $pun_config['o_base_url'].'/' ?>img/test.png" alt="FluxBB bbcode test" />
+		<p><a name="img"></a><?php echo $lang_help['Images info'] ?></p>
+		<p><code>[img=FluxBB bbcode test]<?php echo $pun_config['o_base_url'].'/' ?>img/test.png[/img]</code> <?php echo $lang_help['produces'] ?> <img src="<?php echo $pun_config['o_base_url'].'/' ?>img/test.png" alt="FluxBB bbcode test" /></p>
 	</div>
 </div>
 <h2><?php echo $lang_help['Quotes'] ?></h2>
 <div class="box">
 	<div class="inbox">
-		<?php echo $lang_help['Quotes info'] ?><br /><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;[quote=James]<?php echo $lang_help['Quote text'] ?>[/quote]<br /><br />
-		<?php echo $lang_help['produces quote box'] ?><br /><br />
+		<p><?php echo $lang_help['Quotes info'] ?></p>
+		<p><code>[quote=James]<?php echo $lang_help['Quote text'] ?>[/quote]</code></p>
+		<p><?php echo $lang_help['produces quote box'] ?></p>
 		<div class="postmsg">
 			<div class="quotebox"><cite>James <?php echo $lang_common['wrote'] ?>:</cite><blockquote><div><p><?php echo $lang_help['Quote text'] ?></p></div></blockquote></div>
 		</div>
-		<br />
-		<?php echo $lang_help['Quotes info 2'] ?><br /><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;[quote]<?php echo $lang_help['Quote text'] ?>[/quote]<br /><br />
-		<?php echo $lang_help['produces quote box'] ?><br /><br />
+		<p><?php echo $lang_help['Quotes info 2'] ?></p>
+		<p><code>[quote]<?php echo $lang_help['Quote text'] ?>[/quote]</code></p>
+		<p><?php echo $lang_help['produces quote box'] ?></p>
 		<div class="postmsg">
 			<div class="quotebox"><blockquote><div><p><?php echo $lang_help['Quote text'] ?></p></div></blockquote></div>
 		</div>
@@ -96,9 +95,9 @@ require PUN_ROOT.'header.php';
 <h2><?php echo $lang_help['Code'] ?></h2>
 <div class="box">
 	<div class="inbox">
-		<?php echo $lang_help['Code info'] ?><br /><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;[code]<?php echo $lang_help['Code text'] ?>[/code]<br /><br />
-		<?php echo $lang_help['produces code box'] ?><br /><br />
+		<p><?php echo $lang_help['Code info'] ?></p>
+		<p><code>[code]<?php echo $lang_help['Code text'] ?>[/code]</code></p>
+		<p><?php echo $lang_help['produces code box'] ?></p>
 		<div class="postmsg">
 			<div class="codebox"><div class="incqbox"><h4><?php echo $lang_common['Code'] ?>:</h4><div class="scrollbox" style="height: 4.5em"><pre><?php echo $lang_help['Code text'] ?></pre></div></div></div>
 		</div>
@@ -107,7 +106,7 @@ require PUN_ROOT.'header.php';
 <h2><?php echo $lang_help['Lists'] ?></h2>
 <div class="box">
 	<div class="inbox">
-		<a name="lists"></a><?php echo $lang_help['List info'] ?><br /><br />
+		<p>a name="lists"></a><?php echo $lang_help['List info'] ?></p>
 
 		<p><code>[list][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code> <span><?php echo $lang_help['produces list'] ?></span></p>
 		<ul><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ul>
@@ -122,16 +121,15 @@ require PUN_ROOT.'header.php';
 <h2><?php echo $lang_help['Nested tags'] ?></h2>
 <div class="box">
 	<div class="inbox">
-		<?php echo $lang_help['Nested tags info'] ?><br /><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;[b][u]<?php echo $lang_help['Bold, underlined text'] ?>[/u][/b] <?php echo $lang_help['produces'] ?> <strong><span class="bbu"><?php echo $lang_help['Bold, underlined text'] ?></span></strong>
+		<p><?php echo $lang_help['Nested tags info'] ?></p>
+		<p><code>[b][u]<?php echo $lang_help['Bold, underlined text'] ?>[/u][/b]</code> <?php echo $lang_help['produces'] ?> <strong><span class="bbu"><?php echo $lang_help['Bold, underlined text'] ?></span></strong></p>
 	</div>
 </div>
 <h2><?php echo $lang_common['Smilies'] ?></h2>
 <div class="box">
 	<div class="inbox">
-		<a name="smilies"></a><?php echo $lang_help['Smilies info'] ?><br /><br />
-
-		<ul>
+		<p><a name="smilies"></a><?php echo $lang_help['Smilies info'] ?></p>
+		<p>
 <?php
 
 // Display the smiley set
@@ -143,10 +141,10 @@ foreach ($smilies as $smiley_text => $smiley_img)
 	$smiley_groups[$smiley_img][] = $smiley_text;
 
 foreach ($smiley_groups as $smiley_img => $smiley_texts)
-	echo "\t\t\t".'<li>'.implode(' '.$lang_common['and'].' ', $smiley_texts).' <span>'.$lang_help['produces'].'</span> <img src="img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.$smiley_texts[0].'" /></li>'."\n";
+	echo "\t\t".'<code>'.implode('</code> '.$lang_common['and'].' <code>', $smiley_texts).'</code> <span>'.$lang_help['produces'].'</span> <img src="img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.$smiley_texts[0].'" /><br />'."\n";
 
 ?>
-		</ul>
+		</p>
 	</div>
 </div>
 <?php
