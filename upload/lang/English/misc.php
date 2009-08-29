@@ -48,6 +48,7 @@ $lang_misc = array(
 'Move topics'				=>	'Move topics',
 'Move legend'				=>	'Select destination of move',
 'Move to'					=>	'Move to',
+'Nowhere to move'			=>	'There are no forums into which you can move topics.',
 'Leave redirect'			=>	'Leave redirect topic(s)',
 'Move topic redirect'		=>	'Topic moved. Redirecting &hellip;',
 'Move topics redirect'		=>	'Topics moved. Redirecting &hellip;',
