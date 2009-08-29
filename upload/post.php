@@ -38,7 +38,7 @@ if ($tid < 1 && $fid < 1 || $tid > 0 && $fid > 0)
 
 // Fetch some info about the topic and/or the forum
 if ($tid)
-	$result = $db->query('SELECT f.id, f.forum_name, f.moderators, f.redirect_url, fp.post_replies, fp.post_topics, t.subject, t.closed FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$tid) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT f.id, f.forum_name, f.moderators, f.redirect_url, fp.post_replies, fp.post_topics, t.subject, t.closed, s.user_id AS is_subscribed FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') LEFT JOIN '.$db->prefix.'subscriptions AS s ON (t.id=s.topic_id AND s.user_id='.$pun_user['id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$tid) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
 else
 	$result = $db->query('SELECT f.id, f.forum_name, f.moderators, f.redirect_url, fp.post_replies, fp.post_topics FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fid) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
 
@@ -46,6 +46,7 @@ if (!$db->num_rows($result))
 	message($lang_common['Bad request']);
 
 $cur_posting = $db->fetch_assoc($result);
+$is_subscribed = $tid && $cur_posting['is_subscribed'];
 
 // Is someone trying to post into a redirect forum?
 if ($cur_posting['redirect_url'] != '')
@@ -184,11 +185,12 @@ if (isset($_POST['form_sent']))
 				$new_pid = $db->insert_id();
 
 				// To subscribe or not to subscribe, that ...
-				if ($pun_config['o_subscriptions'] == '1' && $subscribe)
+				if ($pun_config['o_subscriptions'] == '1')
 				{
-					$result = $db->query('SELECT 1 FROM '.$db->prefix.'subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$tid) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
-					if (!$db->num_rows($result))
+					if ($subscribe && !$is_subscribed)
 						$db->query('INSERT INTO '.$db->prefix.'subscriptions (user_id, topic_id) VALUES('.$pun_user['id'].' ,'.$tid.')') or error('Unable to add subscription', __FILE__, __LINE__, $db->error());
+					else if (!$subscribe && $is_subscribed)
+						$db->query('DELETE FROM '.$db->prefix.'subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$tid) or error('Unable to remove subscription', __FILE__, __LINE__, $db->error());	
 				}
 			}
 			else
@@ -294,7 +296,7 @@ if (isset($_POST['form_sent']))
 			if (!$pun_user['is_guest'])
 			{
 				// To subscribe or not to subscribe, that ...
-				if ($pun_config['o_subscriptions'] == '1' && (isset($_POST['subscribe']) && $_POST['subscribe'] == '1'))
+				if ($pun_config['o_subscriptions'] == '1' && $subscribe)
 					$db->query('INSERT INTO '.$db->prefix.'subscriptions (user_id, topic_id) VALUES('.$pun_user['id'].' ,'.$new_tid.')') or error('Unable to add subscription', __FILE__, __LINE__, $db->error());
 
 				// Create the post ("topic post")
@@ -518,7 +520,21 @@ if (!$pun_user['is_guest'])
 		$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'"'.(isset($_POST['hide_smilies']) ? ' checked="checked"' : '').' />'.$lang_post['Hide smilies'];
 
 	if ($pun_config['o_subscriptions'] == '1')
-		$checkboxes[] = '<label><input type="checkbox" name="subscribe" value="1" tabindex="'.($cur_index++).'"'.(isset($_POST['subscribe']) || $pun_user['auto_notify'] == '1' ? ' checked="checked"' : '').' />'.$lang_post['Subscribe'];
+	{
+		$subscr_checked = false;
+
+		// If it's a preview
+		if (isset($_POST['preview']))
+			$subscr_checked = isset($_POST['subscribe']) ? true : false;
+		// If auto subscribed
+		else if ($pun_user['auto_notify'])
+			$subscr_checked = true;
+		// If already subscribed to the topic
+		else if ($is_subscribed)
+			$subscr_checked = true;
+			
+		$checkboxes[] = '<label><input type="checkbox" name="subscribe" value="1" tabindex="'.($cur_index++).'"'.($subscr_checked ? ' checked="checked"' : '').' />'.($is_subscribed ? $lang_post['Stay subscribed'] : $lang_post['Subscribe']);
+	}
 }
 else if ($pun_config['o_smilies'] == '1')
 	$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'"'.(isset($_POST['hide_smilies']) ? ' checked="checked"' : '').' />'.$lang_post['Hide smilies'];
