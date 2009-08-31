@@ -42,6 +42,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 		confirm_referrer('admin_prune.php');
 
 		$prune_from = $_POST['prune_from'];
+		$prune_sticky = isset($_POST['prune_sticky']) ? '1' : '0';
 		$prune_days = intval($_POST['prune_days']);
 		$prune_date = ($prune_days) ? time() - ($prune_days*86400) : -1;
 
@@ -56,14 +57,14 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 			{
 				$fid = $db->result($result, $i);
 
-				prune($fid, $_POST['prune_sticky'], $prune_date);
+				prune($fid, $prune_sticky, $prune_date);
 				update_forum($fid);
 			}
 		}
 		else
 		{
 			$prune_from = intval($prune_from);
-			prune($prune_from, $_POST['prune_sticky'], $prune_date);
+			prune($prune_from, $prune_sticky, $prune_date);
 			update_forum($prune_from);
 		}
 
@@ -93,7 +94,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 	// Concatenate together the query for counting number or topics to prune
 	$sql = 'SELECT COUNT(id) FROM '.$db->prefix.'topics WHERE last_post<'.$prune_date.' AND moved_to IS NULL';
 
-	if ($_POST['prune_sticky'] == '0')
+	if (!$prune_sticky)
 		$sql .= ' AND sticky=\'0\'';
 
 	if ($prune_from != 'all')
@@ -127,7 +128,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 			<form method="post" action="admin_prune.php?action=foo">
 				<div class="inform">
 					<input type="hidden" name="prune_days" value="<?php echo $prune_days ?>" />
-					<input type="hidden" name="prune_sticky" value="<?php echo $_POST['prune_sticky'] ?>" />
+					<input type="hidden" name="prune_sticky" value="<?php echo $prune_sticky ?>" />
 					<input type="hidden" name="prune_from" value="<?php echo $prune_from ?>" />
 					<fieldset>
 						<legend>Confirm prune posts</legend>
