@@ -99,14 +99,14 @@ require PUN_ROOT.'header.php';
 		<p><code>[code]<?php echo $lang_help['Code text'] ?>[/code]</code></p>
 		<p><?php echo $lang_help['produces code box'] ?></p>
 		<div class="postmsg">
-			<div class="codebox"><div class="incqbox"><h4><?php echo $lang_common['Code'] ?>:</h4><div class="scrollbox" style="height: 4.5em"><pre><?php echo $lang_help['Code text'] ?></pre></div></div></div>
+			<div class="codebox"><code><?php echo $lang_help['Code text'] ?></code></div>
 		</div>
 	</div>
 </div>
 <h2><?php echo $lang_help['Lists'] ?></h2>
 <div class="box">
 	<div class="inbox">
-		<p>a name="lists"></a><?php echo $lang_help['List info'] ?></p>
+		<p><a name="lists"></a><?php echo $lang_help['List info'] ?></p>
 
 		<p><code>[list][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code> <span><?php echo $lang_help['produces list'] ?></span></p>
 		<ul><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ul>
