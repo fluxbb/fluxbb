@@ -809,7 +809,7 @@ else if (isset($_POST['form_sent']))
 					$form['signature'] = ucwords(strtolower($form['signature']));
 
 				// Validate BBCode syntax
-				if ($pun_config['p_sig_bbcode'] == '1' || $pun_config['o_make_links'] == '1')
+				if ($pun_config['p_sig_bbcode'] == '1')
 				{
 					require PUN_ROOT.'include/parser.php';
 

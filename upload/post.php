@@ -156,7 +156,7 @@ if (isset($_POST['form_sent']))
 		$message = ucwords(strtolower($message));
 
 	// Validate BBCode syntax
-	if ($pun_config['p_message_bbcode'] == '1' || $pun_config['o_make_links'] == '1')
+	if ($pun_config['p_message_bbcode'] == '1')
 	{
 		require PUN_ROOT.'include/parser.php';
 		$message = preparse_bbcode($message, $errors);
