@@ -140,6 +140,18 @@ if (isset($_POST['form_sent']))
 			require PUN_ROOT.'include/email.php';
 			if (!is_valid_email($email))
 				$errors[] = $lang_common['Invalid e-mail'];
+
+			// Check it it's a banned e-mail address
+			// we should only check guests because members addresses are already verified
+			if ($pun_user['is_guest'] && is_banned_email($email))
+			{
+				if ($pun_config['p_allow_banned_email'] == '0')
+					$errors[] = $lang_prof_reg['Banned e-mail'];
+
+				$banned_email = true;	// Used later when we send an alert e-mail
+			}
+			else
+				$banned_email = false;
 		}
 	}
 
@@ -311,6 +323,15 @@ if (isset($_POST['form_sent']))
 			update_search_index('post', $new_pid, $message, $subject);
 
 			update_forum($fid);
+		}
+
+		// If we previously found out that the e-mail was banned
+		if ($banned_email && $pun_config['o_mailing_list'] != '')
+		{		
+			$mail_subject = 'Alert - Banned e-mail detected';
+			$mail_message = 'User \''.$username.'\' posted with banned e-mail address: '.$email."\n\n".'Post URL: '.$pun_config['o_base_url'].'/viewtopic.php?pid='.$new_pid.'#p'.$new_pid."\n\n".'-- '."\n".'Forum Mailer'."\n".'(Do not reply to this message)';
+
+			pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
 		}
 
 		// If the posting user is logged in, increment his/her post count
