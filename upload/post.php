@@ -335,6 +335,7 @@ if (isset($_POST['form_sent']))
 		{		
 			$mail_subject = $lang_common['Banned email notification'];
 			$mail_message = sprintf($lang_common['Banned email post message'], $username, $email)."\n";
+			$mail_message .= sprintf($lang_common['Post URL'], $pun_config['o_base_url'].'/viewtopic.php?pid='.$new_pid.'#p'.$new_pid)."\n";
 			$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 			pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);

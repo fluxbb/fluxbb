@@ -176,6 +176,7 @@ $lang_common = array(
 'Report message 2'                                =>        'Reason: %s',
 
 'User profile'                                    =>        'User profile: %s',
+'Post URL'                                        =>        'Post URL: %s',
 'Email signature'                                 =>        'Forum Mailer'."\n".'(Do not reply to this message)',
 
 // For extern.php RSS feed
