@@ -142,6 +142,18 @@ if (isset($_POST['form_sent']))
 			require PUN_ROOT.'include/email.php';
 			if (!is_valid_email($email))
 				$errors[] = $lang_common['Invalid e-mail'];
+
+			// Check it it's a banned e-mail address
+			// we should only check guests because members addresses are already verified
+			if ($pun_user['is_guest'] && is_banned_email($email))
+			{
+				if ($pun_config['p_allow_banned_email'] == '0')
+					$errors[] = $lang_prof_reg['Banned e-mail'];
+
+				$banned_email = true;	// Used later when we send an alert e-mail
+			}
+			else
+				$banned_email = false;
 		}
 	}
 
@@ -318,14 +330,24 @@ if (isset($_POST['form_sent']))
 			update_forum($fid);
 		}
 
+		// If we previously found out that the e-mail was banned
+		if ($banned_email && $pun_config['o_mailing_list'] != '')
+		{		
+			$mail_subject = $lang_common['Banned email notification'];
+			$mail_message = sprintf($lang_common['Banned email post message'], $username, $email)."\n";
+			$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
+
+			pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
+		}
+
 		// If the posting user is logged in, increment his/her post count
 		if (!$pun_user['is_guest'])
 		{
 			$db->query('UPDATE '.$db->prefix.'users SET num_posts=num_posts+1, last_post='.$now.' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 
-      		$tracked_topics = get_tracked_topics();
-      		$tracked_topics['topics'][$new_tid] = time();
-      		set_tracked_topics($tracked_topics);
+			$tracked_topics = get_tracked_topics();
+			$tracked_topics['topics'][$new_tid] = time();
+			set_tracked_topics($tracked_topics);
 		}
 		else
 		{

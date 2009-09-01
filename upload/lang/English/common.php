@@ -167,6 +167,7 @@ $lang_common = array(
 'Banned email notification'                       =>        'Alert - Banned e-mail detected',
 'Banned email register message'                   =>        'User \'%s\' registered with banned e-mail address: %s',
 'Banned email change message'                     =>        'User \'%s\' changed to banned e-mail address: %s',
+'Banned email post message'                       =>        'User \'%s\' posted with banned e-mail address: %s',
 'Duplicate email notification'                    =>        'Alert - Duplicate e-mail detected',
 'Duplicate email register message'                =>        'User \'%s\' registered with an e-mail address that also belongs to: %s',
 'Duplicate email change message'                  =>        'User \'%s\' changed to an e-mail address that also belongs to: %s',
