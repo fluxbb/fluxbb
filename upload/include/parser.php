@@ -34,7 +34,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	{
 		global $lang_profile;
 
-		if (preg_match('#\[quote(=(&quot;|"|\'|)(.*)\\1)?\]|\[/quote\]|\[code\]|\[/code\]|\[list(=([1a\*]))?\]|\[/list\]#i', $text))
+		if (preg_match('%\[/?(?:quote|code|list|h)\b[^\]]*\]%i', $text))
 			$errors[] = $lang_profile['Signature quote/code/list'];
 	}
 
@@ -46,7 +46,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	}
 
 	// Tidy up lists
-	$pattern = array('/\[list(?:=([1a\*]))?\]((?>(?:(?!\[list(?:=(?:[1a\*]))\]|\[\/list\]).+?)|(?R))*)\[\/list\]/ems');
+	$pattern = array('%\[list(?:=([1a*]))?+\]((?:(?:(?!\[list(?:=[1a*])?+\]|\[/list\]).)++|(?R))*+)\[/list\]%isxe');
 	$replace = array('preparse_list_tag(\'$2\', \'$1\', $errors)');
 	$text = preg_replace($pattern, $replace, $text);
 
@@ -516,7 +516,7 @@ function preparse_list_tag($content, $type = '*', &$errors)
 	
 	if (strpos($content,'[list') !== false)
 	{
-		$pattern = array('/\[list(?:=([1a\*]))?\]((?>(?:(?!\[list(?:=(?:[1a\*]))\]|\[\/list\]).+?)|(?R))*)\[\/list\]/ems');
+		$pattern = array('%\[list(?:=([1a*]))?+\]((?:(?:(?!\[list(?:=[1a*])?+\]|\[/list\]).)++|(?R))*+)\[/list\]%isxe');
 		$replace = array('preparse_list_tag(\'$2\', \'$1\', $errors)');
 		$content = preg_replace($pattern, $replace, $content);
 	}
@@ -646,7 +646,7 @@ function handle_list_tag($content, $type = '*')
 
 	if (strpos($content,'[list') !== false)
 	{
-		$pattern = array('/\[list(?:=([1a\*]))?\]((?>(?:(?!\[list(?:=(?:[1a\*]))\]|\[\/list\]).+?)|(?R))*)\[\/list\]/ems');
+		$pattern = array('%\[list(?:=([1a*]))?+\]((?:(?:(?!\[list(?:=[1a*])?+\]|\[/list\]).)++|(?R))*+)\[/list\]%isxe');
 		$replace = array('handle_list_tag(\'$2\', \'$1\')');
 		$content = preg_replace($pattern, $replace, $content);
 	}
@@ -685,7 +685,7 @@ function do_bbcode($text, $is_signature = false)
 
 	if (!$is_signature)
 	{
-		$pattern[] = '/\[list(?:=([1a\*]))?\]((?>(?:(?!\[list(?:=(?:[1a\*]))\]|\[\/list\]).+?)|(?R))*)\[\/list\]/ems';
+		$pattern[] = '%\[list(?:=([1a*]))?+\]((?:(?:(?!\[list(?:=[1a*])?+\]|\[/list\]).)++|(?R))*+)\[/list\]%isxe';
 		$replace[] = 'handle_list_tag(\'$2\', \'$1\')';
 	}
 
