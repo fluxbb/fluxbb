@@ -28,6 +28,7 @@ $lang_help = array(
 'Quotes info 2'			=>	'If you don\'t want to quote anyone in particular, you can use the quote tag without specifying a name.',
 'Quote text'			=>	'This is the text i want to quote.',
 'produces quote box'	=>	'produces a quote box like this:',
+'quote note'			=>	'Note: If a username contains the characters [ or ] you can enclose it in quote marks.',
 
 'Code'					=>	'Code',
 'Code info'				=>	'When displaying source code you should make sure that you use the code tag. Text displayed with the code tag will use a monospaced font and will not be affected by other tags.',

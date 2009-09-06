@@ -90,6 +90,7 @@ require PUN_ROOT.'header.php';
 		<div class="postmsg">
 			<div class="quotebox"><blockquote><div><p><?php echo $lang_help['Quote text'] ?></p></div></blockquote></div>
 		</div>
+		<p><?php echo $lang_help['quote note'] ?></p>
 	</div>
 </div>
 <h2><?php echo $lang_help['Code'] ?></h2>
