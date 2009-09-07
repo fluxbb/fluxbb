@@ -607,8 +607,8 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$db->add_field('bans', 'ban_creator', 'INT(10) UNSIGNED', false, 0);
 
 		// Add the time/date format settings to the user table
-		$db->add_field('users', 'time_format', 'INT(10) UNSIGNED', false, 0, 'dst');
-		$db->add_field('users', 'date_format', 'INT(10) UNSIGNED', false, 0, 'dst');
+		$db->add_field('users', 'time_format', 'TINYINT(1)', false, 0, 'dst');
+		$db->add_field('users', 'date_format', 'TINYINT(1)', false, 0, 'dst');
 
 		// Should we do charset conversion or not?
 		if (strpos($cur_version, '1.2') === 0 && isset($_GET['convert_charset']))

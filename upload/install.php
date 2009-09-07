@@ -1237,12 +1237,12 @@ else
 				'default'		=> '0'
 			),
 			'time_format'		=> array(
-				'datatype'		=> 'INT(10) UNSIGNED',
+				'datatype'		=> 'TINYINT(1)',
 				'allow_null'	=> false,
 				'default'		=> '0'
 			),
 			'date_format'		=> array(
-				'datatype'		=> 'INT(10) UNSIGNED',
+				'datatype'		=> 'TINYINT(1)',
 				'allow_null'	=> false,
 				'default'		=> '0'
 			),
