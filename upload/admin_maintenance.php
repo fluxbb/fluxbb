@@ -163,7 +163,7 @@ generate_admin_menu('maintenance');
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Starting Topic ID</th>
+									<th scope="row">Starting topic ID</th>
 									<td>
 										<input type="text" name="i_start_at" size="7" maxlength="7" value="<?php echo (isset($first_id)) ? $first_id : 0 ?>" tabindex="2" />
 										<span>The topic ID to start rebuilding at. The default value is the first available ID in the database. Normally you wouldn't want to change this.</span>

@@ -165,7 +165,7 @@ function process_form(the_form)
 	<h2><span>FluxBB Installation</span></h2>
 	<div class="box">
 		<div class="inbox">
-			<p>Welcome to FluxBB installation! You are about to install FluxBB. In order to install FluxBB you must complete the form set out below. If you encounter any difficulties with the installation, please refer to the documentation.</p>
+			<p>Welcome to FluxBB installation! You are about to install FluxBB. In order to install FluxBB, you must complete the form set out below. If you encounter any difficulties with the installation, please refer to the documentation.</p>
 		</div>
 	</div>
 </div>
@@ -210,7 +210,7 @@ function process_form(the_form)
 			</div>
 			<div class="inform">
 				<fieldset>
-					<legend>Enter then name of your database</legend>
+					<legend>Enter the name of your database</legend>
 					<div class="infldset">
 						<p>The name of the database that FluxBB will be installed into. The database must exist. For SQLite, this is the relative path to the database file. If the SQLite database file does not exist, FluxBB will attempt to create it.</p>
 						<label for="req_db_name"><strong>Database name</strong><br /><input id="req_db_name" type="text" name="req_db_name" size="30" maxlength="50" /><br /></label>
@@ -232,7 +232,7 @@ function process_form(the_form)
 				<fieldset>
 					<legend>Enter database table prefix</legend>
 					<div class="infldset">
-						<p>If you like you can specify a table prefix. This way you can run multiple copies of FluxBB in the same database (example: foo_).</p>
+						<p>If you like, you can specify a table prefix. This way you can run multiple copies of FluxBB in the same database (example: foo_).</p>
 						<label>Table prefix<br /><input id="db_prefix" type="text" name="db_prefix" size="20" maxlength="30" /><br /></label>
 					</div>
 				</fieldset>
@@ -243,16 +243,16 @@ function process_form(the_form)
 					<p>Please enter the requested information in order to setup an administrator for your FluxBB installation</p>
 				</div>
 				<fieldset>
-					<legend>Enter Administrators username</legend>
+					<legend>Enter Administrator's username</legend>
 					<div class="infldset">
 						<p>The username of the forum administrator. You can later create more administrators and moderators. Usernames can be between 2 and 25 characters long.</p>
-						<label><strong>Administrator username</strong><br /><input type="text" name="req_username" size="25" maxlength="25" /><br /></label>
+						<label><strong>Administrator's username</strong><br /><input type="text" name="req_username" size="25" maxlength="25" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
 			<div class="inform">
 				<fieldset>
-					<legend>Enter and confirm Administrator password</legend>
+					<legend>Enter and confirm Administrator's password</legend>
 					<div class="infldset">
 					<p>Passwords can be between 4 and 16 characters long. Passwords are case sensitive.</p>
 						<label class="conl"><strong>Password</strong><br /><input id="req_password1" type="password" name="req_password1" size="16" maxlength="16" /><br /></label>
@@ -274,7 +274,7 @@ function process_form(the_form)
 				<fieldset>
 					<legend>Enter the Base URL of your FluxBB installation</legend>
 					<div class="infldset">
-						<p>The URL (without trailing slash) of your FluxBB forum (example: http://forum.myhost.com or http://myhost.com/~myuser). This <strong>must</strong> be correct or administrators and moderators will not be able to submit any forms. Please note that the preset value below is just an educated guess by FluxBB.</p>
+						<p>The URL (without trailing slash) of your FluxBB forum (example: http://forum.myhost.com or http://myhost.com/~myuser). This <strong>must</strong> be correct, otherwise, administrators and moderators will not be able to submit any forms. Please note that the preset value below is just an educated guess by FluxBB.</p>
 						<label><strong>Base URL</strong><br /><input type="text" name="req_base_url" value="http://<?php echo $_SERVER['SERVER_NAME'].str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) ?>" size="60" maxlength="100" /><br /></label>
 					</div>
 				</fieldset>
