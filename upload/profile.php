@@ -1667,6 +1667,8 @@ else
 <?php
 
 	}
+	else
+		message($lang_common['Bad request']);
 
 ?>
 	<div class="clearer"></div>
