@@ -186,12 +186,12 @@ generate_admin_menu('categories');
 
 ?>
 	<div class="blockform">
-		<h2><span>Add/remove/edit categories</span></h2>
+		<h2><span>Add categories</span></h2>
 		<div class="box">
 		<form method="post" action="admin_categories.php?action=foo">
 			<div class="inform">
 				<fieldset>
-					<legend>Add/delete categories</legend>
+					<legend>Add categories</legend>
 					<div class="infldset">
 						<table class="aligntop" cellspacing="0">
 							<tr>
@@ -201,7 +201,22 @@ generate_admin_menu('categories');
 									<span>The name of the new category you want to add. You can edit the name of the category later (see below). Go to <a href="admin_forums.php">Forums</a> to add forums to your new category.</span>
 								</td>
 							</tr>
-<?php if ($num_cats): ?>							<tr>
+						</table>
+					</div>
+				</fieldset>
+			</div>
+		</form>
+		</div>
+
+<?php if ($num_cats): ?>		<h2 class="block2"><span>Remove categories</span></h2>
+		<div class="box">
+		<form method="post" action="admin_categories.php?action=foo">
+			<div class="inform">
+				<fieldset>
+					<legend>Delete categories</legend>
+					<div class="infldset">
+						<table class="aligntop" cellspacing="0">
+							<tr>
 								<th scope="row">Delete a category<div><input type="submit" name="del_cat" value="Delete" tabindex="4" /></div></th>
 								<td>
 									<select name="cat_to_delete" tabindex="3">
@@ -215,11 +230,18 @@ generate_admin_menu('categories');
 									<span>Select the name of the category you want to delete. You will be asked to confirm your choice of category for deletion before it is deleted.</span>
 								</td>
 							</tr>
-<?php endif; ?>						</table>
+						</table>
 					</div>
 				</fieldset>
 			</div>
-<?php if ($num_cats): ?>			<div class="inform">
+		</form>
+		</div>
+<?php endif; ?>
+
+<?php if ($num_cats): ?>		<h2 class="block2"><span>Edit categories</span></h2>
+		<div class="box">
+		<form method="post" action="admin_categories.php?action=foo">
+			<div class="inform">
 				<fieldset>
 					<legend>Edit categories</legend>
 					<div class="infldset">
@@ -252,9 +274,9 @@ generate_admin_menu('categories');
 					</div>
 				</fieldset>
 			</div>
-<?php endif; ?>		</form>
+		</form>
 		</div>
-	</div>
+<?php endif; ?>	</div>
 	<div class="clearer"></div>
 </div>
 <?php
