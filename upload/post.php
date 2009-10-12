@@ -143,7 +143,7 @@ if (isset($_POST['form_sent']))
 			if (!is_valid_email($email))
 				$errors[] = $lang_common['Invalid e-mail'];
 
-			// Check it it's a banned e-mail address
+			// Check if it's a banned e-mail address
 			// we should only check guests because members addresses are already verified
 			if ($pun_user['is_guest'] && is_banned_email($email))
 			{
