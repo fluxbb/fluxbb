@@ -76,7 +76,7 @@ DIV.blockpost DIV.box {BORDER-COLOR: #565656 #525252 #525252}
 
 /* 3.4 Creates the inset border for quote boxes, code boxes and form info boxes */
 
-.pun .quotebox, DIV.codebox, DIV.forminfo, DIV.blockpost LABEL {BORDER-COLOR: #606060}
+.pun .quotebox, DIV.codebox, DIV.forminfo, DIV.blockpost LABEL, DIV.deletemsg {BORDER-COLOR: #606060}
 
 /* 3.5 Gecko's default fieldset borders are really nasty so this gives them a colour
 without interferring with IE's rather nice default */

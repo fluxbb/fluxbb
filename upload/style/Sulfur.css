@@ -71,7 +71,7 @@ DIV.linksb LI, DIV.postlinksb LI, .blockmenu LI, #brdtitle H1, .pun SPAN.warntex
 
 /* 4.1 By default borders are 1px solid */
 
-DIV.box, .pun TD, .pun TH, DIV.codebox, DIV.quotebox, DIV.forminfo, DIV.blockpost LABEL {
+DIV.box, .pun TD, .pun TH, DIV.codebox, DIV.quotebox, DIV.forminfo, DIV.blockpost LABEL, DIV.deletemsg {
 	BORDER-STYLE: solid;
 	BORDER-WIDTH: 1px
 }
