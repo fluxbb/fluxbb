@@ -115,7 +115,7 @@ function output_rss($feed)
 	echo "\t".'<channel>'."\n";
 	echo "\t\t".'<title><![CDATA['.escape_cdata($feed['title']).']]></title>'."\n";
 	echo "\t\t".'<link>'.$feed['link'].'</link>'."\n";
-	echo "\t\t".'<description>'.pun_htmlspecialchars($feed['description']).'</description>'."\n";
+	echo "\t\t".'<description><![CDATA['.escape_cdata($feed['description']).']]></description>'."\n";
 	echo "\t\t".'<lastBuildDate>'.gmdate('r', count($feed['items']) ? $feed['items'][0]['pubdate'] : time()).'</lastBuildDate>'."\n";
 
 	if ($pun_config['o_show_version'] == '1')
@@ -128,7 +128,7 @@ function output_rss($feed)
 		echo "\t\t".'<item>'."\n";
 		echo "\t\t\t".'<title><![CDATA['.escape_cdata($item['title']).']]></title>'."\n";
 		echo "\t\t\t".'<link>'.$item['link'].'</link>'."\n";
-		echo "\t\t\t".'<description>'.pun_htmlspecialchars($item['description']).'</description>'."\n";
+		echo "\t\t\t".'<description><![CDATA['.escape_cdata($item['description']).']]></description>'."\n";
 		echo "\t\t\t".'<author><![CDATA['.(isset($item['author']['email']) ? escape_cdata($item['author']['email']) : 'dummy@example.com').' ('.escape_cdata($item['author']['name']).')]]></author>'."\n";
 		echo "\t\t\t".'<pubDate>'.gmdate('r', $item['pubdate']).'</pubDate>'."\n";
 		echo "\t\t\t".'<guid>'.$item['link'].'</guid>'."\n";
@@ -175,7 +175,7 @@ function output_atom($feed)
 		echo "\t\t".'<entry>'."\n";
 		echo "\t\t\t".'<title type="html"><![CDATA['.escape_cdata($item['title']).']]></title>'."\n";
 		echo "\t\t\t".'<link rel="alternate" href="'.$item['link'].'"/>'."\n";
-		echo "\t\t\t".'<'.$content_tag.' type="html">'.pun_htmlspecialchars($item['description']).'</'.$content_tag.'>'."\n";
+		echo "\t\t\t".'<'.$content_tag.' type="html"><![CDATA['.escape_cdata($item['description']).']]></'.$content_tag.'>'."\n";
 		echo "\t\t\t".'<author>'."\n";
 		echo "\t\t\t\t".'<name><![CDATA['.escape_cdata($item['author']['name']).']]></name>'."\n";
 
@@ -221,7 +221,7 @@ function output_xml($feed)
 
 		echo "\t\t".'<title><![CDATA['.escape_cdata($item['title']).']]></title>'."\n";
 		echo "\t\t".'<link>'.$item['link'].'</link>'."\n";
-		echo "\t\t".'<content>'.pun_htmlspecialchars($item['description']).'</content>'."\n";
+		echo "\t\t".'<content><![CDATA['.escape_cdata($item['description']).']]></content>'."\n";
 		echo "\t\t".'<author>'."\n";
 		echo "\t\t\t".'<name><![CDATA['.escape_cdata($item['author']['name']).']]></name>'."\n";
 
