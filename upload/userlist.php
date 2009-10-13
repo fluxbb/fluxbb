@@ -47,10 +47,32 @@ $show_group = !isset($_GET['show_group']) ? -1 : intval($_GET['show_group']);
 $sort_by = (!isset($_GET['sort_by']) || $_GET['sort_by'] != 'username' && $_GET['sort_by'] != 'registered' && ($_GET['sort_by'] != 'num_posts' || !$show_post_count)) ? 'username' : $_GET['sort_by'];
 $sort_dir = (!isset($_GET['sort_dir']) || $_GET['sort_dir'] != 'ASC' && $_GET['sort_dir'] != 'DESC') ? 'ASC' : strtoupper($_GET['sort_dir']);
 
+// Create any SQL for the WHERE clause
+$where_sql = array();
+$like_command = ($db_type == 'pgsql') ? 'ILIKE' : 'LIKE';
+
+if ($pun_user['g_search_users'] == '1' && $username != '')
+	$where_sql[] = 'u.username '.$like_command.' \''.$db->escape(str_replace('*', '%', $username)).'\'';
+if ($show_group > -1)
+	$where_sql[] = 'u.group_id='.$show_group;
+
+// Fetch user count
+$result = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'users AS u WHERE u.id>1 AND u.group_id!='.PUN_UNVERIFIED.(!empty($where_sql) ? ' AND '.implode(' AND ', $where_sql) : '')) or error('Unable to fetch user list count', __FILE__, __LINE__, $db->error());
+$num_users = $db->result($result);
+
+// Determine the user offset (based on $_GET['p'])
+$num_pages = ceil($num_users / 50);
+
+$p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : intval($_GET['p']);
+$start_from = 50 * ($p - 1);
 
 $page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_common['User list'];
 if ($pun_user['g_search_users'] == '1')
 	$focus_element = array('userlist', 'username');
+
+// Generate paging links
+$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'userlist.php?username='.urlencode($username).'&amp;show_group='.$show_group.'&amp;sort_by='.$sort_by.'&amp;sort_dir='.strtoupper($sort_dir));
+
 
 define('PUN_ALLOW_INDEX', 1);
 require PUN_ROOT.'header.php';
@@ -104,34 +126,7 @@ while ($cur_group = $db->fetch_assoc($result))
 	</form>
 	</div>
 </div>
-<?php
 
-
-// Create any SQL for the WHERE clause
-$where_sql = array();
-$like_command = ($db_type == 'pgsql') ? 'ILIKE' : 'LIKE';
-
-if ($pun_user['g_search_users'] == '1' && $username != '')
-	$where_sql[] = 'u.username '.$like_command.' \''.$db->escape(str_replace('*', '%', $username)).'\'';
-if ($show_group > -1)
-	$where_sql[] = 'u.group_id='.$show_group;
-
-// Fetch user count
-$result = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'users AS u WHERE u.id>1 AND u.group_id!='.PUN_UNVERIFIED.(!empty($where_sql) ? ' AND '.implode(' AND ', $where_sql) : '')) or error('Unable to fetch user list count', __FILE__, __LINE__, $db->error());
-$num_users = $db->result($result);
-
-
-// Determine the user offset (based on $_GET['p'])
-$num_pages = ceil($num_users / 50);
-
-$p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : intval($_GET['p']);
-$start_from = 50 * ($p - 1);
-
-// Generate paging links
-$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'userlist.php?username='.urlencode($username).'&amp;show_group='.$show_group.'&amp;sort_by='.$sort_by.'&amp;sort_dir='.strtoupper($sort_dir));
-
-
-?>
 <div class="linkst">
 	<div class="inbox">
 		<p class="pagelink"><?php echo $paging_links ?></p>
