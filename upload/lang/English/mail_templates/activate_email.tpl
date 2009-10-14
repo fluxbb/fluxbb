@@ -7,6 +7,6 @@ You have requested to have a new e-mail address assigned to your account in the 
 To change your e-mail address, please visit the following page:
 <activation_url>
 
--- 
+--
 <board_mailer>
 (Do not reply to this message)

@@ -24,7 +24,7 @@
 
 
 // The contents of this file are very much inspired by the file functions_search.php
-// from the phpBB Group forum software phpBB2 (http://www.phpbb.com). 
+// from the phpBB Group forum software phpBB2 (http://www.phpbb.com).
 
 
 // Make sure no one attempts to run this script "directly"

@@ -116,7 +116,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 	{
 		require PUN_ROOT.'include/email.php';
 
-		// Validate the email-address
+		// Validate the e-mail address
 		$email = strtolower(trim($_POST['req_email']));
 		if (!is_valid_email($email))
 			message($lang_common['Invalid e-mail']);

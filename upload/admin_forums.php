@@ -46,7 +46,7 @@ if (isset($_POST['add_forum']))
 
 	$db->query('INSERT INTO '.$db->prefix.'forums (cat_id) VALUES('.$add_to_cat.')') or error('Unable to create forum', __FILE__, __LINE__, $db->error());
 
-	// Regenerate the quickjump cache
+	// Regenerate the quick jump cache
 	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
 		require PUN_ROOT.'include/cache.php';
 
@@ -88,7 +88,7 @@ else if (isset($_GET['del_forum']))
 		$db->query('DELETE FROM '.$db->prefix.'forums WHERE id='.$forum_id) or error('Unable to delete forum', __FILE__, __LINE__, $db->error());
 		$db->query('DELETE FROM '.$db->prefix.'forum_perms WHERE forum_id='.$forum_id) or error('Unable to delete group forum permissions', __FILE__, __LINE__, $db->error());
 
-		// Regenerate the quickjump cache
+		// Regenerate the quick jump cache
 		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
 			require PUN_ROOT.'include/cache.php';
 
@@ -147,7 +147,7 @@ else if (isset($_POST['update_positions']))
 		$db->query('UPDATE '.$db->prefix.'forums SET disp_position='.$disp_position.' WHERE id='.intval($forum_id)) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
 	}
 
-	// Regenerate the quickjump cache
+	// Regenerate the quick jump cache
 	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
 		require PUN_ROOT.'include/cache.php';
 
@@ -213,7 +213,7 @@ else if (isset($_GET['edit_forum']))
 			}
 		}
 
-		// Regenerate the quickjump cache
+		// Regenerate the quick jump cache
 		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
 			require PUN_ROOT.'include/cache.php';
 
@@ -227,7 +227,7 @@ else if (isset($_GET['edit_forum']))
 
 		$db->query('DELETE FROM '.$db->prefix.'forum_perms WHERE forum_id='.$forum_id) or error('Unable to delete group forum permissions', __FILE__, __LINE__, $db->error());
 
-		// Regenerate the quickjump cache
+		// Regenerate the quick jump cache
 		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
 			require PUN_ROOT.'include/cache.php';
 
@@ -328,7 +328,7 @@ else if (isset($_GET['edit_forum']))
 		$post_replies = (($cur_perm['g_post_replies'] == '0' && $cur_perm['post_replies'] == '1') || ($cur_perm['g_post_replies'] == '1' && $cur_perm['post_replies'] != '0')) ? true : false;
 		$post_topics = (($cur_perm['g_post_topics'] == '0' && $cur_perm['post_topics'] == '1') || ($cur_perm['g_post_topics'] == '1' && $cur_perm['post_topics'] != '0')) ? true : false;
 
-		// Determine if the current sittings differ from the default or not
+		// Determine if the current settings differ from the default or not
 		$read_forum_def = ($cur_perm['read_forum'] == '0') ? false : true;
 		$post_replies_def = (($post_replies && $cur_perm['g_post_replies'] == '0') || (!$post_replies && ($cur_perm['g_post_replies'] == '' || $cur_perm['g_post_replies'] == '1'))) ? false : true;
 		$post_topics_def = (($post_topics && $cur_perm['g_post_topics'] == '0') || (!$post_topics && ($cur_perm['g_post_topics'] == '' || $cur_perm['g_post_topics'] == '1'))) ? false : true;

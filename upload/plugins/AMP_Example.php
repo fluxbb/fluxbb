@@ -81,7 +81,7 @@ define('PUN_PLUGIN_LOADED', 1);
 // If the "Show text" button was clicked
 if (isset($_POST['show_text']))
 {
-	// Make sure something something was entered
+	// Make sure something was entered
 	if (trim($_POST['text_to_show']) == '')
 		message('You didn\'t enter anything!');
 

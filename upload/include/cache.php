@@ -147,18 +147,18 @@ function generate_ranks_cache()
 
 
 //
-// Generate quickjump cache PHP scripts
+// Generate quick jump cache PHP scripts
 //
 function generate_quickjump_cache($group_id = false)
 {
 	global $db, $lang_common, $pun_user;
 
-	// If a group_id was supplied, we generate the quickjump cache for that group only
+	// If a group_id was supplied, we generate the quick jump cache for that group only
 	if ($group_id !== false)
 		$groups[0] = $group_id;
 	else
 	{
-		// A group_id was now supplied, so we generate the quickjump cache for all groups
+		// A group_id was now supplied, so we generate the quick jump cache for all groups
 		$result = $db->query('SELECT g_id FROM '.$db->prefix.'groups') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
 		$num_groups = $db->num_rows($result);
 
@@ -169,7 +169,7 @@ function generate_quickjump_cache($group_id = false)
 	// Loop through the groups in $groups and output the cache for each of them
 	while (list(, $group_id) = @each($groups))
 	{
-		// Output quickjump as PHP code
+		// Output quick jump as PHP code
 		$fh = @fopen(FORUM_CACHE_DIR.'cache_quickjump_'.$group_id.'.php', 'wb');
 		if (!$fh)
 			error('Unable to write quickjump cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'', __FILE__, __LINE__);

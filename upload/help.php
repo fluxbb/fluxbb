@@ -64,7 +64,7 @@ require PUN_ROOT.'header.php';
 <h2><?php echo $lang_help['Links and images'] ?></h2>
 <div class="box">
 	<div class="inbox">
-		<p><?php echo $lang_help['Links info'] ?></p>		
+		<p><?php echo $lang_help['Links info'] ?></p>
 		<p><code>[url=<?php echo $pun_config['o_base_url'].'/' ?>]<?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?>[/url]</code> <?php echo $lang_help['produces'] ?> <a href="<?php echo $pun_config['o_base_url'].'/' ?>"><?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?></a><br />
 		<code>[url]<?php echo $pun_config['o_base_url'].'/' ?>[/url]</code> <?php echo $lang_help['produces'] ?> <a href="<?php echo $pun_config['o_base_url'] ?>"><?php echo $pun_config['o_base_url'].'/' ?></a><br />
 		<code>[email]myname@mydomain.com[/email]</code> <?php echo $lang_help['produces'] ?> <a href="mailto:myname@mydomain.com">myname@mydomain.com</a><br />

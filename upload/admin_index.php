@@ -110,7 +110,7 @@ if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' ||
 }
 
 
-// Check for the existance of various PHP opcode caches/optimizers
+// Check for the existence of various PHP opcode caches/optimizers
 if (function_exists('mmcache'))
 	$php_accelerator = '<a href="http://turck-mmcache.sourceforge.net/">Turck MMCache</a>';
 else if (isset($_PHPA))

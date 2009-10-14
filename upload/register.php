@@ -160,7 +160,7 @@ if (isset($_POST['form_sent']))
 	else if ($pun_config['o_regs_verify'] == '1' && $email1 != $email2)
 		$errors[] = $lang_register['E-mail not match'];
 
-	// Check it it's a banned e-mail address
+	// Check if it's a banned e-mail address
 	if (is_banned_email($email1))
 	{
 		if ($pun_config['p_allow_banned_email'] == '0')
@@ -204,7 +204,7 @@ if (isset($_POST['form_sent']))
 	// Did everything go according to plan?
 	if (empty($errors))
 	{
-		// Insert the new user into the database. We do this now to get the last inserted id for later use.
+		// Insert the new user into the database. We do this now to get the last inserted ID for later use
 		$now = time();
 
 		$intial_group_id = ($pun_config['o_regs_verify'] == '0') ? $pun_config['o_default_user_group'] : PUN_UNVERIFIED;

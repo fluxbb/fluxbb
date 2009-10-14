@@ -91,7 +91,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 	$prune_date = time() - ($prune_days*86400);
 	$prune_from = $_POST['prune_from'];
 
-	// Concatenate together the query for counting number or topics to prune
+	// Concatenate together the query for counting number of topics to prune
 	$sql = 'SELECT COUNT(id) FROM '.$db->prefix.'topics WHERE last_post<'.$prune_date.' AND moved_to IS NULL';
 
 	if (!$prune_sticky)

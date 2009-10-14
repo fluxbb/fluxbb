@@ -360,13 +360,13 @@ if (isset($_POST['form_sent']))
 }
 
 
-// If a topic id was specified in the url (it's a reply).
+// If a topic ID was specified in the url (it's a reply)
 if ($tid)
 {
 	$action = $lang_post['Post a reply'];
 	$form = '<form id="post" method="post" action="post.php?action=post&amp;tid='.$tid.'" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">';
 
-	// If a quote-id was specified in the url.
+	// If a quote ID was specified in the url
 	if (isset($_GET['qid']))
 	{
 		$qid = intval($_GET['qid']);
@@ -413,7 +413,7 @@ if ($tid)
 
 	$forum_name = '<a href="viewforum.php?id='.$cur_posting['id'].'">'.pun_htmlspecialchars($cur_posting['forum_name']).'</a>';
 }
-// If a forum_id was specified in the url (new topic).
+// If a forum ID was specified in the url (new topic)
 else if ($fid)
 {
 	$action = $lang_post['Post new topic'];
@@ -589,7 +589,7 @@ if (!empty($checkboxes))
 
 <?php
 
-// Check to see if the topic review is to be displayed.
+// Check to see if the topic review is to be displayed
 if ($tid && $pun_config['o_topic_review'] != '0')
 {
 	require_once PUN_ROOT.'include/parser.php';

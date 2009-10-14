@@ -203,7 +203,7 @@ else if (isset($_POST['add_edit_ban']))
 
 		for ($i = 0; $i < count($addresses); ++$i)
 		{
-			if (strpos($addresses[$i], ':') !== false) 
+			if (strpos($addresses[$i], ':') !== false)
 			{
 				$octets = explode(':', $addresses[$i]);
 
@@ -316,7 +316,7 @@ generate_admin_menu('bans');
 									<th scope="row">Username<div><input type="submit" name="add_ban" value=" Add " tabindex="2" /></div></th>
 									<td>
 										<input type="text" name="new_ban_user" size="25" maxlength="25" tabindex="1" />
-										<span>The username to ban (case insensitive). The next page will let you enter a custom IP and e-mail. If you just want to ban a specific IP/IP-range or e-mail just leave it blank.</span>
+										<span>The username to ban (case-insensitive). The next page will let you enter a custom IP and e-mail. If you just want to ban a specific IP/IP-range or e-mail just leave it blank.</span>
 									</td>
 								</tr>
 							</table>

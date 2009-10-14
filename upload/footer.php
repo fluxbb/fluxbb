@@ -74,7 +74,7 @@ else if ($footer_style == 'viewforum' || $footer_style == 'viewtopic')
 	// Display the "Jump to" drop list
 	if ($pun_config['o_quickjump'] == '1')
 	{
-		// Load cached quickjump
+		// Load cached quick jump
 		if (file_exists(FORUM_CACHE_DIR.'cache_quickjump_'.$pun_user['g_id'].'.php'))
 			include FORUM_CACHE_DIR.'cache_quickjump_'.$pun_user['g_id'].'.php';
 

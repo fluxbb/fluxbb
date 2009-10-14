@@ -185,7 +185,7 @@ generate_admin_menu('options');
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Default timezone</th>
+									<th scope="row">Default time zone</th>
 									<td>
 										<select name="form[default_timezone]">
 											<option value="-12"<?php if ($pun_config['o_default_timezone'] == -12 ) echo ' selected="selected"' ?>>-12</option>
@@ -225,7 +225,7 @@ generate_admin_menu('options');
 											<option value="12"<?php if ($pun_config['o_default_timezone'] == 12 ) echo ' selected="selected"' ?>>+12</option>
 											<option value="13"<?php if ($pun_config['o_default_timezone'] == 13 ) echo ' selected="selected"' ?>>+13</option>
 										</select>
-										<span>The default timezone for guests and users attempting to register for the board.</span>
+										<span>The default time zone for guests and users attempting to register for the board.</span>
 									</td>
 								</tr>
 								<tr>

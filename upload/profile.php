@@ -217,7 +217,7 @@ else if ($action == 'change_email')
 
 		require PUN_ROOT.'include/email.php';
 
-		// Validate the email-address
+		// Validate the e-mail address
 		$new_email = strtolower(trim($_POST['req_new_email']));
 		if (!is_valid_email($new_email))
 			message($lang_common['Invalid e-mail']);
@@ -368,7 +368,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 			if ($uploaded_file['size'] > $pun_config['o_avatars_size'])
 				message($lang_profile['Too large'].' '.forum_number_format($pun_config['o_avatars_size']).' '.$lang_profile['bytes'].'.');
 
-			// Move the file to the avatar directory. We do this before checking the width/height to circumvent open_basedir restrictions.
+			// Move the file to the avatar directory. We do this before checking the width/height to circumvent open_basedir restrictions
 			if (!@move_uploaded_file($uploaded_file['tmp_name'], $pun_config['o_avatars_dir'].'/'.$id.'.tmp'))
 				message($lang_profile['Move failed'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
 
@@ -730,7 +730,7 @@ else if (isset($_POST['form_sent']))
 			{
 				require PUN_ROOT.'include/email.php';
 
-				// Validate the email-address
+				// Validate the e-mail address
 				$form['email'] = strtolower(trim($_POST['req_email']));
 				if (!is_valid_email($form['email']))
 					message($lang_common['Invalid e-mail']);
@@ -861,7 +861,7 @@ else if (isset($_POST['form_sent']))
 	}
 
 
-	// Singlequotes around non-empty values and NULL for empty values
+	// Single quotes around non-empty values and NULL for empty values
 	$temp = array();
 	while (list($key, $input) = @each($form))
 	{

@@ -27,7 +27,7 @@ if (!defined('PUN'))
 	exit;
 
 
-// Here you can add additional smilies if you like (please note that you must escape singlequote and backslash)
+// Here you can add additional smilies if you like (please note that you must escape single quote and backslash)
 $smilies = array(
 	':)' => 'smile.png',
 	'=)' => 'smile.png',
@@ -173,7 +173,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		// Are we dealing with a tag?
 		if (substr($current, 0, 1) != '[' || substr($current, -1, 1) != ']')
 		{
-			// Its not a bbcode tag so we put it on the end and continue
+			// It's not a bbcode tag so we put it on the end and continue
 
 			// If we are nested too deeply don't add to the end
 			if ($current_nest)
@@ -261,7 +261,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		// Is the tag defined?
 		if (!in_array($current_tag, $tags))
 		{
-			// Its not a bbcode tag so we put it on the end and continue
+			// It's not a bbcode tag so we put it on the end and continue
 			if (!$current_nest)
 				$new_text .= $current;
 
@@ -285,7 +285,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		else
 			$current = strtolower($current);
 
-		//This is if we are currently in a tag which escapes other bbcode such as code
+		// This is if we are currently in a tag which escapes other bbcode such as code
 		if ($current_ignore)
 		{
 			if ('[/'.$current_ignore.']' == $current)
@@ -302,7 +302,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 
 		if ($current_nest)
 		{
-			// We are currently too deeply nested so lets see if we are closing the tag or not.
+			// We are currently too deeply nested so lets see if we are closing the tag or not
 			if ($current_tag != $current_nest)
 				continue;
 
@@ -326,11 +326,11 @@ function preparse_tags($text, &$errors, $is_signature = false)
 
 		if (substr($current, 1, 1) == '/')
 		{
-			//This is if we are closing a tag
+			// This is if we are closing a tag
 
 			if ($opened_tag == 0 || !in_array($current_tag, $open_tags))
 			{
-				//We tried to close a tag which is not open
+				// We tried to close a tag which is not open
 				if (in_array($current_tag, $tags_opened))
 				{
 					$errors[] = sprintf($lang_common['BBCode error 1'], $current_tag);
@@ -448,7 +448,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 
 			if (in_array($current_tag, $tags_ignore))
 			{
-				// Its an ignore tag so we don't need to worry about whats inside it,
+				// It's an ignore tag so we don't need to worry about what's inside it
 				$current_ignore = $current_tag;
 				$new_text .= $current;
 				continue;

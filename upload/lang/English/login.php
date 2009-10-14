@@ -1,6 +1,6 @@
 <?php
 
-// Language definitions used in delete.php
+// Language definitions used in login.php
 $lang_login = array(
 
 // Miscellaneous

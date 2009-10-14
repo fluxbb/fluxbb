@@ -9,6 +9,6 @@ Your new password is: <new_password>
 To change your password, please visit the following page:
 <activation_url>
 
--- 
+--
 <board_mailer>
 (Do not reply to this message)

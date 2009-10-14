@@ -62,7 +62,7 @@ require PUN_ROOT.'include/utf8/utf8.php';
 // Strip out "bad" UTF-8 characters
 forum_remove_bad_characters();
 
-// Instruct DB abstraction layer that we don't want it to "SET NAMES". If we need to, we'll do it ourselves below.
+// Instruct DB abstraction layer that we don't want it to "SET NAMES". If we need to, we'll do it ourselves below
 define('FORUM_NO_SET_NAMES', 1);
 
 // Load DB abstraction layer and try to connect
@@ -116,7 +116,7 @@ function seems_utf8($str)
 
 
 //
-// Translates the number from an HTML numeric entity into an UTF-8 character
+// Translates the number from a HTML numeric entity into an UTF-8 character
 //
 function dcr2utf8($src)
 {
@@ -163,7 +163,7 @@ function dcr2utf8($src)
 
 
 //
-// Attemts to convert $str from $old_charset to UTF-8. Also converts HTML entities (including numeric entities) to UTF-8 characters.
+// Attempts to convert $str from $old_charset to UTF-8. Also converts HTML entities (including numeric entities) to UTF-8 characters
 //
 function convert_to_utf8(&$str, $old_charset)
 {
@@ -465,7 +465,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 		unset($new_config);
 
-		// Server timezone is now simply the default timezone
+		// Server time zone is now simply the default time zone
 		if (!array_key_exists('o_default_timezone', $pun_config))
 			$db->query('UPDATE '.$db->prefix.'config SET conf_name = \'o_default_timezone\' WHERE conf_name = \'o_server_timezone\'') or error('Unable to update timezone config', __FILE__, __LINE__, $db->error());
 
@@ -592,7 +592,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 			$db->add_field('topics', 'first_post_id', 'INT(10) UNSIGNED', false, 0, 'posted');
 			$db->add_index('topics', 'first_post_id_idx', array('first_post_id'));
 
-			// Now that we've added the column and indexed it, we need to give it correct data\
+			// Now that we've added the column and indexed it, we need to give it correct data
 			$result = $db->query('SELECT MIN(id) AS first_post, topic_id FROM '.$db->prefix.'posts GROUP BY topic_id') or error('Unable to fetch first_post_id', __FILE__, __LINE__, $db->error());
 
 			while ($cur_post = $db->fetch_assoc($result))

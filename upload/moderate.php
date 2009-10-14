@@ -294,7 +294,7 @@ if (isset($_GET['tid']))
 	{
 		$post_count++;
 
-		// If the poster is a registered user.
+		// If the poster is a registered user
 		if ($cur_post['poster_id'] > 1)
 		{
 			if ($pun_user['g_view_users'] == '1')
@@ -392,7 +392,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		if ($db->num_rows($result) != count($topics))
 			message($lang_common['Bad request']);
 
-		// Delete any redirect topics if there are any (only if we moved/copied the topic back to where it where it was once moved from)
+		// Delete any redirect topics if there are any (only if we moved/copied the topic back to where it was once moved from)
 		$db->query('DELETE FROM '.$db->prefix.'topics WHERE forum_id='.$move_to_forum.' AND moved_to IN('.implode(',',$topics).')') or error('Unable to delete redirect topics', __FILE__, __LINE__, $db->error());
 
 		// Move the topic(s)
@@ -783,7 +783,7 @@ $paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'moderate.ph
 // Select topics
 $result = $db->query('SELECT id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to FROM '.$db->prefix.'topics WHERE forum_id='.$fid.' ORDER BY sticky DESC, last_post DESC LIMIT '.$start_from.', '.$pun_user['disp_topics']) or error('Unable to fetch topic list for forum', __FILE__, __LINE__, $db->error());
 
-// If there are topics in this forum.
+// If there are topics in this forum
 if ($db->num_rows($result))
 {
 	$button_status = '';

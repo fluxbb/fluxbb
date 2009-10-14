@@ -36,7 +36,7 @@ $lang_profile = array(
 // E-mail stuff
 'E-mail key bad'			=>	'The specified e-mail activation key was incorrect or has expired. Please re-request change of e-mail address. If that fails, contact the forum administrator at',
 'E-mail updated'			=>	'Your e-mail address has been updated.',
-'Activate e-mail sent'		=>	'An email has been sent to the specified address with instructions on how to activate the new e-mail address. If it doesn\'t arrive you can contact the forum administrator at',
+'Activate e-mail sent'		=>	'An e-mail has been sent to the specified address with instructions on how to activate the new e-mail address. If it doesn\'t arrive you can contact the forum administrator at',
 'E-mail legend'				=>	'Enter your new e-mail address',
 'E-mail instructions'		=>	'An e-mail will be sent to your new address with an activation link. You must click the link in the e-mail you receive to activate the new address.',
 'Change e-mail'				=>	'Change e-mail address',

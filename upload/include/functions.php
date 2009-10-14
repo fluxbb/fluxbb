@@ -845,7 +845,7 @@ function message($message, $no_back_link = false)
 
 
 //
-// Format a time string according to $time_format and timezones
+// Format a time string according to $time_format and time zones
 //
 function format_time($timestamp, $date_only = false, $date_format = null, $time_format = null, $time_only = false, $no_text = false)
 {
