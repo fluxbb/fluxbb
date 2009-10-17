@@ -956,7 +956,7 @@ if ($pun_user['id'] != $id &&
 	if ($pun_user['g_search'] == '1')
 		$posts_field .= (($posts_field != '') ? ' - ' : '').'<a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a>';
 
-	$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_common['Profile'];
+	$page_title = pun_htmlspecialchars($pun_config['o_board_title'].' / '.sprintf($lang_profile['Users profile'], $user['username']));
 	define('PUN_ALLOW_INDEX', 1);
 	require PUN_ROOT.'header.php';
 
@@ -979,7 +979,7 @@ if ($pun_user['id'] != $id &&
 							<dt><?php echo $lang_profile['Location'] ?>: </dt>
 							<dd><?php echo ($user['location'] !='') ? pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['location']) : $user['location']) : $lang_profile['Unknown']; ?></dd>
 							<dt><?php echo $lang_profile['Website'] ?>: </dt>
-							<dd><?php echo $url ?>&nbsp;</dd>
+							<dd><?php echo $url ?></dd>
 							<dt><?php echo $lang_common['E-mail'] ?>: </dt>
 							<dd><?php echo $email_field ?></dd>
 						</dl>

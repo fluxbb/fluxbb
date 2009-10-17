@@ -70,6 +70,7 @@ $lang_profile = array(
 'Profile redirect'			=>	'Profile updated. Redirecting &hellip;',
 
 // Profile display stuff
+'Users profile'				=>	'%s\'s profile',
 'Not activated'				=>	'This user hasn\'t activated his/her account yet. The account is activated when he/she logs in the first time.',
 'Unknown'					=>	'(Unknown)',	// This is displayed when a user hasn't filled out profile field (e.g. Location)
 'Private'					=>	'(Private)',	// This is displayed when a user does not want to receive e-mails
