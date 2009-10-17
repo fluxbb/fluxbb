@@ -1,27 +1,12 @@
 <?php
-/***********************************************************************
 
-  Copyright (C) 2002-2005  Rickard Andersson (rickard@punbb.org)
+/*---
 
-  This file is part of PunBB.
+	Copyright (C) 2008-2009 FluxBB.org
+	based on code copyright (C) 2002-2005 Rickard Andersson
+	License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
 
-  PunBB is free software; you can redistribute it and/or modify it
-  under the terms of the GNU General Public License as published
-  by the Free Software Foundation; either version 2 of the License,
-  or (at your option) any later version.
-
-  PunBB is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston,
-  MA  02111-1307  USA
-
-************************************************************************/
-
+---*/
 
 // Make sure we have built in support for SQLite
 if (!function_exists('sqlite_open'))
@@ -382,7 +367,7 @@ class DBLayer
 		foreach ($table_lines as $table_line)
 		{
 			$table_line = pun_trim($table_line);
-			if (substr($table_line, 0, 12) == 'CREATE TABLE') 
+			if (substr($table_line, 0, 12) == 'CREATE TABLE')
 				continue;
 			else if (substr($table_line, 0, 11) == 'PRIMARY KEY')
 				$table['primary_key'] = $table_line;
@@ -426,13 +411,13 @@ class DBLayer
 
 		foreach ($table['columns'] as $cur_column => $column_details)
 			$new_table .= "\n".$cur_column.' '.$column_details;
-			
+
 		if (isset($table['unique']))
 			$new_table .= "\n".$table['unique'].',';
-			
+
 		if (isset($table['primary_key']))
 			$new_table .= "\n".$table['primary_key'];
-			
+
 		$new_table = trim($new_table, ',')."\n".');';
 
 		// Drop old table
@@ -483,13 +468,13 @@ class DBLayer
 
 		foreach ($table['columns'] as $cur_column => $column_details)
 			$new_table .= "\n".$cur_column.' '.$column_details;
-			
+
 		if (isset($table['unique']))
 			$new_table .= "\n".$table['unique'].',';
-			
+
 		if (isset($table['primary_key']))
 			$new_table .= "\n".$table['primary_key'];
-			
+
 		$new_table = trim($new_table, ',')."\n".');';
 
 		// Drop old table

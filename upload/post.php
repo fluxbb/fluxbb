@@ -1,27 +1,12 @@
 <?php
-/***********************************************************************
 
-  Copyright (C) 2002-2005  Rickard Andersson (rickard@punbb.org)
+/*---
 
-  This file is part of PunBB.
+	Copyright (C) 2008-2009 FluxBB.org
+	based on code copyright (C) 2002-2005 Rickard Andersson
+	License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
 
-  PunBB is free software; you can redistribute it and/or modify it
-  under the terms of the GNU General Public License as published
-  by the Free Software Foundation; either version 2 of the License,
-  or (at your option) any later version.
-
-  PunBB is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston,
-  MA  02111-1307  USA
-
-************************************************************************/
-
+---*/
 
 define('PUN_ROOT', './');
 require PUN_ROOT.'include/common.php';
@@ -114,7 +99,7 @@ if (isset($_POST['form_sent']))
 		if (strlen($username) < 2)
 			$errors[] = $lang_prof_reg['Username too short'];
 		else if (pun_strlen($username) > 25)	// This usually doesn't happen since the form element only accepts 25 characters
-			$errors[] = $lang_prof_reg['Username too long'];			
+			$errors[] = $lang_prof_reg['Username too long'];
 		else if (!strcasecmp($username, 'Guest') || !strcasecmp($username, $lang_common['Guest']))
 			$errors[] = $lang_prof_reg['Username guest'];
 		else if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username) || preg_match('/((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))/', $username))
@@ -191,7 +176,7 @@ if (isset($_POST['form_sent']))
 			if (!$pun_user['is_guest'])
 			{
 				$new_tid = $tid;
-				
+
 				// Insert the new post
 				$db->query('INSERT INTO '.$db->prefix.'posts (poster, poster_id, poster_ip, message, hide_smilies, posted, topic_id) VALUES(\''.$db->escape($username).'\', '.$pun_user['id'].', \''.get_remote_address().'\', \''.$db->escape($message).'\', '.$hide_smilies.', '.$now.', '.$tid.')') or error('Unable to create post', __FILE__, __LINE__, $db->error());
 				$new_pid = $db->insert_id();
@@ -202,7 +187,7 @@ if (isset($_POST['form_sent']))
 					if ($subscribe && !$is_subscribed)
 						$db->query('INSERT INTO '.$db->prefix.'subscriptions (user_id, topic_id) VALUES('.$pun_user['id'].' ,'.$tid.')') or error('Unable to add subscription', __FILE__, __LINE__, $db->error());
 					else if (!$subscribe && $is_subscribed)
-						$db->query('DELETE FROM '.$db->prefix.'subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$tid) or error('Unable to remove subscription', __FILE__, __LINE__, $db->error());	
+						$db->query('DELETE FROM '.$db->prefix.'subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$tid) or error('Unable to remove subscription', __FILE__, __LINE__, $db->error());
 				}
 			}
 			else
@@ -332,7 +317,7 @@ if (isset($_POST['form_sent']))
 
 		// If we previously found out that the e-mail was banned
 		if ($banned_email && $pun_config['o_mailing_list'] != '')
-		{		
+		{
 			$mail_subject = $lang_common['Banned email notification'];
 			$mail_message = sprintf($lang_common['Banned email post message'], $username, $email)."\n";
 			$mail_message .= sprintf($lang_common['Post URL'], $pun_config['o_base_url'].'/viewtopic.php?pid='.$new_pid.'#p'.$new_pid)."\n";
@@ -555,7 +540,7 @@ if (!$pun_user['is_guest'])
 		// If already subscribed to the topic
 		else if ($is_subscribed)
 			$subscr_checked = true;
-			
+
 		$checkboxes[] = '<label><input type="checkbox" name="subscribe" value="1" tabindex="'.($cur_index++).'"'.($subscr_checked ? ' checked="checked"' : '').' />'.($is_subscribed ? $lang_post['Stay subscribed'] : $lang_post['Subscribe']);
 	}
 }

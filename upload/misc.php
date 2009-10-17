@@ -1,27 +1,12 @@
 <?php
-/***********************************************************************
 
-  Copyright (C) 2002-2005  Rickard Andersson (rickard@punbb.org)
+/*---
 
-  This file is part of PunBB.
+	Copyright (C) 2008-2009 FluxBB.org
+	based on code copyright (C) 2002-2005 Rickard Andersson
+	License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
 
-  PunBB is free software; you can redistribute it and/or modify it
-  under the terms of the GNU General Public License as published
-  by the Free Software Foundation; either version 2 of the License,
-  or (at your option) any later version.
-
-  PunBB is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston,
-  MA  02111-1307  USA
-
-************************************************************************/
-
+---*/
 
 if (isset($_GET['action']))
 	define('PUN_QUIET_VISIT', 1);
@@ -205,7 +190,7 @@ else if (isset($_GET['report']))
 		$reason = pun_linebreaks(pun_trim($_POST['req_reason']));
 		if ($reason == '')
 			message($lang_misc['No reason']);
-			
+
 		if ($pun_user['last_email_sent'] != '' && (time() - $pun_user['last_email_sent']) < $pun_user['g_email_flood'] && (time() - $pun_user['last_email_sent']) >= 0)
 			message(sprintf($lang_misc['Report flood'], $pun_user['g_email_flood']));
 
@@ -232,7 +217,7 @@ else if (isset($_GET['report']))
 		{
 			// We send it to the complete mailing-list in one swoop
 			if ($pun_config['o_mailing_list'] != '')
-			{			
+			{
 				$mail_subject = sprintf($lang_common['Report notification'], $forum_id, $subject);
 				$mail_message = sprintf($lang_common['Report message 1'], $pun_user['username'], $pun_config['o_base_url'].'/viewtopic.php?pid='.$post_id.'#p'.$post_id)."\n";
 				$mail_message .= sprintf($lang_common['Report message 2'], $reason)."\n";
@@ -243,7 +228,7 @@ else if (isset($_GET['report']))
 				pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
 			}
 		}
-		
+
 		$db->query('UPDATE '.$db->prefix.'users SET last_email_sent='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 
 		redirect('viewtopic.php?pid='.$post_id.'#p'.$post_id, $lang_misc['Report redirect']);

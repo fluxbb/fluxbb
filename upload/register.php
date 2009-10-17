@@ -1,27 +1,12 @@
 <?php
-/***********************************************************************
 
-  Copyright (C) 2002-2005  Rickard Andersson (rickard@punbb.org)
+/*---
 
-  This file is part of PunBB.
+	Copyright (C) 2008-2009 FluxBB.org
+	based on code copyright (C) 2002-2005 Rickard Andersson
+	License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
 
-  PunBB is free software; you can redistribute it and/or modify it
-  under the terms of the GNU General Public License as published
-  by the Free Software Foundation; either version 2 of the License,
-  or (at your option) any later version.
-
-  PunBB is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston,
-  MA  02111-1307  USA
-
-************************************************************************/
-
+---*/
 
 define('PUN_ROOT', './');
 require PUN_ROOT.'include/common.php';
@@ -80,7 +65,7 @@ else if ($pun_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POS
 $errors = array();
 
 if (isset($_POST['form_sent']))
-{	
+{
 	// Check that someone from this IP didn't register a user within the last hour (DoS prevention)
 	$result = $db->query('SELECT 1 FROM '.$db->prefix.'users WHERE registration_ip=\''.get_remote_address().'\' AND registered>'.(time() - 3600)) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
@@ -120,7 +105,7 @@ if (isset($_POST['form_sent']))
 		$errors[] = $lang_prof_reg['Username reserved chars'];
 	else if (preg_match('/(?:\[\/?(?:b|u|i|h|colou?r|quote|code|img|url|email|list)\]|\[(?:code|quote|list)=)/i', $username))
 		$errors[] = $lang_prof_reg['Username BBCode'];
-		
+
 	// Check username for any censored words
 	if ($pun_config['o_censoring'] == '1')
 	{
@@ -146,11 +131,11 @@ if (isset($_POST['form_sent']))
 			break;
 		}
 	}
-	
+
 	if (strlen($password1) < 4)
 		$errors[] = $lang_prof_reg['Pass too short'];
 	else if ($password1 != $password2)
-		$errors[] = $lang_prof_reg['Pass not match'];	
+		$errors[] = $lang_prof_reg['Pass not match'];
 
 	// Validate e-mail
 	require PUN_ROOT.'include/email.php';
@@ -217,7 +202,7 @@ if (isset($_POST['form_sent']))
 
 		// If we previously found out that the e-mail was banned
 		if ($banned_email && $pun_config['o_mailing_list'] != '')
-		{		
+		{
 			$mail_subject = $lang_common['Banned email notification'];
 			$mail_message = sprintf($lang_common['Banned email register message'], $username, $email1)."\n";
 			$mail_message .= sprintf($lang_common['User profile'], $pun_config['o_base_url'].'/profile.php?id='.$new_uid)."\n";
@@ -228,7 +213,7 @@ if (isset($_POST['form_sent']))
 
 		// If we previously found out that the e-mail was a dupe
 		if (!empty($dupe_list) && $pun_config['o_mailing_list'] != '')
-		{		
+		{
 			$mail_subject = $lang_common['Duplicate email notification'];
 			$mail_message = sprintf($lang_common['Duplicate email register message'], $username, implode(', ', $dupe_list))."\n";
 			$mail_message .= sprintf($lang_common['User profile'], $pun_config['o_base_url'].'/profile.php?id='.$new_uid)."\n";
@@ -239,7 +224,7 @@ if (isset($_POST['form_sent']))
 
 		// Should we alert people on the admin mailing list that a new user has registered?
 		if ($pun_config['o_regs_report'] == '1')
-		{	
+		{
 			$mail_subject = $lang_common['New user notification'];
 			$mail_message = sprintf($lang_common['New user message'], $username, $pun_config['o_base_url'].'/')."\n";
 			$mail_message .= sprintf($lang_common['User profile'], $pun_config['o_base_url'].'/profile.php?id='.$new_uid)."\n";

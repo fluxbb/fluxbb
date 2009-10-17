@@ -1,14 +1,12 @@
 <?php
-/**
- * Database updating script
- *
- * Updates the database to the latest version.
- *
- * @copyright Copyright (C) 2008 FluxBB.org, based on code copyright (C) 2002-2008 PunBB.org
- * @license http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
- * @package FluxBB
- */
 
+/*---
+
+	Copyright (C) 2008-2009 FluxBB.org
+	based on code copyright (C) 2002-2008 PunBB.org
+	License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
+
+---*/
 
 define('UPDATE_TO', '1.4');
 define('UPDATE_TO_DB_REVISION', 2);

@@ -1,12 +1,12 @@
 <?php
-/**
- * A database layer class supporting transactions that relies on the MySQLi PHP extension.
- *
- * @copyright Copyright (C) 2009 FluxBB.org, based on code copyright (C) 2002-2008 PunBB.org
- * @license http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
- * @package FluxBB
- */
 
+/*---
+
+	Copyright (C) 2008-2009 FluxBB.org
+	based on code copyright (C) 2002-2008 PunBB.org
+	License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
+
+---*/
 
 // Make sure we have built in support for MySQL
 if (!function_exists('mysqli_connect'))

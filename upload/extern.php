@@ -1,16 +1,14 @@
 <?php
-/**
- * External syndication script
- *
- * Allows forum content to be syndicated outside of the site in various formats
- * (ie: RSS, Atom, XML, HTML).
- *
- * @copyright Copyright (C) 2008 FluxBB.org, based on code copyright (C) 2002-2008 PunBB.org
- * @license http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
- * @package FluxBB
- */
 
-/***********************************************************************
+/*---
+
+	Copyright (C) 2008-2009 FluxBB.org
+	based on code copyright (C) 2002-2008 PunBB.org
+	License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
+
+---*/
+
+/*-----------------------------------------------------------------------------
 
   INSTRUCTIONS
 
@@ -56,8 +54,7 @@
             posted - show topics ordered by when they were first
                      posted, giving information about the original post.
 
-
-/***********************************************************************/
+-----------------------------------------------------------------------------*/
 
 define('PUN_QUIET_VISIT', 1);
 
@@ -341,7 +338,7 @@ if ($action == 'feed')
 		$order_posted = isset($_GET['order']) && $_GET['order'] == 'posted';
 		$forum_name = '';
 		$forum_sql = '';
-		
+
 		// Were any forum ID's supplied?
 		if (isset($_GET['fid']) && is_scalar($_GET['fid']) && $_GET['fid'] != '')
 		{
@@ -430,7 +427,7 @@ else if ($action == 'online' || $action == 'online_full')
 	$users = array();
 
 	$result = $db->query('SELECT user_id, ident FROM '.$db->prefix.'online WHERE idle=0 ORDER BY ident', true) or error('Unable to fetch online list', __FILE__, __LINE__, $db->error());
-	
+
 	while ($pun_user_online = $db->fetch_assoc($result))
 	{
 		if ($pun_user_online['user_id'] > 1)
@@ -447,7 +444,7 @@ else if ($action == 'online' || $action == 'online_full')
 	header('Expires: '.gmdate('D, d M Y H:i:s').' GMT');
 	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 	header('Pragma: public');
-	
+
 	echo $lang_index['Guests online'].': '.forum_number_format($num_guests).'<br />'."\n";
 
 	if ($action == 'online_full' && !empty($users))
@@ -473,7 +470,7 @@ else if ($action == 'stats')
 
 	$result = $db->query('SELECT SUM(num_topics), SUM(num_posts) FROM '.$db->prefix.'forums') or error('Unable to fetch topic/post count', __FILE__, __LINE__, $db->error());
 	list($stats['total_topics'], $stats['total_posts']) = $db->fetch_row($result);
-	
+
 	// Send the Content-type header in case the web server is setup to send something else
 	header('Content-type: text/html; charset=utf-8');
 	header('Expires: '.gmdate('D, d M Y H:i:s').' GMT');
@@ -484,7 +481,7 @@ else if ($action == 'stats')
 	echo $lang_index['Newest user'].': '.(($pun_user['g_view_users'] == '1') ? '<a href="'.$pun_config['o_base_url'].'/profile.php?id='.$stats['last_user']['id'].'">'.pun_htmlspecialchars($stats['last_user']['username']).'</a>' : pun_htmlspecialchars($stats['last_user']['username'])).'<br />'."\n";
 	echo $lang_index['No of topics'].': '.forum_number_format($stats['total_topics']).'<br />'."\n";
 	echo $lang_index['No of posts'].': '.forum_number_format($stats['total_posts']).'<br />'."\n";
-	
+
 	exit;
 }
 
