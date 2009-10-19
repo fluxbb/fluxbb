@@ -320,7 +320,7 @@ if (!empty($errors))
 			</div>
 <?php if ($pun_config['o_regs_verify'] == '0'): ?>			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_register['Pass legend 1'] ?></legend>
+					<legend><?php echo $lang_register['Pass legend'] ?></legend>
 					<div class="infldset">
 						<label class="conl"><strong><?php echo $lang_common['Password'] ?></strong><br /><input type="password" name="req_password1" value="<?php if (isset($_POST['req_password1'])) echo pun_htmlspecialchars($_POST['req_password1']); ?>" size="16" maxlength="16" /><br /></label>
 						<label class="conl"><strong><?php echo $lang_prof_reg['Confirm pass'] ?></strong><br /><input type="password" name="req_password2" value="<?php if (isset($_POST['req_password2'])) echo pun_htmlspecialchars($_POST['req_password2']); ?>" size="16" maxlength="16" /><br /></label>

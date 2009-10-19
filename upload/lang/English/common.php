@@ -49,7 +49,6 @@ $lang_common = array(
 // Miscellaneous
 'Announcement'                                    =>        'Announcement',
 'Options'                                         =>        'Options',
-'Actions'                                         =>        'Actions',
 'Submit'                                          =>        'Submit', // "Name" of submit buttons
 'Ban message'                                     =>        'You are banned from this forum.',
 'Ban message 2'                                   =>        'The ban expires at the end of',
@@ -109,13 +108,11 @@ $lang_common = array(
 'Guest'                                           =>        'Guest',
 
 // Stuff for include/parser.php
-'BBCode error 1'                                  =>    '[/%1$s] was found without a matching [%1$s]',
-'BBCode error 2'                                  =>    '[%s] tag is empty',
-'BBCode error 3'                                  =>    '[%1$s] was opened within [%2$s], this is not allowed',
-'BBCode error 4'                                  =>    '[%s] was opened within itself, this is not allowed',
-'BBCode error 5'                                  =>    '[%1$s] was found without a matching [/%1$s]',
-'BBCode error 6'                                  =>    '[%s] tag had an empty attribute section',
-'BBCode nested list'                              =>    '[list] tags cannot be nested',
+'BBCode error no opening tag'                     =>    '[/%1$s] was found without a matching [%1$s]',
+'BBCode error invalid nesting'                    =>    '[%1$s] was opened within [%2$s], this is not allowed',
+'BBCode error invalid self-nesting'               =>    '[%s] was opened within itself, this is not allowed',
+'BBCode error no closing tag'                     =>    '[%1$s] was found without a matching [/%1$s]',
+'BBCode error empty attribute'                    =>    '[%s] tag had an empty attribute section',
 'BBCode code problem'                             =>    'There is a problem with your [code] tags',
 
 // Stuff for the navigator (top of every page)

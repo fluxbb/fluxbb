@@ -263,7 +263,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			if (strlen(substr($current, $equalpos)) == 2)
 			{
 				// Empty tag argument
-				$errors[] = sprintf($lang_common['BBCode error 6'], $current_tag);
+				$errors[] = sprintf($lang_common['BBCode error empty attribute'], $current_tag);
 				return false;
 			}
 			$current = strtolower(substr($current, 0, $equalpos)).substr($current, $equalpos);
@@ -306,7 +306,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		// Check the current tag is allowed here
 		if (!in_array($current_tag, $limit_bbcode) && $current_tag != $open_tags[$opened_tag])
 		{
-			$errors[] = sprintf($lang_common['BBCode error 3'], $current_tag, $open_tags[$opened_tag]);
+			$errors[] = sprintf($lang_common['BBCode error invalid nesting'], $current_tag, $open_tags[$opened_tag]);
 			return false;
 		}
 
@@ -319,7 +319,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 				// We tried to close a tag which is not open
 				if (in_array($current_tag, $tags_opened))
 				{
-					$errors[] = sprintf($lang_common['BBCode error 1'], $current_tag);
+					$errors[] = sprintf($lang_common['BBCode error no opening tag'], $current_tag);
 					return false;
 				}
 			}
@@ -353,7 +353,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 								if (!in_array($temp_tag, $tags_fix))
 								{
 									// We couldn't fix nesting
-									$errors[] = sprintf($lang_common['BBCode error 5'], array_pop($temp_opened));
+									$errors[] = sprintf($lang_common['BBCode error no closing tag'], array_pop($temp_opened));
 									return false;
 								}
 								array_push($temp_opened, $temp_tag);
@@ -387,7 +387,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 						else
 						{
 							// We couldn't fix nesting
-							$errors[] = sprintf($lang_common['BBCode error 1'], $current_tag);
+							$errors[] = sprintf($lang_common['BBCode error no opening tag'], $current_tag);
 							return false;
 						}
 					}
@@ -428,7 +428,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			if (in_array($current_tag, $tags_block) && !in_array($open_tags[$opened_tag], $tags_block) && $opened_tag != 0)
 			{
 				// We tried to open a block tag within a non-block tag
-				$errors[] = sprintf($lang_common['BBCode error 3'], $current_tag, $open_tags[$opened_tag]);
+				$errors[] = sprintf($lang_common['BBCode error invalid nesting'], $current_tag, $open_tags[$opened_tag]);
 				return false;
 			}
 
@@ -444,7 +444,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			if (in_array($current_tag, $open_tags) && !in_array($current_tag, array_keys($tags_nested)))
 			{
 				// We nested a tag we shouldn't
-				$errors[] = sprintf($lang_common['BBCode error 4'], $current_tag);
+				$errors[] = sprintf($lang_common['BBCode error invalid self-nesting'], $current_tag);
 				return false;
 			}
 			else if (in_array($current_tag, array_keys($tags_nested)))
@@ -487,7 +487,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		if (in_array($check, $open_tags))
 		{
 			// We left an important tag open
-			$errors[] = sprintf($lang_common['BBCode error 5'], $check);
+			$errors[] = sprintf($lang_common['BBCode error no closing tag'], $check);
 			return false;
 		}
 	}
@@ -495,7 +495,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	if ($current_ignore)
 	{
 		// We left an ignore tag open
-		$errors[] = sprintf($lang_common['BBCode error 5'], $current_ignore);
+		$errors[] = sprintf($lang_common['BBCode error no closing tag'], $current_ignore);
 		return false;
 	}
 
