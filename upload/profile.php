@@ -161,12 +161,12 @@ if ($action == 'change_pass')
 
 else if ($action == 'change_email')
 {
-	// Make sure we are allowed to change this users e-mail
+	// Make sure we are allowed to change this users email
 	if ($pun_user['id'] != $id)
 	{
-		if (!$pun_user['is_admmod'])	// A regular user trying to change another users e-mail?
+		if (!$pun_user['is_admmod'])	// A regular user trying to change another users email?
 			message($lang_common['No permission']);
-		else if ($pun_user['g_moderator'] == '1')	// A moderator trying to change a users e-mail?
+		else if ($pun_user['g_moderator'] == '1')	// A moderator trying to change a users email?
 		{
 			$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 			if (!$db->num_rows($result))
@@ -187,12 +187,12 @@ else if ($action == 'change_email')
 		list($new_email, $new_email_key) = $db->fetch_row($result);
 
 		if ($key == '' || $key != $new_email_key)
-			message($lang_profile['E-mail key bad'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
+			message($lang_profile['Email key bad'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
 		else
 		{
-			$db->query('UPDATE '.$db->prefix.'users SET email=activate_string, activate_string=NULL, activate_key=NULL WHERE id='.$id) or error('Unable to update e-mail address', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'users SET email=activate_string, activate_string=NULL, activate_key=NULL WHERE id='.$id) or error('Unable to update email address', __FILE__, __LINE__, $db->error());
 
-			message($lang_profile['E-mail updated'], true);
+			message($lang_profile['Email updated'], true);
 		}
 	}
 	else if (isset($_POST['form_sent']))
@@ -202,16 +202,16 @@ else if ($action == 'change_email')
 
 		require PUN_ROOT.'include/email.php';
 
-		// Validate the e-mail address
+		// Validate the email address
 		$new_email = strtolower(trim($_POST['req_new_email']));
 		if (!is_valid_email($new_email))
-			message($lang_common['Invalid e-mail']);
+			message($lang_common['Invalid email']);
 
-		// Check if it's a banned e-mail address
+		// Check if it's a banned email address
 		if (is_banned_email($new_email))
 		{
 			if ($pun_config['p_allow_banned_email'] == '0')
-				message($lang_prof_reg['Banned e-mail']);
+				message($lang_prof_reg['Banned email']);
 			else if ($pun_config['o_mailing_list'] != '')
 			{
 				$mail_subject = $lang_common['Banned email notification'];
@@ -223,12 +223,12 @@ else if ($action == 'change_email')
 			}
 		}
 
-		// Check if someone else already has registered with that e-mail address
+		// Check if someone else already has registered with that email address
 		$result = $db->query('SELECT id, username FROM '.$db->prefix.'users WHERE email=\''.$db->escape($new_email).'\'') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result))
 		{
 			if ($pun_config['p_allow_dupe_email'] == '0')
-				message($lang_prof_reg['Dupe e-mail']);
+				message($lang_prof_reg['Dupe email']);
 			else if ($pun_config['o_mailing_list'] != '')
 			{
 				while ($cur_dupe = $db->fetch_assoc($result))
@@ -248,7 +248,7 @@ else if ($action == 'change_email')
 
 		$db->query('UPDATE '.$db->prefix.'users SET activate_string=\''.$db->escape($new_email).'\', activate_key=\''.$new_email_key.'\' WHERE id='.$id) or error('Unable to update activation data', __FILE__, __LINE__, $db->error());
 
-		// Load the "activate e-mail" template
+		// Load the "activate email" template
 		$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/activate_email.tpl'));
 
 		// The first row contains the subject
@@ -263,27 +263,27 @@ else if ($action == 'change_email')
 
 		pun_mail($new_email, $mail_subject, $mail_message);
 
-		message($lang_profile['Activate e-mail sent'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
+		message($lang_profile['Activate email sent'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
 	}
 
 	$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_common['Profile'];
-	$required_fields = array('req_new_email' => $lang_profile['New e-mail'], 'req_password' => $lang_common['Password']);
+	$required_fields = array('req_new_email' => $lang_profile['New email'], 'req_password' => $lang_common['Password']);
 	$focus_element = array('change_email', 'req_new_email');
 	require PUN_ROOT.'header.php';
 
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_profile['Change e-mail'] ?></span></h2>
+	<h2><span><?php echo $lang_profile['Change email'] ?></span></h2>
 	<div class="box">
 		<form id="change_email" method="post" action="profile.php?action=change_email&amp;id=<?php echo $id ?>" id="change_email" onsubmit="return process_form(this)">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_profile['E-mail legend'] ?></legend>
+					<legend><?php echo $lang_profile['Email legend'] ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
-						<label><strong><?php echo $lang_profile['New e-mail'] ?></strong><br /><input type="text" name="req_new_email" size="50" maxlength="50" /><br /></label>
+						<label><strong><?php echo $lang_profile['New email'] ?></strong><br /><input type="text" name="req_new_email" size="50" maxlength="50" /><br /></label>
 						<label><strong><?php echo $lang_common['Password'] ?></strong><br /><input type="password" name="req_password" size="16" maxlength="16" /><br /></label>
-						<p><?php echo $lang_profile['E-mail instructions'] ?></p>
+						<p><?php echo $lang_profile['Email instructions'] ?></p>
 					</div>
 				</fieldset>
 			</div>
@@ -715,10 +715,10 @@ else if (isset($_POST['form_sent']))
 			{
 				require PUN_ROOT.'include/email.php';
 
-				// Validate the e-mail address
+				// Validate the email address
 				$form['email'] = strtolower(trim($_POST['req_email']));
 				if (!is_valid_email($form['email']))
-					message($lang_common['Invalid e-mail']);
+					message($lang_common['Invalid email']);
 			}
 
 			// Make sure we got a valid language string
@@ -925,7 +925,7 @@ if ($pun_user['id'] != $id &&
 	if ($user['email_setting'] == '0' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
 		$email_field = '<a href="mailto:'.$user['email'].'">'.$user['email'].'</a>';
 	else if ($user['email_setting'] == '1' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
-		$email_field = '<a href="misc.php?email='.$id.'">'.$lang_common['Send e-mail'].'</a>';
+		$email_field = '<a href="misc.php?email='.$id.'">'.$lang_common['Send email'].'</a>';
 	else
 		$email_field = $lang_profile['Private'];
 
@@ -980,7 +980,7 @@ if ($pun_user['id'] != $id &&
 							<dd><?php echo ($user['location'] !='') ? pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['location']) : $user['location']) : $lang_profile['Unknown']; ?></dd>
 							<dt><?php echo $lang_profile['Website'] ?>: </dt>
 							<dd><?php echo $url ?></dd>
-							<dt><?php echo $lang_common['E-mail'] ?>: </dt>
+							<dt><?php echo $lang_common['Email'] ?>: </dt>
 							<dd><?php echo $email_field ?></dd>
 						</dl>
 						<div class="clearer"></div>
@@ -1056,16 +1056,16 @@ else
 			else
 				$username_field = '<p>'.$lang_common['Username'].': '.pun_htmlspecialchars($user['username']).'</p>'."\n";
 
-			$email_field = '<label><strong>'.$lang_common['E-mail'].'</strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="50" /><br /></label><p><a href="misc.php?email='.$id.'">'.$lang_common['Send e-mail'].'</a></p>'."\n";
+			$email_field = '<label><strong>'.$lang_common['Email'].'</strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="50" /><br /></label><p><a href="misc.php?email='.$id.'">'.$lang_common['Send email'].'</a></p>'."\n";
 		}
 		else
 		{
 			$username_field = '<p>'.$lang_common['Username'].': '.pun_htmlspecialchars($user['username']).'</p>'."\n";
 
 			if ($pun_config['o_regs_verify'] == '1')
-				$email_field = '<p>'.$lang_common['E-mail'].': '.$user['email'].'&nbsp;-&nbsp;<a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang_profile['Change e-mail'].'</a></p>'."\n";
+				$email_field = '<p>'.$lang_common['Email'].': '.$user['email'].'&nbsp;-&nbsp;<a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang_profile['Change email'].'</a></p>'."\n";
 			else
-				$email_field = '<label><strong>'.$lang_common['E-mail'].'</strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="50" /><br /></label>'."\n";
+				$email_field = '<label><strong>'.$lang_common['Email'].'</strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="50" /><br /></label>'."\n";
 		}
 
 		$posts_field = '';
@@ -1078,7 +1078,7 @@ else
 
 
 		$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_common['Profile'];
-		$required_fields = array('req_username' => $lang_common['Username'], 'req_email' => $lang_common['E-mail']);
+		$required_fields = array('req_username' => $lang_common['Username'], 'req_email' => $lang_common['Email']);
 		require PUN_ROOT.'header.php';
 
 		generate_profile_menu('essentials');
@@ -1100,7 +1100,7 @@ else
 				</div>
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_prof_reg['E-mail legend'] ?></legend>
+						<legend><?php echo $lang_prof_reg['Email legend'] ?></legend>
 						<div class="infldset">
 							<?php echo $email_field ?>
 						</div>
@@ -1494,11 +1494,11 @@ else
 						<legend><?php echo $lang_prof_reg['Privacy options legend'] ?></legend>
 						<div class="infldset">
 							<input type="hidden" name="form_sent" value="1" />
-							<p><?php echo $lang_prof_reg['E-mail setting info'] ?></p>
+							<p><?php echo $lang_prof_reg['Email setting info'] ?></p>
 							<div class="rbox">
-								<label><input type="radio" name="form[email_setting]" value="0"<?php if ($user['email_setting'] == '0') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['E-mail setting 1'] ?><br /></label>
-								<label><input type="radio" name="form[email_setting]" value="1"<?php if ($user['email_setting'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['E-mail setting 2'] ?><br /></label>
-								<label><input type="radio" name="form[email_setting]" value="2"<?php if ($user['email_setting'] == '2') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['E-mail setting 3'] ?><br /></label>
+								<label><input type="radio" name="form[email_setting]" value="0"<?php if ($user['email_setting'] == '0') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['Email setting 1'] ?><br /></label>
+								<label><input type="radio" name="form[email_setting]" value="1"<?php if ($user['email_setting'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['Email setting 2'] ?><br /></label>
+								<label><input type="radio" name="form[email_setting]" value="2"<?php if ($user['email_setting'] == '2') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['Email setting 3'] ?><br /></label>
 							</div>
 						</div>
 					</fieldset>

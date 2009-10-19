@@ -38,11 +38,11 @@ if (isset($_POST['form_sent']))
 
 	$form['admin_email'] = strtolower($form['admin_email']);
 	if (!is_valid_email($form['admin_email']))
-		message('The admin e-mail address you entered is invalid.');
+		message('The admin email address you entered is invalid.');
 
 	$form['webmaster_email'] = strtolower($form['webmaster_email']);
 	if (!is_valid_email($form['webmaster_email']))
-		message('The webmaster e-mail address you entered is invalid.');
+		message('The webmaster email address you entered is invalid.');
 
 	if ($form['mailing_list'] != '')
 		$form['mailing_list'] = strtolower(preg_replace('/[\s]/', '', $form['mailing_list']));
@@ -343,7 +343,7 @@ generate_admin_menu('options');
 									<th scope="row">User info in posts</th>
 									<td>
 										<input type="radio" name="form[show_user_info]" value="1"<?php if ($pun_config['o_show_user_info'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[show_user_info]" value="0"<?php if ($pun_config['o_show_user_info'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Show information about the poster under the username in topic view. The information affected is location, register date, post count and the contact links (e-mail and URL).</span>
+										<span>Show information about the poster under the username in topic view. The information affected is location, register date, post count and the contact links (email and URL).</span>
 									</td>
 								</tr>
 								<tr>
@@ -507,8 +507,8 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row">Report method</th>
 									<td>
-										<input type="radio" name="form[report_method]" value="0"<?php if ($pun_config['o_report_method'] == '0') echo ' checked="checked"' ?> />&nbsp;Internal&nbsp;&nbsp;&nbsp;<input type="radio" name="form[report_method]" value="1"<?php if ($pun_config['o_report_method'] == '1') echo ' checked="checked"' ?> />&nbsp;E-mail&nbsp;&nbsp;&nbsp;<input type="radio" name="form[report_method]" value="2"<?php if ($pun_config['o_report_method'] == '2') echo ' checked="checked"' ?> />&nbsp;Both
-										<span>Select the method for handling topic/post reports. You can choose whether topic/post reports should be handled by the internal report system,  e-mailed to the addresses on the mailing list (see below) or both.</span>
+										<input type="radio" name="form[report_method]" value="0"<?php if ($pun_config['o_report_method'] == '0') echo ' checked="checked"' ?> />&nbsp;Internal&nbsp;&nbsp;&nbsp;<input type="radio" name="form[report_method]" value="1"<?php if ($pun_config['o_report_method'] == '1') echo ' checked="checked"' ?> />&nbsp;Email&nbsp;&nbsp;&nbsp;<input type="radio" name="form[report_method]" value="2"<?php if ($pun_config['o_report_method'] == '2') echo ' checked="checked"' ?> />&nbsp;Both
+										<span>Select the method for handling topic/post reports. You can choose whether topic/post reports should be handled by the internal report system, emailed to the addresses on the mailing list (see below) or both.</span>
 									</td>
 								</tr>
 								<tr>
@@ -568,35 +568,35 @@ generate_admin_menu('options');
 				</div>
 				<div class="inform">
 					<fieldset>
-						<legend>E-mail</legend>
+						<legend>Email</legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row">Admin e-mail</th>
+									<th scope="row">Admin email</th>
 									<td>
 										<input type="text" name="form[admin_email]" size="50" maxlength="50" value="<?php echo $pun_config['o_admin_email'] ?>" />
-										<span>The e-mail address of the forum administrator.</span>
+										<span>The email address of the forum administrator.</span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Webmaster e-mail</th>
+									<th scope="row">Webmaster email</th>
 									<td>
 										<input type="text" name="form[webmaster_email]" size="50" maxlength="50" value="<?php echo $pun_config['o_webmaster_email'] ?>" />
-										<span>This is the address that all e-mails sent by the forum will be addressed from.</span>
+										<span>This is the address that all emails sent by the forum will be addressed from.</span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row">Subscriptions</th>
 									<td>
 										<input type="radio" name="form[subscriptions]" value="1"<?php if ($pun_config['o_subscriptions'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[subscriptions]" value="0"<?php if ($pun_config['o_subscriptions'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Enable users to subscribe to topics (receive e-mail when someone replies).</span>
+										<span>Enable users to subscribe to topics (receive email when someone replies).</span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row">SMTP server address</th>
 									<td>
 										<input type="text" name="form[smtp_host]" size="30" maxlength="100" value="<?php echo pun_htmlspecialchars($pun_config['o_smtp_host']) ?>" />
-										<span>The address of an external SMTP server to send e-mails with. You can specify a custom port number if the SMTP server doesn't run on the default port 25 (example: mail.myhost.com:3580). Leave blank to use the local mail program.</span>
+										<span>The address of an external SMTP server to send emails with. You can specify a custom port number if the SMTP server doesn't run on the default port 25 (example: mail.myhost.com:3580). Leave blank to use the local mail program.</span>
 									</td>
 								</tr>
 								<tr>
@@ -640,7 +640,7 @@ generate_admin_menu('options');
 									<th scope="row">Verify registrations</th>
 									<td>
 										<input type="radio" name="form[regs_verify]" value="1"<?php if ($pun_config['o_regs_verify'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[regs_verify]" value="0"<?php if ($pun_config['o_regs_verify'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>When enabled, users are e-mailed a random password when they register. They can then log in and change the password in their profile if they see fit. This feature also requires users to verify new e-mail addresses if they choose to change from the one they registered with. This is an effective way of avoiding registration abuse and making sure that all users have "correct" e-mail addresses in their profiles.</span>
+										<span>When enabled, users are emailed a random password when they register. They can then log in and change the password in their profile if they see fit. This feature also requires users to verify new email addresses if they choose to change from the one they registered with. This is an effective way of avoiding registration abuse and making sure that all users have "correct" email addresses in their profiles.</span>
 									</td>
 								</tr>
 								<tr>
@@ -665,12 +665,12 @@ generate_admin_menu('options');
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Default e-mail setting</th>
+									<th scope="row">Default email setting</th>
 									<td>
 										<span>Choose the default privacy setting for new user registrations.</span>
-										<input type="radio" name="form[default_email_setting]" value="0"<?php if ($pun_config['o_default_email_setting'] == '0') echo ' checked="checked"' ?> />&nbsp;Display e-mail address to other users.<br />
-										<input type="radio" name="form[default_email_setting]" value="1"<?php if ($pun_config['o_default_email_setting'] == '1') echo ' checked="checked"' ?> />&nbsp;Hide e-mail address but allow form e-mail.<br />
-										<input type="radio" name="form[default_email_setting]" value="2"<?php if ($pun_config['o_default_email_setting'] == '2') echo ' checked="checked"' ?> />&nbsp;Hide e-mail address and disallow form e-mail.<br />
+										<input type="radio" name="form[default_email_setting]" value="0"<?php if ($pun_config['o_default_email_setting'] == '0') echo ' checked="checked"' ?> />&nbsp;Display email address to other users.<br />
+										<input type="radio" name="form[default_email_setting]" value="1"<?php if ($pun_config['o_default_email_setting'] == '1') echo ' checked="checked"' ?> />&nbsp;Hide email address but allow form email.<br />
+										<input type="radio" name="form[default_email_setting]" value="2"<?php if ($pun_config['o_default_email_setting'] == '2') echo ' checked="checked"' ?> />&nbsp;Hide email address and disallow form email.<br />
 									</td>
 								</tr>
 							</table>

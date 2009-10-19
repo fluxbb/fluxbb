@@ -101,10 +101,10 @@ else if ($action == 'forget' || $action == 'forget_2')
 	{
 		require PUN_ROOT.'include/email.php';
 
-		// Validate the e-mail address
+		// Validate the email address
 		$email = strtolower(trim($_POST['req_email']));
 		if (!is_valid_email($email))
-			message($lang_common['Invalid e-mail']);
+			message($lang_common['Invalid email']);
 
 		$result = $db->query('SELECT id, username, last_email_sent FROM '.$db->prefix.'users WHERE email=\''.$db->escape($email).'\'') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
@@ -118,7 +118,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 			$mail_subject = trim(substr($mail_tpl, 8, $first_crlf-8));
 			$mail_message = trim(substr($mail_tpl, $first_crlf));
 
-			// Do the generic replacements first (they apply to all e-mails sent out here)
+			// Do the generic replacements first (they apply to all emails sent out here)
 			$mail_message = str_replace('<base_url>', $pun_config['o_base_url'].'/', $mail_message);
 			$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
 
@@ -145,12 +145,12 @@ else if ($action == 'forget' || $action == 'forget_2')
 			message($lang_login['Forget mail'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
 		}
 		else
-			message($lang_login['No e-mail match'].' '.htmlspecialchars($email).'.');
+			message($lang_login['No email match'].' '.htmlspecialchars($email).'.');
 	}
 
 
 	$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_login['Request pass'];
-	$required_fields = array('req_email' => $lang_common['E-mail']);
+	$required_fields = array('req_email' => $lang_common['Email']);
 	$focus_element = array('request_pass', 'req_email');
 	require PUN_ROOT.'header.php';
 

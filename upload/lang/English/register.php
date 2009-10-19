@@ -19,10 +19,10 @@ $lang_register = array(
 'Username censor'			=>	'The username you entered contains one or more censored words. Please choose a different username.',
 'Username dupe 1'			=>	'Someone is already registered with the username',
 'Username dupe 2'			=>	'The username you entered is too similar. The username must differ from that by at least one alphanumerical character (a-z or 0-9). Please choose a different username.',
-'E-mail not match'			=>	'E-mail addresses do not match.',
+'Email not match'			=>	'Email addresses do not match.',
 
-// Registration e-mail stuff
-'Reg e-mail'				=>	'Thank you for registering. Your password has been sent to the specified address. If it doesn\'t arrive you can contact the forum administrator at',
+// Registration email stuff
+'Reg email'				=>	'Thank you for registering. Your password has been sent to the specified address. If it doesn\'t arrive you can contact the forum administrator at',
 'Reg complete'				=>	'Registration complete. Logging in and redirecting &hellip;',
 
 // Register info
@@ -32,7 +32,7 @@ $lang_register = array(
 'Pass legend 1'				=>	'Please enter and confirm your chosen password',
 'Pass legend 2'				=>	'Please read the instructions below',
 'Pass info'					=>	'Passwords can be between 4 and 16 characters long. Passwords are case sensitive.',
-'E-mail info'				=>	'You must enter a valid e-mail address as your randomly generated password will be sent to that address.',
-'Confirm e-mail'			=>	'Confirm e-mail address',
+'Email info'				=>	'You must enter a valid email address as your randomly generated password will be sent to that address.',
+'Confirm email'			=>	'Confirm email address',
 
 );

@@ -95,7 +95,7 @@ else if (isset($_GET['email']))
 	list($recipient, $recipient_email, $email_setting) = $db->fetch_row($result);
 
 	if ($email_setting == 2 && !$pun_user['is_admmod'])
-		message($lang_misc['Form e-mail disabled']);
+		message($lang_misc['Form email disabled']);
 
 
 	if (isset($_POST['form_sent']))
@@ -105,16 +105,16 @@ else if (isset($_GET['email']))
 		$message = pun_trim($_POST['req_message']);
 
 		if ($subject == '')
-			message($lang_misc['No e-mail subject']);
+			message($lang_misc['No email subject']);
 		else if ($message == '')
-			message($lang_misc['No e-mail message']);
+			message($lang_misc['No email message']);
 		else if (strlen($message) > 65535)
-			message($lang_misc['Too long e-mail message']);
+			message($lang_misc['Too long email message']);
 
 		if ($pun_user['last_email_sent'] != '' && (time() - $pun_user['last_email_sent']) < $pun_user['g_email_flood'] && (time() - $pun_user['last_email_sent']) >= 0)
 			message(sprintf($lang_misc['Email flood'], $pun_user['g_email_flood']));
 
-		// Load the "form e-mail" template
+		// Load the "form email" template
 		$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/form_email.tpl'));
 
 		// The first row contains the subject
@@ -134,34 +134,34 @@ else if (isset($_GET['email']))
 
 		$db->query('UPDATE '.$db->prefix.'users SET last_email_sent='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 
-		redirect(htmlspecialchars($_POST['redirect_url']), $lang_misc['E-mail sent redirect']);
+		redirect(htmlspecialchars($_POST['redirect_url']), $lang_misc['Email sent redirect']);
 	}
 
 
-	// Try to determine if the data in HTTP_REFERER is valid (if not, we redirect to the users profile after the e-mail is sent)
+	// Try to determine if the data in HTTP_REFERER is valid (if not, we redirect to the users profile after the email is sent)
 	$redirect_url = (isset($_SERVER['HTTP_REFERER']) && preg_match('#^'.preg_quote($pun_config['o_base_url']).'/(.*?)\.php#i', $_SERVER['HTTP_REFERER'])) ? htmlspecialchars($_SERVER['HTTP_REFERER']) : 'index.php';
 
-	$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_misc['Send e-mail to'].' '.pun_htmlspecialchars($recipient);
-	$required_fields = array('req_subject' => $lang_misc['E-mail subject'], 'req_message' => $lang_misc['E-mail message']);
+	$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_misc['Send email to'].' '.pun_htmlspecialchars($recipient);
+	$required_fields = array('req_subject' => $lang_misc['Email subject'], 'req_message' => $lang_misc['Email message']);
 	$focus_element = array('email', 'req_subject');
 	require PUN_ROOT.'header.php';
 
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_misc['Send e-mail to'] ?> <?php echo pun_htmlspecialchars($recipient) ?></span></h2>
+	<h2><span><?php echo $lang_misc['Send email to'] ?> <?php echo pun_htmlspecialchars($recipient) ?></span></h2>
 	<div class="box">
 		<form id="email" method="post" action="misc.php?email=<?php echo $recipient_id ?>" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_misc['Write e-mail'] ?></legend>
+					<legend><?php echo $lang_misc['Write email'] ?></legend>
 					<div class="infldset txtarea">
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="redirect_url" value="<?php echo $redirect_url ?>" />
-						<label><strong><?php echo $lang_misc['E-mail subject'] ?></strong><br />
+						<label><strong><?php echo $lang_misc['Email subject'] ?></strong><br />
 						<input class="longinput" type="text" name="req_subject" size="75" maxlength="70" tabindex="1" /><br /></label>
-						<label><strong><?php echo $lang_misc['E-mail message'] ?></strong><br />
+						<label><strong><?php echo $lang_misc['Email message'] ?></strong><br />
 						<textarea name="req_message" rows="10" cols="75" tabindex="2"></textarea><br /></label>
-						<p><?php echo $lang_misc['E-mail disclosure note'] ?></p>
+						<p><?php echo $lang_misc['Email disclosure note'] ?></p>
 					</div>
 				</fieldset>
 			</div>
@@ -212,7 +212,7 @@ else if (isset($_GET['report']))
 		if ($pun_config['o_report_method'] == 0 || $pun_config['o_report_method'] == 2)
 			$db->query('INSERT INTO '.$db->prefix.'reports (post_id, topic_id, forum_id, reported_by, created, message) VALUES('.$post_id.', '.$topic_id.', '.$forum_id.', '.$pun_user['id'].', '.time().', \''.$db->escape($reason).'\')' ) or error('Unable to create report', __FILE__, __LINE__, $db->error());
 
-		// Should we e-mail the report?
+		// Should we email the report?
 		if ($pun_config['o_report_method'] == 1 || $pun_config['o_report_method'] == 2)
 		{
 			// We send it to the complete mailing-list in one swoop

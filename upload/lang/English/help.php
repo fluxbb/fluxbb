@@ -19,8 +19,8 @@ $lang_help = array(
 'Heading text'				=>	'Heading text',
 
 'Links and images'		=>	'Links and images',
-'Links info'			=>	'You can create links to other documents or to e-mail addresses using the following tags:',
-'My e-mail address'		=>	'My e-mail address',
+'Links info'			=>	'You can create links to other documents or to email addresses using the following tags:',
+'My email address'		=>	'My email address',
 'Images info'			=>	'If you want to display an image you can use the img tag. The text appearing after the "=" sign in the opening tag is used for the alt attribute and should be included whenever possible.',
 
 'Quotes'				=>	'Quotes',

@@ -79,7 +79,7 @@ if (isset($_POST['form_sent']))
 			$subject = ucwords(strtolower($subject));
 	}
 
-	// If the user is logged in we get the username and e-mail from $pun_user
+	// If the user is logged in we get the username and email from $pun_user
 	if (!$pun_user['is_guest'])
 	{
 		$username = $pun_user['username'];
@@ -126,16 +126,16 @@ if (isset($_POST['form_sent']))
 		{
 			require PUN_ROOT.'include/email.php';
 			if (!is_valid_email($email))
-				$errors[] = $lang_common['Invalid e-mail'];
+				$errors[] = $lang_common['Invalid email'];
 
-			// Check if it's a banned e-mail address
+			// Check if it's a banned email address
 			// we should only check guests because members addresses are already verified
 			if ($pun_user['is_guest'] && is_banned_email($email))
 			{
 				if ($pun_config['p_allow_banned_email'] == '0')
-					$errors[] = $lang_prof_reg['Banned e-mail'];
+					$errors[] = $lang_prof_reg['Banned email'];
 
-				$banned_email = true;	// Used later when we send an alert e-mail
+				$banned_email = true;	// Used later when we send an alert email
 			}
 			else
 				$banned_email = false;
@@ -224,10 +224,10 @@ if (isset($_POST['form_sent']))
 
 					$notification_emails = array();
 
-					// Loop through subscribed users and send e-mails
+					// Loop through subscribed users and send emails
 					while ($cur_subscriber = $db->fetch_assoc($result))
 					{
-						// Is the subscription e-mail for $cur_subscriber['language'] cached or not?
+						// Is the subscription email for $cur_subscriber['language'] cached or not?
 						if (!isset($notification_emails[$cur_subscriber['language']]))
 						{
 							if (file_exists(PUN_ROOT.'lang/'.$cur_subscriber['language'].'/mail_templates/new_reply.tpl'))
@@ -315,7 +315,7 @@ if (isset($_POST['form_sent']))
 			update_forum($fid);
 		}
 
-		// If we previously found out that the e-mail was banned
+		// If we previously found out that the email was banned
 		if ($banned_email && $pun_config['o_mailing_list'] != '')
 		{
 			$mail_subject = $lang_common['Banned email notification'];
@@ -411,7 +411,7 @@ else
 
 
 $page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$action;
-$required_fields = array('req_email' => $lang_common['E-mail'], 'req_subject' => $lang_common['Subject'], 'req_message' => $lang_common['Message']);
+$required_fields = array('req_email' => $lang_common['Email'], 'req_subject' => $lang_common['Subject'], 'req_message' => $lang_common['Message']);
 $focus_element = array('post');
 
 if (!$pun_user['is_guest'])
@@ -498,7 +498,7 @@ $cur_index = 1;
 
 if ($pun_user['is_guest'])
 {
-	$email_label = ($pun_config['p_force_guest_email'] == '1') ? '<strong>'.$lang_common['E-mail'].'</strong>' : $lang_common['E-mail'];
+	$email_label = ($pun_config['p_force_guest_email'] == '1') ? '<strong>'.$lang_common['Email'].'</strong>' : $lang_common['Email'];
 	$email_form_name = ($pun_config['p_force_guest_email'] == '1') ? 'req_email' : 'email';
 
 ?>						<label class="conl"><strong><?php echo $lang_post['Guest name'] ?></strong><br /><input type="text" name="req_username" value="<?php if (isset($_POST['req_username'])) echo pun_htmlspecialchars($username); ?>" size="25" maxlength="25" tabindex="<?php echo $cur_index++ ?>" /><br /></label>

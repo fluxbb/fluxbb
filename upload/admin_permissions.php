@@ -88,10 +88,10 @@ generate_admin_menu('permissions');
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Require guest e-mail</th>
+									<th scope="row">Require guest email</th>
 									<td>
 										<input type="radio" name="form[force_guest_email]" value="1"<?php if ($pun_config['p_force_guest_email'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[force_guest_email]" value="0"<?php if ($pun_config['p_force_guest_email'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Require guests to supply an e-mail address when posting.</span>
+										<span>Require guests to supply an email address when posting.</span>
 									</td>
 								</tr>
 							</table>
@@ -148,17 +148,17 @@ generate_admin_menu('permissions');
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row">Allow banned e-mail addresses</th>
+									<th scope="row">Allow banned email addresses</th>
 									<td>
 										<input type="radio" name="form[allow_banned_email]" value="1"<?php if ($pun_config['p_allow_banned_email'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[allow_banned_email]" value="0"<?php if ($pun_config['p_allow_banned_email'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Allow users to register with or change to a banned e-mail address/domain. If left at its default setting (yes) this action will be allowed, but an alert e-mail will be sent to the mailing list (an effective way of detecting multiple registrations).</span>
+										<span>Allow users to register with or change to a banned email address/domain. If left at its default setting (yes) this action will be allowed, but an alert email will be sent to the mailing list (an effective way of detecting multiple registrations).</span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Allow duplicate e-mail addresses</th>
+									<th scope="row">Allow duplicate email addresses</th>
 									<td>
 										<input type="radio" name="form[allow_dupe_email]" value="1"<?php if ($pun_config['p_allow_dupe_email'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[allow_dupe_email]" value="0"<?php if ($pun_config['p_allow_dupe_email'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Controls whether users should be allowed to register with an e-mail address that another user already has. If allowed, an alert e-mail will be sent to the mailing list if a duplicate is detected.</span>
+										<span>Controls whether users should be allowed to register with an email address that another user already has. If allowed, an alert email will be sent to the mailing list if a duplicate is detected.</span>
 									</td>
 								</tr>
 							</table>

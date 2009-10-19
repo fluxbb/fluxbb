@@ -232,11 +232,11 @@ while ($cur_post = $db->fetch_assoc($result))
 			if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
 				$user_info[] = '<dd>'.$lang_common['Posts'].': '.forum_number_format($cur_post['num_posts']);
 
-			// Now let's deal with the contact links (E-mail and URL)
+			// Now let's deal with the contact links (Email and URL)
 			if ((($cur_post['email_setting'] == '0' && !$pun_user['is_guest']) || $pun_user['is_admmod']) && $pun_user['g_send_email'] == '1')
-				$user_contacts[] = '<a href="mailto:'.$cur_post['email'].'">'.$lang_common['E-mail'].'</a>';
+				$user_contacts[] = '<a href="mailto:'.$cur_post['email'].'">'.$lang_common['Email'].'</a>';
 			else if ($cur_post['email_setting'] == '1' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
-				$user_contacts[] = '<a href="misc.php?email='.$cur_post['poster_id'].'">'.$lang_common['E-mail'].'</a>';
+				$user_contacts[] = '<a href="misc.php?email='.$cur_post['poster_id'].'">'.$lang_common['Email'].'</a>';
 
 			if ($cur_post['url'] != '')
 				$user_contacts[] = '<a href="'.pun_htmlspecialchars($cur_post['url']).'">'.$lang_topic['Website'].'</a>';
@@ -260,7 +260,7 @@ while ($cur_post = $db->fetch_assoc($result))
 			$user_info[] = '<dd>'.$lang_topic['IP'].': <a href="moderate.php?get_host='.$cur_post['id'].'">'.$cur_post['poster_ip'].'</a>';
 
 		if ($pun_config['o_show_user_info'] == '1' && $cur_post['poster_email'] != '' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
-			$user_contacts[] = '<a href="mailto:'.$cur_post['poster_email'].'">'.$lang_common['E-mail'].'</a>';
+			$user_contacts[] = '<a href="mailto:'.$cur_post['poster_email'].'">'.$lang_common['Email'].'</a>';
 	}
 
 	// Generation post action array (quote, edit, delete etc.)

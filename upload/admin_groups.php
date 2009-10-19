@@ -213,7 +213,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 									<th scope="row">Email flood interval</th>
 									<td>
 										<input type="text" name="email_flood" size="5" maxlength="4" value="<?php echo $group['g_email_flood'] ?>" tabindex="26" />
-										<span>Number of seconds that users in this group have to wait between e-mails. Set to 0 to disable.</span>
+										<span>Number of seconds that users in this group have to wait between emails. Set to 0 to disable.</span>
 									</td>
 								</tr>
 <?php endif; endif; ?>							</table>

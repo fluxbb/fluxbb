@@ -99,7 +99,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 				<input type="hidden" name="mode" value="<?php echo $mode ?>" />
 <?php if ($mode == 'edit'): ?>				<input type="hidden" name="ban_id" value="<?php echo $ban_id ?>" />
 <?php endif; ?>				<fieldset>
-						<legend>Supplement ban with IP and e-mail</legend>
+						<legend>Supplement ban with IP and email</legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
@@ -117,10 +117,10 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">E-mail/domain</th>
+									<th scope="row">Email/domain</th>
 									<td>
 										<input type="text" name="ban_email" size="40" maxlength="50" value="<?php if (isset($ban_email)) echo strtolower($ban_email); ?>" tabindex="3" />
-										<span>The e-mail or e-mail domain you wish to ban (e.g. someone@somewhere.com or somewhere.com). See "Allow banned e-mail addresses" in Permissions for more info.</span>
+										<span>The email or email domain you wish to ban (e.g. someone@somewhere.com or somewhere.com). See "Allow banned email addresses" in Permissions for more info.</span>
 									</td>
 								</tr>
 							</table>
@@ -175,7 +175,7 @@ else if (isset($_POST['add_edit_ban']))
 	$ban_expire = trim($_POST['ban_expire']);
 
 	if ($ban_user == '' && $ban_ip == '' && $ban_email == '')
-		message('You must enter either a username, an IP address or an e-mail address (at least).');
+		message('You must enter either a username, an IP address or an email address (at least).');
 	else if (strtolower($ban_user) == 'guest')
 		message('The guest user cannot be banned.');
 
@@ -227,7 +227,7 @@ else if (isset($_POST['add_edit_ban']))
 	if ($ban_email != '' && !is_valid_email($ban_email))
 	{
 		if (!preg_match('/^[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/', $ban_email))
-			message('The e-mail address (e.g. user@domain.com) or partial e-mail address domain (e.g. domain.com) you entered is invalid.');
+			message('The email address (e.g. user@domain.com) or partial email address domain (e.g. domain.com) you entered is invalid.');
 	}
 
 	if ($ban_expire != '' && $ban_expire != 'Never')
@@ -301,7 +301,7 @@ generate_admin_menu('bans');
 									<th scope="row">Username<div><input type="submit" name="add_ban" value=" Add " tabindex="2" /></div></th>
 									<td>
 										<input type="text" name="new_ban_user" size="25" maxlength="25" tabindex="1" />
-										<span>The username to ban (case-insensitive). The next page will let you enter a custom IP and e-mail. If you just want to ban a specific IP/IP-range or e-mail just leave it blank.</span>
+										<span>The username to ban (case-insensitive). The next page will let you enter a custom IP and email. If you just want to ban a specific IP/IP-range or email just leave it blank.</span>
 									</td>
 								</tr>
 							</table>
@@ -334,7 +334,7 @@ if ($db->num_rows($result))
 									<td><?php echo pun_htmlspecialchars($cur_ban['username']) ?></td>
 								</tr>
 <?php endif; ?><?php if ($cur_ban['email'] != ''): ?>								<tr>
-									<th>E-mail</th>
+									<th>Email</th>
 									<td><?php echo $cur_ban['email'] ?></td>
 								</tr>
 <?php endif; ?><?php if ($cur_ban['ip'] != ''): ?>								<tr>

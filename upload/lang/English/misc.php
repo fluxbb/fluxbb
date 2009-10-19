@@ -6,18 +6,18 @@ $lang_misc = array(
 'Mark read redirect'		=>	'All topics and forums have been marked as read. Redirecting &hellip;',
 'Mark forum read redirect'	=>	'All topics in the specified forum have been marked as read. Redirecting &hellip;',
 
-// Send e-mail
-'Form e-mail disabled'		=>	'The user you are trying to send an e-mail to has disabled form e-mail.',
-'No e-mail subject'			=>	'You must enter a subject.',
-'No e-mail message'			=>	'You must enter a message.',
-'Too long e-mail message'	=>	'Messages cannot be longer than 65535 characters (64 KB).',
+// Send email
+'Form email disabled'		=>	'The user you are trying to send an email to has disabled form email.',
+'No email subject'			=>	'You must enter a subject.',
+'No email message'			=>	'You must enter a message.',
+'Too long email message'	=>	'Messages cannot be longer than 65535 characters (64 KB).',
 'Email flood'				=>	'At least %s seconds have to pass between sent emails. Please wait a while and try sending again.',
-'E-mail sent redirect'		=>	'E-mail sent. Redirecting &hellip;',
-'Send e-mail to'			=>	'Send e-mail to',
-'E-mail subject'			=>	'Subject',
-'E-mail message'			=>	'Message',
-'E-mail disclosure note'	=>	'Please note that by using this form, your e-mail address will be disclosed to the recipient.',
-'Write e-mail'				=>	'Write and submit your e-mail message',
+'Email sent redirect'		=>	'Email sent. Redirecting &hellip;',
+'Send email to'			=>	'Send email to',
+'Email subject'			=>	'Subject',
+'Email message'			=>	'Message',
+'Email disclosure note'	=>	'Please note that by using this form, your email address will be disclosed to the recipient.',
+'Write email'				=>	'Write and submit your email message',
 
 // Report
 'No reason'					=>	'You must enter a reason.',

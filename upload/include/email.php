@@ -14,7 +14,7 @@ if (!defined('PUN'))
 
 
 //
-// Validate an e-mail address
+// Validate an email address
 //
 function is_valid_email($email)
 {
@@ -109,7 +109,7 @@ function server_parse($socket, $expected_response)
 	}
 
 	if (!(substr($server_response, 0, 3) == $expected_response))
-		error('Unable to send e-mail. Please contact the forum administrator with the following error message reported by the SMTP server: "'.$server_response.'"', __FILE__, __LINE__);
+		error('Unable to send email. Please contact the forum administrator with the following error message reported by the SMTP server: "'.$server_response.'"', __FILE__, __LINE__);
 }
 
 

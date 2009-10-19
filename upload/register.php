@@ -137,33 +137,33 @@ if (isset($_POST['form_sent']))
 	else if ($password1 != $password2)
 		$errors[] = $lang_prof_reg['Pass not match'];
 
-	// Validate e-mail
+	// Validate email
 	require PUN_ROOT.'include/email.php';
 
 	if (!is_valid_email($email1))
-		$errors[] = $lang_common['Invalid e-mail'];
+		$errors[] = $lang_common['Invalid email'];
 	else if ($pun_config['o_regs_verify'] == '1' && $email1 != $email2)
-		$errors[] = $lang_register['E-mail not match'];
+		$errors[] = $lang_register['Email not match'];
 
-	// Check if it's a banned e-mail address
+	// Check if it's a banned email address
 	if (is_banned_email($email1))
 	{
 		if ($pun_config['p_allow_banned_email'] == '0')
-			$errors[] = $lang_prof_reg['Banned e-mail'];
+			$errors[] = $lang_prof_reg['Banned email'];
 
-		$banned_email = true;	// Used later when we send an alert e-mail
+		$banned_email = true;	// Used later when we send an alert email
 	}
 	else
 		$banned_email = false;
 
-	// Check if someone else already has registered with that e-mail address
+	// Check if someone else already has registered with that email address
 	$dupe_list = array();
 
 	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE email=\''.$db->escape($email1).'\'') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 	if ($db->num_rows($result))
 	{
 		if ($pun_config['p_allow_dupe_email'] == '0')
-			$errors[] = $lang_prof_reg['Dupe e-mail'];
+			$errors[] = $lang_prof_reg['Dupe email'];
 
 		while ($cur_dupe = $db->fetch_assoc($result))
 			$dupe_list[] = $cur_dupe['username'];
@@ -200,7 +200,7 @@ if (isset($_POST['form_sent']))
 		$new_uid = $db->insert_id();
 
 
-		// If we previously found out that the e-mail was banned
+		// If we previously found out that the email was banned
 		if ($banned_email && $pun_config['o_mailing_list'] != '')
 		{
 			$mail_subject = $lang_common['Banned email notification'];
@@ -211,7 +211,7 @@ if (isset($_POST['form_sent']))
 			pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
 		}
 
-		// If we previously found out that the e-mail was a dupe
+		// If we previously found out that the email was a dupe
 		if (!empty($dupe_list) && $pun_config['o_mailing_list'] != '')
 		{
 			$mail_subject = $lang_common['Duplicate email notification'];
@@ -253,7 +253,7 @@ if (isset($_POST['form_sent']))
 
 			pun_mail($email1, $mail_subject, $mail_message);
 
-			message($lang_register['Reg e-mail'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
+			message($lang_register['Reg email'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
 		}
 
 		pun_setcookie($new_uid, $password_hash, time() + $pun_config['o_timeout_visit']);
@@ -264,7 +264,7 @@ if (isset($_POST['form_sent']))
 
 
 $page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_register['Register'];
-$required_fields = array('req_username' => $lang_common['Username'], 'req_password1' => $lang_common['Password'], 'req_password2' => $lang_prof_reg['Confirm pass'], 'req_email1' => $lang_common['E-mail'], 'req_email2' => $lang_common['E-mail'].' 2');
+$required_fields = array('req_username' => $lang_common['Username'], 'req_password1' => $lang_common['Password'], 'req_password2' => $lang_prof_reg['Confirm pass'], 'req_email1' => $lang_common['Email'], 'req_email2' => $lang_common['Email'].' 2');
 $focus_element = array('register', 'req_username');
 require PUN_ROOT.'header.php';
 
@@ -330,12 +330,12 @@ if (!empty($errors))
 			</div>
 <?php endif; ?>			<div class="inform">
 				<fieldset>
-					<legend><?php echo ($pun_config['o_regs_verify'] == '1') ? $lang_prof_reg['E-mail legend 2'] : $lang_prof_reg['E-mail legend'] ?></legend>
+					<legend><?php echo ($pun_config['o_regs_verify'] == '1') ? $lang_prof_reg['Email legend 2'] : $lang_prof_reg['Email legend'] ?></legend>
 					<div class="infldset">
-<?php if ($pun_config['o_regs_verify'] == '1'): ?>			<p><?php echo $lang_register['E-mail info'] ?></p>
-<?php endif; ?>					<label><strong><?php echo $lang_common['E-mail'] ?></strong><br />
+<?php if ($pun_config['o_regs_verify'] == '1'): ?>			<p><?php echo $lang_register['Email info'] ?></p>
+<?php endif; ?>					<label><strong><?php echo $lang_common['Email'] ?></strong><br />
 						<input type="text" name="req_email1" value="<?php if (isset($_POST['req_email1'])) echo pun_htmlspecialchars($_POST['req_email1']); ?>" size="50" maxlength="50" /><br /></label>
-<?php if ($pun_config['o_regs_verify'] == '1'): ?>						<label><strong><?php echo $lang_register['Confirm e-mail'] ?></strong><br />
+<?php if ($pun_config['o_regs_verify'] == '1'): ?>						<label><strong><?php echo $lang_register['Confirm email'] ?></strong><br />
 						<input type="text" name="req_email2" value="<?php if (isset($_POST['req_email2'])) echo pun_htmlspecialchars($_POST['req_email2']); ?>" size="50" maxlength="50" /><br /></label>
 <?php endif; ?>					</div>
 				</fieldset>
@@ -431,11 +431,11 @@ if (!empty($errors))
 				<fieldset>
 					<legend><?php echo $lang_prof_reg['Privacy options legend'] ?></legend>
 					<div class="infldset">
-						<p><?php echo $lang_prof_reg['E-mail setting info'] ?></p>
+						<p><?php echo $lang_prof_reg['Email setting info'] ?></p>
 						<div class="rbox">
-							<label><input type="radio" name="email_setting" value="0"<?php if ($email_setting == '0') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['E-mail setting 1'] ?><br /></label>
-							<label><input type="radio" name="email_setting" value="1"<?php if ($email_setting == '1') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['E-mail setting 2'] ?><br /></label>
-							<label><input type="radio" name="email_setting" value="2"<?php if ($email_setting == '2') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['E-mail setting 3'] ?><br /></label>
+							<label><input type="radio" name="email_setting" value="0"<?php if ($email_setting == '0') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['Email setting 1'] ?><br /></label>
+							<label><input type="radio" name="email_setting" value="1"<?php if ($email_setting == '1') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['Email setting 2'] ?><br /></label>
+							<label><input type="radio" name="email_setting" value="2"<?php if ($email_setting == '2') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['Email setting 3'] ?><br /></label>
 						</div>
 					</div>
 				</fieldset>

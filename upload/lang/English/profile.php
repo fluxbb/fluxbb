@@ -33,14 +33,14 @@ $lang_profile = array(
 'New pass'					=>	'New password',
 'Confirm new pass'			=>	'Confirm new password',
 
-// E-mail stuff
-'E-mail key bad'			=>	'The specified e-mail activation key was incorrect or has expired. Please re-request change of e-mail address. If that fails, contact the forum administrator at',
-'E-mail updated'			=>	'Your e-mail address has been updated.',
-'Activate e-mail sent'		=>	'An e-mail has been sent to the specified address with instructions on how to activate the new e-mail address. If it doesn\'t arrive you can contact the forum administrator at',
-'E-mail legend'				=>	'Enter your new e-mail address',
-'E-mail instructions'		=>	'An e-mail will be sent to your new address with an activation link. You must click the link in the e-mail you receive to activate the new address.',
-'Change e-mail'				=>	'Change e-mail address',
-'New e-mail'				=>	'New e-mail',
+// Email stuff
+'Email key bad'			=>	'The specified email activation key was incorrect or has expired. Please re-request change of email address. If that fails, contact the forum administrator at',
+'Email updated'			=>	'Your email address has been updated.',
+'Activate email sent'		=>	'An email has been sent to the specified address with instructions on how to activate the new email address. If it doesn\'t arrive you can contact the forum administrator at',
+'Email legend'				=>	'Enter your new email address',
+'Email instructions'		=>	'An email will be sent to your new address with an activation link. You must click the link in the email you receive to activate the new address.',
+'Change email'				=>	'Change email address',
+'New email'				=>	'New email',
 
 // Avatar upload stuff
 'Avatars disabled'			=>	'The administrator has disabled avatar support.',
@@ -73,7 +73,7 @@ $lang_profile = array(
 'Users profile'				=>	'%s\'s profile',
 'Not activated'				=>	'This user hasn\'t activated his/her account yet. The account is activated when he/she logs in the first time.',
 'Unknown'					=>	'(Unknown)',	// This is displayed when a user hasn't filled out profile field (e.g. Location)
-'Private'					=>	'(Private)',	// This is displayed when a user does not want to receive e-mails
+'Private'					=>	'(Private)',	// This is displayed when a user does not want to receive emails
 'No avatar'					=>	'(No avatar)',
 'Show posts'				=>	'Show all posts',
 'Realname'					=>	'Real name',
@@ -100,8 +100,8 @@ $lang_profile = array(
 'Posts per page'			=>	'Posts',
 'Leave blank'				=>	'Leave blank to use forum default.',
 'Subscription legend'	                =>	'Set your subscription options',
-'Notify full'				=>	'Include post in subscription e-mails.',
-'Notify full info'			=>	'With this enabled, a plain text version of the new post will be included in subscription notification e-mails.',
+'Notify full'				=>	'Include post in subscription emails.',
+'Notify full info'			=>	'With this enabled, a plain text version of the new post will be included in subscription notification emails.',
 'Auto notify full'			=>	'Automatically subscribe to topics when posting.',
 'Auto notify full info'		=>	'With this enabled, you will automatically be subscribed to every topic you post in.',
 'Show smilies'				=>	'Show smilies as graphic icons',

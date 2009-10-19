@@ -118,7 +118,7 @@ if (isset($_GET['show_users']))
 			<thead>
 				<tr>
 					<th class="tcl" scope="col">Username</th>
-					<th class="tc2" scope="col">E-mail</th>
+					<th class="tc2" scope="col">Email</th>
 					<th class="tc3" scope="col">Title/Status</th>
 					<th class="tc4" scope="col">Posts</th>
 					<th class="tc5" scope="col">Admin note</th>
@@ -276,7 +276,7 @@ else if (isset($_POST['find_user']))
 			<thead>
 				<tr>
 					<th class="tcl" scope="col">Username</th>
-					<th class="tc2" scope="col">E-mail</th>
+					<th class="tc2" scope="col">Email</th>
 					<th class="tc3" scope="col">Title/Status</th>
 					<th class="tc4" scope="col">Posts</th>
 					<th class="tc5" scope="col">Admin note</th>
@@ -358,7 +358,7 @@ else
 									<td><input type="text" name="username" size="25" maxlength="25" tabindex="2" /></td>
 								</tr>
 								<tr>
-									<th scope="row">E-mail address</th>
+									<th scope="row">Email address</th>
 									<td><input type="text" name="form[email]" size="30" maxlength="50" tabindex="3" /></td>
 								</tr>
 								<tr>
@@ -434,7 +434,7 @@ else
 									<td>
 										<select name="order_by" tabindex="20">
 											<option value="username" selected="selected">username</option>
-											<option value="email">e-mail</option>
+											<option value="email">email</option>
 											<option value="num_posts">posts</option>
 											<option value="last_post">last post</option>
 											<option value="registered">registered</option>

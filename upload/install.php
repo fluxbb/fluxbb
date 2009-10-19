@@ -116,7 +116,7 @@ function process_form(the_form)
 	element_names["req_username"] = "Administrator username"
 	element_names["req_password1"] = "Administrator password 1"
 	element_names["req_password2"] = "Administrator password 2"
-	element_names["req_email"] = "Administrator's e-mail"
+	element_names["req_email"] = "Administrator's email"
 	element_names["req_base_url"] = "Base URL"
 
 	if (document.all || document.getElementById)
@@ -248,10 +248,10 @@ function process_form(the_form)
 			</div>
 			<div class="inform">
 				<fieldset>
-					<legend>Enter Administrator's e-mail</legend>
+					<legend>Enter Administrator's email</legend>
 					<div class="infldset">
-						<p>The e-mail address of the forum administrator.</p>
-						<label for="req_email"><strong>Administrator's e-mail</strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="50" /><br /></label>
+						<p>The email address of the forum administrator.</p>
+						<label for="req_email"><strong>Administrator's email</strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="50" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -321,7 +321,7 @@ else
 		error('Usernames may not contain any of the text formatting tags (BBCode) that the forum uses. Please go back and correct.');
 
 	if (strlen($email) > 80 || !preg_match('/^(([^<>()[\]\\.,;:\s@"\']+(\.[^<>()[\]\\.,;:\s@"\']+)*)|("[^"\']+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\d\-]+\.)+[a-zA-Z]{2,}))$/', $email))
-		error('The administrator e-mail address you entered is invalid. Please go back and correct.');
+		error('The administrator email address you entered is invalid. Please go back and correct.');
 
 
 	// Load the appropriate DB layer class

@@ -3,8 +3,8 @@
 // Language definitions used in both profile.php and register.php
 $lang_prof_reg = array(
 
-'E-mail legend'				=>	'Enter a valid e-mail address',
-'E-mail legend 2'			=>	'Enter and confirm a valid e-mail address',
+'Email legend'				=>	'Enter a valid email address',
+'Email legend 2'			=>	'Enter and confirm a valid email address',
 'Localisation legend'		=>	'Set your localisation options',
 'Timezone'					=>	'Timezone',
 'Timezone info'				=>	'For the forum to display times correctly you must select your local timezone.',
@@ -15,10 +15,10 @@ $lang_prof_reg = array(
 'Default'					=>	'Default',
 'Language'					=>	'Language',
 'Language info'				=>	'You can choose which language you wish to use to view the forum.',
-'E-mail setting info'		=>	'Select whether you want your e-mail address to be viewable to other users or not and if you want other users to be able to send you e-mail via the forum (form e-mail) or not.',
-'E-mail setting 1'			=>	'Display your e-mail address.',
-'E-mail setting 2'			=>	'Hide your e-mail address but allow form e-mail.',
-'E-mail setting 3'			=>	'Hide your e-mail address and disallow form e-mail.',
+'Email setting info'		=>	'Select whether you want your email address to be viewable to other users or not and if you want other users to be able to send you email via the forum (form email) or not.',
+'Email setting 1'			=>	'Display your email address.',
+'Email setting 2'			=>	'Hide your email address but allow form email.',
+'Email setting 3'			=>	'Hide your email address and disallow form email.',
 'Privacy options legend'	=>	'Set your privacy options',
 'Confirm pass'				=>	'Confirm password',
 
@@ -32,8 +32,8 @@ $lang_prof_reg = array(
 'Banned username'			=>	'The username you entered is banned in this forum. Please choose another username.',
 'Pass too short'			=>	'Passwords must be at least 4 characters long. Please choose another (longer) password.',
 'Pass not match'			=>	'Passwords do not match.',
-'Banned e-mail'				=>	'The e-mail address you entered is banned in this forum. Please choose another e-mail address.',
-'Dupe e-mail'				=>	'Someone else is already registered with that e-mail address. Please choose another e-mail address.',
+'Banned email'				=>	'The email address you entered is banned in this forum. Please choose another email address.',
+'Dupe email'				=>	'Someone else is already registered with that email address. Please choose another email address.',
 'Sig too long'				=>	'Signatures cannot be longer than',
 'characters'				=>	'characters',
 'Sig too many lines'		=>	'Signatures cannot have more than',

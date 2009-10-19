@@ -392,7 +392,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 	// Start by updating the database structure
 	case 'start':
-		// Make all e-mail fields VARCHAR(80)
+		// Make all email fields VARCHAR(80)
 		$db->alter_field('bans', 'email', 'VARCHAR(80)', true);
 		$db->alter_field('posts', 'poster_email', 'VARCHAR(80)', true);
 		$db->alter_field('users', 'email', 'VARCHAR(80)', false, '');

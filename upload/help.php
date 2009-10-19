@@ -53,7 +53,7 @@ require PUN_ROOT.'header.php';
 		<p><code>[url=<?php echo $pun_config['o_base_url'].'/' ?>]<?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?>[/url]</code> <?php echo $lang_help['produces'] ?> <a href="<?php echo $pun_config['o_base_url'].'/' ?>"><?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?></a><br />
 		<code>[url]<?php echo $pun_config['o_base_url'].'/' ?>[/url]</code> <?php echo $lang_help['produces'] ?> <a href="<?php echo $pun_config['o_base_url'] ?>"><?php echo $pun_config['o_base_url'].'/' ?></a><br />
 		<code>[email]myname@mydomain.com[/email]</code> <?php echo $lang_help['produces'] ?> <a href="mailto:myname@mydomain.com">myname@mydomain.com</a><br />
-		<code>[email=myname@mydomain.com]<?php echo $lang_help['My e-mail address'] ?>[/email]</code> <?php echo $lang_help['produces'] ?> <a href="mailto:myname@mydomain.com"><?php echo $lang_help['My e-mail address'] ?></a></p>
+		<code>[email=myname@mydomain.com]<?php echo $lang_help['My email address'] ?>[/email]</code> <?php echo $lang_help['produces'] ?> <a href="mailto:myname@mydomain.com"><?php echo $lang_help['My email address'] ?></a></p>
 	</div>
 	<div class="inbox">
 		<p><a name="img"></a><?php echo $lang_help['Images info'] ?></p>
