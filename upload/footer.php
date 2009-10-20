@@ -102,8 +102,7 @@ else if ($footer_style == 'viewforum' || $footer_style == 'viewtopic')
 if (defined('PUN_DEBUG'))
 {
 	// Calculate script generation time
-	list($usec, $sec) = explode(' ', microtime());
-	$time_diff = sprintf('%.3f', ((float)$usec + (float)$sec) - $pun_start);
+	$time_diff = sprintf('%.3f', get_microtime() - $pun_start);
 	echo "\t\t\t".'<p class="conr">[ '.sprintf($lang_common['Querytime'], $time_diff, $db->get_num_queries()).' ]</p>'."\n";
 }
 

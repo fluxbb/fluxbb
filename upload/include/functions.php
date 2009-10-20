@@ -9,6 +9,15 @@
 ---*/
 
 //
+// Return current timestamp (with microseconds) as a float
+//
+function get_microtime()
+{
+	list($usec, $sec) = explode(' ', microtime());
+	return ((float)$usec + (float)$sec);
+}
+
+//
 // Cookie stuff!
 //
 function check_cookie(&$pun_user)

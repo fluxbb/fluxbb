@@ -13,19 +13,6 @@ if (!defined('PUN'))
 	exit;
 
 
-//
-// Return current timestamp (with microseconds) as a float (used in dblayer)
-//
-if (defined('PUN_SHOW_QUERIES'))
-{
-	function get_microtime()
-	{
-		list($usec, $sec) = explode(' ', microtime());
-		return ((float)$usec + (float)$sec);
-	}
-}
-
-
 // Load the appropriate DB layer class
 switch ($db_type)
 {

@@ -51,8 +51,7 @@ forum_unregister_globals();
 
 
 // Record the start time (will be used to calculate the generation time for the page)
-list($usec, $sec) = explode(' ', microtime());
-$pun_start = ((float)$usec + (float)$sec);
+$pun_start = get_microtime();
 
 // Make sure PHP reports all errors except E_NOTICE. FluxBB supports E_ALL, but a lot of scripts it may interact with, do not
 error_reporting(E_ALL ^ E_NOTICE);
