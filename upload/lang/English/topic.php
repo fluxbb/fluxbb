@@ -5,9 +5,9 @@ $lang_topic = array(
 
 'Post reply'		=>	'Post reply',
 'Topic closed'		=>	'Topic closed',
-'From'				=>	'From',				// User location
+'From'				=>	'From', // User location
 'IP'				=>	'IP',
-'Note'				=>	'Note',				// Admin note
+'Note'				=>	'Note', // Admin note
 'Website'			=>	'Website',
 'Guest'				=>	'Guest',
 'Online'			=>	'Online',
@@ -22,7 +22,7 @@ $lang_topic = array(
 'Subscribe'			=>	'Subscribe to this topic',
 'Quick post'		=>	'Quick post',
 
-'Link separator'	=>	' | ',	// The text that separates links in posts (website, email, report, edit etc.)
+'Link separator'	=>	' | ', // The text that separates links in posts (website, email, report, edit etc.)
 'Mod controls'		=>	'Moderator controls'
 
 );

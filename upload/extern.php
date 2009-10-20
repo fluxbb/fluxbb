@@ -64,7 +64,7 @@ require PUN_ROOT.'include/common.php';
 
 // The length at which topic subjects will be truncated (for HTML output)
 if (!defined('FORUM_EXTERN_MAX_SUBJECT_LENGTH'))
-    define('FORUM_EXTERN_MAX_SUBJECT_LENGTH', 30);
+	define('FORUM_EXTERN_MAX_SUBJECT_LENGTH', 30);
 
 // If we're a guest and we've sent a username/pass, we can try to authenticate using those details
 if ($pun_user['is_guest'] && isset($_SERVER['PHP_AUTH_USER']))

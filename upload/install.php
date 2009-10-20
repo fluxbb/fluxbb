@@ -387,13 +387,13 @@ else
 		error('A table called "'.$db_prefix.'users" is already present in the database "'.$db_name.'". This could mean that FluxBB is already installed or that another piece of software is installed and is occupying one or more of the table names FluxBB requires. If you want to install multiple copies of FluxBB in the same database, you must choose a different table prefix.');
 
 	// Check if InnoDB is available
- 	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
- 	{
+	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+	{
 		$result = $db->query('SHOW VARIABLES LIKE \'have_innodb\'');
 		list (, $result) = $db->fetch_row($result);
 		if ((strtoupper($result) != 'YES'))
 			error('InnoDB does not seem to be enabled. Please choose a database layer that does not have InnoDB support, or enable InnoDB on your MySQL server.');
- 	}
+	}
 
 
 	// Start a transaction

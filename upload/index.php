@@ -135,7 +135,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 	}
 
 ?>
- 				<tr<?php if ($item_status != '') echo ' class="'.$item_status.'"'; ?>>
+				<tr<?php if ($item_status != '') echo ' class="'.$item_status.'"'; ?>>
 					<td class="tcl">
 						<div class="intd">
 							<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo $icon_text ?></div></div>

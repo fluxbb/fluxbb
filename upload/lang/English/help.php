@@ -16,7 +16,7 @@ $lang_help = array(
 'Italic text'			=>	'Italic text',
 'Red text'				=>	'Red text',
 'Blue text'				=>	'Blue text',
-'Heading text'				=>	'Heading text',
+'Heading text'			=>	'Heading text',
 
 'Links and images'		=>	'Links and images',
 'Links info'			=>	'You can create links to other documents or to email addresses using the following tags:',
@@ -39,14 +39,14 @@ $lang_help = array(
 'Nested tags info'		=>	'BBCode can be nested to create more advanced formatting. For example:',
 'Bold, underlined text'	=>	'Bold, underlined text',
 
-'Lists'                    =>    'Lists',
-'List info'                =>    'To create a list you can use the list tag. You can create 3 types of lists using the list tag.',
-'List text 1'              =>    'Example list item 1.',
-'List text 2'              =>    'Example list item 2.',
-'List text 3'              =>    'Example list item 3.',
-'produces list'            =>    'produces a bulleted list.',
-'produces decimal list'    =>    'produces a numbered list.',
-'produces alpha list'      =>    'produces an alphabetically labelled list.',
+'Lists'					=>	'Lists',
+'List info'				=>	'To create a list you can use the list tag. You can create 3 types of lists using the list tag.',
+'List text 1'			=>	'Example list item 1.',
+'List text 2'			=>	'Example list item 2.',
+'List text 3'			=>	'Example list item 3.',
+'produces list'			=>	'produces a bulleted list.',
+'produces decimal list'	=>	'produces a numbered list.',
+'produces alpha list'	=>	'produces an alphabetically labelled list.',
 
 'Smilies info'			=>	'If you like (and if it is enabled), the forum can convert a series of smilies to images representations of that smiley. This forum recognizes the following smilies and replaces them with images:'
 
