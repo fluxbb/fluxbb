@@ -74,7 +74,7 @@ if (version_compare($cur_version, '1.2', '<'))
 	exit('Version mismatch. The database \''.$db_name.'\' doesn\'t seem to be running a FluxBB database schema supported by this update script.');
 
 // If we've already done charset conversion in a previous update, we have to do SET NAMES
-$db->set_names(strpos($cur_version, '1.3') === 0 ? 'utf8' : 'latin1');
+$db->set_names(version_compare($cur_version, '1.3', '<') ? 'latin1' : 'utf8');
 
 // Get the forum config
 $result = $db->query('SELECT * FROM '.$db->prefix.'config') or error('Unable to fetch config.', __FILE__, __LINE__, $db->error());
