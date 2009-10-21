@@ -55,7 +55,7 @@ function generate_admin_menu($page = '')
 		$suffix = substr($entry, strlen($entry) - 4);
 
 		if ($suffix == '.php' && ((!$is_admin && $prefix == 'AMP') || ($is_admin && ($prefix == 'AP' || $prefix == 'AMP'))))
-			$plugins[] = array(substr(substr($entry, strpos($entry, '_') + 1), 0, -4), $entry);
+			$plugins[] = array(substr($entry, strpos($entry, '_') + 1, -4), $entry);
 	}
 	$d->close();
 
