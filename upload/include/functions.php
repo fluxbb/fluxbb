@@ -1020,6 +1020,31 @@ function pun_trim($str)
 
 
 //
+// Inserts $element into $input at $offset
+// $offset can be either a numerical offset to insert at (eg: 0 inserts at the beginning of the array)
+// or a string, which is the key that the new element should be inserted before
+// $key is optional: it's used when inserting a new key/value pair into an associative array
+//
+function array_insert(&$input, $offset, $element, $key = null)
+{
+	if ($key == null)
+		$key = $offset;
+
+	// Determine the proper offset if we're using a string
+	if (!is_int($offset))
+		$offset = array_search($offset, array_keys($input), true);
+
+	// Out of bounds checks
+	if ($offset > count($input))
+		$offset = count($input);
+	else if ($offset < 0)
+		$offset = 0;
+
+	$input = array_merge(array_slice($input, 0, $offset), array($key => $element), array_slice($input, $offset));
+}
+
+
+//
 // Display a message when board is in maintenance mode
 //
 function maintenance_message()
