@@ -36,8 +36,8 @@ if ($action == 'rules')
 <div class="block">
 	<h2><span><?php echo $lang_register['Forum rules'] ?></span></h2>
 	<div class="box">
-		<div class="inbox">
-			<p><?php echo $pun_config['o_rules_message'] ?></p>
+		<div id="rules-block" class="inbox">
+			<?php echo $pun_config['o_rules_message'] ?>
 		</div>
 	</div>
 </div>
