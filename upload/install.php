@@ -14,8 +14,16 @@ define('FORUM_DB_REVISION', 2);
 
 
 define('PUN_ROOT', './');
+
 if (file_exists(PUN_ROOT.'config.php'))
-	exit('The file \'config.php\' already exists which would mean that FluxBB is already installed. You should go <a href="index.php">here</a> instead.');
+{
+	// Check to see whether FluxBB is already installed
+	include PUN_ROOT.'config.php';
+	
+	// If PUN is defined, config.php is probably valid and thus the software is installed
+	if (defined('PUN'))
+		exit('It seems like FluxBB is already installed. You should go <a href="index.php">here</a> instead.');
+}
 
 
 // Make sure we are running at least PHP 4.1.0
