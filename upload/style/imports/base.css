@@ -108,8 +108,8 @@ DIV.linkst .conr, DIV.linksb .conr, DIV.postlinksb .conr {WIDTH:16em}
 FORM DIV.linksb .conr {WIDTH: 32em}
 
 /* 5.3 Keep breadcrumbs from shifting to the right when wrapping */
-
-.linkst UL, linksb UL, .postlinksb UL {MARGIN-LEFT: 18em}
+/* TEMP: THis is not needed anymore since the breadcrumbs are now on their own line */
+/* .linkst UL, linksb UL, .postlinksb UL {MARGIN-LEFT: 18em} */
 
 /* 5.4 Settings for Profile and Admin interface.*/
 
