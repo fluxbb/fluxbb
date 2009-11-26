@@ -954,8 +954,74 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 			convert_table_utf8($db->prefix.'users');
 		}
 
-		$query_str = '?stage=finish';
+		$query_str = '?stage=preparse_posts';
 		break;
+
+
+	// Preparse posts
+	case 'preparse_posts':
+		require PUN_ROOT.'include/parser.php';
+		
+		// Determine where to start
+		if ($start_at == 0)
+		{
+			// Get the first post ID from the db
+			$result = $db->query('SELECT id FROM '.$db->prefix.'posts ORDER BY id LIMIT 1') or error('Unable to fetch first post ID', __FILE__, __LINE__, $db->error());
+
+			if ($db->num_rows($result))
+				$start_at = $db->result($result);
+		}
+		$end_at = $start_at + PER_PAGE;
+
+		// Fetch posts to process this cycle
+		$result = $db->query('SELECT id, message FROM '.$db->prefix.'posts WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
+
+		while ($cur_item = $db->fetch_assoc($result))
+		{
+			echo 'Preparsing post '.$cur_item['id'].' …<br />'."\n";
+			$temp = array();
+			$db->query('UPDATE '.$db->prefix.'posts SET message = \''.$db->escape(preparse_bbcode($cur_item['message'], $temp)).'\' WHERE id = '.$cur_item['id']) or error('Unable to update post', __FILE__, __LINE__, $db->error());
+		}
+
+		// Check if there is more work to do
+		$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
+
+		if ($db->num_rows($result))
+			$query_str = '?stage=preparse_posts&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+		else
+			$query_str = '?stage=preparse_sigs';
+		break;
+	
+
+	// Preparse signatures
+	case 'preparse_sigs':
+		require PUN_ROOT.'include/parser.php';
+		
+		// Determine where to start
+		if ($start_at == 0)
+			$start_at = 2;
+
+		$end_at = $start_at + PER_PAGE;
+
+		// Fetch users to process this cycle
+		$result = $db->query('SELECT id, signature FROM '.$db->prefix.'users WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch users', __FILE__, __LINE__, $db->error());
+
+		while ($cur_item = $db->fetch_assoc($result))
+		{
+			echo 'Preparsing signature '.$cur_item['id'].' …<br />'."\n";
+			$temp = array();
+			$db->query('UPDATE '.$db->prefix.'users SET signature = \''.$db->escape(preparse_bbcode($cur_item['signature'], $temp, true)).'\' WHERE id = '.$cur_item['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
+		}
+
+		// Check if there is more work to do
+		$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
+
+		if ($db->num_rows($result))
+			$query_str = '?stage=preparse_sigs&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+		else
+			$query_str = '?stage=finish';
+		break;
+	
 
 	// Show results page
 	case 'finish':

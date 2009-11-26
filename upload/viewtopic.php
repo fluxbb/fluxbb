@@ -322,7 +322,7 @@ while ($cur_post = $db->fetch_assoc($result))
 				</dl>
 			</div>
 			<div class="postright">
-				<h3><?php if (($post_count + $start_from) > 1) echo ' Re: '; ?><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></h3>
+				<h3><?php if (($post_count + $start_from) > 1) echo 'Re: '; ?><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></h3>
 				<div class="postmsg">
 					<?php echo $cur_post['message']."\n" ?>
 <?php if ($cur_post['edited'] != '') echo "\t\t\t\t\t".'<p class="postedit"><em>'.$lang_topic['Last edit'].' '.pun_htmlspecialchars($cur_post['edited_by']).' ('.format_time($cur_post['edited']).')</em></p>'."\n"; ?>
