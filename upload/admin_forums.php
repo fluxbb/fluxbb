@@ -50,7 +50,7 @@ else if (isset($_GET['del_forum']))
 	if ($forum_id < 1)
 		message($lang_common['Bad request']);
 
-	if (isset($_POST['del_forum_comply']))	// Delete a forum with all posts
+	if (isset($_POST['del_forum_comply'])) // Delete a forum with all posts
 	{
 		@set_time_limit(0);
 
@@ -419,7 +419,7 @@ $tabindex_count = 4;
 $cur_category = 0;
 while ($cur_forum = $db->fetch_assoc($result))
 {
-	if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
+	if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
 	{
 		if ($cur_category != 0)
 			echo "\t\t\t\t\t\t\t".'</table>'."\n\t\t\t\t\t\t".'</div>'."\n\t\t\t\t\t".'</fieldset>'."\n\t\t\t\t".'</div>'."\n";

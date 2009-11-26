@@ -125,7 +125,7 @@ else
 
 $result = $db->query($sql) or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());
 
-// If there are topics in this forum.
+// If there are topics in this forum
 if ($db->num_rows($result))
 {
 	while ($cur_topic = $db->fetch_assoc($result))

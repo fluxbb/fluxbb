@@ -24,7 +24,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 {
 	if (isset($_GET['add_ban']) || isset($_POST['add_ban']))
 	{
-		// If the id of the user to ban was provided through GET (a link from profile.php)
+		// If the ID of the user to ban was provided through GET (a link from profile.php)
 		if (isset($_GET['add_ban']))
 		{
 			$add_ban = intval($_GET['add_ban']);
@@ -39,7 +39,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 			else
 				message('No user by that ID registered.');
 		}
-		else	// Otherwise the username is in POST
+		else // Otherwise the username is in POST
 		{
 			$ban_user = trim($_POST['new_ban_user']);
 
@@ -66,7 +66,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 
 		$mode = 'add';
 	}
-	else	// We are editing a ban
+	else // We are editing a ban
 	{
 		$ban_id = intval($_GET['edit_ban']);
 		if ($ban_id < 1)
@@ -110,7 +110,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">IP-adresses</th>
+									<th scope="row">IP-addresses</th>
 									<td>
 										<input type="text" name="ban_ip" size="45" maxlength="255" value="<?php if (isset($ban_ip)) echo $ban_ip; ?>" tabindex="2" />
 										<span>The IP or IP-ranges you wish to ban (e.g. 150.11.110.1 or 150.11.110). Separate addresses with spaces. If an IP is entered already it is the last known IP of this user in the database.<?php if ($ban_user != '' && isset($user_id)) echo ' Click <a href="admin_users.php?ip_stats='.$user_id.'">here</a> to see IP statistics for this user.' ?></span>

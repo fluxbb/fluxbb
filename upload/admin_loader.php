@@ -43,7 +43,7 @@ require PUN_ROOT.'header.php';
 
 // Attempt to load the plugin. We don't use @ here to supress error messages,
 // because if we did and a parse error occurred in the plugin, we would only
-// get the "blank page of death".
+// get the "blank page of death"
 include PUN_ROOT.'plugins/'.$plugin;
 if (!defined('PUN_PLUGIN_LOADED'))
 	message('Loading of the plugin \''.$plugin.'\' failed.');

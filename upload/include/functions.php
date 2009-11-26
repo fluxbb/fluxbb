@@ -25,7 +25,7 @@ function check_cookie(&$pun_user)
 	global $db, $db_type, $pun_config, $cookie_name, $cookie_seed;
 
 	$now = time();
-	$expire = $now + 31536000;	// The cookie expires after a year
+	$expire = $now + 31536000; // The cookie expires after a year
 
 	// We assume it's a guest
 	$cookie = array('user_id' => 1, 'password_hash' => 'Guest');
@@ -492,7 +492,7 @@ function set_tracked_topics($tracked_topics)
 	}
 
 	forum_setcookie($cookie_name.'_track', $cookie_data, time() + $pun_config['o_timeout_visit']);
-	$_COOKIE[$cookie_name.'_track'] = $cookie_data;	// Set it directly in $_COOKIE as well
+	$_COOKIE[$cookie_name.'_track'] = $cookie_data; // Set it directly in $_COOKIE as well
 }
 
 
@@ -536,16 +536,16 @@ function update_forum($forum_id)
 	$result = $db->query('SELECT COUNT(id), SUM(num_replies) FROM '.$db->prefix.'topics WHERE forum_id='.$forum_id) or error('Unable to fetch forum topic count', __FILE__, __LINE__, $db->error());
 	list($num_topics, $num_posts) = $db->fetch_row($result);
 
-	$num_posts = $num_posts + $num_topics;		// $num_posts is only the sum of all replies (we have to add the topic posts)
+	$num_posts = $num_posts + $num_topics; // $num_posts is only the sum of all replies (we have to add the topic posts)
 
 	$result = $db->query('SELECT last_post, last_post_id, last_poster FROM '.$db->prefix.'topics WHERE forum_id='.$forum_id.' AND moved_to IS NULL ORDER BY last_post DESC LIMIT 1') or error('Unable to fetch last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result))		// There are topics in the forum
+	if ($db->num_rows($result)) // There are topics in the forum
 	{
 		list($last_post, $last_post_id, $last_poster) = $db->fetch_row($result);
 
 		$db->query('UPDATE '.$db->prefix.'forums SET num_topics='.$num_topics.', num_posts='.$num_posts.', last_post='.$last_post.', last_post_id='.$last_post_id.', last_poster=\''.$db->escape($last_poster).'\' WHERE id='.$forum_id) or error('Unable to update last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
 	}
-	else	// There are no topics
+	else // There are no topics
 		$db->query('UPDATE '.$db->prefix.'forums SET num_topics='.$num_topics.', num_posts='.$num_posts.', last_post=NULL, last_post_id=NULL, last_poster=NULL WHERE id='.$forum_id) or error('Unable to update last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
 }
 
@@ -578,13 +578,13 @@ function delete_topic($topic_id)
 	// Delete the topic and any redirect topics
 	$db->query('DELETE FROM '.$db->prefix.'topics WHERE id='.$topic_id.' OR moved_to='.$topic_id) or error('Unable to delete topic', __FILE__, __LINE__, $db->error());
 
-	// Create a list of the post ID's in this topic
+	// Create a list of the post IDs in this topic
 	$post_ids = '';
 	$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE topic_id='.$topic_id) or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
 	while ($row = $db->fetch_row($result))
 		$post_ids .= ($post_ids != '') ? ','.$row[0] : $row[0];
 
-	// Make sure we have a list of post ID's
+	// Make sure we have a list of post IDs
 	if ($post_ids != '')
 	{
 		strip_search_index($post_ids);
@@ -961,13 +961,13 @@ function random_pass($len)
 
 //
 // Compute a hash of $str
-// Uses sha1() if available. If not, SHA1 through mhash() if available. If not, fall back on md5().
+// Uses sha1() if available. If not, SHA1 through mhash() if available. If not, fall back on md5()
 //
 function pun_hash($str)
 {
-	if (function_exists('sha1'))	// Only in PHP 4.3.0+
+	if (function_exists('sha1')) // Only in PHP 4.3.0+
 		return sha1($str);
-	else if (function_exists('mhash'))	// Only if Mhash library is loaded
+	else if (function_exists('mhash')) // Only if Mhash library is loaded
 		return bin2hex(mhash(MHASH_SHA1, $str));
 	else
 		return md5($str);
@@ -1305,7 +1305,7 @@ function forum_unregister_globals()
 		if (!in_array($k, $no_unset) && isset($GLOBALS[$k]))
 		{
 			unset($GLOBALS[$k]);
-			unset($GLOBALS[$k]);	// Double unset to circumvent the zend_hash_del_key_or_index hole in PHP <4.4.3 and <5.1.4
+			unset($GLOBALS[$k]); // Double unset to circumvent the zend_hash_del_key_or_index hole in PHP <4.4.3 and <5.1.4
 		}
 	}
 }

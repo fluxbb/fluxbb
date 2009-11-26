@@ -62,9 +62,9 @@ if ($action == 'change_pass')
 	// Make sure we are allowed to change this users password
 	if ($pun_user['id'] != $id)
 	{
-		if (!$pun_user['is_admmod'])	// A regular user trying to change another users password?
+		if (!$pun_user['is_admmod']) // A regular user trying to change another users password?
 			message($lang_common['No permission']);
-		else if ($pun_user['g_moderator'] == '1')	// A moderator trying to change a users password?
+		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a users password?
 		{
 			$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 			if (!$db->num_rows($result))
@@ -101,7 +101,7 @@ if ($action == 'change_pass')
 			$sha1_in_db = (strlen($db_password_hash) == 40) ? true : false;
 			$sha1_available = (function_exists('sha1') || function_exists('mhash')) ? true : false;
 
-			$old_password_hash = pun_hash($old_password);	// This could result in either an SHA-1 or an MD5 hash
+			$old_password_hash = pun_hash($old_password); // This could result in either an SHA-1 or an MD5 hash
 
 			if (($sha1_in_db && $sha1_available && $db_password_hash == $old_password_hash) ||
 				(!$sha1_in_db && $db_password_hash == md5($old_password)) ||
@@ -164,9 +164,9 @@ else if ($action == 'change_email')
 	// Make sure we are allowed to change this users email
 	if ($pun_user['id'] != $id)
 	{
-		if (!$pun_user['is_admmod'])	// A regular user trying to change another users email?
+		if (!$pun_user['is_admmod']) // A regular user trying to change another users email?
 			message($lang_common['No permission']);
-		else if ($pun_user['g_moderator'] == '1')	// A moderator trying to change a users email?
+		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a users email?
 		{
 			$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 			if (!$db->num_rows($result))
@@ -317,20 +317,20 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 		{
 			switch ($uploaded_file['error'])
 			{
-				case 1:	// UPLOAD_ERR_INI_SIZE
-				case 2:	// UPLOAD_ERR_FORM_SIZE
+				case 1: // UPLOAD_ERR_INI_SIZE
+				case 2: // UPLOAD_ERR_FORM_SIZE
 					message($lang_profile['Too large ini']);
 					break;
 
-				case 3:	// UPLOAD_ERR_PARTIAL
+				case 3: // UPLOAD_ERR_PARTIAL
 					message($lang_profile['Partial upload']);
 					break;
 
-				case 4:	// UPLOAD_ERR_NO_FILE
+				case 4: // UPLOAD_ERR_NO_FILE
 					message($lang_profile['No file']);
 					break;
 
-				case 6:	// UPLOAD_ERR_NO_TMP_DIR
+				case 6: // UPLOAD_ERR_NO_TMP_DIR
 					message($lang_profile['No tmp directory']);
 					break;
 
@@ -688,7 +688,7 @@ else if (isset($_POST['form_sent']))
 
 					if (strlen($form['username']) < 2)
 						message($lang_prof_reg['Username too short']);
-					else if (pun_strlen($form['username']) > 25)	// This usually doesn't happen since the form element only accepts 25 characters
+					else if (pun_strlen($form['username']) > 25) // This usually doesn't happen since the form element only accepts 25 characters
 						message($lang_common['Bad request']);
 					else if (!strcasecmp($form['username'], 'Guest') || !strcasecmp($form['username'], $lang_common['Guest']))
 						message($lang_prof_reg['Username guest']);
@@ -1110,7 +1110,7 @@ else
 					<fieldset>
 						<legend><?php echo $lang_prof_reg['Localisation legend'] ?></legend>
 						<div class="infldset">
-							<label><?php echo $lang_prof_reg['Timezone'] ?>: <?php echo $lang_prof_reg['Timezone info'] ?>
+							<label><?php echo $lang_prof_reg['Time zone'] ?>: <?php echo $lang_prof_reg['Time zone info'] ?>
 
 								<br /><select name="form[timezone]">
 								<option value="-12"<?php if ($user['timezone'] == -12) echo ' selected="selected"' ?>>-12</option>
@@ -1470,7 +1470,7 @@ else
 						</div>
 					</fieldset>
 				</div>
-				<p><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" />  <?php echo $lang_profile['Instructions'] ?></p>
+				<p><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
 			</form>
 		</div>
 	</div>
@@ -1616,7 +1616,7 @@ else
 				$cur_category = 0;
 				while ($cur_forum = $db->fetch_assoc($result))
 				{
-					if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
+					if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
 					{
 						if ($cur_category)
 							echo "\n\t\t\t\t\t\t\t\t".'</div>';

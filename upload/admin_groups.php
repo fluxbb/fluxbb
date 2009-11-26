@@ -32,7 +32,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 
 		$mode = 'add';
 	}
-	else	// We are editing a group
+	else // We are editing a group
 	{
 		$group_id = intval($_GET['edit_group']);
 		if ($group_id < 1)
@@ -430,7 +430,7 @@ else if (isset($_GET['del_group']))
 
 	while ($cur_group = $db->fetch_assoc($result))
 	{
-		if ($cur_group['g_id'] == PUN_MEMBER)	// Pre-select the pre-defined Members group
+		if ($cur_group['g_id'] == PUN_MEMBER) // Pre-select the pre-defined Members group
 			echo "\t\t\t\t\t\t\t\t\t\t".'<option value="'.$cur_group['g_id'].'" selected="selected">'.pun_htmlspecialchars($cur_group['g_title']).'</option>'."\n";
 		else
 			echo "\t\t\t\t\t\t\t\t\t\t".'<option value="'.$cur_group['g_id'].'">'.pun_htmlspecialchars($cur_group['g_title']).'</option>'."\n";

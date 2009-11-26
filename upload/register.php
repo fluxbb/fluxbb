@@ -95,7 +95,7 @@ if (isset($_POST['form_sent']))
 	// Validate username and passwords
 	if (strlen($username) < 2)
 		$errors[] = $lang_prof_reg['Username too short'];
-	else if (pun_strlen($username) > 25)	// This usually doesn't happen since the form element only accepts 25 characters
+	else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
 		$errors[] = $lang_prof_reg['Username too long'];
 	else if (!strcasecmp($username, 'Guest') || !strcasecmp($username, $lang_common['Guest']))
 		$errors[] = $lang_prof_reg['Username guest'];
@@ -151,7 +151,7 @@ if (isset($_POST['form_sent']))
 		if ($pun_config['p_allow_banned_email'] == '0')
 			$errors[] = $lang_prof_reg['Banned email'];
 
-		$banned_email = true;	// Used later when we send an alert email
+		$banned_email = true; // Used later when we send an alert email
 	}
 	else
 		$banned_email = false;
@@ -344,7 +344,7 @@ if (!empty($errors))
 				<fieldset>
 					<legend><?php echo $lang_prof_reg['Localisation legend'] ?></legend>
 					<div class="infldset">
-						<label><?php echo $lang_prof_reg['Timezone'] ?>: <?php echo $lang_prof_reg['Timezone info'] ?>
+						<label><?php echo $lang_prof_reg['Time zone'] ?>: <?php echo $lang_prof_reg['Time zone info'] ?>
 						<br /><select id="time_zone" name="timezone">
 							<option value="-12"<?php if ($timezone == -12 ) echo ' selected="selected"' ?>>-12</option>
 							<option value="-11"<?php if ($timezone == -11) echo ' selected="selected"' ?>>-11</option>

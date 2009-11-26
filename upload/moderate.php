@@ -13,7 +13,7 @@ require PUN_ROOT.'include/common.php';
 
 
 // This particular function doesn't require forum-based moderator access. It can be used
-// by all moderators and admins.
+// by all moderators and admins
 if (isset($_GET['get_host']))
 {
 	if (!$pun_user['is_admmod'])
@@ -60,7 +60,7 @@ if (!$pun_user['is_guest'])
 require PUN_ROOT.'lang/'.$pun_user['language'].'/misc.php';
 
 
-// All other topic moderation features require a topic id in GET
+// All other topic moderation features require a topic ID in GET
 if (isset($_GET['tid']))
 {
 	$tid = intval($_GET['tid']);
@@ -269,8 +269,8 @@ if (isset($_GET['tid']))
 
 	require PUN_ROOT.'include/parser.php';
 
-	$bg_switch = true;	// Used for switching background color in posts
-	$post_count = 0;	// Keep track of post numbers
+	$bg_switch = true; // Used for switching background color in posts
+	$post_count = 0; // Keep track of post numbers
 
 	// Retrieve the posts (and their respective poster)
 	$result = $db->query('SELECT u.title, u.num_posts, g.g_id, g.g_user_title, p.id, p.poster, p.poster_id, p.message, p.hide_smilies, p.posted, p.edited, p.edited_by FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE p.topic_id='.$tid.' ORDER BY p.id LIMIT '.$start_from.','.$pun_user['disp_posts'], true) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
@@ -301,7 +301,7 @@ if (isset($_GET['tid']))
 			$user_title = $lang_topic['Guest'];
 		}
 
-		// Switch the background color for every message.
+		// Switch the background color for every message
 		$bg_switch = ($bg_switch) ? $bg_switch = false : $bg_switch = true;
 		$vtbg = ($bg_switch) ? ' roweven' : ' rowodd';
 
@@ -397,8 +397,8 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 			}
 		}
 
-		update_forum($fid);				// Update the forum FROM which the topic was moved
-		update_forum($move_to_forum);	// Update the forum TO which the topic was moved
+		update_forum($fid); // Update the forum FROM which the topic was moved
+		update_forum($move_to_forum); // Update the forum TO which the topic was moved
 
 		$redirect_msg = (count($topics) > 1) ? $lang_misc['Move topics redirect'] : $lang_misc['Move topic redirect'];
 		redirect('viewforum.php?id='.$move_to_forum, $redirect_msg);
@@ -446,7 +446,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	$cur_category = 0;
 	while ($cur_forum = $db->fetch_assoc($result))
 	{
-		if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
+		if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
 		{
 			if ($cur_category)
 				echo "\t\t\t\t\t\t\t".'</optgroup>'."\n";
@@ -597,14 +597,14 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 		// Delete any subscriptions
 		$db->query('DELETE FROM '.$db->prefix.'subscriptions WHERE topic_id IN('.$topics.')') or error('Unable to delete subscriptions', __FILE__, __LINE__, $db->error());
 
-		// Create a list of the post ID's in this topic and then strip the search index
+		// Create a list of the post IDs in this topic and then strip the search index
 		$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE topic_id IN('.$topics.')') or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
 
 		$post_ids = '';
 		while ($row = $db->fetch_row($result))
 			$post_ids .= ($post_ids != '') ? ','.$row[0] : $row[0];
 
-		// We have to check that we actually have a list of post ID's since we could be deleting just a redirect topic
+		// We have to check that we actually have a list of post IDs since we could be deleting just a redirect topic
 		if ($post_ids != '')
 			strip_search_index($post_ids);
 

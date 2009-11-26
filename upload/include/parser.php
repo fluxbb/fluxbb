@@ -117,7 +117,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	$tags_opened = $tags;
 	// and tags we need to check are closed (the same as above, added it just in case)
 	$tags_closed = $tags;
-	// Tags we can nest and the depth they can be nested to (only quotes )
+	// Tags we can nest and the depth they can be nested to (only quotes)
 	$tags_nested = array('quote' => $pun_config['o_quote_depth'], 'list' => 5, '*' => 5);
 	// Tags to ignore the contents of completely (just code)
 	$tags_ignore = array('code');
@@ -254,7 +254,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			continue;
 		}
 
-		// We definitely have a bbcode tag.
+		// We definitely have a bbcode tag
 
 		// Make the tag string lower case
 		if ($equalpos = strpos($current,'='))
@@ -575,11 +575,11 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 {
 	$url = pun_trim($url);
 	$full_url = str_replace(array(' ', '\'', '`', '"'), array('%20', '', '', ''), $url);
-	if (strpos($url, 'www.') === 0)			// If it starts with www, we add http://
+	if (strpos($url, 'www.') === 0) // If it starts with www, we add http://
 		$full_url = 'http://'.$full_url;
-	else if (strpos($url, 'ftp.') === 0)	// Else if it starts with ftp, we add ftp://
+	else if (strpos($url, 'ftp.') === 0) // Else if it starts with ftp, we add ftp://
 		$full_url = 'ftp://'.$full_url;
-	else if (!preg_match('#^([a-z0-9]{3,6})://#', $url)) 	// Else if it doesn't start with abcdef://, we add http://
+	else if (!preg_match('#^([a-z0-9]{3,6})://#', $url)) // Else if it doesn't start with abcdef://, we add http://
 		$full_url = 'http://'.$full_url;
 
 	// Ok, not very pretty :-)

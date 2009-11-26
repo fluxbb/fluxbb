@@ -11,7 +11,7 @@
 define('UPDATE_TO', '1.4');
 define('UPDATE_TO_DB_REVISION', 2);
 
-// The number of items to process per pageview (lower this if the update script times out during UTF-8 conversion)
+// The number of items to process per page view (lower this if the update script times out during UTF-8 conversion)
 define('PER_PAGE', 300);
 
 
@@ -424,42 +424,42 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 		// Drop g_edit_subjects_interval column from groups table
 		$db->drop_field('groups', 'g_edit_subjects_interval');
-		
+
 		// Add database revision number
 		if (!array_key_exists('o_database_revision', $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_database_revision\', \'0\')') or error('Unable to insert config value \'o_database_revision\'', __FILE__, __LINE__, $db->error());
-		
+
 		// Add default email setting option
 		if (!array_key_exists('o_default_email_setting', $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_default_email_setting\', \'1\')') or error('Unable to insert config value \'o_default_email_setting\'', __FILE__, __LINE__, $db->error());
-		
+
 		// Make sure we have o_additional_navlinks (was added in 1.2.1)
 		if (!array_key_exists('o_additional_navlinks', $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_additional_navlinks\', \'\')') or error('Unable to insert config value \'o_additional_navlinks\'', __FILE__, __LINE__, $db->error());
-		
+
 		// Insert new config option o_topic_views
 		if (!array_key_exists('o_topic_views', $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_topic_views\', \'1\')') or error('Unable to insert config value \'o_topic_views\'', __FILE__, __LINE__, $db->error());
-		
+
 		// Insert new config option o_signatures
 		if (!array_key_exists('o_signatures', $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_signatures\', \'1\')') or error('Unable to insert config value \'o_signatures\'', __FILE__, __LINE__, $db->error());
-		
+
 		// Insert new config option o_smtp_ssl
 		if (!array_key_exists('o_smtp_ssl', $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_smtp_ssl\', \'0\')') or error('Unable to insert config value \'o_smtp_ssl\'', __FILE__, __LINE__, $db->error());
-		
+
 		// Insert new config option o_default_dst
 		if (!array_key_exists('o_default_dst', $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_default_dst\', \'0\')') or error('Unable to insert config value \'o_default_dst\'', __FILE__, __LINE__, $db->error());
-		
+
 		// Insert new config option o_quote_depth
 		if (!array_key_exists('o_quote_depth', $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_quote_depth\', \'3\')') or error('Unable to insert config value \'o_quote_depth\'', __FILE__, __LINE__, $db->error());
-		
+
 		// Server time zone is now simply the default time zone
 		if (!array_key_exists('o_default_timezone', $pun_config))
-			$db->query('UPDATE '.$db->prefix.'config SET conf_name = \'o_default_timezone\' WHERE conf_name = \'o_server_timezone\'') or error('Unable to update timezone config', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'config SET conf_name = \'o_default_timezone\' WHERE conf_name = \'o_server_timezone\'') or error('Unable to update time zone config', __FILE__, __LINE__, $db->error());
 
 		// Increase visit timeout to 30 minutes (only if it hasn't been changed from the default)
 		if (!array_key_exists('o_database_revision', $pun_config) && $pun_config['o_timeout_visit'] == '600')
@@ -556,10 +556,10 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 				break;
 		}
 
-		// Add an index to logged on the online table
+		// Add an index to logged in the online table
 		$db->add_index('online', 'logged_idx', array('logged'));
 
-		// Add an index on last_post in the topics table
+		// Add an index to last_post in the topics table
 		$db->add_index('topics', 'last_post_idx', array('last_post'));
 
 		// Add g_view_users field to groups table

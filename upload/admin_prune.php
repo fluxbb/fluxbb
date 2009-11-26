@@ -181,7 +181,7 @@ else
 	$cur_category = 0;
 	while ($forum = $db->fetch_assoc($result))
 	{
-		if ($forum['cid'] != $cur_category)	// Are we still in the same category?
+		if ($forum['cid'] != $cur_category) // Are we still in the same category?
 		{
 			if ($cur_category)
 				echo "\t\t\t\t\t\t\t\t\t\t\t".'</optgroup>'."\n";

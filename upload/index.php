@@ -44,7 +44,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 {
 	$moderators = '';
 
-	if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
+	if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
 	{
 		if ($cur_category != 0)
 			echo "\t\t\t".'</tbody>'."\n\t\t\t".'</table>'."\n\t\t".'</div>'."\n\t".'</div>'."\n".'</div>'."\n\n";
@@ -112,7 +112,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 		$forum_field .= "\n\t\t\t\t\t\t\t\t".$cur_forum['forum_desc'];
 
 
-	// If there is a last_post/last_poster.
+	// If there is a last_post/last_poster
 	if ($cur_forum['last_post'] != '')
 		$last_post = '<a href="viewtopic.php?pid='.$cur_forum['last_post_id'].'#p'.$cur_forum['last_post_id'].'">'.format_time($cur_forum['last_post']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_forum['last_poster']).'</span>';
 	else

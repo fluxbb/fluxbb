@@ -101,7 +101,7 @@ Rebuilding index &hellip; This might be a good time to put on some coffee :-)<br
 
 		echo 'Processing post <strong>'.$cur_post[1].'</strong> in topic <strong>'.$cur_post[0].'</strong><br />'."\n";
 
-		if ($cur_post[1] == $first_post)	// This is the "topic post" so we have to index the subject as well
+		if ($cur_post[1] == $first_post) // This is the "topic post" so we have to index the subject as well
 			update_search_index('post', $cur_post[1], $cur_post[2], $subject);
 		else
 			update_search_index('post', $cur_post[1], $cur_post[2]);
@@ -144,7 +144,7 @@ generate_admin_menu('maintenance');
 									<th scope="row">Topics per cycle</th>
 									<td>
 										<input type="text" name="i_per_page" size="7" maxlength="7" value="100" tabindex="1" />
-										<span>The number of topics to process per pageview. E.g. if you were to enter 100, one hundred topics would be processed and then the page would refresh. This is to prevent the script from timing out during the rebuild process.</span>
+										<span>The number of topics to process per page view. E.g. if you were to enter 100, one hundred topics would be processed and then the page would refresh. This is to prevent the script from timing out during the rebuild process.</span>
 									</td>
 								</tr>
 								<tr>

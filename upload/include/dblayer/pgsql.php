@@ -99,7 +99,7 @@ class DBLayer
 	}
 
 
-	function query($sql, $unbuffered = false)	// $unbuffered is ignored since there is no pgsql_unbuffered_query()
+	function query($sql, $unbuffered = false) // $unbuffered is ignored since there is no pgsql_unbuffered_query()
 	{
 		if (strlen($sql) > 140000)
 			exit('Insane query. Aborting.');

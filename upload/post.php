@@ -98,7 +98,7 @@ if (isset($_POST['form_sent']))
 		// It's a guest, so we have to validate the username
 		if (strlen($username) < 2)
 			$errors[] = $lang_prof_reg['Username too short'];
-		else if (pun_strlen($username) > 25)	// This usually doesn't happen since the form element only accepts 25 characters
+		else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
 			$errors[] = $lang_prof_reg['Username too long'];
 		else if (!strcasecmp($username, 'Guest') || !strcasecmp($username, $lang_common['Guest']))
 			$errors[] = $lang_prof_reg['Username guest'];
@@ -135,7 +135,7 @@ if (isset($_POST['form_sent']))
 				if ($pun_config['p_allow_banned_email'] == '0')
 					$errors[] = $lang_prof_reg['Banned email'];
 
-				$banned_email = true;	// Used later when we send an alert email
+				$banned_email = true; // Used later when we send an alert email
 			}
 			else
 				$banned_email = false;
@@ -593,7 +593,7 @@ if ($tid && $pun_config['o_topic_review'] != '0')
 
 	while ($cur_post = $db->fetch_assoc($result))
 	{
-		// Switch the background color for every message.
+		// Switch the background color for every message
 		$bg_switch = ($bg_switch) ? $bg_switch = false : $bg_switch = true;
 		$vtbg = ($bg_switch) ? ' roweven' : ' rowodd';
 		$post_count++;

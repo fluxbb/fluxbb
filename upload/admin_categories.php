@@ -44,7 +44,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 	if ($cat_to_delete < 1)
 		message($lang_common['Bad request']);
 
-	if (isset($_POST['del_cat_comply']))	// Delete a category with all forums and posts
+	if (isset($_POST['del_cat_comply'])) // Delete a category with all forums and posts
 	{
 		@set_time_limit(0);
 
@@ -85,7 +85,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 
 		redirect('admin_categories.php', 'Category deleted. Redirecting &hellip;');
 	}
-	else	// If the user hasn't comfirmed the delete
+	else // If the user hasn't comfirmed the delete
 	{
 		$result = $db->query('SELECT cat_name FROM '.$db->prefix.'categories WHERE id='.$cat_to_delete) or error('Unable to fetch category info', __FILE__, __LINE__, $db->error());
 		$cat_name = $db->result($result);
@@ -123,7 +123,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 }
 
 
-else if (isset($_POST['update']))	// Change position and name of the categories
+else if (isset($_POST['update'])) // Change position and name of the categories
 {
 	confirm_referrer('admin_categories.php');
 

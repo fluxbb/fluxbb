@@ -87,7 +87,7 @@ if (isset($_POST['show_text']))
 <?php
 
 }
-else	// If not, we show the "Show text" form
+else // If not, we show the "Show text" form
 {
 	// Display the admin navigation menu
 	generate_admin_menu($plugin);
@@ -128,4 +128,4 @@ else	// If not, we show the "Show text" form
 
 }
 
-// Note that the script just ends here. The footer will be included by admin_loader.php.
+// Note that the script just ends here. The footer will be included by admin_loader.php

@@ -96,8 +96,8 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 
 
 //
-// This function was originally a part of the phpBB Group forum software phpBB2 (http://www.phpbb.com).
-// They deserve all the credit for writing it. I made small modifications for it to suit PunBB and it's coding standards.
+// This function was originally a part of the phpBB Group forum software phpBB2 (http://www.phpbb.com)
+// They deserve all the credit for writing it. I made small modifications for it to suit PunBB and it's coding standards
 //
 function server_parse($socket, $expected_response)
 {
@@ -114,7 +114,7 @@ function server_parse($socket, $expected_response)
 
 
 //
-// This function was originally a part of the phpBB Group forum software phpBB2 (http://www.phpbb.com).
+// This function was originally a part of the phpBB Group forum software phpBB2 (http://www.phpbb.com)
 // They deserve all the credit for writing it. I made small modifications for it to suit PunBB and it's coding standards.
 //
 function smtp_mail($to, $subject, $message, $headers = '')

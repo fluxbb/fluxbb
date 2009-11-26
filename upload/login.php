@@ -38,7 +38,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		$sha1_in_db = (strlen($db_password_hash) == 40) ? true : false;
 		$sha1_available = (function_exists('sha1') || function_exists('mhash')) ? true : false;
 
-		$form_password_hash = pun_hash($form_password);	// This could result in either an SHA-1 or an MD5 hash (depends on $sha1_available)
+		$form_password_hash = pun_hash($form_password); // This could result in either an SHA-1 or an MD5 hash (depends on $sha1_available)
 
 		if ($sha1_in_db && $sha1_available && $db_password_hash == $form_password_hash)
 			$authorized = true;
@@ -46,7 +46,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		{
 			$authorized = true;
 
-			if ($sha1_available)	// There's an MD5 hash in the database, but SHA1 hashing is available, so we update the DB
+			if ($sha1_available) // There's an MD5 hash in the database, but SHA1 hashing is available, so we update the DB
 				$db->query('UPDATE '.$db->prefix.'users SET password=\''.$form_password_hash.'\' WHERE id='.$user_id) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
 		}
 	}
@@ -79,7 +79,7 @@ else if ($action == 'out')
 		exit;
 	}
 
-	// Remove user from "users online" list.
+	// Remove user from "users online" list
 	$db->query('DELETE FROM '.$db->prefix.'online WHERE user_id='.$pun_user['id']) or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
 
 	// Update last_visit (make sure there's something to update it with)

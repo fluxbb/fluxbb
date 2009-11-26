@@ -45,7 +45,7 @@ if ($pid)
 		if ($cur_id == $pid)
 			break;
 	}
-	++$i;	// we started at 0
+	++$i; // we started at 0
 
 	$_GET['p'] = ceil($i / $pun_user['disp_posts']);
 }
@@ -62,7 +62,7 @@ else if ($action == 'new' && !$pun_user['is_guest'])
 
 	if ($first_new_post_id)
 		header('Location: viewtopic.php?pid='.$first_new_post_id.'#p'.$first_new_post_id);
-	else	// If there is no new post, we go to the last post
+	else // If there is no new post, we go to the last post
 		header('Location: viewtopic.php?id='.$id.'&action=last');
 
 	exit;
@@ -177,8 +177,8 @@ require PUN_ROOT.'header.php';
 
 require PUN_ROOT.'include/parser.php';
 
-$bg_switch = true;	// Used for switching background color in posts
-$post_count = 0;	// Keep track of post numbers
+$bg_switch = true; // Used for switching background color in posts
+$post_count = 0; // Keep track of post numbers
 
 // Retrieve the posts (and their respective poster/online status)
 $result = $db->query('SELECT u.email, u.title, u.url, u.location, u.signature, u.email_setting, u.num_posts, u.registered, u.admin_note, p.id, p.poster AS username, p.poster_id, p.poster_ip, p.poster_email, p.message, p.hide_smilies, p.posted, p.edited, p.edited_by, g.g_id, g.g_user_title, o.user_id AS is_online FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON (o.user_id=u.id AND o.user_id!=1 AND o.idle=0) WHERE p.topic_id='.$id.' ORDER BY p.id LIMIT '.$start_from.','.$pun_user['disp_posts'], true) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
@@ -192,7 +192,7 @@ while ($cur_post = $db->fetch_assoc($result))
 	$is_online = '';
 	$signature = '';
 
-	// If the poster is a registered user.
+	// If the poster is a registered user
 	if ($cur_post['poster_id'] > 1)
 	{
 		if ($pun_user['g_view_users'] == '1')
@@ -287,7 +287,7 @@ while ($cur_post = $db->fetch_assoc($result))
 		$post_actions[] = '<li class="postreport"><a href="misc.php?report='.$cur_post['id'].'">'.$lang_topic['Report'].'</a>'.$lang_topic['Link separator'].'</li><li class="postdelete"><a href="delete.php?id='.$cur_post['id'].'">'.$lang_topic['Delete'].'</a>'.$lang_topic['Link separator'].'</li><li class="postedit"><a href="edit.php?id='.$cur_post['id'].'">'.$lang_topic['Edit'].'</a>'.$lang_topic['Link separator'].'</li><li class="postquote"><a href="post.php?tid='.$id.'&amp;qid='.$cur_post['id'].'">'.$lang_topic['Quote'].'</a>';
 
 
-	// Switch the background color for every message.
+	// Switch the background color for every message
 	$bg_switch = ($bg_switch) ? $bg_switch = false : $bg_switch = true;
 	$vtbg = ($bg_switch) ? ' roweven' : ' rowodd';
 

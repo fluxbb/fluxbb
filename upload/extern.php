@@ -22,8 +22,8 @@
 
   The scripts behaviour is controlled via variables supplied in the
   URL to the script. The different variables are: action (what to
-  do), show (how many items to display), fid (the ID or ID's of
-  the forum(s) to poll for topics), nfid (the ID or ID's of forums
+  do), show (how many items to display), fid (the ID or IDs of
+  the forum(s) to poll for topics), nfid (the ID or IDs of forums
   that should be excluded), tid (the ID of the topic from which to
   display posts) and type (output as HTML or RSS). The only
   mandatory variable is action. Possible/default values are:
@@ -38,10 +38,10 @@
             xml - output as XML
             html - output as HTML (<li>'s)
 
-    fid:    One or more forum ID's (comma-separated). If ignored,
+    fid:    One or more forum IDs (comma-separated). If ignored,
             topics from all readable forums will be pulled.
 
-    nfid:   One or more forum ID's (comma-separated) that are to be
+    nfid:   One or more forum IDs (comma-separated) that are to be
             excluded. E.g. the ID of a a test forum.
 
     tid:    A topic ID from which to show posts. If a tid is supplied,
@@ -339,7 +339,7 @@ if ($action == 'feed')
 		$forum_name = '';
 		$forum_sql = '';
 
-		// Were any forum ID's supplied?
+		// Were any forum IDs supplied?
 		if (isset($_GET['fid']) && is_scalar($_GET['fid']) && $_GET['fid'] != '')
 		{
 			$fids = explode(',', pun_trim($_GET['fid']));
@@ -357,7 +357,7 @@ if ($action == 'feed')
 			}
 		}
 
-		// Any forum ID's to exclude?
+		// Any forum IDs to exclude?
 		if (isset($_GET['nfid']) && is_scalar($_GET['nfid']) && $_GET['nfid'] != '')
 		{
 			$nfids = explode(',', pun_trim($_GET['nfid']));
@@ -371,7 +371,7 @@ if ($action == 'feed')
 		$feed = array(
 			'title' 		=>	$pun_config['o_board_title'].$forum_name,
 			'link'			=>	$pun_config['o_base_url'].'/index.php',
-			'description'		=>	sprintf($lang_common['RSS description'], $pun_config['o_board_title']),
+			'description'	=>	sprintf($lang_common['RSS description'], $pun_config['o_board_title']),
 			'items'			=>	array(),
 			'type'			=>	'topics'
 		);
@@ -389,7 +389,7 @@ if ($action == 'feed')
 				'id'			=>	$cur_topic['id'],
 				'title'			=>	$cur_topic['subject'],
 				'link'			=>	$pun_config['o_base_url'].($order_posted ? '/viewtopic.php?id='.$cur_topic['id'] : '/viewtopic.php?id='.$cur_topic['id'].'&amp;action=new'),
-				'description'		=>	$cur_topic['message'],
+				'description'	=>	$cur_topic['message'],
 				'author'		=>	array(
 					'name'	=> $order_posted ? $cur_topic['poster'] : $cur_topic['last_poster']
 				),

@@ -288,7 +288,7 @@ function process_form(the_form)
 else
 {
 	//
-	// Strip slashes only if magic_quotes_gpc is on.
+	// Strip slashes only if magic_quotes_gpc is on
 	//
 	function unescape($str)
 	{
@@ -1450,7 +1450,7 @@ else
 	// Add some random bytes at the end of the cookie name to prevent collisions
 	$cookie_name = 'pun_cookie_'.random_key(6, false, true);
 
-	/// Generate the config.php file data
+	// Generate the config.php file data
 	$config = generate_config_file();
 
 	// Attempt to write config.php and serve it up for download if writing fails

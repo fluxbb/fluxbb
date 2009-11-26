@@ -352,7 +352,7 @@ else
 						<legend>Enter search criteria</legend>
 						<div class="infldset">
 							<p>Search for users in the database. You can enter one or more terms to search for. Wildcards in the form of asterisks (*) are accepted.</p>
-							<table  class="aligntop" cellspacing="0">
+							<table class="aligntop" cellspacing="0">
 								<tr>
 									<th scope="row">Username</th>
 									<td><input type="text" name="username" size="25" maxlength="25" tabindex="2" /></td>

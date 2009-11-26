@@ -9,7 +9,7 @@
 ---*/
 
 // The contents of this file are very much inspired by the file search.php
-// from the phpBB Group forum software phpBB2 (http://www.phpbb.com).
+// from the phpBB Group forum software phpBB2 (http://www.phpbb.com)
 
 define('PUN_ROOT', './');
 require PUN_ROOT.'include/common.php';
@@ -61,7 +61,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		$sort_by = (isset($_GET['sort_by'])) ? intval($_GET['sort_by']) : null;
 		$search_in = (!isset($_GET['search_in']) || $_GET['search_in'] == 'all') ? 0 : (($_GET['search_in'] == 'message') ? 1 : -1);
 	}
-	// If it's a user search (by id)
+	// If it's a user search (by ID)
 	else if ($action == 'show_user')
 	{
 		$user_id = (isset($_GET['user_id'])) ? intval($_GET['user_id']) : 0;
@@ -533,7 +533,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 				$vtpost1 = ($i == 0) ? ' vtp1' : '';
 
-				// Switch the background color for every message.
+				// Switch the background color for every message
 				$bg_switch = ($bg_switch) ? $bg_switch = false : $bg_switch = true;
 				$vtbg = ($bg_switch) ? ' rowodd' : ' roweven';
 
@@ -686,7 +686,7 @@ $result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name,
 $cur_category = 0;
 while ($cur_forum = $db->fetch_assoc($result))
 {
-	if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
+	if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
 	{
 		if ($cur_category)
 			echo "\t\t\t\t\t\t\t".'</optgroup>'."\n";
