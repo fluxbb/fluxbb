@@ -38,7 +38,6 @@ $lang_prof_reg = array(
 'characters'				=>	'characters',
 'Sig too many lines'		=>	'Signatures cannot have more than',
 'lines'						=>	'lines',
-'Signature quote/code'		=>	'The quote and code BBCodes are not allowed in signatures. Please go back and correct.',
 'Bad ICQ'					=>	'You entered an invalid ICQ UIN. Please go back and correct.'
 
 );
