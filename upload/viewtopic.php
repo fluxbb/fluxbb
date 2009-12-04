@@ -315,27 +315,29 @@ while ($cur_post = $db->fetch_assoc($result))
 <div id="p<?php echo $cur_post['id'] ?>" class="blockpost<?php echo $vtbg ?><?php if (($post_count + $start_from) == 1) echo ' firstpost'; ?>">
 	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?>&nbsp;</span><a href="viewtopic.php?pid=<?php echo $cur_post['id'].'#p'.$cur_post['id'] ?>"><?php echo format_time($cur_post['posted']) ?></a></span></h2>
 	<div class="box">
-		<div class="inbox">
-			<div class="postleft">
-				<dl>
-					<dt><strong><?php echo $username ?></strong></dt>
-					<dd class="usertitle"><strong><?php echo $user_title ?></strong></dd>
-<?php if ($user_avatar != '') echo "\t\t\t\t\t".'<dd class="postavatar">'.$user_avatar.'</dd>'; ?>
-<?php if (count($user_info)) echo "\t\t\t\t\t".implode('</dd>'."\n\t\t\t\t\t", $user_info).'</dd>'."\n"; ?>
-<?php if (count($user_contacts)) echo "\t\t\t\t\t".'<dd class="usercontacts">'.implode('&nbsp;&nbsp;', $user_contacts).'</dd>'."\n"; ?>
-				</dl>
-			</div>
-			<div class="postright">
-				<h3><?php if (($post_count + $start_from) > 1) echo 'Re: '; ?><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></h3>
-				<div class="postmsg">
-					<?php echo $cur_post['message']."\n" ?>
-<?php if ($cur_post['edited'] != '') echo "\t\t\t\t\t".'<p class="postedit"><em>'.$lang_topic['Last edit'].' '.pun_htmlspecialchars($cur_post['edited_by']).' ('.format_time($cur_post['edited']).')</em></p>'."\n"; ?>
+		<div class="bgbox">
+			<div class="inbox">
+				<div class="postleft">
+					<dl>
+						<dt><strong><?php echo $username ?></strong></dt>
+						<dd class="usertitle"><strong><?php echo $user_title ?></strong></dd>
+<?php if ($user_avatar != '') echo "\t\t\t\t\t\t".'<dd class="postavatar">'.$user_avatar.'</dd>'; ?>
+<?php if (count($user_info)) echo "\t\t\t\t\t\t".implode('</dd>'."\n\t\t\t\t\t", $user_info).'</dd>'."\n"; ?>
+<?php if (count($user_contacts)) echo "\t\t\t\t\t\t".'<dd class="usercontacts">'.implode('&nbsp;&nbsp;', $user_contacts).'</dd>'."\n"; ?>
+					</dl>
 				</div>
-<?php if ($signature != '') echo "\t\t\t\t".'<div class="postsignature"><hr />'.$signature.'</div>'."\n"; ?>
+				<div class="postright">
+					<h3><?php if (($post_count + $start_from) > 1) echo 'Re: '; ?><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></h3>
+					<div class="postmsg">
+						<?php echo $cur_post['message']."\n" ?>
+<?php if ($cur_post['edited'] != '') echo "\t\t\t\t\t\t".'<p class="postedit"><em>'.$lang_topic['Last edit'].' '.pun_htmlspecialchars($cur_post['edited_by']).' ('.format_time($cur_post['edited']).')</em></p>'."\n"; ?>
+					</div>
+<?php if ($signature != '') echo "\t\t\t\t\t".'<div class="postsignature"><hr />'.$signature.'</div>'."\n"; ?>
+				</div>
+				<div class="clearer"></div>
+				<div class="postfootleft"><?php if ($cur_post['poster_id'] > 1) echo '<p>'.$is_online.'</p>'; ?></div>
+				<div class="postfootright"><?php echo (count($post_actions)) ? '<ul>'.implode($lang_topic['Link separator'].'</li>', $post_actions).'</li></ul></div>'."\n" : '<div>&nbsp;</div></div>'."\n" ?>
 			</div>
-			<div class="clearer"></div>
-			<div class="postfootleft"><?php if ($cur_post['poster_id'] > 1) echo '<p>'.$is_online.'</p>'; ?></div>
-			<div class="postfootright"><?php echo (count($post_actions)) ? '<ul>'.implode($lang_topic['Link separator'].'</li>', $post_actions).'</li></ul></div>'."\n" : '<div>&nbsp;</div></div>'."\n" ?>
 		</div>
 	</div>
 </div>

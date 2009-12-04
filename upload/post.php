@@ -602,19 +602,21 @@ if ($tid && $pun_config['o_topic_review'] != '0')
 
 ?>
 	<div class="box<?php echo $vtbg ?>">
-		<div class="inbox">
-			<div class="postleft">
-				<dl>
-					<dt><strong><?php echo pun_htmlspecialchars($cur_post['poster']) ?></strong></dt>
-					<dd><?php echo format_time($cur_post['posted']) ?></dd>
-				</dl>
-			</div>
-			<div class="postright">
-				<div class="postmsg">
-					<?php echo $cur_post['message'] ?>
+		<div class="bgbox">
+			<div class="inbox">
+				<div class="postleft">
+					<dl>
+						<dt><strong><?php echo pun_htmlspecialchars($cur_post['poster']) ?></strong></dt>
+						<dd><?php echo format_time($cur_post['posted']) ?></dd>
+					</dl>
 				</div>
+				<div class="postright">
+					<div class="postmsg">
+						<?php echo $cur_post['message'] ?>
+					</div>
+				</div>
+				<div class="clearer"></div>
 			</div>
-			<div class="clearer"></div>
 		</div>
 	</div>
 <?php

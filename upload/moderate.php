@@ -317,22 +317,24 @@ if (isset($_GET['tid']))
 <div id="p<?php echo $cur_post['id'] ?>"class="blockpost<?php echo $vtbg ?>">
 	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?>&nbsp;</span><a href="viewtopic.php?pid=<?php echo $cur_post['id'].'#p'.$cur_post['id'] ?>"><?php echo format_time($cur_post['posted']) ?></a></span></h2>
 	<div class="box">
-		<div class="inbox">
-			<div class="postleft">
-				<dl>
-					<dt><strong><?php echo $poster ?></strong></dt>
-					<dd><strong><?php echo $user_title ?></strong></dd>
-				</dl>
-			</div>
-			<div class="postright">
-				<h3 class="nosize"><?php echo $lang_common['Message'] ?></h3>
-				<div class="postmsg">
-					<?php echo $cur_post['message']."\n" ?>
-<?php if ($cur_post['edited'] != '') echo "\t\t\t\t\t".'<p class="postedit"><em>'.$lang_topic['Last edit'].' '.pun_htmlspecialchars($cur_post['edited_by']).' ('.format_time($cur_post['edited']).')</em></p>'."\n"; ?>
+		<div class="bgbox">
+			<div class="inbox">
+				<div class="postleft">
+					<dl>
+						<dt><strong><?php echo $poster ?></strong></dt>
+						<dd><strong><?php echo $user_title ?></strong></dd>
+					</dl>
 				</div>
-				<?php if ($start_from + $post_count > 1) echo '<p class="multidelete"><label><strong>'.$lang_misc['Select'].'</strong>&nbsp;&nbsp;<input type="checkbox" name="posts['.$cur_post['id'].']" value="1" /></label></p>'."\n" ?>
+				<div class="postright">
+					<h3 class="nosize"><?php echo $lang_common['Message'] ?></h3>
+					<div class="postmsg">
+						<?php echo $cur_post['message']."\n" ?>
+<?php if ($cur_post['edited'] != '') echo "\t\t\t\t\t\t".'<p class="postedit"><em>'.$lang_topic['Last edit'].' '.pun_htmlspecialchars($cur_post['edited_by']).' ('.format_time($cur_post['edited']).')</em></p>'."\n"; ?>
+					</div>
+					<?php if ($start_from + $post_count > 1) echo '<p class="multidelete"><label><strong>'.$lang_misc['Select'].'</strong>&nbsp;&nbsp;<input type="checkbox" name="posts['.$cur_post['id'].']" value="1" /></label></p>'."\n" ?>
+				</div>
+				<div class="clearer"></div>
 			</div>
-			<div class="clearer"></div>
 		</div>
 	</div>
 </div>
