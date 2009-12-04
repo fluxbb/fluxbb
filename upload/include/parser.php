@@ -789,7 +789,11 @@ function parse_message($text, $hide_smilies)
 		{
 			$text .= $outside[$i];
 			if (isset($inside[$i]))
-				$text .= '</p><div class="codebox"><pre><code>'.pun_trim($inside[$i], "\n\r").'</code></pre></div><p>';
+			//	$text .= '</p><div class="codebox"><pre><code>'.pun_trim($inside[$i], "\n\r").'</code></pre></div><p>';
+			{
+				$num_lines = (substr_count($inside[$i], "\n"));
+				$text .= '</p><div class="codebox"><pre'.(($num_lines > 28) ? ' class="vscroll"' : '').'><code>'.pun_trim($inside[$i], "\n\r").'</code></pre></div><p>';
+			}
 		}
 	}
 

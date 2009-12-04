@@ -85,7 +85,7 @@ require PUN_ROOT.'header.php';
 		<p><code>[code]<?php echo $lang_help['Code text'] ?>[/code]</code></p>
 		<p><?php echo $lang_help['produces code box'] ?></p>
 		<div class="postmsg">
-			<div class="codebox"><code><?php echo $lang_help['Code text'] ?></code></div>
+			<div class="codebox"><pre><code><?php echo $lang_help['Code text'] ?></code></pre></div>
 		</div>
 	</div>
 </div>

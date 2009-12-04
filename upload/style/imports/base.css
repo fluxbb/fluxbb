@@ -48,7 +48,6 @@ DIV>DIV>DIV.postfootleft, DIV>DIV>DIV.postfootright {PADDING-TOP: 1px; MARGIN-TO
 
 /* Begin IE6Win Fix \*/
 * HTML .inbox, * HTML .inform, * HTML .pun, * HTML .intd, * HTML .tclcon, * HTML .codebox {HEIGHT: 1px}
-* HTML .inbox DIV.postmsg {WIDTH: 98%}
 /* End of IE6Win Fix */
 
 /* 3.3 This is the equivelant of 3.2 but for IE7. It is visible to other browsers
@@ -200,7 +199,7 @@ DIV.blockpost>DIV>DIV.inbox {PADDING-BOTTOM: 1px}
 
 /* 7.3 This is the div which actually contains the post and is inside .postright */
 
-DIV.postmsg {WIDTH:100%;}
+DIV.postmsg {WIDTH:98%;}
 DIV.postmsg P {MARGIN: 0 0 1.5em}
 DIV.postmsg UL, DIV.postmsg OL {MARGIN: 0 0 1.5em 0.5em;PADDING-LEFT: 1.5em}
 DIV.postmsg OL {MARGIN: 0 0 1.5em 1em}
@@ -213,9 +212,9 @@ DIV.postmsg OL.alpha LI {LIST-STYLE-TYPE: lower-alpha}
 /* 7.4 These items control overflow and scrolling within posts. */
 
 DIV.quotebox blockquote {WIDTH: 100%; OVERFLOW: hidden}
-
-DIV.codebox pre {padding: 0; margin: 0 0 0 0; min-height: 3em; overflow: auto; width: 100%;}
-*DIV.codebox pre {overflow-y: hidden; min-height: 2em; padding-bottom: 18px}
+DIV.codebox pre {overflow: auto; width: 100%; padding-bottom: 18px; overflow-y:hidden}
+/* Uncomment the following line to activate vertically scrolling codeboxes*/
+.pun .codebox pre.vscroll {height: 32em; overflow: auto; overflow-y: auto}
 
 IMG.postimg {max-width: 100%}
 A .postimg {max-width: 100%}

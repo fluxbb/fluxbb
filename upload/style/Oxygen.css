@@ -29,7 +29,6 @@
 /* 2.2 Set the font-size for preformatted text i.e in code boxes */
 
 #debug .tcr, .pun PRE, .pun code {FONT-SIZE: 1em; FONT-FAMILY: Consolas, monaco, "Bitstream Vera Sans Mono", "Courier New", courier, monospace}
-#helpfile DIV.box code {FONT-SIZE: 1.2em; FONT-FAMILY: Consolas, monaco, "Bitstream Vera Sans Mono", "Courier New", courier, monospace}
 
 /* 2.3 Font size for headers */
 
@@ -177,7 +176,6 @@ DIV.postmsg H4 {MARGIN-BOTTOM: 10px}
 
 .pun .quotebox, .pun .codebox {margin: 0.75em 1em; padding: 1em 0.75em; }
 .pun .quotebox cite {display: block; padding-bottom: 0.5em}
-
 
 /* 8.5 Padding for the action links and online indicator in viewtopic */
 

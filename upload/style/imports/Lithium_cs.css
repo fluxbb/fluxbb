@@ -11,7 +11,7 @@ BODY {BACKGROUND-COLOR: #FFF}
 DIV.box, #adminconsole FIELDSET TH, .rowodd, .roweven {BACKGROUND-COLOR: #F1F1F1}
 #adminconsole TD, #adminconsole TH {BORDER-COLOR: #F1F1F1}
 
-.pun .quotebox, DIV.codebox {background: #f9f9f9}
+.pun .quotebox, DIV.codebox {background: #f1f1f1}
 
 /* 1. 2 Darker background colours */
 
