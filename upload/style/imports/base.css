@@ -299,6 +299,6 @@ DIV.txtarea TEXTAREA, INPUT.longinput {WIDTH: 100%}
 #helpfile P, #rules-block P {MARGIN: 0 0 0.5em}
 #helpfile UL, #helpfile OL, #rules-block UL, #rules-block OL {MARGIN: 0 0 1em 0.5em; PADDING-LEFT: 1.5em}
 #helpfile OL, #rules-block OL {MARGIN: 0 0 1em 1em}
-#helpfile UL LI, #rules-block UL LI {LIST-STYLE-TYPE: circle}
+#helpfile UL LI, #rules-block UL LI {LIST-STYLE-TYPE: disc}
 #helpfile OL.decimal LI, #rules-block OL.decimal LI {LIST-STYLE-TYPE: decimal}
 #helpfile OL.alpha LI, #rules-block OL.alpha LI {LIST-STYLE-TYPE: lower-alpha}
