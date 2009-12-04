@@ -204,7 +204,9 @@ DIV.postmsg {WIDTH:100%;}
 DIV.postmsg P {MARGIN: 0 0 1.5em}
 DIV.postmsg UL, DIV.postmsg OL {MARGIN: 0 0 1.5em 0.5em;PADDING-LEFT: 1.5em}
 DIV.postmsg OL {MARGIN: 0 0 1.5em 1em}
-DIV.postmsg UL LI {LIST-STYLE-TYPE: circle}
+DIV.postmsg LI UL, DIV.postmsg LI OL {MARGIN-BOTTOM: 0; MARGIN-TOP: 0.5em}
+DIV.postmsg UL LI {LIST-STYLE-TYPE: disc}
+DIV.postmsg UL LI UL LI {LIST-STYLE-TYPE: circle}
 DIV.postmsg OL.decimal LI {LIST-STYLE-TYPE: decimal}
 DIV.postmsg OL.alpha LI {LIST-STYLE-TYPE: lower-alpha}
 
