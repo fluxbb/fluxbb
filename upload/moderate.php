@@ -258,8 +258,12 @@ if (isset($_GET['tid']))
 ?>
 <div class="linkst">
 	<div class="inbox">
+		<ul>
+			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li>&raquo;&nbsp;<a href="viewforum.php?id=<?php echo $fid ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
+			<li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_topic['subject']) ?></li>
+		</ul>
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<ul><li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li><li>&nbsp;&raquo;&nbsp;<a href="viewforum.php?id=<?php echo $fid ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li><li>&nbsp;&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_topic['subject']) ?></li></ul>
 		<div class="clearer"></div>
 	</div>
 </div>
