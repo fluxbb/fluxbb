@@ -314,8 +314,7 @@ if (isset($_GET['tid']))
 
 ?>
 
-<div class="blockpost<?php echo $vtbg ?>">
-	<a name="<?php echo $cur_post['id'] ?>"></a>
+<div id="p<?php echo $cur_post['id'] ?>"class="blockpost<?php echo $vtbg ?>">
 	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?>&nbsp;</span><a href="viewtopic.php?pid=<?php echo $cur_post['id'].'#p'.$cur_post['id'] ?>"><?php echo format_time($cur_post['posted']) ?></a></span></h2>
 	<div class="box">
 		<div class="inbox">
