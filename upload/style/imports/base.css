@@ -47,7 +47,7 @@ DIV>DIV>DIV.postfootleft, DIV>DIV>DIV.postfootright {PADDING-TOP: 1px; MARGIN-TO
 /* 3.2 This is only visible to IE6 Windows and cures various bugs. Do not alter comments */
 
 /* Begin IE6Win Fix \*/
-* HTML .inbox, * HTML .inform, * HTML .pun, * HTML .intd, * HTML .tclcon {HEIGHT: 1px}
+* HTML .inbox, * HTML .inform, * HTML .pun, * HTML .intd, * HTML .tclcon, * HTML .codebox {HEIGHT: 1px}
 * HTML .inbox DIV.postmsg {WIDTH: 98%}
 /* End of IE6Win Fix */
 
@@ -55,7 +55,7 @@ DIV>DIV>DIV.postfootleft, DIV>DIV>DIV.postfootright {PADDING-TOP: 1px; MARGIN-TO
 but does no harm */
 
 /*Begin IE7Win Fix */
-.pun, .pun .inbox, .pun .inform, .pun .intd, .pun .tclcon {min-height: 1px}
+.pun, .pun .inbox, .pun .inform, .pun .intd, .pun .tclcon, .pun .codebox {min-height: 1px}
 /* End of IE7Win Fix */
 
 /****************************************************************/
@@ -101,15 +101,19 @@ LABEL.conl {
 
 /* 5.2 Set up page numbering and posts links */
 
-DIV.linkst .conl, DIV.linksb .conl, DIV.postlinksb .conl {WIDTH:32em}
+DIV.linkst .conl, DIV.linksb .conl, DIV.postlinksb .conl {WIDTH:auto; white-space: nowrap}
 
-DIV.linkst .conr, DIV.linksb .conr, DIV.postlinksb .conr {WIDTH:16em}
+DIV.linkst .conr, DIV.linksb .conr, DIV.postlinksb .conr {WIDTH:auto; white-space: nowrap}
 
 FORM DIV.linksb .conr {WIDTH: 32em}
 
 /* 5.3 Keep breadcrumbs from shifting to the right when wrapping */
 /* TEMP: THis is not needed anymore since the breadcrumbs are now on their own line */
 /* .linkst UL, linksb UL, .postlinksb UL {MARGIN-LEFT: 18em} */
+
+DIV.linkst UL, DIV.linksb UL, DIV.postlinksb UL {clear: both; WIDTH: 100%; overflow: hidden}
+DIV.linkst UL LI, DIV.linksb UL LI, DIV.postlinksb UL LI {white-space: nowrap}
+
 
 /* 5.4 Settings for Profile and Admin interface.*/
 
@@ -169,6 +173,8 @@ DIV.deletemsg { PADDING-TOP: 5px; PADDING-LEFT: 5px; }
 #debug .tcr {WIDTH: 90%; WHITE-SPACE: normal}
 
 #punindex TD.tcr SPAN.byuser {DISPLAY: block}
+
+#vf .iposted DIV.tclcon {text-indent: -0.65em}
 
 /****************************************************************/
 /* 7. VIEWTOPIC SETUP */

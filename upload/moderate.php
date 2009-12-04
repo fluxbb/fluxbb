@@ -741,8 +741,11 @@ $paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'moderate.ph
 ?>
 <div class="linkst">
 	<div class="inbox">
+		<ul>
+			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></li>
+		</ul>
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<ul><li><a href="index.php"><?php echo $lang_common['Index'] ?></a>&nbsp;</li><li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></li></ul>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -815,10 +818,6 @@ if ($db->num_rows($result))
 		}
 		else
 			$subject_new_posts = null;
-
-		// We won't display "the dot", but we add the spaces anyway
-		if ($pun_config['o_show_dot'] == '1')
-			$subject = '&nbsp;&nbsp;'.$subject;
 
 		if ($cur_topic['sticky'] == '1')
 		{

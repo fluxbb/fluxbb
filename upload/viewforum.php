@@ -73,7 +73,10 @@ require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">
 	<div class="inbox">
-		<ul><li><a href="index.php"><?php echo $lang_common['Index'] ?></a>&nbsp;</li><li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></li></ul>
+		<ul>
+			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></li>
+		</ul>
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
 <?php echo $post_link ?>
 		<div class="clearer"></div>
@@ -168,9 +171,10 @@ if ($db->num_rows($result))
 		if (!$pun_user['is_guest'] && $pun_config['o_show_dot'] == '1')
 		{
 			if ($cur_topic['has_posted'] == $pun_user['id'])
+			{
 				$subject = '<strong>&middot;</strong>&nbsp;'.$subject;
-			else
-				$subject = '&nbsp;&nbsp;'.$subject;
+				$item_status .= ' iposted';
+			}
 		}
 
 		if ($cur_topic['sticky'] == '1')
@@ -235,8 +239,10 @@ else
 	<div class="inbox">
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
 <?php echo $post_link ?>
-		<div class="clearer"></div>
-		<ul><li><a href="index.php"><?php echo $lang_common['Index'] ?></a>&nbsp;</li><li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></li></ul>
+		<ul>
+			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></li>
+		</ul>
 		<div class="clearer"></div>
 	</div>
 </div>
