@@ -201,11 +201,9 @@ if ($db->num_rows($result))
 ?>
 				<tr<?php if ($item_status != '') echo ' class="'.trim($item_status).'"'; ?>>
 					<td class="tcl">
-						<div class="intd">
-							<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo trim($icon_text) ?></div></div>
-							<div class="tclcon">
-								<?php echo $subject."\n" ?>
-							</div>
+						<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo trim($icon_text) ?></div></div>
+						<div class="tclcon">
+							<?php echo $subject."\n" ?>
 						</div>
 					</td>
 					<td class="tc2"><?php echo ($cur_topic['moved_to'] == null) ? forum_number_format($cur_topic['num_replies']) : '&nbsp;' ?></td>

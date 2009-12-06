@@ -617,12 +617,11 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 ?>
 				<tr<?php if ($item_status != '') echo ' class="'.trim($item_status).'"'; ?>>
 					<td class="tcl">
-						<div class="intd">
-							<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo trim($icon_text) ?></div></div>
-							<div class="tclcon">
-								<?php echo $subject."\n" ?>
-							</div>
+						<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo trim($icon_text) ?></div></div>
+						<div class="tclcon">
+							<?php echo $subject."\n" ?>
 						</div>
+					</div>
 					</td>
 					<td class="tc2"><?php echo $forum ?></td>
 					<td class="tc3"><?php echo forum_number_format($search_set[$i]['num_replies']) ?></td>

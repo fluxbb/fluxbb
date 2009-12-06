@@ -137,11 +137,9 @@ while ($cur_forum = $db->fetch_assoc($result))
 ?>
 				<tr<?php if ($item_status != '') echo ' class="'.$item_status.'"'; ?>>
 					<td class="tcl">
-						<div class="intd">
-							<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo $icon_text ?></div></div>
-							<div class="tclcon">
-								<?php echo $forum_field."\n".$moderators ?>
-							</div>
+						<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo $icon_text ?></div></div>
+						<div class="tclcon">
+							<?php echo $forum_field."\n".$moderators ?>
 						</div>
 					</td>
 					<td class="tc2"><?php echo forum_number_format($num_topics) ?></td>
