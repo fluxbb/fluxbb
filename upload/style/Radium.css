@@ -172,7 +172,7 @@ DIV.postsignature, DIV.postmsg P.postedit {PADDING-TOP: 15px}
 
 DIV.postmsg H4 {MARGIN-BOTTOM: 10px}
 
-.pun .quotebox, .pun .codebox {margin: 0.75em 1em; padding: 1em 0.75em; }
+.pun .quotebox, .pun .codebox {margin: 0.75em 1em; padding: 1em 0.75em 0em 0.75em; }
 .pun .quotebox cite {display: block; padding-bottom: 0.5em}
 
 /* 8.5 Padding for the action links and online indicator in viewtopic */
