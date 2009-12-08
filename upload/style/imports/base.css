@@ -214,7 +214,7 @@ DIV.postmsg OL.alpha LI {LIST-STYLE-TYPE: lower-alpha}
 DIV.quotebox blockquote {WIDTH: 100%; OVERFLOW: hidden}
 DIV.codebox pre {overflow: auto; width: 100%; padding-bottom: 18px; overflow-y:hidden}
 /* Uncomment the following line to activate vertically scrolling codeboxes*/
-.pun .codebox pre.vscroll {height: 32em; overflow: auto; overflow-y: auto}
+.pun .codebox pre.vscroll {height: 32em; overflow: auto; overflow-y: auto; margin-bottom: 0.75em}
 
 IMG.postimg {max-width: 100%}
 A .postimg {max-width: 100%}
