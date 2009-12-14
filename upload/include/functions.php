@@ -70,18 +70,19 @@ function check_cookie(&$pun_user)
 			{
 				$pun_user['logged'] = $now;
 
-				// With MySQL/MySQLi, REPLACE INTO avoids a user having two rows in the online table
+				// With MySQL/MySQLi/SQLite, REPLACE INTO avoids a user having two rows in the online table
 				switch ($db_type)
 				{
 					case 'mysql':
 					case 'mysqli':
 					case 'mysql_innodb':
 					case 'mysqli_innodb':
+					case 'sqlite':
 						$db->query('REPLACE INTO '.$db->prefix.'online (user_id, ident, logged) VALUES('.$pun_user['id'].', \''.$db->escape($pun_user['username']).'\', '.$pun_user['logged'].')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
 						break;
 
 					default:
-						$db->query('INSERT INTO '.$db->prefix.'online (user_id, ident, logged) VALUES('.$pun_user['id'].', \''.$db->escape($pun_user['username']).'\', '.$pun_user['logged'].')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
+						$db->query('INSERT INTO '.$db->prefix.'online (user_id, ident, logged) SELECT '.$pun_user['id'].', \''.$db->escape($pun_user['username']).'\', '.$pun_user['logged'].' WHERE NOT EXISTS (SELECT 1 FROM '.$db->prefix.'online WHERE user_id='.$pun_user['id'].')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
 						break;
 				}
 
@@ -187,18 +188,19 @@ function set_default_user()
 	{
 		$pun_user['logged'] = time();
 
-		// With MySQL/MySQLi, REPLACE INTO avoids a user having two rows in the online table
+		// With MySQL/MySQLi/SQLite, REPLACE INTO avoids a user having two rows in the online table
 		switch ($db_type)
 		{
 			case 'mysql':
 			case 'mysqli':
 			case 'mysql_innodb':
 			case 'mysqli_innodb':
+			case 'sqlite':
 				$db->query('REPLACE INTO '.$db->prefix.'online (user_id, ident, logged) VALUES(1, \''.$db->escape($remote_addr).'\', '.$pun_user['logged'].')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
 				break;
 
 			default:
-				$db->query('INSERT INTO '.$db->prefix.'online (user_id, ident, logged) VALUES(1, \''.$db->escape($remote_addr).'\', '.$pun_user['logged'].')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
+				$db->query('INSERT INTO '.$db->prefix.'online (user_id, ident, logged) SELECT 1, \''.$db->escape($remote_addr).'\', '.$pun_user['logged'].' WHERE NOT EXISTS (SELECT 1 FROM '.$db->prefix.'online WHERE ident=\''.$db->escape($remote_addr).'\')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
 				break;
 		}
 	}
