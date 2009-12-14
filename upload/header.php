@@ -23,12 +23,28 @@ header('Content-type: text/html; charset=utf-8');
 
 // Load the template
 if (defined('PUN_ADMIN_CONSOLE'))
-	$tpl_main = file_get_contents(PUN_ROOT.'include/template/admin.tpl');
+{
+	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/admin.tpl'))
+		$tpl_file = PUN_ROOT.'style/'.$pun_user['style'].'/admin.tpl';
+	else
+		$tpl_file = PUN_ROOT.'include/template/admin.tpl';
+}
 else if (defined('PUN_HELP'))
-	$tpl_main = file_get_contents(PUN_ROOT.'include/template/help.tpl');
+{
+	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/help.tpl'))
+		$tpl_file = PUN_ROOT.'style/'.$pun_user['style'].'/help.tpl';
+	else
+		$tpl_file = PUN_ROOT.'include/template/help.tpl';
+}
 else
-	$tpl_main = file_get_contents(PUN_ROOT.'include/template/main.tpl');
+{
+	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/main.tpl'))
+		$tpl_file = PUN_ROOT.'style/'.$pun_user['style'].'/main.tpl';
+	else
+		$tpl_file = PUN_ROOT.'include/template/main.tpl';
+}
 
+$tpl_main = file_get_contents($tpl_file);
 
 // START SUBST - <pun_include "*">
 while (preg_match('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_main, $cur_include))

@@ -1058,7 +1058,10 @@ function maintenance_message()
 
 
 	// Load the maintenance template
-	$tpl_maint = trim(file_get_contents(PUN_ROOT.'include/template/maintenance.tpl'));
+	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/maintenance.tpl'))
+		$tpl_maint = trim(file_get_contents(PUN_ROOT.'style/'.$pun_user['style'].'/maintenance.tpl'));
+	else
+		$tpl_maint = trim(file_get_contents(PUN_ROOT.'include/template/maintenance.tpl'));
 
 
 	// START SUBST - <pun_include "*">
@@ -1136,7 +1139,10 @@ function redirect($destination_url, $message)
 
 
 	// Load the redirect template
-	$tpl_redir = trim(file_get_contents(PUN_ROOT.'include/template/redirect.tpl'));
+	if (function_exists(PUN_ROOT.'style/'.$pun_user['style'].'/redirect.tpl'))
+		$tpl_redir = trim(file_get_contents(PUN_ROOT.'style/'.$pun_user['style'].'/redirect.tpl'));
+	else
+		$tpl_redir = trim(file_get_contents(PUN_ROOT.'include/template/redirect.tpl'));
 
 
 	// START SUBST - <pun_include "*">
