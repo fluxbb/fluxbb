@@ -790,8 +790,8 @@ else if (isset($_POST['form_sent']))
 					message($lang_prof_reg['Sig too long'].' '.$pun_config['p_sig_length'].' '.$lang_prof_reg['characters'].'.');
 				else if (substr_count($form['signature'], "\n") > ($pun_config['p_sig_lines']-1))
 					message($lang_prof_reg['Sig too many lines'].' '.$pun_config['p_sig_lines'].' '.$lang_prof_reg['lines'].'.');
-				else if ($form['signature'] && $pun_config['p_sig_all_caps'] == '0' && strtoupper($form['signature']) == $form['signature'] && !$pun_user['is_admmod'])
-					$form['signature'] = ucwords(strtolower($form['signature']));
+				else if ($form['signature'] && $pun_config['p_sig_all_caps'] == '0' && is_all_uppercase($form['signature']) && !$pun_user['is_admmod'])
+					$form['signature'] = utf8_ucwords(utf8_strtolower($form['signature']));
 
 				// Validate BBCode syntax
 				if ($pun_config['p_sig_bbcode'] == '1')

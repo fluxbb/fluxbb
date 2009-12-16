@@ -61,8 +61,8 @@ if (isset($_POST['form_sent']))
 			$errors[] = $lang_post['No subject'];
 		else if (pun_strlen($subject) > 70)
 			$errors[] = $lang_post['Too long subject'];
-		else if ($pun_config['p_subject_all_caps'] == '0' && strtoupper($subject) == $subject && !$pun_user['is_admmod'])
-			$subject = ucwords(strtolower($subject));
+		else if ($pun_config['p_subject_all_caps'] == '0' && is_all_uppercase($subject) && !$pun_user['is_admmod'])
+			$errors[] = $lang_post['All caps subject'];
 	}
 
 	// Clean up message from POST
@@ -72,8 +72,8 @@ if (isset($_POST['form_sent']))
 		$errors[] = $lang_post['No message'];
 	else if (strlen($message) > 65535)
 		$errors[] = $lang_post['Too long message'];
-	else if ($pun_config['p_message_all_caps'] == '0' && strtoupper($message) == $message && !$pun_user['is_admmod'])
-		$message = ucwords(strtolower($message));
+	else if ($pun_config['p_message_all_caps'] == '0' && is_all_uppercase($message) && !$pun_user['is_admmod'])
+		$errors[] = $lang_post['All caps message'];
 
 	// Validate BBCode syntax
 	if ($pun_config['p_message_bbcode'] == '1')

@@ -1020,6 +1020,14 @@ function pun_trim($str)
 	return utf8_trim($str);
 }
 
+//
+// Checks if a string is in all uppercase
+//
+function is_all_uppercase($string)
+{
+	return utf8_strtoupper($string) == $string && utf8_strtolower($string) != $string;
+}
+
 
 //
 // Inserts $element into $input at $offset
