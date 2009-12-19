@@ -114,7 +114,7 @@ DIV.blockmenu, #viewprofile DT {
 
 #viewprofile DL {FLOAT: left; WIDTH: 100%; OVERFLOW: hidden}
 
-DIV.deletemsg { PADDING-TOP: 5px; PADDING-LEFT: 5px; }
+DIV.deletemsg { PADDING: 8px 15px; margin-top: 0.75em}
 
 /****************************************************************/
 /* 6. TABLE SETUP */

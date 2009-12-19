@@ -44,7 +44,7 @@ TD.tc2, TD.tc3, TD.tcmod, #postpreview, #viewprofile DD, DIV.forminfo,
 
 /* 2.1 This is the setup for posts. */
 
-DIV.blockpost DIV.box, DIV.postright, DIV.postfootright {BACKGROUND-COLOR: #DEDFDF}
+DIV.blockpost DIV.box, DIV.postright, DIV.postfootright, DIV.deletemsg {BACKGROUND-COLOR: #DEDFDF}
 DIV.postright, DIV.postfootright {BORDER-LEFT-COLOR: #f1f1f1}
 DIV.postleft, DIV.postfootleft, DIV.blockpost LABEL {BACKGROUND-COLOR: #F1F1F1}
 
