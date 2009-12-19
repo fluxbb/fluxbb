@@ -63,8 +63,8 @@ DIV.usercontent h2 {font-size: 1.2em; font-weight: bold; padding: 0.75em 0 0 0}
 DIV.usercontent h3 {font-size: 1.1em; font-weight: bold; padding: 0.75em 0 0 0}
 DIV.usercontent h4, DIV.usercontent h5, DIV.usercontent h6 {FONT-SIZE: 1em; FONT-WEIGHT: bold; PADDING: 0.75em 0 0 0}
 DIV.quotebox cite {FONT-WEIGHT: bold; FONT-STYLE: normal; padding: 0.75em 0.75em 0 0.75em}
-DIV.postmsg SPAN.bbu {TEXT-DECORATION: underline}
-.pun DIV.postmsg h5 {FONT-SIZE: 1.1em; FONT-WEIGHT: bold; padding: 0.75em 0 0 0;}
+.pun SPAN.bbu {TEXT-DECORATION: underline}
+.pun DIV.postmsg h5, #helpfile h5 {FONT-SIZE: 1.1em; FONT-WEIGHT: bold; padding: 0.75em 0 0 0;}
 
 
 /****************************************************************/
