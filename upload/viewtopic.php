@@ -165,7 +165,7 @@ require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">
 	<div class="inbox">
-		<ul>
+		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 			<li>&raquo;&nbsp;<a href="viewforum.php?id=<?php echo $cur_topic['forum_id'] ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
 			<li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_topic['subject']) ?></li>
@@ -351,7 +351,7 @@ while ($cur_post = $db->fetch_assoc($result))
 	<div class="inbox">
 		<p class="postlink conr"><?php echo $post_link ?></p>
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<ul>
+		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 			<li>&raquo;&nbsp;<a href="viewforum.php?id=<?php echo $cur_topic['forum_id'] ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
 			<li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_topic['subject']) ?></li>

@@ -80,7 +80,7 @@ $cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smili
 ?>
 <div class="linkst">
 	<div class="inbox">
-		<ul>
+		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 			<li>&raquo;&nbsp;<a href="viewforum.php?id=<?php echo $cur_post['fid'] ?>"><?php echo pun_htmlspecialchars($cur_post['forum_name']) ?></a></li>
 			<li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_post['subject']) ?></li>

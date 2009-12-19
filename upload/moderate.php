@@ -258,7 +258,7 @@ if (isset($_GET['tid']))
 ?>
 <div class="linkst">
 	<div class="inbox">
-		<ul>
+		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 			<li>&raquo;&nbsp;<a href="viewforum.php?id=<?php echo $fid ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
 			<li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_topic['subject']) ?></li>
@@ -347,7 +347,7 @@ if (isset($_GET['tid']))
 <div class="postlinksb">
 	<div class="inbox">
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<p class="conr">
+		<p class="conr modbuttons">
 			<input type="submit" name="split_posts" value="<?php echo $lang_misc['Split'] ?>"<?php echo $button_status ?> />
 			<input type="submit" name="delete_posts" value="<?php echo $lang_misc['Delete'] ?>"<?php echo $button_status ?> />
 		</p>
@@ -746,7 +746,7 @@ $paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'moderate.ph
 ?>
 <div class="linkst">
 	<div class="inbox">
-		<ul>
+		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 			<li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></li>
 		</ul>
@@ -879,7 +879,7 @@ else
 <div class="linksb">
 	<div class="inbox">
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<p class="conr"><input type="submit" name="move_topics" value="<?php echo $lang_misc['Move'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="delete_topics" value="<?php echo $lang_misc['Delete'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="merge_topics" value="<?php echo $lang_misc['Merge'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="open" value="<?php echo $lang_misc['Open'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="close" value="<?php echo $lang_misc['Close'] ?>"<?php echo $button_status ?> /></p>
+		<p class="conr modbuttons"><input type="submit" name="move_topics" value="<?php echo $lang_misc['Move'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="delete_topics" value="<?php echo $lang_misc['Delete'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="merge_topics" value="<?php echo $lang_misc['Merge'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="open" value="<?php echo $lang_misc['Open'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="close" value="<?php echo $lang_misc['Close'] ?>"<?php echo $button_status ?> /></p>
 		<div class="clearer"></div>
 	</div>
 </div>

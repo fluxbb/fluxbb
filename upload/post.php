@@ -427,7 +427,7 @@ require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">
 	<div class="inbox">
-		<ul>
+		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 			<li>&raquo;&nbsp;<?php echo $forum_name ?></li>
 <?php if (isset($cur_posting['subject'])): ?>			<li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_posting['subject']) ?></li>
