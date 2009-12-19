@@ -201,8 +201,8 @@ if ($pun_config['o_announcement'] == '1')
 <div id="announce" class="block">
 	<h2><span><?php echo $lang_common['Announcement'] ?></span></h2>
 	<div class="box">
-		<div class="inbox">
-			<div><?php echo $pun_config['o_announcement_message'] ?></div>
+		<div id="announce-block" class="inbox">
+			<div class="usercontent"><?php echo $pun_config['o_announcement_message'] ?></div>
 		</div>
 	</div>
 </div>

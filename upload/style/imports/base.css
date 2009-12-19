@@ -5,15 +5,14 @@
 .pun TABLE, .pun DIV, .pun FORM, .pun P, .pun H1, .pun H2, .pun H3,
 .pun H4, .pun H5, .pun PRE, .pun BLOCKQUOTE, .pun UL, .pun OL, .pun LI, .pun DL,
 .pun DT, .pun DD, .pun TH, .pun TD, .pun FIELDSET, .pun IMG {
-	MARGIN: 0px;
-	PADDING: 0px;
+	MARGIN: 0;
+	PADDING: 0;
 	FONT-WEIGHT: normal;
-	LIST-STYLE: none;
 }
 
-.pun IMG {BORDER: none}
+.pun UL, .pun OL {LIST-STYLE: none}
 
-.pun INPUT, .pun SELECT, .pun TEXTAREA, .pun OPTGROUP {MARGIN: 0}
+.pun IMG {BORDER: 0}
 
 /****************************************************************/
 /* 2. STRUCTURAL SETTINGS - VERY IMPORTANT - DO NOT CHANGE */
@@ -29,7 +28,7 @@
 }
 
 .pun .clearer, .pun .clearb {CLEAR: both}
-.pun .nosize {POSITION: absolute; LEFT: -10000px}
+.pun .nosize {POSITION: absolute; LEFT: -9999em}
 
 /* 2.2 Overflow settings for posts */
 
@@ -47,14 +46,14 @@ DIV>DIV>DIV.postfootleft, DIV>DIV>DIV.postfootright {PADDING-TOP: 1px; MARGIN-TO
 /* 3.2 This is only visible to IE6 Windows and cures various bugs. Do not alter comments */
 
 /* Begin IE6Win Fix \*/
-* HTML .inbox, * HTML .inform, * HTML .pun, * HTML .intd, * HTML .tclcon, * HTML .codebox {HEIGHT: 1px}
+* HTML .inbox, * HTML .inform, * HTML .pun, * HTML .tclcon, * HTML .codebox {HEIGHT: 1px}
 /* End of IE6Win Fix */
 
 /* 3.3 This is the equivelant of 3.2 but for IE7. It is visible to other browsers
 but does no harm */
 
 /*Begin IE7Win Fix */
-.pun, .pun .inbox, .pun .inform, .pun .intd, .pun .tclcon, .pun .codebox {min-height: 1px}
+.pun, .pun .inbox, .pun .inform, .pun .tclcon, .pun .codebox {min-height: 1px}
 /* End of IE7Win Fix */
 
 /****************************************************************/
@@ -68,8 +67,9 @@ but does no harm */
 	POSITION: absolute;
 	DISPLAY: block;
 	OVERFLOW: hidden;
-	WIDTH: 1em;
-	LEFT: -999em
+	WIDTH: 0;
+	LEFT: -9999em;
+	TEXT-INDENT: -9999em;
 }
 
 /****************************************************************/
@@ -81,15 +81,10 @@ but does no harm */
 .conr {
 	FLOAT: right;
 	TEXT-ALIGN: right;
-	CLEAR: right;
-	WIDTH: 40%
 }
 
 .conl {
 	FLOAT: left;
-	WIDTH: 55%;
-	OVERFLOW: hidden;
-	WHITE-SPACE: nowrap
 }
 
 LABEL.conl {
@@ -100,9 +95,9 @@ LABEL.conl {
 
 /* 5.2 Set up page numbering and posts links */
 
-DIV.linkst .conl, DIV.linksb .conl, DIV.postlinksb .conl {WIDTH:auto; white-space: nowrap}
+DIV.linkst .conl, DIV.linksb .conl, DIV.postlinksb .conl {white-space: nowrap}
 
-DIV.linkst .conr, DIV.linksb .conr, DIV.postlinksb .conr {WIDTH:auto; white-space: nowrap}
+DIV.linkst .conr, DIV.linksb .conr, DIV.postlinksb .conr {white-space: nowrap}
 
 FORM DIV.linksb .conr {WIDTH: 32em}
 
@@ -200,19 +195,15 @@ DIV.blockpost>DIV>DIV.inbox {PADDING-BOTTOM: 1px}
 /* 7.3 This is the div which actually contains the post and is inside .postright */
 
 DIV.postmsg {WIDTH:98%;}
-DIV.postmsg P {MARGIN: 0 0 1.5em}
-DIV.postmsg UL, DIV.postmsg OL {MARGIN: 0 0 1.5em 0.5em;PADDING-LEFT: 1.5em}
-DIV.postmsg OL {MARGIN: 0 0 1.5em 1em}
-DIV.postmsg LI UL, DIV.postmsg LI OL {MARGIN-BOTTOM: 0; MARGIN-TOP: 0.5em}
-DIV.postmsg UL LI {LIST-STYLE-TYPE: disc}
-DIV.postmsg UL LI UL LI {LIST-STYLE-TYPE: circle}
-DIV.postmsg OL.decimal LI {LIST-STYLE-TYPE: decimal}
-DIV.postmsg OL.alpha LI {LIST-STYLE-TYPE: lower-alpha}
 
 /* 7.4 These items control overflow and scrolling within posts. */
 
 DIV.quotebox blockquote {WIDTH: 100%; OVERFLOW: hidden}
-DIV.codebox pre {overflow: auto; width: 100%; padding-bottom: 18px; overflow-y:hidden}
+DIV.codebox pre {overflow: auto; width: 100%; overflow-y:hidden}
+* html div.codebox pre {padding-bottom: 10px;}
+*+html div.codebox pre {padding-bottom: 10px}
+div.codebox pre code {display: block; padding: 0.75em;}
+
 /* Uncomment the following line to activate vertically scrolling codeboxes*/
 .pun .codebox pre.vscroll {height: 32em; overflow: auto; overflow-y: auto}
 
@@ -238,9 +229,6 @@ DIV.postsignature HR {
 DIV.searchposts DIV.postmsg {HEIGHT: 8em}
 DIV.searchposts DD P {PADDING-TOP: 3em}
 
-/* 7.8 Class for bbcode [u] */
-
-SPAN.bbu {TEXT-DECORATION: underline}
 
 /****************************************************************/
 /* 8. LISTS SPECIAL SETTINGS */
@@ -251,7 +239,6 @@ SPAN.bbu {TEXT-DECORATION: underline}
 #onlinelist DD, #onlinelist DT, #brdmenu LI, DIV.linkst LI, DIV.linksb LI, DIV.postlinksb LI,
 DIV.postfootright LI, UL.bblinks LI {
 	DISPLAY: inline;
-	HEIGHT: 0
 }
 
 /* 8.2 Turn on square icon for posterror list */

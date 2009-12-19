@@ -34,6 +34,10 @@ TD.tc2, TD.tc3, TD.tcmod, #postpreview, #viewprofile DD, DIV.forminfo,
 
 .pun DIV.blockmenu LI.isactive A, #posterror LI STRONG {COLOR: #333}
 
+/* 1.7 Usercontent (Rules and Announcements */
+
+.pun DIV.usercontent * {background: transparent; color: #333}
+
 /****************************************************************/
 /* 2. POST BACKGROUNDS AND TEXT */
 /****************************************************************/

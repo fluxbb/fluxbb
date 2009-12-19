@@ -48,7 +48,7 @@ else if ($pun_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POS
 				<fieldset>
 					<legend><?php echo $lang_register['Rules legend'] ?></legend>
 					<div class="infldset">
-						<p><?php echo $pun_config['o_rules_message'] ?></p>
+						<div class="usercontent"><?php echo $pun_config['o_rules_message'] ?></div>
 					</div>
 				</fieldset>
 			</div>
