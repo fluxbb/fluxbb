@@ -213,7 +213,6 @@ DIV.postsignature HR {
 
 /* 7.7 Maximum height for search results as posts. Position go to post link */
 
-DIV.searchposts DIV.postmsg {HEIGHT: 8em}
 DIV.searchposts DD P {PADDING-TOP: 3em}
 
 
