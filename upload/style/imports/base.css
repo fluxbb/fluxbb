@@ -78,20 +78,11 @@ but does no harm */
 
 /* 5.1. Setup all left and right content using floats. */
 
-.conr {
-	FLOAT: right;
-	TEXT-ALIGN: right;
-}
+.conr {FLOAT: right; TEXT-ALIGN: right;}
 
-.conl {
-	FLOAT: left;
-}
+.conl {FLOAT: left;}
 
-LABEL.conl {
-	WIDTH: auto;
-	OVERFLOW: visible;
-	MARGIN-RIGHT: 10px
-}
+LABEL.conl {WIDTH: auto; OVERFLOW: visible; MARGIN-RIGHT: 10px}
 
 /* 5.2 Set up page numbering and posts links */
 
@@ -101,13 +92,9 @@ DIV.linkst .conr, DIV.linksb .conr, DIV.postlinksb .conr {white-space: nowrap}
 
 FORM DIV.linksb .conr {WIDTH: 32em}
 
-/* 5.3 Keep breadcrumbs from shifting to the right when wrapping */
-/* TEMP: THis is not needed anymore since the breadcrumbs are now on their own line */
-/* .linkst UL, linksb UL, .postlinksb UL {MARGIN-LEFT: 18em} */
+.pun UL.crumbs {clear: both; WIDTH: 100%; overflow: hidden}
 
-DIV.linkst UL, DIV.linksb UL, DIV.postlinksb UL {clear: both; WIDTH: 100%; overflow: hidden}
-DIV.linkst UL LI, DIV.linksb UL LI, DIV.postlinksb UL LI {white-space: nowrap}
-
+.pun UL.crumbs {white-space: nowrap}
 
 /* 5.4 Settings for Profile and Admin interface.*/
 
