@@ -201,7 +201,7 @@ else if (isset($_POST['find_user']))
 	$form['username'] = $_POST['username'];
 
 	// trim() all elements in $form
-	$form = array_map('trim', $form);
+	$form = array_map('pun_trim', $form);
 	$conditions = array();
 
 	$posts_greater = trim($_POST['posts_greater']);

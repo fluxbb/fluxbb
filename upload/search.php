@@ -122,7 +122,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			if ($keywords)
 			{
 				$stopwords = (array)@file(PUN_ROOT.'lang/'.$pun_user['language'].'/stopwords.txt');
-				$stopwords = array_map('trim', $stopwords);
+				$stopwords = array_map('pun_trim', $stopwords);
 
 				// Remove any apostrophes which aren't part of words
 				$keywords = substr(preg_replace('((?<=\W)\'|\'(?=\W))', '', ' '.$keywords.' '), 1, -1);

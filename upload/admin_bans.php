@@ -184,7 +184,7 @@ else if (isset($_POST['add_edit_ban']))
 	{
 		$ban_ip = preg_replace('/[\s]{2,}/', ' ', $ban_ip);
 		$addresses = explode(' ', $ban_ip);
-		$addresses = array_map('trim', $addresses);
+		$addresses = array_map('pun_trim', $addresses);
 
 		for ($i = 0; $i < count($addresses); ++$i)
 		{

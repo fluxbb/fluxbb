@@ -26,7 +26,7 @@ if (isset($_POST['form_sent']))
 	if (!preg_match('#^'.preg_quote(str_replace('www.', '', $pun_config['o_base_url']).'/admin_options.php', '#').'#i', str_replace('www.', '', (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''))))
 		message('Bad HTTP_REFERER. If you have moved these forums from one location to another or switched domains, you need to update the Base URL manually in the database (look for o_base_url in the config table) and then clear the cache by deleting all .php files in the /cache directory.');
 
-	$form = array_map('trim', $_POST['form']);
+	$form = array_map('pun_trim', $_POST['form']);
 
 	if ($form['board_title'] == '')
 		message('You must enter a board title.');
