@@ -561,7 +561,7 @@ if (!empty($checkboxes))
 					<legend><?php echo $lang_common['Options'] ?></legend>
 					<div class="infldset">
 						<div class="rbox">
-							<?php echo implode('<br /></label>'."\n\t\t\t\t", $checkboxes).'<br /></label>'."\n" ?>
+							<?php echo implode('<br /></label>'."\n\t\t\t\t\t\t\t", $checkboxes).'<br /></label>'."\n" ?>
 						</div>
 					</div>
 				</fieldset>
@@ -616,7 +616,7 @@ if ($tid && $pun_config['o_topic_review'] != '0')
 				</div>
 				<div class="postright">
 					<div class="postmsg">
-						<?php echo $cur_post['message'] ?>
+						<?php echo $cur_post['message']."\n" ?>
 					</div>
 				</div>
 				<div class="clearer"></div>

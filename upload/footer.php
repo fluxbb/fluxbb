@@ -35,7 +35,7 @@ if ($footer_style == 'index' || $footer_style == 'search')
 {
 	if (!$pun_user['is_guest'] && $pun_user['g_search'] == '1')
 	{
-		echo "\n\t\t\t".'<dl id="searchlinks" class="conl">'."\n\t\t\t\t".'<dt><strong>'.$lang_common['Search links'].'</strong></dt>'."\n\t\t\t\t".'<dd><a href="search.php?action=show_24h">'.$lang_common['Show recent posts'].'</a></dd>'."\n";
+		echo "\t\t\t".'<dl id="searchlinks" class="conl">'."\n\t\t\t\t".'<dt><strong>'.$lang_common['Search links'].'</strong></dt>'."\n\t\t\t\t".'<dd><a href="search.php?action=show_24h">'.$lang_common['Show recent posts'].'</a></dd>'."\n";
 		echo "\t\t\t\t".'<dd><a href="search.php?action=show_unanswered">'.$lang_common['Show unanswered posts'].'</a></dd>'."\n";
 
 		if ($pun_config['o_subscriptions'] == '1')
@@ -47,14 +47,14 @@ if ($footer_style == 'index' || $footer_style == 'search')
 	{
 		if ($pun_user['g_search'] == '1')
 		{
-			echo "\n\t\t\t".'<dl id="searchlinks" class="conl">'."\n\t\t\t\t".'<dt><strong>'.$lang_common['Search links'].'</strong></dt><dd><a href="search.php?action=show_24h">'.$lang_common['Show recent posts'].'</a></dd>'."\n";
+			echo "\t\t\t".'<dl id="searchlinks" class="conl">'."\n\t\t\t\t".'<dt><strong>'.$lang_common['Search links'].'</strong></dt><dd><a href="search.php?action=show_24h">'.$lang_common['Show recent posts'].'</a></dd>'."\n";
 			echo "\t\t\t\t".'<dd><a href="search.php?action=show_unanswered">'.$lang_common['Show unanswered posts'].'</a></dd>'."\n\t\t\t".'</dl>'."\n";
 		}
 	}
 }
 else if ($footer_style == 'viewforum' || $footer_style == 'viewtopic')
 {
-	echo "\n\t\t\t".'<div class="conl">'."\n";
+	echo "\t\t\t".'<div class="conl">'."\n";
 
 	// Display the "Jump to" drop list
 	if ($pun_config['o_quickjump'] == '1')

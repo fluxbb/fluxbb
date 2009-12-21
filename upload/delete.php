@@ -98,7 +98,7 @@ $cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smili
 				<p><strong><?php echo $lang_common['Message'] ?></strong>:</p>
 				<div class="deletemsg">
 					<div class="postmsg">
-						<?php echo $cur_post['message'] ?>
+						<?php echo $cur_post['message']."\n" ?>
 					</div>
 				</div>
 			</div>

@@ -621,7 +621,6 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 						<div class="tclcon">
 							<?php echo $subject."\n" ?>
 						</div>
-					</div>
 					</td>
 					<td class="tc2"><?php echo $forum ?></td>
 					<td class="tc3"><?php echo forum_number_format($search_set[$i]['num_replies']) ?></td>
@@ -675,7 +674,7 @@ require PUN_ROOT.'header.php';
 				<fieldset>
 					<legend><?php echo $lang_search['Search in legend'] ?></legend>
 					<div class="infldset">
-						<label class="conl"><?php echo $lang_search['Forum search'] ?>
+						<label class="conl"><?php echo $lang_search['Forum search']."\n" ?>
 						<br /><select id="forum" name="forum">
 <?php
 
@@ -703,7 +702,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 							</optgroup>
 						</select>
 						<br /></label>
-						<label class="conl"><?php echo $lang_search['Search in'] ?>
+						<label class="conl"><?php echo $lang_search['Search in']."\n" ?>
 						<br /><select id="search_in" name="search_in">
 							<option value="all"><?php echo $lang_search['Message and subject'] ?></option>
 							<option value="message"><?php echo $lang_search['Message only'] ?></option>
@@ -718,7 +717,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 				<fieldset>
 					<legend><?php echo $lang_search['Search results legend'] ?></legend>
 					<div class="infldset">
-						<label class="conl"><?php echo $lang_search['Sort by'] ?>
+						<label class="conl"><?php echo $lang_search['Sort by']."\n" ?>
 						<br /><select name="sort_by">
 							<option value="0"><?php echo $lang_search['Sort by post time'] ?></option>
 							<option value="1"><?php echo $lang_search['Sort by author'] ?></option>
@@ -726,13 +725,13 @@ while ($cur_forum = $db->fetch_assoc($result))
 							<option value="3"><?php echo $lang_search['Sort by forum'] ?></option>
 						</select>
 						<br /></label>
-						<label class="conl"><?php echo $lang_search['Sort order'] ?>
+						<label class="conl"><?php echo $lang_search['Sort order']."\n" ?>
 						<br /><select name="sort_dir">
 							<option value="DESC"><?php echo $lang_search['Descending'] ?></option>
 							<option value="ASC"><?php echo $lang_search['Ascending'] ?></option>
 						</select>
 						<br /></label>
-						<label class="conl"><?php echo $lang_search['Show as'] ?>
+						<label class="conl"><?php echo $lang_search['Show as']."\n" ?>
 						<br /><select name="show_as">
 							<option value="topics"><?php echo $lang_search['Show as topics'] ?></option>
 							<option value="posts"><?php echo $lang_search['Show as posts'] ?></option>

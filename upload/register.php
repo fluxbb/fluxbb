@@ -332,8 +332,8 @@ if (!empty($errors))
 				<fieldset>
 					<legend><?php echo ($pun_config['o_regs_verify'] == '1') ? $lang_prof_reg['Email legend 2'] : $lang_prof_reg['Email legend'] ?></legend>
 					<div class="infldset">
-<?php if ($pun_config['o_regs_verify'] == '1'): ?>			<p><?php echo $lang_register['Email info'] ?></p>
-<?php endif; ?>					<label><strong><?php echo $lang_common['Email'] ?></strong><br />
+<?php if ($pun_config['o_regs_verify'] == '1'): ?>						<p><?php echo $lang_register['Email info'] ?></p>
+<?php endif; ?>						<label><strong><?php echo $lang_common['Email'] ?></strong><br />
 						<input type="text" name="req_email1" value="<?php if (isset($_POST['req_email1'])) echo pun_htmlspecialchars($_POST['req_email1']); ?>" size="50" maxlength="50" /><br /></label>
 <?php if ($pun_config['o_regs_verify'] == '1'): ?>						<label><strong><?php echo $lang_register['Confirm email'] ?></strong><br />
 						<input type="text" name="req_email2" value="<?php if (isset($_POST['req_email2'])) echo pun_htmlspecialchars($_POST['req_email2']); ?>" size="50" maxlength="50" /><br /></label>
