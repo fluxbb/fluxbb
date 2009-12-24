@@ -140,6 +140,8 @@ DIV.deletemsg { PADDING: 8px 15px; margin-top: 0.75em}
 
 .tcl, .tcr {OVERFLOW: HIDDEN}
 
+.pun .tcl span.newtext, .pun .tcl span.pagestext {WHITE-SPACE: nowrap}
+
 /* 6.3 Other Table Setup */
 
 #users1 .tcl {WIDTH: 40%}
