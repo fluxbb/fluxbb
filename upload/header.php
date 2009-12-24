@@ -87,7 +87,6 @@ if (isset($required_fields))
 
 ?>
 <script type="text/javascript">
-<!--
 function process_form(the_form)
 {
 	var element_names = new Object()
@@ -118,7 +117,6 @@ function process_form(the_form)
 
 	return true
 }
-// -->
 </script>
 <?php
 

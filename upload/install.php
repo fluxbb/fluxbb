@@ -19,7 +19,7 @@ if (file_exists(PUN_ROOT.'config.php'))
 {
 	// Check to see whether FluxBB is already installed
 	include PUN_ROOT.'config.php';
-	
+
 	// If PUN is defined, config.php is probably valid and thus the software is installed
 	if (defined('PUN'))
 		exit('It seems like FluxBB is already installed. You should go <a href="index.php">here</a> instead.');
@@ -113,7 +113,6 @@ if (!isset($_POST['form_sent']))
 <title>FluxBB Installation</title>
 <link rel="stylesheet" type="text/css" href="style/Oxygen.css" />
 <script type="text/javascript">
-<!--
 function process_form(the_form)
 {
 	var element_names = new Object()
@@ -146,7 +145,6 @@ function process_form(the_form)
 
 	return true
 }
-// -->
 </script>
 </head>
 <body onload="document.getElementById('install').req_db_type.focus()">
