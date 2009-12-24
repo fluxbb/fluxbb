@@ -153,7 +153,7 @@ $tpl_main = str_replace('<pun_title>', '<h1><span>'.pun_htmlspecialchars($pun_co
 
 
 // START SUBST - <pun_desc>
-$tpl_main = str_replace('<pun_desc>', '<p><span>'.$pun_config['o_board_desc'].'</span></p>', $tpl_main);
+$tpl_main = str_replace('<pun_desc>', $pun_config['o_board_desc'], $tpl_main);
 // END SUBST - <pun_desc>
 
 

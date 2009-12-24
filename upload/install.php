@@ -1333,7 +1333,7 @@ else
 		'o_cur_version'				=> "'".FORUM_VERSION."'",
 		'o_database_revision'		=> "'".FORUM_DB_REVISION."'",
 		'o_board_title'				=> "'My FluxBB forum'",
-		'o_board_desc'				=> "'Unfortunately no one can be told what FluxBB is - you have to see it for yourself.'",
+		'o_board_desc'				=> "'<p><span>Unfortunately no one can be told what FluxBB is - you have to see it for yourself.</span></p>'",
 		'o_default_timezone'		=> "'0'",
 		'o_time_format'				=> "'H:i:s'",
 		'o_date_format'				=> "'Y-m-d'",
