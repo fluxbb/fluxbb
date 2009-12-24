@@ -34,20 +34,36 @@
 
 .pun H2, .pun H4 {FONT-SIZE: 1em}
 .pun H3 {FONT-SIZE: 1.1em}
+.pun H5 {FONT-SIZE: 1.2em}
 #brdtitle H1 {FONT-SIZE: 1.4em}
 
 /* 2.4 Larger text for particular items */
 
 DIV.postmsg P {LINE-HEIGHT: 1.4}
 DIV.postleft DT {FONT-SIZE: 1.1em}
-.pun PRE {FONT-SIZE: 1.2em}
+.pun PRE, .pun CODE {FONT-SIZE: 1.2em}
+.pun PRE CODE {FONT-SIZE: 1em;}
 
 /* 2.5 Bold text */
 
-DIV.postleft DT, DIV.postmsg H4, TD.tcl H3, DIV.forminfo H3, P.postlink, DIV.linkst LI, .pun .quotebox cite,
+DIV.postleft DT, #helpfile H5, TD.tcl H3, DIV.forminfo H3, P.postlink, DIV.linkst LI,
 DIV.linksb LI, DIV.postlinksb LI, .blockmenu LI, #brdtitle H1, .pun SPAN.warntext, .pun P.warntext {FONT-WEIGHT: bold}
 
-.pun .quotebox cite {font-style: normal}
+/* 2.6 Post Content, Announcements, Rules */
+
+DIV.usercontent P, DIV.postmsg P {padding: 0.75em 0}
+DIV.usercontent UL, DIV.postmsg UL {PADDING: 0.75em 1em 0.75em 2.5em; LIST-STYLE: disc}
+DIV.usercontent OL, DIV.postmsg OL {PADDING: 0.75em 1em 0.75em 2.5em; LIST-STYLE: decimal}
+DIV.usercontent OL.alpha, DIV.postmsg OL.alpha {LIST-STYLE: lower-alpha}
+DIV.usercontent LI OL, DIV.usercontent LI UL, DIV.postmsg LI OL, DIV.postmsg LI UL {PADDING: 0.25em 1em 0.75em 2.5em}
+DIV.usercontent LI P, DIV.postmsg LI P {PADDING: 0}
+DIV.usercontent h1 {font-size: 1.4em; font-weight: bold; padding: 0.75em 0 0 0}
+DIV.usercontent h2 {font-size: 1.2em; font-weight: bold; padding: 0.75em 0 0 0}
+DIV.usercontent h3 {font-size: 1.1em; font-weight: bold; padding: 0.75em 0 0 0}
+DIV.usercontent h4, DIV.usercontent h5, DIV.usercontent h6 {FONT-SIZE: 1em; FONT-WEIGHT: bold; PADDING: 0.75em 0 0 0}
+DIV.quotebox cite {FONT-WEIGHT: bold; FONT-STYLE: normal; padding: 0.75em 0.75em 0 0.75em}
+.pun SPAN.bbu {TEXT-DECORATION: underline}
+.pun DIV.postmsg h5, #helpfile h5 {FONT-SIZE: 1.1em; FONT-WEIGHT: bold; padding: 0.75em 0 0 0;}
 
 /****************************************************************/
 /* 3. LINKS */
@@ -103,7 +119,7 @@ DIV>FIELDSET {
 /* 5.1 Page margins */
 
 HTML, BODY {MARGIN: 0; PADDING: 0}
-#punwrap {margin:12px 20px}
+#punwrap {MARGIN: 12px 20px}
 
 /* 5.2 Creates vertical space between main board elements (Margins) */
 
@@ -130,6 +146,7 @@ have a 6px space beneath them */
 DIV.block DIV.inbox, DIV.blockmenu DIV.inbox {PADDING: 3px 6px}
 .pun P, .pun UL, .pun DL, DIV.blockmenu LI, .pun LABEL, #announce DIV.inbox DIV {PADDING: 3px 0}
 .pun H2 {PADDING: 4px 6px}
+.pun H5 {PADDING: 0 0 1.5em 0}
 
 /* 6.2 Special spacing for various elements */
 
@@ -157,12 +174,13 @@ DIV.linksb, DIV.postlinksb {PADDING: 3px 6px 8px 6px}
 
 /* 8.1 Padding around left and right columns in viewtopic */
 
-DIV.postleft DL, DIV.postright {PADDING: 6px}
+DIV.postleft DL {PADDING: 0.75em 6px}
+DIV.postright {PADDING: 0 6px}
 
 /* 8.2 Extra spacing for poster contact details and avatar */
 
-DD.usercontacts, DD.postavatar {MARGIN-TOP: 5px}
-DD.postavatar {MARGIN-BOTTOM: 5px}
+DD.usercontacts {MARGIN-TOP: 5px}
+DD.postavatar, DD.usertitle {MARGIN-BOTTOM: 5px}
 
 /* 8.3 Extra top spacing for signatures and edited by */
 
@@ -170,10 +188,9 @@ DIV.postsignature, DIV.postmsg P.postedit {PADDING-TOP: 15px}
 
 /* 8.4 Spacing for code and quote boxes */
 
-DIV.postmsg H4 {MARGIN-BOTTOM: 10px}
-
-.pun .quotebox, .pun .codebox {margin: 0.75em 1em; padding: 1em 0.75em; }
-.pun .quotebox cite {display: block; padding-bottom: 0.5em}
+.pun .quotebox CITE {DISPLAY: block; PADDING: 0.75em 0 0 0;}
+.pun .quotebox {margin: 0.75em 1em; padding: 0 0.75em;}
+.pun .codebox {margin: 0.75em 1em; padding: 0 }
 
 /* 8.5 Padding for the action links and online indicator in viewtopic */
 
@@ -191,9 +208,6 @@ P.multidelete {
 	PADDING-BOTTOM: 5px
 }
 
-/* 8.7 Make sure paragraphs in posts don't get any padding */
-
-DIV.postmsg P {PADDING: 0}
 
 /****************************************************************/
 /* 9. SPECIAL SPACING FOR FORMS */
