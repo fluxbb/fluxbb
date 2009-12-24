@@ -1272,7 +1272,7 @@ else
 						<div class="infldset">
 							<input type="hidden" name="form_sent" value="1" />
 							<label><?php echo $lang_profile['Realname'] ?><br /><input type="text" name="form[realname]" value="<?php echo pun_htmlspecialchars($user['realname']) ?>" size="40" maxlength="40" /><br /></label>
-<?php if (isset($title_field)): ?>					<?php echo $title_field ?>
+<?php if (isset($title_field)): ?>							<?php echo $title_field ?>
 <?php endif; ?>							<label><?php echo $lang_profile['Location'] ?><br /><input type="text" name="form[location]" value="<?php echo pun_htmlspecialchars($user['location']) ?>" size="30" maxlength="30" /><br /></label>
 							<label><?php echo $lang_profile['Website'] ?><br /><input type="text" name="form[url]" value="<?php echo pun_htmlspecialchars($user['url']) ?>" size="50" maxlength="80" /><br /></label>
 						</div>
@@ -1332,7 +1332,7 @@ else
 			$avatar_field = '<a href="profile.php?action=upload_avatar&amp;id='.$id.'">'.$lang_profile['Upload avatar'].'</a>';
 
 		if ($user['signature'] != '')
-			$signature_preview = '<p>'.$lang_profile['Sig preview'].'</p>'."\n\t\t\t\t\t".'<div class="postsignature">'."\n\t\t\t\t\t\t".'<hr />'."\n\t\t\t\t\t\t".$parsed_signature."\n\t\t\t\t\t".'</div>'."\n";
+			$signature_preview = '<p>'.$lang_profile['Sig preview'].'</p>'."\n\t\t\t\t\t\t\t".'<div class="postsignature">'."\n\t\t\t\t\t\t\t\t".'<hr />'."\n\t\t\t\t\t\t\t\t".$parsed_signature."\n\t\t\t\t\t\t\t".'</div>'."\n";
 		else
 			$signature_preview = '<p>'.$lang_profile['No sig'].'</p>'."\n";
 
@@ -1420,7 +1420,6 @@ else
 						<legend><?php echo $lang_profile['Style legend'] ?></legend>
 						<div class="infldset">
 							<label><?php echo $lang_profile['Style info'] ?><br />
-
 							<select name="form[style]">
 <?php
 
