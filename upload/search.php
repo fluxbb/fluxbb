@@ -588,7 +588,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					$item_status .= ' inew';
 					$icon_type = 'icon inew';
 					$subject = '<strong>'.$subject.'</strong>';
-					$subject_new_posts = '<span class="newtext">[&nbsp;<a href="viewtopic.php?id='.$search_set[$i]['tid'].'&amp;action=new" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a>&nbsp;]</span>';
+					$subject_new_posts = '<span class="newtext">[ <a href="viewtopic.php?id='.$search_set[$i]['tid'].'&amp;action=new" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a> ]</span>';
 				}
 				else
 					$subject_new_posts = null;
@@ -603,14 +603,14 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$num_pages_topic = ceil(($search_set[$i]['num_replies'] + 1) / $pun_user['disp_posts']);
 
 				if ($num_pages_topic > 1)
-					$subject_multipage = '[ '.paginate($num_pages_topic, -1, 'viewtopic.php?id='.$search_set[$i]['tid']).' ]';
+					$subject_multipage = '<span class="pagestext">[ '.paginate($num_pages_topic, -1, 'viewtopic.php?id='.$search_set[$i]['tid']).' ]</span>';
 				else
 					$subject_multipage = null;
 
 				// Should we show the "New posts" and/or the multipage links?
 				if (!empty($subject_new_posts) || !empty($subject_multipage))
 				{
-					$subject .= '&nbsp; '.(!empty($subject_new_posts) ? $subject_new_posts : '');
+					$subject .= !empty($subject_new_posts) ? ' '.$subject_new_posts : '';
 					$subject .= !empty($subject_multipage) ? ' '.$subject_multipage : '';
 				}
 
@@ -619,7 +619,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					<td class="tcl">
 						<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo trim($icon_text) ?></div></div>
 						<div class="tclcon">
-							<?php echo $subject."\n" ?>
+							<div>
+								<?php echo $subject."\n" ?>
+							</div>
 						</div>
 					</td>
 					<td class="tc2"><?php echo $forum ?></td>

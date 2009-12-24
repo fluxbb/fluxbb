@@ -109,7 +109,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 	}
 
 	if ($cur_forum['forum_desc'] != '')
-		$forum_field .= "\n\t\t\t\t\t\t\t".$cur_forum['forum_desc'];
+		$forum_field .= "\n\t\t\t\t\t\t\t\t".$cur_forum['forum_desc'];
 
 
 	// If there is a last_post/last_poster
@@ -131,7 +131,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 				$moderators[] = pun_htmlspecialchars($mod_username);
 		}
 
-		$moderators = "\t\t\t\t\t\t\t".'<p><em>('.$lang_common['Moderated by'].'</em> '.implode(', ', $moderators).')</p>'."\n";
+		$moderators = "\t\t\t\t\t\t\t\t".'<p><em>('.$lang_common['Moderated by'].'</em> '.implode(', ', $moderators).')</p>'."\n";
 	}
 
 ?>
@@ -139,7 +139,9 @@ while ($cur_forum = $db->fetch_assoc($result))
 					<td class="tcl">
 						<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo $icon_text ?></div></div>
 						<div class="tclcon">
-							<?php echo $forum_field."\n".$moderators ?>
+							<div>
+								<?php echo $forum_field."\n".$moderators ?>
+							</div>
 						</div>
 					</td>
 					<td class="tc2"><?php echo forum_number_format($num_topics) ?></td>
