@@ -634,7 +634,7 @@ function handle_list_tag($content, $type = '*')
 		$content = preg_replace($pattern, $replace, $content);
 	}
 
-	$content = preg_replace('#\s*\[\*\](.*?)\[/\*\]\s*#s', '<li>$1</li>', pun_trim($content));
+	$content = preg_replace('#\s*\[\*\](.*?)\[/\*\]\s*#s', '<li><p>$1</p></li>', pun_trim($content));
 
 	if ($type == '*')
 		$content = '<ul>'.$content.'</ul>';
