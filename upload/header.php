@@ -61,6 +61,11 @@ while (preg_match('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $t
 // END SUBST - <pun_include "*">
 
 
+// START SUBST - <pun_language>
+$tpl_main = str_replace('<pun_language>', $lang_common['lang_identifier'], $tpl_main);
+// END SUBST - <pun_language>
+
+
 // START SUBST - <pun_content_direction>
 $tpl_main = str_replace('<pun_content_direction>', $lang_common['lang_direction'], $tpl_main);
 // END SUBST - <pun_content_direction>

@@ -1089,6 +1089,11 @@ function maintenance_message()
 	// END SUBST - <pun_include "*">
 
 
+	// START SUBST - <pun_language>
+	$tpl_maint = str_replace('<pun_language>', $lang_common['lang_identifier'], $tpl_maint);
+	// END SUBST - <pun_language>
+
+
 	// START SUBST - <pun_content_direction>
 	$tpl_maint = str_replace('<pun_content_direction>', $lang_common['lang_direction'], $tpl_maint);
 	// END SUBST - <pun_content_direction>
@@ -1168,6 +1173,11 @@ function redirect($destination_url, $message)
 	    ob_end_clean();
 	}
 	// END SUBST - <pun_include "*">
+
+
+	// START SUBST - <pun_language>
+	$tpl_redir = str_replace('<pun_language>', $lang_common['lang_identifier'], $tpl_redir);
+	// END SUBST - <pun_language>
 
 
 	// START SUBST - <pun_content_direction>

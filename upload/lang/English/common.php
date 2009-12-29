@@ -29,6 +29,7 @@ $lang_common = array(
 
 // Text orientation and encoding
 'lang_direction'					=>	'ltr', // ltr (Left-To-Right) or rtl (Right-To-Left)
+'lang_identifier'					=>	'en',
 
 // Number formatting
 'lang_decimal_point'				=>	'.',
