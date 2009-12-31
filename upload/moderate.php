@@ -273,7 +273,6 @@ if (isset($_GET['tid']))
 
 	require PUN_ROOT.'include/parser.php';
 
-	$bg_switch = true; // Used for switching background color in posts
 	$post_count = 0; // Keep track of post numbers
 
 	// Retrieve the posts (and their respective poster)
@@ -305,17 +304,13 @@ if (isset($_GET['tid']))
 			$user_title = $lang_topic['Guest'];
 		}
 
-		// Switch the background color for every message
-		$bg_switch = ($bg_switch) ? $bg_switch = false : $bg_switch = true;
-		$vtbg = ($bg_switch) ? ' roweven' : ' rowodd';
-
 		// Perform the main parsing of the message (BBCode, smilies, censor words etc)
 		$cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 
 ?>
 
-<div id="p<?php echo $cur_post['id'] ?>" class="blockpost<?php echo $vtbg ?>">
-	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?>&nbsp;</span><a href="viewtopic.php?pid=<?php echo $cur_post['id'].'#p'.$cur_post['id'] ?>"><?php echo format_time($cur_post['posted']) ?></a></span></h2>
+<div id="p<?php echo $cur_post['id'] ?>" class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?>">
+	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?></span> <a href="viewtopic.php?pid=<?php echo $cur_post['id'].'#p'.$cur_post['id'] ?>"><?php echo format_time($cur_post['posted']) ?></a></span></h2>
 	<div class="box">
 		<div class="bgbox">
 			<div class="inbox">

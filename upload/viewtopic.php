@@ -181,7 +181,6 @@ require PUN_ROOT.'header.php';
 
 require PUN_ROOT.'include/parser.php';
 
-$bg_switch = true; // Used for switching background color in posts
 $post_count = 0; // Keep track of post numbers
 
 // Retrieve the posts (and their respective poster/online status)
@@ -290,12 +289,6 @@ while ($cur_post = $db->fetch_assoc($result))
 	else
 		$post_actions[] = '<li class="postreport"><a href="misc.php?report='.$cur_post['id'].'">'.$lang_topic['Report'].'</a>'.$lang_topic['Link separator'].'</li><li class="postdelete"><a href="delete.php?id='.$cur_post['id'].'">'.$lang_topic['Delete'].'</a>'.$lang_topic['Link separator'].'</li><li class="postedit"><a href="edit.php?id='.$cur_post['id'].'">'.$lang_topic['Edit'].'</a>'.$lang_topic['Link separator'].'</li><li class="postquote"><a href="post.php?tid='.$id.'&amp;qid='.$cur_post['id'].'">'.$lang_topic['Quote'].'</a>';
 
-
-	// Switch the background color for every message
-	$bg_switch = ($bg_switch) ? $bg_switch = false : $bg_switch = true;
-	$vtbg = ($bg_switch) ? ' roweven' : ' rowodd';
-
-
 	// Perform the main parsing of the message (BBCode, smilies, censor words etc)
 	$cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 
@@ -312,8 +305,8 @@ while ($cur_post = $db->fetch_assoc($result))
 	}
 
 ?>
-<div id="p<?php echo $cur_post['id'] ?>" class="blockpost<?php echo $vtbg ?><?php if (($post_count + $start_from) == 1) echo ' firstpost'; ?>">
-	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?>&nbsp;</span><a href="viewtopic.php?pid=<?php echo $cur_post['id'].'#p'.$cur_post['id'] ?>"><?php echo format_time($cur_post['posted']) ?></a></span></h2>
+<div id="p<?php echo $cur_post['id'] ?>" class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if (($post_count + $start_from) == 1) echo ' firstpost'; ?>">
+	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?></span> <a href="viewtopic.php?pid=<?php echo $cur_post['id'].'#p'.$cur_post['id'] ?>"><?php echo format_time($cur_post['posted']) ?></a></span></h2>
 	<div class="box">
 		<div class="bgbox">
 			<div class="inbox">

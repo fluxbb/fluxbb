@@ -485,6 +485,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		if ($show_as == 'posts')
 		{
 			require PUN_ROOT.'include/parser.php';
+			$post_count = 0;
 		}
 
 		// Fetch the list of forums
@@ -510,6 +511,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 			if ($show_as == 'posts')
 			{
+				++$post_count;
 				$icon = '<div class="icon"><div class="nosize">'.$lang_common['Normal icon'].'</div></div>'."\n";
 				$subject = '<a href="viewtopic.php?id='.$search_set[$i]['tid'].'">'.pun_htmlspecialchars($search_set[$i]['subject']).'</a>';
 
@@ -533,13 +535,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 				$vtpost1 = ($i == 0) ? ' vtp1' : '';
 
-				// Switch the background color for every message
-				$bg_switch = ($bg_switch) ? $bg_switch = false : $bg_switch = true;
-				$vtbg = ($bg_switch) ? ' rowodd' : ' roweven';
-
 
 ?>
-<div class="blockpost<?php echo $vtbg ?>">
+<div class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?>">
 	<h2><?php echo $forum ?>&nbsp;&raquo;&nbsp;<?php echo $subject ?>&nbsp;&raquo;&nbsp;<a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo format_time($search_set[$i]['pposted']) ?></a></h2>
 	<div class="box">
 		<div class="bgbox">
