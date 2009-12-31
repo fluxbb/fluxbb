@@ -344,7 +344,8 @@ if (!empty($errors))
 				<fieldset>
 					<legend><?php echo $lang_prof_reg['Localisation legend'] ?></legend>
 					<div class="infldset">
-						<label><?php echo $lang_prof_reg['Time zone'] ?>: <?php echo $lang_prof_reg['Time zone info'] ?>
+						<p><?php echo $lang_prof_reg['Time zone info'] ?></p>
+						<label><?php echo $lang_prof_reg['Time zone'] ?>
 						<br /><select id="time_zone" name="timezone">
 							<option value="-12"<?php if ($timezone == -12 ) echo ' selected="selected"' ?>>-12</option>
 							<option value="-11"<?php if ($timezone == -11) echo ' selected="selected"' ?>>-11</option>
@@ -385,9 +386,8 @@ if (!empty($errors))
 							<option value="14"<?php if ($timezone == 14 ) echo ' selected="selected"' ?>>+14</option>
 						</select>
 						<br /></label>
-						<p><?php echo $lang_prof_reg['DST'] ?></p>
 						<div class="rbox">
-							<label><input type="checkbox" name="dst" value="1"<?php if ($dst == '1') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['DST info'] ?><br /></label>
+							<label><input type="checkbox" name="dst" value="1"<?php if ($dst == '1') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['DST'] ?><br /></label>
 						</div>
 <?php
 

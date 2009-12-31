@@ -1016,7 +1016,7 @@ if ($pun_user['id'] != $id &&
 <?php if ($pun_config['o_avatars'] == '1'): ?>							<dt><?php echo $lang_profile['Avatar'] ?>: </dt>
 							<dd><?php echo $avatar_field ?></dd>
 <?php endif; if ($pun_config['o_signatures'] == '1'): ?>							<dt><?php echo $lang_profile['Signature'] ?>: </dt>
-							<dd><div><?php echo isset($parsed_signature) ? $parsed_signature : $lang_profile['No sig']; ?></div></dd>
+							<dd><?php echo isset($parsed_signature) ? '<div class="postsignature postmsg">'.$parsed_signature.'</div>' : $lang_profile['No sig']; ?></dd>
 <?php endif; ?>						</dl>
 						<div class="clearer"></div>
 					</div>
@@ -1111,8 +1111,8 @@ else
 					<fieldset>
 						<legend><?php echo $lang_prof_reg['Localisation legend'] ?></legend>
 						<div class="infldset">
-							<label><?php echo $lang_prof_reg['Time zone'] ?>: <?php echo $lang_prof_reg['Time zone info'] ?>
-
+							<p><?php echo $lang_prof_reg['Time zone info'] ?></p>
+							<label><?php echo $lang_prof_reg['Time zone'] ?>
 								<br /><select name="form[timezone]">
 								<option value="-12"<?php if ($user['timezone'] == -12) echo ' selected="selected"' ?>>-12</option>
 								<option value="-11"<?php if ($user['timezone'] == -11) echo ' selected="selected"' ?>>-11</option>
@@ -1153,9 +1153,8 @@ else
 								<option value="14"<?php if ($user['timezone'] == 14) echo ' selected="selected"' ?>>+14</option>
 							</select>
 							<br /></label>
-							<p><?php echo $lang_prof_reg['DST'] ?></p>
 							<div class="rbox">
-								<label><input type="checkbox" name="form[dst]" value="1"<?php if ($user['dst'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['DST info'] ?><br /></label>
+								<label><input type="checkbox" name="form[dst]" value="1"<?php if ($user['dst'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['DST'] ?><br /></label>
 							</div>
 							<label><?php echo $lang_prof_reg['Time format'] ?>
 
@@ -1332,7 +1331,7 @@ else
 			$avatar_field = '<a href="profile.php?action=upload_avatar&amp;id='.$id.'">'.$lang_profile['Upload avatar'].'</a>';
 
 		if ($user['signature'] != '')
-			$signature_preview = '<p>'.$lang_profile['Sig preview'].'</p>'."\n\t\t\t\t\t\t\t".'<div class="postsignature">'."\n\t\t\t\t\t\t\t\t".'<hr />'."\n\t\t\t\t\t\t\t\t".$parsed_signature."\n\t\t\t\t\t\t\t".'</div>'."\n";
+			$signature_preview = '<p>'.$lang_profile['Sig preview'].'</p>'."\n\t\t\t\t\t\t\t".'<div class="postsignature postmsg">'."\n\t\t\t\t\t\t\t\t".'<hr />'."\n\t\t\t\t\t\t\t\t".$parsed_signature."\n\t\t\t\t\t\t\t".'</div>'."\n";
 		else
 			$signature_preview = '<p>'.$lang_profile['No sig'].'</p>'."\n";
 
@@ -1507,12 +1506,8 @@ else
 					<fieldset>
 						<legend><?php echo $lang_profile['Subscription legend'] ?></legend>
 						<div class="infldset">
-							<p><?php echo $lang_profile['Notify full info'] ?></p>
 							<div class="rbox">
 								<label><input type="checkbox" name="form[notify_with_post]" value="1"<?php if ($user['notify_with_post'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_profile['Notify full'] ?><br /></label>
-							</div>
-							<p><?php echo $lang_profile['Auto notify full info'] ?></p>
-							<div class="rbox">
 								<label><input type="checkbox" name="form[auto_notify]" value="1"<?php if ($user['auto_notify'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_profile['Auto notify full'] ?><br /></label>
 							</div>
 						</div>
