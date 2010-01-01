@@ -52,7 +52,7 @@ else if ($pun_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POS
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="agree" value="<?php echo $lang_register['Agree'] ?>" /><input type="submit" name="cancel" value="<?php echo $lang_register['Cancel'] ?>" /></p>
+			<p class="buttons"><input type="submit" name="agree" value="<?php echo $lang_register['Agree'] ?>" /> <input type="submit" name="cancel" value="<?php echo $lang_register['Cancel'] ?>" /></p>
 		</form>
 	</div>
 </div>
@@ -440,7 +440,7 @@ if (!empty($errors))
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="register" value="<?php echo $lang_register['Register'] ?>" /></p>
+			<p class="buttons"><input type="submit" name="register" value="<?php echo $lang_register['Register'] ?>" /></p>
 		</form>
 	</div>
 </div>

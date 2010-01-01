@@ -107,7 +107,7 @@ while ($cur_group = $db->fetch_assoc($result))
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="search" value="<?php echo $lang_common['Submit'] ?>" accesskey="s" /></p>
+			<p class="buttons"><input type="submit" name="search" value="<?php echo $lang_common['Submit'] ?>" accesskey="s" /></p>
 		</form>
 	</div>
 </div>
@@ -115,6 +115,7 @@ while ($cur_group = $db->fetch_assoc($result))
 <div class="linkst">
 	<div class="inbox">
 		<p class="pagelink"><?php echo $paging_links ?></p>
+		<div class="clearer"></div>
 	</div>
 </div>
 
@@ -167,6 +168,7 @@ else
 <div class="linksb">
 	<div class="inbox">
 		<p class="pagelink"><?php echo $paging_links ?></p>
+		<div class="clearer"></div>
 	</div>
 </div>
 <?php

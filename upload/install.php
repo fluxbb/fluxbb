@@ -270,7 +270,7 @@ function process_form(the_form)
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="start" value="Start install" /></p>
+			<p class="buttons"><input type="submit" name="start" value="Start install" /></p>
 		</form>
 	</div>
 </div>

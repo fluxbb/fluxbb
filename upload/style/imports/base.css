@@ -90,7 +90,7 @@ DIV.linkst .conl, DIV.linksb .conl, DIV.postlinksb .conl {white-space: nowrap}
 
 DIV.linkst .conr, DIV.linksb .conr, DIV.postlinksb .conr {white-space: nowrap}
 
-FORM DIV.linksb .conr {WIDTH: 32em}
+FORM DIV.linksb .conr input {margin-left: 6px;}
 
 .pun UL.crumbs {clear: both; WIDTH: 100%; overflow: hidden}
 

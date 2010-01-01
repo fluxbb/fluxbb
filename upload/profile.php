@@ -149,7 +149,7 @@ if ($action == 'change_pass')
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 		</form>
 	</div>
 </div>
@@ -287,7 +287,7 @@ else if ($action == 'change_email')
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="new_email" value="<?php echo $lang_common['Submit'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="new_email" value="<?php echo $lang_common['Submit'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 		</form>
 	</div>
 </div>
@@ -413,7 +413,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="upload" value="<?php echo $lang_profile['Upload'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="upload" value="<?php echo $lang_profile['Upload'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 		</form>
 	</div>
 </div>
@@ -625,7 +625,7 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="delete_user_comply" value="<?php echo $lang_profile['Delete'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="delete_user_comply" value="<?php echo $lang_profile['Delete'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 		</form>
 	</div>
 </div>
@@ -1243,7 +1243,7 @@ else
 <?php endif; ?>						</div>
 					</fieldset>
 				</div>
-				<p><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /><?php echo $lang_profile['Instructions'] ?></p>
+				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
 			</form>
 		</div>
 	</div>
@@ -1277,7 +1277,7 @@ else
 						</div>
 					</fieldset>
 				</div>
-				<p><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /><?php echo $lang_profile['Instructions'] ?></p>
+				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
 			</form>
 		</div>
 	</div>
@@ -1310,7 +1310,7 @@ else
 						</div>
 					</fieldset>
 				</div>
-				<p><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /><?php echo $lang_profile['Instructions'] ?></p>
+				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
 			</form>
 		</div>
 	</div>
@@ -1375,7 +1375,7 @@ else
 						</div>
 					</fieldset>
 				</div>
-<?php endif; ?>				<p><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /><?php echo $lang_profile['Instructions'] ?></p>
+<?php endif; ?>				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
 			</form>
 		</div>
 	</div>
@@ -1469,7 +1469,7 @@ else
 						</div>
 					</fieldset>
 				</div>
-				<p><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
+				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
 			</form>
 		</div>
 	</div>
@@ -1513,7 +1513,7 @@ else
 						</div>
 					</fieldset>
 				</div>
-<?php endif; ?>				<p><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /><?php echo $lang_profile['Instructions'] ?></p>
+<?php endif; ?>				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
 			</form>
 		</div>
 	</div>

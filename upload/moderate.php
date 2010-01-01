@@ -133,7 +133,8 @@ if (isset($_GET['tid']))
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="delete_posts_comply" value="<?php echo $lang_misc['Delete'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="delete_posts_comply" value="<?php echo $lang_misc['Delete'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a>
+			</p>
 		</form>
 	</div>
 </div>
@@ -219,7 +220,7 @@ if (isset($_GET['tid']))
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="split_posts_comply" value="<?php echo $lang_misc['Split'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="split_posts_comply" value="<?php echo $lang_misc['Split'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 		</form>
 	</div>
 </div>
@@ -312,8 +313,8 @@ if (isset($_GET['tid']))
 <div id="p<?php echo $cur_post['id'] ?>" class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?>">
 	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?></span> <a href="viewtopic.php?pid=<?php echo $cur_post['id'].'#p'.$cur_post['id'] ?>"><?php echo format_time($cur_post['posted']) ?></a></span></h2>
 	<div class="box">
-		<div class="bgbox">
-			<div class="inbox">
+		<div class="inbox">
+			<div class="postbody">
 				<div class="postleft">
 					<dl>
 						<dt><strong><?php echo $poster ?></strong></dt>
@@ -328,8 +329,8 @@ if (isset($_GET['tid']))
 					</div>
 					<?php if ($start_from + $post_count > 1) echo '<p class="multidelete"><label><strong>'.$lang_misc['Select'].'</strong>&nbsp;&nbsp;<input type="checkbox" name="posts['.$cur_post['id'].']" value="1" /></label></p>'."\n" ?>
 				</div>
-				<div class="clearer"></div>
 			</div>
+			<div class="clearer"></div>
 		</div>
 	</div>
 </div>
@@ -342,10 +343,7 @@ if (isset($_GET['tid']))
 <div class="postlinksb">
 	<div class="inbox">
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<p class="conr modbuttons">
-			<input type="submit" name="split_posts" value="<?php echo $lang_misc['Split'] ?>"<?php echo $button_status ?> />
-			<input type="submit" name="delete_posts" value="<?php echo $lang_misc['Delete'] ?>"<?php echo $button_status ?> />
-		</p>
+		<p class="conr modbuttons"><input type="submit" name="split_posts" value="<?php echo $lang_misc['Split'] ?>"<?php echo $button_status ?> /> <input type="submit" name="delete_posts" value="<?php echo $lang_misc['Delete'] ?>"<?php echo $button_status ?> /></p>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -469,7 +467,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="move_topics_to" value="<?php echo $lang_misc['Move'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="move_topics_to" value="<?php echo $lang_misc['Move'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 		</form>
 	</div>
 </div>
@@ -560,7 +558,7 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="merge_topics_comply" value="<?php echo $lang_misc['Merge'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="merge_topics_comply" value="<?php echo $lang_misc['Merge'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 		</form>
 	</div>
 </div>
@@ -634,7 +632,7 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="delete_topics_comply" value="<?php echo $lang_misc['Delete'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="delete_topics_comply" value="<?php echo $lang_misc['Delete'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 		</form>
 	</div>
 </div>
@@ -876,7 +874,7 @@ else
 <div class="linksb">
 	<div class="inbox">
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<p class="conr modbuttons"><input type="submit" name="move_topics" value="<?php echo $lang_misc['Move'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="delete_topics" value="<?php echo $lang_misc['Delete'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="merge_topics" value="<?php echo $lang_misc['Merge'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="open" value="<?php echo $lang_misc['Open'] ?>"<?php echo $button_status ?> />&nbsp;&nbsp;<input type="submit" name="close" value="<?php echo $lang_misc['Close'] ?>"<?php echo $button_status ?> /></p>
+		<p class="conr modbuttons"><input type="submit" name="move_topics" value="<?php echo $lang_misc['Move'] ?>"<?php echo $button_status ?> /> <input type="submit" name="delete_topics" value="<?php echo $lang_misc['Delete'] ?>"<?php echo $button_status ?> /> <input type="submit" name="merge_topics" value="<?php echo $lang_misc['Merge'] ?>"<?php echo $button_status ?> /> <input type="submit" name="open" value="<?php echo $lang_misc['Open'] ?>"<?php echo $button_status ?> /> <input type="submit" name="close" value="<?php echo $lang_misc['Close'] ?>"<?php echo $button_status ?> /></p>
 		<div class="clearer"></div>
 	</div>
 </div>

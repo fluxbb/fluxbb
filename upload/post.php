@@ -571,7 +571,7 @@ if (!empty($checkboxes))
 
 ?>
 			</div>
-			<p><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="s" /><input type="submit" name="preview" value="<?php echo $lang_post['Preview'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /><a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="s" /> <input type="submit" name="preview" value="<?php echo $lang_post['Preview'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 		</form>
 	</div>
 </div>
@@ -606,8 +606,8 @@ if ($tid && $pun_config['o_topic_review'] != '0')
 
 ?>
 	<div class="box<?php echo $vtbg ?>">
-		<div class="bgbox">
-			<div class="inbox">
+		<div class="inbox">
+			<div class="postbody">
 				<div class="postleft">
 					<dl>
 						<dt><strong><?php echo pun_htmlspecialchars($cur_post['poster']) ?></strong></dt>
@@ -619,8 +619,8 @@ if ($tid && $pun_config['o_topic_review'] != '0')
 						<?php echo $cur_post['message']."\n" ?>
 					</div>
 				</div>
-				<div class="clearer"></div>
 			</div>
+			<div class="clearer"></div>
 		</div>
 	</div>
 <?php

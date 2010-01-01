@@ -449,6 +449,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 <div class="linkst">
 	<div class="inbox">
 		<p class="pagelink"><?php echo $paging_links ?></p>
+		<div class="clearer"></div>
 	</div>
 </div>
 
@@ -538,16 +539,15 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 ?>
 <div class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?>">
-	<h2><?php echo $forum ?>&nbsp;&raquo;&nbsp;<?php echo $subject ?>&nbsp;&raquo;&nbsp;<a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo format_time($search_set[$i]['pposted']) ?></a></h2>
+	<h2><span><?php echo $forum ?></span> <span>&raquo;&nbsp;<?php echo $subject ?></span> <span>&raquo;&nbsp;<a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo format_time($search_set[$i]['pposted']) ?></a></span></h2>
 	<div class="box">
-		<div class="bgbox">
-			<div class="inbox">
+		<div class="inbox">
+			<div class="postbody">
 				<div class="postleft">
 					<dl>
 						<dt><?php echo $pposter ?></dt>
 						<dd><?php echo $lang_common['Replies'] ?>: <?php echo forum_number_format($search_set[$i]['num_replies']) ?></dd>
 						<dd><?php echo $icon ?></dd>
-						<dd><p class="clearb"><a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo $lang_search['Go to post'] ?></a></p></dd>
 					</dl>
 				</div>
 				<div class="postright">
@@ -556,6 +556,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					</div>
 				</div>
 				<div class="clearer"></div>
+			</div>
+			<div class="postfoot clearb">
+				<div class="postfootright"><ul><li><a href="viewtopic.php?id=<?php echo $search_set[$i]['tid'] ?>"><?php echo $lang_search['Go to topic'] ?></a><?php echo $lang_common['Link separator'] ?></li><li><a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo $lang_search['Go to post'] ?></a></li></ul></div>
 			</div>
 		</div>
 	</div>
@@ -638,6 +641,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 <div class="<?php echo ($show_as == 'topics') ? 'linksb' : 'postlinksb'; ?>">
 	<div class="inbox">
 		<p class="pagelink"><?php echo $paging_links ?></p>
+		<div class="clearer"></div>
 	</div>
 </div>
 <?php
@@ -741,7 +745,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="search" value="<?php echo $lang_common['Submit'] ?>" accesskey="s" /></p>
+			<p class="buttons"><input type="submit" name="search" value="<?php echo $lang_common['Submit'] ?>" accesskey="s" /></p>
 		</form>
 	</div>
 </div>

@@ -169,7 +169,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="request_pass" value="<?php echo $lang_common['Submit'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="request_pass" value="<?php echo $lang_common['Submit'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 		</form>
 	</div>
 </div>
@@ -214,7 +214,7 @@ require PUN_ROOT.'header.php';
 					</div>
 				</fieldset>
 			</div>
-			<p><input type="submit" name="login" value="<?php echo $lang_common['Login'] ?>" tabindex="3" /></p>
+			<p class="buttons"><input type="submit" name="login" value="<?php echo $lang_common['Login'] ?>" tabindex="3" /></p>
 		</form>
 	</div>
 </div>

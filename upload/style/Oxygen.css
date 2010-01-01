@@ -240,7 +240,8 @@ UL.bblinks {PADDING-BOTTOM: 10px; PADDING-LEFT: 4px}
 
 /* 9.5 Horizontal positioning for the submit button on forms */
 
-DIV.blockform P INPUT {MARGIN-LEFT: 12px}
+DIV.blockform .buttons {PADDING-LEFT: 12px;}
+DIV.blockform .buttons input {MARGIN-RIGHT: 8px;}
 
 /****************************************************************/
 /* 10. POST STATUS INDICATORS */

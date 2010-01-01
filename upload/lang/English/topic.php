@@ -21,8 +21,6 @@ $lang_topic = array(
 'Unsubscribe'		=>	'Unsubscribe',
 'Subscribe'			=>	'Subscribe to this topic',
 'Quick post'		=>	'Quick post',
-
-'Link separator'	=>	' | ', // The text that separates links in posts (website, email, report, edit etc.)
 'Mod controls'		=>	'Moderator controls'
 
 );
