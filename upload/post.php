@@ -316,7 +316,7 @@ if (isset($_POST['form_sent']))
 		}
 
 		// If we previously found out that the email was banned
-		if ($banned_email && $pun_config['o_mailing_list'] != '')
+		if ($pun_user['is_guest'] && $banned_email && $pun_config['o_mailing_list'] != '')
 		{
 			$mail_subject = $lang_common['Banned email notification'];
 			$mail_message = sprintf($lang_common['Banned email post message'], $username, $email)."\n";
