@@ -471,9 +471,11 @@ else if (isset($_POST['preview']))
 	<h2><span><?php echo $lang_post['Post preview'] ?></span></h2>
 	<div class="box">
 		<div class="inbox">
-			<div class="postright">
-				<div class="postmsg">
-					<?php echo $preview_message."\n" ?>
+			<div class="postbody">
+				<div class="postright">
+					<div class="postmsg">
+						<?php echo $preview_message."\n" ?>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -592,20 +594,16 @@ if ($tid && $pun_config['o_topic_review'] != '0')
 <?php
 
 	//Set background switching on
-	$bg_switch = true;
 	$post_count = 0;
 
 	while ($cur_post = $db->fetch_assoc($result))
 	{
-		// Switch the background color for every message
-		$bg_switch = ($bg_switch) ? $bg_switch = false : $bg_switch = true;
-		$vtbg = ($bg_switch) ? ' roweven' : ' rowodd';
 		$post_count++;
 
 		$cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 
 ?>
-	<div class="box<?php echo $vtbg ?>">
+	<div class="box<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?>">
 		<div class="inbox">
 			<div class="postbody">
 				<div class="postleft">

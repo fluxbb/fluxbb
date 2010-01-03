@@ -166,9 +166,11 @@ else if (isset($_POST['preview']))
 	<h2><span><?php echo $lang_post['Post preview'] ?></span></h2>
 	<div class="box">
 		<div class="inbox">
-			<div class="postright">
-				<div class="postmsg">
-					<?php echo $preview_message."\n" ?>
+			<div class="postbody">
+				<div class="postright">
+					<div class="postmsg">
+						<?php echo $preview_message."\n" ?>
+					</div>
 				</div>
 			</div>
 		</div>
