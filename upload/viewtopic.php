@@ -151,12 +151,12 @@ if (!$pun_user['is_guest'] && $pun_config['o_subscriptions'] == '1')
 {
 	if ($cur_topic['is_subscribed'])
 		// I apologize for the variable naming here. It's a mix of subscription and action I guess :-)
-		$subscraction = '<p class="subscribelink clearb">'.$lang_topic['Is subscribed'].' - <a href="misc.php?unsubscribe='.$id.'">'.$lang_topic['Unsubscribe'].'</a></p>'."\n";
+		$subscraction = '<p class="subscribelink clearb"><span>'.$lang_topic['Is subscribed'].' - </span><a href="misc.php?unsubscribe='.$id.'">'.$lang_topic['Unsubscribe'].'</a></p>'."\n";
 	else
 		$subscraction = '<p class="subscribelink clearb"><a href="misc.php?subscribe='.$id.'">'.$lang_topic['Subscribe'].'</a></p>'."\n";
 }
 else
-	$subscraction = '<div class="clearer"></div>'."\n";
+	$subscraction = '';
 
 $page_title = pun_htmlspecialchars($pun_config['o_board_title'].' / '.$cur_topic['subject']);
 define('PUN_ALLOW_INDEX', 1);
