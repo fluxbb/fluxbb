@@ -325,7 +325,7 @@ while ($cur_post = $db->fetch_assoc($result))
 						<?php echo $cur_post['message']."\n" ?>
 <?php if ($cur_post['edited'] != '') echo "\t\t\t\t\t\t".'<p class="postedit"><em>'.$lang_topic['Last edit'].' '.pun_htmlspecialchars($cur_post['edited_by']).' ('.format_time($cur_post['edited']).')</em></p>'."\n"; ?>
 					</div>
-<?php if ($signature != '') echo "\t\t\t\t\t".'<div class="postsignature"><hr />'.$signature.'</div>'."\n"; ?>
+<?php if ($signature != '') echo "\t\t\t\t\t".'<div class="postsignature postmsg"><hr />'.$signature.'</div>'."\n"; ?>
 				</div>
 			</div>
 			<div class="postfoot clearb">
