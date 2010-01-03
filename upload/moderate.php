@@ -133,8 +133,7 @@ if (isset($_GET['tid']))
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="delete_posts_comply" value="<?php echo $lang_misc['Delete'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a>
-			</p>
+			<p class="buttons"><input type="submit" name="delete_posts_comply" value="<?php echo $lang_misc['Delete'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 		</form>
 	</div>
 </div>
@@ -327,10 +326,13 @@ if (isset($_GET['tid']))
 						<?php echo $cur_post['message']."\n" ?>
 <?php if ($cur_post['edited'] != '') echo "\t\t\t\t\t\t".'<p class="postedit"><em>'.$lang_topic['Last edit'].' '.pun_htmlspecialchars($cur_post['edited_by']).' ('.format_time($cur_post['edited']).')</em></p>'."\n"; ?>
 					</div>
-					<?php if ($start_from + $post_count > 1) echo '<p class="multidelete"><label><strong>'.$lang_misc['Select'].'</strong>&nbsp;&nbsp;<input type="checkbox" name="posts['.$cur_post['id'].']" value="1" /></label></p>'."\n" ?>
 				</div>
 			</div>
-			<div class="clearer"></div>
+		</div>
+		<div class="inbox">
+			<div class="postfoot clearb">
+				<div class="postfootright"><?php echo ($start_from + $post_count > 1) ? '<p class="multidelete"><label><strong>'.$lang_misc['Select'].'</strong>&nbsp;&nbsp;<input type="checkbox" name="posts['.$cur_post['id'].']" value="1" /></label></p>' : '<p>'.$lang_misc['Cannot delete first'].'</p>' ?></div>
+			</div>
 		</div>
 	</div>
 </div>

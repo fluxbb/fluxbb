@@ -328,6 +328,8 @@ while ($cur_post = $db->fetch_assoc($result))
 <?php if ($signature != '') echo "\t\t\t\t\t".'<div class="postsignature postmsg"><hr />'.$signature.'</div>'."\n"; ?>
 				</div>
 			</div>
+		</div>
+		<div class="inbox">
 			<div class="postfoot clearb">
 				<div class="postfootleft"><?php if ($cur_post['poster_id'] > 1) echo '<p>'.$is_online.'</p>'; ?></div>
 				<div class="postfootright"><?php echo (count($post_actions)) ? '<ul>'.implode($lang_common['Link separator'].'</li>', $post_actions).'</li></ul></div>'."\n" : '<div>&nbsp;</div></div>'."\n" ?>

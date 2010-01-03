@@ -557,6 +557,8 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				</div>
 				<div class="clearer"></div>
 			</div>
+		</div>
+		<div class="inbox">
 			<div class="postfoot clearb">
 				<div class="postfootright"><ul><li><a href="viewtopic.php?id=<?php echo $search_set[$i]['tid'] ?>"><?php echo $lang_search['Go to topic'] ?></a><?php echo $lang_common['Link separator'] ?></li><li><a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo $lang_search['Go to post'] ?></a></li></ul></div>
 			</div>
