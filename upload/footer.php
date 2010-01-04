@@ -95,7 +95,8 @@ else if ($footer_style == 'viewforum' || $footer_style == 'viewtopic')
 }
 
 ?>
-			<p class="conr"><?php printf($lang_common['Powered by'], '<a href="http://fluxbb.org/">FluxBB</a>'.(($pun_config['o_show_version'] == '1') ? ' '.$pun_config['o_cur_version'] : '')) ?></p>
+			<ul class="conr">
+				<li><?php printf($lang_common['Powered by'], '<a href="http://fluxbb.org/">FluxBB</a>'.(($pun_config['o_show_version'] == '1') ? ' '.$pun_config['o_cur_version'] : '')) ?></li>
 <?php
 
 // Display debug info (if enabled/defined)
@@ -103,10 +104,11 @@ if (defined('PUN_DEBUG'))
 {
 	// Calculate script generation time
 	$time_diff = sprintf('%.3f', get_microtime() - $pun_start);
-	echo "\t\t\t".'<p class="conr">[ '.sprintf($lang_common['Querytime'], $time_diff, $db->get_num_queries()).' ]</p>'."\n";
+	echo "\t\t\t\t".'<li>[ '.sprintf($lang_common['Querytime'], $time_diff, $db->get_num_queries()).' ]</li>'."\n";
 }
 
 ?>
+			</ul>
 			<div class="clearer"></div>
 		</div>
 	</div>
