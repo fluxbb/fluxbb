@@ -78,7 +78,7 @@ if (version_compare($cur_version, '1.2', '<'))
 	exit('Version mismatch. The database \''.$db_name.'\' doesn\'t seem to be running a FluxBB database schema supported by this update script.');
 
 // If we've already done charset conversion in a previous update, we have to do SET NAMES
-$db->set_names(version_compare($cur_version, '1.3', '<') ? 'latin1' : 'utf8');
+$db->set_names(strpos($cur_version, '1.2') === 0 ? 'latin1' : 'utf8');
 
 // Get the forum config
 $result = $db->query('SELECT * FROM '.$db->prefix.'config') or error('Unable to fetch config.', __FILE__, __LINE__, $db->error());
@@ -366,7 +366,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 						<tr>
 							<th scope="row">Current character set:</th>
 							<td>
-								<input type="text" name="req_old_charset" size="12" maxlength="20" value="ISO-8859-1" /><br />
+								<input type="text" name="req_old_charset" size="12" maxlength="20" value="<?php echo $old_charset ?>" /><br />
 								<span>Accept default for English forums otherwise the character set of the primary langauge pack.</span>
 							</td>
 						</tr>
@@ -619,7 +619,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 		// Should we do charset conversion or not?
 		if (strpos($cur_version, '1.2') === 0 && isset($_GET['convert_charset']))
-			$query_str = '?stage=conv_misc&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
+			$query_str = '?stage=conv_misc&req_old_charset='.$old_charset;
 		else
 			$query_str = '?stage=conv_tables';
 		break;
@@ -716,7 +716,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 			}
 		}
 
-		$query_str = '?stage=conv_reports&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
+		$query_str = '?stage=conv_reports&req_old_charset='.$old_charset;
 		break;
 
 
@@ -754,9 +754,9 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$result = $db->query('SELECT id FROM '.$db->prefix.'reports WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result))
-			$query_str = '?stage=conv_reports&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+			$query_str = '?stage=conv_reports&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
 		else
-			$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
+			$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset;
 		break;
 
 
@@ -795,9 +795,9 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$result = $db->query('SELECT id FROM '.$db->prefix.'search_words WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result))
-			$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+			$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
 		else
-			$query_str = '?stage=conv_users&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
+			$query_str = '?stage=conv_users&req_old_charset='.$old_charset;
 		break;
 
 
@@ -837,9 +837,9 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result))
-			$query_str = '?stage=conv_users&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+			$query_str = '?stage=conv_users&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
 		else
-			$query_str = '?stage=conv_topics&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
+			$query_str = '?stage=conv_topics&req_old_charset='.$old_charset;
 		break;
 
 
@@ -878,9 +878,9 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result))
-			$query_str = '?stage=conv_topics&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+			$query_str = '?stage=conv_topics&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
 		else
-			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
+			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset;
 		break;
 
 
@@ -921,7 +921,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result))
-			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
 		else
 			$query_str = '?stage=conv_tables';
 		break;
@@ -930,7 +930,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 	// Convert table columns to utf8 (MySQL only)
 	case 'conv_tables':
 		// Do the cumbersome charset conversion of MySQL tables/columns
-		if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+		if (strpos($cur_version, '1.2') === 0 && ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb'))
 		{
 			echo 'Converting table '.$db->prefix.'bans …<br />'."\n"; flush();
 			convert_table_utf8($db->prefix.'bans');
@@ -1001,7 +1001,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result))
-			$query_str = '?stage=preparse_posts&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+			$query_str = '?stage=preparse_posts&start_at='.$db->result($result);
 		else
 			$query_str = '?stage=preparse_sigs';
 		break;
@@ -1031,7 +1031,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result))
-			$query_str = '?stage=preparse_sigs&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+			$query_str = '?stage=preparse_sigs&start_at='.$db->result($result);
 		else
 			$query_str = '?stage=finish';
 		break;
