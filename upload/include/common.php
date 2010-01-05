@@ -21,6 +21,10 @@ define('FORUM_DB_REVISION', 2);
 if (file_exists(PUN_ROOT.'config.php'))
 	include PUN_ROOT.'config.php';
 
+// If we have the 1.3-legacy constant defined, define the proper 1.4 constant so we don't get an incorrect "need to install" message
+if (defined('FORUM'))
+	define('PUN', FORUM);
+
 // If PUN isn't defined, config.php is missing or corrupt
 if (!defined('PUN'))
 	exit('The file \'config.php\' doesn\'t exist or is corrupt. Please run <a href="install.php">install.php</a> to install FluxBB first.');
