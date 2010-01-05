@@ -26,6 +26,10 @@ define('PUN_ROOT', './');
 if (file_exists(PUN_ROOT.'config.php'))
 	include PUN_ROOT.'config.php';
 
+// If we have the 1.3-legacy constant defined, define the proper 1.4 constant so we don't get an incorrect "need to install" message
+if (defined('FORUM'))
+	define('PUN', FORUM);
+
 // If PUN isn't defined, config.php is missing or corrupt or we are outside the root directory
 if (!defined('PUN'))
 	exit('This file must be run from the forum root directory.');
