@@ -929,7 +929,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 	// Convert table columns to utf8 (MySQL only)
 	case 'conv_tables':
-		// Do the cumbersome charset conversion of MySQL tables/columns
+		// Do the cumbersome charset conversion of MySQL tables/columns (if required - i.e. running 1.2)
 		if (strpos($cur_version, '1.2') === 0 && ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb'))
 		{
 			echo 'Converting table '.$db->prefix.'bans …<br />'."\n"; flush();
@@ -975,7 +975,10 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 	// Preparse posts
 	case 'preparse_posts':
 		require PUN_ROOT.'include/parser.php';
-		
+
+		// Now we're definitely using UTF-8, so we convert the output properly
+		$db->set_names('utf8');
+
 		// Determine where to start
 		if ($start_at == 0)
 		{
@@ -990,10 +993,10 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		// Fetch posts to process this cycle
 		$result = $db->query('SELECT id, message FROM '.$db->prefix.'posts WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
 
+		$temp = array();
 		while ($cur_item = $db->fetch_assoc($result))
 		{
 			echo 'Preparsing post '.$cur_item['id'].' …<br />'."\n";
-			$temp = array();
 			$db->query('UPDATE '.$db->prefix.'posts SET message = \''.$db->escape(preparse_bbcode($cur_item['message'], $temp)).'\' WHERE id = '.$cur_item['id']) or error('Unable to update post', __FILE__, __LINE__, $db->error());
 		}
 
@@ -1010,7 +1013,10 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 	// Preparse signatures
 	case 'preparse_sigs':
 		require PUN_ROOT.'include/parser.php';
-		
+
+		// Now we're definitely using UTF-8, so we convert the output properly
+		$db->set_names('utf8');
+
 		// Determine where to start
 		if ($start_at == 0)
 			$start_at = 2;
@@ -1020,10 +1026,10 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		// Fetch users to process this cycle
 		$result = $db->query('SELECT id, signature FROM '.$db->prefix.'users WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch users', __FILE__, __LINE__, $db->error());
 
+		$temp = array();
 		while ($cur_item = $db->fetch_assoc($result))
 		{
 			echo 'Preparsing signature '.$cur_item['id'].' …<br />'."\n";
-			$temp = array();
 			$db->query('UPDATE '.$db->prefix.'users SET signature = \''.$db->escape(preparse_bbcode($cur_item['signature'], $temp, true)).'\' WHERE id = '.$cur_item['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 		}
 
