@@ -233,9 +233,9 @@ function db_seems_utf8()
 		$id = ($i == 0) ? $min_id : (($i == 1) ? $max_id : rand($min_id, $max_id));
 
 		$result = $db->query('SELECT p.message, p.poster, t.subject, f.forum_name FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON (t.id = p.topic_id) INNER JOIN '.$db->prefix.'forums AS f ON (f.id = t.forum_id) WHERE p.id >= '.$id.' LIMIT 1') or error('Unable to fetch post information', __FILE__, __LINE__, $db->error());
-		$temp = $db->fetch_row($result);
+		$temp = implode('', $db->fetch_row($result));
 
-		if (!seems_utf8($temp[0].$temp[1].$temp[2].$temp[3]))
+		if (!seems_utf8($temp) || preg_match('/&(#[0-9]+|#x[a-z0-9]+|[a-z0-9]+);/i', $temp))
 		{
 			$seems_utf8 = false;
 			break;
