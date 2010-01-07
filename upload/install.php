@@ -31,8 +31,8 @@ if (file_exists(PUN_ROOT.'config.php'))
 
 
 // Make sure we are running at least PHP 4.1.0
-if (intval(str_replace('.', '', phpversion())) < 410)
-	exit('You are running PHP version '.PHP_VERSION.'. FluxBB requires at least PHP 4.1.0 to run properly. You must upgrade your PHP installation before you can continue.');
+if (!function_exists('version_compare') || version_compare(PHP_VERSION, '4.1.0', '<'))
+	exit('You are running PHP version '.PHP_VERSION.'. FluxBB '.FORUM_VERSION.' requires at least PHP 4.1.0 to run properly. You must upgrade your PHP installation before you can continue.');
 
 // Disable error reporting for uninitialized variables
 error_reporting(E_ALL);

@@ -16,8 +16,8 @@ define('PER_PAGE', 300);
 
 
 // Make sure we are running at least PHP 4.1.0
-if (intval(str_replace('.', '', phpversion())) < 410)
-	exit('You are running PHP version '.PHP_VERSION.'. FluxBB requires at least PHP 4.1.0 to run properly. You must upgrade your PHP installation before you can continue.');
+if (!function_exists('version_compare') || version_compare(PHP_VERSION, '4.1.0', '<'))
+	exit('You are running PHP version '.PHP_VERSION.'. FluxBB '.UPDATE_TO.' requires at least PHP 4.1.0 to run properly. You must upgrade your PHP installation before you can continue.');
 
 
 define('PUN_ROOT', './');
