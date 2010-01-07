@@ -28,26 +28,39 @@ if (isset($_POST['form_sent']) && $action == 'in')
 
 	$username_sql = ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb') ? 'username=\''.$db->escape($form_username).'\'' : 'LOWER(username)=LOWER(\''.$db->escape($form_username).'\')';
 
-	$result = $db->query('SELECT id, group_id, password FROM '.$db->prefix.'users WHERE '.$username_sql) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-	list($user_id, $group_id, $db_password_hash) = $db->fetch_row($result);
+	$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE '.$username_sql) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	$cur_user = $db->fetch_assoc($result);
 
 	$authorized = false;
 
-	if (!empty($db_password_hash))
+	if (!empty($cur_user['password']))
 	{
-		$sha1_in_db = (strlen($db_password_hash) == 40) ? true : false;
+		$sha1_in_db = (strlen($cur_user['password']) == 40) ? true : false;
 		$sha1_available = (function_exists('sha1') || function_exists('mhash')) ? true : false;
 
 		$form_password_hash = pun_hash($form_password); // This could result in either an SHA-1 or an MD5 hash (depends on $sha1_available)
 
-		if ($sha1_in_db && $sha1_available && $db_password_hash == $form_password_hash)
-			$authorized = true;
-		else if (!$sha1_in_db && $db_password_hash == md5($form_password))
+		// If there is a salt in the database we have upgraded from 1.3-legacy though havent yet logged in
+		if (!empty($cur_user['salt']))
 		{
-			$authorized = true;
+			if (sha1($cur_user['salt'].sha1($form_password)) == $cur_user['password'])
+			{
+				$authorized = true;
 
-			if ($sha1_available) // There's an MD5 hash in the database, but SHA1 hashing is available, so we update the DB
-				$db->query('UPDATE '.$db->prefix.'users SET password=\''.$form_password_hash.'\' WHERE id='.$user_id) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
+				$db->query('UPDATE '.$db->prefix.'users SET password=\''.$form_password_hash.'\', salt=NULL WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
+			}
+		}
+		else
+		{
+			if ($sha1_in_db && $sha1_available && $cur_user['password'] == $form_password_hash)
+				$authorized = true;
+			else if (!$sha1_in_db && $cur_user['password'] == md5($form_password))
+			{
+				$authorized = true;
+
+				if ($sha1_available) // There's an MD5 hash in the database, but SHA1 hashing is available, so we update the DB
+					$db->query('UPDATE '.$db->prefix.'users SET password=\''.$form_password_hash.'\' WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
+			}
 		}
 	}
 
@@ -55,14 +68,14 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		message($lang_login['Wrong user/pass'].' <a href="login.php?action=forget">'.$lang_login['Forgotten pass'].'</a>');
 
 	// Update the status if this is the first time the user logged in
-	if ($group_id == PUN_UNVERIFIED)
-		$db->query('UPDATE '.$db->prefix.'users SET group_id='.$pun_config['o_default_user_group'].' WHERE id='.$user_id) or error('Unable to update user status', __FILE__, __LINE__, $db->error());
+	if ($cur_user['group_id'] == PUN_UNVERIFIED)
+		$db->query('UPDATE '.$db->prefix.'users SET group_id='.$pun_config['o_default_user_group'].' WHERE id='.$cur_user['id']) or error('Unable to update user status', __FILE__, __LINE__, $db->error());
 
 	// Remove this users guest entry from the online list
 	$db->query('DELETE FROM '.$db->prefix.'online WHERE ident=\''.$db->escape(get_remote_address()).'\'') or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
 
 	$expire = ($save_pass == '1') ? time() + 1209600 : time() + $pun_config['o_timeout_visit'];
-	pun_setcookie($user_id, $form_password_hash, $expire);
+	pun_setcookie($cur_user['id'], $form_password_hash, $expire);
 
 	// Reset tracked topics
 	set_tracked_topics(null);
@@ -183,7 +196,7 @@ if (!$pun_user['is_guest'])
 	header('Location: index.php');
 
 // Try to determine if the data in HTTP_REFERER is valid (if not, we redirect to index.php after login)
-$redirect_url = (isset($_SERVER['HTTP_REFERER']) && preg_match('#^'.preg_quote($pun_config['o_base_url']).'/(.*?)\.php#i', $_SERVER['HTTP_REFERER'])) ? htmlspecialchars($_SERVER['HTTP_REFERER']) : 'index.php';
+$redirect_url = (isset($_SERVER['HTTP_REFERER']) && preg_match('#^'.preg_quote($pun_config['o_base_url']).'/(.*?)\.php#i', $_SERVER['HTTP_REFERER'])) ? htmlspecialchars($_SERVER['HTTP_REFERER']) : $pun_config['o_base_url'].'/index.php';
 
 $page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_common['Login'];
 $required_fields = array('req_username' => $lang_common['Username'], 'req_password' => $lang_common['Password']);
@@ -202,7 +215,7 @@ require PUN_ROOT.'header.php';
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="redirect_url" value="<?php echo $redirect_url ?>" />
 						<label class="conl"><strong><?php echo $lang_common['Username'] ?></strong><br /><input type="text" name="req_username" size="25" maxlength="25" tabindex="1" /><br /></label>
-						<label class="conl"><strong><?php echo $lang_common['Password'] ?></strong><br /><input type="password" name="req_password" size="16" maxlength="16" tabindex="2" /><br /></label>
+						<label class="conl"><strong><?php echo $lang_common['Password'] ?></strong><br /><input type="password" name="req_password" size="25" tabindex="2" /><br /></label>
 
 						<div class="rbox clearb">
 							<label><input type="checkbox" name="save_pass" value="1" tabindex="3" /><?php echo $lang_login['Remember me'] ?> <br /></label>

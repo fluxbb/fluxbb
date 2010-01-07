@@ -13,13 +13,17 @@ if (!defined('PUN_ROOT'))
 
 
 // Define the version and database revision that this code was written for
-define('FORUM_VERSION', '1.4');
+define('FORUM_VERSION', '1.4-rc1');
 define('FORUM_DB_REVISION', 2);
 
 
 // Attempt to load the configuration file config.php
 if (file_exists(PUN_ROOT.'config.php'))
 	include PUN_ROOT.'config.php';
+
+// If we have the 1.3-legacy constant defined, define the proper 1.4 constant so we don't get an incorrect "need to install" message
+if (defined('FORUM'))
+	define('PUN', FORUM);
 
 // If PUN isn't defined, config.php is missing or corrupt
 if (!defined('PUN'))

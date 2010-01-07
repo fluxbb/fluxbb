@@ -8,7 +8,7 @@
 
 ---*/
 
-define('UPDATE_TO', '1.4');
+define('UPDATE_TO', '1.4-rc1');
 define('UPDATE_TO_DB_REVISION', 2);
 
 // The number of items to process per page view (lower this if the update script times out during UTF-8 conversion)
@@ -25,6 +25,10 @@ define('PUN_ROOT', './');
 // Attempt to load the configuration file config.php
 if (file_exists(PUN_ROOT.'config.php'))
 	include PUN_ROOT.'config.php';
+
+// If we have the 1.3-legacy constant defined, define the proper 1.4 constant so we don't get an incorrect "need to install" message
+if (defined('FORUM'))
+	define('PUN', FORUM);
 
 // If PUN isn't defined, config.php is missing or corrupt or we are outside the root directory
 if (!defined('PUN'))
@@ -74,7 +78,7 @@ if (version_compare($cur_version, '1.2', '<'))
 	exit('Version mismatch. The database \''.$db_name.'\' doesn\'t seem to be running a FluxBB database schema supported by this update script.');
 
 // If we've already done charset conversion in a previous update, we have to do SET NAMES
-$db->set_names(version_compare($cur_version, '1.3', '<') ? 'latin1' : 'utf8');
+$db->set_names(strpos($cur_version, '1.2') === 0 ? 'latin1' : 'utf8');
 
 // Get the forum config
 $result = $db->query('SELECT * FROM '.$db->prefix.'config') or error('Unable to fetch config.', __FILE__, __LINE__, $db->error());
@@ -229,9 +233,9 @@ function db_seems_utf8()
 		$id = ($i == 0) ? $min_id : (($i == 1) ? $max_id : rand($min_id, $max_id));
 
 		$result = $db->query('SELECT p.message, p.poster, t.subject, f.forum_name FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON (t.id = p.topic_id) INNER JOIN '.$db->prefix.'forums AS f ON (f.id = t.forum_id) WHERE p.id >= '.$id.' LIMIT 1') or error('Unable to fetch post information', __FILE__, __LINE__, $db->error());
-		$temp = $db->fetch_row($result);
+		$temp = implode('', $db->fetch_row($result));
 
-		if (!seems_utf8($temp[0].$temp[1].$temp[2].$temp[3]))
+		if (!seems_utf8($temp) || preg_match('/&(#[0-9]+|#x[a-z0-9]+|[a-z0-9]+);/i', $temp))
 		{
 			$seems_utf8 = false;
 			break;
@@ -362,7 +366,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 						<tr>
 							<th scope="row">Current character set:</th>
 							<td>
-								<input type="text" name="req_old_charset" size="12" maxlength="20" value="ISO-8859-1" /><br />
+								<input type="text" name="req_old_charset" size="12" maxlength="20" value="<?php echo $old_charset ?>" /><br />
 								<span>Accept default for English forums otherwise the character set of the primary langauge pack.</span>
 							</td>
 						</tr>
@@ -456,6 +460,90 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		// Insert new config option o_quote_depth
 		if (!array_key_exists('o_quote_depth', $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_quote_depth\', \'3\')') or error('Unable to insert config value \'o_quote_depth\'', __FILE__, __LINE__, $db->error());
+
+		// Insert config option o_base_url which was removed in 1.3
+		if (!array_key_exists('o_base_url', $pun_config))
+		{
+			// If it isn't in $pun_config['o_base_url'] it should be in $base_url, but just in-case it isn't we can make a guess at it
+			if (!isset($base_url))
+				$base_url = 'http://'.$_SERVER['SERVER_NAME'].str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+
+			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_base_url\', \''.$db->escape($base_url).'\')') or error('Unable to insert config value \'o_quote_depth\'', __FILE__, __LINE__, $db->error());
+		}
+
+		if (strpos($cur_version, '1.2') === 0)
+		{
+			// Groups are almost the same as 1.2:
+			// unverified:	32000 -> 0
+
+			$db->query('UPDATE '.$db->prefix.'users SET group_id = 0 WHERE group_id = 32000') or error('Unable to update unverified users', __FILE__, __LINE__, $db->error());
+		}
+		else if (strpos($cur_version, '1.3') === 0)
+		{
+			// Groups have changed quite a lot from 1.3:
+			// unverified:	0 -> 0
+			// admin:		1 -> 1
+			// mod:			? -> 2
+			// guest:		2 -> 3
+			// member:		? -> 4
+
+			$result = $db->query('SELECT MAX(g_id) + 1 FROM '.$db->prefix.'groups') or error('Unable to select temp group ID', __FILE__, __LINE__, $db->error());
+			$temp_id = $db->result($result);
+
+			$result = $db->query('SELECT g_id FROM '.$db->prefix.'groups WHERE g_moderator = 1 AND g_id > 1 LIMIT 1') or error('Unable to select moderator group', __FILE__, __LINE__, $db->error());
+			if ($db->num_rows($result))
+				$mod_gid = $db->result($result);
+			else
+			{
+				$db->query('INSERT INTO '.$db->prefix.'groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES('."'Moderators', 'Moderator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)") or error('Unable to add group', __FILE__, __LINE__, $db->error());
+				$mod_gid = $db->insert_id();
+			}
+			
+			$member_gid = $pun_config['o_default_user_group'];
+
+			// move the mod group to a temp place
+			$db->query('UPDATE '.$db->prefix.'groups SET g_id = '.$temp_id.' WHERE g_id = '.$mod_gid) or error('Unable to update group ID', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'users SET group_id = '.$temp_id.' WHERE group_id = '.$mod_gid) or error('Unable to update users group ID', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'forum_perms SET group_id = '.$temp_id.' WHERE group_id = '.$mod_gid) or error('Unable to forum_perms group ID', __FILE__, __LINE__, $db->error());
+			if ($member_gid == $mod_gid) $member_gid = $temp_id;
+
+			// move whoever is in 3 to a spare slot
+			$db->query('UPDATE '.$db->prefix.'groups SET g_id = '.$mod_gid.' WHERE g_id = 3') or error('Unable to update group ID', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'users SET group_id = '.$mod_gid.' WHERE group_id = 3') or error('Unable to update users group ID', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'forum_perms SET group_id = '.$mod_gid.' WHERE group_id = 3') or error('Unable to forum_perms group ID', __FILE__, __LINE__, $db->error());
+			if ($member_gid == 3) $member_gid = $mod_gid;
+
+			// move guest to 3
+			$db->query('UPDATE '.$db->prefix.'groups SET g_id = 3 WHERE g_id = 2') or error('Unable to update group ID', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'users SET group_id = 3 WHERE group_id = 2') or error('Unable to update users group ID', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'forum_perms SET group_id = 3 WHERE group_id = 2') or error('Unable to forum_perms group ID', __FILE__, __LINE__, $db->error());
+			if ($member_gid == 2) $member_gid = 3;
+
+			// move mod group in temp place to 2
+			$db->query('UPDATE '.$db->prefix.'groups SET g_id = 2 WHERE g_id = '.$temp_id) or error('Unable to update group ID', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'users SET group_id = 2 WHERE group_id = '.$temp_id) or error('Unable to update users group ID', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'forum_perms SET group_id = 2 WHERE group_id = '.$temp_id) or error('Unable to forum_perms group ID', __FILE__, __LINE__, $db->error());
+			if ($member_gid == $temp_id) $member_gid = 2;
+			
+			// Only move stuff around if it isn't already in the right place
+			if ($member_gid != $mod_gid || $member_gid != 4)
+			{
+				// move members to temp place
+				$db->query('UPDATE '.$db->prefix.'groups SET g_id = '.$temp_id.' WHERE g_id = '.$member_gid) or error('Unable to update group ID', __FILE__, __LINE__, $db->error());
+				$db->query('UPDATE '.$db->prefix.'users SET group_id = '.$temp_id.' WHERE group_id = '.$member_gid) or error('Unable to update users group ID', __FILE__, __LINE__, $db->error());
+				$db->query('UPDATE '.$db->prefix.'forum_perms SET group_id = '.$temp_id.' WHERE group_id = '.$member_gid) or error('Unable to forum_perms group ID', __FILE__, __LINE__, $db->error());
+
+				// move whoever is in 4 to members place
+				$db->query('UPDATE '.$db->prefix.'groups SET g_id = '.$member_gid.' WHERE g_id = 4') or error('Unable to update group ID', __FILE__, __LINE__, $db->error());
+				$db->query('UPDATE '.$db->prefix.'users SET group_id = '.$member_gid.' WHERE group_id = 4') or error('Unable to update users group ID', __FILE__, __LINE__, $db->error());
+				$db->query('UPDATE '.$db->prefix.'forum_perms SET group_id = '.$member_gid.' WHERE group_id = 4') or error('Unable to forum_perms group ID', __FILE__, __LINE__, $db->error());
+
+				// move members in temp place to 4
+				$db->query('UPDATE '.$db->prefix.'groups SET g_id = 4 WHERE g_id = '.$temp_id) or error('Unable to update group ID', __FILE__, __LINE__, $db->error());
+				$db->query('UPDATE '.$db->prefix.'users SET group_id = 4 WHERE group_id = '.$temp_id) or error('Unable to update users group ID', __FILE__, __LINE__, $db->error());
+				$db->query('UPDATE '.$db->prefix.'forum_perms SET group_id = 4 WHERE group_id = '.$temp_id) or error('Unable to forum_perms group ID', __FILE__, __LINE__, $db->error());
+			}
+		}
 
 		// Server time zone is now simply the default time zone
 		if (!array_key_exists('o_default_timezone', $pun_config))
@@ -605,7 +693,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 		// Should we do charset conversion or not?
 		if (strpos($cur_version, '1.2') === 0 && isset($_GET['convert_charset']))
-			$query_str = '?stage=conv_misc&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
+			$query_str = '?stage=conv_misc&req_old_charset='.$old_charset;
 		else
 			$query_str = '?stage=conv_tables';
 		break;
@@ -702,7 +790,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 			}
 		}
 
-		$query_str = '?stage=conv_reports&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
+		$query_str = '?stage=conv_reports&req_old_charset='.$old_charset;
 		break;
 
 
@@ -740,9 +828,9 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$result = $db->query('SELECT id FROM '.$db->prefix.'reports WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result))
-			$query_str = '?stage=conv_reports&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+			$query_str = '?stage=conv_reports&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
 		else
-			$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
+			$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset;
 		break;
 
 
@@ -781,9 +869,9 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$result = $db->query('SELECT id FROM '.$db->prefix.'search_words WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result))
-			$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+			$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
 		else
-			$query_str = '?stage=conv_users&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
+			$query_str = '?stage=conv_users&req_old_charset='.$old_charset;
 		break;
 
 
@@ -823,9 +911,9 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result))
-			$query_str = '?stage=conv_users&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+			$query_str = '?stage=conv_users&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
 		else
-			$query_str = '?stage=conv_topics&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
+			$query_str = '?stage=conv_topics&req_old_charset='.$old_charset;
 		break;
 
 
@@ -864,9 +952,9 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result))
-			$query_str = '?stage=conv_topics&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+			$query_str = '?stage=conv_topics&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
 		else
-			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE;
+			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset;
 		break;
 
 
@@ -907,7 +995,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result))
-			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
 		else
 			$query_str = '?stage=conv_tables';
 		break;
@@ -915,8 +1003,8 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 	// Convert table columns to utf8 (MySQL only)
 	case 'conv_tables':
-		// Do the cumbersome charset conversion of MySQL tables/columns
-		if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+		// Do the cumbersome charset conversion of MySQL tables/columns (if required - i.e. running 1.2)
+		if (strpos($cur_version, '1.2') === 0 && ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb'))
 		{
 			echo 'Converting table '.$db->prefix.'bans …<br />'."\n"; flush();
 			convert_table_utf8($db->prefix.'bans');
@@ -961,7 +1049,10 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 	// Preparse posts
 	case 'preparse_posts':
 		require PUN_ROOT.'include/parser.php';
-		
+
+		// Now we're definitely using UTF-8, so we convert the output properly
+		$db->set_names('utf8');
+
 		// Determine where to start
 		if ($start_at == 0)
 		{
@@ -976,10 +1067,10 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		// Fetch posts to process this cycle
 		$result = $db->query('SELECT id, message FROM '.$db->prefix.'posts WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
 
+		$temp = array();
 		while ($cur_item = $db->fetch_assoc($result))
 		{
 			echo 'Preparsing post '.$cur_item['id'].' …<br />'."\n";
-			$temp = array();
 			$db->query('UPDATE '.$db->prefix.'posts SET message = \''.$db->escape(preparse_bbcode($cur_item['message'], $temp)).'\' WHERE id = '.$cur_item['id']) or error('Unable to update post', __FILE__, __LINE__, $db->error());
 		}
 
@@ -987,7 +1078,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result))
-			$query_str = '?stage=preparse_posts&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+			$query_str = '?stage=preparse_posts&start_at='.$db->result($result);
 		else
 			$query_str = '?stage=preparse_sigs';
 		break;
@@ -996,7 +1087,10 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 	// Preparse signatures
 	case 'preparse_sigs':
 		require PUN_ROOT.'include/parser.php';
-		
+
+		// Now we're definitely using UTF-8, so we convert the output properly
+		$db->set_names('utf8');
+
 		// Determine where to start
 		if ($start_at == 0)
 			$start_at = 2;
@@ -1006,10 +1100,10 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		// Fetch users to process this cycle
 		$result = $db->query('SELECT id, signature FROM '.$db->prefix.'users WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch users', __FILE__, __LINE__, $db->error());
 
+		$temp = array();
 		while ($cur_item = $db->fetch_assoc($result))
 		{
 			echo 'Preparsing signature '.$cur_item['id'].' …<br />'."\n";
-			$temp = array();
 			$db->query('UPDATE '.$db->prefix.'users SET signature = \''.$db->escape(preparse_bbcode($cur_item['signature'], $temp, true)).'\' WHERE id = '.$cur_item['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 		}
 
@@ -1017,7 +1111,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result))
-			$query_str = '?stage=preparse_sigs&req_old_charset='.$old_charset.'&req_per_page='.PER_PAGE.'&start_at='.$db->result($result);
+			$query_str = '?stage=preparse_sigs&start_at='.$db->result($result);
 		else
 			$query_str = '?stage=finish';
 		break;

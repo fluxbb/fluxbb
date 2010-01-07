@@ -28,7 +28,7 @@ class DBLayer
 	);
 
 
-	function DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $foo)
+	function DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
 	{
 		$this->prefix = $db_prefix;
 
@@ -36,10 +36,13 @@ class DBLayer
 		if (strpos($db_host, ':') !== false)
 			list($db_host, $db_port) = explode(':', $db_host);
 
+		// Persistent connection in MySQLi are only available in PHP 5.3 and later releases
+		$p_connect = $p_connect && version_compare(PHP_VERSION, '5.3.0') >= 0 ? 'p:' : '';
+
 		if (isset($db_port))
-			$this->link_id = @mysqli_connect($db_host, $db_username, $db_password, $db_name, $db_port);
+			$this->link_id = @mysqli_connect($p_connect.$db_host, $db_username, $db_password, $db_name, $db_port);
 		else
-			$this->link_id = @mysqli_connect($db_host, $db_username, $db_password, $db_name);
+			$this->link_id = @mysqli_connect($p_connect.$db_host, $db_username, $db_password, $db_name);
 
 		if (!$this->link_id)
 			error('Unable to connect to MySQL and select database. MySQL reported: '.mysqli_connect_error(), __FILE__, __LINE__);

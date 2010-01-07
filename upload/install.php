@@ -9,7 +9,7 @@
 ---*/
 
 // The FluxBB version this script installs
-define('FORUM_VERSION', '1.4');
+define('FORUM_VERSION', '1.4-rc1');
 define('FORUM_DB_REVISION', 2);
 
 
@@ -19,6 +19,10 @@ if (file_exists(PUN_ROOT.'config.php'))
 {
 	// Check to see whether FluxBB is already installed
 	include PUN_ROOT.'config.php';
+
+	// If we have the 1.3-legacy constant defined, define the proper 1.4 constant so we don't get an incorrect "need to install" message
+	if (defined('FORUM'))
+		define('PUN', FORUM);
 
 	// If PUN is defined, config.php is probably valid and thus the software is installed
 	if (defined('PUN'))
