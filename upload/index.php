@@ -1,4 +1,4 @@
-<?php
+yeah <?php
 
 /*---
 
@@ -131,7 +131,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 				$moderators[] = pun_htmlspecialchars($mod_username);
 		}
 
-		$moderators = "\t\t\t\t\t\t\t\t".'<p><em>('.$lang_common['Moderated by'].'</em> '.implode(', ', $moderators).')</p>'."\n";
+		$moderators = "\t\t\t\t\t\t\t\t".'<p class="modlist"><em>('.$lang_common['Moderated by'].'</em> '.implode(', ', $moderators).')</p>'."\n";
 	}
 
 ?>
