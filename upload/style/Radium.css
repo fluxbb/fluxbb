@@ -278,6 +278,15 @@
 	padding: 3px 0 0 0;
 	}
 
+#brddesc {
+	padding: 3px 0;
+	}
+	
+#brddesc * {
+	padding-top: 0;
+	padding-bottom: 0;
+	}
+
 #brdmenu li {
 	display: inline;
 	margin-right: 12px;
