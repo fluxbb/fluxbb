@@ -57,7 +57,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	}
 
 	// Tidy up lists
-	$pattern = array('%\[list(?:=([1a*]))?+\]((?:(?:(?!\[list(?:=[1a*])?+\]|\[/list\]).)++|(?R))*+)\[/list\]%isxe');
+	$pattern = array('%\[list(?:=([1a*]))?+\]((?:(?>.*?(?=\[list(?:=[1a*])?+\]|\[/list\]))|(?R))*)\[/list\]%ise');
 	$replace = array('preparse_list_tag(\'$2\', \'$1\', $errors)');
 	$text = preg_replace($pattern, $replace, $text);
 
@@ -515,7 +515,7 @@ function preparse_list_tag($content, $type = '*', &$errors)
 
 	if (strpos($content,'[list') !== false)
 	{
-		$pattern = array('%\[list(?:=([1a*]))?+\]((?:(?:(?!\[list(?:=[1a*])?+\]|\[/list\]).)++|(?R))*+)\[/list\]%isxe');
+		$pattern = array('%\[list(?:=([1a*]))?+\]((?:(?>.*?(?=\[list(?:=[1a*])?+\]|\[/list\]))|(?R))*)\[/list\]%ise');
 		$replace = array('preparse_list_tag(\'$2\', \'$1\', $errors)');
 		$content = preg_replace($pattern, $replace, $content);
 	}
@@ -629,7 +629,7 @@ function handle_list_tag($content, $type = '*')
 
 	if (strpos($content,'[list') !== false)
 	{
-		$pattern = array('%\[list(?:=([1a*]))?+\]((?:(?:(?!\[list(?:=[1a*])?+\]|\[/list\]).)++|(?R))*+)\[/list\]%isxe');
+		$pattern = array('%\[list(?:=([1a*]))?+\]((?:(?>.*?(?=\[list(?:=[1a*])?+\]|\[/list\]))|(?R))*)\[/list\]%ise');
 		$replace = array('handle_list_tag(\'$2\', \'$1\')');
 		$content = preg_replace($pattern, $replace, $content);
 	}
@@ -664,7 +664,7 @@ function do_bbcode($text, $is_signature = false)
 
 	if (!$is_signature)
 	{
-		$pattern[] = '%\[list(?:=([1a*]))?+\]((?:(?:(?!\[list(?:=[1a*])?+\]|\[/list\]).)++|(?R))*+)\[/list\]%isxe';
+		$pattern[] = '%\[list(?:=([1a*]))?+\]((?:(?>.*?(?=\[list(?:=[1a*])?+\]|\[/list\]))|(?R))*)\[/list\]%ise';
 		$replace[] = 'handle_list_tag(\'$2\', \'$1\')';
 	}
 
