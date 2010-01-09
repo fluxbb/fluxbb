@@ -497,7 +497,7 @@ else if (isset($_POST['update_forums']))
 		if (in_array($cur_forum['id'], $moderator_in) && !in_array($id, $cur_moderators))
 		{
 			$cur_moderators[$username] = $id;
-			ksort($cur_moderators);
+			uksort($cur_moderators, 'strcasecmp');
 
 			$db->query('UPDATE '.$db->prefix.'forums SET moderators=\''.$db->escape(serialize($cur_moderators)).'\' WHERE id='.$cur_forum['id']) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
 		}
@@ -890,7 +890,7 @@ else if (isset($_POST['form_sent']))
 				{
 					unset($cur_moderators[$old_username]);
 					$cur_moderators[$form['username']] = $id;
-					ksort($cur_moderators);
+					uksort($cur_moderators, 'strcasecmp');
 
 					$db->query('UPDATE '.$db->prefix.'forums SET moderators=\''.$db->escape(serialize($cur_moderators)).'\' WHERE id='.$cur_forum['id']) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
 				}
@@ -1095,8 +1095,8 @@ else
 						<div class="infldset">
 							<input type="hidden" name="form_sent" value="1" />
 							<?php echo $username_field ?>
-<?php if ($pun_user['id'] == $id || $pun_user['g_id'] == PUN_ADMIN || ($user['g_moderator'] == '0' && $pun_user['g_mod_change_passwords'] == '1')): ?><p><a href="profile.php?action=change_pass&amp;id=<?php echo $id ?>"><?php echo $lang_profile['Change pass'] ?></a></p>
-<?php endif; ?>					</div>
+<?php if ($pun_user['id'] == $id || $pun_user['g_id'] == PUN_ADMIN || ($user['g_moderator'] == '0' && $pun_user['g_mod_change_passwords'] == '1')): ?>							<p><a href="profile.php?action=change_pass&amp;id=<?php echo $id ?>"><?php echo $lang_profile['Change pass'] ?></a></p>
+<?php endif; ?>						</div>
 					</fieldset>
 				</div>
 				<div class="inform">
