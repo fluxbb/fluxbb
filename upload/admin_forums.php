@@ -106,7 +106,7 @@ else if (isset($_GET['del_forum']))
 						</div>
 					</fieldset>
 				</div>
-				<p><input type="submit" name="del_forum_comply" value="Delete" /><a href="javascript:history.go(-1)">Go back</a></p>
+				<p class="buttons"><input type="submit" name="del_forum_comply" value="Delete" /><a href="javascript:history.go(-1)">Go back</a></p>
 			</form>
 		</div>
 	</div>
