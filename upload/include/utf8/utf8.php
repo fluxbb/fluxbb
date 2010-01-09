@@ -60,4 +60,3 @@ require PUN_ROOT.'include/utf8/substr_replace.php';
 
 require PUN_ROOT.'include/utf8/ucwords.php';
 require PUN_ROOT.'include/utf8/trim.php';
-require PUN_ROOT.'include/utf8/strcasecmp.php';
