@@ -119,7 +119,7 @@ generate_admin_menu('index');
 
 ?>
 	<div class="block">
-		<h2>Forum administration</h2>
+		<h2><span>Forum administration</span></h2>
 		<div id="adintro" class="box">
 			<div class="inbox">
 				<p>
