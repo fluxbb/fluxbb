@@ -497,7 +497,7 @@ else if (isset($_POST['update_forums']))
 		if (in_array($cur_forum['id'], $moderator_in) && !in_array($id, $cur_moderators))
 		{
 			$cur_moderators[$username] = $id;
-			uksort($cur_moderators, 'strcasecmp');
+			uksort($cur_moderators, 'utf8_strcasecmp');
 
 			$db->query('UPDATE '.$db->prefix.'forums SET moderators=\''.$db->escape(serialize($cur_moderators)).'\' WHERE id='.$cur_forum['id']) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
 		}
@@ -890,7 +890,7 @@ else if (isset($_POST['form_sent']))
 				{
 					unset($cur_moderators[$old_username]);
 					$cur_moderators[$form['username']] = $id;
-					uksort($cur_moderators, 'strcasecmp');
+					uksort($cur_moderators, 'utf8_strcasecmp');
 
 					$db->query('UPDATE '.$db->prefix.'forums SET moderators=\''.$db->escape(serialize($cur_moderators)).'\' WHERE id='.$cur_forum['id']) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
 				}
