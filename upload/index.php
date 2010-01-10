@@ -109,7 +109,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 	}
 
 	if ($cur_forum['forum_desc'] != '')
-		$forum_field .= "\n\t\t\t\t\t\t\t\t".$cur_forum['forum_desc'];
+		$forum_field .= "\n\t\t\t\t\t\t\t\t".'<div class="forumdesc">'.$cur_forum['forum_desc'].'</div>';
 
 
 	// If there is a last_post/last_poster
