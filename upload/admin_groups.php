@@ -389,7 +389,7 @@ else if (isset($_GET['del_group']))
 						<legend>Confirm delete group</legend>
 						<div class="infldset">
 							<p>Are you sure that you want to delete the group "<?php echo pun_htmlspecialchars($group_title) ?>"?</p>
-							<p>WARNING! After you deleted a group you can not restore it.</p>
+							<p class="warntext">WARNING! After you deleted a group you can not restore it.</p>
 						</div>
 					</fieldset>
 				</div>
@@ -442,7 +442,7 @@ else if (isset($_GET['del_group']))
 						</div>
 					</fieldset>
 				</div>
-				<p><input type="submit" name="del_group" value="Delete group" /></p>
+				<p class="buttons"><input type="submit" name="del_group" value="Delete group" /><a href="javascript:history.go(-1)">Go back</a></p>
 			</form>
 		</div>
 	</div>

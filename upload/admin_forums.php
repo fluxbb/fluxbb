@@ -102,7 +102,7 @@ else if (isset($_GET['del_forum']))
 						<legend>Important! Read before deleting</legend>
 						<div class="infldset">
 							<p>Are you sure that you want to delete the forum "<?php echo $forum_name ?>"?</p>
-							<p>WARNING! Deleting a forum will delete all posts (if any) in that forum!</p>
+							<p class="warntext">WARNING! Deleting a forum will delete all posts (if any) in that forum!</p>
 						</div>
 					</fieldset>
 				</div>

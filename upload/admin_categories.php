@@ -106,11 +106,11 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 						<legend>Confirm delete category</legend>
 						<div class="infldset">
 							<p>Are you sure that you want to delete the category "<?php echo pun_htmlspecialchars($cat_name) ?>"?</p>
-							<p>WARNING! Deleting a category will delete all forums and posts (if any) in that category!</p>
+							<p class="warntext">WARNING! Deleting a category will delete all forums and posts (if any) in that category!</p>
 						</div>
 					</fieldset>
 				</div>
-				<p><input type="submit" name="del_cat_comply" value="Delete" /><a href="javascript:history.go(-1)">Go back</a></p>
+				<p class="buttons"><input type="submit" name="del_cat_comply" value="Delete" /><a href="javascript:history.go(-1)">Go back</a></p>
 			</form>
 		</div>
 	</div>
