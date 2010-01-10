@@ -538,8 +538,8 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 
 ?>
-<div class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?>">
-	<h2><span><?php echo $forum ?></span> <span>&raquo;&nbsp;<?php echo $subject ?></span> <span>&raquo;&nbsp;<a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo format_time($search_set[$i]['pposted']) ?></a></span></h2>
+<div class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if ($post_count == 1) echo ' blockpost1' ?>">
+	<h2><span><span><?php echo $forum ?></span> <span>&raquo;&nbsp;<?php echo $subject ?></span> <span>&raquo;&nbsp;<a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo format_time($search_set[$i]['pposted']) ?></a></span></span></h2>
 	<div class="box">
 		<div class="inbox">
 			<div class="postbody">

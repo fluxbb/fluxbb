@@ -34,7 +34,8 @@ if (isset($_GET['ip_stats']))
 ?>
 <div class="linkst">
 	<div class="inbox">
-		<div><a href="javascript:history.go(-1)">Go back</a></div>
+		<div class="backlink"><a href="javascript:history.go(-1)">Go back</a></div>
+		<div class="clearer"></div>
 	</div>
 </div>
 
@@ -83,7 +84,8 @@ if (isset($_GET['ip_stats']))
 
 <div class="linksb">
 	<div class="inbox">
-		<div><a href="javascript:history.go(-1)">Go back</a></div>
+		<div class="backlink"><a href="javascript:history.go(-1)">Go back</a></div>
+		<div class="clearer"></div>
 	</div>
 </div>
 <?php
@@ -107,6 +109,7 @@ if (isset($_GET['show_users']))
 <div class="linkst">
 	<div class="inbox">
 		<div><a href="javascript:history.go(-1)">Go back</a></div>
+		<div class="clearer"></div>
 	</div>
 </div>
 
@@ -187,7 +190,8 @@ if (isset($_GET['show_users']))
 
 <div class="linksb">
 	<div class="inbox">
-		<div><a href="javascript:history.go(-1)">Go back</a></div>
+		<div class="backlink"><a href="javascript:history.go(-1)">Go back</a></div>
+		<div class="clearer"></div>
 	</div>
 </div>
 <?php
@@ -264,7 +268,8 @@ else if (isset($_POST['find_user']))
 ?>
 <div class="linkst">
 	<div class="inbox">
-		<div><a href="javascript:history.go(-1)">Go back</a></div>
+		<div class="backlink"><a href="javascript:history.go(-1)">Go back</a></div>
+		<div class="clearer"></div>
 	</div>
 </div>
 
@@ -324,7 +329,8 @@ else if (isset($_POST['find_user']))
 
 <div class="linksb">
 	<div class="inbox">
-		<div><a href="javascript:history.go(-1)">Go back</a></div>
+		<div class="backlink"><a href="javascript:history.go(-1)">Go back</a></div>
+		<div class="clearer"></div>
 	</div>
 </div>
 <?php
