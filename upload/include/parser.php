@@ -12,6 +12,13 @@
 if (!defined('PUN'))
 	exit;
 
+// Attempt to increase the pcre backtrack limit (wont work on all hosts)
+if (version_compare(PHP_VERSION, '5.2.0', '>='))
+{
+	$backtrack_limit = ini_get('pcre.backtrack_limit');
+	if ($backtrack_limit == '' || $backtrack_limit < 220000)
+		@ini_set('pcre.backtrack_limit', 220000);
+}
 
 // Here you can add additional smilies if you like (please note that you must escape single quote and backslash)
 $smilies = array(
@@ -39,7 +46,7 @@ $smilies = array(
 //
 function preparse_bbcode($text, &$errors, $is_signature = false)
 {
-	global $pun_config;
+	global $pun_config, $lang_common;
 
 	if ($is_signature)
 	{
@@ -59,9 +66,13 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	// Tidy up lists
 	$pattern = array('%\[list(?:=([1a*]))?+\]((?:(?>.*?(?=\[list(?:=[1a*])?+\]|\[/list\]))|(?R))*)\[/list\]%ise');
 	$replace = array('preparse_list_tag(\'$2\', \'$1\', $errors)');
-	$text = preg_replace($pattern, $replace, $text);
+	$temp = preg_replace($pattern, $replace, $text);
 
-	$text = str_replace('*'."\0".']', '*]', $text);
+	// If the regex failed
+	if ($temp === null)
+		$errors[] = $lang_common['BBCode list size error'];
+	else
+		$text = str_replace('*'."\0".']', '*]', $temp);
 
 	if ($pun_config['o_make_links'] == '1')
 		$text = do_clickable($text);

@@ -116,6 +116,7 @@ $lang_common = array(
 'BBCode error no closing tag'		=>	'[%1$s] was found without a matching [/%1$s]',
 'BBCode error empty attribute'		=>	'[%s] tag had an empty attribute section',
 'BBCode code problem'				=>	'There is a problem with your [code] tags',
+'BBCode list size error'			=>	'Your list was too long to parse, please make it smaller!',
 
 // Stuff for the navigator (top of every page)
 'Index'								=>	'Index',
