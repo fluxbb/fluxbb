@@ -184,6 +184,10 @@ $lang_common = array(
 // For extern.php RSS feed
 'RSS description'					=>	'The most recent topics at %s.',
 'RSS description topic'				=>	'The most recent posts in %s.',
-'RSS reply'							=>	'Re: ' // The topic subject will be appended to this string (to signify a reply)
+'RSS reply'							=>	'Re: ', // The topic subject will be appended to this string (to signify a reply)
+
+// Admin related stuff in the header
+'New reports'						=>	'There are new reports',
+'Maintenance mode enabled'			=>	'Maintenance mode is enabled!',
 
 );
