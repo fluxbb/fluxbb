@@ -5,7 +5,7 @@ $lang_register = array(
 
 // Miscellaneous
 'No new regs'				=>	'This forum is not accepting new registrations.',
-'Reg cancel redirect'		=>	'Registration cancelled. Redirecting &hellip;',
+'Reg cancel redirect'		=>	'Registration cancelled. Redirecting …',
 'Forum rules'				=>	'Forum rules',
 'Rules legend'				=>	'You must agree to the following in order to register',
 'Registration flood'		=>	'A new user was registered with the same IP address as you within the last hour. To prevent registration flooding, at least an hour has to pass between registrations from the same IP. Sorry for the inconvenience.',
@@ -23,7 +23,7 @@ $lang_register = array(
 
 // Registration email stuff
 'Reg email'					=>	'Thank you for registering. Your password has been sent to the specified address. If it doesn\'t arrive you can contact the forum administrator at',
-'Reg complete'				=>	'Registration complete. Logging in and redirecting &hellip;',
+'Reg complete'				=>	'Registration complete. Logging in and redirecting …',
 
 // Register info
 'Desc 1'					=>	'Registration will grant you access to a number of features and capabilities otherwise unavailable. These functions include the ability to edit and delete posts, design your own signature that accompanies your posts and much more. If you have any questions regarding this forum you should ask an administrator.',
