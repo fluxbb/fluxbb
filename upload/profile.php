@@ -1255,7 +1255,7 @@ else
 	else if ($section == 'personal')
 	{
 		if ($pun_user['g_set_title'] == '1')
-			$title_field = '<label>'.$lang_common['Title'].'&nbsp;&nbsp;(<em>'.$lang_profile['Leave blank'].'</em>)<br /><input type="text" name="title" value="'.pun_htmlspecialchars($user['title']).'" size="30" maxlength="50" /><br /></label>'."\n";
+			$title_field = '<label>'.$lang_common['Title'].'&nbsp;<em>('.$lang_profile['Leave blank'].')</em><br /><input type="text" name="title" value="'.pun_htmlspecialchars($user['title']).'" size="30" maxlength="50" /><br /></label>'."\n";
 
 		$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_common['Profile'];
 		require PUN_ROOT.'header.php';
