@@ -209,7 +209,7 @@ while ($cur_post = $db->fetch_assoc($result))
 			$user_title = censor_words($user_title);
 
 		// Format the online indicator
-		$is_online = ($cur_post['is_online'] == $cur_post['poster_id']) ? '<strong>'.$lang_topic['Online'].'</strong>' : $lang_topic['Offline'];
+		$is_online = ($cur_post['is_online'] == $cur_post['poster_id']) ? '<strong>'.$lang_topic['Online'].'</strong>' : '<span>'.$lang_topic['Offline'].'</span>';
 
 		if ($pun_config['o_avatars'] == '1' && $pun_user['show_avatars'] != '0')
 		{
