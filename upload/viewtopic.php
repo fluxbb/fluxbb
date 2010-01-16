@@ -167,8 +167,8 @@ require PUN_ROOT.'header.php';
 	<div class="inbox">
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li>&raquo;&nbsp;<a href="viewforum.php?id=<?php echo $cur_topic['forum_id'] ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
-			<li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_topic['subject']) ?></li>
+			<li><span>&raquo;&nbsp;</span><a href="viewforum.php?id=<?php echo $cur_topic['forum_id'] ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
+			<li><span>&raquo;&nbsp;</span><strong><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></strong></li>
 		</ul>
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
 		<p class="postlink conr"><?php echo $post_link ?></p>
@@ -349,8 +349,8 @@ while ($cur_post = $db->fetch_assoc($result))
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li>&raquo;&nbsp;<a href="viewforum.php?id=<?php echo $cur_topic['forum_id'] ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
-			<li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_topic['subject']) ?></li>
+			<li><span>&raquo;&nbsp;</span><a href="viewforum.php?id=<?php echo $cur_topic['forum_id'] ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
+			<li><span>&raquo;&nbsp;</span><strong><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></strong></li>
 		</ul>
 		<?php echo $subscraction ?>
 		<div class="clearer"></div>

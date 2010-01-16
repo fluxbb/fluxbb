@@ -395,16 +395,12 @@ if ($tid)
 		else
 			$quote = '> '.$q_poster.' '.$lang_common['wrote'].':'."\n\n".'> '.$q_message."\n";
 	}
-
-	$forum_name = '<a href="viewforum.php?id='.$cur_posting['id'].'">'.pun_htmlspecialchars($cur_posting['forum_name']).'</a>';
 }
 // If a forum ID was specified in the url (new topic)
 else if ($fid)
 {
 	$action = $lang_post['Post new topic'];
 	$form = '<form id="post" method="post" action="post.php?action=post&amp;fid='.$fid.'" onsubmit="return process_form(this)">';
-
-	$forum_name = pun_htmlspecialchars($cur_posting['forum_name']);
 }
 else
 	message($lang_common['Bad request']);
@@ -429,9 +425,10 @@ require PUN_ROOT.'header.php';
 	<div class="inbox">
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li>&raquo;&nbsp;<?php echo $forum_name ?></li>
-<?php if (isset($cur_posting['subject'])): ?>			<li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_posting['subject']) ?></li>
-<?php endif; ?>		</ul>
+			<li><span>&raquo;&nbsp;</span><a href="viewforum.php?id=<?php echo $cur_posting['id'] ?>"><?php echo pun_htmlspecialchars($cur_posting['forum_name']) ?></a></li>
+<?php if (isset($cur_posting['subject'])): ?>			<li><span>&raquo;&nbsp;</span><a href="viewtopic.php?id=<?php echo $tid ?>"><?php echo pun_htmlspecialchars($cur_posting['subject']) ?></a></li>
+<?php endif; ?>			<li><span>&raquo;&nbsp;</span><strong><?php echo $action ?></strong></li>
+		</ul>
 	</div>
 </div>
 

@@ -260,8 +260,9 @@ if (isset($_GET['tid']))
 	<div class="inbox">
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li>&raquo;&nbsp;<a href="viewforum.php?id=<?php echo $fid ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
-			<li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_topic['subject']) ?></li>
+			<li><span>&raquo;&nbsp;</span><a href="viewforum.php?id=<?php echo $fid ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
+			<li><span>&raquo;&nbsp;</span><a href="viewtopic.php?id=<?php echo $tid ?>"><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></a></li>
+			<li><span>&raquo;&nbsp;</span><strong><?php echo $lang_misc['Moderate'] ?></strong></li>
 		</ul>
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
 		<div class="clearer"></div>
@@ -743,7 +744,8 @@ $paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'moderate.ph
 	<div class="inbox">
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li>&raquo;&nbsp;<?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></li>
+			<li><span>&raquo;&nbsp;</span><a href="viewforum.php?id=<?php echo $fid ?>"><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></a></li>
+			<li><span>&raquo;&nbsp;</span><strong><?php echo $lang_misc['Moderate'] ?></strong></li>
 		</ul>
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
 		<div class="clearer"></div>
