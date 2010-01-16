@@ -60,8 +60,8 @@ $pun_start = get_microtime();
 // Make sure PHP reports all errors except E_NOTICE. FluxBB supports E_ALL, but a lot of scripts it may interact with, do not
 error_reporting(E_ALL ^ E_NOTICE);
 
-// Turn off magic_quotes_runtime
-if (get_magic_quotes_runtime())
+// Turn off magic_quotes_runtime, only if using PHP < 5.3.0
+if (version_compare(PHP_VERSION, '5.3.0', '<') && get_magic_quotes_runtime())
 	set_magic_quotes_runtime(0);
 
 // Force POSIX locale (to prevent functions such as strtolower() from messing up UTF-8 strings)
