@@ -310,6 +310,8 @@ if (!empty($errors))
 					<p><?php echo $lang_register['Desc 1'] ?></p>
 					<p><?php echo $lang_register['Desc 2'] ?></p>
 				</div>
+			</div>
+			<div class="inform">
 				<fieldset>
 					<legend><?php echo $lang_register['Username legend'] ?></legend>
 					<div class="infldset">
