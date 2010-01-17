@@ -11,7 +11,9 @@
 // The FluxBB version this script installs
 define('FORUM_VERSION', '1.4-rc1');
 define('FORUM_DB_REVISION', 2);
-
+define('MIN_PHP_VERSION', '4.3.0');
+define('MIN_MYSQL_VERSION', '4.1.2');
+define('MIN_PGSQL_VERSION', '7.0.0');
 
 define('PUN_ROOT', './');
 
@@ -30,9 +32,9 @@ if (file_exists(PUN_ROOT.'config.php'))
 }
 
 
-// Make sure we are running at least PHP 4.1.0
-if (!function_exists('version_compare') || version_compare(PHP_VERSION, '4.1.0', '<'))
-	exit('You are running PHP version '.PHP_VERSION.'. FluxBB '.FORUM_VERSION.' requires at least PHP 4.1.0 to run properly. You must upgrade your PHP installation before you can continue.');
+// Make sure we are running at least MIN_PHP_VERSION
+if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
+	exit('You are running PHP version '.PHP_VERSION.'. FluxBB '.FORUM_VERSION.' requires at least PHP '.MIN_PHP_VERSION.' to run properly. You must upgrade your PHP installation before you can continue.');
 
 // Disable error reporting for uninitialized variables
 error_reporting(E_ALL);
@@ -45,6 +47,7 @@ require PUN_ROOT.'include/functions.php';
 
 // Load UTF-8 functions
 require PUN_ROOT.'include/utf8/utf8.php';
+require FORUM_ROOT.'include/utf8/trim.php';
 
 // Strip out "bad" UTF-8 characters
 forum_remove_bad_characters();
@@ -107,6 +110,11 @@ if (!isset($_POST['form_sent']))
 
 	if (empty($db_extensions))
 		exit('This PHP environment does not have support for any of the databases that FluxBB supports. PHP needs to have support for either MySQL, PostgreSQL or SQLite in order for FluxBB to be installed.');
+
+	// Make an educated guess regarding base_url
+	$base_url_guess = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://').preg_replace('/:80$/', '', $_SERVER['HTTP_HOST']).substr(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), 0, -6);
+	if (substr($base_url_guess, -1) == '/')
+		$base_url_guess = substr($base_url_guess, 0, -1);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -270,7 +278,7 @@ function process_form(the_form)
 					<legend>Enter the Base URL of your FluxBB installation</legend>
 					<div class="infldset">
 						<p>The URL (without trailing slash) of your FluxBB forum (example: http://forum.myhost.com or http://myhost.com/~myuser). This <strong>must</strong> be correct, otherwise, administrators and moderators will not be able to submit any forms. Please note that the preset value below is just an educated guess by FluxBB.</p>
-						<label><strong>Base URL</strong><br /><input type="text" name="req_base_url" value="http://<?php echo $_SERVER['SERVER_NAME'].str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) ?>" size="60" maxlength="100" /><br /></label>
+						<label><strong>Base URL</strong><br /><input type="text" name="req_base_url" value="<?php echo $base_url_guess ?>" size="60" maxlength="100" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -298,15 +306,15 @@ else
 	}
 
 	$db_type = $_POST['req_db_type'];
-	$db_host = trim($_POST['req_db_host']);
-	$db_name = trim($_POST['req_db_name']);
-	$db_username = unescape(trim($_POST['db_username']));
-	$db_password = unescape(trim($_POST['db_password']));
-	$db_prefix = trim($_POST['db_prefix']);
-	$username = unescape(trim($_POST['req_username']));
-	$email = strtolower(trim($_POST['req_email']));
-	$password1 = unescape(trim($_POST['req_password1']));
-	$password2 = unescape(trim($_POST['req_password2']));
+	$db_host = pun_trim($_POST['req_db_host']);
+	$db_name = pun_trim($_POST['req_db_name']);
+	$db_username = unescape(pun_trim($_POST['db_username']));
+	$db_password = unescape(pun_trim($_POST['db_password']));
+	$db_prefix = pun_trim($_POST['db_prefix']);
+	$username = unescape(pun_trim($_POST['req_username']));
+	$email = strtolower(pun_trim($_POST['req_email']));
+	$password1 = unescape(pun_trim($_POST['req_password1']));
+	$password2 = unescape(pun_trim($_POST['req_password2']));
 
 
 	// Make sure base_url doesn't end with a slash
@@ -368,6 +376,9 @@ else
 	// Create the database object (and connect/select db)
 	$db = new DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, false);
 
+	// Validate prefix
+	if (strlen($db_prefix) > 0 && (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $db_prefix) || strlen($db_prefix) > 40))
+		error('The table prefix \''.$db->prefix.'\' contains illegal characters or is too long. The prefix may contain the letters a to z, any numbers and the underscore character. They must however not start with a number. The maximum length is 40 characters. Please choose a different prefix.');
 
 	// Do some DB type specific checks
 	switch ($db_type)
@@ -376,12 +387,15 @@ else
 		case 'mysqli':
 		case 'mysql_innodb':
 		case 'mysqli_innodb':
+			$mysql_info = $db->get_version();
+			if (version_compare($mysql_info['version'], MIN_MYSQL_VERSION, '<'))
+				error('You are running MySQL version '.$mysql_version.'. FluxBB '.FORUM_VERSION.' requires at least MySQL '.MIN_MYSQL_VERSION.' to run properly. You must upgrade your MySQL installation before you can continue.');
 			break;
 
 		case 'pgsql':
-			// Make sure we are running at least PHP 4.3.0 (needed only for PostgreSQL)
-			if (version_compare(PHP_VERSION, '4.3.0', '<'))
-				error('You are running PHP version '.PHP_VERSION.'. FluxBB requires at least PHP 4.3.0 to run properly when using PostgreSQL. You must upgrade your PHP installation or use a different database before you can continue.');
+			$pgsql_info = $db->get_version();
+			if (version_compare($pgsql_info['version'], MIN_PGSQL_VERSION, '<'))
+				error('You are running PostgreSQL version '.$pgsql_info.'. FluxBB '.FORUM_VERSION.' requires at least PostgreSQL '.MIN_PGSQL_VERSION.' to run properly. You must upgrade your PostgreSQL installation before you can continue.');
 			break;
 
 		case 'sqlite':

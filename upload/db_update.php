@@ -8,16 +8,20 @@
 
 ---*/
 
+// The FluxBB version this script updates to
 define('UPDATE_TO', '1.4-rc1');
 define('UPDATE_TO_DB_REVISION', 2);
+define('MIN_PHP_VERSION', '4.3.0');
+define('MIN_MYSQL_VERSION', '4.1.2');
+define('MIN_PGSQL_VERSION', '7.0.0');
 
 // The number of items to process per page view (lower this if the update script times out during UTF-8 conversion)
 define('PER_PAGE', 300);
 
 
-// Make sure we are running at least PHP 4.1.0
-if (!function_exists('version_compare') || version_compare(PHP_VERSION, '4.1.0', '<'))
-	exit('You are running PHP version '.PHP_VERSION.'. FluxBB '.UPDATE_TO.' requires at least PHP 4.1.0 to run properly. You must upgrade your PHP installation before you can continue.');
+// Make sure we are running at least MIN_PHP_VERSION
+if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
+	exit('You are running PHP version '.PHP_VERSION.'. FluxBB '.UPDATE_TO.' requires at least PHP '.MIN_PHP_VERSION.' to run properly. You must upgrade your PHP installation before you can continue.');
 
 
 define('PUN_ROOT', './');
@@ -76,6 +80,25 @@ $cur_version = $db->result($result);
 
 if (version_compare($cur_version, '1.2', '<'))
 	exit('Version mismatch. The database \''.$db_name.'\' doesn\'t seem to be running a FluxBB database schema supported by this update script.');
+
+// Do some DB type specific checks
+switch ($db_type)
+{
+	case 'mysql':
+	case 'mysqli':
+	case 'mysql_innodb':
+	case 'mysqli_innodb':
+		$mysql_info = $db->get_version();
+		if (version_compare($mysql_info['version'], MIN_MYSQL_VERSION, '<'))
+			error('You are running MySQL version '.$mysql_version.'. FluxBB '.UPDATE_TO.' requires at least MySQL '.MIN_MYSQL_VERSION.' to run properly. You must upgrade your MySQL installation before you can continue.');
+		break;
+
+	case 'pgsql':
+		$pgsql_info = $db->get_version();
+		if (version_compare($pgsql_info['version'], MIN_PGSQL_VERSION, '<'))
+			error('You are running PostgreSQL version '.$pgsql_info.'. FluxBB '.UPDATE_TO.' requires at least PostgreSQL '.MIN_PGSQL_VERSION.' to run properly. You must upgrade your PostgreSQL installation before you can continue.');
+		break;
+}
 
 // If we've already done charset conversion in a previous update, we have to do SET NAMES
 $db->set_names(strpos($cur_version, '1.2') === 0 ? 'latin1' : 'utf8');
@@ -466,7 +489,12 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		{
 			// If it isn't in $pun_config['o_base_url'] it should be in $base_url, but just in-case it isn't we can make a guess at it
 			if (!isset($base_url))
-				$base_url = 'http://'.$_SERVER['SERVER_NAME'].str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+			{
+				// Make an educated guess regarding base_url
+				$base_url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://').preg_replace('/:80$/', '', $_SERVER['HTTP_HOST']).substr(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), 0, -6);
+				if (substr($base_url, -1) == '/')
+					$base_url = substr($base_url, 0, -1);
+			}
 
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_base_url\', \''.$db->escape($base_url).'\')') or error('Unable to insert config value \'o_quote_depth\'', __FILE__, __LINE__, $db->error());
 		}
