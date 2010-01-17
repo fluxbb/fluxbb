@@ -547,7 +547,7 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 
 ?>
 <div class="blockform">
-	<h2><?php echo $lang_misc['Merge topics'] ?></h2>
+	<h2><span><?php echo $lang_misc['Merge topics'] ?></span></h2>
 	<div class="box">
 		<form method="post" action="moderate.php?fid=<?php echo $fid ?>">
 			<input type="hidden" name="topics" value="<?php echo implode(',', array_map('intval', array_keys($topics))) ?>" />
@@ -623,7 +623,7 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 
 ?>
 <div class="blockform">
-	<h2><?php echo $lang_misc['Delete topics'] ?></h2>
+	<h2><span><?php echo $lang_misc['Delete topics'] ?></span></h2>
 	<div class="box">
 		<form method="post" action="moderate.php?fid=<?php echo $fid ?>">
 			<input type="hidden" name="topics" value="<?php echo implode(',', array_map('intval', array_keys($topics))) ?>" />

@@ -1499,7 +1499,7 @@ else
 <div class="pun">
 
 <div class="blockform">
-	<h2>Final instructions</h2>
+	<h2><span>Final instructions</span></h2>
 	<div class="box">
 		<div class="fakeform">
 <?php
