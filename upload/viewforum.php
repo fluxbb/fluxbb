@@ -221,8 +221,15 @@ else
 	$colspan = ($pun_config['o_topic_views'] == '1') ? 4 : 3;
 
 ?>
-				<tr>
-					<td class="tcl" colspan="<?php echo $colspan ?>"><?php echo $lang_forum['Empty forum'] ?></td>
+				<tr class="inone">
+					<td class="tcl" colspan="<?php echo $colspan ?>">
+						<div class="icon inone"><div class="nosize"><!-- --></div></div>
+						<div class="tclcon">
+							<div>
+								<strong><?php echo $lang_forum['Empty forum'] ?></strong>
+							</div>
+						</div>
+					</td>
 				</tr>
 <?php
 
