@@ -455,9 +455,6 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 <?php
 
-		// Set background switching on for show as posts
-		$bg_switch = true;
-
 		if ($show_as == 'topics')
 		{
 			// Get topic/forum tracking data
@@ -539,7 +536,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 ?>
 <div class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if ($post_count == 1) echo ' blockpost1' ?>">
-	<h2><span><span><?php echo $forum ?></span> <span>&raquo;&nbsp;<?php echo $subject ?></span> <span>&raquo;&nbsp;<a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo format_time($search_set[$i]['pposted']) ?></a></span></span></h2>
+	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?></span> <span><?php echo $forum ?></span> <span>&raquo;&nbsp;<?php echo $subject ?></span> <span>&raquo;&nbsp;<a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo format_time($search_set[$i]['pposted']) ?></a></span></span></h2>
 	<div class="box">
 		<div class="inbox">
 			<div class="postbody">
