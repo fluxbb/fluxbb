@@ -84,7 +84,12 @@ if (!defined('PUN_ALLOW_INDEX'))
 <?php
 
 if (defined('PUN_ADMIN_CONSOLE'))
-	echo '<link rel="stylesheet" type="text/css" href="style/imports/base_admin.css" />'."\n";
+{
+	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/base_admin.css'))
+		echo '<link rel="stylesheet" type="text/css" href="style/'.$pun_user['style'].'/base_admin.css" />'."\n";
+	else
+		echo '<link rel="stylesheet" type="text/css" href="style/imports/base_admin.css" />'."\n";
+}
 
 if (isset($required_fields))
 {
