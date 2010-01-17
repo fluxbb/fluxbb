@@ -234,6 +234,12 @@ else if (isset($_GET['report']))
 		redirect('viewtopic.php?pid='.$post_id.'#p'.$post_id, $lang_misc['Report redirect']);
 	}
 
+	// Fetch some info about the post, the topic and the forum
+	$result = $db->query('SELECT f.id AS fid, f.forum_name, t.id AS tid, t.subject FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.id='.$post_id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+	if (!$db->num_rows($result))
+		message($lang_common['Bad request']);
+
+	$cur_post = $db->fetch_assoc($result);
 
 	$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_misc['Report post'];
 	$required_fields = array('req_reason' => $lang_misc['Reason']);
@@ -241,6 +247,17 @@ else if (isset($_GET['report']))
 	require PUN_ROOT.'header.php';
 
 ?>
+<div class="linkst">
+	<div class="inbox">
+		<ul class="crumbs">
+			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li><span>&raquo;&nbsp;</span><a href="viewforum.php?id=<?php echo $cur_post['fid'] ?>"><?php echo pun_htmlspecialchars($cur_post['forum_name']) ?></a></li>
+			<li><span>&raquo;&nbsp;</span><a href="viewtopic.php?pid=<?php echo $post_id ?>#p<?php echo $post_id ?>"><?php echo pun_htmlspecialchars($cur_post['subject']) ?></a></li>
+			<li><span>&raquo;&nbsp;</span><strong><?php echo $lang_misc['Report post'] ?></strong></li>
+		</ul>
+	</div>
+</div>
+
 <div class="blockform">
 	<h2><span><?php echo $lang_misc['Report post'] ?></span></h2>
 	<div class="box">
