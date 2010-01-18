@@ -1152,7 +1152,7 @@ function redirect($destination_url, $message)
 
 
 	// Load the redirect template
-	if (function_exists(PUN_ROOT.'style/'.$pun_user['style'].'/redirect.tpl'))
+	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/redirect.tpl'))
 		$tpl_redir = trim(file_get_contents(PUN_ROOT.'style/'.$pun_user['style'].'/redirect.tpl'));
 	else
 		$tpl_redir = trim(file_get_contents(PUN_ROOT.'include/template/redirect.tpl'));
