@@ -67,6 +67,7 @@ $lang_common = array(
 'on'								=>	'on', // As in "BBCode is on"
 'off'								=>	'off',
 'Invalid email'						=>	'The email address you entered is invalid.',
+'Required'							=>	'(Required)',
 'required field'					=>	'is a required field in this form.', // For javascript form validation
 'Last post'							=>	'Last post',
 'by'								=>	'by', // As in last post by someuser
