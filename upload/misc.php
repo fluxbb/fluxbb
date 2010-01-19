@@ -157,9 +157,9 @@ else if (isset($_GET['email']))
 					<div class="infldset txtarea">
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="redirect_url" value="<?php echo $redirect_url ?>" />
-						<label><strong><?php echo $lang_misc['Email subject'] ?></strong><br />
+						<label class="required"><strong><?php echo $lang_misc['Email subject'] ?></strong><br />
 						<input class="longinput" type="text" name="req_subject" size="75" maxlength="70" tabindex="1" /><br /></label>
-						<label><strong><?php echo $lang_misc['Email message'] ?></strong><br />
+						<label class="required"><strong><?php echo $lang_misc['Email message'] ?></strong><br />
 						<textarea name="req_message" rows="10" cols="75" tabindex="2"></textarea><br /></label>
 						<p><?php echo $lang_misc['Email disclosure note'] ?></p>
 					</div>
@@ -267,7 +267,7 @@ else if (isset($_GET['report']))
 					<legend><?php echo $lang_misc['Reason desc'] ?></legend>
 					<div class="infldset txtarea">
 						<input type="hidden" name="form_sent" value="1" />
-						<label><strong><?php echo $lang_misc['Reason'] ?></strong><br /><textarea name="req_reason" rows="5" cols="60"></textarea><br /></label>
+						<label class="required"><strong><?php echo $lang_misc['Reason'] ?></strong><br /><textarea name="req_reason" rows="5" cols="60"></textarea><br /></label>
 					</div>
 				</fieldset>
 			</div>

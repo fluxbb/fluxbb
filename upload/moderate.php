@@ -214,7 +214,7 @@ if (isset($_GET['tid']))
 					<legend><?php echo $lang_misc['Confirm split legend'] ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="posts" value="<?php echo implode(',', array_map('intval', array_keys($posts))) ?>" />
-						<label><strong><?php echo $lang_misc['New subject'] ?></strong><br /><input type="text" name="new_subject" size="80" maxlength="70" /><br /></label>
+						<label class="required"><strong><?php echo $lang_misc['New subject'] ?></strong><br /><input type="text" name="new_subject" size="80" maxlength="70" /><br /></label>
 						<p><?php echo $lang_misc['Split posts comply'] ?></p>
 					</div>
 				</fieldset>

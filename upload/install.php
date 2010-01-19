@@ -188,7 +188,7 @@ function process_form(the_form)
 						<p>FluxBB currently supports MySQL, PostgreSQL and SQLite. If your database of choice is missing from the drop-down menu below, it means this PHP environment does not have support for that particular database. More information regarding support for particular versions of each database can be found in the FAQ.</p>
 <?php if ($dual_mysql): ?>						<p>FluxBB has detected that your PHP environment supports two different ways of communicating with MySQL. The two options are called standard and improved. If you are uncertain which one to use, start by trying improved and if that fails, try standard.</p>
 <?php endif; ?><?php if ($mysql_innodb): ?>					<p>FluxBB has detected that your MySQL server might support <a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-overview.html">InnoDB</a>. This would be a good choice if you are planning to run a large forum. If you are uncertain, it is recommended to not use InnoDB.</p>
-<?php endif; ?>						<label><strong>Database type</strong>
+<?php endif; ?>						<label class="required"><strong>Database type</strong>
 						<br /><select name="req_db_type">
 <?php
 
@@ -206,7 +206,7 @@ function process_form(the_form)
 					<legend>Enter your database server hostname</legend>
 					<div class="infldset">
 						<p>The address of the database server (example: localhost, db.myhost.com or 192.168.0.15). You can specify a custom port number if your database doesn't run on the default port (example: localhost:3580). For SQLite support, just enter anything or leave it at 'localhost'.</p>
-						<label><strong>Database server hostname</strong><br /><input type="text" name="req_db_host" value="localhost" size="50" maxlength="100" /><br /></label>
+						<label class="required"><strong>Database server hostname</strong><br /><input type="text" name="req_db_host" value="localhost" size="50" maxlength="100" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -215,7 +215,7 @@ function process_form(the_form)
 					<legend>Enter the name of your database</legend>
 					<div class="infldset">
 						<p>The name of the database that FluxBB will be installed into. The database must exist. For SQLite, this is the relative path to the database file. If the SQLite database file does not exist, FluxBB will attempt to create it.</p>
-						<label for="req_db_name"><strong>Database name</strong><br /><input id="req_db_name" type="text" name="req_db_name" size="30" maxlength="50" /><br /></label>
+						<label class="required"><strong>Database name</strong><br /><input id="req_db_name" type="text" name="req_db_name" size="30" maxlength="50" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -248,7 +248,7 @@ function process_form(the_form)
 					<legend>Enter Administrator's username</legend>
 					<div class="infldset">
 						<p>The username of the forum administrator. You can later create more administrators and moderators. Usernames can be between 2 and 25 characters long.</p>
-						<label><strong>Administrator's username</strong><br /><input type="text" name="req_username" size="25" maxlength="25" /><br /></label>
+						<label class="required"><strong>Administrator's username</strong><br /><input type="text" name="req_username" size="25" maxlength="25" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -257,8 +257,8 @@ function process_form(the_form)
 					<legend>Enter and confirm Administrator's password</legend>
 					<div class="infldset">
 					<p>Passwords can be between 4 and 16 characters long. Passwords are case sensitive.</p>
-						<label class="conl"><strong>Password</strong><br /><input id="req_password1" type="password" name="req_password1" size="16" maxlength="16" /><br /></label>
-						<label class="conl"><strong>Confirm password</strong><br /><input type="password" name="req_password2" size="16" maxlength="16" /><br /></label>
+						<label class="conl required"><strong>Password</strong><br /><input id="req_password1" type="password" name="req_password1" size="16" maxlength="16" /><br /></label>
+						<label class="conl required"><strong>Confirm password</strong><br /><input type="password" name="req_password2" size="16" maxlength="16" /><br /></label>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
@@ -268,7 +268,7 @@ function process_form(the_form)
 					<legend>Enter Administrator's email</legend>
 					<div class="infldset">
 						<p>The email address of the forum administrator.</p>
-						<label for="req_email"><strong>Administrator's email</strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="50" /><br /></label>
+						<label class="required"><strong>Administrator's email</strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="50" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -277,7 +277,7 @@ function process_form(the_form)
 					<legend>Enter the Base URL of your FluxBB installation</legend>
 					<div class="infldset">
 						<p>The URL (without trailing slash) of your FluxBB forum (example: http://forum.myhost.com or http://myhost.com/~myuser). This <strong>must</strong> be correct, otherwise, administrators and moderators will not be able to submit any forms. Please note that the preset value below is just an educated guess by FluxBB.</p>
-						<label><strong>Base URL</strong><br /><input type="text" name="req_base_url" value="<?php echo $base_url_guess ?>" size="60" maxlength="100" /><br /></label>
+						<label class="required"><strong>Base URL</strong><br /><input type="text" name="req_base_url" value="<?php echo $base_url_guess ?>" size="60" maxlength="100" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
