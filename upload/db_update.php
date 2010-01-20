@@ -18,11 +18,9 @@ define('MIN_PGSQL_VERSION', '7.0.0');
 // The number of items to process per page view (lower this if the update script times out during UTF-8 conversion)
 define('PER_PAGE', 300);
 
-
 // Make sure we are running at least MIN_PHP_VERSION
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
 	exit('You are running PHP version '.PHP_VERSION.'. FluxBB '.UPDATE_TO.' requires at least PHP '.MIN_PHP_VERSION.' to run properly. You must upgrade your PHP installation before you can continue.');
-
 
 define('PUN_ROOT', './');
 
@@ -39,7 +37,8 @@ if (!defined('PUN'))
 	exit('This file must be run from the forum root directory.');
 
 // Enable debug mode
-define('PUN_DEBUG', 1);
+if (!defined('PUN_DEBUG'))
+	define('PUN_DEBUG', 1);
 
 // Turn on full PHP error reporting
 error_reporting(E_ALL);
