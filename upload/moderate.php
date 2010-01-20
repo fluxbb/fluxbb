@@ -427,7 +427,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	if ($db->num_rows($result) < 2)
 		message($lang_misc['Nowhere to move']);
 
-	$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / Moderate';
+	$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_misc['Moderate'];
 	require PUN_ROOT.'header.php';
 
 ?>
