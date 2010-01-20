@@ -158,6 +158,11 @@ if (!$pun_user['is_guest'] && $pun_config['o_subscriptions'] == '1')
 else
 	$subscraction = '';
 
+if ($pun_config['o_feed_type'] == '1')
+	$page_head = array('feed' => '<link rel="alternate" type="application/rss+xml" href="extern.php?action=feed&amp;tid='.$id.'&amp;type=rss" title="'.$lang_common['RSS topic feed'].'" />');
+else if ($pun_config['o_feed_type'] == '2')
+	$page_head = array('feed' => '<link rel="alternate" type="application/atom+xml" href="extern.php?action=feed&amp;tid='.$id.'&amp;type=atom" title="'.$lang_common['Atom topic feed'].'" />');
+
 $page_title = pun_htmlspecialchars($pun_config['o_board_title'].' / '.$cur_topic['subject']);
 define('PUN_ALLOW_INDEX', 1);
 require PUN_ROOT.'header.php';

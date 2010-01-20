@@ -10,7 +10,7 @@
 
 // The FluxBB version this script updates to
 define('UPDATE_TO', '1.4-rc1');
-define('UPDATE_TO_DB_REVISION', 2);
+define('UPDATE_TO_DB_REVISION', 3);
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
 define('MIN_PGSQL_VERSION', '7.0.0');
@@ -483,6 +483,10 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		// Insert new config option o_quote_depth
 		if (!array_key_exists('o_quote_depth', $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_quote_depth\', \'3\')') or error('Unable to insert config value \'o_quote_depth\'', __FILE__, __LINE__, $db->error());
+
+		// Insert new config option o_feed_type
+		if (!array_key_exists('o_feed_type', $pun_config))
+			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_feed_type\', \'2\')') or error('Unable to insert config value \'o_feed_type\'', __FILE__, __LINE__, $db->error());
 
 		// Insert config option o_base_url which was removed in 1.3
 		if (!array_key_exists('o_base_url', $pun_config))

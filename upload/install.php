@@ -10,7 +10,7 @@
 
 // The FluxBB version this script installs
 define('FORUM_VERSION', '1.4-rc1');
-define('FORUM_DB_REVISION', 2);
+define('FORUM_DB_REVISION', 3);
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
 define('MIN_PGSQL_VERSION', '7.0.0');
@@ -1406,6 +1406,7 @@ else
 		'o_maintenance'				=> "'0'",
 		'o_maintenance_message'		=> "'The forums are temporarily down for maintenance. Please try again in a few minutes.<br />\\n<br />\\n/Administrator'",
 		'o_default_dst'				=> "'0'",
+		'o_feed_type'				=> "'2'",
 		'p_message_bbcode'			=> "'1'",
 		'p_message_img_tag'			=> "'1'",
 		'p_message_all_caps'		=> "'1'",

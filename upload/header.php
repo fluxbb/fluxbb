@@ -133,7 +133,10 @@ function process_form(the_form)
 }
 
 // JavaScript tricks for IE6 and older
-echo '<!--[if lte IE 6]><script type="text/javascript" src="style/imports/minmax.js"></script><![endif]-->';
+echo '<!--[if lte IE 6]><script type="text/javascript" src="style/imports/minmax.js"></script><![endif]-->'."\n";
+
+if (isset($page_head))
+	echo implode("\n", $page_head)."\n";
 
 $tpl_temp = trim(ob_get_contents());
 $tpl_main = str_replace('<pun_head>', $tpl_temp, $tpl_main);

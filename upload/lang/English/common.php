@@ -186,6 +186,12 @@ $lang_common = array(
 'RSS description'					=>	'The most recent topics at %s.',
 'RSS description topic'				=>	'The most recent posts in %s.',
 'RSS reply'							=>	'Re: ', // The topic subject will be appended to this string (to signify a reply)
+'RSS active topics feed'			=>	'RSS active topics feed',
+'Atom active topics feed'			=>	'Atom active topics feed',
+'RSS forum feed'					=>	'RSS forum feed',
+'Atom forum feed'					=>	'Atom forum feed',
+'RSS topic feed'					=>	'RSS topic feed',
+'Atom topic feed'					=>	'Atom topic feed',
 
 // Admin related stuff in the header
 'New reports'						=>	'There are new reports',
