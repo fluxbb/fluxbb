@@ -53,7 +53,8 @@
 ----------------------------------------------------------------*/
 
 #brdfooter h2, #brdstats h2, #brdstats .conl dt, #brdstats .conr dt,
-#modcontrols dt, #searchlinks dt, div.postright h3 {
+#modcontrols dt, #searchlinks dt, div.postright h3, span.closedtext,
+h3 small.newtext {
 	position: absolute;
 	display: block;
 	overflow: hidden;
@@ -518,10 +519,6 @@
 	top: 0;
 	}
 
-.pun .closedtext {
-	display: none;
-	}
-
 /*****************************************************************
 6. MAIN FORMS
 *****************************************************************/
@@ -875,6 +872,11 @@
 
 #helpfile div.box {
 	padding: 10px
+	}
+
+#debugtime {
+	margin-top: -12px;
+	text-align: center;
 	}
 
 /*****************************************************************

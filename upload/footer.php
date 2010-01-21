@@ -129,34 +129,29 @@ else if ($footer_style == 'viewforum' || $footer_style == 'viewtopic')
 		}
 
 		if ($pun_config['o_feed_type'] == '1')
-			echo "\t\t\t\t".'<p id="feedlinks"><a href="extern.php?action=feed&amp;tid='.$id.'&amp;type=rss">'.$lang_common['RSS topic feed'].'</a></p>'."\n";
+			echo "\t\t\t\t".'<p id="feedlinks"><span class="rss"><a href="extern.php?action=feed&amp;tid='.$id.'&amp;type=rss">'.$lang_common['RSS topic feed'].'</a></span><span class="atom"><a href="extern.php?action=feed&amp;tid='.$id.'&amp;type=atom">'.$lang_common['Atom topic feed'].'</a></span></p>'."\n";
 		else if ($pun_config['o_feed_type'] == '2')
-			echo "\t\t\t\t".'<p id="feedlinks"><a href="extern.php?action=feed&amp;tid='.$id.'&amp;type=atom">'.$lang_common['Atom topic feed'].'</a></p>'."\n";
+			echo "\t\t\t\t".'<p id="feedlinks"><span class="atom"><a href="extern.php?action=feed&amp;tid='.$id.'&amp;type=atom">'.$lang_common['Atom topic feed'].'</a></span></p>'."\n";
 	}
 
 	echo "\t\t\t".'</div>'."\n";
 }
 
 ?>
-			<ul class="conr">
-				<li id="poweredby"><?php printf($lang_common['Powered by'], '<a href="http://fluxbb.org/">FluxBB</a>'.(($pun_config['o_show_version'] == '1') ? ' '.$pun_config['o_cur_version'] : '')) ?></li>
-<?php
-
-// Display debug info (if enabled/defined)
-if (defined('PUN_DEBUG'))
-{
-	// Calculate script generation time
-	$time_diff = sprintf('%.3f', get_microtime() - $pun_start);
-	echo "\t\t\t\t".'<li id="debugtime">[ '.sprintf($lang_common['Querytime'], $time_diff, $db->get_num_queries()).' ]</li>'."\n";
-}
-
-?>
-			</ul>
+			<p id="poweredby" class="conr"><?php printf($lang_common['Powered by'], '<a href="http://fluxbb.org/">FluxBB</a>'.(($pun_config['o_show_version'] == '1') ? ' '.$pun_config['o_cur_version'] : '')) ?></p>
 			<div class="clearer"></div>
 		</div>
 	</div>
 </div>
 <?php
+
+// Display debug info (if enabled/defined)
+//if (defined('PUN_DEBUG'))
+//{
+	// Calculate script generation time
+	$time_diff = sprintf('%.3f', get_microtime() - $pun_start);
+	echo '<p id="debugtime">[ '.sprintf($lang_common['Querytime'], $time_diff, $db->get_num_queries()).' ]</p>'."\n";
+//}
 
 
 // End the transaction

@@ -135,10 +135,12 @@ $result = $db->query($sql) or error('Unable to fetch topic list', __FILE__, __LI
 // If there are topics in this forum
 if ($db->num_rows($result))
 {
+	$topic_count = 0;
 	while ($cur_topic = $db->fetch_assoc($result))
 	{
-		$icon_text = $lang_common['Normal icon'];
-		$item_status = '';
+		++$topic_count;
+		$status_text = array();
+		$item_status = ($topic_count % 2 == 0) ? 'roweven' : 'rowodd';
 		$icon_type = 'icon';
 
 		if ($cur_topic['moved_to'] == null)
@@ -149,24 +151,29 @@ if ($db->num_rows($result))
 		if ($pun_config['o_censoring'] == '1')
 			$cur_topic['subject'] = censor_words($cur_topic['subject']);
 
+		if ($cur_topic['sticky'] == '1')
+		{
+			$item_status .= ' isticky';
+			$status_text[] = $lang_forum['Sticky'];
+		}
+
 		if ($cur_topic['moved_to'] != 0)
 		{
-			$subject = '<span class="movedtext">'.$lang_forum['Moved'].': </span><a href="viewtopic.php?id='.$cur_topic['moved_to'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($cur_topic['poster']).'</span>';
-			$icon_text = $lang_common['Moved icon'];
-			$item_status = 'imoved';
+			$subject = '<a href="viewtopic.php?id='.$cur_topic['moved_to'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($cur_topic['poster']).'</span>';
+			$status_text[] = '<span class="movedtext">'.$lang_forum['Moved'].'</span>';
+			$item_status .= ' imoved';
 		}
 		else if ($cur_topic['closed'] == '0')
 			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($cur_topic['poster']).'</span>';
 		else
 		{
-			$subject = '<span class="closedtext">'.$lang_forum['Closed'].': </span><a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($cur_topic['poster']).'</span>';
-			$icon_text = $lang_common['Closed icon'];
-			$item_status = 'iclosed';
+			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($cur_topic['poster']).'</span>';
+			$status_text[] = '<span class="closedtext">'.$lang_forum['Closed'].'</span>';
+			$item_status .= ' iclosed';
 		}
 
 		if (!$pun_user['is_guest'] && $cur_topic['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$cur_topic['id']]) || $tracked_topics['topics'][$cur_topic['id']] < $cur_topic['last_post']) && (!isset($tracked_topics['forums'][$id]) || $tracked_topics['forums'][$id] < $cur_topic['last_post']) && $cur_topic['moved_to'] == null)
 		{
-			$icon_text .= ' '.$lang_common['New icon'];
 			$item_status .= ' inew';
 			$icon_type = 'icon inew';
 			$subject = '<strong>'.$subject.'</strong>';
@@ -174,6 +181,9 @@ if ($db->num_rows($result))
 		}
 		else
 			$subject_new_posts = null;
+
+		// Insert the status text before the subject
+		$subject = implode(' ', $status_text).' '.$subject;
 
 		// Should we display the dot or not? :)
 		if (!$pun_user['is_guest'] && $pun_config['o_show_dot'] == '1')
@@ -183,13 +193,6 @@ if ($db->num_rows($result))
 				$subject = '<strong class="ipost">&middot;&nbsp;</strong>'.$subject;
 				$item_status .= ' iposted';
 			}
-		}
-
-		if ($cur_topic['sticky'] == '1')
-		{
-			$subject = '<span class="stickytext">'.$lang_forum['Sticky'].': </span>'.$subject;
-			$item_status .= ' isticky';
-			$icon_text .= ' '.$lang_common['Sticky icon'];
 		}
 
 		$num_pages_topic = ceil(($cur_topic['num_replies'] + 1) / $pun_user['disp_posts']);
@@ -207,9 +210,9 @@ if ($db->num_rows($result))
 		}
 
 ?>
-				<tr<?php if ($item_status != '') echo ' class="'.trim($item_status).'"'; ?>>
+				<tr class="<?php echo $item_status ?>">
 					<td class="tcl">
-						<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo trim($icon_text) ?></div></div>
+						<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo forum_number_format($topic_count + $start_from) ?></div></div>
 						<div class="tclcon">
 							<div>
 								<?php echo $subject."\n" ?>
@@ -229,7 +232,7 @@ else
 	$colspan = ($pun_config['o_topic_views'] == '1') ? 4 : 3;
 
 ?>
-				<tr class="inone">
+				<tr class="rowodd inone">
 					<td class="tcl" colspan="<?php echo $colspan ?>">
 						<div class="icon inone"><div class="nosize"><!-- --></div></div>
 						<div class="tclcon">

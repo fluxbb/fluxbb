@@ -53,7 +53,8 @@
 ----------------------------------------------------------------*/
 
 #brdfooter h2, #brdstats h2, #brdstats .conl dt, #brdstats .conr dt,
-#modcontrols dt, #searchlinks dt, div.postright h3 {
+#modcontrols dt, #searchlinks dt, div.postright h3, span.closedtext,
+h3 small.newtext {
 	position: absolute;
 	display: block;
 	overflow: hidden;
@@ -73,7 +74,7 @@
 	font: 68.75%/1.4545em Verdana, Helvetica, Arial, sans-serif;
 	}
 
-.pun table, .pun td, .pun th, .pun input, .pun select, .pun optgroup, .pun textarea {
+.pun table, .pun td, .pun th, .pun input, .pun select, .pun optgroup, .pun textarea, .pun small {
 	font-size: 1em;
 	font-family: verdana, helvetica, arial, sans-serif; 
 	}
@@ -122,6 +123,7 @@
 .pun span.warntext, .pun p.warntext {
 	font-weight: bold
 	}
+	
 
 /* User Content (Announcements, Rules, Posts)
 ----------------------------------------------------------------*/
@@ -376,7 +378,7 @@
 	float: right;
 	text-align: right;
 	}
-
+	
 
 /* Board Stats
 ----------------------------------------------------------------*/
@@ -516,10 +518,6 @@
 	padding-left: 4px;
 	text-align: center;
 	top: 0;
-	}
-
-.pun .closedtext {
-	display: none;
 	}
 
 /*****************************************************************
@@ -875,6 +873,11 @@
 
 #helpfile div.box {
 	padding: 10px
+	}
+	
+#debugtime {
+	margin-top: -12px;
+	text-align: center;
 	}
 
 /*****************************************************************

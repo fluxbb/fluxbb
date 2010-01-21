@@ -45,6 +45,7 @@ $result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name,
 
 $cur_category = 0;
 $cat_count = 0;
+$forum_count = 0;
 while ($cur_forum = $db->fetch_assoc($result))
 {
 	$moderators = '';
@@ -55,6 +56,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 			echo "\t\t\t".'</tbody>'."\n\t\t\t".'</table>'."\n\t\t".'</div>'."\n\t".'</div>'."\n".'</div>'."\n\n";
 
 		++$cat_count;
+		$forum_count = 0;
 
 ?>
 <div id="idx<?php echo $cat_count ?>" class="blocktable">
@@ -76,8 +78,8 @@ while ($cur_forum = $db->fetch_assoc($result))
 		$cur_category = $cur_forum['cid'];
 	}
 
-	$item_status = '';
-	$icon_text = $lang_common['Normal icon'];
+	++$forum_count;
+	$item_status = ($forum_count % 2 == 0) ? 'roweven' : 'rowodd';
 	$icon_type = 'icon';
 
 	// Are there new posts since our last visit?
@@ -88,8 +90,8 @@ while ($cur_forum = $db->fetch_assoc($result))
 		{
 			if ((empty($tracked_topics['topics'][$check_topic_id]) || $tracked_topics['topics'][$check_topic_id] < $check_last_post) && (empty($tracked_topics['forums'][$cur_forum['fid']]) || $tracked_topics['forums'][$cur_forum['fid']] < $check_last_post))
 			{
-				$item_status = 'inew';
-				$icon_text = $lang_common['New icon'];
+				$item_status .= ' inew';
+				$forum_field_new = '<small class="newtext">[ '.$lang_common['New posts'].' ]</small>';
 				$icon_type = 'icon inew';
 
 				break;
@@ -102,20 +104,18 @@ while ($cur_forum = $db->fetch_assoc($result))
 	{
 		$forum_field = '<h3><a href="'.pun_htmlspecialchars($cur_forum['redirect_url']).'" title="'.$lang_index['Link to'].' '.pun_htmlspecialchars($cur_forum['redirect_url']).'">'.pun_htmlspecialchars($cur_forum['forum_name']).'</a></h3>';
 		$num_topics = $num_posts = '&nbsp;';
-		$item_status = 'iredirect';
-		$icon_text = $lang_common['Redirect icon'];
+		$item_status .= ' iredirect';
 		$icon_type = 'icon';
 	}
 	else
 	{
-		$forum_field = '<h3><a href="viewforum.php?id='.$cur_forum['fid'].'">'.pun_htmlspecialchars($cur_forum['forum_name']).'</a></h3>';
+		$forum_field = '<h3><a href="viewforum.php?id='.$cur_forum['fid'].'">'.pun_htmlspecialchars($cur_forum['forum_name']).'</a>'.(!empty($forum_field_new) ? ' '.$forum_field_new : '').'</h3>';
 		$num_topics = $cur_forum['num_topics'];
 		$num_posts = $cur_forum['num_posts'];
 	}
 
 	if ($cur_forum['forum_desc'] != '')
 		$forum_field .= "\n\t\t\t\t\t\t\t\t".'<div class="forumdesc">'.$cur_forum['forum_desc'].'</div>';
-
 
 	// If there is a last_post/last_poster
 	if ($cur_forum['last_post'] != '')
@@ -140,9 +140,9 @@ while ($cur_forum = $db->fetch_assoc($result))
 	}
 
 ?>
-				<tr<?php if ($item_status != '') echo ' class="'.$item_status.'"'; ?>>
+				<tr class="<?php echo $item_status ?>">
 					<td class="tcl">
-						<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo $icon_text ?></div></div>
+						<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo forum_number_format($forum_count) ?></div></div>
 						<div class="tclcon">
 							<div>
 								<?php echo $forum_field."\n".$moderators ?>

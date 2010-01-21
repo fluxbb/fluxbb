@@ -458,6 +458,8 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		if ($show_as == 'topics')
 		{
 			// Get topic/forum tracking data
+			$topic_count = 0;
+
 			if (!$pun_user['is_guest'])
 				$tracked_topics = get_tracked_topics();
 
@@ -506,16 +508,15 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			if ($pun_config['o_censoring'] == '1')
 				$search_set[$i]['subject'] = censor_words($search_set[$i]['subject']);
 
-
 			if ($show_as == 'posts')
 			{
 				++$post_count;
-				$icon = '<div class="icon"><div class="nosize">'.$lang_common['Normal icon'].'</div></div>'."\n";
 				$subject = '<a href="viewtopic.php?id='.$search_set[$i]['tid'].'">'.pun_htmlspecialchars($search_set[$i]['subject']).'</a>';
 
 				if (!$pun_user['is_guest'] && $search_set[$i]['last_post'] > $pun_user['last_visit'])
-					$icon = '<div class="icon inew"><div class="nosize">'.$lang_common['New icon'].'</div></div>'."\n";
-
+					$icon_text = '<strong>'.$lang_topic['New icon'].'</strong>'."\n";
+				else
+					$icon_text = '<!-- -->';
 
 				if ($pun_config['o_censoring'] == '1')
 					$search_set[$i]['message'] = censor_words($search_set[$i]['message']);
@@ -544,7 +545,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					<dl>
 						<dt><?php echo $pposter ?></dt>
 						<dd><?php echo $lang_common['Replies'] ?>: <?php echo forum_number_format($search_set[$i]['num_replies']) ?></dd>
-						<dd><?php echo $icon ?></dd>
+						<dd><div class="icon"><div class="nosize"><?php echo $icon_text ?></div></div></dd>
 					</dl>
 				</div>
 				<div class="postright">
@@ -567,24 +568,27 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			}
 			else
 			{
-				$icon = '<div class="icon"><div class="nosize">'.$lang_common['Normal icon'].'</div></div>'."\n";
-
-				$icon_text = $lang_common['Normal icon'];
-				$item_status = '';
+				++$topic_count;
+				$status_text = array();
+				$item_status = ($topic_count % 2 == 0) ? 'roweven' : 'rowodd';
 				$icon_type = 'icon';
-
 
 				$subject = '<a href="viewtopic.php?id='.$search_set[$i]['tid'].'">'.pun_htmlspecialchars($search_set[$i]['subject']).'</a> <span class="byuser">'.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($search_set[$i]['poster']).'</span>';
 
+				if ($search_set[$i]['sticky'] == '1')
+				{
+					$item_status .= ' isticky';
+					$status_text[] = '<span class="stickytext">'.$lang_forum['Sticky'].'</span>';
+				}
+
 				if ($search_set[$i]['closed'] != '0')
 				{
-					$icon_text = $lang_common['Closed icon'];
-					$item_status = 'iclosed';
+					$status_text[] = '<span class="closedtext">'.$lang_forum['Closed'].'</span>';
+					$item_status = ' iclosed';
 				}
 
 				if (!$pun_user['is_guest'] && $search_set[$i]['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$search_set[$i]['tid']]) || $tracked_topics['topics'][$search_set[$i]['tid']] < $search_set[$i]['last_post']) && (!isset($tracked_topics['forums'][$search_set[$i]['forum_id']]) || $tracked_topics['forums'][$search_set[$i]['forum_id']] < $search_set[$i]['last_post']))
 				{
-					$icon_text .= ' '.$lang_common['New icon'];
 					$item_status .= ' inew';
 					$icon_type = 'icon inew';
 					$subject = '<strong>'.$subject.'</strong>';
@@ -593,12 +597,8 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				else
 					$subject_new_posts = null;
 
-				if ($search_set[$i]['sticky'] == '1')
-				{
-					$subject = '<span class="stickytext">'.$lang_forum['Sticky'].': </span>'.$subject;
-					$item_status .= ' isticky';
-					$icon_text .= ' '.$lang_forum['Sticky'];
-				}
+				// Insert the status text before the subject
+				$subject = implode(' ', $status_text).' '.$subject;
 
 				$num_pages_topic = ceil(($search_set[$i]['num_replies'] + 1) / $pun_user['disp_posts']);
 
@@ -615,9 +615,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				}
 
 ?>
-				<tr<?php if ($item_status != '') echo ' class="'.trim($item_status).'"'; ?>>
+				<tr class="<?php $item_status ?>">
 					<td class="tcl">
-						<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo trim($icon_text) ?></div></div>
+						<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo forum_number_format($topic_count + $start_from) ?></div></div>
 						<div class="tclcon">
 							<div>
 								<?php echo $subject."\n" ?>

@@ -21,6 +21,7 @@ $lang_topic = array(
 'Unsubscribe'		=>	'Unsubscribe',
 'Subscribe'			=>	'Subscribe to this topic',
 'Quick post'		=>	'Quick post',
-'Mod controls'		=>	'Moderator controls'
+'Mod controls'		=>	'Moderator controls',
+'New icon'			=>	'New post'
 
 );

@@ -777,12 +777,13 @@ $result = $db->query('SELECT id, poster, subject, posted, last_post, last_post_i
 if ($db->num_rows($result))
 {
 	$button_status = '';
-
+	$topic_count = 0;
 	while ($cur_topic = $db->fetch_assoc($result))
 	{
 
-		$icon_text = $lang_common['Normal icon'];
-		$item_status = '';
+		++$topic_count;
+		$status_text = array();
+		$item_status = ($topic_count % 2 == 0) ? 'roweven' : 'rowodd';
 		$icon_type = 'icon';
 
 		if ($cur_topic['moved_to'] == null)
@@ -799,20 +800,29 @@ if ($db->num_rows($result))
 		if ($pun_config['o_censoring'] == '1')
 			$cur_topic['subject'] = censor_words($cur_topic['subject']);
 
+		if ($cur_topic['sticky'] == '1')
+		{
+			$item_status .= ' isticky';
+			$status_text[] = '<span class="stickytext">'.$lang_forum['Sticky'].'</span>';
+		}
+
 		if ($cur_topic['moved_to'] != 0)
-			$subject = $lang_forum['Moved'].': <a href="viewtopic.php?id='.$cur_topic['moved_to'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
+		{
+			$subject = '<a href="viewtopic.php?id='.$cur_topic['moved_to'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
+			$status_text[] = '<span class="movedtext">'.$lang_forum['Moved'].'</span>';
+			$item_status .= ' imoved';
+		}
 		else if ($cur_topic['closed'] == '0')
 			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span>'.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($cur_topic['poster']).'</span>';
 		else
 		{
 			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
-			$icon_text = $lang_common['Closed icon'];
-			$item_status = 'iclosed';
+			$status_text[] = '<span class="closedtext">'.$lang_forum['Closed'].'</span>';
+			$item_status .= ' iclosed';
 		}
 
 		if (!$ghost_topic && $cur_topic['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$cur_topic['id']]) || $tracked_topics['topics'][$cur_topic['id']] < $cur_topic['last_post']) && (!isset($tracked_topics['forums'][$fid]) || $tracked_topics['forums'][$fid] < $cur_topic['last_post']))
 		{
-			$icon_text .= ' '.$lang_common['New icon'];
 			$item_status .= ' inew';
 			$icon_type = 'icon inew';
 			$subject = '<strong>'.$subject.'</strong>';
@@ -821,12 +831,8 @@ if ($db->num_rows($result))
 		else
 			$subject_new_posts = null;
 
-		if ($cur_topic['sticky'] == '1')
-		{
-			$subject = '<span class="stickytext">'.$lang_forum['Sticky'].': </span>'.$subject;
-			$item_status .= ' isticky';
-			$icon_text .= ' '.$lang_forum['Sticky'];
-		}
+		// Insert the status text before the subject
+		$subject = implode(' ', $status_text).' '.$subject;
 
 		$num_pages_topic = ceil(($cur_topic['num_replies'] + 1) / $pun_user['disp_posts']);
 
@@ -843,9 +849,9 @@ if ($db->num_rows($result))
 		}
 
 ?>
-				<tr<?php if ($item_status != '') echo ' class="'.trim($item_status).'"'; ?>>
+				<tr class="<?php echo $item_status ?>">
 					<td class="tcl">
-						<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo trim($icon_text) ?></div></div>
+						<div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo forum_number_format($topic_count + $start_from) ?></div></div>
 						<div class="tclcon">
 							<div>
 								<?php echo $subject."\n" ?>
