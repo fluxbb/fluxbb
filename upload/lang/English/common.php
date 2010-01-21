@@ -43,9 +43,11 @@ $lang_common = array(
 'No cookie'							=>	'You appear to have logged in successfully, however a cookie has not been set. Please check your settings and if applicable, enable cookies for this website.',
 
 // Topic/forum indicators
-'New icon'							=>	'There are new posts',
+'New icon'							=>	'There are new posts.',
 'Normal icon'						=>	'<!-- -->',
-'Closed icon'						=>	'This topic is closed',
+'Moved icon'						=>	'This topic has been moved.',
+'Sticky icon'						=>	'This topic is a sticky.',
+'Closed icon'						=>	'This topic is closed.',
 'Redirect icon'						=>	'Redirected forum',
 
 // Miscellaneous

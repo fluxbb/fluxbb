@@ -150,17 +150,21 @@ if ($db->num_rows($result))
 			$cur_topic['subject'] = censor_words($cur_topic['subject']);
 
 		if ($cur_topic['moved_to'] != 0)
-			$subject = $lang_forum['Moved'].': <a href="viewtopic.php?id='.$cur_topic['moved_to'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($cur_topic['poster']).'</span>';
+		{
+			$subject = '<span class="movedtext">'.$lang_forum['Moved'].': </span><a href="viewtopic.php?id='.$cur_topic['moved_to'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($cur_topic['poster']).'</span>';
+			$icon_text = $lang_common['Moved icon'];
+			$item_status = 'imoved';
+		}
 		else if ($cur_topic['closed'] == '0')
 			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($cur_topic['poster']).'</span>';
 		else
 		{
-			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($cur_topic['poster']).'</span>';
+			$subject = '<span class="closedtext">'.$lang_forum['Closed'].': </span><a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($cur_topic['poster']).'</span>';
 			$icon_text = $lang_common['Closed icon'];
 			$item_status = 'iclosed';
 		}
 
-		if (!$pun_user['is_guest'] && $cur_topic['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$cur_topic['id']]) || $tracked_topics['topics'][$cur_topic['id']] < $cur_topic['last_post']) && (!isset($tracked_topics['forums'][$id]) || $tracked_topics['forums'][$id] < $cur_topic['last_post']))
+		if (!$pun_user['is_guest'] && $cur_topic['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$cur_topic['id']]) || $tracked_topics['topics'][$cur_topic['id']] < $cur_topic['last_post']) && (!isset($tracked_topics['forums'][$id]) || $tracked_topics['forums'][$id] < $cur_topic['last_post']) && $cur_topic['moved_to'] == '0')
 		{
 			$icon_text .= ' '.$lang_common['New icon'];
 			$item_status .= ' inew';
@@ -185,7 +189,7 @@ if ($db->num_rows($result))
 		{
 			$subject = '<span class="stickytext">'.$lang_forum['Sticky'].': </span>'.$subject;
 			$item_status .= ' isticky';
-			$icon_text .= ' '.$lang_forum['Sticky'];
+			$icon_text .= ' '.$lang_common['Sticky icon'];
 		}
 
 		$num_pages_topic = ceil(($cur_topic['num_replies'] + 1) / $pun_user['disp_posts']);

@@ -7,6 +7,7 @@ $lang_forum = array(
 'Views'			=>	'Views',
 'Moved'			=>	'Moved',
 'Sticky'		=>	'Sticky',
+'Closed'		=>	'Closed',
 'Empty forum'	=>	'Forum is empty.'
 
 );
