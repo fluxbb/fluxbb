@@ -154,7 +154,7 @@ if ($db->num_rows($result))
 		if ($cur_topic['sticky'] == '1')
 		{
 			$item_status .= ' isticky';
-			$status_text[] = $lang_forum['Sticky'];
+			$status_text[] = '<span class="stickytext">'.$lang_forum['Sticky'].'</span>';
 		}
 
 		if ($cur_topic['moved_to'] != 0)
