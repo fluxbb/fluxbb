@@ -37,7 +37,7 @@ if (isset($_POST['zap_id']))
 }
 
 
-$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / Admin / Reports';
+$page_title = array($pun_config['o_board_title'], 'Admin', 'Reports');
 require PUN_ROOT.'header.php';
 
 generate_admin_menu('reports');

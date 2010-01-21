@@ -51,7 +51,7 @@ $num_pages = ceil($num_users / 50);
 $p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : intval($_GET['p']);
 $start_from = 50 * ($p - 1);
 
-$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_common['User list'];
+$page_title = array($pun_config['o_board_title'], $lang_common['User list']);
 if ($pun_user['g_search_users'] == '1')
 	$focus_element = array('userlist', 'username');
 

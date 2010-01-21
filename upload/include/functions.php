@@ -464,6 +464,26 @@ function generate_avatar_markup($user_id)
 
 
 //
+// Generate browser's title
+//
+function generate_page_title($page_title, $p)
+{
+	global $pun_config, $lang_common;
+
+	if (empty($page_title))
+		$page_title[0] = $pun_config['o_board_title'];
+
+	$crumbs = '';
+	$num_crumbs = count($page_title);
+
+	for ($i = ($num_crumbs - 1); $i >= 0; --$i)
+			$crumbs .= (is_array($page_title[$i]) ? pun_htmlspecialchars($page_title[0]) : pun_htmlspecialchars($page_title[$i])).((isset($p) && $i == ($num_crumbs - 1)) ? ' ('.sprintf($lang_common['Page'], forum_number_format($p)).')' : '').($i > 0 ? $lang_common['Title separator'] : '');
+
+	return $crumbs;
+}
+
+
+//
 // Save array of tracked topics in cookie
 //
 function set_tracked_topics($tracked_topics)
@@ -818,7 +838,7 @@ function message($message, $no_back_link = false)
 	{
 		global $pun_user;
 
-		$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_common['Info'];
+		$page_title = array($pun_config['o_board_title'], $lang_common['Info']);
 		require PUN_ROOT.'header.php';
 	}
 

@@ -124,7 +124,7 @@ $result = $db->query('SELECT id FROM '.$db->prefix.'topics ORDER BY id LIMIT 1')
 if ($db->num_rows($result))
 	$first_id = $db->result($result);
 
-$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / Admin / Maintenance';
+$page_title = array($pun_config['o_board_title'], 'Admin', 'Maintenance');
 require PUN_ROOT.'header.php';
 
 generate_admin_menu('maintenance');

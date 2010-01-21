@@ -36,7 +36,7 @@ if ($pun_config['o_feed_type'] == '1')
 else if ($pun_config['o_feed_type'] == '2')
 	$page_head = array('feed' => '<link rel="alternate" type="application/atom+xml" href="extern.php?action=feed&amp;type=atom" title="'.$lang_common['Atom active topics feed'].'" />');
 
-$page_title = pun_htmlspecialchars($pun_config['o_board_title']);
+$page_title = array($pun_config['o_board_title']);
 define('PUN_ALLOW_INDEX', 1);
 require PUN_ROOT.'header.php';
 

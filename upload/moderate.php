@@ -116,7 +116,7 @@ if (isset($_GET['tid']))
 		}
 
 
-		$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_misc['Moderate'];
+		$page_title = array($pun_config['o_board_title'], $lang_misc['Moderate']);
 		require PUN_ROOT.'header.php';
 
 ?>
@@ -200,7 +200,7 @@ if (isset($_GET['tid']))
 			redirect('viewtopic.php?id='.$new_tid, $lang_misc['Split posts redirect']);
 		}
 
-		$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_misc['Moderate'];
+		$page_title = array($pun_config['o_board_title'], $lang_misc['Moderate']);
 		$focus_element = array('subject','new_subject');
 		require PUN_ROOT.'header.php';
 
@@ -252,7 +252,7 @@ if (isset($_GET['tid']))
 		$cur_topic['subject'] = censor_words($cur_topic['subject']);
 
 
-	$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$cur_topic['subject'];
+	$page_title = array($pun_config['o_board_title'], $cur_topic['subject']);
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -427,7 +427,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	if ($db->num_rows($result) < 2)
 		message($lang_misc['Nowhere to move']);
 
-	$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_misc['Moderate'];
+	$page_title = array($pun_config['o_board_title'], $lang_misc['Moderate']);
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -542,7 +542,7 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 	if (count($topics) < 2)
 		message($lang_misc['Not enough topics selected']);
 
-	$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_misc['Moderate'];
+	$page_title = array($pun_config['o_board_title'], $lang_misc['Moderate']);
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -618,7 +618,7 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 	}
 
 
-	$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_misc['Moderate'];
+	$page_title = array($pun_config['o_board_title'], $lang_misc['Moderate']);
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -727,7 +727,7 @@ $cur_forum = $db->fetch_assoc($result);
 if ($cur_forum['redirect_url'] != '')
 	message($lang_common['Bad request']);
 
-$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.pun_htmlspecialchars($cur_forum['forum_name']);
+$page_title = array($pun_config['o_board_title'], $cur_forum['forum_name']);
 require PUN_ROOT.'header.php';
 
 // Determine the topic offset (based on $_GET['p'])

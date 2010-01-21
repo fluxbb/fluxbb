@@ -441,7 +441,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 		$db->free_result($result);
 
-		$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_search['Search results'];
+		$page_title = array($pun_config['o_board_title'], $lang_search['Search results']);
 		require PUN_ROOT.'header.php';
 
 
@@ -653,7 +653,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 }
 
 
-$page_title = pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_search['Search'];
+$page_title = array($pun_config['o_board_title'], $lang_search['Search']);
 $focus_element = array('search', 'keywords');
 require PUN_ROOT.'header.php';
 

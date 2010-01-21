@@ -79,7 +79,7 @@ if (!defined('PUN_ALLOW_INDEX'))
 	echo '<meta name="ROBOTS" content="NOINDEX, FOLLOW" />'."\n";
 
 ?>
-<title><?php echo $page_title.(isset($p) ? ' ('.sprintf($lang_common['Page'], forum_number_format($p)).')' : '') ?></title>
+<title><?php echo generate_page_title($page_title, $p) ?></title>
 <link rel="stylesheet" type="text/css" href="style/<?php echo $pun_user['style'].'.css' ?>" />
 <?php
 
