@@ -477,7 +477,7 @@ function generate_page_title($page_title, $p)
 	$num_crumbs = count($page_title);
 
 	for ($i = ($num_crumbs - 1); $i >= 0; --$i)
-			$crumbs .= (is_array($page_title[$i]) ? pun_htmlspecialchars($page_title[0]) : pun_htmlspecialchars($page_title[$i])).((isset($p) && $i == ($num_crumbs - 1)) ? ' ('.sprintf($lang_common['Page'], forum_number_format($p)).')' : '').($i > 0 ? $lang_common['Title separator'] : '');
+		$crumbs .= (is_array($page_title[$i]) ? pun_htmlspecialchars($page_title[0]) : pun_htmlspecialchars($page_title[$i])).((isset($p) && $i == ($num_crumbs - 1)) ? ' ('.sprintf($lang_common['Page'], forum_number_format($p)).')' : '').($i > 0 ? $lang_common['Title separator'] : '');
 
 	return $crumbs;
 }
