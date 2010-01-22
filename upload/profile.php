@@ -1420,7 +1420,7 @@ else
 					<fieldset>
 						<legend><?php echo $lang_profile['Style legend'] ?></legend>
 						<div class="infldset">
-							<label><?php echo $lang_profile['Style info'] ?><br />
+							<label><?php echo $lang_profile['Styles'] ?><br />
 							<select name="form[style]">
 <?php
 

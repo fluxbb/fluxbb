@@ -41,7 +41,7 @@ else if ($pun_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POS
 
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_register['Forum rules'] ?></span></h2>
+	<div class="hd"><h2><span><?php echo $lang_register['Forum rules'] ?></span></h2></div>
 	<div class="box">
 		<form method="get" action="register.php">
 			<div class="inform">
