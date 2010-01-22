@@ -67,9 +67,6 @@ require PUN_ROOT.'include/utf8/utf8.php';
 // Strip out "bad" UTF-8 characters
 forum_remove_bad_characters();
 
-// Instruct DB abstraction layer that we don't want it to "SET NAMES". If we need to, we'll do it ourselves below
-define('FORUM_NO_SET_NAMES', 1);
-
 // Load DB abstraction layer and try to connect
 require PUN_ROOT.'include/dblayer/common_db.php';
 
@@ -98,9 +95,6 @@ switch ($db_type)
 			error('You are running PostgreSQL version '.$pgsql_info.'. FluxBB '.UPDATE_TO.' requires at least PostgreSQL '.MIN_PGSQL_VERSION.' to run properly. You must upgrade your PostgreSQL installation before you can continue.');
 		break;
 }
-
-// If we've already done charset conversion in a previous update, we have to do SET NAMES
-$db->set_names(strpos($cur_version, '1.2') === 0 ? 'latin1' : 'utf8');
 
 // Get the forum config
 $result = $db->query('SELECT * FROM '.$db->prefix.'config') or error('Unable to fetch config.', __FILE__, __LINE__, $db->error());
@@ -418,6 +412,45 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 	// Start by updating the database structure
 	case 'start':
+		// Do the cumbersome charset conversion of MySQL tables/columns (if required - i.e. running 1.2)
+		if (strpos($cur_version, '1.2') === 0 && ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb'))
+		{
+			echo 'Converting table '.$db->prefix.'bans …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'bans');
+			echo 'Converting table '.$db->prefix.'categories …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'categories');
+			echo 'Converting table '.$db->prefix.'censoring …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'censoring');
+			echo 'Converting table '.$db->prefix.'config …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'config');
+			echo 'Converting table '.$db->prefix.'forum_perms …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'forum_perms');
+			echo 'Converting table '.$db->prefix.'forums …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'forums');
+			echo 'Converting table '.$db->prefix.'groups …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'groups');
+			echo 'Converting table '.$db->prefix.'online …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'online');
+			echo 'Converting table '.$db->prefix.'posts …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'posts');
+			echo 'Converting table '.$db->prefix.'ranks …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'ranks');
+			echo 'Converting table '.$db->prefix.'reports …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'reports');
+			echo 'Converting table '.$db->prefix.'search_cache …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'search_cache');
+			echo 'Converting table '.$db->prefix.'search_matches …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'search_matches');
+			echo 'Converting table '.$db->prefix.'search_words …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'search_words');
+			echo 'Converting table '.$db->prefix.'subscriptions …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'subscriptions');
+			echo 'Converting table '.$db->prefix.'topics …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'topics');
+			echo 'Converting table '.$db->prefix.'users …<br />'."\n"; flush();
+			convert_table_utf8($db->prefix.'users');
+		}
+
 		// Make all email fields VARCHAR(80)
 		$db->alter_field('bans', 'email', 'VARCHAR(80)', true);
 		$db->alter_field('posts', 'poster_email', 'VARCHAR(80)', true);
@@ -726,7 +759,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		if (strpos($cur_version, '1.2') === 0 && isset($_GET['convert_charset']))
 			$query_str = '?stage=conv_misc&req_old_charset='.$old_charset;
 		else
-			$query_str = '?stage=conv_tables';
+			$query_str = '?stage=preparse_posts';
 		break;
 
 
@@ -734,7 +767,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 	case 'conv_misc':
 		if (strpos($cur_version, '1.2') !== 0)
 		{
-			$query_str = '?stage=conv_tables';
+			$query_str = '?stage=preparse_posts';
 			break;
 		}
 
@@ -829,7 +862,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 	case 'conv_reports':
 		if (strpos($cur_version, '1.2') !== 0)
 		{
-			$query_str = '?stage=conv_tables';
+			$query_str = '?stage=preparse_posts';
 			break;
 		}
 
@@ -869,7 +902,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 	case 'conv_search_words':
 		if (strpos($cur_version, '1.2') !== 0)
 		{
-			$query_str = '?stage=conv_tables';
+			$query_str = '?stage=preparse_posts';
 			break;
 		}
 
@@ -910,7 +943,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 	case 'conv_users':
 		if (strpos($cur_version, '1.2') !== 0)
 		{
-			$query_str = '?stage=conv_tables';
+			$query_str = '?stage=preparse_posts';
 			break;
 		}
 
@@ -952,7 +985,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 	case 'conv_topics':
 		if (strpos($cur_version, '1.2') !== 0)
 		{
-			$query_str = '?stage=conv_tables';
+			$query_str = '?stage=preparse_posts';
 			break;
 		}
 
@@ -993,7 +1026,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 	case 'conv_posts':
 		if (strpos($cur_version, '1.2') !== 0)
 		{
-			$query_str = '?stage=conv_tables';
+			$query_str = '?stage=preparse_posts';
 			break;
 		}
 
@@ -1028,61 +1061,13 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		if ($db->num_rows($result))
 			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
 		else
-			$query_str = '?stage=conv_tables';
-		break;
-
-
-	// Convert table columns to utf8 (MySQL only)
-	case 'conv_tables':
-		// Do the cumbersome charset conversion of MySQL tables/columns (if required - i.e. running 1.2)
-		if (strpos($cur_version, '1.2') === 0 && ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb'))
-		{
-			echo 'Converting table '.$db->prefix.'bans …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'bans');
-			echo 'Converting table '.$db->prefix.'categories …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'categories');
-			echo 'Converting table '.$db->prefix.'censoring …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'censoring');
-			echo 'Converting table '.$db->prefix.'config …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'config');
-			echo 'Converting table '.$db->prefix.'forum_perms …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'forum_perms');
-			echo 'Converting table '.$db->prefix.'forums …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'forums');
-			echo 'Converting table '.$db->prefix.'groups …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'groups');
-			echo 'Converting table '.$db->prefix.'online …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'online');
-			echo 'Converting table '.$db->prefix.'posts …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'posts');
-			echo 'Converting table '.$db->prefix.'ranks …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'ranks');
-			echo 'Converting table '.$db->prefix.'reports …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'reports');
-			echo 'Converting table '.$db->prefix.'search_cache …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'search_cache');
-			echo 'Converting table '.$db->prefix.'search_matches …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'search_matches');
-			echo 'Converting table '.$db->prefix.'search_words …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'search_words');
-			echo 'Converting table '.$db->prefix.'subscriptions …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'subscriptions');
-			echo 'Converting table '.$db->prefix.'topics …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'topics');
-			echo 'Converting table '.$db->prefix.'users …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'users');
-		}
-
-		$query_str = '?stage=preparse_posts';
+			$query_str = '?stage=preparse_posts';
 		break;
 
 
 	// Preparse posts
 	case 'preparse_posts':
 		require PUN_ROOT.'include/parser.php';
-
-		// Now we're definitely using UTF-8, so we convert the output properly
-		$db->set_names('utf8');
 
 		// Determine where to start
 		if ($start_at == 0)
@@ -1119,9 +1104,6 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 	case 'preparse_sigs':
 		require PUN_ROOT.'include/parser.php';
 
-		// Now we're definitely using UTF-8, so we convert the output properly
-		$db->set_names('utf8');
-
 		// Determine where to start
 		if ($start_at == 0)
 			$start_at = 2;
@@ -1150,8 +1132,6 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 	// Show results page
 	case 'finish':
-		// Now we're definitely using UTF-8, so we convert the output properly
-		$db->set_names('utf8');
 
 		// We update the version number
 		$db->query('UPDATE '.$db->prefix.'config SET conf_value = \''.UPDATE_TO.'\' WHERE conf_name = \'o_cur_version\'') or error('Unable to update version', __FILE__, __LINE__, $db->error());
