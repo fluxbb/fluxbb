@@ -53,8 +53,7 @@
 ----------------------------------------------------------------*/
 
 #brdfooter h2, #brdstats h2, #brdstats .conl dt, #brdstats .conr dt,
-#modcontrols dt, #searchlinks dt, div.postright h3, span.closedtext,
-h3 small.newtext {
+#modcontrols dt, #searchlinks dt, div.postright h3, span.closedtext {
 	position: absolute;
 	display: block;
 	overflow: hidden;
@@ -443,8 +442,13 @@ h3 small.newtext {
 	font-weight: bold;
 	}
 
+.pun .tcl h3 span.newtext {
+	font-size: 0.917em;
+	}
+
 .pun .tcl span.newtext, .pun .tcl span.pagestext {
-	white-space: nowrap
+	white-space: nowrap;
+	font-weight: normal;
 	}
 
 .pun .tcl p {

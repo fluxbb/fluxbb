@@ -91,7 +91,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 			if ((empty($tracked_topics['topics'][$check_topic_id]) || $tracked_topics['topics'][$check_topic_id] < $check_last_post) && (empty($tracked_topics['forums'][$cur_forum['fid']]) || $tracked_topics['forums'][$cur_forum['fid']] < $check_last_post))
 			{
 				$item_status .= ' inew';
-				$forum_field_new = '<small class="newtext">[ '.$lang_common['New posts'].' ]</small>';
+				$forum_field_new = '<span class="newtext">[ <a href="search.php?action=show_new&amp;fid='.$cur_forum['fid'].'">'.$lang_common['New posts'].'</a> ]</span>';
 				$icon_type = 'icon inew';
 
 				break;
