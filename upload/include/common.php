@@ -63,25 +63,21 @@ error_reporting(E_ALL ^ E_NOTICE);
 // Force POSIX locale (to prevent functions such as strtolower() from messing up UTF-8 strings)
 setlocale(LC_CTYPE, 'C');
 
-// Magic quotes are deprecated as of 5.3.0 and removed in 6.0.0
-if (version_compare(PHP_VERSION, '5.3.0', '<'))
+// Turn off magic_quotes_runtime
+if (get_magic_quotes_runtime())
+	set_magic_quotes_runtime(0);
+
+// Strip slashes from GET/POST/COOKIE (if magic_quotes_gpc is enabled)
+if (get_magic_quotes_gpc())
 {
-	// Turn off magic_quotes_runtime
-	if (get_magic_quotes_runtime())
-		set_magic_quotes_runtime(0);
-
-	// Strip slashes from GET/POST/COOKIE (if magic_quotes_gpc is enabled)
-	if (get_magic_quotes_gpc())
+	function stripslashes_array($array)
 	{
-		function stripslashes_array($array)
-		{
-			return is_array($array) ? array_map('stripslashes_array', $array) : stripslashes($array);
-		}
-
-		$_GET = stripslashes_array($_GET);
-		$_POST = stripslashes_array($_POST);
-		$_COOKIE = stripslashes_array($_COOKIE);
+		return is_array($array) ? array_map('stripslashes_array', $array) : stripslashes($array);
 	}
+
+	$_GET = stripslashes_array($_GET);
+	$_POST = stripslashes_array($_POST);
+	$_COOKIE = stripslashes_array($_COOKIE);
 }
 
 // If a cookie name is not specified in config.php, we use the default (pun_cookie)
