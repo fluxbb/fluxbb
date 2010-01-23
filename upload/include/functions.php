@@ -466,20 +466,18 @@ function generate_avatar_markup($user_id)
 //
 // Generate browser's title
 //
-function generate_page_title($page_title, $p)
+function generate_page_title($page_title, $p = null)
 {
 	global $pun_config, $lang_common;
 
-	if (empty($page_title))
-		$page_title[0] = $pun_config['o_board_title'];
+	$page_title = array_reverse($page_title);
+	
+	if ($p != null)
+		$page_title[0] .= ' ('.sprintf($lang_common['Page'], forum_number_format($p)).')';
+		
+	$crumbs = implode($lang_common['Title separator'], $page_title);
 
-	$crumbs = '';
-	$num_crumbs = count($page_title);
-
-	for ($i = ($num_crumbs - 1); $i >= 0; --$i)
-		$crumbs .= (is_array($page_title[$i]) ? pun_htmlspecialchars($page_title[0]) : pun_htmlspecialchars($page_title[$i])).((isset($p) && $i == ($num_crumbs - 1)) ? ' ('.sprintf($lang_common['Page'], forum_number_format($p)).')' : '').($i > 0 ? $lang_common['Title separator'] : '');
-
-	return $crumbs;
+	return pun_htmlspecialchars($crumbs);
 }
 
 
@@ -1121,7 +1119,8 @@ function maintenance_message()
 	ob_start();
 
 ?>
-<title><?php echo pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_common['Maintenance'] ?></title>
+<?php $page_title = array($pun_config['o_board_title'], $lang_common['Maintenance']) ?>
+<title><?php echo generate_page_title($page_title) ?></title>
 <link rel="stylesheet" type="text/css" href="style/<?php echo $pun_user['style'].'.css' ?>" />
 <?php
 
@@ -1208,7 +1207,8 @@ function redirect($destination_url, $message)
 
 ?>
 <meta http-equiv="refresh" content="<?php echo $pun_config['o_redirect_delay'] ?>;URL=<?php echo str_replace(array('<', '>', '"'), array('&lt;', '&gt;', '&quot;'), $destination_url) ?>" />
-<title><?php echo pun_htmlspecialchars($pun_config['o_board_title']).' / '.$lang_common['Redirecting'] ?></title>
+<?php $page_title = array($pun_config['o_board_title'], $lang_common['Redirecting']) ?>
+<title><?php echo generate_page_title($page_title) ?></title>
 <link rel="stylesheet" type="text/css" href="style/<?php echo $pun_user['style'].'.css' ?>" />
 <?php
 
@@ -1278,7 +1278,8 @@ function error($message, $file, $line, $db_error = false)
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?> / Error</title>
+<?php $page_title = array($pun_config['o_board_title'], 'Error') ?>
+<title><?php echo generate_page_title($page_title) ?></title>
 <style type="text/css">
 <!--
 BODY {MARGIN: 10% 20% auto 20%; font: 10px Verdana, Arial, Helvetica, sans-serif}

@@ -62,7 +62,8 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?> / Rebuilding search index &hellip;</title>
+<?php $page_title = array($pun_config['o_board_title'], 'Rebuilding search index &hellip;') ?>
+<title><?php echo generate_page_title($page_title) ?></title>
 <style type="text/css">
 body {
 	font: 10px Verdana, Arial, Helvetica, sans-serif;
