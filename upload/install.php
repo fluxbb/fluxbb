@@ -157,20 +157,31 @@ function process_form(the_form)
 	return true
 }
 </script>
+<style type="text/css">
+<!--
+#punwrap {
+	margin: 20px 10%;
+	}
+-->
+</style>
 </head>
 <body onload="document.getElementById('install').req_db_type.focus()">
 
-<div id="puninstall" style="margin: auto 10% auto 10%">
-<div class="pun">
+<div id="punwrap">
+<div id="puninstall" class="pun">
 
-<div class="block">
-	<h2><span>FluxBB Installation</span></h2>
+<div id="brdheader" class="block">
 	<div class="box">
-		<div class="inbox">
-			<p>Welcome to FluxBB installation! You are about to install FluxBB. In order to install FluxBB, you must complete the form set out below. If you encounter any difficulties with the installation, please refer to the documentation.</p>
+		<div id="brdtitle" class="inbox">
+			<h1><span>FluxBB Installation</span></h1>
+		</div>
+		<div id="brdwelcome" class="inbox">
+			<p>Welcome to FluxBB installation. You are about to install FluxBB. In order to install FluxBB, you must complete the form set out below. If you encounter any difficulties with the installation, please refer to the documentation.</p>
 		</div>
 	</div>
 </div>
+
+<div id="brdmain">
 
 <div class="blockform">
 	<h2><span>Install FluxBB 1.4</span></h2>
@@ -187,7 +198,7 @@ function process_form(the_form)
 					<div class="infldset">
 						<p>FluxBB currently supports MySQL, PostgreSQL and SQLite. If your database of choice is missing from the drop-down menu below, it means this PHP environment does not have support for that particular database. More information regarding support for particular versions of each database can be found in the FAQ.</p>
 <?php if ($dual_mysql): ?>						<p>FluxBB has detected that your PHP environment supports two different ways of communicating with MySQL. The two options are called standard and improved. If you are uncertain which one to use, start by trying improved and if that fails, try standard.</p>
-<?php endif; ?><?php if ($mysql_innodb): ?>					<p>FluxBB has detected that your MySQL server might support <a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-overview.html">InnoDB</a>. This would be a good choice if you are planning to run a large forum. If you are uncertain, it is recommended to not use InnoDB.</p>
+<?php endif; ?><?php if ($mysql_innodb): ?>						<p>FluxBB has detected that your MySQL server might support <a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-overview.html">InnoDB</a>. This would be a good choice if you are planning to run a large forum. If you are uncertain, it is recommended that you do not use InnoDB.</p>
 <?php endif; ?>						<label class="required"><strong>Database type</strong>
 						<br /><select name="req_db_type">
 <?php
@@ -242,7 +253,7 @@ function process_form(the_form)
 			<div class="inform">
 				<div class="forminfo">
 					<h3>Administration setup</h3>
-					<p>Please enter the requested information in order to setup an administrator for your FluxBB installation</p>
+					<p>Please enter the requested information in order to setup an administrator for your FluxBB installation.</p>
 				</div>
 				<fieldset>
 					<legend>Enter Administrator's username</legend>
@@ -284,6 +295,8 @@ function process_form(the_form)
 			<p class="buttons"><input type="submit" name="start" value="Start install" /></p>
 		</form>
 	</div>
+</div>
+
 </div>
 
 </div>
@@ -1492,11 +1505,31 @@ else
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>FluxBB Installation</title>
 <link rel="stylesheet" type="text/css" href="style/Oxygen.css" />
+<style type="text/css">
+<!--
+#punwrap {
+	margin: 20px 10%;
+	}
+-->
+</style>
 </head>
 <body>
 
-<div id="puninstall" style="margin: auto 10% auto 10%">
-<div class="pun">
+<div id="punwrap">
+<div id="puninstall" class="pun">
+
+<div id="brdheader" class="block">
+	<div class="box">
+		<div id="brdtitle" class="inbox">
+			<h1><span>FluxBB Installation</span></h1>
+		</div>
+		<div id="brdwelcome" class="inbox">
+			<p>FluxBB has been installed. To finalize the installation please follow the instructions below.</p>
+		</div>
+	</div>
+</div>
+
+<div id="brdmain">
 
 <div class="blockform">
 	<h2><span>Final instructions</span></h2>
@@ -1550,6 +1583,8 @@ else
 ?>
 		</div>
 	</div>
+</div>
+
 </div>
 
 </div>
