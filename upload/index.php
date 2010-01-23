@@ -80,6 +80,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 
 	++$forum_count;
 	$item_status = ($forum_count % 2 == 0) ? 'roweven' : 'rowodd';
+	$forum_field_new = '';
 	$icon_type = 'icon';
 
 	// Are there new posts since our last visit?
