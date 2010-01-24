@@ -141,11 +141,11 @@ if ($action == 'change_pass')
 				<fieldset>
 					<legend><?php echo $lang_profile['Change pass legend'] ?></legend>
 					<div class="infldset">
-<?php if (!$pun_user['is_admmod']): ?>						<label><strong><?php echo $lang_profile['Old pass'] ?></strong><br />
+<?php if (!$pun_user['is_admmod']): ?>						<label class="required"><strong><?php echo $lang_profile['Old pass'] ?></strong><br />
 						<input type="password" name="req_old_password" size="16" maxlength="16" /><br /></label>
-<?php endif; ?>						<label class="conl"><strong><?php echo $lang_profile['New pass'] ?></strong><br />
+<?php endif; ?>						<label class="conl required"><strong><?php echo $lang_profile['New pass'] ?></strong><br />
 						<input type="password" name="req_new_password1" size="16" maxlength="16" /><br /></label>
-						<label class="conl"><strong><?php echo $lang_profile['Confirm new pass'] ?></strong><br />
+						<label class="conl required"><strong><?php echo $lang_profile['Confirm new pass'] ?></strong><br />
 						<input type="password" name="req_new_password2" size="16" maxlength="16" /><br /></label>
 						<div class="clearb"></div>
 					</div>
