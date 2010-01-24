@@ -103,6 +103,13 @@ if (isset($_POST['form_sent']))
 	$form['avatars_height'] = intval($form['avatars_height']);
 	$form['avatars_size'] = intval($form['avatars_size']);
 
+	// Make sure the number of displayed topics and posts is between 3 and 75
+	if ($form['disp_topics_default'] < 3) $form['disp_topics_default'] = 3;
+	if ($form['disp_topics_default'] > 75) $form['disp_topics_default'] = 75;
+
+	if ($form['disp_posts_default'] < 3) $form['disp_posts_default'] = 3;
+	if ($form['disp_posts_default'] > 75) $form['disp_posts_default'] = 75;
+
 	if ($form['timeout_online'] >= $form['timeout_visit'])
 		message('The value of "Timeout online" must be smaller than the value of "Timeout visit".');
 
