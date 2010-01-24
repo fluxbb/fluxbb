@@ -457,11 +457,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 		if ($show_as == 'topics')
 		{
-			// Get topic/forum tracking data
 			$topic_count = 0;
-
-			if (!$pun_user['is_guest'])
-				$tracked_topics = get_tracked_topics();
 
 ?>
 <div id="vf" class="blocktable">
@@ -488,6 +484,10 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			$post_count = 0;
 		}
 
+		// Get topic/forum tracking data
+		if (!$pun_user['is_guest'])
+			$tracked_topics = get_tracked_topics();
+
 		// Fetch the list of forums
 		$result = $db->query('SELECT id, forum_name FROM '.$db->prefix.'forums') or error('Unable to fetch forum list', __FILE__, __LINE__, $db->error());
 
@@ -511,12 +511,20 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			if ($show_as == 'posts')
 			{
 				++$post_count;
+				$icon_type = 'icon';
 				$subject = '<a href="viewtopic.php?id='.$search_set[$i]['tid'].'">'.pun_htmlspecialchars($search_set[$i]['subject']).'</a>';
 
-				if (!$pun_user['is_guest'] && $search_set[$i]['last_post'] > $pun_user['last_visit'])
-					$icon_text = '<strong>'.$lang_topic['New icon'].'</strong>'."\n";
+				if (!$pun_user['is_guest'] && $search_set[$i]['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$search_set[$i]['tid']]) || $tracked_topics['topics'][$search_set[$i]['tid']] < $search_set[$i]['last_post']) && (!isset($tracked_topics['forums'][$search_set[$i]['forum_id']]) || $tracked_topics['forums'][$search_set[$i]['forum_id']] < $search_set[$i]['last_post']))
+				{
+					$item_status = 'inew';
+					$icon_type = 'icon icon-new';
+					$icon_text = $lang_topic['New icon'];
+				}
 				else
+				{
+					$item_status = '';
 					$icon_text = '<!-- -->';
+				}
 
 				if ($pun_config['o_censoring'] == '1')
 					$search_set[$i]['message'] = censor_words($search_set[$i]['message']);
@@ -536,7 +544,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 
 ?>
-<div class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if ($post_count == 1) echo ' blockpost1' ?>">
+<div class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if ($post_count == 1) echo ' blockpost1' ?><?php if ($item_status != '') echo ' '.$item_status ?>">
 	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?></span> <span><?php echo $forum ?></span> <span>&raquo;&nbsp;<?php echo $subject ?></span> <span>&raquo;&nbsp;<a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo format_time($search_set[$i]['pposted']) ?></a></span></span></h2>
 	<div class="box">
 		<div class="inbox">
@@ -545,7 +553,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					<dl>
 						<dt><?php echo $pposter ?></dt>
 						<dd><?php echo $lang_common['Replies'] ?>: <?php echo forum_number_format($search_set[$i]['num_replies']) ?></dd>
-						<dd><div class="icon"><div class="nosize"><?php echo $icon_text ?></div></div></dd>
+						<dd><div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo $icon_text ?></div></div></dd>
 					</dl>
 				</div>
 				<div class="postright">
@@ -590,7 +598,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				if (!$pun_user['is_guest'] && $search_set[$i]['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$search_set[$i]['tid']]) || $tracked_topics['topics'][$search_set[$i]['tid']] < $search_set[$i]['last_post']) && (!isset($tracked_topics['forums'][$search_set[$i]['forum_id']]) || $tracked_topics['forums'][$search_set[$i]['forum_id']] < $search_set[$i]['last_post']))
 				{
 					$item_status .= ' inew';
-					$icon_type = 'icon inew';
+					$icon_type = 'icon icon-new';
 					$subject = '<strong>'.$subject.'</strong>';
 					$subject_new_posts = '<span class="newtext">[ <a href="viewtopic.php?id='.$search_set[$i]['tid'].'&amp;action=new" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a> ]</span>';
 				}

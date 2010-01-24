@@ -824,7 +824,7 @@ if ($db->num_rows($result))
 		if (!$ghost_topic && $cur_topic['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$cur_topic['id']]) || $tracked_topics['topics'][$cur_topic['id']] < $cur_topic['last_post']) && (!isset($tracked_topics['forums'][$fid]) || $tracked_topics['forums'][$fid] < $cur_topic['last_post']))
 		{
 			$item_status .= ' inew';
-			$icon_type = 'icon inew';
+			$icon_type = 'icon icon-new';
 			$subject = '<strong>'.$subject.'</strong>';
 			$subject_new_posts = '<span class="newtext">[ <a href="viewtopic.php?id='.$cur_topic['id'].'&amp;action=new" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a> ]</span>';
 		}

@@ -93,7 +93,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 			{
 				$item_status .= ' inew';
 				$forum_field_new = '<span class="newtext">[ <a href="search.php?action=show_new&amp;fid='.$cur_forum['fid'].'">'.$lang_common['New posts'].'</a> ]</span>';
-				$icon_type = 'icon inew';
+				$icon_type = 'icon icon-new';
 
 				break;
 			}
