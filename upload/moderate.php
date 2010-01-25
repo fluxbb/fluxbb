@@ -318,7 +318,7 @@ if (isset($_GET['tid']))
 				<div class="postleft">
 					<dl>
 						<dt><strong><?php echo $poster ?></strong></dt>
-						<dd><strong><?php echo $user_title ?></strong></dd>
+						<dd class="usertitle"><strong><?php echo $user_title ?></strong></dd>
 					</dl>
 				</div>
 				<div class="postright">
