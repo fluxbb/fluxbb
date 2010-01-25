@@ -581,7 +581,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$item_status = ($topic_count % 2 == 0) ? 'roweven' : 'rowodd';
 				$icon_type = 'icon';
 
-				$subject = '<a href="viewtopic.php?id='.$search_set[$i]['tid'].'">'.pun_htmlspecialchars($search_set[$i]['subject']).'</a> <span class="byuser">'.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($search_set[$i]['poster']).'</span>';
+				$subject = '<a href="viewtopic.php?id='.$search_set[$i]['tid'].'">'.pun_htmlspecialchars($search_set[$i]['subject']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($search_set[$i]['poster']).'</span>';
 
 				if ($search_set[$i]['sticky'] == '1')
 				{
@@ -634,7 +634,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					</td>
 					<td class="tc2"><?php echo $forum ?></td>
 					<td class="tc3"><?php echo forum_number_format($search_set[$i]['num_replies']) ?></td>
-					<td class="tcr"><?php echo '<a href="viewtopic.php?pid='.$search_set[$i]['last_post_id'].'#p'.$search_set[$i]['last_post_id'].'">'.format_time($search_set[$i]['last_post']).'</a> '.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($search_set[$i]['last_poster']) ?></td>
+					<td class="tcr"><?php echo '<a href="viewtopic.php?pid='.$search_set[$i]['last_post_id'].'#p'.$search_set[$i]['last_post_id'].'">'.format_time($search_set[$i]['last_post']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($search_set[$i]['last_poster']) ?></span></td>
 				</tr>
 <?php
 

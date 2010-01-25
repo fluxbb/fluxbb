@@ -451,6 +451,10 @@
 	white-space: nowrap;
 	font-weight: normal;
 	}
+	
+.pun td span.byuser {
+	white-space: nowrap;
+	}
 
 .pun .tcl p {
 	padding: 5px 0 0 0
