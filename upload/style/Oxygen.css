@@ -229,8 +229,8 @@
 	margin-bottom: 6px
 	}
 	
-#postreview .box {
-	margin-bottom: 3px;
+#postreview .blockpost {
+	margin-bottom: -1px;
 	}
 	
 .pun .block2col .blockform, .pun .block2col .block {

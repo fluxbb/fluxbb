@@ -586,7 +586,7 @@ if ($tid && $pun_config['o_topic_review'] != '0')
 
 ?>
 
-<div id="postreview" class="blockpost">
+<div id="postreview">
 	<h2><span><?php echo $lang_post['Topic review'] ?></span></h2>
 <?php
 
@@ -600,22 +600,24 @@ if ($tid && $pun_config['o_topic_review'] != '0')
 		$cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 
 ?>
-	<div class="box<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?>">
-		<div class="inbox">
-			<div class="postbody">
-				<div class="postleft">
-					<dl>
-						<dt><strong><?php echo pun_htmlspecialchars($cur_post['poster']) ?></strong></dt>
-						<dd><?php echo format_time($cur_post['posted']) ?></dd>
-					</dl>
-				</div>
-				<div class="postright">
-					<div class="postmsg">
-						<?php echo $cur_post['message']."\n" ?>
+	<div class="blockpost">
+		<div class="box<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?>">
+			<div class="inbox">
+				<div class="postbody">
+					<div class="postleft">
+						<dl>
+							<dt><strong><?php echo pun_htmlspecialchars($cur_post['poster']) ?></strong></dt>
+							<dd><?php echo format_time($cur_post['posted']) ?></dd>
+						</dl>
+					</div>
+					<div class="postright">
+						<div class="postmsg">
+							<?php echo $cur_post['message']."\n" ?>
+						</div>
 					</div>
 				</div>
+				<div class="clearer"></div>
 			</div>
-			<div class="clearer"></div>
 		</div>
 	</div>
 <?php
