@@ -540,8 +540,6 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 						$pposter = '<strong>'.$pposter.'</strong>';
 				}
 
-				$vtpost1 = ($i == 0) ? ' vtp1' : '';
-
 
 ?>
 <div class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if ($post_count == 1) echo ' blockpost1' ?><?php if ($item_status != '') echo ' '.$item_status ?>">
