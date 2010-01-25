@@ -592,7 +592,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				if ($search_set[$i]['closed'] != '0')
 				{
 					$status_text[] = '<span class="closedtext">'.$lang_forum['Closed'].'</span>';
-					$item_status = ' iclosed';
+					$item_status .= ' iclosed';
 				}
 
 				if (!$pun_user['is_guest'] && $search_set[$i]['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$search_set[$i]['tid']]) || $tracked_topics['topics'][$search_set[$i]['tid']] < $search_set[$i]['last_post']) && (!isset($tracked_topics['forums'][$search_set[$i]['forum_id']]) || $tracked_topics['forums'][$search_set[$i]['forum_id']] < $search_set[$i]['last_post']))
