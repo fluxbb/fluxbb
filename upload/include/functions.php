@@ -1257,7 +1257,7 @@ function redirect($destination_url, $message)
 //
 function error($message, $file, $line, $db_error = false)
 {
-	global $pun_config;
+	global $pun_config, $lang_common;
 
 	// Set some default settings if the script failed before $pun_config could be populated
 	if (empty($pun_config))
