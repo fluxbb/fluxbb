@@ -1255,7 +1255,7 @@ function redirect($destination_url, $message)
 //
 // Display a simple error message
 //
-function error($message, $file, $line, $db_error = false)
+function error($message, $file = null, $line = null, $db_error = false)
 {
 	global $pun_config, $lang_common;
 
@@ -1307,7 +1307,7 @@ H2 {MARGIN: 0; COLOR: #FFFFFF; BACKGROUND-COLOR: #B84623; FONT-SIZE: 1.1em; PADD
 	<div>
 <?php
 
-	if (defined('PUN_DEBUG'))
+	if (defined('PUN_DEBUG') && $file !== null && $line !== null)
 	{
 		echo "\t\t".'<strong>File:</strong> '.$file.'<br />'."\n\t\t".'<strong>Line:</strong> '.$line.'<br /><br />'."\n\t\t".'<strong>FluxBB reported</strong>: '.$message."\n";
 

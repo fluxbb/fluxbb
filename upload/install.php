@@ -31,6 +31,8 @@ if (file_exists(PUN_ROOT.'config.php'))
 		exit('It seems like FluxBB is already installed. You should go <a href="index.php">here</a> instead.');
 }
 
+// Define PUN because email.php requires it
+define('PUN', 1);
 
 // Make sure we are running at least MIN_PHP_VERSION
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
@@ -431,39 +433,39 @@ else
 
 	// Validate username and passwords
 	if (pun_strlen($username) < 2)
-		error('Usernames must be at least 2 characters long. Please go back and correct.');
+		error('Usernames must be at least 2 characters long. Please go back and correct');
 	else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
-		error('Usernames must not be more than 25 characters long. Please go back and correct.');
+		error('Usernames must not be more than 25 characters long. Please go back and correct');
 	else if (!strcasecmp($username, 'Guest'))
-		error('The username guest is reserved. Please go back and correct.');
+		error('The username guest is reserved. Please go back and correct');
 	else if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username) || preg_match('/((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))/', $username))
-		error('Usernames may not be in the form of an IP address. Please go back and correct.');
+		error('Usernames may not be in the form of an IP address. Please go back and correct');
 	else if ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
-		error('Usernames may not contain all the characters \', " and [ or ] at once. Please choose another username.');
+		error('Usernames may not contain all the characters \', " and [ or ] at once. Please choose another username');
 	else if (preg_match('/(?:\[\/?(?:b|u|i|h|colou?r|quote|code|img|url|email|list)\]|\[(?:code|quote|list)=)/i', $username))
-		error('Usernames may not contain any of the text formatting tags (BBCode) that the forum uses. Please go back and correct.');
+		error('Usernames may not contain any of the text formatting tags (BBCode) that the forum uses. Please go back and correct');
 
 	if (pun_strlen($password1) < 4)
-		error('Passwords must be at least 4 characters long. Please go back and correct.');
+		error('Passwords must be at least 4 characters long. Please go back and correct');
 	else if ($password1 != $password2)
-		error('Passwords do not match. Please go back and correct.');
+		error('Passwords do not match. Please go back and correct');
 
 	// Validate email
 	require PUN_ROOT.'include/email.php';
 
 	if (!is_valid_email($email))
-		error('The administrator email address you entered is invalid. Please go back and correct.');
+		error('The administrator email address you entered is invalid. Please go back and correct');
 
 	if ($title == '')
 		error('You must enter a board title.');
 
 	$default_lang = preg_replace('#[\.\\\/]#', '', $default_lang);
 	if (!file_exists(PUN_ROOT.'lang/'.$default_lang.'/common.php'))
-		error('The default language chosen doesn\'t seem to exist. Please go back and correct.');
+		error('The default language chosen doesn\'t seem to exist. Please go back and correct');
 
 	$default_style = preg_replace('#[\.\\\/]#', '', $default_style);
 	if (!file_exists(PUN_ROOT.'style/'.$default_style.'.css'))
-		error('The default style chosen doesn\'t seem to exist. Please go back and correct.');
+		error('The default style chosen doesn\'t seem to exist. Please go back and correct');
 
 	// Load the appropriate DB layer class
 	switch ($db_type)
@@ -493,7 +495,7 @@ else
 			break;
 
 		default:
-			error('\''.pun_htmlspecialchars($db_type).'\' is not a valid database type.');
+			error('\''.pun_htmlspecialchars($db_type).'\' is not a valid database type');
 	}
 
 	// Create the database object (and connect/select db)
@@ -501,7 +503,7 @@ else
 
 	// Validate prefix
 	if (strlen($db_prefix) > 0 && (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $db_prefix) || strlen($db_prefix) > 40))
-		error('The table prefix \''.$db->prefix.'\' contains illegal characters or is too long. The prefix may contain the letters a to z, any numbers and the underscore character. They must however not start with a number. The maximum length is 40 characters. Please choose a different prefix.');
+		error('The table prefix \''.$db->prefix.'\' contains illegal characters or is too long. The prefix may contain the letters a to z, any numbers and the underscore character. They must however not start with a number. The maximum length is 40 characters. Please choose a different prefix');
 
 	// Do some DB type specific checks
 	switch ($db_type)
@@ -512,18 +514,18 @@ else
 		case 'mysqli_innodb':
 			$mysql_info = $db->get_version();
 			if (version_compare($mysql_info['version'], MIN_MYSQL_VERSION, '<'))
-				error('You are running MySQL version '.$mysql_version.'. FluxBB '.FORUM_VERSION.' requires at least MySQL '.MIN_MYSQL_VERSION.' to run properly. You must upgrade your MySQL installation before you can continue.');
+				error('You are running MySQL version '.$mysql_version.'. FluxBB '.FORUM_VERSION.' requires at least MySQL '.MIN_MYSQL_VERSION.' to run properly. You must upgrade your MySQL installation before you can continue');
 			break;
 
 		case 'pgsql':
 			$pgsql_info = $db->get_version();
 			if (version_compare($pgsql_info['version'], MIN_PGSQL_VERSION, '<'))
-				error('You are running PostgreSQL version '.$pgsql_info.'. FluxBB '.FORUM_VERSION.' requires at least PostgreSQL '.MIN_PGSQL_VERSION.' to run properly. You must upgrade your PostgreSQL installation before you can continue.');
+				error('You are running PostgreSQL version '.$pgsql_info.'. FluxBB '.FORUM_VERSION.' requires at least PostgreSQL '.MIN_PGSQL_VERSION.' to run properly. You must upgrade your PostgreSQL installation before you can continue');
 			break;
 
 		case 'sqlite':
 			if (strtolower($db_prefix) == 'sqlite_')
-				error('The table prefix \'sqlite_\' is reserved for use by the SQLite engine. Please choose a different prefix.');
+				error('The table prefix \'sqlite_\' is reserved for use by the SQLite engine. Please choose a different prefix');
 			break;
 	}
 
@@ -531,7 +533,7 @@ else
 	// Make sure FluxBB isn't already installed
 	$result = $db->query('SELECT 1 FROM '.$db_prefix.'users WHERE id=1');
 	if ($db->num_rows($result))
-		error('A table called "'.$db_prefix.'users" is already present in the database "'.$db_name.'". This could mean that FluxBB is already installed or that another piece of software is installed and is occupying one or more of the table names FluxBB requires. If you want to install multiple copies of FluxBB in the same database, you must choose a different table prefix.');
+		error('A table called "'.$db_prefix.'users" is already present in the database "'.$db_name.'". This could mean that FluxBB is already installed or that another piece of software is installed and is occupying one or more of the table names FluxBB requires. If you want to install multiple copies of FluxBB in the same database, you must choose a different table prefix');
 
 	// Check if InnoDB is available
 	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
@@ -539,7 +541,7 @@ else
 		$result = $db->query('SHOW VARIABLES LIKE \'have_innodb\'');
 		list (, $result) = $db->fetch_row($result);
 		if ((strtoupper($result) != 'YES'))
-			error('InnoDB does not seem to be enabled. Please choose a database layer that does not have InnoDB support, or enable InnoDB on your MySQL server.');
+			error('InnoDB does not seem to be enabled. Please choose a database layer that does not have InnoDB support, or enable InnoDB on your MySQL server');
 	}
 
 
@@ -1459,10 +1461,10 @@ else
 
 	// Insert guest and first admin user
 	$db->query('INSERT INTO '.$db_prefix."users (group_id, username, password, email) VALUES(3, 'Guest', 'Guest', 'Guest')")
-		or error('Unable to add guest user. Please check your configuration and try again.');
+		or error('Unable to add guest user. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 
 	$db->query('INSERT INTO '.$db_prefix."users (group_id, username, password, email, num_posts, last_post, registered, registration_ip, last_visit) VALUES(1, '".$db->escape($username)."', '".pun_hash($password1)."', '$email', 1, ".$now.", ".$now.", '127.0.0.1', ".$now.')')
-		or error('Unable to add administrator user. Please check your configuration and try again.');
+		or error('Unable to add administrator user. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 
 	// Enable/disable avatars depending on file_uploads setting in PHP configuration
 	$avatars = in_array(strtolower(@ini_get('file_uploads')), array('on', 'true', '1')) ? 1 : 0;
@@ -1548,27 +1550,27 @@ else
 	while (list($conf_name, $conf_value) = @each($config))
 	{
 		$db->query('INSERT INTO '.$db_prefix."config (conf_name, conf_value) VALUES('$conf_name', $conf_value)")
-			or error('Unable to insert into table '.$db_prefix.'config. Please check your configuration and try again.');
+			or error('Unable to insert into table '.$db_prefix.'config. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 	}
 
 	// Insert some other default data
 	$db->query('INSERT INTO '.$db_prefix."categories (cat_name, disp_position) VALUES('Test category', 1)")
-		or error('Unable to insert into table '.$db_prefix.'categories. Please check your configuration and try again.');
+		or error('Unable to insert into table '.$db_prefix.'categories. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 
 	$db->query('INSERT INTO '.$db_prefix."forums (forum_name, forum_desc, num_topics, num_posts, last_post, last_post_id, last_poster, disp_position, cat_id) VALUES('Test forum', 'This is just a test forum', 1, 1, ".$now.", 1, '".$db->escape($username)."', 1, 1)")
-		or error('Unable to insert into table '.$db_prefix.'forums. Please check your configuration and try again.');
+		or error('Unable to insert into table '.$db_prefix.'forums. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 
 	$db->query('INSERT INTO '.$db_prefix."topics (poster, subject, posted, first_post_id, last_post, last_post_id, last_poster, forum_id) VALUES('".$db->escape($username)."', 'Test post', ".$now.", 1, ".$now.", 1, '".$db->escape($username)."', 1)")
-		or error('Unable to insert into table '.$db_prefix.'topics. Please check your configuration and try again.');
+		or error('Unable to insert into table '.$db_prefix.'topics. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 
 	$db->query('INSERT INTO '.$db_prefix."posts (poster, poster_id, poster_ip, message, posted, topic_id) VALUES('".$db->escape($username)."', 2, '127.0.0.1', 'If you are looking at this (which I guess you are), the install of FluxBB appears to have worked! Now log in and head over to the administration control panel to configure your forum.', ".$now.', 1)')
-		or error('Unable to insert into table '.$db_prefix.'posts. Please check your configuration and try again.');
+		or error('Unable to insert into table '.$db_prefix.'posts. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 
 	$db->query('INSERT INTO '.$db_prefix."ranks (rank, min_posts) VALUES('New member', 0)")
-		or error('Unable to insert into table '.$db_prefix.'ranks. Please check your configuration and try again.');
+		or error('Unable to insert into table '.$db_prefix.'ranks. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 
 	$db->query('INSERT INTO '.$db_prefix."ranks (rank, min_posts) VALUES('Member', 10)")
-		or error('Unable to insert into table '.$db_prefix.'ranks. Please check your configuration and try again.');
+		or error('Unable to insert into table '.$db_prefix.'ranks. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 
 
 	$db->end_transaction();
