@@ -122,7 +122,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 	if ($cur_forum['last_post'] != '')
 		$last_post = '<a href="viewtopic.php?pid='.$cur_forum['last_post_id'].'#p'.$cur_forum['last_post_id'].'">'.format_time($cur_forum['last_post']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_forum['last_poster']).'</span>';
 	else
-		$last_post = '&nbsp;';
+		$last_post = '-';
 
 	if ($cur_forum['moderators'] != '')
 	{
