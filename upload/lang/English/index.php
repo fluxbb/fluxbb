@@ -4,7 +4,7 @@
 $lang_index = array(
 
 'Topics'		=>	'Topics',
-'Link to'		=>	'Link to', // As in "Link to http://fluxbb.org/"
+'Link to'		=>	'Link to:', // As in "Link to: http://fluxbb.org/"
 'Empty board'	=>	'Board is empty.',
 'Newest user'	=>	'Newest registered user',
 'Users online'	=>	'Registered users online',
