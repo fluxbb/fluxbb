@@ -237,7 +237,7 @@ generate_admin_menu('options');
 		$d = dir(PUN_ROOT.'lang');
 		while (($entry = $d->read()) !== false)
 		{
-			if ($entry != '.' && $entry != '..' && is_dir(PUN_ROOT.'lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/common.php'))
+			if ($entry{0} != '.' && is_dir(PUN_ROOT.'lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/common.php'))
 				$languages[] = $entry;
 		}
 		$d->close();
@@ -254,7 +254,7 @@ generate_admin_menu('options');
 
 ?>
 										</select>
-										<span>This is the default language style used if the visitor is a guest or a user that hasn't changed from the default in his/her profile. If you remove a language pack, this must be updated.</span>
+										<span>This is the default language used if the visitor is a guest or a user that hasn't changed from the default in his/her profile. If you remove a language pack, this must be updated.</span>
 									</td>
 								</tr>
 								<tr>

@@ -111,9 +111,14 @@ if (!isset($_POST['form_sent']))
 		exit('This PHP environment does not have support for any of the databases that FluxBB supports. PHP needs to have support for either MySQL, PostgreSQL or SQLite in order for FluxBB to be installed.');
 
 	// Make an educated guess regarding base_url
-	$base_url_guess = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://').preg_replace('/:80$/', '', $_SERVER['HTTP_HOST']).str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
-	if (substr($base_url_guess, -1) == '/')
-		$base_url_guess = substr($base_url_guess, 0, -1);
+	$base_url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://').preg_replace('/:80$/', '', $_SERVER['HTTP_HOST']).str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+	if (substr($base_url, -1) == '/')
+		$base_url = substr($base_url, 0, -1);
+
+	$title = 'My FluxBB forum';
+	$description = '<p><span>Unfortunately no one can be told what FluxBB is - you have to see it for yourself.</span></p>';
+	$default_lang = 'English';
+	$default_style = 'Oxygen';
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -268,8 +273,8 @@ function process_form(the_form)
 					<legend>Enter and confirm Administrator's password</legend>
 					<div class="infldset">
 					<p>Passwords can be between 4 and 16 characters long. Passwords are case sensitive.</p>
-						<label class="conl required"><strong>Password</strong><br /><input id="req_password1" type="password" name="req_password1" size="16" maxlength="16" /><br /></label>
-						<label class="conl required"><strong>Confirm password</strong><br /><input type="password" name="req_password2" size="16" maxlength="16" /><br /></label>
+						<label class="conl required"><strong>Password</strong><br /><input id="req_password1" type="password" name="req_password1" size="16" /><br /></label>
+						<label class="conl required"><strong>Confirm password</strong><br /><input type="password" name="req_password2" size="16" /><br /></label>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
@@ -284,11 +289,97 @@ function process_form(the_form)
 				</fieldset>
 			</div>
 			<div class="inform">
+				<div class="forminfo">
+					<h3>Board setup</h3>
+					<p>Please enter the requested information in order to setup your FluxBB board.</p>
+				</div>
+				<fieldset>
+					<legend>Enter your board's title</legend>
+					<div class="infldset">
+						<p>The title of this bulletin board (shown at the top of every page).</p>
+						<label class="required"><strong>Board title</strong><br /><input id="req_title" type="text" name="req_title" value="<?php echo pun_htmlspecialchars($title) ?>" size="60" maxlength="255" /><br /></label>
+					</div>
+				</fieldset>
+			</div>
+			<div class="inform">
+				<fieldset>
+					<legend>Enter your board's description</legend>
+					<div class="infldset">
+						<p>A short description of this bulletin board (shown at the top of every page). This field may contain HTML.</p>
+						<label class="required"><strong>Board description</strong><br /><input id="req_desc" type="text" name="req_desc" value="<?php echo pun_htmlspecialchars($description) ?>" size="60" maxlength="255" /><br /></label>
+					</div>
+				</fieldset>
+			</div>
+			<div class="inform">
 				<fieldset>
 					<legend>Enter the Base URL of your FluxBB installation</legend>
 					<div class="infldset">
 						<p>The URL (without trailing slash) of your FluxBB forum (example: http://forum.myhost.com or http://myhost.com/~myuser). This <strong>must</strong> be correct, otherwise, administrators and moderators will not be able to submit any forms. Please note that the preset value below is just an educated guess by FluxBB.</p>
-						<label class="required"><strong>Base URL</strong><br /><input type="text" name="req_base_url" value="<?php echo $base_url_guess ?>" size="60" maxlength="100" /><br /></label>
+						<label class="required"><strong>Base URL</strong><br /><input id="req_base_url" type="text" name="req_base_url" value="<?php echo pun_htmlspecialchars($base_url) ?>" size="60" maxlength="100" /><br /></label>
+					</div>
+				</fieldset>
+			</div>
+			<div class="inform">
+				<fieldset>
+					<legend>Choose the default language</legend>
+					<div class="infldset">
+						<p>This is the default language used if the visitor is a guest or a user that hasn't changed from the default in his/her profile.</p>
+						<label class="required"><strong>Default language</strong><br /><select id="req_default_lang" name="req_default_lang">
+<?php
+
+		$languages = array();
+		$d = dir(PUN_ROOT.'lang');
+		while (($entry = $d->read()) !== false)
+		{
+			if ($entry{0} != '.' && is_dir(PUN_ROOT.'lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/common.php'))
+				$languages[] = $entry;
+		}
+		$d->close();
+
+		@natsort($languages);
+
+		while (list(, $temp) = @each($languages))
+		{
+			if ($temp == $default_lang)
+				echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.$temp.'</option>'."\n";
+			else
+				echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$temp.'">'.$temp.'</option>'."\n";
+		}
+
+?>
+						</select><br /></label>
+					</div>
+				</fieldset>
+			</div>
+			<div class="inform">
+				<fieldset>
+					<legend>Choose the default style</legend>
+					<div class="infldset">
+						<p>This is the default style used for guests and users who haven't changed from the default in their profile.</p>
+						<label class="required"><strong>Default style</strong><br /><select id="req_default_style" name="req_default_style">
+<?php
+
+		$styles = array();
+		$d = dir(PUN_ROOT.'style');
+		while (($entry = $d->read()) !== false)
+		{
+			if (substr($entry, strlen($entry)-4) == '.css')
+				$styles[] = substr($entry, 0, strlen($entry)-4);
+		}
+		$d->close();
+
+		@natsort($styles);
+
+		while (list(, $temp) = @each($styles))
+		{
+			if ($temp == $default_style)
+				echo "\t\t\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.str_replace('_', ' ', $temp).'</option>'."\n";
+			else
+				echo "\t\t\t\t\t\t\t\t\t".'<option value="'.$temp.'">'.str_replace('_', ' ', $temp).'</option>'."\n";
+		}
+
+?>
+						</select><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -327,13 +418,15 @@ else
 	$email = strtolower(pun_trim($_POST['req_email']));
 	$password1 = unescape(pun_trim($_POST['req_password1']));
 	$password2 = unescape(pun_trim($_POST['req_password2']));
-
+	$title = unescape(pun_trim($_POST['req_title']));
+	$description = unescape(pun_trim($_POST['req_desc']));
+	$base_url = unescape(pun_trim($_POST['req_base_url']));
+	$default_lang = unescape(pun_trim($_POST['req_default_lang']));
+	$default_style = unescape(pun_trim($_POST['req_default_style']));
 
 	// Make sure base_url doesn't end with a slash
-	if (substr($_POST['req_base_url'], -1) == '/')
-		$base_url = substr($_POST['req_base_url'], 0, -1);
-	else
-		$base_url = $_POST['req_base_url'];
+	if (substr($base_url, -1) == '/')
+		$base_url = substr($base_url, 0, -1);
 
 
 	// Validate username and passwords
@@ -353,6 +446,11 @@ else
 	if (strlen($email) > 80 || !preg_match('/^(([^<>()[\]\\.,;:\s@"\']+(\.[^<>()[\]\\.,;:\s@"\']+)*)|("[^"\']+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\d\-]+\.)+[a-zA-Z]{2,}))$/', $email))
 		error('The administrator email address you entered is invalid. Please go back and correct.');
 
+	if ($title == '')
+		error('You must enter a board title.');
+
+	$default_lang = preg_replace('#[\.\\\/]#', '', $default_lang);
+	$default_style = preg_replace('#[\.\\\/]#', '', $default_style);
 
 	// Load the appropriate DB layer class
 	switch ($db_type)
@@ -1360,8 +1458,8 @@ else
 	$config = array(
 		'o_cur_version'				=> "'".FORUM_VERSION."'",
 		'o_database_revision'		=> "'".FORUM_DB_REVISION."'",
-		'o_board_title'				=> "'My FluxBB forum'",
-		'o_board_desc'				=> "'<p><span>Unfortunately no one can be told what FluxBB is - you have to see it for yourself.</span></p>'",
+		'o_board_title'				=> "'".$db->escape($title)."'",
+		'o_board_desc'				=> "'".$db->escape($description)."'",
 		'o_default_timezone'		=> "'0'",
 		'o_time_format'				=> "'H:i:s'",
 		'o_date_format'				=> "'Y-m-d'",
@@ -1375,8 +1473,8 @@ else
 		'o_smilies'					=> "'1'",
 		'o_smilies_sig'				=> "'1'",
 		'o_make_links'				=> "'1'",
-		'o_default_lang'			=> "'English'",
-		'o_default_style'			=> "'Oxygen'",
+		'o_default_lang'			=> "'".$db->escape($default_lang)."'",
+		'o_default_style'			=> "'".$db->escape($default_style)."'",
 		'o_default_user_group'		=> "'4'",
 		'o_topic_review'			=> "'15'",
 		'o_disp_topics_default'		=> "'30'",
@@ -1395,16 +1493,16 @@ else
 		'o_report_method'			=> "'0'",
 		'o_regs_report'				=> "'0'",
 		'o_default_email_setting'	=> "'1'",
-		'o_mailing_list'			=> "'$email'",
-		'o_avatars'					=> "'$avatars'",
+		'o_mailing_list'			=> "'".$email."'",
+		'o_avatars'					=> "'".$avatars."'",
 		'o_avatars_dir'				=> "'img/avatars'",
 		'o_avatars_width'			=> "'60'",
 		'o_avatars_height'			=> "'60'",
-		'o_avatars_size'			=> "'10240'",
+		'o_avatars_size'			=> "'102400'",
 		'o_search_all_forums'		=> "'1'",
-		'o_base_url'				=> "'$base_url'",
-		'o_admin_email'				=> "'$email'",
-		'o_webmaster_email'			=> "'$email'",
+		'o_base_url'				=> "'".$db->escape($base_url)."'",
+		'o_admin_email'				=> "'".$email."'",
+		'o_webmaster_email'			=> "'".$email."'",
 		'o_subscriptions'			=> "'1'",
 		'o_smtp_host'				=> "NULL",
 		'o_smtp_user'				=> "NULL",

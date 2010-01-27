@@ -104,7 +104,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 	if ($cur_forum['redirect_url'] != '')
 	{
 		$forum_field = '<h3><a href="'.pun_htmlspecialchars($cur_forum['redirect_url']).'" title="'.$lang_index['Link to'].' '.pun_htmlspecialchars($cur_forum['redirect_url']).'">'.pun_htmlspecialchars($cur_forum['forum_name']).'</a></h3>';
-		$num_topics = $num_posts = '&nbsp;';
+		$num_topics = $num_posts = '-';
 		$item_status .= ' iredirect';
 		$icon_type = 'icon';
 	}

@@ -142,11 +142,11 @@ if ($action == 'change_pass')
 					<legend><?php echo $lang_profile['Change pass legend'] ?></legend>
 					<div class="infldset">
 <?php if (!$pun_user['is_admmod']): ?>						<label class="required"><strong><?php echo $lang_profile['Old pass'] ?></strong><br />
-						<input type="password" name="req_old_password" size="16" maxlength="16" /><br /></label>
+						<input type="password" name="req_old_password" size="16" /><br /></label>
 <?php endif; ?>						<label class="conl required"><strong><?php echo $lang_profile['New pass'] ?></strong><br />
 						<input type="password" name="req_new_password1" size="16" maxlength="16" /><br /></label>
 						<label class="conl required"><strong><?php echo $lang_profile['Confirm new pass'] ?></strong><br />
-						<input type="password" name="req_new_password2" size="16" maxlength="16" /><br /></label>
+						<input type="password" name="req_new_password2" size="16" /><br /></label>
 						<div class="clearb"></div>
 					</div>
 				</fieldset>
@@ -284,7 +284,7 @@ else if ($action == 'change_email')
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
 						<label class="required"><strong><?php echo $lang_profile['New email'] ?></strong><br /><input type="text" name="req_new_email" size="50" maxlength="50" /><br /></label>
-						<label class="required"><strong><?php echo $lang_common['Password'] ?></strong><br /><input type="password" name="req_password" size="16" maxlength="16" /><br /></label>
+						<label class="required"><strong><?php echo $lang_common['Password'] ?></strong><br /><input type="password" name="req_password" size="16" /><br /></label>
 						<p><?php echo $lang_profile['Email instructions'] ?></p>
 					</div>
 				</fieldset>
@@ -1199,7 +1199,7 @@ else
 		$d = dir(PUN_ROOT.'lang');
 		while (($entry = $d->read()) !== false)
 		{
-			if ($entry != '.' && $entry != '..' && is_dir(PUN_ROOT.'lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/common.php'))
+			if ($entry{0} != '.' && is_dir(PUN_ROOT.'lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/common.php'))
 				$languages[] = $entry;
 		}
 		$d->close();
