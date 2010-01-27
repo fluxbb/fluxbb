@@ -1262,8 +1262,19 @@ function error($message, $file, $line, $db_error = false)
 	// Set some default settings if the script failed before $pun_config could be populated
 	if (empty($pun_config))
 	{
-		$pun_config['o_board_title'] = 'FluxBB';
-		$pun_config['o_gzip'] = '0';
+		$pun_config = array(
+			'o_board_title'	=> 'FluxBB',
+			'o_gzip'		=> '0'
+		);
+	}
+
+	// Set some default translations if the script failed before $lang_common could be populated
+	if (empty($lang_common))
+	{
+		$lang_common = array(
+			'Title separator'	=> ' / ',
+			'Page'				=> 'Page %s'
+		);
 	}
 
 	// Empty all output buffers and stop buffering
