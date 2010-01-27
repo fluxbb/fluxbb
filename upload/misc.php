@@ -258,7 +258,7 @@ else if (isset($_GET['report']))
 	</div>
 </div>
 
-<div class="blockform">
+<div id="reportform" class="blockform">
 	<h2><span><?php echo $lang_misc['Report post'] ?></span></h2>
 	<div class="box">
 		<form id="report" method="post" action="misc.php?report=<?php echo $post_id ?>" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">
