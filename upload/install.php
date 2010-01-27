@@ -306,7 +306,7 @@ function process_form(the_form)
 					<legend>Enter your board's description</legend>
 					<div class="infldset">
 						<p>A short description of this bulletin board (shown at the top of every page). This field may contain HTML.</p>
-						<label class="required"><strong>Board description</strong><br /><input id="req_desc" type="text" name="req_desc" value="<?php echo pun_htmlspecialchars($description) ?>" size="60" maxlength="255" /><br /></label>
+						<label>Board description<br /><input id="desc" type="text" name="desc" value="<?php echo pun_htmlspecialchars($description) ?>" size="60" maxlength="255" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -419,7 +419,7 @@ else
 	$password1 = unescape(pun_trim($_POST['req_password1']));
 	$password2 = unescape(pun_trim($_POST['req_password2']));
 	$title = unescape(pun_trim($_POST['req_title']));
-	$description = unescape(pun_trim($_POST['req_desc']));
+	$description = unescape(pun_trim($_POST['desc']));
 	$base_url = unescape(pun_trim($_POST['req_base_url']));
 	$default_lang = unescape(pun_trim($_POST['req_default_lang']));
 	$default_style = unescape(pun_trim($_POST['req_default_style']));
@@ -430,27 +430,40 @@ else
 
 
 	// Validate username and passwords
-	if (strlen($username) < 2)
+	if (pun_strlen($username) < 2)
 		error('Usernames must be at least 2 characters long. Please go back and correct.');
-	if (strlen($password1) < 4)
-		error('Passwords must be at least 4 characters long. Please go back and correct.');
-	if ($password1 != $password2)
-		error('Passwords do not match. Please go back and correct.');
-	if (!strcasecmp($username, 'Guest'))
+	else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
+		error('Usernames must not be more than 25 characters long. Please go back and correct.');
+	else if (!strcasecmp($username, 'Guest'))
 		error('The username guest is reserved. Please go back and correct.');
-	if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username) || preg_match('/((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))/', $username))
+	else if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username) || preg_match('/((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))/', $username))
 		error('Usernames may not be in the form of an IP address. Please go back and correct.');
-	if (preg_match('#\[b\]|\[/b\]|\[u\]|\[/u\]|\[i\]|\[/i\]|\[color|\[/color\]|\[quote\]|\[/quote\]|\[code\]|\[/code\]|\[img\]|\[/img\]|\[url|\[/url\]|\[email|\[/email\]#i', $username))
+	else if ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
+		error('Usernames may not contain all the characters \', " and [ or ] at once. Please choose another username.');
+	else if (preg_match('/(?:\[\/?(?:b|u|i|h|colou?r|quote|code|img|url|email|list)\]|\[(?:code|quote|list)=)/i', $username))
 		error('Usernames may not contain any of the text formatting tags (BBCode) that the forum uses. Please go back and correct.');
 
-	if (strlen($email) > 80 || !preg_match('/^(([^<>()[\]\\.,;:\s@"\']+(\.[^<>()[\]\\.,;:\s@"\']+)*)|("[^"\']+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\d\-]+\.)+[a-zA-Z]{2,}))$/', $email))
+	if (pun_strlen($password1) < 4)
+		error('Passwords must be at least 4 characters long. Please go back and correct.');
+	else if ($password1 != $password2)
+		error('Passwords do not match. Please go back and correct.');
+
+	// Validate email
+	require PUN_ROOT.'include/email.php';
+
+	if (!is_valid_email($email))
 		error('The administrator email address you entered is invalid. Please go back and correct.');
 
 	if ($title == '')
 		error('You must enter a board title.');
 
 	$default_lang = preg_replace('#[\.\\\/]#', '', $default_lang);
+	if (!file_exists(PUN_ROOT.'lang/'.$default_lang.'/common.php'))
+		error('The default language chosen doesn\'t seem to exist. Please go back and correct.');
+
 	$default_style = preg_replace('#[\.\\\/]#', '', $default_style);
+	if (!file_exists(PUN_ROOT.'style/'.$default_style.'.css'))
+		error('The default style chosen doesn\'t seem to exist. Please go back and correct.');
 
 	// Load the appropriate DB layer class
 	switch ($db_type)
