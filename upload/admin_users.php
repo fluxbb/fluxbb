@@ -365,7 +365,7 @@ else
 								</tr>
 								<tr>
 									<th scope="row">Email address</th>
-									<td><input type="text" name="form[email]" size="30" maxlength="50" tabindex="3" /></td>
+									<td><input type="text" name="form[email]" size="30" maxlength="80" tabindex="3" /></td>
 								</tr>
 								<tr>
 									<th scope="row">Title</th>

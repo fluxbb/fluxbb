@@ -284,7 +284,7 @@ function process_form(the_form)
 					<legend>Enter Administrator's email</legend>
 					<div class="infldset">
 						<p>The email address of the forum administrator.</p>
-						<label class="required"><strong>Administrator's email</strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="50" /><br /></label>
+						<label class="required"><strong>Administrator's email</strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="80" /><br /></label>
 					</div>
 				</fieldset>
 			</div>

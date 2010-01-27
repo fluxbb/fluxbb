@@ -283,7 +283,7 @@ else if ($action == 'change_email')
 					<legend><?php echo $lang_profile['Email legend'] ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
-						<label class="required"><strong><?php echo $lang_profile['New email'] ?></strong><br /><input type="text" name="req_new_email" size="50" maxlength="50" /><br /></label>
+						<label class="required"><strong><?php echo $lang_profile['New email'] ?></strong><br /><input type="text" name="req_new_email" size="50" maxlength="80" /><br /></label>
 						<label class="required"><strong><?php echo $lang_common['Password'] ?></strong><br /><input type="password" name="req_password" size="16" /><br /></label>
 						<p><?php echo $lang_profile['Email instructions'] ?></p>
 					</div>
@@ -1059,7 +1059,7 @@ else
 			else
 				$username_field = '<p>'.$lang_common['Username'].': '.pun_htmlspecialchars($user['username']).'</p>'."\n";
 
-			$email_field = '<label class="required"><strong>'.$lang_common['Email'].'</strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="50" /><br /></label><p><a href="misc.php?email='.$id.'">'.$lang_common['Send email'].'</a></p>'."\n";
+			$email_field = '<label class="required"><strong>'.$lang_common['Email'].'</strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label><p><a href="misc.php?email='.$id.'">'.$lang_common['Send email'].'</a></p>'."\n";
 		}
 		else
 		{
@@ -1068,7 +1068,7 @@ else
 			if ($pun_config['o_regs_verify'] == '1')
 				$email_field = '<p>'.$lang_common['Email'].': '.$user['email'].'&nbsp;-&nbsp;<a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang_profile['Change email'].'</a></p>'."\n";
 			else
-				$email_field = '<label class="required"><strong>'.$lang_common['Email'].'</strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="50" /><br /></label>'."\n";
+				$email_field = '<label class="required"><strong>'.$lang_common['Email'].'</strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label>'."\n";
 		}
 
 		$posts_field = '';

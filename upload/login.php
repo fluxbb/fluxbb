@@ -177,7 +177,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 					<legend><?php echo $lang_login['Request pass legend'] ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
-						<label class="required"><strong><?php echo $lang_common['Email'] ?></strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="50" /><br /></label>
+						<label class="required"><strong><?php echo $lang_common['Email'] ?></strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="80" /><br /></label>
 						<p><?php echo $lang_login['Request pass info'] ?></p>
 					</div>
 				</fieldset>

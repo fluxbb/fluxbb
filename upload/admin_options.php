@@ -588,14 +588,14 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row">Admin email</th>
 									<td>
-										<input type="text" name="form[admin_email]" size="50" maxlength="50" value="<?php echo $pun_config['o_admin_email'] ?>" />
+										<input type="text" name="form[admin_email]" size="50" maxlength="80" value="<?php echo $pun_config['o_admin_email'] ?>" />
 										<span>The email address of the forum administrator.</span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row">Webmaster email</th>
 									<td>
-										<input type="text" name="form[webmaster_email]" size="50" maxlength="50" value="<?php echo $pun_config['o_webmaster_email'] ?>" />
+										<input type="text" name="form[webmaster_email]" size="50" maxlength="80" value="<?php echo $pun_config['o_webmaster_email'] ?>" />
 										<span>This is the address that all emails sent by the forum will be addressed from.</span>
 									</td>
 								</tr>
