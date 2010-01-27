@@ -76,7 +76,7 @@ require PUN_ROOT.'header.php';
 
 ?>
 <div class="linkst">
-	<div class="inbox">
+	<div class="inbox crumbsplus">
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 			<li><span>&raquo;&nbsp;</span><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></li>
@@ -254,7 +254,7 @@ else
 </div>
 
 <div class="linksb">
-	<div class="inbox">
+	<div class="inbox crumbsplus">
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
 <?php echo $post_link ?>
 		<ul class="crumbs">
