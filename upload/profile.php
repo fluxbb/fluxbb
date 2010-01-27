@@ -144,7 +144,7 @@ if ($action == 'change_pass')
 <?php if (!$pun_user['is_admmod']): ?>						<label class="required"><strong><?php echo $lang_profile['Old pass'] ?></strong><br />
 						<input type="password" name="req_old_password" size="16" /><br /></label>
 <?php endif; ?>						<label class="conl required"><strong><?php echo $lang_profile['New pass'] ?></strong><br />
-						<input type="password" name="req_new_password1" size="16" maxlength="16" /><br /></label>
+						<input type="password" name="req_new_password1" size="16" /><br /></label>
 						<label class="conl required"><strong><?php echo $lang_profile['Confirm new pass'] ?></strong><br />
 						<input type="password" name="req_new_password2" size="16" /><br /></label>
 						<div class="clearb"></div>
