@@ -905,7 +905,7 @@ function forum_number_format($number, $decimals = 0)
 {
 	global $lang_common;
 
-	return number_format($number, $decimals, $lang_common['lang_decimal_point'], $lang_common['lang_thousands_sep']);
+	return is_numeric($number) ? number_format($number, $decimals, $lang_common['lang_decimal_point'], $lang_common['lang_thousands_sep']) : $number;
 }
 
 
