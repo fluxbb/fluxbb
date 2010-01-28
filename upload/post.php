@@ -425,9 +425,9 @@ require PUN_ROOT.'header.php';
 	<div class="inbox">
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>&raquo;&nbsp;</span><a href="viewforum.php?id=<?php echo $cur_posting['id'] ?>"><?php echo pun_htmlspecialchars($cur_posting['forum_name']) ?></a></li>
-<?php if (isset($cur_posting['subject'])): ?>			<li><span>&raquo;&nbsp;</span><a href="viewtopic.php?id=<?php echo $tid ?>"><?php echo pun_htmlspecialchars($cur_posting['subject']) ?></a></li>
-<?php endif; ?>			<li><span>&raquo;&nbsp;</span><strong><?php echo $action ?></strong></li>
+			<li><span>&raquo;&#160;</span><a href="viewforum.php?id=<?php echo $cur_posting['id'] ?>"><?php echo pun_htmlspecialchars($cur_posting['forum_name']) ?></a></li>
+<?php if (isset($cur_posting['subject'])): ?>			<li><span>&raquo;&#160;</span><a href="viewtopic.php?id=<?php echo $tid ?>"><?php echo pun_htmlspecialchars($cur_posting['subject']) ?></a></li>
+<?php endif; ?>			<li><span>&raquo;&#160;</span><strong><?php echo $action ?></strong></li>
 		</ul>
 	</div>
 </div>
@@ -528,7 +528,7 @@ $checkboxes = array();
 if (!$pun_user['is_guest'])
 {
 	if ($pun_config['o_smilies'] == '1')
-		$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'"'.(isset($_POST['hide_smilies']) ? ' checked="checked"' : '').' />'.$lang_post['Hide smilies'];
+		$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'"'.(isset($_POST['hide_smilies']) ? ' checked="checked"' : '').' />'.$lang_post['Hide smilies'].'<br /></label>';
 
 	if ($pun_config['o_subscriptions'] == '1')
 	{
@@ -544,11 +544,11 @@ if (!$pun_user['is_guest'])
 		else if ($is_subscribed)
 			$subscr_checked = true;
 
-		$checkboxes[] = '<label><input type="checkbox" name="subscribe" value="1" tabindex="'.($cur_index++).'"'.($subscr_checked ? ' checked="checked"' : '').' />'.($is_subscribed ? $lang_post['Stay subscribed'] : $lang_post['Subscribe']);
+		$checkboxes[] = '<label><input type="checkbox" name="subscribe" value="1" tabindex="'.($cur_index++).'"'.($subscr_checked ? ' checked="checked"' : '').' />'.($is_subscribed ? $lang_post['Stay subscribed'] : $lang_post['Subscribe']).'<br /></label>';
 	}
 }
 else if ($pun_config['o_smilies'] == '1')
-	$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'"'.(isset($_POST['hide_smilies']) ? ' checked="checked"' : '').' />'.$lang_post['Hide smilies'];
+	$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'"'.(isset($_POST['hide_smilies']) ? ' checked="checked"' : '').' />'.$lang_post['Hide smilies'].'<br /></label>';
 
 if (!empty($checkboxes))
 {
@@ -560,7 +560,7 @@ if (!empty($checkboxes))
 					<legend><?php echo $lang_common['Options'] ?></legend>
 					<div class="infldset">
 						<div class="rbox">
-							<?php echo implode('<br /></label>'."\n\t\t\t\t\t\t\t", $checkboxes).'<br /></label>'."\n" ?>
+							<?php echo implode("\n\t\t\t\t\t\t\t", $checkboxes)."\n" ?>
 						</div>
 					</div>
 				</fieldset>

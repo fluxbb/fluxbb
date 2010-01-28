@@ -260,9 +260,9 @@ if (isset($_GET['tid']))
 	<div class="inbox crumbsplus">
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>&raquo;&nbsp;</span><a href="viewforum.php?id=<?php echo $fid ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
-			<li><span>&raquo;&nbsp;</span><a href="viewtopic.php?id=<?php echo $tid ?>"><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></a></li>
-			<li><span>&raquo;&nbsp;</span><strong><?php echo $lang_misc['Moderate'] ?></strong></li>
+			<li><span>&raquo;&#160;</span><a href="viewforum.php?id=<?php echo $fid ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
+			<li><span>&raquo;&#160;</span><a href="viewtopic.php?id=<?php echo $tid ?>"><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></a></li>
+			<li><span>&raquo;&#160;</span><strong><?php echo $lang_misc['Moderate'] ?></strong></li>
 		</ul>
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
 		<div class="clearer"></div>
@@ -332,7 +332,7 @@ if (isset($_GET['tid']))
 		</div>
 		<div class="inbox">
 			<div class="postfoot clearb">
-				<div class="postfootright"><?php echo ($start_from + $post_count > 1) ? '<p class="multidelete"><label><strong>'.$lang_misc['Select'].'</strong>&nbsp;&nbsp;<input type="checkbox" name="posts['.$cur_post['id'].']" value="1" /></label></p>' : '<p>'.$lang_misc['Cannot delete first'].'</p>' ?></div>
+				<div class="postfootright"><?php echo ($start_from + $post_count > 1) ? '<p class="multidelete"><label><strong>'.$lang_misc['Select'].'</strong>&#160;<input type="checkbox" name="posts['.$cur_post['id'].']" value="1" /></label></p>' : '<p>'.$lang_misc['Cannot delete first'].'</p>' ?></div>
 			</div>
 		</div>
 	</div>
@@ -744,8 +744,8 @@ $paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'moderate.ph
 	<div class="inbox crumbsplus">
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>&raquo;&nbsp;</span><a href="viewforum.php?id=<?php echo $fid ?>"><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></a></li>
-			<li><span>&raquo;&nbsp;</span><strong><?php echo $lang_misc['Moderate'] ?></strong></li>
+			<li><span>&raquo;&#160;</span><a href="viewforum.php?id=<?php echo $fid ?>"><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></a></li>
+			<li><span>&raquo;&#160;</span><strong><?php echo $lang_misc['Moderate'] ?></strong></li>
 		</ul>
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
 		<div class="clearer"></div>
@@ -793,7 +793,7 @@ if ($db->num_rows($result))
 		}
 		else
 		{
-			$last_post = '&nbsp;';
+			$last_post = '- - -';
 			$ghost_topic = true;
 		}
 
@@ -813,7 +813,7 @@ if ($db->num_rows($result))
 			$item_status .= ' imoved';
 		}
 		else if ($cur_topic['closed'] == '0')
-			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span>'.$lang_common['by'].'&nbsp;'.pun_htmlspecialchars($cur_topic['poster']).'</span>';
+			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
 		else
 		{
 			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
@@ -858,8 +858,8 @@ if ($db->num_rows($result))
 							</div>
 						</div>
 					</td>
-					<td class="tc2"><?php echo (!$ghost_topic) ? forum_number_format($cur_topic['num_replies']) : '&nbsp;' ?></td>
-<?php if ($pun_config['o_topic_views'] == '1'): ?>					<td class="tc3"><?php echo (!$ghost_topic) ? forum_number_format($cur_topic['num_views']) : '&nbsp;' ?></td>
+					<td class="tc2"><?php echo (!$ghost_topic) ? forum_number_format($cur_topic['num_replies']) : '-' ?></td>
+<?php if ($pun_config['o_topic_views'] == '1'): ?>					<td class="tc3"><?php echo (!$ghost_topic) ? forum_number_format($cur_topic['num_views']) : '-' ?></td>
 <?php endif; ?>					<td class="tcr"><?php echo $last_post ?></td>
 					<td class="tcmod"><input type="checkbox" name="topics[<?php echo $cur_topic['id'] ?>]" value="1" /></td>
 				</tr>

@@ -79,7 +79,7 @@ require PUN_ROOT.'header.php';
 	<div class="inbox crumbsplus">
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>&raquo;&nbsp;</span><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></li>
+			<li><span>&raquo;&#160;</span><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></li>
 		</ul>
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
 <?php echo $post_link ?>
@@ -146,7 +146,7 @@ if ($db->num_rows($result))
 		if ($cur_topic['moved_to'] == null)
 			$last_post = '<a href="viewtopic.php?pid='.$cur_topic['last_post_id'].'#p'.$cur_topic['last_post_id'].'">'.format_time($cur_topic['last_post']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['last_poster']).'</span>';
 		else
-			$last_post = '&nbsp;';
+			$last_post = '- - -';
 
 		if ($pun_config['o_censoring'] == '1')
 			$cur_topic['subject'] = censor_words($cur_topic['subject']);
@@ -190,7 +190,7 @@ if ($db->num_rows($result))
 		{
 			if ($cur_topic['has_posted'] == $pun_user['id'])
 			{
-				$subject = '<strong class="ipost">&middot;&nbsp;</strong>'.$subject;
+				$subject = '<strong class="ipost">&middot;&#160;</strong>'.$subject;
 				$item_status .= ' iposted';
 			}
 		}
@@ -219,8 +219,8 @@ if ($db->num_rows($result))
 							</div>
 						</div>
 					</td>
-					<td class="tc2"><?php echo ($cur_topic['moved_to'] == null) ? forum_number_format($cur_topic['num_replies']) : '&nbsp;' ?></td>
-<?php if ($pun_config['o_topic_views'] == '1'): ?>					<td class="tc3"><?php echo ($cur_topic['moved_to'] == null) ? forum_number_format($cur_topic['num_views']) : '&nbsp;' ?></td>
+					<td class="tc2"><?php echo ($cur_topic['moved_to'] == null) ? forum_number_format($cur_topic['num_replies']) : '-' ?></td>
+<?php if ($pun_config['o_topic_views'] == '1'): ?>					<td class="tc3"><?php echo ($cur_topic['moved_to'] == null) ? forum_number_format($cur_topic['num_views']) : '-' ?></td>
 <?php endif; ?>					<td class="tcr"><?php echo $last_post ?></td>
 				</tr>
 <?php
@@ -259,7 +259,7 @@ else
 <?php echo $post_link ?>
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>&raquo;&nbsp;</span><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></li>
+			<li><span>&raquo;&#160;</span><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></li>
 		</ul>
 		<div class="clearer"></div>
 	</div>

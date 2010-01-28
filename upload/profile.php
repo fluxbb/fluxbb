@@ -1066,7 +1066,7 @@ else
 			$username_field = '<p>'.$lang_common['Username'].': '.pun_htmlspecialchars($user['username']).'</p>'."\n";
 
 			if ($pun_config['o_regs_verify'] == '1')
-				$email_field = '<p>'.$lang_common['Email'].': '.$user['email'].'&nbsp;-&nbsp;<a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang_profile['Change email'].'</a></p>'."\n";
+				$email_field = '<p>'.$lang_common['Email'].': '.$user['email'].' - <a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang_profile['Change email'].'</a></p>'."\n";
 			else
 				$email_field = '<label class="required"><strong>'.$lang_common['Email'].'</strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label>'."\n";
 		}
@@ -1255,7 +1255,7 @@ else
 	else if ($section == 'personal')
 	{
 		if ($pun_user['g_set_title'] == '1')
-			$title_field = '<label>'.$lang_common['Title'].'&nbsp;<em>('.$lang_profile['Leave blank'].')</em><br /><input type="text" name="title" value="'.pun_htmlspecialchars($user['title']).'" size="30" maxlength="50" /><br /></label>'."\n";
+			$title_field = '<label>'.$lang_common['Title'].' <em>('.$lang_profile['Leave blank'].')</em><br /><input type="text" name="title" value="'.pun_htmlspecialchars($user['title']).'" size="30" maxlength="50" /><br /></label>'."\n";
 
 		$page_title = array($pun_config['o_board_title'], $lang_common['Profile'], $lang_profile['Section personal']);
 		require PUN_ROOT.'header.php';
@@ -1328,7 +1328,7 @@ else
 
 		$user_avatar = generate_avatar_markup($id);
 		if ($user_avatar)
-			$avatar_field .= '&nbsp;&nbsp;&nbsp;<a href="profile.php?action=delete_avatar&amp;id='.$id.'">'.$lang_profile['Delete avatar'].'</a>';
+			$avatar_field .= ' | <a href="profile.php?action=delete_avatar&amp;id='.$id.'">'.$lang_profile['Delete avatar'].'</a>';
 		else
 			$avatar_field = '<a href="profile.php?action=upload_avatar&amp;id='.$id.'">'.$lang_profile['Upload avatar'].'</a>';
 
@@ -1591,7 +1591,7 @@ else
 ?>
 						<legend><?php echo $lang_profile['Delete ban legend'] ?></legend>
 						<div class="infldset">
-							<input type="submit" name="delete_user" value="<?php echo $lang_profile['Delete user'] ?>" />&nbsp;&nbsp;<input type="submit" name="ban" value="<?php echo $lang_profile['Ban user'] ?>" />
+							<input type="submit" name="delete_user" value="<?php echo $lang_profile['Delete user'] ?>" /> <input type="submit" name="ban" value="<?php echo $lang_profile['Ban user'] ?>" />
 						</div>
 					</fieldset>
 				</div>

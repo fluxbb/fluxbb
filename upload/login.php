@@ -222,8 +222,7 @@ require PUN_ROOT.'header.php';
 						</div>
 
 						<p class="clearb"><?php echo $lang_login['Login info'] ?></p>
-						<p><a href="register.php" tabindex="4"><?php echo $lang_login['Not registered'] ?></a>&nbsp;&nbsp;
-						<a href="login.php?action=forget" tabindex="5"><?php echo $lang_login['Forgotten pass'] ?></a></p>
+						<p><a href="register.php" tabindex="4"><?php echo $lang_login['Not registered'] ?></a> | <a href="login.php?action=forget" tabindex="5"><?php echo $lang_login['Forgotten pass'] ?></a></p>
 					</div>
 				</fieldset>
 			</div>

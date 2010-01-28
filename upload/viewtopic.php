@@ -101,9 +101,9 @@ $is_admmod = ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1'
 if ($cur_topic['closed'] == '0')
 {
 	if (($cur_topic['post_replies'] == '' && $pun_user['g_post_replies'] == '1') || $cur_topic['post_replies'] == '1' || $is_admmod)
-		$post_link = '<a href="post.php?tid='.$id.'">'.$lang_topic['Post reply'].'</a>';
+		$post_link = "\t\t".'<p class="postlink conr"><a href="post.php?tid='.$id.'">'.$lang_topic['Post reply'].'</a></p>';
 	else
-		$post_link = '&nbsp;';
+		$post_link = '';
 }
 else
 {
@@ -111,6 +111,8 @@ else
 
 	if ($is_admmod)
 		$post_link .= ' / <a href="post.php?tid='.$id.'">'.$lang_topic['Post reply'].'</a>';
+
+	$post_link = "\t\t".'<p class="postlink conr">'.$post_link.'</p>';
 }
 
 
@@ -172,11 +174,11 @@ require PUN_ROOT.'header.php';
 	<div class="inbox crumbsplus">
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>&raquo;&nbsp;</span><a href="viewforum.php?id=<?php echo $cur_topic['forum_id'] ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
-			<li><span>&raquo;&nbsp;</span><strong><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></strong></li>
+			<li><span>&raquo;&#160;</span><a href="viewforum.php?id=<?php echo $cur_topic['forum_id'] ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
+			<li><span>&raquo;&#160;</span><strong><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></strong></li>
 		</ul>
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
-		<p class="postlink conr"><?php echo $post_link ?></p>
+<?php echo $post_link ?>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -242,12 +244,12 @@ while ($cur_post = $db->fetch_assoc($result))
 
 			// Now let's deal with the contact links (Email and URL)
 			if ((($cur_post['email_setting'] == '0' && !$pun_user['is_guest']) || $pun_user['is_admmod']) && $pun_user['g_send_email'] == '1')
-				$user_contacts[] = '<a href="mailto:'.$cur_post['email'].'">'.$lang_common['Email'].'</a>';
+				$user_contacts[] = '<span class="email"><a href="mailto:'.$cur_post['email'].'">'.$lang_common['Email'].'</a></span>';
 			else if ($cur_post['email_setting'] == '1' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
-				$user_contacts[] = '<a href="misc.php?email='.$cur_post['poster_id'].'">'.$lang_common['Email'].'</a>';
+				$user_contacts[] = '<span class="email"><a href="misc.php?email='.$cur_post['poster_id'].'">'.$lang_common['Email'].'</a></span>';
 
 			if ($cur_post['url'] != '')
-				$user_contacts[] = '<a href="'.pun_htmlspecialchars($cur_post['url']).'">'.$lang_topic['Website'].'</a>';
+				$user_contacts[] = '<span class="website"><a href="'.pun_htmlspecialchars($cur_post['url']).'">'.$lang_topic['Website'].'</a></span>';
 		}
 
 		if ($pun_user['is_admmod'])
@@ -268,7 +270,7 @@ while ($cur_post = $db->fetch_assoc($result))
 			$user_info[] = '<dd>'.$lang_topic['IP'].': <a href="moderate.php?get_host='.$cur_post['id'].'">'.$cur_post['poster_ip'].'</a>';
 
 		if ($pun_config['o_show_user_info'] == '1' && $cur_post['poster_email'] != '' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
-			$user_contacts[] = '<a href="mailto:'.$cur_post['poster_email'].'">'.$lang_common['Email'].'</a>';
+			$user_contacts[] = '<span class="email"><a href="mailto:'.$cur_post['poster_email'].'">'.$lang_common['Email'].'</a></span>';
 	}
 
 	// Generation post action array (quote, edit, delete etc.)
@@ -321,7 +323,7 @@ while ($cur_post = $db->fetch_assoc($result))
 						<dd class="usertitle"><strong><?php echo $user_title ?></strong></dd>
 <?php if ($user_avatar != '') echo "\t\t\t\t\t\t".'<dd class="postavatar">'.$user_avatar.'</dd>'; ?>
 <?php if (count($user_info)) echo "\t\t\t\t\t\t".implode('</dd>'."\n\t\t\t\t\t\t", $user_info).'</dd>'."\n"; ?>
-<?php if (count($user_contacts)) echo "\t\t\t\t\t\t".'<dd class="usercontacts">'.implode('&nbsp;&nbsp;', $user_contacts).'</dd>'."\n"; ?>
+<?php if (count($user_contacts)) echo "\t\t\t\t\t\t".'<dd class="usercontacts">'.implode(' ', $user_contacts).'</dd>'."\n"; ?>
 					</dl>
 				</div>
 				<div class="postright">
@@ -337,7 +339,7 @@ while ($cur_post = $db->fetch_assoc($result))
 		<div class="inbox">
 			<div class="postfoot clearb">
 				<div class="postfootleft"><?php if ($cur_post['poster_id'] > 1) echo '<p>'.$is_online.'</p>'; ?></div>
-				<div class="postfootright"><?php echo (count($post_actions)) ? '<ul>'.implode($lang_common['Link separator'].'</li>', $post_actions).'</li></ul></div>'."\n" : '<div>&nbsp;</div></div>'."\n" ?>
+<?php if (count($post_actions)) echo "\t\t\t\t".'<div class="postfootright"><ul>'.implode($lang_common['Link separator'].'</li>', $post_actions).'</li></ul></div>'."\n" ?>
 			</div>
 		</div>
 	</div>
@@ -350,12 +352,12 @@ while ($cur_post = $db->fetch_assoc($result))
 ?>
 <div class="postlinksb">
 	<div class="inbox crumbsplus">
-		<p class="postlink conr"><?php echo $post_link ?></p>
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
+<?php echo $post_link ?>
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>&raquo;&nbsp;</span><a href="viewforum.php?id=<?php echo $cur_topic['forum_id'] ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
-			<li><span>&raquo;&nbsp;</span><strong><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></strong></li>
+			<li><span>&raquo;&#160;</span><a href="viewforum.php?id=<?php echo $cur_topic['forum_id'] ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
+			<li><span>&raquo;&#160;</span><strong><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></strong></li>
 		</ul>
 		<?php echo $subscraction ?>
 		<div class="clearer"></div>
