@@ -30,6 +30,7 @@ $lang_profile = array(
 'Old pass'						=>	'Old password',
 'New pass'						=>	'New password',
 'Confirm new pass'				=>	'Confirm new password',
+'Pass info'						=>	'Passwords must be at least 4 characters long. Passwords are case sensitive.',
 
 // Email stuff
 'Email key bad'					=>	'The specified email activation key was incorrect or has expired. Please re-request change of email address. If that fails, contact the forum administrator at',

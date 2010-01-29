@@ -147,6 +147,7 @@ if ($action == 'change_pass')
 						<input type="password" name="req_new_password1" size="16" /><br /></label>
 						<label class="conl required"><strong><?php echo $lang_profile['Confirm new pass'] ?></strong><br />
 						<input type="password" name="req_new_password2" size="16" /><br /></label>
+						<p><?php echo $lang_profile['Pass info'] ?></p>
 						<div class="clearb"></div>
 					</div>
 				</fieldset>
