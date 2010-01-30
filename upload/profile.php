@@ -926,9 +926,9 @@ if ($pun_user['id'] != $id &&
 	($pun_user['g_moderator'] == '1' && $user['g_moderator'] == '1')))
 {
 	if ($user['email_setting'] == '0' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
-		$email_field = '<a href="mailto:'.$user['email'].'">'.$user['email'].'</a>';
+		$email_field = '<span class="email"><a href="mailto:'.$user['email'].'">'.$user['email'].'</a></span>';
 	else if ($user['email_setting'] == '1' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
-		$email_field = '<a href="misc.php?email='.$id.'">'.$lang_common['Send email'].'</a>';
+		$email_field = '<span class="email"><a href="misc.php?email='.$id.'">'.$lang_common['Send email'].'</a></span>';
 	else
 		$email_field = $lang_profile['Private'];
 
@@ -941,7 +941,7 @@ if ($pun_user['id'] != $id &&
 		if ($pun_config['o_censoring'] == '1')
 			$user['url'] = censor_words($user['url']);
 
-		$url = '<a href="'.$user['url'].'">'.$user['url'].'</a>';
+		$url = '<span class="website"><a href="'.$user['url'].'">'.$user['url'].'</a></span>';
 	}
 	else
 		$url = $lang_profile['Unknown'];
@@ -1059,7 +1059,7 @@ else
 			else
 				$username_field = '<p>'.$lang_common['Username'].': '.pun_htmlspecialchars($user['username']).'</p>'."\n";
 
-			$email_field = '<label class="required"><strong>'.$lang_common['Email'].'</strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label><p><a href="misc.php?email='.$id.'">'.$lang_common['Send email'].'</a></p>'."\n";
+			$email_field = '<label class="required"><strong>'.$lang_common['Email'].'</strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label><p><span class="email"><a href="misc.php?email='.$id.'">'.$lang_common['Send email'].'</a></span></p>'."\n";
 		}
 		else
 		{

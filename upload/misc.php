@@ -33,7 +33,7 @@ if ($action == 'rules')
 	require PUN_ROOT.'header.php';
 
 ?>
-<div class="block">
+<div id="rules" class="block">
 	<div class="hd"><h2><span><?php echo $lang_register['Forum rules'] ?></span></h2></div>
 	<div class="box">
 		<div id="rules-block" class="inbox">
@@ -147,7 +147,7 @@ else if (isset($_GET['email']))
 	require PUN_ROOT.'header.php';
 
 ?>
-<div class="blockform">
+<div id="emailform" class="blockform">
 	<h2><span><?php echo $lang_misc['Send email to'] ?> <?php echo pun_htmlspecialchars($recipient) ?></span></h2>
 	<div class="box">
 		<form id="email" method="post" action="misc.php?email=<?php echo $recipient_id ?>" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">

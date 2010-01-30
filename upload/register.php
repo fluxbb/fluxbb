@@ -40,7 +40,7 @@ else if ($pun_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POS
 	require PUN_ROOT.'header.php';
 
 ?>
-<div class="blockform">
+<div id="rules" class="blockform">
 	<div class="hd"><h2><span><?php echo $lang_register['Forum rules'] ?></span></h2></div>
 	<div class="box">
 		<form method="get" action="register.php">
@@ -300,7 +300,7 @@ if (!empty($errors))
 
 }
 ?>
-<div class="blockform">
+<div id="regform" class="blockform">
 	<h2><span><?php echo $lang_register['Register'] ?></span></h2>
 	<div class="box">
 		<form id="register" method="post" action="register.php?action=register" onsubmit="this.register.disabled=true;if(process_form(this)){return true;}else{this.register.disabled=false;return false;}">
