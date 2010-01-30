@@ -62,7 +62,7 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<?php $page_title = array($pun_config['o_board_title'], 'Rebuilding search index &hellip;') ?>
+<?php $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Rebuilding search index &hellip;') ?>
 <title><?php echo generate_page_title($page_title) ?></title>
 <style type="text/css">
 body {
@@ -125,7 +125,7 @@ $result = $db->query('SELECT id FROM '.$db->prefix.'topics ORDER BY id LIMIT 1')
 if ($db->num_rows($result))
 	$first_id = $db->result($result);
 
-$page_title = array($pun_config['o_board_title'], 'Admin', 'Maintenance');
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Maintenance');
 require PUN_ROOT.'header.php';
 
 generate_admin_menu('maintenance');

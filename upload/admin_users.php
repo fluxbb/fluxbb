@@ -28,7 +28,7 @@ if (isset($_GET['ip_stats']))
 		message($lang_common['Bad request']);
 
 
-	$page_title = array($pun_config['o_board_title'], 'Admin', 'Users');
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Users');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -102,7 +102,7 @@ if (isset($_GET['show_users']))
 		message('The supplied IP address is not correctly formatted.');
 
 
-	$page_title = array($pun_config['o_board_title'], 'Admin', 'Users');
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Users');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -262,7 +262,7 @@ else if (isset($_POST['find_user']))
 		message('You didn\'t enter any search terms.');
 
 
-	$page_title = array($pun_config['o_board_title'], 'Admin', 'Users');
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Users');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -341,7 +341,7 @@ else if (isset($_POST['find_user']))
 
 else
 {
-	$page_title = array($pun_config['o_board_title'], 'Admin', 'Users');
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Users');
 	$focus_element = array('find_user', 'username');
 	require PUN_ROOT.'header.php';
 

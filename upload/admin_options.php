@@ -137,7 +137,7 @@ if (isset($_POST['form_sent']))
 }
 
 
-$page_title = array($pun_config['o_board_title'], 'Admin', 'Options');
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Options');
 $form_name = 'update_options';
 require PUN_ROOT.'header.php';
 

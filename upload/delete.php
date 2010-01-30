@@ -71,7 +71,7 @@ if (isset($_POST['delete']))
 }
 
 
-$page_title = array($pun_config['o_board_title'], $lang_delete['Delete post']);
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_delete['Delete post']);
 require PUN_ROOT.'header.php';
 
 require PUN_ROOT.'include/parser.php';

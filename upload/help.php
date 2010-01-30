@@ -23,7 +23,7 @@ if ($pun_user['g_read_board'] == '0')
 require PUN_ROOT.'lang/'.$pun_user['language'].'/help.php';
 
 
-$page_title = array($pun_config['o_board_title'], $lang_help['Help']);
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_help['Help']);
 require PUN_ROOT.'header.php';
 
 ?>

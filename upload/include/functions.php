@@ -477,7 +477,7 @@ function generate_page_title($page_title, $p = null)
 		
 	$crumbs = implode($lang_common['Title separator'], $page_title);
 
-	return pun_htmlspecialchars($crumbs);
+	return $crumbs;
 }
 
 
@@ -836,7 +836,7 @@ function message($message, $no_back_link = false)
 	{
 		global $pun_user;
 
-		$page_title = array($pun_config['o_board_title'], $lang_common['Info']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Info']);
 		require PUN_ROOT.'header.php';
 	}
 
@@ -1119,7 +1119,7 @@ function maintenance_message()
 	ob_start();
 
 ?>
-<?php $page_title = array($pun_config['o_board_title'], $lang_common['Maintenance']) ?>
+<?php $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Maintenance']) ?>
 <title><?php echo generate_page_title($page_title) ?></title>
 <link rel="stylesheet" type="text/css" href="style/<?php echo $pun_user['style'].'.css' ?>" />
 <?php
@@ -1207,7 +1207,7 @@ function redirect($destination_url, $message)
 
 ?>
 <meta http-equiv="refresh" content="<?php echo $pun_config['o_redirect_delay'] ?>;URL=<?php echo str_replace(array('<', '>', '"'), array('&lt;', '&gt;', '&quot;'), $destination_url) ?>" />
-<?php $page_title = array($pun_config['o_board_title'], $lang_common['Redirecting']) ?>
+<?php $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Redirecting']) ?>
 <title><?php echo generate_page_title($page_title) ?></title>
 <link rel="stylesheet" type="text/css" href="style/<?php echo $pun_user['style'].'.css' ?>" />
 <?php
@@ -1289,7 +1289,7 @@ function error($message, $file = null, $line = null, $db_error = false)
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<?php $page_title = array($pun_config['o_board_title'], 'Error') ?>
+<?php $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Error') ?>
 <title><?php echo generate_page_title($page_title) ?></title>
 <style type="text/css">
 <!--

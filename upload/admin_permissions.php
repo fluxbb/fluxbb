@@ -43,7 +43,7 @@ if (isset($_POST['form_sent']))
 }
 
 
-$page_title = array($pun_config['o_board_title'], 'Admin', 'Permissions');
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Permissions');
 require PUN_ROOT.'header.php';
 generate_admin_menu('permissions');
 

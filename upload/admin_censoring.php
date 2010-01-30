@@ -69,7 +69,7 @@ else if (isset($_POST['remove']))
 }
 
 
-$page_title = array($pun_config['o_board_title'], 'Admin', 'Censoring');
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Censoring');
 $focus_element = array('censoring', 'new_search_for');
 require PUN_ROOT.'header.php';
 

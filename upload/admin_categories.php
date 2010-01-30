@@ -90,7 +90,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 		$result = $db->query('SELECT cat_name FROM '.$db->prefix.'categories WHERE id='.$cat_to_delete) or error('Unable to fetch category info', __FILE__, __LINE__, $db->error());
 		$cat_name = $db->result($result);
 
-		$page_title = array($pun_config['o_board_title'], 'Admin', 'Categories');
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Categories');
 		require PUN_ROOT.'header.php';
 
 		generate_admin_menu('categories');
@@ -164,7 +164,7 @@ for ($i = 0; $i < $num_cats; ++$i)
 	$cat_list[] = $db->fetch_row($result);
 
 
-$page_title = array($pun_config['o_board_title'], 'Admin', 'Categories');
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Categories');
 require PUN_ROOT.'header.php';
 
 generate_admin_menu('categories');

@@ -83,7 +83,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		$mode = 'edit';
 	}
 
-	$page_title = array($pun_config['o_board_title'], 'Admin', 'Bans');
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Bans');
 	$focus_element = array('bans2', 'ban_user');
 	require PUN_ROOT.'header.php';
 
@@ -281,7 +281,7 @@ else if (isset($_GET['del_ban']))
 }
 
 
-$page_title = array($pun_config['o_board_title'], 'Admin', 'Bans');
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Bans');
 $focus_element = array('bans', 'new_ban_user');
 require PUN_ROOT.'header.php';
 
