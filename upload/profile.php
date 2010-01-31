@@ -996,7 +996,7 @@ if ($pun_user['id'] != $id &&
 					<div class="infldset">
 						<dl>
 							<dt><?php echo $lang_profile['Jabber'] ?>: </dt>
-							<dd><?php echo ($user['jabber'] !='') ? pun_htmlspecialchars($user['jabber']) : $lang_profile['Unknown']; ?></dd>
+							<dd><?php echo ($user['jabber'] !='') ? pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['jabber']) : $user['jabber']) : $lang_profile['Unknown']; ?></dd>
 							<dt><?php echo $lang_profile['ICQ'] ?>: </dt>
 							<dd><?php echo ($user['icq'] !='') ? $user['icq'] : $lang_profile['Unknown']; ?></dd>
 							<dt><?php echo $lang_profile['MSN'] ?>: </dt>
