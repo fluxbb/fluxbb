@@ -129,8 +129,8 @@ generate_admin_menu('ranks');
 							</thead>
 							<tbody>
 								<tr>
-									<td><input type="text" name="new_rank" size="24" maxlength="50" tabindex="1" /></td>
-									<td><input type="text" name="new_min_posts" size="7" maxlength="7" tabindex="2" /></td>
+									<td class="tcl"><input type="text" name="new_rank" size="24" maxlength="50" tabindex="1" /></td>
+									<td class="tc2"><input type="text" name="new_min_posts" size="7" maxlength="7" tabindex="2" /></td>
 									<td><input type="submit" name="add_rank" value=" Add " tabindex="3" /></td>
 								</tr>
 							</tbody>
@@ -152,8 +152,8 @@ if ($db->num_rows($result))
 							<table cellspacing="0">
 							<thead>
 								<tr>
-									<th class="tcl" scope="col"><strong>Rank&nbsp;title</strong></th>
-									<th class="tc2" scope="col"><strong>Minimum&nbsp;Posts</strong></th>
+									<th class="tcl" scope="col">Rank&nbsp;title</th>
+									<th class="tc2" scope="col">Minimum&nbsp;Posts</th>
 									<th class="hidehead" scope="col">Actions</th>
 								</tr>
 							</thead>
@@ -161,7 +161,7 @@ if ($db->num_rows($result))
 <?php
 
 	while ($cur_rank = $db->fetch_assoc($result))
-		echo "\t\t\t\t\t\t\t\t".'<tr><td><input type="text" name="rank['.$cur_rank['id'].']" value="'.pun_htmlspecialchars($cur_rank['rank']).'" size="24" maxlength="50" /></td><td><input type="text" name="min_posts['.$cur_rank['id'].']" value="'.$cur_rank['min_posts'].'" size="7" maxlength="7" /></td><td><input type="submit" name="update['.$cur_rank['id'].']" value="Update" />&nbsp;<input type="submit" name="remove['.$cur_rank['id'].']" value="Remove" /></td></tr>'."\n";
+		echo "\t\t\t\t\t\t\t\t".'<tr><td class="tcl"><input type="text" name="rank['.$cur_rank['id'].']" value="'.pun_htmlspecialchars($cur_rank['rank']).'" size="24" maxlength="50" /></td><td class="tc2"><input type="text" name="min_posts['.$cur_rank['id'].']" value="'.$cur_rank['min_posts'].'" size="7" maxlength="7" /></td><td><input type="submit" name="update['.$cur_rank['id'].']" value="Update" />&nbsp;<input type="submit" name="remove['.$cur_rank['id'].']" value="Remove" /></td></tr>'."\n";
 
 ?>
 							</tbody>

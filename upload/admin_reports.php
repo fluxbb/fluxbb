@@ -66,13 +66,13 @@ if ($db->num_rows($result))
 					<fieldset>
 						<legend>Reported <?php echo format_time($cur_report['created']) ?></legend>
 						<div class="infldset">
-							<table cellspacing="0">
+							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row">Forum&nbsp;&raquo;&nbsp;Topic&nbsp;&raquo;&nbsp;Post</th>
+									<th scope="row">Report by <?php echo $reporter ?></th>
 									<td><?php echo $forum ?>&nbsp;&raquo;&nbsp;<?php echo $topic ?>&nbsp;&raquo;&nbsp;<?php echo $postid ?></td>
 								</tr>
 								<tr>
-									<th scope="row">Report by <?php echo $reporter ?><div><input type="submit" name="zap_id[<?php echo $cur_report['id'] ?>]" value=" Zap " /></div></th>
+									<th scope="row">Reason<div><input type="submit" name="zap_id[<?php echo $cur_report['id'] ?>]" value=" Zap " /></div></th>
 									<td><?php echo $post ?></td>
 								</tr>
 							</table>
@@ -108,20 +108,20 @@ if ($db->num_rows($result))
 		$topic = ($cur_report['subject'] != '') ? '<a href="viewtopic.php?id='.$cur_report['topic_id'].'">'.pun_htmlspecialchars($cur_report['subject']).'</a>' : 'Deleted';
 		$post = str_replace("\n", '<br />', pun_htmlspecialchars($cur_report['message']));
 		$post_id = ($cur_report['pid'] != '') ? '<a href="viewtopic.php?pid='.$cur_report['pid'].'#p'.$cur_report['pid'].'">Post #'.$cur_report['pid'].'</a>' : 'Deleted';
-		$zapped_by = ($cur_report['zapped_by'] != '') ? '<a href="profile.php?id='.$cur_report['zapped_by_id'].'">'.pun_htmlspecialchars($cur_report['zapped_by']).'</a>' : 'N/A';
+		$zapped_by = ($cur_report['zapped_by'] != '') ? '<strong>'.pun_htmlspecialchars($cur_report['zapped_by']).'</strong>' : 'N/A';
 
 ?>
 				<div class="inform">
 					<fieldset>
-						<legend>Zapped <?php echo format_time($cur_report['zapped']) ?></legend>
+						<legend>Zapped <?php echo format_time($cur_report['zapped']) ?> by <?php echo $zapped_by ?></legend>
 						<div class="infldset">
-							<table cellspacing="0">
+							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row">Forum&nbsp;&raquo;&nbsp;Topic&nbsp;&raquo;&nbsp;Post</th>
+									<th scope="row">Report by <?php echo $reporter ?></th>
 									<td><?php echo $forum ?>&nbsp;&raquo;&nbsp;<?php echo $topic ?>&nbsp;&raquo;&nbsp;<?php echo $post_id ?></td>
 								</tr>
 								<tr>
-									<th scope="row">Reported by <?php echo $reporter ?><div class="topspace">Zapped by <?php echo $zapped_by ?></div></th>
+									<th scope="row">Reason</th>
 									<td><?php echo $post ?></td>
 								</tr>
 							</table>

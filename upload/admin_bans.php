@@ -357,7 +357,20 @@ if ($db->num_rows($result))
 	}
 }
 else
-	echo "\t\t\t\t".'<p>No bans in list.</p>'."\n";
+{
+
+?>
+				<div class="inform">
+					<fieldset>
+						<legend>Ban expires</legend>
+						<div class="infldset">
+							<p>No bans in list.</p>
+						</div>
+
+					</fieldset>
+				</div>
+<?php
+}
 
 ?>
 			</div>

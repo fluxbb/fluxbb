@@ -425,6 +425,14 @@ while ($cur_forum = $db->fetch_assoc($result))
 						<legend>Category: <?php echo pun_htmlspecialchars($cur_forum['cat_name']) ?></legend>
 						<div class="infldset">
 							<table cellspacing="0">
+							<thead>
+								<tr>
+									<th class="tcl">Action</th>
+									<th class="tc2">Postition</th>
+									<th class="tcr">Forum</th>
+								</tr>
+							</thead>
+							<tbody>
 <?php
 
 		$cur_category = $cur_forum['cid'];
@@ -432,9 +440,9 @@ while ($cur_forum = $db->fetch_assoc($result))
 
 ?>
 								<tr>
-									<th><a href="admin_forums.php?edit_forum=<?php echo $cur_forum['fid'] ?>">Edit</a> - <a href="admin_forums.php?del_forum=<?php echo $cur_forum['fid'] ?>">Delete</a></th>
-									<td>Position&nbsp;&nbsp;<input type="text" name="position[<?php echo $cur_forum['fid'] ?>]" size="3" maxlength="3" value="<?php echo $cur_forum['disp_position'] ?>" tabindex="<?php echo $tabindex_count ?>" />
-									&nbsp;&nbsp;<strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></td>
+									<td class="tcl"><a href="admin_forums.php?edit_forum=<?php echo $cur_forum['fid'] ?>">Edit</a> - <a href="admin_forums.php?del_forum=<?php echo $cur_forum['fid'] ?>">Delete</a></td>
+									<td class="tc2"><input type="text" name="position[<?php echo $cur_forum['fid'] ?>]" size="3" maxlength="3" value="<?php echo $cur_forum['disp_position'] ?>" tabindex="<?php echo $tabindex_count ?>" />
+									<td class="tcr"><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></td>
 								</tr>
 <?php
 
@@ -442,6 +450,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 }
 
 ?>
+							</tbody>
 							</table>
 						</div>
 					</fieldset>

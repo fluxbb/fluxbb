@@ -33,7 +33,12 @@ if (isset($_GET['ip_stats']))
 
 ?>
 <div class="linkst">
-	<div class="inbox">
+	<div class="inbox crumbsplus">
+		<ul class="crumbs">
+			<li><a href="admin_index.php">Admin Index</a></li>
+			<li><span>&raquo;&#160;</span><a href="admin_users.php">Users</a></li>
+			<li><span>&raquo;&#160;</span><strong>Search Results</strong></li>
+		</ul>
 		<div class="backlink"><a href="javascript:history.go(-1)">Go back</a></div>
 		<div class="clearer"></div>
 	</div>
@@ -83,8 +88,13 @@ if (isset($_GET['ip_stats']))
 </div>
 
 <div class="linksb">
-	<div class="inbox">
+	<div class="inbox crumbsplus">
 		<div class="backlink"><a href="javascript:history.go(-1)">Go back</a></div>
+		<ul class="crumbs">
+			<li><a href="admin_index.php">Admin Index</a></li>
+			<li><span>&raquo;&#160;</span><a href="admin_users.php">Users</a></li>
+			<li><span>&raquo;&#160;</span><strong>Search Results</strong></li>
+		</ul>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -107,8 +117,13 @@ if (isset($_GET['show_users']))
 
 ?>
 <div class="linkst">
-	<div class="inbox">
-		<div><a href="javascript:history.go(-1)">Go back</a></div>
+	<div class="inbox crumbsplus">
+		<ul class="crumbs">
+			<li><a href="admin_index.php">Admin Index</a></li>
+			<li><span>&raquo;&#160;</span><a href="admin_users.php">Users</a></li>
+			<li><span>&raquo;&#160;</span><strong>Search Results</strong></li>
+		</ul>
+		<div class="backlink"><a href="javascript:history.go(-1)">Go back</a></div>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -189,8 +204,13 @@ if (isset($_GET['show_users']))
 </div>
 
 <div class="linksb">
-	<div class="inbox">
+	<div class="inbox crumbsplus">
 		<div class="backlink"><a href="javascript:history.go(-1)">Go back</a></div>
+		<ul class="crumbs">
+			<li><a href="admin_index.php">Admin Index</a></li>
+			<li><span>&raquo;&#160;</span><a href="admin_users.php">Users</a></li>
+			<li><span>&raquo;&#160;</span><strong>Search Results</strong></li>
+		</ul>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -267,7 +287,12 @@ else if (isset($_POST['find_user']))
 
 ?>
 <div class="linkst">
-	<div class="inbox">
+	<div class="inbox crumbsplus">
+		<ul class="crumbs">
+			<li><a href="admin_index.php">Admin Index</a></li>
+			<li><span>&raquo;&#160;</span><a href="admin_users.php">Users</a></li>
+			<li><span>&raquo;&#160;</span><strong>Search Results</strong></li>
+		</ul>
 		<div class="backlink"><a href="javascript:history.go(-1)">Go back</a></div>
 		<div class="clearer"></div>
 	</div>
@@ -328,8 +353,13 @@ else if (isset($_POST['find_user']))
 </div>
 
 <div class="linksb">
-	<div class="inbox">
+	<div class="inbox crumbsplus">
 		<div class="backlink"><a href="javascript:history.go(-1)">Go back</a></div>
+		<ul class="crumbs">
+			<li><a href="admin_index.php">Admin Index</a></li>
+			<li><span>&raquo;&#160;</span><a href="admin_users.php">Users</a></li>
+			<li><span>&raquo;&#160;</span><strong>Search Results</strong></li>
+		</ul>
 		<div class="clearer"></div>
 	</div>
 </div>

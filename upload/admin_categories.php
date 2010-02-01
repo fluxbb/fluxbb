@@ -232,7 +232,6 @@ generate_admin_menu('categories');
 							<tr>
 								<th class="tcl" scope="col">Name</th>
 								<th scope="col">Position</th>
-								<th>&nbsp;</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -241,7 +240,7 @@ generate_admin_menu('categories');
 	foreach ($cat_list as $i => $category)
 	{
 ?>
-							<tr><td><input type="text" name="cat_name[<?php echo $i ?>]" value="<?php echo pun_htmlspecialchars($category[1]) ?>" size="35" maxlength="80" /></td><td><input type="text" name="cat_order[<?php echo $i ?>]" value="<?php echo $category[2] ?>" size="3" maxlength="3" /></td><td>&nbsp;</td></tr>
+							<tr><td class="tcl"><input type="text" name="cat_name[<?php echo $i ?>]" value="<?php echo pun_htmlspecialchars($cat_name) ?>" size="35" maxlength="80" /></td><td><input type="text" name="cat_order[<?php echo $i ?>]" value="<?php echo $position ?>" size="3" maxlength="3" /></td></tr>
 <?php
 	}
 
