@@ -2,7 +2,7 @@
 
 /*---
 
-	Copyright (C) 2008-2009 FluxBB.org
+	Copyright (C) 2008-2010 FluxBB.org
 	based on code copyright (C) 2002-2005 Rickard Andersson
 	License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
 

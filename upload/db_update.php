@@ -2,7 +2,7 @@
 
 /*---
 
-	Copyright (C) 2008-2009 FluxBB.org
+	Copyright (C) 2008-2010 FluxBB.org
 	based on code copyright (C) 2002-2008 PunBB.org
 	License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
 
@@ -562,7 +562,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 				$db->query('INSERT INTO '.$db->prefix.'groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES('."'Moderators', 'Moderator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)") or error('Unable to add group', __FILE__, __LINE__, $db->error());
 				$mod_gid = $db->insert_id();
 			}
-			
+
 			$member_gid = $pun_config['o_default_user_group'];
 
 			// move the mod group to a temp place
@@ -588,7 +588,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 			$db->query('UPDATE '.$db->prefix.'users SET group_id = 2 WHERE group_id = '.$temp_id) or error('Unable to update users group ID', __FILE__, __LINE__, $db->error());
 			$db->query('UPDATE '.$db->prefix.'forum_perms SET group_id = 2 WHERE group_id = '.$temp_id) or error('Unable to forum_perms group ID', __FILE__, __LINE__, $db->error());
 			if ($member_gid == $temp_id) $member_gid = 2;
-			
+
 			// Only move stuff around if it isn't already in the right place
 			if ($member_gid != $mod_gid || $member_gid != 4)
 			{
@@ -1098,7 +1098,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		else
 			$query_str = '?stage=preparse_sigs';
 		break;
-	
+
 
 	// Preparse signatures
 	case 'preparse_sigs':
@@ -1128,7 +1128,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		else
 			$query_str = '?stage=finish';
 		break;
-	
+
 
 	// Show results page
 	case 'finish':
