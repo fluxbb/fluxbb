@@ -12,6 +12,8 @@ define('PUN_ROOT', './');
 require PUN_ROOT.'include/common.php';
 
 // Include UTF-8 function
+require PUN_ROOT.'include/utf8/substr_replace.php';
+require PUN_ROOT.'include/utf8/ucwords.php'; // utf8_ucwords needs utf8_substr_replace
 require PUN_ROOT.'include/utf8/strcasecmp.php';
 
 $action = isset($_GET['action']) ? $_GET['action'] : null;

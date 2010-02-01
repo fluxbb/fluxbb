@@ -6,9 +6,7 @@
 * @subpackage strings
 */
 
-/**
-* Define UTF8_CORE as required
-*/
+// Define UTF8_CORE as required
 if (!defined('UTF8_CORE'))
 	define('UTF8_CORE', true);
 
@@ -49,9 +47,9 @@ function utf8_strlen($str)
 * @package utf8
 * @subpackage strings
 */
-function utf8_strpos($str, $needle, $offset = null)
+function utf8_strpos($str, $needle, $offset = false)
 {
-	if (is_null($offset))
+	if (!$offset)
 	{
 		$ar = explode($needle, $str, 2);
 
@@ -70,7 +68,7 @@ function utf8_strpos($str, $needle, $offset = null)
 
 		$str = utf8_substr($str, $offset);
 
-		if (false !== ($pos = utf8_strpos($str, $needle)))
+		if (($pos = utf8_strpos($str, $needle)) !== false)
 			return $pos + $offset;
 
 		return false;
@@ -92,9 +90,9 @@ function utf8_strpos($str, $needle, $offset = null)
 * @package utf8
 * @subpackage strings
 */
-function utf8_strrpos($str, $needle, $offset = null)
+function utf8_strrpos($str, $needle, $offset = false)
 {
-	if (is_null($offset))
+	if (!$offset)
 	{
 		$ar = explode($needle, $str);
 
@@ -103,6 +101,7 @@ function utf8_strrpos($str, $needle, $offset = null)
 		    // Pop off the end of the string where the last match was made
 		    array_pop($ar);
 		    $str = join($needle,$ar);
+
 		    return utf8_strlen($str);
 		}
 
@@ -118,7 +117,7 @@ function utf8_strrpos($str, $needle, $offset = null)
 
 		$str = utf8_substr($str, $offset);
 
-		if (false !== ($pos = utf8_strrpos($str, $needle)))
+		if (($pos = utf8_strrpos($str, $needle)) !== false)
 			return $pos + $offset;
 
 		return false;
@@ -154,15 +153,18 @@ function utf8_strrpos($str, $needle, $offset = null)
 * @package utf8
 * @subpackage strings
 */
-function utf8_substr($str, $offset, $length = null)
+function utf8_substr($str, $offset, $length = false)
 {
 	// Generates E_NOTICE for PHP4 objects, but not PHP5 objects
 	$str = (string) $str;
 	$offset = (int) $offset;
-	if (!is_null($length)) $length = (int) $length;
+
+	if ($length)
+		$length = (int) $length;
 
 	// Handle trivial cases
-	if ($length === 0) return '';
+	if ($length === 0)
+		return '';
 	if ($offset < 0 && $length < 0 && $length < $offset)
 		return '';
 
@@ -171,9 +173,11 @@ function utf8_substr($str, $offset, $length = null)
 	if ($offset < 0)
 	{
 		// See notes
-		$strlen = strlen(utf8_decode($str));
+		$strlen = utf8_strlen($str);
 		$offset = $strlen + $offset;
-		if ($offset < 0) $offset = 0;
+
+		if ($offset < 0)
+			$offset = 0;
 	}
 
 	$Op = '';
@@ -196,7 +200,7 @@ function utf8_substr($str, $offset, $length = null)
 
 
 	// Establish a pattern for length
-	if (is_null($length))
+	if (!$length)
 	{
 		// The rest of the string
 		$Lp = '(.*)$';
@@ -208,7 +212,8 @@ function utf8_substr($str, $offset, $length = null)
 			$strlen = strlen(utf8_decode($str));
 
 		// Another trivial case
-		if ($offset > $strlen) return '';
+		if ($offset > $strlen)
+			return '';
 
 		if ($length > 0)
 		{
@@ -233,12 +238,14 @@ function utf8_substr($str, $offset, $length = null)
 
 			// Negative length requires ... capture everything except a group of
 			// -length characters anchored at the tail-end of the string
-			if ($Lx) $Lp = '(?:.{65535}){'.$Lx.'}';
+			if ($Lx)
+				$Lp = '(?:.{65535}){'.$Lx.'}';
+
 			$Lp = '(.*)(?:'.$Lp.'.{'.$Ly.'})$';
 		}
 	}
 
-	if (!preg_match( '#'.$Op.$Lp.'#us',$str, $match ))
+	if (!preg_match('#'.$Op.$Lp.'#us', $str, $match))
 		return '';
 
 	return $match[1];
@@ -265,9 +272,9 @@ function utf8_substr($str, $offset, $length = null)
 */
 function utf8_strtolower($string)
 {
-	static $UTF8_UPPER_TO_LOWER = null;
+	static $UTF8_UPPER_TO_LOWER = false;
 
-	if (is_null($UTF8_UPPER_TO_LOWER))
+	if (!$UTF8_UPPER_TO_LOWER)
 	{
 		$UTF8_UPPER_TO_LOWER = array(
 			0x0041=>0x0061, 0x03A6=>0x03C6, 0x0162=>0x0163, 0x00C5=>0x00E5, 0x0042=>0x0062,
@@ -350,9 +357,9 @@ function utf8_strtolower($string)
 */
 function utf8_strtoupper($string)
 {
-	static $UTF8_LOWER_TO_UPPER = NULL;
+	static $UTF8_LOWER_TO_UPPER = false;
 
-	if (is_null($UTF8_LOWER_TO_UPPER))
+	if (!$UTF8_LOWER_TO_UPPER)
 	{
 		$UTF8_LOWER_TO_UPPER = array(
 			0x0061=>0x0041, 0x03C6=>0x03A6, 0x0163=>0x0162, 0x00E5=>0x00C5, 0x0062=>0x0042,

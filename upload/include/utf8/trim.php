@@ -52,6 +52,7 @@ function utf8_rtrim($str, $charlist=false)
 	return preg_replace('/['.$charlist.']+$/u', '', $str);
 }
 
+//---------------------------------------------------------------
 /**
 * UTF-8 aware replacement for trim()
 * Note: you only need to use this if you are supplying the charlist

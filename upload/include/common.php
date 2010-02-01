@@ -11,11 +11,9 @@
 if (!defined('PUN_ROOT'))
 	exit('The constant PUN_ROOT must be defined and point to a valid FluxBB installation root directory.');
 
-
 // Define the version and database revision that this code was written for
 define('FORUM_VERSION', '1.4-rc1');
 define('FORUM_DB_REVISION', 3);
-
 
 // Attempt to load the configuration file config.php
 if (file_exists(PUN_ROOT.'config.php'))
@@ -28,7 +26,6 @@ if (defined('FORUM'))
 // If PUN isn't defined, config.php is missing or corrupt
 if (!defined('PUN'))
 	exit('The file \'config.php\' doesn\'t exist or is corrupt. Please run <a href="install.php">install.php</a> to install FluxBB first.');
-
 
 // Load the functions script
 require PUN_ROOT.'include/functions.php';
@@ -52,7 +49,6 @@ if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
 
 // Reverse the effect of register_globals
 forum_unregister_globals();
-
 
 // Record the start time (will be used to calculate the generation time for the page)
 $pun_start = get_microtime();
@@ -94,7 +90,6 @@ define('PUN_ADMIN', 1);
 define('PUN_MOD', 2);
 define('PUN_GUEST', 3);
 define('PUN_MEMBER', 4);
-
 
 // Load DB abstraction layer and connect
 require PUN_ROOT.'include/dblayer/common_db.php';
