@@ -40,7 +40,6 @@ if (isset($_POST['add_forum']))
 	redirect('admin_forums.php', 'Forum added. Redirecting &hellip;');
 }
 
-
 // Delete a forum
 else if (isset($_GET['del_forum']))
 {
@@ -118,15 +117,14 @@ else if (isset($_GET['del_forum']))
 	}
 }
 
-
 // Update forum positions
 else if (isset($_POST['update_positions']))
 {
 	confirm_referrer('admin_forums.php');
 
-	while (list($forum_id, $disp_position) = @each($_POST['position']))
+	foreach ($_POST['position'] as $forum_id => $disp_position)
 	{
-		if (!@preg_match('#^\d+$#', $disp_position))
+		if (!preg_match('#^\d+$#', $disp_position))
 			message('Position must be a positive integer value.');
 
 		$db->query('UPDATE '.$db->prefix.'forums SET disp_position='.$disp_position.' WHERE id='.intval($forum_id)) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
@@ -140,7 +138,6 @@ else if (isset($_POST['update_positions']))
 
 	redirect('admin_forums.php', 'Forums updated. Redirecting &hellip;');
 }
-
 
 else if (isset($_GET['edit_forum']))
 {
@@ -221,14 +218,12 @@ else if (isset($_GET['edit_forum']))
 		redirect('admin_forums.php?edit_forum='.$forum_id, 'Permissions reverted to defaults. Redirecting &hellip;');
 	}
 
-
 	// Fetch forum info
 	$result = $db->query('SELECT id, forum_name, forum_desc, redirect_url, num_topics, sort_by, cat_id FROM '.$db->prefix.'forums WHERE id='.$forum_id) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
 	if (!$db->num_rows($result))
 		message($lang_common['Bad request']);
 
 	$cur_forum = $db->fetch_assoc($result);
-
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Forums');
 	require PUN_ROOT.'header.php';

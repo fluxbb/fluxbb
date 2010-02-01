@@ -15,6 +15,7 @@ define('PUN_ROOT', './');
 require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'include/common_admin.php';
 
+
 if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_ban_users'] == '0'))
 	message($lang_common['No permission']);
 
@@ -89,7 +90,6 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 
 	generate_admin_menu('bans');
 
-
 ?>
 	<div class="blockform">
 		<h2><span>Ban advanced settings</span></h2>
@@ -161,7 +161,6 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 
 	require PUN_ROOT.'footer.php';
 }
-
 
 // Add/edit a ban (stage 2)
 else if (isset($_POST['add_edit_ban']))
@@ -258,7 +257,6 @@ else if (isset($_POST['add_edit_ban']))
 
 	redirect('admin_bans.php', 'Ban '.(($_POST['mode'] == 'edit') ? 'edited' : 'added').'. Redirecting &hellip;');
 }
-
 
 // Remove a ban
 else if (isset($_GET['del_ban']))

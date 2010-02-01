@@ -43,7 +43,7 @@ if ($action == 'check_upgrade')
 else if ($action == 'phpinfo' && $pun_user['g_id'] == PUN_ADMIN)
 {
 	// Is phpinfo() a disabled function?
-	if (strpos(strtolower((string)@ini_get('disable_functions')), 'phpinfo') !== false)
+	if (strpos(strtolower((string) ini_get('disable_functions')), 'phpinfo') !== false)
 		message('The PHP function phpinfo() has been disabled on this server.');
 
 	phpinfo();
@@ -55,11 +55,15 @@ else if ($action == 'phpinfo' && $pun_user['g_id'] == PUN_ADMIN)
 if (@file_exists('/proc/loadavg') && is_readable('/proc/loadavg'))
 {
 	// We use @ just in case
-	$fh = @fopen('/proc/loadavg', 'r');
-	$load_averages = @fread($fh, 64);
-	@fclose($fh);
+	if (($fh = @fopen('/proc/loadavg', 'r')))
+	{
+		$load_averages = fread($fh, 64);
+		fclose($fh);
+	}
+	else
+		$load_averages = '';
 
-	$load_averages = @explode(' ', $load_averages);
+	$load_averages = explode(' ', $load_averages);
 	$server_load = isset($load_averages[2]) ? $load_averages[0].' '.$load_averages[1].' '.$load_averages[2] : 'Not available';
 }
 else if (!in_array(PHP_OS, array('WINNT', 'WIN32')) && preg_match('/averages?: ([0-9\.]+),?[\s]+([0-9\.]+),?[\s]+([0-9\.]+)/i', @exec('uptime'), $load_averages))
@@ -86,12 +90,7 @@ if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' ||
 		$total_size += $status['Data_length'] + $status['Index_length'];
 	}
 
-	$total_size = $total_size / 1024;
-
-	if ($total_size > 1024)
-		$total_size = round($total_size / 1024, 2).' MB';
-	else
-		$total_size = round($total_size, 2).' KB';
+	$total_size = file_size($total_size);
 }
 
 
@@ -122,17 +121,17 @@ generate_admin_menu('index');
 		<h2><span>Forum administration</span></h2>
 		<div id="adintro" class="box">
 			<div class="inbox">
+				<p>Welcome to the FluxBB administration control panel. From here you can control vital aspects of the forum. Depending on whether you are an administrator or a moderator you can:</p>
 				<p>
-					Welcome to the FluxBB administration control panel. From here you can control vital aspects of the forum. Depending on whether you are an administrator or a moderator you can<br /><br />
-					&nbsp;- organize categories and forums.<br />
-					&nbsp;- set forum-wide options and preferences.<br />
-					&nbsp;- control permissions for users and guests.<br />
-					&nbsp;- view IP statistics for users.<br />
-					&nbsp;- ban users.<br />
-					&nbsp;- censor words.<br />
-					&nbsp;- set up user ranks.<br />
-					&nbsp;- prune old posts.<br />
-					&nbsp;- handle post reports.
+					&nbsp;- Organize categories and forums.<br />
+					&nbsp;- Set forum-wide options and preferences.<br />
+					&nbsp;- Control permissions for users and guests.<br />
+					&nbsp;- View IP statistics for users.<br />
+					&nbsp;- Ban users.<br />
+					&nbsp;- Censor words.<br />
+					&nbsp;- Set up user ranks.<br />
+					&nbsp;- Prune old posts.<br />
+					&nbsp;- Handle post reports.<br />
 				</p>
 			</div>
 		</div>

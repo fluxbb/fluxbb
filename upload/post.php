@@ -447,7 +447,7 @@ if (!empty($errors))
 			<ul>
 <?php
 
-	while (list(, $cur_error) = each($errors))
+	foreach ($errors as $cur_error)
 		echo "\t\t\t\t".'<li><strong>'.$cur_error.'</strong></li>'."\n";
 ?>
 			</ul>

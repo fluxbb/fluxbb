@@ -34,7 +34,6 @@ if (isset($_POST['add_cat']))
 	redirect('admin_categories.php', 'Category added. Redirecting &hellip;');
 }
 
-
 // Delete a category
 else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 {
@@ -122,7 +121,6 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 	}
 }
 
-
 else if (isset($_POST['update'])) // Change position and name of the categories
 {
 	confirm_referrer('admin_categories.php');
@@ -154,7 +152,6 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 
 	redirect('admin_categories.php', 'Categories updated. Redirecting &hellip;');
 }
-
 
 // Generate an array with all categories
 $result = $db->query('SELECT id, cat_name, disp_position FROM '.$db->prefix.'categories ORDER BY disp_position') or error('Unable to fetch category list', __FILE__, __LINE__, $db->error());
@@ -207,8 +204,8 @@ generate_admin_menu('categories');
 									<select name="cat_to_delete" tabindex="3">
 <?php
 
-	while (list(, list($cat_id, $cat_name, ,)) = @each($cat_list))
-		echo "\t\t\t\t\t\t\t\t\t\t".'<option value="'.$cat_id.'">'.pun_htmlspecialchars($cat_name).'</option>'."\n";
+	foreach ($cat_list as $category)
+		echo "\t\t\t\t\t\t\t\t\t\t".'<option value="'.$category[0].'">'.pun_htmlspecialchars($category[1]).'</option>'."\n";
 
 ?>
 									</select>
@@ -241,15 +238,11 @@ generate_admin_menu('categories');
 						<tbody>
 <?php
 
-	@reset($cat_list);
-	for ($i = 0; $i < $num_cats; ++$i)
+	foreach ($cat_list as $i => $category)
 	{
-		list(, list($cat_id, $cat_name, $position)) = @each($cat_list);
-
 ?>
-							<tr><td><input type="text" name="cat_name[<?php echo $i ?>]" value="<?php echo pun_htmlspecialchars($cat_name) ?>" size="35" maxlength="80" /></td><td><input type="text" name="cat_order[<?php echo $i ?>]" value="<?php echo $position ?>" size="3" maxlength="3" /></td><td>&nbsp;</td></tr>
+							<tr><td><input type="text" name="cat_name[<?php echo $i ?>]" value="<?php echo pun_htmlspecialchars($category[1]) ?>" size="35" maxlength="80" /></td><td><input type="text" name="cat_order[<?php echo $i ?>]" value="<?php echo $category[2] ?>" size="3" maxlength="3" /></td><td>&nbsp;</td></tr>
 <?php
-
 	}
 
 ?>

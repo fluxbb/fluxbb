@@ -288,7 +288,7 @@ if (!empty($errors))
 			<ul>
 <?php
 
-	while (list(, $cur_error) = each($errors))
+	foreach ($errors as $cur_error)
 		echo "\t\t\t\t".'<li><strong>'.$cur_error.'</strong></li>'."\n";
 ?>
 			</ul>
@@ -411,7 +411,7 @@ if (!empty($errors))
 							<br /><select name="language">
 <?php
 
-			while (list(, $temp) = @each($languages))
+			foreach ($languages as $temp)
 			{
 				if ($pun_config['o_default_lang'] == $temp)
 					echo "\t\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.$temp.'</option>'."\n";

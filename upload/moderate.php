@@ -387,7 +387,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		// Should we create redirect topics?
 		if (isset($_POST['with_redirect']))
 		{
-			while (list(, $cur_topic) = @each($topics))
+			foreach ($topics as $cur_topic)
 			{
 				// Fetch info for the redirect topic
 				$result = $db->query('SELECT poster, subject, posted, last_post FROM '.$db->prefix.'topics WHERE id='.$cur_topic) or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());

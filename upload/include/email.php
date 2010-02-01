@@ -167,7 +167,7 @@ function smtp_mail($to, $subject, $message, $headers = '')
 	fwrite($socket, 'MAIL FROM: <'.$pun_config['o_webmaster_email'].'>'."\r\n");
 	server_parse($socket, '250');
 
-	while (list(, $email) = @each($recipients))
+	foreach ($recipients as $email)
 	{
 		fwrite($socket, 'RCPT TO: <'.$email.'>'."\r\n");
 		server_parse($socket, '250');

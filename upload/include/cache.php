@@ -49,7 +49,7 @@ if (!function_exists('var_export'))
 		else
 			$output = $args[0];
 
-		if ($args[1] == true)
+		if ($args[1])
 			return $output;
 		else
 			echo $output;

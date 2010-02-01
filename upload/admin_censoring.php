@@ -36,7 +36,6 @@ if (isset($_POST['add_word']))
 	redirect('admin_censoring.php', 'Censor word added. Redirecting &hellip;');
 }
 
-
 // Update a censor word
 else if (isset($_POST['update']))
 {
@@ -55,7 +54,6 @@ else if (isset($_POST['update']))
 	redirect('admin_censoring.php', 'Censor word updated. Redirecting &hellip;');
 }
 
-
 // Remove a censor word
 else if (isset($_POST['remove']))
 {
@@ -67,7 +65,6 @@ else if (isset($_POST['remove']))
 
 	redirect('admin_censoring.php', 'Censor word removed. Redirecting &hellip;');
 }
-
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Censoring');
 $focus_element = array('censoring', 'new_search_for');

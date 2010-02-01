@@ -31,7 +31,7 @@ function split_words($text)
 		$noise_match = 		array('[quote', '[code', '[url', '[img', '[email', '[color', '[colour', 'quote]', 'code]', 'url]', 'img]', 'email]', 'color]', 'colour]', '^', '$', '&', '(', ')', '<', '>', '`', '\'', '"', '|', ',', '@', '_', '?', '%', '~', '+', '[', ']', '{', '}', ':', '\\', '/', '=', '#', ';', '!', '*');
 		$noise_replace =	array('',       '',      '',     '',     '',       '',       '',        '',       '',      '',     '',     '',       '',       '',        ' ', ' ', ' ', ' ', ' ', ' ', ' ', '',  '',   ' ', ' ', ' ', ' ', '',  ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '' ,  ' ', ' ', ' ', ' ', ' ', ' ');
 
-		$stopwords = (array)@file(PUN_ROOT.'lang/'.$pun_user['language'].'/stopwords.txt');
+		$stopwords = (array) file(PUN_ROOT.'lang/'.$pun_user['language'].'/stopwords.txt');
 		$stopwords = array_map('pun_trim', $stopwords);
 	}
 
@@ -137,7 +137,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 					break;
 
 				default:
-					while (list(, $word) = @each($new_words))
+					foreach ($new_words as $word)
 						$db->query('INSERT INTO '.$db->prefix.'search_words (word) VALUES(\''.$word.'\')') or error('Unable to insert search index words', __FILE__, __LINE__, $db->error());
 					break;
 			}
@@ -147,14 +147,14 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 	}
 
 	// Delete matches (only if editing a post)
-	while (list($match_in, $wordlist) = @each($words['del']))
+	foreach ($words['del'] as $match_in => $wordlist)
 	{
 		$subject_match = ($match_in == 'subject') ? 1 : 0;
 
 		if (!empty($wordlist))
 		{
 			$sql = '';
-			while (list(, $word) = @each($wordlist))
+			foreach ($wordlist as $word)
 				$sql .= (($sql != '') ? ',' : '').$cur_words[$match_in][$word];
 
 			$db->query('DELETE FROM '.$db->prefix.'search_matches WHERE word_id IN('.$sql.') AND post_id='.$post_id.' AND subject_match='.$subject_match) or error('Unable to delete search index word matches', __FILE__, __LINE__, $db->error());
@@ -162,7 +162,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 	}
 
 	// Add new matches
-	while (list($match_in, $wordlist) = @each($words['add']))
+	foreach ($words['add'] as $match_in => $wordlist)
 	{
 		$subject_match = ($match_in == 'subject') ? 1 : 0;
 

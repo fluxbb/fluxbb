@@ -50,11 +50,11 @@ function check_cookie(&$pun_user)
 		}
 
 		// Set a default language if the user selected language no longer exists
-		if (!@file_exists(PUN_ROOT.'lang/'.$pun_user['language']))
+		if (!file_exists(PUN_ROOT.'lang/'.$pun_user['language']))
 			$pun_user['language'] = $pun_config['o_default_lang'];
 
 		// Set a default style if the user selected style no longer exists
-		if (!@file_exists(PUN_ROOT.'style/'.$pun_user['style'].'.css'))
+		if (!file_exists(PUN_ROOT.'style/'.$pun_user['style'].'.css'))
 			$pun_user['style'] = $pun_config['o_default_style'];
 
 		if (!$pun_user['disp_topics'])
@@ -236,7 +236,7 @@ function forum_setcookie($name, $value, $expire)
 	global $cookie_path, $cookie_domain, $cookie_secure;
 
 	// Enable sending of a P3P header
-	@header('P3P: CP="CUR ADM"');
+	header('P3P: CP="CUR ADM"');
 
 	if (version_compare(PHP_VERSION, '5.2.0', '>='))
 		setcookie($name, $value, $expire, $cookie_path, $cookie_domain, $cookie_secure, true);
@@ -452,7 +452,7 @@ function generate_avatar_markup($user_id)
 	{
 		$path = $pun_config['o_avatars_dir'].'/'.$user_id.'.'.$cur_type;
 
-		if (file_exists(PUN_ROOT.$path) && $img_size = @getimagesize(PUN_ROOT.$path))
+		if (file_exists(PUN_ROOT.$path) && $img_size = getimagesize(PUN_ROOT.$path))
 		{
 			$avatar_markup = '<img src="'.$pun_config['o_base_url'].'/'.$path.'?m='.filemtime(PUN_ROOT.$path).'" '.$img_size[3].' alt="" />';
 			break;
@@ -535,7 +535,7 @@ function get_tracked_topics()
 	{
 		$type = substr($t, 0, 1) == 'f' ? 'forums' : 'topics';
 		$id = intval(substr($t, 1));
-		$timestamp = intval(@substr($t, strpos($t, '=') + 1));
+		$timestamp = intval(substr($t, strpos($t, '=') + 1));
 		if ($id > 0 && $timestamp > 0)
 			$tracked_topics[$type][$id] = $timestamp;
 	}
@@ -747,8 +747,7 @@ function get_title($user)
 		// Are there any ranks?
 		if ($pun_config['o_ranks'] == '1' && !empty($pun_ranks))
 		{
-			@reset($pun_ranks);
-			while (list(, $cur_rank) = @each($pun_ranks))
+			foreach ($pun_ranks as $cur_rank)
 			{
 				if (intval($user['num_posts']) >= $cur_rank['min_posts'])
 					$user_title = pun_htmlspecialchars($cur_rank['rank']);
@@ -1343,7 +1342,7 @@ H2 {MARGIN: 0; COLOR: #FFFFFF; BACKGROUND-COLOR: #B84623; FONT-SIZE: 1.1em; PADD
 //
 function forum_unregister_globals()
 {
-	$register_globals = @ini_get('register_globals');
+	$register_globals = ini_get('register_globals');
 	if ($register_globals === "" || $register_globals === "0" || strtolower($register_globals) === "off")
 		return;
 
@@ -1386,6 +1385,20 @@ function forum_remove_bad_characters()
 	$_POST = _forum_remove_bad_characters($_POST);
 	$_COOKIE = _forum_remove_bad_characters($_COOKIE);
 	$_REQUEST = _forum_remove_bad_characters($_REQUEST);
+}
+
+
+//
+// Converts the file size in bytes to a human readable file size
+//
+function file_size($size)
+{
+	$units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB');
+
+	for ($i = 0; $size > 1024; $i++)
+		$size /= 1024;
+
+	return round($size, 2).' '.$units[$i];
 }
 
 

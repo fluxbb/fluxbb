@@ -340,7 +340,7 @@ function process_form(the_form)
 
 		@natsort($languages);
 
-		while (list(, $temp) = @each($languages))
+		foreach ($languages as $temp)
 		{
 			if ($temp == $default_lang)
 				echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.$temp.'</option>'."\n";
@@ -372,7 +372,7 @@ function process_form(the_form)
 
 		@natsort($styles);
 
-		while (list(, $temp) = @each($styles))
+		foreach ($styles as $temp)
 		{
 			if ($temp == $default_style)
 				echo "\t\t\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.str_replace('_', ' ', $temp).'</option>'."\n";
@@ -1547,7 +1547,7 @@ else
 		'p_force_guest_email'		=> "'1'"
 	);
 
-	while (list($conf_name, $conf_value) = @each($config))
+	foreach ($config as $conf_name => $conf_value)
 	{
 		$db->query('INSERT INTO '.$db_prefix."config (conf_name, conf_value) VALUES('$conf_name', $conf_value)")
 			or error('Unable to insert into table '.$db_prefix.'config. Please check your configuration and try again', __FILE__, __LINE__, $db->error());

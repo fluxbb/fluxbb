@@ -135,7 +135,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				if (empty($keywords_array))
 					message($lang_search['No hits']);
 
-				while (list($i, $word) = @each($keywords_array))
+				foreach ($keywords_array as $i => $word)
 				{
 					$num_chars = pun_strlen($word);
 
@@ -149,8 +149,8 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$word_count = 0;
 				$match_type = 'and';
 				$result_list = array();
-				@reset($keywords_array);
-				while (list(, $cur_word) = @each($keywords_array))
+
+				foreach ($keywords_array as $cur_word)
 				{
 					switch ($cur_word)
 					{
@@ -179,8 +179,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 							if ($match_type == 'and' && $word_count)
 							{
-								@reset($result_list);
-								while (list($post_id,) = @each($result_list))
+								foreach ($result_list as $post_id => $temp)
 								{
 									if (!isset($row[$post_id]))
 										$result_list[$post_id] = 0;
@@ -195,8 +194,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					}
 				}
 
-				@reset($result_list);
-				while (list($post_id, $matches) = @each($result_list))
+				foreach ($result_list as $post_id => $matches)
 				{
 					if ($matches)
 						$keyword_results[] = $post_id;
@@ -498,8 +496,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		$count_search_set = count($search_set);
 		for ($i = 0; $i < $count_search_set; ++$i)
 		{
-			@reset($forum_list);
-			while (list(, $temp) = @each($forum_list))
+			foreach ($forum_list as $temp)
 			{
 				if ($temp[0] == $search_set[$i]['forum_id'])
 					$forum = '<a href="viewforum.php?id='.$temp[0].'">'.pun_htmlspecialchars($temp[1]).'</a>';
