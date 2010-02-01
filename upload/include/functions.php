@@ -471,10 +471,10 @@ function generate_page_title($page_title, $p = null)
 	global $pun_config, $lang_common;
 
 	$page_title = array_reverse($page_title);
-	
+
 	if ($p != null)
 		$page_title[0] .= ' ('.sprintf($lang_common['Page'], forum_number_format($p)).')';
-		
+
 	$crumbs = implode($lang_common['Title separator'], $page_title);
 
 	return $crumbs;
