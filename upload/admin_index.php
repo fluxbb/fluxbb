@@ -131,7 +131,7 @@ generate_admin_menu('index');
 					&nbsp;- Censor words.<br />
 					&nbsp;- Set up user ranks.<br />
 					&nbsp;- Prune old posts.<br />
-					&nbsp;- Handle post reports.<br />
+					&nbsp;- Handle post reports.
 				</p>
 			</div>
 		</div>
