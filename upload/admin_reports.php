@@ -84,7 +84,20 @@ if ($db->num_rows($result))
 	}
 }
 else
-	echo "\t\t\t\t".'<p>There are no new reports.</p>'."\n";
+{
+
+?>
+				<div class="inform">
+					<fieldset>
+						<legend>None</legend>
+						<div class="infldset">
+							<p>There are no new reports.</p>
+						</div>
+					</fieldset>
+				</div>
+<?php
+
+}
 
 ?>
 			</form>
@@ -133,7 +146,20 @@ if ($db->num_rows($result))
 	}
 }
 else
-	echo "\t\t\t\t".'<p>There are no zapped reports.</p>'."\n";
+{
+
+?>
+				<div class="inform">
+					<fieldset>
+						<legend>None</legend>
+						<div class="infldset">
+							<p>There are no zapped reports.</p>
+						</div>
+					</fieldset>
+				</div>
+<?php
+
+}
 
 ?>
 			</div>
