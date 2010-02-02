@@ -348,7 +348,7 @@ if ($db->num_rows($result))
 									<td><a href="profile.php?id=<?php echo $cur_ban['ban_creator'] ?>"><?php echo pun_htmlspecialchars($cur_ban['ban_creator_username']) ?></a></td>
 								</tr>
 <?php endif; ?>							</table>
-							<p class="linkactions"><a href="admin_bans.php?edit_ban=<?php echo $cur_ban['id'] ?>">Edit</a> - <a href="admin_bans.php?del_ban=<?php echo $cur_ban['id'] ?>">Remove</a></p>
+							<p class="linkactions"><a href="admin_bans.php?edit_ban=<?php echo $cur_ban['id'] ?>">Edit</a> | <a href="admin_bans.php?del_ban=<?php echo $cur_ban['id'] ?>">Remove</a></p>
 						</div>
 					</fieldset>
 				</div>

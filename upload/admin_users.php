@@ -162,7 +162,7 @@ if (isset($_GET['show_users']))
 			{
 				$user_title = get_title($user_data);
 
-				$actions = '<a href="admin_users.php?ip_stats='.$user_data['id'].'">View IP stats</a> - <a href="search.php?action=show_user&amp;user_id='.$user_data['id'].'">Show posts</a>';
+				$actions = '<a href="admin_users.php?ip_stats='.$user_data['id'].'">View IP stats</a> | <a href="search.php?action=show_user&amp;user_id='.$user_data['id'].'">Show posts</a>';
 
 ?>
 				<tr>
@@ -327,7 +327,7 @@ else if (isset($_POST['find_user']))
 			if (($user_data['g_id'] == '' || $user_data['g_id'] == PUN_UNVERIFIED) && $user_title != $lang_common['Banned'])
 				$user_title = '<span class="warntext">Not verified</span>';
 
-			$actions = '<a href="admin_users.php?ip_stats='.$user_data['id'].'">View IP stats</a> - <a href="search.php?action=show_user&amp;user_id='.$user_data['id'].'">Show posts</a>';
+			$actions = '<a href="admin_users.php?ip_stats='.$user_data['id'].'">View IP stats</a> | <a href="search.php?action=show_user&amp;user_id='.$user_data['id'].'">Show posts</a>';
 
 ?>
 				<tr>

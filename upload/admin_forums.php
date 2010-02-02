@@ -440,7 +440,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 
 ?>
 								<tr>
-									<td class="tcl"><a href="admin_forums.php?edit_forum=<?php echo $cur_forum['fid'] ?>">Edit</a> - <a href="admin_forums.php?del_forum=<?php echo $cur_forum['fid'] ?>">Delete</a></td>
+									<td class="tcl"><a href="admin_forums.php?edit_forum=<?php echo $cur_forum['fid'] ?>">Edit</a> | <a href="admin_forums.php?del_forum=<?php echo $cur_forum['fid'] ?>">Delete</a></td>
 									<td class="tc2"><input type="text" name="position[<?php echo $cur_forum['fid'] ?>]" size="3" maxlength="3" value="<?php echo $cur_forum['disp_position'] ?>" tabindex="<?php echo $tabindex_count ?>" />
 									<td class="tcr"><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></td>
 								</tr>
