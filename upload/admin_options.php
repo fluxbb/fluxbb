@@ -254,7 +254,7 @@ generate_admin_menu('options');
 
 ?>
 										</select>
-										<span>This is the default language used if the visitor is a guest or a user that hasn't changed from the default in his/her profile. If you remove a language pack, this must be updated.</span>
+										<span>This is the default language used for guests and users who haven't changed from the default in their profile. If you remove a language pack, this must be updated.</span>
 									</td>
 								</tr>
 								<tr>

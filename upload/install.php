@@ -325,7 +325,7 @@ function process_form(the_form)
 				<fieldset>
 					<legend>Choose the default language</legend>
 					<div class="infldset">
-						<p>This is the default language used if the visitor is a guest or a user that hasn't changed from the default in his/her profile.</p>
+						<p>This is the default language used for guests and users who haven't changed from the default in their profile.</p>
 						<label class="required"><strong>Default language</strong><br /><select id="req_default_lang" name="req_default_lang">
 <?php
 
