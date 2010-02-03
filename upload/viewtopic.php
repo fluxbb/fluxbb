@@ -153,9 +153,9 @@ if (!$pun_user['is_guest'] && $pun_config['o_subscriptions'] == '1')
 {
 	if ($cur_topic['is_subscribed'])
 		// I apologize for the variable naming here. It's a mix of subscription and action I guess :-)
-		$subscraction = '<p class="subscribelink clearb"><span>'.$lang_topic['Is subscribed'].' - </span><a href="misc.php?unsubscribe='.$id.'">'.$lang_topic['Unsubscribe'].'</a></p>'."\n";
+		$subscraction = "\t\t".'<p class="subscribelink clearb"><span>'.$lang_topic['Is subscribed'].' - </span><a href="misc.php?unsubscribe='.$id.'">'.$lang_topic['Unsubscribe'].'</a></p>'."\n";
 	else
-		$subscraction = '<p class="subscribelink clearb"><a href="misc.php?subscribe='.$id.'">'.$lang_topic['Subscribe'].'</a></p>'."\n";
+		$subscraction = "\t\t".'<p class="subscribelink clearb"><a href="misc.php?subscribe='.$id.'">'.$lang_topic['Subscribe'].'</a></p>'."\n";
 }
 else
 	$subscraction = '';
@@ -359,7 +359,7 @@ while ($cur_post = $db->fetch_assoc($result))
 			<li><span>&raquo;&#160;</span><a href="viewforum.php?id=<?php echo $cur_topic['forum_id'] ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
 			<li><span>&raquo;&#160;</span><strong><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></strong></li>
 		</ul>
-		<?php echo $subscraction ?>
+<?php echo $subscraction ?>
 		<div class="clearer"></div>
 	</div>
 </div>
