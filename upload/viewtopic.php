@@ -51,20 +51,26 @@ if ($pid)
 }
 
 // If action=new, we redirect to the first new post (if any)
-else if ($action == 'new' && !$pun_user['is_guest'])
+else if ($action == 'new')
 {
-	// We need to check if this topic has been viewed recently by the user
-	$tracked_topics = get_tracked_topics();
-	$last_viewed = isset($tracked_topics['topics'][$id]) ? $tracked_topics['topics'][$id] : $pun_user['last_visit'];
+	if (!$pun_user['is_guest'])
+	{
+		// We need to check if this topic has been viewed recently by the user
+		$tracked_topics = get_tracked_topics();
+		$last_viewed = isset($tracked_topics['topics'][$id]) ? $tracked_topics['topics'][$id] : $pun_user['last_visit'];
 
-	$result = $db->query('SELECT MIN(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id.' AND posted>'.$last_viewed) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-	$first_new_post_id = $db->result($result);
+		$result = $db->query('SELECT MIN(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id.' AND posted>'.$last_viewed) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+		$first_new_post_id = $db->result($result);
 
-	if ($first_new_post_id)
-		header('Location: viewtopic.php?pid='.$first_new_post_id.'#p'.$first_new_post_id);
-	else // If there is no new post, we go to the last post
-		header('Location: viewtopic.php?id='.$id.'&action=last');
-
+		if ($first_new_post_id)
+		{
+			header('Location: viewtopic.php?pid='.$first_new_post_id.'#p'.$first_new_post_id);
+			exit;
+		}
+	}
+	
+	// If there is no new post, we go to the last post
+	header('Location: viewtopic.php?id='.$id.'&action=last');
 	exit;
 }
 
