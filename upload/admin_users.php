@@ -28,7 +28,7 @@ if (isset($_GET['ip_stats']))
 		message($lang_common['Bad request']);
 
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Users');
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Users', 'Search results');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -37,7 +37,7 @@ if (isset($_GET['ip_stats']))
 		<ul class="crumbs">
 			<li><a href="admin_index.php">Admin Index</a></li>
 			<li><span>&raquo;&#160;</span><a href="admin_users.php">Users</a></li>
-			<li><span>&raquo;&#160;</span><strong>Search Results</strong></li>
+			<li><span>&raquo;&#160;</span><strong>Search results</strong></li>
 		</ul>
 		<div class="backlink"><a href="javascript:history.go(-1)">Go back</a></div>
 		<div class="clearer"></div>
@@ -45,7 +45,7 @@ if (isset($_GET['ip_stats']))
 </div>
 
 <div id="users1" class="blocktable">
-	<h2><span>Users</span></h2>
+	<h2><span>Search results</span></h2>
 	<div class="box">
 		<div class="inbox">
 			<table cellspacing="0">
@@ -93,7 +93,7 @@ if (isset($_GET['ip_stats']))
 		<ul class="crumbs">
 			<li><a href="admin_index.php">Admin Index</a></li>
 			<li><span>&raquo;&#160;</span><a href="admin_users.php">Users</a></li>
-			<li><span>&raquo;&#160;</span><strong>Search Results</strong></li>
+			<li><span>&raquo;&#160;</span><strong>Search results</strong></li>
 		</ul>
 		<div class="clearer"></div>
 	</div>
@@ -112,7 +112,7 @@ if (isset($_GET['show_users']))
 		message('The supplied IP address is not correctly formatted.');
 
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Users');
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Users', 'Search results');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -121,7 +121,7 @@ if (isset($_GET['show_users']))
 		<ul class="crumbs">
 			<li><a href="admin_index.php">Admin Index</a></li>
 			<li><span>&raquo;&#160;</span><a href="admin_users.php">Users</a></li>
-			<li><span>&raquo;&#160;</span><strong>Search Results</strong></li>
+			<li><span>&raquo;&#160;</span><strong>Search results</strong></li>
 		</ul>
 		<div class="backlink"><a href="javascript:history.go(-1)">Go back</a></div>
 		<div class="clearer"></div>
@@ -129,7 +129,7 @@ if (isset($_GET['show_users']))
 </div>
 
 <div id="users2" class="blocktable">
-	<h2><span>Users</span></h2>
+	<h2><span>Search results</span></h2>
 	<div class="box">
 		<div class="inbox">
 			<table cellspacing="0">
@@ -209,7 +209,7 @@ if (isset($_GET['show_users']))
 		<ul class="crumbs">
 			<li><a href="admin_index.php">Admin Index</a></li>
 			<li><span>&raquo;&#160;</span><a href="admin_users.php">Users</a></li>
-			<li><span>&raquo;&#160;</span><strong>Search Results</strong></li>
+			<li><span>&raquo;&#160;</span><strong>Search results</strong></li>
 		</ul>
 		<div class="clearer"></div>
 	</div>
@@ -282,7 +282,7 @@ else if (isset($_POST['find_user']))
 		message('You didn\'t enter any search terms.');
 
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Users');
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Users', 'Search results');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -291,7 +291,7 @@ else if (isset($_POST['find_user']))
 		<ul class="crumbs">
 			<li><a href="admin_index.php">Admin Index</a></li>
 			<li><span>&raquo;&#160;</span><a href="admin_users.php">Users</a></li>
-			<li><span>&raquo;&#160;</span><strong>Search Results</strong></li>
+			<li><span>&raquo;&#160;</span><strong>Search results</strong></li>
 		</ul>
 		<div class="backlink"><a href="javascript:history.go(-1)">Go back</a></div>
 		<div class="clearer"></div>
@@ -299,7 +299,7 @@ else if (isset($_POST['find_user']))
 </div>
 
 <div id="users2" class="blocktable">
-	<h2><span>Users</span></h2>
+	<h2><span>Search results</span></h2>
 	<div class="box">
 		<div class="inbox">
 			<table cellspacing="0">
@@ -358,7 +358,7 @@ else if (isset($_POST['find_user']))
 		<ul class="crumbs">
 			<li><a href="admin_index.php">Admin Index</a></li>
 			<li><span>&raquo;&#160;</span><a href="admin_users.php">Users</a></li>
-			<li><span>&raquo;&#160;</span><strong>Search Results</strong></li>
+			<li><span>&raquo;&#160;</span><strong>Search results</strong></li>
 		</ul>
 		<div class="clearer"></div>
 	</div>
