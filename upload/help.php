@@ -27,14 +27,14 @@ $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_he
 require PUN_ROOT.'header.php';
 
 ?>
-<h2><?php echo $lang_common['BBCode'] ?></h2>
+<h2><span><?php echo $lang_common['BBCode'] ?></span></h2>
 <div class="box">
 	<div class="inbox">
 		<p><a name="bbcode"></a><?php echo $lang_help['BBCode info 1'] ?></p>
 		<p><?php echo $lang_help['BBCode info 2'] ?></p>
 	</div>
 </div>
-<h2><?php echo $lang_help['Text style'] ?></h2>
+<h2><span><?php echo $lang_help['Text style'] ?></span></h2>
 <div class="box">
 	<div class="inbox">
 		<p><?php echo $lang_help['Text style info'] ?></p>
@@ -46,7 +46,7 @@ require PUN_ROOT.'header.php';
 		<p><code>[h]<?php echo $lang_help['Heading text'] ?>[/h]</code> <?php echo $lang_help['produces'] ?></p><h5><?php echo $lang_help['Heading text'] ?></h5>
 	</div>
 </div>
-<h2><?php echo $lang_help['Links and images'] ?></h2>
+<h2><span><?php echo $lang_help['Links and images'] ?></span></h2>
 <div class="box">
 	<div class="inbox">
 		<p><?php echo $lang_help['Links info'] ?></p>
@@ -60,7 +60,7 @@ require PUN_ROOT.'header.php';
 		<p><code>[img=FluxBB bbcode test]<?php echo $pun_config['o_base_url'].'/' ?>img/test.png[/img]</code> <?php echo $lang_help['produces'] ?> <img src="<?php echo $pun_config['o_base_url'].'/' ?>img/test.png" alt="FluxBB bbcode test" /></p>
 	</div>
 </div>
-<h2><?php echo $lang_help['Quotes'] ?></h2>
+<h2><span><?php echo $lang_help['Quotes'] ?></span></h2>
 <div class="box">
 	<div class="inbox">
 		<p><?php echo $lang_help['Quotes info'] ?></p>
@@ -78,7 +78,7 @@ require PUN_ROOT.'header.php';
 		<p><?php echo $lang_help['quote note'] ?></p>
 	</div>
 </div>
-<h2><?php echo $lang_help['Code'] ?></h2>
+<h2><span><?php echo $lang_help['Code'] ?></span></h2>
 <div class="box">
 	<div class="inbox">
 		<p><?php echo $lang_help['Code info'] ?></p>
@@ -89,13 +89,11 @@ require PUN_ROOT.'header.php';
 		</div>
 	</div>
 </div>
-<h2><?php echo $lang_help['Lists'] ?></h2>
+<h2><span><?php echo $lang_help['Lists'] ?></span></h2>
 <div class="box">
 	<div class="inbox">
 		<p><a name="lists"></a><?php echo $lang_help['List info'] ?></p>
-
 		<p><code>[list][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code> <span><?php echo $lang_help['produces list'] ?></span></p>
-
 		<div class="postmsg">
 			<ul><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ul>
 		</div>
@@ -109,14 +107,14 @@ require PUN_ROOT.'header.php';
 		</div>
 	</div>
 </div>
-<h2><?php echo $lang_help['Nested tags'] ?></h2>
+<h2><span><?php echo $lang_help['Nested tags'] ?></span></h2>
 <div class="box">
 	<div class="inbox">
 		<p><?php echo $lang_help['Nested tags info'] ?></p>
 		<p><code>[b][u]<?php echo $lang_help['Bold, underlined text'] ?>[/u][/b]</code> <?php echo $lang_help['produces'] ?> <strong><span class="bbu"><?php echo $lang_help['Bold, underlined text'] ?></span></strong></p>
 	</div>
 </div>
-<h2><?php echo $lang_common['Smilies'] ?></h2>
+<h2><span><?php echo $lang_common['Smilies'] ?></span></h2>
 <div class="box">
 	<div class="inbox">
 		<p><a name="smilies"></a><?php echo $lang_help['Smilies info'] ?></p>
@@ -132,7 +130,7 @@ foreach ($smilies as $smiley_text => $smiley_img)
 	$smiley_groups[$smiley_img][] = $smiley_text;
 
 foreach ($smiley_groups as $smiley_img => $smiley_texts)
-	echo "\t\t\t".'<p><code>'.implode('</code> '.$lang_common['and'].' <code>', $smiley_texts).'</code> <span>'.$lang_help['produces'].'</span> <img src="img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.$smiley_texts[0].'" /></p>'."\n";
+	echo "\t\t\t".'<p><code>'.implode('</code> '.$lang_common['and'].' <code>', $smiley_texts).'</code> <span>'.$lang_help['produces'].'</span> <img src="'.$pun_config['o_base_url'].'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.$smiley_texts[0].'" /></p>'."\n";
 
 ?>
 		</div>
