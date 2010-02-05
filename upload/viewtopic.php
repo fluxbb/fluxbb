@@ -68,7 +68,7 @@ else if ($action == 'new')
 			exit;
 		}
 	}
-	
+
 	// If there is no new post, we go to the last post
 	header('Location: viewtopic.php?id='.$id.'&action=last');
 	exit;
