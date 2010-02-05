@@ -1117,44 +1117,48 @@ else
 						<div class="infldset">
 							<p><?php echo $lang_prof_reg['Time zone info'] ?></p>
 							<label><?php echo $lang_prof_reg['Time zone'] ?>
-								<br /><select name="form[timezone]">
-								<option value="-12"<?php if ($user['timezone'] == -12) echo ' selected="selected"' ?>>-12</option>
-								<option value="-11"<?php if ($user['timezone'] == -11) echo ' selected="selected"' ?>>-11</option>
-								<option value="-10"<?php if ($user['timezone'] == -10) echo ' selected="selected"' ?>>-10</option>
-								<option value="-9.5"<?php if ($user['timezone'] == -9.5) echo ' selected="selected"' ?>>-09.5</option>
-								<option value="-9"<?php if ($user['timezone'] == -9) echo ' selected="selected"' ?>>-09</option>
-								<option value="-8.5"<?php if ($user['timezone'] == -8.5) echo ' selected="selected"' ?>>-08.5</option>
-								<option value="-8"<?php if ($user['timezone'] == -8) echo ' selected="selected"' ?>>-08 PST</option>
-								<option value="-7"<?php if ($user['timezone'] == -7) echo ' selected="selected"' ?>>-07 MST</option>
-								<option value="-6"<?php if ($user['timezone'] == -6) echo ' selected="selected"' ?>>-06 CST</option>
-								<option value="-5"<?php if ($user['timezone'] == -5) echo ' selected="selected"' ?>>-05 EST</option>
-								<option value="-4"<?php if ($user['timezone'] == -4) echo ' selected="selected"' ?>>-04 AST</option>
-								<option value="-3.5"<?php if ($user['timezone'] == -3.5) echo ' selected="selected"' ?>>-03.5</option>
-								<option value="-3"<?php if ($user['timezone'] == -3) echo ' selected="selected"' ?>>-03 ADT</option>
-								<option value="-2"<?php if ($user['timezone'] == -2) echo ' selected="selected"' ?>>-02</option>
-								<option value="-1"<?php if ($user['timezone'] == -1) echo ' selected="selected"' ?>>-01</option>
-								<option value="0"<?php if ($user['timezone'] == 0) echo ' selected="selected"' ?>>00 GMT</option>
-								<option value="1"<?php if ($user['timezone'] == 1) echo ' selected="selected"' ?>>+01 CET</option>
-								<option value="2"<?php if ($user['timezone'] == 2) echo ' selected="selected"' ?>>+02</option>
-								<option value="3"<?php if ($user['timezone'] == 3) echo ' selected="selected"' ?>>+03</option>
-								<option value="3.5"<?php if ($user['timezone'] == 3.5) echo ' selected="selected"' ?>>+03.5</option>
-								<option value="4"<?php if ($user['timezone'] == 4) echo ' selected="selected"' ?>>+04</option>
-								<option value="4.5"<?php if ($user['timezone'] == 4.5) echo ' selected="selected"' ?>>+04.5</option>
-								<option value="5"<?php if ($user['timezone'] == 5) echo ' selected="selected"' ?>>+05</option>
-								<option value="5.5"<?php if ($user['timezone'] == 5.5) echo ' selected="selected"' ?>>+05.5</option>
-								<option value="6"<?php if ($user['timezone'] == 6) echo ' selected="selected"' ?>>+06</option>
-								<option value="6.5"<?php if ($user['timezone'] == 6.5) echo ' selected="selected"' ?>>+06.5</option>
-								<option value="7"<?php if ($user['timezone'] == 7) echo ' selected="selected"' ?>>+07</option>
-								<option value="8"<?php if ($user['timezone'] == 8) echo ' selected="selected"' ?>>+08</option>
-								<option value="9"<?php if ($user['timezone'] == 9) echo ' selected="selected"' ?>>+09</option>
-								<option value="9.5"<?php if ($user['timezone'] == 9.5) echo ' selected="selected"' ?>>+09.5</option>
-								<option value="10"<?php if ($user['timezone'] == 10) echo ' selected="selected"' ?>>+10</option>
-								<option value="10.5"<?php if ($user['timezone'] == 10.5) echo ' selected="selected"' ?>>+10.5</option>
-								<option value="11"<?php if ($user['timezone'] == 11) echo ' selected="selected"' ?>>+11</option>
-								<option value="11.5"<?php if ($user['timezone'] == 11.5) echo ' selected="selected"' ?>>+11.5</option>
-								<option value="12"<?php if ($user['timezone'] == 12) echo ' selected="selected"' ?>>+12</option>
-								<option value="13"<?php if ($user['timezone'] == 13) echo ' selected="selected"' ?>>+13</option>
-								<option value="14"<?php if ($user['timezone'] == 14) echo ' selected="selected"' ?>>+14</option>
+
+							<br /><select name="form[timezone]">
+								<option value="-12"<?php if ($user['timezone'] == -12) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-12:00'] ?></option>
+								<option value="-11"<?php if ($user['timezone'] == -11) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-11:00'] ?></option>
+								<option value="-10"<?php if ($user['timezone'] == -10) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-10:00'] ?></option>
+								<option value="-9.5"<?php if ($user['timezone'] == -9.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-09:30'] ?></option>
+								<option value="-9"<?php if ($user['timezone'] == -9) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-09:00'] ?></option>
+								<option value="-8.5"<?php if ($user['timezone'] == -8.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-08:30'] ?></option>
+								<option value="-8"<?php if ($user['timezone'] == -8) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-08:00'] ?></option>
+								<option value="-7"<?php if ($user['timezone'] == -7) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-07:00'] ?></option>
+								<option value="-6"<?php if ($user['timezone'] == -6) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-06:00'] ?></option>
+								<option value="-5"<?php if ($user['timezone'] == -5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-05:00'] ?></option>
+								<option value="-4"<?php if ($user['timezone'] == -4) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-04:00'] ?></option>
+								<option value="-3.5"<?php if ($user['timezone'] == -3.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-03:30'] ?></option>
+								<option value="-3"<?php if ($user['timezone'] == -3) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-03:00'] ?></option>
+								<option value="-2"<?php if ($user['timezone'] == -2) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-02:00'] ?></option>
+								<option value="-1"<?php if ($user['timezone'] == -1) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-01:00'] ?></option>
+								<option value="0"<?php if ($user['timezone'] == 0) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC'] ?></option>
+								<option value="1"<?php if ($user['timezone'] == 1) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+01:00'] ?></option>
+								<option value="2"<?php if ($user['timezone'] == 2) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+02:00'] ?></option>
+								<option value="3"<?php if ($user['timezone'] == 3) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+03:00'] ?></option>
+								<option value="3.5"<?php if ($user['timezone'] == 3.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+03:30'] ?></option>
+								<option value="4"<?php if ($user['timezone'] == 4) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+04:00'] ?></option>
+								<option value="4.5"<?php if ($user['timezone'] == 4.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+04:30'] ?></option>
+								<option value="5"<?php if ($user['timezone'] == 5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+05:00'] ?></option>
+								<option value="5.5"<?php if ($user['timezone'] == 5.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+05:30'] ?></option>
+								<option value="5.75"<?php if ($user['timezone'] == 5.75) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+05:45'] ?></option>
+								<option value="6"<?php if ($user['timezone'] == 6) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+06:00'] ?></option>
+								<option value="6.5"<?php if ($user['timezone'] == 6.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+06:30'] ?></option>
+								<option value="7"<?php if ($user['timezone'] == 7) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+07:00'] ?></option>
+								<option value="8"<?php if ($user['timezone'] == 8) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+08:00'] ?></option>
+								<option value="8.75"<?php if ($user['timezone'] == 8.75) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+08:45'] ?></option>
+								<option value="9"<?php if ($user['timezone'] == 9) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+09:00'] ?></option>
+								<option value="9.5"<?php if ($user['timezone'] == 9.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+09:30'] ?></option>
+								<option value="10"<?php if ($user['timezone'] == 10) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+10:00'] ?></option>
+								<option value="10.5"<?php if ($user['timezone'] == 10.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+10:30'] ?></option>
+								<option value="11"<?php if ($user['timezone'] == 11) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+11:00'] ?></option>
+								<option value="11.5"<?php if ($user['timezone'] == 11.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+11:30'] ?></option>
+								<option value="12"<?php if ($user['timezone'] == 12) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+12:00'] ?></option>
+								<option value="12.75"<?php if ($user['timezone'] == 12.75) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+12:45'] ?></option>
+								<option value="13"<?php if ($user['timezone'] == 13) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+13:00'] ?></option>
+								<option value="14"<?php if ($user['timezone'] == 14) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+14:00'] ?></option>
 							</select>
 							<br /></label>
 							<div class="rbox">

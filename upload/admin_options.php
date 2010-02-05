@@ -180,42 +180,46 @@ generate_admin_menu('options');
 									<th scope="row">Default time zone</th>
 									<td>
 										<select name="form[default_timezone]">
-											<option value="-12"<?php if ($pun_config['o_default_timezone'] == -12 ) echo ' selected="selected"' ?>>-12</option>
-											<option value="-11"<?php if ($pun_config['o_default_timezone'] == -11) echo ' selected="selected"' ?>>-11</option>
-											<option value="-10"<?php if ($pun_config['o_default_timezone'] == -10) echo ' selected="selected"' ?>>-10</option>
-											<option value="-9.5"<?php if ($pun_config['o_default_timezone'] == -9.5) echo ' selected="selected"' ?>>-09.5</option>
-											<option value="-9"<?php if ($pun_config['o_default_timezone'] == -9 ) echo ' selected="selected"' ?>>-09</option>
-											<option value="-8.5"<?php if ($pun_config['o_default_timezone'] == -8.5) echo ' selected="selected"' ?>>-08.5</option>
-											<option value="-8"<?php if ($pun_config['o_default_timezone'] == -8 ) echo ' selected="selected"' ?>>-08 PST</option>
-											<option value="-7"<?php if ($pun_config['o_default_timezone'] == -7 ) echo ' selected="selected"' ?>>-07 MST</option>
-											<option value="-6"<?php if ($pun_config['o_default_timezone'] == -6 ) echo ' selected="selected"' ?>>-06 CST</option>
-											<option value="-5"<?php if ($pun_config['o_default_timezone'] == -5 ) echo ' selected="selected"' ?>>-05 EST</option>
-											<option value="-4"<?php if ($pun_config['o_default_timezone'] == -4 ) echo ' selected="selected"' ?>>-04 AST</option>
-											<option value="-3.5"<?php if ($pun_config['o_default_timezone'] == -3.5) echo ' selected="selected"' ?>>-03.5</option>
-											<option value="-3"<?php if ($pun_config['o_default_timezone'] == -3 ) echo ' selected="selected"' ?>>-03 ADT</option>
-											<option value="-2"<?php if ($pun_config['o_default_timezone'] == -2 ) echo ' selected="selected"' ?>>-02</option>
-											<option value="-1"<?php if ($pun_config['o_default_timezone'] == -1) echo ' selected="selected"' ?>>-01</option>
-											<option value="0"<?php if ($pun_config['o_default_timezone'] == 0) echo ' selected="selected"' ?>>00 GMT</option>
-											<option value="1"<?php if ($pun_config['o_default_timezone'] == 1) echo ' selected="selected"' ?>>+01 CET</option>
-											<option value="2"<?php if ($pun_config['o_default_timezone'] == 2 ) echo ' selected="selected"' ?>>+02</option>
-											<option value="3"<?php if ($pun_config['o_default_timezone'] == 3 ) echo ' selected="selected"' ?>>+03</option>
-											<option value="3.5"<?php if ($pun_config['o_default_timezone'] == 3.5) echo ' selected="selected"' ?>>+03.5</option>
-											<option value="4"<?php if ($pun_config['o_default_timezone'] == 4 ) echo ' selected="selected"' ?>>+04</option>
-											<option value="4.5"<?php if ($pun_config['o_default_timezone'] == 4.5) echo ' selected="selected"' ?>>+04.5</option>
-											<option value="5"<?php if ($pun_config['o_default_timezone'] == 5 ) echo ' selected="selected"' ?>>+05</option>
-											<option value="5.5"<?php if ($pun_config['o_default_timezone'] == 5.5) echo ' selected="selected"' ?>>+05.5</option>
-											<option value="6"<?php if ($pun_config['o_default_timezone'] == 6 ) echo ' selected="selected"' ?>>+06</option>
-											<option value="6.5"<?php if ($pun_config['o_default_timezone'] == 6.5) echo ' selected="selected"' ?>>+06.5</option>
-											<option value="7"<?php if ($pun_config['o_default_timezone'] == 7 ) echo ' selected="selected"' ?>>+07</option>
-											<option value="8"<?php if ($pun_config['o_default_timezone'] == 8 ) echo ' selected="selected"' ?>>+08</option>
-											<option value="9"<?php if ($pun_config['o_default_timezone'] == 9 ) echo ' selected="selected"' ?>>+09</option>
-											<option value="9.5"<?php if ($pun_config['o_default_timezone'] == 9.5) echo ' selected="selected"' ?>>+09.5</option>
-											<option value="10"<?php if ($pun_config['o_default_timezone'] == 10) echo ' selected="selected"' ?>>+10</option>
-											<option value="10.5"<?php if ($pun_config['o_default_timezone'] == 10.5) echo ' selected="selected"' ?>>+10.5</option>
-											<option value="11"<?php if ($pun_config['o_default_timezone'] == 11) echo ' selected="selected"' ?>>+11</option>
-											<option value="11.5"<?php if ($pun_config['o_default_timezone'] == 11.5) echo ' selected="selected"' ?>>+11.5</option>
-											<option value="12"<?php if ($pun_config['o_default_timezone'] == 12 ) echo ' selected="selected"' ?>>+12</option>
-											<option value="13"<?php if ($pun_config['o_default_timezone'] == 13 ) echo ' selected="selected"' ?>>+13</option>
+											<option value="-12"<?php if ($pun_config['o_default_timezone'] == -12) echo ' selected="selected"' ?>>(UTC-12:00) International Date Line West</option>
+											<option value="-11"<?php if ($pun_config['o_default_timezone'] == -11) echo ' selected="selected"' ?>>(UTC-11:00) Niue, Samoa</option>
+											<option value="-10"<?php if ($pun_config['o_default_timezone'] == -10) echo ' selected="selected"' ?>>(UTC-10:00) Hawaii-Aleutian, Cook Island</option>
+											<option value="-9.5"<?php if ($pun_config['o_default_timezone'] == -9.5) echo ' selected="selected"' ?>>(UTC-09:30) Marquesas Islands</option>
+											<option value="-9"<?php if ($pun_config['o_default_timezone'] == -9) echo ' selected="selected"' ?>>(UTC-09:00) Alaska, Gambier Island</option>
+											<option value="-8.5"<?php if ($pun_config['o_default_timezone'] == -8.5) echo ' selected="selected"' ?>>(UTC-08:30) Pitcairn Islands</option>
+											<option value="-8"<?php if ($pun_config['o_default_timezone'] == -8) echo ' selected="selected"' ?>>(UTC-08:00) Pacific</option>
+											<option value="-7"<?php if ($pun_config['o_default_timezone'] == -7) echo ' selected="selected"' ?>>(UTC-07:00) Mountain</option>
+											<option value="-6"<?php if ($pun_config['o_default_timezone'] == -6) echo ' selected="selected"' ?>>(UTC-06:00) Central</option>
+											<option value="-5"<?php if ($pun_config['o_default_timezone'] == -5) echo ' selected="selected"' ?>>(UTC-05:00) Eastern</option>
+											<option value="-4"<?php if ($pun_config['o_default_timezone'] == -4) echo ' selected="selected"' ?>>(UTC-04:00) Atlantic</option>
+											<option value="-3.5"<?php if ($pun_config['o_default_timezone'] == -3.5) echo ' selected="selected"' ?>>(UTC-03:30) Newfoundland</option>
+											<option value="-3"<?php if ($pun_config['o_default_timezone'] == -3) echo ' selected="selected"' ?>>(UTC-03:00) Amazon, Central Greenland</option>
+											<option value="-2"<?php if ($pun_config['o_default_timezone'] == -2) echo ' selected="selected"' ?>>(UTC-02:00) Mid-Atlantic</option>
+											<option value="-1"<?php if ($pun_config['o_default_timezone'] == -1) echo ' selected="selected"' ?>>(UTC-01:00) Azores, Cape Verde, Eastern Greenland</option>
+											<option value="0"<?php if ($pun_config['o_default_timezone'] == 0) echo ' selected="selected"' ?>>(UTC) Western European, Greenwich</option>
+											<option value="1"<?php if ($pun_config['o_default_timezone'] == 1) echo ' selected="selected"' ?>>(UTC+01:00) Central European, West African</option>
+											<option value="2"<?php if ($pun_config['o_default_timezone'] == 2) echo ' selected="selected"' ?>>(UTC+02:00) Eastern European, Central African</option>
+											<option value="3"<?php if ($pun_config['o_default_timezone'] == 3) echo ' selected="selected"' ?>>(UTC+03:00) Moscow, Eastern African</option>
+											<option value="3.5"<?php if ($pun_config['o_default_timezone'] == 3.5) echo ' selected="selected"' ?>>(UTC+03:30) Iran</option>
+											<option value="4"<?php if ($pun_config['o_default_timezone'] == 4) echo ' selected="selected"' ?>>(UTC+04:00) Gulf, Samara</option>
+											<option value="4.5"<?php if ($pun_config['o_default_timezone'] == 4.5) echo ' selected="selected"' ?>>(UTC+04:30) Afghanistan</option>
+											<option value="5"<?php if ($pun_config['o_default_timezone'] == 5) echo ' selected="selected"' ?>>(UTC+05:00) Pakistan, Yekaterinburg</option>
+											<option value="5.5"<?php if ($pun_config['o_default_timezone'] == 5.5) echo ' selected="selected"' ?>>(UTC+05:30) India, Sri Lanka</option>
+											<option value="5.75"<?php if ($pun_config['o_default_timezone'] == 5.75) echo ' selected="selected"' ?>>(UTC+05:45) Nepal</option>
+											<option value="6"<?php if ($pun_config['o_default_timezone'] == 6) echo ' selected="selected"' ?>>(UTC+06:00) Bangladesh, Bhutan, Novosibirsk</option>
+											<option value="6.5"<?php if ($pun_config['o_default_timezone'] == 6.5) echo ' selected="selected"' ?>>(UTC+06:30) Cocos Islands, Myanmar</option>
+											<option value="7"<?php if ($pun_config['o_default_timezone'] == 7) echo ' selected="selected"' ?>>(UTC+07:00) Indochina, Krasnoyarsk</option>
+											<option value="8"<?php if ($pun_config['o_default_timezone'] == 8) echo ' selected="selected"' ?>>(UTC+08:00) Greater China, Australian Western, Irkutsk</option>
+											<option value="8.75"<?php if ($pun_config['o_default_timezone'] == 8.75) echo ' selected="selected"' ?>>(UTC+08:45) Southeastern Western Australia</option>
+											<option value="9"<?php if ($pun_config['o_default_timezone'] == 9) echo ' selected="selected"' ?>>(UTC+09:00) Japan, Korea, Chita</option>
+											<option value="9.5"<?php if ($pun_config['o_default_timezone'] == 9.5) echo ' selected="selected"' ?>>(UTC+09:30) Australian Central</option>
+											<option value="10"<?php if ($pun_config['o_default_timezone'] == 10) echo ' selected="selected"' ?>>(UTC+10:00) Australian Eastern, Vladivostok</option>
+											<option value="10.5"<?php if ($pun_config['o_default_timezone'] == 10.5) echo ' selected="selected"' ?>>(UTC+10:30) Lord Howe</option>
+											<option value="11"<?php if ($pun_config['o_default_timezone'] == 11) echo ' selected="selected"' ?>>(UTC+11:00) Solomon Island, Magadan</option>
+											<option value="11.5"<?php if ($pun_config['o_default_timezone'] == 11.5) echo ' selected="selected"' ?>>(UTC+11:30) Norfolk Island</option>
+											<option value="12"<?php if ($pun_config['o_default_timezone'] == 12) echo ' selected="selected"' ?>>(UTC+12:00) New Zealand, Fiji, Kamchatka</option>
+											<option value="12.75"<?php if ($pun_config['o_default_timezone'] == 12.75) echo ' selected="selected"' ?>>(UTC+12:45) Chatham Islands</option>
+											<option value="13"<?php if ($pun_config['o_default_timezone'] == 13) echo ' selected="selected"' ?>>(UTC+13:00) Tonga, Phoenix Islands</option>
+											<option value="14"<?php if ($pun_config['o_default_timezone'] == 14) echo ' selected="selected"' ?>>(UTC+14:00) Line Islands</option>
 										</select>
 										<span>The default time zone for guests and users attempting to register for the board.</span>
 									</td>
@@ -277,14 +281,15 @@ generate_admin_menu('options');
 		foreach ($styles as $temp)
 		{
 			if ($pun_config['o_default_style'] == $temp)
-				echo "\t\t\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.str_replace('_', ' ', $temp).'</option>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.str_replace('_', ' ', $temp).'</option>'."\n";
 			else
-				echo "\t\t\t\t\t\t\t\t\t".'<option value="'.$temp.'">'.str_replace('_', ' ', $temp).'</option>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$temp.'">'.str_replace('_', ' ', $temp).'</option>'."\n";
 		}
 
 ?>
 										</select>
-										<span>This is the default style used for guests and users who haven't changed from the default in their profile.</span></td>
+										<span>This is the default style used for guests and users who haven't changed from the default in their profile.</span>
+									</td>
 								</tr>
 							</table>
 						</div>
