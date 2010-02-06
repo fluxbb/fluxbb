@@ -38,6 +38,7 @@ if (isset($_POST['zap_id']))
 
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Reports');
+define('FORUM_PAGE', 'admin-reports');
 require PUN_ROOT.'header.php';
 
 generate_admin_menu('reports');

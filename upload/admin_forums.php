@@ -87,6 +87,7 @@ else if (isset($_GET['del_forum']))
 
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Forums');
+		define('FORUM_PAGE', 'admin-forums');
 		require PUN_ROOT.'header.php';
 
 		generate_admin_menu('forums');
@@ -226,6 +227,7 @@ else if (isset($_GET['edit_forum']))
 	$cur_forum = $db->fetch_assoc($result);
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Forums');
+	define('FORUM_PAGE', 'admin-forums');
 	require PUN_ROOT.'header.php';
 
 	generate_admin_menu('forums');
@@ -354,6 +356,7 @@ else if (isset($_GET['edit_forum']))
 
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Forums');
+define('FORUM_PAGE', 'admin-forums');
 require PUN_ROOT.'header.php';
 
 generate_admin_menu('forums');

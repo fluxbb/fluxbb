@@ -126,6 +126,7 @@ if ($db->num_rows($result))
 	$first_id = $db->result($result);
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Maintenance');
+define('FORUM_PAGE', 'admin-maintenance');
 require PUN_ROOT.'header.php';
 
 generate_admin_menu('maintenance');

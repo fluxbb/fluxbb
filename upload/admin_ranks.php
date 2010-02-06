@@ -105,6 +105,7 @@ else if (isset($_POST['remove']))
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Ranks');
 $focus_element = array('ranks', 'new_rank');
+define('FORUM_PAGE', 'admin-ranks');
 require PUN_ROOT.'header.php';
 
 generate_admin_menu('ranks');

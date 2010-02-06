@@ -173,6 +173,7 @@ else if ($pun_config['o_feed_type'] == '2')
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), pun_htmlspecialchars($cur_topic['forum_name']), pun_htmlspecialchars($cur_topic['subject']));
 define('PUN_ALLOW_INDEX', 1);
+define('FORUM_PAGE', 'viewtopic');
 require PUN_ROOT.'header.php';
 
 ?>

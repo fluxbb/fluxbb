@@ -418,6 +418,7 @@ else
 	$focus_element[] = 'req_username';
 }
 
+define('FORUM_PAGE', 'post');
 require PUN_ROOT.'header.php';
 
 ?>

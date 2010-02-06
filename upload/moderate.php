@@ -117,6 +117,7 @@ if (isset($_GET['tid']))
 
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Moderate']);
+		define('FORUM_PAGE', 'dialogue');
 		require PUN_ROOT.'header.php';
 
 ?>
@@ -202,6 +203,7 @@ if (isset($_GET['tid']))
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Moderate']);
 		$focus_element = array('subject','new_subject');
+		define('FORUM_PAGE', 'dialogue');
 		require PUN_ROOT.'header.php';
 
 ?>
@@ -253,6 +255,7 @@ if (isset($_GET['tid']))
 
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), pun_htmlspecialchars($cur_topic['forum_name']), pun_htmlspecialchars($cur_topic['subject']));
+	define('FORUM_PAGE', 'modtopic');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -428,6 +431,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		message($lang_misc['Nowhere to move']);
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Moderate']);
+	define('FORUM_PAGE', 'dialogue');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -543,6 +547,7 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 		message($lang_misc['Not enough topics selected']);
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Moderate']);
+	define('FORUM_PAGE', 'dialogue');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -619,6 +624,7 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Moderate']);
+	define('FORUM_PAGE', 'dialogue');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -737,6 +743,7 @@ $start_from = $pun_user['disp_topics'] * ($p - 1);
 $paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'moderate.php?fid='.$fid);
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), pun_htmlspecialchars($cur_forum['forum_name']));
+define('FORUM_PAGE', 'modforum');
 require PUN_ROOT.'header.php';
 
 ?>

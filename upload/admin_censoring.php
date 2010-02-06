@@ -68,6 +68,7 @@ else if (isset($_POST['remove']))
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Censoring');
 $focus_element = array('censoring', 'new_search_for');
+define('FORUM_PAGE', 'admin-censoring');
 require PUN_ROOT.'header.php';
 
 generate_admin_menu('censoring');

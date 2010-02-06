@@ -37,6 +37,7 @@ if (isset($_GET['cancel']))
 else if ($pun_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POST['form_sent']))
 {
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_register['Register'], $lang_register['Forum rules']);
+	define('FORUM_PAGE', 'rules');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -266,6 +267,7 @@ if (isset($_POST['form_sent']))
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_register['Register']);
 $required_fields = array('req_username' => $lang_common['Username'], 'req_password1' => $lang_common['Password'], 'req_password2' => $lang_prof_reg['Confirm pass'], 'req_email1' => $lang_common['Email'], 'req_email2' => $lang_common['Email'].' 2');
 $focus_element = array('register', 'req_username');
+define('FORUM_PAGE', 'register');
 require PUN_ROOT.'header.php';
 
 $timezone = isset($timezone) ? $timezone : $pun_config['o_default_timezone'];

@@ -38,6 +38,7 @@ else if ($pun_config['o_feed_type'] == '2')
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']));
 define('PUN_ALLOW_INDEX', 1);
+define('FORUM_PAGE', 'index');
 require PUN_ROOT.'header.php';
 
 // Print the categories and forums
