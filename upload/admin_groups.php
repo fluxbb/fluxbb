@@ -63,7 +63,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 				<p class="submittop"><input type="submit" name="add_edit_group" value=" Save " /></p>
 				<div class="inform">
 					<input type="hidden" name="mode" value="<?php echo $mode ?>" />
-<?php if ($mode == 'edit'): ?>				<input type="hidden" name="group_id" value="<?php echo $group_id ?>" />
+<?php if ($mode == 'edit'): ?>					<input type="hidden" name="group_id" value="<?php echo $group_id ?>" />
 <?php endif; ?><?php if ($mode == 'add'): ?>				<input type="hidden" name="base_group" value="<?php echo $base_group ?>" />
 <?php endif; ?>					<fieldset>
 						<legend>Setup group options and permissions</legend>

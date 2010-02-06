@@ -170,88 +170,91 @@ generate_admin_menu('categories');
 	<div class="blockform">
 		<h2><span>Add categories</span></h2>
 		<div class="box">
-		<form method="post" action="admin_categories.php?action=foo">
-			<div class="inform">
-				<fieldset>
-					<legend>Add categories</legend>
-					<div class="infldset">
-						<table class="aligntop" cellspacing="0">
-							<tr>
-								<th scope="row">Add a new category<div><input type="submit" name="add_cat" value="Add New" tabindex="2" /></div></th>
-								<td>
-									<input type="text" name="new_cat_name" size="35" maxlength="80" tabindex="1" />
-									<span>The name of the new category you want to add. You can edit the name of the category later (see below). Go to <a href="admin_forums.php">Forums</a> to add forums to your new category.</span>
-								</td>
-							</tr>
-						</table>
-					</div>
-				</fieldset>
-			</div>
-		</form>
+			<form method="post" action="admin_categories.php?action=foo">
+				<div class="inform">
+					<fieldset>
+						<legend>Add categories</legend>
+						<div class="infldset">
+							<table class="aligntop" cellspacing="0">
+								<tr>
+									<th scope="row">Add a new category<div><input type="submit" name="add_cat" value="Add New" tabindex="2" /></div></th>
+									<td>
+										<input type="text" name="new_cat_name" size="35" maxlength="80" tabindex="1" />
+										<span>The name of the new category you want to add. You can edit the name of the category later (see below). Go to <a href="admin_forums.php">Forums</a> to add forums to your new category.</span>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</fieldset>
+				</div>
+			</form>
 		</div>
 
 <?php if ($num_cats): ?>		<h2 class="block2"><span>Remove categories</span></h2>
 		<div class="box">
-		<form method="post" action="admin_categories.php?action=foo">
-			<div class="inform">
-				<fieldset>
-					<legend>Delete categories</legend>
-					<div class="infldset">
-						<table class="aligntop" cellspacing="0">
-							<tr>
-								<th scope="row">Delete a category<div><input type="submit" name="del_cat" value="Delete" tabindex="4" /></div></th>
-								<td>
-									<select name="cat_to_delete" tabindex="3">
+			<form method="post" action="admin_categories.php?action=foo">
+				<div class="inform">
+					<fieldset>
+						<legend>Delete categories</legend>
+						<div class="infldset">
+							<table class="aligntop" cellspacing="0">
+								<tr>
+									<th scope="row">Delete a category<div><input type="submit" name="del_cat" value="Delete" tabindex="4" /></div></th>
+									<td>
+										<select name="cat_to_delete" tabindex="3">
 <?php
 
 	foreach ($cat_list as $category)
-		echo "\t\t\t\t\t\t\t\t\t\t".'<option value="'.$category[0].'">'.pun_htmlspecialchars($category[1]).'</option>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$category[0].'">'.pun_htmlspecialchars($category[1]).'</option>'."\n";
 
 ?>
-									</select>
-									<span>Select the name of the category you want to delete. You will be asked to confirm your choice of category for deletion before it is deleted.</span>
-								</td>
-							</tr>
-						</table>
-					</div>
-				</fieldset>
-			</div>
-		</form>
+										</select>
+										<span>Select the name of the category you want to delete. You will be asked to confirm your choice of category for deletion before it is deleted.</span>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</fieldset>
+				</div>
+			</form>
 		</div>
 <?php endif; ?>
 
 <?php if ($num_cats): ?>		<h2 class="block2"><span>Edit categories</span></h2>
 		<div class="box">
-		<form method="post" action="admin_categories.php?action=foo">
-			<div class="inform">
-				<fieldset>
-					<legend>Edit categories</legend>
-					<div class="infldset">
-						<table id="categoryedit" cellspacing="0" >
-						<thead>
-							<tr>
-								<th class="tcl" scope="col">Name</th>
-								<th scope="col">Position</th>
-							</tr>
-						</thead>
-						<tbody>
+			<form method="post" action="admin_categories.php?action=foo">
+				<div class="inform">
+					<fieldset>
+						<legend>Edit categories</legend>
+						<div class="infldset">
+							<table id="categoryedit" cellspacing="0" >
+							<thead>
+								<tr>
+									<th class="tcl" scope="col">Name</th>
+									<th scope="col">Position</th>
+								</tr>
+							</thead>
+							<tbody>
 <?php
 
 	foreach ($cat_list as $i => $category)
 	{
 ?>
-							<tr><td class="tcl"><input type="text" name="cat_name[<?php echo $i ?>]" value="<?php echo pun_htmlspecialchars($category[1]) ?>" size="35" maxlength="80" /></td><td><input type="text" name="cat_order[<?php echo $i ?>]" value="<?php echo $category[2] ?>" size="3" maxlength="3" /></td></tr>
+								<tr>
+									<td class="tcl"><input type="text" name="cat_name[<?php echo $i ?>]" value="<?php echo pun_htmlspecialchars($category[1]) ?>" size="35" maxlength="80" /></td>
+									<td><input type="text" name="cat_order[<?php echo $i ?>]" value="<?php echo $category[2] ?>" size="3" maxlength="3" /></td>
+								</tr>
 <?php
 	}
 
 ?>
-						</tbody>
-						</table>
-						<div class="fsetsubmit"><input type="submit" name="update" value="Update" /></div>
-					</div>
-				</fieldset>
-			</div>
-		</form>
+							</tbody>
+							</table>
+							<div class="fsetsubmit"><input type="submit" name="update" value="Update" /></div>
+						</div>
+					</fieldset>
+				</div>
+			</form>
 		</div>
 <?php endif; ?>	</div>
 	<div class="clearer"></div>

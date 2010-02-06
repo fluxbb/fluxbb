@@ -109,15 +109,15 @@ else // If not, we show the "Show text" form
 					<fieldset>
 						<legend>Enter a piece of text and hit "Show text"!</legend>
 						<div class="infldset">
-						<table class="aligntop" cellspacing="0">
-							<tr>
-								<th scope="row">Text to show<div><input type="submit" name="show_text" value="Show text" tabindex="2" /></div></th>
-								<td>
-									<input type="text" name="text_to_show" size="25" tabindex="1" />
-									<span>The text you want to display.</span>
-								</td>
-							</tr>
-						</table>
+							<table class="aligntop" cellspacing="0">
+								<tr>
+									<th scope="row">Text to show<div><input type="submit" name="show_text" value="Show text" tabindex="2" /></div></th>
+									<td>
+										<input type="text" name="text_to_show" size="25" tabindex="1" />
+										<span>The text you want to display.</span>
+									</td>
+								</tr>
+							</table>
 						</div>
 					</fieldset>
 				</div>

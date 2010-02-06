@@ -378,10 +378,10 @@ generate_admin_menu('forums');
 	if ($db->num_rows($result) > 0)
 	{
 		while ($cur_cat = $db->fetch_assoc($result))
-			echo "\t\t\t\t\t\t\t\t\t".'<option value="'.$cur_cat['id'].'">'.pun_htmlspecialchars($cur_cat['cat_name']).'</option>'."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$cur_cat['id'].'">'.pun_htmlspecialchars($cur_cat['cat_name']).'</option>'."\n";
 	}
 	else
-		echo "\t\t\t\t\t\t\t\t\t".'<option value="0" disabled="disabled">No categories exist</option>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="0" disabled="disabled">No categories exist</option>'."\n";
 
 ?>
 										</select>

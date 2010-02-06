@@ -150,7 +150,7 @@ generate_admin_menu('options');
 			<form method="post" action="admin_options.php?action=foo">
 				<p class="submittop"><input type="submit" name="save" value="Save changes" /></p>
 				<div class="inform">
-				<input type="hidden" name="form_sent" value="1" />
+					<input type="hidden" name="form_sent" value="1" />
 					<fieldset>
 						<legend>Essentials</legend>
 						<div class="infldset">

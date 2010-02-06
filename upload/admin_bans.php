@@ -366,7 +366,6 @@ else
 						<div class="infldset">
 							<p>No bans in list.</p>
 						</div>
-
 					</fieldset>
 				</div>
 <?php

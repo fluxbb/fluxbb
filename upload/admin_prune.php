@@ -150,7 +150,7 @@ else
 		<div class="box">
 			<form id="prune" method="post" action="admin_prune.php?action=foo" onsubmit="return process_form(this)">
 				<div class="inform">
-				<input type="hidden" name="form_sent" value="1" />
+					<input type="hidden" name="form_sent" value="1" />
 					<fieldset>
 						<legend>Prune old posts</legend>
 						<div class="infldset">

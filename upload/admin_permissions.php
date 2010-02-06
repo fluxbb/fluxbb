@@ -54,7 +54,7 @@ generate_admin_menu('permissions');
 			<form method="post" action="admin_permissions.php">
 				<p class="submittop"><input type="submit" name="save" value="Save changes" /></p>
 				<div class="inform">
-				<input type="hidden" name="form_sent" value="1" />
+					<input type="hidden" name="form_sent" value="1" />
 					<fieldset>
 						<legend>Posting</legend>
 						<div class="infldset">
