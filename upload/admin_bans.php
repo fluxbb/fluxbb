@@ -137,14 +137,14 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 									<th scope="row">Ban message</th>
 									<td>
 										<input type="text" name="ban_message" size="50" maxlength="255" value="<?php if (isset($ban_message)) echo pun_htmlspecialchars($ban_message); ?>" tabindex="4" />
-										<span>A message that will be displayed to the banned user when he/she visits the forums.</span>
+										<span>A message that will be displayed to the banned user when he/she visits the board.</span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row">Expire date</th>
 									<td>
 										<input type="text" name="ban_expire" size="17" maxlength="10" value="<?php if (isset($ban_expire)) echo $ban_expire; ?>" tabindex="5" />
-										<span>The date when this ban should be automatically removed (format: YYYY-MM-DD). Leave blank to remove manually.</span>
+										<span>The date when this ban should be automatically removed (format: yyyy-mm-dd). Leave blank to remove manually.</span>
 									</td>
 								</tr>
 							</table>

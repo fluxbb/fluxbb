@@ -487,7 +487,7 @@ while ($cur_group = $db->fetch_assoc($result))
 
 ?>
 										</select>
-										<span>Select a user group from which the new group will inherit its permission settings. The next page will let you fine-tune said settings.</span>
+										<span>Select a user group from which the new group will inherit its permission settings. The next page will let you fine-tune its settings.</span>
 									</td>
 								</tr>
 							</table>

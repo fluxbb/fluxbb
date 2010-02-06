@@ -151,7 +151,7 @@ generate_admin_menu('permissions');
 									<th scope="row">Allow banned email addresses</th>
 									<td>
 										<input type="radio" name="form[allow_banned_email]" value="1"<?php if ($pun_config['p_allow_banned_email'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[allow_banned_email]" value="0"<?php if ($pun_config['p_allow_banned_email'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Allow users to register with or change to a banned email address/domain. If left at its default setting (yes) this action will be allowed, but an alert email will be sent to the mailing list (an effective way of detecting multiple registrations).</span>
+										<span>Allow users to register with or change to a banned email address/domain. If left at its default setting (yes), this action will be allowed, but an alert email will be sent to the mailing list (an effective way of detecting multiple registrations).</span>
 									</td>
 								</tr>
 								<tr>

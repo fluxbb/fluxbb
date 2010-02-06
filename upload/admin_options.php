@@ -173,7 +173,7 @@ generate_admin_menu('options');
 									<th scope="row">Base URL</th>
 									<td>
 										<input type="text" name="form[base_url]" size="50" maxlength="100" value="<?php echo $pun_config['o_base_url'] ?>" />
-										<span>The complete URL of the forum without trailing slash (i.e. http://www.mydomain.com/forums). This <strong>must</strong> be correct in order for all admin and moderator features to work. If you get "Bad referer" errors, it's probably incorrect.</span>
+										<span>The complete URL of the board without trailing slash (i.e. http://www.mydomain.com/forums). This <strong>must</strong> be correct in order for all admin and moderator features to work. If you get "Bad referer" errors, it's probably incorrect.</span>
 									</td>
 								</tr>
 								<tr>
@@ -390,7 +390,7 @@ generate_admin_menu('options');
 									<th scope="row">Topic review</th>
 									<td>
 										<input type="text" name="form[topic_review]" size="3" maxlength="3" value="<?php echo $pun_config['o_topic_review'] ?>" />
-										<span>Maximum number of posts to display when posting (newest first). 0 to disable.</span>
+										<span>Maximum number of posts to display when posting (newest first). Set to 0 to disable.</span>
 									</td>
 								</tr>
 								<tr>
@@ -441,14 +441,14 @@ generate_admin_menu('options');
 									<th scope="row">Users online</th>
 									<td>
 										<input type="radio" name="form[users_online]" value="1"<?php if ($pun_config['o_users_online'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[users_online]" value="0"<?php if ($pun_config['o_users_online'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Display info on the index page about guests and registered users currently browsing the forums.</span>
+										<span>Display info on the index page about guests and registered users currently browsing the board.</span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><a name="censoring">Censor words</a></th>
 									<td>
 										<input type="radio" name="form[censoring]" value="1"<?php if ($pun_config['o_censoring'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[censoring]" value="0"<?php if ($pun_config['o_censoring'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Enable this to censor specific words in the forum. See <a href="admin_censoring.php">Censoring</a> for more info.</span>
+										<span>Enable this to censor specific words in the board. See <a href="admin_censoring.php">Censoring</a> for more info.</span>
 									</td>
 								</tr>
 								<tr>
@@ -511,7 +511,7 @@ generate_admin_menu('options');
 									<th scope="row">Default feed type</th>
 									<td>
 										<input type="radio" name="form[feed_type]" value="0"<?php if ($pun_config['o_feed_type'] == '0') echo ' checked="checked"' ?> />&nbsp;None&nbsp;&nbsp;&nbsp;<input type="radio" name="form[feed_type]" value="1"<?php if ($pun_config['o_feed_type'] == '1') echo ' checked="checked"' ?> />&nbsp;RSS&nbsp;&nbsp;&nbsp;<input type="radio" name="form[feed_type]" value="2"<?php if ($pun_config['o_feed_type'] == '2') echo ' checked="checked"' ?> />&nbsp;Atom
-										<span>Which type of syndication feed to display. Note: Choosing none will not disable feeds, only hide them by default.</span>
+										<span>Select the type of syndication feed to display. Note: Choosing none will not disable feeds, only hide them by default.</span>
 									</td>
 								</tr>
 							</table>
@@ -594,14 +594,14 @@ generate_admin_menu('options');
 									<th scope="row">Admin email</th>
 									<td>
 										<input type="text" name="form[admin_email]" size="50" maxlength="80" value="<?php echo $pun_config['o_admin_email'] ?>" />
-										<span>The email address of the forum administrator.</span>
+										<span>The email address of the board administrator.</span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row">Webmaster email</th>
 									<td>
 										<input type="text" name="form[webmaster_email]" size="50" maxlength="80" value="<?php echo $pun_config['o_webmaster_email'] ?>" />
-										<span>This is the address that all emails sent by the forum will be addressed from.</span>
+										<span>This is the address that all emails sent by the board will be addressed from.</span>
 									</td>
 								</tr>
 								<tr>
@@ -652,7 +652,7 @@ generate_admin_menu('options');
 									<th scope="row">Allow new registrations</th>
 									<td>
 										<input type="radio" name="form[regs_allow]" value="1"<?php if ($pun_config['o_regs_allow'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[regs_allow]" value="0"<?php if ($pun_config['o_regs_allow'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Controls whether this forum accepts new registrations. Disable only under special circumstances.</span>
+										<span>Controls whether this board accepts new registrations. Disable only under special circumstances.</span>
 									</td>
 								</tr>
 								<tr>
@@ -666,7 +666,7 @@ generate_admin_menu('options');
 									<th scope="row">Report new registrations</th>
 									<td>
 										<input type="radio" name="form[regs_report]" value="1"<?php if ($pun_config['o_regs_report'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[regs_report]" value="0"<?php if ($pun_config['o_regs_report'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>If enabled, FluxBB will notify users on the mailing list (see above) when a new user registers in the forums.</span>
+										<span>If enabled, FluxBB will notify users on the mailing list (see above) when a new user registers in the board.</span>
 									</td>
 								</tr>
 								<tr>
@@ -705,7 +705,7 @@ generate_admin_menu('options');
 									<th scope="row">Display announcement</th>
 									<td>
 										<input type="radio" name="form[announcement]" value="1"<?php if ($pun_config['o_announcement'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[announcement]" value="0"<?php if ($pun_config['o_announcement'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Enable this to display the below message in the forums.</span>
+										<span>Enable this to display the below message in the board.</span>
 									</td>
 								</tr>
 								<tr>
@@ -728,14 +728,14 @@ generate_admin_menu('options');
 									<th scope="row"><a name="maintenance">Maintenance mode</a></th>
 									<td>
 										<input type="radio" name="form[maintenance]" value="1"<?php if ($pun_config['o_maintenance'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[maintenance]" value="0"<?php if ($pun_config['o_maintenance'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>When enabled, the board will only be available to administrators. This should be used if the board needs to taken down temporarily for maintenance. WARNING! Do not log out when the board is in maintenance mode. You will not be able to login again.</span>
+										<span>When enabled, the board will only be available to administrators. This should be used if the board needs to be taken down temporarily for maintenance. WARNING! Do not log out when the board is in maintenance mode. You will not be able to login again.</span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row">Maintenance message</th>
 									<td>
 										<textarea name="form[maintenance_message]" rows="5" cols="55"><?php echo pun_htmlspecialchars($pun_config['o_maintenance_message']) ?></textarea>
-										<span>The message that will be displayed to users when the board is in maintenance mode. If left blank a default message will be used. This text will not be parsed like regular posts and thus may contain HTML.</span>
+										<span>The message that will be displayed to users when the board is in maintenance mode. If left blank, a default message will be used. This text will not be parsed like regular posts and thus may contain HTML.</span>
 									</td>
 								</tr>
 							</table>

@@ -200,7 +200,7 @@ else
 									</td>
 								</tr>
 							</table>
-							<p class="topspace">Use this feature with caution. Pruned posts can <strong>never</strong> be recovered. For best performance you should put the forum in maintenance mode during pruning.</p>
+							<p class="topspace">Use this feature with caution. Pruned posts can <strong>never</strong> be recovered. For best performance, you should put the board in <a href="admin_options.php#maintenance">maintenance mode</a> during pruning.</p>
 							<div class="fsetsubmit"><input type="submit" name="prune" value="Prune" tabindex="5" /></div>
 						</div>
 					</fieldset>

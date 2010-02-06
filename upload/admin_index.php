@@ -121,7 +121,7 @@ generate_admin_menu('index');
 		<h2><span>Forum administration</span></h2>
 		<div id="adintro" class="box">
 			<div class="inbox">
-				<p>Welcome to the FluxBB administration control panel. From here you can control vital aspects of the forum. Depending on whether you are an administrator or a moderator you can:</p>
+				<p>Welcome to the FluxBB administration control panel. From here you can control vital aspects of the board. Depending on whether you are an administrator or a moderator you can:</p>
 				<p>
 					&nbsp;- Organize categories and forums.<br />
 					&nbsp;- Set forum-wide options and preferences.<br />

@@ -287,7 +287,7 @@ else if (isset($_GET['edit_forum']))
 					<fieldset>
 						<legend>Edit group permissions for this forum</legend>
 						<div class="infldset">
-							<p>In this form, you can set the forum specific permissions for the different user groups. If you haven't made any changes to this forums group permissions, what you see below is the default based on settings in <a href="admin_groups.php">User groups</a>. Administrators always have full permissions and are thus excluded. Permission settings that differ from the default permissions for the user group are marked red. The "Read forum" permission checkbox will be disabled if the group in question lacks the "Read board" permission. For redirect forums, only the "Read forum" permission is editable.</p>
+							<p>In this form, you can set the forum specific permissions for the different user groups. If you haven't made any changes to this forum's group permissions, what you see below is the default based on settings in <a href="admin_groups.php">User groups</a>. Administrators always have full permissions and are thus excluded. Permission settings that differ from the default permissions for the user group are marked red. The "Read forum" permission checkbox will be disabled if the group in question lacks the "Read board" permission. For redirect forums, only the "Read forum" permission is editable.</p>
 							<table id="forumperms" cellspacing="0">
 							<thead>
 								<tr>
