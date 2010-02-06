@@ -118,7 +118,7 @@ generate_admin_menu('ranks');
 					<fieldset>
 						<legend>Add rank</legend>
 						<div class="infldset">
-							<p>Enter a rank and the minimum number of posts that a user has to have to attain the rank. Different ranks cannot have the same value for minimum posts. If a title is set for a user, the title will be displayed instead of any rank. <strong>User ranks must be enabled in <a href="admin_options.php#ranks">Options</a> for this to have any effect.</strong></p>
+							<p>Enter a rank and the minimum number of posts a user must have made to attain the rank. Different ranks cannot have the same value for minimum posts. If a title is set for a user, the title will be displayed instead of any rank. <strong>User ranks must be enabled in <a href="admin_options.php#ranks">Options</a> for this to have any effect.</strong></p>
 							<table cellspacing="0">
 							<thead>
 								<tr>
