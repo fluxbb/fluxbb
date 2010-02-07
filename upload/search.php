@@ -554,7 +554,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				</div>
 				<div class="postright">
 					<div class="postmsg">
-						<?php echo $message ?>
+						<?php echo $message."\n" ?>
 					</div>
 				</div>
 				<div class="clearer"></div>
