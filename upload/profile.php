@@ -131,7 +131,7 @@ if ($action == 'change_pass')
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Change pass']);
 	$required_fields = array('req_old_password' => $lang_profile['Old pass'], 'req_new_password1' => $lang_profile['New pass'], 'req_new_password2' => $lang_profile['Confirm new pass']);
 	$focus_element = array('change_pass', ((!$pun_user['is_admmod']) ? 'req_old_password' : 'req_new_password1'));
-	define('FORUM_ACTIVE_PAGE', 'profile');
+	define('PUN_ACTIVE_PAGE', 'profile');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -274,7 +274,7 @@ else if ($action == 'change_email')
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Change email']);
 	$required_fields = array('req_new_email' => $lang_profile['New email'], 'req_password' => $lang_common['Password']);
 	$focus_element = array('change_email', 'req_new_email');
-	define('FORUM_ACTIVE_PAGE', 'profile');
+	define('PUN_ACTIVE_PAGE', 'profile');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -401,7 +401,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Upload avatar']);
 	$required_fields = array('req_file' => $lang_profile['File']);
 	$focus_element = array('upload_avatar', 'req_file');
-	define('FORUM_ACTIVE_PAGE', 'profile');
+	define('PUN_ACTIVE_PAGE', 'profile');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -613,7 +613,7 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 	}
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Confirm delete user']);
-	define('FORUM_ACTIVE_PAGE', 'profile');
+	define('PUN_ACTIVE_PAGE', 'profile');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -967,7 +967,7 @@ if ($pun_user['id'] != $id &&
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), sprintf($lang_profile['Users profile'], pun_htmlspecialchars($user['username'])));
 	define('PUN_ALLOW_INDEX', 1);
-	define('FORUM_ACTIVE_PAGE', 'index');
+	define('PUN_ACTIVE_PAGE', 'index');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -1089,7 +1089,7 @@ else
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section essentials']);
 		$required_fields = array('req_username' => $lang_common['Username'], 'req_email' => $lang_common['Email']);
-		define('FORUM_ACTIVE_PAGE', 'profile');
+		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
 		generate_profile_menu('essentials');
@@ -1270,7 +1270,7 @@ else
 			$title_field = '<label>'.$lang_common['Title'].' <em>('.$lang_profile['Leave blank'].')</em><br /><input type="text" name="title" value="'.pun_htmlspecialchars($user['title']).'" size="30" maxlength="50" /><br /></label>'."\n";
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section personal']);
-		define('FORUM_ACTIVE_PAGE', 'profile');
+		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
 		generate_profile_menu('personal');
@@ -1303,7 +1303,7 @@ else
 	{
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section messaging']);
-		define('FORUM_ACTIVE_PAGE', 'profile');
+		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
 		generate_profile_menu('messaging');
@@ -1352,7 +1352,7 @@ else
 			$signature_preview = '<p>'.$lang_profile['No sig'].'</p>'."\n";
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section personality']);
-		define('FORUM_ACTIVE_PAGE', 'profile');
+		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
 		generate_profile_menu('personality');
@@ -1402,7 +1402,7 @@ else
 	else if ($section == 'display')
 	{
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section display']);
-		define('FORUM_ACTIVE_PAGE', 'profile');
+		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
 		generate_profile_menu('display');
@@ -1497,7 +1497,7 @@ else
 	else if ($section == 'privacy')
 	{
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section privacy']);
-		define('FORUM_ACTIVE_PAGE', 'profile');
+		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
 		generate_profile_menu('privacy');
@@ -1545,7 +1545,7 @@ else
 			message($lang_common['Bad request']);
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section admin']);
-		define('FORUM_ACTIVE_PAGE', 'profile');
+		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
 		generate_profile_menu('admin');

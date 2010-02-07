@@ -30,7 +30,7 @@ if ($action == 'rules')
 	require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_register['Forum rules']);
-	define('FORUM_ACTIVE_PAGE', 'rules');
+	define('PUN_ACTIVE_PAGE', 'rules');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -145,7 +145,7 @@ else if (isset($_GET['email']))
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Send email to'].' '.pun_htmlspecialchars($recipient));
 	$required_fields = array('req_subject' => $lang_misc['Email subject'], 'req_message' => $lang_misc['Email message']);
 	$focus_element = array('email', 'req_subject');
-	define('FORUM_ACTIVE_PAGE', 'index');
+	define('PUN_ACTIVE_PAGE', 'index');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -246,7 +246,7 @@ else if (isset($_GET['report']))
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Report post']);
 	$required_fields = array('req_reason' => $lang_misc['Reason']);
 	$focus_element = array('report', 'req_reason');
-	define('FORUM_ACTIVE_PAGE', 'index');
+	define('PUN_ACTIVE_PAGE', 'index');
 	require PUN_ROOT.'header.php';
 
 ?>

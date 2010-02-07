@@ -418,7 +418,7 @@ else
 	$focus_element[] = 'req_username';
 }
 
-define('FORUM_ACTIVE_PAGE', 'index');
+define('PUN_ACTIVE_PAGE', 'index');
 require PUN_ROOT.'header.php';
 
 ?>
