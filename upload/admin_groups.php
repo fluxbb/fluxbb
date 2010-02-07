@@ -424,7 +424,7 @@ else if (isset($_GET['del_group']))
 					<fieldset>
 						<legend>Move users currently in group</legend>
 						<div class="infldset">
-							<p>The group "<?php echo pun_htmlspecialchars($group_title) ?>" currently has <?php echo $group_members ?> members. Please select a group to which these members will be assigned upon removal.</p>
+							<p>The group "<?php echo pun_htmlspecialchars($group_title) ?>" currently has <?php echo forum_number_format($group_members) ?> members. Please select a group to which these members will be assigned upon removal.</p>
 							<label>Move users to
 							<select name="move_to_group">
 <?php

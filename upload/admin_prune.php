@@ -119,7 +119,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 					<fieldset>
 						<legend>Confirm prune posts</legend>
 						<div class="infldset">
-							<p>Are you sure that you want to prune all topics older than <?php echo $prune_days ?> days from <?php echo $forum ?>? (<?php echo $num_topics ?> topics)</p>
+							<p>Are you sure that you want to prune all topics older than <?php echo $prune_days ?> days from <?php echo $forum ?>? (<?php echo forum_number_format($num_topics) ?> topics)</p>
 							<p class="warntext">WARNING! Pruning posts deletes them permanently.</p>
 						</div>
 					</fieldset>
