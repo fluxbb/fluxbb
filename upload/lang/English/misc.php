@@ -77,9 +77,9 @@ $lang_misc = array(
 
 // Delete multiple posts in topic
 'Delete posts'					=>	'Delete posts',
-'Cannot delete first'			=>	'First post cannot be selected for deletion.',
+'Cannot select first'			=>	'First post cannot be selected for split/delete.',
 'Delete posts comply'			=>	'Are you sure you want to delete the selected posts?',
 'Delete posts redirect'			=>	'Posts deleted. Redirecting …',
-'No posts selected'				=>	'You must select at least one post to be deleted.'
+'No posts selected'				=>	'You must select at least one post for split/delete.'
 
 );
