@@ -355,21 +355,21 @@ function generate_navlinks()
 	global $pun_config, $lang_common, $pun_user;
 
 	// Index and Userlist should always be displayed
-	$links[] = '<li id="navindex"'.((FORUM_PAGE == 'index') ? ' class="isactive"' : '').'><a href="index.php">'.$lang_common['Index'].'</a>';
+	$links[] = '<li id="navindex"'.((FORUM_ACTIVE_PAGE == 'index') ? ' class="isactive"' : '').'><a href="index.php">'.$lang_common['Index'].'</a>';
 
 	if ($pun_user['g_read_board'] == '1' && $pun_user['g_view_users'] == '1')
-		$links[] = '<li id="navuserlist"'.((FORUM_PAGE == 'userlist') ? ' class="isactive"' : '').'><a href="userlist.php">'.$lang_common['User list'].'</a>';
+		$links[] = '<li id="navuserlist"'.((FORUM_ACTIVE_PAGE == 'userlist') ? ' class="isactive"' : '').'><a href="userlist.php">'.$lang_common['User list'].'</a>';
 
 	if ($pun_config['o_rules'] == '1' && (!$pun_user['is_guest'] || $pun_user['g_read_board'] == '1' || $pun_config['o_regs_allow'] == '1'))
-		$links[] = '<li id="navrules"'.((FORUM_PAGE == 'rules') ? ' class="isactive"' : '').'><a href="misc.php?action=rules">'.$lang_common['Rules'].'</a>';
+		$links[] = '<li id="navrules"'.((FORUM_ACTIVE_PAGE == 'rules') ? ' class="isactive"' : '').'><a href="misc.php?action=rules">'.$lang_common['Rules'].'</a>';
 
 	if ($pun_user['is_guest'])
 	{
 		if ($pun_user['g_read_board'] == '1' && $pun_user['g_search'] == '1')
-			$links[] = '<li id="navsearch"'.((FORUM_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a>';
+			$links[] = '<li id="navsearch"'.((FORUM_ACTIVE_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a>';
 
-		$links[] = '<li id="navregister"'.((FORUM_PAGE == 'register') ? ' class="isactive"' : '').'><a href="register.php">'.$lang_common['Register'].'</a>';
-		$links[] = '<li id="navlogin"'.((FORUM_PAGE == 'login') ? ' class="isactive"' : '').'><a href="login.php">'.$lang_common['Login'].'</a>';
+		$links[] = '<li id="navregister"'.((FORUM_ACTIVE_PAGE == 'register') ? ' class="isactive"' : '').'><a href="register.php">'.$lang_common['Register'].'</a>';
+		$links[] = '<li id="navlogin"'.((FORUM_ACTIVE_PAGE == 'login') ? ' class="isactive"' : '').'><a href="login.php">'.$lang_common['Login'].'</a>';
 
 		$info = $lang_common['Not logged in'];
 	}
@@ -378,16 +378,16 @@ function generate_navlinks()
 		if (!$pun_user['is_admmod'])
 		{
 			if ($pun_user['g_read_board'] == '1' && $pun_user['g_search'] == '1')
-				$links[] = '<li id="navsearch"'.((FORUM_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a>';
+				$links[] = '<li id="navsearch"'.((FORUM_ACTIVE_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a>';
 
-			$links[] = '<li id="navprofile"'.((substr(FORUM_PAGE, 0, 7) == 'profile') ? ' class="isactive"' : '').'><a href="profile.php?id='.$pun_user['id'].'">'.$lang_common['Profile'].'</a>';
+			$links[] = '<li id="navprofile"'.((FORUM_ACTIVE_PAGE == 'profile') ? ' class="isactive"' : '').'><a href="profile.php?id='.$pun_user['id'].'">'.$lang_common['Profile'].'</a>';
 			$links[] = '<li id="navlogout"><a href="login.php?action=out&amp;id='.$pun_user['id'].'&amp;csrf_token='.pun_hash($pun_user['id'].pun_hash(get_remote_address())).'">'.$lang_common['Logout'].'</a>';
 		}
 		else
 		{
-			$links[] = '<li id="navsearch"'.((FORUM_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a>';
-			$links[] = '<li id="navprofile"'.((substr(FORUM_PAGE, 0, 7) == 'profile') ? ' class="isactive"' : '').'><a href="profile.php?id='.$pun_user['id'].'">'.$lang_common['Profile'].'</a>';
-			$links[] = '<li id="navadmin"'.((substr(FORUM_PAGE, 0, 5) == 'admin') ? ' class="isactive"' : '').'><a href="admin_index.php">'.$lang_common['Admin'].'</a>';
+			$links[] = '<li id="navsearch"'.((FORUM_ACTIVE_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a>';
+			$links[] = '<li id="navprofile"'.((FORUM_ACTIVE_PAGE == 'profile') ? ' class="isactive"' : '').'><a href="profile.php?id='.$pun_user['id'].'">'.$lang_common['Profile'].'</a>';
+			$links[] = '<li id="navadmin"'.((FORUM_ACTIVE_PAGE == 'admin') ? ' class="isactive"' : '').'><a href="admin_index.php">'.$lang_common['Admin'].'</a>';
 			$links[] = '<li id="navlogout"><a href="login.php?action=out&amp;id='.$pun_user['id'].'&amp;csrf_token='.pun_hash($pun_user['id'].pun_hash(get_remote_address())).'">'.$lang_common['Logout'].'</a>';
 		}
 	}
@@ -836,7 +836,7 @@ function message($message, $no_back_link = false)
 		global $pun_user;
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Info']);
-		define('FORUM_PAGE', 'message');
+		define('FORUM_ACTIVE_PAGE', 'index');
 		require PUN_ROOT.'header.php';
 	}
 

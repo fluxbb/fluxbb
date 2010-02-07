@@ -90,7 +90,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 		$cat_name = $db->result($result);
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Categories');
-		define('FORUM_PAGE', 'admin-categories');
+		define('FORUM_ACTIVE_PAGE', 'admin');
 		require PUN_ROOT.'header.php';
 
 		generate_admin_menu('categories');
@@ -163,7 +163,7 @@ for ($i = 0; $i < $num_cats; ++$i)
 
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Categories');
-define('FORUM_PAGE', 'admin-categories');
+define('FORUM_ACTIVE_PAGE', 'admin');
 require PUN_ROOT.'header.php';
 
 generate_admin_menu('categories');

@@ -60,7 +60,7 @@ $paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'userlist.ph
 
 
 define('PUN_ALLOW_INDEX', 1);
-define('FORUM_PAGE', 'userlist');
+define('FORUM_ACTIVE_PAGE', 'userlist');
 require PUN_ROOT.'header.php';
 
 ?>

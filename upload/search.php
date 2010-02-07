@@ -440,7 +440,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		$db->free_result($result);
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_search['Search results']);
-		define('FORUM_PAGE', 'search');
+		define('FORUM_ACTIVE_PAGE', 'search');
 		require PUN_ROOT.'header.php';
 
 
@@ -659,7 +659,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_search['Search']);
 $focus_element = array('search', 'keywords');
-define('FORUM_PAGE', 'search');
+define('FORUM_ACTIVE_PAGE', 'search');
 require PUN_ROOT.'header.php';
 
 ?>

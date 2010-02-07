@@ -44,7 +44,7 @@ if (isset($_POST['form_sent']))
 
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Permissions');
-define('FORUM_PAGE', 'admin-permissions');
+define('FORUM_ACTIVE_PAGE', 'admin');
 require PUN_ROOT.'header.php';
 generate_admin_menu('permissions');
 

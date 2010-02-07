@@ -51,7 +51,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'User groups');
 	$required_fields = array('req_title' => 'Group title');
 	$focus_element = array('groups2', 'req_title');
-	define('FORUM_PAGE', 'admin-groups');
+	define('FORUM_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
 
 	generate_admin_menu('groups');
@@ -375,7 +375,7 @@ else if (isset($_GET['del_group']))
 			$group_title = $db->result($result);
 
 			$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'User groups');
-			define('FORUM_PAGE', 'admin-groups');
+			define('FORUM_ACTIVE_PAGE', 'admin');
 			require PUN_ROOT.'header.php';
 
 			generate_admin_menu('groups');
@@ -410,7 +410,7 @@ else if (isset($_GET['del_group']))
 	list($group_title, $group_members) = $db->fetch_row($result);
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'User groups');
-	define('FORUM_PAGE', 'admin-groups');
+	define('FORUM_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
 
 	generate_admin_menu('groups');
@@ -458,7 +458,7 @@ else if (isset($_GET['del_group']))
 
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'User groups');
-define('FORUM_PAGE', 'admin-groups');
+define('FORUM_ACTIVE_PAGE', 'admin');
 require PUN_ROOT.'header.php';
 
 generate_admin_menu('groups');

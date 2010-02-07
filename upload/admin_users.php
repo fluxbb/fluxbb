@@ -29,7 +29,7 @@ if (isset($_GET['ip_stats']))
 
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Users', 'Search results');
-	define('FORUM_PAGE', 'admin-iresults');
+	define('FORUM_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -114,7 +114,7 @@ if (isset($_GET['show_users']))
 
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Users', 'Search results');
-	define('FORUM_PAGE', 'admin-uresults');
+	define('FORUM_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -285,7 +285,7 @@ else if (isset($_POST['find_user']))
 
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Users', 'Search results');
-	define('FORUM_PAGE', 'admin-uresults');
+	define('FORUM_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
 
 ?>
@@ -376,7 +376,7 @@ else
 {
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Users');
 	$focus_element = array('find_user', 'username');
-	define('FORUM_PAGE', 'admin-users');
+	define('FORUM_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
 
 	generate_admin_menu('users');
