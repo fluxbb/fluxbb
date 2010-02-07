@@ -349,8 +349,7 @@ if (!empty($errors))
 					<legend><?php echo $lang_prof_reg['Localisation legend'] ?></legend>
 					<div class="infldset">
 						<p><?php echo $lang_prof_reg['Time zone info'] ?></p>
-						<label><?php echo $lang_prof_reg['Time zone'] ?>
-						
+						<label><?php echo $lang_prof_reg['Time zone']."\n" ?>
 						<br /><select id="time_zone" name="timezone">
 							<option value="-12"<?php if ($timezone == -12) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-12:00'] ?></option>
 							<option value="-11"<?php if ($timezone == -11) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-11:00'] ?></option>
