@@ -19,6 +19,9 @@ require PUN_ROOT.'include/common_admin.php';
 if (!$pun_user['is_admmod'])
 	message($lang_common['No permission']);
 
+// Load the admin_index.php language file
+require PUN_ROOT.'lang/'.$admin_language.'/admin_common.php';
+require PUN_ROOT.'lang/'.$admin_language.'/admin_index.php';
 
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 
@@ -26,16 +29,16 @@ $action = isset($_GET['action']) ? $_GET['action'] : null;
 if ($action == 'check_upgrade')
 {
 	if (!ini_get('allow_url_fopen'))
-		message('Unable to check for upgrade since \'allow_url_fopen\' is disabled on this system.');
+		message($lang_admin_index['fopen disabled message']);
 
 	$latest_version = trim(@file_get_contents('http://fluxbb.org/latest_version'));
 	if (empty($latest_version))
-		message('Check for upgrade failed for unknown reasons.');
+		message($lang_admin_index['Upgrade check failed message']);
 
 	if (version_compare($pun_config['o_cur_version'], $latest_version, '>='))
-		message('You are running the latest version of FluxBB.');
+		message($lang_admin_index['Running latest version message']);
 	else
-		message('A new version of FluxBB has been released. You can download the latest version at <a href="http://fluxbb.org/">FluxBB.org</a>.');
+		message(sprintf($lang_admin_index['New version available message'], '<a href="http://fluxbb.org/">FluxBB.org</a>'));
 }
 
 
@@ -44,7 +47,7 @@ else if ($action == 'phpinfo' && $pun_user['g_id'] == PUN_ADMIN)
 {
 	// Is phpinfo() a disabled function?
 	if (strpos(strtolower((string) ini_get('disable_functions')), 'phpinfo') !== false)
-		message('The PHP function phpinfo() has been disabled on this server.');
+		message($lang_admin_index['PHPinfo disabled message']);
 
 	phpinfo();
 	exit;
@@ -55,6 +58,10 @@ else if ($action == 'phpinfo' && $pun_user['g_id'] == PUN_ADMIN)
 if (@file_exists('/proc/loadavg') && is_readable('/proc/loadavg'))
 {
 	// We use @ just in case
+	$fh = @fopen('/proc/loadavg', 'r');
+	$load_averages = @fread($fh, 64);
+	@fclose($fh);
+
 	if (($fh = @fopen('/proc/loadavg', 'r')))
 	{
 		$load_averages = fread($fh, 64);
@@ -63,13 +70,13 @@ if (@file_exists('/proc/loadavg') && is_readable('/proc/loadavg'))
 	else
 		$load_averages = '';
 
-	$load_averages = explode(' ', $load_averages);
-	$server_load = isset($load_averages[2]) ? $load_averages[0].' '.$load_averages[1].' '.$load_averages[2] : 'Not available';
+	$load_averages = @explode(' ', $load_averages);
+	$server_load = isset($load_averages[2]) ? $load_averages[0].' '.$load_averages[1].' '.$load_averages[2] : $lang_admin_index['Not available'];
 }
 else if (!in_array(PHP_OS, array('WINNT', 'WIN32')) && preg_match('/averages?: ([0-9\.]+),?[\s]+([0-9\.]+),?[\s]+([0-9\.]+)/i', @exec('uptime'), $load_averages))
 	$server_load = $load_averages[1].' '.$load_averages[2].' '.$load_averages[3];
 else
-	$server_load = 'Not available';
+	$server_load = $lang_admin_index['Not available'];
 
 
 // Get number of current visitors
@@ -96,22 +103,22 @@ if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' ||
 
 // Check for the existence of various PHP opcode caches/optimizers
 if (function_exists('mmcache'))
-	$php_accelerator = '<a href="http://turck-mmcache.sourceforge.net/">Turck MMCache</a>';
+	$php_accelerator = '<a href="http://'.$lang_admin_index['Turck MMCache link'].'">'.$lang_admin_index['Turck MMCache'].'</a>';
 else if (isset($_PHPA))
-	$php_accelerator = '<a href="http://www.php-accelerator.co.uk/">ionCube PHP Accelerator</a>';
+	$php_accelerator = '<a href="http://'.$lang_admin_index['ionCube PHP Accelerator link'].'">'.$lang_admin_index['ionCube PHP Accelerator'].'</a>';
 else if (ini_get('apc.enabled'))
-	$php_accelerator ='<a href="http://www.php.net/apc/">Alternative PHP Cache (APC)</a>';
+	$php_accelerator ='<a href="http://'.$lang_admin_index['Alternative PHP Cache (APC) link'].'">'.$lang_admin_index['Alternative PHP Cache (APC)'].'</a>';
 else if (ini_get('zend_optimizer.optimization_level'))
-	$php_accelerator = '<a href="http://www.zend.com/products/zend_optimizer/">Zend Optimizer</a>';
+	$php_accelerator = '<a href="http://'.$lang_admin_index['Zend Optimizer link'].'">'.$lang_admin_index['Zend Optimizer'].'</a>';
 else if (ini_get('eaccelerator.enable'))
-	$php_accelerator = '<a href="http://eaccelerator.net/">eAccelerator</a>';
+	$php_accelerator = '<a href="http://'.$lang_admin_index['eAccelerator link'].'">'.$lang_admin_index['eAccelerator'].'</a>';
 else if (ini_get('xcache.cacher'))
-	$php_accelerator = '<a href="http://xcache.lighttpd.net/">XCache</a>';
+	$php_accelerator = '<a href="http://'.$lang_admin_index['XCache link'].'">'.$lang_admin_index['XCache'].'</a>';
 else
-	$php_accelerator = 'N/A';
+	$php_accelerator = $lang_admin_index['NA'];
 
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Index');
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Index']);
 define('PUN_ACTIVE_PAGE', 'admin');
 require PUN_ROOT.'header.php';
 
@@ -119,47 +126,47 @@ generate_admin_menu('index');
 
 ?>
 	<div class="block">
-		<h2><span>Forum administration</span></h2>
+		<h2><span><?php echo $lang_admin_index['Forum admin head'] ?></span></h2>
 		<div id="adintro" class="box">
 			<div class="inbox">
-				<p>Welcome to the FluxBB administration control panel. From here you can control vital aspects of the board. Depending on whether you are an administrator or a moderator you can:</p>
 				<p>
-					&nbsp;- Organize categories and forums.<br />
-					&nbsp;- Set forum-wide options and preferences.<br />
-					&nbsp;- Control permissions for users and guests.<br />
-					&nbsp;- View IP statistics for users.<br />
-					&nbsp;- Ban users.<br />
-					&nbsp;- Censor words.<br />
-					&nbsp;- Set up user ranks.<br />
-					&nbsp;- Prune old posts.<br />
-					&nbsp;- Handle post reports.
+					<?php echo $lang_admin_index['Welcome to admin'] ?><br /><br />
+					&nbsp;- <?php echo $lang_admin_index['Welcome 1'] ?><br />
+					&nbsp;- <?php echo $lang_admin_index['Welcome 2'] ?><br />
+					&nbsp;- <?php echo $lang_admin_index['Welcome 3'] ?><br />
+					&nbsp;- <?php echo $lang_admin_index['Welcome 4'] ?><br />
+					&nbsp;- <?php echo $lang_admin_index['Welcome 5'] ?><br />
+					&nbsp;- <?php echo $lang_admin_index['Welcome 6'] ?><br />
+					&nbsp;- <?php echo $lang_admin_index['Welcome 7'] ?><br />
+					&nbsp;- <?php echo $lang_admin_index['Welcome 8'] ?><br />
+					&nbsp;- <?php echo $lang_admin_index['Welcome 9'] ?>
 				</p>
 			</div>
 		</div>
 
-		<h2 class="block2"><span>Statistics</span></h2>
+		<h2 class="block2"><span><?php echo $lang_admin_index['Statistics head'] ?></span></h2>
 		<div id="adstats" class="box">
 			<div class="inbox">
 				<dl>
-					<dt>FluxBB version</dt>
+					<dt><?php echo $lang_admin_index['FluxBB version label'] ?></dt>
 					<dd>
-						FluxBB <?php echo $pun_config['o_cur_version'] ?> - <a href="admin_index.php?action=check_upgrade">Check for upgrade</a><br />
+						<?php printf($lang_admin_index['FluxBB version data'], $pun_config['o_cur_version'], '<a href="admin_index.php?action=check_upgrade">'.$lang_admin_index['Check for upgrade'].'</a>') ?><br />
 					</dd>
-					<dt>Server load</dt>
+					<dt><?php echo $lang_admin_index['Server load label'] ?></dt>
 					<dd>
-						<?php echo $server_load ?> (<?php echo $num_online ?> users online)
+						<?php printf($lang_admin_index['Server load data'], $server_load, $num_online) ?>
 					</dd>
-<?php if ($pun_user['g_id'] == PUN_ADMIN): ?>					<dt>Environment</dt>
+<?php if ($pun_user['g_id'] == PUN_ADMIN): ?>					<dt><?php echo $lang_admin_index['Environment label'] ?></dt>
 					<dd>
-						Operating system: <?php echo PHP_OS ?><br />
-						PHP: <?php echo phpversion() ?> - <a href="admin_index.php?action=phpinfo">Show info</a><br />
-						Accelerator: <?php echo $php_accelerator."\n" ?>
+						<?php printf($lang_admin_index['Environment data OS'], PHP_OS) ?><br />
+						<?php printf($lang_admin_index['Environment data version'], phpversion(), '<a href="admin_index.php?action=phpinfo">'.$lang_admin_index['Show info'].'</a>') ?><br />
+						<?php printf($lang_admin_index['Environment data acc'], $php_accelerator) ?>
 					</dd>
-					<dt>Database</dt>
+					<dt><?php echo $lang_admin_index['Database label'] ?></dt>
 					<dd>
 						<?php echo implode(' ', $db->get_version())."\n" ?>
-<?php if (isset($total_records) && isset($total_size)): ?>						<br />Rows: <?php echo forum_number_format($total_records)."\n" ?>
-						<br />Size: <?php echo $total_size."\n" ?>
+<?php if (isset($total_records) && isset($total_size)): ?>						<br /><?php printf($lang_admin_index['Database data rows'], forum_number_format($total_records)) ?>
+						<br /><?php printf($lang_admin_index['Database data size'], $total_size) ?>
 <?php endif; endif; ?>					</dd>
 				</dl>
 			</div>

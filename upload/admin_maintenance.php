@@ -21,6 +21,9 @@ require PUN_ROOT.'include/common_admin.php';
 if ($pun_user['g_id'] != PUN_ADMIN)
 	message($lang_common['No permission']);
 
+// Load the admin_maintenance.php language file
+require PUN_ROOT.'lang/'.$admin_language.'/admin_common.php';
+require PUN_ROOT.'lang/'.$admin_language.'/admin_maintenance.php';
 
 if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 {
@@ -62,19 +65,25 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<?php $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Rebuilding search index &hellip;') ?>
+<?php $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_maintenance['Rebuilding search index']) ?>
 <title><?php echo generate_page_title($page_title) ?></title>
 <style type="text/css">
 body {
-	font: 10px Verdana, Arial, Helvetica, sans-serif;
+	font: 12px Verdana, Arial, Helvetica, sans-serif;
 	color: #333333;
 	background-color: #FFFFFF
+}
+
+h1 {
+	font-size: 16px;
+	font-weight: normal;
 }
 </style>
 </head>
 <body>
 
-Rebuilding index &hellip; This might be a good time to put on some coffee :-)<br /><br />
+<h1><?php echo $lang_admin_maintenance['Rebuilding index info'] ?></h1>
+<hr />
 
 <?php
 
@@ -100,7 +109,11 @@ Rebuilding index &hellip; This might be a good time to put on some coffee :-)<br
 			$cur_topic = $cur_post[0];
 		}
 
-		echo 'Processing post <strong>'.$cur_post[1].'</strong> in topic <strong>'.$cur_post[0].'</strong><br />'."\n";
+		?>
+		<p>
+			<span><?php printf($lang_admin_maintenance['Processing post'], $cur_post[1], $cur_post[0]) ?></span></br>
+		</p>
+		<?php
 
 		if ($cur_post[1] == $first_post) // This is the "topic post" so we have to index the subject as well
 			update_search_index('post', $cur_post[1], $cur_post[2], $subject);
@@ -116,7 +129,7 @@ Rebuilding index &hellip; This might be a good time to put on some coffee :-)<br
 	$db->end_transaction();
 	$db->close();
 
-	exit('<script type="text/javascript">window.location="admin_maintenance.php'.$query_str.'"</script><br />JavaScript redirect unsuccessful. Click <a href="admin_maintenance.php'.$query_str.'">here</a> to continue.');
+	exit('<script type="text/javascript">window.location="admin_maintenance.php'.$query_str.'"</script><hr /><p>'.sprintf($lang_admin_maintenance['Javascript redirect failed'], '<a href="admin_maintenance.php'.$query_str.'">'.$lang_admin_maintenance['Click here'].'</a>').'</p>');
 }
 
 
@@ -125,7 +138,7 @@ $result = $db->query('SELECT id FROM '.$db->prefix.'topics ORDER BY id LIMIT 1')
 if ($db->num_rows($result))
 	$first_id = $db->result($result);
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Maintenance');
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Maintenance']);
 define('PUN_ACTIVE_PAGE', 'admin');
 require PUN_ROOT.'header.php';
 
@@ -133,38 +146,38 @@ generate_admin_menu('maintenance');
 
 ?>
 	<div class="blockform">
-		<h2><span>Forum Maintenance</span></h2>
+		<h2><span><?php echo $lang_admin_maintenance['Maintenance head'] ?></span></h2>
 		<div class="box">
 			<form method="get" action="admin_maintenance.php">
 				<div class="inform">
 					<fieldset>
-						<legend>Rebuild search index</legend>
+						<legend><?php echo $lang_admin_maintenance['Rebuild index subhead'] ?></legend>
 						<div class="infldset">
-							<p>If you've added, edited or removed posts manually in the database or if you're having problems searching, you should rebuild the search index. For best performance, you should put the board in <a href="admin_options.php#maintenance">maintenance mode</a> during rebuilding. <strong>Rebuilding the search index can take a long time and will increase server load during the rebuild process!</strong></p>
+							<p><?php printf($lang_admin_maintenance['Rebuild index info'], '<a href="admin_options.php#maintenance">'.$lang_admin_common['Maintenance mode'].'</a>') ?></p>
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row">Topics per cycle</th>
+									<th scope="row"><?php echo $lang_admin_maintenance['Topics per cycle label'] ?></th>
 									<td>
 										<input type="text" name="i_per_page" size="7" maxlength="7" value="100" tabindex="1" />
-										<span>The number of topics to process per page view. E.g. if you were to enter 100, one hundred topics would be processed and then the page would refresh. This is to prevent the script from timing out during the rebuild process.</span>
+										<span><?php echo $lang_admin_maintenance['Topics per cycle help'] ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Starting topic ID</th>
+									<th scope="row"><?php echo $lang_admin_maintenance['Starting topic label'] ?></th>
 									<td>
 										<input type="text" name="i_start_at" size="7" maxlength="7" value="<?php echo (isset($first_id)) ? $first_id : 0 ?>" tabindex="2" />
-										<span>The topic ID to start rebuilding at. The default value is the first available ID in the database. Normally you wouldn't want to change this.</span>
+										<span><?php echo $lang_admin_maintenance['Starting topic help'] ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Empty index</th>
+									<th scope="row"><?php echo $lang_admin_maintenance['Empty index label'] ?></th>
 									<td class="inputadmin">
-										<span><input type="checkbox" name="i_empty_index" value="1" tabindex="3" checked="checked" />&nbsp;&nbsp;Select this if you want the search index to be emptied before rebuilding (see below).</span>
+										<span><input type="checkbox" name="i_empty_index" value="1" tabindex="3" checked="checked" />&nbsp;&nbsp;<?php echo $lang_admin_maintenance['Empty index help'] ?></span>
 									</td>
 								</tr>
 							</table>
-							<p class="topspace">Once the process has completed, you will be redirected back to this page. It is highly recommended that you have JavaScript enabled in your browser during rebuilding (for automatic redirect when a cycle has completed). If you are forced to abort the rebuild process, make a note of the last processed topic ID and enter that ID+1 in "Starting topic ID" when/if you want to continue ("Empty index" must not be selected).</p>
-							<div class="fsetsubmit"><input type="submit" name="rebuild_index" value="Rebuild index" tabindex="4" /></div>
+							<p class="topspace"><?php echo $lang_admin_maintenance['Rebuild completed info'] ?></p>
+							<div class="fsetsubmit"><input type="submit" name="rebuild_index" value="<?php echo $lang_admin_maintenance['Rebuild index'] ?>" tabindex="4" /></div>
 						</div>
 					</fieldset>
 				</div>

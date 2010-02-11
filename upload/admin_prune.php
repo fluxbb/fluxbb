@@ -19,6 +19,9 @@ require PUN_ROOT.'include/common_admin.php';
 if ($pun_user['g_id'] != PUN_ADMIN)
 	message($lang_common['No permission']);
 
+// Load the admin_prune.php language file
+require PUN_ROOT.'lang/'.$admin_language.'/admin_common.php';
+require PUN_ROOT.'lang/'.$admin_language.'/admin_prune.php';
 
 if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comply']))
 {
@@ -65,13 +68,13 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 			$db->query('DELETE FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $orphans).')') or error('Unable to delete redirect topics', __FILE__, __LINE__, $db->error());
 		}
 
-		redirect('admin_prune.php', 'Posts pruned. Redirecting &hellip;');
+		redirect('admin_prune.php', $lang_admin_prune['Posts pruned redirect']);
 	}
 
 
 	$prune_days = $_POST['req_prune_days'];
 	if (!@preg_match('#^\d+$#', $prune_days))
-		message('Days to prune must be a positive integer.');
+		message($lang_admin_prune['Must be integer messag']);
 
 	$prune_date = time() - ($prune_days*86400);
 	$prune_from = $_POST['prune_from'];
@@ -98,10 +101,10 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 	$num_topics = $db->result($result);
 
 	if (!$num_topics)
-		message('There are no topics that are '.$prune_days.' days old. Please decrease the value of "Days old" and try again.');
+		message(sprintf($lang_admin_prune['No old topics message'], $prune_days));
 
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Prune');
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Prune']);
 	define('PUN_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
 
@@ -109,7 +112,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 
 ?>
 	<div class="blockform">
-		<h2><span>Prune</span></h2>
+		<h2><span><?php echo $lang_admin_prune['Prune head'] ?></span></h2>
 		<div class="box">
 			<form method="post" action="admin_prune.php?action=foo">
 				<div class="inform">
@@ -117,14 +120,14 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 					<input type="hidden" name="prune_sticky" value="<?php echo $prune_sticky ?>" />
 					<input type="hidden" name="prune_from" value="<?php echo $prune_from ?>" />
 					<fieldset>
-						<legend>Confirm prune posts</legend>
+						<legend><?php echo $lang_admin_prune['Confirm prune subhead'] ?></legend>
 						<div class="infldset">
-							<p>Are you sure that you want to prune all topics older than <?php echo $prune_days ?> days from <?php echo $forum ?>? (<?php echo forum_number_format($num_topics) ?> topics)</p>
-							<p class="warntext">WARNING! Pruning posts deletes them permanently.</p>
+							<p><?php printf($lang_admin_prune['Confirm prune info'], $prune_days, $forum, forum_number_format($num_topics)) ?></p>
+							<p class="warntext"><?php echo $lang_admin_prune['Confirm prune warn'] ?></p>
 						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="prune_comply" value="Prune" /><a href="javascript:history.go(-1)">Go back</a></p>
+				<p class="buttons"><input type="submit" name="prune_comply" value="<?php echo $lang_admin_common['Prune'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_admin_common['Go back'] ?></a></p>
 			</form>
 		</div>
 	</div>
@@ -138,7 +141,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 
 else
 {
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Prune');
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Prune']);
 	$required_fields = array('req_prune_days' => 'Days old');
 	$focus_element = array('prune', 'req_prune_days');
 	define('PUN_ACTIVE_PAGE', 'admin');
@@ -148,34 +151,34 @@ else
 
 ?>
 	<div class="blockform">
-		<h2><span>Prune</span></h2>
+		<h2><span><?php echo $lang_admin_prune['Prune head'] ?></span></h2>
 		<div class="box">
 			<form id="prune" method="post" action="admin_prune.php?action=foo" onsubmit="return process_form(this)">
 				<div class="inform">
 					<input type="hidden" name="form_sent" value="1" />
 					<fieldset>
-						<legend>Prune old posts</legend>
+						<legend><?php echo $lang_admin_prune['Prune subhead'] ?></legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row">Days old</th>
+									<th scope="row"><?php echo $lang_admin_prune['Days old label'] ?></th>
 									<td>
 										<input type="text" name="req_prune_days" size="3" maxlength="3" tabindex="1" />
-										<span>The number of days "old" a topic must be to be pruned. E.g. if you were to enter 30, every topic that didn't contain a post dated less than 30 days old would be deleted.</span>
+										<span><?php echo $lang_admin_prune['Days old help'] ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Prune sticky topics</th>
+									<th scope="row"><?php echo $lang_admin_prune['Prune sticky label'] ?></th>
 									<td>
-										<input type="radio" name="prune_sticky" value="1" tabindex="2" checked="checked" />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="prune_sticky" value="0" />&nbsp;<strong>No</strong>
-										<span>When enabled sticky topics will also be pruned.</span>
+										<input type="radio" name="prune_sticky" value="1" tabindex="2" checked="checked" />&nbsp;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="prune_sticky" value="0" />&nbsp;<strong><?php echo $lang_admin_common['No'] ?></strong>
+										<span><?php echo $lang_admin_prune['Prune sticky help'] ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Prune from forum</th>
+									<th scope="row"><?php echo $lang_admin_prune['Prune from label'] ?></th>
 									<td>
 										<select name="prune_from" tabindex="3">
-											<option value="all">All forums</option>
+											<option value="all"><?php echo $lang_admin_prune['All forums'] ?></option>
 <?php
 
 	$result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id WHERE f.redirect_url IS NULL ORDER BY c.disp_position, c.id, f.disp_position') or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
@@ -198,12 +201,12 @@ else
 ?>
 											</optgroup>
 										</select>
-										<span>The forum from which you want to prune posts.</span>
+										<span><?php echo $lang_admin_prune['Prune from help'] ?></span>
 									</td>
 								</tr>
 							</table>
-							<p class="topspace">Use this feature with caution. Pruned posts can <strong>never</strong> be recovered. For best performance, you should put the board in <a href="admin_options.php#maintenance">maintenance mode</a> during pruning.</p>
-							<div class="fsetsubmit"><input type="submit" name="prune" value="Prune" tabindex="5" /></div>
+							<p class="topspace"><?php printf($lang_admin_prune['Prune info'], '<a href="admin_options.php#maintenance">'.$lang_admin_common['Maintenance mode'].'</a>') ?></p>
+							<div class="fsetsubmit"><input type="submit" name="prune" value="<?php echo $lang_admin_common['Prune'] ?>" tabindex="5" /></div>
 						</div>
 					</fieldset>
 				</div>

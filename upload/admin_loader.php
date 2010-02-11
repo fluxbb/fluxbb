@@ -14,6 +14,7 @@ define('PUN_ADMIN_CONSOLE', 1);
 define('PUN_ROOT', './');
 require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'include/common_admin.php';
+require PUN_ROOT.'lang/'.$admin_language.'/admin_common.php';
 
 
 if (!$pun_user['is_admmod'])
@@ -32,13 +33,13 @@ if ($pun_user['g_moderator'] == '1' && $prefix == 'AP')
 
 // Make sure the file actually exists
 if (!file_exists(PUN_ROOT.'plugins/'.$plugin))
-	message('There is no plugin called \''.$plugin.'\' in the plugin directory.');
+	message(sprintf($lang_admin_common['No plugin message'], $plugin));
 
 // Construct REQUEST_URI if it isn't set
 if (!isset($_SERVER['REQUEST_URI']))
 	$_SERVER['REQUEST_URI'] = (isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '').'?'.(isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '');
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', str_replace('_', ' ', substr($plugin, strpos($plugin, '_') + 1, -4)));
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Admin'], str_replace('_', ' ', substr($plugin, strpos($plugin, '_') + 1, -4)));
 define('PUN_ACTIVE_PAGE', 'admin');
 require PUN_ROOT.'header.php';
 
@@ -47,7 +48,7 @@ require PUN_ROOT.'header.php';
 // get the "blank page of death"
 include PUN_ROOT.'plugins/'.$plugin;
 if (!defined('PUN_PLUGIN_LOADED'))
-	message('Loading of the plugin \''.$plugin.'\' failed.');
+	message(sprintf($lang_admin_common['Plugin failed message'], $plugin));
 
 // Output the clearer div
 ?>

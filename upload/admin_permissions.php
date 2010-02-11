@@ -19,6 +19,9 @@ require PUN_ROOT.'include/common_admin.php';
 if ($pun_user['g_id'] != PUN_ADMIN)
 	message($lang_common['No permission']);
 
+// Load the admin_permissions.php language file
+require PUN_ROOT.'lang/'.$admin_language.'/admin_common.php';
+require PUN_ROOT.'lang/'.$admin_language.'/admin_permissions.php';
 
 if (isset($_POST['form_sent']))
 {
@@ -39,60 +42,60 @@ if (isset($_POST['form_sent']))
 
 	generate_config_cache();
 
-	redirect('admin_permissions.php', 'Permissions updated. Redirecting &hellip;');
+	redirect('admin_permissions.php', $lang_admin_permissions['Perms updated redirect']);
 }
 
-
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Permissions');
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Permissions']);
 define('PUN_ACTIVE_PAGE', 'admin');
 require PUN_ROOT.'header.php';
+
 generate_admin_menu('permissions');
 
 ?>
 	<div class="blockform">
-		<h2><span>Permissions</span></h2>
+		<h2><span><?php echo $lang_admin_permissions['Permissions head'] ?></span></h2>
 		<div class="box">
 			<form method="post" action="admin_permissions.php">
-				<p class="submittop"><input type="submit" name="save" value="Save changes" /></p>
+				<p class="submittop"><input type="submit" name="save" value="<?php echo $lang_admin_common['Save changes'] ?>" /></p>
 				<div class="inform">
 					<input type="hidden" name="form_sent" value="1" />
 					<fieldset>
-						<legend>Posting</legend>
+						<legend><?php echo $lang_admin_permissions['Posting subhead'] ?></legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row">BBCode</th>
+									<th scope="row"><?php echo $lang_admin_permissions['BBCode label'] ?></th>
 									<td>
-										<input type="radio" name="form[message_bbcode]" value="1"<?php if ($pun_config['p_message_bbcode'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[message_bbcode]" value="0"<?php if ($pun_config['p_message_bbcode'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Allow BBCode in posts (recommended).</span>
+										<input type="radio" name="form[message_bbcode]" value="1"<?php if ($pun_config['p_message_bbcode'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[message_bbcode]" value="0"<?php if ($pun_config['p_message_bbcode'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['No'] ?></strong>
+										<span><?php echo $lang_admin_permissions['BBCode help'] ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Image tag</th>
+									<th scope="row"><?php echo $lang_admin_permissions['Image tag label'] ?></th>
 									<td>
-										<input type="radio" name="form[message_img_tag]" value="1"<?php if ($pun_config['p_message_img_tag'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[message_img_tag]" value="0"<?php if ($pun_config['p_message_img_tag'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Allow the BBCode [img][/img] tag in posts.</span>
+										<input type="radio" name="form[message_img_tag]" value="1"<?php if ($pun_config['p_message_img_tag'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[message_img_tag]" value="0"<?php if ($pun_config['p_message_img_tag'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['No'] ?></strong>
+										<span><?php echo $lang_admin_permissions['Image tag help'] ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">All caps message</th>
+									<th scope="row"><?php echo $lang_admin_permissions['All caps message label'] ?></th>
 									<td>
-										<input type="radio" name="form[message_all_caps]" value="1"<?php if ($pun_config['p_message_all_caps'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[message_all_caps]" value="0"<?php if ($pun_config['p_message_all_caps'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Allow a message to contain only capital letters.</span>
+										<input type="radio" name="form[message_all_caps]" value="1"<?php if ($pun_config['p_message_all_caps'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[message_all_caps]" value="0"<?php if ($pun_config['p_message_all_caps'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['No'] ?></strong>
+										<span><?php echo $lang_admin_permissions['All caps message help'] ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">All caps subject</th>
+									<th scope="row"><?php echo $lang_admin_permissions['All caps subject label'] ?></th>
 									<td>
-										<input type="radio" name="form[subject_all_caps]" value="1"<?php if ($pun_config['p_subject_all_caps'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[subject_all_caps]" value="0"<?php if ($pun_config['p_subject_all_caps'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Allow a subject to contain only capital letters.</span>
+										<input type="radio" name="form[subject_all_caps]" value="1"<?php if ($pun_config['p_subject_all_caps'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[subject_all_caps]" value="0"<?php if ($pun_config['p_subject_all_caps'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['No'] ?></strong>
+										<span><?php echo $lang_admin_permissions['All caps subject help'] ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Require guest email</th>
+									<th scope="row"><?php echo $lang_admin_permissions['Require e-mail label'] ?></th>
 									<td>
-										<input type="radio" name="form[force_guest_email]" value="1"<?php if ($pun_config['p_force_guest_email'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[force_guest_email]" value="0"<?php if ($pun_config['p_force_guest_email'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Require guests to supply an email address when posting.</span>
+										<input type="radio" name="form[force_guest_email]" value="1"<?php if ($pun_config['p_force_guest_email'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[force_guest_email]" value="0"<?php if ($pun_config['p_force_guest_email'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['No'] ?></strong>
+										<span><?php echo $lang_admin_permissions['Require e-mail help'] ?></span>
 									</td>
 								</tr>
 							</table>
@@ -101,42 +104,42 @@ generate_admin_menu('permissions');
 				</div>
 				<div class="inform">
 					<fieldset>
-						<legend>Signatures</legend>
+						<legend><?php echo $lang_admin_permissions['Signatures subhead'] ?></legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row">BBCodes in signatures</th>
+									<th scope="row"><?php echo $lang_admin_permissions['BBCode sigs label'] ?></th>
 									<td>
-										<input type="radio" name="form[sig_bbcode]" value="1"<?php if ($pun_config['p_sig_bbcode'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[sig_bbcode]" value="0"<?php if ($pun_config['p_sig_bbcode'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Allow BBCodes in user signatures.</span>
+										<input type="radio" name="form[sig_bbcode]" value="1"<?php if ($pun_config['p_sig_bbcode'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[sig_bbcode]" value="0"<?php if ($pun_config['p_sig_bbcode'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['No'] ?></strong>
+										<span><?php echo $lang_admin_permissions['BBCode sigs help'] ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Image tag in signatures</th>
+									<th scope="row"><?php echo $lang_admin_permissions['Image tag sigs label'] ?></th>
 									<td>
-										<input type="radio" name="form[sig_img_tag]" value="1"<?php if ($pun_config['p_sig_img_tag'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[sig_img_tag]" value="0"<?php if ($pun_config['p_sig_img_tag'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Allow the BBCode [img][/img] tag in user signatures (not recommended).</span>
+										<input type="radio" name="form[sig_img_tag]" value="1"<?php if ($pun_config['p_sig_img_tag'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[sig_img_tag]" value="0"<?php if ($pun_config['p_sig_img_tag'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['No'] ?></strong>
+										<span><?php echo $lang_admin_permissions['Image tag sigs help'] ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">All caps signature</th>
+									<th scope="row"><?php echo $lang_admin_permissions['All caps sigs label'] ?></th>
 									<td>
-										<input type="radio" name="form[sig_all_caps]" value="1"<?php if ($pun_config['p_sig_all_caps'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[sig_all_caps]" value="0"<?php if ($pun_config['p_sig_all_caps'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Allow a signature to contain only capital letters.</span>
+										<input type="radio" name="form[sig_all_caps]" value="1"<?php if ($pun_config['p_sig_all_caps'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[sig_all_caps]" value="0"<?php if ($pun_config['p_sig_all_caps'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['No'] ?></strong>
+										<span><?php echo $lang_admin_permissions['All caps sigs help'] ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Maximum signature length</th>
+									<th scope="row"><?php echo $lang_admin_permissions['Max sig length label'] ?></th>
 									<td>
 										<input type="text" name="form[sig_length]" size="5" maxlength="5" value="<?php echo $pun_config['p_sig_length'] ?>" />
-										<span>The maximum number of characters a user signature may contain.</span>
+										<span><?php echo $lang_admin_permissions['Max sig length help'] ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Maximum signature lines</th>
+									<th scope="row"><?php echo $lang_admin_permissions['Max sig lines label'] ?></th>
 									<td>
 										<input type="text" name="form[sig_lines]" size="3" maxlength="3" value="<?php echo $pun_config['p_sig_lines'] ?>" />
-										<span>The maximum number of lines a user signature may contain.</span>
+										<span><?php echo $lang_admin_permissions['Max sig lines help'] ?></span>
 									</td>
 								</tr>
 							</table>
@@ -145,28 +148,28 @@ generate_admin_menu('permissions');
 				</div>
 				<div class="inform">
 					<fieldset>
-						<legend>Registration</legend>
+						<legend><?php echo $lang_admin_permissions['Registration subhead'] ?></legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row">Allow banned email addresses</th>
+									<th scope="row"><?php echo $lang_admin_permissions['Banned e-mail label'] ?></th>
 									<td>
-										<input type="radio" name="form[allow_banned_email]" value="1"<?php if ($pun_config['p_allow_banned_email'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[allow_banned_email]" value="0"<?php if ($pun_config['p_allow_banned_email'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Allow users to register with or change to a banned email address/domain. If left at its default setting (yes), this action will be allowed, but an alert email will be sent to the mailing list (an effective way of detecting multiple registrations).</span>
+										<input type="radio" name="form[allow_banned_email]" value="1"<?php if ($pun_config['p_allow_banned_email'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[allow_banned_email]" value="0"<?php if ($pun_config['p_allow_banned_email'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['No'] ?></strong>
+										<span><?php echo $lang_admin_permissions['Banned e-mail help'] ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">Allow duplicate email addresses</th>
+									<th scope="row"><?php echo $lang_admin_permissions['Duplicate e-mail label'] ?></th>
 									<td>
-										<input type="radio" name="form[allow_dupe_email]" value="1"<?php if ($pun_config['p_allow_dupe_email'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[allow_dupe_email]" value="0"<?php if ($pun_config['p_allow_dupe_email'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Controls whether users should be allowed to register with an email address that another user already has. If allowed, an alert email will be sent to the mailing list if a duplicate is detected.</span>
+										<input type="radio" name="form[allow_dupe_email]" value="1"<?php if ($pun_config['p_allow_dupe_email'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[allow_dupe_email]" value="0"<?php if ($pun_config['p_allow_dupe_email'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_common['No'] ?></strong>
+										<span><?php echo $lang_admin_permissions['Duplicate e-mail help'] ?></span>
 									</td>
 								</tr>
 							</table>
 						</div>
 					</fieldset>
 				</div>
-				<p class="submitend"><input type="submit" name="save" value="Save changes" /></p>
+				<p class="submitend"><input type="submit" name="save" value="<?php echo $lang_admin_common['Save changes'] ?>" /></p>
 			</form>
 		</div>
 	</div>

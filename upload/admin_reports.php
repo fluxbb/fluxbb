@@ -19,6 +19,9 @@ require PUN_ROOT.'include/common_admin.php';
 if (!$pun_user['is_admmod'])
 	message($lang_common['No permission']);
 
+// Load the admin_reports.php language file
+require PUN_ROOT.'lang/'.$admin_language.'/admin_common.php';
+require PUN_ROOT.'lang/'.$admin_language.'/admin_reports.php';
 
 // Zap a report
 if (isset($_POST['zap_id']))
@@ -33,11 +36,11 @@ if (isset($_POST['zap_id']))
 	if ($zapped == '')
 		$db->query('UPDATE '.$db->prefix.'reports SET zapped='.time().', zapped_by='.$pun_user['id'].' WHERE id='.$zap_id) or error('Unable to zap report', __FILE__, __LINE__, $db->error());
 
-	redirect('admin_reports.php', 'Report zapped. Redirecting &hellip;');
+	redirect('admin_reports.php', $lang_admin_reports['Report zapped redirect']);
 }
 
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Admin', 'Reports');
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Reports']);
 define('PUN_ACTIVE_PAGE', 'admin');
 require PUN_ROOT.'header.php';
 
@@ -45,7 +48,7 @@ generate_admin_menu('reports');
 
 ?>
 	<div class="blockform">
-		<h2><span>New reports</span></h2>
+		<h2><span><?php echo $lang_admin_reports['New reports head'] ?></span></h2>
 		<div class="box">
 			<form method="post" action="admin_reports.php?action=zap">
 <?php
@@ -56,24 +59,26 @@ if ($db->num_rows($result))
 {
 	while ($cur_report = $db->fetch_assoc($result))
 	{
-		$reporter = ($cur_report['reporter'] != '') ? '<a href="profile.php?id='.$cur_report['reported_by'].'">'.pun_htmlspecialchars($cur_report['reporter']).'</a>' : 'Deleted user';
-		$forum = ($cur_report['forum_name'] != '') ? '<a href="viewforum.php?id='.$cur_report['forum_id'].'">'.pun_htmlspecialchars($cur_report['forum_name']).'</a>' : 'Deleted';
-		$topic = ($cur_report['subject'] != '') ? '<a href="viewtopic.php?id='.$cur_report['topic_id'].'">'.pun_htmlspecialchars($cur_report['subject']).'</a>' : 'Deleted';
+		$reporter = ($cur_report['reporter'] != '') ? '<a href="profile.php?id='.$cur_report['reported_by'].'">'.pun_htmlspecialchars($cur_report['reporter']).'</a>' : $lang_admin_reports['Deleted user'];
+		$forum = ($cur_report['forum_name'] != '') ? '<a href="viewforum.php?id='.$cur_report['forum_id'].'">'.pun_htmlspecialchars($cur_report['forum_name']).'</a>' : $lang_admin_reports['Deleted'];
+		$topic = ($cur_report['subject'] != '') ? '<a href="viewtopic.php?id='.$cur_report['topic_id'].'">'.pun_htmlspecialchars($cur_report['subject']).'</a>' : $lang_admin_reports['Deleted'];
 		$post = str_replace("\n", '<br />', pun_htmlspecialchars($cur_report['message']));
-		$postid = ($cur_report['pid'] != '') ? '<a href="viewtopic.php?pid='.$cur_report['pid'].'#p'.$cur_report['pid'].'">Post #'.$cur_report['pid'].'</a>' : 'Deleted';
+		$postid = ($cur_report['pid'] != '') ? '<a href="viewtopic.php?pid='.$cur_report['pid'].'#p'.$cur_report['pid'].'">Post #'.$cur_report['pid'].'</a>' : $lang_admin_reports['Deleted'];
+		$report_location = array($forum, $topic, $postid);
 
 ?>
 				<div class="inform">
 					<fieldset>
-						<legend>Reported <?php echo format_time($cur_report['created']) ?></legend>
+						<legend><?php printf($lang_admin_reports['Report subhead'], format_time($cur_report['created'])) ?></legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row">Report by <?php echo $reporter ?></th>
-									<td><?php echo $forum ?>&nbsp;&raquo;&nbsp;<?php echo $topic ?>&nbsp;&raquo;&nbsp;<?php echo $postid ?></td>
+
+									<th scope="row"><?php printf($lang_admin_reports['Reported by'], $reporter) ?></th>
+									<td><?php echo implode($lang_admin_reports['Location seperator'], $report_location) ?></td>
 								</tr>
 								<tr>
-									<th scope="row">Reason<div><input type="submit" name="zap_id[<?php echo $cur_report['id'] ?>]" value=" Zap " /></div></th>
+									<th scope="row"><?php echo $lang_admin_reports['Reason'] ?><div><input type="submit" name="zap_id[<?php echo $cur_report['id'] ?>]" value="<?php echo $lang_admin_reports['Zap'] ?>" /></div></th>
 									<td><?php echo $post ?></td>
 								</tr>
 							</table>
@@ -90,9 +95,9 @@ else
 ?>
 				<div class="inform">
 					<fieldset>
-						<legend>None</legend>
+						<legend><?php echo $lang_admin_common['None'] ?></legend>
 						<div class="infldset">
-							<p>There are no new reports.</p>
+							<p><?php echo $lang_admin_reports['No new reports'] ?></p>
 						</div>
 					</fieldset>
 				</div>
@@ -106,7 +111,7 @@ else
 	</div>
 
 	<div class="blockform block2">
-		<h2><span>10 last zapped reports</span></h2>
+		<h2><span><?php echo $lang_admin_reports['Last 10 head'] ?></span></h2>
 		<div class="box">
 			<div class="fakeform">
 <?php
@@ -117,25 +122,27 @@ if ($db->num_rows($result))
 {
 	while ($cur_report = $db->fetch_assoc($result))
 	{
-		$reporter = ($cur_report['reporter'] != '') ? '<a href="profile.php?id='.$cur_report['reported_by'].'">'.pun_htmlspecialchars($cur_report['reporter']).'</a>' : 'Deleted user';
-		$forum = ($cur_report['forum_name'] != '') ? '<a href="viewforum.php?id='.$cur_report['forum_id'].'">'.pun_htmlspecialchars($cur_report['forum_name']).'</a>' : 'Deleted';
-		$topic = ($cur_report['subject'] != '') ? '<a href="viewtopic.php?id='.$cur_report['topic_id'].'">'.pun_htmlspecialchars($cur_report['subject']).'</a>' : 'Deleted';
+		$reporter = ($cur_report['reporter'] != '') ? '<a href="profile.php?id='.$cur_report['reported_by'].'">'.pun_htmlspecialchars($cur_report['reporter']).'</a>' : $lang_admin_reports['Deleted user'];
+		$forum = ($cur_report['forum_name'] != '') ? '<a href="viewforum.php?id='.$cur_report['forum_id'].'">'.pun_htmlspecialchars($cur_report['forum_name']).'</a>' : $lang_admin_reports['Deleted'];
+		$topic = ($cur_report['subject'] != '') ? '<a href="viewtopic.php?id='.$cur_report['topic_id'].'">'.pun_htmlspecialchars($cur_report['subject']).'</a>' : $lang_admin_reports['Deleted'];
 		$post = str_replace("\n", '<br />', pun_htmlspecialchars($cur_report['message']));
-		$post_id = ($cur_report['pid'] != '') ? '<a href="viewtopic.php?pid='.$cur_report['pid'].'#p'.$cur_report['pid'].'">Post #'.$cur_report['pid'].'</a>' : 'Deleted';
-		$zapped_by = ($cur_report['zapped_by'] != '') ? '<strong>'.pun_htmlspecialchars($cur_report['zapped_by']).'</strong>' : 'N/A';
+		$post_id = ($cur_report['pid'] != '') ? '<a href="viewtopic.php?pid='.$cur_report['pid'].'#p'.$cur_report['pid'].'">Post #'.$cur_report['pid'].'</a>' : $lang_admin_reports['Deleted'];
+		$zapped_by = ($cur_report['zapped_by'] != '') ? '<a href="profile.php?id='.$cur_report['zapped_by_id'].'">'.pun_htmlspecialchars($cur_report['zapped_by']).'</a>' : $lang_admin_reports['NA'];
+		$zapped_by = ($cur_report['zapped_by'] != '') ? '<strong>'.pun_htmlspecialchars($cur_report['zapped_by']).'</strong>' : $lang_admin_reports['NA'];
+		$report_location = array($forum, $topic, $post_id);
 
 ?>
 				<div class="inform">
 					<fieldset>
-						<legend>Zapped <?php echo format_time($cur_report['zapped']) ?> by <?php echo $zapped_by ?></legend>
+						<legend><?php printf($lang_admin_reports['Zapped subhead'], format_time($cur_report['zapped']), $zapped_by) ?></legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row">Report by <?php echo $reporter ?></th>
-									<td><?php echo $forum ?>&nbsp;&raquo;&nbsp;<?php echo $topic ?>&nbsp;&raquo;&nbsp;<?php echo $post_id ?></td>
+									<th scope="row"><?php printf($lang_admin_reports['Reported by'], $reporter) ?></th>
+									<td><?php echo implode($lang_admin_reports['Location seperator'], $report_location) ?></td>
 								</tr>
 								<tr>
-									<th scope="row">Reason</th>
+									<th scope="row"><?php echo $lang_admin_reports['Reason'] ?></th>
 									<td><?php echo $post ?></td>
 								</tr>
 							</table>
@@ -152,9 +159,9 @@ else
 ?>
 				<div class="inform">
 					<fieldset>
-						<legend>None</legend>
+						<legend><?php echo $lang_admin_common['None'] ?></legend>
 						<div class="infldset">
-							<p>There are no zapped reports.</p>
+							<p><?php echo $lang_admin_reports['No zapped reports'] ?></p>
 						</div>
 					</fieldset>
 				</div>
