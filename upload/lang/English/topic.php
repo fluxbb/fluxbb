@@ -22,6 +22,7 @@ $lang_topic = array(
 'Subscribe'			=>	'Subscribe to this topic',
 'Quick post'		=>	'Quick post',
 'Mod controls'		=>	'Moderator controls',
-'New icon'			=>	'New post'
+'New icon'			=>	'New post',
+'Re'				=>	'Re:'
 
 );

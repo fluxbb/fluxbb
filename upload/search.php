@@ -412,7 +412,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 		if ($show_as == 'posts')
 		{
-			$sql = 'SELECT p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, p.message, p.hide_smilies, t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id WHERE p.id IN('.$search_results.') ORDER BY '.$sort_by_sql;
+			$sql = 'SELECT p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, p.message, p.hide_smilies, t.id AS tid, t.poster, t.subject, t.first_post_id, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id WHERE p.id IN('.$search_results.') ORDER BY '.$sort_by_sql;
 		}
 		else
 			$sql = 'SELECT t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.sticky, t.forum_id FROM '.$db->prefix.'topics AS t WHERE t.id IN('.$search_results.') ORDER BY '.$sort_by_sql;
@@ -479,6 +479,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 		if ($show_as == 'posts')
 		{
+			require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
 			require PUN_ROOT.'include/parser.php';
 			$post_count = 0;
 		}
@@ -510,6 +511,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			{
 				++$post_count;
 				$icon_type = 'icon';
+				if ($search_set[$i]['pid'] == $search_set[$i]['first_post_id'])
 				$subject = '<a href="viewtopic.php?id='.$search_set[$i]['tid'].'">'.pun_htmlspecialchars($search_set[$i]['subject']).'</a>';
 
 				if (!$pun_user['is_guest'] && $search_set[$i]['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$search_set[$i]['tid']]) || $tracked_topics['topics'][$search_set[$i]['tid']] < $search_set[$i]['last_post']) && (!isset($tracked_topics['forums'][$search_set[$i]['forum_id']]) || $tracked_topics['forums'][$search_set[$i]['forum_id']] < $search_set[$i]['last_post']))
@@ -540,8 +542,8 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 
 ?>
-<div class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if ($post_count == 1) echo ' blockpost1' ?><?php if ($item_status != '') echo ' '.$item_status ?>">
-	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?></span> <span><?php echo $forum ?></span> <span>&raquo;&#160;<?php echo $subject ?></span> <span>&raquo;&#160;<a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo format_time($search_set[$i]['pposted']) ?></a></span></span></h2>
+<div class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if ($search_set[$i]['pid'] != $search_set[$i]['first_post_id']) echo ' firstpost' ?><?php if ($post_count == 1) echo ' blockpost1' ?><?php if ($item_status != '') echo ' '.$item_status ?>">
+	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?></span> <span><?php if ($search_set[$i]['pid'] != $search_set[$i]['first_post_id']) echo $lang_topic['Re'].' ' ?><?php echo $forum ?></span> <span>&raquo;&#160;<?php echo $subject ?></span> <span>&raquo;&#160;<a href="viewtopic.php?pid=<?php echo $search_set[$i]['pid'].'#p'.$search_set[$i]['pid'] ?>"><?php echo format_time($search_set[$i]['pposted']) ?></a></span></span></h2>
 	<div class="box">
 		<div class="inbox">
 			<div class="postbody">
