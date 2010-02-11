@@ -23,25 +23,21 @@ header('Content-type: text/html; charset=utf-8');
 
 // Load the template
 if (defined('PUN_ADMIN_CONSOLE'))
-{
-	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/admin.tpl'))
-		$tpl_file = PUN_ROOT.'style/'.$pun_user['style'].'/admin.tpl';
-	else
-		$tpl_file = PUN_ROOT.'include/template/admin.tpl';
-}
+	$tpl_file = 'admin.tpl';
 else if (defined('PUN_HELP'))
+	$tpl_file = 'help.tpl';
+else
+	$tpl_file = 'main.tpl';
+
+if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/'.$tpl_file))
 {
-	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/help.tpl'))
-		$tpl_file = PUN_ROOT.'style/'.$pun_user['style'].'/help.tpl';
-	else
-		$tpl_file = PUN_ROOT.'include/template/help.tpl';
+	$tpl_file = PUN_ROOT.'style/'.$pun_user['style'].'/'.$tpl_file;
+	$tpl_inc_dir = PUN_ROOT.'style/'.$pun_user['style'].'/';
 }
 else
 {
-	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/main.tpl'))
-		$tpl_file = PUN_ROOT.'style/'.$pun_user['style'].'/main.tpl';
-	else
-		$tpl_file = PUN_ROOT.'include/template/main.tpl';
+	$tpl_file = PUN_ROOT.'include/template/'.$tpl_file;
+	$tpl_inc_dir = PUN_ROOT.'include/user/';
 }
 
 $tpl_main = file_get_contents($tpl_file);
@@ -49,11 +45,13 @@ $tpl_main = file_get_contents($tpl_file);
 // START SUBST - <pun_include "*">
 while (preg_match('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_main, $cur_include))
 {
-	if (!file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
-		error('Unable to process user include '.htmlspecialchars($cur_include[0]).' from template main.tpl. There is no such file in folder /include/user/');
+	if (!file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
+		error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file), $tpl_inc_dir));
 
 	ob_start();
-	include PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
+
+	require $tpl_inc_dir.$cur_include[1].'.'.$cur_include[2];
+
 	$tpl_temp = ob_get_contents();
 	$tpl_main = str_replace($cur_include[0], $tpl_temp, $tpl_main);
 	ob_end_clean();
