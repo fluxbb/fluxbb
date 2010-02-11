@@ -210,7 +210,7 @@ $lang_admin_options = array(
 // Maintenance Section
 'Maintenance subhead'				=>	'Maintenance',
 'Maintenance mode label'			=>	'Maintenance mode',
-'Maintenance mode help'				=>	'When enabled, the board will only be available to administrators. This should be used if the board needs to be taken down temporarily for maintenance. WARNING! Do not log out when the board is in maintenance mode. You will not be able to login again.',
+'Maintenance mode help'				=>	'When enabled, the board will only be available to administrators. This should be used if the board needs to be taken down temporarily for maintenance. <strong>WARNING! Do not log out when the board is in maintenance mode.</strong> You will not be able to login again.',
 'Maintenance message label'			=>	'Maintenance message',
 'Maintenance message help'			=>	'The message that will be displayed to users when the board is in maintenance mode. If left blank, a default message will be used. This text will not be parsed like regular posts and thus may contain HTML.',
 

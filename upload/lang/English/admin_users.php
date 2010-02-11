@@ -56,6 +56,7 @@ $lang_admin_users = array(
 'Results IP address head'		=>	'IP address',
 'Results last used head'		=>	'Last used',
 'Results times found head'		=>	'Times found',
+'Results action head'			=>	'Action',
 'Results find more link'		=>	'Find more users for this ip',
 'Results no posts found'		=>	'There are currently no posts by that user in the forum.',
 'Bad IP message'				=>	'The supplied IP address is not correctly formatted.',

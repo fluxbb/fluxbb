@@ -5,10 +5,10 @@ $lang_admin_maintenance = array(
 
 'Maintenance head'				=>	'Forum Maintenance',
 'Rebuild index subhead'			=>	'Rebuild search index',
-'Rebuild index info'			=>	'If you\'ve added, edited or removed posts manually in the database or if you\'re having problems searching, you should rebuild the search index. For best performance you should put the forum in %s during rebuilding. <strong>Rebuilding the search index can take a long time and will increase server load during the rebuild process!</strong>',
+'Rebuild index info'			=>	'If you\'ve added, edited or removed posts manually in the database or if you\'re having problems searching, you should rebuild the search index. For best performance, you should put the forum in %s during rebuilding. <strong>Rebuilding the search index can take a long time and will increase server load during the rebuild process!</strong>',
 'Topics per cycle label'		=>	'Topics per cycle',
 'Topics per cycle help'			=>	'The number of topics to process per pageview. E.g. if you were to enter 100, one hundred topics would be processed and then the page would refresh. This is to prevent the script from timing out during the rebuild process.',
-'Starting topic label'			=>	'Starting Topic ID',
+'Starting topic label'			=>	'Starting topic ID',
 'Starting topic help'			=>	'The topic ID to start rebuilding at. The default value is the first available ID in the database. Normally you wouldn\'t want to change this.',
 'Empty index label'				=>	'Empty index',
 'Empty index help'				=>	'Select this if you want the search index to be emptied before rebuilding (see below).',
