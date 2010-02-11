@@ -58,7 +58,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 
 		// Make sure we're not banning an admin
 		if (isset($group_id) && $group_id == PUN_ADMIN)
-			message($lang_admin_bans['User is admin message']);
+			message(sprintf($lang_admin_bans['User is admin message'], pun_htmlspecialchars($ban_user)));
 
 		// If we have a $user_id, we can try to find the last known IP of that user
 		if (isset($user_id))
