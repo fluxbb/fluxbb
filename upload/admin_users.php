@@ -173,7 +173,7 @@ if (isset($_GET['show_users']))
 					<td class="tc2"><a href="mailto:<?php echo $user_data['email'] ?>"><?php echo $user_data['email'] ?></a></td>
 					<td class="tc3"><?php echo $user_title ?></td>
 					<td class="tc4"><?php echo forum_number_format($user_data['num_posts']) ?></td>
-					<td class="tc5"><?php echo ($user_data['admin_note'] != '') ? $user_data['admin_note'] : '&nbsp;' ?></td>
+					<td class="tc5"><?php echo ($user_data['admin_note'] != '') ? pun_htmlspecialchars($user_data['admin_note']) : '&nbsp;' ?></td>
 					<td class="tcr"><?php echo $actions ?></td>
 				</tr>
 <?php
@@ -339,7 +339,7 @@ else if (isset($_POST['find_user']))
 					<td class="tc2"><a href="mailto:<?php echo $user_data['email'] ?>"><?php echo $user_data['email'] ?></a></td>
 					<td class="tc3"><?php echo $user_title ?></td>
 					<td class="tc4"><?php echo forum_number_format($user_data['num_posts']) ?></td>
-					<td class="tc5"><?php echo ($user_data['admin_note'] != '') ? $user_data['admin_note'] : '&nbsp;' ?></td>
+					<td class="tc5"><?php echo ($user_data['admin_note'] != '') ? pun_htmlspecialchars($user_data['admin_note']) : '&nbsp;' ?></td>
 					<td class="tcr"><?php echo $actions ?></td>
 				</tr>
 <?php
