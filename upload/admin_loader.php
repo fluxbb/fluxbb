@@ -14,12 +14,10 @@ define('PUN_ADMIN_CONSOLE', 1);
 define('PUN_ROOT', './');
 require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'include/common_admin.php';
-require PUN_ROOT.'lang/'.$admin_language.'/admin_common.php';
 
 
 if (!$pun_user['is_admmod'])
 	message($lang_common['No permission']);
-
 
 // The plugin to load should be supplied via GET
 $plugin = isset($_GET['plugin']) ? $_GET['plugin'] : '';

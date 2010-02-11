@@ -20,6 +20,8 @@ else if (file_exists(PUN_ROOT.'lang/'.$pun_config['o_default_lang'].'/admin_comm
 else
 	$admin_language = 'English';
 
+// Attempt to load the admin_common language file
+require PUN_ROOT.'lang/'.$admin_language.'/admin_common.php';
 
 //
 // Display the admin navigation menu

@@ -20,7 +20,6 @@ if ($pun_user['g_id'] != PUN_ADMIN)
 	message($lang_common['No permission']);
 
 // Load the admin_categories.php language file
-require PUN_ROOT.'lang/'.$admin_language.'/admin_common.php';
 require PUN_ROOT.'lang/'.$admin_language.'/admin_categories.php';
 
 // Add a new category

@@ -20,7 +20,6 @@ if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_u
 	message($lang_common['No permission']);
 
 // Load the admin_bans.php language file
-require PUN_ROOT.'lang/'.$admin_language.'/admin_common.php';
 require PUN_ROOT.'lang/'.$admin_language.'/admin_bans.php';
 
 // Add/edit a ban (stage 1)

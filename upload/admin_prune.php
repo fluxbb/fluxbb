@@ -20,7 +20,6 @@ if ($pun_user['g_id'] != PUN_ADMIN)
 	message($lang_common['No permission']);
 
 // Load the admin_prune.php language file
-require PUN_ROOT.'lang/'.$admin_language.'/admin_common.php';
 require PUN_ROOT.'lang/'.$admin_language.'/admin_prune.php';
 
 if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comply']))

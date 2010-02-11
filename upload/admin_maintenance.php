@@ -22,7 +22,6 @@ if ($pun_user['g_id'] != PUN_ADMIN)
 	message($lang_common['No permission']);
 
 // Load the admin_maintenance.php language file
-require PUN_ROOT.'lang/'.$admin_language.'/admin_common.php';
 require PUN_ROOT.'lang/'.$admin_language.'/admin_maintenance.php';
 
 if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))

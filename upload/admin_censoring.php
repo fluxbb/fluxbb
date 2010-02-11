@@ -20,7 +20,6 @@ if (!$pun_user['is_admmod'])
 	message($lang_common['No permission']);
 
 // Load the admin_censoring.php language file
-require PUN_ROOT.'lang/'.$admin_language.'/admin_common.php';
 require PUN_ROOT.'lang/'.$admin_language.'/admin_censoring.php';
 
 // Add a censor word
