@@ -3,7 +3,7 @@
 // Language definitions used in admin_maintenance.php
 $lang_admin_maintenance = array(
 
-'Maintenance head'				=>	'Forum Maintenance',
+'Maintenance head'				=>	'Forum maintenance',
 'Rebuild index subhead'			=>	'Rebuild search index',
 'Rebuild index info'			=>	'If you\'ve added, edited or removed posts manually in the database or if you\'re having problems searching, you should rebuild the search index. For best performance, you should put the forum in %s during rebuilding. <strong>Rebuilding the search index can take a long time and will increase server load during the rebuild process!</strong>',
 'Topics per cycle label'		=>	'Topics per cycle',
