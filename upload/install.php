@@ -129,7 +129,7 @@ if (!isset($_POST['form_sent']))
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>FluxBB Installation</title>
-<link rel="stylesheet" type="text/css" href="style/Oxygen.css" />
+<link rel="stylesheet" type="text/css" href="style/<?php echo $default_style ?>.css" />
 <script type="text/javascript">
 function process_form(the_form)
 {
@@ -1388,7 +1388,7 @@ else
 			'style'				=> array(
 				'datatype'		=> 'VARCHAR(25)',
 				'allow_null'	=> false,
-				'default'		=> '\'Oxygen\''
+				'default'		=> '\''.$db->escape($default_style).'\''
 			),
 			'num_posts'			=> array(
 				'datatype'		=> 'INT(10) UNSIGNED',
@@ -1617,7 +1617,7 @@ else
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>FluxBB Installation</title>
-<link rel="stylesheet" type="text/css" href="style/Oxygen.css" />
+<link rel="stylesheet" type="text/css" href="style/<?php echo $default_style ?>.css" />
 <style type="text/css">
 <!--
 #punwrap {

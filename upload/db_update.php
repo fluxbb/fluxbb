@@ -322,7 +322,7 @@ switch ($stage)
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>FluxBB Database Update</title>
-<link rel="stylesheet" type="text/css" href="style/Oxygen.css" />
+<link rel="stylesheet" type="text/css" href="style/<?php echo $pun_config['o_default_style'] ?>.css" />
 </head>
 <body>
 
@@ -1158,7 +1158,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>FluxBB Database Update</title>
-<link rel="stylesheet" type="text/css" href="style/Oxygen.css" />
+<link rel="stylesheet" type="text/css" href="style/<?php echo $pun_config['o_default_style'] ?>.css" />
 </head>
 <body>
 
