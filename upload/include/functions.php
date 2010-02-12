@@ -1083,24 +1083,32 @@ function maintenance_message()
 	$message = str_replace($pattern, $replace, $pun_config['o_maintenance_message']);
 
 
-	// Load the maintenance template
 	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/maintenance.tpl'))
-		$tpl_maint = trim(file_get_contents(PUN_ROOT.'style/'.$pun_user['style'].'/maintenance.tpl'));
+	{
+		$tpl_file = PUN_ROOT.'style/'.$pun_user['style'].'/maintenance.tpl';
+		$tpl_inc_dir = PUN_ROOT.'style/'.$pun_user['style'].'/';
+	}
 	else
-		$tpl_maint = trim(file_get_contents(PUN_ROOT.'include/template/maintenance.tpl'));
+	{
+		$tpl_file = PUN_ROOT.'include/template/maintenance.tpl';
+		$tpl_inc_dir = PUN_ROOT.'include/user/';
+	}
 
+	$tpl_maint = file_get_contents($tpl_file);
 
 	// START SUBST - <pun_include "*">
 	while (preg_match('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_maint, $cur_include))
 	{
-		if (!file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
-			error('Unable to process user include '.htmlspecialchars($cur_include[0]).' from template maintenance.tpl. There is no such file in folder /include/user/');
+		if (!file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
+			error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file), $tpl_inc_dir));
 
 		ob_start();
-		include PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
+
+		require $tpl_inc_dir.$cur_include[1].'.'.$cur_include[2];
+
 		$tpl_temp = ob_get_contents();
 		$tpl_maint = str_replace($cur_include[0], $tpl_temp, $tpl_maint);
-	    ob_end_clean();
+		ob_end_clean();
 	}
 	// END SUBST - <pun_include "*">
 
@@ -1118,8 +1126,9 @@ function maintenance_message()
 	// START SUBST - <pun_head>
 	ob_start();
 
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Maintenance']);
+
 ?>
-<?php $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Maintenance']) ?>
 <title><?php echo generate_page_title($page_title) ?></title>
 <link rel="stylesheet" type="text/css" href="style/<?php echo $pun_user['style'].'.css' ?>" />
 <?php
@@ -1170,24 +1179,32 @@ function redirect($destination_url, $message)
 		header('Location: '.str_replace('&amp;', '&', $destination_url));
 
 
-	// Load the redirect template
 	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/redirect.tpl'))
-		$tpl_redir = trim(file_get_contents(PUN_ROOT.'style/'.$pun_user['style'].'/redirect.tpl'));
+	{
+		$tpl_file = PUN_ROOT.'style/'.$pun_user['style'].'/redirect.tpl';
+		$tpl_inc_dir = PUN_ROOT.'style/'.$pun_user['style'].'/';
+	}
 	else
-		$tpl_redir = trim(file_get_contents(PUN_ROOT.'include/template/redirect.tpl'));
+	{
+		$tpl_file = PUN_ROOT.'include/template/redirect.tpl';
+		$tpl_inc_dir = PUN_ROOT.'include/user/';
+	}
 
+	$tpl_redir = file_get_contents($tpl_file);
 
 	// START SUBST - <pun_include "*">
 	while (preg_match('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_redir, $cur_include))
 	{
-		if (!file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
-			error('Unable to process user include '.htmlspecialchars($cur_include[0]).' from template redirect.tpl. There is no such file in folder /include/user/');
+		if (!file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
+			error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file), $tpl_inc_dir));
 
 		ob_start();
-		include PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
+
+		require $tpl_inc_dir.$cur_include[1].'.'.$cur_include[2];
+
 		$tpl_temp = ob_get_contents();
 		$tpl_redir = str_replace($cur_include[0], $tpl_temp, $tpl_redir);
-	    ob_end_clean();
+		ob_end_clean();
 	}
 	// END SUBST - <pun_include "*">
 
@@ -1205,9 +1222,10 @@ function redirect($destination_url, $message)
 	// START SUBST - <pun_head>
 	ob_start();
 
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Redirecting']);
+
 ?>
 <meta http-equiv="refresh" content="<?php echo $pun_config['o_redirect_delay'] ?>;URL=<?php echo str_replace(array('<', '>', '"'), array('&lt;', '&gt;', '&quot;'), $destination_url) ?>" />
-<?php $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Redirecting']) ?>
 <title><?php echo generate_page_title($page_title) ?></title>
 <link rel="stylesheet" type="text/css" href="style/<?php echo $pun_user['style'].'.css' ?>" />
 <?php
