@@ -511,7 +511,7 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Default feed label'] ?></th>
                                     <td>
-										<input type="radio" name="form[feed_type]" value="0"<?php if ($pun_config['o_feed_type'] == '0') echo ' checked="checked"' ?> />&nbsp;<?php echo $lang_admin_options['None'] ?>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[feed_type]" value="1"<?php if ($pun_config['o_feed_type'] == '1') echo ' checked="checked"' ?> />&nbsp;<?php echo $lang_admin_options['RSS'] ?>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[feed_type]" value="2"<?php if ($pun_config['o_feed_type'] == '2') echo ' checked="checked"' ?> />&nbsp;<?php echo $lang_admin_options['Atom'] ?>
+										<input type="radio" name="form[feed_type]" value="0"<?php if ($pun_config['o_feed_type'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_options['None'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[feed_type]" value="1"<?php if ($pun_config['o_feed_type'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_options['RSS'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[feed_type]" value="2"<?php if ($pun_config['o_feed_type'] == '2') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_options['Atom'] ?></strong>
 										<span><?php echo $lang_admin_options['Default feed help'] ?></span>
 									</td>
 								</tr>
@@ -527,7 +527,7 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Reporting method label'] ?></th>
 									<td>
-										<input type="radio" name="form[report_method]" value="0"<?php if ($pun_config['o_report_method'] == '0') echo ' checked="checked"' ?> />&nbsp;<?php echo $lang_admin_options['Internal'] ?>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[report_method]" value="1"<?php if ($pun_config['o_report_method'] == '1') echo ' checked="checked"' ?> />&nbsp;<?php echo $lang_admin_options['By e-mail'] ?>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[report_method]" value="2"<?php if ($pun_config['o_report_method'] == '2') echo ' checked="checked"' ?> />&nbsp;<?php echo $lang_admin_options['Both'] ?>
+										<input type="radio" name="form[report_method]" value="0"<?php if ($pun_config['o_report_method'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_options['Internal'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[report_method]" value="1"<?php if ($pun_config['o_report_method'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_options['By e-mail'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[report_method]" value="2"<?php if ($pun_config['o_report_method'] == '2') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_options['Both'] ?></strong>
 										<span><?php echo $lang_admin_options['Reporting method help'] ?></span>
 									</td>
 								</tr>
