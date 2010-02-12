@@ -625,7 +625,7 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 				<fieldset>
 					<legend><?php echo $lang_profile['Confirm delete legend'] ?></legend>
 					<div class="infldset">
-						<p><?php echo $lang_profile['Confirmation info'].' '.pun_htmlspecialchars($username).'.' ?></p>
+						<p><?php echo $lang_profile['Confirmation info'].' <strong>'.pun_htmlspecialchars($username).'</strong>.' ?></p>
 						<div class="rbox">
 							<label><input type="checkbox" name="delete_posts" value="1" checked="checked" /><?php echo $lang_profile['Delete posts'] ?><br /></label>
 						</div>

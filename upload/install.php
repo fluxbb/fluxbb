@@ -325,7 +325,7 @@ function process_form(the_form)
 				<fieldset>
 					<legend>Choose the default language</legend>
 					<div class="infldset">
-						<p>This is the default language used for guests and users who haven't changed from the default in their profile.</p>
+						<p>The default language used for guests and users who haven't changed from the default in their profile.</p>
 						<label class="required"><strong>Default language</strong><br /><select id="req_default_lang" name="req_default_lang">
 <?php
 
@@ -357,7 +357,7 @@ function process_form(the_form)
 				<fieldset>
 					<legend>Choose the default style</legend>
 					<div class="infldset">
-						<p>This is the default style used for guests and users who haven't changed from the default in their profile.</p>
+						<p>The default style used for guests and users who haven't changed from the default in their profile.</p>
 						<label class="required"><strong>Default style</strong><br /><select id="req_default_style" name="req_default_style">
 <?php
 

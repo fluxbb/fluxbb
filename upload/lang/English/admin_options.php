@@ -27,9 +27,9 @@ $lang_admin_options = array(
 'DST label'							=>	'Adjust for DST',
 'DST help'							=>	'Check if daylight savings is in effect (advances times by 1 hour).',
 'Language label'					=>	'Default language',
-'Language help'						=>	'This is the default language used for guests and users who haven\'t changed from the default in their profile. If you remove a language pack, this must be updated.',
+'Language help'						=>	'The default language for guests and users who haven\'t changed from the default in their profile. If you remove a language pack, this must be updated.',
 'Default style label'				=>	'Default style',
-'Default style help'				=>	'This is the default style used for guests and users who haven\'t changed from the default in their profile.',
+'Default style help'				=>	'The default style for guests and users who haven\'t changed from the default in their profile.',
 
 // Essentials section timezone options
 'UTC-12:00'					=>	'(UTC-12:00) International Date Line West',
@@ -163,7 +163,7 @@ $lang_admin_options = array(
 'Max height label'					=>	'Max height',
 'Max height help'					=>	'The maximum allowed height of avatars in pixels (60 is recommended).',
 'Max size label'					=>	'Max size',
-'Max size help'						=>	'the maximum allowed size of avatars in bytes (10240 is recommended).',
+'Max size help'						=>	'The maximum allowed size of avatars in bytes (10240 is recommended).',
 
 // E-mail section
 'E-mail subhead'					=>	'Email',
