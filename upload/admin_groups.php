@@ -450,7 +450,7 @@ else if (isset($_GET['del_group']))
 						</div>
 					</fieldset>
 				</div>
-				<p><input type="submit" name="del_group" value="<?php echo $lang_admin_groups['Delete group'] ?>" /></p>
+				<p class="buttons"><input type="submit" name="del_group" value="<?php echo $lang_admin_groups['Delete group'] ?>" /></p>
 			</form>
 		</div>
 	</div>
