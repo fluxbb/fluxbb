@@ -75,7 +75,7 @@ function generate_admin_menu($page = '')
 	{
 
 ?>
-		<h2 class="block2"><span><?php echo $lang_admin_common['Plugins'] ?></span></h2>
+		<h2 class="block2"><span><?php echo $lang_admin_common['Plugins menu'] ?></span></h2>
 		<div class="box">
 			<div class="inbox">
 				<ul>

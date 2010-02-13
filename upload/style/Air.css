@@ -1241,6 +1241,9 @@ PROFILES (+ ADMIN MENU)
 	float:left;
 	width: 13em
 }
+
+.pun .blockmenu .block2 {
+}
 	
 .pun .blockmenu ul {
 	border-top-style: dotted;
@@ -1266,15 +1269,6 @@ PROFILES (+ ADMIN MENU)
 	text-decoration: none;
 }
 
-.pun .blockmenu .block2 {
-	font-size: 1em;
-	padding: 9px 6px 9px 6px;
-	border-style: solid none;
-	border-width: 1px;
-	margin: -1px 0;
-	position: relative;
-	font-weight: bold;
-}
 	
 #viewprofile .box {
 	border-style: solid;
@@ -1517,12 +1511,6 @@ html, body, #punwrap {
 	color: #333;
 	background: #f6f9fc;
 	}
-	
-.pun .blockmenu .block2 {
-	background: #6C7680;
-	border-color: #566579;
-	color: #fff;
-}
 
 .pun #viewprofile .box {
 	border-color: #b9c5ce #d9e1e7;
