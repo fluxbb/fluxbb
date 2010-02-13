@@ -141,6 +141,7 @@ div.postright h3,
 #punpost .blockform h2,
 #punsearch #vf h2,
 #postpreview h2,
+#posterror h2,
 .pun #quickpost h2,
 .pun #reportform h2,
 .pun .blockpost h2 {
@@ -316,6 +317,7 @@ html, body {
 #punindex .blocktable h2,
 #punpost .blockform h2,
 .pun #quickpost h2,
+.pun #posterror h2,
 #punsearch #vf h2 {
 	margin-left: 1px;
 	margin-top: 1px;
@@ -325,7 +327,7 @@ html, body {
 	z-index: 100;
 }
 
-#punpost .blockform h2, #punedit .blockform h2, .pun #quickpost h2, .pun #postpreview h2 {
+#punpost .blockform h2, #punedit .blockform h2, .pun #posterror h2, .pun #quickpost h2, .pun #postpreview h2 {
 	width: 75%;
 	padding: 10px 19px 4px 37px;
 	border: 0;
@@ -990,22 +992,31 @@ MAIN POSTS
 MAIN FORMS
 *****************************************************************/
 
-.pun .blockform .box {
+.pun .blockform .box, .pun #posterror .box {
 	border-style: solid;
 	border-width: 1px;
+	padding-bottom: 12px;
 }
 
-.pun .blockform .forminfo {
+.pun .blockform .forminfo, .pun #posterror .error-info {
 	padding: 12px 18px;
 	border-style: solid;
 	border-width: 1px;
 	margin-top: 12px;
 	position: relative;
 }
-	
+
+.pun #posterror .error-info {
+	margin-top: 21px;
+}
+
 .pun .forminfo h3 {
 	font-size: 1.231em;
 	font-weight: bold;
+}
+
+.pun #posterror .box {
+	padding: 12px 18px;
 }
 
 .pun .inform {
@@ -1081,6 +1092,7 @@ MAIN FORMS
 	
 .pun form .buttons {
 	padding: 8px 19px 8px 34px;
+	margin-bottom: -12px;
 }
 	
 .pun .blockform .buttons input {
@@ -1162,7 +1174,7 @@ MAIN FORMS
 	padding-top: 12px;
 }
 
-.pun #postpreview {
+.pun #postpreview, .pun #posterror {
 	margin-bottom: 12px;
 }
 	
@@ -1450,7 +1462,7 @@ html, body, #punwrap {
 /* Main Forms + Profile
 ----------------------------------------------------------------*/
 
-.pun .blockform .box, #adstats, #adintro, #postpreview {
+.pun .blockform .box, #adstats, #adintro, #postpreview, #posterror .box {
 	border-color: #b9c5ce #d9e1e7;
 	background: #ebf1f5;
 }
@@ -1460,7 +1472,7 @@ html, body, #punwrap {
 	background: #f6f9fc;
 }
 
-.pun #quickpost h2, #punpost .blockform h2, #punedit .blockform h2 {
+.pun #quickpost h2, #punpost .blockform h2, #punedit .blockform h2, #posterror h2 {
 	background: #ebf1f5;
 	color: #357082;
 }	
@@ -1468,6 +1480,16 @@ html, body, #punwrap {
 .pun .forminfo {
 	background: #fff;	
 	border-color: #dfe6ee;
+}
+
+.pun #posterror .error-info {
+	background: #ffffe1;
+	border-color: #dfe6ee;
+}
+
+.pun .error-list li {
+	padding-left: 24px;
+	background: url(Air/img/exclaim.png) center left no-repeat;
 }
 
 .pun .infldset, #pundelete .deletemsg, #adintro .inbox, #adstats .inbox {

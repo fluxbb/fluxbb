@@ -285,9 +285,9 @@ if (!empty($errors))
 <div id="posterror" class="block">
 	<h2><span><?php echo $lang_register['Registration errors'] ?></span></h2>
 	<div class="box">
-		<div class="inbox">
+		<div class="inbox error-info">
 			<p><?php echo $lang_register['Registration errors info'] ?></p>
-			<ul>
+			<ul class="error-list">
 <?php
 
 	foreach ($errors as $cur_error)

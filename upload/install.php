@@ -1576,18 +1576,18 @@ else
 	$db->end_transaction();
 
 
-	$alerts = '';
+	$alerts = array();
 	// Check if the cache directory is writable
 	if (!@is_writable('./cache/'))
-		$alerts .= '<p style="font-size: 1.1em"><span style="color: #C03000"><strong>The cache directory is currently not writable!</strong></span> In order for FluxBB to function properly, the directory named <em>cache</em> must be writable by PHP. Use chmod to set the appropriate directory permissions. If in doubt, chmod to 0777.</p>';
+		$alerts[] = '<strong>The cache directory is currently not writable!</strong> In order for FluxBB to function properly, the directory named <em>cache</em> must be writable by PHP. Use chmod to set the appropriate directory permissions. If in doubt, chmod to 0777.';
 
 	// Check if default avatar directory is writable
 	if (!@is_writable('./img/avatars/'))
-		$alerts .= '<p style="font-size: 1.1em"><span style="color: #C03000"><strong>The avatar directory is currently not writable!</strong></span> If you want users to be able to upload their own avatar images you must see to it that the directory named <em>img/avatars</em> is writable by PHP. You can later choose to save avatar images in a different directory (see Admin/Options). Use chmod to set the appropriate directory permissions. If in doubt, chmod to 0777.</p>';
+		$alerts[] = '<strong>The avatar directory is currently not writable!</strong> If you want users to be able to upload their own avatar images you must see to it that the directory named <em>img/avatars</em> is writable by PHP. You can later choose to save avatar images in a different directory (see Admin/Options). Use chmod to set the appropriate directory permissions. If in doubt, chmod to 0777.';
 
 	// Check if we disabled uploading avatars because file_uploads was disabled
 	if ($avatars == '0')
-		$alerts .= '<p style="font-size: 1.1em"><span style="color: #C03000"><strong>File uploads appear to be disallowed on this server!</strong></span> If you want users to be able to upload their own avatar images you must enable the file_uploads configuration setting in PHP. Once file uploads have been enabled, avatar uploads can be enabled in Administration/Options/Features.</p>';
+		$alerts[] = '<strong>File uploads appear to be disallowed on this server!</strong> If you want users to be able to upload their own avatar images you must enable the file_uploads configuration setting in PHP. Once file uploads have been enabled, avatar uploads can be enabled in Administration/Options/Features.';
 
 	// Add some random bytes at the end of the cookie name to prevent collisions
 	$cookie_name = 'pun_cookie_'.random_key(6, false, true);
@@ -1647,19 +1647,18 @@ else
 <div class="blockform">
 	<h2><span>Final instructions</span></h2>
 	<div class="box">
-		<div class="fakeform">
 <?php
 
 if (!$written)
 {
 
 ?>
+		<form method="post" action="install.php">
 			<div class="inform">
 				<div class="forminfo">
-					<p>Important! To finalize the installation, you need to click on the button below to download a file called config.php. You then need to upload this file to the root directory of your FluxBB installation.</p>
-<?php if ($alerts != ''): ?>					<?php echo $alerts."\n" ?>
-<?php endif; ?>				</div>
-				<form method="post" action="install.php">
+					<p>To finalize the installation, you need to click on the button below to download a file called config.php. You then need to upload this file to the root directory of your FluxBB installation.</p>
+					<p>Once you have uploaded config.php, FluxBB will be fully installed! At that point, you may <a href="index.php">go to the forum index</a>.</p>
+				</div>
 				<input type="hidden" name="generate_config" value="1" />
 				<input type="hidden" name="db_type" value="<?php echo $db_type; ?>" />
 				<input type="hidden" name="db_host" value="<?php echo $db_host; ?>" />
@@ -1669,14 +1668,19 @@ if (!$written)
 				<input type="hidden" name="db_prefix" value="<?php echo pun_htmlspecialchars($db_prefix); ?>" />
 				<input type="hidden" name="cookie_name" value="<?php echo pun_htmlspecialchars($cookie_name); ?>" />
 				<input type="hidden" name="cookie_seed" value="<?php echo pun_htmlspecialchars($cookie_seed); ?>" />
-				<p><input type="submit" value="Download config.php file" /></p>
-				</form>
-			</div>
-			<div class="inform">
-				<div class="forminfo">
-					<p>Once you have uploaded config.php, FluxBB will be fully installed! At that point, you may <a href="index.php">go to the forum index</a>.</p>
+
+<?php if (!empty($alerts)): ?>				<div class="forminfo error-info">
+					<ul class="error-list">
+<?php
+
+foreach ($alerts as $cur_alert)
+	echo "\t\t\t\t\t".'<li>'.$cur_alert.'</li>'."\n";
+?>
 				</div>
-			</div>
+<?php endif; ?>			</div>
+			<p class="buttons"><input type="submit" value="Download config.php file" /></p>
+		</form>
+
 <?php
 
 }
@@ -1684,17 +1688,18 @@ else
 {
 
 ?>
+		<div class="fakeform">
 			<div class="inform">
 				<div class="forminfo">
 					<p>FluxBB has been fully installed! You may now <a href="index.php">go to the forum index</a></p>
 				</div>
 			</div>
+		</div>
 <?php
 
 }
 
 ?>
-		</div>
 	</div>
 </div>
 
