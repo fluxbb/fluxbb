@@ -172,7 +172,7 @@ if ($db->num_rows($result))
 
 }
 else
-	echo "\t\t\t\t\t\t\t".'<p>'.$lang_admin_ranks['No ranks inlist'].'</p>'."\n";
+	echo "\t\t\t\t\t\t\t".'<p>'.$lang_admin_ranks['No ranks in list'].'</p>'."\n";
 
 ?>
 						</div>
