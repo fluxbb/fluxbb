@@ -28,6 +28,19 @@ if (isset($_GET['ip_stats']))
 	$ip_stats = intval($_GET['ip_stats']);
 	if ($ip_stats < 1)
 		message($lang_common['Bad request']);
+		
+	// Fetch ip count
+	$result = $db->query('SELECT poster_ip, MAX(posted) AS last_used FROM '.$db->prefix.'posts WHERE poster_id='.$ip_stats.' GROUP BY poster_ip') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+	$num_ips = $db->num_rows($result);
+
+	// Determine the ip offset (based on $_GET['p'])
+	$num_pages = ceil($num_ips / 50);
+
+	$p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : intval($_GET['p']);
+	$start_from = 50 * ($p - 1);
+
+	// Generate paging links
+	$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'admin_users.php?ip_stats='.$ip_stats );
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Users'], $lang_admin_users['Results head']);
 	define('PUN_ACTIVE_PAGE', 'admin');
@@ -41,7 +54,7 @@ if (isset($_GET['ip_stats']))
 			<li><span>&raquo;&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
 			<li><span>&raquo;&#160;</span><strong><?php echo $lang_admin_users['Results head'] ?></strong></li>
 		</ul>
-		<div class="backlink"><a href="javascript:history.go(-1)"><?php echo $lang_admin_common['Go back'] ?></a></div>
+		<p class="pagelink"><?php echo $paging_links ?></p>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -62,7 +75,7 @@ if (isset($_GET['ip_stats']))
 			<tbody>
 <?php
 
-	$result = $db->query('SELECT poster_ip, MAX(posted) AS last_used, COUNT(id) AS used_times FROM '.$db->prefix.'posts WHERE poster_id='.$ip_stats.' GROUP BY poster_ip ORDER BY last_used DESC') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT poster_ip, MAX(posted) AS last_used, COUNT(id) AS used_times FROM '.$db->prefix.'posts WHERE poster_id='.$ip_stats.' GROUP BY poster_ip ORDER BY last_used DESC LIMIT '.$start_from.', 50') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 	if ($db->num_rows($result))
 	{
 		while ($cur_ip = $db->fetch_assoc($result))
@@ -91,7 +104,7 @@ if (isset($_GET['ip_stats']))
 
 <div class="linksb">
 	<div class="inbox crumbsplus">
-		<div class="backlink"><a href="javascript:history.go(-1)"><?php echo $lang_admin_common['Go back'] ?></a></div>
+		<p class="pagelink"><?php echo $paging_links ?></p>
 		<ul class="crumbs">
 			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
 			<li><span>&raquo;&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
@@ -113,6 +126,18 @@ if (isset($_GET['show_users']))
 	if (!@preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $ip) && !@preg_match('/^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/', $ip))
 		message($lang_admin_users['Bad IP message']);
 
+	// Fetch user count
+	$result = $db->query('SELECT DISTINCT poster_id, poster FROM '.$db->prefix.'posts WHERE poster_ip=\''.$db->escape($ip).'\'') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+	$num_users = $db->num_rows($result);
+
+	// Determine the user offset (based on $_GET['p'])
+	$num_pages = ceil($num_users / 50);
+
+	$p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : intval($_GET['p']);
+	$start_from = 50 * ($p - 1);
+
+	// Generate paging links
+	$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'admin_users.php?show_users='.$ip);
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Users'], $lang_admin_users['Results head']);
 	define('PUN_ACTIVE_PAGE', 'admin');
@@ -126,7 +151,7 @@ if (isset($_GET['show_users']))
 			<li><span>&raquo;&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
 			<li><span>&raquo;&#160;</span><strong><?php echo $lang_admin_users['Results head'] ?></strong></li>
 		</ul>
-		<div class="backlink"><a href="javascript:history.go(-1)"><?php echo $lang_admin_common['Go back'] ?></a></div>
+		<p class="pagelink"><?php echo $paging_links ?></p>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -208,7 +233,7 @@ if (isset($_GET['show_users']))
 
 <div class="linksb">
 	<div class="inbox crumbsplus">
-		<div class="backlink"><a href="javascript:history.go(-1)"><?php echo $lang_admin_common['Go back'] ?></a></div>
+		<p class="pagelink"><?php echo $paging_links ?></p>
 		<ul class="crumbs">
 			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
 			<li><span>&raquo;&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
@@ -222,37 +247,52 @@ if (isset($_GET['show_users']))
 }
 
 
-else if (isset($_POST['find_user']))
+else if (isset($_GET['find_user']))
 {
-	$form = $_POST['form'];
-	$form['username'] = $_POST['username'];
+	$form = isset($_GET['form']) ? $_GET['form'] : array(); ;
 
 	// trim() all elements in $form
 	$form = array_map('pun_trim', $form);
-	$conditions = array();
+	$conditions = $query_str = array();
 
-	$posts_greater = trim($_POST['posts_greater']);
-	$posts_less = trim($_POST['posts_less']);
-	$last_post_after = trim($_POST['last_post_after']);
-	$last_post_before = trim($_POST['last_post_before']);
-	$registered_after = trim($_POST['registered_after']);
-	$registered_before = trim($_POST['registered_before']);
-	$order_by = $_POST['order_by'];
-	$direction = $_POST['direction'];
-	$user_group = $_POST['user_group'];
-
+	$posts_greater = isset($_GET['posts_greater']) ? trim($_GET['posts_greater']) : '';
+	$posts_less = isset($_GET['posts_less']) ? trim($_GET['posts_less']) : '';
+	$last_post_after = isset($_GET['last_post_after']) ? trim($_GET['last_post_after']) : '';
+	$last_post_before = isset($_GET['last_post_before']) ? trim($_GET['last_post_before']) : '';
+	$registered_after = isset($_GET['registered_after']) ? trim($_GET['registered_after']) : '';
+	$registered_before = isset($_GET['registered_before']) ? trim($_GET['registered_before']) : '';
+	$order_by = isset($_GET['order_by']) && in_array($_GET['order_by'], array('username', 'email', 'num_posts', 'last_post', 'registered')) ? $_GET['order_by'] : 'username';
+	$direction = isset($_GET['direction']) && in_array($_GET['direction'], array('ASC', 'DESC')) ? $_GET['direction'] : 'ASC';
+	$user_group = isset($_GET['user_group']) ? intval($_GET['user_group']) : -1;
+	
+	$query_str[] = 'order_by='.$order_by;
+	$query_str[] = 'direction='.$direction;
+	$query_str[] = 'user_group='.$user_group;
+	
 	if (preg_match('/[^0-9]/', $posts_greater.$posts_less))
 		message($lang_admin_users['Non numeric message']);
 
 	// Try to convert date/time to timestamps
 	if ($last_post_after != '')
+	{
+		$query_str[] = 'last_post_after='.$last_post_after;
 		$last_post_after = strtotime($last_post_after);
+	}
 	if ($last_post_before != '')
+	{
+		$query_str[] = 'last_post_before='.$last_post_before;
 		$last_post_before = strtotime($last_post_before);
+	}
 	if ($registered_after != '')
+	{
+		$query_str[] = 'registered_after='.$registered_after;
 		$registered_after = strtotime($registered_after);
+	}
 	if ($registered_before != '')
+	{
+		$query_str[] = 'registered_before='.$registered_before;
 		$registered_before = strtotime($registered_before);
+	}
 
 	if ($last_post_after == -1 || $last_post_before == -1 || $registered_after == -1 || $registered_before == -1)
 		message($lang_admin_users['Invalid date time message']);
@@ -270,20 +310,41 @@ else if (isset($_POST['find_user']))
 	while (list($key, $input) = @each($form))
 	{
 		if ($input != '' && in_array($key, array('username', 'email', 'title', 'realname', 'url', 'jabber', 'icq', 'msn', 'aim', 'yahoo', 'location', 'signature', 'admin_note')))
+		{
 			$conditions[] = 'u.'.$db->escape($key).' '.$like_command.' \''.$db->escape(str_replace('*', '%', $input)).'\'';
+			$query_str[] = 'form%5B'.$key.'%5D='.urlencode($input);
+		}
 	}
 
 	if ($posts_greater != '')
+	{
+		$query_str[] = 'posts_greater='.$posts_greater;
 		$conditions[] = 'u.num_posts>'.$posts_greater;
+	}
 	if ($posts_less != '')
+	{
+		$query_str[] = 'posts_less='.$posts_less;
 		$conditions[] = 'u.num_posts<'.$posts_less;
+	}
 
-	if ($user_group != 'all')
-		$conditions[] = 'u.group_id='.intval($user_group);
+	if ($user_group > -1)
+		$conditions[] = 'u.group_id='.$user_group;
 
 	if (empty($conditions))
 		message($lang_admin_users['No search terms entered']);
 
+	// Fetch user count
+	$result = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id>1 AND '.implode(' AND ', $conditions)) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	$num_users = $db->result($result);
+
+	// Determine the user offset (based on $_GET['p'])
+	$num_pages = ceil($num_users / 50);
+
+	$p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : intval($_GET['p']);
+	$start_from = 50 * ($p - 1);
+
+	// Generate paging links
+	$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'admin_users.php?find_user=&amp;'.implode('&', $query_str));
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Users'], $lang_admin_users['Results head']);
 	define('PUN_ACTIVE_PAGE', 'admin');
@@ -297,10 +358,11 @@ else if (isset($_POST['find_user']))
 			<li><span>&raquo;&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
 			<li><span>&raquo;&#160;</span><strong><?php echo $lang_admin_users['Results head'] ?></strong></li>
 		</ul>
-		<div class="backlink"><a href="javascript:history.go(-1)"><?php echo $lang_admin_common['Go back'] ?></a></div>
+		<p class="pagelink"><?php echo $paging_links ?></p>
 		<div class="clearer"></div>
 	</div>
 </div>
+
 
 <div id="users2" class="blocktable">
 	<h2><span><?php echo $lang_admin_users['Results head'] ?></span></h2>
@@ -320,7 +382,7 @@ else if (isset($_POST['find_user']))
 			<tbody>
 <?php
 
-	$result = $db->query('SELECT u.id, u.username, u.email, u.title, u.num_posts, u.admin_note, g.g_id, g.g_user_title FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id>1 AND '.implode(' AND ', $conditions).' ORDER BY '.$db->escape($order_by).' '.$db->escape($direction)) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT u.id, u.username, u.email, u.title, u.num_posts, u.admin_note, g.g_id, g.g_user_title FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id>1 AND '.implode(' AND ', $conditions).' ORDER BY '.$db->escape($order_by).' '.$db->escape($direction).' LIMIT '.$start_from.', 50') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 	if ($db->num_rows($result))
 	{
 		while ($user_data = $db->fetch_assoc($result))
@@ -356,9 +418,9 @@ else if (isset($_POST['find_user']))
 	</div>
 </div>
 
-<div class="linksb crumbsplus">
-	<div class="inbox">
-		<div class="backlink"><a href="javascript:history.go(-1)"><?php echo $lang_admin_common['Go back'] ?></a></div>
+<div class="linksb">
+	<div class="inbox crumbsplus">
+		<p class="pagelink"><?php echo $paging_links ?></p>
 		<ul class="crumbs">
 			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
 			<li><span>&raquo;&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
@@ -386,7 +448,7 @@ else
 	<div class="blockform">
 		<h2><span><?php echo $lang_admin_users['User search head'] ?></span></h2>
 		<div class="box">
-			<form id="find_user" method="post" action="admin_users.php?action=find_user">
+			<form id="find_user" method="get" action="admin_users.php">
 				<p class="submittop"><input type="submit" name="find_user" value="<?php echo $lang_admin_users['Submit search'] ?>" tabindex="1" /></p>
 				<div class="inform">
 					<fieldset>
@@ -396,7 +458,7 @@ else
 							<table class="aligntop" cellspacing="0">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_users['Username label'] ?></th>
-									<td><input type="text" name="username" size="25" maxlength="25" tabindex="2" /></td>
+									<td><input type="text" name="form[username]" size="25" maxlength="25" tabindex="2" /></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_users['E-mail address label'] ?></th>
@@ -493,7 +555,7 @@ else
 									<th scope="row"><?php echo $lang_admin_users['User group label'] ?></th>
 									<td>
 										<select name="user_group" tabindex="23">
-											<option value="all" selected="selected"><?php echo $lang_admin_users['All groups'] ?></option>
+											<option value="-1" selected="selected"><?php echo $lang_admin_users['All groups'] ?></option>
 											<option value="0"><?php echo $lang_admin_users['Unverified users'] ?></option>
 <?php
 
