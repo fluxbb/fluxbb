@@ -249,7 +249,7 @@ if (isset($_GET['show_users']))
 
 else if (isset($_GET['find_user']))
 {
-	$form = isset($_GET['form']) ? $_GET['form'] : array(); ;
+	$form = isset($_GET['form']) ? $_GET['form'] : array();
 
 	// trim() all elements in $form
 	$form = array_map('pun_trim', $form);
