@@ -5,7 +5,7 @@ $lang_admin_index = array(
 
 'fopen disabled message'			=>	'Unable to check for upgrade since \'allow_url_fopen\' is disabled on this system.',
 'Upgrade check failed message'		=>	'Check for upgrade failed for unknown reasons.',
-'Running latest version'			=>	'You are running the latest version of FluxBB.',
+'Running latest version message'			=>	'You are running the latest version of FluxBB.',
 'New version available message'		=>	'A new version of FluxBB has been released. You can download the latest version at %s.',
 'PHPinfo disabled message'			=>	'The PHP function phpinfo() has been disabled on this server.',
 'Not available'						=>	'Not available',
