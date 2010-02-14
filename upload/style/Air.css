@@ -78,18 +78,26 @@ div.postright h3,
 	}
 
 .pun .usercontent ul, .pun .postmsg ul {
-	list-style: disc
-	padding: 7px 13px 7px 36px;
+	list-style: disc;
+	padding: 4px 13px 4px 30px;
 }
 	
 .pun .usercontent ol, .pun .postmsg ol {
-	list-style: decimal
-	padding: 7px 13px 7px 36px;
+	list-style: decimal;
+	padding: 4px 13px 4px 30px;
 }
 	
 .pun .usercontent ol.alpha, .pun .postmsg ol.alpha {
 	list-style: lower-alpha;
 } 
+
+.pun .usercontent li, .pun .postmsg li {
+	padding: 0 3px;
+}
+
+.pun .usercontent li p, .pun .postmsg li p {
+	padding: 0;
+}
 
 .pun strong, .pun th, .pun span.warntext, .pun p.warntext {
 	font-weight: bold;
@@ -178,7 +186,7 @@ div.postright h3,
 }
 	
 .pun .postmsg h5, #helpfile h5 {
-	font-size: 1.077em;
+	font-size: 1.231em;
 	font-weight: bold;
 	padding: 7px 0 0 0;
 }
