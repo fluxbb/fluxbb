@@ -58,13 +58,14 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 		}
 	}
 
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_maintenance['Rebuilding search index']);
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<?php $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_maintenance['Rebuilding search index']) ?>
 <title><?php echo generate_page_title($page_title) ?></title>
 <style type="text/css">
 body {
@@ -99,7 +100,7 @@ h1 {
 	$cur_topic = 0;
 	while ($cur_post = $db->fetch_row($result))
 	{
-		if ($cur_post[0] <> $cur_topic)
+		if ($cur_post[0] != $cur_topic)
 		{
 			// Fetch subject and ID of first post in topic
 			$result2 = $db->query('SELECT p.id, t.subject, MIN(p.posted) AS first FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id WHERE t.id='.$cur_post[0].' GROUP BY p.id, t.subject ORDER BY first LIMIT 1') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
@@ -108,11 +109,7 @@ h1 {
 			$cur_topic = $cur_post[0];
 		}
 
-		?>
-		<p>
-			<span><?php printf($lang_admin_maintenance['Processing post'], $cur_post[1], $cur_post[0]) ?></span></br>
-		</p>
-		<?php
+		echo "\t\t".'<p><span>'.sprintf($lang_admin_maintenance['Processing post'], $cur_post[1], $cur_post[0]).'</span></br></p>'."\n";
 
 		if ($cur_post[1] == $first_post) // This is the "topic post" so we have to index the subject as well
 			update_search_index('post', $cur_post[1], $cur_post[2], $subject);
