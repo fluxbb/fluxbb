@@ -42,13 +42,13 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	// If it's a regular search (keywords and/or author)
 	else if ($action == 'search')
 	{
-		$keywords = (isset($_GET['keywords'])) ? strtolower(trim($_GET['keywords'])) : null;
-		$author = (isset($_GET['author'])) ? strtolower(trim($_GET['author'])) : null;
+		$keywords = (isset($_GET['keywords'])) ? utf8_strtolower(pun_trim($_GET['keywords'])) : null;
+		$author = (isset($_GET['author'])) ? utf8_strtolower(pun_trim($_GET['author'])) : null;
 
-		if (preg_match('#^[\*%]+$#', $keywords) || strlen(str_replace(array('*', '%'), '', $keywords)) < 3)
+		if (preg_match('#^[\*%]+$#', $keywords) || utf8_strlen(str_replace(array('*', '%'), '', $keywords)) < 3)
 			$keywords = '';
 
-		if (preg_match('#^[\*%]+$#', $author) || strlen(str_replace(array('*', '%'), '', $author)) < 2)
+		if (preg_match('#^[\*%]+$#', $author) || utf8_strlen(str_replace(array('*', '%'), '', $author)) < 2)
 			$author = '';
 
 		if (!$keywords && !$author)
@@ -110,20 +110,13 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				message(sprintf($lang_search['Search flood'], $pun_user['g_search_flood']));
 
 			if (!$pun_user['is_guest'])
-			{
 				$db->query('UPDATE '.$db->prefix.'users SET last_search='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
-			}
 			else
-			{
 				$db->query('UPDATE '.$db->prefix.'online SET last_search='.time().' WHERE ident=\''.$db->escape(get_remote_address()).'\'' ) or error('Unable to update user', __FILE__, __LINE__, $db->error());
-			}
 
 			// If it's a search for keywords
 			if ($keywords)
 			{
-				$stopwords = (array)@file(PUN_ROOT.'lang/'.$pun_user['language'].'/stopwords.txt');
-				$stopwords = array_map('pun_trim', $stopwords);
-
 				// Remove any apostrophes which aren't part of words
 				$keywords = substr(preg_replace('((?<=\W)\'|\'(?=\W))', '', ' '.$keywords.' '), 1, -1);
 				// Remove symbols and multiple whitespace
@@ -131,17 +124,11 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 				// Fill an array with all the words
 				$keywords_array = array_unique(explode(' ', $keywords));
+				// Remove any words that are not indexed
+				$keywords_array = array_filter($keywords_array, 'validate_search_word');
 
 				if (empty($keywords_array))
 					message($lang_search['No hits']);
-
-				foreach ($keywords_array as $i => $word)
-				{
-					$num_chars = pun_strlen($word);
-
-					if ($word !== 'or' && ($num_chars < 3 || $num_chars > 20 || in_array($word, $stopwords)))
-						unset($keywords_array[$i]);
-				}
 
 				// Should we search in message body or topic subject specifically?
 				$search_in_cond = ($search_in) ? (($search_in > 0) ? ' AND m.subject_match = 0' : ' AND m.subject_match = 1') : '';
@@ -162,7 +149,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 						default:
 						{
-							$result = $db->query('SELECT m.post_id FROM '.$db->prefix.'search_words AS w INNER JOIN '.$db->prefix.'search_matches AS m ON m.word_id = w.id WHERE w.word LIKE \''.str_replace('*', '%', $cur_word).'\''.$search_in_cond, true) or error('Unable to search for posts', __FILE__, __LINE__, $db->error());
+							$result = $db->query('SELECT m.post_id FROM '.$db->prefix.'search_words AS w INNER JOIN '.$db->prefix.'search_matches AS m ON m.word_id = w.id WHERE w.word LIKE \''.$db->escape(str_replace('*', '%', $cur_word)).'\''.$search_in_cond, true) or error('Unable to search for posts', __FILE__, __LINE__, $db->error());
 
 							$row = array();
 							while ($temp = $db->fetch_row($result))
@@ -204,7 +191,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			}
 
 			// If it's a search for author name (and that author name isn't Guest)
-			if ($author && strcasecmp($author, 'Guest') && strcasecmp($author, $lang_common['Guest']))
+			if ($author && $author != 'guest' && $author != utf8_strtolower($lang_common['Guest']))
 			{
 				switch ($db_type)
 				{
@@ -360,12 +347,13 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		$search_results = implode(',', $search_ids);
 
 		// Fill an array with our results and search properties
-		$temp['search_results'] = $search_results;
-		$temp['num_hits'] = $num_hits;
-		$temp['sort_by'] = $sort_by;
-		$temp['sort_dir'] = $sort_dir;
-		$temp['show_as'] = $show_as;
-		$temp = serialize($temp);
+		$temp = serialize(array(
+			'search_results'	=> $search_results,
+			'num_hits'			=> $num_hits,
+			'sort_by'			=> $sort_by,
+			'sort_dir'			=> $sort_dir,
+			'show_as'			=> $show_as,
+		));
 		$search_id = mt_rand(1, 2147483647);
 
 		$ident = ($pun_user['is_guest']) ? get_remote_address() : $pun_user['username'];

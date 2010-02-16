@@ -9,6 +9,39 @@
 ---*/
 
 //
+// Checks if a word is a valid searchable word
+//
+function validate_search_word($word)
+{
+	global $pun_user;
+	static $stopwords, $keywords;
+
+	if (!isset($keywords))
+		$keywords = array('and', 'or', 'not');
+
+	// We must allow keywords!
+	if (in_array($word, $keywords))
+		return true;
+
+	if (!isset($stopwords))
+	{
+		if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/stopwords.txt'))
+		{
+			$stopwords = file(PUN_ROOT.'lang/'.$pun_user['language'].'/stopwords.txt');
+			$stopwords = array_map('pun_trim', $stopwords);
+			$stopwords = array_filter($stopwords);
+		}
+		else
+			$stopwords = array();
+
+	}
+
+	$num_chars = utf8_strlen($word);
+	return $num_chars >= 3 && $num_chars <= 20 && !in_array($word, $stopwords);
+}
+
+
+//
 // Return current timestamp (with microseconds) as a float
 //
 function get_microtime()

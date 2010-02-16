@@ -23,46 +23,20 @@ if (!defined('PUN'))
 //
 function split_words($text)
 {
-	global $pun_user;
-	static $noise_match, $noise_replace, $stopwords;
-
-	if (empty($noise_match))
-	{
-		$noise_match = 		array('[quote', '[code', '[url', '[img', '[email', '[color', '[colour', 'quote]', 'code]', 'url]', 'img]', 'email]', 'color]', 'colour]', '^', '$', '&', '(', ')', '<', '>', '`', '\'', '"', '|', ',', '@', '_', '?', '%', '~', '+', '[', ']', '{', '}', ':', '\\', '/', '=', '#', ';', '!', '*');
-		$noise_replace =	array('',       '',      '',     '',     '',       '',       '',        '',       '',      '',     '',     '',       '',       '',        ' ', ' ', ' ', ' ', ' ', ' ', ' ', '',  '',   ' ', ' ', ' ', ' ', '',  ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '' ,  ' ', ' ', ' ', ' ', ' ', ' ');
-
-		$stopwords = (array) file(PUN_ROOT.'lang/'.$pun_user['language'].'/stopwords.txt');
-		$stopwords = array_map('pun_trim', $stopwords);
-	}
-
-	// Clean up
-	$patterns[] = '#&[\#a-z0-9]+?;#i';
-	$patterns[] = '#\b[\w]+:\/\/[a-z0-9\.\-]+(\/[a-z0-9\?\.%_\-\+=&\/~]+)?#';
-	$patterns[] = '#\[\/?[a-z\*=\+\-]+(\:?[0-9a-z]+)?:[a-z0-9]{10,}(\:[a-z0-9]+)?=?.*?\]#';
-	$text = preg_replace($patterns, ' ', ' '.strtolower($text).' ');
-
-	// Filter out junk
-	$text = str_replace($noise_match, $noise_replace, $text);
-
-	// Strip out extra whitespace between words
-	$text = pun_trim(preg_replace('#\s+#', ' ', $text));
+	// Remove BBCode
+	$text = preg_replace('/\[\/?(b|u|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]/', ' ', $text);
+	// Remove any apostrophes which aren't part of words
+	$text = substr(preg_replace('((?<=\W)\'|\'(?=\W))', '', ' '.$text.' '), 1, -1);
+	// Remove symbols and multiple whitespace
+	$text = preg_replace('/[\^\$&\(\)<>`"\|,@_\?%~\+\[\]{}:=\/#\\\\;!\*\.\s]+/', ' ', $text);
 
 	// Fill an array with all the words
-	$words = explode(' ', $text);
+	$words = array_unique(explode(' ', $text));
 
-	if (!empty($words))
-	{
-		foreach ($words as $i => $word)
-		{
-			$words[$i] = pun_trim($word, '.');
-			$num_chars = pun_strlen($word);
+	// Remove any words that should not be indexed
+	$words = array_filter($words, 'validate_search_word');
 
-			if ($num_chars < 3 || $num_chars > 20 || in_array($word, $stopwords))
-				unset($words[$i]);
-		}
-	}
-
-	return array_unique($words);
+	return $words;
 }
 
 
@@ -72,6 +46,9 @@ function split_words($text)
 function update_search_index($mode, $post_id, $message, $subject = null)
 {
 	global $db_type, $db;
+
+	$message = utf8_strtolower($message);
+	$subject = utf8_strtolower($subject);
 
 	// Split old and new post/subject to obtain array of 'words'
 	$words_message = split_words($message);
