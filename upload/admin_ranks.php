@@ -31,7 +31,7 @@ if (isset($_POST['add_rank']))
 	$min_posts = $_POST['new_min_posts'];
 
 	if ($rank == '')
-		message('You must enter a rank title.');
+		message($lang_admin_ranks['Must enter title']);
 
 	if (!@preg_match('#^\d+$#', $min_posts))
 		message($lang_admim_ranks['Must be integer message']);

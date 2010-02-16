@@ -51,7 +51,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['User groups']);
-	$required_fields = array('req_title' => 'Group title');
+	$required_fields = array('req_title' => $lang_admin_groups['Group title label']);
 	$focus_element = array('groups2', 'req_title');
 	define('PUN_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
@@ -422,7 +422,7 @@ else if (isset($_GET['del_group']))
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo $lang_admin_groups['Remove group head'] ?>Remove group</span></h2>
+		<h2><span><?php echo $lang_admin_groups['Remove group head'] ?></span></h2>
 		<div class="box">
 			<form id="groups" method="post" action="admin_groups.php?del_group=<?php echo $group_id ?>">
 				<div class="inform">
