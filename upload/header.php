@@ -43,7 +43,9 @@ else
 $tpl_main = file_get_contents($tpl_file);
 
 // START SUBST - <pun_include "*">
-while (preg_match('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_main, $cur_include))
+preg_match_all('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_main, $pun_includes, PREG_SET_ORDER);
+
+foreach ($pun_includes as $cur_include)
 {
 	if (!file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
 		error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file), $tpl_inc_dir));
