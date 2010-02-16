@@ -153,13 +153,13 @@ class DBLayer
 				// Horrible hack to get rid of table names and table aliases from the array keys
 				foreach ($cur_row as $key => $value)
 				{
-				    $dot_spot = strpos($key, '.');
-				    if ($dot_spot !== false)
-				    {
-				        unset($cur_row[$key]);
-				        $key = substr($key, $dot_spot+1);
-				        $cur_row[$key] = $value;
-				    }
+					$dot_spot = strpos($key, '.');
+					if ($dot_spot !== false)
+					{
+						unset($cur_row[$key]);
+						$key = substr($key, $dot_spot+1);
+						$cur_row[$key] = $value;
+					}
 				}
 			}
 

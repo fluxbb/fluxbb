@@ -69,7 +69,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 
 		$mode = 'add';
 	}
-	else	// We are editing a ban
+	else // We are editing a ban
 	{
 		$ban_id = intval($_GET['edit_ban']);
 		if ($ban_id < 1)

@@ -98,11 +98,11 @@ function utf8_strrpos($str, $needle, $offset = false)
 
 		if (count($ar) > 1)
 		{
-		    // Pop off the end of the string where the last match was made
-		    array_pop($ar);
-		    $str = join($needle,$ar);
+			// Pop off the end of the string where the last match was made
+			array_pop($ar);
+			$str = join($needle,$ar);
 
-		    return utf8_strlen($str);
+			return utf8_strlen($str);
 		}
 
 		return false;

@@ -28,7 +28,7 @@ if (isset($_GET['ip_stats']))
 	$ip_stats = intval($_GET['ip_stats']);
 	if ($ip_stats < 1)
 		message($lang_common['Bad request']);
-		
+
 	// Fetch ip count
 	$result = $db->query('SELECT poster_ip, MAX(posted) AS last_used FROM '.$db->prefix.'posts WHERE poster_id='.$ip_stats.' GROUP BY poster_ip') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 	$num_ips = $db->num_rows($result);
@@ -264,11 +264,11 @@ else if (isset($_GET['find_user']))
 	$order_by = isset($_GET['order_by']) && in_array($_GET['order_by'], array('username', 'email', 'num_posts', 'last_post', 'registered')) ? $_GET['order_by'] : 'username';
 	$direction = isset($_GET['direction']) && in_array($_GET['direction'], array('ASC', 'DESC')) ? $_GET['direction'] : 'ASC';
 	$user_group = isset($_GET['user_group']) ? intval($_GET['user_group']) : -1;
-	
+
 	$query_str[] = 'order_by='.$order_by;
 	$query_str[] = 'direction='.$direction;
 	$query_str[] = 'user_group='.$user_group;
-	
+
 	if (preg_match('/[^0-9]/', $posts_greater.$posts_less))
 		message($lang_admin_users['Non numeric message']);
 
@@ -479,7 +479,7 @@ else
 								<tr>
 									<th scope="row"><?php echo $lang_admin_users['Jabber label'] ?></th>
 									<td><input type="text" name="form[jabber]" size="30" maxlength="75" tabindex="7" /></td>
-								</tr>								
+								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_users['ICQ label'] ?></th>
 									<td><input type="text" name="form[icq]" size="12" maxlength="12" tabindex="8" /></td>

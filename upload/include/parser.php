@@ -184,7 +184,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 				$split_current = preg_split("/(\n\n+)/", $current, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 				$current = '';
 
-				if (!pun_trim($split_current[0], "\n")) // the first part is a linebreak so we need to handle any open tags first
+				if (!pun_trim($split_current[0], "\n")) // The first part is a linebreak so we need to handle any open tags first
 					array_unshift($split_current, '');
 
 				for ($i = 1; $i < count($split_current); $i += 2)

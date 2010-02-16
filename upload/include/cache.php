@@ -167,7 +167,7 @@ function generate_quickjump_cache($group_id = false)
 		$cur_category = 0;
 		while ($cur_forum = $db->fetch_assoc($result))
 		{
-			if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
+			if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
 			{
 				if ($cur_category)
 					$output .= "\t\t\t\t\t\t".'</optgroup>'."\n";

@@ -591,7 +591,7 @@ if ($tid && $pun_config['o_topic_review'] != '0')
 	<h2><span><?php echo $lang_post['Topic review'] ?></span></h2>
 <?php
 
-	//Set background switching on
+	// Set background switching on
 	$post_count = 0;
 
 	while ($cur_post = $db->fetch_assoc($result))

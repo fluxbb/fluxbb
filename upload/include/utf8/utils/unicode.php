@@ -37,7 +37,7 @@
 function utf8_to_unicode($str)
 {
 	$mState = 0; // Cached expected number of octets after the current octet
-	             // until the beginning of the next UTF8 character sequence
+				 // until the beginning of the next UTF8 character sequence
 	$mUcs4  = 0; // Cached Unicode character
 	$mBytes = 1; // Cached expected number of octets in the current sequence
 

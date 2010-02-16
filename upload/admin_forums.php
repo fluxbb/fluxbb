@@ -417,7 +417,7 @@ $tabindex_count = 4;
 $cur_category = 0;
 while ($cur_forum = $db->fetch_assoc($result))
 {
-	if ($cur_forum['cid'] != $cur_category)	// A new category since last iteration?
+	if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
 	{
 		if ($cur_category != 0)
 			echo "\t\t\t\t\t\t\t".'</tbody>'."\n\t\t\t\t\t\t\t".'</table>'."\n\t\t\t\t\t\t".'</div>'."\n\t\t\t\t\t".'</fieldset>'."\n\t\t\t\t".'</div>'."\n";
