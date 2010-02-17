@@ -16,6 +16,8 @@ $lang_login = array(
 'Login legend'			=>	'Enter your username and password below',
 'Remember me'			=>	'Log me in automatically each time I visit.',
 'Login info'			=>	'If you have not registered or have forgotten your password click on the appropriate link below.',
+'New password errors'		=>	'Password request error',
+'New passworderrors info'	=>	'The following error needs to be corrected before a new password can be sent:',
 
 // Forget password mail stuff
 'Forget mail'			=>	'An email has been sent to the specified address with instructions on how to change your password. If it does not arrive you can contact the forum administrator at',

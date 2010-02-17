@@ -112,62 +112,92 @@ else if ($action == 'forget' || $action == 'forget_2')
 
 	if (isset($_POST['form_sent']))
 	{
+		// Start with a clean slate
+		$errors = array();
+
 		require PUN_ROOT.'include/email.php';
 
 		// Validate the email address
 		$email = strtolower(trim($_POST['req_email']));
 		if (!is_valid_email($email))
-			message($lang_common['Invalid email']);
-
-		$result = $db->query('SELECT id, username, last_email_sent FROM '.$db->prefix.'users WHERE email=\''.$db->escape($email).'\'') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-
-		if ($db->num_rows($result))
+			$errors[] = $lang_common['Invalid email'];
+			
+		// Did everything go according to plan?
+		if (empty($errors))
 		{
-			// Load the "activate password" template
-			$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/activate_password.tpl'));
+			$result = $db->query('SELECT id, username, last_email_sent FROM '.$db->prefix.'users WHERE email=\''.$db->escape($email).'\'') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
-			// The first row contains the subject
-			$first_crlf = strpos($mail_tpl, "\n");
-			$mail_subject = trim(substr($mail_tpl, 8, $first_crlf-8));
-			$mail_message = trim(substr($mail_tpl, $first_crlf));
-
-			// Do the generic replacements first (they apply to all emails sent out here)
-			$mail_message = str_replace('<base_url>', $pun_config['o_base_url'].'/', $mail_message);
-			$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
-
-			// Loop through users we found
-			while ($cur_hit = $db->fetch_assoc($result))
+			if ($db->num_rows($result))
 			{
-				if ($cur_hit['last_email_sent'] != '' && (time() - $cur_hit['last_email_sent']) < 3600 && (time() - $cur_hit['last_email_sent']) >= 0)
-					message($lang_login['Email flood']);
+				// Load the "activate password" template
+				$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/activate_password.tpl'));
 
-				// Generate a new password and a new password activation code
-				$new_password = random_pass(8);
-				$new_password_key = random_pass(8);
+				// The first row contains the subject
+				$first_crlf = strpos($mail_tpl, "\n");
+				$mail_subject = trim(substr($mail_tpl, 8, $first_crlf-8));
+				$mail_message = trim(substr($mail_tpl, $first_crlf));
 
-				$db->query('UPDATE '.$db->prefix.'users SET activate_string=\''.pun_hash($new_password).'\', activate_key=\''.$new_password_key.'\', last_email_sent = '.time().' WHERE id='.$cur_hit['id']) or error('Unable to update activation data', __FILE__, __LINE__, $db->error());
+				// Do the generic replacements first (they apply to all emails sent out here)
+				$mail_message = str_replace('<base_url>', $pun_config['o_base_url'].'/', $mail_message);
+				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
 
-				// Do the user specific replacements to the template
-				$cur_mail_message = str_replace('<username>', $cur_hit['username'], $mail_message);
-				$cur_mail_message = str_replace('<activation_url>', $pun_config['o_base_url'].'/profile.php?id='.$cur_hit['id'].'&action=change_pass&key='.$new_password_key, $cur_mail_message);
-				$cur_mail_message = str_replace('<new_password>', $new_password, $cur_mail_message);
+				// Loop through users we found
+				while ($cur_hit = $db->fetch_assoc($result))
+				{
+					if ($cur_hit['last_email_sent'] != '' && (time() - $cur_hit['last_email_sent']) < 3600 && (time() - $cur_hit['last_email_sent']) >= 0)
+						message($lang_login['Email flood'], true);
 
-				pun_mail($email, $mail_subject, $cur_mail_message);
+					// Generate a new password and a new password activation code
+					$new_password = random_pass(8);
+					$new_password_key = random_pass(8);
+
+					$db->query('UPDATE '.$db->prefix.'users SET activate_string=\''.pun_hash($new_password).'\', activate_key=\''.$new_password_key.'\', last_email_sent = '.time().' WHERE id='.$cur_hit['id']) or error('Unable to update activation data', __FILE__, __LINE__, $db->error());
+
+					// Do the user specific replacements to the template
+					$cur_mail_message = str_replace('<username>', $cur_hit['username'], $mail_message);
+					$cur_mail_message = str_replace('<activation_url>', $pun_config['o_base_url'].'/profile.php?id='.$cur_hit['id'].'&action=change_pass&key='.$new_password_key, $cur_mail_message);
+					$cur_mail_message = str_replace('<new_password>', $new_password, $cur_mail_message);
+
+					pun_mail($email, $mail_subject, $cur_mail_message);
+				}
+
+				message($lang_login['Forget mail'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
 			}
-
-			message($lang_login['Forget mail'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
+			else
+				$errors[] = $lang_login['No email match'].' '.htmlspecialchars($email).'.';
+			}
 		}
-		else
-			message($lang_login['No email match'].' '.htmlspecialchars($email).'.');
-	}
-
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_login['Request pass']);
 	$required_fields = array('req_email' => $lang_common['Email']);
 	$focus_element = array('request_pass', 'req_email');
 	define ('PUN_ACTIVE_PAGE', 'login');
 	require PUN_ROOT.'header.php';
+		
+// If there are errors, we display them
+if (!empty($errors))
+{
 
+?>
+<div id="posterror" class="block">
+	<h2><span><?php echo $lang_login['New password errors'] ?></span></h2>
+	<div class="box">
+		<div class="inbox error-info">
+			<p><?php echo $lang_login['New passworderrors info'] ?></p>
+			<ul class="error-list">
+<?php
+
+	foreach ($errors as $cur_error)
+		echo "\t\t\t\t".'<li><strong>'.$cur_error.'</strong></li>'."\n";
+?>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<?php
+
+}
 ?>
 <div class="blockform">
 	<h2><span><?php echo $lang_login['Request pass'] ?></span></h2>
@@ -183,7 +213,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="request_pass" value="<?php echo $lang_common['Submit'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="request_pass" value="<?php echo $lang_common['Submit'] ?>" /><?php if (empty($errors)): ?> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a><?php endif; ?></p>
 		</form>
 	</div>
 </div>
