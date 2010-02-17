@@ -38,7 +38,8 @@ div.postright h3,
 #reportform h2,
 #punmoderate #vf h2,
 #punviewforum #vf h2,
-#pundelete .blockform h2 {
+#pundelete .blockform h2,
+.pun .required strong span {
 	display: block;
 	left: -9999em;
 	overflow: hidden;
@@ -66,7 +67,7 @@ div.postright h3,
 
 .pun pre code {
 	font-size: 1em;
-	}
+}
 
 .pun p, .pun ul, .pun ol, .pun dl {
 	font-size: 1em;
@@ -75,7 +76,7 @@ div.postright h3,
 
 .pun .blocktable p {
 	padding: 0;
-	}
+}
 
 .pun .usercontent ul, .pun .postmsg ul {
 	list-style: disc;
@@ -121,7 +122,7 @@ div.postright h3,
 
 .pun th, .pun legend {
 	padding: 7px 0;
-	}
+}
 	
 .pun h1 {
 	font-family: "Trebuchet MS", Helvetica, Arial, sans-serif;
@@ -218,47 +219,47 @@ div.postright h3,
 html, body {
 	padding: 0;
 	margin: 0;
-	}
+}
 
 #punwrap {
 	margin: 30px 40px;
-	}
+}
 
 #punwrap div.top-box {
-	padding-left: 18px;
+	background: url(Air/img/main_top.png) top left no-repeat;
 	bottom: -18px;
 	margin-top: -18px;
+	padding-left: 18px;
 	position: relative;
-	background: url(Air/img/main_top.png) top left no-repeat;
-	}
+}
 
 #punwrap div.top-box div {
-	height: 18px;
 	background: url(Air/img/main_top.png) top right no-repeat;
-	}
+	height: 18px;
+}
 	
 #punwrap div.end-box {
-	padding-left: 18px;
-	top: -18px;
-	margin-bottom: -18px;
-	position: relative;
 	background: url(Air/img/main_end.png) bottom left no-repeat;
-	}
+	margin-bottom: -18px;
+	padding-left: 18px;
+	position: relative;
+	top: -18px;
+}
 
 #punwrap div.end-box div {
-	height: 18px;
 	background: url(Air/img/main_end.png) bottom right no-repeat;
-	}
+	height: 18px;
+}
 
 #punredirect, #punmaint {
 	margin: 50px 20% 12px 20%;
-	}
+}
 	
 .pun {
 	border-style: solid;
 	border-width: 1px;
 	padding: 18px;
-	}
+}
 
 /* Section Spacing and Borders
 ----------------------------------------------------------------*/
@@ -267,35 +268,35 @@ html, body {
 	border-style: solid none solid none;
 	border-width: 3px 0 3px 0;
 	margin-bottom: 12px;
+	overflow: hidden;
 	padding: 12px 0;
 	position: relative;
 	width: 100%;
-	overflow: hidden;
-	}
+}
 	
 #punindex #brdmain {
 	padding-top: 24px;
-	}
+}
 	
 #brdstats {
 	border-style: solid none none none;
 	border-width: 3px 0 0 0;
 	margin-top: 24px;
 	padding-top: 12px;
-	}
+}
 
 #quickpost {
 	border-style: solid none none none;
 	border-width: 3px 0 0 0;
 	margin-top: 12px;
 	padding-top: 12px;
-	}
+}
 	
 #announce {
 	border-style: solid none none none;
 	border-width: 3px 0 0 0;
 	padding-top: 3px;
-	}	
+}	
 	
 
 /* Main Containers
@@ -336,9 +337,9 @@ html, body {
 }
 
 #punpost .blockform h2, #punedit .blockform h2, .pun #posterror h2, .pun #quickpost h2, .pun #postpreview h2 {
-	width: 75%;
-	padding: 10px 19px 4px 37px;
 	border: 0;
+	padding: 10px 19px 4px 37px;
+	width: 75%;
 }
 	
 #punuserlist .blocktable h2 {
@@ -351,7 +352,7 @@ html, body {
 	border-bottom-style: dotted;
 	border-bottom-width: 1px;
 	margin-bottom: 3px;
-	}
+}
 	
 /*****************************************************************
 4. COMMON BOARD ELEMENTS
@@ -404,16 +405,16 @@ html, body {
 	overflow: hidden;
 	padding: 10px 0;
 	width: 100%;
-	}
+}
 
 #brdwelcome .conl, #brdwelcome .conr, #brdwelcome p {
 	float: left;
 	padding: 0;
-	}
+}
 	
 #brdwelcome .conl, #brdwelcome .conr {
 	white-space: nowrap;
-	}
+}
 	
 #brdwelcome li {
 	float: left;
@@ -543,10 +544,10 @@ html, body {
 ----------------------------------------------------------------*/
 
 .pun .linkst, .pun .linksb, .pun .postlinksb, .pun .crumbs {
+	clear: both;
 	overflow: hidden;
 	position: relative;
 	width: 100%;
-	clear: both;
 }
 
 .pun .linkst .crumbs {
@@ -622,7 +623,7 @@ MAIN TABLES
 
 #punindex .blocktable h2, #punsearch #vf h2 {
 	padding-left: 8px;
-	}
+}
 
 .pun table {
 	border-collapse: collapse;
@@ -680,10 +681,10 @@ MAIN TABLES
 .pun #vf td.tcl span.stickytext, .pun #vf td.tcl span.closedtext {
 	font-size: 1em;
 	font-weight: bold;
-	}
+}
 
 .pun .blocktable .tcl p {
-	padding: 5px 0 0 0
+	padding: 5px 0 0 0;
 }
 
 #punsearch #vf .tc2 {
@@ -694,7 +695,7 @@ MAIN TABLES
 }
 	
 #users1 .tcr {
-	width: 25%
+	width: 25%;
 }
 
 #users1 .tc2 {
@@ -709,7 +710,7 @@ MAIN TABLES
 }
 
 #debug .tcl {
-	width: 10%
+	width: 10%;
 }
 
 #punredirect #debug .tcl, #punmaint #debug .tcl {
@@ -737,7 +738,7 @@ MAIN TABLES
 }
 
 .pun #vf td.tcl a {
-	font-weight: bold}
+	font-weight: bold;
 }
 
 .pun #vf td.tcl span a {
@@ -793,16 +794,16 @@ MAIN POSTS
 .pun .blockpost h2 {
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
-	padding: 0.538em 8px 0.538em 236px;
-	height: 1.462em;
 	font-weight: normal;
+	height: 1.462em;
+	padding: 0.538em 8px 0.538em 236px;
 }
 
 #punsearch .blockpost h2 {
+	height: auto;
 	padding-left: 36px;
 	white-space: normal;
-	height: auto;
-	}
+}
 	
 #punsearch .blockpost h2 span span {
 	white-space: nowrap;
@@ -909,22 +910,22 @@ MAIN POSTS
 }
 	
 .pun .blockpost .usercontacts .email {
-	padding-left: 21px;
-	margin-right: 5px;
 	background: url(Air/img/email.png) center left no-repeat;
+	margin-right: 5px;
+	padding-left: 21px;
 }
 
 .pun .blockpost .usercontacts .website {
-	padding-left: 18px;
 	background: url(Air/img/ext.png) center left no-repeat;
+	padding-left: 18px;
 }
 
 .pun .postsignature hr {
+	border:none;
+	height: 1px;
 	margin-left: 0px;
 	text-align: left;
-	height: 1px;
-	border:none
-	}
+}
 
 /* Content
 ----------------------------------------------------------------*/
@@ -961,15 +962,15 @@ MAIN POSTS
 }
 
 .pun .quotebox blockquote {
+	overflow: hidden;
 	width: 100%;
-	overflow: hidden
 }
 	
 .pun .codebox pre {
-	overflow: auto;
-	width: 100%;
 	overflow-y:hidden;
+	overflow: auto;
 	padding-bottom: 10px;
+	width: 100%;
 }
 	
 .pun div[class~="codebox"] pre {
@@ -1037,9 +1038,9 @@ MAIN FORMS
 }
 	
 .pun legend {
-	padding: 10px 19px 4px 19px;
 	font-weight: bold;
 	margin-left: -7px;
+	padding: 10px 19px 4px 19px;
 }
 	
 .pun div[class*="inform"] legend {
@@ -1047,11 +1048,11 @@ MAIN FORMS
 }
 
 .pun .infldset {
-	padding: 12px 18px;
 	border-style: solid;
 	border-width: 1px;
-	overflow: hidden;
 	display: inline-block;
+	overflow: hidden;
+	padding: 12px 18px;
 }
 	
 .pun div[class*="infldset"] {
@@ -1063,14 +1064,14 @@ MAIN FORMS
 }
 	
 .pun fieldset p {
-	padding: 0 0 7px 0;
 	clear: both;
+	padding: 0 0 7px 0;
 	width: 100%;
 }
 
 .pun fieldset .usercontent p {
 	padding: 7px 0;
-	}
+}
 	
 .pun fieldset label {
 	display: block;
@@ -1084,6 +1085,7 @@ MAIN FORMS
 }
 	
 .pun .required strong {
+	font-weight: normal;
 	padding-right: 20px;
 	background: url(Air/img/asterisk.png) center right no-repeat;
 }
@@ -1093,9 +1095,9 @@ MAIN FORMS
 }
 	
 .pun label.conl {
+	clear: none;
 	float: left;
 	padding-right: 12px;
-	clear: none;
 }
 	
 .pun form .buttons {
@@ -1110,7 +1112,7 @@ MAIN FORMS
 .pun fieldset .rbox {
 	padding: 3px 0;
 	vertical-align: middle;
-	width; 100%;
+	width: 100%;
 }
 	
 .pun fieldset .rbox label {
@@ -1122,9 +1124,9 @@ MAIN FORMS
 .pun fieldset .rbox label input {
 	margin: 0 7px 2px -23px;
 	padding: 0;
-	width: 16px;
 	position: relative;
 	vertical-align: middle;
+	width: 16px;
 }
 	
 .pun .txtarea {
@@ -1140,23 +1142,23 @@ MAIN FORMS
 }
 	
 .pun .blockform .bblinks li {
-	display: inline;
-	padding-left: 20px;
-	margin-right: 8px;
 	background: url(Air/img/help.png) center left no-repeat;
+	display: inline;
+	margin-right: 8px;
+	padding-left: 20px;
 }
 	
 .pun #login p.clearb {
-	padding-top: 7px;
-	margin-top: 7px;
-	padding-bottom: 3px;
 	border-top-style: dotted;
 	border-top-width: 1px;
 	font-size: 0;
 	height: 0;
 	line-height: 0;
-	text-indent: -9999em;
+	margin-top: 7px;
 	overflow: hidden;
+	padding-bottom: 3px;
+	padding-top: 7px;
+	text-indent: -9999em;
 	width: 100%;
 }
 
@@ -1167,10 +1169,10 @@ MAIN FORMS
 }
 
 .pun #quickpost .bblinks {
-	position:absolute;
-	top: 18px;
 	left: 18px;
 	line-height: 1.75em;
+	position:absolute;
+	top: 18px;
 	width: 12em;
 }
 	
@@ -1191,13 +1193,13 @@ MAIN FORMS
 }
 	
 .pun #postpreview .postbody {
+	border-style: solid;
+	border-width: 1px;
 	float: none;
 	margin: 0 18px 12px 18px;
 	padding: 0;
-	width: auto;
-	border-style: solid;
-	border-width: 1px;
 	padding: 4px 18px 4px 18px;
+	width: auto;
 }
 	
 #pundelete .deletemsg {
@@ -1312,7 +1314,7 @@ PROFILES (+ ADMIN MENU)
 	height: 100%;
 }
 
-#adstats" div[class*="inbox"], #adintro div[class*="inbox"] {
+#adstats div[class*="inbox"], #adintro div[class*="inbox"] {
 	height: auto;
 }
 

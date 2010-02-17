@@ -121,7 +121,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 		$email = strtolower(trim($_POST['req_email']));
 		if (!is_valid_email($email))
 			$errors[] = $lang_common['Invalid email'];
-			
+
 		// Did everything go according to plan?
 		if (empty($errors))
 		{
@@ -173,7 +173,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 	$focus_element = array('request_pass', 'req_email');
 	define ('PUN_ACTIVE_PAGE', 'login');
 	require PUN_ROOT.'header.php';
-		
+
 // If there are errors, we display them
 if (!empty($errors))
 {
@@ -208,7 +208,7 @@ if (!empty($errors))
 					<legend><?php echo $lang_login['Request pass legend'] ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
-						<label class="required"><strong><?php echo $lang_common['Email'] ?></strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="80" /><br /></label>
+						<label class="required"><strong><?php echo $lang_common['Email'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="80" /><br /></label>
 						<p><?php echo $lang_login['Request pass info'] ?></p>
 					</div>
 				</fieldset>
@@ -246,8 +246,8 @@ require PUN_ROOT.'header.php';
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="redirect_url" value="<?php echo $redirect_url ?>" />
-						<label class="conl required"><strong><?php echo $lang_common['Username'] ?></strong><br /><input type="text" name="req_username" size="25" maxlength="25" tabindex="1" /><br /></label>
-						<label class="conl required"><strong><?php echo $lang_common['Password'] ?></strong><br /><input type="password" name="req_password" size="25" tabindex="2" /><br /></label>
+						<label class="conl required"><strong><?php echo $lang_common['Username'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" tabindex="1" /><br /></label>
+						<label class="conl required"><strong><?php echo $lang_common['Password'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="password" name="req_password" size="25" tabindex="2" /><br /></label>
 
 						<div class="rbox clearb">
 							<label><input type="checkbox" name="save_pass" value="1" tabindex="3" /><?php echo $lang_login['Remember me'] ?><br /></label>

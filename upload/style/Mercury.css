@@ -53,7 +53,8 @@
 ----------------------------------------------------------------*/
 
 #brdfooter h2, #brdstats h2, #brdstats .conl dt, #brdstats .conr dt,
-#modcontrols dt, #searchlinks dt, div.postright h3, span.closedtext {
+#modcontrols dt, #searchlinks dt, div.postright h3, span.closedtext,
+.pun .required strong span {
 	position: absolute;
 	display: block;
 	overflow: hidden;
