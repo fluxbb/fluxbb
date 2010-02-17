@@ -10,7 +10,7 @@
 
 // The FluxBB version this script updates to
 define('UPDATE_TO', '1.4-rc1');
-define('UPDATE_TO_DB_REVISION', 3);
+define('UPDATE_TO_DB_REVISION', 4);
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
 define('MIN_PGSQL_VERSION', '7.0.0');
@@ -713,6 +713,37 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 		// Add an index to last_post in the topics table
 		$db->add_index('topics', 'last_post_idx', array('last_post'));
+
+		// Add an index to username on the bans table
+		switch ($db_type)
+		{
+			case 'mysql':
+			case 'mysqli':
+			case 'mysql_innodb':
+			case 'mysqli_innodb':
+				$db->add_index('bans', 'username_idx', array('username(25)'));
+				break;
+
+			default:
+				$db->add_index('bans', 'username_idx', array('username'));
+				break;
+		}
+
+		// Change the username_idx on users to a unique index of max size 25
+		$db->drop_index('users', 'username_idx');
+		switch ($db_type)
+		{
+			case 'mysql':
+			case 'mysqli':
+			case 'mysql_innodb':
+			case 'mysqli_innodb':
+				$db->add_index('users', 'username_idx', array('username(25)'), true);
+				break;
+
+			default:
+				$db->add_index('users', 'username_idx', array('username'), true);
+				break;
+		}
 
 		// Add g_view_users field to groups table
 		$db->add_field('groups', 'g_view_users', 'TINYINT(1)', false, 1, 'g_read_board');

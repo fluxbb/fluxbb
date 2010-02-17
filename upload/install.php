@@ -10,7 +10,7 @@
 
 // The FluxBB version this script installs
 define('FORUM_VERSION', '1.4-rc1');
-define('FORUM_DB_REVISION', 3);
+define('FORUM_DB_REVISION', 4);
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
 define('MIN_PGSQL_VERSION', '7.0.0');
@@ -582,8 +582,14 @@ else
 				'default'		=> '0'
 			)
 		),
-		'PRIMARY KEY'	=> array('id')
+		'PRIMARY KEY'	=> array('id'),
+		'INDEXES'		=> array(
+			'username_idx'	=> array('username')
+		)
 	);
+
+	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+		$schema['INDEXES']['username_idx'] = array('username(25)');
 
 	$db->create_table('bans', $schema);
 
@@ -1436,14 +1442,16 @@ else
 			),
 		),
 		'PRIMARY KEY'	=> array('id'),
-		'INDEXES'		=> array(
-			'registered_idx'	=> array('registered'),
+		'UNIQUE KEYS'	=> array(
 			'username_idx'		=> array('username')
+		),
+		'INDEXES'		=> array(
+			'registered_idx'	=> array('registered')
 		)
 	);
 
 	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
-		$schema['INDEXES']['username_idx'] = array('username(8)');
+		$schema['UNIQUE KEYS']['username_idx'] = array('username(25)');
 
 	$db->create_table('users', $schema);
 

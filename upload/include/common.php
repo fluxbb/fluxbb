@@ -13,7 +13,7 @@ if (!defined('PUN_ROOT'))
 
 // Define the version and database revision that this code was written for
 define('FORUM_VERSION', '1.4-rc1');
-define('FORUM_DB_REVISION', 3);
+define('FORUM_DB_REVISION', 4);
 
 // Attempt to load the configuration file config.php
 if (file_exists(PUN_ROOT.'config.php'))
