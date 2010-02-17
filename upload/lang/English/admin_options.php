@@ -10,7 +10,7 @@ $lang_admin_options = array(
 'Enter announcement here'			=>	'Enter your announcement here.',
 'Enter rules here'					=>	'Enter your rules here.',
 'Default maintenance message'		=>	'The forums are temporarily down for maintenance. Please try again in a few minutes.',
-'Timeout error'						=>	'The value of "Timeout online" must be smaller than the value of "Timeout visit".',
+'Timeout error message'				=>	'The value of "Timeout online" must be smaller than the value of "Timeout visit".',
 'Options updated redirect'			=>	'Options updated. Redirecting …',
 'Options head'						=>	'Options',
 

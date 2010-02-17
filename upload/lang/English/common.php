@@ -89,7 +89,6 @@ $lang_common = array(
 'and'								=>	'and',
 'Image link'						=>	'image', // This is displayed (i.e. <image>) instead of images when "Show images" is disabled in the profile
 'wrote'								=>	'wrote', // For [quote]'s
-'Code'								=>	'Code', // For [code]'s
 'Mailer'							=>	'Mailer', // As in "MyForums Mailer" in the signature of outgoing emails
 'Important information'				=>	'Important information',
 'Write message legend'				=>	'Write your message and submit',
@@ -150,7 +149,6 @@ $lang_common = array(
 'Unstick topic'						=>	'Unstick topic',
 'Stick topic'						=>	'Stick topic',
 'Moderate forum'					=>	'Moderate forum',
-'Delete posts'						=>	'Delete multiple posts', // Deprecated
 'Powered by'						=>	'Powered by %s',
 
 // Debug information

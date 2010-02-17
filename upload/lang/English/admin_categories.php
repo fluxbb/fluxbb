@@ -6,7 +6,6 @@ $lang_admin_categories = array(
 'Must enter name message'		=>	'You must enter a name for the category',
 'Category added redirect'		=>	'Category added. Redirecting …',
 'Category deleted redirect'		=>	'Category deleted. Redirecting …',
-'Categories'					=>	'Categories',
 'Delete category head'			=>	'Delete category (together with all forums and posts it contains)',
 'Confirm delete subhead'		=>	'Confirm delete category',
 'Confirm delete info'			=>	'Are you sure that you want to delete the category <strong>%s</strong>?',

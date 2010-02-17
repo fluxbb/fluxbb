@@ -27,7 +27,6 @@ $lang_prof_reg = array(
 'Username IP'				=>	'Usernames may not be in the form of an IP address. Please choose another username.',
 'Username reserved chars'	=>	'Usernames may not contain all the characters \', " and [ or ] at once. Please choose another username.',
 'Username BBCode'			=>	'Usernames may not contain any of the text formatting tags (BBCode) that the forum uses. Please choose another username.',
-'Dupe username'				=>	'Someone else has already registered with that username. Please choose another username.',
 'Banned username'			=>	'The username you entered is banned in this forum. Please choose another username.',
 'Pass too short'			=>	'Passwords must be at least 4 characters long. Please choose another (longer) password.',
 'Pass not match'			=>	'Passwords do not match.',

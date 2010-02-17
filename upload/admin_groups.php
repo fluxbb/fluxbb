@@ -267,7 +267,7 @@ else if (isset($_POST['add_edit_group']))
 	$email_flood = isset($_POST['email_flood']) ? intval($_POST['email_flood']) : '0';
 
 	if ($title == '')
-		message($lang_admin_groups['Must enter title']);
+		message($lang_admin_groups['Must enter title message']);
 
 	$user_title = ($user_title != '') ? '\''.$db->escape($user_title).'\'' : 'NULL';
 
@@ -275,7 +275,7 @@ else if (isset($_POST['add_edit_group']))
 	{
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'groups WHERE g_title=\''.$db->escape($title).'\'') or error('Unable to check group title collision', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result))
-			message(sprintf($lang_common_groups['Title already exists'], pun_htmlspecialchars($title)));
+			message(sprintf($lang_admin_groups['Title already exists message'], pun_htmlspecialchars($title)));
 
 		$db->query('INSERT INTO '.$db->prefix.'groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES(\''.$db->escape($title).'\', '.$user_title.', '.$moderator.', '.$mod_edit_users.', '.$mod_rename_users.', '.$mod_change_passwords.', '.$mod_ban_users.', '.$read_board.', '.$view_users.', '.$post_replies.', '.$post_topics.', '.$edit_posts.', '.$delete_posts.', '.$delete_topics.', '.$set_title.', '.$search.', '.$search_users.', '.$send_email.', '.$post_flood.', '.$search_flood.', '.$email_flood.')') or error('Unable to add group', __FILE__, __LINE__, $db->error());
 		$new_group_id = $db->insert_id();
@@ -289,7 +289,7 @@ else if (isset($_POST['add_edit_group']))
 	{
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'groups WHERE g_title=\''.$db->escape($title).'\' AND g_id!='.intval($_POST['group_id'])) or error('Unable to check group title collision', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result))
-			message(sprintf($lang_common_groups['Title already exists message'], pun_htmlspecialchars($title)));
+			message(sprintf($lang_admin_groups['Title already exists message'], pun_htmlspecialchars($title)));
 
 		$db->query('UPDATE '.$db->prefix.'groups SET g_title=\''.$db->escape($title).'\', g_user_title='.$user_title.', g_moderator='.$moderator.', g_mod_edit_users='.$mod_edit_users.', g_mod_rename_users='.$mod_rename_users.', g_mod_change_passwords='.$mod_change_passwords.', g_mod_ban_users='.$mod_ban_users.', g_read_board='.$read_board.', g_view_users='.$view_users.', g_post_replies='.$post_replies.', g_post_topics='.$post_topics.', g_edit_posts='.$edit_posts.', g_delete_posts='.$delete_posts.', g_delete_topics='.$delete_topics.', g_set_title='.$set_title.', g_search='.$search.', g_search_users='.$search_users.', g_send_email='.$send_email.', g_post_flood='.$post_flood.', g_search_flood='.$search_flood.', g_email_flood='.$email_flood.' WHERE g_id='.intval($_POST['group_id'])) or error('Unable to update group', __FILE__, __LINE__, $db->error());
 	}

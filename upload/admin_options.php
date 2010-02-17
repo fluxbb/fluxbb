@@ -207,7 +207,7 @@ generate_admin_menu('options');
 											<option value="5.5"<?php if ($pun_config['o_default_timezone'] == 5.5) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+05:30'] ?></option>
 											<option value="5.75"<?php if ($pun_config['o_default_timezone'] == 5.75) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+05:45'] ?></option>
 											<option value="6"<?php if ($pun_config['o_default_timezone'] == 6) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+06:00'] ?></option>
-											<option value="6.5"<?php if ($pun_config['o_default_timezone'] == 6.5) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+12:00'] ?></option>
+											<option value="6.5"<?php if ($pun_config['o_default_timezone'] == 6.5) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+06:30'] ?></option>
 											<option value="7"<?php if ($pun_config['o_default_timezone'] == 7) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+07:00'] ?></option>
 											<option value="8"<?php if ($pun_config['o_default_timezone'] == 8) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+08:00'] ?></option>
 											<option value="8.75"<?php if ($pun_config['o_default_timezone'] == 8.75) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+08:45'] ?></option>

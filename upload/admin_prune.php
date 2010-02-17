@@ -73,7 +73,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 
 	$prune_days = $_POST['req_prune_days'];
 	if (!@preg_match('#^\d+$#', $prune_days))
-		message($lang_admin_prune['Must be integer messag']);
+		message($lang_admin_prune['Must be integer message']);
 
 	$prune_date = time() - ($prune_days*86400);
 	$prune_from = $_POST['prune_from'];

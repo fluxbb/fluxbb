@@ -370,7 +370,7 @@ else
 ?>
 				<div class="inform">
 					<fieldset>
-						<legend>Ban expires</legend>
+						<legend><?php echo $lang_admin_bans['Ban expires'] ?></legend>
 						<div class="infldset">
 							<p><?php echo $lang_admin_bans['No bans in list'] ?></p>
 						</div>
