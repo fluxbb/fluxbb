@@ -1130,9 +1130,9 @@ function maintenance_message()
 	$tpl_maint = file_get_contents($tpl_file);
 
 	// START SUBST - <pun_include "*">
-	preg_match_all('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_maint, $pun_includes, PREG_SET_ORDER); 
+	preg_match_all('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_maint, $pun_includes, PREG_SET_ORDER);
 
-	foreach ($pun_includes as $cur_include) 
+	foreach ($pun_includes as $cur_include)
 	{
 		if (!file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
 			error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file), $tpl_inc_dir));
@@ -1228,9 +1228,9 @@ function redirect($destination_url, $message)
 	$tpl_redir = file_get_contents($tpl_file);
 
 	// START SUBST - <pun_include "*">
-	preg_match_all('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_redir, $pun_includes, PREG_SET_ORDER); 
+	preg_match_all('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_redir, $pun_includes, PREG_SET_ORDER);
 
-	foreach ($pun_includes as $cur_include) 
+	foreach ($pun_includes as $cur_include)
 	{
 		if (!file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
 			error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file), $tpl_inc_dir));

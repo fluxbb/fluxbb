@@ -15,4 +15,3 @@ $lang_admin_plugin_example = array(
 'Input content'			=>	'The text you want to display.',
 
 );
-
