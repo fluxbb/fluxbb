@@ -306,7 +306,7 @@ generate_admin_menu('bans');
 									<th scope="row"><?php echo $lang_admin_bans['Username label'] ?><div><input type="submit" name="add_ban" value="<?php echo $lang_admin_common['Add'] ?>" tabindex="2" /></div></th>
 									<td>
 										<input type="text" name="new_ban_user" size="25" maxlength="25" tabindex="1" />
-										<span><?php echo $lang_admin_bans['Username help'] ?></span>
+										<span><?php echo $lang_admin_bans['Username advanced help'] ?></span>
 									</td>
 								</tr>
 							</table>

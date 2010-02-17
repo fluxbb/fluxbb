@@ -17,7 +17,8 @@ $lang_admin_bans = array(
 'New ban head'				=>	'New ban',
 'Add ban subhead'			=>	'Add ban',
 'Username label'			=>	'Username',
-'Username help'				=>	'The username to ban (case-insensitive). The next page will let you enter a custom IP and email. If you just want to ban a specific IP/IP-range or email just leave it blank.',
+'Username help'				=>	'The username to ban (case-insensitive).',
+'Username advanced help'	=>	'The username to ban (case-insensitive). The next page will let you enter a custom IP and email. If you just want to ban a specific IP/IP-range or email just leave it blank.',
 
 'Existing bans head'		=>	'Existing bans',
 'Existing ban subhead'		=>	'Ban expires: %s',
