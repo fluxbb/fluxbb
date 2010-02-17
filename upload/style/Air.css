@@ -1086,7 +1086,8 @@ MAIN FORMS
 	
 .pun .required strong {
 	font-weight: normal;
-	padding-right: 20px;
+	white-space: pre-wrap;
+	padding-right: 14px;
 	background: url(Air/img/asterisk.png) center right no-repeat;
 }
 	
