@@ -92,7 +92,7 @@ if ($action == 'change_pass')
 
 		if ($new_password1 != $new_password2)
 			message($lang_prof_reg['Pass not match']);
-		if (strlen($new_password1) < 4)
+		if (pun_strlen($new_password1) < 4)
 			message($lang_prof_reg['Pass too short']);
 
 		$result = $db->query('SELECT password FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch password', __FILE__, __LINE__, $db->error());
@@ -694,7 +694,7 @@ else if (isset($_POST['form_sent']))
 					$form['username'] = trim($_POST['req_username']);
 					$old_username = trim($_POST['old_username']);
 
-					if (strlen($form['username']) < 2)
+					if (pun_strlen($form['username']) < 2)
 						message($lang_prof_reg['Username too short']);
 					else if (pun_strlen($form['username']) > 25) // This usually doesn't happen since the form element only accepts 25 characters
 						message($lang_common['Bad request']);

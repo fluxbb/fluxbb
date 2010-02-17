@@ -70,7 +70,7 @@ if (isset($_POST['form_sent']))
 
 	if ($message == '')
 		$errors[] = $lang_post['No message'];
-	else if (strlen($message) > PUN_MAX_POSTSIZE)
+	else if (pun_strlen($message) > PUN_MAX_POSTSIZE)
 		$errors[] = $lang_post['Too long message'];
 	else if ($pun_config['p_message_all_caps'] == '0' && is_all_uppercase($message) && !$pun_user['is_admmod'])
 		$errors[] = $lang_post['All caps message'];

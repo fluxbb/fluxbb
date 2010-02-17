@@ -96,7 +96,7 @@ if (isset($_POST['form_sent']))
 		require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
 
 		// It's a guest, so we have to validate the username
-		if (strlen($username) < 2)
+		if (pun_strlen($username) < 2)
 			$errors[] = $lang_prof_reg['Username too short'];
 		else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
 			$errors[] = $lang_prof_reg['Username too long'];
@@ -147,7 +147,7 @@ if (isset($_POST['form_sent']))
 
 	if ($message == '')
 		$errors[] = $lang_post['No message'];
-	else if (strlen($message) > PUN_MAX_POSTSIZE)
+	else if (pun_strlen($message) > PUN_MAX_POSTSIZE)
 		$errors[] = $lang_post['Too long message'];
 	else if ($pun_config['p_message_all_caps'] == '0' && is_all_uppercase($message) && !$pun_user['is_admmod'])
 		$errors[] = $lang_post['All caps message'];

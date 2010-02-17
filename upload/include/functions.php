@@ -36,7 +36,7 @@ function validate_search_word($word)
 
 	}
 
-	$num_chars = utf8_strlen($word);
+	$num_chars = pun_strlen($word);
 	return $num_chars >= PUN_SEARCH_MIN_WORD && $num_chars <= PUN_SEARCH_MAX_WORD && !in_array($word, $stopwords);
 }
 
