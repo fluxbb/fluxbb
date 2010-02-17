@@ -58,7 +58,7 @@ if (!defined('PUN'))
 	exit;
 
 // Load the admin_bans.php language file
-require PUN_ROOT.'lang/'.$admin_language.'/plugins/example.php';
+require PUN_ROOT.'lang/'.$admin_language.'/admin_plugin_example.php';
 
 // Tell admin_loader.php that this is indeed a plugin and that it is loaded
 define('PUN_PLUGIN_LOADED', 1);
