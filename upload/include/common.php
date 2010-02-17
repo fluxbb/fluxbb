@@ -164,3 +164,11 @@ update_users_online();
 // Check to see if we logged in without a cookie being set
 if ($pun_user['is_guest'] && isset($_GET['login']))
 	message($lang_common['No cookie']);
+
+if (!defined('PUN_MAX_POSTSIZE'))
+	define('PUN_MAX_POSTSIZE', 65535);
+
+if (!defined('PUN_SEARCH_MIN_WORD'))
+	define('PUN_SEARCH_MIN_WORD', 3);
+if (!defined('PUN_SEARCH_MAX_WORD'))
+	define('PUN_SEARCH_MAX_WORD', 20);

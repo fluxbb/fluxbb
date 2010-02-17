@@ -109,7 +109,7 @@ else if (isset($_GET['email']))
 			message($lang_misc['No email subject']);
 		else if ($message == '')
 			message($lang_misc['No email message']);
-		else if (strlen($message) > 65535)
+		else if (strlen($message) > PUN_MAX_POSTSIZE)
 			message($lang_misc['Too long email message']);
 
 		if ($pun_user['last_email_sent'] != '' && (time() - $pun_user['last_email_sent']) < $pun_user['g_email_flood'] && (time() - $pun_user['last_email_sent']) >= 0)
