@@ -113,7 +113,7 @@ if (isset($_POST['form_sent']))
 	if ($form['disp_posts_default'] > 75) $form['disp_posts_default'] = 75;
 
 	if ($form['timeout_online'] >= $form['timeout_visit'])
-		message($lang_admin_options['Timout error message']);
+		message($lang_admin_options['Timeout error message']);
 
 	foreach ($form as $key => $input)
 	{
