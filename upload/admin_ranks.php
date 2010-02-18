@@ -28,12 +28,12 @@ if (isset($_POST['add_rank']))
 	confirm_referrer('admin_ranks.php');
 
 	$rank = pun_trim($_POST['new_rank']);
-	$min_posts = $_POST['new_min_posts'];
+	$min_posts = trim($_POST['new_min_posts']);
 
 	if ($rank == '')
 		message($lang_admin_ranks['Must enter title']);
 
-	if (!preg_match('%^\d+$%', $min_posts))
+	if (preg_match('/[^0-9]/', $min_posts))
 		message($lang_admin_ranks['Must be integer message']);
 
 	// Make sure there isn't already a rank with the same min_posts value
@@ -61,12 +61,12 @@ else if (isset($_POST['update']))
 	$id = intval(key($_POST['update']));
 
 	$rank = pun_trim($_POST['rank'][$id]);
-	$min_posts = $_POST['min_posts'][$id];
+	$min_posts = trim($_POST['min_posts'][$id]);
 
 	if ($rank == '')
 		message($lang_admin_ranks['Must enter title message']);
 
-	if (!preg_match('%^\d+$%', $min_posts))
+	if (preg_match('/[^0-9]/', $min_posts))
 		message($lang_admin_ranks['Must be integer message']);
 
 	// Make sure there isn't already a rank with the same min_posts value
