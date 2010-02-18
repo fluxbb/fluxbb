@@ -28,33 +28,91 @@ if (isset($_POST['form_sent']))
 	if (!preg_match('#^'.preg_quote(str_replace('www.', '', $pun_config['o_base_url']).'/admin_options.php', '#').'#i', str_replace('www.', '', (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''))))
 		message($lang_admin_options['Bad HTTP Referer message']);
 
-	$form = array_map('pun_trim', $_POST['form']);
+	$form = array(
+		'board_title'			=> pun_trim($_POST['form']['board_title']),
+		'board_desc'			=> pun_trim($_POST['form']['board_desc']),
+		'base_url'				=> pun_trim($_POST['form']['base_url']),
+		'default_timezone'		=> floatval($_POST['form']['default_timezone']),
+		'default_dst'			=> $_POST['form']['default_dst'] != '1' ? '0' : '1',
+		'default_lang'			=> preg_replace('#[\.\\\/]#', '', pun_trim($_POST['form']['default_lang'])),
+		'default_style'			=> preg_replace('#[\.\\\/]#', '', pun_trim($_POST['form']['default_style'])),
+		'time_format'			=> intval($_POST['form']['time_format']),
+		'date_format'			=> intval($_POST['form']['date_format']),
+		'timeout_visit'			=> intval($_POST['form']['timeout_visit']),
+		'timeout_online'		=> intval($_POST['form']['timeout_online']),
+		'redirect_delay'		=> intval($_POST['form']['redirect_delay']),
+		'show_version'			=> $_POST['form']['show_version'] != '1' ? '0' : '1',
+		'show_user_info'		=> $_POST['form']['show_user_info'] != '1' ? '0' : '1',
+		'show_post_count'		=> $_POST['form']['show_post_count'] != '1' ? '0' : '1',
+		'smilies'				=> $_POST['form']['smilies'] != '1' ? '0' : '1',
+		'smilies_sig'			=> $_POST['form']['smilies_sig'] != '1' ? '0' : '1',
+		'make_links'			=> $_POST['form']['make_links'] != '1' ? '0' : '1',
+		'topic_review'			=> $_POST['form']['topic_review'] != '1' ? '0' : '1',
+		'disp_topics_default'	=> intval($_POST['form']['disp_topics_default']),
+		'disp_posts_default'	=> intval($_POST['form']['disp_posts_default']),
+		'indent_num_spaces'		=> intval($_POST['form']['indent_num_spaces']),
+		'quote_depth'			=> intval($_POST['form']['quote_depth']),
+		'quickpost'				=> $_POST['form']['quickpost'] != '1' ? '0' : '1',
+		'users_online'			=> $_POST['form']['users_online'] != '1' ? '0' : '1',
+		'censoring'				=> $_POST['form']['censoring'] != '1' ? '0' : '1',
+		'signatures'			=> $_POST['form']['signatures'] != '1' ? '0' : '1',
+		'ranks'					=> $_POST['form']['ranks'] != '1' ? '0' : '1',
+		'show_dot'				=> $_POST['form']['show_dot'] != '1' ? '0' : '1',
+		'topic_views'			=> $_POST['form']['topic_views'] != '1' ? '0' : '1',
+		'quickjump'				=> $_POST['form']['quickjump'] != '1' ? '0' : '1',
+		'gzip'					=> $_POST['form']['gzip'] != '1' ? '0' : '1',
+		'search_all_forums'		=> $_POST['form']['search_all_forums'] != '1' ? '0' : '1',
+		'additional_navlinks'	=> pun_trim($_POST['form']['additional_navlinks']),
+		'feed_type'				=> intval($_POST['form']['feed_type']),
+		'report_method'			=> intval($_POST['form']['report_method']),
+		'mailing_list'			=> pun_trim($_POST['form']['mailing_list']),
+		'avatars'				=> $_POST['form']['avatars'] != '1' ? '0' : '1',
+		'avatars_dir'			=> pun_trim($_POST['form']['avatars_dir']),
+		'avatars_width'			=> intval($_POST['form']['avatars_width']),
+		'avatars_height'		=> intval($_POST['form']['avatars_height']),
+		'avatars_size'			=> intval($_POST['form']['avatars_size']),
+		'admin_email'			=> strtolower(pun_trim($_POST['form']['admin_email'])),
+		'webmaster_email'		=> strtolower(pun_trim($_POST['form']['webmaster_email'])),
+		'subscriptions'			=> $_POST['form']['subscriptions'] != '1' ? '0' : '1',
+		'smtp_host'				=> pun_trim($_POST['form']['smtp_host']),
+		'smtp_user'				=> pun_trim($_POST['form']['smtp_user']),
+		'smtp_pass'				=> pun_trim($_POST['form']['smtp_pass']),
+		'smtp_ssl'				=> $_POST['form']['smtp_ssl'] != '1' ? '0' : '1',
+		'regs_allow'			=> $_POST['form']['regs_allow'] != '1' ? '0' : '1',
+		'regs_verify'			=> $_POST['form']['regs_verify'] != '1' ? '0' : '1',
+		'regs_report'			=> $_POST['form']['regs_report'] != '1' ? '0' : '1',
+		'rules'					=> $_POST['form']['rules'] != '1' ? '0' : '1',
+		'rules_message'			=> pun_trim($_POST['form']['rules_message']),
+		'default_email_setting'	=> intval($_POST['form']['default_email_setting']),
+		'announcement'			=> $_POST['form']['announcement'] != '1' ? '0' : '1',
+		'announcement_message'	=> pun_trim($_POST['form']['announcement_message']),
+		'maintenance'			=> $_POST['form']['maintenance'] != '1' ? '0' : '1',
+		'maintenance_message'	=> pun_trim($_POST['form']['maintenance_message']),
+	);
 
 	if ($form['board_title'] == '')
 		message($lang_admin_options['Must enter title message']);
-
-	// Clean default_lang
-	$form['default_lang'] = preg_replace('#[\.\\\/]#', '', $form['default_lang']);
-
-	require PUN_ROOT.'include/email.php';
-
-	$form['admin_email'] = strtolower($form['admin_email']);
-	if (!is_valid_email($form['admin_email']))
-		message($lang_admin_options['Invalid e-mail message']);
-
-	$form['webmaster_email'] = strtolower($form['webmaster_email']);
-	if (!is_valid_email($form['webmaster_email']))
-		message($lang_admin_options['Invalid webmaster e-mail message']);
-
-	if ($form['mailing_list'] != '')
-		$form['mailing_list'] = strtolower(preg_replace('/[\s]/', '', $form['mailing_list']));
 
 	// Make sure base_url doesn't end with a slash
 	if (substr($form['base_url'], -1) == '/')
 		$form['base_url'] = substr($form['base_url'], 0, -1);
 
-	// Clean avatars_dir
-	$form['avatars_dir'] = str_replace("\0", '', $form['avatars_dir']);
+	if (!file_exists(PUN_ROOT.'lang/'.$form['default_lang'].'/common.php'))
+		message($lang_common['Bad request']);
+	if (!file_exists(PUN_ROOT.'style/'.$form['default_style'].'.css'))
+		message($lang_common['Bad request']);
+
+
+	require PUN_ROOT.'include/email.php';
+
+	if (!is_valid_email($form['admin_email']))
+		message($lang_admin_options['Invalid e-mail message']);
+
+	if (!is_valid_email($form['webmaster_email']))
+		message($lang_admin_options['Invalid webmaster e-mail message']);
+
+	if ($form['mailing_list'] != '')
+		$form['mailing_list'] = strtolower(preg_replace('/[\s]/', '', $form['mailing_list']));
 
 	// Make sure avatars_dir doesn't end with a slash
 	if (substr($form['avatars_dir'], -1) == '/')
@@ -68,9 +126,7 @@ if (isset($_POST['form_sent']))
 	else
 	{
 		$form['announcement_message'] = $lang_admin_options['Enter announcement here'];
-
-		if ($form['announcement'] == '1')
-			$form['announcement'] = '0';
+		$form['announcement'] = '0';
 	}
 
 	if ($form['rules_message'] != '')
@@ -78,9 +134,7 @@ if (isset($_POST['form_sent']))
 	else
 	{
 		$form['rules_message'] = $lang_admin_options['Enter rules here'];
-
-		if ($form['rules'] == '1')
-			$form['rules'] = '0';
+		$form['rules'] = '0';
 	}
 
 	if ($form['maintenance_message'] != '')
@@ -88,29 +142,28 @@ if (isset($_POST['form_sent']))
 	else
 	{
 		$form['maintenance_message'] = $lang_admin_options['Default maintenance message'];
-
-		if ($form['maintenance'] == '1')
-			$form['maintenance'] = '0';
+		$form['maintenance'] = '0';
 	}
 
-	$form['timeout_visit'] = intval($form['timeout_visit']);
-	$form['timeout_online'] = intval($form['timeout_online']);
-	$form['redirect_delay'] = intval($form['redirect_delay']);
-	$form['topic_review'] = intval($form['topic_review']);
-	$form['disp_topics_default'] = intval($form['disp_topics_default']);
-	$form['disp_posts_default'] = intval($form['disp_posts_default']);
-	$form['indent_num_spaces'] = intval($form['indent_num_spaces']);
-	$form['quote_depth'] = intval($form['quote_depth']);
-	$form['avatars_width'] = intval($form['avatars_width']);
-	$form['avatars_height'] = intval($form['avatars_height']);
-	$form['avatars_size'] = intval($form['avatars_size']);
-
 	// Make sure the number of displayed topics and posts is between 3 and 75
-	if ($form['disp_topics_default'] < 3) $form['disp_topics_default'] = 3;
-	if ($form['disp_topics_default'] > 75) $form['disp_topics_default'] = 75;
+	if ($form['disp_topics_default'] < 3)
+		$form['disp_topics_default'] = 3;
+	else if ($form['disp_topics_default'] > 75)
+		$form['disp_topics_default'] = 75;
 
-	if ($form['disp_posts_default'] < 3) $form['disp_posts_default'] = 3;
-	if ($form['disp_posts_default'] > 75) $form['disp_posts_default'] = 75;
+	if ($form['disp_posts_default'] < 3)
+		$form['disp_posts_default'] = 3;
+	else if ($form['disp_posts_default'] > 75)
+		$form['disp_posts_default'] = 75;
+
+	if ($form['feed_type'] < 0 || $form['feed_type'] > 2)
+		message($lang_common['Bad request']);
+
+	if ($form['report_method'] < 0 || $form['report_method'] > 2)
+		message($lang_common['Bad request']);
+
+	if ($form['default_email_setting'] < 0 || $form['default_email_setting'] > 2)
+		message($lang_common['Bad request']);
 
 	if ($form['timeout_online'] >= $form['timeout_visit'])
 		message($lang_admin_options['Timeout error message']);
