@@ -661,20 +661,6 @@ else if (isset($_POST['form_sent']))
 	if ($pun_user['is_admmod'])
 		confirm_referrer('profile.php');
 
-	// Extract allowed elements from $_POST['form']
-	function extract_elements($allowed_elements)
-	{
-		$form = array();
-
-		foreach ($_POST['form'] as $key => $value)
-		{
-			if (in_array($key, $allowed_elements))
-				$form[$key] = $value;
-		}
-
-		return $form;
-	}
-
 	$username_updated = false;
 
 	// Validate input depending on section
@@ -682,7 +668,20 @@ else if (isset($_POST['form_sent']))
 	{
 		case 'essentials':
 		{
-			$form = extract_elements(array('timezone', 'dst', 'language', 'time_format', 'date_format'));
+			$form = array(
+				'timezone'		=> floatval($POST['form']['timezone']),
+				'dst'			=> $_POST['form']['dst'] != '1' ? '0' : '1',
+				'time_format'	=> intval($POST['form']['time_format']),
+				'date_format'	=> intval($POST['form']['date_format']),
+			);
+
+			// Make sure we got a valid language string
+			if (isset($_POST['form']['language']))
+			{
+				$form['language'] = preg_replace('#[\.\\\/]#', '', pun_trim($_POST['form']['language']));
+				if (!file_exists(PUN_ROOT.'lang/'.$form['language'].'/common.php'))
+						message($lang_common['Bad request']);
+			}
 
 			if ($pun_user['is_admmod'])
 			{
@@ -729,25 +728,20 @@ else if (isset($_POST['form_sent']))
 					message($lang_common['Invalid email']);
 			}
 
-			// Make sure we got a valid language string
-			if (isset($form['language']))
-			{
-				$form['language'] = preg_replace('#[\.\\\/]#', '', $form['language']);
-				if (!file_exists(PUN_ROOT.'lang/'.$form['language'].'/common.php'))
-						message($lang_common['Bad request']);
-			}
-
-			$form['time_format'] = (isset($form['time_format'])) ? intval($form['time_format']) : 0;
-			$form['date_format'] = (isset($form['date_format'])) ? intval($form['date_format']) : 0;
-
-			if (!isset($form['dst']) || $form['dst'] != '1') $form['dst'] = '0';
-
 			break;
 		}
 
 		case 'personal':
 		{
-			$form = extract_elements(array('realname', 'url', 'location'));
+			$form = array(
+				'realname'		=> pun_trim($_POST['form']['realname']),
+				'url'			=> pun_trim($_POST['form']['url']),
+				'location'		=> pun_trim($_POST['form']['location']),
+			);
+
+			// Add http:// if the URL doesn't contain it already
+			if ($form['url'] != '' && strpos(strtolower($form['url']), 'http://') !== 0)
+				$form['url'] = 'http://'.$form['url'];
 
 			if ($pun_user['g_id'] == PUN_ADMIN)
 				$form['title'] = pun_trim($_POST['title']);
@@ -759,26 +753,28 @@ else if (isset($_POST['form_sent']))
 				{
 					// A list of words that the title may not contain
 					// If the language is English, there will be some duplicates, but it's not the end of the world
-					$forbidden = array('Member', 'Moderator', 'Administrator', 'Banned', 'Guest', $lang_common['Member'], $lang_common['Moderator'], $lang_common['Administrator'], $lang_common['Banned'], $lang_common['Guest']);
+					$forbidden = array('member', 'moderator', 'administrator', 'banned', 'guest', utf8_strtolower($lang_common['Member']), utf8_strtolower($lang_common['Moderator']), utf8_strtolower($lang_common['Administrator']), utf8_strtolower($lang_common['Banned']), utf8_strtolower($lang_common['Guest']));
 
-					if (in_array($form['title'], $forbidden))
+					if (in_array(utf8_strtolower($form['title']), $forbidden))
 						message($lang_profile['Forbidden title']);
 				}
 			}
-
-			// Add http:// if the URL doesn't contain it already
-			if ($form['url'] != '' && strpos(strtolower($form['url']), 'http://') !== 0)
-				$form['url'] = 'http://'.$form['url'];
 
 			break;
 		}
 
 		case 'messaging':
 		{
-			$form = extract_elements(array('jabber', 'icq', 'msn', 'aim', 'yahoo'));
+			$form = array(
+				'jabber'		=> pun_trim($_POST['form']['jabber']),
+				'icq'			=> pun_trim($_POST['form']['icq']),
+				'msn'			=> pun_trim($_POST['form']['msn']),
+				'aim'			=> pun_trim($_POST['form']['aim']),
+				'yahoo'			=> pun_trim($_POST['form']['yahoo']),
+			);
 
 			// If the ICQ UIN contains anything other than digits it's invalid
-			if ($form['icq'] != '' && @preg_match('/[^0-9]/', $form['icq']))
+			if (preg_match('/[^0-9]/', $form['icq']))
 				message($lang_prof_reg['Bad ICQ']);
 
 			break;
@@ -820,31 +816,55 @@ else if (isset($_POST['form_sent']))
 
 		case 'display':
 		{
-			$form = extract_elements(array('disp_topics', 'disp_posts', 'show_smilies', 'show_img', 'show_img_sig', 'show_avatars', 'show_sig', 'style'));
+			$form = array(
+				'disp_topics'		=> pun_trim($_POST['form']['disp_topics']),
+				'disp_posts'		=> pun_trim($_POST['form']['disp_posts']),
+				'show_smilies'		=> $_POST['form']['show_smilies'] != '1' ? '0' : '1',
+				'show_img'			=> $_POST['form']['show_img'] != '1' ? '0' : '1',
+				'show_img_sig'		=> $_POST['form']['show_img_sig'] != '1' ? '0' : '1',
+				'show_avatars'		=> $_POST['form']['show_avatars'] != '1' ? '0' : '1',
+				'show_sig'			=> $_POST['form']['show_sig'] != '1' ? '0' : '1',
+			);
 
-			if ($form['disp_topics'] != '' && intval($form['disp_topics']) < 3) $form['disp_topics'] = 3;
-			if ($form['disp_topics'] != '' && intval($form['disp_topics']) > 75) $form['disp_topics'] = 75;
-			if ($form['disp_posts'] != '' && intval($form['disp_posts']) < 3) $form['disp_posts'] = 3;
-			if ($form['disp_posts'] != '' && intval($form['disp_posts']) > 75) $form['disp_posts'] = 75;
+			if ($form['disp_topics'] != '')
+			{
+				$form['disp_topics'] = intval($form['disp_topics']);
+				if ($form['disp_topics'] < 3)
+					$form['disp_topics'] = 3;
+				else if ($form['disp_topics'] > 75)
+					$form['disp_topics'] = 75;
+			}
 
-			if (!isset($form['show_smilies']) || $form['show_smilies'] != '1') $form['show_smilies'] = '0';
-			if (!isset($form['show_img']) || $form['show_img'] != '1') $form['show_img'] = '0';
-			if (!isset($form['show_img_sig']) || $form['show_img_sig'] != '1') $form['show_img_sig'] = '0';
-			if (!isset($form['show_avatars']) || $form['show_avatars'] != '1') $form['show_avatars'] = '0';
-			if (!isset($form['show_sig']) || $form['show_sig'] != '1') $form['show_sig'] = '0';
+			if ($form['disp_posts'] != '')
+			{
+				$form['disp_posts'] = intval($form['disp_posts']);
+				if ($form['disp_posts'] < 3)
+					$form['disp_posts'] = 3;
+				else if ($form['disp_posts'] > 75)
+					$form['disp_posts'] = 75;
+			}
+
+			// Make sure we got a valid style string
+			if (isset($_POST['form']['style']))
+			{
+				$form['style'] = preg_replace('#[\.\\\/]#', '', pun_trim($_POST['form']['style']));
+				if (!file_exists(PUN_ROOT.'style/'.$form['style'].'.css'))
+						message($lang_common['Bad request']);
+			}
 
 			break;
 		}
 
 		case 'privacy':
 		{
-			$form = extract_elements(array('email_setting', 'notify_with_post', 'auto_notify'));
+			$form = array(
+				'email_setting'			=> intval($_POST['form']['email_setting']),
+				'notify_with_post'		=> $_POST['form']['notify_with_post'] != '1' ? '0' : '1',
+				'auto_notify'			=> $_POST['form']['auto_notify'] != '1' ? '0' : '1',
+			);
 
-			$form['email_setting'] = intval($form['email_setting']);
-			if ($form['email_setting'] < 0 || $form['email_setting'] > 2) $form['email_setting'] = $pun_config['o_default_email_setting'];
-
-			if (!isset($form['notify_with_post']) || $form['notify_with_post'] != '1') $form['notify_with_post'] = '0';
-			if (!isset($form['auto_notify']) || $form['auto_notify'] != '1') $form['auto_notify'] = '0';
+			if ($form['email_setting'] < 0 || $form['email_setting'] > 2)
+				$form['email_setting'] = $pun_config['o_default_email_setting'];
 
 			break;
 		}
