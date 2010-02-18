@@ -9,7 +9,7 @@ $lang_admin_forums = array(
 'Forum updated redirect'	=>	'Forum updated. Redirecting …',
 'Perms reverted redirect'	=>	'Permissions reverted to defaults. Redirecting …',
 'Must enter name message'	=>	'You must enter a forum name.',
-'Position must be integer'	=>	'Position must be a positive integer value.',
+'Must be integer message'	=>	'Position must be a positive integer value.',
 
 // Entry page
 'Add forum head'			=>	'Add forum',

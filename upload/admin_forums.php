@@ -126,8 +126,9 @@ else if (isset($_POST['update_positions']))
 
 	foreach ($_POST['position'] as $forum_id => $disp_position)
 	{
-		if (!preg_match('#^\d+$#', $disp_position))
-			message($lang_admin_forums['Position must be integer']);
+		$disp_position = trim($disp_position);
+		if ($disp_position == '' || preg_match('/[^0-9]/', $disp_position))
+			message($lang_admin_forums['Must be integer message']);
 
 		$db->query('UPDATE '.$db->prefix.'forums SET disp_position='.$disp_position.' WHERE id='.intval($forum_id)) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
 	}

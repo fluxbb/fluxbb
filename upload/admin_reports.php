@@ -72,7 +72,6 @@ if ($db->num_rows($result))
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-
 									<th scope="row"><?php printf($lang_admin_reports['Reported by'], $reporter) ?></th>
 									<td><?php echo implode($lang_admin_reports['Location seperator'], $report_location) ?></td>
 								</tr>

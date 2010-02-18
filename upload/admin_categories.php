@@ -128,8 +128,8 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 {
 	confirm_referrer('admin_categories.php');
 
-	$cat_order = $_POST['cat_order'];
-	$cat_name = $_POST['cat_name'];
+	$cat_order = array_map('trim', $_POST['cat_order']);
+	$cat_name = array_map('pun_trim', $_POST['cat_name']);
 
 	$result = $db->query('SELECT id, disp_position FROM '.$db->prefix.'categories ORDER BY disp_position') or error('Unable to fetch category list', __FILE__, __LINE__, $db->error());
 	$num_cats = $db->num_rows($result);
@@ -139,7 +139,7 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 		if ($cat_name[$i] == '')
 			message($lang_admin_categories['Must enter name message']);
 
-		if (!@preg_match('#^\d+$#', $cat_order[$i]))
+		if ($cat_order[$i] == '' || preg_match('/[^0-9]/', $cat_order[$i]))
 			message($lang_admin_categories['Must enter integer message']);
 
 		list($cat_id, $position) = $db->fetch_row($result);

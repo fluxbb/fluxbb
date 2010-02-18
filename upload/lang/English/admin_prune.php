@@ -3,7 +3,7 @@
 // Language definitions used in admin_prune.php
 $lang_admin_prune = array(
 
-'Must be integer message'	=>	'Days to prune must be a positive integer.',
+'Must be integer message'	=>	'Days to prune must be a positive integer value.',
 'No old topics message'		=>	'There are no topics that are %s days old. Please decrease the value of "Days old" and try again.',
 'Posts pruned redirect'		=>	'Posts pruned. Redirecting …',
 'Prune head'				=>	'Prune',

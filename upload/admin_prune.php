@@ -70,9 +70,8 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 		redirect('admin_prune.php', $lang_admin_prune['Posts pruned redirect']);
 	}
 
-
-	$prune_days = $_POST['req_prune_days'];
-	if (!@preg_match('#^\d+$#', $prune_days))
+	$prune_days = trim($_POST['req_prune_days']);
+	if ($prune_days == '' || preg_match('/[^0-9]/', $prune_days))
 		message($lang_admin_prune['Must be integer message']);
 
 	$prune_date = time() - ($prune_days*86400);
