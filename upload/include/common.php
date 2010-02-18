@@ -77,6 +77,7 @@ if (get_magic_quotes_gpc())
 	$_GET = stripslashes_array($_GET);
 	$_POST = stripslashes_array($_POST);
 	$_COOKIE = stripslashes_array($_COOKIE);
+	$_REQUEST = stripslashes_array($_REQUEST);
 }
 
 // If a cookie name is not specified in config.php, we use the default (pun_cookie)
