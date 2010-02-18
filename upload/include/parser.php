@@ -12,16 +12,33 @@
 if (!defined('PUN'))
 	exit;
 
-// Attempt to increase the pcre backtrack limit (wont work on all hosts)
-if (version_compare(PHP_VERSION, '5.2.0', '>='))
-{
-	$backtrack_limit = ini_get('pcre.backtrack_limit');
-	if ($backtrack_limit == '' || $backtrack_limit < 220000)
-		@ini_set('pcre.backtrack_limit', 220000);
-}
-
 // Global variables
-$re_list = '%\[list(?:=([1a*]))?+\]((?:(?>.*?(?=\[list(?:=[1a*])?+\]|\[/list\]))|(?R))*)\[/list\]%ise';
+/* regular expression to match nested BBCode LIST tags
+'%
+\[list                # match opening bracket and tag name of outermost LIST tag
+(?:=([1a*]))?+        # optional attribute capture in group 1
+\]                    # closing bracket of outermost opening LIST tag
+(                     # capture contents of LIST tag in group 2 
+  (?:                 # non capture group for either contents or whole nested LIST
+    [^\[]*+           # unroll the loop! consume everything up to next [ (normal *)
+    (?:               # (See "Mastering Regular Expressions" chapter 6 for details)
+      (?!             # negative lookahead ensures we are NOT on [LIST*] or [/LIST]
+        \[list        # opening LIST tag
+        (?:=[1a*])?+  # with optional attribute
+        \]            # closing bracket of opening LIST tag
+        |             # or...
+        \[/list\]     # a closing LIST tag
+      )               # end negative lookahead assertion (we are not on a LIST tag)
+      \[              # match the [ which is NOT the start of LIST tag (special)
+      [^\[]*+         # consume everything up to next [ (normal *)
+    )*+               # finish up "unrolling the loop" technique (special (normal*))*
+  |                   # or...
+    (?R)              # recursively match a whole nested LIST element
+  )*                  # as many times as necessary until deepest nested LIST tag grabbed
+)                     # end capturing contents of LIST tag into group 2
+\[/list\]             # match outermost closing LIST tag
+%iex' */
+ $re_list = '%\[list(?:=([1a*]))?+\]((?:[^\[]*+(?:(?!\[list(?:=[1a*])?+\]|\[/list\])\[[^\[]*+)*+|(?R))*)\[/list\]%ie'; // 20100217
 
 // Here you can add additional smilies if you like (please note that you must escape single quote and backslash)
 $smilies = array(
