@@ -2,7 +2,6 @@
 
 // Language definitions used in admin_ranks.php
 $lang_admin_ranks = array(
-'Must enter title'			=>	'You must enter a rank title.',
 'Must be integer message'	=>	'Minimum posts must be a positive integer value.',
 'Dupe min posts message'	=>	'There is already a rank with a minimun posts value of %s.',
 'Must enter title message'	=>	'You must enter a rank title.',
