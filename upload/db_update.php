@@ -81,6 +81,7 @@ if (version_compare($cur_version, '1.2', '<'))
 	exit('Version mismatch. The database \''.$db_name.'\' doesn\'t seem to be running a FluxBB database schema supported by this update script.');
 
 // Do some DB type specific checks
+$mysql = false;
 switch ($db_type)
 {
 	case 'mysql':
@@ -90,12 +91,15 @@ switch ($db_type)
 		$mysql_info = $db->get_version();
 		if (version_compare($mysql_info['version'], MIN_MYSQL_VERSION, '<'))
 			error('You are running MySQL version '.$mysql_version.'. FluxBB '.UPDATE_TO.' requires at least MySQL '.MIN_MYSQL_VERSION.' to run properly. You must upgrade your MySQL installation before you can continue.');
+
+		$mysql = true;
 		break;
 
 	case 'pgsql':
 		$pgsql_info = $db->get_version();
 		if (version_compare($pgsql_info['version'], MIN_PGSQL_VERSION, '<'))
 			error('You are running PostgreSQL version '.$pgsql_info.'. FluxBB '.UPDATE_TO.' requires at least PostgreSQL '.MIN_PGSQL_VERSION.' to run properly. You must upgrade your PostgreSQL installation before you can continue.');
+
 		break;
 }
 
@@ -188,7 +192,7 @@ function dcr2utf8($src)
 //
 function convert_to_utf8(&$str, $old_charset)
 {
-	if ($str == '')
+	if ($str === null || $str == '')
 		return false;
 
 	$save = $str;
@@ -266,27 +270,34 @@ function db_seems_utf8()
 
 
 //
-// Safely converts text type columns into utf8 (MySQL only)
+// Alter a table to be utf8. MySQL only
 // Function based on update_convert_table_utf8() from the Drupal project (http://drupal.org/)
 //
-function convert_table_utf8($table)
+function alter_table_utf8($table)
 {
-	global $db;
+	global $mysql, $db;
+	static $types;
 
-	$types = array(
-		'char' 			=> 'binary',
-		'varchar'		=> 'varbinary',
-		'tinytext'		=> 'tinyblob',
-		'mediumtext'	=> 'mediumblob',
-		'text'			=> 'blob',
-		'longtext'		=> 'longblob'
-	);
+	if (!$mysql)
+		return;
+
+	if (!isset($types))
+	{
+		$types = array(
+			'char'			=> 'binary',
+			'varchar'		=> 'varbinary',
+			'tinytext'		=> 'tinyblob',
+			'mediumtext'	=> 'mediumblob',
+			'text'			=> 'blob',
+			'longtext'		=> 'longblob'
+		);
+	}
 
 	// Set table default charset to utf8
-	$db->query('ALTER TABLE `'.$table.'` CHARACTER SET utf8') or error('Unable to set table character set', __FILE__, __LINE__, $db->error());
+	$db->query('ALTER TABLE '.$table.' CHARACTER SET utf8') or error('Unable to set table character set', __FILE__, __LINE__, $db->error());
 
 	// Find out which columns need converting and build SQL statements
-	$result = $db->query('SHOW FULL COLUMNS FROM `'.$table.'`') or error('Unable to fetch column information', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SHOW FULL COLUMNS FROM '.$table) or error('Unable to fetch column information', __FILE__, __LINE__, $db->error());
 	while ($cur_column = $db->fetch_assoc($result))
 	{
 		list($type) = explode('(', $cur_column['Type']);
@@ -297,6 +308,97 @@ function convert_table_utf8($table)
 			$db->alter_field($table, $cur_column['Field'], preg_replace('/'.$type.'/i', $types[$type], $cur_column['Type']), $allow_null, $cur_column['Default']);
 			$db->alter_field($table, $cur_column['Field'], $cur_column['Type'].' CHARACTER SET utf8', $allow_null, $cur_column['Default']);
 		}
+	}
+}
+
+//
+// Safely converts text type columns into utf8
+// If finished returns true, otherwise returns $end_at
+//
+function convert_table_utf8($table, $callback, $old_charset, $key = null, $start_at = null)
+{
+	global $mysql, $db;
+
+	$finished = true;
+	$end_at = 0;
+	if ($mysql)
+	{
+		// Only set up the tables if we are doing this in 1 go, or its the first go
+		if ($start_at === null || $start_at == 0)
+		{
+			// Drop any temp table that exists, in-case it's left over from a failed update
+			$db->query('DROP TABLE IF EXISTS '.$table.'_utf8') or error('Unable to drop temp table', __FILE__, __LINE__, $db->error());
+
+			// Copy the table
+			$db->query('CREATE TABLE '.$table.'_utf8 LIKE '.$table) or error('Unable to create new table', __FILE__, __LINE__, $db->error());
+
+			// Set table default charset to utf8
+			alter_table_utf8($table.'_utf8');
+		}
+
+		// Move & Convert everything
+		$result = $db->query('SELECT * FROM '.$table.($start_at === null ? '' : ' WHERE '.$key.'>'.$start_at).' ORDER BY '.$key.' ASC'.($start_at === null ? '' : ' LIMIT '.PER_PAGE)) or error('Unable to select from old table', __FILE__, __LINE__, $db->error());
+		while ($cur_item = $db->fetch_assoc($result))
+		{
+			$cur_item = call_user_func($callback, $cur_item, $old_charset);
+
+			foreach ($cur_item as $idx => $value)
+				$cur_item[$idx] = $value === null ? 'NULL' : '\''.$db->escape($value).'\'';
+
+			$db->query('INSERT INTO '.$table.'_utf8('.implode(',', array_keys($cur_item)).') VALUES ('.implode(',', array_values($cur_item)).')') or error('Unable to insert data to new table', __FILE__, __LINE__, $db->error());
+
+			$end_at = $cur_item[$key];
+		}
+
+		// If we aren't doing this all in 1 go and $end_at has a value (i.e. we have processed at least 1 row), figure out if we have more to do or not
+		if ($start_at !== null && $end_at > 0)
+		{
+			$result = $db->query('SELECT 1 FROM '.$table.' WHERE '.$key.'>'.$end_at.' ORDER BY '.$key.' ASC LIMIT 1') or error('Unable to check for next row', __FILE__, __LINE__, $db->error());
+			$finished = $db->num_rows($result) == 0;
+		}
+
+		// Only swap the tables if we are doing this in 1 go, or its the last go
+		if ($finished)
+		{
+			// Delete old table
+			$db->query('DROP TABLE '.$table) or error('Unable to drop old table', __FILE__, __LINE__, $db->error());
+
+			// Rename table
+			$db->query('ALTER TABLE '.$table.'_utf8 RENAME '.$table) or error('Unable to rename new table', __FILE__, __LINE__, $db->error());
+
+			return true;
+		}
+
+		return $end_at;
+	}
+	else
+	{
+		// Convert everything
+		$result = $db->query('SELECT * FROM '.$table.($start_at === null ? '' : ' WHERE '.$key.'>'.$start_at).' ORDER BY '.$key.' ASC'.($start_at === null ? '' : ' LIMIT '.PER_PAGE)) or error('Unable to select from table', __FILE__, __LINE__, $db->error());
+		while ($cur_item = $db->fetch_assoc($result))
+		{
+			$cur_item = call_user_func($callback, $cur_item, $old_charset);
+
+			$temp = array();
+			foreach ($cur_item as $idx => $value)
+				$temp[] = $idx.'='.($value === null ? 'NULL' : '\''.$db->escape($value).'\'');
+
+			if (!empty($temp))
+				$db->query('UPDATE '.$table.' SET '.implode(', ', $temp).' WHERE '.$key.'=\''.$db->escape($cur_item[$key]).'\'') or error('Unable to update data', __FILE__, __LINE__, $db->error());
+
+			$end_at = $cur_item[$key];
+		}
+
+		if ($start_at !== null && $end_at > 0)
+		{
+			$result = $db->query('SELECT 1 FROM '.$table.' WHERE '.$key.'>'.$end_at.' ORDER BY '.$key.' ASC LIMIT 1') or error('Unable to check for next row', __FILE__, __LINE__, $db->error());
+			if ($db->num_rows($result) == 0)
+				return true;
+
+			return $end_at;
+		}
+
+		return true;
 	}
 }
 
@@ -415,44 +517,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 	// Start by updating the database structure
 	case 'start':
-		// Do the cumbersome charset conversion of MySQL tables/columns (if required - i.e. running 1.2)
-		if (strpos($cur_version, '1.2') === 0 && ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb'))
-		{
-			echo 'Converting table '.$db->prefix.'bans …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'bans');
-			echo 'Converting table '.$db->prefix.'categories …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'categories');
-			echo 'Converting table '.$db->prefix.'censoring …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'censoring');
-			echo 'Converting table '.$db->prefix.'config …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'config');
-			echo 'Converting table '.$db->prefix.'forum_perms …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'forum_perms');
-			echo 'Converting table '.$db->prefix.'forums …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'forums');
-			echo 'Converting table '.$db->prefix.'groups …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'groups');
-			echo 'Converting table '.$db->prefix.'online …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'online');
-			echo 'Converting table '.$db->prefix.'posts …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'posts');
-			echo 'Converting table '.$db->prefix.'ranks …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'ranks');
-			echo 'Converting table '.$db->prefix.'reports …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'reports');
-			echo 'Converting table '.$db->prefix.'search_cache …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'search_cache');
-			echo 'Converting table '.$db->prefix.'search_matches …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'search_matches');
-			echo 'Converting table '.$db->prefix.'search_words …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'search_words');
-			echo 'Converting table '.$db->prefix.'subscriptions …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'subscriptions');
-			echo 'Converting table '.$db->prefix.'topics …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'topics');
-			echo 'Converting table '.$db->prefix.'users …<br />'."\n"; flush();
-			convert_table_utf8($db->prefix.'users');
-		}
+		$query_str = '?stage=preparse_posts';
 
 		// Make all email fields VARCHAR(80)
 		$db->alter_field('bans', 'email', 'VARCHAR(80)', true);
@@ -678,38 +743,20 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		{
 			$db->query('DELETE FROM '.$db->prefix.'online') or error('Unable to clear online table', __FILE__, __LINE__, $db->error());
 
-			switch ($db_type)
-			{
-				case 'mysql':
-				case 'mysqli':
-				case 'mysql_innodb':
-				case 'mysqli_innodb':
-					$db->add_index('online', 'user_id_ident_idx', array('user_id', 'ident(25)'), true);
-					break;
-
-				default:
-					$db->add_index('online', 'user_id_ident_idx', array('user_id', 'ident'), true);
-					break;
-			}
+			if ($mysql)
+				$db->add_index('online', 'user_id_ident_idx', array('user_id', 'ident(25)'), true);
+			else
+				$db->add_index('online', 'user_id_ident_idx', array('user_id', 'ident'), true);
 		}
 
 		// Remove the redundant user_id_idx on the online table
 		$db->drop_index('online', 'user_id_idx');
 
 		// Add an index to ident on the online table
-		switch ($db_type)
-		{
-			case 'mysql':
-			case 'mysqli':
-			case 'mysql_innodb':
-			case 'mysqli_innodb':
-				$db->add_index('online', 'ident_idx', array('ident(25)'));
-				break;
-
-			default:
-				$db->add_index('online', 'ident_idx', array('ident'));
-				break;
-		}
+		if ($mysql)
+			$db->add_index('online', 'ident_idx', array('ident(25)'));
+		else
+			$db->add_index('online', 'ident_idx', array('ident'));
 
 		// Add an index to logged in the online table
 		$db->add_index('online', 'logged_idx', array('logged'));
@@ -718,35 +765,17 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$db->add_index('topics', 'last_post_idx', array('last_post'));
 
 		// Add an index to username on the bans table
-		switch ($db_type)
-		{
-			case 'mysql':
-			case 'mysqli':
-			case 'mysql_innodb':
-			case 'mysqli_innodb':
-				$db->add_index('bans', 'username_idx', array('username(25)'));
-				break;
-
-			default:
-				$db->add_index('bans', 'username_idx', array('username'));
-				break;
-		}
+		if ($mysql)
+			$db->add_index('bans', 'username_idx', array('username(25)'));
+		else
+			$db->add_index('bans', 'username_idx', array('username'));
 
 		// Change the username_idx on users to a unique index of max size 25
 		$db->drop_index('users', 'username_idx');
-		switch ($db_type)
-		{
-			case 'mysql':
-			case 'mysqli':
-			case 'mysql_innodb':
-			case 'mysqli_innodb':
-				$db->add_index('users', 'username_idx', array('username(25)'), true);
-				break;
-
-			default:
-				$db->add_index('users', 'username_idx', array('username'), true);
-				break;
-		}
+		if ($mysql)
+			$db->add_index('users', 'username_idx', array('username(25)'), true);
+		else
+			$db->add_index('users', 'username_idx', array('username'), true);
 
 		// Add g_view_users field to groups table
 		$db->add_field('groups', 'g_view_users', 'TINYINT(1)', false, 1, 'g_read_board');
@@ -791,47 +820,95 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 		// Should we do charset conversion or not?
 		if (strpos($cur_version, '1.2') === 0 && isset($_GET['convert_charset']))
-			$query_str = '?stage=conv_misc&req_old_charset='.$old_charset;
-		else
-			$query_str = '?stage=preparse_posts';
+			$query_str = '?stage=conv_bans&req_old_charset='.$old_charset;
+
 		break;
 
 
-	// Convert config, categories, forums, groups, ranks and censor words
-	case 'conv_misc':
-		if (strpos($cur_version, '1.2') !== 0)
+	// Convert bans
+	case 'conv_bans':
+		$query_str = '?stage=conv_categories&req_old_charset='.$old_charset;
+
+		function _conv_bans($cur_item, $old_charset)
 		{
-			$query_str = '?stage=preparse_posts';
-			break;
+			echo 'Converting ban '.$cur_item['id'].' …<br />'."\n";
+
+			convert_to_utf8($cur_item['username'], $old_charset);
+			convert_to_utf8($cur_item['message'], $old_charset);
+
+			return $cur_item;
 		}
 
-		// Convert config
-		echo 'Converting configuration …'."<br />\n";
-		foreach ($pun_config as $conf_name => $conf_value)
-		{
-			if (convert_to_utf8($conf_value, $old_charset))
-			{
-				$db->query('UPDATE '.$db->prefix.'config SET conf_value = \''.$db->escape($conf_value).'\' WHERE conf_name = \''.$conf_name.'\'') or error('Unable to update config', __FILE__, __LINE__, $db->error());
-			}
-		}
+		$end_at = convert_table_utf8($db->prefix.'bans', '_conv_bans', $old_charset, 'id', $start_at);
 
-		// Convert categories
+		if ($end_at !== true)
+			$query_str = '?stage=conv_bans&req_old_charset='.$old_charset.'&start_at='.$end_at;
+
+		break;
+
+
+	// Convert categories
+	case 'conv_categories':
+		$query_str = '?stage=conv_censors&req_old_charset='.$old_charset;
+
 		echo 'Converting categories …'."<br />\n";
-		$result = $db->query('SELECT id, cat_name FROM '.$db->prefix.'categories ORDER BY id') or error('Unable to fetch categories', __FILE__, __LINE__, $db->error());
-
-		while ($cur_item = $db->fetch_assoc($result))
+		
+		function _conv_categories($cur_item, $old_charset)
 		{
-			if (convert_to_utf8($cur_item['cat_name'], $old_charset))
-			{
-				$db->query('UPDATE '.$db->prefix.'categories SET cat_name = \''.$db->escape($cur_item['cat_name']).'\' WHERE id = '.$cur_item['id']) or error('Unable to update category', __FILE__, __LINE__, $db->error());
-			}
+			convert_to_utf8($cur_item['cat_name'], $old_charset);
+
+			return $cur_item;
 		}
 
-		// Convert forums
-		echo 'Converting forums …'."<br />\n";
-		$result = $db->query('SELECT id, forum_name, forum_desc, moderators FROM '.$db->prefix.'forums ORDER BY id') or error('Unable to fetch forums', __FILE__, __LINE__, $db->error());
+		convert_table_utf8($db->prefix.'categories', '_conv_categories', $old_charset, 'id');
 
-		while ($cur_item = $db->fetch_assoc($result))
+		break;
+
+
+	// Convert censor words
+	case 'conv_censors':
+		$query_str = '?stage=conv_config&req_old_charset='.$old_charset;
+
+		echo 'Converting censor words …'."<br />\n";
+
+		function _conv_censoring($cur_item, $old_charset)
+		{
+			convert_to_utf8($cur_item['search_for'], $old_charset);
+			convert_to_utf8($cur_item['replace_with'], $old_charset);
+
+			return $cur_item;
+		}
+
+		convert_table_utf8($db->prefix.'censoring', '_conv_censoring', $old_charset, 'id');
+
+		break;
+
+
+	// Convert config
+	case 'conv_config':
+		$query_str = '?stage=conv_forums&req_old_charset='.$old_charset;
+
+		echo 'Converting configuration …'."<br />\n";
+
+		function _conv_config($cur_item, $old_charset)
+		{
+			convert_to_utf8($cur_item['conf_value'], $old_charset);
+
+			return $cur_item;
+		}
+
+		convert_table_utf8($db->prefix.'config', '_conv_config', $old_charset, 'conf_name');
+
+		break;
+
+
+	// Convert forums
+	case 'conv_forums':
+		$query_str = '?stage=conv_perms&req_old_charset='.$old_charset;
+
+		echo 'Converting forums …'."<br />\n";
+
+		function _conv_forums($cur_item, $old_charset)
 		{
 			$moderators = ($cur_item['moderators'] != '') ? unserialize($cur_item['moderators']) : array();
 			$moderators_utf8 = array();
@@ -841,234 +918,152 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 				$moderators_utf8[$mod_username] = $mod_user_id;
 			}
 
-			if (convert_to_utf8($cur_item['forum_name'], $old_charset) | convert_to_utf8($cur_item['forum_desc'], $old_charset) || $moderators !== $moderators_utf8)
-			{
-				$cur_item['forum_desc'] = $cur_item['forum_desc'] != '' ? '\''.$db->escape($cur_item['forum_desc']).'\'' : 'NULL';
-				$cur_item['moderators'] = !empty($moderators_utf8) ? '\''.$db->escape(serialize($moderators_utf8)).'\'' : 'NULL';
+			convert_to_utf8($cur_item['forum_name'], $old_charset);
+			convert_to_utf8($cur_item['forum_desc'], $old_charset);
 
-				$db->query('UPDATE '.$db->prefix.'forums SET forum_name = \''.$db->escape($cur_item['forum_name']).'\', forum_desc = '.$cur_item['forum_desc'].', moderators = '.$cur_item['moderators'].' WHERE id = '.$cur_item['id']) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
-			}
+			if (!empty($moderators_utf8))
+				$cur_item['moderators'] = serialize($moderators_utf8);
+
+			return $cur_item;
 		}
 
-		// Convert groups
+		convert_table_utf8($db->prefix.'forums', '_conv_forums', $old_charset, 'id');
+
+		break;
+
+
+	// Convert forum permissions
+	case 'conv_perms':
+		$query_str = '?stage=conv_groups&req_old_charset='.$old_charset;
+
+		alter_table_utf8($db->prefix.'forum_perms');
+
+		break;
+
+
+	// Convert groups
+	case 'conv_groups':
+		$query_str = '?stage=conv_online&req_old_charset='.$old_charset;
+
 		echo 'Converting groups …'."<br />\n";
-		$result = $db->query('SELECT g_id, g_title, g_user_title FROM '.$db->prefix.'groups ORDER BY g_id') or error('Unable to fetch groups', __FILE__, __LINE__, $db->error());
 
-		while ($cur_item = $db->fetch_assoc($result))
+		function _conv_groups($cur_item, $old_charset)
 		{
-			if (convert_to_utf8($cur_item['g_title'], $old_charset) | convert_to_utf8($cur_item['g_user_title'], $old_charset))
-			{
-				$cur_item['g_user_title'] = $cur_item['g_user_title'] != '' ? '\''.$db->escape($cur_item['g_user_title']).'\'' : 'NULL';
+			convert_to_utf8($cur_item['g_title'], $old_charset);
+			convert_to_utf8($cur_item['g_user_title'], $old_charset);
 
-				$db->query('UPDATE '.$db->prefix.'groups SET g_title = \''.$db->escape($cur_item['g_title']).'\', g_user_title = '.$cur_item['g_user_title'].' WHERE g_id = '.$cur_item['g_id']) or error('Unable to update group', __FILE__, __LINE__, $db->error());
-			}
+			return $cur_item;
 		}
 
-		// Convert ranks
-		echo 'Converting ranks …'."<br />\n";
-		$result = $db->query('SELECT id, rank FROM '.$db->prefix.'ranks ORDER BY id') or error('Unable to fetch ranks', __FILE__, __LINE__, $db->error());
+		convert_table_utf8($db->prefix.'groups', '_conv_groups', $old_charset, 'g_id');
 
-		while ($cur_item = $db->fetch_assoc($result))
-		{
-			if (convert_to_utf8($cur_item['rank'], $old_charset))
-			{
-				$db->query('UPDATE '.$db->prefix.'ranks SET rank = \''.$db->escape($cur_item['rank']).'\' WHERE id = '.$cur_item['id']) or error('Unable to update rank', __FILE__, __LINE__, $db->error());
-			}
-		}
-
-		// Convert censor words
-		echo 'Converting censor words …'."<br />\n";
-		$result = $db->query('SELECT id, search_for, replace_with FROM '.$db->prefix.'censoring ORDER BY id') or error('Unable to fetch censors', __FILE__, __LINE__, $db->error());
-
-		while ($cur_item = $db->fetch_assoc($result))
-		{
-			if (convert_to_utf8($cur_item['search_for'], $old_charset) | convert_to_utf8($cur_item['replace_with'], $old_charset))
-			{
-				$db->query('UPDATE '.$db->prefix.'censoring SET search_for = \''.$db->escape($cur_item['search_for']).'\', replace_with = \''.$db->escape($cur_item['replace_with']).'\' WHERE id = '.$cur_item['id']) or error('Unable to update censor', __FILE__, __LINE__, $db->error());
-			}
-		}
-
-		$query_str = '?stage=conv_reports&req_old_charset='.$old_charset;
 		break;
 
 
-	// Convert reports
-	case 'conv_reports':
-		if (strpos($cur_version, '1.2') !== 0)
-		{
-			$query_str = '?stage=preparse_posts';
-			break;
-		}
+	// Convert online
+	case 'conv_online':
+		$query_str = '?stage=conv_posts&req_old_charset='.$old_charset;
 
-		// Determine where to start
-		if ($start_at == 0)
-		{
-			$result = $db->query('SELECT id FROM '.$db->prefix.'reports ORDER BY id LIMIT 1') or error('Unable to fetch first report ID', __FILE__, __LINE__, $db->error());
+		// Truncate the table
+		$db->query(($mysql ? 'TRUNCATE TABLE ' : 'DELETE FROM ').$db->prefix.'online') or error('Unable to empty online table', __FILE__, __LINE__, $db->error());
 
-			if ($db->num_rows($result))
-				$start_at = $db->result($result);
-		}
-		$end_at = $start_at + PER_PAGE;
+		alter_table_utf8($db->prefix.'online');
 
-		// Fetch reports to process this cycle
-		$result = $db->query('SELECT id, message FROM '.$db->prefix.'reports WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch reports', __FILE__, __LINE__, $db->error());
-
-		while ($cur_item = $db->fetch_assoc($result))
-		{
-			echo 'Converting report '.$cur_item['id'].' …<br />'."\n";
-			if (convert_to_utf8($cur_item['message'], $old_charset))
-			{
-				$db->query('UPDATE '.$db->prefix.'reports SET message = \''.$db->escape($cur_item['message']).'\' WHERE id = '.$cur_item['id']) or error('Unable to update report', __FILE__, __LINE__, $db->error());
-			}
-		}
-
-		// Check if there is more work to do
-		$result = $db->query('SELECT id FROM '.$db->prefix.'reports WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
-
-		if ($db->num_rows($result))
-			$query_str = '?stage=conv_reports&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
-		else
-			$query_str = '?stage=conv_users&req_old_charset='.$old_charset;
-		break;
-
-
-	// Convert users
-	case 'conv_users':
-		if (strpos($cur_version, '1.2') !== 0)
-		{
-			$query_str = '?stage=preparse_posts';
-			break;
-		}
-
-		// Determine where to start
-		if ($start_at == 0)
-			$start_at = 2;
-
-		$end_at = $start_at + PER_PAGE;
-
-		// Fetch users to process this cycle
-		$result = $db->query('SELECT id, username, title, realname, location, signature, admin_note FROM '.$db->prefix.'users WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch users', __FILE__, __LINE__, $db->error());
-
-		while ($cur_item = $db->fetch_assoc($result))
-		{
-			echo 'Converting user '.$cur_item['id'].' …<br />'."\n";
-			if (convert_to_utf8($cur_item['username'], $old_charset) | convert_to_utf8($cur_item['title'], $old_charset) | convert_to_utf8($cur_item['realname'], $old_charset) | convert_to_utf8($cur_item['location'], $old_charset) | convert_to_utf8($cur_item['signature'], $old_charset) | convert_to_utf8($cur_item['admin_note'], $old_charset))
-			{
-				$cur_item['title'] = $cur_item['title'] != '' ? '\''.$db->escape($cur_item['title']).'\'' : 'NULL';
-				$cur_item['realname'] = $cur_item['realname'] != '' ? '\''.$db->escape($cur_item['realname']).'\'' : 'NULL';
-				$cur_item['location'] = $cur_item['location'] != '' ? '\''.$db->escape($cur_item['location']).'\'' : 'NULL';
-				$cur_item['signature'] = $cur_item['signature'] != '' ? '\''.$db->escape($cur_item['signature']).'\'' : 'NULL';
-				$cur_item['admin_note'] = $cur_item['admin_note'] != '' ? '\''.$db->escape($cur_item['admin_note']).'\'' : 'NULL';
-
-				$db->query('UPDATE '.$db->prefix.'users SET username = \''.$db->escape($cur_item['username']).'\', title = '.$cur_item['title'].', realname = '.$cur_item['realname'].', location = '.$cur_item['location'].', signature = '.$cur_item['signature'].', admin_note = '.$cur_item['admin_note'].' WHERE id = '.$cur_item['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
-			}
-		}
-
-		// Check if there is more work to do
-		$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
-
-		if ($db->num_rows($result))
-			$query_str = '?stage=conv_users&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
-		else
-			$query_str = '?stage=conv_topics&req_old_charset='.$old_charset;
-		break;
-
-
-	// Convert topics
-	case 'conv_topics':
-		if (strpos($cur_version, '1.2') !== 0)
-		{
-			$query_str = '?stage=preparse_posts';
-			break;
-		}
-
-		// Determine where to start
-		if ($start_at == 0)
-		{
-			// Get the first topic ID from the db
-			$result = $db->query('SELECT id FROM '.$db->prefix.'topics ORDER BY id LIMIT 1') or error('Unable to fetch first topic ID', __FILE__, __LINE__, $db->error());
-
-			if ($db->num_rows($result))
-				$start_at = $db->result($result);
-		}
-		$end_at = $start_at + PER_PAGE;
-
-		// Fetch topics to process this cycle
-		$result = $db->query('SELECT id, poster, subject, last_poster FROM '.$db->prefix.'topics WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch topics', __FILE__, __LINE__, $db->error());
-
-		while ($cur_item = $db->fetch_assoc($result))
-		{
-			echo 'Converting topic '.$cur_item['id'].' …<br />'."\n";
-			if (convert_to_utf8($cur_item['poster'], $old_charset) | convert_to_utf8($cur_item['subject'], $old_charset) | convert_to_utf8($cur_item['last_poster'], $old_charset))
-			{
-				$db->query('UPDATE '.$db->prefix.'topics SET poster = \''.$db->escape($cur_item['poster']).'\', subject = \''.$db->escape($cur_item['subject']).'\', last_poster = \''.$db->escape($cur_item['last_poster']).'\' WHERE id = '.$cur_item['id']) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
-			}
-		}
-
-		// Check if there is more work to do
-		$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
-
-		if ($db->num_rows($result))
-			$query_str = '?stage=conv_topics&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
-		else
-			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset;
 		break;
 
 
 	// Convert posts
 	case 'conv_posts':
-		if (strpos($cur_version, '1.2') !== 0)
-		{
-			$query_str = '?stage=preparse_posts';
-			break;
-		}
+		$query_str = '?stage=conv_ranks&req_old_charset='.$old_charset;
 
-		// Determine where to start
-		if ($start_at == 0)
-		{
-			// Get the first post ID from the db
-			$result = $db->query('SELECT id FROM '.$db->prefix.'posts ORDER BY id LIMIT 1') or error('Unable to fetch first post ID', __FILE__, __LINE__, $db->error());
-
-			if ($db->num_rows($result))
-				$start_at = $db->result($result);
-		}
-		$end_at = $start_at + PER_PAGE;
-
-		// Fetch posts to process this cycle
-		$result = $db->query('SELECT id, poster, message, edited_by FROM '.$db->prefix.'posts WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
-
-		while ($cur_item = $db->fetch_assoc($result))
+		function _conv_posts($cur_item, $old_charset)
 		{
 			echo 'Converting post '.$cur_item['id'].' …<br />'."\n";
-			if (convert_to_utf8($cur_item['poster'], $old_charset) | convert_to_utf8($cur_item['message'], $old_charset) | convert_to_utf8($cur_item['edited_by'], $old_charset))
-			{
-				$cur_item['edited_by'] = $cur_item['edited_by'] != '' ? '\''.$db->escape($cur_item['edited_by']).'\'' : 'NULL';
 
-				$db->query('UPDATE '.$db->prefix.'posts SET poster = \''.$db->escape($cur_item['poster']).'\', message = \''.$db->escape($cur_item['message']).'\', edited_by = '.$cur_item['edited_by'].' WHERE id = '.$cur_item['id']) or error('Unable to update post', __FILE__, __LINE__, $db->error());
-			}
+			convert_to_utf8($cur_item['poster'], $old_charset);
+			convert_to_utf8($cur_item['message'], $old_charset);
+			convert_to_utf8($cur_item['edited_by'], $old_charset);
+
+			return $cur_item;
 		}
 
-		// Check if there is more work to do
-		$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
+		$end_at = convert_table_utf8($db->prefix.'posts', '_conv_posts', $old_charset, 'id', $start_at);
 
-		if ($db->num_rows($result))
-			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
-		else
-			$query_str = '?stage=rebuild_idx';
+		if ($end_at !== true)
+			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset.'&start_at='.$end_at;
+
 		break;
 
 
-	// Re-index posts
-	case 'rebuild_idx':
-		if (strpos($cur_version, '1.2') !== 0)
+	// Convert ranks
+	case 'conv_ranks':
+		$query_str = '?stage=conv_reports&req_old_charset='.$old_charset;
+
+		echo 'Converting ranks …'."<br />\n";
+
+		function _conv_ranks($cur_item, $old_charset)
 		{
-			$query_str = '?stage=preparse_posts';
-			break;
+			convert_to_utf8($cur_item['rank'], $old_charset);
+
+			return $cur_item;
 		}
 
-		$truncate_sql = ($db_type != 'sqlite' && $db_type != 'pgsql') ? 'TRUNCATE TABLE ' : 'DELETE FROM ';
-		$db->query($truncate_sql.$db->prefix.'search_matches') or error('Unable to empty search index match table', __FILE__, __LINE__, $db->error());
-		$db->query($truncate_sql.$db->prefix.'search_words') or error('Unable to empty search index words table', __FILE__, __LINE__, $db->error());
+		convert_table_utf8($db->prefix.'ranks', '_conv_ranks', $old_charset, 'id');
+
+		break;
+
+
+	// Convert reports
+	case 'conv_reports':
+		$query_str = '?stage=conv_search_cache&req_old_charset='.$old_charset;
+
+		function _conv_reports($cur_item, $old_charset)
+		{
+			echo 'Converting report '.$cur_item['id'].' …<br />'."\n";
+
+			convert_to_utf8($cur_item['message'], $old_charset);
+
+			return $cur_item;
+		}
+
+		$end_at = convert_table_utf8($db->prefix.'reports', '_conv_reports', $old_charset, 'id', $start_at);
+
+		if ($end_at !== true)
+			$query_str = '?stage=conv_reports&req_old_charset='.$old_charset.'&start_at='.$end_at;
+
+		break;
+
+
+	// Convert search cache
+	case 'conv_search_cache':
+		$query_str = '?stage=conv_search_matches&req_old_charset='.$old_charset;
+
+		// Truncate the table
+		$db->query(($mysql ? 'TRUNCATE TABLE ' : 'DELETE FROM ').$db->prefix.'search_cache') or error('Unable to empty search cache table', __FILE__, __LINE__, $db->error());
+
+		alter_table_utf8($db->prefix.'search_cache');
+
+		break;
+
+
+	// Convert search matches
+	case 'conv_search_matches':
+		$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset;
+
+		// Truncate the table
+		$db->query(($mysql ? 'TRUNCATE TABLE ' : 'DELETE FROM ').$db->prefix.'search_matches') or error('Unable to empty search index match table', __FILE__, __LINE__, $db->error());
+
+		alter_table_utf8($db->prefix.'search_matches');
+
+		break;
+
+
+	// Convert search words
+	case 'conv_search_words':
+		$query_str = '?stage=conv_subscriptions&req_old_charset='.$old_charset;
+
+		// Truncate the table
+		$db->query(($mysql ? 'TRUNCATE TABLE ' : 'DELETE FROM ').$db->prefix.'search_words') or error('Unable to empty search index words table', __FILE__, __LINE__, $db->error());
 
 		// Reset the sequence for the search words (not needed for SQLite)
 		switch ($db_type)
@@ -1077,120 +1072,172 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 			case 'mysqli':
 			case 'mysql_innodb':
 			case 'mysqli_innodb':
-				$result = $db->query('ALTER TABLE '.$db->prefix.'search_words auto_increment=1') or error('Unable to update table auto_increment', __FILE__, __LINE__, $db->error());
+				$db->query('ALTER TABLE '.$db->prefix.'search_words auto_increment=1') or error('Unable to update table auto_increment', __FILE__, __LINE__, $db->error());
 				break;
 
 			case 'pgsql';
-				$result = $db->query('SELECT setval(\''.$db->prefix.'search_words_id_seq\', 1, false)') or error('Unable to update sequence', __FILE__, __LINE__, $db->error());
+				$db->query('SELECT setval(\''.$db->prefix.'search_words_id_seq\', 1, false)') or error('Unable to update sequence', __FILE__, __LINE__, $db->error());
+				break;
 		}
+
+		alter_table_utf8($db->prefix.'search_words');
+
+		break;
+
+
+	// Convert subscriptions
+	case 'conv_subscriptions':
+		$query_str = '?stage=conv_topics&req_old_charset='.$old_charset;
+
+		alter_table_utf8($db->prefix.'subscriptions');
+
+		break;
+
+
+	// Convert topics
+	case 'conv_topics':
+		$query_str = '?stage=conv_users&req_old_charset='.$old_charset;
+
+		function _conv_topics($cur_item, $old_charset)
+		{
+			echo 'Converting topic '.$cur_item['id'].' …<br />'."\n";
+
+			convert_to_utf8($cur_item['poster'], $old_charset);
+			convert_to_utf8($cur_item['subject'], $old_charset);
+			convert_to_utf8($cur_item['last_poster'], $old_charset);
+
+			return $cur_item;
+		}
+
+		$end_at = convert_table_utf8($db->prefix.'topics', '_conv_topics', $old_charset, 'id', $start_at);
+
+		if ($end_at !== true)
+			$query_str = '?stage=conv_topics&req_old_charset='.$old_charset.'&start_at='.$end_at;
+
+		break;
+
+
+	// Convert users
+	case 'conv_users':
+		$query_str = '?stage=rebuild_idx';
+
+		function _conv_users($cur_item, $old_charset)
+		{
+			echo 'Converting user '.$cur_item['id'].' …<br />'."\n";
+
+			convert_to_utf8($cur_item['username'], $old_charset);
+			convert_to_utf8($cur_item['title'], $old_charset);
+			convert_to_utf8($cur_item['realname'], $old_charset);
+			convert_to_utf8($cur_item['location'], $old_charset);
+			convert_to_utf8($cur_item['signature'], $old_charset);
+			convert_to_utf8($cur_item['admin_note'], $old_charset);
+
+			return $cur_item;
+		}
+
+		$end_at = convert_table_utf8($db->prefix.'users', '_conv_users', $old_charset, 'id', $start_at);
+
+		if ($end_at !== true)
+			$query_str = '?stage=conv_users&req_old_charset='.$old_charset.'&start_at='.$end_at;
+
+		break;
+
+
+	// Rebuild the search index
+	case 'rebuild_idx':
+		$query_str = '?stage=preparse_posts';
 
 		require PUN_ROOT.'include/search_idx.php';
 
-		// Fetch posts to process
-		$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE id>='.$start_at.' ORDER BY id LIMIT '.PER_PAGE) or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());
-		$topics = array();
-		while ($cur_topic = $db->fetch_row($result))
-			$topics[] = $cur_topic[0];
+		// Fetch posts to
+		$result = $db->query('SELECT p.id, p.message, t.subject, t.first_post_id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id WHERE p.id > '.$start_at.' ORDER BY p.id ASC LIMIT '.PER_PAGE) or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
 
-		$result = $db->query('SELECT topic_id, id, message FROM '.$db->prefix.'posts WHERE topic_id IN ('.implode(',', $topics).') ORDER BY topic_id') or error('Unable to fetch topic/post info', __FILE__, __LINE__, $db->error());
-
-		$cur_topic = 0;
-		while ($cur_post = $db->fetch_row($result))
+		$end_at = 0;
+		while ($cur_item = $db->fetch_assoc($result))
 		{
-			if ($cur_post[0] != $cur_topic)
-			{
-				// Fetch subject and ID of first post in topic
-				$result2 = $db->query('SELECT p.id, t.subject, MIN(p.posted) AS first FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id WHERE t.id='.$cur_post[0].' GROUP BY p.id, t.subject ORDER BY first LIMIT 1') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
-				list($first_post, $subject) = $db->fetch_row($result2);
-
-				$cur_topic = $cur_post[0];
-			}
-
-			echo 'Processing post <strong>'.$cur_post[1].'</strong> in topic <strong>'.$cur_post[0].'</strong> …<br />'."\n";
-			if ($cur_post[1] == $first_post) // This is the "topic post" so we have to index the subject as well
-				update_search_index('post', $cur_post[1], $cur_post[2], $subject);
+			if ($cur_item['id'] == $cur_item['first_post_id'])
+				update_search_index('post', $cur_item['id'], $cur_item['message'], $cur_item['subject']);
 			else
-				update_search_index('post', $cur_post[1], $cur_post[2]);
+				update_search_index('post', $cur_item['id'], $cur_item['message']);
+
+			$end_at = $cur_item['id'];
 		}
 
 		// Check if there is more work to do
-		$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE id>'.$cur_topic.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
+		if ($end_at > 0)
+		{
+			$result = $db->query('SELECT 1 FROM '.$db->prefix.'posts WHERE id > '.$end_at.' ORDER BY id ASC LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
-		if ($db->num_rows($result))
-			$query_str = '?stage=rebuild_idx&start_at='.$db->result($result);
-		else
-			$query_str = '?stage=preparse_posts';
+			if ($db->num_rows($result) > 0)
+				$query_str = '?stage=rebuild_idx&start_at='.$end_at;
+		}
+
 		break;
 
 
 	// Preparse posts
 	case 'preparse_posts':
+		$query_str = '?stage=preparse_sigs';
+
 		require PUN_ROOT.'include/parser.php';
 
-		// Determine where to start
-		if ($start_at == 0)
-		{
-			// Get the first post ID from the db
-			$result = $db->query('SELECT id FROM '.$db->prefix.'posts ORDER BY id LIMIT 1') or error('Unable to fetch first post ID', __FILE__, __LINE__, $db->error());
-
-			if ($db->num_rows($result))
-				$start_at = $db->result($result);
-		}
-		$end_at = $start_at + PER_PAGE;
-
 		// Fetch posts to process this cycle
-		$result = $db->query('SELECT id, message FROM '.$db->prefix.'posts WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT id, message FROM '.$db->prefix.'posts WHERE id > '.$start_at.' ORDER BY id ASC LIMIT '.PER_PAGE) or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
 
 		$temp = array();
+		$end_at = 0;
 		while ($cur_item = $db->fetch_assoc($result))
 		{
 			echo 'Preparsing post '.$cur_item['id'].' …<br />'."\n";
 			$db->query('UPDATE '.$db->prefix.'posts SET message = \''.$db->escape(preparse_bbcode($cur_item['message'], $temp)).'\' WHERE id = '.$cur_item['id']) or error('Unable to update post', __FILE__, __LINE__, $db->error());
+
+			$end_at = $cur_item['id'];
 		}
 
 		// Check if there is more work to do
-		$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
+		if ($end_at > 0)
+		{
+			$result = $db->query('SELECT 1 FROM '.$db->prefix.'posts WHERE id > '.$end_at.' ORDER BY id ASC LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
-		if ($db->num_rows($result))
-			$query_str = '?stage=preparse_posts&start_at='.$db->result($result);
-		else
-			$query_str = '?stage=preparse_sigs';
+			if ($db->num_rows($result) > 0)
+				$query_str = '?stage=preparse_posts&start_at='.$end_at;
+		}
+
 		break;
 
 
 	// Preparse signatures
 	case 'preparse_sigs':
+		$query_str = '?stage=finish';
+
 		require PUN_ROOT.'include/parser.php';
 
-		// Determine where to start
-		if ($start_at == 0)
-			$start_at = 2;
-
-		$end_at = $start_at + PER_PAGE;
-
 		// Fetch users to process this cycle
-		$result = $db->query('SELECT id, signature FROM '.$db->prefix.'users WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch users', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT id, signature FROM '.$db->prefix.'users WHERE id > '.$start_at.' ORDER BY id ASC LIMIT '.PER_PAGE) or error('Unable to fetch users', __FILE__, __LINE__, $db->error());
 
 		$temp = array();
+		$end_at = 0;
 		while ($cur_item = $db->fetch_assoc($result))
 		{
 			echo 'Preparsing signature '.$cur_item['id'].' …<br />'."\n";
 			$db->query('UPDATE '.$db->prefix.'users SET signature = \''.$db->escape(preparse_bbcode($cur_item['signature'], $temp, true)).'\' WHERE id = '.$cur_item['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
+
+			$end_at = $cur_item['id'];
 		}
 
 		// Check if there is more work to do
-		$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
+		if ($end_at > 0)
+		{
+			$result = $db->query('SELECT 1 FROM '.$db->prefix.'users WHERE id > '.$end_at.' ORDER BY id ASC LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
+			if ($db->num_rows($result) > 0)
+				$query_str = '?stage=preparse_sigs&start_at='.$end_at;
+		}
 
-		if ($db->num_rows($result))
-			$query_str = '?stage=preparse_sigs&start_at='.$db->result($result);
-		else
-			$query_str = '?stage=finish';
 		break;
 
 
 	// Show results page
 	case 'finish':
-
 		// We update the version number
 		$db->query('UPDATE '.$db->prefix.'config SET conf_value = \''.UPDATE_TO.'\' WHERE conf_name = \'o_cur_version\'') or error('Unable to update version', __FILE__, __LINE__, $db->error());
 
@@ -1202,10 +1249,6 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 		while ($row = $db->fetch_row($result))
 			update_forum($row[0]);
-
-		// We'll empty the search cache table as well
-		$truncate_sql = ($db_type != 'sqlite' && $db_type != 'pgsql') ? 'TRUNCATE TABLE ' : 'DELETE FROM ';
-		$db->query($truncate_sql.$db->prefix.'search_cache') or error('Unable to empty search cache table', __FILE__, __LINE__, $db->error());
 
 		// Empty the PHP cache
 		forum_clear_cache();
