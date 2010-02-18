@@ -5,7 +5,9 @@
 /* Limited Reset
 ----------------------------------------------------------------*/
 
-.pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, .pun h4, .pun h5, .pun pre, .pun blockquote, .pun ul, .pun ol, .pun li, .pun dl, .pun dt, .pun dd, .pun th, .pun td, .pun fieldset, .pun legend .pun img, .pun abbr, .pun cite {
+.pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, .pun h4, .pun h5, .pun pre, .pun blockquote,
+.pun ul, .pun ol, .pun li, .pun dl, .pun dt, .pun dd, .pun th, .pun td, .pun fieldset, .pun legend .pun img,
+.pun abbr, .pun cite {
 	border: 0;
 	font-style: normal;
 	font-weight: normal;
@@ -14,7 +16,7 @@
 }
 
 .pun ul, .pun ol {
-	list-style: none
+	list-style: none;
 }
 
 .pun select {
@@ -25,21 +27,9 @@
 /* Hidden Elements
 ----------------------------------------------------------------*/
 
-#brdfooter h2,
-#brdstats h2,
-#debug h2,
-#brdstats .conl dt,
-#brdstats .conr dt,
-#modcontrols dt,
-#searchlinks dt,
-div.postright h3,
-.pun .subscribelink span,
-#announce .hd,
-#reportform h2,
-#punmoderate #vf h2,
-#punviewforum #vf h2,
-#pundelete .blockform h2,
-.pun .required strong span {
+#brdfooter h2, #brdstats h2, #debug h2, #brdstats .conl dt, #brdstats .conr dt, #modcontrols dt,
+#searchlinks dt, div.postright h3, .pun .subscribelink span, #announce .hd, #reportform h2, #punmoderate #vf h2,
+#punviewforum #vf h2, #pundelete .blockform h2, .pun .required strong span {
 	display: block;
 	left: -9999em;
 	overflow: hidden;
@@ -144,16 +134,8 @@ div.postright h3,
 	padding: 7px 0;
 }
 
-#pundelete .blockform h2,
-#punedit .blockform h2,
-#punindex .blocktable h2,
-#punpost .blockform h2,
-#punsearch #vf h2,
-#postpreview h2,
-#posterror h2,
-.pun #quickpost h2,
-.pun #reportform h2,
-.pun .blockpost h2 {
+#pundelete .blockform h2, #punedit .blockform h2, #punindex .blocktable h2, #punpost .blockform h2,
+#punsearch #vf h2, #postpreview h2, #posterror h2, .pun #quickpost h2, .pun #reportform h2, .pun .blockpost h2 {
 	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
 	font-size: 1em;
 	font-weight: bold;
@@ -1033,8 +1015,8 @@ MAIN FORMS
 }
 
 .pun fieldset {
-	width: 100%;
 	overflow: hidden;
+	width: 100%;
 }
 
 .pun legend {
@@ -1074,9 +1056,9 @@ MAIN FORMS
 }
 
 .pun fieldset label {
+	clear: both;
 	display: block;
 	padding: 0 0 7px 0;
-	clear: both;
 }
 
 .pun label em {
@@ -1085,10 +1067,10 @@ MAIN FORMS
 }
 
 .pun .required strong {
-	font-weight: normal;
-	white-space: pre-wrap;
-	padding-right: 14px;
 	background: url(Air/img/asterisk.png) center right no-repeat;
+	font-weight: normal;
+	padding-right: 14px;
+	white-space: pre-wrap;
 }
 
 .pun label input, .pun label select, .pun label textarea {
@@ -1210,14 +1192,14 @@ MAIN FORMS
 }
 
 .pun span.email {
-	padding-left: 21px;
-	margin-right: 5px;
 	background: url(Air/img/email.png) center left no-repeat;
+	margin-right: 5px;
+	padding-left: 21px;
 }
 
 .pun span.website {
-	padding-left: 18px;
 	background: url(Air/img/ext.png) center left no-repeat;
+	padding-left: 18px;
 }
 
 #punmisc #rules .box {
@@ -1264,23 +1246,27 @@ PROFILES (+ ADMIN MENU)
 }
 
 .pun .blockmenu li {
-	padding: 0;
 	border-bottom-style: dotted;
 	border-bottom-width: 1px;
 	font-weight: bold;
+	padding: 0;
 }
 
 .pun .blockmenu a:link, .pun .blockmenu a:visited {
-	text-decoration: none;
-	padding: 9px 6px 3px 6px;
 	display: block;
 	height: 1%;
+	min-height: 1px;
+	padding: 9px 6px 3px 6px;
+	text-decoration: none;
+}
+
+.pun div[class*="blockmenu"] a:link, .pun div[class*="blockmenu"] a:visited {
+	height: auto;
 }
 
 .pun .blockmenu a:hover, .pun .blockmenu a:active, .pun .blockmenu a:focus {
 	text-decoration: none;
 }
-
 
 #viewprofile .box {
 	border-style: solid;
@@ -1289,16 +1275,16 @@ PROFILES (+ ADMIN MENU)
 }
 
 #viewprofile dt, #adstats dt {
-	width: 13em;
 	padding: 7px 0;
 	position: absolute;
+	width: 13em;
 }
 
 #viewprofile dl {
-	padding: 0;
-	margin: 7px 0;
 	border-style: solid none none none;
 	border-width: 1px;
+	margin: 7px 0;
+	padding: 0;
 }
 
 
@@ -1311,14 +1297,13 @@ PROFILES (+ ADMIN MENU)
 #adstats .inbox, #adintro .inbox {
 	border-style: solid;
 	border-width: 1px;
-	padding: 18px;
 	height: 100%;
+	padding: 18px;
 }
 
 #adstats div[class*="inbox"], #adintro div[class*="inbox"] {
 	height: auto;
 }
-
 
 #adstats dl {
 	margin: 0;
@@ -1326,10 +1311,9 @@ PROFILES (+ ADMIN MENU)
 }
 
 #viewprofile dd, #adstats dd {
-	padding: 7px 0;
 	border-style: none none solid none;
 	border-width: 1px;
-	padding-left: 13em;
+	padding: 7px 0 7px 13em;
 }
 
 /*****************************************************************
@@ -1350,8 +1334,7 @@ html, body, #punwrap {
 	color: #566579;
 }
 
-#brdtitle h1, .pun .crumbs, #brdstats #onlinelist,
-#brdfooter #searchlinks, #brdfooter #modcontrols,
+#brdtitle h1, .pun .crumbs, #brdstats #onlinelist, #brdfooter #searchlinks, #brdfooter #modcontrols,
 #punmaint h2, #punredirect h2, #adminconsole .submittop {
 	border-color: #b9c5ce;
 }
@@ -1369,19 +1352,19 @@ html, body, #punwrap {
 
 #brdmenu ul {
 	background: #44699c;
-	}
+}
 
 #brdmenu a, #brdmenu a:link, #brdmenu a:visited {
 	background: #44699c;
 	border-color: #fff;
 	color: #d4dae2;
-	}
+}
 
 #brdmenu a:hover, #brdmenu a:active, #brdmenu a:focus {
 	background: #b50000;
 	border-color: #fff;
 	color: #fff;
-	}
+}
 
 /* Main Tables
 ----------------------------------------------------------------*/
@@ -1546,16 +1529,16 @@ html, body, #punwrap {
 
 .pun .icon {
 	border-color: #e8ecf1 #d4d9dd #dfe3e8 #e8ecf1;
-	}
+}
 
 .pun .iredirect .icon {
+	border-color: #B9C5CE;
 	border-width: 1px;
 	padding: 7px;
-	border-color: #B9C5CE;
-	}
+}
 
 .pun .inew .icon {
 	border-color: #91b3d9 #87a8d1 #6c85bb #7292c3;
-	}
+}
 
-	
+ 
