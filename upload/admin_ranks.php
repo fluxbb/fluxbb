@@ -33,7 +33,7 @@ if (isset($_POST['add_rank']))
 	if ($rank == '')
 		message($lang_admin_ranks['Must enter title']);
 
-	if (!is_int($min_posts))
+	if (!preg_match('%^\d+$%', $min_posts))
 		message($lang_admin_ranks['Must be integer message']);
 
 	// Make sure there isn't already a rank with the same min_posts value
@@ -61,12 +61,12 @@ else if (isset($_POST['update']))
 	$id = intval(key($_POST['update']));
 
 	$rank = trim($_POST['rank'][$id]);
-	$min_posts = trim($_POST['min_posts'][$id]);
+	$min_posts = $_POST['min_posts'][$id];
 
 	if ($rank == '')
 		message($lang_admin_ranks['Must enter title message']);
 
-	if (!is_int($min_posts))
+	if (!preg_match('%^\d+$%', $min_posts))
 		message($lang_admin_ranks['Must be integer message']);
 
 	// Make sure there isn't already a rank with the same min_posts value
