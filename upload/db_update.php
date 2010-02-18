@@ -14,6 +14,9 @@ define('UPDATE_TO_DB_REVISION', 4);
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
 define('MIN_PGSQL_VERSION', '7.0.0');
+define('PUN_SEARCH_MIN_WORD', 3);
+define('PUN_SEARCH_MAX_WORD', 20);
+
 
 // The number of items to process per page view (lower this if the update script times out during UTF-8 conversion)
 define('PER_PAGE', 300);
@@ -925,47 +928,6 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		if ($db->num_rows($result))
 			$query_str = '?stage=conv_reports&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
 		else
-			$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset;
-		break;
-
-
-	// Convert search words
-	case 'conv_search_words':
-		if (strpos($cur_version, '1.2') !== 0)
-		{
-			$query_str = '?stage=preparse_posts';
-			break;
-		}
-
-		// Determine where to start
-		if ($start_at == 0)
-		{
-			// Get the first search word ID from the db
-			$result = $db->query('SELECT id FROM '.$db->prefix.'search_words ORDER BY id LIMIT 1') or error('Unable to fetch first search_words ID', __FILE__, __LINE__, $db->error());
-
-			if ($db->num_rows($result))
-				$start_at = $db->result($result);
-		}
-		$end_at = $start_at + PER_PAGE;
-
-		// Fetch words to process this cycle
-		$result = $db->query('SELECT id, word FROM '.$db->prefix.'search_words WHERE id >= '.$start_at.' AND id < '.$end_at.' ORDER BY id') or error('Unable to fetch search words', __FILE__, __LINE__, $db->error());
-
-		while ($cur_item = $db->fetch_assoc($result))
-		{
-			echo 'Converting search word '.$cur_item['id'].' …<br />'."\n";
-			if (convert_to_utf8($cur_item['word'], $old_charset))
-			{
-				$db->query('UPDATE '.$db->prefix.'search_words SET word = \''.$db->escape($cur_item['word']).'\' WHERE id = '.$cur_item['id']) or error('Unable to update search word', __FILE__, __LINE__, $db->error());
-			}
-		}
-
-		// Check if there is more work to do
-		$result = $db->query('SELECT id FROM '.$db->prefix.'search_words WHERE id >= '.$end_at.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
-
-		if ($db->num_rows($result))
-			$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
-		else
 			$query_str = '?stage=conv_users&req_old_charset='.$old_charset;
 		break;
 
@@ -1092,6 +1054,71 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		if ($db->num_rows($result))
 			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset.'&start_at='.$db->result($result);
 		else
+			$query_str = '?stage=rebuild_idx';
+		break;
+
+
+	// Re-index posts
+	case 'rebuild_idx':
+		if (strpos($cur_version, '1.2') !== 0)
+		{
+			$query_str = '?stage=preparse_posts';
+			break;
+		}
+
+		$truncate_sql = ($db_type != 'sqlite' && $db_type != 'pgsql') ? 'TRUNCATE TABLE ' : 'DELETE FROM ';
+		$db->query($truncate_sql.$db->prefix.'search_matches') or error('Unable to empty search index match table', __FILE__, __LINE__, $db->error());
+		$db->query($truncate_sql.$db->prefix.'search_words') or error('Unable to empty search index words table', __FILE__, __LINE__, $db->error());
+
+		// Reset the sequence for the search words (not needed for SQLite)
+		switch ($db_type)
+		{
+			case 'mysql':
+			case 'mysqli':
+			case 'mysql_innodb':
+			case 'mysqli_innodb':
+				$result = $db->query('ALTER TABLE '.$db->prefix.'search_words auto_increment=1') or error('Unable to update table auto_increment', __FILE__, __LINE__, $db->error());
+				break;
+
+			case 'pgsql';
+				$result = $db->query('SELECT setval(\''.$db->prefix.'search_words_id_seq\', 1, false)') or error('Unable to update sequence', __FILE__, __LINE__, $db->error());
+		}
+
+		require PUN_ROOT.'include/search_idx.php';
+
+		// Fetch posts to process
+		$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE id>='.$start_at.' ORDER BY id LIMIT '.PER_PAGE) or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());
+		$topics = array();
+		while ($cur_topic = $db->fetch_row($result))
+			$topics[] = $cur_topic[0];
+
+		$result = $db->query('SELECT topic_id, id, message FROM '.$db->prefix.'posts WHERE topic_id IN ('.implode(',', $topics).') ORDER BY topic_id') or error('Unable to fetch topic/post info', __FILE__, __LINE__, $db->error());
+
+		$cur_topic = 0;
+		while ($cur_post = $db->fetch_row($result))
+		{
+			if ($cur_post[0] != $cur_topic)
+			{
+				// Fetch subject and ID of first post in topic
+				$result2 = $db->query('SELECT p.id, t.subject, MIN(p.posted) AS first FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id WHERE t.id='.$cur_post[0].' GROUP BY p.id, t.subject ORDER BY first LIMIT 1') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
+				list($first_post, $subject) = $db->fetch_row($result2);
+
+				$cur_topic = $cur_post[0];
+			}
+
+			echo 'Processing post <strong>'.$cur_post[1].'</strong> in topic <strong>'.$cur_post[0].'</strong> …<br />'."\n";
+			if ($cur_post[1] == $first_post) // This is the "topic post" so we have to index the subject as well
+				update_search_index('post', $cur_post[1], $cur_post[2], $subject);
+			else
+				update_search_index('post', $cur_post[1], $cur_post[2]);
+		}
+
+		// Check if there is more work to do
+		$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE id>'.$cur_topic.' ORDER BY id LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
+
+		if ($db->num_rows($result))
+			$query_str = '?stage=rebuild_idx&start_at='.$db->result($result);
+		else
 			$query_str = '?stage=preparse_posts';
 		break;
 
@@ -1176,8 +1203,9 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		while ($row = $db->fetch_row($result))
 			update_forum($row[0]);
 
-		// We'll empty the search cache table as well (using DELETE FROM since SQLite does not support TRUNCATE TABLE)
-		$db->query('DELETE FROM '.$db->prefix.'search_cache') or error('Unable to clear search cache', __FILE__, __LINE__, $db->error());
+		// We'll empty the search cache table as well
+		$truncate_sql = ($db_type != 'sqlite' && $db_type != 'pgsql') ? 'TRUNCATE TABLE ' : 'DELETE FROM ';
+		$db->query($truncate_sql.$db->prefix.'search_cache') or error('Unable to empty search cache table', __FILE__, __LINE__, $db->error());
 
 		// Empty the PHP cache
 		forum_clear_cache();
