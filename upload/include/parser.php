@@ -20,6 +20,9 @@ if (version_compare(PHP_VERSION, '5.2.0', '>='))
 		@ini_set('pcre.backtrack_limit', 220000);
 }
 
+// Global variables
+$re_list = '%\[list(?:=([1a*]))?+\]((?:(?>.*?(?=\[list(?:=[1a*])?+\]|\[/list\]))|(?R))*)\[/list\]%ise';
+
 // Here you can add additional smilies if you like (please note that you must escape single quote and backslash)
 $smilies = array(
 	':)' => 'smile.png',
@@ -46,7 +49,7 @@ $smilies = array(
 //
 function preparse_bbcode($text, &$errors, $is_signature = false)
 {
-	global $pun_config, $lang_common;
+	global $pun_config, $lang_common, $re_list;
 
 	if ($is_signature)
 	{
@@ -64,7 +67,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	}
 
 	// Tidy up lists
-	$pattern = array('%\[list(?:=([1a*]))?+\]((?:(?>.*?(?=\[list(?:=[1a*])?+\]|\[/list\]))|(?R))*)\[/list\]%ise');
+	$pattern = array($re_list);
 	$replace = array('preparse_list_tag(\'$2\', \'$1\', $errors)');
 	$temp = preg_replace($pattern, $replace, $text);
 
@@ -519,14 +522,14 @@ function preparse_tags($text, &$errors, $is_signature = false)
 //
 function preparse_list_tag($content, $type = '*', &$errors)
 {
-	global $lang_common;
+	global $lang_common, $re_list;
 
 	if (strlen($type) != 1)
 		$type = '*';
 
 	if (strpos($content,'[list') !== false)
 	{
-		$pattern = array('%\[list(?:=([1a*]))?+\]((?:(?>.*?(?=\[list(?:=[1a*])?+\]|\[/list\]))|(?R))*)\[/list\]%ise');
+		$pattern = array($re_list);
 		$replace = array('preparse_list_tag(\'$2\', \'$1\', $errors)');
 		$content = preg_replace($pattern, $replace, $content);
 	}
@@ -635,12 +638,14 @@ function handle_img_tag($url, $is_signature = false, $alt = null)
 //
 function handle_list_tag($content, $type = '*')
 {
+	global $re_list;
+
 	if (strlen($type) != 1)
 		$type = '*';
 
 	if (strpos($content,'[list') !== false)
 	{
-		$pattern = array('%\[list(?:=([1a*]))?+\]((?:(?>.*?(?=\[list(?:=[1a*])?+\]|\[/list\]))|(?R))*)\[/list\]%ise');
+		$pattern = array($re_list);
 		$replace = array('handle_list_tag(\'$2\', \'$1\')');
 		$content = preg_replace($pattern, $replace, $content);
 	}
@@ -664,7 +669,7 @@ function handle_list_tag($content, $type = '*')
 //
 function do_bbcode($text, $is_signature = false)
 {
-	global $lang_common, $pun_user, $pun_config;
+	global $lang_common, $pun_user, $pun_config, $re_list;
 
 	if (strpos($text, '[quote') !== false)
 	{
@@ -675,7 +680,7 @@ function do_bbcode($text, $is_signature = false)
 
 	if (!$is_signature)
 	{
-		$pattern[] = '%\[list(?:=([1a*]))?+\]((?:(?>.*?(?=\[list(?:=[1a*])?+\]|\[/list\]))|(?R))*)\[/list\]%ise';
+		$pattern[] = $re_list;
 		$replace[] = 'handle_list_tag(\'$2\', \'$1\')';
 	}
 
