@@ -109,7 +109,7 @@ else if (isset($_GET['email']))
 			message($lang_misc['No email subject']);
 		else if ($message == '')
 			message($lang_misc['No email message']);
-		else if (strlen($message) > PUN_MAX_POSTSIZE)
+		else if (pun_strlen($message) > PUN_MAX_POSTSIZE)
 			message($lang_misc['Too long email message']);
 
 		if ($pun_user['last_email_sent'] != '' && (time() - $pun_user['last_email_sent']) < $pun_user['g_email_flood'] && (time() - $pun_user['last_email_sent']) >= 0)
@@ -120,8 +120,8 @@ else if (isset($_GET['email']))
 
 		// The first row contains the subject
 		$first_crlf = strpos($mail_tpl, "\n");
-		$mail_subject = trim(substr($mail_tpl, 8, $first_crlf-8));
-		$mail_message = trim(substr($mail_tpl, $first_crlf));
+		$mail_subject = pun_trim(substr($mail_tpl, 8, $first_crlf-8));
+		$mail_message = pun_trim(substr($mail_tpl, $first_crlf));
 
 		$mail_subject = str_replace('<mail_subject>', $subject, $mail_subject);
 		$mail_message = str_replace('<sender>', $pun_user['username'], $mail_message);

@@ -88,7 +88,7 @@ if (isset($_POST['form_sent']))
 	// Otherwise it should be in $_POST
 	else
 	{
-		$username = trim($_POST['req_username']);
+		$username = pun_trim($_POST['req_username']);
 		$email = strtolower(trim(($pun_config['p_force_guest_email'] == '1') ? $_POST['req_email'] : $_POST['email']));
 
 		// Load the register.php/profile.php language files

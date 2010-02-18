@@ -27,7 +27,7 @@ if (isset($_POST['add_rank']))
 {
 	confirm_referrer('admin_ranks.php');
 
-	$rank = trim($_POST['new_rank']);
+	$rank = pun_trim($_POST['new_rank']);
 	$min_posts = $_POST['new_min_posts'];
 
 	if ($rank == '')
@@ -60,7 +60,7 @@ else if (isset($_POST['update']))
 
 	$id = intval(key($_POST['update']));
 
-	$rank = trim($_POST['rank'][$id]);
+	$rank = pun_trim($_POST['rank'][$id]);
 	$min_posts = $_POST['min_posts'][$id];
 
 	if ($rank == '')

@@ -86,8 +86,8 @@ if (isset($_POST['form_sent']))
 	}
 	else
 	{
-		$password1 = trim($_POST['req_password1']);
-		$password2 = trim($_POST['req_password2']);
+		$password1 = pun_trim($_POST['req_password1']);
+		$password2 = pun_trim($_POST['req_password2']);
 	}
 
 	// Convert multiple whitespace characters into one (to prevent people from registering with indistinguishable usernames)

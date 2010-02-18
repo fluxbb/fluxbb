@@ -44,7 +44,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		}
 		else // Otherwise the username is in POST
 		{
-			$ban_user = trim($_POST['new_ban_user']);
+			$ban_user = pun_trim($_POST['new_ban_user']);
 
 			if ($ban_user != '')
 			{
@@ -170,10 +170,10 @@ else if (isset($_POST['add_edit_ban']))
 {
 	confirm_referrer('admin_bans.php');
 
-	$ban_user = trim($_POST['ban_user']);
+	$ban_user = pun_trim($_POST['ban_user']);
 	$ban_ip = trim($_POST['ban_ip']);
 	$ban_email = strtolower(trim($_POST['ban_email']));
-	$ban_message = trim($_POST['ban_message']);
+	$ban_message = pun_trim($_POST['ban_message']);
 	$ban_expire = trim($_POST['ban_expire']);
 
 	if ($ban_user == '' && $ban_ip == '' && $ban_email == '')

@@ -27,7 +27,7 @@ if (isset($_POST['add_cat']))
 {
 	confirm_referrer('admin_categories.php');
 
-	$new_cat_name = trim($_POST['new_cat_name']);
+	$new_cat_name = pun_trim($_POST['new_cat_name']);
 	if ($new_cat_name == '')
 		message($lang_admin_categories['Must enter name message']);
 

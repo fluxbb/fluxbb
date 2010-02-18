@@ -86,9 +86,9 @@ if ($action == 'change_pass')
 		if ($pun_user['is_admmod'])
 			confirm_referrer('profile.php');
 
-		$old_password = isset($_POST['req_old_password']) ? trim($_POST['req_old_password']) : '';
-		$new_password1 = trim($_POST['req_new_password1']);
-		$new_password2 = trim($_POST['req_new_password2']);
+		$old_password = isset($_POST['req_old_password']) ? pun_trim($_POST['req_old_password']) : '';
+		$new_password1 = pun_trim($_POST['req_new_password1']);
+		$new_password2 = pun_trim($_POST['req_new_password2']);
 
 		if ($new_password1 != $new_password2)
 			message($lang_prof_reg['Pass not match']);
@@ -686,13 +686,13 @@ else if (isset($_POST['form_sent']))
 
 			if ($pun_user['is_admmod'])
 			{
-				$form['admin_note'] = trim($_POST['admin_note']);
+				$form['admin_note'] = pun_trim($_POST['admin_note']);
 
 				// Are we allowed to change usernames?
 				if ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1' && $pun_user['g_mod_rename_users'] == '1'))
 				{
-					$form['username'] = trim($_POST['req_username']);
-					$old_username = trim($_POST['old_username']);
+					$form['username'] = pun_trim($_POST['req_username']);
+					$old_username = pun_trim($_POST['old_username']);
 
 					if (pun_strlen($form['username']) < 2)
 						message($lang_prof_reg['Username too short']);
@@ -750,10 +750,10 @@ else if (isset($_POST['form_sent']))
 			$form = extract_elements(array('realname', 'url', 'location'));
 
 			if ($pun_user['g_id'] == PUN_ADMIN)
-				$form['title'] = trim($_POST['title']);
+				$form['title'] = pun_trim($_POST['title']);
 			else if ($pun_user['g_set_title'] == '1')
 			{
-				$form['title'] = trim($_POST['title']);
+				$form['title'] = pun_trim($_POST['title']);
 
 				if ($form['title'] != '')
 				{
@@ -791,7 +791,7 @@ else if (isset($_POST['form_sent']))
 			// Clean up signature from POST
 			if ($pun_config['o_signatures'] == '1')
 			{
-				$form['signature'] = pun_linebreaks(trim($_POST['signature']));
+				$form['signature'] = pun_linebreaks(pun_trim($_POST['signature']));
 
 				// Validate signature
 				if (pun_strlen($form['signature']) > $pun_config['p_sig_length'])

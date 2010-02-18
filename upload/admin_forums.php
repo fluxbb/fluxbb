@@ -153,8 +153,8 @@ else if (isset($_GET['edit_forum']))
 		confirm_referrer('admin_forums.php');
 
 		// Start with the forum details
-		$forum_name = trim($_POST['forum_name']);
-		$forum_desc = pun_linebreaks(trim($_POST['forum_desc']));
+		$forum_name = pun_trim($_POST['forum_name']);
+		$forum_desc = pun_linebreaks(pun_trim($_POST['forum_desc']));
 		$cat_id = intval($_POST['cat_id']);
 		$sort_by = intval($_POST['sort_by']);
 		$redirect_url = isset($_POST['redirect_url']) ? trim($_POST['redirect_url']) : null;

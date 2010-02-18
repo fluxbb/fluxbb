@@ -244,8 +244,8 @@ else if (isset($_POST['add_edit_group']))
 	// Is this the admin group? (special rules apply)
 	$is_admin_group = (isset($_POST['group_id']) && $_POST['group_id'] == PUN_ADMIN) ? true : false;
 
-	$title = trim($_POST['req_title']);
-	$user_title = trim($_POST['user_title']);
+	$title = pun_trim($_POST['req_title']);
+	$user_title = pun_trim($_POST['user_title']);
 	$moderator = isset($_POST['moderator']) && $_POST['moderator'] == '1' ? '1' : '0';
 	$mod_edit_users = $moderator == '1' && isset($_POST['mod_edit_users']) && $_POST['mod_edit_users'] == '1' ? '1' : '0';
 	$mod_rename_users = $moderator == '1' && isset($_POST['mod_rename_users']) && $_POST['mod_rename_users'] == '1' ? '1' : '0';

@@ -27,8 +27,8 @@ if (isset($_POST['add_word']))
 {
 	confirm_referrer('admin_censoring.php');
 
-	$search_for = trim($_POST['new_search_for']);
-	$replace_with = trim($_POST['new_replace_with']);
+	$search_for = pun_trim($_POST['new_search_for']);
+	$replace_with = pun_trim($_POST['new_replace_with']);
 
 	if ($search_for == '' || $replace_with == '')
 		message($lang_admin_censoring['Must enter both message']);
@@ -45,8 +45,8 @@ else if (isset($_POST['update']))
 
 	$id = intval(key($_POST['update']));
 
-	$search_for = trim($_POST['search_for'][$id]);
-	$replace_with = trim($_POST['replace_with'][$id]);
+	$search_for = pun_trim($_POST['search_for'][$id]);
+	$replace_with = pun_trim($_POST['replace_with'][$id]);
 
 	if ($search_for == '' || $replace_with == '')
 		message($lang_admin_censoring['Must search both message']);

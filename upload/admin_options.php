@@ -61,7 +61,7 @@ if (isset($_POST['form_sent']))
 		$form['avatars_dir'] = substr($form['avatars_dir'], 0, -1);
 
 	if ($form['additional_navlinks'] != '')
-		$form['additional_navlinks'] = trim(pun_linebreaks($form['additional_navlinks']));
+		$form['additional_navlinks'] = pun_trim(pun_linebreaks($form['additional_navlinks']));
 
 	if ($form['announcement_message'] != '')
 		$form['announcement_message'] = pun_linebreaks($form['announcement_message']);
