@@ -109,7 +109,7 @@ h1 {
 			$cur_topic = $cur_post[0];
 		}
 
-		echo "\t\t".'<p><span>'.sprintf($lang_admin_maintenance['Processing post'], $cur_post[1], $cur_post[0]).'</span></br></p>'."\n";
+		echo '<p><span>'.sprintf($lang_admin_maintenance['Processing post'], $cur_post[1], $cur_post[0]).'</span></p>'."\n";
 
 		if ($cur_post[1] == $first_post) // This is the "topic post" so we have to index the subject as well
 			update_search_index('post', $cur_post[1], $cur_post[2], $subject);

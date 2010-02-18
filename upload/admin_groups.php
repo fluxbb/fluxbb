@@ -446,7 +446,7 @@ else if (isset($_GET['del_group']))
 
 ?>
 							</select>
-							</br></label>
+							<br /></label>
 						</div>
 					</fieldset>
 				</div>
