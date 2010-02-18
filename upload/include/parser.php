@@ -67,9 +67,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	}
 
 	// Tidy up lists
-	$pattern = array($re_list);
-	$replace = array('preparse_list_tag(\'$2\', \'$1\', $errors)');
-	$temp = preg_replace($pattern, $replace, $text);
+	$temp = preg_replace($re_list, 'preparse_list_tag(\'$2\', \'$1\', $errors)', $text);
 
 	// If the regex failed
 	if ($temp === null)
@@ -529,9 +527,7 @@ function preparse_list_tag($content, $type = '*', &$errors)
 
 	if (strpos($content,'[list') !== false)
 	{
-		$pattern = array($re_list);
-		$replace = array('preparse_list_tag(\'$2\', \'$1\', $errors)');
-		$content = preg_replace($pattern, $replace, $content);
+		$content = preg_replace($re_list, 'preparse_list_tag(\'$2\', \'$1\', $errors)', $content);
 	}
 
 	$items = explode('[*]', str_replace('\"', '"', $content));
@@ -645,9 +641,7 @@ function handle_list_tag($content, $type = '*')
 
 	if (strpos($content,'[list') !== false)
 	{
-		$pattern = array($re_list);
-		$replace = array('handle_list_tag(\'$2\', \'$1\')');
-		$content = preg_replace($pattern, $replace, $content);
+		$content = preg_replace($re_list, 'handle_list_tag(\'$2\', \'$1\')', $content);
 	}
 
 	$content = preg_replace('#\s*\[\*\](.*?)\[/\*\]\s*#s', '<li><p>$1</p></li>', pun_trim($content));
