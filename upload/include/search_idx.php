@@ -155,12 +155,12 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 				case 'mysqli':
 				case 'mysql_innodb':
 				case 'mysqli_innodb':
-					$db->query('INSERT INTO '.$db->prefix.'search_words (word) VALUES(\''.implode('\'),(\'', array_map(array($db, 'escape'), $new_words)).'\')') or error('Unable to insert search index words', __FILE__, __LINE__, $db->error());
+					$db->query('INSERT INTO '.$db->prefix.'search_words (word) VALUES(\''.implode('\'),(\'', array_map(array($db, 'escape'), $new_words)).'\')');
 					break;
 
 				default:
 					foreach ($new_words as $word)
-						$db->query('INSERT INTO '.$db->prefix.'search_words (word) VALUES(\''.$word.'\')') or error('Unable to insert search index words', __FILE__, __LINE__, $db->error());
+						$db->query('INSERT INTO '.$db->prefix.'search_words (word) VALUES(\''.$db->escape($word).'\')');
 					break;
 			}
 		}
