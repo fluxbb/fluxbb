@@ -288,7 +288,7 @@ class DBLayer
 	function create_table($table_name, $schema, $no_prefix = false)
 	{
 		if ($this->table_exists($table_name, $no_prefix))
-			return;
+			return true;
 
 		$query = 'CREATE TABLE '.($no_prefix ? '' : $this->prefix).$table_name." (\n";
 
@@ -322,23 +322,25 @@ class DBLayer
 		// We remove the last two characters (a newline and a comma) and add on the ending
 		$query = substr($query, 0, strlen($query) - 2)."\n".')';
 
-		$this->query($query) or error('Unable to create table '.($no_prefix ? '' : $this->prefix).$table_name, __FILE__, __LINE__, $this->error());
+		$result = $this->query($query) ? true : false;
 
 		// Add indexes
 		if (isset($schema['INDEXES']))
 		{
 			foreach ($schema['INDEXES'] as $index_name => $index_fields)
-				$this->add_index($table_name, $index_name, $index_fields, false, $no_prefix);
+				$result &= $this->add_index($table_name, $index_name, $index_fields, false, $no_prefix);
 		}
+
+		return $result;
 	}
 
 
 	function drop_table($table_name, $no_prefix = false)
 	{
 		if (!$this->table_exists($table_name, $no_prefix))
-			return;
+			return true;
 
-		$this->query('DROP TABLE '.($no_prefix ? '' : $this->prefix).$table_name) or error('Unable to drop table '.($no_prefix ? '' : $this->prefix).$table_name, __FILE__, __LINE__, $this->error());
+		return $this->query('DROP TABLE '.($no_prefix ? '' : $this->prefix).$table_name) ? true : false;
 	}
 
 
@@ -384,15 +386,15 @@ class DBLayer
 	function add_field($table_name, $field_name, $field_type, $allow_null, $default_value = null, $after_field = 0, $no_prefix = false)
 	{
 		if ($this->field_exists($table_name, $field_name, $no_prefix))
-			return;
+			return true;
 
 		$table = $this->get_table_info($table_name, $no_prefix);
 
 		// Create temp table
 		$now = time();
 		$tmptable = str_replace('CREATE TABLE '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).' (', 'CREATE TABLE '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now.' (', $table['sql']);
-		$this->query($tmptable) or error('Unable to create temporary table', __FILE__, __LINE__, $this->error());
-		$this->query('INSERT INTO '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now.' SELECT * FROM '.($no_prefix ? '' : $this->prefix).$this->escape($table_name)) or error('Unable to insert data into temporary table', __FILE__, __LINE__, $this->error());
+		$result = $this->query($tmptable) ? true : false;
+		$result &= $this->query('INSERT INTO '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now.' SELECT * FROM '.($no_prefix ? '' : $this->prefix).$this->escape($table_name)) ? true : false;
 
 		// Create new table sql
 		$field_type = preg_replace(array_keys($this->datatype_transformations), array_values($this->datatype_transformations), $field_type);
@@ -421,44 +423,47 @@ class DBLayer
 		$new_table = trim($new_table, ',')."\n".');';
 
 		// Drop old table
-		$this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name));
+		$result &= $this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name));
 
 		// Create new table
-		$this->query($new_table) or error('Unable to recreate table', __FILE__, __LINE__, $this->error());
+		$result &= $this->query($new_table) ? true : false;
 
 		// Recreate indexes
 		if (!empty($table['indices']))
 		{
 			foreach ($table['indices'] as $cur_index)
-				$this->query($cur_index) or error('Unable to add index', __FILE__, __LINE__, $this->error());
+				$result &= $this->query($cur_index) ? true : false;
 		}
 
 		// Copy content back
-		$this->query('INSERT INTO '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).' ('.implode(', ', $old_columns).') SELECT * FROM '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now) or error('Unable to insert data into recreated table', __FILE__, __LINE__, $this->error());
+		$result &= $this->query('INSERT INTO '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).' ('.implode(', ', $old_columns).') SELECT * FROM '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now) ? true : false;
 
 		// Drop temp table
-		$this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now);
+		$result &= $this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now);
+
+		return $result;
 	}
 
 
 	function alter_field($table_name, $field_name, $field_type, $allow_null, $default_value = null, $after_field = 0, $no_prefix = false)
 	{
-		return;
+		// Unneeded for SQLite
+		return true;
 	}
 
 
 	function drop_field($table_name, $field_name, $no_prefix = false)
 	{
 		if (!$this->field_exists($table_name, $field_name, $no_prefix))
-			return;
+			return true;
 
 		$table = $this->get_table_info($table_name, $no_prefix);
 
 		// Create temp table
 		$now = time();
 		$tmptable = str_replace('CREATE TABLE '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).' (', 'CREATE TABLE '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now.' (', $table['sql']);
-		$this->query($tmptable) or error('Unable to create temporary table', __FILE__, __LINE__, $this->error());
-		$this->query('INSERT INTO '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now.' SELECT * FROM '.($no_prefix ? '' : $this->prefix).$this->escape($table_name)) or error('Unable to insert data into temporary table', __FILE__, __LINE__, $this->error());
+		$result = $this->query($tmptable) ? true : false;
+		$result &= $this->query('INSERT INTO '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now.' SELECT * FROM '.($no_prefix ? '' : $this->prefix).$this->escape($table_name)) ? true : false;
 
 		// Work out the columns we need to keep and the sql for the new table
 		unset($table['columns'][$field_name]);
@@ -478,40 +483,47 @@ class DBLayer
 		$new_table = trim($new_table, ',')."\n".');';
 
 		// Drop old table
-		$this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name));
+		$result &= $this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name));
 
 		// Create new table
-		$this->query($new_table) or error('Unable to recreate table', __FILE__, __LINE__, $this->error());
+		$result &= $this->query($new_table) ? true : false;
 
 		// Recreate indexes
 		if (!empty($table['indices']))
 		{
 			foreach ($table['indices'] as $cur_index)
-				$this->query($cur_index) or error('Unable to add index', __FILE__, __LINE__, $this->error());
+				$result &= $this->query($cur_index) ? true : false;
 		}
 
 		// Copy content back
-		$this->query('INSERT INTO '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).' SELECT '.implode(', ', $new_columns).' FROM '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now) or error('Unable to reinsert data', __FILE__, __LINE__, $this->error());
+		$result &= $this->query('INSERT INTO '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).' SELECT '.implode(', ', $new_columns).' FROM '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now) ? true : false;
 
 		// Drop temp table
-		$this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now);
+		$result &= $this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now);
+
+		return $result;
 	}
 
 
 	function add_index($table_name, $index_name, $index_fields, $unique = false, $no_prefix = false)
 	{
 		if ($this->index_exists($table_name, $index_name, $no_prefix))
-			return;
+			return true;
 
-		$this->query('CREATE '.($unique ? 'UNIQUE ' : '').'INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name.' ON '.($no_prefix ? '' : $this->prefix).$table_name.'('.implode(',', $index_fields).')') or error('Unable to add index', __FILE__, __LINE__, $this->error());
+		return $this->query('CREATE '.($unique ? 'UNIQUE ' : '').'INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name.' ON '.($no_prefix ? '' : $this->prefix).$table_name.'('.implode(',', $index_fields).')') ? true : false;
 	}
 
 
 	function drop_index($table_name, $index_name, $no_prefix = false)
 	{
 		if (!$this->index_exists($table_name, $index_name, $no_prefix))
-			return;
+			return true;
 
-		$this->query('DROP INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name) or error('Unable to drop index', __FILE__, __LINE__, $this->error());
+		return $this->query('DROP INDEX '.($no_prefix ? '' : $this->prefix).$table_name.'_'.$index_name) ? true : false;
+	}
+
+	function truncate_table($table_name, $no_prefix = false)
+	{
+		return $this->query('DELETE FROM '.($no_prefix ? '' : $this->prefix).$table_name) ? true : false;
 	}
 }

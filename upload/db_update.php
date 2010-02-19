@@ -521,34 +521,34 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$query_str = '?stage=preparse_posts';
 
 		// Make all email fields VARCHAR(80)
-		$db->alter_field('bans', 'email', 'VARCHAR(80)', true);
-		$db->alter_field('posts', 'poster_email', 'VARCHAR(80)', true);
-		$db->alter_field('users', 'email', 'VARCHAR(80)', false, '');
-		$db->alter_field('users', 'jabber', 'VARCHAR(80)', true);
-		$db->alter_field('users', 'msn', 'VARCHAR(80)', true);
-		$db->alter_field('users', 'activate_string', 'VARCHAR(80)', true);
+		$db->alter_field('bans', 'email', 'VARCHAR(80)', true) or error('Unable to alter email field', __FILE__, __LINE__, $db->error());
+		$db->alter_field('posts', 'poster_email', 'VARCHAR(80)', true) or error('Unable to alter poster_email field', __FILE__, __LINE__, $db->error());
+		$db->alter_field('users', 'email', 'VARCHAR(80)', false, '') or error('Unable to alter email field', __FILE__, __LINE__, $db->error());
+		$db->alter_field('users', 'jabber', 'VARCHAR(80)', true) or error('Unable to alter jabber field', __FILE__, __LINE__, $db->error());
+		$db->alter_field('users', 'msn', 'VARCHAR(80)', true) or error('Unable to alter msn field', __FILE__, __LINE__, $db->error());
+		$db->alter_field('users', 'activate_string', 'VARCHAR(80)', true) or error('Unable to alter activate_string field', __FILE__, __LINE__, $db->error());
 
 		// Make all IP fields VARCHAR(39) to support IPv6
-		$db->alter_field('posts', 'poster_ip', 'VARCHAR(39)', true);
-		$db->alter_field('users', 'registration_ip', 'VARCHAR(39)', false, '0.0.0.0');
+		$db->alter_field('posts', 'poster_ip', 'VARCHAR(39)', true) or error('Unable to alter poster_ip field', __FILE__, __LINE__, $db->error());
+		$db->alter_field('users', 'registration_ip', 'VARCHAR(39)', false, '0.0.0.0') or error('Unable to alter registration_ip field', __FILE__, __LINE__, $db->error());
 
 		// Add the DST option to the users table
-		$db->add_field('users', 'dst', 'TINYINT(1)', false, 0, 'timezone');
+		$db->add_field('users', 'dst', 'TINYINT(1)', false, 0, 'timezone') or error('Unable to add dst field', __FILE__, __LINE__, $db->error());
 
 		// Add the last_post field to the online table
-		$db->add_field('online', 'last_post', 'INT(10) UNSIGNED', true, null, null);
+		$db->add_field('online', 'last_post', 'INT(10) UNSIGNED', true, null, null) or error('Unable to add last_post field', __FILE__, __LINE__, $db->error());
 
 		// Add the last_search field to the online table
-		$db->add_field('online', 'last_search', 'INT(10) UNSIGNED', true, null, null);
+		$db->add_field('online', 'last_search', 'INT(10) UNSIGNED', true, null, null) or error('Unable to add last_search field', __FILE__, __LINE__, $db->error());
 
 		// Add the last_search column to the users table
-		$db->add_field('users', 'last_search', 'INT(10) UNSIGNED', true, null, 'last_post');
+		$db->add_field('users', 'last_search', 'INT(10) UNSIGNED', true, null, 'last_post') or error('Unable to add last_search field', __FILE__, __LINE__, $db->error());
 
 		// Drop use_avatar column from users table
-		$db->drop_field('users', 'use_avatar');
+		$db->drop_field('users', 'use_avatar') or error('Unable to drop use_avatar field', __FILE__, __LINE__, $db->error());
 
 		// Drop save_pass column from users table
-		$db->drop_field('users', 'save_pass');
+		$db->drop_field('users', 'save_pass') or error('Unable to drop save_pass field', __FILE__, __LINE__, $db->error());
 
 		// Drop g_edit_subjects_interval column from groups table
 		$db->drop_field('groups', 'g_edit_subjects_interval');
@@ -693,7 +693,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		if (!$db->field_exists('groups', 'g_moderator'))
 		{
 			// Add g_moderator column to groups table
-			$db->add_field('groups', 'g_moderator', 'TINYINT(1)', false, 0, 'g_user_title');
+			$db->add_field('groups', 'g_moderator', 'TINYINT(1)', false, 0, 'g_user_title') or error('Unable to add g_moderator field', __FILE__, __LINE__, $db->error());
 
 			// Give the moderator group moderator privileges
 			$db->query('UPDATE '.$db->prefix.'groups SET g_moderator = 1 WHERE g_id = 2') or error('Unable to update moderator powers', __FILE__, __LINE__, $db->error());
@@ -704,7 +704,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		{
 			$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name = \'p_mod_edit_users\'') or error('Unable to update moderator powers', __FILE__, __LINE__, $db->error());
 
-			$db->add_field('groups', 'g_mod_edit_users', 'TINYINT(1)', false, 0, 'g_moderator');
+			$db->add_field('groups', 'g_mod_edit_users', 'TINYINT(1)', false, 0, 'g_moderator') or error('Unable to add g_mod_edit_users field', __FILE__, __LINE__, $db->error());
 
 			$db->query('UPDATE '.$db->prefix.'groups SET g_mod_edit_users = '.$pun_config['p_mod_edit_users'].' WHERE g_moderator = 1') or error('Unable to update moderator powers', __FILE__, __LINE__, $db->error());
 		}
@@ -714,7 +714,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		{
 			$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name = \'p_mod_rename_users\'') or error('Unable to update moderator powers', __FILE__, __LINE__, $db->error());
 
-			$db->add_field('groups', 'g_mod_rename_users', 'TINYINT(1)', false, 0, 'g_mod_edit_users');
+			$db->add_field('groups', 'g_mod_rename_users', 'TINYINT(1)', false, 0, 'g_mod_edit_users') or error('Unable to add g_mod_rename_users field', __FILE__, __LINE__, $db->error());
 
 			$db->query('UPDATE '.$db->prefix.'groups SET g_mod_rename_users = '.$pun_config['p_mod_rename_users'].' WHERE g_moderator = 1') or error('Unable to update moderator powers', __FILE__, __LINE__, $db->error());
 		}
@@ -724,7 +724,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		{
 			$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name = \'p_mod_change_passwords\'') or error('Unable to update moderator powers', __FILE__, __LINE__, $db->error());
 
-			$db->add_field('groups', 'g_mod_change_passwords', 'TINYINT(1)', false, 0, 'g_mod_rename_users');
+			$db->add_field('groups', 'g_mod_change_passwords', 'TINYINT(1)', false, 0, 'g_mod_rename_users') or error('Unable to add g_mod_change_passwords field', __FILE__, __LINE__, $db->error());
 
 			$db->query('UPDATE '.$db->prefix.'groups SET g_mod_change_passwords = '.$pun_config['p_mod_change_passwords'].' WHERE g_moderator = 1') or error('Unable to update moderator powers', __FILE__, __LINE__, $db->error());
 		}
@@ -734,7 +734,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		{
 			$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name = \'p_mod_ban_users\'') or error('Unable to update moderator powers', __FILE__, __LINE__, $db->error());
 
-			$db->add_field('groups', 'g_mod_ban_users', 'TINYINT(1)', false, 0, 'g_mod_change_passwords');
+			$db->add_field('groups', 'g_mod_ban_users', 'TINYINT(1)', false, 0, 'g_mod_change_passwords') or error('Unable to add g_mod_ban_users field', __FILE__, __LINE__, $db->error());
 
 			$db->query('UPDATE '.$db->prefix.'groups SET g_mod_ban_users = '.$pun_config['p_mod_ban_users'].' WHERE g_moderator = 1') or error('Unable to update moderator powers', __FILE__, __LINE__, $db->error());
 		}
@@ -742,63 +742,65 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		// We need to add a unique index to avoid users having multiple rows in the online table
 		if (!$db->index_exists('online', 'user_id_ident_idx'))
 		{
-			$db->query('DELETE FROM '.$db->prefix.'online') or error('Unable to clear online table', __FILE__, __LINE__, $db->error());
+			$db->truncate_table('online') or error('Unable to clear online table', __FILE__, __LINE__, $db->error());
 
 			if ($mysql)
-				$db->add_index('online', 'user_id_ident_idx', array('user_id', 'ident(25)'), true);
+				$db->add_index('online', 'user_id_ident_idx', array('user_id', 'ident(25)'), true) or error('Unable to add user_id_ident_idx index', __FILE__, __LINE__, $db->error());
 			else
-				$db->add_index('online', 'user_id_ident_idx', array('user_id', 'ident'), true);
+				$db->add_index('online', 'user_id_ident_idx', array('user_id', 'ident'), true) or error('Unable to add user_id_ident_idx index', __FILE__, __LINE__, $db->error());
 		}
 
 		// Remove the redundant user_id_idx on the online table
-		$db->drop_index('online', 'user_id_idx');
+		$db->drop_index('online', 'user_id_idx') or error('Unable to drop user_id_idx index', __FILE__, __LINE__, $db->error());
 
 		// Add an index to ident on the online table
 		if ($mysql)
-			$db->add_index('online', 'ident_idx', array('ident(25)'));
+			$db->add_index('online', 'ident_idx', array('ident(25)')) or error('Unable to add ident_idx index', __FILE__, __LINE__, $db->error());
 		else
-			$db->add_index('online', 'ident_idx', array('ident'));
+			$db->add_index('online', 'ident_idx', array('ident')) or error('Unable to add ident_idx index', __FILE__, __LINE__, $db->error());
 
 		// Add an index to logged in the online table
-		$db->add_index('online', 'logged_idx', array('logged'));
+		$db->add_index('online', 'logged_idx', array('logged')) or error('Unable to add logged_idx index', __FILE__, __LINE__, $db->error());
 
 		// Add an index to last_post in the topics table
-		$db->add_index('topics', 'last_post_idx', array('last_post'));
+		$db->add_index('topics', 'last_post_idx', array('last_post')) or error('Unable to add last_post_idx index', __FILE__, __LINE__, $db->error());
 
 		// Add an index to username on the bans table
 		if ($mysql)
-			$db->add_index('bans', 'username_idx', array('username(25)'));
+			$db->add_index('bans', 'username_idx', array('username(25)')) or error('Unable to add username_idx index', __FILE__, __LINE__, $db->error());
 		else
-			$db->add_index('bans', 'username_idx', array('username'));
+			$db->add_index('bans', 'username_idx', array('username')) or error('Unable to add username_idx index', __FILE__, __LINE__, $db->error());
 
 		// Change the username_idx on users to a unique index of max size 25
-		$db->drop_index('users', 'username_idx');
-		if ($mysql)
-			$db->add_index('users', 'username_idx', array('username(25)'), true);
-		else
-			$db->add_index('users', 'username_idx', array('username'), true);
+		$db->drop_index('users', 'username_idx') or error('Unable to drop old username_idx index', __FILE__, __LINE__, $db->error());
+		$field = $mysql ? 'username(25)' : 'username';
+
+		// Attempt to add a unique index. If the user doesn't use a transactional database this can fail due to multiple matching usernames in the
+		// users table. This is bad, but just giving up if it happens is even worse! If it fails just add a regular non-unique index.
+		if (!$db->add_index('users', 'username_idx', array($field), true))
+			$db->add_index('users', 'username_idx', array($field)) or error('Unable to add username_idx field', __FILE__, __LINE__, $db->error());
 
 		// Add g_view_users field to groups table
-		$db->add_field('groups', 'g_view_users', 'TINYINT(1)', false, 1, 'g_read_board');
+		$db->add_field('groups', 'g_view_users', 'TINYINT(1)', false, 1, 'g_read_board') or error('Unable to add g_view_users field', __FILE__, __LINE__, $db->error());
 
 		// Add the last_email_sent column to the users table and the g_send_email and
 		// g_email_flood columns to the groups table
-		$db->add_field('users', 'last_email_sent', 'INT(10) UNSIGNED', true, null, 'last_search');
-		$db->add_field('groups', 'g_send_email', 'TINYINT(1)', false, 1, 'g_search_users');
-		$db->add_field('groups', 'g_email_flood', 'SMALLINT(6)', false, 60, 'g_search_flood');
+		$db->add_field('users', 'last_email_sent', 'INT(10) UNSIGNED', true, null, 'last_search') or error('Unable to add last_email_sent field', __FILE__, __LINE__, $db->error());
+		$db->add_field('groups', 'g_send_email', 'TINYINT(1)', false, 1, 'g_search_users') or error('Unable to add g_send_email field', __FILE__, __LINE__, $db->error());
+		$db->add_field('groups', 'g_email_flood', 'SMALLINT(6)', false, 60, 'g_search_flood') or error('Unable to add g_email_flood field', __FILE__, __LINE__, $db->error());
 
 		// Set non-default g_send_email and g_flood_email values properly
 		$db->query('UPDATE '.$db->prefix.'groups SET g_send_email = 0 WHERE g_id = 3') or error('Unable to update group email permissions', __FILE__, __LINE__, $db->error());
 		$db->query('UPDATE '.$db->prefix.'groups SET g_email_flood = 0 WHERE g_id IN (1,2,3)') or error('Unable to update group email permissions', __FILE__, __LINE__, $db->error());
 
 		// Add the auto notify/subscription option to the users table
-		$db->add_field('users', 'auto_notify', 'TINYINT(1)', false, 0, 'notify_with_post');
+		$db->add_field('users', 'auto_notify', 'TINYINT(1)', false, 0, 'notify_with_post') or error('Unable to add auto_notify field', __FILE__, __LINE__, $db->error());
 
 		// Add the first_post_id column to the topics table
 		if (!$db->field_exists('topics', 'first_post_id'))
 		{
-			$db->add_field('topics', 'first_post_id', 'INT(10) UNSIGNED', false, 0, 'posted');
-			$db->add_index('topics', 'first_post_id_idx', array('first_post_id'));
+			$db->add_field('topics', 'first_post_id', 'INT(10) UNSIGNED', false, 0, 'posted') or error('Unable to add first_post_id field', __FILE__, __LINE__, $db->error());
+			$db->add_index('topics', 'first_post_id_idx', array('first_post_id')) or error('Unable to add first_post_id_idx index', __FILE__, __LINE__, $db->error());
 
 			// Now that we've added the column and indexed it, we need to give it correct data
 			$result = $db->query('SELECT MIN(id) AS first_post, topic_id FROM '.$db->prefix.'posts GROUP BY topic_id') or error('Unable to fetch first_post_id', __FILE__, __LINE__, $db->error());
@@ -813,11 +815,11 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$db->query('UPDATE '.$db->prefix.'users SET group_id=0 WHERE group_id=32000') or error('Unable to move unverified users', __FILE__, __LINE__, $db->error());
 
 		// Add the ban_creator column to the bans table
-		$db->add_field('bans', 'ban_creator', 'INT(10) UNSIGNED', false, 0);
+		$db->add_field('bans', 'ban_creator', 'INT(10) UNSIGNED', false, 0) or error('Unable to add ban_creator field', __FILE__, __LINE__, $db->error());
 
 		// Add the time/date format settings to the user table
-		$db->add_field('users', 'time_format', 'TINYINT(1)', false, 0, 'dst');
-		$db->add_field('users', 'date_format', 'TINYINT(1)', false, 0, 'dst');
+		$db->add_field('users', 'time_format', 'TINYINT(1)', false, 0, 'dst') or error('Unable to add time_format field', __FILE__, __LINE__, $db->error());
+		$db->add_field('users', 'date_format', 'TINYINT(1)', false, 0, 'dst') or error('Unable to add date_format field', __FILE__, __LINE__, $db->error());
 
 		// Should we do charset conversion or not?
 		if (strpos($cur_version, '1.2') === 0 && isset($_GET['convert_charset']))
@@ -966,7 +968,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$query_str = '?stage=conv_posts&req_old_charset='.$old_charset;
 
 		// Truncate the table
-		$db->query(($mysql ? 'TRUNCATE TABLE ' : 'DELETE FROM ').$db->prefix.'online') or error('Unable to empty online table', __FILE__, __LINE__, $db->error());
+		$db->truncate_table('online') or error('Unable to empty online table', __FILE__, __LINE__, $db->error());
 
 		alter_table_utf8($db->prefix.'online');
 
@@ -1040,7 +1042,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$query_str = '?stage=conv_search_matches&req_old_charset='.$old_charset;
 
 		// Truncate the table
-		$db->query(($mysql ? 'TRUNCATE TABLE ' : 'DELETE FROM ').$db->prefix.'search_cache') or error('Unable to empty search cache table', __FILE__, __LINE__, $db->error());
+		$db->truncate_table('search_cache') or error('Unable to empty search cache table', __FILE__, __LINE__, $db->error());
 
 		alter_table_utf8($db->prefix.'search_cache');
 
@@ -1052,7 +1054,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$query_str = '?stage=conv_search_words&req_old_charset='.$old_charset;
 
 		// Truncate the table
-		$db->query(($mysql ? 'TRUNCATE TABLE ' : 'DELETE FROM ').$db->prefix.'search_matches') or error('Unable to empty search index match table', __FILE__, __LINE__, $db->error());
+		$db->truncate_table('search_matches') or error('Unable to empty search index match table', __FILE__, __LINE__, $db->error());
 
 		alter_table_utf8($db->prefix.'search_matches');
 
@@ -1064,7 +1066,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$query_str = '?stage=conv_subscriptions&req_old_charset='.$old_charset;
 
 		// Truncate the table
-		$db->query(($mysql ? 'TRUNCATE TABLE ' : 'DELETE FROM ').$db->prefix.'search_words') or error('Unable to empty search index words table', __FILE__, __LINE__, $db->error());
+		$db->truncate_table('search_words') or error('Unable to empty search index words table', __FILE__, __LINE__, $db->error());
 
 		// Reset the sequence for the search words (not needed for SQLite)
 		switch ($db_type)
@@ -1150,7 +1152,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 
 		require PUN_ROOT.'include/search_idx.php';
 
-		// Fetch posts to
+		// Fetch posts to process this cycle
 		$result = $db->query('SELECT p.id, p.message, t.subject, t.first_post_id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id WHERE p.id > '.$start_at.' ORDER BY p.id ASC LIMIT '.PER_PAGE) or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
 
 		$end_at = 0;
