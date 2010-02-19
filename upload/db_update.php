@@ -201,7 +201,7 @@ function convert_to_utf8(&$str, $old_charset)
 	if (version_compare(PHP_VERSION, '5.0.0', '<') && $old_charset == 'ISO-8859-1' || $old_charset == 'ISO-8859-15')
 		$str = html_entity_decode($str, ENT_QUOTES, $old_charset);
 
-	if (!seems_utf8($str))
+	if ($old_charset != 'UTF-8' && !seems_utf8($str))
 	{
 		if ($old_charset == 'ISO-8859-1')
 			$str = utf8_encode($str);
@@ -232,40 +232,6 @@ function utf8_callback_1($matches)
 function utf8_callback_2($matches)
 {
 	return dcr2utf8(hexdec($matches[1]));
-}
-
-
-//
-// Tries to determine whether post data in the database is UTF-8 encoded or not
-//
-function db_seems_utf8()
-{
-	global $db_type, $db;
-
-	$seems_utf8 = true;
-
-	$result = $db->query('SELECT MIN(id), MAX(id) FROM '.$db->prefix.'posts') or error('Unable to fetch post IDs', __FILE__, __LINE__, $db->error());
-	list($min_id, $max_id) = $db->fetch_row($result);
-
-	if (empty($min_id) || empty($max_id))
-		return true;
-
-	// Get a random soup of data and check if it appears to be UTF-8
-	for ($i = 0; $i < 100; ++$i)
-	{
-		$id = ($i == 0) ? $min_id : (($i == 1) ? $max_id : rand($min_id, $max_id));
-
-		$result = $db->query('SELECT p.message, p.poster, t.subject, f.forum_name FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON (t.id = p.topic_id) INNER JOIN '.$db->prefix.'forums AS f ON (f.id = t.forum_id) WHERE p.id >= '.$id.' LIMIT 1') or error('Unable to fetch post information', __FILE__, __LINE__, $db->error());
-		$temp = implode('', $db->fetch_row($result));
-
-		if (!seems_utf8($temp) || preg_match('/&(#[0-9]+|#x[a-z0-9]+|[a-z0-9]+);/i', $temp))
-		{
-			$seems_utf8 = false;
-			break;
-		}
-	}
-
-	return $seems_utf8;
 }
 
 
@@ -336,8 +302,15 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 			alter_table_utf8($table.'_utf8');
 		}
 
+		// Change to latin1 mode so MySQL doesn't attempt to perform conversion on the data from the old table
+		$db->set_names('latin1');
+
 		// Move & Convert everything
-		$result = $db->query('SELECT * FROM '.$table.($start_at === null ? '' : ' WHERE '.$key.'>'.$start_at).' ORDER BY '.$key.' ASC'.($start_at === null ? '' : ' LIMIT '.PER_PAGE)) or error('Unable to select from old table', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT * FROM '.$table.($start_at === null ? '' : ' WHERE '.$key.'>'.$start_at).' ORDER BY '.$key.' ASC'.($start_at === null ? '' : ' LIMIT '.PER_PAGE), false) or error('Unable to select from old table', __FILE__, __LINE__, $db->error());
+
+		// Change back to utf8 mode so we can insert it into the new table
+		$db->set_names('utf8');
+
 		while ($cur_item = $db->fetch_assoc($result))
 		{
 			$cur_item = call_user_func($callback, $cur_item, $old_charset);
@@ -419,7 +392,6 @@ switch ($stage)
 {
 	// Show form
 	case '':
-		$db_seems_utf8 = db_seems_utf8();
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -441,11 +413,11 @@ switch ($stage)
 		<form method="get" action="<?php echo pun_htmlspecialchars($_SERVER['REQUEST_URI']) ?>" onsubmit="this.start.disabled=true">
 		<input type="hidden" name="stage" value="start" />
 			<div class="inform">
-				<p style="font-size: 1.1em">This script will update your forum database. The update procedure might take anything from a second to a few minutes depending on the speed of the server and the size of the forum database. Don't forget to make a backup of the database before continuing.</p>
+				<p style="font-size: 1.1em">This script will update your forum database. The update procedure might take anything from a second to hours depending on the speed of the server and the size of the forum database. Don't forget to make a backup of the database before continuing.</p>
 				<p style="font-size: 1.1em">Did you read the update instructions in the documentation? If not, start there.</p>
 <?php
 
-if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'])))
+if (strpos($cur_version, '1.2') === 0)
 {
 	if (!function_exists('iconv') && !function_exists('mb_convert_encoding'))
 	{
@@ -455,25 +427,12 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 <?php
 
 	}
-}
-
-if (strpos($cur_version, '1.2') === 0 && $db_seems_utf8 && !isset($_GET['force']))
-{
-
-?>
-				<p style="font-size: 1.1em"><span><strong>IMPORTANT!</strong> Based on a random selection of 100 posts, topic subjects, usernames and forum names from the database, it appears as if text in the database is currently UTF-8 encoded. This is a good thing. Based on this, the update process will not attempt to do charset conversion. If you have reason to believe that the charset conversion is required nonetheless, you can <a href="<?php echo pun_htmlspecialchars($_SERVER['REQUEST_URI']).((substr_count($_SERVER['REQUEST_URI'], '?') == 1) ? '&amp;' : '?').'force=1' ?>">force the conversion to run</a>.</p>
-<?php
-
-}
-
-if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'])))
-{
 
 ?>
 			</div>
 			<div class="inform">
-				<p style="font-size: 1.1em"><strong>Enable conversion:</strong> When enabled this update script will, after it has made the required structural changes to the database, convert all text in the database from the current character set to UTF-8. This conversion is required if you're upgrading from version 1.2 and you are not currently using an UTF-8 language pack.</p>
-				<p style="font-size: 1.1em"><strong>Current character set:</strong> If the primary language in your forum is English, you can leave this at the default value. However, if your forum is non-English, you should enter the character set of the primary language pack used in the forum.</p>
+				<p style="font-size: 1.1em"><strong>Enable conversion:</strong> When enabled this update script will, after it has made the required structural changes to the database, convert all text in the database from the current character set to UTF-8. This conversion is required if you're upgrading from version 1.2.</p>
+				<p style="font-size: 1.1em"><strong>Current character set:</strong> If the primary language in your forum is English, you can leave this at the default value. However, if your forum is non-English, you should enter the character set of the primary language pack used in the forum. <i>Getting this wrong can corrupt your database so don't just guess!</i> Note: This is required even if the old database is UTF-8.</p>
 			<fieldset>
 				<legend>Charset conversion</legend>
 				<div class="infldset">
