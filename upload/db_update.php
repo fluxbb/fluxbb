@@ -271,8 +271,8 @@ function alter_table_utf8($table)
 		{
 			$allow_null = ($cur_column['Null'] == 'YES');
 
-			$db->alter_field($table, $cur_column['Field'], preg_replace('/'.$type.'/i', $types[$type], $cur_column['Type']), $allow_null, $cur_column['Default']);
-			$db->alter_field($table, $cur_column['Field'], $cur_column['Type'].' CHARACTER SET utf8', $allow_null, $cur_column['Default']);
+			$db->alter_field($table, $cur_column['Field'], preg_replace('/'.$type.'/i', $types[$type], $cur_column['Type']), $allow_null, $cur_column['Default']) or error('Unable to alter field to binary', __FILE__, __LINE__, $db->error());
+			$db->alter_field($table, $cur_column['Field'], $cur_column['Type'].' CHARACTER SET utf8', $allow_null, $cur_column['Default']) or error('Unable to alter field to utf8', __FILE__, __LINE__, $db->error());
 		}
 	}
 }
@@ -293,7 +293,7 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 		if ($start_at === null || $start_at == 0)
 		{
 			// Drop any temp table that exists, in-case it's left over from a failed update
-			$db->query('DROP TABLE IF EXISTS '.$table.'_utf8') or error('Unable to drop temp table', __FILE__, __LINE__, $db->error());
+			$db->drop_table($table.'_utf8') or error('Unable to drop left over temp table', __FILE__, __LINE__, $db->error());
 
 			// Copy the table
 			$db->query('CREATE TABLE '.$table.'_utf8 LIKE '.$table) or error('Unable to create new table', __FILE__, __LINE__, $db->error());
@@ -335,7 +335,7 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 		if ($finished)
 		{
 			// Delete old table
-			$db->query('DROP TABLE '.$table) or error('Unable to drop old table', __FILE__, __LINE__, $db->error());
+			$db->drop_table($table) or error('Unable to drop old table', __FILE__, __LINE__, $db->error());
 
 			// Rename table
 			$db->query('ALTER TABLE '.$table.'_utf8 RENAME '.$table) or error('Unable to rename new table', __FILE__, __LINE__, $db->error());
