@@ -39,9 +39,8 @@ if (isset($_GET['i_per_page']) && isset($_GET['i_start_at']))
 		// This is the only potentially "dangerous" thing we can do here, so we check the referer
 		confirm_referrer('admin_maintenance.php');
 
-		$truncate_sql = ($db_type != 'sqlite' && $db_type != 'pgsql') ? 'TRUNCATE TABLE ' : 'DELETE FROM ';
-		$db->query($truncate_sql.$db->prefix.'search_matches') or error('Unable to empty search index match table', __FILE__, __LINE__, $db->error());
-		$db->query($truncate_sql.$db->prefix.'search_words') or error('Unable to empty search index words table', __FILE__, __LINE__, $db->error());
+		$db->truncate_table('search_matches') or error('Unable to empty search index match table', __FILE__, __LINE__, $db->error());
+		$db->truncate_table('search_words') or error('Unable to empty search index words table', __FILE__, __LINE__, $db->error());
 
 		// Reset the sequence for the search words (not needed for SQLite)
 		switch ($db_type)
@@ -87,40 +86,34 @@ h1 {
 
 <?php
 
+	$query_str = '';
+
 	require PUN_ROOT.'include/search_idx.php';
 
-	// Fetch posts to process
-	$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE id>='.$start_at.' ORDER BY id LIMIT '.$per_page) or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());
-	$topics = array();
-	while ($cur_topic = $db->fetch_row($result))
-		$topics[] = $cur_topic[0];
+	// Fetch posts to process this cycle
+	$result = $db->query('SELECT p.id, p.message, t.subject, t.first_post_id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id WHERE p.id >= '.$start_at.' ORDER BY p.id ASC LIMIT '.$per_page) or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
 
-	$result = $db->query('SELECT topic_id, id, message FROM '.$db->prefix.'posts WHERE topic_id IN ('.implode(',', $topics).') ORDER BY topic_id') or error('Unable to fetch topic/post info', __FILE__, __LINE__, $db->error());
-
-	$cur_topic = 0;
-	while ($cur_post = $db->fetch_row($result))
+	$end_at = 0;
+	while ($cur_item = $db->fetch_assoc($result))
 	{
-		if ($cur_post[0] != $cur_topic)
-		{
-			// Fetch subject and ID of first post in topic
-			$result2 = $db->query('SELECT p.id, t.subject, MIN(p.posted) AS first FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id WHERE t.id='.$cur_post[0].' GROUP BY p.id, t.subject ORDER BY first LIMIT 1') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
-			list($first_post, $subject) = $db->fetch_row($result2);
+		echo '<p><span>'.sprintf($lang_admin_maintenance['Processing post'], $cur_item['id']).'</span></p>'."\n";
 
-			$cur_topic = $cur_post[0];
-		}
-
-		echo '<p><span>'.sprintf($lang_admin_maintenance['Processing post'], $cur_post[1], $cur_post[0]).'</span></p>'."\n";
-
-		if ($cur_post[1] == $first_post) // This is the "topic post" so we have to index the subject as well
-			update_search_index('post', $cur_post[1], $cur_post[2], $subject);
+		if ($cur_item['id'] == $cur_item['first_post_id'])
+			update_search_index('post', $cur_item['id'], $cur_item['message'], $cur_item['subject']);
 		else
-			update_search_index('post', $cur_post[1], $cur_post[2]);
+			update_search_index('post', $cur_item['id'], $cur_item['message']);
+
+		$end_at = $cur_item['id'];
 	}
 
 	// Check if there is more work to do
-	$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE id>'.$cur_topic.' ORDER BY id ASC LIMIT 1') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
+	if ($end_at > 0)
+	{
+		$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE id > '.$end_at.' ORDER BY id ASC LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
-	$query_str = ($db->num_rows($result)) ? '?i_per_page='.$per_page.'&i_start_at='.$db->result($result) : '';
+		if ($db->num_rows($result) > 0)
+			$query_str = '?i_per_page='.$per_page.'&i_start_at='.$db->result($result);
+	}
 
 	$db->end_transaction();
 	$db->close();
@@ -130,7 +123,7 @@ h1 {
 
 
 // Get the first post ID from the db
-$result = $db->query('SELECT id FROM '.$db->prefix.'topics ORDER BY id LIMIT 1') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT id FROM '.$db->prefix.'posts ORDER BY id ASC LIMIT 1') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
 if ($db->num_rows($result))
 	$first_id = $db->result($result);
 
@@ -152,17 +145,17 @@ generate_admin_menu('maintenance');
 							<p><?php printf($lang_admin_maintenance['Rebuild index info'], '<a href="admin_options.php#maintenance">'.$lang_admin_common['Maintenance mode'].'</a>') ?></p>
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row"><?php echo $lang_admin_maintenance['Topics per cycle label'] ?></th>
+									<th scope="row"><?php echo $lang_admin_maintenance['Posts per cycle label'] ?></th>
 									<td>
-										<input type="text" name="i_per_page" size="7" maxlength="7" value="100" tabindex="1" />
-										<span><?php echo $lang_admin_maintenance['Topics per cycle help'] ?></span>
+										<input type="text" name="i_per_page" size="7" maxlength="7" value="300" tabindex="1" />
+										<span><?php echo $lang_admin_maintenance['Posts per cycle help'] ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang_admin_maintenance['Starting topic label'] ?></th>
+									<th scope="row"><?php echo $lang_admin_maintenance['Starting post label'] ?></th>
 									<td>
 										<input type="text" name="i_start_at" size="7" maxlength="7" value="<?php echo (isset($first_id)) ? $first_id : 0 ?>" tabindex="2" />
-										<span><?php echo $lang_admin_maintenance['Starting topic help'] ?></span>
+										<span><?php echo $lang_admin_maintenance['Starting post help'] ?></span>
 									</td>
 								</tr>
 								<tr>
