@@ -1111,7 +1111,7 @@ if (strpos($cur_version, '1.2') === 0)
 
 	// Rebuild the search index
 	case 'rebuild_idx':
-		/*$query_str = '?stage=preparse_posts';
+		$query_str = '?stage=preparse_posts';
 
 		require PUN_ROOT.'include/search_idx.php';
 
@@ -1205,7 +1205,7 @@ if (strpos($cur_version, '1.2') === 0)
 
 
 	// Show results page
-	case 'finish':*/
+	case 'finish':
 		// We update the version number
 		$db->query('UPDATE '.$db->prefix.'config SET conf_value = \''.UPDATE_TO.'\' WHERE conf_name = \'o_cur_version\'') or error('Unable to update version', __FILE__, __LINE__, $db->error());
 

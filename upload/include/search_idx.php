@@ -145,9 +145,6 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 		$db->free_result($result);
 
 		$new_words = array_diff($unique_words, array_keys($word_ids));
-		echo '"'.implode('","', $unique_words).'"'."<br />\n";
-		echo '"'.implode('","', array_keys($word_ids)).'"'."<br />\n";
-		echo '"'.implode('","', $new_words).'"'."<br />\n";
 		unset($unique_words);
 
 		if (!empty($new_words))
