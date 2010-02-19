@@ -342,10 +342,11 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 		{
 			$cur_item = call_user_func($callback, $cur_item, $old_charset);
 
+			$temp = array();
 			foreach ($cur_item as $idx => $value)
-				$cur_item[$idx] = $value === null ? 'NULL' : '\''.$db->escape($value).'\'';
+				$temp[$idx] = $value === null ? 'NULL' : '\''.$db->escape($value).'\'';
 
-			$db->query('INSERT INTO '.$table.'_utf8('.implode(',', array_keys($cur_item)).') VALUES ('.implode(',', array_values($cur_item)).')') or error('Unable to insert data to new table', __FILE__, __LINE__, $db->error());
+			$db->query('INSERT INTO '.$table.'_utf8('.implode(',', array_keys($temp)).') VALUES ('.implode(',', array_values($temp)).')') or error('Unable to insert data to new table', __FILE__, __LINE__, $db->error());
 
 			$end_at = $cur_item[$key];
 		}
@@ -852,7 +853,7 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$query_str = '?stage=conv_censors&req_old_charset='.$old_charset;
 
 		echo 'Converting categories …'."<br />\n";
-		
+
 		function _conv_categories($cur_item, $old_charset)
 		{
 			convert_to_utf8($cur_item['cat_name'], $old_charset);
@@ -1155,6 +1156,8 @@ if (strpos($cur_version, '1.2') === 0 && (!$db_seems_utf8 || isset($_GET['force'
 		$end_at = 0;
 		while ($cur_item = $db->fetch_assoc($result))
 		{
+			echo 'Rebuilding index for post '.$cur_item['id'].' …<br />'."\n";
+
 			if ($cur_item['id'] == $cur_item['first_post_id'])
 				update_search_index('post', $cur_item['id'], $cur_item['message'], $cur_item['subject']);
 			else
