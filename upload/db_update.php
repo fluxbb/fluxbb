@@ -266,13 +266,17 @@ function alter_table_utf8($table)
 	$result = $db->query('SHOW FULL COLUMNS FROM '.$table) or error('Unable to fetch column information', __FILE__, __LINE__, $db->error());
 	while ($cur_column = $db->fetch_assoc($result))
 	{
+		if ($cur_column['Collation'] === null)
+			continue;
+
 		list($type) = explode('(', $cur_column['Type']);
 		if (isset($types[$type]) && strpos($cur_column['Collation'], 'utf8') === false)
 		{
 			$allow_null = ($cur_column['Null'] == 'YES');
+			$collate = (substr($cur_column['Collation'], -3) == 'bin') ? 'utf8_bin' : 'utf8_general_ci';
 
 			$db->alter_field($table, $cur_column['Field'], preg_replace('/'.$type.'/i', $types[$type], $cur_column['Type']), $allow_null, $cur_column['Default'], null, true) or error('Unable to alter field to binary', __FILE__, __LINE__, $db->error());
-			$db->alter_field($table, $cur_column['Field'], $cur_column['Type'].' CHARACTER SET utf8', $allow_null, $cur_column['Default'], null, true) or error('Unable to alter field to utf8', __FILE__, __LINE__, $db->error());
+			$db->alter_field($table, $cur_column['Field'], $cur_column['Type'].' CHARACTER SET utf8 COLLATE '.$collate, $allow_null, $cur_column['Default'], null, true) or error('Unable to alter field to utf8', __FILE__, __LINE__, $db->error());
 		}
 	}
 }
@@ -1107,7 +1111,7 @@ if (strpos($cur_version, '1.2') === 0)
 
 	// Rebuild the search index
 	case 'rebuild_idx':
-		$query_str = '?stage=preparse_posts';
+		/*$query_str = '?stage=preparse_posts';
 
 		require PUN_ROOT.'include/search_idx.php';
 
@@ -1201,7 +1205,7 @@ if (strpos($cur_version, '1.2') === 0)
 
 
 	// Show results page
-	case 'finish':
+	case 'finish':*/
 		// We update the version number
 		$db->query('UPDATE '.$db->prefix.'config SET conf_value = \''.UPDATE_TO.'\' WHERE conf_name = \'o_cur_version\'') or error('Unable to update version', __FILE__, __LINE__, $db->error());
 

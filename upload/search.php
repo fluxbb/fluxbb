@@ -24,6 +24,7 @@ if ($pun_user['g_read_board'] == '0')
 else if ($pun_user['g_search'] == '0')
 	message($lang_search['No search permission']);
 
+require PUN_ROOT.'include/search_idx.php';
 
 // Figure out what to do :-)
 if (isset($_GET['action']) || isset($_GET['search_id']))
@@ -117,15 +118,8 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			// If it's a search for keywords
 			if ($keywords)
 			{
-				// Remove any apostrophes which aren't part of words
-				$keywords = substr(preg_replace('((?<=\W)\'|\'(?=\W))', '', ' '.$keywords.' '), 1, -1);
-				// Remove symbols and multiple whitespace
-				$keywords = preg_replace('/[\^\$&\(\)<>`"\|,@_\?%~\+\[\]{}:=\/#\\\\;!\.\s]+/', ' ', $keywords);
-
-				// Fill an array with all the words
-				$keywords_array = array_unique(explode(' ', $keywords));
-				// Remove any words that are not indexed
-				$keywords_array = array_filter($keywords_array, 'validate_search_word');
+				// split the keywords into words
+				$keywords_array = split_words($keywords, true);
 
 				if (empty($keywords_array))
 					message($lang_search['No hits']);

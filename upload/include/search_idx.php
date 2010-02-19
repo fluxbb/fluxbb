@@ -21,14 +21,16 @@ if (!defined('PUN'))
 // "Cleans up" a text string and returns an array of unique words
 // This function depends on the current locale setting
 //
-function split_words($text)
+function split_words($text, $allow_keywords)
 {
 	// Remove BBCode
 	$text = preg_replace('/\[\/?(b|u|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]/', ' ', $text);
 	// Remove any apostrophes which aren't part of words
 	$text = substr(preg_replace('((?<=\W)\'|\'(?=\W))', '', ' '.$text.' '), 1, -1);
 	// Remove symbols and multiple whitespace
-	$text = preg_replace('/[\^\$&\(\)<>`"\|,@_\?%~\+\[\]{}:=\/#\\\\;!\*\.\s]+/', ' ', $text);
+	$text = preg_replace('/[\^\$&\(\)<>`"“”\|,@_\?%~\+\[\]{}:=\/#\\\\;!\*\.…\s]+/', ' ', $text);
+	// Replace multiple dashes with just one
+	$text = preg_replace('/([\-])+/', '$1', $text);
 
 	// Fill an array with all the words
 	$words = array_unique(explode(' ', $text));
@@ -36,9 +38,52 @@ function split_words($text)
 	// Remove any words that should not be indexed
 	$words = array_filter($words, 'validate_search_word');
 
+	// If we aren't allowed keywords, remove them
+	if (!$allow_keywords)
+		$words = array_filter($words, 'not_is_keyword');
+
 	return $words;
 }
 
+
+//
+// Checks if a word is a valid searchable word
+//
+function validate_search_word($word)
+{
+	global $pun_user;
+	static $stopwords;
+
+	// We must allow keywords through for now! Note the double negative...
+	if (!not_is_keyword($word))
+		return true;
+
+	if (!isset($stopwords))
+	{
+		if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/stopwords.txt'))
+		{
+			$stopwords = file(PUN_ROOT.'lang/'.$pun_user['language'].'/stopwords.txt');
+			$stopwords = array_map('pun_trim', $stopwords);
+			$stopwords = array_filter($stopwords);
+		}
+		else
+			$stopwords = array();
+
+	}
+
+	$num_chars = pun_strlen($word);
+	return $num_chars >= PUN_SEARCH_MIN_WORD && $num_chars <= PUN_SEARCH_MAX_WORD && !in_array($word, $stopwords);
+}
+
+
+//
+// Check a given word is not a search keyword.
+// The logic is backwards so we can easily use it in array_filter to remove keywords.
+//
+function not_is_keyword($word)
+{
+	return $word != 'and' && $word != 'or' && $word != 'not';
+}
 
 //
 // Updates the search index with the contents of $post_id (and $subject)
@@ -51,8 +96,8 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 	$subject = utf8_strtolower($subject);
 
 	// Split old and new post/subject to obtain array of 'words'
-	$words_message = split_words($message);
-	$words_subject = ($subject) ? split_words($subject) : array();
+	$words_message = split_words($message, false);
+	$words_subject = ($subject) ? split_words($subject, false) : array();
 
 	if ($mode == 'edit')
 	{
@@ -100,6 +145,9 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 		$db->free_result($result);
 
 		$new_words = array_diff($unique_words, array_keys($word_ids));
+		echo '"'.implode('","', $unique_words).'"'."<br />\n";
+		echo '"'.implode('","', array_keys($word_ids)).'"'."<br />\n";
+		echo '"'.implode('","', $new_words).'"'."<br />\n";
 		unset($unique_words);
 
 		if (!empty($new_words))
