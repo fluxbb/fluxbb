@@ -99,9 +99,6 @@ class DBLayer
 
 	function query($sql, $unbuffered = false) // $unbuffered is ignored since there is no pgsql_unbuffered_query()
 	{
-		if (strlen($sql) > 140000)
-			exit('Insane query. Aborting.');
-
 		if (strrpos($sql, 'LIMIT') !== false)
 			$sql = preg_replace('#LIMIT ([0-9]+),([ 0-9]+)#', 'LIMIT \\2 OFFSET \\1', $sql);
 

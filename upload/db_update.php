@@ -8,7 +8,7 @@
 
 // The FluxBB version this script updates to
 define('UPDATE_TO', '1.4-rc1');
-define('UPDATE_TO_DB_REVISION', 4);
+define('UPDATE_TO_DB_REVISION', 5);
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
 define('MIN_PGSQL_VERSION', '7.0.0');
@@ -767,9 +767,7 @@ if (strpos($cur_version, '1.2') === 0)
 			$result = $db->query('SELECT MIN(id) AS first_post, topic_id FROM '.$db->prefix.'posts GROUP BY topic_id') or error('Unable to fetch first_post_id', __FILE__, __LINE__, $db->error());
 
 			while ($cur_post = $db->fetch_assoc($result))
-			{
 				$db->query('UPDATE '.$db->prefix.'topics SET first_post_id = '.$cur_post['first_post'].' WHERE id = '.$cur_post['topic_id']) or error('Unable to update first_post_id', __FILE__, __LINE__, $db->error());
-			}
 		}
 
 		// Move any users with the old unverified status to their new group
@@ -781,6 +779,9 @@ if (strpos($cur_version, '1.2') === 0)
 		// Add the time/date format settings to the user table
 		$db->add_field('users', 'time_format', 'TINYINT(1)', false, 0, 'dst') or error('Unable to add time_format field', __FILE__, __LINE__, $db->error());
 		$db->add_field('users', 'date_format', 'TINYINT(1)', false, 0, 'dst') or error('Unable to add date_format field', __FILE__, __LINE__, $db->error());
+
+		// Change the search_data field to mediumtext
+		$db->alter_field('search_cache', 'search_data', 'MEDIUMTEXT') or error('Unable to alter search_data field', __FILE__, __LINE__, $db->error());
 
 		// Should we do charset conversion or not?
 		if (strpos($cur_version, '1.2') === 0 && isset($_GET['convert_charset']))

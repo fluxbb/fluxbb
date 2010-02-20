@@ -64,9 +64,6 @@ class DBLayer
 
 	function query($sql, $unbuffered = false)
 	{
-		if (strlen($sql) > 140000)
-			exit('Insane query. Aborting.');
-
 		if (defined('PUN_SHOW_QUERIES'))
 			$q_start = get_microtime();
 

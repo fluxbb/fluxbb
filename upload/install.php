@@ -8,7 +8,7 @@
 
 // The FluxBB version this script installs
 define('FORUM_VERSION', '1.4-rc1');
-define('FORUM_DB_REVISION', 4);
+define('FORUM_DB_REVISION', 5);
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
 define('MIN_PGSQL_VERSION', '7.0.0');
@@ -1081,7 +1081,7 @@ else
 				'default'		=> '\'\''
 			),
 			'search_data'	=> array(
-				'datatype'		=> 'TEXT',
+				'datatype'		=> 'MEDIUMTEXT',
 				'allow_null'	=> true
 			)
 		),
