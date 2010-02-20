@@ -49,24 +49,24 @@ function split_words($text, $allow_keywords)
 //
 function validate_search_word($word)
 {
-	global $pun_user;
+	global $pun_user, $pun_config;
 	static $stopwords;
 
 	// We must allow keywords through for now! Note the double negative...
 	if (!not_is_keyword($word))
 		return true;
 
+	$language = isset($pun_user['language']) ? $pun_user['language'] : $pun_config['o_default_lang'];
 	if (!isset($stopwords))
 	{
-		if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/stopwords.txt'))
+		if (file_exists(PUN_ROOT.'lang/'.$language.'/stopwords.txt'))
 		{
-			$stopwords = file(PUN_ROOT.'lang/'.$pun_user['language'].'/stopwords.txt');
+			$stopwords = file(PUN_ROOT.'lang/'.$language.'/stopwords.txt');
 			$stopwords = array_map('pun_trim', $stopwords);
 			$stopwords = array_filter($stopwords);
 		}
 		else
 			$stopwords = array();
-
 	}
 
 	$num_chars = pun_strlen($word);

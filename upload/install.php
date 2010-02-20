@@ -1586,6 +1586,7 @@ else
 
 	// Index the test post so searching for it works
 	require PUN_ROOT.'include/search_idx.php';
+	$pun_config['o_default_lang'] = $default_lang;
 	update_search_index('post', 1, $message, $subject);
 
 	$db->end_transaction();
