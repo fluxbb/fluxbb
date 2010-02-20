@@ -23,8 +23,8 @@ function split_words($text, $allow_keywords)
 {
 	// Remove BBCode
 	$text = preg_replace('/\[\/?(b|u|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]/', ' ', $text);
-	// Remove any apostrophes which aren't part of words
-	$text = substr(preg_replace('((?<=\W)\'|\'(?=\W))', '', ' '.$text.' '), 1, -1);
+	// Remove any apostrophes or dashes which aren't part of words
+	$text = substr(preg_replace('/((?<=\W)[\'\-]|[\'\-](?=\W))/', '', ' '.$text.' '), 1, -1);
 	// Remove symbols and multiple whitespace
 	$text = preg_replace('/[\^\$&\(\)<>`"“”\|,@_\?%~\+\[\]{}:=\/#\\\\;!\*\.…\s]+/', ' ', $text);
 	// Replace multiple dashes with just one
