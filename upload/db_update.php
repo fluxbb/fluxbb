@@ -450,7 +450,7 @@ if (strpos($cur_version, '1.2') === 0)
 							<th scope="row">Current character set:</th>
 							<td>
 								<input type="text" name="req_old_charset" size="12" maxlength="20" value="<?php echo $old_charset ?>" /><br />
-								<span>Accept default for English forums otherwise the character set of the primary langauge pack.</span>
+								<span>Accept default for English forums otherwise the character set of the primary language pack.</span>
 							</td>
 						</tr>
 					</table>
