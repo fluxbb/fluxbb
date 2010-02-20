@@ -83,6 +83,30 @@ function not_is_keyword($word)
 	return $word != 'and' && $word != 'or' && $word != 'not';
 }
 
+
+//
+// Strip [img] [url] and [email] out of the message so we don't index their contents
+//
+function strip_bbcode($text)
+{
+	static $patterns;
+
+	if (!isset($patterns))
+	{
+		$patterns = array(
+			'#\[img\]((ht|f)tps?://)([^\s<"]*?)\[/img\]#'					=>	'',		// Remove the whole thing
+			'#\[img=([^\[]*?)\]((ht|f)tps?://)([^\s<"]*?)\[/img\]#'			=>	'$1',	// Keep the alt description
+			'#\[url\]([^\[]*?)\[/url\]#'									=>	'',		// Remove the whole thing
+			'#\[url=([^\[]+?)\](.*?)\[/url\]#'								=>	'$2',	// Keep the text
+			'#\[email\]([^\[]*?)\[/email\]#'								=>	'',		// Remove the whole thing
+			'#\[email=([^\[]+?)\](.*?)\[/email\]#'							=>	'$2',	// Keep the text
+		);
+	}
+
+	return preg_replace(array_keys($patterns), array_values($patterns), $text);
+}
+
+
 //
 // Updates the search index with the contents of $post_id (and $subject)
 //
@@ -92,6 +116,9 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 	$message = utf8_strtolower($message);
 	$subject = utf8_strtolower($subject);
+
+	// Remove any bbcode that we shouldn't index
+	$message = strip_bbcode($message);
 
 	// Split old and new post/subject to obtain array of 'words'
 	$words_message = split_words($message, false);
