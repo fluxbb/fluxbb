@@ -1,12 +1,10 @@
 <?php
 
-/*---
-
-	Copyright (C) 2008-2010 FluxBB.org
-	based on code copyright (C) 2002-2008 PunBB.org
-	License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
-
----*/
+/**
+ * Copyright (C) 2008-2010 FluxBB
+ * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
+ * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
+ */
 
 // Make sure we have built in support for MySQL
 if (!function_exists('mysql_connect'))
