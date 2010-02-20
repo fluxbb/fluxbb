@@ -781,7 +781,7 @@ if (strpos($cur_version, '1.2') === 0)
 		$db->add_field('users', 'date_format', 'TINYINT(1)', false, 0, 'dst') or error('Unable to add date_format field', __FILE__, __LINE__, $db->error());
 
 		// Change the search_data field to mediumtext
-		$db->alter_field('search_cache', 'search_data', 'MEDIUMTEXT') or error('Unable to alter search_data field', __FILE__, __LINE__, $db->error());
+		$db->alter_field('search_cache', 'search_data', 'MEDIUMTEXT', true) or error('Unable to alter search_data field', __FILE__, __LINE__, $db->error());
 
 		// Should we do charset conversion or not?
 		if (strpos($cur_version, '1.2') === 0 && isset($_GET['convert_charset']))
