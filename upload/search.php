@@ -192,36 +192,27 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 				if ($db->num_rows($result))
 				{
-					$user_ids = '';
+					$user_ids = array();
 					while ($row = $db->fetch_row($result))
-						$user_ids .= (($user_ids != '') ? ',' : '').$row[0];
+						$user_ids[] = $row[0];
 
-					$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE poster_id IN('.$user_ids.')') or error('Unable to fetch matched posts list', __FILE__, __LINE__, $db->error());
-
-					$search_ids = array();
-					while ($row = $db->fetch_row($result))
-						$author_results[] = $row[0];
+					$result = $db->query('SELECT id AS post_id, topic_id FROM '.$db->prefix.'posts WHERE poster_id IN('.implode(',', $user_ids).')') or error('Unable to fetch matched posts list', __FILE__, __LINE__, $db->error());
+					while ($temp = $db->fetch_assoc($result))
+						$author_results[$temp['post_id']] = $temp['topic_id'];
 
 					$db->free_result($result);
 				}
 			}
 
-
+			// If we searched for both keywords and author name we want the intersection between the results
 			if ($author && $keywords)
-			{
-				// If we searched for both keywords and author name we want the intersection between the results
-				$search_ids = array_intersect($keyword_results, $author_results);
-				unset($keyword_results, $author_results);
-			}
+				$search_ids = array_intersect_assoc($keyword_results, $author_results);
 			else if ($keywords)
 				$search_ids = $keyword_results;
 			else
 				$search_ids = $author_results;
 
-			$num_hits = count($search_ids);
-			if (!$num_hits)
-				message($lang_search['No hits']);
-
+			unset($keyword_results, $author_results);
 
 			if ($show_as == 'topics')
 				$search_ids = array_values($search_ids);
@@ -229,7 +220,10 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$search_ids = array_keys($search_ids);
 
 			$search_ids = array_unique($search_ids);
+
 			$num_hits = count($search_ids);
+			if (!$num_hits)
+				message($lang_search['No hits']);
 		}
 		else if ($action == 'show_new' || $action == 'show_24h' || $action == 'show_user' || $action == 'show_subscriptions' || $action == 'show_unanswered')
 		{
