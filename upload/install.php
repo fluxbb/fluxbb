@@ -210,7 +210,7 @@ function process_form(the_form)
 						<p>FluxBB currently supports MySQL, PostgreSQL and SQLite. If your database of choice is missing from the drop-down menu below, it means this PHP environment does not have support for that particular database. More information regarding support for particular versions of each database can be found in the FAQ.</p>
 <?php if ($dual_mysql): ?>						<p>FluxBB has detected that your PHP environment supports two different ways of communicating with MySQL. The two options are called standard and improved. If you are uncertain which one to use, start by trying improved and if that fails, try standard.</p>
 <?php endif; ?><?php if ($mysql_innodb): ?>						<p>FluxBB has detected that your MySQL server might support <a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-overview.html">InnoDB</a>. This would be a good choice if you are planning to run a large forum. If you are uncertain, it is recommended that you do not use InnoDB.</p>
-<?php endif; ?>						<label class="required"><strong>Database type <span><?php echo $lang_common['Required'] ?></span></strong>
+<?php endif; ?>						<label class="required"><strong>Database type <span>(Required)</span></strong>
 						<br /><select name="req_db_type">
 <?php
 
@@ -228,7 +228,7 @@ function process_form(the_form)
 					<legend>Enter your database server hostname</legend>
 					<div class="infldset">
 						<p>The address of the database server (example: localhost, db.myhost.com or 192.168.0.15). You can specify a custom port number if your database doesn't run on the default port (example: localhost:3580). For SQLite support, just enter anything or leave it at 'localhost'.</p>
-						<label class="required"><strong>Database server hostname <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_db_host" value="localhost" size="50" maxlength="100" /><br /></label>
+						<label class="required"><strong>Database server hostname <span>(Required)</span></strong><br /><input type="text" name="req_db_host" value="localhost" size="50" maxlength="100" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -237,7 +237,7 @@ function process_form(the_form)
 					<legend>Enter the name of your database</legend>
 					<div class="infldset">
 						<p>The name of the database that FluxBB will be installed into. The database must exist. For SQLite, this is the relative path to the database file. If the SQLite database file does not exist, FluxBB will attempt to create it.</p>
-						<label class="required"><strong>Database name <span><?php echo $lang_common['Required'] ?></span></strong><br /><input id="req_db_name" type="text" name="req_db_name" size="30" maxlength="50" /><br /></label>
+						<label class="required"><strong>Database name <span>(Required)</span></strong><br /><input id="req_db_name" type="text" name="req_db_name" size="30" maxlength="50" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -270,7 +270,7 @@ function process_form(the_form)
 					<legend>Enter Administrator's username</legend>
 					<div class="infldset">
 						<p>The username of the forum administrator. You can later create more administrators and moderators. Usernames can be between 2 and 25 characters long.</p>
-						<label class="required"><strong>Administrator's username <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" /><br /></label>
+						<label class="required"><strong>Administrator's username <span>(Required)</span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -279,8 +279,8 @@ function process_form(the_form)
 					<legend>Enter and confirm Administrator's password</legend>
 					<div class="infldset">
 					<p>Passwords must be at least 4 characters long. Passwords are case sensitive.</p>
-						<label class="conl required"><strong>Password <span><?php echo $lang_common['Required'] ?></span></strong><br /><input id="req_password1" type="password" name="req_password1" size="16" /><br /></label>
-						<label class="conl required"><strong>Confirm password <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="password" name="req_password2" size="16" /><br /></label>
+						<label class="conl required"><strong>Password <span>(Required)</span></strong><br /><input id="req_password1" type="password" name="req_password1" size="16" /><br /></label>
+						<label class="conl required"><strong>Confirm password <span>(Required)</span></strong><br /><input type="password" name="req_password2" size="16" /><br /></label>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
@@ -290,7 +290,7 @@ function process_form(the_form)
 					<legend>Enter Administrator's email</legend>
 					<div class="infldset">
 						<p>The email address of the forum administrator.</p>
-						<label class="required"><strong>Administrator's email <span><?php echo $lang_common['Required'] ?></span></strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="80" /><br /></label>
+						<label class="required"><strong>Administrator's email <span>(Required)</span></strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="80" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -303,7 +303,7 @@ function process_form(the_form)
 					<legend>Enter your board's title</legend>
 					<div class="infldset">
 						<p>The title of this bulletin board (shown at the top of every page).</p>
-						<label class="required"><strong>Board title <span><?php echo $lang_common['Required'] ?></span></strong><br /><input id="req_title" type="text" name="req_title" value="<?php echo pun_htmlspecialchars($title) ?>" size="60" maxlength="255" /><br /></label>
+						<label class="required"><strong>Board title <span>(Required)</span></strong><br /><input id="req_title" type="text" name="req_title" value="<?php echo pun_htmlspecialchars($title) ?>" size="60" maxlength="255" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -321,7 +321,7 @@ function process_form(the_form)
 					<legend>Enter the Base URL of your FluxBB installation</legend>
 					<div class="infldset">
 						<p>The URL (without trailing slash) of your FluxBB forum (example: http://forum.myhost.com or http://myhost.com/~myuser). This <strong>must</strong> be correct, otherwise, administrators and moderators will not be able to submit any forms. Please note that the preset value below is just an educated guess by FluxBB.</p>
-						<label class="required"><strong>Base URL <span><?php echo $lang_common['Required'] ?></span></strong><br /><input id="req_base_url" type="text" name="req_base_url" value="<?php echo pun_htmlspecialchars($base_url) ?>" size="60" maxlength="100" /><br /></label>
+						<label class="required"><strong>Base URL <span>(Required)</span></strong><br /><input id="req_base_url" type="text" name="req_base_url" value="<?php echo pun_htmlspecialchars($base_url) ?>" size="60" maxlength="100" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -330,7 +330,7 @@ function process_form(the_form)
 					<legend>Choose the default language</legend>
 					<div class="infldset">
 						<p>The default language used for guests and users who haven't changed from the default in their profile.</p>
-						<label class="required"><strong>Default language <span><?php echo $lang_common['Required'] ?></span></strong><br /><select id="req_default_lang" name="req_default_lang">
+						<label class="required"><strong>Default language <span>(Required)</span></strong><br /><select id="req_default_lang" name="req_default_lang">
 <?php
 
 		$languages = array();
@@ -362,7 +362,7 @@ function process_form(the_form)
 					<legend>Choose the default style</legend>
 					<div class="infldset">
 						<p>The default style used for guests and users who haven't changed from the default in their profile.</p>
-						<label class="required"><strong>Default style <span><?php echo $lang_common['Required'] ?></span></strong><br /><select id="req_default_style" name="req_default_style">
+						<label class="required"><strong>Default style <span>(Required)</span></strong><br /><select id="req_default_style" name="req_default_style">
 <?php
 
 		$styles = array();
