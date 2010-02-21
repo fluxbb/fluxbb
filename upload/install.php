@@ -114,7 +114,10 @@ if (!isset($_POST['form_sent']))
 		exit('This PHP environment does not have support for any of the databases that FluxBB supports. PHP needs to have support for either MySQL, PostgreSQL or SQLite in order for FluxBB to be installed.');
 
 	// Make an educated guess regarding base_url
-	$base_url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://').preg_replace('/:80$/', '', $_SERVER['HTTP_HOST']).str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+	$base_url  = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';	// protocol
+	$base_url .= preg_replace('/:(80|443)$/', '', $_SERVER['HTTP_HOST']);							// host[:port]
+	$base_url .= str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));							// path
+
 	if (substr($base_url, -1) == '/')
 		$base_url = substr($base_url, 0, -1);
 

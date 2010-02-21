@@ -479,7 +479,7 @@ if (strpos($cur_version, '1.2') === 0)
 
 	// Start by updating the database structure
 	case 'start':
-		$query_str = '?stage=preparse_posts';
+		$query_str = '?stage=pre_finish';
 
 		// Make all email fields VARCHAR(80)
 		$db->alter_field('bans', 'email', 'VARCHAR(80)', true) or error('Unable to alter email field', __FILE__, __LINE__, $db->error());
@@ -557,10 +557,13 @@ if (strpos($cur_version, '1.2') === 0)
 			if (!isset($base_url))
 			{
 				// Make an educated guess regarding base_url
-				$base_url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://').preg_replace('/:80$/', '', $_SERVER['HTTP_HOST']).substr(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), 0, -6);
-				if (substr($base_url, -1) == '/')
-					$base_url = substr($base_url, 0, -1);
+				$base_url  = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';	// protocol
+				$base_url .= preg_replace('/:(80|443)$/', '', $_SERVER['HTTP_HOST']);							// host[:port]
+				$base_url .= str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));							// path
 			}
+
+			if (substr($base_url, -1) == '/')
+				$base_url = substr($base_url, 0, -1);
 
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_base_url\', \''.$db->escape($base_url).'\')') or error('Unable to insert config value \'o_quote_depth\'', __FILE__, __LINE__, $db->error());
 		}
@@ -1108,9 +1111,40 @@ if (strpos($cur_version, '1.2') === 0)
 		break;
 
 
+	// Check if we need to do any more work
+	case 'pre_finish':
+		$query_str = '?stage=finish';
+
+		// If we are doing a major update
+		if (strpos($cur_version, substr(UPDATE_TO, 0, 2)) !== 0)
+			$query_str = '?stage=rebuild_idx';
+
+		break;
+
+
 	// Rebuild the search index
 	case 'rebuild_idx':
 		$query_str = '?stage=preparse_posts';
+
+		// Truncate the tables just in-case we didn't already (if we are coming directly here without converting the tables)
+		$db->truncate_table('search_cache') or error('Unable to empty search cache table', __FILE__, __LINE__, $db->error());
+		$db->truncate_table('search_matches') or error('Unable to empty search index match table', __FILE__, __LINE__, $db->error());
+		$db->truncate_table('search_words') or error('Unable to empty search index words table', __FILE__, __LINE__, $db->error());
+
+		// Reset the sequence for the search words (not needed for SQLite)
+		switch ($db_type)
+		{
+			case 'mysql':
+			case 'mysqli':
+			case 'mysql_innodb':
+			case 'mysqli_innodb':
+				$db->query('ALTER TABLE '.$db->prefix.'search_words auto_increment=1') or error('Unable to update table auto_increment', __FILE__, __LINE__, $db->error());
+				break;
+
+			case 'pgsql';
+				$db->query('SELECT setval(\''.$db->prefix.'search_words_id_seq\', 1, false)') or error('Unable to update sequence', __FILE__, __LINE__, $db->error());
+				break;
+		}
 
 		require PUN_ROOT.'include/search_idx.php';
 
