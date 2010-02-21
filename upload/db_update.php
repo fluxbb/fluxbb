@@ -462,7 +462,7 @@ if (strpos($cur_version, '1.2') === 0)
 
 ?>
 			</div>
-			<p><input type="submit" name="start" value="Start update" /></p>
+			<p class="buttons"><input type="submit" name="start" value="Start update" /></p>
 		</form>
 	</div>
 </div>
