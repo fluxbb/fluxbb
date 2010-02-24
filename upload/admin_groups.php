@@ -448,7 +448,7 @@ else if (isset($_GET['del_group']))
 						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="del_group" value="<?php echo $lang_admin_groups['Delete group'] ?>" /></p>
+				<p class="buttons"><input type="submit" name="del_group" value="<?php echo $lang_admin_groups['Delete group'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_admin_common['Go back'] ?></a></p>
 			</form>
 		</div>
 	</div>
