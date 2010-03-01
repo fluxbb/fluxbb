@@ -213,9 +213,19 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					}
 				}
 
-				// Sort the results
-				array_multisort($sort_data, $sort_dir == 'DESC' ? SORT_DESC : SORT_ASC, $sort_type, $keyword_results);
-				unset($sort_data);
+				// Sort the results - annoyingly array_multisort re-indexes arrays with numeric keys, so we need to split the keys out into a seperate array then combine them again after
+				$post_ids = array_keys($keyword_results);
+				$topic_ids = array_values($keyword_results);
+
+				array_multisort(array_values($sort_data), $sort_dir == 'DESC' ? SORT_DESC : SORT_ASC, $sort_type, $post_ids, $topic_ids);
+
+				// combine the arrays back into a key=>value array (array_combine is PHP5 only unfortunately)
+				$num_results = count($keyword_results);
+				$keyword_results = array();
+				for ($i = 0;$i < $num_results;$i++)
+					$keyword_results[$post_ids[$i]] = $topic_ids[$i];
+
+				unset($sort_data, $post_ids, $topic_ids);
 			}
 
 			// If it's a search for author name (and that author name isn't Guest)
