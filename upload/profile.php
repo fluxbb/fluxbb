@@ -667,10 +667,10 @@ else if (isset($_POST['form_sent']))
 		case 'essentials':
 		{
 			$form = array(
-				'timezone'		=> floatval($POST['form']['timezone']),
+				'timezone'		=> floatval($_POST['form']['timezone']),
 				'dst'			=> $_POST['form']['dst'] != '1' ? '0' : '1',
-				'time_format'	=> intval($POST['form']['time_format']),
-				'date_format'	=> intval($POST['form']['date_format']),
+				'time_format'	=> intval($_POST['form']['time_format']),
+				'date_format'	=> intval($_POST['form']['date_format']),
 			);
 
 			// Make sure we got a valid language string
