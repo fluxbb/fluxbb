@@ -66,9 +66,7 @@ if (isset($_POST['form_sent']))
 	// Clean up message from POST
 	$message = pun_linebreaks(pun_trim($_POST['req_message']));
 
-	if ($message == '')
-		$errors[] = $lang_post['No message'];
-	else if (pun_strlen($message) > PUN_MAX_POSTSIZE)
+	if (pun_strlen($message) > PUN_MAX_POSTSIZE)
 		$errors[] = $lang_post['Too long message'];
 	else if ($pun_config['p_message_all_caps'] == '0' && is_all_uppercase($message) && !$pun_user['is_admmod'])
 		$errors[] = $lang_post['All caps message'];
@@ -80,6 +78,8 @@ if (isset($_POST['form_sent']))
 		$message = preparse_bbcode($message, $errors);
 	}
 
+	if ($message == '')
+		$errors[] = $lang_post['No message'];
 
 	$hide_smilies = isset($_POST['hide_smilies']) ? '1' : '0';
 
