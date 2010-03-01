@@ -113,6 +113,34 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			else
 				$db->query('UPDATE '.$db->prefix.'online SET last_search='.time().' WHERE ident=\''.$db->escape(get_remote_address()).'\'' ) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 
+			switch ($sort_by)
+			{
+				case 1:
+					$sort_by_sql = ($show_as == 'topics') ? 't.poster' : 'p.poster';
+					$sort_type = SORT_STRING;
+					break;
+
+				case 2:
+					$sort_by_sql = 't.subject';
+					$sort_type = SORT_STRING;
+					break;
+
+				case 3:
+					$sort_by_sql = 't.forum_id';
+					$sort_type = SORT_NUMERIC;
+					break;
+
+				case 4:
+					$sort_by_sql = 't.last_post';
+					$sort_type = SORT_NUMERIC;
+					break;
+
+				default:
+					$sort_by_sql = ($show_as == 'topics') ? 't.last_post' : 'p.posted';
+					$sort_type = SORT_NUMERIC;
+					break;
+			}
+
 			// If it's a search for keywords
 			if ($keywords)
 			{
@@ -128,6 +156,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$word_count = 0;
 				$match_type = 'and';
 
+				$sort_data = array();
 				foreach ($keywords_array as $cur_word)
 				{
 					switch ($cur_word)
@@ -140,7 +169,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 						default:
 						{
-							$result = $db->query('SELECT m.post_id, p.topic_id FROM '.$db->prefix.'search_words AS w INNER JOIN '.$db->prefix.'search_matches AS m ON m.word_id = w.id INNER JOIN '.$db->prefix.'posts AS p ON p.id=m.post_id INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE w.word LIKE \''.$db->escape(str_replace('*', '%', $cur_word)).'\''.$search_in_cond.' AND (fp.read_forum IS NULL OR fp.read_forum=1)'.$forum_sql, true) or error('Unable to search for posts', __FILE__, __LINE__, $db->error());
+							$result = $db->query('SELECT m.post_id, p.topic_id, '.$sort_by_sql.' AS sort_by FROM '.$db->prefix.'search_words AS w INNER JOIN '.$db->prefix.'search_matches AS m ON m.word_id = w.id INNER JOIN '.$db->prefix.'posts AS p ON p.id=m.post_id INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE w.word LIKE \''.$db->escape(str_replace('*', '%', $cur_word)).'\''.$search_in_cond.' AND (fp.read_forum IS NULL OR fp.read_forum=1)'.$forum_sql, true) or error('Unable to search for posts', __FILE__, __LINE__, $db->error());
 
 							$row = array();
 							while ($temp = $db->fetch_assoc($result))
@@ -148,11 +177,20 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 								$row[$temp['post_id']] = $temp['topic_id'];
 
 								if (!$word_count)
+								{
 									$keyword_results[$temp['post_id']] = $temp['topic_id'];
+									$sort_data[$temp['post_id']] = $temp['sort_by'];
+								}
 								else if ($match_type == 'or')
+								{
 									$keyword_results[$temp['post_id']] = $temp['topic_id'];
+									$sort_data[$temp['post_id']] = $temp['sort_by'];
+								}
 								else if ($match_type == 'not')
-									$keyword_results[$temp['post_id']] = 0;
+								{
+									unset($keyword_results[$temp['post_id']]);
+									unset($sort_data[$temp['post_id']]);
+								}
 							}
 
 							if ($match_type == 'and' && $word_count)
@@ -160,7 +198,10 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 								foreach ($keyword_results as $post_id => $topic_id)
 								{
 									if (!isset($row[$post_id]))
-										$keyword_results[$post_id] = 0;
+									{
+										unset($keyword_results[$post_id]);
+										unset($sort_data[$post_id]);
+									}
 								}
 							}
 
@@ -172,8 +213,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					}
 				}
 
-				// Remove the entries which we invalidated due to and/not
-				$keyword_results = array_filter($keyword_results);
+				// Sort the results
+				array_multisort($sort_data, $sort_dir == 'DESC' ? SORT_DESC : SORT_ASC, $sort_type, $keyword_results);
+				unset($sort_data);
 			}
 
 			// If it's a search for author name (and that author name isn't Guest)
@@ -196,7 +238,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					while ($row = $db->fetch_row($result))
 						$user_ids[] = $row[0];
 
-					$result = $db->query('SELECT id AS post_id, topic_id FROM '.$db->prefix.'posts WHERE poster_id IN('.implode(',', $user_ids).')') or error('Unable to fetch matched posts list', __FILE__, __LINE__, $db->error());
+					$result = $db->query('SELECT p.id AS post_id, p.topic_id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id WHERE p.poster_id IN('.implode(',', $user_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch matched posts list', __FILE__, __LINE__, $db->error());
 					while ($temp = $db->fetch_assoc($result))
 						$author_results[$temp['post_id']] = $temp['topic_id'];
 
