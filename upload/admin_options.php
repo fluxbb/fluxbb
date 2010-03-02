@@ -45,7 +45,7 @@ if (isset($_POST['form_sent']))
 		'smilies'				=> $_POST['form']['smilies'] != '1' ? '0' : '1',
 		'smilies_sig'			=> $_POST['form']['smilies_sig'] != '1' ? '0' : '1',
 		'make_links'			=> $_POST['form']['make_links'] != '1' ? '0' : '1',
-		'topic_review'			=> $_POST['form']['topic_review'] != '1' ? '0' : '1',
+		'topic_review'			=> intval($_POST['form']['topic_review']),
 		'disp_topics_default'	=> intval($_POST['form']['disp_topics_default']),
 		'disp_posts_default'	=> intval($_POST['form']['disp_posts_default']),
 		'indent_num_spaces'		=> intval($_POST['form']['indent_num_spaces']),
