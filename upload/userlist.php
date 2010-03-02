@@ -28,7 +28,7 @@ $show_post_count = ($pun_config['o_show_post_count'] == '1' || $pun_user['is_adm
 $username = (isset($_GET['username']) && $pun_user['g_search_users'] == '1') ? pun_trim($_GET['username']) : '';
 $show_group = !isset($_GET['show_group']) ? -1 : intval($_GET['show_group']);
 $sort_by = (!isset($_GET['sort_by']) || $_GET['sort_by'] != 'username' && $_GET['sort_by'] != 'registered' && ($_GET['sort_by'] != 'num_posts' || !$show_post_count)) ? 'username' : $_GET['sort_by'];
-$sort_dir = (!isset($_GET['sort_dir']) || $_GET['sort_dir'] != 'ASC' && $_GET['sort_dir'] != 'DESC') ? 'ASC' : utf8_strtoupper($_GET['sort_dir']);
+$sort_dir = isset($_GET['sort_dir']) && in_array($_GET['sort_dir'], array('ASC', 'DESC')) ? $_GET['sort_dir'] : 'ASC';
 
 // Create any SQL for the WHERE clause
 $where_sql = array();
@@ -54,7 +54,7 @@ if ($pun_user['g_search_users'] == '1')
 	$focus_element = array('userlist', 'username');
 
 // Generate paging links
-$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'userlist.php?username='.urlencode($username).'&amp;show_group='.$show_group.'&amp;sort_by='.$sort_by.'&amp;sort_dir='.strtoupper($sort_dir));
+$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'userlist.php?username='.urlencode($username).'&amp;show_group='.$show_group.'&amp;sort_by='.$sort_by.'&amp;sort_dir='.$sort_dir);
 
 
 define('PUN_ALLOW_INDEX', 1);
