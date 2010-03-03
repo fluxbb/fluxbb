@@ -99,8 +99,14 @@ if (isset($_POST['form_sent']))
 		message($lang_common['Bad request']);
 	if (!file_exists(PUN_ROOT.'style/'.$form['default_style'].'.css'))
 		message($lang_common['Bad request']);
+		
+	if ($form['time_format'] == '')
+		$form['time_format'] = 'H:i:s';
 
-
+	if ($form['date_format'] == '')
+		$form['date_format'] = 'Y-m-d';
+		
+		
 	require PUN_ROOT.'include/email.php';
 
 	if (!is_valid_email($form['admin_email']))
