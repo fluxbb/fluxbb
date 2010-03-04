@@ -172,7 +172,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 									<th scope="row"><?php echo $lang_admin_groups['Set own title label'] ?></th>
 									<td>
 										<input type="radio" name="set_title" value="1"<?php if ($group['g_set_title'] == '1') echo ' checked="checked"' ?> tabindex="17" />&nbsp;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="set_title" value="0"<?php if ($group['g_set_title'] == '0') echo ' checked="checked"' ?> tabindex="18" />&nbsp;<strong><?php echo $lang_admin_common['No'] ?></strong>
-										<span><?php echo $lang_admin_groups['Set own title help'] ?>.</span>
+										<span><?php echo $lang_admin_groups['Set own title help'] ?></span>
 									</td>
 								</tr>
 <?php endif; ?>								<tr>
