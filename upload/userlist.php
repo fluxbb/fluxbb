@@ -25,9 +25,9 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/search.php';
 // Determine if we are allowed to view post counts
 $show_post_count = ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod']) ? true : false;
 
-$username = (isset($_GET['username']) && $pun_user['g_search_users'] == '1') ? pun_trim($_GET['username']) : '';
-$show_group = !isset($_GET['show_group']) ? -1 : intval($_GET['show_group']);
-$sort_by = (!isset($_GET['sort_by']) || $_GET['sort_by'] != 'username' && $_GET['sort_by'] != 'registered' && ($_GET['sort_by'] != 'num_posts' || !$show_post_count)) ? 'username' : $_GET['sort_by'];
+$username = isset($_GET['username']) && $pun_user['g_search_users'] == '1' ? pun_trim($_GET['username']) : '';
+$show_group = isset($_GET['show_group']) ? intval($_GET['show_group']) : -1;
+$sort_by = isset($_GET['sort_by']) && (in_array($_GET['sort_by'], array('username', 'registered')) || ($_GET['sort_by'] == 'num_posts' && $show_post_count)) ? $_GET['sort_by'] : 'username';
 $sort_dir = isset($_GET['sort_dir']) && in_array($_GET['sort_dir'], array('ASC', 'DESC')) ? $_GET['sort_dir'] : 'ASC';
 
 // Create any SQL for the WHERE clause
