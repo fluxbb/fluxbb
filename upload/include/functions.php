@@ -24,14 +24,13 @@ function check_cookie(&$pun_user)
 	global $db, $db_type, $pun_config, $cookie_name, $cookie_seed;
 
 	$now = time();
-	$expire = $now + 31536000; // The cookie expires after a year
 
 	// We assume it's a guest
 	$cookie = array('user_id' => 1, 'password_hash' => 'Guest');
 
 	// If a cookie is set, we get the user_id and password hash from it
 	if (isset($_COOKIE[$cookie_name]))
-		list($cookie['user_id'], $cookie['password_hash']) = @unserialize($_COOKIE[$cookie_name]);
+		list($cookie['user_id'], $cookie['password_hash'], $cookie['expiration_time']) = @unserialize($_COOKIE[$cookie_name]);
 
 	if ($cookie['user_id'] > 1)
 	{
@@ -42,11 +41,16 @@ function check_cookie(&$pun_user)
 		// If user authorisation failed
 		if (!isset($pun_user['id']) || md5($cookie_seed.$pun_user['password']) !== $cookie['password_hash'])
 		{
+			$expire = $now + 31536000; // The cookie expires after a year
 			pun_setcookie(1, md5(uniqid(rand(), true)), $expire);
 			set_default_user();
 
 			return;
 		}
+
+		// Send a new, updated cookie with a new expiration timestamp
+		$expire = (intval($cookie['expiration_time']) > $now + $pun_config['o_timeout_visit']) ? $now + 1209600 : $now + $pun_config['o_timeout_visit'];
+		pun_setcookie($pun_user['id'], $pun_user['password'], $expire);
 
 		// Set a default language if the user selected language no longer exists
 		if (!file_exists(PUN_ROOT.'lang/'.$pun_user['language']))
@@ -223,7 +227,7 @@ function pun_setcookie($user_id, $password_hash, $expire)
 {
 	global $cookie_name, $cookie_seed;
 
-	forum_setcookie($cookie_name, serialize(array($user_id, md5($cookie_seed.$password_hash))), $expire);
+	forum_setcookie($cookie_name, serialize(array($user_id, md5($cookie_seed.$password_hash), $expire)), $expire);
 }
 
 
