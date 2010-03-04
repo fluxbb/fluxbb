@@ -324,12 +324,12 @@ function check_bans()
 //
 function update_users_online()
 {
-	global $db, $pun_config, $pun_user;
+	global $db, $pun_config;
 
 	$now = time();
 
 	// Fetch all online list entries that are older than "o_timeout_online"
-	$result = $db->query('SELECT * FROM '.$db->prefix.'online WHERE logged<'.($now-$pun_config['o_timeout_online'])) or error('Unable to fetch old entries from online list', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT user_id, ident, logged, idle FROM '.$db->prefix.'online WHERE logged<'.($now-$pun_config['o_timeout_online'])) or error('Unable to fetch old entries from online list', __FILE__, __LINE__, $db->error());
 	while ($cur_user = $db->fetch_assoc($result))
 	{
 		// If the entry is a guest, delete it
