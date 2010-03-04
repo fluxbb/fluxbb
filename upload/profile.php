@@ -668,7 +668,7 @@ else if (isset($_POST['form_sent']))
 		{
 			$form = array(
 				'timezone'		=> floatval($_POST['form']['timezone']),
-				'dst'			=> $_POST['form']['dst'] != '1' ? '0' : '1',
+				'dst'			=> isset($_POST['form']['dst']) ? '1' : '0',
 				'time_format'	=> intval($_POST['form']['time_format']),
 				'date_format'	=> intval($_POST['form']['date_format']),
 			);
@@ -817,11 +817,11 @@ else if (isset($_POST['form_sent']))
 			$form = array(
 				'disp_topics'		=> pun_trim($_POST['form']['disp_topics']),
 				'disp_posts'		=> pun_trim($_POST['form']['disp_posts']),
-				'show_smilies'		=> $_POST['form']['show_smilies'] != '1' ? '0' : '1',
-				'show_img'			=> $_POST['form']['show_img'] != '1' ? '0' : '1',
-				'show_img_sig'		=> $_POST['form']['show_img_sig'] != '1' ? '0' : '1',
-				'show_avatars'		=> $_POST['form']['show_avatars'] != '1' ? '0' : '1',
-				'show_sig'			=> $_POST['form']['show_sig'] != '1' ? '0' : '1',
+				'show_smilies'		=> isset($_POST['form']['show_smilies']) ? '1' : '0',
+				'show_img'			=> isset($_POST['form']['show_img']) ? '1' : '0',
+				'show_img_sig'		=> isset($_POST['form']['show_img_sig']) ? '1' : '0',
+				'show_avatars'		=> isset($_POST['form']['show_avatars']) ? '1' : '0',
+				'show_sig'			=> isset($_POST['form']['show_sig']) ? '1' : '0',
 			);
 
 			if ($form['disp_topics'] != '')
@@ -857,8 +857,8 @@ else if (isset($_POST['form_sent']))
 		{
 			$form = array(
 				'email_setting'			=> intval($_POST['form']['email_setting']),
-				'notify_with_post'		=> $_POST['form']['notify_with_post'] != '1' ? '0' : '1',
-				'auto_notify'			=> $_POST['form']['auto_notify'] != '1' ? '0' : '1',
+				'notify_with_post'		=> isset($_POST['form']['notify_with_post']) ? '1' : '0',
+				'auto_notify'			=> isset($_POST['form']['auto_notify']) ? '1' : '0',
 			);
 
 			if ($form['email_setting'] < 0 || $form['email_setting'] > 2)
