@@ -352,6 +352,9 @@ class DBLayer
 		$table['indices'] = array();
 		while ($cur_index = $this->fetch_assoc($result))
 		{
+			if (empty($cur_index['sql']))
+				continue;
+
 			if (!isset($table['sql']))
 				$table['sql'] = $cur_index['sql'];
 			else
@@ -487,7 +490,8 @@ class DBLayer
 		if (!empty($table['indices']))
 		{
 			foreach ($table['indices'] as $cur_index)
-				$result &= $this->query($cur_index) ? true : false;
+				if (!preg_match('%\('.preg_quote($field_name, '%').'\)%', $cur_index))
+					$result &= $this->query($cur_index) ? true : false;
 		}
 
 		// Copy content back
