@@ -91,7 +91,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 		$forum = '"'.pun_htmlspecialchars($db->result($result)).'"';
 	}
 	else
-		$forum = 'all forums';
+		$forum = $lang_admin_prune['All forums'];
 
 	$result = $db->query($sql) or error('Unable to fetch topic prune count', __FILE__, __LINE__, $db->error());
 	$num_topics = $db->result($result);
