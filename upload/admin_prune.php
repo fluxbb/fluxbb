@@ -138,7 +138,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 else
 {
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Prune']);
-	$required_fields = array('req_prune_days' => 'Days old');
+	$required_fields = array('req_prune_days' => $lang_admin_prune['Days old label']);
 	$focus_element = array('prune', 'req_prune_days');
 	define('PUN_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
