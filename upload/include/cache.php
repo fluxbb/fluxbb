@@ -10,50 +10,6 @@
 if (!defined('PUN'))
 	exit;
 
-//
-// If we are running pre PHP 4.2.0, we add our own implementation of var_export
-//
-if (!function_exists('var_export'))
-{
-	function var_export()
-	{
-		$args = func_get_args();
-		$indent = (isset($args[2])) ? $args[2] : '';
-
-		if (is_array($args[0]))
-		{
-			$output = 'array ('."\n";
-
-			foreach ($args[0] as $k => $v)
-			{
-				if (is_numeric($k))
-					$output .= $indent.'  '.$k.' => ';
-				else
-					$output .= $indent.'  \''.str_replace('\'', '\\\'', str_replace('\\', '\\\\', $k)).'\' => ';
-
-				if (is_array($v))
-					$output .= var_export($v, true, $indent.'  ');
-				else
-				{
-					if (gettype($v) != 'string' && !empty($v))
-						$output .= $v.','."\n";
-					else
-						$output .= '\''.str_replace('\'', '\\\'', str_replace('\\', '\\\\', $v)).'\','."\n";
-				}
-			}
-
-			$output .= ($indent != '') ? $indent.'),'."\n" : ')';
-		}
-		else
-			$output = $args[0];
-
-		if ($args[1])
-			return $output;
-		else
-			echo $output;
-	}
-}
-
 
 //
 // Generate the config cache PHP script
