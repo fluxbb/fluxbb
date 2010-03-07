@@ -158,8 +158,6 @@ if (isset($_POST['form_sent']))
 	if ($message == '')
 		$errors[] = $lang_post['No message'];
 
-	require PUN_ROOT.'include/search_idx.php';
-
 	$hide_smilies = isset($_POST['hide_smilies']) ? '1' : '0';
 	$subscribe = isset($_POST['subscribe']) ? '1' : '0';
 
@@ -168,6 +166,8 @@ if (isset($_POST['form_sent']))
 	// Did everything go according to plan?
 	if (empty($errors) && !isset($_POST['preview']))
 	{
+		require PUN_ROOT.'include/search_idx.php';
+
 		// If it's a reply
 		if ($tid)
 		{
