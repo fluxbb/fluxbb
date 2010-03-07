@@ -209,11 +209,11 @@ else if (isset($_GET['report']))
 		list($subject, $forum_id) = $db->fetch_row($result);
 
 		// Should we use the internal report handling?
-		if ($pun_config['o_report_method'] == 0 || $pun_config['o_report_method'] == 2)
+		if ($pun_config['o_report_method'] == '0' || $pun_config['o_report_method'] == '2')
 			$db->query('INSERT INTO '.$db->prefix.'reports (post_id, topic_id, forum_id, reported_by, created, message) VALUES('.$post_id.', '.$topic_id.', '.$forum_id.', '.$pun_user['id'].', '.time().', \''.$db->escape($reason).'\')' ) or error('Unable to create report', __FILE__, __LINE__, $db->error());
 
 		// Should we email the report?
-		if ($pun_config['o_report_method'] == 1 || $pun_config['o_report_method'] == 2)
+		if ($pun_config['o_report_method'] == '1' || $pun_config['o_report_method'] == '2')
 		{
 			// We send it to the complete mailing-list in one swoop
 			if ($pun_config['o_mailing_list'] != '')

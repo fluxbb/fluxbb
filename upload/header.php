@@ -185,7 +185,7 @@ else
 
 	if ($pun_user['is_admmod'])
 	{
-		if ($pun_config['o_report_method'] == 0 || $pun_config['o_report_method'] == 2)
+		if ($pun_config['o_report_method'] == '0' || $pun_config['o_report_method'] == '2')
 		{
 			$result_header = $db->query('SELECT 1 FROM '.$db->prefix.'reports WHERE zapped IS NULL') or error('Unable to fetch reports info', __FILE__, __LINE__, $db->error());
 
