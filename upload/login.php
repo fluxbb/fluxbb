@@ -33,33 +33,31 @@ if (isset($_POST['form_sent']) && $action == 'in')
 
 	if (!empty($cur_user['password']))
 	{
-		$sha1_in_db = (strlen($cur_user['password']) == 40) ? true : false;
-		$sha1_available = (function_exists('sha1') || function_exists('mhash')) ? true : false;
-
-		$form_password_hash = pun_hash($form_password); // This could result in either an SHA-1 or an MD5 hash (depends on $sha1_available)
+		$form_password_hash = pun_hash($form_password); // Will result in a SHA-1 hash
 
 		// If there is a salt in the database we have upgraded from 1.3-legacy though havent yet logged in
 		if (!empty($cur_user['salt']))
 		{
-			if (sha1($cur_user['salt'].sha1($form_password)) == $cur_user['password'])
+			if (sha1($cur_user['salt'].sha1($form_password)) == $cur_user['password']) // 1.3 used sha1(salt.sha1(pass))
 			{
 				$authorized = true;
 
 				$db->query('UPDATE '.$db->prefix.'users SET password=\''.$form_password_hash.'\', salt=NULL WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
 			}
 		}
-		else
+		// If the length isn't 40 then the password isn't using sha1, so it must be md5 from 1.2
+		else if (strlen($cur_user['password']) != 40)
 		{
-			if ($sha1_in_db && $sha1_available && $cur_user['password'] == $form_password_hash)
-				$authorized = true;
-			else if (!$sha1_in_db && $cur_user['password'] == md5($form_password))
+			if (md5($form_password) == $cur_user['password'])
 			{
 				$authorized = true;
 
-				if ($sha1_available) // There's an MD5 hash in the database, but SHA1 hashing is available, so we update the DB
-					$db->query('UPDATE '.$db->prefix.'users SET password=\''.$form_password_hash.'\' WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
+				$db->query('UPDATE '.$db->prefix.'users SET password=\''.$form_password_hash.'\' WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
 			}
 		}
+		// Otherwise we should have a normal sha1 password
+		else
+			$authorized = ($cur_user['password'] == $form_password_hash);
 	}
 
 	if (!$authorized)

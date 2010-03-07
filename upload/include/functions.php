@@ -982,16 +982,10 @@ function random_pass($len)
 
 //
 // Compute a hash of $str
-// Uses sha1() if available. If not, SHA1 through mhash() if available. If not, fall back on md5()
 //
 function pun_hash($str)
 {
-	if (function_exists('sha1')) // Only in PHP 4.3.0+
-		return sha1($str);
-	else if (function_exists('mhash')) // Only if Mhash library is loaded
-		return bin2hex(mhash(MHASH_SHA1, $str));
-	else
-		return md5($str);
+	return sha1($str);
 }
 
 
