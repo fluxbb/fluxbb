@@ -131,6 +131,7 @@ $lang_profile = array(
 'User delete redirect'			=>	'User deleted. Redirecting …',
 'Group membership redirect'		=>	'Group membership saved. Redirecting …',
 'Update forums redirect'		=>	'Forum moderator rights updated. Redirecting …',
-'Ban redirect'					=>	'Redirecting …'
+'Ban redirect'					=>	'Redirecting …',
+'No delete admin message'		=>	'Administrators cannot be deleted. In order to delete this user, you must first move him/her to a different user group.',
 
 );

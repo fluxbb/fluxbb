@@ -541,7 +541,7 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 	list($group_id, $username) = $db->fetch_row($result);
 
 	if ($group_id == PUN_ADMIN)
-		message('Administrators cannot be deleted. In order to delete this user, you must first move him/her to a different user group.');
+		message($lang_profile['No delete admin message']);
 
 	if (isset($_POST['delete_user_comply']))
 	{
