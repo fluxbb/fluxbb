@@ -209,7 +209,7 @@ function process_form(the_form)
 					<div class="infldset">
 						<p>FluxBB currently supports MySQL, PostgreSQL and SQLite. If your database of choice is missing from the drop-down menu below, it means this PHP environment does not have support for that particular database. More information regarding support for particular versions of each database can be found in the FAQ.</p>
 <?php if ($dual_mysql): ?>						<p>FluxBB has detected that your PHP environment supports two different ways of communicating with MySQL. The two options are called standard and improved. If you are uncertain which one to use, start by trying improved and if that fails, try standard.</p>
-<?php endif; ?><?php if ($mysql_innodb): ?>						<p>FluxBB has detected that your MySQL server might support <a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-overview.html">InnoDB</a>. This would be a good choice if you are planning to run a large forum. If you are uncertain, it is recommended that you do not use InnoDB.</p>
+<?php endif; ?><?php if ($mysql_innodb): ?>						<p>FluxBB has detected that your MySQL server might support <a href="http://dev.mysql.com/doc/refman/5.0/en/innodb.html">InnoDB</a>. This would be a good choice if you are planning to run a large forum. If you are uncertain, it is recommended that you do not use InnoDB.</p>
 <?php endif; ?>						<label class="required"><strong>Database type <span>(Required)</span></strong>
 						<br /><select name="req_db_type">
 <?php
