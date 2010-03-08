@@ -4,6 +4,7 @@
 $lang_admin_bans = array(
 
 'No user message'			=>	'No user by that username registered. If you want to add a ban not tied to a specific username just leave the username blank.',
+'No user ID message'			=>	'No user by that ID registered.',
 'User is admin message'		=>	'The user %s is an administrator and can\'t be banned. If you want to ban an administrator, you must first demote him/her to moderator or user.',
 'Must enter message'		=>	'You must enter either a username, an IP address or an email address (at least).',
 'Cannot ban guest message'	=>	'The guest user cannot be banned.',

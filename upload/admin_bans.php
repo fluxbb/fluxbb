@@ -38,7 +38,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 			if ($db->num_rows($result))
 				list($group_id, $ban_user, $ban_email) = $db->fetch_row($result);
 			else
-				message('No user by that ID registered.');
+				message($lang_admin_bans['No user ID message']);
 		}
 		else // Otherwise the username is in POST
 		{
