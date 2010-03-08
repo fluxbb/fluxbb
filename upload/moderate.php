@@ -32,8 +32,11 @@ if (isset($_GET['get_host']))
 
 		$ip = $db->result($result);
 	}
+	
+	// Load the misc.php language file
+	require PUN_ROOT.'lang/'.$pun_user['language'].'/misc.php';
 
-	message('The IP address is: '.$ip.'<br />The host name is: '.@gethostbyaddr($ip).'<br /><br /><a href="admin_users.php?show_users='.$ip.'">Show more users for this IP</a>');
+	message(sprintf($lang_misc['Host info'], $ip.'<br />', @gethostbyaddr($ip).'<br /><br />', '<a href="admin_users.php?show_users='.$ip.'">'.$lang_misc['Show more users'].'</a>'));
 }
 
 

@@ -80,6 +80,10 @@ $lang_misc = array(
 'Cannot select first'			=>	'First post cannot be selected for split/delete.',
 'Delete posts comply'			=>	'Are you sure you want to delete the selected posts?',
 'Delete posts redirect'			=>	'Posts deleted. Redirecting …',
-'No posts selected'				=>	'You must select at least one post for split/delete.'
+'No posts selected'				=>	'You must select at least one post for split/delete.',
+
+// Get host
+'Host info'			        =>	'The IP address is: %sThe host name is: %s%s',
+'Show more users'		        =>	'Show more users for this IP',
 
 );
