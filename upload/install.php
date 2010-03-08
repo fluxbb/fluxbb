@@ -312,7 +312,7 @@ function process_form(the_form)
 					<legend>Enter your board's description</legend>
 					<div class="infldset">
 						<p>A short description of this bulletin board (shown at the top of every page). This field may contain HTML.</p>
-						<label>Board description<br /><input id="desc" type="text" name="desc" value="<?php echo pun_htmlspecialchars($description) ?>" size="60" maxlength="255" /><br /></label>
+						<label><strong>Board description</strong><br /><input id="desc" type="text" name="desc" value="<?php echo pun_htmlspecialchars($description) ?>" size="60" maxlength="255" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -1710,7 +1710,7 @@ else
 		<div class="fakeform">
 			<div class="inform">
 				<div class="forminfo">
-					<p>FluxBB has been fully installed! You may now <a href="index.php">go to the forum index</a></p>
+					<p>FluxBB has been fully installed! You may now <a href="index.php">go to the forum index</a>.</p>
 				</div>
 			</div>
 		</div>
