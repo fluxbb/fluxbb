@@ -23,7 +23,6 @@ $lang_admin_common = array(
 
 'Admin'					=>	'Admin',
 'Go back'				=>	'Go back',
-'Submit'				=>	'Submit',
 'Delete'				=>	'Delete',
 'Update'				=>	'Update',
 'Add'					=>	'Add',
@@ -34,7 +33,6 @@ $lang_admin_common = array(
 'No'					=>	'No',
 'Save changes'			=>	'Save changes',
 'Save'					=>	'Save',
-'Ranks'					=>	'Ranks',
 'here'					=>	'here',
 'Action'				=>	'Action',
 'None'					=>	'None',
