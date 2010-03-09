@@ -10,6 +10,10 @@
 if (!defined('UTF8_CORE'))
 	define('UTF8_CORE', true);
 
+// utf8_strpos() and utf8_strrpos() need utf8_bad_strip() to strip invalid
+// characters. Mbstring doesn't do this while the Native implementation does.
+require_once UTF8.'/utils/bad.php';
+
 /**
 * Wrapper round mb_strlen
 * Assumes you have mb_internal_encoding to UTF-8 already
@@ -38,7 +42,10 @@ function utf8_strlen($str)
 */
 function utf8_strpos($str, $search, $offset = false)
 {
-	if (!$offset)
+	// Strip unvalid characters
+	$str = utf8_bad_strip($str);
+
+	if ($offset === false)
 		return mb_strpos($str, $search);
 	else
 		return mb_strpos($str, $search, $offset);
@@ -57,6 +64,9 @@ function utf8_strpos($str, $search, $offset = false)
 */
 function utf8_strrpos($str, $search, $offset = false)
 {
+	// Strip unvalid characters
+	$str = utf8_bad_strip($str);
+
 	if (!$offset)
 	{
 		// Emulate behaviour of strrpos rather than raising warning
@@ -95,7 +105,7 @@ function utf8_strrpos($str, $search, $offset = false)
 */
 function utf8_substr($str, $offset, $length = false)
 {
-	if (!$length)
+	if ($length === false)
 		return mb_substr($str, $offset);
 	else
 		return mb_substr($str, $offset, $length);

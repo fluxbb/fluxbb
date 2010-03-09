@@ -31,10 +31,10 @@
 */
 function utf8_is_valid($str)
 {
-	$mState = 0; // Cached expected number of octets after the current octet
-				 // until the beginning of the next UTF8 character sequence
-	$mUcs4  = 0; // Cached Unicode character
-	$mBytes = 1; // Cached expected number of octets in the current sequence
+	$mState = 0;     // Cached expected number of octets after the current octet
+	                 // until the beginning of the next UTF8 character sequence
+	$mUcs4  = 0;     // Cached Unicode character
+	$mBytes = 1;     // Cached expected number of octets in the current sequence
 
 	$len = strlen($str);
 
@@ -156,7 +156,7 @@ function utf8_is_valid($str)
 
 /**
 * Tests whether a string complies as UTF-8. This will be much
-* faster than utf8_is_valid but will pass five and six octet
+* faster than utf8_is_valid, but will pass five and six octet
 * UTF-8 sequences, which are not supported by Unicode and
 * so cannot be displayed correctly in a browser. In other words
 * it is not as strict as utf8_is_valid but it's faster. If you use
@@ -164,6 +164,8 @@ function utf8_is_valid($str)
 * attackers will be able to inject 5 and 6 byte sequences (which
 * may or may not be a significant risk, depending on what you are
 * are doing)
+* Note: Does not pass five and six octet UTF-8 sequences anymore in
+*       in the unit tests.
 * @see utf8_is_valid
 * @see http://www.php.net/manual/en/reference.pcre.pattern.modifiers.php#54805
 * @param string UTF-8 string to check
