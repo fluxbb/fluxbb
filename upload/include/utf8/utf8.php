@@ -34,6 +34,8 @@ if (!defined('UTF8'))
 
 if (extension_loaded('mbstring') && !defined('UTF8_USE_MBSTRING') && !defined('UTF8_USE_NATIVE'))
 	define('UTF8_USE_MBSTRING', true);
+else
+	define('UTF8_USE_NATIVE', true);
 
 if (defined('UTF8_USE_MBSTRING'))
 {
