@@ -420,7 +420,7 @@ else if (isset($_GET['del_group']))
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo $lang_admin_groups['Remove group head'] ?></span></h2>
+		<h2><span><?php echo $lang_admin_groups['Delete group head'] ?></span></h2>
 		<div class="box">
 			<form id="groups" method="post" action="admin_groups.php?del_group=<?php echo $group_id ?>">
 				<div class="inform">
@@ -548,7 +548,7 @@ while ($cur_group = $db->fetch_assoc($result))
 $result = $db->query('SELECT g_id, g_title FROM '.$db->prefix.'groups ORDER BY g_id') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
 
 while ($cur_group = $db->fetch_assoc($result))
-	echo "\t\t\t\t\t\t\t\t".'<tr><th scope="row"><a href="admin_groups.php?edit_group='.$cur_group['g_id'].'">'.$lang_admin_groups['Edit link'].'</a>'.(($cur_group['g_id'] > PUN_MEMBER) ? ' | <a href="admin_groups.php?del_group='.$cur_group['g_id'].'">'.$lang_admin_groups['Remove link'].'</a>' : '').'</th><td>'.pun_htmlspecialchars($cur_group['g_title']).'</td></tr>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<tr><th scope="row"><a href="admin_groups.php?edit_group='.$cur_group['g_id'].'">'.$lang_admin_groups['Edit link'].'</a>'.(($cur_group['g_id'] > PUN_MEMBER) ? ' | <a href="admin_groups.php?del_group='.$cur_group['g_id'].'">'.$lang_admin_groups['Delete link'].'</a>' : '').'</th><td>'.pun_htmlspecialchars($cur_group['g_title']).'</td></tr>'."\n";
 
 ?>
 							</table>
