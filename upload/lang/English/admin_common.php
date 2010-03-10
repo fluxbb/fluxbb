@@ -28,7 +28,6 @@ $lang_admin_common = array(
 'Add'					=>	'Add',
 'Edit'					=>	'Edit',
 'Remove'				=>	'Remove',
-'Forums'				=>	'Forums',
 'Yes'					=>	'Yes',
 'No'					=>	'No',
 'Save changes'			=>	'Save changes',
