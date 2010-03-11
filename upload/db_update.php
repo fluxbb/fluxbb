@@ -1116,7 +1116,7 @@ if (strpos($cur_version, '1.2') === 0)
 		$query_str = '?stage=finish';
 
 		// If we are doing a major update
-		if (strpos($cur_version, substr(UPDATE_TO, 0, 2)) !== 0)
+		if (strpos($cur_version, substr(UPDATE_TO, 0, 3)) !== 0)
 			$query_str = '?stage=rebuild_idx';
 
 		break;
