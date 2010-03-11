@@ -15,18 +15,40 @@ if (!defined('PUN'))
 	exit;
 
 
+// Make a regex that will match CJK or Hangul characters
+define('PUN_CJK_HANGUL_REGEX', '['.
+	'\x{1100}-\x{11FF}'.		// Hangul Jamo							1100-11FF		(http://www.fileformat.info/info/unicode/block/hangul_jamo/index.htm)
+	'\x{3130}-\x{318F}'.		// Hangul Compatibility Jamo			3130-318F		(http://www.fileformat.info/info/unicode/block/hangul_compatibility_jamo/index.htm)
+	'\x{AC00}-\x{D7AF}'.		// Hangul Syllables						AC00-D7AF		(http://www.fileformat.info/info/unicode/block/hangul_syllables/index.htm)
+
+	// CJK Unified Ideographs	(http://en.wikipedia.org/wiki/CJK_Unified_Ideographs)
+	'\x{2E80}-\x{2EFF}'.		// CJK Radicals Supplement				2E80-2EFF		(http://www.fileformat.info/info/unicode/block/cjk_radicals_supplement/index.htm)
+	'\x{2F00}-\x{2FDF}'.		// Kangxi Radicals						2F00-2FDF		(http://www.fileformat.info/info/unicode/block/kangxi_radicals/index.htm)
+	'\x{2FF0}-\x{2FFF}'.		// Ideographic Description Characters	2FF0-2FFF		(http://www.fileformat.info/info/unicode/block/ideographic_description_characters/index.htm)
+	'\x{3000}-\x{303F}'.		// CJK Symbols and Punctuation			3000-303F		(http://www.fileformat.info/info/unicode/block/cjk_symbols_and_punctuation/index.htm)
+	'\x{31C0}-\x{31EF}'.		// CJK Strokes							31C0-31EF		(http://www.fileformat.info/info/unicode/block/cjk_strokes/index.htm)
+	'\x{3200}-\x{32FF}'.		// Enclosed CJK Letters and Months		3200-32FF		(http://www.fileformat.info/info/unicode/block/enclosed_cjk_letters_and_months/index.htm)
+	'\x{3400}-\x{4DBF}'.		// CJK Unified Ideographs Extension A	3400-4DBF		(http://www.fileformat.info/info/unicode/block/cjk_unified_ideographs_extension_a/index.htm)
+	'\x{4E00}-\x{9FFF}'.		// CJK Unified Ideographs				4E00-9FFF		(http://www.fileformat.info/info/unicode/block/cjk_unified_ideographs/index.htm)
+	'\x{20000}-\x{2A6DF}'.		// CJK Unified Ideographs Extension B	20000-2A6DF		(http://www.fileformat.info/info/unicode/block/cjk_unified_ideographs_extension_b/index.htm)
+']');
+
+
 //
 // "Cleans up" a text string and returns an array of unique words
 // This function depends on the current locale setting
 //
-function split_words($text, $allow_keywords)
+function split_words($text, $idx)
 {
 	// Remove BBCode
 	$text = preg_replace('/\[\/?(b|u|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]/', ' ', $text);
+
 	// Remove any apostrophes or dashes which aren't part of words
 	$text = substr(preg_replace('/((?<=\W)[\'\-]|[\'\-](?=\W))/', '', ' '.$text.' '), 1, -1);
+
 	// Remove symbols and multiple whitespace
 	$text = preg_replace('/[\^\$&\(\)<>`"“”\|,@_\?%~\+\[\]{}:=\/#\\\\;!\*\.…\s]+/u', ' ', $text);
+
 	// Replace multiple dashes with just one
 	$text = preg_replace('/([\-])+/', '$1', $text);
 
@@ -34,11 +56,12 @@ function split_words($text, $allow_keywords)
 	$words = array_unique(explode(' ', $text));
 
 	// Remove any words that should not be indexed
-	$words = array_filter($words, 'validate_search_word');
-
-	// If we aren't allowed keywords, remove them
-	if (!$allow_keywords)
-		$words = array_filter($words, 'not_is_keyword');
+	foreach ($words as $key => $value)
+	{
+		// If the word shouldn't be indexed, remove it
+		if (!validate_search_word($value, $idx))
+			unset($words[$key]);
+	}
 
 	return $words;
 }
@@ -47,13 +70,13 @@ function split_words($text, $allow_keywords)
 //
 // Checks if a word is a valid searchable word
 //
-function validate_search_word($word)
+function validate_search_word($word, $idx)
 {
 	global $pun_user, $pun_config;
 	static $stopwords;
 
-	// We must allow keywords through for now! Note the double negative...
-	if (!not_is_keyword($word))
+	// If we are not indexing we must allow keywords through!
+	if (!$idx && is_keyword($word))
 		return true;
 
 	$language = isset($pun_user['language']) ? $pun_user['language'] : $pun_config['o_default_lang'];
@@ -69,18 +92,35 @@ function validate_search_word($word)
 			$stopwords = array();
 	}
 
+	// If it is a stopword it isn't valid
+	if (in_array($word, $stopwords))
+		return false;
+
+	// If the word if CJK we don't want to index it, but we do want to be allowed to search it
+	if (is_cjk($word))
+		return !$idx;
+
+	// Check the word is within the min/max length
 	$num_chars = pun_strlen($word);
-	return $num_chars >= PUN_SEARCH_MIN_WORD && $num_chars <= PUN_SEARCH_MAX_WORD && !in_array($word, $stopwords);
+	return $num_chars >= PUN_SEARCH_MIN_WORD && $num_chars <= PUN_SEARCH_MAX_WORD;
 }
 
 
 //
-// Check a given word is not a search keyword.
-// The logic is backwards so we can easily use it in array_filter to remove keywords.
+// Check a given word is a search keyword.
 //
-function not_is_keyword($word)
+function is_keyword($word)
 {
 	return $word != 'and' && $word != 'or' && $word != 'not';
+}
+
+
+//
+// Check if a given word is CJK or Hangul.
+//
+function is_cjk($word)
+{
+	return preg_match('/^'.PUN_CJK_HANGUL_REGEX.'+$/u', $word) ? true : false;
 }
 
 
@@ -121,8 +161,8 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 	$message = strip_bbcode($message);
 
 	// Split old and new post/subject to obtain array of 'words'
-	$words_message = split_words($message, false);
-	$words_subject = ($subject) ? split_words($subject, false) : array();
+	$words_message = split_words($message, true);
+	$words_subject = ($subject) ? split_words($subject, true) : array();
 
 	if ($mode == 'edit')
 	{
