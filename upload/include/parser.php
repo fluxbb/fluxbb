@@ -16,7 +16,7 @@ if (!defined('PUN'))
 \[list                # match opening bracket and tag name of outermost LIST tag
 (?:=([1a*]))?+        # optional attribute capture in group 1
 \]                    # closing bracket of outermost opening LIST tag
-(                     # capture contents of LIST tag in group 2 
+(                     # capture contents of LIST tag in group 2
   (?:                 # non capture group for either contents or whole nested LIST
     [^\[]*+           # unroll the loop! consume everything up to next [ (normal *)
     (?:               # (See "Mastering Regular Expressions" chapter 6 for details)
@@ -36,7 +36,7 @@ if (!defined('PUN'))
 )                     # end capturing contents of LIST tag into group 2
 \[/list\]             # match outermost closing LIST tag
 %iex' */
-$re_list = '%\[list(?:=([1a*]))?+\]((?:[^\[]*+(?:(?!\[list(?:=[1a*])?+\]|\[/list\])\[[^\[]*+)*+|(?R))*)\[/list\]%ie'; 
+$re_list = '%\[list(?:=([1a*]))?+\]((?:[^\[]*+(?:(?!\[list(?:=[1a*])?+\]|\[/list\])\[[^\[]*+)*+|(?R))*)\[/list\]%ie';
 
 // Here you can add additional smilies if you like (please note that you must escape single quote and backslash)
 $smilies = array(

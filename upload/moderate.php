@@ -32,7 +32,7 @@ if (isset($_GET['get_host']))
 
 		$ip = $db->result($result);
 	}
-	
+
 	// Load the misc.php language file
 	require PUN_ROOT.'lang/'.$pun_user['language'].'/misc.php';
 

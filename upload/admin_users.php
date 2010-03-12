@@ -274,7 +274,7 @@ else if (isset($_GET['find_user']))
 	if ($last_post_after != '')
 	{
 		$query_str[] = 'last_post_after='.$last_post_after;
-		
+
 		$last_post_after = strtotime($last_post_after);
 		if ($last_post_after === false || $last_post_after == -1)
 			message($lang_admin_users['Invalid date time message']);
@@ -284,7 +284,7 @@ else if (isset($_GET['find_user']))
 	if ($last_post_before != '')
 	{
 		$query_str[] = 'last_post_before='.$last_post_before;
-		
+
 		$last_post_before = strtotime($last_post_before);
 		if ($last_post_before === false || $last_post_before == -1)
 			message($lang_admin_users['Invalid date time message']);
@@ -294,7 +294,7 @@ else if (isset($_GET['find_user']))
 	if ($registered_after != '')
 	{
 		$query_str[] = 'registered_after='.$registered_after;
-		
+
 		$registered_after = strtotime($registered_after);
 		if ($registered_after === false || $registered_after == -1)
 			message($lang_admin_users['Invalid date time message']);
@@ -304,7 +304,7 @@ else if (isset($_GET['find_user']))
 	if ($registered_before != '')
 	{
 		$query_str[] = 'registered_before='.$registered_before;
-		
+
 		$registered_before = strtotime($registered_before);
 		if ($registered_before === false || $registered_before == -1)
 			message($lang_admin_users['Invalid date time message']);

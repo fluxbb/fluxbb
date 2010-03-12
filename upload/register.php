@@ -209,7 +209,7 @@ if (isset($_POST['form_sent']))
 				$mail_message = sprintf($lang_common['Banned email register message'], $username, $email1)."\n";
 				$mail_message .= sprintf($lang_common['User profile'], $pun_config['o_base_url'].'/profile.php?id='.$new_uid)."\n";
 				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
-	
+
 				pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
 			}
 
@@ -220,7 +220,7 @@ if (isset($_POST['form_sent']))
 				$mail_message = sprintf($lang_common['Duplicate email register message'], $username, implode(', ', $dupe_list))."\n";
 				$mail_message .= sprintf($lang_common['User profile'], $pun_config['o_base_url'].'/profile.php?id='.$new_uid)."\n";
 				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
-	
+
 				pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
 			}
 
@@ -231,7 +231,7 @@ if (isset($_POST['form_sent']))
 				$mail_message = sprintf($lang_common['New user message'], $username, $pun_config['o_base_url'].'/')."\n";
 				$mail_message .= sprintf($lang_common['User profile'], $pun_config['o_base_url'].'/profile.php?id='.$new_uid)."\n";
 				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
-	
+
 				pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
 			}
 		}

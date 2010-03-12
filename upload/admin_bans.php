@@ -303,7 +303,7 @@ else if (isset($_GET['find_ban']))
 	if ($expire_after != '')
 	{
 		$query_str[] = 'expire_after='.$expire_after;
-		
+
 		$expire_after = strtotime($expire_after);
 		if ($expire_after === false || $expire_after == -1)
 			message($lang_admin_bans['Invalid date message']);
@@ -313,7 +313,7 @@ else if (isset($_GET['find_ban']))
 	if ($expire_before != '')
 	{
 		$query_str[] = 'expire_before='.$expire_before;
-		
+
 		$expire_before = strtotime($expire_before);
 		if ($expire_before === false || $expire_before == -1)
 			message($lang_admin_bans['Invalid date message']);
@@ -460,7 +460,7 @@ generate_admin_menu('bans');
 				</div>
 			</form>
 		</div>
-		
+
 		<h2><span><?php echo $lang_admin_bans['Ban search head'] ?></span></h2>
 		<div class="box">
 			<form id="find_band" method="get" action="admin_bans.php">
@@ -478,7 +478,7 @@ generate_admin_menu('bans');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['IP label'] ?></th>
 									<td><input type="text" name="form[ip]" size="30" maxlength="255" tabindex="5" /></td>
-								</tr>								
+								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['E-mail label'] ?></th>
 									<td><input type="text" name="form[email]" size="30" maxlength="80" tabindex="6" /></td>
@@ -486,7 +486,7 @@ generate_admin_menu('bans');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['Message label'] ?></th>
 									<td><input type="text" name="form[message]" size="30" maxlength="255" tabindex="7" /></td>
-								</tr>								
+								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['Expire after label'] ?></th>
 									<td><input type="text" name="expire_after" size="10" maxlength="10" tabindex="8" />
@@ -496,7 +496,7 @@ generate_admin_menu('bans');
 									<th scope="row"><?php echo $lang_admin_bans['Expire before label'] ?></th>
 									<td><input type="text" name="expire_before" size="10" maxlength="10" tabindex="9" />
 									<span><?php echo $lang_admin_bans['Date help'] ?></span></td>
-								</tr>								
+								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['Order by label'] ?></th>
 									<td>
@@ -517,7 +517,7 @@ generate_admin_menu('bans');
 				</div>
 				<p class="submitend"><input type="submit" name="find_ban" value="<?php echo $lang_admin_bans['Submit search'] ?>" tabindex="12" /></p>
 			</form>
-		</div>		
+		</div>
 	</div>
 	<div class="clearer"></div>
 </div>
