@@ -124,7 +124,7 @@ if (!isset($_POST['form_sent']))
 	$title = 'My FluxBB forum';
 	$description = '<p><span>Unfortunately no one can be told what FluxBB is - you have to see it for yourself.</span></p>';
 	$default_lang = 'English';
-	$default_style = 'Oxygen';
+	$default_style = 'Air';
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
