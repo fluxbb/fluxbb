@@ -228,7 +228,7 @@ if ($pun_config['o_users_online'] == '1')
 
 }
 else
-	echo "\t\t".'</dl>'."\n\t\t\t".'<div class="clearer"></div>'."\n";
+	echo "\t\t\t".'</dl>'."\n\t\t\t".'<div class="clearer"></div>'."\n";
 
 
 ?>

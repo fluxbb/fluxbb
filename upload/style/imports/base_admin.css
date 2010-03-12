@@ -35,12 +35,12 @@ TABLE#forumperms TH, TABLE#forumperms TD {WHITE-SPACE: normal; WIDTH: auto; TEXT
 TABLE#forumperms .atcl {TEXT-ALIGN: left; WIDTH: 15em; WHITE-SPACE: nowrap}
 #adminconsole TD.nodefault {BACKGROUND-COLOR: #D59B9B}
 
-/*** User Search Result Tables ***/
-#users2 TH, #users2 TH {TEXT-ALIGN: left}
-#users2 .tcl, #users2 .tc3, #users2 .tc5 {WIDTH: 15%; TEXT-ALIGN: left; PADDING: 4px 6px}
-#users2 .tc2 {WIDTH: 22%; TEXT-ALIGN: left; PADDING: 4px 6px}
-#users2 .tc4 {WIDTH: 8%; TEXT-ALIGN: center}
-#users2 .tcr {WHITE-SPACE: nowrap}
+/*** User/Ban Search Result Tables ***/
+#users2 TH, #bans1 TH {TEXT-ALIGN: left}
+#users2 .tcl, #users2 .tc3, #users2 .tc5, #bans1 .tcl, #bans1 .tc3, #bans1 .tc5, #bans1 .tc6 {WIDTH: 15%; TEXT-ALIGN: left; PADDING: 4px 6px}
+#users2 .tc2, #bans1 .tc2 {WIDTH: 22%; TEXT-ALIGN: left; PADDING: 4px 6px}
+#users2 .tc4, #bans1 .tc4 {WIDTH: 8%; TEXT-ALIGN: center}
+#users2 .tcr, #bans1 .tcr {WHITE-SPACE: nowrap}
 #adminconsole #linkst, #adminconsole #linksb A {FONT-WEIGHT: bold}
 
 /*** Plugins ***/

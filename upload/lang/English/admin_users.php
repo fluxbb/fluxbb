@@ -65,7 +65,6 @@ $lang_admin_users = array(
 'Results show posts link'	=>	'Show posts',
 'Results guest'				=>	'Guest',
 'Results no IP found'		=>	'The supplied IP address could not be found in the database.',
-'No search terms entered'	=>	'You didn\'t enter any search terms.',
 'No match'					=>	'No match'
 
 );
