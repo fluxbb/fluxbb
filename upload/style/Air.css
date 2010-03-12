@@ -29,7 +29,7 @@
 
 #brdfooter h2, #brdstats h2, #debug h2, #brdstats .conl dt, #brdstats .conr dt, #modcontrols dt,
 #searchlinks dt, div.postright h3, .pun .subscribelink span, #announce .hd, #reportform h2, #punmoderate #vf h2,
-#punviewforum #vf h2, #pundelete .blockform h2, .pun .required strong span {
+#punviewforum #vf h2, #pundelete .blockform h2, .pun .required strong span, .pun .icon div {
 	display: block;
 	left: -9999em;
 	overflow: hidden;
@@ -749,12 +749,6 @@ MAIN TABLES
 	width: 0;
 }
 
-.pun .icon div {
-	height: 0;
-	left: -9999em;
-	position: absolute;
-	text-indent: -9999em;
-}
 
 .pun .iposted .ipost {
 	font-weight: bold;
