@@ -105,7 +105,7 @@ else // If not, we show the "Show text" form
 
 		<h2 class="block2"><span><?php echo $lang_admin_plugin_example['Example form title'] ?></span></h2>
 		<div class="box">
-			<form id="example" method="post" action="<?php echo $_SERVER['REQUEST_URI'] ?>&amp;foo=bar">
+			<form id="example" method="post" action="<?php echo pun_htmlspecialchars($_SERVER['REQUEST_URI']) ?>&amp;foo=bar">
 				<div class="inform">
 					<fieldset>
 						<legend><?php echo $lang_admin_plugin_example['Legend text'] ?></legend>
