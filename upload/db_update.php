@@ -1126,24 +1126,27 @@ if (strpos($cur_version, '1.2') === 0)
 	case 'rebuild_idx':
 		$query_str = '?stage=preparse_posts';
 
-		// Truncate the tables just in-case we didn't already (if we are coming directly here without converting the tables)
-		$db->truncate_table('search_cache') or error('Unable to empty search cache table', __FILE__, __LINE__, $db->error());
-		$db->truncate_table('search_matches') or error('Unable to empty search index match table', __FILE__, __LINE__, $db->error());
-		$db->truncate_table('search_words') or error('Unable to empty search index words table', __FILE__, __LINE__, $db->error());
-
-		// Reset the sequence for the search words (not needed for SQLite)
-		switch ($db_type)
+		if ($start_at == 0)
 		{
-			case 'mysql':
-			case 'mysqli':
-			case 'mysql_innodb':
-			case 'mysqli_innodb':
-				$db->query('ALTER TABLE '.$db->prefix.'search_words auto_increment=1') or error('Unable to update table auto_increment', __FILE__, __LINE__, $db->error());
-				break;
+			// Truncate the tables just in-case we didn't already (if we are coming directly here without converting the tables)
+			$db->truncate_table('search_cache') or error('Unable to empty search cache table', __FILE__, __LINE__, $db->error());
+			$db->truncate_table('search_matches') or error('Unable to empty search index match table', __FILE__, __LINE__, $db->error());
+			$db->truncate_table('search_words') or error('Unable to empty search index words table', __FILE__, __LINE__, $db->error());
 
-			case 'pgsql';
-				$db->query('SELECT setval(\''.$db->prefix.'search_words_id_seq\', 1, false)') or error('Unable to update sequence', __FILE__, __LINE__, $db->error());
-				break;
+			// Reset the sequence for the search words (not needed for SQLite)
+			switch ($db_type)
+			{
+				case 'mysql':
+				case 'mysqli':
+				case 'mysql_innodb':
+				case 'mysqli_innodb':
+					$db->query('ALTER TABLE '.$db->prefix.'search_words auto_increment=1') or error('Unable to update table auto_increment', __FILE__, __LINE__, $db->error());
+					break;
+
+				case 'pgsql';
+					$db->query('SELECT setval(\''.$db->prefix.'search_words_id_seq\', 1, false)') or error('Unable to update sequence', __FILE__, __LINE__, $db->error());
+					break;
+			}
 		}
 
 		require PUN_ROOT.'include/search_idx.php';
