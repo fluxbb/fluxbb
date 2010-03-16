@@ -111,7 +111,7 @@ function validate_search_word($word, $idx)
 //
 function is_keyword($word)
 {
-	return $word != 'and' && $word != 'or' && $word != 'not';
+	return $word == 'and' || $word == 'or' || $word == 'not';
 }
 
 
