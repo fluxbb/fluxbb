@@ -1087,7 +1087,7 @@ if (strpos($cur_version, '1.2') === 0)
 
 	// Convert users
 	case 'conv_users':
-		$query_str = '?stage=rebuild_idx';
+		$query_str = '?stage=preparse_posts';
 
 		function _conv_users($cur_item, $old_charset)
 		{
