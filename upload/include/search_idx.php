@@ -75,9 +75,9 @@ function validate_search_word($word, $idx)
 	global $pun_user, $pun_config;
 	static $stopwords;
 
-	// If we are not indexing we must allow keywords through!
-	if (!$idx && is_keyword($word))
-		return true;
+	// If the word is a keyword we don't want to index it, but we do want to be allowed to search it
+	if (is_keyword($word))
+		return !$idx;
 
 	$language = isset($pun_user['language']) ? $pun_user['language'] : $pun_config['o_default_lang'];
 	if (!isset($stopwords))
