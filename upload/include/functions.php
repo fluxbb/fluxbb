@@ -1400,6 +1400,7 @@ function forum_remove_bad_characters()
 
 //
 // Removes any "bad" characters (characters which mess with the display of a page, are invisible, etc) from the given string
+// See: http://kb.mozillazine.org/Network.IDN.blacklist_chars
 //
 function remove_bad_characters($array)
 {
@@ -1407,10 +1408,58 @@ function remove_bad_characters($array)
 
 	if (!isset($bad_utf8_chars))
 	{
-		$bad_utf8_chars = array("\0", "\xc2\xad", "\xcc\xb7", "\xcc\xb8", "\xe1\x85\x9F", "\xe1\x85\xA0", "\xe2\x80\x80", "\xe2\x80\x81", "\xe2\x80\x82", "\xe2\x80\x83", "\xe2\x80\x84", "\xe2\x80\x85", "\xe2\x80\x86", "\xe2\x80\x87", "\xe2\x80\x88", "\xe2\x80\x89", "\xe2\x80\x8a", "\xe2\x80\x8b", "\xe2\x80\x8e", "\xe2\x80\x8f", "\xe2\x80\xaa", "\xe2\x80\xab", "\xe2\x80\xac", "\xe2\x80\xad", "\xe2\x80\xae", "\xe2\x80\xaf", "\xe2\x81\x9f", "\xe3\x80\x80", "\xe3\x85\xa4", "\xef\xbb\xbf", "\xef\xbe\xa0", "\xef\xbf\xb9", "\xef\xbf\xba", "\xef\xbf\xbb", "\xef\xbf\xbc", "\xef\xbf\xbd");
+		$bad_utf8_chars = array(
+			"\0"			=> '',		// NULL									0000	*
+			"\xcc\xb7"		=> '',		// COMBINING SHORT SOLIDUS OVERLAY		0337	*
+			"\xcc\xb8"		=> '',		// COMBINING LONG SOLIDUS OVERLAY		0338	*
+			"\xe1\x85\x9F"	=> '',		// HANGUL CHOSEONG FILLER				115F	*
+			"\xe1\x85\xA0"	=> '',		// HANGUL JUNGSEONG FILLER				1160	*
+			"\xe2\x80\x8b"	=> '',		// ZERO WIDTH SPACE						200B	*
+			"\xe2\x80\x8c"	=> '',		// ZERO WIDTH NON-JOINER				200C
+			"\xe2\x80\x8d"	=> '',		// ZERO WIDTH JOINER					200D
+			"\xe2\x80\x8e"	=> '',		// LEFT-TO-RIGHT MARK					200E
+			"\xe2\x80\x8f"	=> '',		// RIGHT-TO-LEFT MARK					200F
+			"\xe2\x80\xaa"	=> '',		// LEFT-TO-RIGHT EMBEDDING				202A
+			"\xe2\x80\xab"	=> '',		// RIGHT-TO-LEFT EMBEDDING				202B
+			"\xe2\x80\xac"	=> '', 		// POP DIRECTIONAL FORMATTING			202C
+			"\xe2\x80\xad"	=> '',		// LEFT-TO-RIGHT OVERRIDE				202D
+			"\xe2\x80\xae"	=> '',		// RIGHT-TO-LEFT OVERRIDE				202E
+			"\xe2\x80\xaf"	=> '',		// NARROW NO-BREAK SPACE				202F	*
+			"\xe2\x81\x9f"	=> '',		// MEDIUM MATHEMATICAL SPACE			205F	*
+			"\xe2\x81\xa0"	=> '',		// WORD JOINER							2060
+			"\xe3\x85\xa4"	=> '',		// HANGUL FILLER						3164	*
+			"\xef\xbb\xbf"	=> '',		// ZERO WIDTH NO-BREAK SPACE			FEFF
+			"\xef\xbe\xa0"	=> '',		// HALFWIDTH HANGUL FILLER				FFA0	*
+			"\xef\xbf\xb9"	=> '',		// INTERLINEAR ANNOTATION ANCHOR		FFF9	*
+			"\xef\xbf\xba"	=> '',		// INTERLINEAR ANNOTATION SEPARATOR		FFFA	*
+			"\xef\xbf\xbb"	=> '',		// INTERLINEAR ANNOTATION TERMINATOR	FFFB	*
+			"\xef\xbf\xbc"	=> '',		// OBJECT REPLACEMENT CHARACTER			FFFC	*
+			"\xef\xbf\xbd"	=> '',		// REPLACEMENT CHARACTER				FFFD	*
+			"\xc2\xad"		=> '-',		// SOFT HYPHEN							00AD
+			"\xE2\x80\x9C"	=> '"',		// LEFT DOUBLE QUOTATION MARK			201C
+			"\xE2\x80\x9D"	=> '"',		// RIGHT DOUBLE QUOTATION MARK			201D
+			"\xE2\x80\x98"	=> '\'',	// LEFT SINGLE QUOTATION MARK			2018
+			"\xE2\x80\x99"	=> '\'',	// RIGHT SINGLE QUOTATION MARK			2019
+			"\xe2\x80\x80"	=> ' ',		// EN QUAD								2000	*
+			"\xe2\x80\x81"	=> ' ',		// EM QUAD								2001	*
+			"\xe2\x80\x82"	=> ' ',		// EN SPACE								2002	*
+			"\xe2\x80\x83"	=> ' ',		// EM SPACE								2003	*
+			"\xe2\x80\x84"	=> ' ',		// THREE-PER-EM SPACE					2004	*
+			"\xe2\x80\x85"	=> ' ',		// FOUR-PER-EM SPACE					2005	*
+			"\xe2\x80\x86"	=> ' ',		// SIX-PER-EM SPACE						2006	*
+			"\xe2\x80\x87"	=> ' ',		// FIGURE SPACE							2007	*
+			"\xe2\x80\x88"	=> ' ',		// PUNCTUATION SPACE					2008	*
+			"\xe2\x80\x89"	=> ' ',		// THIN SPACE							2009	*
+			"\xe2\x80\x8a"	=> ' ',		// HAIR SPACE							200A	*
+			"\xE3\x80\x80"	=> ' ',		// IDEOGRAPHIC SPACE					3000	*
+		);
 	}
 
-	return is_array($array) ? array_map('remove_bad_characters', $array) : str_replace($bad_utf8_chars, '', $array);
+	if (is_array($array))
+		return array_map('remove_bad_characters', $array);
+
+	// Replace some "bad" characters
+	return str_replace(array_keys($bad_utf8_chars), array_values($bad_utf8_chars), $array);
 }
 
 
