@@ -21,6 +21,13 @@ define('PUN_CJK_HANGUL_REGEX', '['.
 	'\x{3130}-\x{318F}'.		// Hangul Compatibility Jamo			3130-318F		(http://www.fileformat.info/info/unicode/block/hangul_compatibility_jamo/index.htm)
 	'\x{AC00}-\x{D7AF}'.		// Hangul Syllables						AC00-D7AF		(http://www.fileformat.info/info/unicode/block/hangul_syllables/index.htm)
 
+	// Hiragana
+	'\x{3040}-\x{309F}'.		// Hiragana								3040-309F		(http://www.fileformat.info/info/unicode/block/hiragana/index.htm)
+
+	// Katakana
+	'\x{30A0}-\x{30FF}'.		// Katakana								30A0-30FF		(http://www.fileformat.info/info/unicode/block/katakana/index.htm)
+	'\x{31F0}-\x{31FF}'.		// Katakana Phonetic Extensions			31F0-31FF		(http://www.fileformat.info/info/unicode/block/katakana_phonetic_extensions/index.htm)
+
 	// CJK Unified Ideographs	(http://en.wikipedia.org/wiki/CJK_Unified_Ideographs)
 	'\x{2E80}-\x{2EFF}'.		// CJK Radicals Supplement				2E80-2EFF		(http://www.fileformat.info/info/unicode/block/cjk_radicals_supplement/index.htm)
 	'\x{2F00}-\x{2FDF}'.		// Kangxi Radicals						2F00-2FDF		(http://www.fileformat.info/info/unicode/block/kangxi_radicals/index.htm)

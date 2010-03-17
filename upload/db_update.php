@@ -217,6 +217,9 @@ function convert_to_utf8(&$str, $old_charset)
 	$str = preg_replace_callback('/&#([0-9]+);/', 'utf8_callback_1', $str);
 	$str = preg_replace_callback('/&#x([a-f0-9]+);/i', 'utf8_callback_2', $str);
 
+	// Remove "bad" characters
+	$str = remove_bad_characters($str);
+
 	return ($save != $str);
 }
 
