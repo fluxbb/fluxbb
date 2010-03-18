@@ -294,7 +294,7 @@ else if (isset($_GET['find_ban']))
 	$expire_after = isset($_GET['expire_after']) ? trim($_GET['expire_after']) : '';
 	$expire_before = isset($_GET['expire_before']) ? trim($_GET['expire_before']) : '';
 	$order_by = isset($_GET['order_by']) && in_array($_GET['order_by'], array('username', 'ip', 'email', 'expire')) ? $_GET['order_by'] : 'username';
-	$direction = isset($_GET['direction']) && in_array($_GET['direction'], array('ASC', 'DESC')) ? $_GET['direction'] : 'ASC';
+	$direction = isset($_GET['direction']) && $_GET['direction'] == 'DESC' ? 'DESC' : 'ASC';
 
 	$query_str[] = 'order_by='.$order_by;
 	$query_str[] = 'direction='.$direction;

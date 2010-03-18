@@ -28,7 +28,7 @@ $show_post_count = ($pun_config['o_show_post_count'] == '1' || $pun_user['is_adm
 $username = isset($_GET['username']) && $pun_user['g_search_users'] == '1' ? pun_trim($_GET['username']) : '';
 $show_group = isset($_GET['show_group']) ? intval($_GET['show_group']) : -1;
 $sort_by = isset($_GET['sort_by']) && (in_array($_GET['sort_by'], array('username', 'registered')) || ($_GET['sort_by'] == 'num_posts' && $show_post_count)) ? $_GET['sort_by'] : 'username';
-$sort_dir = isset($_GET['sort_dir']) && in_array($_GET['sort_dir'], array('ASC', 'DESC')) ? $_GET['sort_dir'] : 'ASC';
+$sort_dir = isset($_GET['sort_dir']) && $_GET['sort_dir'] == 'DESC' ? 'DESC' : 'ASC';
 
 // Create any SQL for the WHERE clause
 $where_sql = array();

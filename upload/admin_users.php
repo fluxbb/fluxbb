@@ -260,7 +260,7 @@ else if (isset($_GET['find_user']))
 	$registered_after = isset($_GET['registered_after']) ? trim($_GET['registered_after']) : '';
 	$registered_before = isset($_GET['registered_before']) ? trim($_GET['registered_before']) : '';
 	$order_by = isset($_GET['order_by']) && in_array($_GET['order_by'], array('username', 'email', 'num_posts', 'last_post', 'registered')) ? $_GET['order_by'] : 'username';
-	$direction = isset($_GET['direction']) && in_array($_GET['direction'], array('ASC', 'DESC')) ? $_GET['direction'] : 'ASC';
+	$direction = isset($_GET['direction']) && $_GET['direction'] == 'DESC' ? 'DESC' : 'ASC';
 	$user_group = isset($_GET['user_group']) ? intval($_GET['user_group']) : -1;
 
 	$query_str[] = 'order_by='.$order_by;
