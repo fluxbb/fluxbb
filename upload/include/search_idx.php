@@ -142,8 +142,8 @@ function strip_bbcode($text)
 	{
 		$patterns = array(
 			'%\[img=([^\]]*+)\][^[]*+\[/img\]%'									=>	'$1',	// Keep the alt description
-			'%\[(url|email)=[^\]]*+\]([^[]*+(?:(?!\[/\1\])\[[^[]*+)*+)\[/\1\]%' =>	'$2',	// Keep the text
-			'%\[(img|url|email)\]([^[]*+(?:(?!\[/\1\])\[[^[]*+)*+)\[/\1\]%'		=>	'',		// Remove the whole thing
+			'%\[(url|email)=[^\]]*+\]([^[]*+(?:(?!\[/\1\])\[[^[]*+)*)\[/\1\]%' =>	'$2',	// Keep the text
+			'%\[(img|url|email)\]([^[]*+(?:(?!\[/\1\])\[[^[]*+)*)\[/\1\]%'		=>	'',		// Remove the whole thing
 		);
 	}
 
