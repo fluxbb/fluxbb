@@ -141,12 +141,9 @@ function strip_bbcode($text)
 	if (!isset($patterns))
 	{
 		$patterns = array(
-			'#\[img\]((ht|f)tps?://)([^\s<"]*?)\[/img\]#'					=>	'',		// Remove the whole thing
-			'#\[img=([^\[]*?)\]((ht|f)tps?://)([^\s<"]*?)\[/img\]#'			=>	'$1',	// Keep the alt description
-			'#\[url\]([^\[]*?)\[/url\]#'									=>	'',		// Remove the whole thing
-			'#\[url=([^\[]+?)\](.*?)\[/url\]#'								=>	'$2',	// Keep the text
-			'#\[email\]([^\[]*?)\[/email\]#'								=>	'',		// Remove the whole thing
-			'#\[email=([^\[]+?)\](.*?)\[/email\]#'							=>	'$2',	// Keep the text
+			'%\[img=([^\]]*+)\][^[]*+\[/img\]%'									=>	'$1',	// Keep the alt description
+			'%\[(url|email)=[^\]]*+\]([^[]*+(?:(?!\[/\1\])\[[^[]*+)*+)\[/\1\]%' =>	'$2',	// Keep the text
+			'%\[(img|url|email)\]([^[]*+(?:(?!\[/\1\])\[[^[]*+)*+)\[/\1\]%'		=>	'',		// Remove the whole thing
 		);
 	}
 
