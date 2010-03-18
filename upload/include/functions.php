@@ -1397,7 +1397,6 @@ function forum_remove_bad_characters()
 	$_REQUEST = remove_bad_characters($_REQUEST);
 }
 
-
 //
 // Removes any "bad" characters (characters which mess with the display of a page, are invisible, etc) from the given string
 // See: http://kb.mozillazine.org/Network.IDN.blacklist_chars
@@ -1458,8 +1457,13 @@ function remove_bad_characters($array)
 	if (is_array($array))
 		return array_map('remove_bad_characters', $array);
 
+	// Strip out any invalid characters
+	$array = utf8_bad_strip($array);
+
 	// Replace some "bad" characters
-	return str_replace(array_keys($bad_utf8_chars), array_values($bad_utf8_chars), $array);
+	$array = str_replace(array_keys($bad_utf8_chars), array_values($bad_utf8_chars), $array);
+
+	return $array;
 }
 
 

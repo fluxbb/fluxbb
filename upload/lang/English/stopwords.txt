@@ -167,6 +167,7 @@ youre
 you're
 yours
 http
+https
 ftp
 www
 com

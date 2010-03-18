@@ -54,7 +54,7 @@ function split_words($text, $idx)
 	$text = substr(preg_replace('/((?<=\W)[\'\-]|[\'\-](?=\W))/', '', ' '.$text.' '), 1, -1);
 
 	// Remove symbols and multiple whitespace
-	$text = preg_replace('/[\^\$&\(\)<>`"\|,@_\?%~\+\[\]{}:=\/#\\\\;!\*\.…\s]+/u', ' ', $text);
+	$text = preg_replace('/[\^\$&\(\)<>`"„\|,@_\?%~\+\[\]{}:=\/#\\\\;!\*\.…\s•]+/u', ' ', $text);
 
 	// Replace multiple dashes with just one
 	$text = preg_replace('/([\-])+/', '$1', $text);

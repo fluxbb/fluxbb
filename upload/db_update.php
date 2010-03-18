@@ -41,15 +41,41 @@ if (!defined('PUN'))
 if (!defined('PUN_DEBUG'))
 	define('PUN_DEBUG', 1);
 
+// Load the functions script
+require PUN_ROOT.'include/functions.php';
+
+// Load UTF-8 functions
+require PUN_ROOT.'include/utf8/utf8.php';
+
+// Strip out "bad" UTF-8 characters
+forum_remove_bad_characters();
+
+// Reverse the effect of register_globals
+forum_unregister_globals();
+
 // Turn on full PHP error reporting
 error_reporting(E_ALL);
+
+// Force POSIX locale (to prevent functions such as strtolower() from messing up UTF-8 strings)
+setlocale(LC_CTYPE, 'C');
 
 // Turn off magic_quotes_runtime
 if (get_magic_quotes_runtime())
 	set_magic_quotes_runtime(0);
 
-// Turn off PHP time limit
-@set_time_limit(0);
+// Strip slashes from GET/POST/COOKIE (if magic_quotes_gpc is enabled)
+if (get_magic_quotes_gpc())
+{
+	function stripslashes_array($array)
+	{
+		return is_array($array) ? array_map('stripslashes_array', $array) : stripslashes($array);
+	}
+
+	$_GET = stripslashes_array($_GET);
+	$_POST = stripslashes_array($_POST);
+	$_COOKIE = stripslashes_array($_COOKIE);
+	$_REQUEST = stripslashes_array($_REQUEST);
+}
 
 // If a cookie name is not specified in config.php, we use the default (forum_cookie)
 if (empty($cookie_name))
@@ -59,14 +85,8 @@ if (empty($cookie_name))
 if (!defined('FORUM_CACHE_DIR'))
 	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
 
-// Load the functions script
-require PUN_ROOT.'include/functions.php';
-
-// Load UTF-8 functions
-require PUN_ROOT.'include/utf8/utf8.php';
-
-// Strip out "bad" UTF-8 characters
-forum_remove_bad_characters();
+// Turn off PHP time limit
+@set_time_limit(0);
 
 // Load DB abstraction layer and try to connect
 require PUN_ROOT.'include/dblayer/common_db.php';

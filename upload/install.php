@@ -39,13 +39,7 @@ define('PUN', 1);
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
 	exit('You are running PHP version '.PHP_VERSION.'. FluxBB '.FORUM_VERSION.' requires at least PHP '.MIN_PHP_VERSION.' to run properly. You must upgrade your PHP installation before you can continue.');
 
-// Disable error reporting for uninitialized variables
-error_reporting(E_ALL);
-
-// Turn off PHP time limit
-@set_time_limit(0);
-
-// We need some stuff from functions.php
+// Load the functions script
 require PUN_ROOT.'include/functions.php';
 
 // Load UTF-8 functions
@@ -53,6 +47,36 @@ require PUN_ROOT.'include/utf8/utf8.php';
 
 // Strip out "bad" UTF-8 characters
 forum_remove_bad_characters();
+
+// Reverse the effect of register_globals
+forum_unregister_globals();
+
+// Disable error reporting for uninitialized variables
+error_reporting(E_ALL);
+
+// Force POSIX locale (to prevent functions such as strtolower() from messing up UTF-8 strings)
+setlocale(LC_CTYPE, 'C');
+
+// Turn off magic_quotes_runtime
+if (get_magic_quotes_runtime())
+	set_magic_quotes_runtime(0);
+
+// Strip slashes from GET/POST/COOKIE (if magic_quotes_gpc is enabled)
+if (get_magic_quotes_gpc())
+{
+	function stripslashes_array($array)
+	{
+		return is_array($array) ? array_map('stripslashes_array', $array) : stripslashes($array);
+	}
+
+	$_GET = stripslashes_array($_GET);
+	$_POST = stripslashes_array($_POST);
+	$_COOKIE = stripslashes_array($_COOKIE);
+	$_REQUEST = stripslashes_array($_REQUEST);
+}
+
+// Turn off PHP time limit
+@set_time_limit(0);
 
 //
 // Generate output to be used for config.php
