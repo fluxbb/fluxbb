@@ -430,34 +430,25 @@ function process_form(the_form)
 }
 else
 {
-	//
-	// Strip slashes only if magic_quotes_gpc is on
-	//
-	function unescape($str)
-	{
-		return (get_magic_quotes_gpc() == 1) ? stripslashes($str) : $str;
-	}
-
 	$db_type = $_POST['req_db_type'];
 	$db_host = pun_trim($_POST['req_db_host']);
 	$db_name = pun_trim($_POST['req_db_name']);
-	$db_username = unescape(pun_trim($_POST['db_username']));
-	$db_password = unescape(pun_trim($_POST['db_password']));
+	$db_username = pun_trim($_POST['db_username']);
+	$db_password = pun_trim($_POST['db_password']);
 	$db_prefix = pun_trim($_POST['db_prefix']);
-	$username = unescape(pun_trim($_POST['req_username']));
+	$username = pun_trim($_POST['req_username']);
 	$email = strtolower(pun_trim($_POST['req_email']));
-	$password1 = unescape(pun_trim($_POST['req_password1']));
-	$password2 = unescape(pun_trim($_POST['req_password2']));
-	$title = unescape(pun_trim($_POST['req_title']));
-	$description = unescape(pun_trim($_POST['desc']));
-	$base_url = unescape(pun_trim($_POST['req_base_url']));
-	$default_lang = unescape(pun_trim($_POST['req_default_lang']));
-	$default_style = unescape(pun_trim($_POST['req_default_style']));
+	$password1 = pun_trim($_POST['req_password1']);
+	$password2 = pun_trim($_POST['req_password2']);
+	$title = pun_trim($_POST['req_title']);
+	$description = pun_trim($_POST['desc']);
+	$base_url = pun_trim($_POST['req_base_url']);
+	$default_lang = pun_trim($_POST['req_default_lang']);
+	$default_style = pun_trim($_POST['req_default_style']);
 
 	// Make sure base_url doesn't end with a slash
 	if (substr($base_url, -1) == '/')
 		$base_url = substr($base_url, 0, -1);
-
 
 	// Validate username and passwords
 	if (pun_strlen($username) < 2)
