@@ -70,7 +70,7 @@ if (@file_exists('/proc/loadavg') && is_readable('/proc/loadavg'))
 	$load_averages = @explode(' ', $load_averages);
 	$server_load = isset($load_averages[2]) ? $load_averages[0].' '.$load_averages[1].' '.$load_averages[2] : $lang_admin_index['Not available'];
 }
-else if (!in_array(PHP_OS, array('WINNT', 'WIN32')) && preg_match('/averages?: ([0-9\.]+),?[\s]+([0-9\.]+),?[\s]+([0-9\.]+)/i', @exec('uptime'), $load_averages))
+else if (!in_array(PHP_OS, array('WINNT', 'WIN32')) && preg_match('/averages?: ([0-9\.]+),?\s+([0-9\.]+),?\s+([0-9\.]+)/i', @exec('uptime'), $load_averages))
 	$server_load = $load_averages[1].' '.$load_averages[2].' '.$load_averages[3];
 else
 	$server_load = $lang_admin_index['Not available'];

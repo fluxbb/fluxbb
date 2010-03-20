@@ -182,7 +182,7 @@ else if (isset($_POST['add_edit_ban']))
 	// Validate IP/IP range (it's overkill, I know)
 	if ($ban_ip != '')
 	{
-		$ban_ip = preg_replace('/[\s]{2,}/', ' ', $ban_ip);
+		$ban_ip = preg_replace('/\s{2,}/S', ' ', $ban_ip);
 		$addresses = explode(' ', $ban_ip);
 		$addresses = array_map('pun_trim', $addresses);
 

@@ -1171,7 +1171,7 @@ function redirect($destination_url, $message)
 		$destination_url = $pun_config['o_base_url'].'/'.$destination_url;
 
 	// Do a little spring cleaning
-	$destination_url = preg_replace('/([\r\n])|(%0[ad])|(;[\s]*data[\s]*:)/i', '', $destination_url);
+	$destination_url = preg_replace('/([\r\n])|(%0[ad])|(;\s*data\s*:)/i', '', $destination_url);
 
 	// If the delay is 0 seconds, we might as well skip the redirect all together
 	if ($pun_config['o_redirect_delay'] == '0')
