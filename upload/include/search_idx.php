@@ -57,7 +57,7 @@ function split_words($text, $idx)
 	$text = preg_replace('/[\^\$&\(\)<>`"„\|,@_\?%~\+\[\]{}:=\/#\\\\;!\*\.…\s•]+/u', ' ', $text);
 
 	// Replace multiple dashes with just one
-	$text = preg_replace('/([\-])+/', '$1', $text);
+	$text = preg_replace('/-{2,}/', '-', $text);
 
 	// Fill an array with all the words
 	$words = array_unique(explode(' ', $text));
