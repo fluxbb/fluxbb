@@ -112,7 +112,7 @@ function process_form(the_form)
 
 	if (document.all || document.getElementById)
 	{
-		for (i = 0; i < the_form.length; ++i)
+		for (var i = 0; i < the_form.length; ++i)
 		{
 			var elem = the_form.elements[i]
 			if (elem.name && elem.name.substring(0, 4) == "req_")
