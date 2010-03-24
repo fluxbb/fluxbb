@@ -1208,7 +1208,9 @@ PROFILES (+ ADMIN MENU)
 ----------------------------------------------------------------*/
 
 .pun .block2col {
-	padding-bottom: 1px
+	padding-bottom: 1px;
+	height: 100%;
+	overflow: hidden;
 }
 
 .pun .block2col .blockform, .pun .block2col .block {
