@@ -5,7 +5,7 @@
 /* Limited Reset
 ----------------------------------------------------------------*/
 
-htnl, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, .pun h4, .pun h5, .pun pre, .pun blockquote,
+html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, .pun h4, .pun h5, .pun pre, .pun blockquote,
 .pun ul, .pun ol, .pun li, .pun dl, .pun dt, .pun dd, .pun th, .pun td, .pun fieldset, .pun legend .pun img,
 .pun abbr, .pun cite {
 	border: 0;
