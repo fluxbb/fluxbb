@@ -129,8 +129,6 @@ $lang_common = array(
 'Show new posts'					=>	'Show new posts since last visit',
 'Mark all as read'					=>	'Mark all topics as read',
 'Mark forum read'					=>	'Mark this forum as read',
-'Menu link separator'				=>	'', // The text that separates links in the navigator
-'Link separator'					=>	' | ', // The text that separates links in posts
 'Title separator'					=>	' / ',
 
 // Stuff for the page footer

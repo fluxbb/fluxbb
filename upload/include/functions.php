@@ -358,21 +358,21 @@ function generate_navlinks()
 	global $pun_config, $lang_common, $pun_user;
 
 	// Index and Userlist should always be displayed
-	$links[] = '<li id="navindex"'.((PUN_ACTIVE_PAGE == 'index') ? ' class="isactive"' : '').'><a href="index.php">'.$lang_common['Index'].'</a>';
+	$links[] = '<li id="navindex"'.((PUN_ACTIVE_PAGE == 'index') ? ' class="isactive"' : '').'><a href="index.php">'.$lang_common['Index'].'</a></li>';
 
 	if ($pun_user['g_read_board'] == '1' && $pun_user['g_view_users'] == '1')
-		$links[] = '<li id="navuserlist"'.((PUN_ACTIVE_PAGE == 'userlist') ? ' class="isactive"' : '').'><a href="userlist.php">'.$lang_common['User list'].'</a>';
+		$links[] = '<li id="navuserlist"'.((PUN_ACTIVE_PAGE == 'userlist') ? ' class="isactive"' : '').'><a href="userlist.php">'.$lang_common['User list'].'</a></li>';
 
 	if ($pun_config['o_rules'] == '1' && (!$pun_user['is_guest'] || $pun_user['g_read_board'] == '1' || $pun_config['o_regs_allow'] == '1'))
-		$links[] = '<li id="navrules"'.((PUN_ACTIVE_PAGE == 'rules') ? ' class="isactive"' : '').'><a href="misc.php?action=rules">'.$lang_common['Rules'].'</a>';
+		$links[] = '<li id="navrules"'.((PUN_ACTIVE_PAGE == 'rules') ? ' class="isactive"' : '').'><a href="misc.php?action=rules">'.$lang_common['Rules'].'</a></li>';
 
 	if ($pun_user['is_guest'])
 	{
 		if ($pun_user['g_read_board'] == '1' && $pun_user['g_search'] == '1')
-			$links[] = '<li id="navsearch"'.((PUN_ACTIVE_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a>';
+			$links[] = '<li id="navsearch"'.((PUN_ACTIVE_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a></li>';
 
-		$links[] = '<li id="navregister"'.((PUN_ACTIVE_PAGE == 'register') ? ' class="isactive"' : '').'><a href="register.php">'.$lang_common['Register'].'</a>';
-		$links[] = '<li id="navlogin"'.((PUN_ACTIVE_PAGE == 'login') ? ' class="isactive"' : '').'><a href="login.php">'.$lang_common['Login'].'</a>';
+		$links[] = '<li id="navregister"'.((PUN_ACTIVE_PAGE == 'register') ? ' class="isactive"' : '').'><a href="register.php">'.$lang_common['Register'].'</a></li>';
+		$links[] = '<li id="navlogin"'.((PUN_ACTIVE_PAGE == 'login') ? ' class="isactive"' : '').'><a href="login.php">'.$lang_common['Login'].'</a></li>';
 
 		$info = $lang_common['Not logged in'];
 	}
@@ -381,17 +381,17 @@ function generate_navlinks()
 		if (!$pun_user['is_admmod'])
 		{
 			if ($pun_user['g_read_board'] == '1' && $pun_user['g_search'] == '1')
-				$links[] = '<li id="navsearch"'.((PUN_ACTIVE_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a>';
+				$links[] = '<li id="navsearch"'.((PUN_ACTIVE_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a></li>';
 
-			$links[] = '<li id="navprofile"'.((PUN_ACTIVE_PAGE == 'profile') ? ' class="isactive"' : '').'><a href="profile.php?id='.$pun_user['id'].'">'.$lang_common['Profile'].'</a>';
-			$links[] = '<li id="navlogout"><a href="login.php?action=out&amp;id='.$pun_user['id'].'&amp;csrf_token='.pun_hash($pun_user['id'].pun_hash(get_remote_address())).'">'.$lang_common['Logout'].'</a>';
+			$links[] = '<li id="navprofile"'.((PUN_ACTIVE_PAGE == 'profile') ? ' class="isactive"' : '').'><a href="profile.php?id='.$pun_user['id'].'">'.$lang_common['Profile'].'</a></li>';
+			$links[] = '<li id="navlogout"><a href="login.php?action=out&amp;id='.$pun_user['id'].'&amp;csrf_token='.pun_hash($pun_user['id'].pun_hash(get_remote_address())).'">'.$lang_common['Logout'].'</a></li>';
 		}
 		else
 		{
-			$links[] = '<li id="navsearch"'.((PUN_ACTIVE_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a>';
-			$links[] = '<li id="navprofile"'.((PUN_ACTIVE_PAGE == 'profile') ? ' class="isactive"' : '').'><a href="profile.php?id='.$pun_user['id'].'">'.$lang_common['Profile'].'</a>';
-			$links[] = '<li id="navadmin"'.((PUN_ACTIVE_PAGE == 'admin') ? ' class="isactive"' : '').'><a href="admin_index.php">'.$lang_common['Admin'].'</a>';
-			$links[] = '<li id="navlogout"><a href="login.php?action=out&amp;id='.$pun_user['id'].'&amp;csrf_token='.pun_hash($pun_user['id'].pun_hash(get_remote_address())).'">'.$lang_common['Logout'].'</a>';
+			$links[] = '<li id="navsearch"'.((PUN_ACTIVE_PAGE == 'search') ? ' class="isactive"' : '').'><a href="search.php">'.$lang_common['Search'].'</a></li>';
+			$links[] = '<li id="navprofile"'.((PUN_ACTIVE_PAGE == 'profile') ? ' class="isactive"' : '').'><a href="profile.php?id='.$pun_user['id'].'">'.$lang_common['Profile'].'</a></li>';
+			$links[] = '<li id="navadmin"'.((PUN_ACTIVE_PAGE == 'admin') ? ' class="isactive"' : '').'><a href="admin_index.php">'.$lang_common['Admin'].'</a></li>';
+			$links[] = '<li id="navlogout"><a href="login.php?action=out&amp;id='.$pun_user['id'].'&amp;csrf_token='.pun_hash($pun_user['id'].pun_hash(get_remote_address())).'">'.$lang_common['Logout'].'</a></li>';
 		}
 	}
 
@@ -403,11 +403,11 @@ function generate_navlinks()
 			// Insert any additional links into the $links array (at the correct index)
 			$num_links = count($extra_links[1]);
 			for ($i = 0; $i < $num_links; ++$i)
-				array_splice($links, $extra_links[1][$i], 0, array('<li id="navextra'.($i + 1).'">'.$extra_links[2][$i]));
+				array_splice($links, $extra_links[1][$i], 0, array('<li id="navextra'.($i + 1).'">'.$extra_links[2][$i])).'</li>';
 		}
 	}
 
-	return '<ul>'."\n\t\t\t\t".implode($lang_common['Menu link separator'].'</li>'."\n\t\t\t\t", $links).'</li>'."\n\t\t\t".'</ul>';
+	return '<ul>'."\n\t\t\t\t".implode("\n\t\t\t\t", $links)."\n\t\t\t".'</ul>';
 }
 
 
@@ -1138,14 +1138,24 @@ function maintenance_message()
 	// END SUBST - <pun_head>
 
 
-	// START SUBST - <pun_maint_heading>
-	$tpl_maint = str_replace('<pun_maint_heading>', $lang_common['Maintenance'], $tpl_maint);
-	// END SUBST - <pun_maint_heading>
+	// START SUBST - <pun_maint_main>
+	ob_start();
 
+?>
+<div class="block">
+	<h2><?php echo $lang_common['Maintenance'] ?></h2>
+	<div class="box">
+		<div class="inbox">
+			<p><?php echo $message ?></p>
+		</div>
+	</div>
+</div>
+<?php
 
-	// START SUBST - <pun_maint_message>
-	$tpl_maint = str_replace('<pun_maint_message>', $message, $tpl_maint);
-	// END SUBST - <pun_maint_message>
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_redir = str_replace('<pun_maint_main>', $tpl_temp, $tpl_main);
+	ob_end_clean();
+	// END SUBST - <pun_maint_main>
 
 
 	// End the transaction
@@ -1237,15 +1247,24 @@ function redirect($destination_url, $message)
 	// END SUBST - <pun_head>
 
 
-	// START SUBST - <pun_redir_heading>
-	$tpl_redir = str_replace('<pun_redir_heading>', $lang_common['Redirecting'], $tpl_redir);
-	// END SUBST - <pun_redir_heading>
+	// START SUBST - <pun_redir_main>
+	ob_start();
 
+?>
+<div class="block">
+	<h2><?php echo $lang_common['Redirecting'] ?></h2>
+	<div class="box">
+		<div class="inbox">
+			<p><?php echo $message.'<br /><br /><a href="'.$destination_url.'">'.$lang_common['Click redirect'].'</a>' ?></p>
+		</div>
+	</div>
+</div>
+<?php
 
-	// START SUBST - <pun_redir_text>
-	$tpl_temp = $message.'<br /><br />'.'<a href="'.$destination_url.'">'.$lang_common['Click redirect'].'</a>';
-	$tpl_redir = str_replace('<pun_redir_text>', $tpl_temp, $tpl_redir);
-	// END SUBST - <pun_redir_text>
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_redir = str_replace('<pun_redir_main>', $tpl_temp, $tpl_redir);
+	ob_end_clean();
+	// END SUBST - <pun_redir_main>
 
 
 	// START SUBST - <pun_footer>

@@ -528,7 +528,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 ?>
 <div class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if ($cur_search['pid'] == $cur_search['first_post_id']) echo ' firstpost' ?><?php if ($post_count == 1) echo ' blockpost1' ?><?php if ($item_status != '') echo ' '.$item_status ?>">
-	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?></span> <span><?php if ($cur_search['pid'] != $cur_search['first_post_id']) echo $lang_topic['Re'].' ' ?><?php echo $forum ?></span> <span>&raquo;&#160;<?php echo $cur_search['subject'] ?></span> <span>&raquo;&#160;<a href="viewtopic.php?pid=<?php echo $cur_search['pid'].'#p'.$cur_search['pid'] ?>"><?php echo format_time($cur_search['pposted']) ?></a></span></span></h2>
+	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?></span> <span><?php if ($cur_search['pid'] != $cur_search['first_post_id']) echo $lang_topic['Re'].' ' ?><?php echo $forum ?></span> <span>&raquo;&#160;<a href="viewtopic.php?id=<?php echo $cur_search['tid'] ?>"><?php echo $cur_search['subject'] ?></a></span> <span>&raquo;&#160;<a href="viewtopic.php?pid=<?php echo $cur_search['pid'].'#p'.$cur_search['pid'] ?>"><?php echo format_time($cur_search['pposted']) ?></a></span></span></h2>
 	<div class="box">
 		<div class="inbox">
 			<div class="postbody">
@@ -549,7 +549,12 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		</div>
 		<div class="inbox">
 			<div class="postfoot clearb">
-				<div class="postfootright"><ul><li><a href="viewtopic.php?id=<?php echo $cur_search['tid'] ?>"><?php echo $lang_search['Go to topic'] ?></a><?php echo $lang_common['Link separator'] ?></li><li><a href="viewtopic.php?pid=<?php echo $cur_search['pid'].'#p'.$cur_search['pid'] ?>"><?php echo $lang_search['Go to post'] ?></a></li></ul></div>
+				<div class="postfootright">
+					<ul>
+						<li><a href="viewtopic.php?id=<?php echo $cur_search['tid'] ?>"><?php echo $lang_search['Go to topic'] ?></a></li>
+						<li><a href="viewtopic.php?pid=<?php echo $cur_search['pid'].'#p'.$cur_search['pid'] ?>"><?php echo $lang_search['Go to post'] ?></a></li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</div>

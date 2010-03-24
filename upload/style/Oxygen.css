@@ -640,6 +640,9 @@
 	padding: 6px 15px;
 	}
 
+.pun p.actions span {
+	margin-right: 12px;
+	}
 
 /*****************************************************************
 7. PROFILES AND ADMIN
@@ -782,6 +785,7 @@
 
 .pun .postfootright li {
 	display: inline;
+	margin-right: 12px;
 	}
 
 .pun .postfootright a:link, .pun .postfootright a:visited {

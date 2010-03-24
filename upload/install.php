@@ -205,19 +205,18 @@ function process_form(the_form)
 <div id="punwrap">
 <div id="puninstall" class="pun">
 
+<div class="top-box"><div><!-- Top Corners --></div></div>
+
 <div id="brdheader" class="block">
 	<div class="box">
 		<div id="brdtitle" class="inbox">
 			<h1><span>FluxBB Installation</span></h1>
-		</div>
-		<div id="brdwelcome" class="inbox">
-			<p>Welcome to FluxBB installation. You are about to install FluxBB. In order to install FluxBB, you must complete the form set out below. If you encounter any difficulties with the installation, please refer to the documentation.</p>
+			<div id="brddesc"><p>Welcome to FluxBB installation. You are about to install FluxBB. In order to install FluxBB, you must complete the form set out below. If you encounter any difficulties with the installation, please refer to the documentation.</p></div>
 		</div>
 	</div>
 </div>
 
 <div id="brdmain">
-
 <div class="blockform">
 	<h2><span>Install FluxBB 1.4</span></h2>
 	<div class="box">
@@ -417,8 +416,9 @@ function process_form(the_form)
 		</form>
 	</div>
 </div>
-
 </div>
+
+<div class="end-box"><div><!-- Bottom Corners --></div></div>
 
 </div>
 </div>
@@ -1665,13 +1665,13 @@ else
 <div id="punwrap">
 <div id="puninstall" class="pun">
 
+<div class="top-box"><div><!-- Top Corners --></div></div>
+
 <div id="brdheader" class="block">
 	<div class="box">
 		<div id="brdtitle" class="inbox">
 			<h1><span>FluxBB Installation</span></h1>
-		</div>
-		<div id="brdwelcome" class="inbox">
-			<p>FluxBB has been installed. To finalize the installation please follow the instructions below.</p>
+			<div id="brddesc"><p>FluxBB has been installed. To finalize the installation please follow the instructions below.</p></div>
 		</div>
 	</div>
 </div>
@@ -1738,6 +1738,8 @@ else
 </div>
 
 </div>
+
+<div class="end-box"><div><!-- Bottom Corners --></div></div>
 
 </div>
 </div>
