@@ -723,7 +723,6 @@
 .pun .postleft, .pun .postfootleft {
 	float:left;
 	width: 18em;
-	overflow: hidden;
 	position: relative;
 	overflow: hidden;
 	}
