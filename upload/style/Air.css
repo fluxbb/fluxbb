@@ -325,6 +325,7 @@ htnl, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 .pun #postpreview h2 {
 	padding: 10px 19px 4px 37px;
 	width: 75%;
+	border: 0;
 }
 
 #punredirect h2, #punmaint h2 {
