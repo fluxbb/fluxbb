@@ -427,7 +427,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		$start_from = $per_page * ($p - 1);
 
 		// Generate paging links
-		$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'search.php?search_id='.$search_id);
+		$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'search.php?search_id='.$search_id);
 
 		// throw away the first $start_from of $search_ids, only keep the top $per_page of $search_ids
 		$search_ids = array_slice($search_ids, $start_from, $per_page);

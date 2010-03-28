@@ -38,7 +38,7 @@ if (isset($_GET['ip_stats']))
 	$start_from = 50 * ($p - 1);
 
 	// Generate paging links
-	$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'admin_users.php?ip_stats='.$ip_stats );
+	$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'admin_users.php?ip_stats='.$ip_stats );
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Users'], $lang_admin_users['Results head']);
 	define('PUN_ACTIVE_PAGE', 'admin');
@@ -135,7 +135,7 @@ if (isset($_GET['show_users']))
 	$start_from = 50 * ($p - 1);
 
 	// Generate paging links
-	$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'admin_users.php?show_users='.$ip);
+	$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'admin_users.php?show_users='.$ip);
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Users'], $lang_admin_users['Results head']);
 	define('PUN_ACTIVE_PAGE', 'admin');
@@ -347,7 +347,7 @@ else if (isset($_GET['find_user']))
 	$start_from = 50 * ($p - 1);
 
 	// Generate paging links
-	$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'admin_users.php?find_user=&amp;'.implode('&amp;', $query_str));
+	$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'admin_users.php?find_user=&amp;'.implode('&amp;', $query_str));
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Users'], $lang_admin_users['Results head']);
 	define('PUN_ACTIVE_PAGE', 'admin');

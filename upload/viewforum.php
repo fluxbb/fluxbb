@@ -61,7 +61,7 @@ $p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : in
 $start_from = $pun_user['disp_topics'] * ($p - 1);
 
 // Generate paging links
-$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'viewforum.php?id='.$id);
+$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'viewforum.php?id='.$id);
 
 if ($pun_config['o_feed_type'] == '1')
 	$page_head = array('feed' => '<link rel="alternate" type="application/rss+xml" href="extern.php?action=feed&amp;fid='.$id.'&amp;type=rss" title="'.$lang_common['RSS forum feed'].'" />');

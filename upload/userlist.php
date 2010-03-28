@@ -54,7 +54,7 @@ if ($pun_user['g_search_users'] == '1')
 	$focus_element = array('userlist', 'username');
 
 // Generate paging links
-$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'userlist.php?username='.urlencode($username).'&amp;show_group='.$show_group.'&amp;sort_by='.$sort_by.'&amp;sort_dir='.$sort_dir);
+$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'userlist.php?username='.urlencode($username).'&amp;show_group='.$show_group.'&amp;sort_by='.$sort_by.'&amp;sort_dir='.$sort_dir);
 
 
 define('PUN_ALLOW_INDEX', 1);

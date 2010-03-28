@@ -136,7 +136,7 @@ $p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : in
 $start_from = $pun_user['disp_posts'] * ($p - 1);
 
 // Generate paging links
-$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'viewtopic.php?id='.$id);
+$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'viewtopic.php?id='.$id);
 
 
 if ($pun_config['o_censoring'] == '1')

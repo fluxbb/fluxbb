@@ -248,7 +248,7 @@ if (isset($_GET['tid']))
 	$start_from = $pun_user['disp_posts'] * ($p - 1);
 
 	// Generate paging links
-	$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'moderate.php?fid='.$fid.'&amp;tid='.$tid);
+	$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'moderate.php?fid='.$fid.'&amp;tid='.$tid);
 
 
 	if ($pun_config['o_censoring'] == '1')
@@ -741,7 +741,7 @@ $p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : in
 $start_from = $pun_user['disp_topics'] * ($p - 1);
 
 // Generate paging links
-$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'moderate.php?fid='.$fid);
+$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'moderate.php?fid='.$fid);
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), pun_htmlspecialchars($cur_forum['forum_name']));
 define('PUN_ACTIVE_PAGE', 'index');
