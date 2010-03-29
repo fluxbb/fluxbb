@@ -320,6 +320,57 @@ function check_bans()
 
 
 //
+// Check username
+//
+function check_username($username, $exclude_id = null)
+{
+	global $db, $pun_config, $errors, $lang_prof_reg, $lang_register, $lang_common, $pun_bans;
+
+	// Convert multiple whitespace characters into one (to prevent people from registering with indistinguishable usernames)
+	$username = preg_replace('#\s+#s', ' ', $username);
+
+	// Validate username
+	if (pun_strlen($username) < 2)
+		$errors[] = $lang_prof_reg['Username too short'];
+	else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
+		$errors[] = $lang_prof_reg['Username too long'];
+	else if (!strcasecmp($username, 'Guest') || !strcasecmp($username, $lang_common['Guest']))
+		$errors[] = $lang_prof_reg['Username guest'];
+	else if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username) || preg_match('/((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))/', $username))
+		$errors[] = $lang_prof_reg['Username IP'];
+	else if ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
+		$errors[] = $lang_prof_reg['Username reserved chars'];
+	else if (preg_match('/(?:\[\/?(?:b|u|i|h|colou?r|quote|code|img|url|email|list|\*)\]|\[(?:img|url|quote|list)=)/i', $username))
+		$errors[] = $lang_prof_reg['Username BBCode'];
+
+	// Check username for any censored words
+	if ($pun_config['o_censoring'] == '1' && censor_words($username) != $username)
+		$errors[] = $lang_register['Username censor'];	
+	
+	// Check that the username (or a too similar username) is not already registered
+	$query = ($exclude_id) ? ' AND id!='.$exclude_id : '';
+	
+	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(preg_replace('/[^\w]/', '', $username)).'\') AND id>1'.$query) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+
+	if ($db->num_rows($result))
+	{
+		$busy = $db->result($result);
+		$errors[] = $lang_register['Username dupe 1'].' '.pun_htmlspecialchars($busy).'. '.$lang_register['Username dupe 2'];
+	}
+
+	// Check username for any banned usernames
+	foreach ($pun_bans as $cur_ban)
+	{
+		if ($cur_ban['username'] != '' && utf8_strtolower($username) == utf8_strtolower($cur_ban['username']))
+		{
+			$errors[] = $lang_prof_reg['Banned username'];
+			break;
+		}
+	}	
+}
+
+
+//
 // Update "Users online"
 //
 function update_users_online()

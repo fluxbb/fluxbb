@@ -94,31 +94,7 @@ if (isset($_POST['form_sent']))
 		require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
 
 		// It's a guest, so we have to validate the username
-		if (pun_strlen($username) < 2)
-			$errors[] = $lang_prof_reg['Username too short'];
-		else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
-			$errors[] = $lang_prof_reg['Username too long'];
-		else if (!strcasecmp($username, 'Guest') || !strcasecmp($username, $lang_common['Guest']))
-			$errors[] = $lang_prof_reg['Username guest'];
-		else if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username) || preg_match('/((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))/', $username))
-			$errors[] = $lang_prof_reg['Username IP'];
-		else if ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
-			$errors[] = $lang_prof_reg['Username reserved chars'];
-		else if (preg_match('/(?:\[\/?(?:b|u|i|h|colou?r|quote|code|img|url|email|list)\]|\[(?:code|quote|list)=)/i', $username))
-			$errors[] = $lang_prof_reg['Username BBCode'];
-
-		// Check username for any censored words
-		$temp = censor_words($username);
-		if ($temp != $username)
-			$errors[] = $lang_register['Username censor'];
-
-		// Check that the username (or a too similar username) is not already registered
-		$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (username=\''.$db->escape($username).'\' OR username=\''.$db->escape(preg_replace('/[^\w]/', '', $username)).'\') AND id>1') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-		if ($db->num_rows($result))
-		{
-			$busy = $db->result($result);
-			$errors[] = $lang_register['Username dupe 1'].' '.pun_htmlspecialchars($busy).'. '.$lang_register['Username dupe 2'];
-		}
+		check_username($username);
 
 		if ($pun_config['p_force_guest_email'] == '1' || $email != '')
 		{

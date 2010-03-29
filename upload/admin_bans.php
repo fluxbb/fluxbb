@@ -342,7 +342,7 @@ else if (isset($_GET['find_ban']))
 	$start_from = 50 * ($p - 1);
 
 	// Generate paging links
-	$paging_links = $lang_common['Pages'].': '.paginate($num_pages, $p, 'admin_bans.php?find_ban=&amp;'.implode('&amp;', $query_str));
+	$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'admin_bans.php?find_ban=&amp;'.implode('&amp;', $query_str)); 
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Bans'], $lang_admin_bans['Results head']);
 	define('PUN_ACTIVE_PAGE', 'admin');

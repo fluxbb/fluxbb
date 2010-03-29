@@ -691,21 +691,13 @@ else if (isset($_POST['form_sent']))
 					$form['username'] = pun_trim($_POST['req_username']);
 					$old_username = pun_trim($_POST['old_username']);
 
-					if (pun_strlen($form['username']) < 2)
-						message($lang_prof_reg['Username too short']);
-					else if (pun_strlen($form['username']) > 25) // This usually doesn't happen since the form element only accepts 25 characters
-						message($lang_common['Bad request']);
-					else if (!strcasecmp($form['username'], 'Guest') || !strcasecmp($form['username'], $lang_common['Guest']))
-						message($lang_prof_reg['Username guest']);
-					else if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $form['username']) || preg_match('/((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))/', $form['username']))
-						message($lang_prof_reg['Username IP']);
-					else if (preg_match('/(?:\[\/?(?:b|u|i|h|colou?r|quote|code|img|url|email|list)\]|\[(?:code|quote|list)=)/i', $form['username']))
-						message($lang_prof_reg['Username BBCode']);
-
-					// Check that the username is not already registered
-					$result = $db->query('SELECT 1 FROM '.$db->prefix.'users WHERE username=\''.$db->escape($form['username']).'\' AND id!='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-					if ($db->num_rows($result))
-						message($lang_profile['Dupe username']);
+					// Check username
+					require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
+					
+					$errors = array();
+					check_username($form['username'], $id);
+					if (!empty($errors))
+						message($errors[0]);
 
 					if ($form['username'] != $old_username)
 						$username_updated = true;

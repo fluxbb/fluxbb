@@ -64,7 +64,6 @@ $lang_profile = array(
 'Upload'						=>	'Upload', // submit button
 
 // Form validation stuff
-'Dupe username'					=>	'Someone else has already registered with that username. Please go back and try a different username.',
 'Forbidden title'				=>	'The title you entered contains a forbidden word. You must choose a different title.',
 'Profile redirect'				=>	'Profile updated. Redirecting …',
 
