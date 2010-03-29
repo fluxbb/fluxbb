@@ -693,7 +693,7 @@ else if (isset($_POST['form_sent']))
 
 					// Check username
 					require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
-					
+
 					$errors = array();
 					check_username($form['username'], $id);
 					if (!empty($errors))
