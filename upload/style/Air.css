@@ -195,7 +195,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 ----------------------------------------------------------------*/
 
 #punwrap {
-	margin: 30px 40px;
+	padding: 30px 40px;
 }
 
 #punredirect, #punmaint {
@@ -208,14 +208,12 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	padding: 18px;
 }
 
-
 .pun .top-box, .pun .end-box {
 	float: left;
 	width: 100%;
 	position: relative;
 	left: -19px;
 }
-
 
 .pun .top-box div, .pun .end-box div {
 	float: right;
@@ -250,10 +248,12 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 ----------------------------------------------------------------*/
 
 #brdmain {
-	border-style: solid none solid none;
+	border-style: solid none;
 	border-width: 3px 0;
 	margin-bottom: 12px;
 	padding: 12px 0;
+	width: 100%;
+	position: relative;
 }
 
 #punindex #brdmain {
@@ -313,7 +313,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	padding: 10px 19px 4px 37px;
 }
 
-#punindex .blocktable h2, #punsearch #vf h2 {
+#punindex #brdmain .blocktable h2, #punsearch #vf h2 {
 	margin: 1px 0 0 1px;
 	min-width: 10em;
 	position: absolute;
@@ -780,13 +780,13 @@ MAIN POSTS
 
 #punsearch .blockpost h2 span span {
 	white-space: nowrap;
-	}
+}
 
 #punsearch .blockpost .icon {
 	position: absolute;
 	top: 0;
 	margin-top: -2.154em;
-	}
+}
 
 .pun .blockpost h2 .conr {
 	float: right;
