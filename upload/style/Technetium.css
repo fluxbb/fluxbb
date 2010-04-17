@@ -940,7 +940,7 @@ body {
 
 .pun .box, #adminconsole fieldset th {
 	background-color: #FBFCFD;
-	background-image: url("technetium/light-shade.png");
+	background-image: url("Technetium/light-shade.png");
 	background-position: bottom;
 	background-repeat: repeat-x;
 	}
@@ -948,7 +948,7 @@ body {
 .pun td.tc2, .pun td.tc3, .pun td.tcmod, #postpreview, #viewprofile dd, .pun .forminfo,
 #adminconsole fieldset td, .pun .blockmenu .box, #adstats dd {
 	background-color: #F4F9FD;
-	background-image: url("technetium/light-shade.png");
+	background-image: url("Technetium/light-shade.png");
 	background-repeat: repeat-x;
 	background-position: bottom;
 	}
@@ -956,14 +956,14 @@ body {
 .pun h2, #brdmenu {
 	background-color: #C5D8EB;
 	color: #122434;
-	background-image: url("technetium/dark-shade.png");
+	background-image: url("Technetium/dark-shade.png");
 	background-repeat: repeat-x;
 	background-position: top;
 	}
 
 .pun h2  {
 	background-color: #C5D8EB;
-	background-image: url("technetium/inv-shade.png");
+	background-image: url("Technetium/inv-shade.png");
 	background-repeat: repeat-x;
 	color: #122434;
 	text-shadow: #FFF 1px -1px 0.7em;
@@ -971,7 +971,7 @@ body {
 
 .pun #announce h2  {
 	background-color: #FBF8BF;
-	background-image: url("technetium/inv-shade.png");
+	background-image: url("Technetium/inv-shade.png");
 	background-repeat: repeat-x;
 	}
 
@@ -981,12 +981,12 @@ body {
 
 .pun th {
 	background-color: #EFF3F8;
-	background-image: url("technetium/light-shade.png");
+	background-image: url("Technetium/light-shade.png");
 	background-repeat: repeat-x;
 	}
 
 .pun td {
-	background-image: url("technetium/light-shade.png");
+	background-image: url("Technetium/light-shade.png");
 	background-color: #FBFCFD;
 	background-position: bottom;
 	background-repeat: repeat-x;
@@ -1023,7 +1023,7 @@ body {
 
 .pun .postlink a:link, .pun .postlink a:visited, .pun .postlink a:active  {
 	background-color:#F0F5FA;
-	background-image:url(technetium/inv-shade.png);
+	background-image:url(Technetium/inv-shade.png);
 	background-repeat:repeat-x;
 	border: 1px solid;
 	color:#2B3037;
@@ -1045,7 +1045,7 @@ body {
 
 #brdheader .box {
 	background-color:#F0F5FA;
-	background-image:url(technetium/light-shade.png);
+	background-image:url(Technetium/light-shade.png);
 	background-repeat:repeat-x;
 	background-position: top;
 	color:#122434;
@@ -1059,7 +1059,7 @@ body {
 
 .pun #brdtitle {
 	background-color: #D1E1EF;
-	background-image: url("technetium/inv-shade.png");
+	background-image: url("Technetium/inv-shade.png");
 	background-repeat: repeat-x;
 	text-shadow: #FFF 1px -1px 0.4em;
 	}
@@ -1185,33 +1185,33 @@ body {
 ----------------------------------------------------------------*/
 
 .pun .icon {
-	background-image:url(technetium/icon-nonew.png);
+	background-image:url(Technetium/icon-nonew.png);
 	}
 
 .pun .iredirect .icon {
-	background-image:url(technetium/icon-moved.png);
+	background-image:url(Technetium/icon-moved.png);
 	}
 
 .pun .inew .icon{
-	background-image:url(technetium/icon-new.png);
+	background-image:url(Technetium/icon-new.png);
 	}
 
 .pun .iclosed .icon  {
-	background-image:url(technetium/icon-closed.png);
+	background-image:url(Technetium/icon-closed.png);
 	}
 
 .pun .isticky .icon {
-	background-image:url(technetium/icon-nonew-sticky.png);
+	background-image:url(Technetium/icon-nonew-sticky.png);
 	}
 
 .pun .isticky.inew .icon {
-	background-image:url(technetium/icon-new-sticky.png);
+	background-image:url(Technetium/icon-new-sticky.png);
 	}
 
 .pun .iclosed.isticky .icon {
-	background-image:url(technetium/icon-closed-sticky.png);
+	background-image:url(Technetium/icon-closed-sticky.png);
 	}
 
 .pun .imoved .icon {
-	background-image:url(technetium/icon-moved.png);
+	background-image:url(Technetium/icon-moved.png);
 	}
