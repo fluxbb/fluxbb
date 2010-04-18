@@ -1485,7 +1485,7 @@ html, body, #punwrap {
 	border-color: #dfe6ee;
 }
 
-.pun label, .pun legend {
+.pun label, .pun legend, #adminconsole fieldset th {
 	color: #357082;
 }
 
