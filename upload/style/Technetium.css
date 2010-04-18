@@ -28,11 +28,11 @@ Yes, it is valid CSS 3, but unfortunately border-radius doesn't seem to work cor
 ----------------------------------------------------------------*/
 
 body {
-	line-height: 1.6;
+    line-height: 1.9em;
 }
 
 .pun {
-	width: 960px;
+    width: 95%;
 	margin: 0 auto;
 	}
 
@@ -90,7 +90,7 @@ body {
 
 .pun table, .pun td, .pun th, .pun input, .pun select, .pun optgroup, .pun textarea {
 	font-size: 1em;
-	font-family: Georgia, Times, Times New Roman, serif;
+	font-family: Georgia, Times, "Times New Roman", serif;
 	}
 
 .pun pre, .pun code {
@@ -140,6 +140,7 @@ body {
 
 .pun .blockpost h2 {
 	font-size: 1.0em;
+    padding: 8px;
 	}
 
 .pun h3 {
@@ -155,11 +156,16 @@ body {
 	font-weight: bold
 	}
 
+.pun .postleft dl dt {
+    font-size: 1.4em;
+    }
+
 /* User Content (Announcements, Rules, Posts)
 ----------------------------------------------------------------*/
 
 .pun .usercontent p, .pun .postmsg p {
-	padding: 0.75em 0
+    padding: 0.5em 0;
+    line-height: 1.6em;
 	}
 
 .pun .usercontent ul, .pun .postmsg ul {
@@ -224,6 +230,15 @@ body {
 	padding: 0.75em 0 0 0;
 	}
 
+#punviewtopic .blockpost dt, #punmoderate .blockpost dt {
+	display:block;
+	height:1.462em;
+	left:0;
+	overflow:hidden;
+	position:absolute;
+	top:-2.615em;
+	width:206px;
+}
 
 /*****************************************************************
 3. COMMON STYLES
@@ -233,7 +248,7 @@ body {
 ----------------------------------------------------------------*/
 
 #punwrap {
-	margin: 12px 20px
+    margin: 4px
 	}
 
 #punredirect .block, #punmaint .block {
@@ -343,12 +358,28 @@ body {
 
 #brdwelcome .conl {
 	float: left;
+    white-space: nowrap;
 	}
+
+#brdwelcome li {
+    float:left;
+    margin-right:8px;
+    white-space:nowrap;
+}
+
+#brdwelcome .conl li strong:after {
+    content: '.'
+    }
 
 #brdwelcome .conr {
 	float: right;
 	text-align: right;
 	}
+
+#brdwelcome .conr li {
+    float: right;
+    text-align: right;
+    }
 
 /* Breadcrumbs and Post Links
 ----------------------------------------------------------------*/
@@ -372,6 +403,10 @@ body {
 	white-space: nowrap;
 	font-weight: bold;
 	}
+
+.pun .linkst .crumbs {
+    font-size: 1.3em;
+    }
 
 .pun .pagelink {
 	float: left;
@@ -425,6 +460,11 @@ body {
 	text-align: right;
 	}
 
+#brdfooter #feedlinks span {
+    background:url("Technetium/feed.png") no-repeat scroll left center transparent;
+    padding-left:18px;
+    display: inline;
+}
 
 /* Board Stats
 ----------------------------------------------------------------*/
@@ -565,7 +605,11 @@ body {
 	}
 
 .pun .stickytext {
-	font-weight: bold;
+    display: none;
+    }
+
+.pun .movedtext {
+    display: none;
 	}
 
 .pun .closedtext {
@@ -591,21 +635,56 @@ body {
 	}
 
 .pun .inform {
-	padding-bottom: 12px
+    padding: 0 18px;
 	}
 
 .pun fieldset {
-	padding: 0px 12px 0px 12px;
-	border-style: solid;
-	border-width: 1px
+    overflow: hidden;
+    width: 100%;
+    padding-bottom: 0.8em;
 	}
 
 .pun legend {
-	padding: 0px 6px
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-left: -7px;
+    padding: 10px 19px 7px 19px;
 	}
 
+.pun div[class*="inform"] legend {
+    margin-left: 0;
+}
+
 .pun .infldset {
-	padding: 9px 0px 12px 0
+    border-style: solid;
+    border-width: 1px;
+    display: inline-block;
+    overflow: hidden;
+    padding: 12px 18px;
+}
+
+.pun div[class*="infldset"] {
+    display: block;
+}
+
+#punregister #rules .infldset {
+    padding: 5px 18px;
+}
+
+.pun fieldset p {
+    clear: both;
+    padding: 0 0 7px 0;
+    width: 100%;
+}
+
+.pun fieldset .usercontent p {
+    padding: 7px 0;
+}
+
+.pun fieldset label {
+    clear: both;
+    display: block;
+    padding: 0 0 7px 0;
 	}
 
 .pun label {
@@ -646,7 +725,7 @@ body {
 	}
 
 .pun .txtarea {
-	width: 75%
+    width: 90%
 	}
 
 .pun .txtarea textarea, .pun input.longinput {
@@ -664,7 +743,8 @@ body {
 	}
 
 .pun .blockform .buttons {
-	padding-left: 12px;
+    padding-left: 18px;
+    padding-bottom: 5px;
 	}
 
 .pun .blockform .buttons input {
@@ -769,7 +849,7 @@ body {
 	}
 
 .pun .postleft dl {
-	padding: 0.75em 6px;
+    padding: 0.5em 6px;
 	}
 
 .pun .postleft .usercontacts, .pun .postleft .icon {
@@ -970,9 +1050,7 @@ body {
 	}
 
 .pun #announce h2  {
-	background-color: #FBF8BF;
-	background-image: url("Technetium/inv-shade.png");
-	background-repeat: repeat-x;
+	display: none;
 	}
 
 .box #announce-block {
@@ -997,7 +1075,7 @@ body {
 	}
 
 .pun .iclosed td {
-	background-color: #ECEEF0
+	background-color: #DAE1E9
 	}
 
 .pun .iclosed.isticky td {
