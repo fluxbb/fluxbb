@@ -1305,6 +1305,10 @@ PROFILES (+ ADMIN MENU)
 }
 
 
+/*****************************************************************
+COLOUR SCHEME
+*****************************************************************/
+
 /* Basic defaults and Common Items
 ----------------------------------------------------------------*/
 
@@ -1325,28 +1329,28 @@ html, body, #punwrap {
 }
 
 .pun a, .pun a:link, .pun a:visited {
-	color: #821400;
+	color: #990000;
 }
 
 .pun a:hover, .pun a:active, .pun a:focus {
-	color: #b06f00;
+	color: #f60;
 }
 
 /* Primary Navigation
 ----------------------------------------------------------------*/
 
 #brdmenu ul {
-	background: #821400;
+	background: #990000;
 }
 
 #brdmenu a, #brdmenu a:link, #brdmenu a:visited {
-	background: #821400;
+	background: #990000;
 	border-color: #fff;
 	color: #ddd;
 }
 
 #brdmenu a:hover, #brdmenu a:active, #brdmenu a:focus {
-	background: #bc1c00;
+	background: #f60;
 	border-color: #fff;
 	color: #fff;
 }
@@ -1355,19 +1359,19 @@ html, body, #punwrap {
 ----------------------------------------------------------------*/
 
 .pun .blocktable .box {
-	background: #fefefc;
+	background: #fbfaf5;
 	border-color: #cec7b9 #e7e2d9;
 }
 
 #punindex .blocktable h2, .pun #vf h2 {
-	background: #f5f2eb;
+	background: #ecebe7;
 	border-color: #e1d9ca;
-	color: #6c5c2c;
+	color: #836359;
 }
 
 #adminconsole fieldset th, #adminconsole fieldset td {
-	background: #fcfaf6;
-	border-color: #eee9df;
+	background: #f3f2ed;
+	border-color: #ebe0dc;
 }
 
 .pun #users1 h2 {
@@ -1375,40 +1379,40 @@ html, body, #punwrap {
 }
 
 .pun .blocktable td {
-	border-color: #eee9df;
+	border-color: #ebe0dc;
 }
 
 .pun .blocktable th {
-	background: #f5f2eb;
+	background: #ecebe7;
 	border-color: #e1d9ca;
-	color: #6c5c2c;
+	color: #836359;
 }
 
 .pun .blocktable td.tcl span.stickytext {
-	color: #ea7c37;
+	color: #000;
 }
 
 /* Main Posts
 ----------------------------------------------------------------*/
 
 .pun .blockpost {
-	background: #fcfaf6;
+	background: #f3f2ed;
 	border-color: #cec7b9 #e7e2d9;
 }
 
 .pun .blockpost h2 {
-	background: #f5f2eb;
+	background: #ecebe7;
 	border-color: #e1d9ca;
-	color: #6c5c2c;
+	color: #836359;
 }
 
 .pun .blockpost .postbody, .pun .blockpost .postfoot {
-	background: #fefefc;
-	border-color: #eee9df;
+	background: #fbfaf5;
+	border-color: #ebe0dc;
 }
 
 .pun .blockpost .postfootright li {
-	color: #fefefc;
+	color: #fbfaf5;
 }
 
 .pun .postmsg {
@@ -1420,13 +1424,13 @@ html, body, #punwrap {
 }
 
 .pun .quotebox {
-	background: #f5f5f5;
-	border-color: #bda67a;
+	background: #f4f4e8;
+	border-color: #ccc;
 	color: #665858;
 }
 
 .pun .quotebox cite {
-	color: #6c5c2c;
+	color: #836359;
 }
 
 .pun .codebox {
@@ -1443,46 +1447,46 @@ html, body, #punwrap {
 
 .pun .blockform .box, #adstats, #adintro, #postpreview, #posterror .box {
 	border-color: #cec7b9 #e7e2d9;
-	background: #f5f2eb;
+	background: #ecebe7;
 }
 
 #punmisc #rules .box, #helpfile .box {
 	border-color: #cec7b9 #e7e2d9;
-	background: #fcfaf6;
+	background: #f3f2ed;
 }
 
 .pun #quickpost h2, #punpost .blockform h2, #punedit .blockform h2, #posterror h2 {
-	background: #f5f2eb;
-	color: #6c5c2c;
+	background: #ecebe7;
+	color: #836359;
 }
 
 .pun .forminfo {
 	background: #fff;
-	border-color: #eee9df;
+	border-color: #ebe0dc;
 }
 
 #puninstall form .forminfo {
-	background: #44699c;
+	background: #990000;
 	color: #fff;
 }
 
 .pun #posterror .error-info {
 	background: #ffffe1;
-	border-color: #eee9df;
+	border-color: #ebe0dc;
 }
 
 .pun .error-list li {
 	padding-left: 24px;
-	background: url(fire/img/exclaim.png) center left no-repeat;
+	background: url(Fire/img/exclaim.png) center left no-repeat;
 }
 
 .pun .infldset, #pundelete .deletemsg, #adintro .inbox, #adstats .inbox {
-	background: #fcfaf6;
-	border-color: #eee9df;
+	background: #f3f2ed;
+	border-color: #ebe0dc;
 }
 
-.pun label, .pun legend {
-	color: #6c5c2c;
+.pun label, .pun legend, #adminconsole fieldset th {
+	color: #836359;
 }
 
 .pun fieldset p {
@@ -1494,25 +1498,25 @@ html, body, #punwrap {
 }
 
 .pun .blockmenu a:hover, .pun .blockmenu a:active, .pun .blockmenu a:focus {
-	background: #f5f5f5;
+	background: #ffffe6;
 }
 
 .pun .blockmenu .isactive a:link, .pun .blockmenu .isactive a:visited {
-	color: #222;
-	background: #f5f2eb;
+	color: #333;
+	background: #f3f2ed;
 	}
 
 .pun #viewprofile .box {
 	border-color: #cec7b9 #e7e2d9;
-	background: #f5f2eb;
+	background: #ecebe7;
 }
 
 .pun #viewprofile dt, #adstats dt {
-	color: #6c5c2c;
+	color: #836359;
 }
 
 .pun #viewprofile dl, .pun #viewprofile dd, #adstats dl, #adstats dd {
-	border-color: #eee9df;
+	border-color: #ebe0dc;
 }
 
 #adminconsole fieldset td.nodefault {
@@ -1533,5 +1537,7 @@ html, body, #punwrap {
 }
 
 .pun .inew .icon {
-	border-color: #d99191 #d18787 #bb6c6c #c37272;
+	border-color: #ca0000 #ab0000 #bb0000 #d30000;
 }
+
+
