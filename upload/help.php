@@ -26,7 +26,7 @@ define('PUN_ACTIVE_PAGE', 'help');
 require PUN_ROOT.'header.php';
 
 ?>
-<h2><span><?php echo $lang_common['BBCode'] ?></span></h2>
+<h2><span><?php echo $lang_help['BBCode'] ?></span></h2>
 <div class="box">
 	<div class="inbox">
 		<p><a name="bbcode"></a><?php echo $lang_help['BBCode info 1'] ?></p>
@@ -113,7 +113,7 @@ require PUN_ROOT.'header.php';
 		<p><code>[b][u]<?php echo $lang_help['Bold, underlined text'] ?>[/u][/b]</code> <?php echo $lang_help['produces'] ?> <strong><span class="bbu"><?php echo $lang_help['Bold, underlined text'] ?></span></strong></p>
 	</div>
 </div>
-<h2><span><?php echo $lang_common['Smilies'] ?></span></h2>
+<h2><span><?php echo $lang_help['Smilies'] ?></span></h2>
 <div class="box">
 	<div class="inbox">
 		<p><a name="smilies"></a><?php echo $lang_help['Smilies info'] ?></p>
