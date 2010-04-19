@@ -5,9 +5,11 @@ $lang_topic = array(
 
 'Post reply'	=>	'Post reply',
 'Topic closed'	=>	'Topic closed',
-'From'			=>	'From', // User location
-'IP'			=>	'IP',
-'Note'			=>	'Note', // Admin note
+'From'			=>	'From:', // User location
+'IP'			=>	'IP:',
+'Note'			=>	'Note:', // Admin note
+'Posts'			=>	'Posts:',
+'Registered'	=>	'Registered:',
 'Website'		=>	'Website',
 'Guest'			=>	'Guest',
 'Online'		=>	'Online',

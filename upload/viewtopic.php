@@ -239,13 +239,13 @@ while ($cur_post = $db->fetch_assoc($result))
 				if ($pun_config['o_censoring'] == '1')
 					$cur_post['location'] = censor_words($cur_post['location']);
 
-				$user_info[] = '<dd>'.$lang_topic['From'].': '.pun_htmlspecialchars($cur_post['location']);
+				$user_info[] = '<dd>'.$lang_topic['From'].' '.pun_htmlspecialchars($cur_post['location']);
 			}
 
-			$user_info[] = '<dd>'.$lang_common['Registered'].': '.format_time($cur_post['registered'], true);
+			$user_info[] = '<dd>'.$lang_topic['Registered'].' '.format_time($cur_post['registered'], true);
 
 			if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
-				$user_info[] = '<dd>'.$lang_common['Posts'].': '.forum_number_format($cur_post['num_posts']);
+				$user_info[] = '<dd>'.$lang_topic['Posts'].' '.forum_number_format($cur_post['num_posts']);
 
 			// Now let's deal with the contact links (Email and URL)
 			if ((($cur_post['email_setting'] == '0' && !$pun_user['is_guest']) || $pun_user['is_admmod']) && $pun_user['g_send_email'] == '1')
@@ -259,10 +259,10 @@ while ($cur_post = $db->fetch_assoc($result))
 
 		if ($pun_user['is_admmod'])
 		{
-			$user_info[] = '<dd>'.$lang_topic['IP'].': <a href="moderate.php?get_host='.$cur_post['id'].'">'.$cur_post['poster_ip'].'</a>';
+			$user_info[] = '<dd>'.$lang_topic['IP'].' <a href="moderate.php?get_host='.$cur_post['id'].'">'.$cur_post['poster_ip'].'</a>';
 
 			if ($cur_post['admin_note'] != '')
-				$user_info[] = '<dd>'.$lang_topic['Note'].': <strong>'.pun_htmlspecialchars($cur_post['admin_note']).'</strong>';
+				$user_info[] = '<dd>'.$lang_topic['Note'].' <strong>'.pun_htmlspecialchars($cur_post['admin_note']).'</strong>';
 		}
 	}
 	// If the poster is a guest (or a user that has been deleted)
@@ -272,7 +272,7 @@ while ($cur_post = $db->fetch_assoc($result))
 		$user_title = get_title($cur_post);
 
 		if ($pun_user['is_admmod'])
-			$user_info[] = '<dd>'.$lang_topic['IP'].': <a href="moderate.php?get_host='.$cur_post['id'].'">'.$cur_post['poster_ip'].'</a>';
+			$user_info[] = '<dd>'.$lang_topic['IP'].' <a href="moderate.php?get_host='.$cur_post['id'].'">'.$cur_post['poster_ip'].'</a>';
 
 		if ($pun_config['o_show_user_info'] == '1' && $cur_post['poster_email'] != '' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
 			$user_contacts[] = '<span class="email"><a href="mailto:'.$cur_post['poster_email'].'">'.$lang_common['Email'].'</a></span>';
