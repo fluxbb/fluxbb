@@ -7,7 +7,7 @@
  */
 
 // The FluxBB version this script updates to
-define('UPDATE_TO', '1.4-rc1');
+define('UPDATE_TO', '1.4-rc2');
 define('UPDATE_TO_DB_REVISION', 5);
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
