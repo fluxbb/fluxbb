@@ -25,4 +25,3 @@ function utf8_strcasecmp($strX, $strY)
 
 	return strcmp($strX, $strY);
 }
-
