@@ -28,11 +28,11 @@ Yes, it is valid CSS 3, but unfortunately border-radius doesn't seem to work cor
 ----------------------------------------------------------------*/
 
 body {
-    line-height: 1.9em;
+	line-height: 1.9em;
 }
 
 .pun {
-    width: 95%;
+	width: 95%;
 	margin: 0 auto;
 	}
 
@@ -140,7 +140,7 @@ body {
 
 .pun .blockpost h2 {
 	font-size: 1.0em;
-    padding: 8px;
+	padding: 8px;
 	}
 
 .pun h3 {
@@ -157,15 +157,15 @@ body {
 	}
 
 .pun .postleft dl dt {
-    font-size: 1.4em;
-    }
+	font-size: 1.4em;
+	}
 
 /* User Content (Announcements, Rules, Posts)
 ----------------------------------------------------------------*/
 
 .pun .usercontent p, .pun .postmsg p {
-    padding: 0.5em 0;
-    line-height: 1.6em;
+	padding: 0.5em 0;
+	line-height: 1.6em;
 	}
 
 .pun .usercontent ul, .pun .postmsg ul {
@@ -230,16 +230,6 @@ body {
 	padding: 0.75em 0 0 0;
 	}
 
-#punviewtopic .blockpost dt, #punmoderate .blockpost dt {
-	display:block;
-	height:1.462em;
-	left:0;
-	overflow:hidden;
-	position:absolute;
-	top:-2.615em;
-	width:206px;
-}
-
 /*****************************************************************
 3. COMMON STYLES
 *****************************************************************/
@@ -248,7 +238,7 @@ body {
 ----------------------------------------------------------------*/
 
 #punwrap {
-    margin: 4px
+	margin: 4px
 	}
 
 #punredirect .block, #punmaint .block {
@@ -358,18 +348,18 @@ body {
 
 #brdwelcome .conl {
 	float: left;
-    white-space: nowrap;
+	white-space: nowrap;
 	}
 
 #brdwelcome li {
-    float:left;
-    margin-right:8px;
-    white-space:nowrap;
+	float:left;
+	margin-right:8px;
+	white-space:nowrap;
 }
 
 #brdwelcome .conl li strong:after {
-    content: '.'
-    }
+	content: '.'
+	}
 
 #brdwelcome .conr {
 	float: right;
@@ -377,9 +367,9 @@ body {
 	}
 
 #brdwelcome .conr li {
-    float: right;
-    text-align: right;
-    }
+	float: right;
+	text-align: right;
+	}
 
 /* Breadcrumbs and Post Links
 ----------------------------------------------------------------*/
@@ -405,8 +395,8 @@ body {
 	}
 
 .pun .linkst .crumbs {
-    font-size: 1.3em;
-    }
+	font-size: 1.3em;
+	}
 
 .pun .pagelink {
 	float: left;
@@ -461,10 +451,11 @@ body {
 	}
 
 #brdfooter #feedlinks span {
-    background:url("Technetium/feed.png") no-repeat scroll left center transparent;
-    padding-left:18px;
-    display: inline;
+	background:url("Technetium/feed.png") no-repeat scroll left center transparent;
+	padding-left:18px;
+	display: inline;
 }
+
 
 /* Board Stats
 ----------------------------------------------------------------*/
@@ -605,12 +596,12 @@ body {
 	}
 
 .pun .stickytext {
-    display: none;
-    }
+	display: none;
+	}
 
 .pun .movedtext {
-    display: none;
-	}
+	display: none;
+}
 
 .pun .closedtext {
 	font-weight: bold;
@@ -619,9 +610,6 @@ body {
 6. MAIN FORMS
 *****************************************************************/
 
-.pun .blockform form, .pun .fakeform {
-	PADDING: 20px 20px 15px 20px
-	}
 
 .pun .forminfo {
 	margin-bottom: 12px;
@@ -634,58 +622,61 @@ body {
 	font-weight: bold;
 	}
 
+
+
 .pun .inform {
-    padding: 0 18px;
-	}
+	padding: 0 18px;
+}
 
 .pun fieldset {
-    overflow: hidden;
-    width: 100%;
-    padding-bottom: 0.8em;
-	}
+	overflow: hidden;
+	width: 100%;
+	padding-bottom: 0.8em;
+}
 
 .pun legend {
-    font-size: 1.2em;
-    font-weight: bold;
-    margin-left: -7px;
-    padding: 10px 19px 7px 19px;
-	}
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-left: -7px;
+	padding: 10px 19px 7px 19px;
+}
 
 .pun div[class*="inform"] legend {
-    margin-left: 0;
+	margin-left: 0;
 }
 
 .pun .infldset {
-    border-style: solid;
-    border-width: 1px;
-    display: inline-block;
-    overflow: hidden;
-    padding: 12px 18px;
+	border-style: solid;
+	border-width: 1px;
+	display: inline-block;
+	overflow: hidden;
+	padding: 12px 18px;
 }
 
 .pun div[class*="infldset"] {
-    display: block;
+	display: block;
 }
 
 #punregister #rules .infldset {
-    padding: 5px 18px;
+	padding: 5px 18px;
 }
 
 .pun fieldset p {
-    clear: both;
-    padding: 0 0 7px 0;
-    width: 100%;
+	clear: both;
+	padding: 0 0 7px 0;
+	width: 100%;
 }
 
 .pun fieldset .usercontent p {
-    padding: 7px 0;
+	padding: 7px 0;
 }
 
 .pun fieldset label {
-    clear: both;
-    display: block;
-    padding: 0 0 7px 0;
-	}
+	clear: both;
+	display: block;
+	padding: 0 0 7px 0;
+}
+
 
 .pun label {
 	display: block;
@@ -725,7 +716,7 @@ body {
 	}
 
 .pun .txtarea {
-    width: 90%
+	width: 90%
 	}
 
 .pun .txtarea textarea, .pun input.longinput {
@@ -743,8 +734,8 @@ body {
 	}
 
 .pun .blockform .buttons {
-    padding-left: 18px;
-    padding-bottom: 5px;
+	padding-left: 18px;
+	padding-bottom: 5px;
 	}
 
 .pun .blockform .buttons input {
@@ -849,7 +840,7 @@ body {
 	}
 
 .pun .postleft dl {
-    padding: 0.5em 6px;
+	padding: 0.5em 6px;
 	}
 
 .pun .postleft .usercontacts, .pun .postleft .icon {
@@ -1010,7 +1001,7 @@ COLOUR SCHEME
 ----------------------------------------------------------------*/
 
 body {
-	background: #fff;
+	background: #fff url("Technetium/bg.png") repeat-x top;
 	color: #122434
 	}
 
@@ -1075,11 +1066,11 @@ body {
 	}
 
 .pun .iclosed td {
-	background-color: #DAE1E9
+	background-color: #ECEEF0
 	}
 
 .pun .iclosed.isticky td {
-	background-color: #CED8E1;
+	background-color: #CDD6E0;
 	}
 
 .pun legend {
@@ -1143,6 +1134,12 @@ body {
 	}
 
 
+.pun .infldset, #pundelete .deletemsg, #adintro .inbox, #adstats .inbox {
+	background: #FBFCFD url(Technetium/light-shade.png) bottom repeat-x;
+	border-color: #C0CCD8;
+}
+
+
 /* Posts
 ----------------------------------------------------------------*/
 
@@ -1187,7 +1184,7 @@ body {
 }
 
 .blocktable #announce h2 {
-	border-color: #F5EE67;
+	border-color: #F6B620;
 }
 
 .pun td {
@@ -1199,8 +1196,17 @@ body {
 	}
 
 #adminconsole td, #adminconsole th {
-	border-color: #A2B5CC;
-	}
+	border-style:solid;
+	border-width:1px 0px !important;
+}
+
+#adminconsole th {
+	border-width: 1px 0px 1px 1px !important;
+}
+
+#adminconsole td {
+	border-width: 1px 1px 1px 1px !important;
+}
 
 .pun .forminfo, .pun .blockpost label, .pun .deletemsg {
 	border-color: #aca899 #fff #fff #aca899;
@@ -1244,6 +1250,15 @@ body {
 .pun .iclosed td.tcl a:link, .pun .iclosed td.tcl a:visited {
 	color: #888
 	}
+
+.pun .isticky.iclosed td.tcl a:link, .pun .isticky.iclosed td.tcl a:visited {
+	color: #475F6B !important;
+	}
+
+.pun .isticky.iclosed td.tcl a:hover {
+	color: #577382 !important;
+	}
+
 
 .pun .postreport a:hover, .pun .postreport a:active,
 .pun .iclosed td.tcl a:hover, .pun .iclosed td.tcl a:active {
