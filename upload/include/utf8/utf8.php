@@ -37,6 +37,10 @@ if (extension_loaded('mbstring') && !defined('UTF8_USE_MBSTRING') && !defined('U
 else
 	define('UTF8_USE_NATIVE', true);
 
+// utf8_strpos() and utf8_strrpos() need utf8_bad_strip() to strip invalid
+// characters. Mbstring doesn't do this while the Native implementation does.
+require UTF8.'/utils/bad.php';
+
 if (defined('UTF8_USE_MBSTRING'))
 {
 	/**
