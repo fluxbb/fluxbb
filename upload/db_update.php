@@ -809,6 +809,103 @@ if (strpos($cur_version, '1.2') === 0)
 		// Change the search_data field to mediumtext
 		$db->alter_field('search_cache', 'search_data', 'MEDIUMTEXT', true) or error('Unable to alter search_data field', __FILE__, __LINE__, $db->error());
 
+		// Incase we had the fulltext search extension installed (1.3-legacy), remove it
+		$db->drop_index('topics', 'subject_idx') or error('Unable to drop subject_idx index', __FILE__, __LINE__, $db->error());
+		$db->drop_index('posts', 'message_idx') or error('Unable to drop message_idx index', __FILE__, __LINE__, $db->error());
+		
+		// If the search_cache table has been dropped by the fulltext search extension, recreate it
+		if (!$db->table_exists('search_cache'))
+		{
+			$schema = array(
+				'FIELDS'		=> array(
+					'id'			=> array(
+						'datatype'		=> 'INT(10) UNSIGNED',
+						'allow_null'	=> false,
+						'default'		=> '0'
+					),
+					'ident'			=> array(
+						'datatype'		=> 'VARCHAR(200)',
+						'allow_null'	=> false,
+						'default'		=> '\'\''
+					),
+					'search_data'	=> array(
+						'datatype'		=> 'MEDIUMTEXT',
+						'allow_null'	=> true
+					)
+				),
+				'PRIMARY KEY'	=> array('id'),
+				'INDEXES'		=> array(
+					'ident_idx'	=> array('ident')
+				)
+			);
+		
+			if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+				$schema['INDEXES']['ident_idx'] = array('ident(8)');
+		
+			$db->create_table('search_cache', $schema);
+		}
+
+		// If the search_matches table has been dropped by the fulltext search extension, recreate it
+		if (!$db->table_exists('search_matches'))
+		{
+			$schema = array(
+				'FIELDS'		=> array(
+					'post_id'		=> array(
+						'datatype'		=> 'INT(10) UNSIGNED',
+						'allow_null'	=> false,
+						'default'		=> '0'
+					),
+					'word_id'		=> array(
+						'datatype'		=> 'INT(10) UNSIGNED',
+						'allow_null'	=> false,
+						'default'		=> '0'
+					),
+					'subject_match'	=> array(
+						'datatype'		=> 'TINYINT(1)',
+						'allow_null'	=> false,
+						'default'		=> '0'
+					)
+				),
+				'INDEXES'		=> array(
+					'word_id_idx'	=> array('word_id'),
+					'post_id_idx'	=> array('post_id')
+				)
+			);
+		
+			$db->create_table('search_matches', $schema);
+		}
+
+		// If the search_words table has been dropped by the fulltext search extension, recreate it
+		if (!$db->table_exists('search_words'))
+		{
+			$schema = array(
+				'FIELDS'		=> array(
+					'id'			=> array(
+						'datatype'		=> 'SERIAL',
+						'allow_null'	=> false
+					),
+					'word'			=> array(
+						'datatype'		=> 'VARCHAR(20)',
+						'allow_null'	=> false,
+						'default'		=> '\'\'',
+						'collation'		=> 'bin'
+					)
+				),
+				'PRIMARY KEY'	=> array('word'),
+				'INDEXES'		=> array(
+					'id_idx'	=> array('id')
+				)
+			);
+		
+			if ($db_type == 'sqlite')
+			{
+				$schema['PRIMARY KEY'] = array('id');
+				$schema['UNIQUE KEYS'] = array('word_idx'	=> array('word'));
+			}
+		
+			$db->create_table('search_words', $schema);
+		}
+
 		// Should we do charset conversion or not?
 		if (strpos($cur_version, '1.2') === 0 && isset($_GET['convert_charset']))
 			$query_str = '?stage=conv_bans&req_old_charset='.$old_charset;
