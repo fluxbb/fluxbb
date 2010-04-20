@@ -454,7 +454,7 @@ function generate_navlinks()
 			// Insert any additional links into the $links array (at the correct index)
 			$num_links = count($extra_links[1]);
 			for ($i = 0; $i < $num_links; ++$i)
-				array_splice($links, $extra_links[1][$i], 0, array('<li id="navextra'.($i + 1).'">'.$extra_links[2][$i])).'</li>';
+				array_splice($links, $extra_links[1][$i], 0, array('<li id="navextra'.($i + 1).'">'.$extra_links[2][$i].'</li>'));
 		}
 	}
 
