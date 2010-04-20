@@ -188,13 +188,13 @@ else
 		<div class="inbox">
 			<dl class="conr">
 				<dt><strong><?php echo $lang_index['Board stats'] ?></strong></dt>
-				<dd><?php echo $lang_index['No of users'].': <strong>'.forum_number_format($stats['total_users']) ?></strong></dd>
-				<dd><?php echo $lang_index['No of topics'].': <strong>'.forum_number_format($stats['total_topics']) ?></strong></dd>
-				<dd><?php echo $lang_index['No of posts'].': <strong>'.forum_number_format($stats['total_posts']) ?></strong></dd>
+				<dd><?php printf($lang_index['No of users'], '<strong>'.forum_number_format($stats['total_users']).'</strong>') ?></dd>
+				<dd><?php printf($lang_index['No of topics'], '<strong>'.forum_number_format($stats['total_topics']).'</strong>') ?></dd>
+				<dd><?php printf($lang_index['No of posts'], '<strong>'.forum_number_format($stats['total_posts']).'</strong>') ?></dd>
 			</dl>
 			<dl class="conl">
 				<dt><strong><?php echo $lang_index['User info'] ?></strong></dt>
-				<dd><?php echo $lang_index['Newest user'] ?>: <?php echo $stats['newest_user'] ?></dd>
+				<dd><?php printf($lang_index['Newest user'], $stats['newest_user']) ?></dd>
 <?php
 
 if ($pun_config['o_users_online'] == '1')
@@ -218,11 +218,11 @@ if ($pun_config['o_users_online'] == '1')
 	}
 
 	$num_users = count($users);
-	echo "\t\t\t\t".'<dd>'. $lang_index['Users online'].': <strong>'.forum_number_format($num_users).'</strong></dd>'."\n\t\t\t\t".'<dd>'.$lang_index['Guests online'].': <strong>'.forum_number_format($num_guests).'</strong></dd>'."\n\t\t\t".'</dl>'."\n";
+	echo "\t\t\t\t".'<dd>'.sprintf($lang_index['Users online'], '<strong>'.forum_number_format($num_users).'</strong>').'</dd>'."\n\t\t\t\t".'<dd>'.sprintf($lang_index['Guests online'], '<strong>'.forum_number_format($num_guests).'</strong>').'</dd>'."\n\t\t\t".'</dl>'."\n";
 
 
 	if ($num_users > 0)
-		echo "\t\t\t".'<dl id="onlinelist" class="clearb">'."\n\t\t\t\t".'<dt><strong>'.$lang_index['Online'].':</strong></dt>'."\t\t\t\t".implode(',</dd> ', $users).'</dd>'."\n\t\t\t".'</dl>'."\n";
+		echo "\t\t\t".'<dl id="onlinelist" class="clearb">'."\n\t\t\t\t".'<dt><strong>'.$lang_index['Online'].' </strong></dt>'."\t\t\t\t".implode(',</dd> ', $users).'</dd>'."\n\t\t\t".'</dl>'."\n";
 	else
 		echo "\t\t\t".'<div class="clearer"></div>'."\n";
 
