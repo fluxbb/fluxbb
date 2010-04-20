@@ -13,7 +13,6 @@ $lang_prof_reg = array(
 'Date format'				=>	'Date format',
 'Default'					=>	'Default',
 'Language'					=>	'Language',
-'Language info'				=>	'You can choose which language you wish to use to view the forum.',
 'Email setting info'		=>	'Select whether you want your email address to be viewable to other users or not and if you want other users to be able to send you email via the forum (form email) or not.',
 'Email setting 1'			=>	'Display your email address.',
 'Email setting 2'			=>	'Hide your email address but allow form email.',

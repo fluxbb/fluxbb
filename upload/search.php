@@ -535,7 +535,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				<div class="postleft">
 					<dl>
 						<dt><?php echo $pposter ?></dt>
-						<dd><?php echo $lang_common['Replies'] ?>: <?php echo forum_number_format($cur_search['num_replies']) ?></dd>
+						<dd><?php echo $lang_topic['Replies'].' '.forum_number_format($cur_search['num_replies']) ?></dd>
 						<dd><div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo $icon_text ?></div></div></dd>
 					</dl>
 				</div>

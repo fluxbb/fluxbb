@@ -1231,7 +1231,7 @@ else
 			natsort($languages);
 
 ?>
-							<label><?php echo $lang_prof_reg['Language'] ?>: <?php echo $lang_prof_reg['Language info'] ?>
+							<label><?php echo $lang_prof_reg['Language'] ?>
 							<br /><select name="form[language]">
 <?php
 

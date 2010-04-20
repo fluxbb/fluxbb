@@ -66,7 +66,7 @@ require PUN_ROOT.'header.php';
 		<p><code>[quote=James]<?php echo $lang_help['Quote text'] ?>[/quote]</code></p>
 		<p><?php echo $lang_help['produces quote box'] ?></p>
 		<div class="postmsg">
-			<div class="quotebox"><cite>James <?php echo $lang_common['wrote'] ?>:</cite><blockquote><div><p><?php echo $lang_help['Quote text'] ?></p></div></blockquote></div>
+			<div class="quotebox"><cite>James <?php echo $lang_common['wrote'] ?></cite><blockquote><div><p><?php echo $lang_help['Quote text'] ?></p></div></blockquote></div>
 		</div>
 		<p><?php echo $lang_help['Quotes info 2'] ?></p>
 		<p><code>[quote]<?php echo $lang_help['Quote text'] ?>[/quote]</code></p>

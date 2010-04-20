@@ -374,7 +374,7 @@ if (!empty($errors))
 		{
 
 ?>
-							<label><?php echo $lang_prof_reg['Language'] ?>: <?php echo $lang_prof_reg['Language info'] ?>
+							<label><?php echo $lang_prof_reg['Language'] ?>
 							<br /><select name="language">
 <?php
 

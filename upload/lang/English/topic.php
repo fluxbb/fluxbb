@@ -10,6 +10,7 @@ $lang_topic = array(
 'Note'			=>	'Note:', // Admin note
 'Posts'			=>	'Posts:',
 'Registered'	=>	'Registered:',
+'Replies'		=>	'Replies:',
 'Website'		=>	'Website',
 'Guest'			=>	'Guest',
 'Online'		=>	'Online',

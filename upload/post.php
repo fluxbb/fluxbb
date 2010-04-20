@@ -367,7 +367,7 @@ if ($tid)
 			$quote = '[quote='.$q_poster.']'.$q_message.'[/quote]'."\n";
 		}
 		else
-			$quote = '> '.$q_poster.' '.$lang_common['wrote'].':'."\n\n".'> '.$q_message."\n";
+			$quote = '> '.$q_poster.' '.$lang_common['wrote']."\n\n".'> '.$q_message."\n";
 	}
 }
 // If a forum ID was specified in the url (new topic)
