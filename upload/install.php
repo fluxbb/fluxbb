@@ -610,7 +610,7 @@ else
 	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 		$schema['INDEXES']['username_idx'] = array('username(25)');
 
-	$db->create_table('bans', $schema);
+	$db->create_table('bans', $schema) or error('Unable to create bans table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -633,7 +633,7 @@ else
 		'PRIMARY KEY'	=> array('id')
 	);
 
-	$db->create_table('categories', $schema);
+	$db->create_table('categories', $schema) or error('Unable to create categories table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -656,7 +656,7 @@ else
 		'PRIMARY KEY'	=> array('id')
 	);
 
-	$db->create_table('censoring', $schema);
+	$db->create_table('censoring', $schema) or error('Unable to create censoring table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -674,7 +674,7 @@ else
 		'PRIMARY KEY'	=> array('conf_name')
 	);
 
-	$db->create_table('config', $schema);
+	$db->create_table('config', $schema) or error('Unable to create config table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -708,7 +708,7 @@ else
 		'PRIMARY KEY'	=> array('group_id', 'forum_id')
 	);
 
-	$db->create_table('forum_perms', $schema);
+	$db->create_table('forum_perms', $schema) or error('Unable to create forum_perms table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -775,7 +775,7 @@ else
 		'PRIMARY KEY'	=> array('id')
 	);
 
-	$db->create_table('forums', $schema);
+	$db->create_table('forums', $schema) or error('Unable to create forums table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -892,7 +892,7 @@ else
 		'PRIMARY KEY'	=> array('g_id')
 	);
 
-	$db->create_table('groups', $schema);
+	$db->create_table('groups', $schema) or error('Unable to create groups table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -945,7 +945,7 @@ else
 	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 		$schema['ENGINE'] = 'InnoDB';
 
-	$db->create_table('online', $schema);
+	$db->create_table('online', $schema) or error('Unable to create online table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -1007,7 +1007,7 @@ else
 		)
 	);
 
-	$db->create_table('posts', $schema);
+	$db->create_table('posts', $schema) or error('Unable to create posts table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -1030,7 +1030,7 @@ else
 		'PRIMARY KEY'	=> array('id')
 	);
 
-	$db->create_table('ranks', $schema);
+	$db->create_table('ranks', $schema) or error('Unable to create ranks table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -1083,7 +1083,7 @@ else
 		)
 	);
 
-	$db->create_table('reports', $schema);
+	$db->create_table('reports', $schema) or error('Unable to create reports table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -1112,7 +1112,7 @@ else
 	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 		$schema['INDEXES']['ident_idx'] = array('ident(8)');
 
-	$db->create_table('search_cache', $schema);
+	$db->create_table('search_cache', $schema) or error('Unable to create search_cache table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -1139,7 +1139,7 @@ else
 		)
 	);
 
-	$db->create_table('search_matches', $schema);
+	$db->create_table('search_matches', $schema) or error('Unable to create search_matches table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -1167,7 +1167,7 @@ else
 		$schema['UNIQUE KEYS'] = array('word_idx'	=> array('word'));
 	}
 
-	$db->create_table('search_words', $schema);
+	$db->create_table('search_words', $schema) or error('Unable to create search_words table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -1186,7 +1186,7 @@ else
 		'PRIMARY KEY'	=> array('user_id', 'topic_id')
 	);
 
-	$db->create_table('subscriptions', $schema);
+	$db->create_table('subscriptions', $schema) or error('Unable to create subscriptions table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -1268,7 +1268,7 @@ else
 		)
 	);
 
-	$db->create_table('topics', $schema);
+	$db->create_table('topics', $schema) or error('Unable to create topics table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(
@@ -1472,7 +1472,7 @@ else
 	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 		$schema['UNIQUE KEYS']['username_idx'] = array('username(25)');
 
-	$db->create_table('users', $schema);
+	$db->create_table('users', $schema) or error('Unable to create users table', __FILE__, __LINE__, $db->error());
 
 
 	$now = time();
