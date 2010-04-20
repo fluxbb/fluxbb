@@ -990,17 +990,17 @@ if ($pun_user['id'] != $id &&
 				<legend><?php echo $lang_profile['Section personal'] ?></legend>
 					<div class="infldset">
 						<dl>
-							<dt><?php echo $lang_common['Username'] ?>: </dt>
+							<dt><?php echo $lang_common['Username'] ?></dt>
 							<dd><?php echo pun_htmlspecialchars($user['username']) ?></dd>
-							<dt><?php echo $lang_common['Title'] ?>: </dt>
+							<dt><?php echo $lang_common['Title'] ?></dt>
 							<dd><?php echo ($pun_config['o_censoring'] == '1') ? censor_words($user_title_field) : $user_title_field; ?></dd>
-							<dt><?php echo $lang_profile['Realname'] ?>: </dt>
+							<dt><?php echo $lang_profile['Realname'] ?></dt>
 							<dd><?php echo ($user['realname'] !='') ? pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['realname']) : $user['realname']) : $lang_profile['Unknown']; ?></dd>
-							<dt><?php echo $lang_profile['Location'] ?>: </dt>
+							<dt><?php echo $lang_profile['Location'] ?></dt>
 							<dd><?php echo ($user['location'] !='') ? pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['location']) : $user['location']) : $lang_profile['Unknown']; ?></dd>
-							<dt><?php echo $lang_profile['Website'] ?>: </dt>
+							<dt><?php echo $lang_profile['Website'] ?></dt>
 							<dd><?php echo $url ?></dd>
-							<dt><?php echo $lang_common['Email'] ?>: </dt>
+							<dt><?php echo $lang_common['Email'] ?></dt>
 							<dd><?php echo $email_field ?></dd>
 						</dl>
 						<div class="clearer"></div>
@@ -1012,15 +1012,15 @@ if ($pun_user['id'] != $id &&
 				<legend><?php echo $lang_profile['Section messaging'] ?></legend>
 					<div class="infldset">
 						<dl>
-							<dt><?php echo $lang_profile['Jabber'] ?>: </dt>
+							<dt><?php echo $lang_profile['Jabber'] ?></dt>
 							<dd><?php echo ($user['jabber'] !='') ? pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['jabber']) : $user['jabber']) : $lang_profile['Unknown']; ?></dd>
-							<dt><?php echo $lang_profile['ICQ'] ?>: </dt>
+							<dt><?php echo $lang_profile['ICQ'] ?></dt>
 							<dd><?php echo ($user['icq'] !='') ? $user['icq'] : $lang_profile['Unknown']; ?></dd>
-							<dt><?php echo $lang_profile['MSN'] ?>: </dt>
+							<dt><?php echo $lang_profile['MSN'] ?></dt>
 							<dd><?php echo ($user['msn'] !='') ? pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['msn']) : $user['msn']) : $lang_profile['Unknown']; ?></dd>
-							<dt><?php echo $lang_profile['AOL IM'] ?>: </dt>
+							<dt><?php echo $lang_profile['AOL IM'] ?></dt>
 							<dd><?php echo ($user['aim'] !='') ? pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['aim']) : $user['aim']) : $lang_profile['Unknown']; ?></dd>
-							<dt><?php echo $lang_profile['Yahoo'] ?>: </dt>
+							<dt><?php echo $lang_profile['Yahoo'] ?></dt>
 							<dd><?php echo ($user['yahoo'] !='') ? pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['yahoo']) : $user['yahoo']) : $lang_profile['Unknown']; ?></dd>
 						</dl>
 						<div class="clearer"></div>
@@ -1032,9 +1032,9 @@ if ($pun_user['id'] != $id &&
 				<legend><?php echo $lang_profile['Section personality'] ?></legend>
 					<div class="infldset">
 						<dl>
-<?php if ($pun_config['o_avatars'] == '1'): ?>							<dt><?php echo $lang_profile['Avatar'] ?>: </dt>
+<?php if ($pun_config['o_avatars'] == '1'): ?>							<dt><?php echo $lang_profile['Avatar'] ?></dt>
 							<dd><?php echo $avatar_field ?></dd>
-<?php endif; if ($pun_config['o_signatures'] == '1'): ?>							<dt><?php echo $lang_profile['Signature'] ?>: </dt>
+<?php endif; if ($pun_config['o_signatures'] == '1'): ?>							<dt><?php echo $lang_profile['Signature'] ?></dt>
 							<dd><?php echo isset($parsed_signature) ? '<div class="postsignature postmsg">'.$parsed_signature.'</div>' : $lang_profile['No sig']; ?></dd>
 <?php endif; ?>						</dl>
 						<div class="clearer"></div>
@@ -1046,11 +1046,11 @@ if ($pun_user['id'] != $id &&
 				<legend><?php echo $lang_profile['User activity'] ?></legend>
 					<div class="infldset">
 						<dl>
-<?php if ($posts_field != ''): ?>							<dt><?php echo $lang_common['Posts'] ?>: </dt>
+<?php if ($posts_field != ''): ?>							<dt><?php echo $lang_common['Posts'] ?></dt>
 							<dd><?php echo $posts_field ?></dd>
-<?php endif; ?>							<dt><?php echo $lang_common['Last post'] ?>: </dt>
+<?php endif; ?>							<dt><?php echo $lang_common['Last post'] ?></dt>
 							<dd><?php echo $last_post ?></dd>
-							<dt><?php echo $lang_common['Registered'] ?>: </dt>
+							<dt><?php echo $lang_common['Registered'] ?></dt>
 							<dd><?php echo format_time($user['registered'], true) ?></dd>
 						</dl>
 						<div class="clearer"></div>
@@ -1074,7 +1074,7 @@ else
 			if ($pun_user['g_id'] == PUN_ADMIN || $pun_user['g_mod_rename_users'] == '1')
 				$username_field = '<input type="hidden" name="old_username" value="'.pun_htmlspecialchars($user['username']).'" /><label class="required"><strong>'.$lang_common['Username'].' <span>'.$lang_common['Required'].'</span></strong><br /><input type="text" name="req_username" value="'.pun_htmlspecialchars($user['username']).'" size="25" maxlength="25" /><br /></label>'."\n";
 			else
-				$username_field = '<p>'.$lang_common['Username'].': '.pun_htmlspecialchars($user['username']).'</p>'."\n";
+				$username_field = '<p>'.sprintf($lang_profile['Username info'], pun_htmlspecialchars($user['username'])).'</p>'."\n";
 
 			$email_field = '<label class="required"><strong>'.$lang_common['Email'].' <span>'.$lang_common['Required'].'</span></strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label><p><span class="email"><a href="misc.php?email='.$id.'">'.$lang_common['Send email'].'</a></span></p>'."\n";
 		}
@@ -1083,7 +1083,7 @@ else
 			$username_field = '<p>'.$lang_common['Username'].': '.pun_htmlspecialchars($user['username']).'</p>'."\n";
 
 			if ($pun_config['o_regs_verify'] == '1')
-				$email_field = '<p>'.$lang_common['Email'].': '.$user['email'].' - <a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang_profile['Change email'].'</a></p>'."\n";
+				$email_field = '<p>'.sprintf($lang_profile['Email info'], $user['email'].' - <a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang_profile['Change email'].'</a>').'</p>'."\n";
 			else
 				$email_field = '<label class="required"><strong>'.$lang_common['Email'].' <span>'.$lang_common['Required'].'</span></strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label>'."\n";
 		}
@@ -1092,7 +1092,7 @@ else
 		if ($pun_user['g_id'] == PUN_ADMIN)
 			$posts_field = '<label>'.$lang_common['Posts'].'<br /><input type="text" name="num_posts" value="'.$user['num_posts'].'" size="8" maxlength="8" /><br /></label><p><a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a></p>'."\n";
 		else if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
-			$posts_field = '<p>'.$lang_common['Posts'].': '.forum_number_format($user['num_posts']).($pun_user['g_search'] == '1' ? ' - <a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a>' : '').'</p>'."\n";
+			$posts_field = '<p>'.sprintf($lang_profile['Posts info'], forum_number_format($user['num_posts']).($pun_user['g_search'] == '1' ? ' - <a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a>' : '')).'</p>'."\n";
 		else if ($pun_user['g_search'] == '1')
 			$posts_field = '<p><a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a></p>'."\n";
 
@@ -1258,8 +1258,8 @@ else
 					<fieldset>
 						<legend><?php echo $lang_profile['User activity'] ?></legend>
 						<div class="infldset">
-							<p><?php echo $lang_common['Registered'] ?>: <?php echo format_time($user['registered'], true); if ($pun_user['is_admmod']) echo ' (<a href="moderate.php?get_host='.pun_htmlspecialchars($user['registration_ip']).'">'.pun_htmlspecialchars($user['registration_ip']).'</a>)'; ?></p>
-							<p><?php echo $lang_common['Last post'] ?>: <?php echo $last_post ?></p>
+							<p><?php printf($lang_profile['Registered info'], format_time($user['registered'], true).(($pun_user['is_admmod']) ? ' (<a href="moderate.php?get_host='.pun_htmlspecialchars($user['registration_ip']).'">'.pun_htmlspecialchars($user['registration_ip']).'</a>)' : '')) ?></p>
+							<p><?php printf($lang_profile['Last post info'], $last_post) ?></p>
 							<?php echo $posts_field ?>
 <?php if ($pun_user['is_admmod']): ?>							<label><?php echo $lang_profile['Admin note'] ?><br />
 							<input id="admin_note" type="text" name="admin_note" value="<?php echo pun_htmlspecialchars($user['admin_note']) ?>" size="30" maxlength="30" /><br /></label>
@@ -1389,7 +1389,7 @@ else
 						<div class="infldset">
 							<p><?php echo $lang_profile['Signature info'] ?></p>
 							<div class="txtarea">
-								<label><?php echo $lang_profile['Sig max length'] ?>: <?php echo forum_number_format($pun_config['p_sig_length']) ?> / <?php echo $lang_profile['Sig max lines'] ?>: <?php echo $pun_config['p_sig_lines'] ?><br />
+								<label><?php printf($lang_profile['Sig max size'], forum_number_format($pun_config['p_sig_length']), $pun_config['p_sig_lines']) ?><br />
 								<textarea name="signature" rows="4" cols="65"><?php echo pun_htmlspecialchars($user['signature']) ?></textarea><br /></label>
 							</div>
 							<ul class="bblinks">

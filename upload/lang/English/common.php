@@ -80,7 +80,6 @@ $lang_common = array(
 'Forum'								=>	'Forum',
 'Posts'								=>	'Posts',
 'Replies'							=>	'Replies',
-'Author'							=>	'Author',
 'Pages'								=>	'Pages:',
 'Page'								=>	'Page %s',
 'BBCode'							=>	'BBCode:', // You probably shouldn't change this
