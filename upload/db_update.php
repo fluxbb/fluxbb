@@ -812,7 +812,7 @@ if (strpos($cur_version, '1.2') === 0)
 		// Incase we had the fulltext search extension installed (1.3-legacy), remove it
 		$db->drop_index('topics', 'subject_idx') or error('Unable to drop subject_idx index', __FILE__, __LINE__, $db->error());
 		$db->drop_index('posts', 'message_idx') or error('Unable to drop message_idx index', __FILE__, __LINE__, $db->error());
-		
+
 		// If the search_cache table has been dropped by the fulltext search extension, recreate it
 		if (!$db->table_exists('search_cache'))
 		{
@@ -838,10 +838,10 @@ if (strpos($cur_version, '1.2') === 0)
 					'ident_idx'	=> array('ident')
 				)
 			);
-		
+
 			if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 				$schema['INDEXES']['ident_idx'] = array('ident(8)');
-		
+
 			$db->create_table('search_cache', $schema);
 		}
 
@@ -871,7 +871,7 @@ if (strpos($cur_version, '1.2') === 0)
 					'post_id_idx'	=> array('post_id')
 				)
 			);
-		
+
 			$db->create_table('search_matches', $schema);
 		}
 
@@ -896,13 +896,13 @@ if (strpos($cur_version, '1.2') === 0)
 					'id_idx'	=> array('id')
 				)
 			);
-		
+
 			if ($db_type == 'sqlite')
 			{
 				$schema['PRIMARY KEY'] = array('id');
 				$schema['UNIQUE KEYS'] = array('word_idx'	=> array('word'));
 			}
-		
+
 			$db->create_table('search_words', $schema);
 		}
 
