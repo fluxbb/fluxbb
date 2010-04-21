@@ -85,6 +85,6 @@ $lang_misc = array(
 // Get host
 'Host info 1'					=>	'The IP address is: %s',
 'Host info 2'					=>	'The host name is: %s',
-'Show more users'		        =>	'Show more users for this IP',
+'Show more users'				=>	'Show more users for this IP',
 
 );

@@ -266,10 +266,10 @@ define('UTF8_BAD_SEQINCOMPLETE', 7);
 */
 function utf8_bad_identify($str, &$i)
 {
-	$mState = 0;     // Cached expected number of octets after the current octet
-	                 // until the beginning of the next UTF8 character sequence
-	$mUcs4  = 0;     // Cached Unicode character
-	$mBytes = 1;     // Cached expected number of octets in the current sequence
+	$mState = 0;	// Cached expected number of octets after the current octet
+					// until the beginning of the next UTF8 character sequence
+	$mUcs4  = 0;	// Cached Unicode character
+	$mBytes = 1;	// Cached expected number of octets in the current sequence
 
 	$len = strlen($str);
 

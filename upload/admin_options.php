@@ -567,7 +567,7 @@ generate_admin_menu('options');
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Default feed label'] ?></th>
-                                    <td>
+									<td>
 										<input type="radio" name="form[feed_type]" value="0"<?php if ($pun_config['o_feed_type'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_options['None'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[feed_type]" value="1"<?php if ($pun_config['o_feed_type'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_options['RSS'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[feed_type]" value="2"<?php if ($pun_config['o_feed_type'] == '2') echo ' checked="checked"' ?> />&nbsp;<strong><?php echo $lang_admin_options['Atom'] ?></strong>
 										<span><?php echo $lang_admin_options['Default feed help'] ?></span>
 									</td>
