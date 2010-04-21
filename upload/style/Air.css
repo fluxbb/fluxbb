@@ -1465,12 +1465,12 @@ html, body, #punwrap {
 	border-color: #dfe6ee;
 }
 
-#puninstall form .forminfo {
+#puninstall form#install .forminfo {
 	background: #44699c;
 	color: #fff;
 }
 
-.pun #posterror .error-info {
+.pun #posterror .error-info, #puninstall .error-info {
 	background: #ffffe1;
 	border-color: #dfe6ee;
 }
