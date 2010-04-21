@@ -130,6 +130,9 @@ while ($cur_config_item = $db->fetch_row($result))
 if (isset($pun_config['o_database_revision']) && $pun_config['o_database_revision'] >= UPDATE_TO_DB_REVISION && version_compare($pun_config['o_cur_version'], UPDATE_TO, '>='))
 	exit('Your database is already as up-to-date as this script can make it.');
 
+$default_style = $pun_config['o_default_style'];
+if (!file_exists(PUN_ROOT.'style/'.$default_style.'.css'))
+	$default_style = 'Air';
 
 //
 // Determines whether $str is UTF-8 encoded or not
@@ -425,7 +428,7 @@ switch ($stage)
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>FluxBB Database Update</title>
-<link rel="stylesheet" type="text/css" href="style/<?php echo $pun_config['o_default_style'] ?>.css" />
+<link rel="stylesheet" type="text/css" href="style/<?php echo $default_style ?>.css" />
 </head>
 <body>
 
@@ -906,6 +909,10 @@ if (strpos($cur_version, '1.2') === 0)
 			$db->create_table('search_words', $schema);
 		}
 
+		// Change the default style if the old doesn't exist anymore
+		if ($pun_config['o_default_style'] != $default_style)
+			$db->query('UPDATE '.$db->prefix.'config SET conf_value = \''.$db->escape($default_style).'\' WHERE conf_name = \'o_default_style\'') or error('Unable to update default style config', __FILE__, __LINE__, $db->error());
+
 		// Should we do charset conversion or not?
 		if (strpos($cur_version, '1.2') === 0 && isset($_GET['convert_charset']))
 			$query_str = '?stage=conv_bans&req_old_charset='.$old_charset;
@@ -1384,7 +1391,7 @@ if (strpos($cur_version, '1.2') === 0)
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>FluxBB Database Update</title>
-<link rel="stylesheet" type="text/css" href="style/<?php echo $pun_config['o_default_style'] ?>.css" />
+<link rel="stylesheet" type="text/css" href="style/<?php echo $default_style ?>.css" />
 </head>
 <body>
 
