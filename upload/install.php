@@ -1540,7 +1540,7 @@ else
 		'o_avatars_dir'				=> "'img/avatars'",
 		'o_avatars_width'			=> "'60'",
 		'o_avatars_height'			=> "'60'",
-		'o_avatars_size'			=> "'102400'",
+		'o_avatars_size'			=> "'10240'",
 		'o_search_all_forums'		=> "'1'",
 		'o_base_url'				=> "'".$db->escape($base_url)."'",
 		'o_admin_email'				=> "'".$email."'",
