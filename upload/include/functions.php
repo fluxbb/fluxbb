@@ -1238,6 +1238,14 @@ function redirect($destination_url, $message)
 	if ($pun_config['o_redirect_delay'] == '0')
 		header('Location: '.str_replace('&amp;', '&', $destination_url));
 
+	// Send no-cache headers
+	header('Expires: Thu, 21 Jul 1977 07:30:00 GMT'); // When yours truly first set eyes on this world! :)
+	header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+	header('Cache-Control: post-check=0, pre-check=0', false);
+	header('Pragma: no-cache'); // For HTTP/1.0 compatibility
+
+	// Send the Content-type header in case the web server is setup to send something else
+	header('Content-type: text/html; charset=utf-8');
 
 	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/redirect.tpl'))
 	{
@@ -1372,6 +1380,15 @@ function error($message, $file = null, $line = null, $db_error = false)
 	// "Restart" output buffering if we are using ob_gzhandler (since the gzip header is already sent)
 	if ($pun_config['o_gzip'] && extension_loaded('zlib'))
 		ob_start('ob_gzhandler');
+
+	// Send no-cache headers
+	header('Expires: Thu, 21 Jul 1977 07:30:00 GMT'); // When yours truly first set eyes on this world! :)
+	header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+	header('Cache-Control: post-check=0, pre-check=0', false);
+	header('Pragma: no-cache'); // For HTTP/1.0 compatibility
+
+	// Send the Content-type header in case the web server is setup to send something else
+	header('Content-type: text/html; charset=utf-8');
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
