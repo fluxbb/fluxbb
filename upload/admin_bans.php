@@ -353,8 +353,8 @@ else if (isset($_GET['find_ban']))
 	<div class="inbox crumbsplus">
 		<ul class="crumbs">
 			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
-			<li><span>&raquo;&#160;</span><a href="admin_bans.php"><?php echo $lang_admin_common['Bans'] ?></a></li>
-			<li><span>&raquo;&#160;</span><strong><?php echo $lang_admin_bans['Results head'] ?></strong></li>
+			<li><span>&#187;&#160;</span><a href="admin_bans.php"><?php echo $lang_admin_common['Bans'] ?></a></li>
+			<li><span>&#187;&#160;</span><strong><?php echo $lang_admin_bans['Results head'] ?></strong></li>
 		</ul>
 		<p class="pagelink"><?php echo $paging_links ?></p>
 		<div class="clearer"></div>
@@ -419,8 +419,8 @@ else if (isset($_GET['find_ban']))
 		<p class="pagelink"><?php echo $paging_links ?></p>
 		<ul class="crumbs">
 			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
-			<li><span>&raquo;&#160;</span><a href="admin_bans.php"><?php echo $lang_admin_common['Bans'] ?></a></li>
-			<li><span>&raquo;&#160;</span><strong><?php echo $lang_admin_bans['Results head'] ?></strong></li>
+			<li><span>&#187;&#160;</span><a href="admin_bans.php"><?php echo $lang_admin_common['Bans'] ?></a></li>
+			<li><span>&#187;&#160;</span><strong><?php echo $lang_admin_bans['Results head'] ?></strong></li>
 		</ul>
 		<div class="clearer"></div>
 	</div>

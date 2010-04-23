@@ -400,9 +400,9 @@ require PUN_ROOT.'header.php';
 	<div class="inbox">
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>&raquo;&#160;</span><a href="viewforum.php?id=<?php echo $cur_posting['id'] ?>"><?php echo pun_htmlspecialchars($cur_posting['forum_name']) ?></a></li>
-<?php if (isset($cur_posting['subject'])): ?>			<li><span>&raquo;&#160;</span><a href="viewtopic.php?id=<?php echo $tid ?>"><?php echo pun_htmlspecialchars($cur_posting['subject']) ?></a></li>
-<?php endif; ?>			<li><span>&raquo;&#160;</span><strong><?php echo $action ?></strong></li>
+			<li><span>&#187;&#160;</span><a href="viewforum.php?id=<?php echo $cur_posting['id'] ?>"><?php echo pun_htmlspecialchars($cur_posting['forum_name']) ?></a></li>
+<?php if (isset($cur_posting['subject'])): ?>			<li><span>&#187;&#160;</span><a href="viewtopic.php?id=<?php echo $tid ?>"><?php echo pun_htmlspecialchars($cur_posting['subject']) ?></a></li>
+<?php endif; ?>			<li><span>&#187;&#160;</span><strong><?php echo $action ?></strong></li>
 		</ul>
 	</div>
 </div>
