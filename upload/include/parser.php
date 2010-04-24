@@ -162,7 +162,8 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		'list' 	=> array('*'),
 		'url' 	=> array('b', 'i', 'u', 'color', 'colour', 'img'),
 		'email' => array('b', 'i', 'u', 'color', 'colour', 'img'),
-		'img' 	=> array()
+		'img' 	=> array(),
+		'h'		=> array('b', 'i', 'u', 'color', 'colour', 'url', 'email'),
 	);
 	// Tags we can automatically fix bad nesting
 	$tags_fix = array('quote', 'b', 'i', 'u', 'color', 'colour', 'url', 'email', 'h');
