@@ -1477,7 +1477,7 @@ html, body, #punwrap {
 
 .pun .error-list li {
 	padding-left: 24px;
-	background: url(earth/img/exclaim.png) center left no-repeat;
+	background: url(Earth/img/exclaim.png) center left no-repeat;
 }
 
 .pun .infldset, #pundelete .deletemsg, #adintro .inbox, #adstats .inbox {
