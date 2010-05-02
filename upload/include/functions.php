@@ -1209,7 +1209,7 @@ function maintenance_message()
 <?php
 
 	$tpl_temp = trim(ob_get_contents());
-	$tpl_redir = str_replace('<pun_maint_main>', $tpl_temp, $tpl_main);
+	$tpl_maint = str_replace('<pun_maint_main>', $tpl_temp, $tpl_maint);
 	ob_end_clean();
 	// END SUBST - <pun_maint_main>
 
