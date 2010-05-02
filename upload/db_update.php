@@ -667,6 +667,8 @@ if (strpos($cur_version, '1.2') === 0)
 				$db->query('UPDATE '.$db->prefix.'users SET group_id = 4 WHERE group_id = '.$temp_id) or error('Unable to update users group ID', __FILE__, __LINE__, $db->error());
 				$db->query('UPDATE '.$db->prefix.'forum_perms SET group_id = 4 WHERE group_id = '.$temp_id) or error('Unable to forum_perms group ID', __FILE__, __LINE__, $db->error());
 			}
+
+			$db->query('UPDATE '.$db->prefix.'config SET conf_value=\''.$member_gid.'\' WHERE conf_name=\'o_default_user_group\'') or error('Unable to update default user group ID', __FILE__, __LINE__, $db->error());
 		}
 
 		// Server time zone is now simply the default time zone
