@@ -103,6 +103,10 @@ function check_cookie(&$pun_user)
 
 				$idle_sql = ($pun_user['idle'] == '1') ? ', idle=0' : '';
 				$db->query('UPDATE '.$db->prefix.'online SET logged='.$now.$idle_sql.' WHERE user_id='.$pun_user['id']) or error('Unable to update online list', __FILE__, __LINE__, $db->error());
+
+				// Update tracked topics with the current expire time
+				if (isset($_COOKIE[$cookie_name.'_track']))
+					forum_setcookie($cookie_name.'_track', $_COOKIE[$cookie_name.'_track'], $now + $pun_config['o_timeout_visit']);
 			}
 		}
 		else
