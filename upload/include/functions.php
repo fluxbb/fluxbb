@@ -1151,12 +1151,15 @@ function maintenance_message()
 
 	foreach ($pun_includes as $cur_include)
 	{
-		if (!file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
-			error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file), $tpl_inc_dir));
-
 		ob_start();
 
-		require $tpl_inc_dir.$cur_include[1].'.'.$cur_include[2];
+		// Allow for overriding user includes, too.
+		if (file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
+			require $tpl_inc_dir.$cur_include[1].'.'.$cur_include[2];
+		else if (file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
+			require PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
+		else
+			error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file)));
 
 		$tpl_temp = ob_get_contents();
 		$tpl_maint = str_replace($cur_include[0], $tpl_temp, $tpl_maint);
@@ -1267,12 +1270,15 @@ function redirect($destination_url, $message)
 
 	foreach ($pun_includes as $cur_include)
 	{
-		if (!file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
-			error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file), $tpl_inc_dir));
-
 		ob_start();
 
-		require $tpl_inc_dir.$cur_include[1].'.'.$cur_include[2];
+		// Allow for overriding user includes, too.
+		if (file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
+			require $tpl_inc_dir.$cur_include[1].'.'.$cur_include[2];
+		else if (file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
+			require PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
+		else
+			error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file)));
 
 		$tpl_temp = ob_get_contents();
 		$tpl_redir = str_replace($cur_include[0], $tpl_temp, $tpl_redir);
