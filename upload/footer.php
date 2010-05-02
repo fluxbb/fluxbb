@@ -146,10 +146,21 @@ else if ($footer_style == 'viewforum' || $footer_style == 'viewtopic')
 // Display debug info (if enabled/defined)
 if (defined('PUN_DEBUG'))
 {
+	echo '<p id="debugtime">[ ';
+
 	// Calculate script generation time
 	$time_diff = sprintf('%.3f', get_microtime() - $pun_start);
-	echo '<p id="debugtime">[ '.sprintf($lang_common['Querytime'], $time_diff, $db->get_num_queries()).' - Memory usage: '.
-		 file_size(memory_get_usage()).', Peak: '.file_size(memory_get_peak_usage()).' ]</p>'."\n";
+	echo sprintf($lang_common['Querytime'], $time_diff, $db->get_num_queries());
+
+	if (function_exists('memory_get_usage'))
+	{
+		echo ' - '.sprintf($lang_common['Memory usage'], file_size(memory_get_usage()));
+
+		if (function_exists('memory_get_peak_usage'))
+			echo ' '.sprintf($lang_common['Peak usage'], file_size(memory_get_peak_usage()));
+	}
+
+	echo ' ]</p>'."\n";
 }
 
 

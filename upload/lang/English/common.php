@@ -151,6 +151,8 @@ $lang_common = array(
 // Debug information
 'Debug table'						=>	'Debug information',
 'Querytime'							=>	'Generated in %1$s seconds, %2$s queries executed',
+'Memory usage'						=>	'Memory usage: %1$s',
+'Peak usage'						=>	'(Peak: %1$s)',
 'Query times'						=>	'Time (s)',
 'Query'								=>	'Query',
 'Total query time'					=>	'Total query time: %s',
