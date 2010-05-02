@@ -48,14 +48,14 @@ if ($action == 'change_pass')
 
 		$key = $_GET['key'];
 
-		$result = $db->query('SELECT activate_string, activate_key FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch new password', __FILE__, __LINE__, $db->error());
-		list($new_password_hash, $new_password_key) = $db->fetch_row($result);
+		$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch new password', __FILE__, __LINE__, $db->error());
+		$cur_user = $db->fetch_assoc($result);
 
-		if ($key == '' || $key != $new_password_key)
+		if ($key == '' || $key != $cur_user['activate_key'])
 			message($lang_profile['Pass key bad'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
 		else
 		{
-			$db->query('UPDATE '.$db->prefix.'users SET password=\''.$new_password_hash.'\', activate_string=NULL, activate_key=NULL WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'users SET password=\''.$cur_user['activate_string'].'\', activate_string=NULL, activate_key=NULL'.(!empty($cur_user['salt']) ? ', salt=NULL' : '').' WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
 
 			message($lang_profile['Pass updated'], true);
 		}
@@ -93,21 +93,16 @@ if ($action == 'change_pass')
 		if (pun_strlen($new_password1) < 4)
 			message($lang_prof_reg['Pass too short']);
 
-		$result = $db->query('SELECT password FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch password', __FILE__, __LINE__, $db->error());
-		list($db_password_hash) = $db->fetch_row($result);
+		$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch password', __FILE__, __LINE__, $db->error());
+		$cur_user = $db->fetch_assoc($result);
 
 		$authorized = false;
 
-		if (!empty($db_password_hash))
+		if (!empty($cur_user['password']))
 		{
-			$sha1_in_db = (strlen($db_password_hash) == 40) ? true : false;
-			$sha1_available = (function_exists('sha1') || function_exists('mhash')) ? true : false;
+			$old_password_hash = pun_hash($old_password);
 
-			$old_password_hash = pun_hash($old_password); // This could result in either an SHA-1 or an MD5 hash
-
-			if (($sha1_in_db && $sha1_available && $db_password_hash == $old_password_hash) ||
-				(!$sha1_in_db && $db_password_hash == md5($old_password)) ||
-				$pun_user['is_admmod'])
+			if ($cur_user['password'] == $old_password_hash || $pun_user['is_admmod'])
 				$authorized = true;
 		}
 
@@ -116,12 +111,10 @@ if ($action == 'change_pass')
 
 		$new_password_hash = pun_hash($new_password1);
 
-		$db->query('UPDATE '.$db->prefix.'users SET password=\''.$new_password_hash.'\' WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
+		$db->query('UPDATE '.$db->prefix.'users SET password=\''.$new_password_hash.'\''.(!empty($cur_user['salt']) ? ', salt=NULL' : '').' WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
 
 		if ($pun_user['id'] == $id)
-		{
 			pun_setcookie($pun_user['id'], $new_password_hash, time() + $pun_config['o_timeout_visit']);
-		}
 
 		redirect('profile.php?section=essentials&amp;id='.$id, $lang_profile['Pass updated redirect']);
 	}
