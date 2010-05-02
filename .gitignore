@@ -1,0 +1,3 @@
+upload/cache/cache_*
+upload/include/user/*
+upload/config.php
