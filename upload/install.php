@@ -1433,7 +1433,7 @@ else
 		<div class="fakeform">
 			<div class="inform">
 				<div class="forminfo">
-					<p>To finalize the installation all you need to do is to <strong>copy and paste the text in the text box below into a file called config.php and then upload this file to the root directory of your FluxBB installation</strong>. Make sure there are no linebreaks or spaces before &lt;?php. You can later edit config.php if you reconfigure your setup (e.g. change the database password or ).</p>
+					<p>To finalize the installation all you need to do is to <strong>copy and paste the text in the text box below into a file called config.php and then upload this file to the root directory of your FluxBB installation</strong>. Make sure there are no linebreaks or spaces before &lt;?php. You can later edit config.php if you reconfigure your setup (e.g. change the database password).</p>
 <?php if ($alerts != ''): ?>					<?php echo $alerts."\n" ?>
 <?php endif; ?>				</div>
 				<fieldset>
