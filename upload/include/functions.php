@@ -1458,7 +1458,7 @@ H2 {MARGIN: 0; COLOR: #FFFFFF; BACKGROUND-COLOR: #B84623; FONT-SIZE: 1.1em; PADD
 function forum_unregister_globals()
 {
 	$register_globals = ini_get('register_globals');
-	if ($register_globals === "" || $register_globals === "0" || strtolower($register_globals) === "off")
+	if ($register_globals === '' || $register_globals === '0' || strtolower($register_globals) === 'off')
 		return;
 
 	// Prevent script.php?GLOBALS[foo]=bar
