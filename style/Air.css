@@ -108,7 +108,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	font-weight: bold;
 }
 
-.pun .postmsg h5, #helpfile h5 {
+.pun .postmsg h5, #punhelp h5 {
 	font-size: 1.231em;
 	font-weight: bold;
 }
@@ -148,7 +148,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	padding-bottom: 0;
 }
 
-.pun .postmsg h5, #helpfile h5, .pun .usercontent h1, .pun .usercontent h2, .pun .usercontent h3,
+.pun .postmsg h5, #punhelp h5, .pun .usercontent h1, .pun .usercontent h2, .pun .usercontent h3,
 .pun .usercontent h4, .pun .usercontent h5, .pun .usercontent h6 {
 	padding: 7px 0 0 0;
 }
@@ -1198,7 +1198,7 @@ MAIN FORMS
 	}
 
 
-#helpfile .box {
+#punhelp .box {
 	border-style: solid;
 	border-width: 1px;
 	padding: 7px 12px;
@@ -1461,7 +1461,7 @@ html, body, .pun {
 	background: #ebf1f5;
 }
 
-#punmisc #rules .box, #helpfile .box {
+#punmisc #rules .box, #punhelp .box {
 	border-color: #b9c5ce #d9e1e7;
 	background: #f6f9fc;
 }
