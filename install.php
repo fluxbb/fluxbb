@@ -193,20 +193,12 @@ function process_form(the_form)
 	return true
 }
 </script>
-<style type="text/css">
-<!--
-#punwrap {
-	margin: 20px 10%;
-	}
--->
-</style>
 </head>
 <body onload="document.getElementById('install').req_db_type.focus()">
 
-<div id="punwrap">
 <div id="puninstall" class="pun">
-
 <div class="top-box"><div><!-- Top Corners --></div></div>
+<div class="punwrap">
 
 <div id="brdheader" class="block">
 	<div class="box">
@@ -419,9 +411,8 @@ function process_form(the_form)
 </div>
 </div>
 
-<div class="end-box"><div><!-- Bottom Corners --></div></div>
-
 </div>
+<div class="end-box"><div><!-- Bottom Corners --></div></div>
 </div>
 
 </body>
@@ -1653,20 +1644,12 @@ else
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>FluxBB Installation</title>
 <link rel="stylesheet" type="text/css" href="style/<?php echo $default_style ?>.css" />
-<style type="text/css">
-<!--
-#punwrap {
-	margin: 20px 10%;
-	}
--->
-</style>
 </head>
 <body>
 
-<div id="punwrap">
 <div id="puninstall" class="pun">
-
 <div class="top-box"><div><!-- Top Corners --></div></div>
+<div class="punwrap">
 
 <div id="brdheader" class="block">
 	<div class="box">
@@ -1740,9 +1723,8 @@ else
 
 </div>
 
-<div class="end-box"><div><!-- Bottom Corners --></div></div>
-
 </div>
+<div class="end-box"><div><!-- Bottom Corners --></div></div>
 </div>
 
 </body>

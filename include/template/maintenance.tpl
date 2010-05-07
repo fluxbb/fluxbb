@@ -7,18 +7,16 @@
 
 <body>
 
-<div id="punwrap">
 <div id="punmaint" class="pun">
-
 <div class="top-box"><div><!-- Top Corners --></div></div>
+<div class="punwrap">
 
 <div id="brdmain">
 <pun_maint_main>
 </div>
 
-<div class="end-box"><div><!-- Bottom Corners --></div></div>
-
 </div>
+<div class="end-box"><div><!-- Bottom Corners --></div></div>
 </div>
 
 </body>

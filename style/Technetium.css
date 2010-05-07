@@ -237,11 +237,11 @@ body {
 /* Page Layout
 ----------------------------------------------------------------*/
 
-#punwrap {
-	margin: 4px
+.pun {
+	margin: 12px 20px
 	}
 
-#punredirect .block, #punmaint .block {
+#punredirect, #punmaint, #puninstall, #pundb_update {
 	margin: 50px 20% 12px 20%
 	}
 
@@ -440,6 +440,17 @@ body {
 
 /* Board Footer
 ----------------------------------------------------------------*/
+
+#brdfooter #modcontrols {
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	text-align: center;
+	}
+	
+#brdfooter #modcontrols dd {
+	display: inline;
+	margin-right: 10px;
+	}
 
 #brdfooter .conl {
 	float: left;
@@ -1017,7 +1028,7 @@ body {
 	}
 
 .pun td.tc2, .pun td.tc3, .pun td.tcmod, #postpreview, #viewprofile dd, .pun .forminfo,
-#adminconsole fieldset td, .pun .blockmenu .box, #adstats dd {
+ #brdfooter #modcontrols, #adminconsole fieldset td, .pun .blockmenu .box, #adstats dd {
 	background-color: #F4F9FD;
 	background-image: url("Technetium/light-shade.png");
 	background-repeat: repeat-x;
@@ -1099,6 +1110,7 @@ body {
 	text-shadow: #FFF 1px -1px 0.4em;
 	padding: 0.3em;
 	border-radius: 0.4em;
+	position: relative;
 	-moz-border-radius: 0.4em;
 	-webkit-border-top-left-radius: 0.4em;
 	-webkit-border-top-right-radius: 0.4em;
@@ -1179,7 +1191,7 @@ body {
 /* Borders
 ----------------------------------------------------------------*/
 
-.pun .box, .pun h2 {
+.pun .box, .pun h2, #brdfooter #modcontrols {
 	border-color: #A2B5CC;
 }
 

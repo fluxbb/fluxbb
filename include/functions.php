@@ -849,7 +849,7 @@ function paginate($num_pages, $cur_page, $link)
 			$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p=1">1</a>';
 
 			if ($cur_page > 5)
-				$pages[] = '<span>'.$lang_common['Spacer'].'</span>';
+				$pages[] = '<span class="spacer">'.$lang_common['Spacer'].'</span>';
 		}
 
 		// Don't ask me how the following works. It just does, OK? :-)
@@ -866,7 +866,7 @@ function paginate($num_pages, $cur_page, $link)
 		if ($cur_page <= ($num_pages-3))
 		{
 			if ($cur_page != ($num_pages-3) && $cur_page != ($num_pages-4))
-				$pages[] = '<span>'.$lang_common['Spacer'].'</span>';
+				$pages[] = '<span class="spacer">'.$lang_common['Spacer'].'</span>';
 
 			$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p='.$num_pages.'">'.forum_number_format($num_pages).'</a>';
 		}

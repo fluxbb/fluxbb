@@ -433,8 +433,9 @@ switch ($stage)
 </head>
 <body>
 
-<div id="punwrap">
-<div id="puninstall" class="pun" style="margin: 10% 20% auto 20%">
+<div id="pundb_update" class="pun">
+<div class="top-box"><div><!-- Top Corners --></div></div>
+<div class="punwrap">
 
 <div class="blockform">
 	<h2><span>FluxBB Update</span></h2>
@@ -495,6 +496,7 @@ if (strpos($cur_version, '1.2') === 0)
 </div>
 
 </div>
+<div class="end-box"><div><!-- Bottom Corners --></div></div>
 </div>
 
 </body>
@@ -1398,8 +1400,9 @@ if (strpos($cur_version, '1.2') === 0)
 </head>
 <body>
 
-<div id="punwrap">
-<div id="puninstall" class="pun" style="margin: 10% 20% auto 20%">
+<div id="pundb_update" class="pun">
+<div class="top-box"><div><!-- Top Corners --></div></div>
+<div class="punwrap">
 
 <div class="blockform">
 	<h2><span>FluxBB Update</span></h2>
@@ -1413,6 +1416,7 @@ if (strpos($cur_version, '1.2') === 0)
 </div>
 
 </div>
+<div class="end-box"><div><!-- Bottom Corners --></div></div>
 </div>
 
 </body>

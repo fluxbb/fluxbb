@@ -41,20 +41,20 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 ----------------------------------------------------------------*/
 
 .pun {
-	font: 81.25%/1.462em "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font: 81.25%/1.462em Arial, Helvetica, sans-serif;
 }
 
 .pun table, .pun td, .pun th, .pun input, .pun select, .pun optgroup, .pun textarea {
-	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 1em;
 }
 
 .pun h1 {
-	font:2.154em/1em "Trebuchet MS", Helvetica, Arial, sans-serif;
+	font:2.154em/1em "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 
 .pun h2, .pun .hd h2 {
-	font: 1.616em/1.190em "Trebuchet MS", Helvetica, Arial, sans-serif;
+	font: 1.616em/1.190em "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 
 .pun h3 {
@@ -74,7 +74,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 
 .pun pre, .pun code {
 	font-family: consolas, monaco, "bitstream vera sans mono", "courier new", courier, monospace;
-	font-size: 0.929em;
+	font-size: 1em;
 }
 
 .pun pre code {
@@ -92,9 +92,13 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 /* Fonts Special Cases
 ----------------------------------------------------------------*/
 
+.pun .postmsg p, .pun .postmsg li {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
 #pundelete .blockform h2, #punedit .blockform h2, #punindex .blocktable h2, #punpost .blockform h2,
 #punsearch #vf h2, #postpreview h2, #posterror h2, .pun #quickpost h2, .pun #reportform h2, .pun .blockpost h2 {
-	font: 1em/1.462em "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font: 1em/1.462em Arial, Helvetica, sans-serif;
 	font-weight: bold;
 	white-space: nowrap;
 }
@@ -110,7 +114,6 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 }
 
 .pun .quotebox cite {
-	font-size: 0.926em;
 	font-weight: bold;
 	line-height: 1.462em;
 }
@@ -194,55 +197,49 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 /* Page Layout
 ----------------------------------------------------------------*/
 
-#punwrap {
+.pun {
 	padding: 30px 40px;
 }
 
 #punredirect, #punmaint {
-	margin: 50px 18% 12px 18%;
+	padding: 60px 20% 12px 20%;;
 }
 
-.pun {
+#puninstall, #pundb_update {
+	padding: 20px 10%;
+}
+
+.pun .punwrap {
 	border-style: solid;
 	border-width: 1px;
 	padding: 18px;
 }
 
-.pun .top-box, .pun .end-box {
-	float: left;
-	width: 100%;
-	position: relative;
-	left: -19px;
-}
-
-.pun .top-box div, .pun .end-box div {
-	float: right;
-	position: relative;
-	height: 18px;
-	width: 50%;
-	right: -38px;
-}
-
 .pun .top-box {
+	height: 18px;
+	margin-bottom: -18px;
+	position: relative;
 	background: url(Fire/img/main_top.png) top left no-repeat;
-	top: -19px;
-	margin-bottom: -19px;
 }
 
 .pun .top-box div {
+	height: 18px;
+	margin-left: 50%;
 	background: url(Fire/img/main_top.png) top right no-repeat;
 }
 
 .pun .end-box {
-	background: url(Fire/img/main_end.png) bottom left no-repeat;
-	bottom: -19px;
 	margin-top: -17px;
+	height: 18px;
+	position: relative;
+	background: url(Fire/img/main_end.png) bottom left no-repeat;
 }
 
 .pun .end-box div {
+	height: 18px;
+	margin-left: 50%;
 	background: url(Fire/img/main_end.png) bottom right no-repeat;
 }
-
 
 /* Section Spacing and Borders
 ----------------------------------------------------------------*/
@@ -453,72 +450,76 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 /* Footer
 ----------------------------------------------------------------*/
 
-#brdfooter {
+.pun #brdfooter .inbox {
+	width: 100%;
 	overflow: hidden;
 	position: relative;
-	width: 100%;
 }
 
-#brdfooter .conr {
-	clear: both;
-	padding-bottom: 3px;
-	padding-top: 21px;
+.pun #brdfooter #modcontrols {
+	border-style: none none dotted none;
+	border-width: 0 0 1px 0;
+	margin-bottom: 4px;
+	text-align: center;
+}
+
+.pun #brdfooter #modcontrols dd {
+	display: inline;
+}
+
+.pun #brdfooter #modcontrols dd span {
+	background: url(Fire/img/bull.png) center left no-repeat;
+	display: inline-block;
+	line-height: normal;
+	padding-left: 18px;
+	white-space: nowrap;
+}
+
+.pun #brdfooter .conr {
 	text-align: right;
-	width: 100%;
+	float: right;
 }
 
-#brdfooter .conr a {
+.pun #brdfooter .conl {
+	float: left;
+}
+
+.pun #brdfooter #poweredby a {
 	font-size: 1.077em;
 	font-weight: bold;
 }
 
-#brdfooter #qjump {
-	bottom: 0;
-	left: 0;
-	padding: 7px 0 0 0;
-	position: absolute;
-	width: 50%;
+.pun #brdfooter #qjump {
+	padding-top: 5px;
 }
 
-#brdfooter #qjump * {
+.pun #brdfooter #qjump * {
 	white-space: nowrap;
 }
 
-#brdfooter #searchlinks, #brdfooter #modcontrols {
-	border-bottom-style: dotted;
-	border-bottom-width: 1px;
-	margin-bottom: 4px;
-	text-align: center;
-	width:100%;
-}
-
-#brdfooter .conl dd {
-	display: inline;
-}
-
-#brdfooter #searchlinks dd, #brdfooter #modcontrols dd {
+.pun #brdfooter #searchlinks dd span {
+	display: inline-block;
+	line-height: normal;
+	padding-left: 18px;
+	white-space: nowrap;
 	background: url(Fire/img/bull.png) center left no-repeat;
-	padding-left: 16px;
-	white-space: nowrap;
 }
 
-#brdfooter #feedlinks {
-	float: right;
-	margin-bottom: -27px;
-	text-align: right;
+.pun #brdfooter #feedlinks {
+	padding-bottom: 0;
 }
 
-#brdfooter #feedlinks span {
+.pun #brdfooter #feedlinks span {
 	background: url(Fire/img/feed.png) center left no-repeat;
-	display: block;
-	margin-left: 8px;
+	display: inline-block;
+	line-height: normal;
 	padding-left: 18px;
 	white-space: nowrap;
 }
 
 .pun #debugtime {
-	border-top-style: dotted;
-	border-top-width: 1px;
+	border-style: dotted none none none;
+	border-width: 1px 0 0 0;
 	margin-top: 7px;
 	text-align: center;
 }
@@ -565,16 +566,20 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	white-space: nowrap;
 }
 
-.pun .pagelink strong, .pun .pagelink a {
-	border-left: 1px solid #ccc;
+.pun .pagelink strong, .pun .pagelink a, .pun .pagelink span.spacer {
+	border-style: none none none solid;
+	border-width: 0 0 0 1px;
 	display: inline-block;
-	margin-right: -6px;
 	padding: 0 12px 0 10px;
+	margin-right: -6px;
 }
 
 .pun .pagelink .item1 {
 	border: 0;
-	margin-left: -6px;
+}
+
+.pun .pagelink .pages-label {
+	display: inline-block;
 }
 
 .pun .postlink {
@@ -903,10 +908,6 @@ MAIN POSTS
 /* Content
 ----------------------------------------------------------------*/
 
-.pun .blockpost .postmsg {
-	font-size: 1.077em;
-}
-
 .pun .blockpost .postmsg .postedit {
 	font-size: 0.857em;
 }
@@ -961,14 +962,20 @@ MAIN POSTS
 	overflow-y: auto
 }
 
-.pun .postmsg img.postimg, .pun .postmsg a img.postimg {
-	max-width: 100%;
-	vertical-align: middle;
-}
-
 .pun .postmsg img {
 	vertical-align: text-top;
 }
+
+.pun .postmsg .postimg img {
+	max-width: 98%;
+	vertical-align: middle;
+}
+
+.pun .postmsg .postimg a:link img, .pun .postmsg .postimg a:visited img {
+	border-style: solid;
+	border-width: 2px;
+}
+
 
 /*****************************************************************
 MAIN FORMS
@@ -1098,12 +1105,8 @@ MAIN FORMS
 	width: 16px;
 }
 
-.pun .txtarea {
-	padding-right: 210px;
-}
-
 .pun .txtarea textarea, .pun input.longinput {
-	width: 97%;
+	width: 98%;
 }
 
 .pun .blockform .bblinks {
@@ -1312,19 +1315,19 @@ COLOUR SCHEME
 /* Basic defaults and Common Items
 ----------------------------------------------------------------*/
 
-html, body, #punwrap {
+html, body, .pun {
 	background: #eeedea;
 	color: #333;
 }
 
-.pun {
+.pun .punwrap {
 	background: #fff;
 	border-color: #e1d9ca;
 	color: #665858;
 }
 
 #brdtitle #brddesc, .pun .crumbs, #brdstats #onlinelist, #brdfooter #searchlinks, #brdfooter #modcontrols,
-#punmaint h2, #punredirect h2, #adminconsole .submittop, .pun #debugtime {
+#punmaint h2, #punredirect h2, #adminconsole .submittop, .pun #debugtime, .pun .pagelink * {
 	border-color: #cec7b9;
 }
 
@@ -1334,6 +1337,14 @@ html, body, #punwrap {
 
 .pun a:hover, .pun a:active, .pun a:focus {
 	color: #f60;
+}
+
+.pun .postmsg .postimg a:link img, .pun .postmsg .postimg a:visited img {
+	border-color: #990000;
+}
+
+.pun .postmsg .postimg a:hover img, .pun .postmsg .postimg a:active img, .pun .postmsg .postimg a:focus img {
+	border-color: #f60;
 }
 
 /* Primary Navigation

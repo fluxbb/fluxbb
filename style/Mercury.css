@@ -201,11 +201,11 @@
 /* Page Layout
 ----------------------------------------------------------------*/
 
-#punwrap {
+.pun {
 	margin: 12px 20px
 	}
 
-#punredirect .block, #punmaint .block {
+#punredirect, #punmaint, #puninstall, #pundb_update {
 	margin: 50px 20% 12px 20%
 	}
 
@@ -376,6 +376,17 @@
 #brdfooter .conr {
 	float: right;
 	text-align: right;
+	}
+
+#brdfooter #modcontrols {
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	text-align: center;
+	}
+	
+#brdfooter #modcontrols dd {
+	display: inline;
+	margin:0 6px;
 	}
 
 
@@ -843,11 +854,6 @@
 	overflow-y: auto
 	}
 
-.pun .postmsg img.postimg, .pun .postmsg a img.postimg {
-	max-width: 100%;
-	vertical-align: middle;
-	}
-
 .pun .postmsg img {
 	vertical-align: bottom;
 	}
@@ -859,6 +865,16 @@
 	height: 1px;
 	border:none
 	}
+
+.pun .postmsg .postimg img {
+	max-width: 98%;
+	vertical-align: middle;
+}
+
+.pun .postmsg .postimg a:link img, .pun .postmsg .postimg a:visited img {
+	border-style: solid;
+	border-width: 2px;
+}
 
 .pun .blockpost label {
 	padding: 3px 6px;
@@ -912,7 +928,7 @@ body {
 	}
 
 .pun td.tc2, .pun td.tc3, .pun td.tcmod, #postpreview, #viewprofile dd, .pun .forminfo,
-#adminconsole fieldset td, .pun .blockmenu .box, #adstats dd {
+#brdfooter #modcontrols, #adminconsole fieldset td, .pun .blockmenu .box, #adstats dd {
 	background-color: #424242
 	}
 
@@ -978,7 +994,7 @@ body {
 	border-color:#565656
 	}
 
-.pun td {
+.pun td, #brdfooter #modcontrols {
 	border-color: #565656
 	}
 
@@ -1005,6 +1021,14 @@ body {
 .pun a:hover, .pun a:active, .pun a:focus {
 	color: #ffee40
 	}
+
+.pun .postmsg .postimg a:link img, .pun .postmsg .postimg a:visited img {
+	border-color: #f6b620;
+}
+
+.pun .postmsg .postimg a:hover img, .pun .postmsg .postimg a:active img, .pun .postmsg .postimg a:focus img {
+	border-color: #ffee40;
+}
 
 .pun h2 a:link, .pun h2 a:visited,
 #brdmenu a:link, #brdmenu a:visited {
