@@ -144,7 +144,7 @@ function output_atom($feed)
 	global $lang_common, $pun_config;
 
 	// Send XML/no cache headers
-	header('Content-Type: text/xml; charset=utf-8');
+	header('Content-Type: application/atom+xml; charset=utf-8');
 	header('Expires: '.gmdate('D, d M Y H:i:s').' GMT');
 	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 	header('Pragma: public');
