@@ -25,7 +25,7 @@ ob_start();
 	<div class="box">
 <?php
 
-if (($footer_style == 'viewforum' || $footer_style == 'viewtopic') && $is_admmod)
+if (isset($footer_style) && ($footer_style == 'viewforum' || $footer_style == 'viewtopic') && $is_admmod)
 {
 	echo "\t\t".'<div id="modcontrols" class="inbox">'."\n";
 
