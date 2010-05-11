@@ -353,6 +353,12 @@ generate_admin_menu('options');
 						</div>
 					</fieldset>
 				</div>
+<?php
+
+	$diff = ($pun_user['timezone'] + $pun_user['dst']) * 3600;
+	$timestamp = time() + $diff;
+
+?>
 				<div class="inform">
 					<fieldset>
 						<legend><?php echo $lang_admin_options['Timeouts subhead'] ?></legend>
@@ -362,14 +368,14 @@ generate_admin_menu('options');
 									<th scope="row"><?php echo $lang_admin_options['Time format label'] ?></th>
 									<td>
 										<input type="text" name="form[time_format]" size="25" maxlength="25" value="<?php echo pun_htmlspecialchars($pun_config['o_time_format']) ?>" />
-										<span><?php printf($lang_admin_options['Time format help'], date($pun_config['o_time_format']), '<a href="http://www.php.net/manual/en/function.date.php">'.$lang_admin_options['PHP manual'].'</a>') ?></span>
+										<span><?php printf($lang_admin_options['Time format help'], gmdate($pun_config['o_time_format'], $timestamp), '<a href="http://www.php.net/manual/en/function.date.php">'.$lang_admin_options['PHP manual'].'</a>') ?></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Date format label'] ?></th>
 									<td>
 										<input type="text" name="form[date_format]" size="25" maxlength="25" value="<?php echo pun_htmlspecialchars($pun_config['o_date_format']) ?>" />
-										<span><?php printf($lang_admin_options['Date format help'], date($pun_config['o_date_format']), '<a href="http://www.php.net/manual/en/function.date.php">'.$lang_admin_options['PHP manual'].'</a>') ?></span>
+										<span><?php printf($lang_admin_options['Date format help'], gmdate($pun_config['o_date_format'], $timestamp), '<a href="http://www.php.net/manual/en/function.date.php">'.$lang_admin_options['PHP manual'].'</a>') ?></span>
 									</td>
 								</tr>
 								<tr>
