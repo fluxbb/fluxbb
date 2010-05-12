@@ -535,7 +535,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				<div class="postleft">
 					<dl>
 						<dt><?php echo $pposter ?></dt>
-						<dd><?php echo $lang_topic['Replies'].' '.forum_number_format($cur_search['num_replies']) ?></dd>
+						<dd><span><?php echo $lang_topic['Replies'].' '.forum_number_format($cur_search['num_replies']) ?></span></dd>
 						<dd><div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo $icon_text ?></div></div></dd>
 					</dl>
 				</div>
@@ -551,8 +551,8 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			<div class="postfoot clearb">
 				<div class="postfootright">
 					<ul>
-						<li><a href="viewtopic.php?id=<?php echo $cur_search['tid'] ?>"><?php echo $lang_search['Go to topic'] ?></a></li>
-						<li><a href="viewtopic.php?pid=<?php echo $cur_search['pid'].'#p'.$cur_search['pid'] ?>"><?php echo $lang_search['Go to post'] ?></a></li>
+						<li><span><a href="viewtopic.php?id=<?php echo $cur_search['tid'] ?>"><?php echo $lang_search['Go to topic'] ?></a></span></li>
+						<li><span><a href="viewtopic.php?pid=<?php echo $cur_search['pid'].'#p'.$cur_search['pid'] ?>"><?php echo $lang_search['Go to post'] ?></a></span></li>
 					</ul>
 				</div>
 			</div>

@@ -92,8 +92,8 @@ if ($footer_style == 'index' || $footer_style == 'search')
 			echo "\t\t\t\t".'<dl id="searchlinks">'."\n";
 			echo "\t\t\t\t\t".'<dt><strong>'.$lang_common['Search links'].'</strong></dt>'."\n";
 
-			echo "\t\t\t\t\t".'<dd><a href="search.php?action=show_24h">'.$lang_common['Show recent posts'].'</a></dd>'."\n";
-			echo "\t\t\t\t\t".'<dd><a href="search.php?action=show_unanswered">'.$lang_common['Show unanswered posts'].'</a></dd>'."\n";
+			echo "\t\t\t\t\t".'<dd><span<<a href="search.php?action=show_24h">'.$lang_common['Show recent posts'].'</a></span></dd>'."\n";
+			echo "\t\t\t\t\t".'<dd><span><a href="search.php?action=show_unanswered">'.$lang_common['Show unanswered posts'].'</a></span></dd>'."\n";
 
 			echo "\t\t\t\t".'</dl>'."\n";
 		}
@@ -141,7 +141,7 @@ else if ($footer_style == 'viewforum')
 	if ($pun_config['o_feed_type'] == '1')
 		echo "\t\t\t\t".'<p id="feedlinks"><span class="rss"><a href="extern.php?action=feed&amp;fid='.$forum_id.'&amp;type=rss">'.$lang_common['RSS forum feed'].'</a></span></p>'."\n";
 	else if ($pun_config['o_feed_type'] == '2')
-		echo "\t\t\t\t".'<p id="feedlinks"><span class="atom"><a href="extern.php?action=feed&amp;fid='.$forum_id.'&amp;type=atom">'.$lang_common['Atom forum feed'].'</a></span></p>'."\n";
+		echo "\t\t\t\t".'<p id="feedlinks" class="actions"><span class="atom"><a href="extern.php?action=feed&amp;fid='.$forum_id.'&amp;type=atom">'.$lang_common['Atom forum feed'].'</a></span></p>'."\n";
 }
 else if ($footer_style == 'viewtopic')
 {

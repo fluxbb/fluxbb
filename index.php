@@ -188,13 +188,13 @@ else
 		<div class="inbox">
 			<dl class="conr">
 				<dt><strong><?php echo $lang_index['Board stats'] ?></strong></dt>
-				<dd><?php printf($lang_index['No of users'], '<strong>'.forum_number_format($stats['total_users']).'</strong>') ?></dd>
-				<dd><?php printf($lang_index['No of topics'], '<strong>'.forum_number_format($stats['total_topics']).'</strong>') ?></dd>
-				<dd><?php printf($lang_index['No of posts'], '<strong>'.forum_number_format($stats['total_posts']).'</strong>') ?></dd>
+				<dd><span><?php printf($lang_index['No of users'], '<strong>'.forum_number_format($stats['total_users']).'</strong>') ?></span></dd>
+				<dd><span><?php printf($lang_index['No of topics'], '<strong>'.forum_number_format($stats['total_topics']).'</strong>') ?></span></dd>
+				<dd><span><?php printf($lang_index['No of posts'], '<strong>'.forum_number_format($stats['total_posts']).'</strong>') ?></span></dd>
 			</dl>
 			<dl class="conl">
 				<dt><strong><?php echo $lang_index['User info'] ?></strong></dt>
-				<dd><?php printf($lang_index['Newest user'], $stats['newest_user']) ?></dd>
+				<dd><span><?php printf($lang_index['Newest user'], $stats['newest_user']) ?></span></dd>
 <?php
 
 if ($pun_config['o_users_online'] == '1')
@@ -218,7 +218,7 @@ if ($pun_config['o_users_online'] == '1')
 	}
 
 	$num_users = count($users);
-	echo "\t\t\t\t".'<dd>'.sprintf($lang_index['Users online'], '<strong>'.forum_number_format($num_users).'</strong>').'</dd>'."\n\t\t\t\t".'<dd>'.sprintf($lang_index['Guests online'], '<strong>'.forum_number_format($num_guests).'</strong>').'</dd>'."\n\t\t\t".'</dl>'."\n";
+	echo "\t\t\t\t".'<dd><span>'.sprintf($lang_index['Users online'], '<strong>'.forum_number_format($num_users).'</strong>').'</span></dd>'."\n\t\t\t\t".'<dd><span>'.sprintf($lang_index['Guests online'], '<strong>'.forum_number_format($num_guests).'</strong>').'</span></dd>'."\n\t\t\t".'</dl>'."\n";
 
 
 	if ($num_users > 0)
