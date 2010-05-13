@@ -57,10 +57,10 @@ if ($db->num_rows($result))
 	while ($cur_report = $db->fetch_assoc($result))
 	{
 		$reporter = ($cur_report['reporter'] != '') ? '<a href="profile.php?id='.$cur_report['reported_by'].'">'.pun_htmlspecialchars($cur_report['reporter']).'</a>' : $lang_admin_reports['Deleted user'];
-		$forum = ($cur_report['forum_name'] != '') ? '<a href="viewforum.php?id='.$cur_report['forum_id'].'">'.pun_htmlspecialchars($cur_report['forum_name']).'</a>' : $lang_admin_reports['Deleted'];
-		$topic = ($cur_report['subject'] != '') ? '<a href="viewtopic.php?id='.$cur_report['topic_id'].'">'.pun_htmlspecialchars($cur_report['subject']).'</a>' : $lang_admin_reports['Deleted'];
+		$forum = ($cur_report['forum_name'] != '') ? '<span><a href="viewforum.php?id='.$cur_report['forum_id'].'">'.pun_htmlspecialchars($cur_report['forum_name']).'</a></span>' : '<span>'.$lang_admin_reports['Deleted'].'</span>';
+		$topic = ($cur_report['subject'] != '') ? '<span>&#187;&#160;<a href="viewtopic.php?id='.$cur_report['topic_id'].'">'.pun_htmlspecialchars($cur_report['subject']).'</a></span>' : '<span>'.$lang_admin_reports['Deleted'].'</span>';
 		$post = str_replace("\n", '<br />', pun_htmlspecialchars($cur_report['message']));
-		$postid = ($cur_report['pid'] != '') ? '<a href="viewtopic.php?pid='.$cur_report['pid'].'#p'.$cur_report['pid'].'">Post #'.$cur_report['pid'].'</a>' : $lang_admin_reports['Deleted'];
+		$postid = ($cur_report['pid'] != '') ? '<span>&#187;&#160;<a href="viewtopic.php?pid='.$cur_report['pid'].'#p'.$cur_report['pid'].'">Post #'.$cur_report['pid'].'</a></span>' : '<span>'.$lang_admin_reports['Deleted'].'</span>';
 		$report_location = array($forum, $topic, $postid);
 
 ?>
@@ -71,7 +71,7 @@ if ($db->num_rows($result))
 							<table class="aligntop" cellspacing="0">
 								<tr>
 									<th scope="row"><?php printf($lang_admin_reports['Reported by'], $reporter) ?></th>
-									<td><?php echo implode($lang_admin_reports['Location seperator'], $report_location) ?></td>
+									<td class="location"><?php echo implode(' ', $report_location) ?></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_reports['Reason'] ?><div><input type="submit" name="zap_id[<?php echo $cur_report['id'] ?>]" value="<?php echo $lang_admin_reports['Zap'] ?>" /></div></th>
@@ -119,10 +119,10 @@ if ($db->num_rows($result))
 	while ($cur_report = $db->fetch_assoc($result))
 	{
 		$reporter = ($cur_report['reporter'] != '') ? '<a href="profile.php?id='.$cur_report['reported_by'].'">'.pun_htmlspecialchars($cur_report['reporter']).'</a>' : $lang_admin_reports['Deleted user'];
-		$forum = ($cur_report['forum_name'] != '') ? '<a href="viewforum.php?id='.$cur_report['forum_id'].'">'.pun_htmlspecialchars($cur_report['forum_name']).'</a>' : $lang_admin_reports['Deleted'];
-		$topic = ($cur_report['subject'] != '') ? '<a href="viewtopic.php?id='.$cur_report['topic_id'].'">'.pun_htmlspecialchars($cur_report['subject']).'</a>' : $lang_admin_reports['Deleted'];
+		$forum = ($cur_report['forum_name'] != '') ? '<span><a href="viewforum.php?id='.$cur_report['forum_id'].'">'.pun_htmlspecialchars($cur_report['forum_name']).'</a></span>' : '<span>'.$lang_admin_reports['Deleted'].'</span>';
+		$topic = ($cur_report['subject'] != '') ? '<span>&#187;&#160;<a href="viewtopic.php?id='.$cur_report['topic_id'].'">'.pun_htmlspecialchars($cur_report['subject']).'</a></span>' : '<span>'.$lang_admin_reports['Deleted'].'</span>';
 		$post = str_replace("\n", '<br />', pun_htmlspecialchars($cur_report['message']));
-		$post_id = ($cur_report['pid'] != '') ? '<a href="viewtopic.php?pid='.$cur_report['pid'].'#p'.$cur_report['pid'].'">Post #'.$cur_report['pid'].'</a>' : $lang_admin_reports['Deleted'];
+		$post_id = ($cur_report['pid'] != '') ? '<span>&#187;&#160;<a href="viewtopic.php?pid='.$cur_report['pid'].'#p'.$cur_report['pid'].'">Post #'.$cur_report['pid'].'</a></span>' : '<span>'.$lang_admin_reports['Deleted'].'</span>';
 		$zapped_by = ($cur_report['zapped_by'] != '') ? '<a href="profile.php?id='.$cur_report['zapped_by_id'].'">'.pun_htmlspecialchars($cur_report['zapped_by']).'</a>' : $lang_admin_reports['NA'];
 		$zapped_by = ($cur_report['zapped_by'] != '') ? '<strong>'.pun_htmlspecialchars($cur_report['zapped_by']).'</strong>' : $lang_admin_reports['NA'];
 		$report_location = array($forum, $topic, $post_id);
@@ -135,7 +135,7 @@ if ($db->num_rows($result))
 							<table class="aligntop" cellspacing="0">
 								<tr>
 									<th scope="row"><?php printf($lang_admin_reports['Reported by'], $reporter) ?></th>
-									<td><?php echo implode($lang_admin_reports['Location seperator'], $report_location) ?></td>
+									<td class="location"><?php echo implode(' ', $report_location) ?></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_reports['Reason'] ?></th>

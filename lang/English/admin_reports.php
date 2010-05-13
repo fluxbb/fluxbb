@@ -8,7 +8,6 @@ $lang_admin_reports = array(
 'Deleted user'				=>	'Deleted user',
 'Deleted'					=>	'Deleted',
 'Report subhead'			=>	'Reported %s',
-'Location seperator'		=>	' » ',
 'Reported by'				=>	'Reported by %s',
 'Reason'					=>	'Reason',
 'Zap'						=>	'Zap',
