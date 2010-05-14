@@ -610,7 +610,7 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 
 	// Ok, not very pretty :-)
 	if (!$bbcode)
-		$link = ($link == '' || $link == $url) ? ((utf8_strlen($url) > 55) ? utf8_substr($url, 0 , 39).' &#133; '.utf8_substr($url, -10) : $url) : stripslashes($link);
+		$link = ($link == '' || $link == $url) ? ((utf8_strlen($url) > 55) ? utf8_substr($url, 0 , 39).' &#8230; '.utf8_substr($url, -10) : $url) : stripslashes($link);
 
 	if ($bbcode)
 	{
