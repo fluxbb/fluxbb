@@ -78,7 +78,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
 		list($inside, $outside) = split_text($text, '[code]', '[/code]', $errors);
-		$text = implode("\0", $outside);
+		$text = implode("\1", $outside);
 	}
 
 	// Tidy up lists
@@ -96,7 +96,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	// If we split up the message before we have to concatenate it together again (code tags)
 	if (isset($inside))
 	{
-		$outside = explode("\0", $text);
+		$outside = explode("\1", $text);
 		$text = '';
 
 		$num_tokens = count($outside);
@@ -158,7 +158,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	$tags_quotes = array('url', 'email', 'img');
 	// Tags we limit bbcode in
 	$tags_limit_bbcode = array(
-		'*' 	=> array('b', 'i', 'u', 'color', 'colour', 'url', 'email', 'list', 'img'),
+		'*' 	=> array('b', 'i', 'u', 'color', 'colour', 'url', 'email', 'list', 'img', 'code'),
 		'list' 	=> array('*'),
 		'url' 	=> array('b', 'i', 'u', 'color', 'colour', 'img'),
 		'email' => array('b', 'i', 'u', 'color', 'colour', 'img'),
@@ -789,7 +789,7 @@ function parse_message($text, $hide_smilies)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
 		list($inside, $outside) = split_text($text, '[code]', '[/code]', $errors);
-		$text = implode("\0", $outside);
+		$text = implode("\1", $outside);
 	}
 
 	if ($pun_config['p_message_bbcode'] == '1' && strpos($text, '[') !== false && strpos($text, ']') !== false)
@@ -806,7 +806,7 @@ function parse_message($text, $hide_smilies)
 	// If we split up the message before we have to concatenate it together again (code tags)
 	if (isset($inside))
 	{
-		$outside = explode("\0", $text);
+		$outside = explode("\1", $text);
 		$text = '';
 
 		$num_tokens = count($outside);
