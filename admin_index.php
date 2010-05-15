@@ -128,15 +128,15 @@ generate_admin_menu('index');
 			<div class="inbox">
 				<p>
 					<?php echo $lang_admin_index['Welcome to admin'] ?><br /><br />
-					&nbsp;- <?php echo $lang_admin_index['Welcome 1'] ?><br />
-					&nbsp;- <?php echo $lang_admin_index['Welcome 2'] ?><br />
-					&nbsp;- <?php echo $lang_admin_index['Welcome 3'] ?><br />
-					&nbsp;- <?php echo $lang_admin_index['Welcome 4'] ?><br />
-					&nbsp;- <?php echo $lang_admin_index['Welcome 5'] ?><br />
-					&nbsp;- <?php echo $lang_admin_index['Welcome 6'] ?><br />
-					&nbsp;- <?php echo $lang_admin_index['Welcome 7'] ?><br />
-					&nbsp;- <?php echo $lang_admin_index['Welcome 8'] ?><br />
-					&nbsp;- <?php echo $lang_admin_index['Welcome 9'] ?>
+					&#160;- <?php echo $lang_admin_index['Welcome 1'] ?><br />
+					&#160;- <?php echo $lang_admin_index['Welcome 2'] ?><br />
+					&#160;- <?php echo $lang_admin_index['Welcome 3'] ?><br />
+					&#160;- <?php echo $lang_admin_index['Welcome 4'] ?><br />
+					&#160;- <?php echo $lang_admin_index['Welcome 5'] ?><br />
+					&#160;- <?php echo $lang_admin_index['Welcome 6'] ?><br />
+					&#160;- <?php echo $lang_admin_index['Welcome 7'] ?><br />
+					&#160;- <?php echo $lang_admin_index['Welcome 8'] ?><br />
+					&#160;- <?php echo $lang_admin_index['Welcome 9'] ?>
 				</p>
 			</div>
 		</div>

@@ -166,7 +166,7 @@ else
 								<tr>
 									<th scope="row"><?php echo $lang_admin_prune['Prune sticky label'] ?></th>
 									<td>
-										<input type="radio" name="prune_sticky" value="1" tabindex="2" checked="checked" />&nbsp;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="prune_sticky" value="0" />&nbsp;<strong><?php echo $lang_admin_common['No'] ?></strong>
+										<input type="radio" name="prune_sticky" value="1" tabindex="2" checked="checked" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&#160;&#160;&#160;<input type="radio" name="prune_sticky" value="0" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong>
 										<span><?php echo $lang_admin_prune['Prune sticky help'] ?></span>
 									</td>
 								</tr>

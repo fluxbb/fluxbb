@@ -1129,7 +1129,7 @@ function maintenance_message()
 
 	// Deal with newlines, tabs and multiple spaces
 	$pattern = array("\t", '  ', '  ');
-	$replace = array('&nbsp; &nbsp; ', '&nbsp; ', ' &nbsp;');
+	$replace = array('&#160; &#160; ', '&#160; ', ' &#160;');
 	$message = str_replace($pattern, $replace, $pun_config['o_maintenance_message']);
 
 
@@ -1613,7 +1613,7 @@ function display_saved_queries()
 
 ?>
 				<tr>
-					<td class="tcl"><?php echo ($cur_query[1] != 0) ? $cur_query[1] : '&nbsp;' ?></td>
+					<td class="tcl"><?php echo ($cur_query[1] != 0) ? $cur_query[1] : '&#160;' ?></td>
 					<td class="tcr"><?php echo pun_htmlspecialchars($cur_query[0]) ?></td>
 				</tr>
 <?php

@@ -159,7 +159,7 @@ generate_admin_menu('maintenance');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_maintenance['Empty index label'] ?></th>
 									<td class="inputadmin">
-										<span><input type="checkbox" name="i_empty_index" value="1" tabindex="3" checked="checked" />&nbsp;&nbsp;<?php echo $lang_admin_maintenance['Empty index help'] ?></span>
+										<span><input type="checkbox" name="i_empty_index" value="1" tabindex="3" checked="checked" />&#160;&#160;<?php echo $lang_admin_maintenance['Empty index help'] ?></span>
 									</td>
 								</tr>
 							</table>

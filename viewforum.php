@@ -78,7 +78,7 @@ require PUN_ROOT.'header.php';
 	<div class="inbox crumbsplus">
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>&#187;&#160;</span><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></li>
+			<li><span>»&#160;</span><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></li>
 		</ul>
 		<p class="pagelink conl"><?php echo $paging_links ?></p>
 <?php echo $post_link ?>
@@ -189,7 +189,7 @@ if ($db->num_rows($result))
 		{
 			if ($cur_topic['has_posted'] == $pun_user['id'])
 			{
-				$subject = '<strong class="ipost">&middot;&#160;</strong>'.$subject;
+				$subject = '<strong class="ipost">·&#160;</strong>'.$subject;
 				$item_status .= ' iposted';
 			}
 		}
@@ -258,7 +258,7 @@ else
 <?php echo $post_link ?>
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>&#187;&#160;</span><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></li>
+			<li><span>»&#160;</span><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></li>
 		</ul>
 		<div class="clearer"></div>
 	</div>
