@@ -304,6 +304,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 #brdwelcome li span {
 	background: url(Air/img/bull.png) center left no-repeat;
 	padding-left: 18px;
+	margin-right: 3px;
 	display: inline-block;
 	line-height: normal;
 	white-space: nowrap;
@@ -493,8 +494,8 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 *****************************************************************/
 
 #punindex #brdmain .blocktable h2, #punsearch #vf h2 {
+	font: 1em/1.462em bold Arial, Helvetica, sans-serif;
 	font-weight: bold;
-	font: 1em/1.462em Arial, Helvetica, sans-serif;
 	margin: 1px 1px 0 1px;
 	padding-left: 8px;
 	position: absolute;
