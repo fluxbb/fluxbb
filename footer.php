@@ -92,7 +92,7 @@ if ($footer_style == 'index' || $footer_style == 'search')
 			echo "\t\t\t\t".'<dl id="searchlinks">'."\n";
 			echo "\t\t\t\t\t".'<dt><strong>'.$lang_common['Search links'].'</strong></dt>'."\n";
 
-			echo "\t\t\t\t\t".'<dd><span<<a href="search.php?action=show_24h">'.$lang_common['Show recent posts'].'</a></span></dd>'."\n";
+			echo "\t\t\t\t\t".'<dd><span><a href="search.php?action=show_24h">'.$lang_common['Show recent posts'].'</a></span></dd>'."\n";
 			echo "\t\t\t\t\t".'<dd><span><a href="search.php?action=show_unanswered">'.$lang_common['Show unanswered posts'].'</a></span></dd>'."\n";
 
 			echo "\t\t\t\t".'</dl>'."\n";

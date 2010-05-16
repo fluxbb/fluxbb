@@ -1,6 +1,10 @@
-
 #adminconsole .blockform .box {
 	padding-bottom: 12px;
+}
+
+#adminconsole fieldset .infldset {
+	position: relative;
+	overflow: hidden;
 }
 
 #adminconsole fieldset table {
