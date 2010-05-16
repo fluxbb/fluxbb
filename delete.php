@@ -93,17 +93,36 @@ $cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smili
 	<div class="box">
 		<form method="post" action="delete.php?id=<?php echo $id ?>">
 			<div class="inform">
-				<p><strong><?php echo $lang_delete['Warning'] ?></strong></p>
-				<p><strong><?php printf($lang_delete['Author'], '</strong>'.pun_htmlspecialchars($cur_post['poster'])) ?></p>
-				<p><strong><?php echo $lang_common['Message'] ?></strong></p>
-				<div class="deletemsg">
-					<div class="postmsg">
-						<?php echo $cur_post['message']."\n" ?>
-					</div>
+				<div class="forminfo">
+					<h3><span><?php printf($is_topic_post ? $lang_delete['Topic by'] : $lang_delete['Reply by'], '<strong>'.pun_htmlspecialchars($cur_post['poster']).'</strong>', format_time($cur_post['posted'])) ?></span></h3>
+					<p><?php echo ($is_topic_post) ? '<strong>'.$lang_delete['Topic warning'].'</strong>' : '<strong>'.$lang_delete['Warning'].'</strong>' ?><br /><?php echo $lang_delete['Delete info'] ?></p>
 				</div>
 			</div>
 			<p class="buttons"><input type="submit" name="delete" value="<?php echo $lang_delete['Delete'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
 		</form>
+	</div>
+</div>
+
+<div id="postreview">
+	<div class="blockpost">
+		<div class="box<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?>">
+			<div class="inbox">
+				<div class="postbody">
+					<div class="postleft">
+						<dl>
+							<dt><strong><?php echo pun_htmlspecialchars($cur_post['poster']) ?></strong></dt>
+							<dd><span><?php echo format_time($cur_post['posted']) ?></span></dd>
+						</dl>
+					</div>
+					<div class="postright">
+						<div class="postmsg">
+							<?php echo $cur_post['message']."\n" ?>
+						</div>
+					</div>
+				</div>
+				<div class="clearer"></div>
+			</div>
+		</div>
 	</div>
 </div>
 <?php
