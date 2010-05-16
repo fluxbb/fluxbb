@@ -293,7 +293,7 @@ else if (isset($_GET['edit_forum']))
 							<table id="forumperms" cellspacing="0">
 							<thead>
 								<tr>
-									<th class="atcl">&nbsp;</th>
+									<th class="atcl">&#160;</th>
 									<th><?php echo $lang_admin_forums['Read forum label'] ?></th>
 									<th><?php echo $lang_admin_forums['Post replies label'] ?></th>
 									<th><?php echo $lang_admin_forums['Post topics label'] ?></th>

@@ -610,7 +610,7 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 
 	// Ok, not very pretty :-)
 	if (!$bbcode)
-		$link = ($link == '' || $link == $url) ? ((utf8_strlen($url) > 55) ? utf8_substr($url, 0 , 39).' &#133; '.utf8_substr($url, -10) : $url) : stripslashes($link);
+		$link = ($link == '' || $link == $url) ? ((utf8_strlen($url) > 55) ? utf8_substr($url, 0 , 39).' … '.utf8_substr($url, -10) : $url) : stripslashes($link);
 
 	if ($bbcode)
 	{
@@ -800,7 +800,7 @@ function parse_message($text, $hide_smilies)
 
 	// Deal with newlines, tabs and multiple spaces
 	$pattern = array("\n", "\t", '  ', '  ');
-	$replace = array('<br />', '&nbsp; &nbsp; ', '&nbsp; ', ' &nbsp;');
+	$replace = array('<br />', '&#160; &#160; ', '&#160; ', ' &#160;');
 	$text = str_replace($pattern, $replace, $text);
 
 	// If we split up the message before we have to concatenate it together again (code tags)
@@ -854,7 +854,7 @@ function parse_signature($text)
 
 	// Deal with newlines, tabs and multiple spaces
 	$pattern = array("\n", "\t", '  ', '  ');
-	$replace = array('<br />', '&nbsp; &nbsp; ', '&nbsp; ', ' &nbsp;');
+	$replace = array('<br />', '&#160; &#160; ', '&#160; ', ' &#160;');
 	$text = str_replace($pattern, $replace, $text);
 
 	// Add paragraph tag around post, but make sure there are no empty paragraphs

@@ -1129,7 +1129,7 @@ function maintenance_message()
 
 	// Deal with newlines, tabs and multiple spaces
 	$pattern = array("\t", '  ', '  ');
-	$replace = array('&nbsp; &nbsp; ', '&nbsp; ', ' &nbsp;');
+	$replace = array('&#160; &#160; ', '&#160; ', ' &#160;');
 	$message = str_replace($pattern, $replace, $pun_config['o_maintenance_message']);
 
 
@@ -1503,7 +1503,6 @@ function remove_bad_characters($array)
 	if (!isset($bad_utf8_chars))
 	{
 		$bad_utf8_chars = array(
-			"\0"			=> '',		// NULL									0000	*
 			"\xcc\xb7"		=> '',		// COMBINING SHORT SOLIDUS OVERLAY		0337	*
 			"\xcc\xb8"		=> '',		// COMBINING LONG SOLIDUS OVERLAY		0338	*
 			"\xe1\x85\x9F"	=> '',		// HANGUL CHOSEONG FILLER				115F	*
@@ -1554,6 +1553,9 @@ function remove_bad_characters($array)
 
 	// Strip out any invalid characters
 	$array = utf8_bad_strip($array);
+
+	// Remove control characters
+	$array = preg_replace('/[\x{00}-\x{08}\x{0b}-\x{0c}\x{0e}-\x{1f}]/', '', $array);
 
 	// Replace some "bad" characters
 	$array = str_replace(array_keys($bad_utf8_chars), array_values($bad_utf8_chars), $array);
@@ -1611,7 +1613,7 @@ function display_saved_queries()
 
 ?>
 				<tr>
-					<td class="tcl"><?php echo ($cur_query[1] != 0) ? $cur_query[1] : '&nbsp;' ?></td>
+					<td class="tcl"><?php echo ($cur_query[1] != 0) ? $cur_query[1] : '&#160;' ?></td>
 					<td class="tcr"><?php echo pun_htmlspecialchars($cur_query[0]) ?></td>
 				</tr>
 <?php

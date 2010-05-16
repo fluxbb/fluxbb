@@ -79,7 +79,8 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		else
 			message($lang_common['Bad request']);
 
-		$ban_expire = ($ban_expire != '') ? date('Y-m-d', $ban_expire) : '';
+		$diff = ($pun_user['timezone'] + $pun_user['dst']) * 3600;
+		$ban_expire = ($ban_expire != '') ? gmdate('Y-m-d', $ban_expire + $diff) : '';
 
 		$mode = 'edit';
 	}
@@ -232,9 +233,15 @@ else if (isset($_POST['add_edit_ban']))
 
 	if ($ban_expire != '' && $ban_expire != 'Never')
 	{
-		$ban_expire = strtotime($ban_expire);
+		$ban_expire = strtotime($ban_expire.' GMT');
 
-		if ($ban_expire == -1 || $ban_expire <= time())
+		if ($ban_expire == -1 || !$ban_expire)
+			message($lang_admin_bans['Invalid date message'].' '.$lang_admin_bans['Invalid date reasons']);
+
+		$diff = ($pun_user['timezone'] + $pun_user['dst']) * 3600;
+		$ban_expire -= $diff;
+
+		if ($ban_expire <= time())
 			message($lang_admin_bans['Invalid date message'].' '.$lang_admin_bans['Invalid date reasons']);
 	}
 	else
@@ -353,8 +360,8 @@ else if (isset($_GET['find_ban']))
 	<div class="inbox crumbsplus">
 		<ul class="crumbs">
 			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
-			<li><span>&#187;&#160;</span><a href="admin_bans.php"><?php echo $lang_admin_common['Bans'] ?></a></li>
-			<li><span>&#187;&#160;</span><strong><?php echo $lang_admin_bans['Results head'] ?></strong></li>
+			<li><span>»&#160;</span><a href="admin_bans.php"><?php echo $lang_admin_common['Bans'] ?></a></li>
+			<li><span>»&#160;</span><strong><?php echo $lang_admin_bans['Results head'] ?></strong></li>
 		</ul>
 		<p class="pagelink"><?php echo $paging_links ?></p>
 		<div class="clearer"></div>
@@ -392,11 +399,11 @@ else if (isset($_GET['find_ban']))
 
 ?>
 				<tr>
-					<td class="tcl"><?php echo ($ban_data['username'] != '') ? pun_htmlspecialchars($ban_data['username']) : '&nbsp;' ?></td>
-					<td class="tc2"><?php echo ($ban_data['email'] != '') ? $ban_data['email'] : '&nbsp;' ?></td>
-					<td class="tc3"><?php echo ($ban_data['ip'] != '') ? $ban_data['ip'] : '&nbsp;' ?></td>
+					<td class="tcl"><?php echo ($ban_data['username'] != '') ? pun_htmlspecialchars($ban_data['username']) : '&#160;' ?></td>
+					<td class="tc2"><?php echo ($ban_data['email'] != '') ? $ban_data['email'] : '&#160;' ?></td>
+					<td class="tc3"><?php echo ($ban_data['ip'] != '') ? $ban_data['ip'] : '&#160;' ?></td>
 					<td class="tc4"><?php echo $expire ?></td>
-					<td class="tc5"><?php echo ($ban_data['message'] != '') ? pun_htmlspecialchars($ban_data['message']) : '&nbsp;' ?></td>
+					<td class="tc5"><?php echo ($ban_data['message'] != '') ? pun_htmlspecialchars($ban_data['message']) : '&#160;' ?></td>
 					<td class="tc6"><?php echo ($ban_data['ban_creator_username'] != '') ? '<a href="profile.php?id='.$ban_data['ban_creator'].'">'.pun_htmlspecialchars($ban_data['ban_creator_username']).'</a>' : $lang_admin_bans['Unknown'] ?></td>
 					<td class="tcr"><?php echo $actions ?></td>
 				</tr>
@@ -419,8 +426,8 @@ else if (isset($_GET['find_ban']))
 		<p class="pagelink"><?php echo $paging_links ?></p>
 		<ul class="crumbs">
 			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
-			<li><span>&#187;&#160;</span><a href="admin_bans.php"><?php echo $lang_admin_common['Bans'] ?></a></li>
-			<li><span>&#187;&#160;</span><strong><?php echo $lang_admin_bans['Results head'] ?></strong></li>
+			<li><span>»&#160;</span><a href="admin_bans.php"><?php echo $lang_admin_common['Bans'] ?></a></li>
+			<li><span>»&#160;</span><strong><?php echo $lang_admin_bans['Results head'] ?></strong></li>
 		</ul>
 		<div class="clearer"></div>
 	</div>
@@ -505,7 +512,7 @@ generate_admin_menu('bans');
 											<option value="ip"><?php echo $lang_admin_bans['Order by ip'] ?></option>
 											<option value="email"><?php echo $lang_admin_bans['Order by e-mail'] ?></option>
 											<option value="expire"><?php echo $lang_admin_bans['Order by expire'] ?></option>
-										</select>&nbsp;&nbsp;&nbsp;<select name="direction" tabindex="11">
+										</select>&#160;&#160;&#160;<select name="direction" tabindex="11">
 											<option value="ASC" selected="selected"><?php echo $lang_admin_bans['Ascending'] ?></option>
 											<option value="DESC"><?php echo $lang_admin_bans['Descending'] ?></option>
 										</select>

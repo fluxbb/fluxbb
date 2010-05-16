@@ -109,7 +109,7 @@ function process_form(the_form)
 
 	// Output a JavaScript array with localised field names
 	foreach ($required_fields as $elem_orig => $elem_trans)
-		echo "\t".'element_names["'.$elem_orig.'"] = "'.addslashes(str_replace('&nbsp;', ' ', $elem_trans)).'"'."\n";
+		echo "\t".'element_names["'.$elem_orig.'"] = "'.addslashes(str_replace('&#160;', ' ', $elem_trans)).'"'."\n";
 
 ?>
 

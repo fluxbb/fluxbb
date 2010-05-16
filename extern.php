@@ -252,7 +252,7 @@ function output_html($feed)
 	foreach ($feed['items'] as $item)
 	{
 		if (utf8_strlen($item['title']) > FORUM_EXTERN_MAX_SUBJECT_LENGTH)
-			$subject_truncated = pun_htmlspecialchars(pun_trim(utf8_substr($item['title'], 0, (FORUM_EXTERN_MAX_SUBJECT_LENGTH - 5)))).' &hellip;';
+			$subject_truncated = pun_htmlspecialchars(pun_trim(utf8_substr($item['title'], 0, (FORUM_EXTERN_MAX_SUBJECT_LENGTH - 5)))).' …';
 		else
 			$subject_truncated = pun_htmlspecialchars($item['title']);
 
