@@ -10,7 +10,7 @@ $lang_delete = array(
 'Reply by'				=>	'Reply by %s - %s',
 'Topic by'				=>	'Topic started by %s - %s',
 'Delete'				=>	'Delete', // The submit button
-'Post del redirect'		=>	'Post deleted. Redirecting â€¦',
-'Topic del redirect'	=>	'Topic deleted. Redirecting â€¦'
+'Post del redirect'		=>	'Post deleted. Redirecting …',
+'Topic del redirect'	=>	'Topic deleted. Redirecting …'
 
 );
