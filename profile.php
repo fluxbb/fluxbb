@@ -722,8 +722,8 @@ else if (isset($_POST['form_sent']))
 				'location'		=> pun_trim($_POST['form']['location']),
 			);
 
-			// Add http:// if the URL doesn't contain it already
-			if ($form['url'] != '' && strpos(strtolower($form['url']), 'http://') !== 0)
+			// Add http:// if the URL doesn't contain it already (while allowing https://, too)
+			if ($form['url'] != '' && !preg_match('#^https?://#i', $form['url']))
 				$form['url'] = 'http://'.$form['url'];
 
 			if ($pun_user['g_id'] == PUN_ADMIN)
