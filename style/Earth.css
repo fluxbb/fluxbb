@@ -980,9 +980,9 @@ MAIN FORMS
 #punpost .blockform h2, #punedit .blockform h2, .pun #posterror h2,
 .pun #quickpost h2, #pundelete .blockform h2 {
 	margin: 1px 1px 0 1px;
-	min-width: 10em;
+	min-width: 18em;
+	width: 50%;
 	position: absolute;
-	width: 75%;
 	z-index: 100;
 	padding: 10px 19px 4px 37px;
 }
