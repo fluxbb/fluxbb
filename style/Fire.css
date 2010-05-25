@@ -1144,6 +1144,10 @@ MAIN FORMS
 	width: 1em;
 }
 
+.pun input[type=text], .pun select, .pun textarea {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
 .pun .txtarea textarea, .pun input.longinput {
 	width: 98%;
 }
