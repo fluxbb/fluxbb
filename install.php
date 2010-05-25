@@ -194,7 +194,7 @@ function process_form(the_form)
 }
 </script>
 </head>
-<body onload="document.getElementById('install').req_db_type.focus()">
+<body onload="document.getElementById('install').req_db_type.focus();document.getElementById('install').start.disabled=false;">
 
 <div id="puninstall" class="pun">
 <div class="top-box"><div><!-- Top Corners --></div></div>
