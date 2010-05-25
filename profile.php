@@ -1421,8 +1421,8 @@ else
 		$d = dir(PUN_ROOT.'style');
 		while (($entry = $d->read()) !== false)
 		{
-			if (substr($entry, strlen($entry)-4) == '.css')
-				$styles[] = substr($entry, 0, strlen($entry)-4);
+			if (substr($entry, -4) == '.css')
+				$styles[] = substr($entry, 0, -4);
 		}
 		$d->close();
 
