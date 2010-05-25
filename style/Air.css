@@ -995,7 +995,6 @@ MAIN FORMS
 	width: 25em;
 	position: absolute;
 	z-index: 100;
-	padding: 10px 19px 4px 37px;
 }
 
 .pun #quickpost legend, #punpost legend, #punedit legend {
@@ -1028,6 +1027,10 @@ MAIN FORMS
 	border-style: solid;
 	border-width: 1px;
 	position: relative;
+}
+
+.pun .blockform .forminfo {
+	margin-top: 12px;
 }
 
 #pundelete .blockform .forminfo {
