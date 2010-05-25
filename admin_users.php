@@ -52,7 +52,9 @@ if (isset($_GET['ip_stats']))
 			<li><span>»&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
 			<li><span>»&#160;</span><strong><?php echo $lang_admin_users['Results head'] ?></strong></li>
 		</ul>
-		<p class="pagelink"><?php echo $paging_links ?></p>
+		<div class="pagepost">
+			<p class="pagelink"><?php echo $paging_links ?></p>
+		</div>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -102,7 +104,9 @@ if (isset($_GET['ip_stats']))
 
 <div class="linksb">
 	<div class="inbox crumbsplus">
-		<p class="pagelink"><?php echo $paging_links ?></p>
+		<div class="pagepost">
+			<p class="pagelink"><?php echo $paging_links ?></p>
+		</div>
 		<ul class="crumbs">
 			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
 			<li><span>»&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
@@ -149,7 +153,9 @@ if (isset($_GET['show_users']))
 			<li><span>»&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
 			<li><span>»&#160;</span><strong><?php echo $lang_admin_users['Results head'] ?></strong></li>
 		</ul>
-		<p class="pagelink"><?php echo $paging_links ?></p>
+		<div class="pagepost">
+			<p class="pagelink"><?php echo $paging_links ?></p>
+		</div>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -231,7 +237,9 @@ if (isset($_GET['show_users']))
 
 <div class="linksb">
 	<div class="inbox crumbsplus">
-		<p class="pagelink"><?php echo $paging_links ?></p>
+		<div class="pagepost">
+			<p class="pagelink"><?php echo $paging_links ?></p>
+		</div>
 		<ul class="crumbs">
 			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
 			<li><span>»&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
@@ -361,7 +369,9 @@ else if (isset($_GET['find_user']))
 			<li><span>»&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
 			<li><span>»&#160;</span><strong><?php echo $lang_admin_users['Results head'] ?></strong></li>
 		</ul>
-		<p class="pagelink"><?php echo $paging_links ?></p>
+		<div class="pagepost">
+			<p class="pagelink"><?php echo $paging_links ?></p>
+		</div>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -423,7 +433,9 @@ else if (isset($_GET['find_user']))
 
 <div class="linksb">
 	<div class="inbox crumbsplus">
-		<p class="pagelink"><?php echo $paging_links ?></p>
+		<div class="pagepost">
+			<p class="pagelink"><?php echo $paging_links ?></p>
+		</div>
 		<ul class="crumbs">
 			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
 			<li><span>»&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>

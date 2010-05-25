@@ -125,19 +125,19 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 /* Generic Float Clear
 ----------------------------------------------------------------*/
 
-.pun .inbox, .pun #brdmain, .pun .crumbs, .pun .block2col {
+.pun .inbox, .pun #brdmain, .pun .crumbs, .pun .pagepost, .pun .block2col {
 	min-height: 1px;
 }
 
-* html .pun .inbox, * html .pun #brdmain, * html .pun .infldset, * html .pun .crumbs, * html .pun .block2col {
+* html .pun .inbox, * html .pun #brdmain, * html .pun .infldset, * html .pun .crumbs, * html .pun .pagepost, * html .pun .block2col {
 	display: inline-block;
 }
 
-* html .pun .inbox, * html .pun #bdrdmain, * html .pun .infldset, * html .pun .crumbs, * html .pun .block2col {
+* html .pun .inbox, * html .pun #bdrdmain, * html .pun .infldset, * html .pun .crumbs, * html .pun .pagepost, * html .pun .block2col {
 	display: block;
 }
 
-.pun .inbox:after, .pun #brdmain:after, .pun .crumbs:after, .pun .block2col:after {
+.pun .inbox:after, .pun #brdmain:after, .pun .crumbs:after, .pun .pagepost:after, .pun .block2col:after {
       content: " ";
       display: block;
       height: 0;
@@ -411,33 +411,43 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 /* Breadcrumbs, Postlink, Pagination
 ----------------------------------------------------------------*/
 
+.pun .linkst .inbox, .pun linksb .inbox, .pun .postlinksb .inbox {
+	overflow: hidden;
+}
+
 .pun .linksb, .pun .postlinksb, .pun .linkst, .pun .crumbs {
 	clear: both;
 	position: relative;
-	width: 100%;
 }
 
 .pun .linkst .crumbs {
 	font-family: "Trebuchet MS", Helvetica, Arial, sans-serif;
 	font-size: 1.462em;
-	line-height: 1em;
+	line-height: 1.211em;
 	padding: 7px 0;
 }
 
-.pun .linkst .crumbsplus .crumbs {
-	border-bottom-style: dotted;
-	border-bottom-width: 1px;
-}
-
-.pun .linksb .crumbsplus .crumbs, .pun .postlinksb .crumbsplus .crumbs {
-	border-top-style: dotted;
-	border-top-width: 1px;
+.pun .linksb .crumbs, .pun .postlinksb .crumbs {
 	font-family: "Trebuchet MS", Helvetica, Arial, sans-serif;
 	font-size: 1.154em;
 }
 
+.pun .linkst .crumbsplus .pagepost {
+	border-top-style: dotted;
+	border-top-width: 1px;
+}
+
+.pun .linksb .crumbsplus .pagepost, .pun .postlinksb .crumbsplus .pagepost {
+	border-bottom-style: dotted;
+	border-bottom-width: 1px;
+}
+
+.pun .postlinksb .crumbs {
+	margin-right: 11em;
+}
+
 .pun .crumbs li {
-	float:left;
+	float: left;
 	padding-right: 0.4em;
 	white-space: nowrap;
 }
@@ -494,7 +504,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 *****************************************************************/
 
 #punindex #brdmain .blocktable h2, #punsearch #vf h2 {
-	font: 1em/1.462em bold Arial, Helvetica, sans-serif;
+	font: 1em/1.462em Arial, Helvetica, sans-serif;
 	font-weight: bold;
 	margin: 1px 1px 0 1px;
 	padding-left: 8px;
@@ -1345,7 +1355,7 @@ html, body, .pun {
 	color: #566579;
 }
 
-#brdtitle #brddesc, .pun .crumbs, #brdstats #onlinelist, #brdfooter #searchlinks, #brdfooter #modcontrols,
+#brdtitle #brddesc, .pun .pagepost, #brdstats #onlinelist, #brdfooter #searchlinks, #brdfooter #modcontrols,
 #punmaint h2, #punredirect h2, #adminconsole .submittop, .pun #debugtime, .pun .pagelink a, .pun .pagelink * {
 	border-color: #b9c5ce;
 }
