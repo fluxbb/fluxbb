@@ -105,7 +105,7 @@ $is_admmod = ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1'
 if ($cur_topic['closed'] == '0')
 {
 	if (($cur_topic['post_replies'] == '' && $pun_user['g_post_replies'] == '1') || $cur_topic['post_replies'] == '1' || $is_admmod)
-		$post_link = "\t\t".'<p class="postlink conr"><a href="post.php?tid='.$id.'">'.$lang_topic['Post reply'].'</a></p>'."\n";
+		$post_link = "\t\t\t".'<p class="postlink conr"><a href="post.php?tid='.$id.'">'.$lang_topic['Post reply'].'</a></p>'."\n";
 	else
 		$post_link = '';
 }
@@ -116,7 +116,7 @@ else
 	if ($is_admmod)
 		$post_link .= ' / <a href="post.php?tid='.$id.'">'.$lang_topic['Post reply'].'</a>';
 
-	$post_link = "\t\t".'<p class="postlink conr">'.$post_link.'</p>'."\n";
+	$post_link = "\t\t\t".'<p class="postlink conr">'.$post_link.'</p>'."\n";
 }
 
 
@@ -182,8 +182,10 @@ require PUN_ROOT.'header.php';
 			<li><span>»&#160;</span><a href="viewforum.php?id=<?php echo $cur_topic['forum_id'] ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
 			<li><span>»&#160;</span><strong><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></strong></li>
 		</ul>
-		<p class="pagelink conl"><?php echo $paging_links ?></p>
+		<div class="pagepost">
+			<p class="pagelink conl"><?php echo $paging_links ?></p>
 <?php echo $post_link ?>
+		</div>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -362,8 +364,10 @@ while ($cur_post = $db->fetch_assoc($result))
 ?>
 <div class="postlinksb">
 	<div class="inbox crumbsplus">
-		<p class="pagelink conl"><?php echo $paging_links ?></p>
+		<div class="pagepost">
+			<p class="pagelink conl"><?php echo $paging_links ?></p>
 <?php echo $post_link ?>
+		</div>
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 			<li><span>»&#160;</span><a href="viewforum.php?id=<?php echo $cur_topic['forum_id'] ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>

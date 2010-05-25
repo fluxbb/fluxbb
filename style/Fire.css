@@ -125,19 +125,19 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 /* Generic Float Clear
 ----------------------------------------------------------------*/
 
-.pun .inbox, .pun #brdmain, .pun .crumbs, .pun .block2col {
+.pun .inbox, .pun #brdmain, .pun .crumbs, .pun .pagepost, .pun .block2col {
 	min-height: 1px;
 }
 
-* html .pun .inbox, * html .pun #brdmain, * html .pun .infldset, * html .pun .crumbs, * html .pun .block2col {
+* html .pun .inbox, * html .pun #brdmain, * html .pun .infldset, * html .pun .crumbs, * html .pun .pagepost, * html .pun .block2col {
 	display: inline-block;
 }
 
-* html .pun .inbox, * html .pun #bdrdmain, * html .pun .infldset, * html .pun .crumbs, * html .pun .block2col {
+* html .pun .inbox, * html .pun #bdrdmain, * html .pun .infldset, * html .pun .crumbs, * html .pun .pagepost, * html .pun .block2col {
 	display: block;
 }
 
-.pun .inbox:after, .pun #brdmain:after, .pun .crumbs:after, .pun .block2col:after {
+.pun .inbox:after, .pun #brdmain:after, .pun .crumbs:after, .pun .pagepost:after, .pun .block2col:after {
       content: " ";
       display: block;
       height: 0;
@@ -411,29 +411,39 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 /* Breadcrumbs, Postlink, Pagination
 ----------------------------------------------------------------*/
 
+.pun .linkst .inbox, .pun linksb .inbox, .pun .postlinksb .inbox {
+	overflow: hidden;
+}
+
 .pun .linksb, .pun .postlinksb, .pun .linkst, .pun .crumbs {
 	clear: both;
 	position: relative;
-	width: 100%;
 }
 
 .pun .linkst .crumbs {
 	font-family: "Trebuchet MS", Helvetica, Arial, sans-serif;
 	font-size: 1.462em;
-	line-height: 1em;
+	line-height: 1.211em;
 	padding: 7px 0;
 }
 
-.pun .linkst .crumbsplus .crumbs {
+.pun .linksb .crumbs, .pun .postlinksb .crumbs {
+	font-family: "Trebuchet MS", Helvetica, Arial, sans-serif;
+	font-size: 1.154em;
+}
+
+.pun .linkst .crumbsplus .pagepost {
+	border-top-style: dotted;
+	border-top-width: 1px;
+}
+
+.pun .linksb .crumbsplus .pagepost, .pun .postlinksb .crumbsplus .pagepost {
 	border-bottom-style: dotted;
 	border-bottom-width: 1px;
 }
 
-.pun .linksb .crumbsplus .crumbs, .pun .postlinksb .crumbsplus .crumbs {
-	border-top-style: dotted;
-	border-top-width: 1px;
-	font-family: "Trebuchet MS", Helvetica, Arial, sans-serif;
-	font-size: 1.154em;
+.pun .postlinksb .crumbs {
+	margin-right: 11em;
 }
 
 .pun .crumbs li {
@@ -1328,108 +1338,6 @@ PROFILES (+ ADMIN MENU)
 }
 
 /*****************************************************************
-PROFILES (+ ADMIN MENU)
-*****************************************************************/
-
-/* Profile / Admin
-----------------------------------------------------------------*/
-
-.pun .block2col {
-	overflow: hidden;
-	width: 100%;
-}
-
-.pun .block2col .blockform, .pun .block2col .block {
-	margin-left: 15em
-}
-
-.pun .blockmenu {
-	float:left;
-	width: 13em;
-	padding-bottom: 12px;
-}
-
-.pun .blockmenu .block2 {
-	padding-top: 19px;
-}
-
-.pun .blockmenu ul {
-	border-top-style: dotted;
-	border-top-width: 1px;
-	padding: 0;
-}
-
-.pun .blockmenu li {
-	border-bottom-style: dotted;
-	border-bottom-width: 1px;
-	font-weight: bold;
-	padding: 0;
-}
-
-.pun .blockmenu a:link, .pun .blockmenu a:visited {
-	display: block;
-	padding: 9px 6px 3px 6px;
-	min-height: 1px;
-	text-decoration: none;
-}
-
-* html .pun .blockmenu a:link,  * html .pun .blockmenu a:visited {
-	height: 1%;
-}
-
-.pun .blockmenu a:hover, .pun .blockmenu a:active, .pun .blockmenu a:focus {
-	text-decoration: none;
-}
-
-#viewprofile .box {
-	border-style: solid;
-	border-width: 1px;
-	padding-bottom: 18px;
-}
-
-#viewprofile dt, #adstats dt {
-	padding: 7px 0;
-	position: absolute;
-	width: 13em;
-}
-
-#viewprofile dl {
-	border-style: solid none none none;
-	border-width: 1px;
-	margin: 7px 0;
-	padding: 0;
-}
-
-#adintro, #adstats {
-	border-style: solid;
-	border-width: 1px;
-	padding: 18px;
-}
-
-#adstats .inbox, #adintro .inbox {
-	border-style: solid;
-	border-width: 1px;
-	height: 100%;
-	padding: 18px;
-}
-
-#adstats div[class*="inbox"], #adintro div[class*="inbox"] {
-	height: auto;
-}
-
-#adstats dl {
-	margin: 0;
-	padding: 0;
-}
-
-#viewprofile dd, #adstats dd {
-	border-style: none none solid none;
-	border-width: 1px;
-	padding: 7px 0 7px 13em;
-}
-
-
-/*****************************************************************
 COLOUR SCHEME
 *****************************************************************/
 
@@ -1447,7 +1355,7 @@ html, body, .pun {
 	color: #665858;
 }
 
-#brdtitle #brddesc, .pun .crumbs, #brdstats #onlinelist, #brdfooter #searchlinks, #brdfooter #modcontrols,
+#brdtitle #brddesc, .pun .pagepost, #brdstats #onlinelist, #brdfooter #searchlinks, #brdfooter #modcontrols,
 #punmaint h2, #punredirect h2, #adminconsole .submittop, .pun #debugtime, .pun .pagelink * {
 	border-color: #cec7b9;
 }
@@ -1585,7 +1493,8 @@ html, body, .pun {
 	background: #f3f2ed;
 }
 
-.pun #quickpost h2, #punpost .blockform h2, #punedit .blockform h2, #posterror h2 {
+.pun #quickpost h2, #punpost .blockform h2, #punedit .blockform h2, #posterror h2,
+#pundelete .blockform h2 {
 	background: #ecebe7;
 	color: #836359;
 }

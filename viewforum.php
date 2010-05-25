@@ -44,7 +44,7 @@ $is_admmod = ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1'
 
 // Can we or can we not post new topics?
 if (($cur_forum['post_topics'] == '' && $pun_user['g_post_topics'] == '1') || $cur_forum['post_topics'] == '1' || $is_admmod)
-	$post_link = "\t\t".'<p class="postlink conr"><a href="post.php?fid='.$id.'">'.$lang_forum['Post topic'].'</a></p>'."\n";
+	$post_link = "\t\t\t".'<p class="postlink conr"><a href="post.php?fid='.$id.'">'.$lang_forum['Post topic'].'</a></p>'."\n";
 else
 	$post_link = '';
 
@@ -80,8 +80,10 @@ require PUN_ROOT.'header.php';
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 			<li><span>»&#160;</span><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></li>
 		</ul>
-		<p class="pagelink conl"><?php echo $paging_links ?></p>
+		<div class="pagepost">
+			<p class="pagelink conl"><?php echo $paging_links ?></p>
 <?php echo $post_link ?>
+		</div>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -254,8 +256,10 @@ else
 
 <div class="linksb">
 	<div class="inbox crumbsplus">
-		<p class="pagelink conl"><?php echo $paging_links ?></p>
+		<div class="pagepost">
+			<p class="pagelink conl"><?php echo $paging_links ?></p>
 <?php echo $post_link ?>
+		</div>
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
 			<li><span>»&#160;</span><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></li>
