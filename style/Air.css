@@ -985,31 +985,41 @@ MAIN FORMS
 	font: 1em/1.462em Arial, Helvetica, sans-serif;
 	font-weight: bold;
 	white-space: nowrap;
+	padding: 10px 19px 4px 37px;
+	border: 0;
 }
 
-#punpost .blockform h2, #punedit .blockform h2, .pun #posterror h2,
-.pun #quickpost h2, #pundelete .blockform h2 {
+#punpost .blockform h2, #punedit .blockform h2,.pun #quickpost h2,
+#pundelete .blockform h2 {
 	margin: 1px 1px 0 1px;
-	min-width: 18em;
-	width: 50%;
+	width: 25em;
 	position: absolute;
 	z-index: 100;
 	padding: 10px 19px 4px 37px;
 }
 
-.pun #postpreview h2 {
-	padding: 10px 19px 4px 37px;
-	width: 75%;
-	border: 0;
+.pun #quickpost legend, #punpost legend, #punedit legend {
+	width: 25em;
+	overflow: hidden;
+	white-space: nowrap;
 }
 
-.pun .blockform .box, .pun #posterror .box {
+.pun .blockform .box {
 	border-style: solid;
 	border-width: 1px;
 	padding-bottom: 12px;
 }
 
-* html .pun .blockform .box, * html .pun #posterror .box {
+.pun #posterror {
+	border-style: solid;
+	border-width: 1px;
+}
+
+.pun #posterror .box {
+	padding: 0 18px 12px 18px;
+}
+
+* html .pun .blockform .box, * html .pun #posterror {
 	display: inline-block;
 }
 
@@ -1017,7 +1027,6 @@ MAIN FORMS
 	padding: 12px 18px;
 	border-style: solid;
 	border-width: 1px;
-	margin-top: 12px;
 	position: relative;
 }
 
@@ -1027,14 +1036,6 @@ MAIN FORMS
 
 .pun .forminfo h3 {
 	padding-bottom: 0;
-}
-
-.pun #posterror .error-info {
-	margin-top: 21px;
-}
-
-.pun #posterror .box {
-	padding: 12px 18px;
 }
 
 .pun .error-list li {
@@ -1483,7 +1484,7 @@ html, body, .pun {
 /* Main Forms + Profile
 ----------------------------------------------------------------*/
 
-.pun .blockform .box, #adstats, #adintro, #postpreview, #posterror .box {
+.pun .blockform .box, #adstats, #adintro, #postpreview, #posterror {
 	border-color: #b9c5ce #d9e1e7;
 	background: #ebf1f5;
 }
