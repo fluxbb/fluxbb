@@ -363,7 +363,9 @@ else if (isset($_GET['find_ban']))
 			<li><span>»&#160;</span><a href="admin_bans.php"><?php echo $lang_admin_common['Bans'] ?></a></li>
 			<li><span>»&#160;</span><strong><?php echo $lang_admin_bans['Results head'] ?></strong></li>
 		</ul>
-		<p class="pagelink"><?php echo $paging_links ?></p>
+		<div class="pagepost">
+			<p class="pagelink"><?php echo $paging_links ?></p>
+		</div>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -423,7 +425,9 @@ else if (isset($_GET['find_ban']))
 
 <div class="linksb">
 	<div class="inbox crumbsplus">
-		<p class="pagelink"><?php echo $paging_links ?></p>
+		<div class="pagepost">
+			<p class="pagelink"><?php echo $paging_links ?></p>
+		</div>
 		<ul class="crumbs">
 			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
 			<li><span>»&#160;</span><a href="admin_bans.php"><?php echo $lang_admin_common['Bans'] ?></a></li>
