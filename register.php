@@ -72,7 +72,7 @@ if (isset($_POST['form_sent']))
 		message($lang_register['Registration flood']);
 
 
-	$username = pun_trim($_POST['req_username']);
+	$username = pun_trim($_POST['req_user']);
 	$email1 = strtolower(trim($_POST['req_email1']));
 
 	if ($pun_config['o_regs_verify'] == '1')
@@ -227,8 +227,8 @@ if (isset($_POST['form_sent']))
 
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_register['Register']);
-$required_fields = array('req_username' => $lang_common['Username'], 'req_password1' => $lang_common['Password'], 'req_password2' => $lang_prof_reg['Confirm pass'], 'req_email1' => $lang_common['Email'], 'req_email2' => $lang_common['Email'].' 2');
-$focus_element = array('register', 'req_username');
+$required_fields = array('req_user' => $lang_common['Username'], 'req_password1' => $lang_common['Password'], 'req_password2' => $lang_prof_reg['Confirm pass'], 'req_email1' => $lang_common['Email'], 'req_email2' => $lang_common['Email'].' 2');
+$focus_element = array('register', 'req_user');
 define('PUN_ACTIVE_PAGE', 'register');
 require PUN_ROOT.'header.php';
 
@@ -280,7 +280,7 @@ if (!empty($errors))
 					<legend><?php echo $lang_register['Username legend'] ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
-						<label class="required"><strong><?php echo $lang_common['Username'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_username" value="<?php if (isset($_POST['req_username'])) echo pun_htmlspecialchars($_POST['req_username']); ?>" size="25" maxlength="25" /><br /></label>
+						<label class="required"><strong><?php echo $lang_common['Username'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_user" value="<?php if (isset($_POST['req_user'])) echo pun_htmlspecialchars($_POST['req_user']); ?>" size="25" maxlength="25" /><br /></label>
 					</div>
 				</fieldset>
 			</div>

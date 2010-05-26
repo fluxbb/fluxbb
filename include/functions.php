@@ -716,7 +716,7 @@ function forum_clear_cache()
 	$d = dir(FORUM_CACHE_DIR);
 	while (($entry = $d->read()) !== false)
 	{
-		if (substr($entry, strlen($entry)-4) == '.php')
+		if (substr($entry, -4) == '.php')
 			@unlink(FORUM_CACHE_DIR.$entry);
 	}
 	$d->close();
