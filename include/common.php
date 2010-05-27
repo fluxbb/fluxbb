@@ -11,7 +11,10 @@ if (!defined('PUN_ROOT'))
 
 // Define the version and database revision that this code was written for
 define('FORUM_VERSION', '1.4-rc3');
-define('FORUM_DB_REVISION', 5);
+
+define('FORUM_DB_REVISION', 7);
+define('FORUM_SI_REVISION', 1);
+define('FORUM_PARSER_REVISION', 1);
 
 // Block prefetch requests
 if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
@@ -113,7 +116,10 @@ if (!defined('PUN_CONFIG_LOADED'))
 }
 
 // Verify that we are running the proper database schema revision
-if (!isset($pun_config['o_database_revision']) || $pun_config['o_database_revision'] < FORUM_DB_REVISION || version_compare($pun_config['o_cur_version'], FORUM_VERSION, '<'))
+if (!isset($pun_config['o_database_revision']) || $pun_config['o_database_revision'] < FORUM_DB_REVISION ||
+		!isset($pun_config['o_searchindex_revision']) || $pun_config['o_searchindex_revision'] < FORUM_SI_REVISION ||
+		!isset($pun_config['o_parser_revision']) || $pun_config['o_parser_revision'] < FORUM_PARSER_REVISION ||
+		version_compare($pun_config['o_cur_version'], FORUM_VERSION, '<'))
 	exit('Your FluxBB database is out-of-date and must be upgraded in order to continue. Please run <a href="'.PUN_ROOT.'db_update.php">db_update.php</a> in order to complete the upgrade process.');
 
 // Enable output buffering
