@@ -8,7 +8,10 @@
 
 // The FluxBB version this script updates to
 define('UPDATE_TO', '1.4-rc3');
-define('UPDATE_TO_DB_REVISION', 5);
+
+define('UPDATE_TO_DB_REVISION', 7);
+define('UPDATE_TO_SI_REVISION', 1);
+define('UPDATE_TO_PARSER_REVISION', 1);
 
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
@@ -128,7 +131,10 @@ while ($cur_config_item = $db->fetch_row($result))
 	$pun_config[$cur_config_item[0]] = $cur_config_item[1];
 
 // Check the database revision and the current version
-if (isset($pun_config['o_database_revision']) && $pun_config['o_database_revision'] >= UPDATE_TO_DB_REVISION && version_compare($pun_config['o_cur_version'], UPDATE_TO, '>='))
+if (isset($pun_config['o_database_revision']) && $pun_config['o_database_revision'] >= UPDATE_TO_DB_REVISION &&
+		isset($pun_config['o_searchindex_revision']) && $pun_config['o_searchindex_revision'] >= UPDATE_TO_SI_REVISION &&
+		isset($pun_config['o_parser_revision']) && $pun_config['o_parser_revision'] >= UPDATE_TO_PARSER_REVISION &&
+		version_compare($pun_config['o_cur_version'], UPDATE_TO, '>='))
 	exit('Your database is already as up-to-date as this script can make it.');
 
 $default_style = $pun_config['o_default_style'];
@@ -508,7 +514,11 @@ if (strpos($cur_version, '1.2') === 0)
 
 	// Start by updating the database structure
 	case 'start':
-		$query_str = '?stage=pre_finish';
+		$query_str = '?stage=preparse_posts';
+
+		// If we don't need to update the database, skip this stage
+		if (isset($pun_config['o_database_revision']) && $pun_config['o_database_revision'] >= UPDATE_TO_DB_REVISION)
+			break;
 
 		// Make all email fields VARCHAR(80)
 		$db->alter_field('bans', 'email', 'VARCHAR(80)', true) or error('Unable to alter email field', __FILE__, __LINE__, $db->error());
@@ -546,6 +556,14 @@ if (strpos($cur_version, '1.2') === 0)
 		// Add database revision number
 		if (!array_key_exists('o_database_revision', $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_database_revision\', \'0\')') or error('Unable to insert config value \'o_database_revision\'', __FILE__, __LINE__, $db->error());
+
+		// Add search index revision number
+		if (!array_key_exists('o_searchindex_revision', $pun_config))
+			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_searchindex_revision\', \'0\')') or error('Unable to insert config value \'o_searchindex_revision\'', __FILE__, __LINE__, $db->error());
+
+		// Add parser revision number
+		if (!array_key_exists('o_parser_revision', $pun_config))
+			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_parser_revision\', \'0\')') or error('Unable to insert config value \'o_parser_revision\'', __FILE__, __LINE__, $db->error());
 
 		// Add default email setting option
 		if (!array_key_exists('o_default_email_setting', $pun_config))
@@ -1243,20 +1261,13 @@ if (strpos($cur_version, '1.2') === 0)
 		break;
 
 
-	// Check if we need to do any more work
-	case 'pre_finish':
-		$query_str = '?stage=finish';
-
-		// If we are doing a major update we should preparse the posts and reindex everything
-		if (strpos($cur_version, substr(UPDATE_TO, 0, 3)) !== 0)
-			$query_str = '?stage=preparse_posts';
-
-		break;
-
-
 	// Preparse posts
 	case 'preparse_posts':
 		$query_str = '?stage=preparse_sigs';
+
+		// If we don't need to parse the posts, skip this stage
+		if (isset($pun_config['o_parser_revision']) && $pun_config['o_parser_revision'] >= UPDATE_TO_PARSER_REVISION)
+			break;
 
 		require PUN_ROOT.'include/parser.php';
 
@@ -1289,6 +1300,10 @@ if (strpos($cur_version, '1.2') === 0)
 	case 'preparse_sigs':
 		$query_str = '?stage=rebuild_idx';
 
+		// If we don't need to parse the sigs, skip this stage
+		if (isset($pun_config['o_parser_revision']) && $pun_config['o_parser_revision'] >= UPDATE_TO_PARSER_REVISION)
+			break;
+
 		require PUN_ROOT.'include/parser.php';
 
 		// Fetch users to process this cycle
@@ -1318,6 +1333,10 @@ if (strpos($cur_version, '1.2') === 0)
 	// Rebuild the search index
 	case 'rebuild_idx':
 		$query_str = '?stage=finish';
+
+		// If we don't need to update the search index, skip this stage
+		if (isset($pun_config['o_searchindex_revision']) && $pun_config['o_searchindex_revision'] >= UPDATE_TO_SI_REVISION)
+			break;
 
 		if ($start_at == 0)
 		{
@@ -1379,6 +1398,12 @@ if (strpos($cur_version, '1.2') === 0)
 
 		// And the database revision number
 		$db->query('UPDATE '.$db->prefix.'config SET conf_value = \''.UPDATE_TO_DB_REVISION.'\' WHERE conf_name = \'o_database_revision\'') or error('Unable to update database revision number', __FILE__, __LINE__, $db->error());
+
+		// And the search index revision number
+		$db->query('UPDATE '.$db->prefix.'config SET conf_value = \''.UPDATE_TO_SI_REVISION.'\' WHERE conf_name = \'o_searchindex_revision\'') or error('Unable to update search index revision number', __FILE__, __LINE__, $db->error());
+
+		// And the parser revision number
+		$db->query('UPDATE '.$db->prefix.'config SET conf_value = \''.UPDATE_TO_PARSER_REVISION.'\' WHERE conf_name = \'o_parser_revision\'') or error('Unable to update parser revision number', __FILE__, __LINE__, $db->error());
 
 		// This feels like a good time to synchronize the forums
 		$result = $db->query('SELECT id FROM '.$db->prefix.'forums') or error('Unable to fetch forum IDs', __FILE__, __LINE__, $db->error());

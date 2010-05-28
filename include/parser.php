@@ -123,7 +123,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 		list($inside, $outside) = split_text($text, '[code]', '[/code]', $errors);
 		$text = implode("\1", $outside);
 	}
-	
+
 	// Remove empty tags
 	while (($new_text = preg_replace('/\[(b|u|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]\[\/\1\]/', '', $text)) !== false)
 	{
@@ -663,7 +663,7 @@ function handle_img_tag($url, $is_signature = false, $alt = null)
 	if ($is_signature && $pun_user['show_img_sig'] != '0')
 		$img_tag = '<img class="sigimage" src="'.$url.'" alt="'.pun_htmlspecialchars($alt).'" />';
 	else if (!$is_signature && $pun_user['show_img'] != '0')
-		$img_tag = '<span class="postimg"><a href="'.$url.'"><img src="'.$url.'" alt="'.pun_htmlspecialchars($alt).'" /></a></span>';
+		$img_tag = '<span class="postimg"><img src="'.$url.'" alt="'.pun_htmlspecialchars($alt).'" /></span>';
 
 	return $img_tag;
 }
