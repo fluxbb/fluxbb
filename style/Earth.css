@@ -852,7 +852,7 @@ MAIN POSTS
 	padding: 7px 0;
 }
 
-.pun .postmsg p, .pun .postmsg li {
+.pun .postmsg p, .pun .postmsg li, #punhelp p samp {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
@@ -889,7 +889,7 @@ MAIN POSTS
 	padding: 0;
 }
 
-.pun .postmsg span.bbu {
+.pun span.bbu {
 	text-decoration: underline;
 }
 
@@ -962,7 +962,7 @@ MAIN POSTS
 	overflow-y: auto
 }
 
-.pun .postmsg img {
+.pun .postmsg img, #punhelp samp img {
 	vertical-align: text-top;
 }
 
@@ -1461,7 +1461,7 @@ html, body, .pun {
 	color: #fcfcf4;
 }
 
-.pun .postmsg {
+.pun .postmsg, #punhelp code, #punhelp samp {
 	color: #333;
 }
 
