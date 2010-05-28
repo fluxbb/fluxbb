@@ -8,7 +8,10 @@
 
 // The FluxBB version this script installs
 define('FORUM_VERSION', '1.4-rc3');
-define('FORUM_DB_REVISION', 5);
+
+define('FORUM_DB_REVISION', 7);
+define('FORUM_SI_REVISION', 1);
+define('FORUM_PARSER_REVISION', 1);
 
 define('MIN_PHP_VERSION', '4.3.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
@@ -1492,6 +1495,8 @@ else
 	$config = array(
 		'o_cur_version'				=> "'".FORUM_VERSION."'",
 		'o_database_revision'		=> "'".FORUM_DB_REVISION."'",
+		'o_searchindex_revision'	=> "'".FORUM_SI_REVISION."'",
+		'o_parser_revision'			=> "'".FORUM_PARSER_REVISION."'",
 		'o_board_title'				=> "'".$db->escape($title)."'",
 		'o_board_desc'				=> "'".$db->escape($description)."'",
 		'o_default_timezone'		=> "'0'",
