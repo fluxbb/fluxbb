@@ -449,8 +449,9 @@ switch ($stage)
 		<form method="get" action="<?php echo pun_htmlspecialchars($_SERVER['REQUEST_URI']) ?>" onsubmit="this.start.disabled=true">
 		<input type="hidden" name="stage" value="start" />
 			<div class="inform">
-				<p style="font-size: 1.1em">This script will update your forum database. The update procedure might take anything from a second to hours depending on the speed of the server and the size of the forum database. Don't forget to make a backup of the database before continuing.</p>
-				<p style="font-size: 1.1em">Did you read the update instructions in the documentation? If not, start there.</p>
+				<div class="forminfo">
+					<p style="font-size: 1.1em">This script will update your forum database. The update procedure might take anything from a second to hours depending on the speed of the server and the size of the forum database. Don't forget to make a backup of the database before continuing.</p>
+					<p style="font-size: 1.1em">Did you read the update instructions in the documentation? If not, start there.</p>
 <?php
 
 if (strpos($cur_version, '1.2') === 0)
@@ -459,37 +460,31 @@ if (strpos($cur_version, '1.2') === 0)
 	{
 
 ?>
-				<p style="font-size: 1.1em"><strong>IMPORTANT!</strong> FluxBB has detected that this PHP environment does not have support for the encoding mechanisms required to do UTF-8 conversion from character sets other than ISO-8859-1. What this means is that if the current character set is not ISO-8859-1, FluxBB won't be able to convert your forum database to UTF-8 and you will have to do it manually. Instructions for doing manual charset conversion can be found in the update instructions.</p>
+					<p style="font-size: 1.1em"><strong>IMPORTANT!</strong> FluxBB has detected that this PHP environment does not have support for the encoding mechanisms required to do UTF-8 conversion from character sets other than ISO-8859-1. What this means is that if the current character set is not ISO-8859-1, FluxBB won't be able to convert your forum database to UTF-8 and you will have to do it manually. Instructions for doing manual charset conversion can be found in the update instructions.</p>
 <?php
 
 	}
 
 ?>
+				</div>
 			</div>
 			<div class="inform">
-				<p style="font-size: 1.1em"><strong>Enable conversion:</strong> When enabled this update script will, after it has made the required structural changes to the database, convert all text in the database from the current character set to UTF-8. This conversion is required if you're upgrading from version 1.2.</p>
-				<p style="font-size: 1.1em"><strong>Current character set:</strong> If the primary language in your forum is English, you can leave this at the default value. However, if your forum is non-English, you should enter the character set of the primary language pack used in the forum. <i>Getting this wrong can corrupt your database so don't just guess!</i> Note: This is required even if the old database is UTF-8.</p>
-			<fieldset>
-				<legend>Charset conversion</legend>
-				<div class="infldset">
-					<table class="aligntop" cellspacing="0">
-						<tr>
-							<th scope="row">Enable conversion:</th>
-							<td>
-								<input type="checkbox" name="convert_charset" value="1" checked="checked" />
-								<span>Perform database charset conversion.</span>
-							</td>
-						</tr>
-						<tr>
-							<th scope="row">Current character set:</th>
-							<td>
-								<input type="text" name="req_old_charset" size="12" maxlength="20" value="<?php echo $old_charset ?>" /><br />
-								<span>Accept default for English forums otherwise the character set of the primary language pack.</span>
-							</td>
-						</tr>
-					</table>
+				<div class="forminfo">
+					<p style="font-size: 1.1em"><strong>Enable conversion:</strong> When enabled this update script will, after it has made the required structural changes to the database, convert all text in the database from the current character set to UTF-8. This conversion is required if you're upgrading from version 1.2.</p>
+					<p style="font-size: 1.1em"><strong>Current character set:</strong> If the primary language in your forum is English, you can leave this at the default value. However, if your forum is non-English, you should enter the character set of the primary language pack used in the forum. <i>Getting this wrong can corrupt your database so don't just guess!</i> Note: This is required even if the old database is UTF-8.</p>
 				</div>
-			</fieldset>
+				<fieldset>
+					<legend>Charset conversion</legend>
+					<div class="infldset">
+						<div class="rbox">
+							<label><input type="checkbox" name="convert_charset" value="1" checked="checked" /><strong>Enable conversion</strong> (perform database charset conversion).<br /></label>
+						</div>
+						<label>
+							<strong>Current character set</strong><br />Accept default for English forums otherwise the character set of the primary language pack.<br />
+							<input type="text" name="req_old_charset" size="12" maxlength="20" value="<?php echo $old_charset ?>" /><br />
+						</label>
+					</div>
+				</fieldset>
 <?php
 
 }
@@ -1434,7 +1429,9 @@ if (strpos($cur_version, '1.2') === 0)
 	<div class="box">
 		<div class="fakeform">
 			<div class="inform">
-				<p style="font-size: 1.1em">Your forum database was successfully updated. You may now <a href="<?php echo PUN_ROOT ?>index.php">go to the forum index</a>.</p>
+				<div class="forminfo">
+					<p style="font-size: 1.1em">Your forum database was successfully updated. You may now <a href="<?php echo PUN_ROOT ?>index.php">go to the forum index</a>.</p>
+				</div>
 			</div>
 		</div>
 	</div>
