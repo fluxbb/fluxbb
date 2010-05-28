@@ -117,7 +117,6 @@ require PUN_ROOT.'header.php';
 <div class="box">
 	<div class="inbox">
 		<p><a name="smilies"></a><?php echo $lang_help['Smilies info'] ?></p>
-		<div class="postmsg">
 <?php
 
 // Display the smiley set
@@ -129,10 +128,9 @@ foreach ($smilies as $smiley_text => $smiley_img)
 	$smiley_groups[$smiley_img][] = $smiley_text;
 
 foreach ($smiley_groups as $smiley_img => $smiley_texts)
-	echo "\t\t\t".'<p><code>'.implode('</code> '.$lang_common['and'].' <code>', $smiley_texts).'</code> <span>'.$lang_help['produces'].'</span> <img src="'.$pun_config['o_base_url'].'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.$smiley_texts[0].'" /></p>'."\n";
+	echo "\t\t".'<p><code>'.implode('</code> '.$lang_common['and'].' <code>', $smiley_texts).'</code> <span>'.$lang_help['produces'].'</span> <img src="'.$pun_config['o_base_url'].'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.$smiley_texts[0].'" /></p>'."\n";
 
 ?>
-		</div>
 	</div>
 </div>
 <?php
