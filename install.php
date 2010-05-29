@@ -114,6 +114,83 @@ if (isset($_POST['generate_config']))
 
 if (!isset($_POST['form_sent']))
 {
+	// Make an educated guess regarding base_url
+	$base_url  = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';	// protocol
+	$base_url .= preg_replace('/:(80|443)$/', '', $_SERVER['HTTP_HOST']);							// host[:port]
+	$base_url .= str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));							// path
+
+	if (substr($base_url, -1) == '/')
+		$base_url = substr($base_url, 0, -1);
+		
+	$db_type = $db_name = $db_username = $db_password = $db_prefix = $username = $email = $password1 = $password2 = '';
+	$db_host = 'localhost';
+	$title = 'My FluxBB forum';
+	$description = '<p><span>Unfortunately no one can be told what FluxBB is - you have to see it for yourself.</span></p>';
+	$default_lang = 'English';
+	$default_style = 'Air';
+}
+else
+{
+	$db_type = $_POST['req_db_type'];
+	$db_host = pun_trim($_POST['req_db_host']);
+	$db_name = pun_trim($_POST['req_db_name']);
+	$db_username = pun_trim($_POST['db_username']);
+	$db_password = pun_trim($_POST['db_password']);
+	$db_prefix = pun_trim($_POST['db_prefix']);
+	$username = pun_trim($_POST['req_username']);
+	$email = strtolower(pun_trim($_POST['req_email']));
+	$password1 = pun_trim($_POST['req_password1']);
+	$password2 = pun_trim($_POST['req_password2']);
+	$title = pun_trim($_POST['req_title']);
+	$description = pun_trim($_POST['desc']);
+	$base_url = pun_trim($_POST['req_base_url']);
+	$default_lang = pun_trim($_POST['req_default_lang']);
+	$default_style = pun_trim($_POST['req_default_style']);
+	$alerts = array();
+
+	// Make sure base_url doesn't end with a slash
+	if (substr($base_url, -1) == '/')
+		$base_url = substr($base_url, 0, -1);
+
+	// Validate username and passwords
+	if (pun_strlen($username) < 2)
+		$alerts[] = 'Usernames must be at least 2 characters long.';
+	else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
+		$alerts[] = 'Usernames must not be more than 25 characters long.';
+	else if (!strcasecmp($username, 'Guest'))
+		$alerts[] = 'The username guest is reserved.';
+	else if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username) || preg_match('/((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))/', $username))
+		$alerts[] = 'Usernames may not be in the form of an IP address.';
+	else if ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
+		$alerts[] = 'Usernames may not contain all the characters \', " and [ or ] at once.';
+	else if (preg_match('/(?:\[\/?(?:b|u|i|h|colou?r|quote|code|img|url|email|list)\]|\[(?:code|quote|list)=)/i', $username))
+		$alerts[] = 'Usernames may not contain any of the text formatting tags (BBCode) that the forum uses.';
+
+	if (pun_strlen($password1) < 4)
+		$alerts[] = 'Passwords must be at least 4 characters long.';
+	else if ($password1 != $password2)
+		$alerts[] = 'Passwords do not match.';
+
+	// Validate email
+	require PUN_ROOT.'include/email.php';
+
+	if (!is_valid_email($email))
+		$alerts[] = 'The administrator email address you entered is invalid.';
+
+	if ($title == '')
+		$alerts[] = 'You must enter a board title.';
+
+	$default_lang = preg_replace('#[\.\\\/]#', '', $default_lang);
+	if (!file_exists(PUN_ROOT.'lang/'.$default_lang.'/common.php'))
+		$alerts[] = 'The default language chosen doesn\'t seem to exist.';
+
+	$default_style = preg_replace('#[\.\\\/]#', '', $default_style);
+	if (!file_exists(PUN_ROOT.'style/'.$default_style.'.css'))
+		$alerts[] = 'The default style chosen doesn\'t seem to exist.';
+}
+
+if (!isset($_POST['form_sent']) || !empty($alerts))
+{
 	// Determine available database extensions
 	$dual_mysql = false;
 	$db_extensions = array();
@@ -140,20 +217,7 @@ if (!isset($_POST['form_sent']))
 
 	if (empty($db_extensions))
 		exit('This PHP environment does not have support for any of the databases that FluxBB supports. PHP needs to have support for either MySQL, PostgreSQL or SQLite in order for FluxBB to be installed.');
-
-	// Make an educated guess regarding base_url
-	$base_url  = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';	// protocol
-	$base_url .= preg_replace('/:(80|443)$/', '', $_SERVER['HTTP_HOST']);							// host[:port]
-	$base_url .= str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));							// path
-
-	if (substr($base_url, -1) == '/')
-		$base_url = substr($base_url, 0, -1);
-
-	$title = 'My FluxBB forum';
-	$description = '<p><span>Unfortunately no one can be told what FluxBB is - you have to see it for yourself.</span></p>';
-	$default_lang = 'English';
-	$default_style = 'Air';
-
+		
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -174,6 +238,7 @@ function process_form(the_form)
 	element_names["req_password1"] = "Administrator password 1"
 	element_names["req_password2"] = "Administrator password 2"
 	element_names["req_email"] = "Administrator's email"
+	element_names["req_title"] = "Board title"
 	element_names["req_base_url"] = "Base URL"
 
 	if (document.all || document.getElementById)
@@ -219,6 +284,18 @@ function process_form(the_form)
 		<form id="install" method="post" action="install.php" onsubmit="this.start.disabled=true;if(process_form(this)){return true;}else{this.start.disabled=false;return false;}">
 		<div><input type="hidden" name="form_sent" value="1" /></div>
 			<div class="inform">
+<?php if (!empty($alerts)): ?>				<div class="forminfo error-info">
+					<p>The following errors need to be corrected:</p>
+					<ul class="error-list">
+<?php
+
+foreach ($alerts as $cur_alert)
+	echo "\t\t\t\t\t\t".'<li>'.$cur_alert.'</li>'."\n";
+?>
+					</ul>
+				</div>
+<?php endif; ?>			</div>
+			<div class="inform">
 				<div class="forminfo">
 					<h3>Database setup</h3>
 					<p>Please enter the requested information in order to setup your database for FluxBB. You must know all the information asked for before proceeding with the installation.</p>
@@ -233,8 +310,13 @@ function process_form(the_form)
 						<br /><select name="req_db_type">
 <?php
 
-	foreach ($db_extensions as $db_type)
-		echo "\t\t\t\t\t\t\t".'<option value="'.$db_type[0].'">'.$db_type[1].'</option>'."\n";
+	foreach ($db_extensions as $temp)
+	{
+		if ($temp[0] == $db_type)
+			echo "\t\t\t\t\t\t\t".'<option value="'.$temp[0].'" selected="selected">'.$temp[1].'</option>'."\n";
+		else
+			echo "\t\t\t\t\t\t\t".'<option value="'.$temp[0].'">'.$temp[1].'</option>'."\n";
+	}
 
 ?>
 						</select>
@@ -247,7 +329,7 @@ function process_form(the_form)
 					<legend>Enter your database server hostname</legend>
 					<div class="infldset">
 						<p>The address of the database server (example: localhost, db.myhost.com or 192.168.0.15). You can specify a custom port number if your database doesn't run on the default port (example: localhost:3580). For SQLite support, just enter anything or leave it at 'localhost'.</p>
-						<label class="required"><strong>Database server hostname <span>(Required)</span></strong><br /><input type="text" name="req_db_host" value="localhost" size="50" maxlength="100" /><br /></label>
+						<label class="required"><strong>Database server hostname <span>(Required)</span></strong><br /><input type="text" name="req_db_host" value="<?php echo pun_htmlspecialchars($db_host) ?>" size="50" maxlength="100" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -256,7 +338,7 @@ function process_form(the_form)
 					<legend>Enter the name of your database</legend>
 					<div class="infldset">
 						<p>The name of the database that FluxBB will be installed into. The database must exist. For SQLite, this is the relative path to the database file. If the SQLite database file does not exist, FluxBB will attempt to create it.</p>
-						<label class="required"><strong>Database name <span>(Required)</span></strong><br /><input id="req_db_name" type="text" name="req_db_name" size="30" maxlength="50" /><br /></label>
+						<label class="required"><strong>Database name <span>(Required)</span></strong><br /><input id="req_db_name" type="text" name="req_db_name" value="<?php echo pun_htmlspecialchars($db_name) ?>" size="30" maxlength="50" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -265,8 +347,8 @@ function process_form(the_form)
 					<legend>Enter your database username and password</legend>
 					<div class="infldset">
 						<p>Enter the username and password with which you connect to the database. Ignore for SQLite.</p>
-						<label class="conl">Database username<br /><input type="text" name="db_username" size="30" maxlength="50" /><br /></label>
-						<label class="conl">Database password<br /><input type="password" name="db_password" size="30" maxlength="50" /><br /></label>
+						<label class="conl">Database username<br /><input type="text" name="db_username" value="<?php echo pun_htmlspecialchars($db_username) ?>" size="30" maxlength="50" /><br /></label>
+						<label class="conl">Database password<br /><input type="password" name="db_password" value="<?php echo pun_htmlspecialchars($db_password) ?>" size="30" maxlength="50" /><br /></label>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
@@ -276,7 +358,7 @@ function process_form(the_form)
 					<legend>Enter database table prefix</legend>
 					<div class="infldset">
 						<p>If you like, you can specify a table prefix. This way you can run multiple copies of FluxBB in the same database (example: foo_).</p>
-						<label>Table prefix<br /><input id="db_prefix" type="text" name="db_prefix" size="20" maxlength="30" /><br /></label>
+						<label>Table prefix<br /><input id="db_prefix" type="text" name="db_prefix" value="<?php echo pun_htmlspecialchars($db_prefix) ?>" size="20" maxlength="30" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -289,7 +371,7 @@ function process_form(the_form)
 					<legend>Enter Administrator's username</legend>
 					<div class="infldset">
 						<p>The username of the forum administrator. You can later create more administrators and moderators. Usernames can be between 2 and 25 characters long.</p>
-						<label class="required"><strong>Administrator's username <span>(Required)</span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" /><br /></label>
+						<label class="required"><strong>Administrator's username <span>(Required)</span></strong><br /><input type="text" name="req_username" value="<?php echo pun_htmlspecialchars($username) ?>" size="25" maxlength="25" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -298,8 +380,8 @@ function process_form(the_form)
 					<legend>Enter and confirm Administrator's password</legend>
 					<div class="infldset">
 					<p>Passwords must be at least 4 characters long. Passwords are case sensitive.</p>
-						<label class="conl required"><strong>Password <span>(Required)</span></strong><br /><input id="req_password1" type="password" name="req_password1" size="16" /><br /></label>
-						<label class="conl required"><strong>Confirm password <span>(Required)</span></strong><br /><input type="password" name="req_password2" size="16" /><br /></label>
+						<label class="conl required"><strong>Password <span>(Required)</span></strong><br /><input id="req_password1" type="password" name="req_password1" value="<?php echo pun_htmlspecialchars($password1) ?>" size="16" /><br /></label>
+						<label class="conl required"><strong>Confirm password <span>(Required)</span></strong><br /><input type="password" name="req_password2" value="<?php echo pun_htmlspecialchars($password2) ?>" size="16" /><br /></label>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
@@ -309,7 +391,7 @@ function process_form(the_form)
 					<legend>Enter Administrator's email</legend>
 					<div class="infldset">
 						<p>The email address of the forum administrator.</p>
-						<label class="required"><strong>Administrator's email <span>(Required)</span></strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="80" /><br /></label>
+						<label class="required"><strong>Administrator's email <span>(Required)</span></strong><br /><input id="req_email" type="text" name="req_email" value="<?php echo pun_htmlspecialchars($email) ?>" size="50" maxlength="80" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -425,62 +507,6 @@ function process_form(the_form)
 }
 else
 {
-	$db_type = $_POST['req_db_type'];
-	$db_host = pun_trim($_POST['req_db_host']);
-	$db_name = pun_trim($_POST['req_db_name']);
-	$db_username = pun_trim($_POST['db_username']);
-	$db_password = pun_trim($_POST['db_password']);
-	$db_prefix = pun_trim($_POST['db_prefix']);
-	$username = pun_trim($_POST['req_username']);
-	$email = strtolower(pun_trim($_POST['req_email']));
-	$password1 = pun_trim($_POST['req_password1']);
-	$password2 = pun_trim($_POST['req_password2']);
-	$title = pun_trim($_POST['req_title']);
-	$description = pun_trim($_POST['desc']);
-	$base_url = pun_trim($_POST['req_base_url']);
-	$default_lang = pun_trim($_POST['req_default_lang']);
-	$default_style = pun_trim($_POST['req_default_style']);
-
-	// Make sure base_url doesn't end with a slash
-	if (substr($base_url, -1) == '/')
-		$base_url = substr($base_url, 0, -1);
-
-	// Validate username and passwords
-	if (pun_strlen($username) < 2)
-		error('Usernames must be at least 2 characters long. Please go back and correct');
-	else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
-		error('Usernames must not be more than 25 characters long. Please go back and correct');
-	else if (!strcasecmp($username, 'Guest'))
-		error('The username guest is reserved. Please go back and correct');
-	else if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username) || preg_match('/((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))/', $username))
-		error('Usernames may not be in the form of an IP address. Please go back and correct');
-	else if ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
-		error('Usernames may not contain all the characters \', " and [ or ] at once. Please choose another username');
-	else if (preg_match('/(?:\[\/?(?:b|u|i|h|colou?r|quote|code|img|url|email|list)\]|\[(?:code|quote|list)=)/i', $username))
-		error('Usernames may not contain any of the text formatting tags (BBCode) that the forum uses. Please go back and correct');
-
-	if (pun_strlen($password1) < 4)
-		error('Passwords must be at least 4 characters long. Please go back and correct');
-	else if ($password1 != $password2)
-		error('Passwords do not match. Please go back and correct');
-
-	// Validate email
-	require PUN_ROOT.'include/email.php';
-
-	if (!is_valid_email($email))
-		error('The administrator email address you entered is invalid. Please go back and correct');
-
-	if ($title == '')
-		error('You must enter a board title.');
-
-	$default_lang = preg_replace('#[\.\\\/]#', '', $default_lang);
-	if (!file_exists(PUN_ROOT.'lang/'.$default_lang.'/common.php'))
-		error('The default language chosen doesn\'t seem to exist. Please go back and correct');
-
-	$default_style = preg_replace('#[\.\\\/]#', '', $default_style);
-	if (!file_exists(PUN_ROOT.'style/'.$default_style.'.css'))
-		error('The default style chosen doesn\'t seem to exist. Please go back and correct');
-
 	// Load the appropriate DB layer class
 	switch ($db_type)
 	{
@@ -1699,6 +1725,7 @@ if (!$written)
 foreach ($alerts as $cur_alert)
 	echo "\t\t\t\t\t".'<li>'.$cur_alert.'</li>'."\n";
 ?>
+					</ul>
 				</div>
 <?php endif; ?>			</div>
 			<p class="buttons"><input type="submit" value="Download config.php file" /></p>
