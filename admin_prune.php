@@ -23,7 +23,7 @@ require PUN_ROOT.'lang/'.$admin_language.'/admin_prune.php';
 if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comply']))
 {
 	$prune_from = trim($_POST['prune_from']);
-	$prune_sticky = isset($_POST['prune_sticky']) ? '1' : '0';
+	$prune_sticky = intval($_POST['prune_sticky']);
 
 	if (isset($_POST['prune_comply']))
 	{
@@ -78,7 +78,7 @@ if (isset($_GET['action']) || isset($_POST['prune']) || isset($_POST['prune_comp
 	// Concatenate together the query for counting number of topics to prune
 	$sql = 'SELECT COUNT(id) FROM '.$db->prefix.'topics WHERE last_post<'.$prune_date.' AND moved_to IS NULL';
 
-	if (!$prune_sticky)
+	if ($prune_sticky == '0')
 		$sql .= ' AND sticky=\'0\'';
 
 	if ($prune_from != 'all')
