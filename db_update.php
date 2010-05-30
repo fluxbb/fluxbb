@@ -488,6 +488,8 @@ if (strpos($cur_version, '1.2') === 0)
 <?php
 
 }
+else
+	echo "\t\t\t\t".'</div>'."\n";
 
 ?>
 			</div>
