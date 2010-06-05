@@ -633,9 +633,6 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 		$full_url = 'http://'.$full_url;
 
 	// Ok, not very pretty :-)
-	if (!$bbcode)
-		$link = ($link == '' || $link == $url) ? ((utf8_strlen($url) > 55) ? utf8_substr($url, 0 , 39).' … '.utf8_substr($url, -10) : $url) : stripslashes($link);
-
 	if ($bbcode)
 	{
 		if ($full_url == $link)
@@ -644,7 +641,18 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 			return '[url='.$full_url.']'.$link.'[/url]';
 	}
 	else
+	{
+		if ($link == '' || $link == $url)
+		{
+			$url = html_entity_decode($url, ENT_QUOTES, 'UTF-8');
+			$link = utf8_strlen($url) > 55 ? utf8_substr($url, 0 , 39).' … '.utf8_substr($url, -10) : $url;
+			$link = pun_htmlspecialchars($link);
+		}
+		else
+			$link = stripslashes($link);
+
 		return '<a href="'.$full_url.'">'.$link.'</a>';
+	}
 }
 
 
