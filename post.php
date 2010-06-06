@@ -343,6 +343,10 @@ if ($tid)
 
 		$q_message = preg_replace('%\[img(?:=.*?)?\]%', '[url]', $q_message);
 		$q_message = str_replace('[/img]', '[/url]', $q_message);
+
+		if ($pun_config['o_censoring'] == '1')
+			$q_message = censor_words($q_message);
+
 		$q_message = pun_htmlspecialchars($q_message);
 
 		if ($pun_config['p_message_bbcode'] == '1')

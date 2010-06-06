@@ -32,7 +32,10 @@ $is_admmod = ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1'
 $can_edit_subject = $id == $cur_post['first_post_id'];
 
 if ($pun_config['o_censoring'] == '1')
+{
 	$cur_post['subject'] = censor_words($cur_post['subject']);
+	$cur_post['message'] = censor_words($cur_post['message']);
+}
 
 // Do we have permission to edit this post?
 if (($pun_user['g_edit_posts'] == '0' ||
