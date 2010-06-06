@@ -25,6 +25,9 @@ if (!$db->num_rows($result))
 
 $cur_post = $db->fetch_assoc($result);
 
+if ($pun_config['o_censoring'] == '1')
+	$cur_post['subject'] = censor_words($cur_post['subject']);
+
 // Sort out who the moderators are and if we are currently a moderator (or an admin)
 $mods_array = ($cur_post['moderators'] != '') ? unserialize($cur_post['moderators']) : array();
 $is_admmod = ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1' && array_key_exists($pun_user['username'], $mods_array))) ? true : false;

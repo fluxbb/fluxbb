@@ -241,6 +241,9 @@ else if (isset($_GET['report']))
 
 	$cur_post = $db->fetch_assoc($result);
 
+	if ($pun_config['o_censoring'] == '1')
+		$cur_post['subject'] = censor_words($cur_post['subject']);
+
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Report post']);
 	$required_fields = array('req_reason' => $lang_misc['Reason']);
 	$focus_element = array('report', 'req_reason');
