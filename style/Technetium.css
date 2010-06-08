@@ -1028,7 +1028,7 @@ body {
 	}
 
 .pun td.tc2, .pun td.tc3, .pun td.tcmod, #postpreview, #viewprofile dd, .pun .forminfo,
- #brdfooter #modcontrols, #adminconsole fieldset td, .pun .blockmenu .box, #adstats dd {
+#brdfooter #modcontrols, #adminconsole fieldset td, .pun .blockmenu .box, #adstats dd {
 	background-color: #F4F9FD;
 	background-image: url("Technetium/light-shade.png");
 	background-repeat: repeat-x;
