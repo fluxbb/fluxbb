@@ -1600,7 +1600,11 @@ function file_size($size)
 function pun_list_styles()
 {
 	$styles = glob(PUN_ROOT.'style/*.css');
-	return array_map('basename', $styles);
+
+	foreach ($styles as $key => $value)
+		$styles[$key] = basename($value, '.css');
+
+	return $styles;
 }
 
 
@@ -1610,7 +1614,11 @@ function pun_list_styles()
 function pun_list_langs()
 {
 	$languages = glob(PUN_ROOT.'lang/*/common.php');
-	return array_map('dirname', $languages);
+
+	foreach ($languages as $key => $value)
+		$languages[$key] = basename(dirname($value));
+
+	return $languages;
 }
 
 
