@@ -1209,19 +1209,11 @@ else
 
 <?php
 
-		$languages = array();
-		$d = dir(PUN_ROOT.'lang');
-		while (($entry = $d->read()) !== false)
-		{
-			if ($entry{0} != '.' && is_dir(PUN_ROOT.'lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/common.php'))
-				$languages[] = $entry;
-		}
-		$d->close();
+		$languages = pun_list_langs();
 
 		// Only display the language selection box if there's more than one language available
 		if (count($languages) > 1)
 		{
-			natsort($languages);
 
 ?>
 							<label><?php echo $lang_prof_reg['Language'] ?>
@@ -1417,21 +1409,13 @@ else
 				<div><input type="hidden" name="form_sent" value="1" /></div>
 <?php
 
-		$styles = array();
-		$d = dir(PUN_ROOT.'style');
-		while (($entry = $d->read()) !== false)
-		{
-			if (substr($entry, -4) == '.css')
-				$styles[] = substr($entry, 0, -4);
-		}
-		$d->close();
+		$styles = pun_list_styles();
 
 		// Only display the style selection box if there's more than one style available
 		if (count($styles) == 1)
 			echo "\t\t\t".'<div><input type="hidden" name="form[style]" value="'.$styles[0].'" /></div>'."\n";
 		else if (count($styles) > 1)
 		{
-			natsort($styles);
 
 ?>
 				<div class="inform">

@@ -713,13 +713,9 @@ function delete_post($post_id, $topic_id)
 //
 function forum_clear_cache()
 {
-	$d = dir(FORUM_CACHE_DIR);
-	while (($entry = $d->read()) !== false)
-	{
-		if (substr($entry, -4) == '.php')
-			@unlink(FORUM_CACHE_DIR.$entry);
-	}
-	$d->close();
+	$files = glob(FORUM_CACHE_DIR.'*.php');
+	foreach ($files as $file)
+		@unlink($file);
 }
 
 
@@ -1595,6 +1591,26 @@ function file_size($size)
 		$size /= 1024;
 
 	return round($size, 2).' '.$units[$i];
+}
+
+
+//
+// Fetch a list of available styles
+//
+function pun_list_styles()
+{
+	$styles = glob(PUN_ROOT.'style/*.css');
+	return array_map('basename', $styles);
+}
+
+
+//
+// Fetch a list of available language packs
+//
+function pun_list_langs()
+{
+	$languages = glob(PUN_ROOT.'lang/*/common.php');
+	return array_map('dirname', $languages);
 }
 
 

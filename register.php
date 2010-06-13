@@ -360,14 +360,7 @@ if (!empty($errors))
 						</div>
 <?php
 
-		$languages = array();
-		$d = dir(PUN_ROOT.'lang');
-		while (($entry = $d->read()) !== false)
-		{
-			if ($entry != '.' && $entry != '..' && is_dir(PUN_ROOT.'lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/common.php'))
-				$languages[] = $entry;
-		}
-		$d->close();
+		$languages = pun_list_langs();
 
 		// Only display the language selection box if there's more than one language available
 		if (count($languages) > 1)

@@ -295,16 +295,7 @@ generate_admin_menu('options');
 										<select name="form[default_lang]">
 <?php
 
-		$languages = array();
-		$d = dir(PUN_ROOT.'lang');
-		while (($entry = $d->read()) !== false)
-		{
-			if ($entry{0} != '.' && is_dir(PUN_ROOT.'lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/common.php'))
-				$languages[] = $entry;
-		}
-		$d->close();
-
-		@natsort($languages);
+		$languages = pun_list_langs();
 
 		foreach ($languages as $temp)
 		{
@@ -325,16 +316,7 @@ generate_admin_menu('options');
 										<select name="form[default_style]">
 <?php
 
-		$styles = array();
-		$d = dir(PUN_ROOT.'style');
-		while (($entry = $d->read()) !== false)
-		{
-			if (substr($entry, -4) == '.css')
-				$styles[] = substr($entry, 0, -4);
-		}
-		$d->close();
-
-		@natsort($styles);
+		$styles = pun_list_styles();
 
 		foreach ($styles as $temp)
 		{
