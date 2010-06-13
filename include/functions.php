@@ -713,9 +713,13 @@ function delete_post($post_id, $topic_id)
 //
 function forum_clear_cache()
 {
-	$files = glob(FORUM_CACHE_DIR.'*.php');
-	foreach ($files as $file)
-		@unlink($file);
+	$d = dir(FORUM_CACHE_DIR);
+	while (($entry = $d->read()) !== false)
+	{
+		if (substr($entry, -4) == '.php')
+			@unlink(FORUM_CACHE_DIR.$entry);
+	}
+	$d->close();
 }
 
 
@@ -1599,10 +1603,20 @@ function file_size($size)
 //
 function pun_list_styles()
 {
-	$styles = glob(PUN_ROOT.'style/*.css');
+	$styles = array();
 
-	foreach ($styles as $key => $value)
-		$styles[$key] = basename($value, '.css');
+	$d = dir(PUN_ROOT.'style');
+	while (($entry = $d->read()) !== false)
+	{
+		if ($entry{0} == '.')
+			continue;
+
+		if (substr($entry, -4) == '.css')
+			$styles[] = substr($entry, 0, -4);
+	}
+	$d->close();
+
+	natcasesort($styles);
 
 	return $styles;
 }
@@ -1613,14 +1627,50 @@ function pun_list_styles()
 //
 function pun_list_langs()
 {
-	$languages = glob(PUN_ROOT.'lang/*/common.php');
+	$languages = array();
 
-	foreach ($languages as $key => $value)
-		$languages[$key] = basename(dirname($value));
+	$d = dir(PUN_ROOT.'lang');
+	while (($entry = $d->read()) !== false)
+	{
+		if ($entry{0} == '.')
+			continue;
+
+		if (is_dir(PUN_ROOT.'lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/common.php'))
+			$languages[] = $entry;
+	}
+	$d->close();
+
+	natcasesort($languages);
 
 	return $languages;
 }
 
+
+//
+// Fetch a list of available admin plugins
+//
+function pun_list_plugins($is_admin)
+{
+	$plugins = array();
+
+	$d = dir(PUN_ROOT.'plugins');
+	while (($entry = $d->read()) !== false)
+	{
+		if ($entry{0} == '.')
+			continue;
+
+		$prefix = substr($entry, 0, strpos($entry, '_'));
+		$suffix = substr($entry, strlen($entry) - 4);
+
+		if ($suffix == '.php' && ((!$is_admin && $prefix == 'AMP') || ($is_admin && ($prefix == 'AP' || $prefix == 'AMP'))))
+			$plugins[] = array(substr($entry, strpos($entry, '_') + 1, -4), $entry);
+	}
+	$d->close();
+
+	natcasesort($plugins);
+
+	return $plugins;
+}
 
 // DEBUG FUNCTIONS BELOW
 

@@ -56,17 +56,7 @@ function generate_admin_menu($page = '')
 <?php
 
 	// See if there are any plugins
-	$plugins = array();
-	$d = dir(PUN_ROOT.'plugins');
-	while (($entry = $d->read()) !== false)
-	{
-		$prefix = substr($entry, 0, strpos($entry, '_'));
-		$suffix = substr($entry, strlen($entry) - 4);
-
-		if ($suffix == '.php' && ((!$is_admin && $prefix == 'AMP') || ($is_admin && ($prefix == 'AP' || $prefix == 'AMP'))))
-			$plugins[] = array(substr($entry, strpos($entry, '_') + 1, -4), $entry);
-	}
-	$d->close();
+	$plugins = pun_list_plugins($is_admin);
 
 	// Did we find any plugins?
 	if (!empty($plugins))
