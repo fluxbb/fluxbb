@@ -79,7 +79,7 @@ function generate_admin_menu($page = '')
 				<ul>
 <?php
 
-		while (list(, $cur_plugin) = @each($plugins))
+		foreach ($plugins as $cur_plugin)
 			echo "\t\t\t\t\t".'<li'.(($page == $cur_plugin[1]) ? ' class="isactive"' : '').'><a href="admin_loader.php?plugin='.$cur_plugin[1].'">'.str_replace('_', ' ', $cur_plugin[0]).'</a></li>'."\n";
 
 ?>
