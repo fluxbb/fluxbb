@@ -1076,7 +1076,7 @@ function pun_htmlspecialchars_decode($str)
 		$translations = array_flip($translations);
 	}
 
-	return strtr($string, $translations);
+	return strtr($str, $translations);
 }
 
 
