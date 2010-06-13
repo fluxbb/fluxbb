@@ -1061,6 +1061,26 @@ function pun_htmlspecialchars($str)
 
 
 //
+// Calls htmlspecialchars_decode with a few options already set
+//
+function pun_htmlspecialchars_decode($str)
+{
+	if (function_exists('htmlspecialchars_decode'))
+		return htmlspecialchars_decode($str, ENT_QUOTES);
+
+	static $translations;
+	if (!isset($translations))
+	{
+		$translations = get_html_translation_table(HTML_SPECIALCHARS, ENT_QUOTES);
+		$translations['&#039;'] = '\''; // get_html_translation_table doesn't include &#039; which is what htmlspecialchars translates ' to, but apparently that is okay?! http://bugs.php.net/bug.php?id=25927
+		$translations = array_flip($translations);
+	}
+
+	return strtr($string, $translations);
+}
+
+
+//
 // A wrapper for utf8_strlen for compatibility
 //
 function pun_strlen($str)

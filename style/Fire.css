@@ -138,12 +138,12 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 }
 
 .pun .inbox:after, .pun #brdmain:after, .pun .crumbs:after, .pun .pagepost:after, .pun .block2col:after {
-      content: " ";
-      display: block;
-      height: 0;
-      font-size: 0;
-      clear: both;
-      visibility: hidden;
+	content: " ";
+	display: block;
+	height: 0;
+	font-size: 0;
+	clear: both;
+	visibility: hidden;
 }
 
 .pun .block2col .inbox:after {

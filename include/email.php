@@ -28,7 +28,7 @@ function is_valid_email($email)
 //
 function is_banned_email($email)
 {
-	global $db, $pun_bans;
+	global $pun_bans;
 
 	foreach ($pun_bans as $cur_ban)
 	{
