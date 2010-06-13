@@ -41,12 +41,12 @@ require PUN_ROOT.'header.php';
 		<p><code>[u]<?php echo $lang_help['Underlined text'] ?>[/u]</code> <?php echo $lang_help['produces'] ?> <samp><span class="bbu"><?php echo $lang_help['Underlined text'] ?></span></samp></p>
 		<p><code>[i]<?php echo $lang_help['Italic text'] ?>[/i]</code> <?php echo $lang_help['produces'] ?> <samp><i><?php echo $lang_help['Italic text'] ?></i></samp></p>
 		<p><code>[s]<?php echo $lang_help['Strike-through text'] ?>[/s]</code> <?php echo $lang_help['produces'] ?> <samp><span class="bbs"><?php echo $lang_help['Strike-through text'] ?></span></samp></p>
-		<p><code>[color=#FF0000]<?php echo $lang_help['Red text'] ?>[/color]</code> <?php echo $lang_help['produces'] ?> <samp><span style="color: #ff0000"><?php echo $lang_help['Red text'] ?></span></samp></p>
-		<p><code>[color=blue]<?php echo $lang_help['Blue text'] ?>[/color]</code> <?php echo $lang_help['produces'] ?> <samp><span style="color: blue"><?php echo $lang_help['Blue text'] ?></span></samp></p>
-		<p><code>[h]<?php echo $lang_help['Heading text'] ?>[/h]</code> <?php echo $lang_help['produces'] ?></p> <div class="postmsg"><h5><?php echo $lang_help['Heading text'] ?></h5></div>
 		<p><code>[del]<?php echo $lang_help['Deleted text'] ?>[/del]</code> <?php echo $lang_help['produces'] ?> <samp><del><?php echo $lang_help['Deleted text'] ?></del></samp></p>
 		<p><code>[ins]<?php echo $lang_help['Inserted text'] ?>[/ins]</code> <?php echo $lang_help['produces'] ?> <samp><ins><?php echo $lang_help['Inserted text'] ?></ins></samp></p>
 		<p><code>[em]<?php echo $lang_help['Emphasised text'] ?>[/em]</code> <?php echo $lang_help['produces'] ?> <samp><em><?php echo $lang_help['Emphasised text'] ?></em></samp></p>
+		<p><code>[color=#FF0000]<?php echo $lang_help['Red text'] ?>[/color]</code> <?php echo $lang_help['produces'] ?> <samp><span style="color: #ff0000"><?php echo $lang_help['Red text'] ?></span></samp></p>
+		<p><code>[color=blue]<?php echo $lang_help['Blue text'] ?>[/color]</code> <?php echo $lang_help['produces'] ?> <samp><span style="color: blue"><?php echo $lang_help['Blue text'] ?></span></samp></p>
+		<p><code>[h]<?php echo $lang_help['Heading text'] ?>[/h]</code> <?php echo $lang_help['produces'] ?></p> <div class="postmsg"><h5><?php echo $lang_help['Heading text'] ?></h5></div>
 	</div>
 </div>
 <h2><span><?php echo $lang_help['Links and images'] ?></span></h2>
