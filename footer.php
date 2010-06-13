@@ -60,7 +60,7 @@ if (isset($footer_style) && ($footer_style == 'viewforum' || $footer_style == 'v
 }
 
 ?>
-		<div id="footer" class="inbox">
+		<div id="brdfooternav" class="inbox">
 <?php
 
 // If no footer style has been specified, we use the default (only copyright/debug info)
