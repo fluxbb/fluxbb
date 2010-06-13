@@ -125,7 +125,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	}
 
 	// Remove empty tags
-	while (($new_text = preg_replace('/\[(b|u|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]\[\/\1\]/', '', $text)) !== false)
+	while (($new_text = preg_replace('/\[(b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]\[\/\1\]/', '', $text)) !== false)
 	{
 		if ($new_text != $text)
 			$text = $new_text;
@@ -163,7 +163,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	// Start off by making some arrays of bbcode tags and what we need to do with each one
 
 	// List of all the tags
-	$tags = array('quote', 'code', 'b', 'i', 'u', 'color', 'colour', 'url', 'email', 'img', 'list', '*', 'h');
+	$tags = array('quote', 'code', 'b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email', 'img', 'list', '*', 'h');
 	// List of tags that we need to check are open (You could not put b,i,u in here then illegal nesting like [b][i][/b][/i] would be allowed)
 	$tags_opened = $tags;
 	// and tags we need to check are closed (the same as above, added it just in case)
@@ -175,22 +175,22 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	// Block tags, block tags can only go within another block tag, they cannot be in a normal tag
 	$tags_block = array('quote', 'code', 'list', 'h', '*');
 	// Inline tags, we do not allow new lines in these
-	$tags_inline = array('b', 'i', 'u', 'color', 'colour', 'h');
+	$tags_inline = array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'h');
 	// Tags we trim interior space
 	$tags_trim = array('img');
 	// Tags we remove quotes from the argument
 	$tags_quotes = array('url', 'email', 'img');
 	// Tags we limit bbcode in
 	$tags_limit_bbcode = array(
-		'*' 	=> array('b', 'i', 'u', 'color', 'colour', 'url', 'email', 'list', 'img', 'code'),
+		'*' 	=> array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email', 'list', 'img', 'code'),
 		'list' 	=> array('*'),
-		'url' 	=> array('b', 'i', 'u', 'color', 'colour', 'img'),
-		'email' => array('b', 'i', 'u', 'color', 'colour', 'img'),
+		'url' 	=> array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'img'),
+		'email' => array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'img'),
 		'img' 	=> array(),
-		'h'		=> array('b', 'i', 'u', 'color', 'colour', 'url', 'email'),
+		'h'		=> array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email'),
 	);
 	// Tags we can automatically fix bad nesting
-	$tags_fix = array('quote', 'b', 'i', 'u', 'color', 'colour', 'url', 'email', 'h');
+	$tags_fix = array('quote', 'b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email', 'h');
 
 	$split_text = preg_split("/(\[[\*a-zA-Z0-9-\/]*?(?:=.*?)?\])/", $text, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
@@ -729,12 +729,20 @@ function do_bbcode($text, $is_signature = false)
 	$pattern[] = '#\[b\](.*?)\[/b\]#ms';
 	$pattern[] = '#\[i\](.*?)\[/i\]#ms';
 	$pattern[] = '#\[u\](.*?)\[/u\]#ms';
+	$pattern[] = '#\[s\](.*?)\[/s\]#ms';
+	$pattern[] = '#\[del\](.*?)\[/del\]#ms';
+	$pattern[] = '#\[ins\](.*?)\[/ins\]#ms';
+	$pattern[] = '#\[em\](.*?)\[/em\]#ms';
 	$pattern[] = '#\[colou?r=([a-zA-Z]{3,20}|\#[0-9a-fA-F]{6}|\#[0-9a-fA-F]{3})](.*?)\[/colou?r\]#ms';
 	$pattern[] = '#\[h\](.*?)\[/h\]#ms';
 
 	$replace[] = '<strong>$1</strong>';
 	$replace[] = '<em>$1</em>';
 	$replace[] = '<span class="bbu">$1</span>';
+	$replace[] = '<span class="bbs">$1</span>';
+	$replace[] = '<del>$1</del>';
+	$replace[] = '<ins>$1</ins>';
+	$replace[] = '<em>$1</em>';
 	$replace[] = '<span style="color: $1">$2</span>';
 	$replace[] = '</p><h5>$1</h5><p>';
 

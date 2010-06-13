@@ -893,6 +893,14 @@ MAIN POSTS
 	text-decoration: underline;
 }
 
+.pun span.bbs, .pun del {
+	text-decoration: line-through;
+}
+
+.pun ins {
+	background-color: #ff0;
+}
+
 .pun .blockpost .postmsg .postedit {
 	font-size: 0.857em;
 }
