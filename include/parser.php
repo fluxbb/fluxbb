@@ -644,7 +644,7 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 	{
 		if ($link == '' || $link == $url)
 		{
-			$url = html_entity_decode($url, ENT_QUOTES, 'UTF-8');
+			$url = pun_htmlspecialchars_decode($url);
 			$link = utf8_strlen($url) > 55 ? utf8_substr($url, 0 , 39).' … '.utf8_substr($url, -10) : $url;
 			$link = pun_htmlspecialchars($link);
 		}
