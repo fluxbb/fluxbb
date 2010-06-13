@@ -15,9 +15,13 @@ $lang_help = array(
 'Bold text'				=>	'Bold text',
 'Underlined text'		=>	'Underlined text',
 'Italic text'			=>	'Italic text',
+'Strike-through text'	=>	'Strike-through text',
 'Red text'				=>	'Red text',
 'Blue text'				=>	'Blue text',
 'Heading text'			=>	'Heading text',
+'Deleted text'			=>	'Deleted text',
+'Inserted text'			=>	'Inserted text',
+'Emphasised text'		=>	'Emphasised text',
 
 'Links and images'		=>	'Links and images',
 'Links info'			=>	'You can create links to other documents or to email addresses using the following tags:',
