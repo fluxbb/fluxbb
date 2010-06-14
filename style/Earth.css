@@ -1031,7 +1031,7 @@ MAIN FORMS
 	display: inline-block;
 }
 
-.pun .blockform .forminfo, .pun #posterror .error-info {
+.pun .blockform .forminfo, .pun .error-info {
 	padding: 12px 18px;
 	border-style: solid;
 	border-width: 1px;
@@ -1526,12 +1526,18 @@ html, body, .pun {
 	color: #fff;
 }
 
-.pun #posterror .error-info, #puninstall .error-info {
+.pun #posterror .error-info {
 	background: #ffffe1;
 	border-color: #dfe6ee;
 }
 
-.pun .infldset, #pundelete .deletemsg, #adintro .inbox, #adstats .inbox {
+#puninstall form#install .error-info {
+	background: #ffffe1;
+	border-color: #dfe6ee;
+	color: #333;
+}
+
+.pun .infldset, #adintro .inbox, #adstats .inbox {
 	background: #f6f6ea;
 	border-color: #dce6d8;
 }
