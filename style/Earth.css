@@ -1488,7 +1488,7 @@ html, body, .pun {
 	color: #83866a;
 }
 
-.pun .codebox {
+.pun .codebox, #punhelp .codebox code {
 	background: #333;
 	color: #fff;
 }
