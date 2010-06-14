@@ -121,7 +121,7 @@ if (!isset($_POST['form_sent']))
 
 	if (substr($base_url, -1) == '/')
 		$base_url = substr($base_url, 0, -1);
-		
+
 	$db_type = $db_name = $db_username = $db_password = $db_prefix = $username = $email = $password1 = $password2 = '';
 	$db_host = 'localhost';
 	$title = 'My FluxBB forum';
@@ -217,7 +217,7 @@ if (!isset($_POST['form_sent']) || !empty($alerts))
 
 	if (empty($db_extensions))
 		exit('This PHP environment does not have support for any of the databases that FluxBB supports. PHP needs to have support for either MySQL, PostgreSQL or SQLite in order for FluxBB to be installed.');
-		
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -285,12 +285,12 @@ function process_form(the_form)
 		<div><input type="hidden" name="form_sent" value="1" /></div>
 			<div class="inform">
 <?php if (!empty($alerts)): ?>				<div class="forminfo error-info">
-					<p>The following errors need to be corrected:</p>
+					<h3>The following errors need to be corrected:</h3>
 					<ul class="error-list">
 <?php
 
 foreach ($alerts as $cur_alert)
-	echo "\t\t\t\t\t\t".'<li>'.$cur_alert.'</li>'."\n";
+	echo "\t\t\t\t\t\t".'<li><strong>'.$cur_alert.'</strong></li>'."\n";
 ?>
 					</ul>
 				</div>
