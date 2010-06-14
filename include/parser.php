@@ -117,6 +117,24 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	if ($temp_text !== false)
 		$text = $temp_text;
 
+	// Remove empty tags
+	while (($new_text = strip_empty_bbcode($text, $errors)) !== false)
+	{
+		if ($new_text != $text)
+			$text = $new_text;
+		else
+			break;
+	}
+
+	return pun_trim($text);
+}
+
+
+//
+// Strip empty bbcode tags from some text
+//
+function strip_empty_bbcode($text, &$errors)
+{
 	// If the message contains a code tag we have to split it up (empty tags within [code][/code] are fine)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
@@ -125,7 +143,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	}
 
 	// Remove empty tags
-	while (($new_text = preg_replace('/\[(b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]\[\/\1\]/', '', $text)) !== false)
+	while (($new_text = preg_replace('/\[(b|u|s|ins|del|em|i|h|colou?r|quote|img|url|email|list)(?:\=[^\]]*)?\]\[\/\1\]/', '', $text)) !== false)
 	{
 		if ($new_text != $text)
 			$text = $new_text;
@@ -140,7 +158,6 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 		$text = '';
 
 		$num_tokens = count($outside);
-
 		for ($i = 0; $i < $num_tokens; ++$i)
 		{
 			$text .= $outside[$i];
@@ -149,7 +166,16 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 		}
 	}
 
-	return pun_trim($text);
+	// Remove empty code tags
+	while (($new_text = preg_replace('/\[(code)\]\[\/\1\]/', '', $text)) !== false)
+	{
+		if ($new_text != $text)
+			$text = $new_text;
+		else
+			break;
+	}
+
+	return $text;
 }
 
 
