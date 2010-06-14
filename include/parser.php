@@ -143,7 +143,7 @@ function strip_empty_bbcode($text, &$errors)
 	}
 
 	// Remove empty tags
-	while (($new_text = preg_replace('/\[(b|u|s|ins|del|em|i|h|colou?r|quote|img|url|email|list)(?:\=[^\]]*)?\]\[\/\1\]/', '', $text)) !== false)
+	while (($new_text = preg_replace('/\[(b|u|s|ins|del|em|i|h|colou?r|quote|img|url|email|list)(?:\=[^\]]*)?\]\s*\[\/\1\]/', '', $text)) !== false)
 	{
 		if ($new_text != $text)
 			$text = $new_text;
@@ -167,7 +167,7 @@ function strip_empty_bbcode($text, &$errors)
 	}
 
 	// Remove empty code tags
-	while (($new_text = preg_replace('/\[(code)\]\[\/\1\]/', '', $text)) !== false)
+	while (($new_text = preg_replace('/\[(code)\]\s*\[\/\1\]/', '', $text)) !== false)
 	{
 		if ($new_text != $text)
 			$text = $new_text;
@@ -203,7 +203,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	// Inline tags, we do not allow new lines in these
 	$tags_inline = array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'h');
 	// Tags we trim interior space
-	$tags_trim = array('quote', 'b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email', 'img', '*', 'h');
+	$tags_trim = array('img');
 	// Tags we remove quotes from the argument
 	$tags_quotes = array('url', 'email', 'img');
 	// Tags we limit bbcode in
