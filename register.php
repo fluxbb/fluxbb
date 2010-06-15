@@ -360,7 +360,7 @@ if (!empty($errors))
 						</div>
 <?php
 
-		$languages = pun_list_langs();
+		$languages = forum_list_langs();
 
 		// Only display the language selection box if there's more than one language available
 		if (count($languages) > 1)

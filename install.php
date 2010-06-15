@@ -434,7 +434,7 @@ foreach ($alerts as $cur_alert)
 						<label class="required"><strong>Default language <span>(Required)</span></strong><br /><select id="req_default_lang" name="req_default_lang">
 <?php
 
-		$languages = pun_list_langs();
+		$languages = forum_list_langs();
 
 		foreach ($languages as $temp)
 		{
@@ -457,7 +457,7 @@ foreach ($alerts as $cur_alert)
 						<label class="required"><strong>Default style <span>(Required)</span></strong><br /><select id="req_default_style" name="req_default_style">
 <?php
 
-		$styles = pun_list_styles();
+		$styles = forum_list_styles();
 
 		foreach ($styles as $temp)
 		{

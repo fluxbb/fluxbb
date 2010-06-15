@@ -56,7 +56,7 @@ function generate_admin_menu($page = '')
 <?php
 
 	// See if there are any plugins
-	$plugins = pun_list_plugins($is_admin);
+	$plugins = forum_list_plugins($is_admin);
 
 	// Did we find any plugins?
 	if (!empty($plugins))

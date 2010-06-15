@@ -295,7 +295,7 @@ generate_admin_menu('options');
 										<select name="form[default_lang]">
 <?php
 
-		$languages = pun_list_langs();
+		$languages = forum_list_langs();
 
 		foreach ($languages as $temp)
 		{
@@ -316,7 +316,7 @@ generate_admin_menu('options');
 										<select name="form[default_style]">
 <?php
 
-		$styles = pun_list_styles();
+		$styles = forum_list_styles();
 
 		foreach ($styles as $temp)
 		{

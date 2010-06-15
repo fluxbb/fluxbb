@@ -1209,7 +1209,7 @@ else
 
 <?php
 
-		$languages = pun_list_langs();
+		$languages = forum_list_langs();
 
 		// Only display the language selection box if there's more than one language available
 		if (count($languages) > 1)
@@ -1409,7 +1409,7 @@ else
 				<div><input type="hidden" name="form_sent" value="1" /></div>
 <?php
 
-		$styles = pun_list_styles();
+		$styles = forum_list_styles();
 
 		// Only display the style selection box if there's more than one style available
 		if (count($styles) == 1)

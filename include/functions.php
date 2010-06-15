@@ -1601,7 +1601,7 @@ function file_size($size)
 //
 // Fetch a list of available styles
 //
-function pun_list_styles()
+function forum_list_styles()
 {
 	$styles = array();
 
@@ -1625,7 +1625,7 @@ function pun_list_styles()
 //
 // Fetch a list of available language packs
 //
-function pun_list_langs()
+function forum_list_langs()
 {
 	$languages = array();
 
@@ -1649,7 +1649,7 @@ function pun_list_langs()
 //
 // Fetch a list of available admin plugins
 //
-function pun_list_plugins($is_admin)
+function forum_list_plugins($is_admin)
 {
 	$plugins = array();
 
