@@ -228,9 +228,8 @@ body {
 	text-decoration: line-through;
 	}
 
-.pun ins {
+.pun .postmsg ins {
 	text-decoration: none;
-	background-color: #ff0;
 	}
 
 .pun div.postmsg h5, #punhelp h5 {
@@ -1195,6 +1194,10 @@ body {
 
 .pun .quotebox {
 	background-color: #FAFCFE;
+	}
+
+.pun .postmsg ins {
+	background-color: #ff0;
 	}
 
 /* Borders

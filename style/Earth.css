@@ -897,9 +897,8 @@ MAIN POSTS
 	text-decoration: line-through;
 }
 
-.pun ins {
+.pun .postmsg ins {
 	text-decoration: none;
-	background-color: #ff0;
 }
 
 .pun .blockpost .postmsg .postedit {
@@ -1495,6 +1494,10 @@ html, body, .pun {
 
 .pun .postmsg hr {
 	background: #bbc6b2;
+}
+
+.pun .postmsg ins {
+	background-color: #ff0;
 }
 
 /* Main Forms + Profile
