@@ -192,9 +192,8 @@
 	text-decoration: line-through;
 	}
 
-.pun ins {
+.pun .postmsg ins, #punhelp samp ins {
 	text-decoration: none;
-	background-color: #ff0;
 	}
 
 .pun div.postmsg h5, #punhelp h5 {
@@ -989,6 +988,10 @@ body {
 
 .pun .blockpost h2 span.conr {
 	color: #aabdcd
+	}
+
+.pun .postmsg ins, #punhelp samp ins {
+	background-color: #ff0;
 	}
 
 .pun hr {
