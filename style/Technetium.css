@@ -250,7 +250,8 @@ body {
 	}
 
 #punredirect, #punmaint, #puninstall, #pundb_update {
-	margin: 50px 20% 12px 20%
+	margin: 50px 20% 12px 20%;
+	width: auto;
 	}
 
 
