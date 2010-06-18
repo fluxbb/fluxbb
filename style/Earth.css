@@ -897,7 +897,7 @@ MAIN POSTS
 	text-decoration: line-through;
 }
 
-.pun .postmsg ins {
+.pun .postmsg ins, #punhelp samp ins {
 	text-decoration: none;
 }
 
@@ -1496,7 +1496,7 @@ html, body, .pun {
 	background: #bbc6b2;
 }
 
-.pun .postmsg ins {
+.pun .postmsg ins, #punhelp samp ins {
 	background-color: #ff0;
 }
 

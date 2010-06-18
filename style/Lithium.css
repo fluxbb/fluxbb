@@ -191,7 +191,7 @@
 	text-decoration: line-through;
 	}
 
-.pun .postmsg ins {
+.pun .postmsg ins, #punhelp samp ins {
 	text-decoration: none;
 	}
 
@@ -989,7 +989,7 @@ body {
 	color: #b7d094
 	}
 
-.pun .postmsg ins {
+.pun .postmsg ins, #punhelp samp ins {
 	background-color: #ff0;
 	}
 
