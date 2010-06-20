@@ -69,9 +69,6 @@ $lang_profile = array(
 
 // Profile display stuff
 'Users profile'					=>	'%s\'s profile',
-'Unknown'						=>	'(Unknown)', // This is displayed when a user hasn't filled out profile field (e.g. Location)
-'Private'						=>	'(Private)', // This is displayed when a user does not want to receive emails
-'No avatar'						=>	'(No avatar)',
 'Username info'					=>	'Username: %s',
 'Email info'					=>	'Email: %s',
 'Posts info'					=>	'Posts: %s',

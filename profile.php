@@ -933,40 +933,121 @@ if ($pun_user['id'] != $id &&
 	(!$pun_user['is_admmod'] ||
 	($pun_user['g_moderator'] == '1' && $pun_user['g_mod_edit_users'] == '0') ||
 	($pun_user['g_moderator'] == '1' && $user['g_moderator'] == '1')))
-{
-	if ($user['email_setting'] == '0' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
-		$email_field = '<span class="email"><a href="mailto:'.$user['email'].'">'.$user['email'].'</a></span>';
-	else if ($user['email_setting'] == '1' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
-		$email_field = '<span class="email"><a href="misc.php?email='.$id.'">'.$lang_common['Send email'].'</a></span>';
-	else
-		$email_field = $lang_profile['Private'];
-
-	$user_title_field = get_title($user);
-
+{	
+	$user_personal = array();
+	
+	$user_personal[] = '<dt>'.$lang_common['Username'].'</dt>';
+	$user_personal[] = '<dd>'.pun_htmlspecialchars($user['username']).'</dd>';
+	
+	$user_title_field = get_title($user);	
+	$user_personal[] = '<dt>'.$lang_common['Title'].'</dt>';
+	$user_personal[] = '<dd>'.(($pun_config['o_censoring'] == '1') ? censor_words($user_title_field) : $user_title_field).'</dd>';
+	
+	if ($user['realname'] != '')
+	{
+		$user_personal[] = '<dt>'.$lang_profile['Realname'].'</dt>';
+		$user_personal[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['realname']) : $user['realname']).'</dd>';
+	}
+	
+	if ($user['location'] != '')
+	{
+		$user_personal[] = '<dt>'.$lang_profile['Location'].'</dt>';
+		$user_personal[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['location']) : $user['location']).'</dd>';
+	}
+	
 	if ($user['url'] != '')
 	{
-		$user['url'] = pun_htmlspecialchars($user['url']);
-
-		if ($pun_config['o_censoring'] == '1')
-			$user['url'] = censor_words($user['url']);
-
-		$url = '<span class="website"><a href="'.$user['url'].'">'.$user['url'].'</a></span>';
+		$user['url'] = pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['url']) : $user['url']);
+		$user_personal[] = '<dt>'.$lang_profile['Website'].'</dt>';
+		$user_personal[] = '<dd><span class="website"><a href="'.$user['url'].'">'.$user['url'].'</a></span></dd>';
 	}
+	
+	if ($user['email_setting'] == '0' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
+		$email_field = '<a href="mailto:'.$user['email'].'">'.$user['email'].'</a>';
+	else if ($user['email_setting'] == '1' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
+		$email_field = '<a href="misc.php?email='.$id.'">'.$lang_common['Send email'].'</a>';
 	else
-		$url = $lang_profile['Unknown'];
-
+		$email_field = '';	
+	if ($email_field != '')
+	{
+		$user_personal[] = '<dt>'.$lang_common['Email'].'</dt>';
+		$user_personal[] = '<dd><span class="email">'.$email_field.'</span></dd>';
+	}	
+	
+	$user_messaging = array();
+	
+	if ($user['jabber'] != '')
+	{
+		$user_messaging[] = '<dt>'.$lang_profile['Jabber'].'</dt>';
+		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['jabber']) : $user['jabber']).'</dd>';
+	}
+	
+	if ($user['icq'] != '')
+	{
+		$user_messaging[] = '<dt>'.$lang_profile['ICQ'].'</dt>';
+		$user_messaging[] = '<dd>'.$user['icq'].'</dd>';
+	}
+	
+	if ($user['msn'] != '')
+	{
+		$user_messaging[] = '<dt>'.$lang_profile['MSN'].'</dt>';
+		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['msn']) : $user['msn']).'</dd>';
+	}
+	
+	if ($user['aim'] != '')
+	{
+		$user_messaging[] = '<dt>'.$lang_profile['AOL IM'].'</dt>';
+		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['aim']) : $user['aim']).'</dd>';
+	}
+	
+	if ($user['yahoo'] != '')
+	{
+		$user_messaging[] = '<dt>'.$lang_profile['Yahoo'].'</dt>';
+		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['yahoo']) : $user['yahoo']).'</dd>';
+	}
+	
+	$user_personality = array();
+	
 	if ($pun_config['o_avatars'] == '1')
 	{
 		$avatar_field = generate_avatar_markup($id);
-		if ($avatar_field == '')
-			$avatar_field = $lang_profile['No avatar'];
+		if ($avatar_field != '')
+		{
+			$user_personality[] = '<dt>'.$lang_profile['Avatar'].'</dt>';
+			$user_personality[] = '<dd>'.$avatar_field.'</dd>';	
+		}	
 	}
-
+	
+	if ($pun_config['o_signatures'] == '1')
+	{
+		if (isset($parsed_signature))
+		{
+			$user_personality[] = '<dt>'.$lang_profile['Signature'].'</dt>';
+			$user_personality[] = '<dd><div class="postsignature postmsg">'.$parsed_signature.'</div></dd>';	
+		}	
+	}
+	
+	$user_activity = array();
+	
 	$posts_field = '';
 	if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
 		$posts_field = forum_number_format($user['num_posts']);
-	if ($pun_user['g_search'] == '1')
+	if ($pun_user['g_search'] == '1' && $user['num_posts'] > 0)
 		$posts_field .= (($posts_field != '') ? ' - ' : '').'<a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a>';
+	if ($posts_field != '')
+	{
+		$user_activity[] = '<dt>'.$lang_common['Posts'].'</dt>';
+		$user_activity[] = '<dd>'.$posts_field.'</dd>';	
+	}
+	
+	if ($user['num_posts'] > 0)
+	{
+		$user_activity[] = '<dt>'.$lang_common['Last post'].'</dt>';
+		$user_activity[] = '<dd>'.$last_post.'</dd>';
+	}
+
+	$user_activity[] = '<dt>'.$lang_common['Registered'].'</dt>';
+	$user_activity[] = '<dd>'.format_time($user['registered'], true).'</dd>';
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), sprintf($lang_profile['Users profile'], pun_htmlspecialchars($user['username'])));
 	define('PUN_ALLOW_INDEX', 1);
@@ -983,53 +1064,30 @@ if ($pun_user['id'] != $id &&
 				<legend><?php echo $lang_profile['Section personal'] ?></legend>
 					<div class="infldset">
 						<dl>
-							<dt><?php echo $lang_common['Username'] ?></dt>
-							<dd><?php echo pun_htmlspecialchars($user['username']) ?></dd>
-							<dt><?php echo $lang_common['Title'] ?></dt>
-							<dd><?php echo ($pun_config['o_censoring'] == '1') ? censor_words($user_title_field) : $user_title_field; ?></dd>
-							<dt><?php echo $lang_profile['Realname'] ?></dt>
-							<dd><?php echo ($user['realname'] !='') ? pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['realname']) : $user['realname']) : $lang_profile['Unknown']; ?></dd>
-							<dt><?php echo $lang_profile['Location'] ?></dt>
-							<dd><?php echo ($user['location'] !='') ? pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['location']) : $user['location']) : $lang_profile['Unknown']; ?></dd>
-							<dt><?php echo $lang_profile['Website'] ?></dt>
-							<dd><?php echo $url ?></dd>
-							<dt><?php echo $lang_common['Email'] ?></dt>
-							<dd><?php echo $email_field ?></dd>
+							<?php echo implode("\n\t\t\t\t\t\t\t", $user_personal)."\n" ?>
 						</dl>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
 			</div>
-			<div class="inform">
+<?php if (!empty($user_messaging)): ?>			<div class="inform">
 				<fieldset>
 				<legend><?php echo $lang_profile['Section messaging'] ?></legend>
 					<div class="infldset">
 						<dl>
-							<dt><?php echo $lang_profile['Jabber'] ?></dt>
-							<dd><?php echo ($user['jabber'] !='') ? pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['jabber']) : $user['jabber']) : $lang_profile['Unknown']; ?></dd>
-							<dt><?php echo $lang_profile['ICQ'] ?></dt>
-							<dd><?php echo ($user['icq'] !='') ? $user['icq'] : $lang_profile['Unknown']; ?></dd>
-							<dt><?php echo $lang_profile['MSN'] ?></dt>
-							<dd><?php echo ($user['msn'] !='') ? pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['msn']) : $user['msn']) : $lang_profile['Unknown']; ?></dd>
-							<dt><?php echo $lang_profile['AOL IM'] ?></dt>
-							<dd><?php echo ($user['aim'] !='') ? pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['aim']) : $user['aim']) : $lang_profile['Unknown']; ?></dd>
-							<dt><?php echo $lang_profile['Yahoo'] ?></dt>
-							<dd><?php echo ($user['yahoo'] !='') ? pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['yahoo']) : $user['yahoo']) : $lang_profile['Unknown']; ?></dd>
+							<?php echo implode("\n\t\t\t\t\t\t\t", $user_messaging)."\n" ?>
 						</dl>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
 			</div>
-<?php if ($pun_config['o_avatars'] == '1' || $pun_config['o_signatures'] == '1'): ?>			<div class="inform">
+<?php endif; if (!empty($user_personality)): ?>			<div class="inform">
 				<fieldset>
 				<legend><?php echo $lang_profile['Section personality'] ?></legend>
 					<div class="infldset">
 						<dl>
-<?php if ($pun_config['o_avatars'] == '1'): ?>							<dt><?php echo $lang_profile['Avatar'] ?></dt>
-							<dd><?php echo $avatar_field ?></dd>
-<?php endif; if ($pun_config['o_signatures'] == '1'): ?>							<dt><?php echo $lang_profile['Signature'] ?></dt>
-							<dd><?php echo isset($parsed_signature) ? '<div class="postsignature postmsg">'.$parsed_signature.'</div>' : $lang_profile['No sig']; ?></dd>
-<?php endif; ?>						</dl>
+							<?php echo implode("\n\t\t\t\t\t\t\t", $user_personality)."\n" ?>
+						</dl>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
@@ -1039,12 +1097,7 @@ if ($pun_user['id'] != $id &&
 				<legend><?php echo $lang_profile['User activity'] ?></legend>
 					<div class="infldset">
 						<dl>
-<?php if ($posts_field != ''): ?>							<dt><?php echo $lang_common['Posts'] ?></dt>
-							<dd><?php echo $posts_field ?></dd>
-<?php endif; ?>							<dt><?php echo $lang_common['Last post'] ?></dt>
-							<dd><?php echo $last_post ?></dd>
-							<dt><?php echo $lang_common['Registered'] ?></dt>
-							<dd><?php echo format_time($user['registered'], true) ?></dd>
+							<?php echo implode("\n\t\t\t\t\t\t\t", $user_activity)."\n" ?>
 						</dl>
 						<div class="clearer"></div>
 					</div>
