@@ -60,8 +60,8 @@ if ($db->num_rows($result))
 		$forum = ($cur_report['forum_name'] != '') ? '<span><a href="viewforum.php?id='.$cur_report['forum_id'].'">'.pun_htmlspecialchars($cur_report['forum_name']).'</a></span>' : '<span>'.$lang_admin_reports['Deleted'].'</span>';
 		$topic = ($cur_report['subject'] != '') ? '<span>»&#160;<a href="viewtopic.php?id='.$cur_report['topic_id'].'">'.pun_htmlspecialchars($cur_report['subject']).'</a></span>' : '<span>»&#160;'.$lang_admin_reports['Deleted'].'</span>';
 		$post = str_replace("\n", '<br />', pun_htmlspecialchars($cur_report['message']));
-		$postid = ($cur_report['pid'] != '') ? '<span>»&#160;<a href="viewtopic.php?pid='.$cur_report['pid'].'#p'.$cur_report['pid'].'">Post #'.$cur_report['pid'].'</a></span>' : '<span>»&#160;'.$lang_admin_reports['Deleted'].'</span>';
-		$report_location = array($forum, $topic, $postid);
+		$post_id = ($cur_report['pid'] != '') ? '<span>»&#160;<a href="viewtopic.php?pid='.$cur_report['pid'].'#p'.$cur_report['pid'].'">Post #'.$cur_report['pid'].'</a></span>' : '<span>»&#160;'.$lang_admin_reports['Deleted'].'</span>';
+		$report_location = array($forum, $topic, $post_id);
 
 ?>
 				<div class="inform">
