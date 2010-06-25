@@ -85,7 +85,7 @@ $num_online = $db->result($result);
 if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 {
 	// Calculate total db size/row count
-	$result = $db->query('SHOW TABLE STATUS FROM `'.$db_name.'`') or error('Unable to fetch table status', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SHOW TABLE STATUS FROM `'.$db_name.'`LIKE \''.$db->prefix.'%\'') or error('Unable to fetch table status', __FILE__, __LINE__, $db->error());
 
 	$total_records = $total_size = 0;
 	while ($status = $db->fetch_assoc($result))
