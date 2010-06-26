@@ -118,7 +118,7 @@ generate_admin_menu('ranks');
 					<fieldset>
 						<legend><?php echo $lang_admin_ranks['Add rank subhead'] ?></legend>
 						<div class="infldset">
-							<p><?php printf($lang_admin_ranks['Add rank info'], '<a href="admin_options.php#ranks">'.$lang_admin_common['Options'].'</a>') ?></p>
+							<p><?php echo $lang_admin_ranks['Add rank info'].' '.($pun_config['o_ranks'] == '1' ? sprintf($lang_admin_ranks['Ranks enabled'], '<a href="admin_options.php#ranks">'.$lang_admin_common['Options'].'</a>') : sprintf($lang_admin_ranks['Ranks disabled'], '<a href="admin_options.php#ranks">'.$lang_admin_common['Options'].'</a>')) ?></p>
 							<table cellspacing="0">
 							<thead>
 								<tr>
