@@ -185,6 +185,14 @@ class DBLayer
 			return false;
 	}
 
+
+	function get_names()
+	{
+		$result = $this->query('SHOW VARIABLES LIKE \'character_set_connection\'');
+		return $this->result($result, 0, 1);
+	}
+
+
 	function set_names($names)
 	{
 		return $this->query('SET NAMES \''.$this->escape($names).'\'');
