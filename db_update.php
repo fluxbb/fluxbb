@@ -1467,4 +1467,4 @@ $db->end_transaction();
 $db->close();
 
 if ($query_str != '')
-	exit('<script type="text/javascript">window.location="db_update.php'.$query_str.'"</script><br />JavaScript seems to be disabled. <a href="db_update.php'.$query_str.'">Click here to continue</a>.');
+	exit('<script type="text/javascript">window.location="db_update.php'.$query_str.'"</script><noscript>JavaScript seems to be disabled. <a href="db_update.php'.$query_str.'">Click here to continue</a>.</noscript>');
