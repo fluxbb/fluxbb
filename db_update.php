@@ -103,7 +103,7 @@ if (!defined('FORUM_CACHE_DIR'))
 require PUN_ROOT.'include/dblayer/common_db.php';
 
 // Check what the default character set is - since 1.2 didn't specify any we will use whatever the default was (usually latin1)
-$old_charset = defined('FORUM_DEFAULT_CHARSET') ? FORUM_DEFAULT_CHARSET : $db->get_names();
+$old_connection_charset = defined('FORUM_DEFAULT_CHARSET') ? FORUM_DEFAULT_CHARSET : $db->get_names();
 
 // Set the connection to UTF-8 now
 $db->set_names('utf8');
@@ -331,7 +331,7 @@ function alter_table_utf8($table)
 //
 function convert_table_utf8($table, $callback, $old_charset, $key = null, $start_at = null)
 {
-	global $mysql, $db, $old_charset;
+	global $mysql, $db, $old_connection_charset;
 
 	$finished = true;
 	$end_at = 0;
@@ -351,7 +351,7 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 		}
 
 		// Change to the old character set so MySQL doesn't attempt to perform conversion on the data from the old table
-		$db->set_names($old_charset);
+		$db->set_names($old_connection_charset);
 
 		// Move & Convert everything
 		$result = $db->query('SELECT * FROM '.$table.($start_at === null ? '' : ' WHERE '.$key.'>'.$start_at).' ORDER BY '.$key.' ASC'.($start_at === null ? '' : ' LIMIT '.PER_PAGE), false) or error('Unable to select from old table', __FILE__, __LINE__, $db->error());
