@@ -127,10 +127,13 @@ class DBLayer
 	{
 		if ($query_id)
 		{
-			if ($row != 0)
-				@sqlite_seek($query_id, $row);
+			if ($row !== 0 && @sqlite_seek($query_id, $row) === false)
+				return false;
 
 			$cur_row = @sqlite_current($query_id);
+			if ($cur_row === false)
+				return false;
+
 			return $cur_row[$col];
 		}
 		else
@@ -241,9 +244,16 @@ class DBLayer
 			return false;
 	}
 
+
+	function get_names()
+	{
+		return '';
+	}
+
+
 	function set_names($names)
 	{
-		return;
+		return true;
 	}
 
 

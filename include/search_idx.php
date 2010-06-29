@@ -48,7 +48,7 @@ define('PUN_CJK_HANGUL_REGEX', '['.
 function split_words($text, $idx)
 {
 	// Remove BBCode
-	$text = preg_replace('/\[\/?(b|u|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]/', ' ', $text);
+	$text = preg_replace('/\[\/?(b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]/', ' ', $text);
 
 	// Remove any apostrophes or dashes which aren't part of words
 	$text = substr(preg_replace('/((?<=\W)[\'\-]|[\'\-](?=\W))/', '', ' '.$text.' '), 1, -1);

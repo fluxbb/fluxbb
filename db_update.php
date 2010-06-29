@@ -19,9 +19,16 @@ define('MIN_PGSQL_VERSION', '7.0.0');
 define('PUN_SEARCH_MIN_WORD', 3);
 define('PUN_SEARCH_MAX_WORD', 20);
 
+// The MySQL connection character set that was used for FluxBB 1.2 - in 99% of cases this should be detected automatically,
+// but can be overridden using the below constant if required.
+//define('FORUM_DEFAULT_CHARSET', 'latin1');
+
 
 // The number of items to process per page view (lower this if the update script times out during UTF-8 conversion)
 define('PER_PAGE', 300);
+
+// Don't set to UTF-8 until after we've found out what the default character set is
+define('FORUM_NO_SET_NAMES', 1);
 
 // Make sure we are running at least MIN_PHP_VERSION
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
@@ -94,6 +101,12 @@ if (!defined('FORUM_CACHE_DIR'))
 
 // Load DB abstraction layer and try to connect
 require PUN_ROOT.'include/dblayer/common_db.php';
+
+// Check what the default character set is - since 1.2 didn't specify any we will use whatever the default was (usually latin1)
+$old_connection_charset = defined('FORUM_DEFAULT_CHARSET') ? FORUM_DEFAULT_CHARSET : $db->get_names();
+
+// Set the connection to UTF-8 now
+$db->set_names('utf8');
 
 // Check current version
 $result = $db->query('SELECT conf_value FROM '.$db->prefix.'config WHERE conf_name=\'o_cur_version\'') or error('Unable to fetch version info.', __FILE__, __LINE__, $db->error());
@@ -318,7 +331,7 @@ function alter_table_utf8($table)
 //
 function convert_table_utf8($table, $callback, $old_charset, $key = null, $start_at = null)
 {
-	global $mysql, $db;
+	global $mysql, $db, $old_connection_charset;
 
 	$finished = true;
 	$end_at = 0;
@@ -337,8 +350,8 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 			alter_table_utf8($table.'_utf8');
 		}
 
-		// Change to latin1 mode so MySQL doesn't attempt to perform conversion on the data from the old table
-		$db->set_names('latin1');
+		// Change to the old character set so MySQL doesn't attempt to perform conversion on the data from the old table
+		$db->set_names($old_connection_charset);
 
 		// Move & Convert everything
 		$result = $db->query('SELECT * FROM '.$table.($start_at === null ? '' : ' WHERE '.$key.'>'.$start_at).' ORDER BY '.$key.' ASC'.($start_at === null ? '' : ' LIMIT '.PER_PAGE), false) or error('Unable to select from old table', __FILE__, __LINE__, $db->error());
@@ -1402,6 +1415,14 @@ else
 		// And the parser revision number
 		$db->query('UPDATE '.$db->prefix.'config SET conf_value = \''.UPDATE_TO_PARSER_REVISION.'\' WHERE conf_name = \'o_parser_revision\'') or error('Unable to update parser revision number', __FILE__, __LINE__, $db->error());
 
+		// Check the default language still exists!
+		if (!file_exists(PUN_ROOT.'lang/'.$pun_config['o_default_lang'].'/common.php'))
+			$db->query('UPDATE '.$db->prefix.'config SET conf_value = \'English\' WHERE conf_name = \'o_default_lang\'') or error('Unable to update default language', __FILE__, __LINE__, $db->error());
+
+		// Check the default style still exists!
+		if (!file_exists(PUN_ROOT.'style/'.$pun_config['o_default_style'].'.css'))
+			$db->query('UPDATE '.$db->prefix.'config SET conf_value = \'Air\' WHERE conf_name = \'o_default_style\'') or error('Unable to update default style', __FILE__, __LINE__, $db->error());
+
 		// This feels like a good time to synchronize the forums
 		$result = $db->query('SELECT id FROM '.$db->prefix.'forums') or error('Unable to fetch forum IDs', __FILE__, __LINE__, $db->error());
 
@@ -1454,4 +1475,4 @@ $db->end_transaction();
 $db->close();
 
 if ($query_str != '')
-	exit('<script type="text/javascript">window.location="db_update.php'.$query_str.'"</script><br />JavaScript seems to be disabled. <a href="db_update.php'.$query_str.'">Click here to continue</a>.');
+	exit('<script type="text/javascript">window.location="db_update.php'.$query_str.'"</script><noscript>JavaScript seems to be disabled. <a href="db_update.php'.$query_str.'">Click here to continue</a>.</noscript>');

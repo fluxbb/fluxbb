@@ -94,10 +94,13 @@ class DBLayer
 	{
 		if ($query_id)
 		{
-			if ($row)
-				@mysqli_data_seek($query_id, $row);
+			if ($row !== 0 && @mysqli_data_seek($query_id, $row) === false)
+				return false;
 
 			$cur_row = @mysqli_fetch_row($query_id);
+			if ($cur_row === false)
+				return false;
+
 			return $cur_row[$col];
 		}
 		else
@@ -181,6 +184,14 @@ class DBLayer
 		else
 			return false;
 	}
+
+
+	function get_names()
+	{
+		$result = $this->query('SHOW VARIABLES LIKE \'character_set_connection\'');
+		return $this->result($result, 0, 1);
+	}
+
 
 	function set_names($names)
 	{
