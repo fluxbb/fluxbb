@@ -31,10 +31,8 @@ $lang_prof_reg = array(
 'Pass not match'			=>	'Passwords do not match.',
 'Banned email'				=>	'The email address you entered is banned in this forum. Please choose another email address.',
 'Dupe email'				=>	'Someone else is already registered with that email address. Please choose another email address.',
-'Sig too long'				=>	'Signatures cannot be longer than',
-'characters'				=>	'characters',
-'Sig too many lines'		=>	'Signatures cannot have more than',
-'lines'						=>	'lines',
+'Sig too long'				=>	'Signatures cannot be longer than %1$s characters. Please reduce your signature by %2$s characters.',
+'Sig too many lines'		=>	'Signatures cannot have more than %s lines.',
 'Bad ICQ'					=>	'You entered an invalid ICQ UIN. Please go back and correct.',
 
 'UTC-12:00'					=>	'(UTC-12:00) International Date Line West',
