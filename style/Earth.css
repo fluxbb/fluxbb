@@ -503,12 +503,17 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 4. MAIN TABLES
 *****************************************************************/
 
+.pun #brdmain .blocktable {
+	position: relative;
+}
+
 #punindex #brdmain .blocktable h2, #punsearch #vf h2 {
 	font: 1em/1.462em Arial, Helvetica, sans-serif;
 	font-weight: bold;
 	margin: 1px 1px 0 1px;
 	padding-left: 8px;
 	position: absolute;
+	left: 0;
 	white-space: nowrap;
 	z-index: 100;
 }
