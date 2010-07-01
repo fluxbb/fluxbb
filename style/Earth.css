@@ -279,7 +279,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 #brdmenu a:link, #brdmenu a:visited {
 	border-right-style: solid;
 	border-width: 1px;
-	display: inline-block;
+	display: block;
 	min-width: 60px;
 	padding: 12px 16px 6px 8px;
 	white-space: nowrap;
