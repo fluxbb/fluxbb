@@ -244,9 +244,16 @@ class DBLayer
 			return false;
 	}
 
+
+	function get_names()
+	{
+		return '';
+	}
+
+
 	function set_names($names)
 	{
-		return;
+		return true;
 	}
 
 

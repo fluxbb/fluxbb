@@ -774,9 +774,9 @@ else if (isset($_POST['form_sent']))
 
 				// Validate signature
 				if (pun_strlen($form['signature']) > $pun_config['p_sig_length'])
-					message($lang_prof_reg['Sig too long'].' '.$pun_config['p_sig_length'].' '.$lang_prof_reg['characters'].'.');
+					message(sprintf($lang_prof_reg['Sig too long'], $pun_config['p_sig_length'], pun_strlen($form['signature']) - $pun_config['p_sig_length']));
 				else if (substr_count($form['signature'], "\n") > ($pun_config['p_sig_lines']-1))
-					message($lang_prof_reg['Sig too many lines'].' '.$pun_config['p_sig_lines'].' '.$lang_prof_reg['lines'].'.');
+					message(sprintf($lang_prof_reg['Sig too many lines'], $pun_config['p_sig_lines']));
 				else if ($form['signature'] && $pun_config['p_sig_all_caps'] == '0' && is_all_uppercase($form['signature']) && !$pun_user['is_admmod'])
 					$form['signature'] = utf8_ucwords(utf8_strtolower($form['signature']));
 

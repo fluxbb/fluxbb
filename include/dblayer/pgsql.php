@@ -255,6 +255,14 @@ class DBLayer
 			return false;
 	}
 
+
+	function get_names()
+	{
+		$result = $this->query('SHOW client_encoding');
+		return strtolower($this->result($result)); // MySQL returns lowercase so lets be consistent
+	}
+
+
 	function set_names($names)
 	{
 		return $this->query('SET NAMES \''.$this->escape($names).'\'');

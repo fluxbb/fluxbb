@@ -1667,8 +1667,6 @@ function forum_list_plugins($is_admin)
 	}
 	$d->close();
 
-	natcasesort($plugins);
-
 	return $plugins;
 }
 
