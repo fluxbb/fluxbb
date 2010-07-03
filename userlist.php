@@ -32,10 +32,9 @@ $sort_dir = isset($_GET['sort_dir']) && $_GET['sort_dir'] == 'DESC' ? 'DESC' : '
 
 // Create any SQL for the WHERE clause
 $where_sql = array();
-$like_command = ($db_type == 'pgsql') ? 'ILIKE' : 'LIKE';
 
 if ($username != '')
-	$where_sql[] = 'u.username '.$like_command.' \''.$db->escape(str_replace('*', '%', $username)).'\'';
+	$where_sql[] = 'LOWER(u.username) LIKE LOWER(\''.$db->escape(str_replace('*', '%', $username)).'\')';
 if ($show_group > -1)
 	$where_sql[] = 'u.group_id='.$show_group;
 

@@ -42,7 +42,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	else if ($action == 'search')
 	{
 		$keywords = (isset($_GET['keywords'])) ? utf8_strtolower(pun_trim($_GET['keywords'])) : null;
-		$author = (isset($_GET['author'])) ? utf8_strtolower(pun_trim($_GET['author'])) : null;
+		$author = (isset($_GET['author'])) ? pun_trim($_GET['author']) : null;
 
 		if (preg_match('#^[\*%]+$#', $keywords) || (pun_strlen(str_replace(array('*', '%'), '', $keywords)) < PUN_SEARCH_MIN_WORD && !is_cjk($keywords)))
 			$keywords = '';
@@ -239,16 +239,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			// If it's a search for author name (and that author name isn't Guest)
 			if ($author && $author != 'guest' && $author != utf8_strtolower($lang_common['Guest']))
 			{
-				switch ($db_type)
-				{
-					case 'pgsql':
-						$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE username ILIKE \''.$db->escape($author).'\'') or error('Unable to fetch users', __FILE__, __LINE__, $db->error());
-						break;
-
-					default:
-						$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE username LIKE \''.$db->escape($author).'\'') or error('Unable to fetch users', __FILE__, __LINE__, $db->error());
-						break;
-				}
+				$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE LOWER(username) LIKE LOWER(\''.$db->escape($author).'\')') or error('Unable to fetch users', __FILE__, __LINE__, $db->error());
 
 				if ($db->num_rows($result))
 				{
