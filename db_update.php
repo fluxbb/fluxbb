@@ -9,7 +9,7 @@
 // The FluxBB version this script updates to
 define('UPDATE_TO', '1.4.0');
 
-define('UPDATE_TO_DB_REVISION', 7);
+define('UPDATE_TO_DB_REVISION', 8);
 define('UPDATE_TO_SI_REVISION', 1);
 define('UPDATE_TO_PARSER_REVISION', 1);
 
@@ -304,7 +304,7 @@ function alter_table_utf8($table)
 	}
 
 	// Set table default charset to utf8
-	$db->query('ALTER TABLE '.$table.' CHARACTER SET utf8') or error('Unable to set table character set', __FILE__, __LINE__, $db->error());
+	$db->query('ALTER TABLE '.$table.' CHARACTER SET utf8 COLLATE utf8_bin') or error('Unable to set table character set', __FILE__, __LINE__, $db->error());
 
 	// Find out which columns need converting and build SQL statements
 	$result = $db->query('SHOW FULL COLUMNS FROM '.$table) or error('Unable to fetch column information', __FILE__, __LINE__, $db->error());
@@ -425,6 +425,34 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 }
 
 
+//
+// Converts a MySQL tables collation to binary
+//
+function convert_table_bin($table, $charset)
+{
+	global $db;
+
+	// Set table default collation to binary
+	$db->query('ALTER TABLE '.$table.' COLLATE '.$charset.'_bin') or error('Unable to set table collation', __FILE__, __LINE__, $db->error());
+
+	// Find out which columns need converting and build SQL statements
+	$result = $db->query('SHOW FULL COLUMNS FROM '.$table) or error('Unable to fetch column information', __FILE__, __LINE__, $db->error());
+	while ($cur_column = $db->fetch_assoc($result))
+	{
+		if ($cur_column['Collation'] === null)
+			continue;
+
+		// If it isn't binary, it should be!
+		if (substr($cur_column['Collation'], -3) != 'bin')
+		{
+			$allow_null = ($cur_column['Null'] == 'YES');
+
+			$db->alter_field($table, $cur_column['Field'], $cur_column['Type'].' COLLATE '.$charset.'_bin', $allow_null, $cur_column['Default'], null, true) or error('Unable to alter field to binary', __FILE__, __LINE__, $db->error());
+		}
+	}
+}
+
+
 header('Content-type: text/html; charset=utf-8');
 
 // Empty all output buffers and stop buffering
@@ -529,6 +557,22 @@ else
 		// If we don't need to update the database, skip this stage
 		if (isset($pun_config['o_database_revision']) && $pun_config['o_database_revision'] >= UPDATE_TO_DB_REVISION)
 			break;
+
+		// If we are using MySQL we need to make sure the tables have been converted to binary instead of general_ci
+		// otherwise it is possible to have multiple usernames that are "indentical", causing an error in upgrading.
+		if ($mysql && $pun_config['o_database_revision'] < 8) // This was done in DB revision 8, don't bother attempting it again if it's already done...
+		{
+			$result = $db->query('SHOW TABLE STATUS LIKE \''.$db->prefix.'%\'') or error('Unable to list tables', __FILE__, __LINE__, $db->error());
+			while ($status = $db->fetch_assoc($result))
+			{
+				// Figure out the existing charset for this table, we don't want to change it yet - only the collation
+				list ($charset) = explode('_', $status['Collation']);
+				convert_table_bin($status['Name'], $charset);
+			}
+
+			// Update the default charset and collation (MySQL only)
+			$db->query('ALTER DATABASE '.$db_name.' CHARACTER SET utf8 COLLATE utf8_bin') or error('Unable to update default characterset', __FILE__, __LINE__, $db->error());
+		}
 
 		// Make all email fields VARCHAR(80)
 		$db->alter_field('bans', 'email', 'VARCHAR(80)', true) or error('Unable to alter email field', __FILE__, __LINE__, $db->error());
@@ -875,7 +919,7 @@ else
 				)
 			);
 
-			if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+			if ($mysql)
 				$schema['INDEXES']['ident_idx'] = array('ident(8)');
 
 			$db->create_table('search_cache', $schema);
