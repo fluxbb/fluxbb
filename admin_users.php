@@ -324,7 +324,7 @@ else if (isset($_GET['find_user']))
 	{
 		if ($input != '' && in_array($key, array('username', 'email', 'title', 'realname', 'url', 'jabber', 'icq', 'msn', 'aim', 'yahoo', 'location', 'signature', 'admin_note')))
 		{
-			$conditions[] = 'LOWER(u.'.$db->escape($key).') LIKE (\''.$db->escape(str_replace('*', '%', $input)).'\')';
+			$conditions[] = 'LOWER(u.'.$db->escape($key).') LIKE LOWER(\''.$db->escape(str_replace('*', '%', $input)).'\')';
 			$query_str[] = 'form%5B'.$key.'%5D='.urlencode($input);
 		}
 	}
