@@ -125,7 +125,7 @@ switch ($db_type)
 	case 'mysqli_innodb':
 		$mysql_info = $db->get_version();
 		if (version_compare($mysql_info['version'], MIN_MYSQL_VERSION, '<'))
-			error('You are running MySQL version '.$mysql_version.'. FluxBB '.UPDATE_TO.' requires at least MySQL '.MIN_MYSQL_VERSION.' to run properly. You must upgrade your MySQL installation before you can continue.');
+			error('You are running MySQL version '.$mysql_info['version'].'. FluxBB '.UPDATE_TO.' requires at least MySQL '.MIN_MYSQL_VERSION.' to run properly. You must upgrade your MySQL installation before you can continue.');
 
 		$mysql = true;
 		break;
@@ -133,7 +133,7 @@ switch ($db_type)
 	case 'pgsql':
 		$pgsql_info = $db->get_version();
 		if (version_compare($pgsql_info['version'], MIN_PGSQL_VERSION, '<'))
-			error('You are running PostgreSQL version '.$pgsql_info.'. FluxBB '.UPDATE_TO.' requires at least PostgreSQL '.MIN_PGSQL_VERSION.' to run properly. You must upgrade your PostgreSQL installation before you can continue.');
+			error('You are running PostgreSQL version '.$pgsql_info['version'].'. FluxBB '.UPDATE_TO.' requires at least PostgreSQL '.MIN_PGSQL_VERSION.' to run properly. You must upgrade your PostgreSQL installation before you can continue.');
 
 		break;
 }
