@@ -122,7 +122,7 @@ if (!isset($_POST['form_sent']))
 	if (substr($base_url, -1) == '/')
 		$base_url = substr($base_url, 0, -1);
 
-	$db_type = $db_name = $db_username = $db_password1 = $db_password2 = $db_prefix = $username = $email = $password1 = $password2 = '';
+	$db_type = $db_name = $db_username = $db_prefix = $username = $email = '';
 	$db_host = 'localhost';
 	$title = 'My FluxBB forum';
 	$description = '<p><span>Unfortunately no one can be told what FluxBB is - you have to see it for yourself.</span></p>';
@@ -353,8 +353,8 @@ foreach ($alerts as $cur_alert)
 					<div class="infldset">
 						<p>Enter the username and password with which you connect to the database. Ignore for SQLite.</p>
 						<label class="conl">Database username<br /><input type="text" name="db_username" value="<?php echo pun_htmlspecialchars($db_username) ?>" size="30" maxlength="50" /><br /></label>
-						<label class="conl">Database password<br /><input type="password" name="db_password1" value="<?php echo pun_htmlspecialchars($db_password1) ?>" size="30" maxlength="50" /><br /></label>
-						<label class="conl">Confirm database password<br /><input type="password" name="db_password2" value="<?php echo pun_htmlspecialchars($db_password2) ?>" size="30" maxlength="50" /><br /></label>
+						<label class="conl">Database password<br /><input type="password" name="db_password1" size="30" maxlength="50" /><br /></label>
+						<label class="conl">Confirm database password<br /><input type="password" name="db_password2" size="30" maxlength="50" /><br /></label>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
@@ -386,8 +386,8 @@ foreach ($alerts as $cur_alert)
 					<legend>Enter and confirm Administrator's password</legend>
 					<div class="infldset">
 					<p>Passwords must be at least 4 characters long. Passwords are case sensitive.</p>
-						<label class="conl required"><strong>Password <span>(Required)</span></strong><br /><input id="req_password1" type="password" name="req_password1" value="<?php echo pun_htmlspecialchars($password1) ?>" size="16" /><br /></label>
-						<label class="conl required"><strong>Confirm password <span>(Required)</span></strong><br /><input type="password" name="req_password2" value="<?php echo pun_htmlspecialchars($password2) ?>" size="16" /><br /></label>
+						<label class="conl required"><strong>Password <span>(Required)</span></strong><br /><input id="req_password1" type="password" name="req_password1" size="16" /><br /></label>
+						<label class="conl required"><strong>Confirm password <span>(Required)</span></strong><br /><input type="password" name="req_password2" size="16" /><br /></label>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
