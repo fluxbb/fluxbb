@@ -124,7 +124,7 @@ if (isset($_POST['form_sent']))
 
 	// Here we use strlen() not pun_strlen() as we want to limit the post to PUN_MAX_POSTSIZE bytes, not characters
 	if (strlen($message) > PUN_MAX_POSTSIZE)
-		$errors[] = sprintf($lang_post['Too long message'], PUN_MAX_POSTSIZE);
+		$errors[] = sprintf($lang_post['Too long message'], forum_number_format(PUN_MAX_POSTSIZE));
 	else if ($pun_config['p_message_all_caps'] == '0' && is_all_uppercase($message) && !$pun_user['is_admmod'])
 		$errors[] = $lang_post['All caps message'];
 

@@ -9,7 +9,7 @@
 // The FluxBB version this script updates to
 define('UPDATE_TO', '1.4.1');
 
-define('UPDATE_TO_DB_REVISION', 7);
+define('UPDATE_TO_DB_REVISION', 8);
 define('UPDATE_TO_SI_REVISION', 1);
 define('UPDATE_TO_PARSER_REVISION', 1);
 
@@ -554,6 +554,9 @@ else
 		// Make all IP fields VARCHAR(39) to support IPv6
 		$db->alter_field('posts', 'poster_ip', 'VARCHAR(39)', true) or error('Unable to alter poster_ip field', __FILE__, __LINE__, $db->error());
 		$db->alter_field('users', 'registration_ip', 'VARCHAR(39)', false, '0.0.0.0') or error('Unable to alter registration_ip field', __FILE__, __LINE__, $db->error());
+
+		// Make the message field MEDIUMTEXT to allow proper conversion of 65535 character posts to UTF-8
+		$db->alter_field('posts', 'message', 'MEDIUMTEXT', true) or error('Unable to alter message field', __FILE__, __LINE__, $db->error());
 
 		// Add the DST option to the users table
 		$db->add_field('users', 'dst', 'TINYINT(1)', false, 0, 'timezone') or error('Unable to add dst field', __FILE__, __LINE__, $db->error());
