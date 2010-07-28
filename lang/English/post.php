@@ -7,7 +7,7 @@ $lang_post = array(
 'No subject'		=>	'Topics must contain a subject.',
 'Too long subject'	=>	'Subjects cannot be longer than 70 characters.',
 'No message'		=>	'You must enter a message.',
-'Too long message'	=>	'Posts cannot be longer that 65535 bytes (64 KB).',
+'Too long message'	=>	'Posts cannot be longer that %s bytes (64 KB).',
 'All caps subject'	=>	'Subjects cannot contain only capital letters.',
 'All caps message'	=>	'Posts cannot contain only capital letters.',
 
