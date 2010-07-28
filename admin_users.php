@@ -325,11 +325,7 @@ else if (isset($_GET['find_user']))
 	{
 		if ($input != '' && in_array($key, array('username', 'email', 'title', 'realname', 'url', 'jabber', 'icq', 'msn', 'aim', 'yahoo', 'location', 'signature', 'admin_note')))
 		{
-<<<<<<< HEAD
-			$conditions[] = 'LOWER(u.'.$db->escape($key).') LIKE LOWER(\''.$db->escape(str_replace('*', '%', $input)).'\')';
-=======
 			$conditions[] = 'u.'.$db->escape($key).' '.$like_command.' \''.$db->escape(str_replace('*', '%', $input)).'\'';
->>>>>>> 158ad27... Updating some places to perform case insensitive search
 			$query_str[] = 'form%5B'.$key.'%5D='.urlencode($input);
 		}
 	}
