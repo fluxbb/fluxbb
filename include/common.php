@@ -173,6 +173,7 @@ update_users_online();
 if ($pun_user['is_guest'] && isset($_GET['login']))
 	message($lang_common['No cookie']);
 
+// The maximum size of a post, in bytes
 if (!defined('PUN_MAX_POSTSIZE'))
 	define('PUN_MAX_POSTSIZE', 65535);
 
