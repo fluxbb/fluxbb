@@ -99,6 +99,13 @@ if (!defined('FORUM_CACHE_DIR'))
 // Turn off PHP time limit
 @set_time_limit(0);
 
+// Define a few commonly used constants
+define('PUN_UNVERIFIED', 0);
+define('PUN_ADMIN', 1);
+define('PUN_MOD', 2);
+define('PUN_GUEST', 3);
+define('PUN_MEMBER', 4);
+
 // Load DB abstraction layer and try to connect
 require PUN_ROOT.'include/dblayer/common_db.php';
 
@@ -153,6 +160,12 @@ if (isset($pun_config['o_database_revision']) && $pun_config['o_database_revisio
 $default_style = $pun_config['o_default_style'];
 if (!file_exists(PUN_ROOT.'style/'.$default_style.'.css'))
 	$default_style = 'Air';
+
+// Start a session, used to queue up errors if duplicate users occur when converting from FluxBB v1.2.
+session_start();
+
+if (!isset($_SESSION['dupe_users']))
+	$_SESSION['dupe_users'] = array();
 
 //
 // Determines whether $str is UTF-8 encoded or not
@@ -329,7 +342,7 @@ function alter_table_utf8($table)
 // Safely converts text type columns into utf8
 // If finished returns true, otherwise returns $end_at
 //
-function convert_table_utf8($table, $callback, $old_charset, $key = null, $start_at = null)
+function convert_table_utf8($table, $callback, $old_charset, $key = null, $start_at = null, $error_callback = null)
 {
 	global $mysql, $db, $old_connection_charset;
 
@@ -367,7 +380,7 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 			foreach ($cur_item as $idx => $value)
 				$temp[$idx] = $value === null ? 'NULL' : '\''.$db->escape($value).'\'';
 
-			$db->query('INSERT INTO '.$table.'_utf8('.implode(',', array_keys($temp)).') VALUES ('.implode(',', array_values($temp)).')') or error('Unable to insert data to new table', __FILE__, __LINE__, $db->error());
+			$db->query('INSERT INTO '.$table.'_utf8('.implode(',', array_keys($temp)).') VALUES ('.implode(',', array_values($temp)).')') or ($error_callback === null ? error('Unable to insert data to new table', __FILE__, __LINE__, $db->error()) : call_user_func($error_callback, $cur_item));
 
 			$end_at = $cur_item[$key];
 		}
@@ -1266,10 +1279,205 @@ else
 			return $cur_item;
 		}
 
-		$end_at = convert_table_utf8($db->prefix.'users', '_conv_users', $old_charset, 'id', $start_at);
+		function _error_users($cur_user)
+		{
+			$_SESSION['dupe_users'][$cur_user['id']] = $cur_user;
+		}
+
+		$end_at = convert_table_utf8($db->prefix.'users', '_conv_users', $old_charset, 'id', $start_at, '_error_users');
 
 		if ($end_at !== true)
 			$query_str = '?stage=conv_users&req_old_charset='.$old_charset.'&start_at='.$end_at;
+		else if (!empty($_SESSION['dupe_users']))
+			$query_str = '?stage=conv_users_dupe';
+
+		break;
+
+
+	// Handle any duplicate users which occured due to conversion
+	case 'conv_users_dupe':
+		$query_str = '?stage=preparse_posts';
+
+		if (!$mysql || empty($_SESSION['dupe_users']))
+			break;
+
+		if (isset($_POST['form_sent']))
+		{
+			$errors = array();
+
+			require PUN_ROOT.'include/email.php';
+
+			foreach ($_SESSION['dupe_users'] as $id => $cur_user)
+			{
+				$errors[$id] = array();
+
+				$username = pun_trim($_POST['dupe_users'][$id]);
+
+				if (pun_strlen($username) < 2)
+					$errors[$id][] = 'Usernames must be at least 2 characters long. Please choose another (longer) username.';
+				else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
+					$errors[$id][] = 'Usernames must not be more than 25 characters long. Please choose another (shorter) username.';
+				else if (!strcasecmp($username, 'Guest'))
+					$errors[$id][] = 'The username guest is reserved. Please choose another username.';
+				else if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username) || preg_match('/((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))/', $username))
+					$errors[$id][] = 'Usernames may not be in the form of an IP address. Please choose another username.';
+				else if ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
+					$errors[$id][] = 'Usernames may not contain all the characters \', " and [ or ] at once. Please choose another username.';
+				else if (preg_match('/(?:\[\/?(?:b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list|\*)\]|\[(?:img|url|quote|list)=)/i', $username))
+					$errors[$id][] = 'Usernames may not contain any of the text formatting tags (BBCode) that the forum uses. Please choose another username.';
+
+				$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(preg_replace('/[^\w]/', '', $username)).'\')) AND id>1') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+
+				if ($db->num_rows($result))
+				{
+					$busy = $db->result($result);
+					$errors[$id][] = 'Someone is already registered with the username '.pun_htmlspecialchars($busy).'. The username you entered is too similar. The username must differ from that by at least one alphanumerical character (a-z or 0-9). Please choose a different username.';
+				}
+
+				if (empty($errors[$id]))
+				{
+					$old_username = $cur_user['username'];
+					$_SESSION['dupe_users'][$id]['username'] = $cur_user['username'] = $username;
+
+					$temp = array();
+					foreach ($cur_user as $idx => $value)
+						$temp[$idx] = $value === null ? 'NULL' : '\''.$db->escape($value).'\'';
+
+					// Insert the renamed user
+					$db->query('INSERT INTO '.$db->prefix.'users('.implode(',', array_keys($temp)).') VALUES ('.implode(',', array_values($temp)).')') or error('Unable to insert data to new table', __FILE__, __LINE__, $db->error());
+
+					// Renaming a user also affects a bunch of other stuff, lets fix that too...
+					$db->query('UPDATE '.$db->prefix.'posts SET poster=\''.$db->escape($username).'\' WHERE poster_id='.$id) or error('Unable to update posts', __FILE__, __LINE__, $db->error());
+
+					// TODO: The following must compare using collation utf8_bin otherwise we will accidently update posts/topics/etc belonging to both of the duplicate users, not just the one we renamed!
+					$db->query('UPDATE '.$db->prefix.'posts SET edited_by=\''.$db->escape($username).'\' WHERE edited_by=\''.$db->escape($old_username).'\' COLLATE utf8_bin') or error('Unable to update posts', __FILE__, __LINE__, $db->error());
+					$db->query('UPDATE '.$db->prefix.'topics SET poster=\''.$db->escape($username).'\' WHERE poster=\''.$db->escape($old_username).'\' COLLATE utf8_bin') or error('Unable to update topics', __FILE__, __LINE__, $db->error());
+					$db->query('UPDATE '.$db->prefix.'topics SET last_poster=\''.$db->escape($username).'\' WHERE last_poster=\''.$db->escape($old_username).'\' COLLATE utf8_bin') or error('Unable to update topics', __FILE__, __LINE__, $db->error());
+					$db->query('UPDATE '.$db->prefix.'forums SET last_poster=\''.$db->escape($username).'\' WHERE last_poster=\''.$db->escape($old_username).'\' COLLATE utf8_bin') or error('Unable to update forums', __FILE__, __LINE__, $db->error());
+					$db->query('UPDATE '.$db->prefix.'online SET ident=\''.$db->escape($username).'\' WHERE ident=\''.$db->escape($old_username).'\' COLLATE utf8_bin') or error('Unable to update online list', __FILE__, __LINE__, $db->error());
+
+					// If the user is a moderator or an administrator we have to update the moderator lists
+					$result = $db->query('SELECT g_moderator FROM '.$db->prefix.'groups WHERE g_id='.$cur_user['group_id']) or error('Unable to fetch group', __FILE__, __LINE__, $db->error());
+					$group_mod = $db->result($result);
+
+					if ($cur_user['group_id'] == PUN_ADMIN || $group_mod == '1')
+					{
+						$result = $db->query('SELECT id, moderators FROM '.$db->prefix.'forums') or error('Unable to fetch forum list', __FILE__, __LINE__, $db->error());
+
+						while ($cur_forum = $db->fetch_assoc($result))
+						{
+							$cur_moderators = ($cur_forum['moderators'] != '') ? unserialize($cur_forum['moderators']) : array();
+
+							if (in_array($id, $cur_moderators))
+							{
+								unset($cur_moderators[$old_username]);
+								$cur_moderators[$username] = $id;
+								uksort($cur_moderators, 'utf8_strcasecmp');
+
+								$db->query('UPDATE '.$db->prefix.'forums SET moderators=\''.$db->escape(serialize($cur_moderators)).'\' WHERE id='.$cur_forum['id']) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
+							}
+						}
+					}
+
+					// Email the user alerting them of the change
+					if (file_exists(PUN_ROOT.'lang/'.$cur_user['language'].'/mail_templates/rename.tpl'))
+						$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$cur_user['language'].'/mail_templates/rename.tpl'));
+					else if (file_exists(PUN_ROOT.'lang/'.$pun_config['o_default_lang'].'/mail_templates/rename.tpl'))
+						$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_config['o_default_lang'].'/mail_templates/rename.tpl'));
+					else
+						$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/English/mail_templates/rename.tpl'));
+
+					// The first row contains the subject
+					$first_crlf = strpos($mail_tpl, "\n");
+					$mail_subject = trim(substr($mail_tpl, 8, $first_crlf-8));
+					$mail_message = trim(substr($mail_tpl, $first_crlf));
+
+					$mail_subject = str_replace('<board_title>', $pun_config['o_board_title'], $mail_subject);
+					$mail_message = str_replace('<base_url>', $pun_config['o_base_url'].'/', $mail_message);
+					$mail_message = str_replace('<old_username>', $old_username, $mail_message);
+					$mail_message = str_replace('<new_username>', $username, $mail_message);
+					$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' Mailer', $mail_message);
+
+					pun_mail($cur_user['email'], $mail_subject, $mail_message);
+
+					unset($_SESSION['dupe_users'][$id]);
+				}
+			}
+		}
+
+		if (!empty($_SESSION['dupe_users']))
+		{
+			$query_str = '';
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>FluxBB Database Update</title>
+<link rel="stylesheet" type="text/css" href="style/<?php echo $default_style ?>.css" />
+</head>
+<body>
+
+<div id="pundb_update" class="pun">
+<div class="top-box"><div><!-- Top Corners --></div></div>
+<div class="punwrap">
+
+<div class="blockform">
+	<h2><span>Error converting users</span></h2>
+	<div class="box">
+		<form method="post" action="db_update.php?stage=conv_users_dupe">
+			<input type="hidden" name="form_sent" value="1" />
+			<div class="inform">
+				<div class="forminfo">
+						<p style="font-size: 1.1em">There was an error converting some users. This can occur when converting from FluxBB v1.2 if multiple users have registered with very similar usernames, for example "bob" and "böb".</p>
+						<p style="font-size: 1.1em">Below is a list of users who failed to convert. Please choose a new username for each user. Users who are renamed will automatically be sent an email alerting them of the change.</p>
+				</div>
+			</div>
+<?php
+
+			foreach ($_SESSION['dupe_users'] as $id => $cur_user)
+			{
+
+?>
+			<div class="inform">
+				<fieldset>
+					<legend><?php echo pun_htmlspecialchars($cur_user['username']); ?></legend>
+					<div class="infldset">
+						<label class="required"><strong>New username <span>(required)</span></strong><br /><input type="text" name="<?php echo 'dupe_users['.$id.']'; ?>" value="<?php if (isset($_POST['dupe_users'][$id])) echo pun_htmlspecialchars($_POST['dupe_users'][$id]); ?>" size="25" maxlength="25" /><br /></label>
+					</div>
+				</fieldset>
+<?php if (!empty($errors[$id])): ?>				<div class="forminfo error-info">
+					<h3>The following errors need to be corrected:</h3>
+					<ul class="error-list">
+<?php
+
+foreach ($errors[$id] as $cur_error)
+	echo "\t\t\t\t\t\t".'<li><strong>'.$cur_error.'</strong></li>'."\n";
+?>
+					</ul>
+				</div>
+<?php endif; ?>			</div>
+<?php
+
+			}
+
+?>
+			<p class="buttons"><input type="submit" name="rename" value="Rename users" /></p>
+		</form>
+	</div>
+</div>
+
+</div>
+<div class="end-box"><div><!-- Bottom Corners --></div></div>
+</div>
+
+</body>
+</html>
+<?php
+
+		}
 
 		break;
 
