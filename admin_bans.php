@@ -61,6 +61,12 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		{
 			$result = $db->query('SELECT poster_ip FROM '.$db->prefix.'posts WHERE poster_id='.$user_id.' ORDER BY posted DESC LIMIT 1') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 			$ban_ip = ($db->num_rows($result)) ? $db->result($result) : '';
+
+			if ($ban_ip == '')
+			{
+				$result = $db->query('SELECT registration_ip FROM '.$db->prefix.'users WHERE id='.$user_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+				$ban_ip = ($db->num_rows($result)) ? $db->result($result) : '';
+			}
 		}
 
 		$mode = 'add';
