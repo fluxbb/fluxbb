@@ -7,7 +7,7 @@
  */
 
 // The FluxBB version this script installs
-define('FORUM_VERSION', '1.4.0');
+define('FORUM_VERSION', '1.4.1');
 
 define('FORUM_DB_REVISION', 8);
 define('FORUM_SI_REVISION', 1);
@@ -122,7 +122,7 @@ if (!isset($_POST['form_sent']))
 	if (substr($base_url, -1) == '/')
 		$base_url = substr($base_url, 0, -1);
 
-	$db_type = $db_name = $db_username = $db_password = $db_prefix = $username = $email = $password1 = $password2 = '';
+	$db_type = $db_name = $db_username = $db_prefix = $username = $email = '';
 	$db_host = 'localhost';
 	$title = 'My FluxBB forum';
 	$description = '<p><span>Unfortunately no one can be told what FluxBB is - you have to see it for yourself.</span></p>';
@@ -135,7 +135,8 @@ else
 	$db_host = pun_trim($_POST['req_db_host']);
 	$db_name = pun_trim($_POST['req_db_name']);
 	$db_username = pun_trim($_POST['db_username']);
-	$db_password = pun_trim($_POST['db_password']);
+	$db_password1 = pun_trim($_POST['db_password1']);
+	$db_password2 = pun_trim($_POST['db_password2']);
 	$db_prefix = pun_trim($_POST['db_prefix']);
 	$username = pun_trim($_POST['req_username']);
 	$email = strtolower(pun_trim($_POST['req_email']));
@@ -151,6 +152,10 @@ else
 	// Make sure base_url doesn't end with a slash
 	if (substr($base_url, -1) == '/')
 		$base_url = substr($base_url, 0, -1);
+
+	// Validate database password
+	if ($db_password1 != $db_password2)
+		$alerts[] = 'Database passwords do not match.';
 
 	// Validate username and passwords
 	if (pun_strlen($username) < 2)
@@ -348,7 +353,8 @@ foreach ($alerts as $cur_alert)
 					<div class="infldset">
 						<p>Enter the username and password with which you connect to the database. Ignore for SQLite.</p>
 						<label class="conl">Database username<br /><input type="text" name="db_username" value="<?php echo pun_htmlspecialchars($db_username) ?>" size="30" maxlength="50" /><br /></label>
-						<label class="conl">Database password<br /><input type="password" name="db_password" value="<?php echo pun_htmlspecialchars($db_password) ?>" size="30" maxlength="50" /><br /></label>
+						<label class="conl">Database password<br /><input type="password" name="db_password1" size="30" maxlength="50" /><br /></label>
+						<label class="conl">Confirm database password<br /><input type="password" name="db_password2" size="30" maxlength="50" /><br /></label>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
@@ -380,8 +386,8 @@ foreach ($alerts as $cur_alert)
 					<legend>Enter and confirm Administrator's password</legend>
 					<div class="infldset">
 					<p>Passwords must be at least 4 characters long. Passwords are case sensitive.</p>
-						<label class="conl required"><strong>Password <span>(Required)</span></strong><br /><input id="req_password1" type="password" name="req_password1" value="<?php echo pun_htmlspecialchars($password1) ?>" size="16" /><br /></label>
-						<label class="conl required"><strong>Confirm password <span>(Required)</span></strong><br /><input type="password" name="req_password2" value="<?php echo pun_htmlspecialchars($password2) ?>" size="16" /><br /></label>
+						<label class="conl required"><strong>Password <span>(Required)</span></strong><br /><input id="req_password1" type="password" name="req_password1" size="16" /><br /></label>
+						<label class="conl required"><strong>Confirm password <span>(Required)</span></strong><br /><input type="password" name="req_password2" size="16" /><br /></label>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
@@ -521,7 +527,7 @@ else
 	}
 
 	// Create the database object (and connect/select db)
-	$db = new DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, false);
+	$db = new DBLayer($db_host, $db_username, $db_password1, $db_name, $db_prefix, false);
 
 	// Validate prefix
 	if (strlen($db_prefix) > 0 && (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $db_prefix) || strlen($db_prefix) > 40))
@@ -1695,7 +1701,7 @@ if (!$written)
 				<input type="hidden" name="db_host" value="<?php echo $db_host; ?>" />
 				<input type="hidden" name="db_name" value="<?php echo pun_htmlspecialchars($db_name); ?>" />
 				<input type="hidden" name="db_username" value="<?php echo pun_htmlspecialchars($db_username); ?>" />
-				<input type="hidden" name="db_password" value="<?php echo pun_htmlspecialchars($db_password); ?>" />
+				<input type="hidden" name="db_password" value="<?php echo pun_htmlspecialchars($db_password1); ?>" />
 				<input type="hidden" name="db_prefix" value="<?php echo pun_htmlspecialchars($db_prefix); ?>" />
 				<input type="hidden" name="cookie_name" value="<?php echo pun_htmlspecialchars($cookie_name); ?>" />
 				<input type="hidden" name="cookie_seed" value="<?php echo pun_htmlspecialchars($cookie_seed); ?>" />

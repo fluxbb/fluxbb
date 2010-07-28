@@ -28,11 +28,9 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		// If the ID of the user to ban was provided through GET (a link from profile.php)
 		if (isset($_GET['add_ban']))
 		{
-			$add_ban = intval($_GET['add_ban']);
-			if ($add_ban < 2)
+			$user_id = intval($_GET['add_ban']);
+			if ($user_id < 2)
 				message($lang_common['Bad request']);
-
-			$user_id = $add_ban;
 
 			$result = $db->query('SELECT group_id, username, email FROM '.$db->prefix.'users WHERE id='.$user_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 			if ($db->num_rows($result))
@@ -121,7 +119,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['E-mail label'] ?></th>
 									<td>
-										<input type="text" name="ban_email" size="40" maxlength="80" value="<?php if (isset($ban_email)) echo strtolower($ban_email); ?>" tabindex="3" />
+										<input type="text" name="ban_email" size="40" maxlength="80" value="<?php if (isset($ban_email)) echo $ban_email; ?>" tabindex="3" />
 										<span><?php echo $lang_admin_bans['E-mail help'] ?></span>
 									</td>
 								</tr>
