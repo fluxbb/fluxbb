@@ -263,7 +263,12 @@ while ($cur_post = $db->fetch_assoc($result))
 				$user_contacts[] = '<span class="email"><a href="misc.php?email='.$cur_post['poster_id'].'">'.$lang_common['Email'].'</a></span>';
 
 			if ($cur_post['url'] != '')
+			{
+				if ($pun_config['o_censoring'] == '1')
+					$cur_post['url'] = censor_words($cur_post['url']);
+
 				$user_contacts[] = '<span class="website"><a href="'.pun_htmlspecialchars($cur_post['url']).'">'.$lang_topic['Website'].'</a></span>';
+			}
 		}
 
 		if ($pun_user['is_admmod'])
