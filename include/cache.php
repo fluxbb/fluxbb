@@ -31,6 +31,9 @@ function generate_config_cache()
 	fwrite($fh, '<?php'."\n\n".'define(\'PUN_CONFIG_LOADED\', 1);'."\n\n".'$pun_config = '.var_export($output, true).';'."\n\n".'?>');
 
 	fclose($fh);
+
+	if (function_exists('apc_delete_file'))
+		apc_delete_file(FORUM_CACHE_DIR.'cache_config.php');
 }
 
 
@@ -56,6 +59,9 @@ function generate_bans_cache()
 	fwrite($fh, '<?php'."\n\n".'define(\'PUN_BANS_LOADED\', 1);'."\n\n".'$pun_bans = '.var_export($output, true).';'."\n\n".'?>');
 
 	fclose($fh);
+
+	if (function_exists('apc_delete_file'))
+		apc_delete_file(FORUM_CACHE_DIR.'cache_bans.php');
 }
 
 
@@ -81,6 +87,9 @@ function generate_ranks_cache()
 	fwrite($fh, '<?php'."\n\n".'define(\'PUN_RANKS_LOADED\', 1);'."\n\n".'$pun_ranks = '.var_export($output, true).';'."\n\n".'?>');
 
 	fclose($fh);
+
+	if (function_exists('apc_delete_file'))
+		apc_delete_file(FORUM_CACHE_DIR.'cache_ranks.php');
 }
 
 
@@ -139,6 +148,9 @@ function generate_quickjump_cache($group_id = false)
 		fwrite($fh, $output);
 
 		fclose($fh);
+
+		if (function_exists('apc_delete_file'))
+			apc_delete_file(FORUM_CACHE_DIR.'cache_quickjump_'.$group_id.'.php');
 	}
 }
 
