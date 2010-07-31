@@ -21,6 +21,7 @@ $lang_misc = array(
 
 // Report
 'No reason'						=>	'You must enter a reason.',
+'Reason too long'				=>	'Your message must be under 65535 bytes (~64kb).',
 'Report flood'					=>	'At least %s seconds have to pass between reports. Please wait a while and try sending again.',
 'Report redirect'				=>	'Post reported. Redirecting …',
 'Report post'					=>	'Report post',

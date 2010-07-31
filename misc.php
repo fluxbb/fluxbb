@@ -190,6 +190,8 @@ else if (isset($_GET['report']))
 		$reason = pun_linebreaks(pun_trim($_POST['req_reason']));
 		if ($reason == '')
 			message($lang_misc['No reason']);
+		else if (strlen($reason) > 65535) // TEXT field can only hold 65535 bytes
+			message($lang_misc['Reason too long']);
 
 		if ($pun_user['last_email_sent'] != '' && (time() - $pun_user['last_email_sent']) < $pun_user['g_email_flood'] && (time() - $pun_user['last_email_sent']) >= 0)
 			message(sprintf($lang_misc['Report flood'], $pun_user['g_email_flood']));
