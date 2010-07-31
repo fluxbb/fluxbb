@@ -21,6 +21,9 @@ class DBLayer
 	var $saved_queries = array();
 	var $num_queries = 0;
 
+	var $error_no = false;
+	var $error_msg = 'Unknown';
+
 	var $datatype_transformations = array(
 		'/^SERIAL$/'	=>	'INT(10) UNSIGNED AUTO_INCREMENT'
 	);
@@ -92,6 +95,9 @@ class DBLayer
 		{
 			if (defined('PUN_SHOW_QUERIES'))
 				$this->saved_queries[] = array($sql, 0);
+
+			$this->error_no = @mysql_errno($this->link_id);
+			$this->error_msg = @mysql_error($this->link_id);
 
 			// Rollback transaction
 			if ($this->in_transaction)
@@ -172,8 +178,8 @@ class DBLayer
 	function error()
 	{
 		$result['error_sql'] = @current(@end($this->saved_queries));
-		$result['error_no'] = @mysql_errno($this->link_id);
-		$result['error_msg'] = @mysql_error($this->link_id);
+		$result['error_no'] = $this->error_no;
+		$result['error_msg'] = $this->error_msg;
 
 		return $result;
 	}

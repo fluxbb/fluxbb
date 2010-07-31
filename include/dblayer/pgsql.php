@@ -124,6 +124,7 @@ class DBLayer
 			if (defined('PUN_SHOW_QUERIES'))
 				$this->saved_queries[] = array($sql, 0);
 
+			$this->error_no = false;
 			$this->error_msg = @pg_result_error($this->query_result);
 
 			if ($this->in_transaction)
@@ -217,17 +218,7 @@ class DBLayer
 	function error()
 	{
 		$result['error_sql'] = @current(@end($this->saved_queries));
-		$result['error_no'] = false;
-/*
-		if (!empty($this->query_result))
-		{
-			$result['error_msg'] = trim(@pg_result_error($this->query_result));
-			if ($result['error_msg'] != '')
-				return $result;
-		}
-
-		$result['error_msg'] = (!empty($this->link_id)) ? trim(@pg_last_error($this->link_id)) : trim(@pg_last_error());
-*/
+		$result['error_no'] = $this->error_no;
 		$result['error_msg'] = $this->error_msg;
 
 		return $result;
