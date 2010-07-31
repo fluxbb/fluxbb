@@ -280,7 +280,7 @@ if ($action == 'feed')
 
 	// Determine what type of feed to output
 	$type = isset($_GET['type']) ? strtolower($_GET['type']) : 'html';
-	if (!in_array($_GET['type'], array('html', 'rss', 'atom', 'xml')))
+	if (!in_array($type, array('html', 'rss', 'atom', 'xml')))
 		$type = 'html';
 
 	$show = isset($_GET['show']) ? intval($_GET['show']) : 15;
