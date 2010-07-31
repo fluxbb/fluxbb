@@ -76,6 +76,19 @@ if ($pun_user['g_read_board'] == '0')
 
 $action = isset($_GET['action']) ? $_GET['action'] : 'feed';
 
+// Handle a couple old formats, from FluxBB 1.2
+switch ($action)
+{
+	case 'active':
+		$action = 'feed';
+		$_GET['order'] = 'last_post';
+		break;
+
+	case 'new':
+		$action = 'feed';
+		$_GET['order'] = 'posted';
+		break;
+}
 
 //
 // Sends the proper headers for Basic HTTP Authentication
