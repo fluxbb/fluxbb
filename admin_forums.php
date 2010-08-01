@@ -29,7 +29,7 @@ if (isset($_POST['add_forum']))
 	if ($add_to_cat < 1)
 		message($lang_common['Bad request']);
 
-	$db->query('INSERT INTO '.$db->prefix.'forums (cat_id) VALUES('.$add_to_cat.')') or error('Unable to create forum', __FILE__, __LINE__, $db->error());
+	$db->query('INSERT INTO '.$db->prefix.'forums (forum_name, cat_id) VALUES(\''.$db->escape($lang_admin_forums['New forum']).'\', '.$add_to_cat.')') or error('Unable to create forum', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the quick jump cache
 	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
