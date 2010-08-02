@@ -470,7 +470,7 @@ else if (isset($_POST['preview']))
 $cur_index = 1;
 
 ?>
-<div class="blockform">
+<div id="postform" class="blockform">
 	<h2><span><?php echo $action ?></span></h2>
 	<div class="box">
 		<?php echo $form."\n" ?>

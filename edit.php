@@ -189,7 +189,7 @@ else if (isset($_POST['preview']))
 }
 
 ?>
-<div class="blockform">
+<div id="editform" class="blockform">
 	<h2><span><?php echo $lang_post['Edit post'] ?></span></h2>
 	<div class="box">
 		<form id="edit" method="post" action="edit.php?id=<?php echo $id ?>&amp;action=edit" onsubmit="return process_form(this)">
