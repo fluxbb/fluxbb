@@ -44,4 +44,5 @@ TABLE#forumperms .atcl {TEXT-ALIGN: left; WIDTH: 15em; WHITE-SPACE: nowrap}
 #adminconsole #linkst, #adminconsole #linksb A {FONT-WEIGHT: bold}
 
 /*** Plugins ***/
-#exampleplugin .inbox {PADDING: 6px 6px 0px 6px}
+.plugin .inbox {PADDING-BOTTOM: 10px}
+.plugin p {PADDING: 10px 10px 0}

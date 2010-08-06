@@ -94,7 +94,7 @@ else // If not, we show the "Show text" form
 	generate_admin_menu($plugin);
 
 ?>
-	<div id="exampleplugin" class="blockform">
+	<div class="plugin blockform">
 		<h2><span><?php echo $lang_admin_plugin_example['Example plugin title'] ?></span></h2>
 		<div class="box">
 			<div class="inbox">
