@@ -27,25 +27,17 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
 // If a post ID is specified we determine topic ID and page number so we can redirect to the correct message
 if ($pid)
 {
-	$result = $db->query('SELECT topic_id FROM '.$db->prefix.'posts WHERE id='.$pid) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT topic_id, posted FROM '.$db->prefix.'posts WHERE id='.$pid) or error(__FILE__, __LINE__);
 	if (!$db->num_rows($result))
 		message($lang_common['Bad request']);
 
-	$id = $db->result($result);
+	list($id, $posted) = $db->fetch_row($result);
 
-	// Determine on what page the post is located (depending on $pun_user['disp_posts'])
-	$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE topic_id='.$id.' ORDER BY posted') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-	$num_posts = $db->num_rows($result);
+	// Determine on what page the post is located (depending on $forum_user['disp_posts'])
+	$result = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id.' AND posted<'.$posted) or error(__FILE__, __LINE__);
+	$num_posts = $db->result($result) + 1;
 
-	for ($i = 0; $i < $num_posts; ++$i)
-	{
-		$cur_id = $db->result($result, $i);
-		if ($cur_id == $pid)
-			break;
-	}
-	++$i; // we started at 0
-
-	$_GET['p'] = ceil($i / $pun_user['disp_posts']);
+	$_GET['p'] = ceil($num_posts / $pun_user['disp_posts']);
 }
 
 // If action=new, we redirect to the first new post (if any)
