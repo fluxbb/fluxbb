@@ -29,7 +29,7 @@ function check_cookie(&$pun_user)
 	$cookie = array('user_id' => 1, 'password_hash' => 'Guest', 'expiration_time' => 0);
 
 	// If a cookie is set, we get the user_id and password hash from it
-	if (isset($_COOKIE[$cookie_name]) && preg_match('/a:3:{i:0;s:[\d]+:"([\d]+)";i:1;s:[\d]+:"([0-9a-f]+)";i:2;i:([\d]+);};/', $_COOKIE[$cookie_name], $matches))
+	if (isset($_COOKIE[$cookie_name]) && preg_match('/a:3:{i:0;s:\d+:"(\d+)";i:1;s:\d+:"([0-9a-f]+)";i:2;i:(\d+);}/', $_COOKIE[$cookie_name], $matches))
 		list(, $cookie['user_id'], $cookie['password_hash'], $cookie['expiration_time']) = $matches;
 
 	if ($cookie['user_id'] > 1)
