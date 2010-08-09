@@ -33,7 +33,7 @@ function generate_config_cache()
 	fclose($fh);
 
 	if (function_exists('apc_delete_file'))
-		apc_delete_file(FORUM_CACHE_DIR.'cache_config.php');
+		@apc_delete_file(FORUM_CACHE_DIR.'cache_config.php');
 }
 
 
@@ -61,7 +61,7 @@ function generate_bans_cache()
 	fclose($fh);
 
 	if (function_exists('apc_delete_file'))
-		apc_delete_file(FORUM_CACHE_DIR.'cache_bans.php');
+		@apc_delete_file(FORUM_CACHE_DIR.'cache_bans.php');
 }
 
 
@@ -89,7 +89,7 @@ function generate_ranks_cache()
 	fclose($fh);
 
 	if (function_exists('apc_delete_file'))
-		apc_delete_file(FORUM_CACHE_DIR.'cache_ranks.php');
+		@apc_delete_file(FORUM_CACHE_DIR.'cache_ranks.php');
 }
 
 
@@ -150,7 +150,7 @@ function generate_quickjump_cache($group_id = false)
 		fclose($fh);
 
 		if (function_exists('apc_delete_file'))
-			apc_delete_file(FORUM_CACHE_DIR.'cache_quickjump_'.$group_id.'.php');
+			@apc_delete_file(FORUM_CACHE_DIR.'cache_quickjump_'.$group_id.'.php');
 	}
 }
 
