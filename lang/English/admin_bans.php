@@ -24,7 +24,7 @@ $lang_admin_bans = array(
 
 'Ban search head'			=>	'Ban search',
 'Ban search subhead'		=>	'Enter search criteria',
-'Ban search info'			=>	'Search for bans in the database. You can enter one or more terms to search for. Wildcards in the form of asterisks (*) are accepted.',
+'Ban search info'			=>	'Search for bans in the database. You can enter one or more terms to search for. Wildcards in the form of asterisks (*) are accepted. To show all bans leave all fields empty.',
 'Date help'					=>	'(yyyy-mm-dd)',
 'Message label'				=>	'Message',
 'Expire after label'		=>	'Expire after',
