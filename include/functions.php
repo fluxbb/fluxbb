@@ -1101,9 +1101,9 @@ function pun_linebreaks($str)
 //
 // A wrapper for utf8_trim for compatibility
 //
-function pun_trim($str)
+function pun_trim($str, $charlist = false)
 {
-	return utf8_trim($str);
+	return utf8_trim($str, $charlist);
 }
 
 //
