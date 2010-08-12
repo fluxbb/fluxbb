@@ -24,7 +24,7 @@
 
 
 // The FluxBB version this script installs
-$fluxbb_version = '1.2.22';
+$fluxbb_version = '1.2.23';
 
 
 define('PUN_ROOT', './');
