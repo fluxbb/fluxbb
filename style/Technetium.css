@@ -906,6 +906,7 @@ body {
 	width:98%;
 	overflow: hidden;
 	padding-bottom: 6px;
+	word-wrap: break-word;
 	}
 
 .pun .postfootright ul, .pun .postfootright div, .pun .postfootright p,

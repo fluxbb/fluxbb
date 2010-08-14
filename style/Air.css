@@ -800,6 +800,7 @@ MAIN POSTS
 .pun .postmsg {
 	width:100%;
 	overflow: hidden;
+	word-wrap: break-word;
 }
 
 .pun .blockpost .postfootright {
