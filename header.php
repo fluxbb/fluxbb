@@ -165,7 +165,7 @@ $tpl_main = str_replace('<pun_page>', htmlspecialchars(basename($_SERVER['PHP_SE
 
 
 // START SUBST - <pun_title>
-$tpl_main = str_replace('<pun_title>', '<h1><span>'.pun_htmlspecialchars($pun_config['o_board_title']).'</span></h1>', $tpl_main);
+$tpl_main = str_replace('<pun_title>', '<h1><a href="'.$pun_config['o_base_url'].'">'.pun_htmlspecialchars($pun_config['o_board_title']).'</a></h1>', $tpl_main);
 // END SUBST - <pun_title>
 
 
