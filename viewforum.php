@@ -75,7 +75,7 @@ require PUN_ROOT.'header.php';
 	<div class="inbox crumbsplus">
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></li>
+			<li><span>»&#160;</span><strong><a href="viewforum.php?id=<?php echo $id ?>"><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></a></strong></li>
 		</ul>
 		<div class="pagepost">
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
@@ -251,7 +251,7 @@ else
 		</div>
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></li>
+			<li><span>»&#160;</span><strong><a href="viewforum.php?id=<?php echo $id ?>"><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></a></strong></li>
 		</ul>
 		<div class="clearer"></div>
 	</div>
