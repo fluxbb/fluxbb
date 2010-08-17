@@ -830,9 +830,10 @@ else if (isset($_POST['form_sent']))
 			// Make sure we got a valid style string
 			if (isset($_POST['form']['style']))
 			{
-				$form['style'] = preg_replace('#[\.\\\/]#', '', pun_trim($_POST['form']['style']));
-				if (!file_exists(PUN_ROOT.'style/'.$form['style'].'.css'))
-						message($lang_common['Bad request']);
+				$styles = forum_list_styles();
+				$form['style'] = pun_trim($_POST['form']['style']);
+				if (!in_array($form['style'], $styles))
+					message($lang_common['Bad request']);
 			}
 
 			break;
