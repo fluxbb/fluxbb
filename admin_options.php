@@ -32,7 +32,7 @@ if (isset($_POST['form_sent']))
 		'base_url'				=> pun_trim($_POST['form']['base_url']),
 		'default_timezone'		=> floatval($_POST['form']['default_timezone']),
 		'default_dst'			=> $_POST['form']['default_dst'] != '1' ? '0' : '1',
-		'default_lang'			=> preg_replace('#[\.\\\/]#', '', pun_trim($_POST['form']['default_lang'])),
+		'default_lang'			=> pun_trim($_POST['form']['default_lang']),
 		'default_style'			=> pun_trim($_POST['form']['default_style']),
 		'time_format'			=> pun_trim($_POST['form']['time_format']),
 		'date_format'			=> pun_trim($_POST['form']['date_format']),
@@ -95,8 +95,10 @@ if (isset($_POST['form_sent']))
 	if (substr($form['base_url'], -1) == '/')
 		$form['base_url'] = substr($form['base_url'], 0, -1);
 
-	if (!file_exists(PUN_ROOT.'lang/'.$form['default_lang'].'/common.php'))
+	$languages = forum_list_langs();
+	if (!in_array($form['default_lang'], $languages))
 		message($lang_common['Bad request']);
+	
 	$styles = forum_list_styles();
 	if (!in_array($form['default_style'], $styles))
 		message($lang_common['Bad request']);

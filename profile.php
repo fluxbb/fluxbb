@@ -669,9 +669,10 @@ else if (isset($_POST['form_sent']))
 			// Make sure we got a valid language string
 			if (isset($_POST['form']['language']))
 			{
-				$form['language'] = preg_replace('#[\.\\\/]#', '', pun_trim($_POST['form']['language']));
-				if (!file_exists(PUN_ROOT.'lang/'.$form['language'].'/common.php'))
-						message($lang_common['Bad request']);
+				$languages = forum_list_langs();
+				$form['language'] = pun_trim($_POST['form']['language']);
+				if (!in_array($form['language'], $languages))
+					message($lang_common['Bad request']);
 			}
 
 			if ($pun_user['is_admmod'])
