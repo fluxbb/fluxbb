@@ -33,7 +33,7 @@ if (isset($_POST['form_sent']))
 		'default_timezone'		=> floatval($_POST['form']['default_timezone']),
 		'default_dst'			=> $_POST['form']['default_dst'] != '1' ? '0' : '1',
 		'default_lang'			=> preg_replace('#[\.\\\/]#', '', pun_trim($_POST['form']['default_lang'])),
-		'default_style'			=> preg_replace('#[\.\\\/]#', '', pun_trim($_POST['form']['default_style'])),
+		'default_style'			=> pun_trim($_POST['form']['default_style']),
 		'time_format'			=> pun_trim($_POST['form']['time_format']),
 		'date_format'			=> pun_trim($_POST['form']['date_format']),
 		'timeout_visit'			=> intval($_POST['form']['timeout_visit']),
@@ -97,7 +97,8 @@ if (isset($_POST['form_sent']))
 
 	if (!file_exists(PUN_ROOT.'lang/'.$form['default_lang'].'/common.php'))
 		message($lang_common['Bad request']);
-	if (!file_exists(PUN_ROOT.'style/'.$form['default_style'].'.css'))
+	$styles = forum_list_styles();
+	if (!in_array($form['default_style'], $styles))
 		message($lang_common['Bad request']);
 
 	if ($form['time_format'] == '')
