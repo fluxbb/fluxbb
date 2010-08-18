@@ -983,6 +983,7 @@ MAIN POSTS
 .pun .postmsg .postimg img {
 	max-width: 98%;
 	vertical-align: middle;
+	margin: 7px 0.5em 7px 0;
 }
 
 .pun .postmsg .postimg a:link img, .pun .postmsg .postimg a:visited img {
