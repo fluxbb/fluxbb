@@ -111,6 +111,9 @@ if ($db->num_rows($result))
 	for ($i = 0;$cur_topic_id = $db->result($result, $i);$i++)
 		$topic_ids[] = $cur_topic_id;
 
+	if (empty($topic_ids))
+		error('The topic table and forum table seem to be out of sync!', __FILE__, __LINE__);
+
 	// Fetch list of topics to display on this page
 	if ($pun_user['is_guest'] || $pun_config['o_show_dot'] == '0')
 	{
