@@ -108,7 +108,7 @@ $cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smili
 
 <div id="postreview">
 	<div class="blockpost">
-		<div class="box<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?>">
+		<div class="box">
 			<div class="inbox">
 				<div class="postbody">
 					<div class="postleft">
