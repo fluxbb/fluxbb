@@ -637,11 +637,11 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 else if (isset($_POST['form_sent']))
 {
 	// Fetch the user group of the user we are editing
-	$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT u.username, u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 	if (!$db->num_rows($result))
 		message($lang_common['Bad request']);
 
-	list($group_id, $is_moderator) = $db->fetch_row($result);
+	list($old_username, $group_id, $is_moderator) = $db->fetch_row($result);
 
 	if ($pun_user['id'] != $id &&
 		(!$pun_user['is_admmod'] ||
@@ -683,18 +683,19 @@ else if (isset($_POST['form_sent']))
 				if ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1' && $pun_user['g_mod_rename_users'] == '1'))
 				{
 					$form['username'] = pun_trim($_POST['req_username']);
-					$old_username = pun_trim($_POST['old_username']);
-
-					// Check username
-					require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
-
-					$errors = array();
-					check_username($form['username'], $id);
-					if (!empty($errors))
-						message($errors[0]);
 
 					if ($form['username'] != $old_username)
+					{
+						// Check username
+						require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
+
+						$errors = array();
+						check_username($form['username'], $id);
+						if (!empty($errors))
+							message($errors[0]);
+
 						$username_updated = true;
+					}
 				}
 
 				// We only allow administrators to update the post count
@@ -1120,7 +1121,7 @@ else
 		if ($pun_user['is_admmod'])
 		{
 			if ($pun_user['g_id'] == PUN_ADMIN || $pun_user['g_mod_rename_users'] == '1')
-				$username_field = '<input type="hidden" name="old_username" value="'.pun_htmlspecialchars($user['username']).'" /><label class="required"><strong>'.$lang_common['Username'].' <span>'.$lang_common['Required'].'</span></strong><br /><input type="text" name="req_username" value="'.pun_htmlspecialchars($user['username']).'" size="25" maxlength="25" /><br /></label>'."\n";
+				$username_field = '<label class="required"><strong>'.$lang_common['Username'].' <span>'.$lang_common['Required'].'</span></strong><br /><input type="text" name="req_username" value="'.pun_htmlspecialchars($user['username']).'" size="25" maxlength="25" /><br /></label>'."\n";
 			else
 				$username_field = '<p>'.sprintf($lang_profile['Username info'], pun_htmlspecialchars($user['username'])).'</p>'."\n";
 
