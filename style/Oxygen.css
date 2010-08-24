@@ -74,7 +74,7 @@
 	font: 68.75%/1.4545em Verdana, Helvetica, Arial, sans-serif;
 	}
 
-.pun table, .pun td, .pun th, .pun input, .pun select, .pun optgroup, .pun textarea, .pun small, .pun samp {
+.pun table, .pun td, .pun th, .pun input, .pun select, .pun optgroup, .pun textarea, .pun small, .pun samp, .pun legend {
 	font-size: 1em;
 	font-family: verdana, helvetica, arial, sans-serif;
 	}

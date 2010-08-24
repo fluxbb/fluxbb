@@ -31,7 +31,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	font: 81.25%/1.462em Arial, Helvetica, sans-serif;
 }
 
-.pun table, .pun td, .pun th, .pun input, .pun select, .pun optgroup, .pun textarea {
+.pun table, .pun td, .pun th, .pun input, .pun select, .pun optgroup, .pun textarea, .pun legend {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 1em;
 }
