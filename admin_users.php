@@ -453,7 +453,7 @@ else if (isset($_GET['find_user']))
 else
 {
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Users']);
-	$focus_element = array('find_user', 'username');
+	$focus_element = array('find_user', 'form[username]');
 	define('PUN_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
 
