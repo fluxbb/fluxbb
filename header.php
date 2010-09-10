@@ -104,33 +104,34 @@ if (isset($required_fields))
 /* <![CDATA[ */
 function process_form(the_form)
 {
-	var element_names = new Object()
+	var element_names = {
 <?php
-
-	// Output a JavaScript array with localised field names
+	// Output a JavaScript object with localised field names
+	$tpl_temp = count($required_fields);
 	foreach ($required_fields as $elem_orig => $elem_trans)
-		echo "\t".'element_names["'.$elem_orig.'"] = "'.addslashes(str_replace('&#160;', ' ', $elem_trans)).'"'."\n";
-
+	{
+		echo "\t\t\"".$elem_orig.'": "'.addslashes(str_replace('&#160;', ' ', $elem_trans));
+		if (--$tpl_temp) echo "\",\n";
+		else echo "\"\n\t};\n";
+	}
 ?>
-
 	if (document.all || document.getElementById)
 	{
 		for (var i = 0; i < the_form.length; ++i)
 		{
-			var elem = the_form.elements[i]
-			if (elem.name && elem.name.substring(0, 4) == "req_")
+			var elem = the_form.elements[i];
+			if (elem.name && (/^req_/.test(elem.name)))
 			{
-				if (elem.type && (elem.type=="text" || elem.type=="textarea" || elem.type=="password" || elem.type=="file") && elem.value=='')
+				if (!elem.value && elem.type && (/^(?:text(?:area)?|password|file)$/i.test(elem.type)))
 				{
-					alert("\"" + element_names[elem.name] + "\" <?php echo $lang_common['required field'] ?>")
-					elem.focus()
-					return false
+					alert('"' + element_names[elem.name] + '" <?php echo $lang_common['required field'] ?>');
+					elem.focus();
+					return false;
 				}
 			}
 		}
 	}
-
-	return true
+	return true;
 }
 /* ]]> */
 </script>

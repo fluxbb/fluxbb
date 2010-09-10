@@ -225,46 +225,46 @@ if (!isset($_POST['form_sent']) || !empty($alerts))
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>FluxBB Installation</title>
 <link rel="stylesheet" type="text/css" href="style/<?php echo $default_style ?>.css" />
 <script type="text/javascript">
+/* <![CDATA[ */
 function process_form(the_form)
 {
-	var element_names = new Object()
-	element_names["req_db_type"] = "Database type"
-	element_names["req_db_host"] = "Database server hostname"
-	element_names["req_db_name"] = "Database name"
-	element_names["db_prefix"] = "Table prefix"
-	element_names["req_username"] = "Administrator username"
-	element_names["req_password1"] = "Administrator password 1"
-	element_names["req_password2"] = "Administrator password 2"
-	element_names["req_email"] = "Administrator's email"
-	element_names["req_title"] = "Board title"
-	element_names["req_base_url"] = "Base URL"
-
+	var element_names = {
+		"req_db_type": "Database type",
+		"req_db_host": "Database server hostname",
+		"req_db_name": "Database name",
+		"db_prefix": "Table prefix",
+		"req_username": "Administrator username",
+		"req_password1": "Administrator password 1",
+		"req_password2": "Administrator password 2",
+		"req_email": "Administrator's email",
+		"req_title": "Board title",
+		"req_base_url": "Base URL"
+	};
 	if (document.all || document.getElementById)
 	{
 		for (var i = 0; i < the_form.length; ++i)
 		{
-			var elem = the_form.elements[i]
-			if (elem.name && elem.name.substring(0, 4) == "req_")
+			var elem = the_form.elements[i];
+			if (elem.name && (/^req_/.test(elem.name)))
 			{
-				if (elem.type && (elem.type=="text" || elem.type=="textarea" || elem.type=="password" || elem.type=="file") && elem.value=='')
+				if (!elem.value && elem.type && (/^(?:text(?:area)?|password|file)$/i.test(elem.type)))
 				{
-					alert("\"" + element_names[elem.name] + "\" is a required field in this form.")
-					elem.focus()
-					return false
+					alert('"' + element_names[elem.name] + '" is a required field in this form.');
+					elem.focus();
+					return false;
 				}
 			}
 		}
 	}
-
-	return true
+	return true;
 }
+/* ]]> */
 </script>
 </head>
 <body onload="document.getElementById('install').req_db_type.focus();document.getElementById('install').start.disabled=false;">
