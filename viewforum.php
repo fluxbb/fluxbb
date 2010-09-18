@@ -254,7 +254,7 @@ else
 		</div>
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><strong><a href="viewforum.php?id=<?php echo $id ?>"><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></a></strong></li>
+			<li><span>»&#160;</span><a href="viewforum.php?id=<?php echo $id ?>"><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></a></li>
 		</ul>
 		<div class="clearer"></div>
 	</div>
