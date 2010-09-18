@@ -89,6 +89,7 @@ if (isset($_POST['form_sent']))
 		$errors[] = $lang_post['No message'];
 
 	$hide_smilies = isset($_POST['hide_smilies']) ? '1' : '0';
+	$stick_topic = isset($_POST['stick_topic']) && $is_admmod ? '1' : '0';
 
 	// Did everything go according to plan?
 	if (empty($errors) && !isset($_POST['preview']))
@@ -100,7 +101,7 @@ if (isset($_POST['form_sent']))
 		if ($can_edit_subject)
 		{
 			// Update the topic and any redirect topics
-			$db->query('UPDATE '.$db->prefix.'topics SET subject=\''.$db->escape($subject).'\' WHERE id='.$cur_post['tid'].' OR moved_to='.$cur_post['tid']) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'topics SET subject=\''.$db->escape($subject).'\', sticky='.$stick_topic.' WHERE id='.$cur_post['tid'].' OR moved_to='.$cur_post['tid']) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
 
 			// We changed the subject, so we need to take that into account when we update the search words
 			update_search_index('edit', $id, $message, $subject);
@@ -212,6 +213,14 @@ else if (isset($_POST['preview']))
 <?php
 
 $checkboxes = array();
+if ($can_edit_subject && $is_admmod)
+{
+	if (isset($_POST['stick_topic']) || $cur_post['sticky'] == '1')
+		$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" checked="checked" tabindex="'.($cur_index++).'" />'.$lang_common['Stick topic'].'<br /></label>';
+	else
+		$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" tabindex="'.($cur_index++).'" />'.$lang_common['Stick topic'].'<br /></label>';
+}
+
 if ($pun_config['o_smilies'] == '1')
 {
 	if (isset($_POST['hide_smilies']) || $cur_post['hide_smilies'] == '1')
