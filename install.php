@@ -193,12 +193,12 @@ else
 	if ($title == '')
 		$alerts[] = $lang_install['No board title'];
 
-	$default_lang = preg_replace('#[\.\\\/]#', '', $default_lang);
-	if (!file_exists(PUN_ROOT.'lang/'.$default_lang.'/common.php'))
+	$languages = forum_list_langs();
+	if (!in_array($default_lang, $languages))
 		$alerts[] = $lang_install['Error default language'];
 
-	$default_style = preg_replace('#[\.\\\/]#', '', $default_style);
-	if (!file_exists(PUN_ROOT.'style/'.$default_style.'.css'))
+	$styles = forum_list_styles();
+	if (!in_array($default_style, $styles))
 		$alerts[] = $lang_install['Error default style'];
 }
 
