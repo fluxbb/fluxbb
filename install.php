@@ -188,7 +188,7 @@ else
 	require PUN_ROOT.'include/email.php';
 
 	if (!is_valid_email($email))
-		$alerts[] = $lang_install['Wrong mail'];
+		$alerts[] = $lang_install['Wrong email'];
 
 	if ($title == '')
 		$alerts[] = $lang_install['No board title'];
@@ -1735,7 +1735,7 @@ else
 		<div class="fakeform">
 			<div class="inform">
 				<div class="forminfo">
-					<p><?php echo $lang_install['FluxBB has been fully installed'] ?></p>
+					<p><?php echo $lang_install['FluxBB has been installed'] ?></p>
 				</div>
 			</div>
 		</div>
