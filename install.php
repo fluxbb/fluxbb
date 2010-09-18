@@ -1629,11 +1629,11 @@ else
 
 	$alerts = array();
 	// Check if the cache directory is writable
-	if (!@is_writable('./cache/'))
+	if (!@is_writable(PUN_ROOT.'cache/'))
 		$alerts[] = $lang_install['Alert cache'];
 
 	// Check if default avatar directory is writable
-	if (!@is_writable('./img/avatars/'))
+	if (!@is_writable(PUN_ROOT.'img/avatars/'))
 		$alerts[] = $lang_install['Alert avatar'];
 
 	// Check if we disabled uploading avatars because file_uploads was disabled
