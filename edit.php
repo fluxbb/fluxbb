@@ -89,7 +89,9 @@ if (isset($_POST['form_sent']))
 		$errors[] = $lang_post['No message'];
 
 	$hide_smilies = isset($_POST['hide_smilies']) ? '1' : '0';
-	$stick_topic = isset($_POST['stick_topic']) && $is_admmod ? '1' : '0';
+	$stick_topic = isset($_POST['stick_topic']) ? '1' : '0';
+	if (!$is_admmod)
+		$stick_topic = $cur_post['sticky'];
 
 	// Did everything go according to plan?
 	if (empty($errors) && !isset($_POST['preview']))
