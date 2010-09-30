@@ -961,34 +961,30 @@ else
 			$db->create_table('search_words', $schema);
 		}
 
-		// If we haven't done the subscription stuff yet...
-		if (UPDATE_TO_DB_REVISION < 9)
+		// If the subscription table hasn't been renamed yet, rename it
+		if ($db->table_exists('subscriptions') && !$db->table_exists('topic_subscriptions'))
+			$db->query('ALTER TABLE '.$db->prefix.'subscriptions RENAME TO '.$db->prefix.'topic_subscriptions') or error('Unable to rename subscriptions table', __FILE__, __LINE__, $db->error());
+
+		// if we don't have the forum_subscriptions table, create it
+		if (!$db->table_exists('forum_subscriptions'))
 		{
-			// If the subscription table hasn't been renamed yet, rename it
-			if ($db->table_exists('subscriptions') && !$db->table_exists('topic_subscriptions'))
-				$db->query('ALTER TABLE '.$db->prefix.'subscriptions RENAME TO '.$db->prefix.'topic_subscriptions') or error('Unable to rename subscriptions table', __FILE__, __LINE__, $db->error());
-
-			// if we don't have the forum_subscriptions table, create it
-			if (!$db->table_exists('forum_subscriptions'))
-			{
-				$schema = array(
-					'FIELDS'		=> array(
-						'user_id'		=> array(
-							'datatype'		=> 'INT(10) UNSIGNED',
-							'allow_null'	=> false,
-							'default'		=> '0'
-						),
-						'forum_id'		=> array(
-							'datatype'		=> 'INT(10) UNSIGNED',
-							'allow_null'	=> false,
-							'default'		=> '0'
-						)
+			$schema = array(
+				'FIELDS'		=> array(
+					'user_id'		=> array(
+						'datatype'		=> 'INT(10) UNSIGNED',
+						'allow_null'	=> false,
+						'default'		=> '0'
 					),
-					'PRIMARY KEY'	=> array('user_id', 'forum_id')
-				);
+					'forum_id'		=> array(
+						'datatype'		=> 'INT(10) UNSIGNED',
+						'allow_null'	=> false,
+						'default'		=> '0'
+					)
+				),
+				'PRIMARY KEY'	=> array('user_id', 'forum_id')
+			);
 
-				$db->create_table('forum_subscriptions', $schema) or error('Unable to create forum subscriptions table', __FILE__, __LINE__, $db->error());
-			}
+			$db->create_table('forum_subscriptions', $schema) or error('Unable to create forum subscriptions table', __FILE__, __LINE__, $db->error());
 		}
 
 		// Change the default style if the old doesn't exist anymore
@@ -1266,14 +1262,9 @@ else
 	case 'conv_subscriptions':
 		$query_str = '?stage=conv_topics&req_old_charset='.$old_charset;
 
-		// The subscription table changed in revision 9
-		if (UPDATE_TO_DB_REVISION < 9)
-			alter_table_utf8($db->prefix.'subscriptions');
-		else
-		{
-			alter_table_utf8($db->prefix.'topic_subscriptions');
-			alter_table_utf8($db->prefix.'forum_subscriptions');
-		}
+		// By this stage we should have already renamed the subscription table
+		alter_table_utf8($db->prefix.'topic_subscriptions');
+		alter_table_utf8($db->prefix.'forum_subscriptions'); // This should actually already be utf8, but for consistency...
 
 		break;
 
