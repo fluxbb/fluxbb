@@ -9,7 +9,7 @@
 // The FluxBB version this script installs
 define('FORUM_VERSION', '1.4.2');
 
-define('FORUM_DB_REVISION', 8);
+define('FORUM_DB_REVISION', 9);
 define('FORUM_SI_REVISION', 1);
 define('FORUM_PARSER_REVISION', 1);
 
@@ -1201,7 +1201,26 @@ else
 		'PRIMARY KEY'	=> array('user_id', 'topic_id')
 	);
 
-	$db->create_table('subscriptions', $schema) or error('Unable to create subscriptions table', __FILE__, __LINE__, $db->error());
+	$db->create_table('topic_subscriptions', $schema) or error('Unable to create topic subscriptions table', __FILE__, __LINE__, $db->error());
+
+
+	$schema = array(
+		'FIELDS'		=> array(
+			'user_id'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'forum_id'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			)
+		),
+		'PRIMARY KEY'	=> array('user_id', 'forum_id')
+	);
+
+	$db->create_table('forum_subscriptions', $schema) or error('Unable to create forum subscriptions table', __FILE__, __LINE__, $db->error());
 
 
 	$schema = array(

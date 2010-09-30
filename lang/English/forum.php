@@ -9,6 +9,9 @@ $lang_forum = array(
 'Sticky'		=>	'Sticky:',
 'Closed'		=>	'Closed:',
 'Empty forum'	=>	'Forum is empty.',
-'Mod controls'	=>	'Moderator controls'
+'Mod controls'	=>	'Moderator controls',
+'Is subscribed'	=>	'You are currently subscribed to this forum',
+'Unsubscribe'	=>	'Unsubscribe',
+'Subscribe'		=>	'Subscribe to this forum'
 
 );

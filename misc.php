@@ -287,46 +287,81 @@ else if (isset($_GET['report']))
 }
 
 
-else if (isset($_GET['subscribe']))
+else if ($action == 'subscribe')
 {
 	if ($pun_user['is_guest'] || $pun_config['o_subscriptions'] != '1')
 		message($lang_common['No permission']);
 
-	$topic_id = intval($_GET['subscribe']);
-	if ($topic_id < 1)
+	$topic_id = isset($_GET['tid']) ? intval($_GET['tid']) : 0;
+	$forum_id = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
+	if ($topic_id < 1 && $forum_id < 1)
 		message($lang_common['Bad request']);
 
-	// Make sure the user can view the topic
-	$result = $db->query('SELECT 1 FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$topic_id.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
-		message($lang_common['Bad request']);
+	if ($topic_id)
+	{
+		// Make sure the user can view the topic
+		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$topic_id.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
+		if (!$db->num_rows($result))
+			message($lang_common['Bad request']);
 
-	$result = $db->query('SELECT 1 FROM '.$db->prefix.'subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$topic_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result))
-		message($lang_misc['Already subscribed']);
+		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topic_subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$topic_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
+		if ($db->num_rows($result))
+			message($lang_misc['Already subscribed topic']);
 
-	$db->query('INSERT INTO '.$db->prefix.'subscriptions (user_id, topic_id) VALUES('.$pun_user['id'].' ,'.$topic_id.')') or error('Unable to add subscription', __FILE__, __LINE__, $db->error());
+		$db->query('INSERT INTO '.$db->prefix.'topic_subscriptions (user_id, topic_id) VALUES('.$pun_user['id'].' ,'.$topic_id.')') or error('Unable to add subscription', __FILE__, __LINE__, $db->error());
 
-	redirect('viewtopic.php?id='.$topic_id, $lang_misc['Subscribe redirect']);
+		redirect('viewtopic.php?id='.$topic_id, $lang_misc['Subscribe redirect']);
+	}
+
+	if ($forum_id)
+	{
+		// Make sure the user can view the forum
+		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$forum_id) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
+		if (!$db->num_rows($result))
+			message($lang_common['Bad request']);
+
+		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forum_subscriptions WHERE user_id='.$pun_user['id'].' AND forum_id='.$forum_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
+		if ($db->num_rows($result))
+			message($lang_misc['Already subscribed forum']);
+
+		$db->query('INSERT INTO '.$db->prefix.'forum_subscriptions (user_id, forum_id) VALUES('.$pun_user['id'].' ,'.$forum_id.')') or error('Unable to add subscription', __FILE__, __LINE__, $db->error());
+
+		redirect('viewforum.php?id='.$forum_id, $lang_misc['Subscribe redirect']);
+	}
 }
 
 
-else if (isset($_GET['unsubscribe']))
+else if ($action == 'unsubscribe')
 {
 	if ($pun_user['is_guest'] || $pun_config['o_subscriptions'] != '1')
 		message($lang_common['No permission']);
 
-	$topic_id = intval($_GET['unsubscribe']);
-	if ($topic_id < 1)
+	$topic_id = isset($_GET['tid']) ? intval($_GET['tid']) : 0;
+	$forum_id = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
+	if ($topic_id < 1 && $forum_id < 1)
 		message($lang_common['Bad request']);
 
-	$result = $db->query('SELECT 1 FROM '.$db->prefix.'subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$topic_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
-		message($lang_misc['Not subscribed']);
+	if ($topic_id)
+	{
+		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topic_subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$topic_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
+		if (!$db->num_rows($result))
+			message($lang_misc['Not subscribed topic']);
 
-	$db->query('DELETE FROM '.$db->prefix.'subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$topic_id) or error('Unable to remove subscription', __FILE__, __LINE__, $db->error());
+		$db->query('DELETE FROM '.$db->prefix.'topic_subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$topic_id) or error('Unable to remove subscription', __FILE__, __LINE__, $db->error());
 
-	redirect('viewtopic.php?id='.$topic_id, $lang_misc['Unsubscribe redirect']);
+		redirect('viewtopic.php?id='.$topic_id, $lang_misc['Unsubscribe redirect']);
+	}
+
+	if ($forum_id)
+	{
+		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forum_subscriptions WHERE user_id='.$pun_user['id'].' AND forum_id='.$forum_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
+		if (!$db->num_rows($result))
+			message($lang_misc['Not subscribed forum']);
+
+		$db->query('DELETE FROM '.$db->prefix.'forum_subscriptions WHERE user_id='.$pun_user['id'].' AND forum_id='.$forum_id) or error('Unable to remove subscription', __FILE__, __LINE__, $db->error());
+
+		redirect('viewforum.php?id='.$forum_id, $lang_misc['Unsubscribe redirect']);
+	}
 }
 
 

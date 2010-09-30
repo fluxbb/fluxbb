@@ -9,7 +9,7 @@
 // The FluxBB version this script updates to
 define('UPDATE_TO', '1.4.2');
 
-define('UPDATE_TO_DB_REVISION', 8);
+define('UPDATE_TO_DB_REVISION', 9);
 define('UPDATE_TO_SI_REVISION', 1);
 define('UPDATE_TO_PARSER_REVISION', 1);
 
@@ -959,6 +959,32 @@ else
 			}
 
 			$db->create_table('search_words', $schema);
+		}
+
+		// If the subscription table hasn't been renamed yet, rename it
+		if ($db->table_exists('subscriptions') && !$db->table_exists('topic_subscriptions'))
+			$db->query('ALTER TABLE '.$db->prefix.'subscriptions RENAME TO '.$db->prefix.'topic_subscriptions') or error('Unable to rename subscriptions table', __FILE__, __LINE__, $db->error());
+
+		// if we don't have the forum_subscriptions table, create it
+		if (!$db->table_exists('forum_subscriptions'))
+		{
+			$schema = array(
+				'FIELDS'		=> array(
+					'user_id'		=> array(
+						'datatype'		=> 'INT(10) UNSIGNED',
+						'allow_null'	=> false,
+						'default'		=> '0'
+					),
+					'forum_id'		=> array(
+						'datatype'		=> 'INT(10) UNSIGNED',
+						'allow_null'	=> false,
+						'default'		=> '0'
+					)
+				),
+				'PRIMARY KEY'	=> array('user_id', 'forum_id')
+			);
+
+			$db->create_table('forum_subscriptions', $schema) or error('Unable to create forum subscriptions table', __FILE__, __LINE__, $db->error());
 		}
 
 		// Change the default style if the old doesn't exist anymore
