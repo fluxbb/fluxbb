@@ -961,9 +961,8 @@ else
 			$db->create_table('search_words', $schema);
 		}
 
-		// If the subscription table hasn't been renamed yet, rename it
-		if ($db->table_exists('subscriptions') && !$db->table_exists('topic_subscriptions'))
-			$db->query('ALTER TABLE '.$db->prefix.'subscriptions RENAME TO '.$db->prefix.'topic_subscriptions') or error('Unable to rename subscriptions table', __FILE__, __LINE__, $db->error());
+		// Rename the subscription table
+		$db->rename_table('subscriptions', 'topic_subscriptions');
 
 		// if we don't have the forum_subscriptions table, create it
 		if (!$db->table_exists('forum_subscriptions'))

@@ -349,6 +349,35 @@ class DBLayer
 	}
 
 
+	function rename_table($old_name, $new_name, $no_prefix = false)
+	{
+		// If there new table exists and the old one doesn't, then we're happy
+		if ($this->table_exists($new_table, $no_prefix) && !$this->table_exists($old_table, $no_prefix))
+			return true;
+
+		$table = $this->get_table_info($table_name, $no_prefix);
+
+		// Create new table
+		$newtable = str_replace('CREATE TABLE '.($no_prefix ? '' : $this->prefix).$this->escape($old_name).' (', 'CREATE TABLE '.($no_prefix ? '' : $this->prefix).$this->escape($new_name).' (', $table['sql']);
+		$result = $this->query($newtable) ? true : false;
+
+		// Recreate indexes
+		if (!empty($table['indices']))
+		{
+			foreach ($table['indices'] as $cur_index)
+				$result &= $this->query($cur_index) ? true : false;
+		}
+
+		// Copy content across
+		$result &= $this->query('INSERT INTO '.($no_prefix ? '' : $this->prefix).$this->escape($new_name).' SELECT * FROM '.($no_prefix ? '' : $this->prefix).$this->escape($old_name)) ? true : false;
+
+		// Drop old table
+		$result &= $this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name));
+
+		return $result;
+	}
+
+
 	function get_table_info($table_name, $no_prefix = false)
 	{
 		// Grab table info
