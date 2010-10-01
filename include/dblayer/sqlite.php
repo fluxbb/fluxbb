@@ -355,7 +355,7 @@ class DBLayer
 		if ($this->table_exists($new_table, $no_prefix) && !$this->table_exists($old_table, $no_prefix))
 			return true;
 
-		$table = $this->get_table_info($table_name, $no_prefix);
+		$table = $this->get_table_info($old_name, $no_prefix);
 
 		// Create new table
 		$newtable = str_replace('CREATE TABLE '.($no_prefix ? '' : $this->prefix).$this->escape($old_name).' (', 'CREATE TABLE '.($no_prefix ? '' : $this->prefix).$this->escape($new_name).' (', $table['sql']);
