@@ -1341,6 +1341,14 @@ PROFILES (+ ADMIN MENU)
 	padding: 18px;
 }
 
+#adintro li span {
+	display: inline-block;
+	padding-left: 16px;
+	margin-left: 8px;
+	line-height: normal;
+	background: url(Earth/img/bull.png) center left no-repeat;
+}
+
 #adstats .inbox, #adintro .inbox {
 	border-style: solid;
 	border-width: 1px;
