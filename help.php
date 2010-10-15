@@ -99,17 +99,17 @@ require PUN_ROOT.'header.php';
 		<p><code>[list][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code>
 		<br /><span><?php echo $lang_help['produces list'] ?></span></p>
 		<div class="postmsg">
-			<ul><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ul>
+			<ul><li><p><?php echo $lang_help['List text 1'] ?></p></li><li><p><?php echo $lang_help['List text 2'] ?></p></li><li><p><?php echo $lang_help['List text 3'] ?></p></li></ul>
 		</div>
 		<p><code>[list=1][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code>
 		<br /><span><?php echo $lang_help['produces decimal list'] ?></span></p>
 		<div class="postmsg">
-			<ol class="decimal"><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ol>
+			<ol class="decimal"><li><p><?php echo $lang_help['List text 1'] ?></p></li><li><p><?php echo $lang_help['List text 2'] ?></p></li><li><p><?php echo $lang_help['List text 3'] ?></p></li></ol>
 		</div>
 		<p><code>[list=a][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code>
 		<br /><span><?php echo $lang_help['produces alpha list'] ?></span></p>
 		<div class="postmsg">
-			<ol class="alpha"><li><?php echo $lang_help['List text 1'] ?></li><li><?php echo $lang_help['List text 2'] ?></li><li><?php echo $lang_help['List text 3'] ?></li></ol>
+			<ol class="alpha"><li><p><?php echo $lang_help['List text 1'] ?></p></li><li><p><?php echo $lang_help['List text 2'] ?></p></li><li><p><?php echo $lang_help['List text 3'] ?></p></li></ol>
 		</div>
 	</div>
 </div>
