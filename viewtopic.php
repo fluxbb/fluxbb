@@ -49,7 +49,7 @@ else if ($action == 'new')
 		$tracked_topics = get_tracked_topics();
 		$last_viewed = isset($tracked_topics['topics'][$id]) ? $tracked_topics['topics'][$id] : $pun_user['last_visit'];
 
-		$result = $db->query('SELECT MIN(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id.' AND posted>'.$last_viewed) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT MIN(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id.' AND posted>'.$last_viewed) or error('Unable to fetch first new post info', __FILE__, __LINE__, $db->error());
 		$first_new_post_id = $db->result($result);
 
 		if ($first_new_post_id)
@@ -67,7 +67,7 @@ else if ($action == 'new')
 // If action=last, we redirect to the last post
 else if ($action == 'last')
 {
-	$result = $db->query('SELECT MAX(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT MAX(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id) or error('Unable to fetch last post info', __FILE__, __LINE__, $db->error());
 	$last_post_id = $db->result($result);
 
 	if ($last_post_id)
