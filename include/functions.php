@@ -1246,6 +1246,130 @@ function maintenance_message()
 
 
 //
+// Display a message when the board needs installed
+//
+function install_message()
+{
+	$default_style = 'Air';
+	$default_lang = 'English';
+
+	// Attempt to load the common language file
+	if (file_exists(PUN_ROOT.'lang/'.$default_lang.'/common.php'))
+	{
+		include PUN_ROOT.'lang/'.$default_lang.'/common.php';
+		include PUN_ROOT.'lang/'.$default_lang.'/install.php';
+	}
+	else
+		error('There is no valid language pack \''.pun_htmlspecialchars($default_lang).'\' installed. Please reinstall a language of that name');
+
+	if (file_exists(PUN_ROOT.'style/'.$default_style.'/maintenance.tpl'))
+	{
+		$tpl_file = PUN_ROOT.'style/'.$default_style.'/maintenance.tpl';
+		$tpl_inc_dir = PUN_ROOT.'style/'.$default_style.'/';
+	}
+	else
+	{
+		$tpl_file = PUN_ROOT.'include/template/maintenance.tpl';
+		$tpl_inc_dir = PUN_ROOT.'include/user/';
+	}
+
+	$tpl_maint = file_get_contents($tpl_file);
+
+	// START SUBST - <pun_include "*">
+	preg_match_all('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_maint, $pun_includes, PREG_SET_ORDER);
+
+	foreach ($pun_includes as $cur_include)
+	{
+		ob_start();
+
+		// Allow for overriding user includes, too.
+		if (file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
+			require $tpl_inc_dir.$cur_include[1].'.'.$cur_include[2];
+		else if (file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
+			require PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
+		else
+			error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file)));
+
+		$tpl_temp = ob_get_contents();
+		$tpl_maint = str_replace($cur_include[0], $tpl_temp, $tpl_maint);
+		ob_end_clean();
+	}
+	// END SUBST - <pun_include "*">
+
+
+	// START SUBST - <pun_language>
+	$tpl_maint = str_replace('<pun_language>', $lang_common['lang_identifier'], $tpl_maint);
+	// END SUBST - <pun_language>
+
+
+	// START SUBST - <pun_content_direction>
+	$tpl_maint = str_replace('<pun_content_direction>', $lang_common['lang_direction'], $tpl_maint);
+	// END SUBST - <pun_content_direction>
+
+
+	// START SUBST - <pun_head>
+	ob_start();
+
+	$page_title = array($lang_install['Install']);
+
+?>
+<title><?php echo generate_page_title($page_title) ?></title>
+<link rel="stylesheet" type="text/css" href="style/<?php echo $default_style.'.css' ?>" />
+<?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_maint = str_replace('<pun_head>', $tpl_temp, $tpl_maint);
+	ob_end_clean();
+	// END SUBST - <pun_head>
+
+
+	// START SUBST - <pun_maint_main>
+	ob_start();
+
+?>
+<div class="blockform">
+	<h2><span><?php echo $lang_install['Install'] ?></span></h2>
+	<p><?php echo $lang_install['Install message'] ?></p>
+	<div class="box">
+		<form id="install" method="post" action="install.php">
+			<div class="inform">
+				<fieldset>
+				<legend><?php echo $lang_install['Choose install language'] ?></legend>
+					<div class="infldset">
+						<p><?php echo $lang_install['Choose install language info'] ?></p>
+						<label class="required"><strong><?php echo $lang_install['Install language'] ?> <span><?php echo $lang_install['Required'] ?></span></strong><br /><select id="req_default_lang" name="req_default_lang">
+<?php
+
+		$languages = forum_list_langs();
+		foreach ($languages as $temp)
+		{
+			if ($temp == $default_lang)
+				echo "\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.$temp.'</option>'."\n";
+			else
+				echo "\t\t\t\t\t\t\t".'<option value="'.$temp.'">'.$temp.'</option>'."\n";
+		}
+
+?>
+						</select><br /></label>
+					</div>
+				</fieldset>
+			</div>
+			<p class="buttons"><input type="submit" name="submit" value="<?php echo $lang_install['Next'] ?>" /></p>
+		</form>
+	</div>
+</div>
+<?php
+
+	$tpl_temp = trim(ob_get_contents());
+	$tpl_maint = str_replace('<pun_maint_main>', $tpl_temp, $tpl_maint);
+	ob_end_clean();
+	// END SUBST - <pun_maint_main>
+
+	exit($tpl_maint);
+}
+
+
+//
 // Display $message and redirect user to $destination_url
 //
 function redirect($destination_url, $message)

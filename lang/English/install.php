@@ -4,6 +4,11 @@
 
 $lang_install = array(
 
+'Install message'				=>	'The file \'config.php\' doesn\'t exist or is corrupt. This implies that FluxBB has not yet been installed. To install, please follow the instructions below.',
+'Choose install language'		=>	'Choose the install script language',
+'Choose install language info'	=>	'The language used for the install script.',
+'Install language'				=>	'Install language',
+'Next'							=>	'Next',
 'Already installed'				=>	'It seems like FluxBB is already installed. You should go <a href="index.php">here</a> instead.',
 'You are running error'			=>	'You are running %1$s version %2$s. FluxBB %3$s requires at least %1$s %4$s to run properly. You must upgrade your %1$s installation before you can continue.',
 'My FluxBB Forum'				=>	'My FluxBB Forum',

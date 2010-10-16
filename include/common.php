@@ -38,10 +38,6 @@ if (file_exists(PUN_ROOT.'config.php'))
 if (defined('FORUM'))
 	define('PUN', FORUM);
 
-// If PUN isn't defined, config.php is missing or corrupt
-if (!defined('PUN'))
-	exit('The file \'config.php\' doesn\'t exist or is corrupt. Please run <a href="install.php">install.php</a> to install FluxBB first.');
-
 // Load the functions script
 require PUN_ROOT.'include/functions.php';
 
@@ -53,6 +49,10 @@ forum_remove_bad_characters();
 
 // Reverse the effect of register_globals
 forum_unregister_globals();
+
+// If PUN isn't defined, config.php is missing or corrupt
+if (!defined('PUN'))
+	install_message();
 
 // Record the start time (will be used to calculate the generation time for the page)
 $pun_start = get_microtime();

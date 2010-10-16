@@ -22,8 +22,8 @@ define('PUN_SEARCH_MAX_WORD', 20);
 
 define('PUN_ROOT', './');
 
-// TODO: How do we get this?
-$default_lang = 'English';
+// If we've been passed a default language, use it
+$default_lang = isset($_POST['req_default_lang']) ? trim($_POST['req_default_lang']) : 'English';
 
 // If such a language pack doesn't exist, or isn't up-to-date enough to translate this page, default to English
 if (!file_exists(PUN_ROOT.'lang/'.$default_lang.'/install.php'))
