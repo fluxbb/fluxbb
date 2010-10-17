@@ -30,6 +30,12 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	$action = (isset($_GET['action'])) ? $_GET['action'] : null;
 	$forum = (isset($_GET['forum'])) ? intval($_GET['forum']) : -1;
 	$sort_dir = (isset($_GET['sort_dir']) && $_GET['sort_dir'] == 'DESC') ? 'DESC' : 'ASC';
+	
+	// Allow the old action names for backwards compatibility reasons
+	if ($action == 'show_user')
+		$action = 'show_user_posts';
+	else if ($action == 'show_24h')
+		$action = 'show_recent';
 
 	// If a search_id was supplied
 	if (isset($_GET['search_id']))
@@ -61,17 +67,16 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		$search_in = (!isset($_GET['search_in']) || $_GET['search_in'] == 'all') ? 0 : (($_GET['search_in'] == 'message') ? 1 : -1);
 	}
 	// If it's a user search (by ID)
-	else if ($action == 'show_user')
+	else if ($action == 'show_user_posts' || $action == 'show_user_topics')
 	{
 		$user_id = (isset($_GET['user_id'])) ? intval($_GET['user_id']) : 0;
 		if ($user_id < 2)
 			message($lang_common['Bad request']);
 	}
-	else
-	{
-		if ($action != 'show_new' && $action != 'show_24h' && $action != 'show_unanswered' && $action != 'show_subscriptions')
-			message($lang_common['Bad request']);
-	}
+	else if ($action == 'show_recent')
+		$interval = isset($_GET['value']) ? intval($_GET['value']) : 0;
+	else if ($action != 'show_new' && $action != 'show_unanswered' && $action != 'show_subscriptions')
+		message($lang_common['Bad request']);
 
 
 	// If a valid search_id was supplied we attempt to fetch the search results from the db
@@ -285,9 +290,11 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			if (!$num_hits)
 				message($lang_search['No hits']);
 		}
-		else if ($action == 'show_new' || $action == 'show_24h' || $action == 'show_user' || $action == 'show_subscriptions' || $action == 'show_unanswered')
+		else if ($action == 'show_new' || $action == 'show_recent' || $action == 'show_user_posts' || $action == 'show_user_topics' || $action == 'show_subscriptions' || $action == 'show_unanswered')
 		{
-			// If it's a search for new posts
+			$show_as = 'topics';
+			
+			// If it's a search for new posts since last visit
 			if ($action == 'show_new')
 			{
 				if ($pun_user['is_guest'])
@@ -299,23 +306,34 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				if (!$num_hits)
 					message($lang_search['No new posts']);
 			}
-			// If it's a search for todays posts
-			else if ($action == 'show_24h')
+			// If it's a search for recent posts (in a certain time interval)
+			else if ($action == 'show_recent')
 			{
-				$result = $db->query('SELECT t.id FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.last_post>'.(time() - 86400).' AND t.moved_to IS NULL ORDER BY t.last_post DESC') or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());
+				$result = $db->query('SELECT t.id FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.last_post>'.(time() - $interval).' AND t.moved_to IS NULL'.(isset($_GET['fid']) ? ' AND t.forum_id='.intval($_GET['fid']) : '').' ORDER BY t.last_post DESC') or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());
 				$num_hits = $db->num_rows($result);
 
 				if (!$num_hits)
 					message($lang_search['No recent posts']);
 			}
 			// If it's a search for posts by a specific user ID
-			else if ($action == 'show_user')
+			else if ($action == 'show_user_posts')
 			{
-				$result = $db->query('SELECT t.id FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'posts AS p ON t.id=p.topic_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id='.$user_id.' GROUP BY t.id'.($db_type == 'pgsql' ? ', t.last_post' : '').' ORDER BY t.last_post DESC') or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());
+				$show_as = 'posts';
+				
+				$result = $db->query('SELECT p.id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON p.topic_id=t.id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id='.$user_id.' ORDER BY t.last_post DESC') or error('Unable to fetch user posts', __FILE__, __LINE__, $db->error());
 				$num_hits = $db->num_rows($result);
 
 				if (!$num_hits)
 					message($lang_search['No user posts']);
+			}
+			// If it's a search for topics by a specific user ID
+			else if ($action == 'show_user_topics')
+			{
+				$result = $db->query('SELECT t.id FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'posts AS p ON t.first_post_id=p.id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id='.$user_id.' ORDER BY t.last_post DESC') or error('Unable to fetch user topics', __FILE__, __LINE__, $db->error());
+				$num_hits = $db->num_rows($result);
+
+				if (!$num_hits)
+					message($lang_search['No user topics']);
 			}
 			// If it's a search for subscribed topics
 			else if ($action == 'show_subscriptions')
@@ -348,8 +366,6 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$search_ids[] = $row[0];
 
 			$db->free_result($result);
-
-			$show_as = 'topics';
 		}
 		else
 			message($lang_common['Bad request']);
@@ -381,7 +397,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 		$db->query('INSERT INTO '.$db->prefix.'search_cache (id, ident, search_data) VALUES('.$search_id.', \''.$db->escape($ident).'\', \''.$db->escape($temp).'\')') or error('Unable to insert search results', __FILE__, __LINE__, $db->error());
 
-		if ($action != 'show_new' && $action != 'show_24h')
+		if ($action != 'show_new' && $action != 'show_recent')
 		{
 			$db->end_transaction();
 			$db->close();
