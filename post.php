@@ -418,7 +418,7 @@ if ($tid)
 		list($q_poster, $q_message) = $db->fetch_row($result);
 
 		// Remove [img] tags from quoted message
-		$q_message = preg_replace('%\[img(?:=.*?)?\](.*)\[/img\]%', '\1', $q_message);
+		$q_message = preg_replace('%\[img(?:=(?:[^\[]*?))?\]((ht|f)tps?://)([^\s<"]*?)\[/img\]%U', '\1\3', $q_message);
 
 		if ($pun_config['o_censoring'] == '1')
 			$q_message = censor_words($q_message);
