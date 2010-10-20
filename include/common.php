@@ -120,7 +120,7 @@ if (!isset($pun_config['o_database_revision']) || $pun_config['o_database_revisi
 		!isset($pun_config['o_searchindex_revision']) || $pun_config['o_searchindex_revision'] < FORUM_SI_REVISION ||
 		!isset($pun_config['o_parser_revision']) || $pun_config['o_parser_revision'] < FORUM_PARSER_REVISION ||
 		version_compare($pun_config['o_cur_version'], FORUM_VERSION, '<'))
-	exit('Your FluxBB database is out-of-date and must be upgraded in order to continue. Please run <a href="'.PUN_ROOT.'db_update.php">db_update.php</a> in order to complete the upgrade process.');
+	update_message();
 
 // Enable output buffering
 if (!defined('PUN_DISABLE_BUFFERING'))

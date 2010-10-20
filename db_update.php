@@ -106,6 +106,35 @@ define('PUN_MOD', 2);
 define('PUN_GUEST', 3);
 define('PUN_MEMBER', 4);
 
+// Start a session, used to queue up errors if duplicate users occur when converting from FluxBB v1.2.
+session_start();
+
+if (!isset($_SESSION['dupe_users']))
+	$_SESSION['dupe_users'] = array();
+
+if (isset($_POST['req_db_pass']))
+	$_SESSION['db_pass'] = strtolower(trim($_POST['req_db_pass']));
+
+// Ensure we have a password of some type
+if (empty($_SESSION['db_pass']))
+	exit('No database password provided.');
+
+switch ($db_type)
+{
+	// For SQLite we compare against the database file name, since the password is left blank
+	case 'sqlite':
+		if ($_SESSION['db_pass'] != strtolower($db_name))
+			exit('Invalid database file name.');
+
+		break;
+	// For everything else, check the password matches
+	default:
+		if ($_SESSION['db_pass'] != strtolower($db_password))
+			exit('Invalid database password.');
+
+		break;
+}
+
 // Load DB abstraction layer and try to connect
 require PUN_ROOT.'include/dblayer/common_db.php';
 
@@ -160,12 +189,6 @@ if (isset($pun_config['o_database_revision']) && $pun_config['o_database_revisio
 $default_style = $pun_config['o_default_style'];
 if (!file_exists(PUN_ROOT.'style/'.$default_style.'.css'))
 	$default_style = 'Air';
-
-// Start a session, used to queue up errors if duplicate users occur when converting from FluxBB v1.2.
-session_start();
-
-if (!isset($_SESSION['dupe_users']))
-	$_SESSION['dupe_users'] = array();
 
 //
 // Determines whether $str is UTF-8 encoded or not
