@@ -1794,6 +1794,42 @@ function forum_list_plugins($is_admin)
 	return $plugins;
 }
 
+
+//
+// Split text into chunks ($inside contains all text inside $start and $end, and $outside contains all text outside)
+//
+function split_text($text, $start, $end, &$errors, $retab = true)
+{
+	global $pun_config, $lang_common;
+
+	$tokens = explode($start, $text);
+
+	$outside[] = $tokens[0];
+
+	$num_tokens = count($tokens);
+	for ($i = 1; $i < $num_tokens; ++$i)
+	{
+		$temp = explode($end, $tokens[$i]);
+
+		if (count($temp) != 2)
+		{
+			$errors[] = $lang_common['BBCode code problem'];
+			return array(null, array($text));
+		}
+		$inside[] = $temp[0];
+		$outside[] = $temp[1];
+	}
+
+	if ($pun_config['o_indent_num_spaces'] != 8 && $retab)
+	{
+		$spaces = str_repeat(' ', $pun_config['o_indent_num_spaces']);
+		$inside = str_replace("\t", $spaces, $inside);
+	}
+
+	return array($inside, $outside);
+}
+
+
 // DEBUG FUNCTIONS BELOW
 
 //

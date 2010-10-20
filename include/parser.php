@@ -100,15 +100,15 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 		$text = '';
 
 		$num_tokens = count($outside);
-
 		for ($i = 0; $i < $num_tokens; ++$i)
 		{
 			$text .= $outside[$i];
 			if (isset($inside[$i]))
 				$text .= '[code]'.$inside[$i].'[/code]';
 		}
+
+		unset($inside);
 	}
-	unset($inside);
 
 	$temp_text = false;
 	if (empty($errors))
@@ -606,41 +606,6 @@ function preparse_list_tag($content, $type = '*', &$errors)
 	}
 
 	return '[list='.$type.']'."\n".$content.'[/list]';
-}
-
-
-//
-// Split text into chunks ($inside contains all text inside $start and $end, and $outside contains all text outside)
-//
-function split_text($text, $start, $end, &$errors, $retab = true)
-{
-	global $pun_config, $lang_common;
-
-	$tokens = explode($start, $text);
-
-	$outside[] = $tokens[0];
-
-	$num_tokens = count($tokens);
-	for ($i = 1; $i < $num_tokens; ++$i)
-	{
-		$temp = explode($end, $tokens[$i]);
-
-		if (count($temp) != 2)
-		{
-			$errors[] = $lang_common['BBCode code problem'];
-			return array(null, array($text));
-		}
-		$inside[] = $temp[0];
-		$outside[] = $temp[1];
-	}
-
-	if ($pun_config['o_indent_num_spaces'] != 8 && $retab)
-	{
-		$spaces = str_repeat(' ', $pun_config['o_indent_num_spaces']);
-		$inside = str_replace("\t", $spaces, $inside);
-	}
-
-	return array($inside, $outside);
 }
 
 

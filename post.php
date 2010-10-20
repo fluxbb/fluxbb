@@ -417,8 +417,36 @@ if ($tid)
 
 		list($q_poster, $q_message) = $db->fetch_row($result);
 
+		// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
+		if (strpos($q_message, '[code]') !== false && strpos($q_message, '[/code]') !== false)
+		{
+			$errors = array();
+			list($inside, $outside) = split_text($q_message, '[code]', '[/code]', $errors);
+			if (!empty($errors)) // Technically this shouldn't happen, since $q_message is an existing post it should only exist if it previously passed validation
+				message($errors[0]);
+
+			$q_message = implode("\1", $outside);
+		}
+
 		// Remove [img] tags from quoted message
 		$q_message = preg_replace('%\[img(?:=(?:[^\[]*?))?\]((ht|f)tps?://)([^\s<"]*?)\[/img\]%U', '\1\3', $q_message);
+
+		// If we split up the message before we have to concatenate it together again (code tags)
+		if (isset($inside))
+		{
+			$outside = explode("\1", $q_message);
+			$q_message = '';
+
+			$num_tokens = count($outside);
+			for ($i = 0; $i < $num_tokens; ++$i)
+			{
+				$q_message .= $outside[$i];
+				if (isset($inside[$i]))
+					$q_message .= '[code]'.$inside[$i].'[/code]';
+			}
+
+			unset($inside);
+		}
 
 		if ($pun_config['o_censoring'] == '1')
 			$q_message = censor_words($q_message);
