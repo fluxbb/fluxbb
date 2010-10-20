@@ -106,35 +106,6 @@ define('PUN_MOD', 2);
 define('PUN_GUEST', 3);
 define('PUN_MEMBER', 4);
 
-// Start a session, used to queue up errors if duplicate users occur when converting from FluxBB v1.2.
-session_start();
-
-if (!isset($_SESSION['dupe_users']))
-	$_SESSION['dupe_users'] = array();
-
-if (isset($_POST['req_db_pass']))
-	$_SESSION['db_pass'] = strtolower(trim($_POST['req_db_pass']));
-
-// Ensure we have a password of some type
-if (empty($_SESSION['db_pass']))
-	error('No database password provided.');
-
-switch ($db_type)
-{
-	// For SQLite we compare against the database file name, since the password is left blank
-	case 'sqlite':
-		if ($_SESSION['db_pass'] != strtolower($db_name))
-			error('Invalid database file name.');
-
-		break;
-	// For everything else, check the password matches
-	default:
-		if ($_SESSION['db_pass'] != strtolower($db_password))
-			error('Invalid database password.');
-
-		break;
-}
-
 // Load DB abstraction layer and try to connect
 require PUN_ROOT.'include/dblayer/common_db.php';
 
@@ -179,16 +150,56 @@ $result = $db->query('SELECT * FROM '.$db->prefix.'config') or error('Unable to 
 while ($cur_config_item = $db->fetch_row($result))
 	$pun_config[$cur_config_item[0]] = $cur_config_item[1];
 
+// Generate or fetch the UID - this confirms we have a valid admin
+if (isset($_POST['req_db_pass']))
+{
+	$req_db_pass = strtolower(trim($_POST['req_db_pass']));
+
+	switch ($db_type)
+	{
+		// For SQLite we compare against the database file name, since the password is left blank
+		case 'sqlite':
+			if ($req_db_pass != strtolower($db_name))
+				error('Invalid database file name. When using SQLite the database file name must be entered exactly as it appears in your \'config.php\'');
+
+			break;
+		// For everything else, check the password matches
+		default:
+			if ($req_db_pass != strtolower($db_password))
+				error('Invalid database password. To upgrade FluxBB you must enter your database password exactly as it appears in your \'config.php\'');
+
+			break;
+	}
+
+	// Generate a unique id to identify this session, only if this is a valid session
+	$uid = pun_hash($req_db_pass.'|'.uniqid(rand(), true));
+}
+else if (isset($_GET['uid']))
+	$uid = trim($_GET['uid']);
+else
+	error('No database password provided');
+
+// Now we know we have a valid admin, confirm someone else isn't already updating the database
+$lock = file_exists(FORUM_CACHE_DIR.'db_update.lock') ? trim(file_get_contents(FORUM_CACHE_DIR.'db_update.lock')) : false;
+if ($lock !== false && $lock != $uid)
+	error(sprintf('It appears the update script is already being ran by someone else. If this is not the case, please manually delete the file \'%s\' and try again', FORUM_CACHE_DIR.'db_update.lock'));
+
 // Check the database revision and the current version
 if (isset($pun_config['o_database_revision']) && $pun_config['o_database_revision'] >= UPDATE_TO_DB_REVISION &&
 		isset($pun_config['o_searchindex_revision']) && $pun_config['o_searchindex_revision'] >= UPDATE_TO_SI_REVISION &&
 		isset($pun_config['o_parser_revision']) && $pun_config['o_parser_revision'] >= UPDATE_TO_PARSER_REVISION &&
 		version_compare($pun_config['o_cur_version'], UPDATE_TO, '>='))
-	error('Your database is already as up-to-date as this script can make it.');
+	error('Your database is already as up-to-date as this script can make it');
 
 $default_style = $pun_config['o_default_style'];
 if (!file_exists(PUN_ROOT.'style/'.$default_style.'.css'))
 	$default_style = 'Air';
+
+// Start a session, used to queue up errors if duplicate users occur when converting from FluxBB v1.2.
+session_start();
+
+if (!isset($_SESSION['dupe_users']))
+	$_SESSION['dupe_users'] = array();
 
 //
 // Determines whether $str is UTF-8 encoded or not
@@ -496,6 +507,7 @@ switch ($stage)
 	<h2><span>FluxBB Update</span></h2>
 	<div class="box">
 		<form method="get" action="<?php echo pun_htmlspecialchars($_SERVER['REQUEST_URI']) ?>" onsubmit="this.start.disabled=true">
+		<input type="hidden" name="uid" value="<?php echo $uid; ?>" />
 		<input type="hidden" name="stage" value="start" />
 			<div class="inform">
 				<div class="forminfo">
@@ -561,6 +573,14 @@ else
 	// Start by updating the database structure
 	case 'start':
 		$query_str = '?stage=preparse_posts';
+
+		// Write the update lock
+		$fh = @fopen(FORUM_CACHE_DIR.'db_update.lock', 'wb');
+		if (!$fh)
+			error('Unable to write update lock. Please make sure PHP has write access to the directory \'cache\' and no-one else is currently running the update script.', __FILE__, __LINE__);
+
+		fwrite($fh, $uid);
+		fclose($fh);
 
 		// If we don't need to update the database, skip this stage
 		if (isset($pun_config['o_database_revision']) && $pun_config['o_database_revision'] >= UPDATE_TO_DB_REVISION)
@@ -1696,6 +1716,9 @@ foreach ($errors[$id] as $cur_error)
 		// Empty the PHP cache
 		forum_clear_cache();
 
+		// Delete the update lock file
+		@unlink(FORUM_CACHE_DIR.'db_update.lock');
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -1739,4 +1762,4 @@ $db->end_transaction();
 $db->close();
 
 if ($query_str != '')
-	exit('<script type="text/javascript">window.location="db_update.php'.$query_str.'"</script><noscript>JavaScript seems to be disabled. <a href="db_update.php'.$query_str.'">Click here to continue</a>.</noscript>');
+	exit('<script type="text/javascript">window.location="db_update.php'.$query_str.'&uid='.$uid.'"</script><noscript>JavaScript seems to be disabled. <a href="db_update.php'.$query_str.'">Click here to continue</a>.</noscript>');
