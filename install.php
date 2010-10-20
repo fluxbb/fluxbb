@@ -229,7 +229,7 @@ if (!isset($_POST['form_sent']) || !empty($alerts))
 		$db_extensions[] = array('pgsql', 'PostgreSQL');
 
 	if (empty($db_extensions))
-		exit($lang_install['No DB extensions']);
+		error($lang_install['No DB extensions']);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

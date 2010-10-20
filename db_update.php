@@ -117,20 +117,20 @@ if (isset($_POST['req_db_pass']))
 
 // Ensure we have a password of some type
 if (empty($_SESSION['db_pass']))
-	exit('No database password provided.');
+	error('No database password provided.');
 
 switch ($db_type)
 {
 	// For SQLite we compare against the database file name, since the password is left blank
 	case 'sqlite':
 		if ($_SESSION['db_pass'] != strtolower($db_name))
-			exit('Invalid database file name.');
+			error('Invalid database file name.');
 
 		break;
 	// For everything else, check the password matches
 	default:
 		if ($_SESSION['db_pass'] != strtolower($db_password))
-			exit('Invalid database password.');
+			error('Invalid database password.');
 
 		break;
 }
@@ -149,7 +149,7 @@ $result = $db->query('SELECT conf_value FROM '.$db->prefix.'config WHERE conf_na
 $cur_version = $db->result($result);
 
 if (version_compare($cur_version, '1.2', '<'))
-	exit('Version mismatch. The database \''.$db_name.'\' doesn\'t seem to be running a FluxBB database schema supported by this update script.');
+	error('Version mismatch. The database \''.$db_name.'\' doesn\'t seem to be running a FluxBB database schema supported by this update script.');
 
 // Do some DB type specific checks
 $mysql = false;
@@ -184,7 +184,7 @@ if (isset($pun_config['o_database_revision']) && $pun_config['o_database_revisio
 		isset($pun_config['o_searchindex_revision']) && $pun_config['o_searchindex_revision'] >= UPDATE_TO_SI_REVISION &&
 		isset($pun_config['o_parser_revision']) && $pun_config['o_parser_revision'] >= UPDATE_TO_PARSER_REVISION &&
 		version_compare($pun_config['o_cur_version'], UPDATE_TO, '>='))
-	exit('Your database is already as up-to-date as this script can make it.');
+	error('Your database is already as up-to-date as this script can make it.');
 
 $default_style = $pun_config['o_default_style'];
 if (!file_exists(PUN_ROOT.'style/'.$default_style.'.css'))
