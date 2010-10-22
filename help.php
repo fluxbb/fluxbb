@@ -60,7 +60,7 @@ require PUN_ROOT.'header.php';
 	</div>
 	<div class="inbox">
 		<p><a name="img"></a><?php echo $lang_help['Images info'] ?></p>
-		<p><code>[img=FluxBB bbcode test]<?php echo pun_htmlspecialchars($pun_config['o_base_url'].'/') ?>img/test.png[/img]</code> <?php echo $lang_help['produces'] ?> <samp><img src="<?php echo pun_htmlspecialchars($pun_config['o_base_url'].'/') ?>img/test.png" alt="FluxBB bbcode test" /></samp></p>
+		<p><code>[img=<?php echo $lang_help['FluxBB bbcode test'] ?>]<?php echo pun_htmlspecialchars($pun_config['o_base_url'].'/') ?>img/test.png[/img]</code> <?php echo $lang_help['produces'] ?> <samp><img src="<?php echo pun_htmlspecialchars($pun_config['o_base_url'].'/') ?>img/test.png" alt="<?php echo $lang_help['FluxBB bbcode test'] ?>" /></samp></p>
 	</div>
 </div>
 <h2><span><?php echo $lang_help['Quotes'] ?></span></h2>
