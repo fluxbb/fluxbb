@@ -22,9 +22,7 @@ require PUN_ROOT.'lang/'.$admin_language.'/admin_options.php';
 
 if (isset($_POST['form_sent']))
 {
-	// Custom referrer check (so we can output a custom error message)
-	if (!preg_match('#^'.preg_quote(str_replace('www.', '', $pun_config['o_base_url']).'/admin_options.php', '#').'#i', str_replace('www.', '', (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''))))
-		message($lang_admin_options['Bad HTTP Referer message']);
+	confirm_referrer('admin_options.php', $lang_admin_options['Bad HTTP Referer message']);
 
 	$form = array(
 		'board_title'			=> pun_trim($_POST['form']['board_title']),
@@ -98,7 +96,7 @@ if (isset($_POST['form_sent']))
 	$languages = forum_list_langs();
 	if (!in_array($form['default_lang'], $languages))
 		message($lang_common['Bad request']);
-	
+
 	$styles = forum_list_styles();
 	if (!in_array($form['default_style'], $styles))
 		message($lang_common['Bad request']);

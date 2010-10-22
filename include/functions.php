@@ -1014,12 +1014,27 @@ if (!function_exists('file_get_contents'))
 //
 // Make sure that HTTP_REFERER matches $pun_config['o_base_url']/$script
 //
-function confirm_referrer($script)
+function confirm_referrer($script, $error_msg = false)
 {
 	global $pun_config, $lang_common;
 
-	if (!preg_match('#^'.preg_quote(str_replace('www.', '', $pun_config['o_base_url']).'/'.$script, '#').'#i', str_replace('www.', '', (isset($_SERVER['HTTP_REFERER']) ? urldecode($_SERVER['HTTP_REFERER']) : ''))))
-		message($lang_common['Bad referrer']);
+	// There is no referrer
+	if (empty($_SERVER['HTTP_REFERER']))
+		message($error_msg ? $error_msg : $lang_common['Bad referrer']);
+
+	$referrer = parse_url(strtolower($_SERVER['HTTP_REFERER']));
+	// Remove www subdomain if it exists
+	if (strpos($referrer['host'], 'www.') === 0)
+		$referrer['host'] = substr($referrer['host'], 4);
+
+	$valid = parse_url(strtolower($pun_config['o_base_url'].'/'.$script));
+	// Remove www subdomain if it exists
+	if (strpos($valid['host'], 'www.') === 0)
+		$valid['host'] = substr($valid['host'], 4);
+
+	// Check the host and path match. Ignore the scheme, port, etc.
+	if ($referrer['host'] != $valid['host'] || $referrer['path'] != $valid['path'])
+		message($error_msg ? $error_msg : $lang_common['Bad referrer']);
 }
 
 
