@@ -1200,6 +1200,8 @@ else
 
 		function _conv_posts($cur_item, $old_charset)
 		{
+			global $lang_update;
+
 			echo sprintf($lang_update['Converting item'], $lang_update['post'], $cur_item['id']).'<br />'."\n";
 
 			convert_to_utf8($cur_item['poster'], $old_charset);
@@ -1241,6 +1243,8 @@ else
 
 		function _conv_reports($cur_item, $old_charset)
 		{
+			global $lang_update;
+
 			echo sprintf($lang_update['Converting item'], $lang_update['report'], $cur_item['id']).'<br />'."\n";
 
 			convert_to_utf8($cur_item['message'], $old_charset);
@@ -1324,6 +1328,8 @@ else
 
 		function _conv_topics($cur_item, $old_charset)
 		{
+			global $lang_update;
+
 			echo sprintf($lang_update['Converting item'], $lang_update['topic'], $cur_item['id']).'<br />'."\n";
 
 			convert_to_utf8($cur_item['poster'], $old_charset);
@@ -1347,6 +1353,8 @@ else
 
 		function _conv_users($cur_item, $old_charset)
 		{
+			global $lang_update;
+			
 			echo sprintf($lang_update['Converting item'], $lang_update['user'], $cur_item['id']).'<br />'."\n";
 
 			convert_to_utf8($cur_item['username'], $old_charset);
