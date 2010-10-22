@@ -223,7 +223,24 @@ if (!$pun_user['is_guest'])
 	header('Location: index.php');
 
 // Try to determine if the data in HTTP_REFERER is valid (if not, we redirect to index.php after login)
-$redirect_url = (isset($_SERVER['HTTP_REFERER']) && preg_match('#^'.preg_quote($pun_config['o_base_url']).'/(.*?)\.php#i', $_SERVER['HTTP_REFERER'])) ? htmlspecialchars($_SERVER['HTTP_REFERER']) : $pun_config['o_base_url'].'/index.php';
+if (!empty($_SERVER['HTTP_REFERER']))
+{
+	$referrer = parse_url($_SERVER['HTTP_REFERER']);
+	// Remove www subdomain if it exists
+	if (strpos($referrer['host'], 'www.') === 0)
+		$referrer['host'] = substr($referrer['host'], 4);
+
+	$valid = parse_url($pun_config['o_base_url']);
+	// Remove www subdomain if it exists
+	if (strpos($valid['host'], 'www.') === 0)
+		$valid['host'] = substr($valid['host'], 4);
+
+	if ($referrer['host'] == $valid['host'] && preg_match('#^'.preg_quote($valid['path']).'/(.*?)\.php#i', $referrer['path']))
+		$redirect_url = $_SERVER['HTTP_REFERER'];
+}
+
+if (!isset($redirect_url))
+	$redirect_url = 'index.php';
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Login']);
 $required_fields = array('req_username' => $lang_common['Username'], 'req_password' => $lang_common['Password']);
@@ -241,7 +258,7 @@ require PUN_ROOT.'header.php';
 					<legend><?php echo $lang_login['Login legend'] ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
-						<input type="hidden" name="redirect_url" value="<?php echo $redirect_url ?>" />
+						<input type="hidden" name="redirect_url" value="<?php echo pun_htmlspecialchars($redirect_url) ?>" />
 						<label class="conl required"><strong><?php echo $lang_common['Username'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" tabindex="1" /><br /></label>
 						<label class="conl required"><strong><?php echo $lang_common['Password'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="password" name="req_password" size="25" tabindex="2" /><br /></label>
 

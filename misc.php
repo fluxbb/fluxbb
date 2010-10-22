@@ -138,7 +138,24 @@ else if (isset($_GET['email']))
 
 
 	// Try to determine if the data in HTTP_REFERER is valid (if not, we redirect to the users profile after the email is sent)
-	$redirect_url = (isset($_SERVER['HTTP_REFERER']) && preg_match('#^'.preg_quote($pun_config['o_base_url']).'/(.*?)\.php#i', $_SERVER['HTTP_REFERER'])) ? htmlspecialchars($_SERVER['HTTP_REFERER']) : 'index.php';
+	if (!empty($_SERVER['HTTP_REFERER']))
+	{
+		$referrer = parse_url($_SERVER['HTTP_REFERER']);
+		// Remove www subdomain if it exists
+		if (strpos($referrer['host'], 'www.') === 0)
+			$referrer['host'] = substr($referrer['host'], 4);
+
+		$valid = parse_url($pun_config['o_base_url']);
+		// Remove www subdomain if it exists
+		if (strpos($valid['host'], 'www.') === 0)
+			$valid['host'] = substr($valid['host'], 4);
+
+		if ($referrer['host'] == $valid['host'] && preg_match('#^'.preg_quote($valid['path']).'/(.*?)\.php#i', $referrer['path']))
+			$redirect_url = $_SERVER['HTTP_REFERER'];
+	}
+
+	if (!isset($redirect_url))
+		$redirect_url = 'profile.php?id='.$recipient_id;
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Send email to'].' '.pun_htmlspecialchars($recipient));
 	$required_fields = array('req_subject' => $lang_misc['Email subject'], 'req_message' => $lang_misc['Email message']);
@@ -156,7 +173,7 @@ else if (isset($_GET['email']))
 					<legend><?php echo $lang_misc['Write email'] ?></legend>
 					<div class="infldset txtarea">
 						<input type="hidden" name="form_sent" value="1" />
-						<input type="hidden" name="redirect_url" value="<?php echo $redirect_url ?>" />
+						<input type="hidden" name="redirect_url" value="<?php echo pun_htmlspecialchars($redirect_url) ?>" />
 						<label class="required"><strong><?php echo $lang_misc['Email subject'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br />
 						<input class="longinput" type="text" name="req_subject" size="75" maxlength="70" tabindex="1" /><br /></label>
 						<label class="required"><strong><?php echo $lang_misc['Email message'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br />
