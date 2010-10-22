@@ -20,7 +20,7 @@ $lang_update = array(
 'Invalid password error'		=>	'Invalid database password. To upgrade FluxBB you must enter your database password exactly as it appears in your \'%s\'',
 'No password error'				=>	'No database password provided',
 'Script runs error'				=>	'It appears the update script is already being ran by someone else. If this is not the case, please manually delete the file \'%s\' and try again',
-'No update error'				=>	'Your database is already as up-to-date as this script can make it',
+'No update error'				=>	'Your forum is already as up-to-date as this script can make it',
 
 'Intro 1'						=>	'This script will update your forum database. The update procedure might take anything from a second to hours depending on the speed of the server and the size of the forum database. Don\'t forget to make a backup of the database before continuing.',
 'Intro 2'						=>	'Did you read the update instructions in the documentation? If not, start there.',
