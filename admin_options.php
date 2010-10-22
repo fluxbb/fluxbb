@@ -231,7 +231,7 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Base URL label'] ?></th>
 									<td>
-										<input type="text" name="form[base_url]" size="50" maxlength="100" value="<?php echo $pun_config['o_base_url'] ?>" />
+										<input type="text" name="form[base_url]" size="50" maxlength="100" value="<?php echo pun_htmlspecialchars($pun_config['o_base_url']) ?>" />
 										<span><?php echo $lang_admin_options['Base URL help'] ?></span>
 									</td>
 								</tr>
