@@ -53,14 +53,14 @@ require PUN_ROOT.'header.php';
 <div class="box">
 	<div class="inbox">
 		<p><?php echo $lang_help['Links info'] ?></p>
-		<p><code>[url=<?php echo pun_htmlspecialchars($pun_config['o_base_url'].'/') ?>]<?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?>[/url]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars($pun_config['o_base_url'].'/') ?>"><?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?></a></samp></p>
-		<p><code>[url]<?php echo pun_htmlspecialchars($pun_config['o_base_url'].'/') ?>[/url]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars($pun_config['o_base_url'].'/') ?>"><?php echo pun_htmlspecialchars($pun_config['o_base_url'].'/') ?></a></samp></p>
+		<p><code>[url=<?php echo pun_htmlspecialchars(get_base_url(true).'/') ?>]<?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?>[/url]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/') ?>"><?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?></a></samp></p>
+		<p><code>[url]<?php echo pun_htmlspecialchars(get_base_url(true).'/') ?>[/url]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/') ?>"><?php echo pun_htmlspecialchars(get_base_url(true).'/') ?></a></samp></p>
 		<p><code>[email]myname@mydomain.com[/email]</code> <?php echo $lang_help['produces'] ?> <samp><a href="mailto:myname@mydomain.com">myname@mydomain.com</a></samp></p>
 		<p><code>[email=myname@mydomain.com]<?php echo $lang_help['My email address'] ?>[/email]</code> <?php echo $lang_help['produces'] ?> <samp><a href="mailto:myname@mydomain.com"><?php echo $lang_help['My email address'] ?></a></samp></p>
 	</div>
 	<div class="inbox">
 		<p><a name="img"></a><?php echo $lang_help['Images info'] ?></p>
-		<p><code>[img=<?php echo $lang_help['FluxBB bbcode test'] ?>]<?php echo pun_htmlspecialchars($pun_config['o_base_url'].'/') ?>img/test.png[/img]</code> <?php echo $lang_help['produces'] ?> <samp><img src="<?php echo pun_htmlspecialchars($pun_config['o_base_url'].'/') ?>img/test.png" alt="<?php echo $lang_help['FluxBB bbcode test'] ?>" /></samp></p>
+		<p><code>[img=<?php echo $lang_help['FluxBB bbcode test'] ?>]<?php echo pun_htmlspecialchars(get_base_url(true)) ?>/img/test.png[/img]</code> <?php echo $lang_help['produces'] ?> <samp><img src="<?php echo pun_htmlspecialchars(get_base_url(true)) ?>/img/test.png" alt="<?php echo $lang_help['FluxBB bbcode test'] ?>" /></samp></p>
 	</div>
 </div>
 <h2><span><?php echo $lang_help['Quotes'] ?></span></h2>
@@ -135,7 +135,7 @@ foreach ($smilies as $smiley_text => $smiley_img)
 	$smiley_groups[$smiley_img][] = $smiley_text;
 
 foreach ($smiley_groups as $smiley_img => $smiley_texts)
-	echo "\t\t".'<p><code>'.implode('</code> '.$lang_common['and'].' <code>', $smiley_texts).'</code> <span>'.$lang_help['produces'].'</span> <samp><img src="'.pun_htmlspecialchars($pun_config['o_base_url']).'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.$smiley_texts[0].'" /></samp></p>'."\n";
+	echo "\t\t".'<p><code>'.implode('</code> '.$lang_common['and'].' <code>', $smiley_texts).'</code> <span>'.$lang_help['produces'].'</span> <samp><img src="'.pun_htmlspecialchars(get_base_url(true)).'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.$smiley_texts[0].'" /></samp></p>'."\n";
 
 ?>
 	</div>

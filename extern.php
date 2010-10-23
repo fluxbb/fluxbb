@@ -308,7 +308,7 @@ if ($action == 'feed')
 		// Setup the feed
 		$feed = array(
 			'title' 		=>	$pun_config['o_board_title'].$lang_common['Title separator'].$cur_topic['subject'],
-			'link'			=>	$pun_config['o_base_url'].'/viewtopic.php?id='.$tid,
+			'link'			=>	get_base_url(true).'/viewtopic.php?id='.$tid,
 			'description'		=>	sprintf($lang_common['RSS description topic'], $cur_topic['subject']),
 			'items'			=>	array(),
 			'type'			=>	'posts'
@@ -323,7 +323,7 @@ if ($action == 'feed')
 			$item = array(
 				'id'			=>	$cur_post['id'],
 				'title'			=>	$cur_topic['first_post_id'] == $cur_post['id'] ? $cur_topic['subject'] : $lang_common['RSS reply'].$cur_topic['subject'],
-				'link'			=>	$pun_config['o_base_url'].'/viewtopic.php?pid='.$cur_post['id'].'#p'.$cur_post['id'],
+				'link'			=>	get_base_url(true).'/viewtopic.php?pid='.$cur_post['id'].'#p'.$cur_post['id'],
 				'description'		=>	$cur_post['message'],
 				'author'		=>	array(
 					'name'	=> $cur_post['poster'],
@@ -336,7 +336,7 @@ if ($action == 'feed')
 				if ($cur_post['email_setting'] == '0' && !$pun_user['is_guest'])
 					$item['author']['email'] = $cur_post['email'];
 
-				$item['author']['uri'] = $pun_config['o_base_url'].'/profile.php?id='.$cur_post['poster_id'];
+				$item['author']['uri'] = get_base_url(true).'/profile.php?id='.$cur_post['poster_id'];
 			}
 			else if ($cur_post['poster_email'] != '' && !$pun_user['is_guest'])
 				$item['author']['email'] = $cur_post['poster_email'];
@@ -384,7 +384,7 @@ if ($action == 'feed')
 		// Setup the feed
 		$feed = array(
 			'title' 		=>	$pun_config['o_board_title'].$forum_name,
-			'link'			=>	$pun_config['o_base_url'].'/index.php',
+			'link'			=>	get_base_url(true).'/index.php',
 			'description'	=>	sprintf($lang_common['RSS description'], $pun_config['o_board_title']),
 			'items'			=>	array(),
 			'type'			=>	'topics'
@@ -402,7 +402,7 @@ if ($action == 'feed')
 			$item = array(
 				'id'			=>	$cur_topic['id'],
 				'title'			=>	$cur_topic['subject'],
-				'link'			=>	$pun_config['o_base_url'].'/viewtopic.php?id='.$cur_topic['id'].($order_posted ? '' : '&amp;action=new'),
+				'link'			=>	get_base_url(true).'/viewtopic.php?id='.$cur_topic['id'].($order_posted ? '' : '&amp;action=new'),
 				'description'	=>	$cur_topic['message'],
 				'author'		=>	array(
 					'name'	=> $order_posted ? $cur_topic['poster'] : $cur_topic['last_poster']
@@ -415,7 +415,7 @@ if ($action == 'feed')
 				if ($cur_topic['email_setting'] == '0' && !$pun_user['is_guest'])
 					$item['author']['email'] = $cur_topic['email'];
 
-				$item['author']['uri'] = $pun_config['o_base_url'].'/profile.php?id='.$cur_topic['poster_id'];
+				$item['author']['uri'] = get_base_url(true).'/profile.php?id='.$cur_topic['poster_id'];
 			}
 			else if ($cur_topic['poster_email'] != '' && !$pun_user['is_guest'])
 				$item['author']['email'] = $cur_topic['poster_email'];
@@ -446,7 +446,7 @@ else if ($action == 'online' || $action == 'online_full')
 	{
 		if ($pun_user_online['user_id'] > 1)
 		{
-			$users[] = ($pun_user['g_view_users'] == '1') ? '<a href="'.$pun_config['o_base_url'].'/profile.php?id='.$pun_user_online['user_id'].'">'.pun_htmlspecialchars($pun_user_online['ident']).'</a>' : pun_htmlspecialchars($pun_user_online['ident']);
+			$users[] = ($pun_user['g_view_users'] == '1') ? '<a href="'.get_base_url(true).'/profile.php?id='.$pun_user_online['user_id'].'">'.pun_htmlspecialchars($pun_user_online['ident']).'</a>' : pun_htmlspecialchars($pun_user_online['ident']);
 			++$num_users;
 		}
 		else
@@ -492,7 +492,7 @@ else if ($action == 'stats')
 	header('Pragma: public');
 
 	echo sprintf($lang_index['No of users'], forum_number_format($stats['total_users'])).'<br />'."\n";
-	echo sprintf($lang_index['Newest user'], (($pun_user['g_view_users'] == '1') ? '<a href="'.$pun_config['o_base_url'].'/profile.php?id='.$stats['last_user']['id'].'">'.pun_htmlspecialchars($stats['last_user']['username']).'</a>' : pun_htmlspecialchars($stats['last_user']['username']))).'<br />'."\n";
+	echo sprintf($lang_index['Newest user'], (($pun_user['g_view_users'] == '1') ? '<a href="'.get_base_url(true).'/profile.php?id='.$stats['last_user']['id'].'">'.pun_htmlspecialchars($stats['last_user']['username']).'</a>' : pun_htmlspecialchars($stats['last_user']['username']))).'<br />'."\n";
 	echo sprintf($lang_index['No of topics'], forum_number_format($stats['total_topics'])).'<br />'."\n";
 	echo sprintf($lang_index['No of posts'], forum_number_format($stats['total_posts'])).'<br />'."\n";
 

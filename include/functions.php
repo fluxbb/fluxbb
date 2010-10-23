@@ -173,6 +173,28 @@ function get_current_url($max_length = 0)
 
 
 //
+// Fetch the base_url, optionally support HTTPS and HTTP
+//
+function get_base_url($support_https = false)
+{
+	global $pun_config;
+	static $base_url;
+
+	if (!$support_https)
+		return $pun_config['o_base_url'];
+
+	if (!isset($base_url))
+	{
+		// Make sure we are using the correct protocol
+		$protocol = (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') ? 'http://' : 'https://';
+		$base_url = str_replace(array('http://', 'https://'), $protocol, $pun_config['o_base_url']);
+	}
+
+	return $base_url;
+}
+
+
+//
 // Fill $pun_user with default values (for guests)
 //
 function set_default_user()
@@ -510,7 +532,7 @@ function generate_avatar_markup($user_id)
 
 		if (file_exists(PUN_ROOT.$path) && $img_size = getimagesize(PUN_ROOT.$path))
 		{
-			$avatar_markup = '<img src="'.$pun_config['o_base_url'].'/'.$path.'?m='.filemtime(PUN_ROOT.$path).'" '.$img_size[3].' alt="" />';
+			$avatar_markup = '<img src="'.get_base_url(true).'/'.$path.'?m='.filemtime(PUN_ROOT.$path).'" '.$img_size[3].' alt="" />';
 			break;
 		}
 	}
@@ -1513,7 +1535,7 @@ function redirect($destination_url, $message)
 
 	// Prefix with o_base_url (unless there's already a valid URI)
 	if (strpos($destination_url, 'http://') !== 0 && strpos($destination_url, 'https://') !== 0 && strpos($destination_url, '/') !== 0)
-		$destination_url = $pun_config['o_base_url'].'/'.$destination_url;
+		$destination_url = get_base_url(true).'/'.$destination_url;
 
 	// Do a little spring cleaning
 	$destination_url = preg_replace('/([\r\n])|(%0[ad])|(;\s*data\s*:)/i', '', $destination_url);
