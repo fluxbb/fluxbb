@@ -134,7 +134,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 				$mail_message = trim(substr($mail_tpl, $first_crlf));
 
 				// Do the generic replacements first (they apply to all emails sent out here)
-				$mail_message = str_replace('<base_url>', $pun_config['o_base_url'].'/', $mail_message);
+				$mail_message = str_replace('<base_url>', get_base_url().'/', $mail_message);
 				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
 
 				// Loop through users we found
@@ -151,7 +151,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 
 					// Do the user specific replacements to the template
 					$cur_mail_message = str_replace('<username>', $cur_hit['username'], $mail_message);
-					$cur_mail_message = str_replace('<activation_url>', $pun_config['o_base_url'].'/profile.php?id='.$cur_hit['id'].'&action=change_pass&key='.$new_password_key, $cur_mail_message);
+					$cur_mail_message = str_replace('<activation_url>', get_base_url().'/profile.php?id='.$cur_hit['id'].'&action=change_pass&key='.$new_password_key, $cur_mail_message);
 					$cur_mail_message = str_replace('<new_password>', $new_password, $cur_mail_message);
 
 					pun_mail($email, $mail_subject, $cur_mail_message);
@@ -230,7 +230,7 @@ if (!empty($_SERVER['HTTP_REFERER']))
 	if (strpos($referrer['host'], 'www.') === 0)
 		$referrer['host'] = substr($referrer['host'], 4);
 
-	$valid = parse_url($pun_config['o_base_url']);
+	$valid = parse_url(get_base_url());
 	// Remove www subdomain if it exists
 	if (strpos($valid['host'], 'www.') === 0)
 		$valid['host'] = substr($valid['host'], 4);

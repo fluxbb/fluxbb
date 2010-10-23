@@ -1034,7 +1034,7 @@ if (!function_exists('file_get_contents'))
 
 
 //
-// Make sure that HTTP_REFERER matches $pun_config['o_base_url']/$script
+// Make sure that HTTP_REFERER matches base_url/script
 //
 function confirm_referrer($script, $error_msg = false)
 {
@@ -1049,7 +1049,7 @@ function confirm_referrer($script, $error_msg = false)
 	if (strpos($referrer['host'], 'www.') === 0)
 		$referrer['host'] = substr($referrer['host'], 4);
 
-	$valid = parse_url(strtolower($pun_config['o_base_url'].'/'.$script));
+	$valid = parse_url(strtolower(get_base_url().'/'.$script));
 	// Remove www subdomain if it exists
 	if (strpos($valid['host'], 'www.') === 0)
 		$valid['host'] = substr($valid['host'], 4);
@@ -1533,7 +1533,7 @@ function redirect($destination_url, $message)
 {
 	global $db, $pun_config, $lang_common, $pun_user;
 
-	// Prefix with o_base_url (unless there's already a valid URI)
+	// Prefix with base_url (unless there's already a valid URI)
 	if (strpos($destination_url, 'http://') !== 0 && strpos($destination_url, 'https://') !== 0 && strpos($destination_url, '/') !== 0)
 		$destination_url = get_base_url(true).'/'.$destination_url;
 

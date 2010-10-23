@@ -1466,7 +1466,7 @@ else
 					$mail_message = trim(substr($mail_tpl, $first_crlf));
 
 					$mail_subject = str_replace('<board_title>', $pun_config['o_board_title'], $mail_subject);
-					$mail_message = str_replace('<base_url>', $pun_config['o_base_url'].'/', $mail_message);
+					$mail_message = str_replace('<base_url>', get_base_url().'/', $mail_message);
 					$mail_message = str_replace('<old_username>', $old_username, $mail_message);
 					$mail_message = str_replace('<new_username>', $username, $mail_message);
 					$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' Mailer', $mail_message);

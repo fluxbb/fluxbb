@@ -145,7 +145,7 @@ else if (isset($_GET['email']))
 		if (strpos($referrer['host'], 'www.') === 0)
 			$referrer['host'] = substr($referrer['host'], 4);
 
-		$valid = parse_url($pun_config['o_base_url']);
+		$valid = parse_url(get_base_url());
 		// Remove www subdomain if it exists
 		if (strpos($valid['host'], 'www.') === 0)
 			$valid['host'] = substr($valid['host'], 4);
@@ -238,7 +238,7 @@ else if (isset($_GET['report']))
 			if ($pun_config['o_mailing_list'] != '')
 			{
 				$mail_subject = sprintf($lang_common['Report notification'], $forum_id, $subject);
-				$mail_message = sprintf($lang_common['Report message 1'], $pun_user['username'], $pun_config['o_base_url'].'/viewtopic.php?pid='.$post_id.'#p'.$post_id)."\n";
+				$mail_message = sprintf($lang_common['Report message 1'], $pun_user['username'], get_base_url().'/viewtopic.php?pid='.$post_id.'#p'.$post_id)."\n";
 				$mail_message .= sprintf($lang_common['Report message 2'], $reason)."\n";
 				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 

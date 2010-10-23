@@ -167,7 +167,7 @@ if (isset($_POST['form_sent']))
 			{
 				$mail_subject = $lang_common['Banned email notification'];
 				$mail_message = sprintf($lang_common['Banned email register message'], $username, $email1)."\n";
-				$mail_message .= sprintf($lang_common['User profile'], $pun_config['o_base_url'].'/profile.php?id='.$new_uid)."\n";
+				$mail_message .= sprintf($lang_common['User profile'], get_base_url().'/profile.php?id='.$new_uid)."\n";
 				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 				pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
@@ -178,7 +178,7 @@ if (isset($_POST['form_sent']))
 			{
 				$mail_subject = $lang_common['Duplicate email notification'];
 				$mail_message = sprintf($lang_common['Duplicate email register message'], $username, implode(', ', $dupe_list))."\n";
-				$mail_message .= sprintf($lang_common['User profile'], $pun_config['o_base_url'].'/profile.php?id='.$new_uid)."\n";
+				$mail_message .= sprintf($lang_common['User profile'], get_base_url().'/profile.php?id='.$new_uid)."\n";
 				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 				pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
@@ -188,8 +188,8 @@ if (isset($_POST['form_sent']))
 			if ($pun_config['o_regs_report'] == '1')
 			{
 				$mail_subject = $lang_common['New user notification'];
-				$mail_message = sprintf($lang_common['New user message'], $username, $pun_config['o_base_url'].'/')."\n";
-				$mail_message .= sprintf($lang_common['User profile'], $pun_config['o_base_url'].'/profile.php?id='.$new_uid)."\n";
+				$mail_message = sprintf($lang_common['New user message'], $username, get_base_url().'/')."\n";
+				$mail_message .= sprintf($lang_common['User profile'], get_base_url().'/profile.php?id='.$new_uid)."\n";
 				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 				pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
@@ -208,10 +208,10 @@ if (isset($_POST['form_sent']))
 			$mail_message = trim(substr($mail_tpl, $first_crlf));
 
 			$mail_subject = str_replace('<board_title>', $pun_config['o_board_title'], $mail_subject);
-			$mail_message = str_replace('<base_url>', $pun_config['o_base_url'].'/', $mail_message);
+			$mail_message = str_replace('<base_url>', get_base_url().'/', $mail_message);
 			$mail_message = str_replace('<username>', $username, $mail_message);
 			$mail_message = str_replace('<password>', $password1, $mail_message);
-			$mail_message = str_replace('<login_url>', $pun_config['o_base_url'].'/login.php', $mail_message);
+			$mail_message = str_replace('<login_url>', get_base_url().'/login.php', $mail_message);
 			$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
 
 			pun_mail($email1, $mail_subject, $mail_message);

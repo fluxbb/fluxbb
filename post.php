@@ -229,16 +229,16 @@ if (isset($_POST['form_sent']))
 								$mail_subject = str_replace('<topic_subject>', '\''.$cur_posting['subject'].'\'', $mail_subject);
 								$mail_message = str_replace('<topic_subject>', '\''.$cur_posting['subject'].'\'', $mail_message);
 								$mail_message = str_replace('<replier>', $username, $mail_message);
-								$mail_message = str_replace('<post_url>', $pun_config['o_base_url'].'/viewtopic.php?pid='.$new_pid.'#p'.$new_pid, $mail_message);
-								$mail_message = str_replace('<unsubscribe_url>', $pun_config['o_base_url'].'/misc.php?action=unsubscribe&tid='.$tid, $mail_message);
+								$mail_message = str_replace('<post_url>', get_base_url().'/viewtopic.php?pid='.$new_pid.'#p'.$new_pid, $mail_message);
+								$mail_message = str_replace('<unsubscribe_url>', get_base_url().'/misc.php?action=unsubscribe&tid='.$tid, $mail_message);
 								$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
 
 								$mail_subject_full = str_replace('<topic_subject>', '\''.$cur_posting['subject'].'\'', $mail_subject_full);
 								$mail_message_full = str_replace('<topic_subject>', '\''.$cur_posting['subject'].'\'', $mail_message_full);
 								$mail_message_full = str_replace('<replier>', $username, $mail_message_full);
 								$mail_message_full = str_replace('<message>', $message, $mail_message_full);
-								$mail_message_full = str_replace('<post_url>', $pun_config['o_base_url'].'/viewtopic.php?pid='.$new_pid.'#p'.$new_pid, $mail_message_full);
-								$mail_message_full = str_replace('<unsubscribe_url>', $pun_config['o_base_url'].'/misc.php?action=unsubscribe&tid='.$tid, $mail_message_full);
+								$mail_message_full = str_replace('<post_url>', get_base_url().'/viewtopic.php?pid='.$new_pid.'#p'.$new_pid, $mail_message_full);
+								$mail_message_full = str_replace('<unsubscribe_url>', get_base_url().'/misc.php?action=unsubscribe&tid='.$tid, $mail_message_full);
 								$mail_message_full = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message_full);
 
 								$notification_emails[$cur_subscriber['language']][0] = $mail_subject;
@@ -332,8 +332,8 @@ if (isset($_POST['form_sent']))
 								$mail_message = str_replace('<topic_subject>', '\''.$subject.'\'', $mail_message);
 								$mail_message = str_replace('<forum_name>', '\''.$cur_posting['forum_name'].'\'', $mail_message);
 								$mail_message = str_replace('<poster>', $username, $mail_message);
-								$mail_message = str_replace('<topic_url>', $pun_config['o_base_url'].'/viewtopic.php?id='.$new_tid, $mail_message);
-								$mail_message = str_replace('<unsubscribe_url>', $pun_config['o_base_url'].'/misc.php?action=unsubscribe&fid='.$cur_posting['id'], $mail_message);
+								$mail_message = str_replace('<topic_url>', get_base_url().'/viewtopic.php?id='.$new_tid, $mail_message);
+								$mail_message = str_replace('<unsubscribe_url>', get_base_url().'/misc.php?action=unsubscribe&fid='.$cur_posting['id'], $mail_message);
 								$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
 
 								$mail_subject_full = str_replace('<topic_subject>', '\''.$subject.'\'', $mail_subject_full);
@@ -342,8 +342,8 @@ if (isset($_POST['form_sent']))
 								$mail_message_full = str_replace('<forum_name>', '\''.$cur_posting['forum_name'].'\'', $mail_message_full);
 								$mail_message_full = str_replace('<poster>', $username, $mail_message_full);
 								$mail_message_full = str_replace('<message>', $message, $mail_message_full);
-								$mail_message_full = str_replace('<topic_url>', $pun_config['o_base_url'].'/viewtopic.php?id='.$new_tid, $mail_message_full);
-								$mail_message_full = str_replace('<unsubscribe_url>', $pun_config['o_base_url'].'/misc.php?action=unsubscribe&fid='.$cur_posting['id'], $mail_message_full);
+								$mail_message_full = str_replace('<topic_url>', get_base_url().'/viewtopic.php?id='.$new_tid, $mail_message_full);
+								$mail_message_full = str_replace('<unsubscribe_url>', get_base_url().'/misc.php?action=unsubscribe&fid='.$cur_posting['id'], $mail_message_full);
 								$mail_message_full = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message_full);
 
 								$notification_emails[$cur_subscriber['language']][0] = $mail_subject;
@@ -373,7 +373,7 @@ if (isset($_POST['form_sent']))
 		{
 			$mail_subject = $lang_common['Banned email notification'];
 			$mail_message = sprintf($lang_common['Banned email post message'], $username, $email)."\n";
-			$mail_message .= sprintf($lang_common['Post URL'], $pun_config['o_base_url'].'/viewtopic.php?pid='.$new_pid.'#p'.$new_pid)."\n";
+			$mail_message .= sprintf($lang_common['Post URL'], get_base_url().'/viewtopic.php?pid='.$new_pid.'#p'.$new_pid)."\n";
 			$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 			pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
