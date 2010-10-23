@@ -402,7 +402,7 @@ if ($action == 'feed')
 			$item = array(
 				'id'			=>	$cur_topic['id'],
 				'title'			=>	$cur_topic['subject'],
-				'link'			=>	get_base_url(true).'/viewtopic.php?id='.$cur_topic['id'].($order_posted ? '' : '&amp;action=new'),
+				'link'			=>	get_base_url(true).'/viewtopic.php?id='.$cur_topic['id'].($order_posted ? '' : '&action=new'),
 				'description'	=>	$cur_topic['message'],
 				'author'		=>	array(
 					'name'	=> $order_posted ? $cur_topic['poster'] : $cur_topic['last_poster']
