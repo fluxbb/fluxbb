@@ -122,7 +122,7 @@ function output_rss($feed)
 	echo '<rss version="2.0">'."\n";
 	echo "\t".'<channel>'."\n";
 	echo "\t\t".'<title><![CDATA['.escape_cdata($feed['title']).']]></title>'."\n";
-	echo "\t\t".'<link>'.$feed['link'].'</link>'."\n";
+	echo "\t\t".'<link>'.pun_htmlspecialchars($feed['link']).'</link>'."\n";
 	echo "\t\t".'<description><![CDATA['.escape_cdata($feed['description']).']]></description>'."\n";
 	echo "\t\t".'<lastBuildDate>'.gmdate('r', count($feed['items']) ? $feed['items'][0]['pubdate'] : time()).'</lastBuildDate>'."\n";
 
@@ -135,7 +135,7 @@ function output_rss($feed)
 	{
 		echo "\t\t".'<item>'."\n";
 		echo "\t\t\t".'<title><![CDATA['.escape_cdata($item['title']).']]></title>'."\n";
-		echo "\t\t\t".'<link>'.$item['link'].'</link>'."\n";
+		echo "\t\t\t".'<link>'.pun_htmlspecialchars($item['link']).'</link>'."\n";
 		echo "\t\t\t".'<description><![CDATA['.escape_cdata($item['description']).']]></description>'."\n";
 		echo "\t\t\t".'<author><![CDATA['.(isset($item['author']['email']) ? escape_cdata($item['author']['email']) : 'dummy@example.com').' ('.escape_cdata($item['author']['name']).')]]></author>'."\n";
 		echo "\t\t\t".'<pubDate>'.gmdate('r', $item['pubdate']).'</pubDate>'."\n";
@@ -167,7 +167,7 @@ function output_atom($feed)
 
 	echo "\t".'<title type="html"><![CDATA['.escape_cdata($feed['title']).']]></title>'."\n";
 	echo "\t".'<link rel="self" href="'.pun_htmlspecialchars(get_current_url()).'"/>'."\n";
-	echo "\t".'<link href="'.$feed['link'].'"/>'."\n";
+	echo "\t".'<link href="'.pun_htmlspecialchars($feed['link']).'"/>'."\n";
 	echo "\t".'<updated>'.gmdate('Y-m-d\TH:i:s\Z', count($feed['items']) ? $feed['items'][0]['pubdate'] : time()).'</updated>'."\n";
 
 	if ($pun_config['o_show_version'] == '1')
@@ -175,7 +175,7 @@ function output_atom($feed)
 	else
 		echo "\t".'<generator>FluxBB</generator>'."\n";
 
-	echo "\t".'<id>'.$feed['link'].'</id>'."\n";
+	echo "\t".'<id>'.pun_htmlspecialchars($feed['link']).'</id>'."\n";
 
 	$content_tag = ($feed['type'] == 'posts') ? 'content' : 'summary';
 
@@ -183,7 +183,7 @@ function output_atom($feed)
 	{
 		echo "\t".'<entry>'."\n";
 		echo "\t\t".'<title type="html"><![CDATA['.escape_cdata($item['title']).']]></title>'."\n";
-		echo "\t\t".'<link rel="alternate" href="'.$item['link'].'"/>'."\n";
+		echo "\t\t".'<link rel="alternate" href="'.pun_htmlspecialchars($item['link']).'"/>'."\n";
 		echo "\t\t".'<'.$content_tag.' type="html"><![CDATA['.escape_cdata($item['description']).']]></'.$content_tag.'>'."\n";
 		echo "\t\t".'<author>'."\n";
 		echo "\t\t\t".'<name><![CDATA['.escape_cdata($item['author']['name']).']]></name>'."\n";
@@ -192,7 +192,7 @@ function output_atom($feed)
 			echo "\t\t\t".'<email><![CDATA['.escape_cdata($item['author']['email']).']]></email>'."\n";
 
 		if (isset($item['author']['uri']))
-			echo "\t\t\t".'<uri>'.$item['author']['uri'].'</uri>'."\n";
+			echo "\t\t\t".'<uri>'.pun_htmlspecialchars($item['author']['uri']).'</uri>'."\n";
 
 		echo "\t\t".'</author>'."\n";
 		echo "\t\t".'<updated>'.gmdate('Y-m-d\TH:i:s\Z', $item['pubdate']).'</updated>'."\n";
@@ -220,7 +220,7 @@ function output_xml($feed)
 
 	echo '<?xml version="1.0" encoding="utf-8"?>'."\n";
 	echo '<source>'."\n";
-	echo "\t".'<url>'.$feed['link'].'</url>'."\n";
+	echo "\t".'<url>'.pun_htmlspecialchars($feed['link']).'</url>'."\n";
 
 	$forum_tag = ($feed['type'] == 'posts') ? 'post' : 'topic';
 
@@ -229,7 +229,7 @@ function output_xml($feed)
 		echo "\t".'<'.$forum_tag.' id="'.$item['id'].'">'."\n";
 
 		echo "\t\t".'<title><![CDATA['.escape_cdata($item['title']).']]></title>'."\n";
-		echo "\t\t".'<link>'.$item['link'].'</link>'."\n";
+		echo "\t\t".'<link>'.pun_htmlspecialchars($item['link']).'</link>'."\n";
 		echo "\t\t".'<content><![CDATA['.escape_cdata($item['description']).']]></content>'."\n";
 		echo "\t\t".'<author>'."\n";
 		echo "\t\t\t".'<name><![CDATA['.escape_cdata($item['author']['name']).']]></name>'."\n";
@@ -238,7 +238,7 @@ function output_xml($feed)
 			echo "\t\t\t".'<email><![CDATA['.escape_cdata($item['author']['email']).']]></email>'."\n";
 
 		if (isset($item['author']['uri']))
-			echo "\t\t\t".'<uri>'.$item['author']['uri'].'</uri>'."\n";
+			echo "\t\t\t".'<uri>'.pun_htmlspecialchars($item['author']['uri']).'</uri>'."\n";
 
 		echo "\t\t".'</author>'."\n";
 		echo "\t\t".'<posted>'.gmdate('r', $item['pubdate']).'</posted>'."\n";
@@ -269,7 +269,7 @@ function output_html($feed)
 		else
 			$subject_truncated = pun_htmlspecialchars($item['title']);
 
-		echo '<li><a href="'.$item['link'].'" title="'.pun_htmlspecialchars($item['title']).'">'.$subject_truncated.'</a></li>'."\n";
+		echo '<li><a href="'.pun_htmlspecialchars($item['link']).'" title="'.pun_htmlspecialchars($item['title']).'">'.$subject_truncated.'</a></li>'."\n";
 	}
 }
 
@@ -446,7 +446,7 @@ else if ($action == 'online' || $action == 'online_full')
 	{
 		if ($pun_user_online['user_id'] > 1)
 		{
-			$users[] = ($pun_user['g_view_users'] == '1') ? '<a href="'.get_base_url(true).'/profile.php?id='.$pun_user_online['user_id'].'">'.pun_htmlspecialchars($pun_user_online['ident']).'</a>' : pun_htmlspecialchars($pun_user_online['ident']);
+			$users[] = ($pun_user['g_view_users'] == '1') ? '<a href="'.pun_htmlspecialchars(get_base_url(true)).'/profile.php?id='.$pun_user_online['user_id'].'">'.pun_htmlspecialchars($pun_user_online['ident']).'</a>' : pun_htmlspecialchars($pun_user_online['ident']);
 			++$num_users;
 		}
 		else
@@ -492,7 +492,7 @@ else if ($action == 'stats')
 	header('Pragma: public');
 
 	echo sprintf($lang_index['No of users'], forum_number_format($stats['total_users'])).'<br />'."\n";
-	echo sprintf($lang_index['Newest user'], (($pun_user['g_view_users'] == '1') ? '<a href="'.get_base_url(true).'/profile.php?id='.$stats['last_user']['id'].'">'.pun_htmlspecialchars($stats['last_user']['username']).'</a>' : pun_htmlspecialchars($stats['last_user']['username']))).'<br />'."\n";
+	echo sprintf($lang_index['Newest user'], (($pun_user['g_view_users'] == '1') ? '<a href="'.pun_htmlspecialchars(get_base_url(true)).'/profile.php?id='.$stats['last_user']['id'].'">'.pun_htmlspecialchars($stats['last_user']['username']).'</a>' : pun_htmlspecialchars($stats['last_user']['username']))).'<br />'."\n";
 	echo sprintf($lang_index['No of topics'], forum_number_format($stats['total_topics'])).'<br />'."\n";
 	echo sprintf($lang_index['No of posts'], forum_number_format($stats['total_posts'])).'<br />'."\n";
 
