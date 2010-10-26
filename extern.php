@@ -197,7 +197,7 @@ function output_atom($feed)
 		echo "\t\t".'</author>'."\n";
 		echo "\t\t".'<updated>'.gmdate('Y-m-d\TH:i:s\Z', $item['pubdate']).'</updated>'."\n";
 
-		echo "\t\t".'<id>'.$item['link'].'</id>'."\n";
+		echo "\t\t".'<id>'.pun_htmlspecialchars($item['link']).'</id>'."\n";
 		echo "\t".'</entry>'."\n";
 	}
 
