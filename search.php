@@ -74,7 +74,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			message($lang_common['Bad request']);
 	}
 	else if ($action == 'show_recent')
-		$interval = isset($_GET['value']) ? intval($_GET['value']) : 0;
+		$interval = isset($_GET['value']) ? intval($_GET['value']) : 86400;
 	else if ($action != 'show_new' && $action != 'show_unanswered' && $action != 'show_subscriptions')
 		message($lang_common['Bad request']);
 
