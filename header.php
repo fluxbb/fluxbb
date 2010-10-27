@@ -209,7 +209,7 @@ else
 	else
 		$page_quicklinks[] = '<a href="misc.php?action=markread">'.$lang_common['Mark all as read'].'</a>';
 
-	if (!$pun_user['g_search'] == '1')
+	if ($pun_user['g_search'] == '1')
 		$page_quicklinks[] = '<a href="search.php?action=show_new" title="'.$lang_common['Show new posts'].'">'.$lang_common['New posts'].'</a>';
 }
 
