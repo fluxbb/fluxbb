@@ -199,14 +199,26 @@ else
 
 		if ($pun_config['o_maintenance'] == '1')
 			$tpl_temp .= "\n\t\t\t\t".'<li class="maintenancelink"><span><strong><a href="admin_options.php#maintenance">'.$lang_common['Maintenance mode enabled'].'</a></strong></span></li>';
+
+		$tpl_temp .= "\n\t\t\t".'</ul>';
 	}
 
-	if (in_array(basename($_SERVER['PHP_SELF']), array('index.php', 'search.php')))
-		$tpl_temp .= "\n\t\t\t".'</ul>'."\n\t\t\t".'<ul class="conr">'.($pun_user['g_search'] == '1' ? "\n\t\t\t\t".'<li><span><a href="search.php?action=show_new">'.$lang_common['Show new posts'].'</a></span></li>' : '')."\n\t\t\t\t".'<li><span><a href="misc.php?action=markread">'.$lang_common['Mark all as read'].'</a></span></li>'."\n\t\t\t".'</ul>'."\n\t\t\t".'<div class="clearer"></div>'."\n\t\t".'</div>';
+	// Generate quicklinks
+	$tpl_temp .= "\n\t\t\t".'<ul class="conr">';
+
+	// Quick searches
+	if ($pun_user['g_search'] == '1')
+	{
+		$tpl_temp .= "\n\t\t\t\t".'<li><span><a href="search.php?action=show_new" title="'.$lang_common['Show new posts'].'">'.$lang_common['New posts'].'</a></span></li>';
+		$tpl_temp .= "\n\t\t\t\t".'<li><span><a href="search.php?action=show_recent" title="'.$lang_common['Show active topics'].'">'.$lang_common['Active topics'].'</a></span></li>';
+		$tpl_temp .= "\n\t\t\t\t".'<li><span><a href="search.php?action=show_unanswered" title="'.$lang_common['Show unanswered topics'].'">'.$lang_common['Unanswered topics'].'</a></span></li>';
+	}
+
+	//$tpl_temp .= "\n\t\t\t\t".'<li><span><a href="misc.php?action=markread">'.$lang_common['Mark all as read'].'</a></span></li>';
 	else if (basename($_SERVER['PHP_SELF']) == 'viewforum.php')
-		$tpl_temp .= "\n\t\t\t".'</ul>'."\n\t\t\t".'<ul class="conr">'."\n\t\t\t\t".'<li><span><a href="misc.php?action=markforumread&amp;fid='.$id.'">'.$lang_common['Mark forum read'].'</a></span></li>'."\n\t\t\t".'</ul>'."\n\t\t\t".'<div class="clearer"></div>'."\n\t\t".'</div>';
-	else
-		$tpl_temp .= "\n\t\t\t".'</ul>'."\n\t\t\t".'<div class="clearer"></div>'."\n\t\t".'</div>';
+		$tpl_temp .= "\n\t\t\t\t".'<li><span><a href="misc.php?action=markforumread&amp;fid='.$id.'">'.$lang_common['Mark forum read'].'</a></span></li>';
+
+	$tpl_temp .= "\n\t\t\t".'</ul>'."\n\t\t\t".'<div class="clearer"></div>'."\n\t\t".'</div>';
 }
 
 $tpl_main = str_replace('<pun_status>', $tpl_temp, $tpl_main);
