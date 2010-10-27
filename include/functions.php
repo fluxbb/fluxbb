@@ -1507,7 +1507,7 @@ function update_message()
 					<div class="infldset">
 						<p><?php echo $lang_update['Database password info'] ?></p>
 						<p><strong><?php echo $lang_update['Note']; ?></strong> <?php echo $lang_update['Database password note'] ?></p>
-						<label class="required"><strong><?php echo $lang_update['Database password'] ?> <span><?php echo $lang_update['Required'] ?></span></strong><br /><input type="text" id="req_db_pass" name="req_db_pass" /><br /></label>
+						<label class="required"><strong><?php echo $lang_update['Database password'] ?> <span><?php echo $lang_update['Required'] ?></span></strong><br /><input type="password" id="req_db_pass" name="req_db_pass" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
