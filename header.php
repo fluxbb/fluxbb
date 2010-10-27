@@ -181,11 +181,14 @@ $tpl_main = str_replace('<pun_navlinks>','<div id="brdmenu" class="inbox">'."\n\
 
 
 // START SUBST - <pun_status>
+$page_statusinfo = $page_quicklinks = array();
+
 if ($pun_user['is_guest'])
-	$tpl_temp = '<div id="brdwelcome" class="inbox">'."\n\t\t\t".'<p>'.$lang_common['Not logged in'].'</p>'."\n\t\t".'</div>';
+	$page_statusinfo = '<p>'.$lang_common['Not logged in'].'</p>';
 else
 {
-	$tpl_temp = '<div id="brdwelcome" class="inbox">'."\n\t\t\t".'<ul class="conl">'."\n\t\t\t\t".'<li><span>'.$lang_common['Logged in as'].' <strong>'.pun_htmlspecialchars($pun_user['username']).'</strong></span></li>'."\n\t\t\t\t".'<li><span>'.sprintf($lang_common['Last visit'], format_time($pun_user['last_visit'])).'</span></li>';
+	$page_statusinfo[] = '<li><span>'.$lang_common['Logged in as'].' <strong>'.pun_htmlspecialchars($pun_user['username']).'</strong></span></li>';
+	$page_statusinfo[] = '<li><span>'.sprintf($lang_common['Last visit'], format_time($pun_user['last_visit'])).'</span></li>';
 
 	if ($pun_user['is_admmod'])
 	{
@@ -194,32 +197,52 @@ else
 			$result_header = $db->query('SELECT 1 FROM '.$db->prefix.'reports WHERE zapped IS NULL') or error('Unable to fetch reports info', __FILE__, __LINE__, $db->error());
 
 			if ($db->result($result_header))
-				$tpl_temp .= "\n\t\t\t\t".'<li class="reportlink"><span><strong><a href="admin_reports.php">'.$lang_common['New reports'].'</a></strong></span></li>';
+				$page_statusinfo[] = '<li class="reportlink"><span><strong><a href="admin_reports.php">'.$lang_common['New reports'].'</a></strong></span></li>';
 		}
 
 		if ($pun_config['o_maintenance'] == '1')
-			$tpl_temp .= "\n\t\t\t\t".'<li class="maintenancelink"><span><strong><a href="admin_options.php#maintenance">'.$lang_common['Maintenance mode enabled'].'</a></strong></span></li>';
-
-		$tpl_temp .= "\n\t\t\t".'</ul>';
+			$page_statusinfo[] = '<li class="maintenancelink"><span><strong><a href="admin_options.php#maintenance">'.$lang_common['Maintenance mode enabled'].'</a></strong></span></li>';
 	}
+	
+	if (basename($_SERVER['PHP_SELF'] == 'viewforum.php'))
+		$page_quicklinks[] = '<a href="misc.php?action=markforumread&amp;fid='.$id.'">'.$lang_common['Mark forum read'].'</a>';
+	else
+		$page_quicklinks[] = '<a href="misc.php?action=markread">'.$lang_common['Mark all as read'].'</a>';
 
-	// Generate quicklinks
-	$tpl_temp .= "\n\t\t\t".'<ul class="conr">';
-
-	// Quick searches
-	if ($pun_user['g_search'] == '1')
-	{
-		$tpl_temp .= "\n\t\t\t\t".'<li><span><a href="search.php?action=show_new" title="'.$lang_common['Show new posts'].'">'.$lang_common['New posts'].'</a></span></li>';
-		$tpl_temp .= "\n\t\t\t\t".'<li><span><a href="search.php?action=show_recent" title="'.$lang_common['Show active topics'].'">'.$lang_common['Active topics'].'</a></span></li>';
-		$tpl_temp .= "\n\t\t\t\t".'<li><span><a href="search.php?action=show_unanswered" title="'.$lang_common['Show unanswered topics'].'">'.$lang_common['Unanswered topics'].'</a></span></li>';
-	}
-
-	//$tpl_temp .= "\n\t\t\t\t".'<li><span><a href="misc.php?action=markread">'.$lang_common['Mark all as read'].'</a></span></li>';
-	else if (basename($_SERVER['PHP_SELF']) == 'viewforum.php')
-		$tpl_temp .= "\n\t\t\t\t".'<li><span><a href="misc.php?action=markforumread&amp;fid='.$id.'">'.$lang_common['Mark forum read'].'</a></span></li>';
-
-	$tpl_temp .= "\n\t\t\t".'</ul>'."\n\t\t\t".'<div class="clearer"></div>'."\n\t\t".'</div>';
+	if (!$pun_user['g_search'] == '1')
+		$page_quicklinks[] = '<a href="search.php?action=show_new" title="'.$lang_common['Show new posts'].'">'.$lang_common['New posts'].'</a>';
 }
+
+// Quick searches
+if ($pun_user['g_search'] == '1')
+{
+	$page_quicklinks[] = '<a href="search.php?action=show_recent" title="'.$lang_common['Show active topics'].'">'.$lang_common['Active topics'].'</a>';
+	$page_quicklinks[] = '<a href="search.php?action=show_unanswered" title="'.$lang_common['Show unanswered topics'].'">'.$lang_common['Unanswered topics'].'</a>';
+}
+
+
+// Generate all that jazz
+$tpl_temp = '<div id="brdwelcome" class="inbox">'."\n\t\t\t";
+
+// The status information
+if (is_array($page_statusinfo))
+{
+	$tpl_temp .= "\n\t\t\t".'<ul class="conl">';
+	$tpl_temp .= "\n\t\t\t\t".implode("\n\t\t\t\t", $page_statusinfo);
+	$tpl_temp .= "\n\t\t\t".'</ul>';
+}
+else
+	$tpl_temp .= "\n\t\t\t".$page_statusinfo;
+
+// Generate quicklinks
+if (count($page_quicklinks))
+{
+	$tpl_temp .= "\n\t\t\t".'<ul class="conr">';
+	$tpl_temp .= "\n\t\t\t\t".'<li><span>'.implode('</span></li>'."\n\t\t\t\t".'<li><span>', $page_quicklinks).'</span></li>';
+	$tpl_temp .= "\n\t\t\t".'</ul>'."\n\t\t\t".'<div class="clearer"></div>';
+}
+
+$tpl_temp .= "\n\t\t".'</div>';	
 
 $tpl_main = str_replace('<pun_status>', $tpl_temp, $tpl_main);
 // END SUBST - <pun_status>
