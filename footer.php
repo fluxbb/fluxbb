@@ -63,37 +63,33 @@ if (isset($footer_style) && ($footer_style == 'viewforum' || $footer_style == 'v
 		<div id="brdfooternav" class="inbox">
 <?php
 
-// If no footer style has been specified, we use the default (only copyright/debug info)
-$footer_style = isset($footer_style) ? $footer_style : NULL;
+echo "\t\t\t".'<div class="conl">'."\n";
 
-// Display forum quick jump
-if ($footer_style == 'viewforum' || $footer_style == 'viewtopic')
+// Display the "Jump to" drop list
+if ($pun_config['o_quickjump'] == '1')
 {
-	echo "\t\t\t".'<div class="conl">'."\n";
+	// Load cached quick jump
+	if (file_exists(FORUM_CACHE_DIR.'cache_quickjump_'.$pun_user['g_id'].'.php'))
+		include FORUM_CACHE_DIR.'cache_quickjump_'.$pun_user['g_id'].'.php';
 
-	// Display the "Jump to" drop list
-	if ($pun_config['o_quickjump'] == '1')
+	if (!defined('PUN_QJ_LOADED'))
 	{
-		// Load cached quick jump
-		if (file_exists(FORUM_CACHE_DIR.'cache_quickjump_'.$pun_user['g_id'].'.php'))
-			include FORUM_CACHE_DIR.'cache_quickjump_'.$pun_user['g_id'].'.php';
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require PUN_ROOT.'include/cache.php';
 
-		if (!defined('PUN_QJ_LOADED'))
-		{
-			if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-				require PUN_ROOT.'include/cache.php';
-
-			generate_quickjump_cache($pun_user['g_id']);
-			require FORUM_CACHE_DIR.'cache_quickjump_'.$pun_user['g_id'].'.php';
-		}
+		generate_quickjump_cache($pun_user['g_id']);
+		require FORUM_CACHE_DIR.'cache_quickjump_'.$pun_user['g_id'].'.php';
 	}
-
-	echo "\t\t\t".'</div>'."\n";
 }
+
+echo "\t\t\t".'</div>'."\n";
 
 ?>
 			<div class="conr">
 <?php
+
+// If no footer style has been specified, we use the default (only copyright/debug info)
+$footer_style = isset($footer_style) ? $footer_style : NULL;
 
 if ($footer_style == 'index')
 {
