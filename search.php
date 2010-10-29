@@ -657,7 +657,6 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 </div>
 <?php
 
-		$footer_style = 'search';
 		require PUN_ROOT.'footer.php';
 	}
 	else
