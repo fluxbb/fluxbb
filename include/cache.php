@@ -102,19 +102,25 @@ function generate_quickjump_cache($group_id = false)
 
 	// If a group_id was supplied, we generate the quick jump cache for that group only
 	if ($group_id !== false)
-		$groups[0] = $group_id;
+	{
+		// Is this group even allowed to read forums?
+		$result = $db->query('SELECT g_read_board FROM '.$db->prefix.'groups WHERE g_id='.$group_id) or error('Unable to fetch user group read permission', __FILE__, __LINE__, $db->error());
+		$read_board = $db->result($result);
+		
+		$groups[$group_id] = $read_board;
+	}
 	else
 	{
 		// A group_id was now supplied, so we generate the quick jump cache for all groups
-		$result = $db->query('SELECT g_id FROM '.$db->prefix.'groups') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT g_id, g_read_board FROM '.$db->prefix.'groups') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
 		$num_groups = $db->num_rows($result);
 
-		for ($i = 0; $i < $num_groups; ++$i)
-			$groups[] = $db->result($result, $i);
+		while ($row = $db->fetch_row($result))
+			$groups[$row[0]] = $row[1];
 	}
 
 	// Loop through the groups in $groups and output the cache for each of them
-	foreach ($groups as $group_id)
+	foreach ($groups as $group_id => $read_board)
 	{
 		// Output quick jump as PHP code
 		$fh = @fopen(FORUM_CACHE_DIR.'cache_quickjump_'.$group_id.'.php', 'wb');
@@ -122,29 +128,33 @@ function generate_quickjump_cache($group_id = false)
 			error('Unable to write quick jump cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'', __FILE__, __LINE__);
 
 		$output = '<?php'."\n\n".'if (!defined(\'PUN\')) exit;'."\n".'define(\'PUN_QJ_LOADED\', 1);'."\n\n".'?>';
-		$output .= "\t\t\t\t".'<form id="qjump" method="get" action="viewforum.php">'."\n\t\t\t\t\t".'<div><label><span><?php echo $lang_common[\'Jump to\'] ?>'.'<br /></span>'."\n\t\t\t\t\t".'<select name="id" onchange="window.location=(\'viewforum.php?id=\'+this.options[this.selectedIndex].value)">'."\n";
 
-
-		$result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.redirect_url FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$group_id.') WHERE fp.read_forum IS NULL OR fp.read_forum=1 ORDER BY c.disp_position, c.id, f.disp_position', true) or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
-
-		$cur_category = 0;
-		while ($cur_forum = $db->fetch_assoc($result))
+		if ($read_board == '1')
 		{
-			if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
-			{
-				if ($cur_category)
-					$output .= "\t\t\t\t\t\t".'</optgroup>'."\n";
+			$output .= "\t\t\t\t".'<form id="qjump" method="get" action="viewforum.php">'."\n\t\t\t\t\t".'<div><label><span><?php echo $lang_common[\'Jump to\'] ?>'.'<br /></span>'."\n\t\t\t\t\t".'<select name="id" onchange="window.location=(\'viewforum.php?id=\'+this.options[this.selectedIndex].value)">'."\n";
 
-				$output .= "\t\t\t\t\t\t".'<optgroup label="'.pun_htmlspecialchars($cur_forum['cat_name']).'">'."\n";
-				$cur_category = $cur_forum['cid'];
+
+			$result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.redirect_url FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$group_id.') WHERE fp.read_forum IS NULL OR fp.read_forum=1 ORDER BY c.disp_position, c.id, f.disp_position', true) or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
+
+			$cur_category = 0;
+			while ($cur_forum = $db->fetch_assoc($result))
+			{
+				if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
+				{
+					if ($cur_category)
+						$output .= "\t\t\t\t\t\t".'</optgroup>'."\n";
+
+					$output .= "\t\t\t\t\t\t".'<optgroup label="'.pun_htmlspecialchars($cur_forum['cat_name']).'">'."\n";
+					$cur_category = $cur_forum['cid'];
+				}
+
+				$redirect_tag = ($cur_forum['redirect_url'] != '') ? ' &gt;&gt;&gt;' : '';
+				$output .= "\t\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'"<?php echo ($forum_id == '.$cur_forum['fid'].') ? \' selected="selected"\' : \'\' ?>>'.pun_htmlspecialchars($cur_forum['forum_name']).$redirect_tag.'</option>'."\n";
 			}
 
-			$redirect_tag = ($cur_forum['redirect_url'] != '') ? ' &gt;&gt;&gt;' : '';
-			$output .= "\t\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'"<?php echo ($forum_id == '.$cur_forum['fid'].') ? \' selected="selected"\' : \'\' ?>>'.pun_htmlspecialchars($cur_forum['forum_name']).$redirect_tag.'</option>'."\n";
+			$output .= "\t\t\t\t\t\t".'</optgroup>'."\n\t\t\t\t\t".'</select>'."\n\t\t\t\t\t".'<input type="submit" value="<?php echo $lang_common[\'Go\'] ?>" accesskey="g" />'."\n\t\t\t\t\t".'</label></div>'."\n\t\t\t\t".'</form>'."\n";
 		}
-
-		$output .= "\t\t\t\t\t\t".'</optgroup>'."\n\t\t\t\t\t".'</select>'."\n\t\t\t\t\t".'<input type="submit" value="<?php echo $lang_common[\'Go\'] ?>" accesskey="g" />'."\n\t\t\t\t\t".'</label></div>'."\n\t\t\t\t".'</form>'."\n";
-
+		
 		fwrite($fh, $output);
 
 		fclose($fh);
