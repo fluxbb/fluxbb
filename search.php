@@ -69,7 +69,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	// If it's a user search (by ID)
 	else if ($action == 'show_user_posts' || $action == 'show_user_topics' || $action == 'show_subscriptions')
 	{
-		$user_id = (isset($_GET['user_id'])) ? intval($_GET['user_id']) : 0;
+		$user_id = (isset($_GET['user_id'])) ? intval($_GET['user_id']) : $pun_user['id'];
 		if ($user_id < 2)
 			message($lang_common['Bad request']);
 	}
