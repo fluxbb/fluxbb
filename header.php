@@ -204,7 +204,7 @@ else
 			$page_statusinfo[] = '<li class="maintenancelink"><span><strong><a href="admin_options.php#maintenance">'.$lang_common['Maintenance mode enabled'].'</a></strong></span></li>';
 	}
 	
-	if (basename($_SERVER['PHP_SELF'] == 'viewforum.php'))
+	if (basename($_SERVER['PHP_SELF']) == 'viewforum.php')
 		$page_quicklinks[] = '<a href="misc.php?action=markforumread&amp;fid='.$id.'">'.$lang_common['Mark forum read'].'</a>';
 	else
 		$page_quicklinks[] = '<a href="misc.php?action=markread">'.$lang_common['Mark all as read'].'</a>';
