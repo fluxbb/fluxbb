@@ -72,6 +72,10 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		$user_id = (isset($_GET['user_id'])) ? intval($_GET['user_id']) : $pun_user['id'];
 		if ($user_id < 2)
 			message($lang_common['Bad request']);
+
+		// Subscribed topics can only be viewed by admins, moderators and the users themselves
+		if ($action == 'show_subscriptions' && !$pun_user['is_admmod'] && $user_id != $pun_user['id'])
+			message($lang_common['No permission']);
 	}
 	else if ($action == 'show_recent')
 		$interval = isset($_GET['value']) ? intval($_GET['value']) : 86400;
