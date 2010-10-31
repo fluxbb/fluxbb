@@ -204,9 +204,10 @@ else
 			$page_statusinfo[] = '<li class="maintenancelink"><span><strong><a href="admin_options.php#maintenance">'.$lang_common['Maintenance mode enabled'].'</a></strong></span></li>';
 	}
 	
-	if (basename($_SERVER['PHP_SELF']) == 'viewforum.php')
+	$script_name = basename($_SERVER['PHP_SELF']);
+	if ($script_name == 'viewforum.php')
 		$page_quicklinks[] = '<a href="misc.php?action=markforumread&amp;fid='.$id.'">'.$lang_common['Mark forum read'].'</a>';
-	else
+	else if ($script_name == 'index.php')
 		$page_quicklinks[] = '<a href="misc.php?action=markread">'.$lang_common['Mark all as read'].'</a>';
 
 	if ($pun_user['g_search'] == '1')
