@@ -147,7 +147,7 @@ generate_admin_menu('index');
 				<dl>
 					<dt><?php echo $lang_admin_index['FluxBB version label'] ?></dt>
 					<dd>
-						<?php printf($lang_admin_index['FluxBB version data'], $pun_config['o_cur_version'], '<a href="admin_index.php?action=check_upgrade">'.$lang_admin_index['Check for upgrade'].'</a>') ?><br />
+						<?php printf($lang_admin_index['FluxBB version data'], $pun_config['o_cur_version'], '<a href="admin_index.php?action=check_upgrade">'.$lang_admin_index['Check for upgrade'].'</a>') ?>
 					</dd>
 					<dt><?php echo $lang_admin_index['Server load label'] ?></dt>
 					<dd>
@@ -164,7 +164,7 @@ generate_admin_menu('index');
 						<?php echo implode(' ', $db->get_version())."\n" ?>
 <?php if (isset($total_records) && isset($total_size)): ?>						<br /><?php printf($lang_admin_index['Database data rows'], forum_number_format($total_records)) ?>
 						<br /><?php printf($lang_admin_index['Database data size'], $total_size) ?>
-<?php endif; endif; ?>					</dd>
+<?php endif; ?>					</dd><?php endif; ?>
 				</dl>
 			</div>
 		</div>
