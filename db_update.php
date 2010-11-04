@@ -1053,6 +1053,8 @@ else
 
 		function _conv_bans($cur_item, $old_charset)
 		{
+			global $lang_update;
+			
 			echo sprintf($lang_update['Converting item'], $lang_update['ban'], $cur_item['id']).'<br />'."\n";
 
 			convert_to_utf8($cur_item['username'], $old_charset);
