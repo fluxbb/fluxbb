@@ -72,7 +72,6 @@ if (isset($_POST['form_sent']))
 		'subscriptions'			=> $_POST['form']['subscriptions'] != '1' ? '0' : '1',
 		'smtp_host'				=> pun_trim($_POST['form']['smtp_host']),
 		'smtp_user'				=> pun_trim($_POST['form']['smtp_user']),
-		'smtp_pass'				=> pun_trim($_POST['form']['smtp_pass']),
 		'smtp_ssl'				=> $_POST['form']['smtp_ssl'] != '1' ? '0' : '1',
 		'regs_allow'			=> $_POST['form']['regs_allow'] != '1' ? '0' : '1',
 		'regs_verify'			=> $_POST['form']['regs_verify'] != '1' ? '0' : '1',
@@ -126,6 +125,18 @@ if (isset($_POST['form_sent']))
 	if ($form['additional_navlinks'] != '')
 		$form['additional_navlinks'] = pun_trim(pun_linebreaks($form['additional_navlinks']));
 
+	// Change or enter a SMTP password
+	if (isset($_POST['form']['smtp_change_pass']))
+	{
+		$smtp_pass1 = isset($_POST['form']['smtp_pass1']) ? pun_trim($_POST['form']['smtp_pass1']) : '';
+		$smtp_pass2 = isset($_POST['form']['smtp_pass2']) ? pun_trim($_POST['form']['smtp_pass2']) : '';
+		
+		if ($smtp_pass1 == $smtp_pass2)
+			$form['smtp_pass'] = $smtp_pass1;
+		else
+			message($lang_admin_options['SMTP passwords did not match']);
+	}
+	
 	if ($form['announcement_message'] != '')
 		$form['announcement_message'] = pun_linebreaks($form['announcement_message']);
 	else
@@ -675,7 +686,10 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['SMTP password label'] ?></th>
 									<td>
-										<input type="text" name="form[smtp_pass]" size="25" maxlength="50" value="<?php echo pun_htmlspecialchars($pun_config['o_smtp_pass']) ?>" />
+										<span><input type="checkbox" name="form[smtp_change_pass]" value="1" />&#160;&#160;<?php echo $lang_admin_options['SMTP change password help'] ?></span>
+<?php $smtp_pass = !empty($pun_config['o_smtp_pass']) ? random_key(pun_strlen($pun_config['o_smtp_pass']), true) : ''; ?>
+										<input type="password" name="form[smtp_pass1]" size="25" maxlength="50" value="<?php echo $smtp_pass ?>" />
+										<input type="password" name="form[smtp_pass2]" size="25" maxlength="50" value="<?php echo $smtp_pass ?>" />
 										<span><?php echo $lang_admin_options['SMTP password help'] ?></span>
 									</td>
 								</tr>

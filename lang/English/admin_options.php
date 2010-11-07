@@ -7,6 +7,7 @@ $lang_admin_options = array(
 'Must enter title message'			=>	'You must enter a board title.',
 'Invalid e-mail message'			=>	'The admin email address you entered is invalid.',
 'Invalid webmaster e-mail message'	=>	'The webmaster email address you entered is invalid.',
+'SMTP passwords did not match'		=>	'You need to enter the SMTP password twice exactly the same to change it.',
 'Enter announcement here'			=>	'Enter your announcement here.',
 'Enter rules here'					=>	'Enter your rules here.',
 'Default maintenance message'		=>	'The forums are temporarily down for maintenance. Please try again in a few minutes.',
@@ -178,7 +179,8 @@ $lang_admin_options = array(
 'SMTP username label'				=>	'SMTP username',
 'SMTP username help'				=>	'Username for SMTP server. Only enter a username if it is required by the SMTP server (most servers <strong>do not</strong> require authentication).',
 'SMTP password label'				=>	'SMTP password',
-'SMTP password help'				=>	'Password for SMTP server. Only enter a password if it is required by the SMTP server (most servers <strong>do not</strong> require authentication).',
+'SMTP change password help'			=>	'Check this if you want to change or delete the currently stored password.',
+'SMTP password help'				=>	'Password for SMTP server. Only enter a password if it is required by the SMTP server (most servers <strong>do not</strong> require authentication). Please enter your password twice to confirm.',
 'SMTP SSL label'					=>	'Encrypt SMTP using SSL',
 'SMTP SSL help'						=>	'Encrypts the connection to the SMTP server using SSL. Should only be used if your SMTP server requires it and your version of PHP supports SSL.',
 
