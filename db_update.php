@@ -198,7 +198,7 @@ else
 
 // Now we know we have a valid admin, confirm someone else isn't already updating the database
 if ($lock_error)
-	error(sprintf(($lang_update['Script runs error'], FORUM_CACHE_DIR.'db_update.lock'));
+	error(sprintf($lang_update['Script runs error'], FORUM_CACHE_DIR.'db_update.lock'));
 
 // Check the database, search index and parser revision and the current version
 if (isset($pun_config['o_database_revision']) && $pun_config['o_database_revision'] >= UPDATE_TO_DB_REVISION &&
