@@ -253,7 +253,7 @@ function pun_setcookie($user_id, $password_hash, $expire)
 {
 	global $cookie_name, $cookie_seed;
 
-	forum_setcookie($cookie_name, serialize(array($user_id, md5($cookie_seed.$password_hash), $expire)), $expire);
+	forum_setcookie($cookie_name, serialize(array((string) $user_id, md5($cookie_seed.$password_hash), (int) $expire)), $expire);
 }
 
 
