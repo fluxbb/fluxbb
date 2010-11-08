@@ -157,6 +157,10 @@ switch ($db_type)
 		break;
 }
 
+// Read the lock file
+$lock = file_exists(FORUM_CACHE_DIR.'db_update.lock') ? trim(file_get_contents(FORUM_CACHE_DIR.'db_update.lock')) : false;
+$lock_error = false;
+
 // Generate or fetch the UID - this confirms we have a valid admin
 if (isset($_POST['req_db_pass']))
 {
@@ -180,16 +184,21 @@ if (isset($_POST['req_db_pass']))
 
 	// Generate a unique id to identify this session, only if this is a valid session
 	$uid = pun_hash($req_db_pass.'|'.uniqid(rand(), true));
+	if ($lock) // We already have a lock file
+		$lock_error = true;
 }
 else if (isset($_GET['uid']))
+{
 	$uid = trim($_GET['uid']);
+	if (!$lock || $lock != $uid) // The lock doesn't exist or doesn't match the given UID
+		$lock_error = true;
+}
 else
 	error($lang_update['No password error']);
 
 // Now we know we have a valid admin, confirm someone else isn't already updating the database
-$lock = file_exists(FORUM_CACHE_DIR.'db_update.lock') ? trim(file_get_contents(FORUM_CACHE_DIR.'db_update.lock')) : false;
-if ($lock !== false && $lock != $uid)
-	error(sprintf($lang_update['Script runs error'], FORUM_CACHE_DIR.'db_update.lock'));
+if ($lock_error)
+	error(sprintf(($lang_update['Script runs error'], FORUM_CACHE_DIR.'db_update.lock'));
 
 // Check the database, search index and parser revision and the current version
 if (isset($pun_config['o_database_revision']) && $pun_config['o_database_revision'] >= UPDATE_TO_DB_REVISION &&
