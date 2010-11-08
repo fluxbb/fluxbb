@@ -1356,7 +1356,7 @@ else
 		function _conv_users($cur_item, $old_charset)
 		{
 			global $lang_update;
-			
+
 			echo sprintf($lang_update['Converting item'], $lang_update['user'], $cur_item['id']).'<br />'."\n";
 
 			convert_to_utf8($cur_item['username'], $old_charset);
