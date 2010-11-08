@@ -186,6 +186,15 @@ if (isset($_POST['req_db_pass']))
 	$uid = pun_hash($req_db_pass.'|'.uniqid(rand(), true));
 	if ($lock) // We already have a lock file
 		$lock_error = true;
+	else // Create the lock file
+	{
+		$fh = @fopen(FORUM_CACHE_DIR.'db_update.lock', 'wb');
+		if (!$fh)
+			error(sprintf($lang_update['Unable to lock error'], 'cache'));
+
+		fwrite($fh, $uid);
+		fclose($fh);
+	}
 }
 else if (isset($_GET['uid']))
 {
@@ -589,14 +598,6 @@ else
 	// Start by updating the database structure
 	case 'start':
 		$query_str = '?stage=preparse_posts';
-
-		// Write the update lock
-		$fh = @fopen(FORUM_CACHE_DIR.'db_update.lock', 'wb');
-		if (!$fh)
-			error(sprintf($lang_update['Unable to lock error'], 'cache'));
-
-		fwrite($fh, $uid);
-		fclose($fh);
 
 		// If we don't need to update the database, skip this stage
 		if (isset($pun_config['o_database_revision']) && $pun_config['o_database_revision'] >= UPDATE_TO_DB_REVISION)
