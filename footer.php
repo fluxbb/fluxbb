@@ -141,7 +141,7 @@ else if ($footer_style == 'viewforum')
 	if ($pun_config['o_feed_type'] == '1')
 		echo "\t\t\t\t".'<p id="feedlinks"><span class="rss"><a href="extern.php?action=feed&amp;fid='.$forum_id.'&amp;type=rss">'.$lang_common['RSS forum feed'].'</a></span></p>'."\n";
 	else if ($pun_config['o_feed_type'] == '2')
-		echo "\t\t\t\t".'<p id="feedlinks" class="actions"><span class="atom"><a href="extern.php?action=feed&amp;fid='.$forum_id.'&amp;type=atom">'.$lang_common['Atom forum feed'].'</a></span></p>'."\n";
+		echo "\t\t\t\t".'<p id="feedlinks"><span class="atom"><a href="extern.php?action=feed&amp;fid='.$forum_id.'&amp;type=atom">'.$lang_common['Atom forum feed'].'</a></span></p>'."\n";
 }
 else if ($footer_style == 'viewtopic')
 {
