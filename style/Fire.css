@@ -301,6 +301,14 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	padding: 0;
 }
 
+#brdwelcome .conl {
+  float: left;
+}
+
+#brdwelcome .conr {
+  float: right;
+}
+
 #brdwelcome li span {
 	background: url(Fire/img/bull.png) center left no-repeat;
 	padding-left: 18px;
