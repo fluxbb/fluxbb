@@ -1754,7 +1754,7 @@ else
 		<div class="fakeform">
 			<div class="inform">
 				<div class="forminfo">
-					<p><?php echo $lang_install['FluxBB has been installed'] ?></p>
+					<p><?php echo $lang_install['FluxBB fully installed'] ?></p>
 				</div>
 			</div>
 		</div>

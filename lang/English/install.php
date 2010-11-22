@@ -114,6 +114,6 @@ $lang_install = array(
 'Info 17'						=>	'To finalize the installation, you need to click on the button below to download a file called config.php. You then need to upload this file to the root directory of your FluxBB installation.',
 'Info 18'						=>	'Once you have uploaded config.php, FluxBB will be fully installed! At that point, you may <a href="index.php">go to the forum index</a>.',
 'Download config.php file'		=>	'Download config.php file',
-'FluxBB has been installed'		=>	'FluxBB has been fully installed! You may now <a href="index.php">go to the forum index</a>.',
+'FluxBB fully installed'		=>	'FluxBB has been fully installed! You may now <a href="index.php">go to the forum index</a>.',
 
 );
