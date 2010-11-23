@@ -105,7 +105,7 @@ function generate_quickjump_cache($group_id = false)
 		$groups[0] = $group_id;
 	else
 	{
-		// A group_id was now supplied, so we generate the quick jump cache for all groups
+		// A group_id was not supplied, so we generate the quick jump cache for all groups
 		$result = $db->query('SELECT g_id FROM '.$db->prefix.'groups') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
 		$num_groups = $db->num_rows($result);
 
