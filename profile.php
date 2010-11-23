@@ -1041,7 +1041,7 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 	if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
 		$posts_field = forum_number_format($user['num_posts']);
 	if ($pun_user['g_search'] == '1' && $user['num_posts'] > 0)
-		$posts_field .= (($posts_field != '') ? ' - ' : '').'<a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a>';
+		$posts_field .= (($posts_field != '') ? ' - ' : '').'<a href="search.php?action=show_user_topics&amp;user_id='.$id.'">'.$lang_profile['Show topics'].'</a> - <a href="search.php?action=show_user_posts&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a>';
 	if ($posts_field != '')
 	{
 		$user_activity[] = '<dt>'.$lang_common['Posts'].'</dt>';
@@ -1144,11 +1144,11 @@ else
 
 		$posts_field = '';
 		if ($pun_user['g_id'] == PUN_ADMIN)
-			$posts_field = '<label>'.$lang_common['Posts'].'<br /><input type="text" name="num_posts" value="'.$user['num_posts'].'" size="8" maxlength="8" /><br /></label><p class="actions"><span><a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a></span></p>'."\n";
+			$posts_field = '<label>'.$lang_common['Posts'].'<br /><input type="text" name="num_posts" value="'.$user['num_posts'].'" size="8" maxlength="8" /><br /></label><p class="actions"><span><a href="search.php?action=show_user_topics&amp;user_id='.$id.'">'.$lang_profile['Show topics'].'</a> - <a href="search.php?action=show_user_posts&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a>'.($pun_config['o_subscriptions'] == '1' ? ' - <a href="search.php?action=show_subscriptions&amp;user_id='.$id.'">'.$lang_profile['Show subscriptions'].'</a>' : '').'</span></p>'."\n";
 		else if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
-			$posts_field = '<p>'.sprintf($lang_profile['Posts info'], forum_number_format($user['num_posts']).($pun_user['g_search'] == '1' ? ' - <a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a>' : '')).'</p>'."\n";
+			$posts_field = '<p>'.sprintf($lang_profile['Posts info'], forum_number_format($user['num_posts']).($pun_user['g_search'] == '1' ? ' - <a href="search.php?action=show_user_topics&amp;user_id='.$id.'">'.$lang_profile['Show topics'].'</a> - <a href="search.php?action=show_user_posts&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a>'.($pun_config['o_subscriptions'] == '1' ? ' - <a href="search.php?action=show_subscriptions&amp;user_id='.$id.'">'.$lang_profile['Show subscriptions'].'</a>' : '') : '')).'</p>'."\n";
 		else if ($pun_user['g_search'] == '1')
-			$posts_field = '<p class="actions"><span><a href="search.php?action=show_user&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a></span></p>'."\n";
+			$posts_field = '<p class="actions"><span><a href="search.php?action=show_user_topics&amp;user_id='.$id.'">'.$lang_profile['Show topics'].'</a> - <a href="search.php?action=show_user_posts&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a></span></p>'."\n";
 
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section essentials']);
