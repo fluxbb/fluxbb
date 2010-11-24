@@ -297,6 +297,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		else if ($action == 'show_new' || $action == 'show_recent' || $action == 'show_user_posts' || $action == 'show_user_topics' || $action == 'show_subscriptions' || $action == 'show_unanswered')
 		{
 			$show_as = 'topics';
+			// We want to sort things after last post
+			$sort_by = 0;
+			$sort_dir = 'DESC';
 			
 			// If it's a search for new posts since last visit
 			if ($action == 'show_new')
@@ -324,7 +327,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			{
 				$show_as = 'posts';
 				
-				$result = $db->query('SELECT p.id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON p.topic_id=t.id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id='.$user_id.' ORDER BY t.last_post DESC') or error('Unable to fetch user posts', __FILE__, __LINE__, $db->error());
+				$result = $db->query('SELECT p.id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON p.topic_id=t.id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id='.$user_id.' ORDER BY p.posted DESC') or error('Unable to fetch user posts', __FILE__, __LINE__, $db->error());
 				$num_hits = $db->num_rows($result);
 
 				if (!$num_hits)
@@ -360,10 +363,6 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				if (!$num_hits)
 					message($lang_search['No unanswered']);
 			}
-
-			// We want to sort things after last post
-			$sort_by = 4;
-			$sort_dir = 'DESC';
 
 			$search_ids = array();
 			while ($row = $db->fetch_row($result))
@@ -428,10 +427,6 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 			case 3:
 				$sort_by_sql = 't.forum_id';
-				break;
-
-			case 4:
-				$sort_by_sql = 't.last_post';
 				break;
 
 			default:
