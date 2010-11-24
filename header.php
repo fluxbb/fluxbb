@@ -210,12 +210,12 @@ else
 	else if ($script_name == 'index.php')
 		$page_quicklinks[] = '<a href="misc.php?action=markread">'.$lang_common['Mark all as read'].'</a>';
 
-	if ($pun_user['g_search'] == '1')
+	if ($pun_user['g_read_board'] == '1' && $pun_user['g_search'] == '1')
 		$page_quicklinks[] = '<a href="search.php?action=show_new" title="'.$lang_common['Show new posts'].'">'.$lang_common['New posts'].'</a>';
 }
 
 // Quick searches
-if ($pun_user['g_search'] == '1')
+if ($pun_user['g_read_board'] == '1' && $pun_user['g_search'] == '1')
 {
 	$page_quicklinks[] = '<a href="search.php?action=show_recent" title="'.$lang_common['Show active topics'].'">'.$lang_common['Active topics'].'</a>';
 	$page_quicklinks[] = '<a href="search.php?action=show_unanswered" title="'.$lang_common['Show unanswered topics'].'">'.$lang_common['Unanswered topics'].'</a>';
