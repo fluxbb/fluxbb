@@ -427,7 +427,7 @@ foreach ($alerts as $cur_alert)
 					<legend><?php echo $lang_install['Enter board description'] ?></legend>
 					<div class="infldset">
 						<p><?php echo $lang_install['Info 13'] ?></p>
-						<label><strong><?php echo $lang_install['Board description'] ?></strong><br /><input id="desc" type="text" name="desc" value="<?php echo pun_htmlspecialchars($description) ?>" size="60" maxlength="255" /><br /></label>
+						<label><?php echo $lang_install['Board description'] ?><br /><input id="desc" type="text" name="desc" value="<?php echo pun_htmlspecialchars($description) ?>" size="60" maxlength="255" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
