@@ -125,7 +125,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 			$text = $new_text;
 			if ($new_text == '')
 			{
-				$errors[] = $lang_post['Message empty after strip'];
+				$errors[] = $lang_post['Empty after strip'];
 				break;
 			}
 		}
