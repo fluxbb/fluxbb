@@ -201,7 +201,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	$tags_opened = $tags;
 	// and tags we need to check are closed (the same as above, added it just in case)
 	$tags_closed = $tags;
-	// Tags we can nest and the depth they can be nested to (only quotes)
+	// Tags we can nest and the depth they can be nested to
 	$tags_nested = array('quote' => $pun_config['o_quote_depth'], 'list' => 5, '*' => 5);
 	// Tags to ignore the contents of completely (just code)
 	$tags_ignore = array('code');
