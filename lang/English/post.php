@@ -10,6 +10,7 @@ $lang_post = array(
 'Too long message'	=>	'Posts cannot be longer that %s bytes.',
 'All caps subject'	=>	'Subjects cannot contain only capital letters.',
 'All caps message'	=>	'Posts cannot contain only capital letters.',
+'Empty after strip'	=>	'It seems your post consisted of empty BBCodes only. It is possible that this happened because e.g. the innermost quote was discarded because of the maximum quote depth level.',
 
 // Posting
 'Post errors'		=>	'Post errors',

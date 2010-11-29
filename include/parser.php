@@ -64,7 +64,7 @@ $smilies = array(
 //
 function preparse_bbcode($text, &$errors, $is_signature = false)
 {
-	global $pun_config, $lang_common, $re_list;
+	global $pun_config, $lang_common, $lang_post, $re_list;
 
 	if ($is_signature)
 	{
@@ -121,7 +121,14 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	while (($new_text = strip_empty_bbcode($text, $errors)) !== false)
 	{
 		if ($new_text != $text)
+		{
 			$text = $new_text;
+			if ($new_text == '')
+			{
+				$errors[] = $lang_post['Message empty after strip'];
+				break;
+			}
+		}
 		else
 			break;
 	}
