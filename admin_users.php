@@ -194,7 +194,7 @@ if (isset($_GET['show_users']))
 			{
 				$user_title = get_title($user_data);
 
-				$actions = '<a href="admin_users.php?ip_stats='.$user_data['id'].'">'.$lang_admin_users['Results view IP link'].'</a> | <a href="search.php?action=show_user&amp;user_id='.$user_data['id'].'">'.$lang_admin_users['Results show posts link'].'</a>';
+				$actions = '<a href="admin_users.php?ip_stats='.$user_data['id'].'">'.$lang_admin_users['Results view IP link'].'</a> | <a href="search.php?action=show_user_posts&amp;user_id='.$user_data['id'].'">'.$lang_admin_users['Results show posts link'].'</a>';
 
 ?>
 				<tr>
@@ -406,7 +406,7 @@ else if (isset($_GET['find_user']))
 			if (($user_data['g_id'] == '' || $user_data['g_id'] == PUN_UNVERIFIED) && $user_title != $lang_common['Banned'])
 				$user_title = '<span class="warntext">'.$lang_admin_users['Not verified'].'</span>';
 
-			$actions = '<a href="admin_users.php?ip_stats='.$user_data['id'].'">'.$lang_admin_users['Results view IP link'].'</a> | <a href="search.php?action=show_user&amp;user_id='.$user_data['id'].'">'.$lang_admin_users['Results show posts link'].'</a>';
+			$actions = '<a href="admin_users.php?ip_stats='.$user_data['id'].'">'.$lang_admin_users['Results view IP link'].'</a> | <a href="search.php?action=show_user_posts&amp;user_id='.$user_data['id'].'">'.$lang_admin_users['Results show posts link'].'</a>';
 
 ?>
 				<tr>
