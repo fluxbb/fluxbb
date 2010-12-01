@@ -205,9 +205,7 @@ else
 	}
 	
 	$script_name = basename($_SERVER['PHP_SELF']);
-	if ($script_name == 'viewforum.php')
-		$page_quicklinks[] = '<a href="misc.php?action=markforumread&amp;fid='.$id.'">'.$lang_common['Mark forum read'].'</a>';
-	else if ($script_name == 'index.php')
+	if ($script_name == 'index.php')
 		$page_quicklinks[] = '<a href="misc.php?action=markread">'.$lang_common['Mark all as read'].'</a>';
 
 	if ($pun_user['g_read_board'] == '1' && $pun_user['g_search'] == '1')
