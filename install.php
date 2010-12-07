@@ -20,7 +20,7 @@ define('PUN_SEARCH_MIN_WORD', 3);
 define('PUN_SEARCH_MAX_WORD', 20);
 
 
-define('PUN_ROOT', './');
+define('PUN_ROOT', dirname(__FILE__).'/');
 
 // If we've been passed a default language, use it
 $default_lang = isset($_POST['req_default_lang']) ? trim($_POST['req_default_lang']) : 'English';

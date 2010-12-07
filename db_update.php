@@ -34,7 +34,7 @@ define('FORUM_NO_SET_NAMES', 1);
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
 	exit('You are running PHP version '.PHP_VERSION.'. FluxBB '.UPDATE_TO.' requires at least PHP '.MIN_PHP_VERSION.' to run properly. You must upgrade your PHP installation before you can continue.');
 
-define('PUN_ROOT', './');
+define('PUN_ROOT', dirname(__FILE__).'/');
 
 // Attempt to load the configuration file config.php
 if (file_exists(PUN_ROOT.'config.php'))

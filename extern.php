@@ -57,7 +57,7 @@
 define('PUN_QUIET_VISIT', 1);
 
 if (!defined('PUN_ROOT'))
-	define('PUN_ROOT', './');
+	define('PUN_ROOT', dirname(__FILE__).'/');
 require PUN_ROOT.'include/common.php';
 
 // The length at which topic subjects will be truncated (for HTML output)
