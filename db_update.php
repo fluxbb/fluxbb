@@ -1767,7 +1767,7 @@ foreach ($errors[$id] as $cur_error)
 		<div class="fakeform">
 			<div class="inform">
 				<div class="forminfo">
-					<p style="font-size: 1.1em"><?php printf($lang_update['Successfully updated'], sprintf('<a href="'.PUN_ROOT.'index.php">%s</a>', $lang_update['go to index'])) ?></p>
+					<p style="font-size: 1.1em"><?php printf($lang_update['Successfully updated'], sprintf('<a href="index.php">%s</a>', $lang_update['go to index'])) ?></p>
 				</div>
 			</div>
 		</div>
