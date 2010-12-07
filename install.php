@@ -9,7 +9,7 @@
 // The FluxBB version this script installs
 define('FORUM_VERSION', '1.4.2');
 
-define('FORUM_DB_REVISION', 9);
+define('FORUM_DB_REVISION', 10);
 define('FORUM_SI_REVISION', 1);
 define('FORUM_PARSER_REVISION', 1);
 
@@ -1581,7 +1581,8 @@ else
 		'o_base_url'				=> "'".$db->escape($base_url)."'",
 		'o_admin_email'				=> "'".$email."'",
 		'o_webmaster_email'			=> "'".$email."'",
-		'o_subscriptions'			=> "'1'",
+		'o_forum_subscriptions'		=> "'1'",
+		'o_topic_subscriptions'		=> "'1'",
 		'o_smtp_host'				=> "NULL",
 		'o_smtp_user'				=> "NULL",
 		'o_smtp_pass'				=> "NULL",

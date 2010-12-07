@@ -1155,7 +1155,7 @@ else
 			$posts_actions[] = '<a href="search.php?action=show_user_topics&amp;user_id='.$id.'">'.$lang_profile['Show topics'].'</a>';
 			$posts_actions[] = '<a href="search.php?action=show_user_posts&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a>';
 			
-			if ($pun_config['o_subscriptions'] == '1')
+			if ($pun_config['o_topic_subscriptions'] == '1')
 				$posts_actions[] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$id.'">'.$lang_profile['Show subscriptions'].'</a>';
 		}
 		
@@ -1579,13 +1579,14 @@ else
 						</div>
 					</fieldset>
 				</div>
-<?php if ($pun_config['o_subscriptions'] == '1'): ?>				<div class="inform">
+<?php if ($pun_config['o_forum_subscriptions'] == '1' && $pun_config['o_topic_subscriptions'] == '1'): ?>				<div class="inform">
 					<fieldset>
 						<legend><?php echo $lang_profile['Subscription legend'] ?></legend>
 						<div class="infldset">
 							<div class="rbox">
 								<label><input type="checkbox" name="form[notify_with_post]" value="1"<?php if ($user['notify_with_post'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_profile['Notify full'] ?><br /></label>
-								<label><input type="checkbox" name="form[auto_notify]" value="1"<?php if ($user['auto_notify'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_profile['Auto notify full'] ?><br /></label>
+<?php if ($pun_config['o_topic_subscriptions'] == '1'): ?>								<label><input type="checkbox" name="form[auto_notify]" value="1"<?php if ($user['auto_notify'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_profile['Auto notify full'] ?><br /></label>
+<?php endif; ?>
 							</div>
 						</div>
 					</fieldset>

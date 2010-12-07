@@ -73,7 +73,7 @@ $forum_actions = array();
 
 if (!$pun_user['is_guest'])
 {
-	if ($pun_config['o_subscriptions'] == '1')
+	if ($pun_config['o_forum_subscriptions'] == '1')
 	{
 		if ($cur_forum['is_subscribed'])
 			$forum_actions[] = '<span>'.$lang_forum['Is subscribed'].' - </span><a href="misc.php?action=unsubscribe&amp;fid='.$id.'">'.$lang_forum['Unsubscribe'].'</a>';

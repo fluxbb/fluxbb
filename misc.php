@@ -306,7 +306,7 @@ else if (isset($_GET['report']))
 
 else if ($action == 'subscribe')
 {
-	if ($pun_user['is_guest'] || $pun_config['o_subscriptions'] != '1')
+	if ($pun_user['is_guest'])
 		message($lang_common['No permission']);
 
 	$topic_id = isset($_GET['tid']) ? intval($_GET['tid']) : 0;
@@ -316,6 +316,9 @@ else if ($action == 'subscribe')
 
 	if ($topic_id)
 	{
+		if ($pun_config['o_topic_subscriptions'] != '1')
+			message($lang_common['No permission']);
+		
 		// Make sure the user can view the topic
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$topic_id.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
@@ -332,6 +335,9 @@ else if ($action == 'subscribe')
 
 	if ($forum_id)
 	{
+		if ($pun_config['o_forum_subscriptions'] != '1')
+			message($lang_common['No permission']);
+		
 		// Make sure the user can view the forum
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$forum_id) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
@@ -350,7 +356,7 @@ else if ($action == 'subscribe')
 
 else if ($action == 'unsubscribe')
 {
-	if ($pun_user['is_guest'] || $pun_config['o_subscriptions'] != '1')
+	if ($pun_user['is_guest'])
 		message($lang_common['No permission']);
 
 	$topic_id = isset($_GET['tid']) ? intval($_GET['tid']) : 0;
@@ -360,6 +366,9 @@ else if ($action == 'unsubscribe')
 
 	if ($topic_id)
 	{
+		if ($pun_config['o_topic_subscriptions'] != '1')
+			message($lang_common['No permission']);
+		
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topic_subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$topic_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
 			message($lang_misc['Not subscribed topic']);
@@ -371,6 +380,9 @@ else if ($action == 'unsubscribe')
 
 	if ($forum_id)
 	{
+		if ($pun_config['o_forum_subscriptions'] != '1')
+			message($lang_common['No permission']);
+		
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forum_subscriptions WHERE user_id='.$pun_user['id'].' AND forum_id='.$forum_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
 			message($lang_misc['Not subscribed forum']);

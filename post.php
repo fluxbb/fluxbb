@@ -161,7 +161,7 @@ if (isset($_POST['form_sent']))
 				$new_pid = $db->insert_id();
 
 				// To subscribe or not to subscribe, that ...
-				if ($pun_config['o_subscriptions'] == '1')
+				if ($pun_config['o_topic_subscriptions'] == '1')
 				{
 					if ($subscribe && !$is_subscribed)
 						$db->query('INSERT INTO '.$db->prefix.'topic_subscriptions (user_id, topic_id) VALUES('.$pun_user['id'].' ,'.$tid.')') or error('Unable to add subscription', __FILE__, __LINE__, $db->error());
@@ -189,7 +189,7 @@ if (isset($_POST['form_sent']))
 			update_forum($cur_posting['id']);
 
 			// Should we send out notifications?
-			if ($pun_config['o_subscriptions'] == '1')
+			if ($pun_config['o_topic_subscriptions'] == '1')
 			{
 				// Get the post time for the previous post in this topic
 				$result = $db->query('SELECT posted FROM '.$db->prefix.'posts WHERE topic_id='.$tid.' ORDER BY id DESC LIMIT 1, 1') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
@@ -272,7 +272,7 @@ if (isset($_POST['form_sent']))
 			if (!$pun_user['is_guest'])
 			{
 				// To subscribe or not to subscribe, that ...
-				if ($pun_config['o_subscriptions'] == '1' && $subscribe)
+				if ($pun_config['o_topic_subscriptions'] == '1' && $subscribe)
 					$db->query('INSERT INTO '.$db->prefix.'topic_subscriptions (user_id, topic_id) VALUES('.$pun_user['id'].' ,'.$new_tid.')') or error('Unable to add subscription', __FILE__, __LINE__, $db->error());
 
 				// Create the post ("topic post")
@@ -294,7 +294,7 @@ if (isset($_POST['form_sent']))
 			update_forum($fid);
 
 			// Should we send out notifications?
-			if ($pun_config['o_subscriptions'] == '1')
+			if ($pun_config['o_forum_subscriptions'] == '1')
 			{
 				// Get any subscribed users that should be notified (banned users are excluded)
 				$result = $db->query('SELECT u.id, u.email, u.notify_with_post, u.language FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'forum_subscriptions AS s ON u.id=s.user_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id='.$cur_posting['id'].' AND fp.group_id=u.group_id) LEFT JOIN '.$db->prefix.'bans AS b ON u.username=b.username WHERE b.username IS NULL AND (fp.read_forum IS NULL OR fp.read_forum=1) AND s.forum_id='.$cur_posting['id'].' AND u.id!='.$pun_user['id']) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
@@ -620,7 +620,7 @@ if (!$pun_user['is_guest'])
 	if ($pun_config['o_smilies'] == '1')
 		$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'"'.(isset($_POST['hide_smilies']) ? ' checked="checked"' : '').' />'.$lang_post['Hide smilies'].'<br /></label>';
 
-	if ($pun_config['o_subscriptions'] == '1')
+	if ($pun_config['o_topic_subscriptions'] == '1')
 	{
 		$subscr_checked = false;
 
