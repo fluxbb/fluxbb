@@ -166,4 +166,35 @@ function generate_quickjump_cache($group_id = false)
 	}
 }
 
+
+//
+// Generate the censoring cache PHP scripts
+//
+function generate_censoring_cache()
+{
+	global $db;
+	
+	$result = $db->query('SELECT search_for, replace_with FROM '.$db->prefix.'censoring') or error('Unable to fetch censoring list', __FILE__, __LINE__, $db->error());
+	$num_words = $db->num_rows($result);
+	
+	$search_for = $replace_with = array();
+	for ($i = 0; $i < $num_words; $i++)
+	{
+		list($search_for[$i], $replace_with[$i]) = $db->fetch_row($result);
+		$search_for[$i] = '/(?<=\W)('.str_replace('\*', '\w*?', preg_quote($search_for[$i], '/')).')(?=\W)/iu';
+	}
+	
+	// Output censored words as PHP code
+	$fh = @fopen(FORUM_CACHE_DIR.'cache_censoring.php', 'wb');
+	if (!$fh)
+		error('Unable to write censoring cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'', __FILE__, __LINE__);
+	
+	fwrite($fh, '<?php'."\n\n".'define(\'PUN_CENSOR_LOADED\', 1);'."\n\n".'$search_for = '.var_export($search_for, true).';'."\n\n".'$replace_with = '.var_export($replace_with, true).';'."\n\n".'?>');
+	
+	fclose($fh);
+	
+	if (function_exists('apc_delete_file'))
+		@apc_delete_file(FORUM_CACHE_DIR.'cache_censoring.php');
+}
+
 define('FORUM_CACHE_FUNCTIONS_LOADED', true);
