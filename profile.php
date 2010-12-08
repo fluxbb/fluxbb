@@ -1579,7 +1579,7 @@ else
 						</div>
 					</fieldset>
 				</div>
-<?php if ($pun_config['o_forum_subscriptions'] == '1' && $pun_config['o_topic_subscriptions'] == '1'): ?>				<div class="inform">
+<?php if ($pun_config['o_forum_subscriptions'] == '1' || $pun_config['o_topic_subscriptions'] == '1'): ?>				<div class="inform">
 					<fieldset>
 						<legend><?php echo $lang_profile['Subscription legend'] ?></legend>
 						<div class="infldset">
