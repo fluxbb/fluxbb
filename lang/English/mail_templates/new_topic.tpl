@@ -1,6 +1,6 @@
-Subject: New topic in forum: <forum_name>
+Subject: New topic in forum: '<forum_name>'
 
-<poster> has posted a new topic <topic_subject> in the forum <forum_name>, to which you are subscribed.
+<poster> has posted a new topic '<topic_subject>' in the forum '<forum_name>', to which you are subscribed.
 
 The topic is located at <topic_url>
 
