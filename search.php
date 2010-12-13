@@ -98,6 +98,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			$sort_by = $temp['sort_by'];
 			$sort_dir = $temp['sort_dir'];
 			$show_as = $temp['show_as'];
+			$search_type = $temp['search_type'];
 
 			unset($temp);
 		}
@@ -275,11 +276,20 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 			// If we searched for both keywords and author name we want the intersection between the results
 			if ($author && $keywords)
+			{
 				$search_ids = array_intersect_assoc($keyword_results, $author_results);
+				$search_type = array('both', array($keywords, $author));
+			}
 			else if ($keywords)
+			{
 				$search_ids = $keyword_results;
+				$search_type = array('keywords', $keywords);
+			}
 			else
+			{
 				$search_ids = $author_results;
+				$search_type = array('author', $author);
+			}
 
 			unset($keyword_results, $author_results);
 
@@ -296,6 +306,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		}
 		else if ($action == 'show_new' || $action == 'show_recent' || $action == 'show_user_posts' || $action == 'show_user_topics' || $action == 'show_subscriptions' || $action == 'show_unanswered')
 		{
+			$search_type = array('action', $action);
 			$show_as = 'topics';
 			// We want to sort things after last post
 			$sort_by = 0;
@@ -325,6 +336,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			// If it's a search for posts by a specific user ID
 			else if ($action == 'show_user_posts')
 			{
+				$search_type[1] = array($search_type[1], $user_id);
 				$show_as = 'posts';
 				
 				$result = $db->query('SELECT p.id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON p.topic_id=t.id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id='.$user_id.' ORDER BY p.posted DESC') or error('Unable to fetch user posts', __FILE__, __LINE__, $db->error());
@@ -336,6 +348,8 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			// If it's a search for topics by a specific user ID
 			else if ($action == 'show_user_topics')
 			{
+				$search_type[1] = array($search_type[1], $user_id);
+				
 				$result = $db->query('SELECT t.id FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'posts AS p ON t.first_post_id=p.id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id='.$user_id.' ORDER BY t.last_post DESC') or error('Unable to fetch user topics', __FILE__, __LINE__, $db->error());
 				$num_hits = $db->num_rows($result);
 
@@ -345,6 +359,8 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			// If it's a search for subscribed topics
 			else if ($action == 'show_subscriptions')
 			{
+				$search_type[1] = array($search_type[1], $user_id);
+				
 				if ($pun_user['is_guest'])
 					message($lang_common['Bad request']);
 
@@ -393,6 +409,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			'sort_by'			=> $sort_by,
 			'sort_dir'			=> $sort_dir,
 			'show_as'			=> $show_as,
+			'search_type'		=> $search_type
 		));
 		$search_id = mt_rand(1, 2147483647);
 
@@ -446,6 +463,25 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 		// throw away the first $start_from of $search_ids, only keep the top $per_page of $search_ids
 		$search_ids = array_slice($search_ids, $start_from, $per_page);
+		
+		$crumbs_text = array();
+		$crumbs_text['show_as'] = $show_as == 'topics' ? $lang_search['Search topics'] : $lang_search['Search posts'];
+
+		if ($search_type[0] == 'action')
+		{
+			// TODO: Display usernames
+			if (is_array($search_type[1]))
+				//$crumbs_text['search_type'] = sprintf($lang_search['Quick search '.$search_type[1][0]], $search_type[1][1]);
+				$crumbs_text['search_type'] = $lang_search['Quick search '.$search_type[1][0]];
+			else
+				$crumbs_text['search_type'] = $lang_search['Quick search '.$search_type[1]];
+		}
+		else if ($search_type[0] == 'both')
+			$crumbs_text['search_type'] = sprintf($lang_search['By both'], pun_htmlspecialchars($search_type[1][0]), pun_htmlspecialchars($search_type[1][1]));
+		else if ($search_type[0] == 'keywords')
+			$crumbs_text['search_type'] = sprintf($lang_search['By keywords'], pun_htmlspecialchars($search_type[1]));
+		else if ($search_type[0] == 'author')
+			$crumbs_text['search_type'] = sprintf($lang_search['By user'], pun_htmlspecialchars($search_type[1]));
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_search['Search results']);
 		define('PUN_ACTIVE_PAGE', 'search');
@@ -454,7 +490,12 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 ?>
 <div class="linkst">
-	<div class="inbox">
+	<div class="inbox crumbsplus">
+		<ul class="crumbs">
+			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li><span>»&#160;</span><a href="search.php"><?php echo $crumbs_text['show_as'] ?></a></li>
+			<li><span>»&#160;</span><strong><?php echo $crumbs_text['search_type'] ?></strong></li>
+		</ul>
 		<p class="pagelink"><?php echo $paging_links ?></p>
 		<div class="clearer"></div>
 	</div>
@@ -649,8 +690,13 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 ?>
 <div class="<?php echo ($show_as == 'topics') ? 'linksb' : 'postlinksb'; ?>">
-	<div class="inbox">
+	<div class="inbox crumbsplus">
 		<p class="pagelink"><?php echo $paging_links ?></p>
+		<ul class="crumbs">
+			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li><span>»&#160;</span><a href="search.php"><?php echo $crumbs_text['show_as'] ?></a></li>
+			<li><span>»&#160;</span><strong><?php echo $crumbs_text['search_type'] ?></strong></li>
+		</ul>
 		<div class="clearer"></div>
 	</div>
 </div>

@@ -36,6 +36,17 @@ $lang_search = array(
 
 // Results
 'Search results'			=>	'Search results',
+'Search topics'				=>	'Search topics',
+'Search posts'				=>	'Search posts',
+'Quick search show_new'			=>	'New',
+'Quick search show_recent'		=>	'Active',
+'Quick search show_unanswered'	=>	'Unanswered',
+'Quick search show_user_topics'	=>	'By user',
+'Quick search show_user_posts'	=>	'By user',
+'Quick search show_subscriptions'	=>	'Subscribed',
+'By keywords'					=>	'With keywords \'%s\'',
+'By user'						=>	'With posts by %s',
+'By both'						=>	'With keywords \'%s\' in posts by %s',
 'No terms'					=>	'You have to enter at least one keyword and/or an author to search for.',
 'No hits'					=>	'Your search returned no hits.',
 'No user posts'				=>	'There are no posts by this user in this forum.',
