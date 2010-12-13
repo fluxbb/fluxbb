@@ -9,7 +9,7 @@
 // The FluxBB version this script installs
 define('FORUM_VERSION', '1.4.2');
 
-define('FORUM_DB_REVISION', 9);
+define('FORUM_DB_REVISION', 10);
 define('FORUM_SI_REVISION', 1);
 define('FORUM_PARSER_REVISION', 1);
 
@@ -20,7 +20,7 @@ define('PUN_SEARCH_MIN_WORD', 3);
 define('PUN_SEARCH_MAX_WORD', 20);
 
 
-define('PUN_ROOT', './');
+define('PUN_ROOT', dirname(__FILE__).'/');
 
 // If we've been passed a default language, use it
 $default_lang = isset($_POST['req_default_lang']) ? trim($_POST['req_default_lang']) : 'English';
@@ -96,9 +96,9 @@ if (get_magic_quotes_gpc())
 //
 function generate_config_file()
 {
-	global $db_type, $db_host, $db_name, $db_username, $db_password1, $db_prefix, $cookie_name, $cookie_seed;
+	global $db_type, $db_host, $db_name, $db_username, $db_password, $db_prefix, $cookie_name, $cookie_seed;
 
-	return '<?php'."\n\n".'$db_type = \''.$db_type."';\n".'$db_host = \''.$db_host."';\n".'$db_name = \''.addslashes($db_name)."';\n".'$db_username = \''.addslashes($db_username)."';\n".'$db_password = \''.addslashes($db_password1)."';\n".'$db_prefix = \''.addslashes($db_prefix)."';\n".'$p_connect = false;'."\n\n".'$cookie_name = '."'".$cookie_name."';\n".'$cookie_domain = '."'';\n".'$cookie_path = '."'/';\n".'$cookie_secure = 0;'."\n".'$cookie_seed = \''.random_key(16, false, true)."';\n\ndefine('PUN', 1);\n";
+	return '<?php'."\n\n".'$db_type = \''.$db_type."';\n".'$db_host = \''.$db_host."';\n".'$db_name = \''.addslashes($db_name)."';\n".'$db_username = \''.addslashes($db_username)."';\n".'$db_password = \''.addslashes($db_password)."';\n".'$db_prefix = \''.addslashes($db_prefix)."';\n".'$p_connect = false;'."\n\n".'$cookie_name = '."'".$cookie_name."';\n".'$cookie_domain = '."'';\n".'$cookie_path = '."'/';\n".'$cookie_secure = 0;'."\n".'$cookie_seed = \''.random_key(16, false, true)."';\n\ndefine('PUN', 1);\n";
 }
 
 
@@ -111,7 +111,7 @@ if (isset($_POST['generate_config']))
 	$db_host = $_POST['db_host'];
 	$db_name = $_POST['db_name'];
 	$db_username = $_POST['db_username'];
-	$db_password1 = $_POST['db_password1'];
+	$db_password = $_POST['db_password1'];
 	$db_prefix = $_POST['db_prefix'];
 	$cookie_name = $_POST['cookie_name'];
 	$cookie_seed = $_POST['cookie_seed'];
@@ -143,8 +143,7 @@ else
 	$db_host = pun_trim($_POST['req_db_host']);
 	$db_name = pun_trim($_POST['req_db_name']);
 	$db_username = pun_trim($_POST['db_username']);
-	$db_password1 = pun_trim($_POST['db_password1']);
-	$db_password2 = pun_trim($_POST['db_password2']);
+	$db_password = pun_trim($_POST['db_password']);
 	$db_prefix = pun_trim($_POST['db_prefix']);
 	$username = pun_trim($_POST['req_username']);
 	$email = strtolower(pun_trim($_POST['req_email']));
@@ -160,10 +159,6 @@ else
 	// Make sure base_url doesn't end with a slash
 	if (substr($base_url, -1) == '/')
 		$base_url = substr($base_url, 0, -1);
-
-	// Validate database password
-	if ($db_password1 != $db_password2)
-		$alerts[] = $lang_install['Database wrong password'];
 
 	// Validate username and passwords
 	if (pun_strlen($username) < 2)
@@ -361,8 +356,7 @@ foreach ($alerts as $cur_alert)
 					<div class="infldset">
 						<p><?php echo $lang_install['Info 5'] ?></p>
 						<label class="conl"><?php echo $lang_install['Database username'] ?><br /><input type="text" name="db_username" value="<?php echo pun_htmlspecialchars($db_username) ?>" size="30" maxlength="50" /><br /></label>
-						<label class="conl"><?php echo $lang_install['Database password'] ?><br /><input type="password" name="db_password1" size="30" maxlength="50" /><br /></label>
-						<label class="conl"><?php echo $lang_install['Database confirm password'] ?><br /><input type="password" name="db_password2" size="30" maxlength="50" /><br /></label>
+						<label class="conl"><?php echo $lang_install['Database password'] ?><br /><input type="password" name="db_password" size="30" maxlength="50" /><br /></label>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
@@ -533,7 +527,7 @@ else
 	}
 
 	// Create the database object (and connect/select db)
-	$db = new DBLayer($db_host, $db_username, $db_password1, $db_name, $db_prefix, false);
+	$db = new DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, false);
 
 	// Validate prefix
 	if (strlen($db_prefix) > 0 && (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $db_prefix) || strlen($db_prefix) > 40))
@@ -1581,7 +1575,8 @@ else
 		'o_base_url'				=> "'".$db->escape($base_url)."'",
 		'o_admin_email'				=> "'".$email."'",
 		'o_webmaster_email'			=> "'".$email."'",
-		'o_subscriptions'			=> "'1'",
+		'o_forum_subscriptions'		=> "'1'",
+		'o_topic_subscriptions'		=> "'1'",
 		'o_smtp_host'				=> "NULL",
 		'o_smtp_user'				=> "NULL",
 		'o_smtp_pass'				=> "NULL",
@@ -1726,7 +1721,7 @@ if (!$written)
 				<input type="hidden" name="db_host" value="<?php echo $db_host; ?>" />
 				<input type="hidden" name="db_name" value="<?php echo pun_htmlspecialchars($db_name); ?>" />
 				<input type="hidden" name="db_username" value="<?php echo pun_htmlspecialchars($db_username); ?>" />
-				<input type="hidden" name="db_password1" value="<?php echo pun_htmlspecialchars($db_password1); ?>" />
+				<input type="hidden" name="db_password" value="<?php echo pun_htmlspecialchars($db_password); ?>" />
 				<input type="hidden" name="db_prefix" value="<?php echo pun_htmlspecialchars($db_prefix); ?>" />
 				<input type="hidden" name="cookie_name" value="<?php echo pun_htmlspecialchars($cookie_name); ?>" />
 				<input type="hidden" name="cookie_seed" value="<?php echo pun_htmlspecialchars($cookie_seed); ?>" />

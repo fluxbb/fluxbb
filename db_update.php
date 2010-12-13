@@ -9,7 +9,7 @@
 // The FluxBB version this script updates to
 define('UPDATE_TO', '1.4.2');
 
-define('UPDATE_TO_DB_REVISION', 9);
+define('UPDATE_TO_DB_REVISION', 10);
 define('UPDATE_TO_SI_REVISION', 1);
 define('UPDATE_TO_PARSER_REVISION', 1);
 
@@ -34,7 +34,7 @@ define('FORUM_NO_SET_NAMES', 1);
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
 	exit('You are running PHP version '.PHP_VERSION.'. FluxBB '.UPDATE_TO.' requires at least PHP '.MIN_PHP_VERSION.' to run properly. You must upgrade your PHP installation before you can continue.');
 
-define('PUN_ROOT', './');
+define('PUN_ROOT', dirname(__FILE__).'/');
 
 // Attempt to load the configuration file config.php
 if (file_exists(PUN_ROOT.'config.php'))
@@ -532,8 +532,8 @@ switch ($stage)
 	<h2><span><?php echo $lang_update['Update'] ?></span></h2>
 	<div class="box">
 		<form method="get" action="<?php echo pun_htmlspecialchars($_SERVER['REQUEST_URI']) ?>" onsubmit="this.start.disabled=true">
-		<input type="hidden" name="uid" value="<?php echo $uid; ?>" />
-		<input type="hidden" name="stage" value="start" />
+			<input type="hidden" name="uid" value="<?php echo $uid; ?>" />
+			<input type="hidden" name="stage" value="start" />
 			<div class="inform">
 				<div class="forminfo">
 					<p style="font-size: 1.1em"><?php echo $lang_update['Intro 1'] ?></p>
@@ -1045,6 +1045,14 @@ else
 
 			$db->create_table('forum_subscriptions', $schema) or error('Unable to create forum subscriptions table', __FILE__, __LINE__, $db->error());
 		}
+		
+		// Insert new config option o_forum_subscriptions
+		if (!array_key_exists('o_forum_subscriptions', $pun_config))
+			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_forum_subscriptions\', \'1\')') or error('Unable to insert config value \'o_forum_subscriptions\'', __FILE__, __LINE__, $db->error());
+		
+		// Rename config option o_subscriptions to o_topic_subscriptions
+		if (!array_key_exists('o_topic_subscriptions', $pun_config))
+			$db->query('UPDATE '.$db->prefix.'config SET conf_name=\'o_topic_subscriptions\' WHERE conf_name=\'o_subscriptions\'') or error('Unable to rename config value \'o_subscriptions\'', __FILE__, __LINE__, $db->error());
 
 		// Change the default style if the old doesn't exist anymore
 		if ($pun_config['o_default_style'] != $default_style)
@@ -1767,7 +1775,7 @@ foreach ($errors[$id] as $cur_error)
 		<div class="fakeform">
 			<div class="inform">
 				<div class="forminfo">
-					<p style="font-size: 1.1em"><?php printf($lang_update['Successfully updated'], sprintf('<a href="'.PUN_ROOT.'index.php">%s</a>', $lang_update['go to index'])) ?></p>
+					<p style="font-size: 1.1em"><?php printf($lang_update['Successfully updated'], sprintf('<a href="index.php">%s</a>', $lang_update['go to index'])) ?></p>
 				</div>
 			</div>
 		</div>

@@ -9,7 +9,7 @@
 // Tell header.php to use the help template
 define('PUN_HELP', 1);
 
-define('PUN_ROOT', './');
+define('PUN_ROOT', dirname(__FILE__).'/');
 require PUN_ROOT.'include/common.php';
 
 
@@ -39,7 +39,7 @@ require PUN_ROOT.'header.php';
 		<p><?php echo $lang_help['Text style info'] ?></p>
 		<p><code>[b]<?php echo $lang_help['Bold text'] ?>[/b]</code> <?php echo $lang_help['produces'] ?> <samp><strong><?php echo $lang_help['Bold text'] ?></strong></samp></p>
 		<p><code>[u]<?php echo $lang_help['Underlined text'] ?>[/u]</code> <?php echo $lang_help['produces'] ?> <samp><span class="bbu"><?php echo $lang_help['Underlined text'] ?></span></samp></p>
-		<p><code>[i]<?php echo $lang_help['Italic text'] ?>[/i]</code> <?php echo $lang_help['produces'] ?> <samp><i><?php echo $lang_help['Italic text'] ?></i></samp></p>
+		<p><code>[i]<?php echo $lang_help['Italic text'] ?>[/i]</code> <?php echo $lang_help['produces'] ?> <samp><em><?php echo $lang_help['Italic text'] ?></em></samp></p>
 		<p><code>[s]<?php echo $lang_help['Strike-through text'] ?>[/s]</code> <?php echo $lang_help['produces'] ?> <samp><span class="bbs"><?php echo $lang_help['Strike-through text'] ?></span></samp></p>
 		<p><code>[del]<?php echo $lang_help['Deleted text'] ?>[/del]</code> <?php echo $lang_help['produces'] ?> <samp><del><?php echo $lang_help['Deleted text'] ?></del></samp></p>
 		<p><code>[ins]<?php echo $lang_help['Inserted text'] ?>[/ins]</code> <?php echo $lang_help['produces'] ?> <samp><ins><?php echo $lang_help['Inserted text'] ?></ins></samp></p>
