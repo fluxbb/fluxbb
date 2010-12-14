@@ -336,7 +336,6 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			// If it's a search for posts by a specific user ID
 			else if ($action == 'show_user_posts')
 			{
-				$search_type[1] = array($search_type[1], $user_id);
 				$show_as = 'posts';
 				
 				$result = $db->query('SELECT p.id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON p.topic_id=t.id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id='.$user_id.' ORDER BY p.posted DESC') or error('Unable to fetch user posts', __FILE__, __LINE__, $db->error());
@@ -348,8 +347,6 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			// If it's a search for topics by a specific user ID
 			else if ($action == 'show_user_topics')
 			{
-				$search_type[1] = array($search_type[1], $user_id);
-				
 				$result = $db->query('SELECT t.id FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'posts AS p ON t.first_post_id=p.id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id='.$user_id.' ORDER BY t.last_post DESC') or error('Unable to fetch user topics', __FILE__, __LINE__, $db->error());
 				$num_hits = $db->num_rows($result);
 
@@ -359,8 +356,6 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			// If it's a search for subscribed topics
 			else if ($action == 'show_subscriptions')
 			{
-				$search_type[1] = array($search_type[1], $user_id);
-				
 				if ($pun_user['is_guest'])
 					message($lang_common['Bad request']);
 
@@ -464,15 +459,26 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		// throw away the first $start_from of $search_ids, only keep the top $per_page of $search_ids
 		$search_ids = array_slice($search_ids, $start_from, $per_page);
 		
+		
+		// Run the query and fetch the results
+		if ($show_as == 'posts')
+			$result = $db->query('SELECT p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, p.message, p.hide_smilies, t.id AS tid, t.poster, t.subject, t.first_post_id, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id, f.forum_name FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE p.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
+		else
+			$result = $db->query('SELECT t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.sticky, t.forum_id, f.forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE t.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
+		
+		$search_set = array();
+		while ($row = $db->fetch_assoc($result))
+			$search_set[] = $row;
+		
 		$crumbs_text = array();
 		$crumbs_text['show_as'] = $show_as == 'topics' ? $lang_search['Search topics'] : $lang_search['Search posts'];
 
 		if ($search_type[0] == 'action')
 		{
-			// TODO: Display usernames
-			if (is_array($search_type[1]))
-				//$crumbs_text['search_type'] = sprintf($lang_search['Quick search '.$search_type[1][0]], $search_type[1][1]);
-				$crumbs_text['search_type'] = $lang_search['Quick search '.$search_type[1][0]];
+			if ($search_type[1] == 'show_user_topics')
+				$crumbs_text['search_type'] = sprintf($lang_search['Quick search show_user_topics'], pun_htmlspecialchars($search_set[0]['poster']));
+			else if ($search_type[1] == 'show_user_posts')
+				$crumbs_text['search_type'] = sprintf($lang_search['Quick search show_user_posts'], pun_htmlspecialchars($search_set[0]['pposter']));
 			else
 				$crumbs_text['search_type'] = $lang_search['Quick search '.$search_type[1]];
 		}
@@ -538,12 +544,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		if (!$pun_user['is_guest'])
 			$tracked_topics = get_tracked_topics();
 
-		if ($show_as == 'posts')
-			$result = $db->query('SELECT p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, p.message, p.hide_smilies, t.id AS tid, t.poster, t.subject, t.first_post_id, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id, f.forum_name FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE p.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
-		else
-			$result = $db->query('SELECT t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.sticky, t.forum_id, f.forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE t.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
-
-		while ($cur_search = $db->fetch_assoc($result))
+		foreach ($search_set as $cur_search)
 		{
 			$forum = '<a href="viewforum.php?id='.$cur_search['forum_id'].'">'.pun_htmlspecialchars($cur_search['forum_name']).'</a>';
 
