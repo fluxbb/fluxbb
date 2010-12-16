@@ -143,10 +143,9 @@ function process_form(the_form)
 echo '<!--[if lte IE 6]><script type="text/javascript" src="style/imports/minmax.js"></script><![endif]-->'."\n";
 
 if (!isset($page_head))
-{
 	$page_head = array();
-	$page_head['top'] = '<link rel="top" href="index.php" title="'.$lang_common['Forum index'].'" />';
-}
+
+$page_head['top'] = '<link rel="top" href="index.php" title="'.$lang_common['Forum index'].'" />';
 
 echo implode("\n", $page_head)."\n";
 
