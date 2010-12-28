@@ -99,6 +99,8 @@ function generate_ranks_cache()
 function generate_quickjump_cache($group_id = false)
 {
 	global $db, $lang_common, $pun_user;
+	
+	$groups = array();
 
 	// If a group_id was supplied, we generate the quick jump cache for that group only
 	if ($group_id !== false)
