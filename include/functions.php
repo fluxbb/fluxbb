@@ -1827,11 +1827,6 @@ function remove_bad_characters($array)
 			"\xef\xbf\xbb"	=> '',		// INTERLINEAR ANNOTATION TERMINATOR	FFFB	*
 			"\xef\xbf\xbc"	=> '',		// OBJECT REPLACEMENT CHARACTER			FFFC	*
 			"\xef\xbf\xbd"	=> '',		// REPLACEMENT CHARACTER				FFFD	*
-			"\xc2\xad"		=> '-',		// SOFT HYPHEN							00AD
-			"\xE2\x80\x9C"	=> '"',		// LEFT DOUBLE QUOTATION MARK			201C
-			"\xE2\x80\x9D"	=> '"',		// RIGHT DOUBLE QUOTATION MARK			201D
-			"\xE2\x80\x98"	=> '\'',	// LEFT SINGLE QUOTATION MARK			2018
-			"\xE2\x80\x99"	=> '\'',	// RIGHT SINGLE QUOTATION MARK			2019
 			"\xe2\x80\x80"	=> ' ',		// EN QUAD								2000	*
 			"\xe2\x80\x81"	=> ' ',		// EM QUAD								2001	*
 			"\xe2\x80\x82"	=> ' ',		// EN SPACE								2002	*
