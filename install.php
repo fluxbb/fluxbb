@@ -111,7 +111,7 @@ if (isset($_POST['generate_config']))
 	$db_host = $_POST['db_host'];
 	$db_name = $_POST['db_name'];
 	$db_username = $_POST['db_username'];
-	$db_password = $_POST['db_password1'];
+	$db_password = $_POST['db_password'];
 	$db_prefix = $_POST['db_prefix'];
 	$cookie_name = $_POST['cookie_name'];
 	$cookie_seed = $_POST['cookie_seed'];
