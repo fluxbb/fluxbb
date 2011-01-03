@@ -1144,21 +1144,21 @@ else
 
 		$posts_field = '';
 		$posts_actions = array();
-		
+
 		if ($pun_user['g_id'] == PUN_ADMIN)
 			$posts_field .= '<label>'.$lang_common['Posts'].'<br /><input type="text" name="num_posts" value="'.$user['num_posts'].'" size="8" maxlength="8" /><br /></label>';
 		else if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
 			$posts_actions[] = sprintf($lang_profile['Posts info'], forum_number_format($user['num_posts']));
-					       
+
 		if ($pun_user['g_search'] == '1' || $pun_user['g_id'] == PUN_ADMIN)
 		{
 			$posts_actions[] = '<a href="search.php?action=show_user_topics&amp;user_id='.$id.'">'.$lang_profile['Show topics'].'</a>';
 			$posts_actions[] = '<a href="search.php?action=show_user_posts&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a>';
-			
+
 			if ($pun_config['o_topic_subscriptions'] == '1')
 				$posts_actions[] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$id.'">'.$lang_profile['Show subscriptions'].'</a>';
 		}
-		
+
 		$posts_field .= (!empty($posts_actions) ? '<p class="actions">'.implode(' - ', $posts_actions).'</p>' : '')."\n";
 
 

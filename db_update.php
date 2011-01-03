@@ -1045,11 +1045,11 @@ else
 
 			$db->create_table('forum_subscriptions', $schema) or error('Unable to create forum subscriptions table', __FILE__, __LINE__, $db->error());
 		}
-		
+
 		// Insert new config option o_forum_subscriptions
 		if (!array_key_exists('o_forum_subscriptions', $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_forum_subscriptions\', \'1\')') or error('Unable to insert config value \'o_forum_subscriptions\'', __FILE__, __LINE__, $db->error());
-		
+
 		// Rename config option o_subscriptions to o_topic_subscriptions
 		if (!array_key_exists('o_topic_subscriptions', $pun_config))
 			$db->query('UPDATE '.$db->prefix.'config SET conf_name=\'o_topic_subscriptions\' WHERE conf_name=\'o_subscriptions\'') or error('Unable to rename config value \'o_subscriptions\'', __FILE__, __LINE__, $db->error());
@@ -1072,7 +1072,7 @@ else
 		function _conv_bans($cur_item, $old_charset)
 		{
 			global $lang_update;
-			
+
 			echo sprintf($lang_update['Converting item'], $lang_update['ban'], $cur_item['id']).'<br />'."\n";
 
 			convert_to_utf8($cur_item['username'], $old_charset);

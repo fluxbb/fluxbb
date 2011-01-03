@@ -99,7 +99,7 @@ function generate_ranks_cache()
 function generate_quickjump_cache($group_id = false)
 {
 	global $db, $lang_common, $pun_user;
-	
+
 	$groups = array();
 
 	// If a group_id was supplied, we generate the quick jump cache for that group only
@@ -108,7 +108,7 @@ function generate_quickjump_cache($group_id = false)
 		// Is this group even allowed to read forums?
 		$result = $db->query('SELECT g_read_board FROM '.$db->prefix.'groups WHERE g_id='.$group_id) or error('Unable to fetch user group read permission', __FILE__, __LINE__, $db->error());
 		$read_board = $db->result($result);
-		
+
 		$groups[$group_id] = $read_board;
 	}
 	else
@@ -130,7 +130,7 @@ function generate_quickjump_cache($group_id = false)
 			error('Unable to write quick jump cache file to cache directory. Please make sure PHP has write access to the directory \'cache\'', __FILE__, __LINE__);
 
 		$output = '<?php'."\n\n".'if (!defined(\'PUN\')) exit;'."\n".'define(\'PUN_QJ_LOADED\', 1);'."\n".'$forum_id = isset($forum_id) ? $forum_id : 0;'."\n\n".'?>';
-		
+
 		if ($read_board == '1')
 		{
 			$result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.redirect_url FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$group_id.') WHERE fp.read_forum IS NULL OR fp.read_forum=1 ORDER BY c.disp_position, c.id, f.disp_position', true) or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
