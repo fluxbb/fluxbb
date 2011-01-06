@@ -357,7 +357,6 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 			list($width, $height, $type,) = @getimagesize($pun_config['o_avatars_dir'].'/'.$id.'.tmp');
 
 			// Determine type
-			$extension = null;
 			if ($type == IMAGETYPE_GIF)
 				$extension = '.gif';
 			else if ($type == IMAGETYPE_JPEG)
@@ -407,7 +406,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $pun_config['o_avatars_size'] ?>" />
 						<label class="required"><strong><?php echo $lang_profile['File'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input name="req_file" type="file" size="40" /><br /></label>
-						<p><?php echo $lang_profile['Avatar desc'].' '.$pun_config['o_avatars_width'].' x '.$pun_config['o_avatars_height'].' '.$lang_profile['pixels'].' '.$lang_common['and'].' '.forum_number_format($pun_config['o_avatars_size']).' '.$lang_profile['bytes'].' ('.forum_number_format(ceil($pun_config['o_avatars_size'] / 1024)) ?> KB).</p>
+						<p><?php echo $lang_profile['Avatar desc'].' '.$pun_config['o_avatars_width'].' x '.$pun_config['o_avatars_height'].' '.$lang_profile['pixels'].' '.$lang_common['and'].' '.forum_number_format($pun_config['o_avatars_size']).' '.$lang_profile['bytes'].' ('.file_size($pun_config['o_avatars_size']).').' ?></p>
 					</div>
 				</fieldset>
 			</div>
