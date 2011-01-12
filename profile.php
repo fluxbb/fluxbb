@@ -351,10 +351,10 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 				message($lang_profile['Too large'].' '.forum_number_format($pun_config['o_avatars_size']).' '.$lang_profile['bytes'].'.');
 
 			// Move the file to the avatar directory. We do this before checking the width/height to circumvent open_basedir restrictions
-			if (!@move_uploaded_file($uploaded_file['tmp_name'], $pun_config['o_avatars_dir'].'/'.$id.'.tmp'))
+			if (!@move_uploaded_file($uploaded_file['tmp_name'], PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$id.'.tmp'))
 				message($lang_profile['Move failed'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
 
-			list($width, $height, $type,) = @getimagesize($pun_config['o_avatars_dir'].'/'.$id.'.tmp');
+			list($width, $height, $type,) = @getimagesize(PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$id.'.tmp');
 
 			// Determine type
 			if ($type == IMAGETYPE_GIF)
@@ -366,21 +366,21 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 			else
 			{
 				// Invalid type
-				@unlink($pun_config['o_avatars_dir'].'/'.$id.'.tmp');
+				@unlink(PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$id.'.tmp');
 				message($lang_profile['Bad type']);
 			}
 
 			// Now check the width/height
 			if (empty($width) || empty($height) || $width > $pun_config['o_avatars_width'] || $height > $pun_config['o_avatars_height'])
 			{
-				@unlink($pun_config['o_avatars_dir'].'/'.$id.'.tmp');
+				@unlink(PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$id.'.tmp');
 				message($lang_profile['Too wide or high'].' '.$pun_config['o_avatars_width'].'x'.$pun_config['o_avatars_height'].' '.$lang_profile['pixels'].'.');
 			}
 
 			// Delete any old avatars and put the new one in place
 			delete_avatar($id);
-			@rename($pun_config['o_avatars_dir'].'/'.$id.'.tmp', $pun_config['o_avatars_dir'].'/'.$id.$extension);
-			@chmod($pun_config['o_avatars_dir'].'/'.$id.$extension, 0644);
+			@rename(PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$id.'.tmp', PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$id.$extension);
+			@chmod(PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$id.$extension, 0644);
 		}
 		else
 			message($lang_profile['Unknown failure']);
