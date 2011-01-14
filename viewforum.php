@@ -80,7 +80,7 @@ if (!$pun_user['is_guest'])
 		else
 			$forum_actions[] = '<a href="misc.php?action=subscribe&amp;fid='.$id.'">'.$lang_forum['Subscribe'].'</a>';
 	}
-	
+
 	$forum_actions[] = '<a href="misc.php?action=markforumread&amp;fid='.$id.'">'.$lang_common['Mark forum read'].'</a>';
 }
 
