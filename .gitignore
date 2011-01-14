@@ -1,7 +1,7 @@
-cache/cache_*.php
-cache/db_update.lock
-include/user/*
-img/avatars/*.png
-img/avatars/*.jpg
-img/avatars/*.gif
-config.php
+/cache/cache_*.php
+/cache/db_update.lock
+/include/user/*
+/img/avatars/*.png
+/img/avatars/*.jpg
+/img/avatars/*.gif
+/config.php
