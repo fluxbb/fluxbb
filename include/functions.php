@@ -1620,7 +1620,7 @@ function remove_bad_characters($array)
 //
 function file_size($size)
 {
-	$units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB');
+	$units = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB');
 
 	for ($i = 0; $size > 1024; $i++)
 		$size /= 1024;
