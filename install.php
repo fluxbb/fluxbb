@@ -23,7 +23,7 @@ define('PUN_SEARCH_MAX_WORD', 20);
 define('PUN_ROOT', dirname(__FILE__).'/');
 
 // If we've been passed a default language, use it
-$default_lang = isset($_POST['req_default_lang']) ? trim($_POST['req_default_lang']) : 'English';
+$default_lang = isset($_POST['default_lang']) ? trim($_POST['default_lang']) : 'English';
 
 // If such a language pack doesn't exist, or isn't up-to-date enough to translate this page, default to English
 if (!file_exists(PUN_ROOT.'lang/'.$default_lang.'/install.php'))
@@ -226,6 +226,9 @@ if (!isset($_POST['form_sent']) || !empty($alerts))
 	if (empty($db_extensions))
 		error($lang_install['No DB extensions']);
 
+	// Fetch a list of installed languages
+	$languages = forum_list_langs();
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
@@ -280,12 +283,45 @@ function process_form(the_form)
 	<div class="box">
 		<div id="brdtitle" class="inbox">
 			<h1><span><?php echo $lang_install['FluxBB Installation'] ?></span></h1>
-			<div id="brddesc"><p><?php echo $lang_install['Welcome'] ?></p></div>
+			<div id="brddesc"><p><?php echo $lang_install['Install message'] ?></p><p><?php echo $lang_install['Welcome'] ?></p></div>
 		</div>
 	</div>
 </div>
 
 <div id="brdmain">
+<?php if (count($languages) > 1): ?><div class="blockform">
+	<h2><span><?php echo $lang_install['Choose install language'] ?></span></h2>
+	<div class="box">
+		<form id="install" method="post" action="install.php">
+			<div class="inform">
+				<fieldset>
+					<legend><?php echo $lang_install['Install language'] ?></legend>
+					<div class="infldset">
+						<p><?php echo $lang_install['Choose install language info'] ?></p>
+						<label><strong><?php echo $lang_install['Install language'] ?></strong>
+						<br /><select name="default_lang">
+<?php
+
+		foreach ($languages as $temp)
+		{
+			if ($temp == $default_lang)
+				echo "\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.$temp.'</option>'."\n";
+			else
+				echo "\t\t\t\t\t".'<option value="'.$temp.'">'.$temp.'</option>'."\n";
+		}
+
+?>
+						</select>
+						<br /></label>
+					</div>
+				</fieldset>
+			</div>
+			<p class="buttons"><input type="submit" name="start" value="<?php echo $lang_install['Change language'] ?>" /></p>
+		</form>
+	</div>
+</div>
+<?php endif; ?>
+
 <div class="blockform">
 	<h2><span><?php echo $lang_install['Install'] ?></span></h2>
 	<div class="box">

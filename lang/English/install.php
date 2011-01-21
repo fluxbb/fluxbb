@@ -4,10 +4,11 @@
 
 $lang_install = array(
 
-'Install message'				=>	'The file \'config.php\' doesn\'t exist or is corrupt. This implies that FluxBB has not yet been installed. To install, please follow the instructions below.',
+'Install message'				=>	'The file \'config.php\' doesn\'t exist or is corrupt. This implies that FluxBB has not yet been installed.',
 'Choose install language'		=>	'Choose the install script language',
-'Choose install language info'	=>	'The language used for the install script.',
+'Choose install language info'	=>	'The language used for this install script. The default language used for the board itself can be set below.',
 'Install language'				=>	'Install language',
+'Change language'				=>	'Change language',
 'Next'							=>	'Next',
 'Already installed'				=>	'It seems like FluxBB is already installed. You should go <a href="index.php">here</a> instead.',
 'You are running error'			=>	'You are running %1$s version %2$s. FluxBB %3$s requires at least %1$s %4$s to run properly. You must upgrade your %1$s installation before you can continue.',
@@ -34,7 +35,7 @@ $lang_install = array(
 'Base URL'						=>	'Base URL',
 'Required field'				=>	'is a required field in this form.',
 'FluxBB Installation'			=>	'FluxBB Installation',
-'Welcome'						=>	'Welcome to FluxBB installation. You are about to install FluxBB. In order to install FluxBB, you must complete the form set out below. If you encounter any difficulties with the installation, please refer to the documentation.',
+'Welcome'						=>	'You are about to install FluxBB. In order to install FluxBB, you must complete the form set out below. If you encounter any difficulties with the installation, please refer to the documentation.',
 'Install'						=>	'Install FluxBB 1.4',
 'Errors'						=>	'The following errors need to be corrected:',
 'Database setup'				=>	'Database setup',

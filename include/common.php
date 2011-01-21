@@ -52,7 +52,10 @@ forum_unregister_globals();
 
 // If PUN isn't defined, config.php is missing or corrupt
 if (!defined('PUN'))
-	install_message();
+{
+	header('Location: install.php');
+	exit;
+}
 
 // Record the start time (will be used to calculate the generation time for the page)
 $pun_start = get_microtime();
