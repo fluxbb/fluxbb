@@ -71,6 +71,7 @@ $lang_update = array(
 'Username duplicate error'		=>	'Someone is already registered with the username %s. The username you entered is too similar. The username must differ from that by at least one alphanumerical character (a-z or 0-9). Please choose a different username.',
 
 'JavaScript disabled'			=>	'JavaScript seems to be disabled. %s.',
-'Click here to continue'		=>	'Click here to continue'
+'Click here to continue'		=>	'Click here to continue',
+'Required field'				=>	'is a required field in this form.'
 
 );
