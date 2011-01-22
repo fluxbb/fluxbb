@@ -758,12 +758,12 @@ function censor_words($text)
 	{
 		if (file_exists(FORUM_CACHE_DIR.'cache_censoring.php'))
 			include FORUM_CACHE_DIR.'cache_censoring.php';
-		
+
 		if (!defined('PUN_CENSOR_LOADED'))
 		{
 			if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
 				require PUN_ROOT.'include/cache.php';
-			
+
 			generate_censoring_cache();
 			require FORUM_CACHE_DIR.'cache_censoring.php';
 		}

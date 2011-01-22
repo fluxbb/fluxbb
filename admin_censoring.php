@@ -36,9 +36,9 @@ if (isset($_POST['add_word']))
 	// Regenerate the censoring cache
 	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
 		require PUN_ROOT.'include/cache.php';
-	
+
 	generate_censoring_cache();
-	
+
 	redirect('admin_censoring.php', $lang_admin_censoring['Word added redirect']);
 }
 
@@ -60,9 +60,9 @@ else if (isset($_POST['update']))
 	// Regenerate the censoring cache
 	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
 		require PUN_ROOT.'include/cache.php';
-	
+
 	generate_censoring_cache();
-	
+
 	redirect('admin_censoring.php', $lang_admin_censoring['Word updated redirect']);
 }
 
@@ -78,9 +78,9 @@ else if (isset($_POST['remove']))
 	// Regenerate the censoring cache
 	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
 		require PUN_ROOT.'include/cache.php';
-	
+
 	generate_censoring_cache();
-	
+
 	redirect('admin_censoring.php',  $lang_admin_censoring['Word removed redirect']);
 }
 
