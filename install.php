@@ -23,13 +23,13 @@ define('PUN_SEARCH_MAX_WORD', 20);
 define('PUN_ROOT', dirname(__FILE__).'/');
 
 // If we've been passed a default language, use it
-$default_lang = isset($_POST['default_lang']) ? trim($_POST['default_lang']) : 'English';
+$install_lang = isset($_REQUEST['install_lang']) ? trim($_REQUEST['install_lang']) : 'English';
 
 // If such a language pack doesn't exist, or isn't up-to-date enough to translate this page, default to English
-if (!file_exists(PUN_ROOT.'lang/'.$default_lang.'/install.php'))
-	$default_lang = 'English';
+if (!file_exists(PUN_ROOT.'lang/'.$install_lang.'/install.php'))
+	$install_lang = 'English';
 
-require PUN_ROOT.'lang/'.$default_lang.'/install.php';
+require PUN_ROOT.'lang/'.$install_lang.'/install.php';
 
 if (file_exists(PUN_ROOT.'config.php'))
 {
@@ -135,6 +135,7 @@ if (!isset($_POST['form_sent']))
 	$db_host = 'localhost';
 	$title = $lang_install['My FluxBB Forum'];
 	$description = '<p><span>'.$lang_install['Description'].'</span></p>';
+	$default_lang = $install_lang;
 	$default_style = 'Air';
 }
 else
@@ -299,12 +300,12 @@ function process_form(the_form)
 					<div class="infldset">
 						<p><?php echo $lang_install['Choose install language info'] ?></p>
 						<label><strong><?php echo $lang_install['Install language'] ?></strong>
-						<br /><select name="default_lang">
+						<br /><select name="install_lang">
 <?php
 
 		foreach ($languages as $temp)
 		{
-			if ($temp == $default_lang)
+			if ($temp == $install_lang)
 				echo "\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.$temp.'</option>'."\n";
 			else
 				echo "\t\t\t\t\t".'<option value="'.$temp.'">'.$temp.'</option>'."\n";
@@ -326,7 +327,7 @@ function process_form(the_form)
 	<h2><span><?php echo $lang_install['Install'] ?></span></h2>
 	<div class="box">
 		<form id="install" method="post" action="install.php" onsubmit="this.start.disabled=true;if(process_form(this)){return true;}else{this.start.disabled=false;return false;}">
-		<div><input type="hidden" name="form_sent" value="1" /></div>
+		<div><input type="hidden" name="form_sent" value="1" /><input type="hidden" name="install_lang" value="<?php echo pun_htmlspecialchars($install_lang) ?>" /></div>
 			<div class="inform">
 <?php if (!empty($alerts)): ?>				<div class="forminfo error-info">
 					<h3><?php echo $lang_install['Errors'] ?></h3>
