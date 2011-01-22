@@ -431,7 +431,7 @@ if ($quickpost)
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="submit" tabindex="2" value="<?php echo $lang_common['Submit'] ?>" accesskey="s" /></p>
+			<p class="buttons"><input type="submit" name="submit" tabindex="2" value="<?php echo $lang_common['Submit'] ?>" accesskey="s" /> <input type="submit" name="preview" value="<?php echo $lang_topic['Preview'] ?>" tabindex="3" accesskey="p" /></p>
 		</form>
 	</div>
 </div>
