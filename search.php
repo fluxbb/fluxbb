@@ -98,6 +98,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			$sort_by = $temp['sort_by'];
 			$sort_dir = $temp['sort_dir'];
 			$show_as = $temp['show_as'];
+			$search_type = $temp['search_type'];
 
 			unset($temp);
 		}
@@ -275,11 +276,20 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 			// If we searched for both keywords and author name we want the intersection between the results
 			if ($author && $keywords)
+			{
 				$search_ids = array_intersect_assoc($keyword_results, $author_results);
+				$search_type = array('both', array($keywords, $author));
+			}
 			else if ($keywords)
+			{
 				$search_ids = $keyword_results;
+				$search_type = array('keywords', $keywords);
+			}
 			else
+			{
 				$search_ids = $author_results;
+				$search_type = array('author', $author);
+			}
 
 			unset($keyword_results, $author_results);
 
@@ -296,6 +306,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		}
 		else if ($action == 'show_new' || $action == 'show_recent' || $action == 'show_user_posts' || $action == 'show_user_topics' || $action == 'show_subscriptions' || $action == 'show_unanswered')
 		{
+			$search_type = array('action', $action);
 			$show_as = 'topics';
 			// We want to sort things after last post
 			$sort_by = 0;
@@ -393,6 +404,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			'sort_by'			=> $sort_by,
 			'sort_dir'			=> $sort_dir,
 			'show_as'			=> $show_as,
+			'search_type'		=> $search_type
 		));
 		$search_id = mt_rand(1, 2147483647);
 
@@ -447,6 +459,35 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		// throw away the first $start_from of $search_ids, only keep the top $per_page of $search_ids
 		$search_ids = array_slice($search_ids, $start_from, $per_page);
 
+		// Run the query and fetch the results
+		if ($show_as == 'posts')
+			$result = $db->query('SELECT p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, p.message, p.hide_smilies, t.id AS tid, t.poster, t.subject, t.first_post_id, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id, f.forum_name FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE p.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
+		else
+			$result = $db->query('SELECT t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.sticky, t.forum_id, f.forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE t.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
+
+		$search_set = array();
+		while ($row = $db->fetch_assoc($result))
+			$search_set[] = $row;
+
+		$crumbs_text = array();
+		$crumbs_text['show_as'] = $show_as == 'topics' ? $lang_search['Search topics'] : $lang_search['Search posts'];
+
+		if ($search_type[0] == 'action')
+		{
+			if ($search_type[1] == 'show_user_topics')
+				$crumbs_text['search_type'] = sprintf($lang_search['Quick search show_user_topics'], pun_htmlspecialchars($search_set[0]['poster']));
+			else if ($search_type[1] == 'show_user_posts')
+				$crumbs_text['search_type'] = sprintf($lang_search['Quick search show_user_posts'], pun_htmlspecialchars($search_set[0]['pposter']));
+			else
+				$crumbs_text['search_type'] = $lang_search['Quick search '.$search_type[1]];
+		}
+		else if ($search_type[0] == 'both')
+			$crumbs_text['search_type'] = sprintf($lang_search['By both'], pun_htmlspecialchars($search_type[1][0]), pun_htmlspecialchars($search_type[1][1]));
+		else if ($search_type[0] == 'keywords')
+			$crumbs_text['search_type'] = sprintf($lang_search['By keywords'], pun_htmlspecialchars($search_type[1]));
+		else if ($search_type[0] == 'author')
+			$crumbs_text['search_type'] = sprintf($lang_search['By user'], pun_htmlspecialchars($search_type[1]));
+
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_search['Search results']);
 		define('PUN_ACTIVE_PAGE', 'search');
 		require PUN_ROOT.'header.php';
@@ -454,8 +495,15 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 ?>
 <div class="linkst">
-	<div class="inbox">
-		<p class="pagelink"><?php echo $paging_links ?></p>
+	<div class="inbox crumbsplus">
+		<ul class="crumbs">
+			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li><span>»&#160;</span><a href="search.php"><?php echo $crumbs_text['show_as'] ?></a></li>
+			<li><span>»&#160;</span><strong><?php echo $crumbs_text['search_type'] ?></strong></li>
+		</ul>
+		<div class="pagepost">
+			<p class="pagelink"><?php echo $paging_links ?></p>
+		</div>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -497,12 +545,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		if (!$pun_user['is_guest'])
 			$tracked_topics = get_tracked_topics();
 
-		if ($show_as == 'posts')
-			$result = $db->query('SELECT p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, p.message, p.hide_smilies, t.id AS tid, t.poster, t.subject, t.first_post_id, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id, f.forum_name FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE p.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
-		else
-			$result = $db->query('SELECT t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.sticky, t.forum_id, f.forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE t.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
-
-		while ($cur_search = $db->fetch_assoc($result))
+		foreach ($search_set as $cur_search)
 		{
 			$forum = '<a href="viewforum.php?id='.$cur_search['forum_id'].'">'.pun_htmlspecialchars($cur_search['forum_name']).'</a>';
 
@@ -649,8 +692,15 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 ?>
 <div class="<?php echo ($show_as == 'topics') ? 'linksb' : 'postlinksb'; ?>">
-	<div class="inbox">
-		<p class="pagelink"><?php echo $paging_links ?></p>
+	<div class="inbox crumbsplus">
+		<div class="pagepost">
+			<p class="pagelink"><?php echo $paging_links ?></p>
+		</div>
+		<ul class="crumbs">
+			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li><span>»&#160;</span><a href="search.php"><?php echo $crumbs_text['show_as'] ?></a></li>
+			<li><span>»&#160;</span><strong><?php echo $crumbs_text['search_type'] ?></strong></li>
+		</ul>
 		<div class="clearer"></div>
 	</div>
 </div>
