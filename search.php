@@ -30,7 +30,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	$action = (isset($_GET['action'])) ? $_GET['action'] : null;
 	$forum = (isset($_GET['forum'])) ? intval($_GET['forum']) : -1;
 	$sort_dir = (isset($_GET['sort_dir']) && $_GET['sort_dir'] == 'DESC') ? 'DESC' : 'ASC';
-	
+
 	// Allow the old action names for backwards compatibility reasons
 	if ($action == 'show_user')
 		$action = 'show_user_posts';
@@ -311,7 +311,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			// We want to sort things after last post
 			$sort_by = 0;
 			$sort_dir = 'DESC';
-			
+
 			// If it's a search for new posts since last visit
 			if ($action == 'show_new')
 			{
@@ -337,7 +337,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			else if ($action == 'show_user_posts')
 			{
 				$show_as = 'posts';
-				
+
 				$result = $db->query('SELECT p.id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON p.topic_id=t.id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id='.$user_id.' ORDER BY p.posted DESC') or error('Unable to fetch user posts', __FILE__, __LINE__, $db->error());
 				$num_hits = $db->num_rows($result);
 

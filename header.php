@@ -207,7 +207,7 @@ else
 		if ($pun_config['o_maintenance'] == '1')
 			$page_statusinfo[] = '<li class="maintenancelink"><span><strong><a href="admin_options.php#maintenance">'.$lang_common['Maintenance mode enabled'].'</a></strong></span></li>';
 	}
-	
+
 	$script_name = basename($_SERVER['PHP_SELF']);
 	if ($script_name == 'index.php')
 		$page_quicklinks[] = '<a href="misc.php?action=markread">'.$lang_common['Mark all as read'].'</a>';
@@ -245,7 +245,7 @@ if (count($page_quicklinks))
 	$tpl_temp .= "\n\t\t\t".'</ul>'."\n\t\t\t".'<div class="clearer"></div>';
 }
 
-$tpl_temp .= "\n\t\t".'</div>';	
+$tpl_temp .= "\n\t\t".'</div>';
 
 $tpl_main = str_replace('<pun_status>', $tpl_temp, $tpl_main);
 // END SUBST - <pun_status>

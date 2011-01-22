@@ -18,20 +18,20 @@ if (!defined('PUN'))
 \]                    # closing bracket of outermost opening LIST tag
 (                     # capture contents of LIST tag in group 2
   (?:                 # non capture group for either contents or whole nested LIST
-    [^\[]*+           # unroll the loop! consume everything up to next [ (normal *)
-    (?:               # (See "Mastering Regular Expressions" chapter 6 for details)
-      (?!             # negative lookahead ensures we are NOT on [LIST*] or [/LIST]
-        \[list        # opening LIST tag
-        (?:=[1a*])?+  # with optional attribute
-        \]            # closing bracket of opening LIST tag
-        |             # or...
-        \[/list\]     # a closing LIST tag
-      )               # end negative lookahead assertion (we are not on a LIST tag)
-      \[              # match the [ which is NOT the start of LIST tag (special)
-      [^\[]*+         # consume everything up to next [ (normal *)
-    )*+               # finish up "unrolling the loop" technique (special (normal*))*
+	[^\[]*+           # unroll the loop! consume everything up to next [ (normal *)
+	(?:               # (See "Mastering Regular Expressions" chapter 6 for details)
+	  (?!             # negative lookahead ensures we are NOT on [LIST*] or [/LIST]
+		\[list        # opening LIST tag
+		(?:=[1a*])?+  # with optional attribute
+		\]            # closing bracket of opening LIST tag
+		|             # or...
+		\[/list\]     # a closing LIST tag
+	  )               # end negative lookahead assertion (we are not on a LIST tag)
+	  \[              # match the [ which is NOT the start of LIST tag (special)
+	  [^\[]*+         # consume everything up to next [ (normal *)
+	)*+               # finish up "unrolling the loop" technique (special (normal*))*
   |                   # or...
-    (?R)              # recursively match a whole nested LIST element
+	(?R)              # recursively match a whole nested LIST element
   )*                  # as many times as necessary until deepest nested LIST tag grabbed
 )                     # end capturing contents of LIST tag into group 2
 \[/list\]             # match outermost closing LIST tag
