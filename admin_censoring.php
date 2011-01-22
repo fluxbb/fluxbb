@@ -28,8 +28,8 @@ if (isset($_POST['add_word']))
 	$search_for = pun_trim($_POST['new_search_for']);
 	$replace_with = pun_trim($_POST['new_replace_with']);
 
-	if ($search_for == '' || $replace_with == '')
-		message($lang_admin_censoring['Must enter both message']);
+	if ($search_for == '')
+		message($lang_admin_censoring['Must enter word message']);
 
 	$db->query('INSERT INTO '.$db->prefix.'censoring (search_for, replace_with) VALUES (\''.$db->escape($search_for).'\', \''.$db->escape($replace_with).'\')') or error('Unable to add censor word', __FILE__, __LINE__, $db->error());
 
@@ -52,8 +52,8 @@ else if (isset($_POST['update']))
 	$search_for = pun_trim($_POST['search_for'][$id]);
 	$replace_with = pun_trim($_POST['replace_with'][$id]);
 
-	if ($search_for == '' || $replace_with == '')
-		message($lang_admin_censoring['Must search both message']);
+	if ($search_for == '')
+		message($lang_admin_censoring['Must enter word message']);
 
 	$db->query('UPDATE '.$db->prefix.'censoring SET search_for=\''.$db->escape($search_for).'\', replace_with=\''.$db->escape($replace_with).'\' WHERE id='.$id) or error('Unable to update censor word', __FILE__, __LINE__, $db->error());
 
