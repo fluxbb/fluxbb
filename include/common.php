@@ -13,8 +13,8 @@ if (!defined('PUN_ROOT'))
 define('FORUM_VERSION', '1.4.3');
 
 define('FORUM_DB_REVISION', 10);
-define('FORUM_SI_REVISION', 1);
-define('FORUM_PARSER_REVISION', 1);
+define('FORUM_SI_REVISION', 2);
+define('FORUM_PARSER_REVISION', 2);
 
 // Block prefetch requests
 if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
