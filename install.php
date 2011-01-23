@@ -48,6 +48,10 @@ if (file_exists(PUN_ROOT.'config.php'))
 // Define PUN because email.php requires it
 define('PUN', 1);
 
+// If the cache directory is not specified, we use the default setting
+if (!defined('FORUM_CACHE_DIR'))
+	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
+
 // Make sure we are running at least MIN_PHP_VERSION
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
 	exit(sprintf($lang_install['You are running error'], 'PHP', PHP_VERSION, FORUM_VERSION, MIN_PHP_VERSION));
