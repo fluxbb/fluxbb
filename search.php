@@ -364,6 +364,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 				if (!$num_hits)
 					message($lang_search['No subscriptions']);
+				
+				// Pass on user ID so that we can later know whose subscriptions we're searching for
+				$search_type[2] = $user_id;
 			}
 			// If it's a search for unanswered posts
 			else
@@ -478,6 +481,19 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$crumbs_text['search_type'] = sprintf($lang_search['Quick search show_user_topics'], pun_htmlspecialchars($search_set[0]['poster']));
 			else if ($search_type[1] == 'show_user_posts')
 				$crumbs_text['search_type'] = sprintf($lang_search['Quick search show_user_posts'], pun_htmlspecialchars($search_set[0]['pposter']));
+			else if ($search_type[1] == 'show_subscriptions')
+			{
+				// Fetch username of subscriber
+				$subscriber_id = $search_type[2];
+				$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE id='.$subscriber_id) or error('Unable to fetch username of subscriber', __FILE__, __LINE__, $db->error());
+				
+				if ($db->num_rows($result))
+					$subscriber_name = $db->result($result);
+				else
+					message($lang_common['Bad request']);
+				
+				$crumbs_text['search_type'] = sprintf($lang_search['Quick search show_subscriptions'], pun_htmlspecialchars($subscriber_name));
+			}
 			else
 				$crumbs_text['search_type'] = $lang_search['Quick search '.$search_type[1]];
 		}
