@@ -471,7 +471,7 @@ function generate_navlinks()
 	}
 
 	// Are there any additional navlinks we should insert into the array before imploding it?
-	if ($pun_config['o_additional_navlinks'] != '')
+	if ($pun_user['g_read_board'] == '1' && $pun_config['o_additional_navlinks'] != '')
 	{
 		if (preg_match_all('#([0-9]+)\s*=\s*(.*?)\n#s', $pun_config['o_additional_navlinks']."\n", $extra_links))
 		{
