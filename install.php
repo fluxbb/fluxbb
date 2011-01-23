@@ -202,6 +202,14 @@ else
 		$alerts[] = $lang_install['Error default style'];
 }
 
+// Check if the cache directory is writable
+if (!@is_writable(FORUM_CACHE_DIR))
+	$alerts[] = sprintf($lang_install['Alert cache'], FORUM_CACHE_DIR);
+
+// Check if default avatar directory is writable
+if (!@is_writable(PUN_ROOT.'img/avatars/'))
+	$alerts[] = sprintf($lang_install['Alert avatar'], PUN_ROOT.'img/avatars/');
+
 if (!isset($_POST['form_sent']) || !empty($alerts))
 {
 	// Determine available database extensions
@@ -1683,13 +1691,6 @@ else
 
 
 	$alerts = array();
-	// Check if the cache directory is writable
-	if (!@is_writable(PUN_ROOT.'cache/'))
-		$alerts[] = $lang_install['Alert cache'];
-
-	// Check if default avatar directory is writable
-	if (!@is_writable(PUN_ROOT.'img/avatars/'))
-		$alerts[] = $lang_install['Alert avatar'];
 
 	// Check if we disabled uploading avatars because file_uploads was disabled
 	if ($avatars == '0')
