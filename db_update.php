@@ -471,34 +471,6 @@ if (empty($stage))
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo $lang_update['Update'] ?></title>
 <link rel="stylesheet" type="text/css" href="style/<?php echo $default_style ?>.css" />
-<script type="text/javascript">
-/* <![CDATA[ */
-function process_form(the_form)
-{
-	var element_names = {
-		"req_db_pass": "<?php echo $lang_update['Database password'] ?>",
-		"req_old_charset": "<?php echo $lang_update['Current character set label'] ?>"
-	};
-	if (document.all || document.getElementById)
-	{
-		for (var i = 0; i < the_form.length; ++i)
-		{
-			var elem = the_form.elements[i];
-			if (elem.name && (/^req_/.test(elem.name)))
-			{
-				if (!elem.value && elem.type && (/^(?:text(?:area)?|password|file)$/i.test(elem.type)))
-				{
-					alert('"' + element_names[elem.name] + '" <?php echo $lang_update['Required field'] ?>');
-					elem.focus();
-					return false;
-				}
-			}
-		}
-	}
-	return true;
-}
-/* ]]> */
-</script>
 </head>
 <body onload="document.getElementById('install').req_db_type.focus();document.getElementById('install').start.disabled=false;">
 
@@ -519,7 +491,7 @@ function process_form(the_form)
 <div class="blockform">
 	<h2><span><?php echo $lang_update['Update'] ?></span></h2>
 	<div class="box">
-		<form method="post" action="db_update.php" onsubmit="this.start.disabled=true;if(process_form(this)){return true;}else{this.start.disabled=false;return false;}">
+		<form method="post" action="db_update.php">
 			<input type="hidden" name="stage" value="start" />
 			<div class="inform">
 				<fieldset>
