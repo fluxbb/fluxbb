@@ -26,7 +26,7 @@ $lang_update = array(
 'Intro 2'						=>	'Did you read the update instructions in the documentation? If not, start there.',
 'No charset conversion'			=>	'<strong>IMPORTANT!</strong> FluxBB has detected that this PHP environment does not have support for the encoding mechanisms required to do UTF-8 conversion from character sets other than ISO-8859-1. What this means is that if the current character set is not ISO-8859-1, FluxBB won\'t be able to convert your forum database to UTF-8 and you will have to do it manually. Instructions for doing manual charset conversion can be found in the update instructions.',
 'Enable conversion'				=>	'<strong>Enable conversion:</strong> When enabled this update script will, after it has made the required structural changes to the database, convert all text in the database from the current character set to UTF-8. This conversion is required if you\'re upgrading from version 1.2.',
-'Current character set'			=>	'<strong>Current character set:</strong> If the primary language in your forum is English, you can leave this at the default value. However, if your forum is non-English, you should enter the character set of the primary language pack used in the forum. <i>Getting this wrong can corrupt your database so don\'t just guess!</i> Note: This is required even if the old database is UTF-8.',
+'Current character set'			=>	'<strong>Current character set:</strong> If the primary language in your forum is English, you can leave this at the default value. However, if your forum is non-English, you should enter the character set of the primary language pack used in the forum. <em>Getting this wrong can corrupt your database so don\'t just guess!</em> Note: This is required even if the old database is UTF-8.',
 'Charset conversion'			=>	'Charset conversion',
 'Enable conversion label'		=>	'<strong>Enable conversion</strong> (perform database charset conversion).',
 'Current character set label'	=>	'Current character set',
@@ -71,6 +71,7 @@ $lang_update = array(
 'Username duplicate error'		=>	'Someone is already registered with the username %s. The username you entered is too similar. The username must differ from that by at least one alphanumerical character (a-z or 0-9). Please choose a different username.',
 
 'JavaScript disabled'			=>	'JavaScript seems to be disabled. %s.',
-'Click here to continue'		=>	'Click here to continue'
+'Click here to continue'		=>	'Click here to continue',
+'Required field'				=>	'is a required field in this form.'
 
 );

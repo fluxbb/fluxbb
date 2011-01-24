@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2010 FluxBB
+ * Copyright (C) 2008-2011 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -43,17 +43,31 @@ if ($cur_forum['redirect_url'] != '')
 $mods_array = ($cur_forum['moderators'] != '') ? unserialize($cur_forum['moderators']) : array();
 $is_admmod = ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1' && array_key_exists($pun_user['username'], $mods_array))) ? true : false;
 
+switch ($cur_forum['sort_by'])
+{
+	case 0:
+		$sort_by = 'last_post DESC';
+		break;
+	case 1:
+		$sort_by = 'posted DESC';
+		break;
+	case 2:
+		$sort_by = 'subject ASC';
+		break;
+	default:
+		$sort_by = 'last_post DESC';
+		break;
+}
+
 // Can we or can we not post new topics?
 if (($cur_forum['post_topics'] == '' && $pun_user['g_post_topics'] == '1') || $cur_forum['post_topics'] == '1' || $is_admmod)
 	$post_link = "\t\t\t".'<p class="postlink conr"><a href="post.php?fid='.$id.'">'.$lang_forum['Post topic'].'</a></p>'."\n";
 else
 	$post_link = '';
 
-
 // Get topic/forum tracking data
 if (!$pun_user['is_guest'])
 	$tracked_topics = get_tracked_topics();
-
 
 // Determine the topic offset (based on $_GET['p'])
 $num_pages = ceil($cur_forum['num_topics'] / $pun_user['disp_topics']);
@@ -64,10 +78,29 @@ $start_from = $pun_user['disp_topics'] * ($p - 1);
 // Generate paging links
 $paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'viewforum.php?id='.$id);
 
+
+// Add relationship meta tags
+$page_head = array();
+$page_head['up'] = '<link rel="up" href="index.php" title="'.$lang_common['Forum index'].'" />';
+
+if ($num_pages > 1)
+{
+	if ($p > 1)
+	{
+		$page_head['first'] = '<link rel="first" href="viewforum.php?id='.$id.'&amp;p=1" title="'.sprintf($lang_common['Page'], 1).'" />';
+		$page_head['prev'] = '<link rel="prev" href="viewforum.php?id='.$id.'&amp;p='.($p-1).'" title="'.sprintf($lang_common['Page'], $p-1).'" />';
+	}
+	if ($p < $num_pages)
+	{
+		$page_head['next'] = '<link rel="next" href="viewforum.php?id='.$id.'&amp;p='.($p+1).'" title="'.sprintf($lang_common['Page'], $p+1).'" />';
+		$page_head['last'] = '<link rel="last" href="viewforum.php?id='.$id.'&amp;p='.$num_pages.'" title="'.sprintf($lang_common['Page'], $num_pages).'" />';
+	}
+}
+
 if ($pun_config['o_feed_type'] == '1')
-	$page_head = array('feed' => '<link rel="alternate" type="application/rss+xml" href="extern.php?action=feed&amp;fid='.$id.'&amp;type=rss" title="'.$lang_common['RSS forum feed'].'" />');
+	$page_head['feed'] = '<link rel="alternate" type="application/rss+xml" href="extern.php?action=feed&amp;fid='.$id.'&amp;type=rss" title="'.$lang_common['RSS forum feed'].'" />';
 else if ($pun_config['o_feed_type'] == '2')
-	$page_head = array('feed' => '<link rel="alternate" type="application/atom+xml" href="extern.php?action=feed&amp;fid='.$id.'&amp;type=atom" title="'.$lang_common['Atom forum feed'].'" />');
+	$page_head['feed'] = '<link rel="alternate" type="application/atom+xml" href="extern.php?action=feed&amp;fid='.$id.'&amp;type=atom" title="'.$lang_common['Atom forum feed'].'" />';
 
 $forum_actions = array();
 
@@ -80,7 +113,7 @@ if (!$pun_user['is_guest'])
 		else
 			$forum_actions[] = '<a href="misc.php?action=subscribe&amp;fid='.$id.'">'.$lang_forum['Subscribe'].'</a>';
 	}
-	
+
 	$forum_actions[] = '<a href="misc.php?action=markforumread&amp;fid='.$id.'">'.$lang_common['Mark forum read'].'</a>';
 }
 
@@ -121,7 +154,7 @@ require PUN_ROOT.'header.php';
 <?php
 
 // Retrieve a list of topic IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
-$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE forum_id='.$id.' ORDER BY sticky DESC, '.(($cur_forum['sort_by'] == '1') ? 'posted' : 'last_post').' DESC, id DESC LIMIT '.$start_from.', '.$pun_user['disp_topics']) or error('Unable to fetch topic IDs', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE forum_id='.$id.' ORDER BY sticky DESC, '.$sort_by.', id DESC LIMIT '.$start_from.', '.$pun_user['disp_topics']) or error('Unable to fetch topic IDs', __FILE__, __LINE__, $db->error());
 
 // If there are topics in this forum
 if ($db->num_rows($result))
@@ -137,12 +170,12 @@ if ($db->num_rows($result))
 	if ($pun_user['is_guest'] || $pun_config['o_show_dot'] == '0')
 	{
 		// Without "the dot"
-		$sql = 'SELECT id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topic_ids).') ORDER BY sticky DESC, '.(($cur_forum['sort_by'] == '1') ? 'posted' : 'last_post').' DESC, id DESC';
+		$sql = 'SELECT id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topic_ids).') ORDER BY sticky DESC, '.$sort_by.', id DESC';
 	}
 	else
 	{
 		// With "the dot"
-		$sql = 'SELECT p.poster_id AS has_posted, t.id, t.subject, t.poster, t.posted, t.last_post, t.last_post_id, t.last_poster, t.num_views, t.num_replies, t.closed, t.sticky, t.moved_to FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'posts AS p ON t.id=p.topic_id AND p.poster_id='.$pun_user['id'].' WHERE t.id IN('.implode(',', $topic_ids).') GROUP BY t.id'.($db_type == 'pgsql' ? ', t.subject, t.poster, t.posted, t.last_post, t.last_post_id, t.last_poster, t.num_views, t.num_replies, t.closed, t.sticky, t.moved_to, p.poster_id' : '').' ORDER BY t.sticky DESC, t.'.(($cur_forum['sort_by'] == '1') ? 'posted' : 'last_post').' DESC, t.id DESC';
+		$sql = 'SELECT p.poster_id AS has_posted, t.id, t.subject, t.poster, t.posted, t.last_post, t.last_post_id, t.last_poster, t.num_views, t.num_replies, t.closed, t.sticky, t.moved_to FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'posts AS p ON t.id=p.topic_id AND p.poster_id='.$pun_user['id'].' WHERE t.id IN('.implode(',', $topic_ids).') GROUP BY t.id'.($db_type == 'pgsql' ? ', t.subject, t.poster, t.posted, t.last_post, t.last_post_id, t.last_poster, t.num_views, t.num_replies, t.closed, t.sticky, t.moved_to, p.poster_id' : '').' ORDER BY t.sticky DESC, t.'.$sort_by.', t.id DESC';
 	}
 
 	$result = $db->query($sql) or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2010 FluxBB
+ * Copyright (C) 2008-2011 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -226,15 +226,15 @@ if (isset($_POST['form_sent']))
 								$mail_subject_full = trim(substr($mail_tpl_full, 8, $first_crlf-8));
 								$mail_message_full = trim(substr($mail_tpl_full, $first_crlf));
 
-								$mail_subject = str_replace('<topic_subject>', '\''.$cur_posting['subject'].'\'', $mail_subject);
-								$mail_message = str_replace('<topic_subject>', '\''.$cur_posting['subject'].'\'', $mail_message);
+								$mail_subject = str_replace('<topic_subject>', $cur_posting['subject'], $mail_subject);
+								$mail_message = str_replace('<topic_subject>', $cur_posting['subject'], $mail_message);
 								$mail_message = str_replace('<replier>', $username, $mail_message);
 								$mail_message = str_replace('<post_url>', get_base_url().'/viewtopic.php?pid='.$new_pid.'#p'.$new_pid, $mail_message);
 								$mail_message = str_replace('<unsubscribe_url>', get_base_url().'/misc.php?action=unsubscribe&tid='.$tid, $mail_message);
 								$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
 
-								$mail_subject_full = str_replace('<topic_subject>', '\''.$cur_posting['subject'].'\'', $mail_subject_full);
-								$mail_message_full = str_replace('<topic_subject>', '\''.$cur_posting['subject'].'\'', $mail_message_full);
+								$mail_subject_full = str_replace('<topic_subject>', $cur_posting['subject'], $mail_subject_full);
+								$mail_message_full = str_replace('<topic_subject>', $cur_posting['subject'], $mail_message_full);
 								$mail_message_full = str_replace('<replier>', $username, $mail_message_full);
 								$mail_message_full = str_replace('<message>', $message, $mail_message_full);
 								$mail_message_full = str_replace('<post_url>', get_base_url().'/viewtopic.php?pid='.$new_pid.'#p'.$new_pid, $mail_message_full);
@@ -312,10 +312,10 @@ if (isset($_POST['form_sent']))
 						{
 							if (file_exists(PUN_ROOT.'lang/'.$cur_subscriber['language'].'/mail_templates/new_topic.tpl'))
 							{
-								// Load the "new reply" template
+								// Load the "new topic" template
 								$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$cur_subscriber['language'].'/mail_templates/new_topic.tpl'));
 
-								// Load the "new reply full" template (with post included)
+								// Load the "new topic full" template (with post included)
 								$mail_tpl_full = trim(file_get_contents(PUN_ROOT.'lang/'.$cur_subscriber['language'].'/mail_templates/new_topic_full.tpl'));
 
 								// The first row contains the subject (it also starts with "Subject:")
@@ -327,19 +327,17 @@ if (isset($_POST['form_sent']))
 								$mail_subject_full = trim(substr($mail_tpl_full, 8, $first_crlf-8));
 								$mail_message_full = trim(substr($mail_tpl_full, $first_crlf));
 
-								$mail_subject = str_replace('<topic_subject>', '\''.$subject.'\'', $mail_subject);
-								$mail_subject = str_replace('<forum_name>', '\''.$cur_posting['forum_name'].'\'', $mail_subject);
-								$mail_message = str_replace('<topic_subject>', '\''.$subject.'\'', $mail_message);
-								$mail_message = str_replace('<forum_name>', '\''.$cur_posting['forum_name'].'\'', $mail_message);
+								$mail_subject = str_replace('<forum_name>', $cur_posting['forum_name'], $mail_subject);
+								$mail_message = str_replace('<topic_subject>', $subject, $mail_message);
+								$mail_message = str_replace('<forum_name>', $cur_posting['forum_name'], $mail_message);
 								$mail_message = str_replace('<poster>', $username, $mail_message);
 								$mail_message = str_replace('<topic_url>', get_base_url().'/viewtopic.php?id='.$new_tid, $mail_message);
 								$mail_message = str_replace('<unsubscribe_url>', get_base_url().'/misc.php?action=unsubscribe&fid='.$cur_posting['id'], $mail_message);
 								$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
 
-								$mail_subject_full = str_replace('<topic_subject>', '\''.$subject.'\'', $mail_subject_full);
-								$mail_subject_full = str_replace('<forum_name>', '\''.$cur_posting['forum_name'].'\'', $mail_subject_full);
-								$mail_message_full = str_replace('<topic_subject>', '\''.$subject.'\'', $mail_message_full);
-								$mail_message_full = str_replace('<forum_name>', '\''.$cur_posting['forum_name'].'\'', $mail_message_full);
+								$mail_subject_full = str_replace('<forum_name>', $cur_posting['forum_name'], $mail_subject_full);
+								$mail_message_full = str_replace('<topic_subject>', $subject, $mail_message_full);
+								$mail_message_full = str_replace('<forum_name>', $cur_posting['forum_name'], $mail_message_full);
 								$mail_message_full = str_replace('<poster>', $username, $mail_message_full);
 								$mail_message_full = str_replace('<message>', $message, $mail_message_full);
 								$mail_message_full = str_replace('<topic_url>', get_base_url().'/viewtopic.php?id='.$new_tid, $mail_message_full);

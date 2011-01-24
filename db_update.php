@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Copyright (C) 2008-2010 FluxBB
+ * Copyright (C) 2008-2011 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
 // The FluxBB version this script updates to
-define('UPDATE_TO', '1.4.2');
+define('UPDATE_TO', '1.4.3');
 
 define('UPDATE_TO_DB_REVISION', 10);
-define('UPDATE_TO_SI_REVISION', 1);
-define('UPDATE_TO_PARSER_REVISION', 1);
+define('UPDATE_TO_SI_REVISION', 2);
+define('UPDATE_TO_PARSER_REVISION', 2);
 
-define('MIN_PHP_VERSION', '4.3.0');
+define('MIN_PHP_VERSION', '4.4.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
 define('MIN_PGSQL_VERSION', '7.0.0');
 define('PUN_SEARCH_MIN_WORD', 3);
@@ -44,9 +44,12 @@ if (file_exists(PUN_ROOT.'config.php'))
 if (defined('FORUM'))
 	define('PUN', FORUM);
 
-// If PUN isn't defined, config.php is missing or corrupt or we are outside the root directory
+// If PUN isn't defined, config.php is missing or corrupt
 if (!defined('PUN'))
-	exit('This file must be run from the forum root directory.');
+{
+	header('Location: install.php');
+	exit;
+}
 
 // Enable debug mode
 if (!defined('PUN_DEBUG'))
@@ -156,58 +159,6 @@ switch ($db_type)
 
 		break;
 }
-
-// Read the lock file
-$lock = file_exists(FORUM_CACHE_DIR.'db_update.lock') ? trim(file_get_contents(FORUM_CACHE_DIR.'db_update.lock')) : false;
-$lock_error = false;
-
-// Generate or fetch the UID - this confirms we have a valid admin
-if (isset($_POST['req_db_pass']))
-{
-	$req_db_pass = strtolower(trim($_POST['req_db_pass']));
-
-	switch ($db_type)
-	{
-		// For SQLite we compare against the database file name, since the password is left blank
-		case 'sqlite':
-			if ($req_db_pass != strtolower($db_name))
-				error(sprintf($lang_update['Invalid file error'], 'config.php'));
-
-			break;
-		// For everything else, check the password matches
-		default:
-			if ($req_db_pass != strtolower($db_password))
-				error(sprintf($lang_update['Invalid password error'], 'config.php'));
-
-			break;
-	}
-
-	// Generate a unique id to identify this session, only if this is a valid session
-	$uid = pun_hash($req_db_pass.'|'.uniqid(rand(), true));
-	if ($lock) // We already have a lock file
-		$lock_error = true;
-	else // Create the lock file
-	{
-		$fh = @fopen(FORUM_CACHE_DIR.'db_update.lock', 'wb');
-		if (!$fh)
-			error(sprintf($lang_update['Unable to lock error'], 'cache'));
-
-		fwrite($fh, $uid);
-		fclose($fh);
-	}
-}
-else if (isset($_GET['uid']))
-{
-	$uid = trim($_GET['uid']);
-	if (!$lock || $lock != $uid) // The lock doesn't exist or doesn't match the given UID
-		$lock_error = true;
-}
-else
-	error($lang_update['No password error']);
-
-// Now we know we have a valid admin, confirm someone else isn't already updating the database
-if ($lock_error)
-	error(sprintf($lang_update['Script runs error'], FORUM_CACHE_DIR.'db_update.lock'));
 
 // Check the database, search index and parser revision and the current version
 if (isset($pun_config['o_database_revision']) && $pun_config['o_database_revision'] >= UPDATE_TO_DB_REVISION &&
@@ -503,15 +454,14 @@ header('Content-type: text/html; charset=utf-8');
 while (@ob_end_clean());
 
 
-$stage = isset($_GET['stage']) ? $_GET['stage'] : '';
-$old_charset = isset($_GET['req_old_charset']) ? str_replace('ISO8859', 'ISO-8859', strtoupper($_GET['req_old_charset'])) : 'ISO-8859-1';
-$start_at = isset($_GET['start_at']) ? intval($_GET['start_at']) : 0;
+$stage = isset($_REQUEST['stage']) ? $_REQUEST['stage'] : '';
+$old_charset = isset($_REQUEST['req_old_charset']) ? str_replace('ISO8859', 'ISO-8859', strtoupper($_REQUEST['req_old_charset'])) : 'ISO-8859-1';
+$start_at = isset($_REQUEST['start_at']) ? intval($_REQUEST['start_at']) : 0;
 $query_str = '';
 
-switch ($stage)
+// Show form
+if (empty($stage))
 {
-	// Show form
-	case '':
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -522,42 +472,61 @@ switch ($stage)
 <title><?php echo $lang_update['Update'] ?></title>
 <link rel="stylesheet" type="text/css" href="style/<?php echo $default_style ?>.css" />
 </head>
-<body>
+<body onload="document.getElementById('install').req_db_type.focus();document.getElementById('install').start.disabled=false;">
 
 <div id="pundb_update" class="pun">
 <div class="top-box"><div><!-- Top Corners --></div></div>
 <div class="punwrap">
 
+<div id="brdheader" class="block">
+	<div class="box">
+		<div id="brdtitle" class="inbox">
+			<h1><span><?php echo $lang_update['Update'] ?></span></h1>
+			<div id="brddesc"><p><?php echo $lang_update['Update message'] ?></p><p><strong><?php echo $lang_update['Note']; ?></strong> <?php echo $lang_update['Members message']; ?></p></div>
+		</div>
+	</div>
+</div>
+
+<div id="brdmain">
 <div class="blockform">
 	<h2><span><?php echo $lang_update['Update'] ?></span></h2>
 	<div class="box">
-		<form method="get" action="<?php echo pun_htmlspecialchars($_SERVER['REQUEST_URI']) ?>" onsubmit="this.start.disabled=true">
-			<input type="hidden" name="uid" value="<?php echo $uid; ?>" />
+		<form method="post" action="db_update.php">
 			<input type="hidden" name="stage" value="start" />
 			<div class="inform">
+				<fieldset>
+				<legend><?php echo $lang_update['Administrator only'] ?></legend>
+					<div class="infldset">
+						<p><?php echo $lang_update['Database password info'] ?></p>
+						<p><strong><?php echo $lang_update['Note']; ?></strong> <?php echo $lang_update['Database password note'] ?></p>
+						<label class="required"><strong><?php echo $lang_update['Database password'] ?> <span><?php echo $lang_update['Required'] ?></span></strong><br /><input type="password" id="req_db_pass" name="req_db_pass" /><br /></label>
+					</div>
+				</fieldset>
+			</div>
+			<div class="inform">
 				<div class="forminfo">
-					<p style="font-size: 1.1em"><?php echo $lang_update['Intro 1'] ?></p>
-					<p style="font-size: 1.1em"><?php echo $lang_update['Intro 2'] ?></p>
+					<p><?php echo $lang_update['Intro 1'] ?></p>
+					<p><?php echo $lang_update['Intro 2'] ?></p>
 <?php
 
-if (strpos($cur_version, '1.2') === 0)
-{
-	if (!function_exists('iconv') && !function_exists('mb_convert_encoding'))
+	if (strpos($cur_version, '1.2') === 0)
 	{
+		if (!function_exists('iconv') && !function_exists('mb_convert_encoding'))
+		{
 
 ?>
-					<p style="font-size: 1.1em"><?php echo $lang_update['No charset conversion'] ?></p>
+					<p><?php echo $lang_update['No charset conversion'] ?></p>
 <?php
 
-	}
+		}
 
 ?>
 				</div>
 			</div>
 			<div class="inform">
 				<div class="forminfo">
-					<p style="font-size: 1.1em"><?php echo $lang_update['Enable conversion'] ?></p>
-					<p style="font-size: 1.1em"><?php echo $lang_update['Current character set'] ?></p>
+					<p><?php echo $lang_update['Enable conversion'] ?></p>
+					<p><?php echo $lang_update['Current character set'] ?></p>
 				</div>
 				<fieldset>
 					<legend><?php echo $lang_update['Charset conversion'] ?></legend>
@@ -573,15 +542,16 @@ if (strpos($cur_version, '1.2') === 0)
 				</fieldset>
 <?php
 
-}
-else
-	echo "\t\t\t\t".'</div>'."\n";
+	}
+	else
+		echo "\t\t\t\t".'</div>'."\n";
 
 ?>
 			</div>
 			<p class="buttons"><input type="submit" name="start" value="<?php echo $lang_update['Start update'] ?>" /></p>
 		</form>
 	</div>
+</div>
 </div>
 
 </div>
@@ -592,9 +562,66 @@ else
 </html>
 <?php
 
-		break;
+	$db->end_transaction();
+	$db->close();
+	exit;
 
+}
 
+// Read the lock file
+$lock = file_exists(FORUM_CACHE_DIR.'db_update.lock') ? trim(file_get_contents(FORUM_CACHE_DIR.'db_update.lock')) : false;
+$lock_error = false;
+
+// Generate or fetch the UID - this confirms we have a valid admin
+if (isset($_POST['req_db_pass']))
+{
+	$req_db_pass = strtolower(trim($_POST['req_db_pass']));
+
+	switch ($db_type)
+	{
+		// For SQLite we compare against the database file name, since the password is left blank
+		case 'sqlite':
+			if ($req_db_pass != strtolower($db_name))
+				error(sprintf($lang_update['Invalid file error'], 'config.php'));
+
+			break;
+		// For everything else, check the password matches
+		default:
+			if ($req_db_pass != strtolower($db_password))
+				error(sprintf($lang_update['Invalid password error'], 'config.php'));
+
+			break;
+	}
+
+	// Generate a unique id to identify this session, only if this is a valid session
+	$uid = pun_hash($req_db_pass.'|'.uniqid(rand(), true));
+	if ($lock) // We already have a lock file
+		$lock_error = true;
+	else // Create the lock file
+	{
+		$fh = @fopen(FORUM_CACHE_DIR.'db_update.lock', 'wb');
+		if (!$fh)
+			error(sprintf($lang_update['Unable to lock error'], 'cache'));
+
+		fwrite($fh, $uid);
+		fclose($fh);
+	}
+}
+else if (isset($_GET['uid']))
+{
+	$uid = trim($_GET['uid']);
+	if (!$lock || $lock != $uid) // The lock doesn't exist or doesn't match the given UID
+		$lock_error = true;
+}
+else
+	error($lang_update['No password error']);
+
+// If there is an error with the lock file
+if ($lock_error)
+	error(sprintf($lang_update['Script runs error'], FORUM_CACHE_DIR.'db_update.lock'));
+
+switch ($stage)
+{
 	// Start by updating the database structure
 	case 'start':
 		$query_str = '?stage=preparse_posts';
@@ -1045,11 +1072,11 @@ else
 
 			$db->create_table('forum_subscriptions', $schema) or error('Unable to create forum subscriptions table', __FILE__, __LINE__, $db->error());
 		}
-		
+
 		// Insert new config option o_forum_subscriptions
 		if (!array_key_exists('o_forum_subscriptions', $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_forum_subscriptions\', \'1\')') or error('Unable to insert config value \'o_forum_subscriptions\'', __FILE__, __LINE__, $db->error());
-		
+
 		// Rename config option o_subscriptions to o_topic_subscriptions
 		if (!array_key_exists('o_topic_subscriptions', $pun_config))
 			$db->query('UPDATE '.$db->prefix.'config SET conf_name=\'o_topic_subscriptions\' WHERE conf_name=\'o_subscriptions\'') or error('Unable to rename config value \'o_subscriptions\'', __FILE__, __LINE__, $db->error());
@@ -1072,7 +1099,7 @@ else
 		function _conv_bans($cur_item, $old_charset)
 		{
 			global $lang_update;
-			
+
 			echo sprintf($lang_update['Converting item'], $lang_update['ban'], $cur_item['id']).'<br />'."\n";
 
 			convert_to_utf8($cur_item['username'], $old_charset);
@@ -1434,7 +1461,7 @@ else
 				else if (preg_match('/(?:\[\/?(?:b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list|\*)\]|\[(?:img|url|quote|list)=)/i', $username))
 					$errors[$id][] = $lang_update['Username BBCode error'];
 
-				$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(preg_replace('/[^\w]/', '', $username)).'\')) AND id>1') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+				$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(preg_replace('/[^\p{L}\p{N}]/u', '', $username)).'\')) AND id>1') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
 				if ($db->num_rows($result))
 				{

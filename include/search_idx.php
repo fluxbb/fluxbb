@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2010 FluxBB
+ * Copyright (C) 2008-2011 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -51,7 +51,7 @@ function split_words($text, $idx)
 	$text = preg_replace('/\[\/?(b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]/', ' ', $text);
 
 	// Remove any apostrophes or dashes which aren't part of words
-	$text = substr(preg_replace('/((?<=\W)[\'\-]|[\'\-](?=\W))/', '', ' '.$text.' '), 1, -1);
+	$text = substr(preg_replace('/((?<=[^\p{L}\p{N}])[\'\-]|[\'\-](?=[^\p{L}\p{N}]))/u', '', ' '.$text.' '), 1, -1);
 
 	// Remove symbols and multiple whitespace, allow % and * if we aren't indexing
 	$text = preg_replace('/[\^\$&\(\)<>`"„\|,@_\?~\+\[\]{}:=\/#\\\\;!\.…\s•'.($idx ? '%\*' : '').']+/u', ' ', $text);
@@ -79,24 +79,25 @@ function split_words($text, $idx)
 //
 function validate_search_word($word, $idx)
 {
-	global $pun_user, $pun_config;
 	static $stopwords;
 
 	// If the word is a keyword we don't want to index it, but we do want to be allowed to search it
 	if (is_keyword($word))
 		return !$idx;
 
-	$language = isset($pun_user['language']) ? $pun_user['language'] : $pun_config['o_default_lang'];
 	if (!isset($stopwords))
 	{
-		if (file_exists(PUN_ROOT.'lang/'.$language.'/stopwords.txt'))
+		if (file_exists(FORUM_CACHE_DIR.'cache_stopwords.php'))
+			include FORUM_CACHE_DIR.'cache_stopwords.php';
+
+		if (!defined('PUN_STOPWORDS_LOADED'))
 		{
-			$stopwords = file(PUN_ROOT.'lang/'.$language.'/stopwords.txt');
-			$stopwords = array_map('pun_trim', $stopwords);
-			$stopwords = array_filter($stopwords);
+			if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+				require PUN_ROOT.'include/cache.php';
+
+			generate_stopwords_cache();
+			require FORUM_CACHE_DIR.'cache_stopwords.php';
 		}
-		else
-			$stopwords = array();
 	}
 
 	// If it is a stopword it isn't valid

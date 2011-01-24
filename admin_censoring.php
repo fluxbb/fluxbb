@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2010 FluxBB
+ * Copyright (C) 2008-2011 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -28,10 +28,16 @@ if (isset($_POST['add_word']))
 	$search_for = pun_trim($_POST['new_search_for']);
 	$replace_with = pun_trim($_POST['new_replace_with']);
 
-	if ($search_for == '' || $replace_with == '')
-		message($lang_admin_censoring['Must enter both message']);
+	if ($search_for == '')
+		message($lang_admin_censoring['Must enter word message']);
 
 	$db->query('INSERT INTO '.$db->prefix.'censoring (search_for, replace_with) VALUES (\''.$db->escape($search_for).'\', \''.$db->escape($replace_with).'\')') or error('Unable to add censor word', __FILE__, __LINE__, $db->error());
+
+	// Regenerate the censoring cache
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
+	generate_censoring_cache();
 
 	redirect('admin_censoring.php', $lang_admin_censoring['Word added redirect']);
 }
@@ -46,10 +52,16 @@ else if (isset($_POST['update']))
 	$search_for = pun_trim($_POST['search_for'][$id]);
 	$replace_with = pun_trim($_POST['replace_with'][$id]);
 
-	if ($search_for == '' || $replace_with == '')
-		message($lang_admin_censoring['Must search both message']);
+	if ($search_for == '')
+		message($lang_admin_censoring['Must enter word message']);
 
 	$db->query('UPDATE '.$db->prefix.'censoring SET search_for=\''.$db->escape($search_for).'\', replace_with=\''.$db->escape($replace_with).'\' WHERE id='.$id) or error('Unable to update censor word', __FILE__, __LINE__, $db->error());
+
+	// Regenerate the censoring cache
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
+	generate_censoring_cache();
 
 	redirect('admin_censoring.php', $lang_admin_censoring['Word updated redirect']);
 }
@@ -62,6 +74,12 @@ else if (isset($_POST['remove']))
 	$id = intval(key($_POST['remove']));
 
 	$db->query('DELETE FROM '.$db->prefix.'censoring WHERE id='.$id) or error('Unable to delete censor word', __FILE__, __LINE__, $db->error());
+
+	// Regenerate the censoring cache
+	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+		require PUN_ROOT.'include/cache.php';
+
+	generate_censoring_cache();
 
 	redirect('admin_censoring.php',  $lang_admin_censoring['Word removed redirect']);
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2010 FluxBB
+ * Copyright (C) 2008-2011 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -745,6 +745,22 @@ $cur_forum = $db->fetch_assoc($result);
 if ($cur_forum['redirect_url'] != '')
 	message($lang_common['Bad request']);
 
+switch ($cur_forum['sort_by'])
+{
+	case 0:
+		$sort_by = 'last_post DESC';
+		break;
+	case 1:
+		$sort_by = 'posted DESC';
+		break;
+	case 2:
+		$sort_by = 'subject ASC';
+		break;
+	default:
+		$sort_by = 'last_post DESC';
+		break;
+}
+
 // Determine the topic offset (based on $_GET['p'])
 $num_pages = ceil($cur_forum['num_topics'] / $pun_user['disp_topics']);
 
@@ -793,7 +809,7 @@ require PUN_ROOT.'header.php';
 
 
 // Retrieve a list of topic IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
-$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE forum_id='.$fid.' ORDER BY sticky DESC, '.(($cur_forum['sort_by'] == '1') ? 'posted' : 'last_post').' DESC, id DESC LIMIT '.$start_from.', '.$pun_user['disp_topics']) or error('Unable to fetch topic IDs', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE forum_id='.$fid.' ORDER BY sticky DESC, '.$sort_by.', id DESC LIMIT '.$start_from.', '.$pun_user['disp_topics']) or error('Unable to fetch topic IDs', __FILE__, __LINE__, $db->error());
 
 // If there are topics in this forum
 if ($db->num_rows($result))
@@ -803,7 +819,7 @@ if ($db->num_rows($result))
 		$topic_ids[] = $cur_topic_id;
 
 	// Select topics
-	$result = $db->query('SELECT id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topic_ids).') ORDER BY sticky DESC, '.(($cur_forum['sort_by'] == '1') ? 'posted' : 'last_post').' DESC, id DESC') or error('Unable to fetch topic list for forum', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topic_ids).') ORDER BY sticky DESC, '.$sort_by.', id DESC') or error('Unable to fetch topic list for forum', __FILE__, __LINE__, $db->error());
 
 	$button_status = '';
 	$topic_count = 0;

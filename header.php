@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2010 FluxBB
+ * Copyright (C) 2008-2011 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -142,8 +142,12 @@ function process_form(the_form)
 // JavaScript tricks for IE6 and older
 echo '<!--[if lte IE 6]><script type="text/javascript" src="style/imports/minmax.js"></script><![endif]-->'."\n";
 
-if (isset($page_head))
-	echo implode("\n", $page_head)."\n";
+if (!isset($page_head))
+	$page_head = array();
+
+$page_head['top'] = '<link rel="top" href="index.php" title="'.$lang_common['Forum index'].'" />';
+
+echo implode("\n", $page_head)."\n";
 
 $tpl_temp = trim(ob_get_contents());
 $tpl_main = str_replace('<pun_head>', $tpl_temp, $tpl_main);
@@ -203,7 +207,7 @@ else
 		if ($pun_config['o_maintenance'] == '1')
 			$page_statusinfo[] = '<li class="maintenancelink"><span><strong><a href="admin_options.php#maintenance">'.$lang_common['Maintenance mode enabled'].'</a></strong></span></li>';
 	}
-	
+
 	$script_name = basename($_SERVER['PHP_SELF']);
 	if ($script_name == 'index.php')
 		$page_quicklinks[] = '<a href="misc.php?action=markread">'.$lang_common['Mark all as read'].'</a>';
@@ -241,14 +245,14 @@ if (count($page_quicklinks))
 	$tpl_temp .= "\n\t\t\t".'</ul>'."\n\t\t\t".'<div class="clearer"></div>';
 }
 
-$tpl_temp .= "\n\t\t".'</div>';	
+$tpl_temp .= "\n\t\t".'</div>';
 
 $tpl_main = str_replace('<pun_status>', $tpl_temp, $tpl_main);
 // END SUBST - <pun_status>
 
 
 // START SUBST - <pun_announcement>
-if ($pun_config['o_announcement'] == '1')
+if ($pun_user['g_read_board'] == '1' && $pun_config['o_announcement'] == '1')
 {
 	ob_start();
 

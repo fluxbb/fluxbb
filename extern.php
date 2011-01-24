@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2010 FluxBB
+ * Copyright (C) 2008-2011 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -26,31 +26,31 @@
   display posts) and type (output as HTML or RSS). The only
   mandatory variable is action. Possible/default values are:
 
-    action: feed - show most recent topics/posts (HTML or RSS)
-            online - show users online (HTML)
-            online_full - as above, but includes a full list (HTML)
-            stats - show board statistics (HTML)
+	action: feed - show most recent topics/posts (HTML or RSS)
+			online - show users online (HTML)
+			online_full - as above, but includes a full list (HTML)
+			stats - show board statistics (HTML)
 
-    type:   rss - output as RSS 2.0
-            atom - output as Atom 1.0
-            xml - output as XML
-            html - output as HTML (<li>'s)
+	type:   rss - output as RSS 2.0
+			atom - output as Atom 1.0
+			xml - output as XML
+			html - output as HTML (<li>'s)
 
-    fid:    One or more forum IDs (comma-separated). If ignored,
-            topics from all readable forums will be pulled.
+	fid:    One or more forum IDs (comma-separated). If ignored,
+			topics from all readable forums will be pulled.
 
-    nfid:   One or more forum IDs (comma-separated) that are to be
-            excluded. E.g. the ID of a a test forum.
+	nfid:   One or more forum IDs (comma-separated) that are to be
+			excluded. E.g. the ID of a a test forum.
 
-    tid:    A topic ID from which to show posts. If a tid is supplied,
-            fid and nfid are ignored.
+	tid:    A topic ID from which to show posts. If a tid is supplied,
+			fid and nfid are ignored.
 
-    show:   Any integer value between 1 and 50. The default is 15.
+	show:   Any integer value between 1 and 50. The default is 15.
 
-    order:  last_post - show topics ordered by when they were last
-                        posted in, giving information about the reply.
-            posted - show topics ordered by when they were first
-                     posted, giving information about the original post.
+	order:  last_post - show topics ordered by when they were last
+						posted in, giving information about the reply.
+			posted - show topics ordered by when they were first
+					 posted, giving information about the original post.
 
 -----------------------------------------------------------------------------*/
 

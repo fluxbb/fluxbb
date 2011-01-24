@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2010 FluxBB
+ * Copyright (C) 2008-2011 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -376,7 +376,7 @@ function check_username($username, $exclude_id = null)
 	// Check that the username (or a too similar username) is not already registered
 	$query = ($exclude_id) ? ' AND id!='.$exclude_id : '';
 
-	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(preg_replace('/[^\w]/', '', $username)).'\')) AND id>1'.$query) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(preg_replace('/[^\p{L}\p{N}]/u', '', $username)).'\')) AND id>1'.$query) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
 	if ($db->num_rows($result))
 	{
@@ -471,7 +471,7 @@ function generate_navlinks()
 	}
 
 	// Are there any additional navlinks we should insert into the array before imploding it?
-	if ($pun_config['o_additional_navlinks'] != '')
+	if ($pun_user['g_read_board'] == '1' && $pun_config['o_additional_navlinks'] != '')
 	{
 		if (preg_match_all('#([0-9]+)\s*=\s*(.*?)\n#s', $pun_config['o_additional_navlinks']."\n", $extra_links))
 		{
@@ -756,14 +756,16 @@ function censor_words($text)
 	// If not already built in a previous call, build an array of censor words and their replacement text
 	if (!isset($search_for))
 	{
-		$result = $db->query('SELECT search_for, replace_with FROM '.$db->prefix.'censoring') or error('Unable to fetch censor word list', __FILE__, __LINE__, $db->error());
-		$num_words = $db->num_rows($result);
+		if (file_exists(FORUM_CACHE_DIR.'cache_censoring.php'))
+			include FORUM_CACHE_DIR.'cache_censoring.php';
 
-		$search_for = array();
-		for ($i = 0; $i < $num_words; ++$i)
+		if (!defined('PUN_CENSOR_LOADED'))
 		{
-			list($search_for[$i], $replace_with[$i]) = $db->fetch_row($result);
-			$search_for[$i] = '/(?<=\W)('.str_replace('\*', '\w*?', preg_quote($search_for[$i], '/')).')(?=\W)/i';
+			if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+				require PUN_ROOT.'include/cache.php';
+
+			generate_censoring_cache();
+			require FORUM_CACHE_DIR.'cache_censoring.php';
 		}
 	}
 
@@ -907,12 +909,10 @@ function paginate($num_pages, $cur_page, $link)
 //
 function message($message, $no_back_link = false)
 {
-	global $db, $lang_common, $pun_config, $pun_start, $tpl_main;
+	global $db, $lang_common, $pun_config, $pun_start, $tpl_main, $pun_user;
 
 	if (!defined('PUN_HEADER'))
 	{
-		global $pun_user;
-
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Info']);
 		define('PUN_ACTIVE_PAGE', 'index');
 		require PUN_ROOT.'header.php';
@@ -1283,250 +1283,6 @@ function maintenance_message()
 
 
 //
-// Display a message when the board needs installed
-//
-function install_message()
-{
-	$default_style = 'Air';
-	$default_lang = 'English';
-
-	// Attempt to load the common language file
-	if (file_exists(PUN_ROOT.'lang/'.$default_lang.'/common.php'))
-	{
-		include PUN_ROOT.'lang/'.$default_lang.'/common.php';
-		include PUN_ROOT.'lang/'.$default_lang.'/install.php';
-	}
-	else
-		error('There is no valid language pack \''.pun_htmlspecialchars($default_lang).'\' installed. Please reinstall a language of that name');
-
-	if (file_exists(PUN_ROOT.'style/'.$default_style.'/maintenance.tpl'))
-	{
-		$tpl_file = PUN_ROOT.'style/'.$default_style.'/maintenance.tpl';
-		$tpl_inc_dir = PUN_ROOT.'style/'.$default_style.'/';
-	}
-	else
-	{
-		$tpl_file = PUN_ROOT.'include/template/maintenance.tpl';
-		$tpl_inc_dir = PUN_ROOT.'include/user/';
-	}
-
-	$tpl_maint = file_get_contents($tpl_file);
-
-	// START SUBST - <pun_include "*">
-	preg_match_all('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_maint, $pun_includes, PREG_SET_ORDER);
-
-	foreach ($pun_includes as $cur_include)
-	{
-		ob_start();
-
-		// Allow for overriding user includes, too.
-		if (file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
-			require $tpl_inc_dir.$cur_include[1].'.'.$cur_include[2];
-		else if (file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
-			require PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
-		else
-			error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file)));
-
-		$tpl_temp = ob_get_contents();
-		$tpl_maint = str_replace($cur_include[0], $tpl_temp, $tpl_maint);
-		ob_end_clean();
-	}
-	// END SUBST - <pun_include "*">
-
-
-	// START SUBST - <pun_language>
-	$tpl_maint = str_replace('<pun_language>', $lang_common['lang_identifier'], $tpl_maint);
-	// END SUBST - <pun_language>
-
-
-	// START SUBST - <pun_content_direction>
-	$tpl_maint = str_replace('<pun_content_direction>', $lang_common['lang_direction'], $tpl_maint);
-	// END SUBST - <pun_content_direction>
-
-
-	// START SUBST - <pun_head>
-	ob_start();
-
-	$page_title = array($lang_install['Install']);
-
-?>
-<title><?php echo generate_page_title($page_title) ?></title>
-<link rel="stylesheet" type="text/css" href="style/<?php echo $default_style.'.css' ?>" />
-<?php
-
-	$tpl_temp = trim(ob_get_contents());
-	$tpl_maint = str_replace('<pun_head>', $tpl_temp, $tpl_maint);
-	ob_end_clean();
-	// END SUBST - <pun_head>
-
-
-	// START SUBST - <pun_maint_main>
-	ob_start();
-
-?>
-<div class="blockform">
-	<h2><span><?php echo $lang_install['Install'] ?></span></h2>
-	<p><?php echo $lang_install['Install message'] ?></p>
-	<div class="box">
-		<form id="install" method="post" action="install.php">
-			<div class="inform">
-				<fieldset>
-				<legend><?php echo $lang_install['Choose install language'] ?></legend>
-					<div class="infldset">
-						<p><?php echo $lang_install['Choose install language info'] ?></p>
-						<label class="required"><strong><?php echo $lang_install['Install language'] ?> <span><?php echo $lang_install['Required'] ?></span></strong><br /><select id="req_default_lang" name="req_default_lang">
-<?php
-
-		$languages = forum_list_langs();
-		foreach ($languages as $temp)
-		{
-			if ($temp == $default_lang)
-				echo "\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.$temp.'</option>'."\n";
-			else
-				echo "\t\t\t\t\t\t\t".'<option value="'.$temp.'">'.$temp.'</option>'."\n";
-		}
-
-?>
-						</select><br /></label>
-					</div>
-				</fieldset>
-			</div>
-			<p class="buttons"><input type="submit" name="submit" value="<?php echo $lang_install['Next'] ?>" /></p>
-		</form>
-	</div>
-</div>
-<?php
-
-	$tpl_temp = trim(ob_get_contents());
-	$tpl_maint = str_replace('<pun_maint_main>', $tpl_temp, $tpl_maint);
-	ob_end_clean();
-	// END SUBST - <pun_maint_main>
-
-	exit($tpl_maint);
-}
-
-
-//
-// Display a message when the board needs installed
-//
-function update_message()
-{
-	global $pun_config, $db_password;
-
-	$default_style = $pun_config['o_default_style'];
-	if (!file_exists(PUN_ROOT.'style/'.$default_style.'.css'))
-		$default_style = 'Air';
-
-	$default_lang = $pun_config['o_default_lang'];
-	if (!file_exists(PUN_ROOT.'lang/'.$default_lang.'/common.php'))
-		$default_lang = 'English';
-
-	// Attempt to load the common language file
-	if (file_exists(PUN_ROOT.'lang/'.$default_lang.'/common.php'))
-	{
-		include PUN_ROOT.'lang/'.$default_lang.'/common.php';
-		include PUN_ROOT.'lang/'.$default_lang.'/update.php';
-	}
-	else
-		error('There is no valid language pack \''.pun_htmlspecialchars($default_lang).'\' installed. Please reinstall a language of that name');
-
-	if (file_exists(PUN_ROOT.'style/'.$default_style.'/maintenance.tpl'))
-	{
-		$tpl_file = PUN_ROOT.'style/'.$default_style.'/maintenance.tpl';
-		$tpl_inc_dir = PUN_ROOT.'style/'.$default_style.'/';
-	}
-	else
-	{
-		$tpl_file = PUN_ROOT.'include/template/maintenance.tpl';
-		$tpl_inc_dir = PUN_ROOT.'include/user/';
-	}
-
-	$tpl_maint = file_get_contents($tpl_file);
-
-	// START SUBST - <pun_include "*">
-	preg_match_all('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_maint, $pun_includes, PREG_SET_ORDER);
-
-	foreach ($pun_includes as $cur_include)
-	{
-		ob_start();
-
-		// Allow for overriding user includes, too.
-		if (file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
-			require $tpl_inc_dir.$cur_include[1].'.'.$cur_include[2];
-		else if (file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
-			require PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
-		else
-			error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file)));
-
-		$tpl_temp = ob_get_contents();
-		$tpl_maint = str_replace($cur_include[0], $tpl_temp, $tpl_maint);
-		ob_end_clean();
-	}
-	// END SUBST - <pun_include "*">
-
-
-	// START SUBST - <pun_language>
-	$tpl_maint = str_replace('<pun_language>', $lang_common['lang_identifier'], $tpl_maint);
-	// END SUBST - <pun_language>
-
-
-	// START SUBST - <pun_content_direction>
-	$tpl_maint = str_replace('<pun_content_direction>', $lang_common['lang_direction'], $tpl_maint);
-	// END SUBST - <pun_content_direction>
-
-
-	// START SUBST - <pun_head>
-	ob_start();
-
-	$page_title = array($lang_update['Update']);
-
-?>
-<title><?php echo generate_page_title($page_title) ?></title>
-<link rel="stylesheet" type="text/css" href="style/<?php echo $default_style.'.css' ?>" />
-<?php
-
-	$tpl_temp = trim(ob_get_contents());
-	$tpl_maint = str_replace('<pun_head>', $tpl_temp, $tpl_maint);
-	ob_end_clean();
-	// END SUBST - <pun_head>
-
-
-	// START SUBST - <pun_maint_main>
-	ob_start();
-
-?>
-<div class="blockform">
-	<h2><span><?php echo $lang_update['Update'] ?></span></h2>
-	<p><?php echo $lang_update['Update message'] ?></p>
-	<p><strong><?php echo $lang_update['Note']; ?></strong> <?php echo $lang_update['Members message']; ?></p>
-	<div class="box">
-		<form id="update" method="post" action="db_update.php">
-			<div class="inform">
-				<fieldset>
-				<legend><?php echo $lang_update['Administrator only'] ?></legend>
-					<div class="infldset">
-						<p><?php echo $lang_update['Database password info'] ?></p>
-						<p><strong><?php echo $lang_update['Note']; ?></strong> <?php echo $lang_update['Database password note'] ?></p>
-						<label class="required"><strong><?php echo $lang_update['Database password'] ?> <span><?php echo $lang_update['Required'] ?></span></strong><br /><input type="password" id="req_db_pass" name="req_db_pass" /><br /></label>
-					</div>
-				</fieldset>
-			</div>
-			<p class="buttons"><input type="submit" name="submit" value="<?php echo $lang_update['Next'] ?>" /></p>
-		</form>
-	</div>
-</div>
-<?php
-
-	$tpl_temp = trim(ob_get_contents());
-	$tpl_maint = str_replace('<pun_maint_main>', $tpl_temp, $tpl_maint);
-	ob_end_clean();
-	// END SUBST - <pun_maint_main>
-
-	exit($tpl_maint);
-}
-
-
-//
 // Display $message and redirect user to $destination_url
 //
 function redirect($destination_url, $message)
@@ -1829,11 +1585,6 @@ function remove_bad_characters($array)
 			"\xef\xbf\xbb"	=> '',		// INTERLINEAR ANNOTATION TERMINATOR	FFFB	*
 			"\xef\xbf\xbc"	=> '',		// OBJECT REPLACEMENT CHARACTER			FFFC	*
 			"\xef\xbf\xbd"	=> '',		// REPLACEMENT CHARACTER				FFFD	*
-			"\xc2\xad"		=> '-',		// SOFT HYPHEN							00AD
-			"\xE2\x80\x9C"	=> '"',		// LEFT DOUBLE QUOTATION MARK			201C
-			"\xE2\x80\x9D"	=> '"',		// RIGHT DOUBLE QUOTATION MARK			201D
-			"\xE2\x80\x98"	=> '\'',	// LEFT SINGLE QUOTATION MARK			2018
-			"\xE2\x80\x99"	=> '\'',	// RIGHT SINGLE QUOTATION MARK			2019
 			"\xe2\x80\x80"	=> ' ',		// EN QUAD								2000	*
 			"\xe2\x80\x81"	=> ' ',		// EM QUAD								2001	*
 			"\xe2\x80\x82"	=> ' ',		// EN SPACE								2002	*
