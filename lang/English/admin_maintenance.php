@@ -19,5 +19,6 @@ $lang_admin_maintenance = array(
 'Processing post'				=>	'Processing post <strong>%s</strong> …',
 'Click here'					=>	'Click here',
 'Javascript redirect failed'	=>	'JavaScript redirect unsuccessful. %s to continue …',
+'Must be integer message'		=>	'Posts per cycle must be a positive integer value.',
 
 );
