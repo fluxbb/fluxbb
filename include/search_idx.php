@@ -53,11 +53,11 @@ function split_words($text, $idx)
 	// Remove any apostrophes or dashes which aren't part of words
 	$text = substr(preg_replace('/((?<=[^\p{L}\p{N}])[\'\-]|[\'\-](?=[^\p{L}\p{N}]))/u', '', ' '.$text.' '), 1, -1);
 
-	// Remove symbols and multiple whitespace, allow % and * if we aren't indexing
-	$text = preg_replace('/[\^\$&\(\)<>`"„\|,@_\?~\+\[\]{}:=\/#\\\\;!\.…\s•'.($idx ? '%\*' : '').']+/u', ' ', $text);
+	// Remove punctuation and symbols (actually anything that isn't a letter or number), allow apostrophes and dashes (and % * if we aren't indexing)
+	$text = preg_replace('/(?![\'\-'.($idx ? '' : '%\*').'])[^\p{L}\p{N}]+/u', ' ', $text);
 
-	// Replace multiple dashes with just one
-	$text = preg_replace('/-{2,}/', '-', $text);
+	// Replace multiple whitespace or dashes
+	$text = preg_replace('/(\s){2,}/u', '\1', $text);
 
 	// Fill an array with all the words
 	$words = array_unique(explode(' ', $text));
