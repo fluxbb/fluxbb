@@ -1086,7 +1086,7 @@ switch ($stage)
 			$db->query('UPDATE '.$db->prefix.'config SET conf_value = \''.$db->escape($default_style).'\' WHERE conf_name = \'o_default_style\'') or error('Unable to update default style config', __FILE__, __LINE__, $db->error());
 
 		// Should we do charset conversion or not?
-		if (strpos($cur_version, '1.2') === 0 && isset($_GET['convert_charset']))
+		if (strpos($cur_version, '1.2') === 0 && isset($_POST['convert_charset']))
 			$query_str = '?stage=conv_bans&req_old_charset='.$old_charset;
 
 		break;
