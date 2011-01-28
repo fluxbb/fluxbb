@@ -27,14 +27,14 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
 // If a post ID is specified we determine topic ID and page number so we can redirect to the correct message
 if ($pid)
 {
-	$result = $db->query('SELECT topic_id, posted FROM '.$db->prefix.'posts WHERE id='.$pid) or error(__FILE__, __LINE__);
+	$result = $db->query('SELECT topic_id, posted FROM '.$db->prefix.'posts WHERE id='.$pid) or error('Unable to fetch topic ID', __FILE__, __LINE__, $db->error());
 	if (!$db->num_rows($result))
 		message($lang_common['Bad request']);
 
 	list($id, $posted) = $db->fetch_row($result);
 
 	// Determine on what page the post is located (depending on $forum_user['disp_posts'])
-	$result = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id.' AND posted<'.$posted) or error(__FILE__, __LINE__);
+	$result = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id.' AND posted<'.$posted) or error('Unable to count previous posts', __FILE__, __LINE__, $db->error());
 	$num_posts = $db->result($result) + 1;
 
 	$_GET['p'] = ceil($num_posts / $pun_user['disp_posts']);
