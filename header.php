@@ -209,7 +209,8 @@ else
 	}
 
 	$script_name = basename($_SERVER['PHP_SELF']);
-	if ($script_name == 'index.php')
+	$action = isset($_GET['action']) ? $_GET['action'] : null;
+	if ($script_name == 'index.php' || ($script_name == 'search.php' && $action == 'show_new'))
 		$page_quicklinks[] = '<a href="misc.php?action=markread">'.$lang_common['Mark all as read'].'</a>';
 
 	if ($pun_user['g_read_board'] == '1' && $pun_user['g_search'] == '1')
