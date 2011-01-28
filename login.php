@@ -230,10 +230,18 @@ if (!empty($_SERVER['HTTP_REFERER']))
 	if (strpos($referrer['host'], 'www.') === 0)
 		$referrer['host'] = substr($referrer['host'], 4);
 
+	// Make sure the path component exists
+	if (!isset($referrer['path']))
+		$referrer['path'] = '';
+
 	$valid = parse_url(get_base_url());
 	// Remove www subdomain if it exists
 	if (strpos($valid['host'], 'www.') === 0)
 		$valid['host'] = substr($valid['host'], 4);
+
+	// Make sure the path component exists
+	if (!isset($valid['path']))
+		$valid['path'] = '';
 
 	if ($referrer['host'] == $valid['host'] && preg_match('#^'.preg_quote($valid['path']).'/(.*?)\.php#i', $referrer['path']))
 		$redirect_url = $_SERVER['HTTP_REFERER'];
