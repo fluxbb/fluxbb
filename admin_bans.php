@@ -304,7 +304,7 @@ else if (isset($_GET['find_ban']))
 
 	$expire_after = isset($_GET['expire_after']) ? trim($_GET['expire_after']) : '';
 	$expire_before = isset($_GET['expire_before']) ? trim($_GET['expire_before']) : '';
-	$order_by = isset($_GET['order_by']) && in_array($_GET['order_by'], array('username', 'ip', 'email', 'expire')) ? $_GET['order_by'] : 'username';
+	$order_by = isset($_GET['order_by']) && in_array($_GET['order_by'], array('username', 'ip', 'email', 'expire')) ? 'b.'.$_GET['order_by'] : 'b.username';
 	$direction = isset($_GET['direction']) && $_GET['direction'] == 'DESC' ? 'DESC' : 'ASC';
 
 	$query_str[] = 'order_by='.$order_by;
@@ -319,7 +319,7 @@ else if (isset($_GET['find_ban']))
 		if ($expire_after === false || $expire_after == -1)
 			message($lang_admin_bans['Invalid date message']);
 
-		$conditions[] = 'expire>'.$expire_after;
+		$conditions[] = 'b.expire>'.$expire_after;
 	}
 	if ($expire_before != '')
 	{
@@ -329,7 +329,7 @@ else if (isset($_GET['find_ban']))
 		if ($expire_before === false || $expire_before == -1)
 			message($lang_admin_bans['Invalid date message']);
 
-		$conditions[] = 'expire<'.$expire_before;
+		$conditions[] = 'b.expire<'.$expire_before;
 	}
 
 	$like_command = ($db_type == 'pgsql') ? 'ILIKE' : 'LIKE';
