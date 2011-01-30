@@ -139,7 +139,7 @@ function output_rss($feed)
 		echo "\t\t\t".'<description><![CDATA['.escape_cdata($item['description']).']]></description>'."\n";
 		echo "\t\t\t".'<author><![CDATA['.(isset($item['author']['email']) ? escape_cdata($item['author']['email']) : 'dummy@example.com').' ('.escape_cdata($item['author']['name']).')]]></author>'."\n";
 		echo "\t\t\t".'<pubDate>'.gmdate('r', $item['pubdate']).'</pubDate>'."\n";
-		echo "\t\t\t".'<guid>'.$item['link'].'</guid>'."\n";
+		echo "\t\t\t".'<guid>'.pun_htmlspecialchars($item['link']).'</guid>'."\n";
 
 		echo "\t\t".'</item>'."\n";
 	}
