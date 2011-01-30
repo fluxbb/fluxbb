@@ -41,6 +41,7 @@ $lang_search = array(
 'Quick search show_new'				=>	'New',
 'Quick search show_recent'			=>	'Active',
 'Quick search show_unanswered'		=>	'Unanswered',
+'Quick search show_replies'			=>	'Yours',
 'Quick search show_user_topics'		=>	'By %s',
 'Quick search show_user_posts'		=>	'By %s',
 'Quick search show_subscriptions'	=>	'Subscribed by %s',

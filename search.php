@@ -79,6 +79,11 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	}
 	else if ($action == 'show_recent')
 		$interval = isset($_GET['value']) ? intval($_GET['value']) : 86400;
+	else if ($action == 'show_replies')
+	{
+		if ($pun_user['is_guest'])
+			message($lang_common['Bad request']);
+	}
 	else if ($action != 'show_new' && $action != 'show_unanswered')
 		message($lang_common['Bad request']);
 
@@ -304,7 +309,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			if (!$num_hits)
 				message($lang_search['No hits']);
 		}
-		else if ($action == 'show_new' || $action == 'show_recent' || $action == 'show_user_posts' || $action == 'show_user_topics' || $action == 'show_subscriptions' || $action == 'show_unanswered')
+		else if ($action == 'show_new' || $action == 'show_recent' || $action == 'show_replies' || $action == 'show_user_posts' || $action == 'show_user_topics' || $action == 'show_subscriptions' || $action == 'show_unanswered')
 		{
 			$search_type = array('action', $action);
 			$show_as = 'topics';
@@ -332,6 +337,15 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 				if (!$num_hits)
 					message($lang_search['No recent posts']);
+			}
+			// If it's a search for topics in which the user has posted
+			else if ($action == 'show_replies')
+			{
+				$result = $db->query('SELECT t.id FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'posts AS p ON t.id=p.topic_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id='.$pun_user['id'].' GROUP BY t.id'.($db_type == 'pgsql' ? ', t.last_post' : '').' ORDER BY t.last_post DESC') or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());
+				$num_hits = $db->num_rows($result);
+				
+				if (!$num_hits)
+					message($lang_search['No user posts']);
 			}
 			// If it's a search for posts by a specific user ID
 			else if ($action == 'show_user_posts')
