@@ -283,17 +283,17 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			if ($author && $keywords)
 			{
 				$search_ids = array_intersect_assoc($keyword_results, $author_results);
-				$search_type = array('both', array($keywords, $author));
+				$search_type = array('both', array($keywords, $author), $forum, isset($_GET['search_in']) ? $_GET['search_in'] : '');
 			}
 			else if ($keywords)
 			{
 				$search_ids = $keyword_results;
-				$search_type = array('keywords', $keywords);
+				$search_type = array('keywords', $keywords, $forum, isset($_GET['search_in']) ? $_GET['search_in'] : '');
 			}
 			else
 			{
 				$search_ids = $author_results;
-				$search_type = array('author', $author);
+				$search_type = array('author', $author, $forum, isset($_GET['search_in']) ? $_GET['search_in'] : '');
 			}
 
 			unset($keyword_results, $author_results);
@@ -519,12 +519,28 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			else
 				$crumbs_text['search_type'] = '<a href="search.php?action='.pun_htmlspecialchars($search_type[1]).'">'.$lang_search['Quick search '.$search_type[1]].'</a>';
 		}
-		else if ($search_type[0] == 'both')
-			$crumbs_text['search_type'] = sprintf($lang_search['By both'], pun_htmlspecialchars($search_type[1][0]), pun_htmlspecialchars($search_type[1][1]));
-		else if ($search_type[0] == 'keywords')
-			$crumbs_text['search_type'] = sprintf($lang_search['By keywords'], pun_htmlspecialchars($search_type[1]));
-		else if ($search_type[0] == 'author')
-			$crumbs_text['search_type'] = sprintf($lang_search['By user'], pun_htmlspecialchars($search_type[1]));
+		else
+		{
+			$keywords = $author = '';
+
+			if ($search_type[0] == 'both')
+			{
+				list ($keywords, $author) = $search_type[1];
+				$crumbs_text['search_type'] = sprintf($lang_search['By both'], pun_htmlspecialchars($keywords), pun_htmlspecialchars($author));
+			}
+			else if ($search_type[0] == 'keywords')
+			{
+				$keywords = $search_type[1];
+				$crumbs_text['search_type'] = sprintf($lang_search['By keywords'], pun_htmlspecialchars($keywords));
+			}
+			else if ($search_type[0] == 'author')
+			{
+				$author = $search_type[1];
+				$crumbs_text['search_type'] = sprintf($lang_search['By user'], pun_htmlspecialchars($author));
+			}
+
+			$crumbs_text['search_type'] = '<a href="search.php?action=search&amp;keywords='.pun_htmlspecialchars($keywords).'&amp;author='.pun_htmlspecialchars($author).'&amp;forum='.pun_htmlspecialchars($search_type[2]).'&amp;search_in='.pun_htmlspecialchars($search_type[3]).'&amp;sort_by='.pun_htmlspecialchars($sort_by).'&amp;sort_dir='.pun_htmlspecialchars($sort_dir).'&amp;show_as='.pun_htmlspecialchars($show_as).'">'.$crumbs_text['search_type'].'</a>';
+		}
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_search['Search results']);
 		define('PUN_ACTIVE_PAGE', 'search');
