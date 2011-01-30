@@ -343,6 +343,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 				if (!$num_hits)
 					message($lang_search['No user posts']);
+
+				// Pass on the user ID so that we can later know whos posts we're searching for
+				$search_type[2] = $user_id;
 			}
 			// If it's a search for topics by a specific user ID
 			else if ($action == 'show_user_topics')
@@ -352,6 +355,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 				if (!$num_hits)
 					message($lang_search['No user topics']);
+
+				// Pass on the user ID so that we can later know whos topics we're searching for
+				$search_type[2] = $user_id;
 			}
 			// If it's a search for subscribed topics
 			else if ($action == 'show_subscriptions')
@@ -364,7 +370,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 				if (!$num_hits)
 					message($lang_search['No subscriptions']);
-				
+
 				// Pass on user ID so that we can later know whose subscriptions we're searching for
 				$search_type[2] = $user_id;
 			}
@@ -415,17 +421,19 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 		$db->query('INSERT INTO '.$db->prefix.'search_cache (id, ident, search_data) VALUES('.$search_id.', \''.$db->escape($ident).'\', \''.$db->escape($temp).'\')') or error('Unable to insert search results', __FILE__, __LINE__, $db->error());
 
-		if ($action != 'show_new' && $action != 'show_recent')
-		{
-			$db->end_transaction();
-			$db->close();
+		$db->end_transaction();
+		$db->close();
 
-			// Redirect the user to the cached result page
-			header('Location: search.php?search_id='.$search_id);
-			exit;
-		}
+		// Redirect the user to the cached result page
+		header('Location: search.php?search_id='.$search_id);
+		exit;
 	}
 
+	$forum_actions = array();
+
+	// If we're on the new posts search, display a "mark all as read" link
+	if (!$pun_user['is_guest'] && $search_type[0] == 'action' && $search_type[1] == 'show_new')
+		$forum_actions[] = '<a href="misc.php?action=markread">'.$lang_common['Mark all as read'].'</a>';
 
 	// Fetch results to display
 	if (!empty($search_ids))
@@ -478,9 +486,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		if ($search_type[0] == 'action')
 		{
 			if ($search_type[1] == 'show_user_topics')
-				$crumbs_text['search_type'] = sprintf($lang_search['Quick search show_user_topics'], pun_htmlspecialchars($search_set[0]['poster']));
+				$crumbs_text['search_type'] = '<a href="search.php?action=show_user_topics&amp;user_id='.$search_type[2].'">'.sprintf($lang_search['Quick search show_user_topics'], pun_htmlspecialchars($search_set[0]['poster'])).'</a>';
 			else if ($search_type[1] == 'show_user_posts')
-				$crumbs_text['search_type'] = sprintf($lang_search['Quick search show_user_posts'], pun_htmlspecialchars($search_set[0]['pposter']));
+				$crumbs_text['search_type'] = '<a href="search.php?action=show_user_posts&amp;user_id='.$search_type[2].'">'.sprintf($lang_search['Quick search show_user_posts'], pun_htmlspecialchars($search_set[0]['pposter'])).'</a>';
 			else if ($search_type[1] == 'show_subscriptions')
 			{
 				// Fetch username of subscriber
@@ -492,10 +500,10 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				else
 					message($lang_common['Bad request']);
 				
-				$crumbs_text['search_type'] = sprintf($lang_search['Quick search show_subscriptions'], pun_htmlspecialchars($subscriber_name));
+				$crumbs_text['search_type'] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$subscriber_id.'">'.sprintf($lang_search['Quick search show_subscriptions'], pun_htmlspecialchars($subscriber_name)).'</a>';
 			}
 			else
-				$crumbs_text['search_type'] = $lang_search['Quick search '.$search_type[1]];
+				$crumbs_text['search_type'] = '<a href="search.php?action='.pun_htmlspecialchars($search_type[1]).'">'.$lang_search['Quick search '.$search_type[1]].'</a>';
 		}
 		else if ($search_type[0] == 'both')
 			$crumbs_text['search_type'] = sprintf($lang_search['By both'], pun_htmlspecialchars($search_type[1][0]), pun_htmlspecialchars($search_type[1][1]));
@@ -718,6 +726,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			<li><span>»&#160;</span><a href="search.php"><?php echo $crumbs_text['show_as'] ?></a></li>
 			<li><span>»&#160;</span><strong><?php echo $crumbs_text['search_type'] ?></strong></li>
 		</ul>
+<?php echo (!empty($forum_actions) ? "\t\t".'<p class="subscribelink clearb">'.implode(' - ', $forum_actions).'</p>'."\n" : '') ?>
 		<div class="clearer"></div>
 	</div>
 </div>
