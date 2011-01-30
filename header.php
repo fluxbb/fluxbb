@@ -210,7 +210,7 @@ else
 
 	if ($pun_user['g_read_board'] == '1' && $pun_user['g_search'] == '1')
 	{
-		$page_postsearches[] = '<a href="search.php?action=show_new" title="'.$lang_common['Show new posts'].'">'.$lang_common['New posts'].'</a>';
+		$page_postsearches[] = '<a href="search.php?action=show_new" title="'.$lang_common['Show new posts'].'">'.$lang_common['New posts header'].'</a>';
 		$page_topicsearches[] = '<a href="search.php?action=show_replies" title="'.$lang_common['Show your topics'].'">'.$lang_common['Your topics'].'</a>';
 	}
 }
