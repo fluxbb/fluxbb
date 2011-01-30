@@ -494,12 +494,12 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				// Fetch username of subscriber
 				$subscriber_id = $search_type[2];
 				$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE id='.$subscriber_id) or error('Unable to fetch username of subscriber', __FILE__, __LINE__, $db->error());
-				
+
 				if ($db->num_rows($result))
 					$subscriber_name = $db->result($result);
 				else
 					message($lang_common['Bad request']);
-				
+
 				$crumbs_text['search_type'] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$subscriber_id.'">'.sprintf($lang_search['Quick search show_subscriptions'], pun_htmlspecialchars($subscriber_name)).'</a>';
 			}
 			else
@@ -515,7 +515,6 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_search['Search results']);
 		define('PUN_ACTIVE_PAGE', 'search');
 		require PUN_ROOT.'header.php';
-
 
 ?>
 <div class="linkst">

@@ -507,6 +507,14 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	top: 33px;
 }
 
+#punindex .subscribelink {
+	top: 0px;
+}
+
+#punindex .linksb {
+	height: 12px;
+}
+
 /*****************************************************************
 4. MAIN TABLES
 *****************************************************************/
