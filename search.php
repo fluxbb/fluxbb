@@ -435,12 +435,15 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 		$db->query('INSERT INTO '.$db->prefix.'search_cache (id, ident, search_data) VALUES('.$search_id.', \''.$db->escape($ident).'\', \''.$db->escape($temp).'\')') or error('Unable to insert search results', __FILE__, __LINE__, $db->error());
 
-		$db->end_transaction();
-		$db->close();
+		if ($search_type[0] != 'action')
+		{
+			$db->end_transaction();
+			$db->close();
 
-		// Redirect the user to the cached result page
-		header('Location: search.php?search_id='.$search_id);
-		exit;
+			// Redirect the user to the cached result page
+			header('Location: search.php?search_id='.$search_id);
+			exit;
+		}
 	}
 
 	$forum_actions = array();
