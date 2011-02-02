@@ -207,7 +207,7 @@ if ($action == 'prune')
 	define('PUN_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
 
-	generate_admin_menu('prune');
+	generate_admin_menu('maintenance');
 
 ?>
 	<div class="blockform">
