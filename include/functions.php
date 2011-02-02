@@ -25,31 +25,46 @@ function check_cookie(&$pun_user)
 
 	$now = time();
 
-	// We assume it's a guest
-	$cookie = array('user_id' => 1, 'password_hash' => 'Guest', 'expiration_time' => 0);
-
-	// If a cookie is set, we get the user_id and password hash from it
-	if (isset($_COOKIE[$cookie_name]) && preg_match('/a:3:{i:0;s:\d+:"(\d+)";i:1;s:\d+:"([0-9a-f]+)";i:2;i:(\d+);}/', $_COOKIE[$cookie_name], $matches))
-		list(, $cookie['user_id'], $cookie['password_hash'], $cookie['expiration_time']) = $matches;
-
-	if ($cookie['user_id'] > 1)
+	// If the cookie is set and it matches the correct pattern, then read the values from it
+	if (isset($_COOKIE[$cookie_name]) && preg_match('/^(\d+)\|([0-9a-fA-F]+)\|(\d+)\|([0-9a-fA-F]+)$/', $_COOKIE[$cookie_name], $matches))
 	{
+		$cookie = array(
+			'user_id'			=> intval($matches[1]),
+			'password_hash' 	=> $matches[2],
+			'expiration_time'	=> intval($matches[3]),
+			'cookie_hash'		=> $matches[4],
+		);
+	}
+
+	// If it has a non-guest user, and hasn't expired
+	if (isset($cookie) && $cookie['user_id'] > 1 && $cookie['expiration_time'] > $now)
+	{
+		// If the cookie has been tampered with
+		if (forum_hmac($cookie['user_id'].'|'.$cookie['expiration_time'], $cookie_seed.'_cookie_hash') != $cookie['cookie_hash'])
+		{
+			$expire = $now + 31536000; // The cookie expires after a year
+			pun_setcookie(1, pun_hash(uniqid(rand(), true)), $expire);
+			set_default_user();
+
+			return;
+		}
+
 		// Check if there's a user with the user ID and password hash from the cookie
 		$result = $db->query('SELECT u.*, g.*, o.logged, o.idle FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id LEFT JOIN '.$db->prefix.'online AS o ON o.user_id=u.id WHERE u.id='.intval($cookie['user_id'])) or error('Unable to fetch user information', __FILE__, __LINE__, $db->error());
 		$pun_user = $db->fetch_assoc($result);
 
 		// If user authorisation failed
-		if (!isset($pun_user['id']) || md5($cookie_seed.$pun_user['password']) !== $cookie['password_hash'])
+		if (!isset($pun_user['id']) || forum_hmac($pun_user['password'], $cookie_seed.'_password_hash') !== $cookie['password_hash'])
 		{
 			$expire = $now + 31536000; // The cookie expires after a year
-			pun_setcookie(1, md5(uniqid(rand(), true)), $expire);
+			pun_setcookie(1, pun_hash(uniqid(rand(), true)), $expire);
 			set_default_user();
 
 			return;
 		}
 
 		// Send a new, updated cookie with a new expiration timestamp
-		$expire = (intval($cookie['expiration_time']) > $now + $pun_config['o_timeout_visit']) ? $now + 1209600 : $now + $pun_config['o_timeout_visit'];
+		$expire = ($cookie['expiration_time'] > $now + $pun_config['o_timeout_visit']) ? $now + 1209600 : $now + $pun_config['o_timeout_visit'];
 		pun_setcookie($pun_user['id'], $pun_user['password'], $expire);
 
 		// Set a default language if the user selected language no longer exists
@@ -246,6 +261,35 @@ function set_default_user()
 
 
 //
+// SHA1 HMAC with PHP 4 fallback
+//
+function forum_hmac($data, $key, $raw_output = false)
+{
+	if (function_exists('hash_hmac'))
+		return hash_hmac('sha1', $data, $key, $raw_output);
+
+	// If key size more than blocksize then we hash it once
+	if (strlen($key) > 64)
+		$key = sha1($key, true); // we have to use raw output here to match the standard
+
+	// Ensure we're padded to exactly one block boundary
+	$key = str_pad($key, 64, chr(0x00));
+
+	$hmac_opad = str_repeat(chr(0x5C), 64);
+	$hmac_ipad = str_repeat(chr(0x36), 64);
+
+	// Do inner and outer padding
+	for ($i = 0;$i < 64;$i++) {
+		$hmac_opad[$i] = $hmac_opad[$i] ^ $key[$i];
+		$hmac_ipad[$i] = $hmac_ipad[$i] ^ $key[$i];
+	}
+
+	// Finally, calculate the HMAC
+	return sha1($hmac_opad.sha1($hmac_ipad.$data, true), $raw_output);
+}
+
+
+//
 // Set a cookie, FluxBB style!
 // Wrapper for forum_setcookie
 //
@@ -253,7 +297,7 @@ function pun_setcookie($user_id, $password_hash, $expire)
 {
 	global $cookie_name, $cookie_seed;
 
-	forum_setcookie($cookie_name, serialize(array((string) $user_id, md5($cookie_seed.$password_hash), (int) $expire)), $expire);
+	forum_setcookie($cookie_name, $user_id.'|'.forum_hmac($password_hash, $cookie_seed.'_password_hash').'|'.$expire.'|'.forum_hmac($user_id.'|'.$expire, $cookie_seed.'_cookie_hash'), $expire);
 }
 
 
