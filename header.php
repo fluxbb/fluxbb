@@ -185,7 +185,7 @@ $tpl_main = str_replace('<pun_navlinks>','<div id="brdmenu" class="inbox">'."\n\
 
 
 // START SUBST - <pun_status>
-$page_statusinfo = $page_postsearches = $page_topicsearches = array();
+$page_statusinfo = $page_topicsearches = array();
 
 if ($pun_user['is_guest'])
 	$page_statusinfo = '<p>'.$lang_common['Not logged in'].'</p>';
@@ -210,8 +210,8 @@ else
 
 	if ($pun_user['g_read_board'] == '1' && $pun_user['g_search'] == '1')
 	{
-		$page_postsearches[] = '<a href="search.php?action=show_new" title="'.$lang_common['Show new posts'].'">'.$lang_common['New posts header'].'</a>';
-		$page_topicsearches[] = '<a href="search.php?action=show_replies" title="'.$lang_common['Show your topics'].'">'.$lang_common['Your topics'].'</a>';
+		$page_topicsearches[] = '<a href="search.php?action=show_replies" title="'.$lang_common['Show posted topics'].'">'.$lang_common['Posted topics'].'</a>';
+		$page_topicsearches[] = '<a href="search.php?action=show_new" title="'.$lang_common['Show new posts'].'">'.$lang_common['New posts header'].'</a>';
 	}
 }
 
@@ -237,13 +237,10 @@ else
 	$tpl_temp .= "\n\t\t\t".$page_statusinfo;
 
 // Generate quicklinks
-if (count($page_postsearches) || count($page_topicsearches))
+if (count($page_topicsearches))
 {
 	$tpl_temp .= "\n\t\t\t".'<ul class="conr">';
-	if (count($page_postsearches))
-		$tpl_temp .= "\n\t\t\t\t".'<li><span>'.$lang_common['Post searches'].' '.implode(' | ', $page_postsearches).'</span></li>';
-	if (count($page_topicsearches))
-		$tpl_temp .= "\n\t\t\t\t".'<li><span>'.$lang_common['Topic searches'].' '.implode(' | ', $page_topicsearches).'</span></li>';
+	$tpl_temp .= "\n\t\t\t\t".'<li><span>'.$lang_common['Topic searches'].' '.implode(' | ', $page_topicsearches).'</span></li>';
 	$tpl_temp .= "\n\t\t\t".'</ul>'."\n\t\t\t".'<div class="clearer"></div>';
 }
 
