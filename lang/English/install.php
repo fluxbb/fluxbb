@@ -96,6 +96,7 @@ $lang_install = array(
 'Moderator'						=>	'Moderator',
 'Guest'							=>	'Guest',
 'New member'					=>	'New member',
+'Members'						=>	'Members',
 'Member'						=>	'Member',
 'Announcement'					=>	'Enter your announcement here.',
 'Rules'							=>	'Enter your rules here',
