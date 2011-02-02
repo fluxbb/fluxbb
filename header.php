@@ -237,7 +237,7 @@ else
 	$tpl_temp .= "\n\t\t\t".$page_statusinfo;
 
 // Generate quicklinks
-if (count($page_topicsearches))
+if (!empty($page_topicsearches))
 {
 	$tpl_temp .= "\n\t\t\t".'<ul class="conr">';
 	$tpl_temp .= "\n\t\t\t\t".'<li><span>'.$lang_common['Topic searches'].' '.implode(' | ', $page_topicsearches).'</span></li>';
