@@ -9,7 +9,7 @@
 // The FluxBB version this script installs
 define('FORUM_VERSION', '1.4.4');
 
-define('FORUM_DB_REVISION', 10);
+define('FORUM_DB_REVISION', 11);
 define('FORUM_SI_REVISION', 2);
 define('FORUM_PARSER_REVISION', 2);
 
@@ -1640,6 +1640,7 @@ else
 		'o_maintenance_message'		=> "'".$db->escape($lang_install['Maintenance message'])."'",
 		'o_default_dst'				=> "'0'",
 		'o_feed_type'				=> "'2'",
+		'o_feed_ttl'				=> "'0'",
 		'p_message_bbcode'			=> "'1'",
 		'p_message_img_tag'			=> "'1'",
 		'p_message_all_caps'		=> "'1'",
