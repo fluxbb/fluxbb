@@ -383,9 +383,9 @@ if ($action == 'feed')
 				$forum_sql .= ' AND t.forum_id NOT IN('.implode(',', $nfids).')';
 		}
 
-		// Only attempt to cache if caching is enabled and no forums were included/excluded
-		if ($pun_config['o_feed_ttl'] > 0 && $forum_sql == '')
-			$cache_id = 'feed'.sha1($pun_user['g_id'].'|'.$lang_common['lang_identifier'].'|'.($order_posted ? '1' : '0'));
+		// Only attempt to cache if caching is enabled and we have all or a single forum
+		if ($pun_config['o_feed_ttl'] > 0 && ($forum_sql == '' || ($forum_name != '' && !isset($_GET['nfid']))))
+			$cache_id = 'feed'.sha1($pun_user['g_id'].'|'.$lang_common['lang_identifier'].'|'.($order_posted ? '1' : '0').($forum_name == '' ? '' : '|'.$fids[0]));
 
 		// Load cached feed
 		if (isset($cache_id) && file_exists(FORUM_CACHE_DIR.'cache_'.$cache_id.'.php'))
