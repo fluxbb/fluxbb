@@ -182,7 +182,7 @@ class DBLayer
 
 	function affected_rows()
 	{
-		return ($this->query_result) ? @sqlite_changes($this->query_result) : false;
+		return ($this->link_id) ? @sqlite_changes($this->link_id) : false;
 	}
 
 
