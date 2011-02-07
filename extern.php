@@ -287,8 +287,6 @@ if ($action == 'feed')
 	if ($show < 1 || $show > 50)
 		$show = 15;
 
-	$now = time();
-
 	// Was a topic ID supplied?
 	if (isset($_GET['tid']))
 	{
@@ -391,6 +389,7 @@ if ($action == 'feed')
 		if (isset($cache_id) && file_exists(FORUM_CACHE_DIR.'cache_'.$cache_id.'.php'))
 			include FORUM_CACHE_DIR.'cache_'.$cache_id.'.php';
 
+		$now = time();
 		if (!isset($feed) || $cache_expire < $now)
 		{
 			// Setup the feed
