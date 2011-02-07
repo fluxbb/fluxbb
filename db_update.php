@@ -174,9 +174,6 @@ if (!file_exists(PUN_ROOT.'style/'.$default_style.'.css'))
 // Start a session, used to queue up errors if duplicate users occur when converting from FluxBB v1.2.
 session_start();
 
-if (!isset($_SESSION['dupe_users']))
-	$_SESSION['dupe_users'] = array();
-
 //
 // Determines whether $str is UTF-8 encoded or not
 //
@@ -1401,6 +1398,9 @@ switch ($stage)
 	// Convert users
 	case 'conv_users':
 		$query_str = '?stage=preparse_posts';
+
+		if ($start_at == 0)
+			$_SESSION['dupe_users'] = array();
 
 		function _conv_users($cur_item, $old_charset)
 		{
