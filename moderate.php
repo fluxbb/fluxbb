@@ -156,6 +156,10 @@ if (isset($_GET['tid']))
 			if (@preg_match('/[^0-9,]/', $posts))
 				message($lang_common['Bad request']);
 
+			$move_to_forum = isset($_POST['move_to_forum']) ? intval($_POST['move_to_forum']) : 0;
+			if ($move_to_forum < 1)
+				message($lang_common['Bad request']);
+
 			// How many posts did we just split off?
 			$num_posts_splitted = substr_count($posts, ',') + 1;
 
@@ -181,7 +185,7 @@ if (isset($_GET['tid']))
 			$first_post_data = $db->fetch_assoc($result);
 
 			// Create the new topic
-			$db->query('INSERT INTO '.$db->prefix.'topics (poster, subject, posted, first_post_id, forum_id) VALUES (\''.$db->escape($first_post_data['poster']).'\', \''.$db->escape($new_subject).'\', '.$first_post_data['posted'].', '.$first_post_data['id'].', '.$fid.')') or error('Unable to create new topic', __FILE__, __LINE__, $db->error());
+			$db->query('INSERT INTO '.$db->prefix.'topics (poster, subject, posted, first_post_id, forum_id) VALUES (\''.$db->escape($first_post_data['poster']).'\', \''.$db->escape($new_subject).'\', '.$first_post_data['posted'].', '.$first_post_data['id'].', '.$move_to_forum.')') or error('Unable to create new topic', __FILE__, __LINE__, $db->error());
 			$new_tid = $db->insert_id();
 
 			// Move the posts to the new topic
@@ -198,9 +202,12 @@ if (isset($_GET['tid']))
 			$db->query('UPDATE '.$db->prefix.'topics SET last_post='.$last_post_data['posted'].', last_post_id='.$last_post_data['id'].', last_poster=\''.$db->escape($last_post_data['poster']).'\', num_replies='.($num_posts_splitted-1).' WHERE id='.$new_tid) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
 
 			update_forum($fid);
+			update_forum($move_to_forum);
 
 			redirect('viewtopic.php?id='.$new_tid, $lang_misc['Split posts redirect']);
 		}
+
+		$result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.redirect_url IS NULL ORDER BY c.disp_position, c.id, f.disp_position') or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Moderate']);
 		$focus_element = array('subject','new_subject');
@@ -218,6 +225,29 @@ if (isset($_GET['tid']))
 					<div class="infldset">
 						<input type="hidden" name="posts" value="<?php echo implode(',', array_map('intval', array_keys($posts))) ?>" />
 						<label class="required"><strong><?php echo $lang_misc['New subject'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="new_subject" size="80" maxlength="70" /><br /></label>
+						<label><?php echo $lang_misc['Move to'] ?>
+						<br /><select name="move_to_forum">
+<?php
+
+	$cur_category = 0;
+	while ($cur_forum = $db->fetch_assoc($result))
+	{
+		if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
+		{
+			if ($cur_category)
+				echo "\t\t\t\t\t\t\t".'</optgroup>'."\n";
+
+			echo "\t\t\t\t\t\t\t".'<optgroup label="'.pun_htmlspecialchars($cur_forum['cat_name']).'">'."\n";
+			$cur_category = $cur_forum['cid'];
+		}
+
+		echo "\t\t\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'"'.($fid == $cur_forum['fid'] ? ' selected="selected"' : '').'>'.pun_htmlspecialchars($cur_forum['forum_name']).'</option>'."\n";
+	}
+
+?>
+							</optgroup>
+						</select>
+						<br /></label>
 						<p><?php echo $lang_misc['Split posts comply'] ?></p>
 					</div>
 				</fieldset>
