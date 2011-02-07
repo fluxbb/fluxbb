@@ -169,8 +169,8 @@ if (isset($_GET['tid']))
 				message($lang_common['Bad request']);
 
 			// Verify that the move to forum ID is valid
-			$result = $db->query('SELECT post_topics FROM '.$db->prefix.'forum_perms WHERE group_id='.$pun_user['g_id'].' AND forum_id='.$move_to_forum) or error('Unable to fetch forum permissions', __FILE__, __LINE__, $db->error());
-			if ($db->num_rows($result) && $db->result($result) != '1')
+			$result = $db->query('SELECT 1 FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.group_id='.$pun_user['g_id'].' AND fp.forum_id='.$move_to_forum.') WHERE f.redirect_url IS NULL AND (fp.post_topics IS NULL OR fp.post_topics=1)') or error('Unable to fetch forum permissions', __FILE__, __LINE__, $db->error());
+			if (!$db->num_rows($result))
 				message($lang_common['Bad request']);
 
 			// Load the post.php language file
@@ -428,8 +428,8 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 			message($lang_common['Bad request']);
 
 		// Verify that the move to forum ID is valid
-		$result = $db->query('SELECT post_topics FROM '.$db->prefix.'forum_perms WHERE group_id='.$pun_user['g_id'].' AND forum_id='.$move_to_forum) or error('Unable to fetch forum permissions', __FILE__, __LINE__, $db->error());
-		if ($db->num_rows($result) && $db->result($result) != '1')
+		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.group_id='.$pun_user['g_id'].' AND fp.forum_id='.$move_to_forum.') WHERE f.redirect_url IS NULL AND (fp.post_topics IS NULL OR fp.post_topics=1)') or error('Unable to fetch forum permissions', __FILE__, __LINE__, $db->error());
+		if (!$db->num_rows($result))
 			message($lang_common['Bad request']);
 
 		// Delete any redirect topics if there are any (only if we moved/copied the topic back to where it was once moved from)
