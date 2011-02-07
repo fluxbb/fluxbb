@@ -1566,7 +1566,7 @@ switch ($stage)
 <div class="blockform">
 	<h2><span><?php echo $lang_update['Error converting users'] ?></span></h2>
 	<div class="box">
-		<form method="post" action="db_update.php?stage=conv_users_dupe">
+		<form method="post" action="db_update.php?stage=conv_users_dupe&amp;uid=<?php echo $uid ?>">
 			<input type="hidden" name="form_sent" value="1" />
 			<div class="inform">
 				<div class="forminfo">
