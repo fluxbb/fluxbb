@@ -1664,6 +1664,24 @@ function forum_list_langs()
 
 
 //
+// Generate a cache ID based on the last modification time for all stopwords files
+//
+function generate_stopwords_cache_id()
+{
+	$hash = array();
+
+	$files = glob(PUN_ROOT.'lang/*/stopwords.txt');
+	foreach ($files as $file)
+	{
+		$hash[] = $file;
+		$hash[] = filemtime($file);
+	}
+
+	return sha1(implode('|', $hash));
+}
+
+
+//
 // Fetch a list of available admin plugins
 //
 function forum_list_plugins($is_admin)
