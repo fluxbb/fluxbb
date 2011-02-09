@@ -283,7 +283,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			if ($author && $keywords)
 			{
 				$search_ids = array_intersect_assoc($keyword_results, $author_results);
-				$search_type = array('both', array($keywords, $author), $forum, isset($_GET['search_in']) ? $_GET['search_in'] : '');
+				$search_type = array('both', array($keywords, pun_trim($_GET['author'])), $forum, isset($_GET['search_in']) ? $_GET['search_in'] : '');
 			}
 			else if ($keywords)
 			{
@@ -293,7 +293,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			else
 			{
 				$search_ids = $author_results;
-				$search_type = array('author', $author, $forum, isset($_GET['search_in']) ? $_GET['search_in'] : '');
+				$search_type = array('author', pun_trim($_GET['author']), $forum, isset($_GET['search_in']) ? $_GET['search_in'] : '');
 			}
 
 			unset($keyword_results, $author_results);
