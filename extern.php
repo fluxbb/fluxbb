@@ -395,7 +395,7 @@ if ($action == 'feed')
 			// Setup the feed
 			$feed = array(
 				'title' 		=>	$pun_config['o_board_title'].$forum_name,
-				'link'			=>	get_base_url(true).'/index.php',
+				'link'			=>	'/index.php',
 				'description'	=>	sprintf($lang_common['RSS description'], $pun_config['o_board_title']),
 				'items'			=>	array(),
 				'type'			=>	'topics'
@@ -413,7 +413,7 @@ if ($action == 'feed')
 				$item = array(
 					'id'			=>	$cur_topic['id'],
 					'title'			=>	$cur_topic['subject'],
-					'link'			=>	get_base_url(true).'/viewtopic.php?id='.$cur_topic['id'].($order_posted ? '' : '&action=new'),
+					'link'			=>	'/viewtopic.php?id='.$cur_topic['id'].($order_posted ? '' : '&action=new'),
 					'description'	=>	$cur_topic['message'],
 					'author'		=>	array(
 						'name'	=> $order_posted ? $cur_topic['poster'] : $cur_topic['last_poster']
@@ -426,7 +426,7 @@ if ($action == 'feed')
 					if ($cur_topic['email_setting'] == '0' && !$pun_user['is_guest'])
 						$item['author']['email'] = $cur_topic['email'];
 
-					$item['author']['uri'] = get_base_url(true).'/profile.php?id='.$cur_topic['poster_id'];
+					$item['author']['uri'] = '/profile.php?id='.$cur_topic['poster_id'];
 				}
 				else if ($cur_topic['poster_email'] != '' && !$pun_user['is_guest'])
 					$item['author']['email'] = $cur_topic['poster_email'];
@@ -453,6 +453,17 @@ if ($action == 'feed')
 		// If we only want to show a few items but due to caching we have too many
 		if (count($feed['items']) > $show)
 			$feed['items'] = array_slice($feed['items'], 0, $show);
+
+		// Prepend the current base URL onto some links. Done after caching to handle http/https correctly
+		$feed['link'] = get_base_url(true).$feed['link'];
+
+		foreach ($feed['items'] as $item)
+		{
+			$item['link'] = get_base_url(true).$item['link'];
+
+			if (isset($item['author']['uri']))
+				$item['author']['uri'] = get_base_url(true).$item['author']['uri'];
+		}
 
 		$output_func = 'output_'.$type;
 		$output_func($feed);
