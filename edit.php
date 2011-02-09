@@ -60,9 +60,14 @@ if (isset($_POST['form_sent']))
 	if ($can_edit_subject)
 	{
 		$subject = pun_trim($_POST['req_subject']);
+		
+		if ($pun_config['o_censoring'] == '1')
+			$censored_subject = pun_trim(censor_words($subject));
 
 		if ($subject == '')
 			$errors[] = $lang_post['No subject'];
+		else if ($censored_subject == '')
+			$errors[] = $lang_post['No subject after censoring'];
 		else if (pun_strlen($subject) > 70)
 			$errors[] = $lang_post['Too long subject'];
 		else if ($pun_config['p_subject_all_caps'] == '0' && is_all_uppercase($subject) && !$pun_user['is_admmod'])
@@ -85,8 +90,19 @@ if (isset($_POST['form_sent']))
 		$message = preparse_bbcode($message, $errors);
 	}
 
-	if ($message == '')
-		$errors[] = $lang_post['No message'];
+	if (empty($errors))
+	{
+		if ($message == '')
+			$errors[] = $lang_post['No message'];
+		else if ($pun_config['o_censoring'] == '1')
+		{
+			// Censor message to see if that causes problems
+			$censored_message = pun_trim(censor_words($message));
+			
+			if ($censored_message == '')
+				$errors[] = $lang_post['No message after censoring'];
+		}
+	}
 
 	$hide_smilies = isset($_POST['hide_smilies']) ? '1' : '0';
 	$stick_topic = isset($_POST['stick_topic']) ? '1' : '0';
