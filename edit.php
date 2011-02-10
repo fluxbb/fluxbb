@@ -66,7 +66,7 @@ if (isset($_POST['form_sent']))
 
 		if ($subject == '')
 			$errors[] = $lang_post['No subject'];
-		else if ($censored_subject == '')
+		else if ($pun_config['o_censoring'] == '1' && $censored_subject == '')
 			$errors[] = $lang_post['No subject after censoring'];
 		else if (pun_strlen($subject) > 70)
 			$errors[] = $lang_post['Too long subject'];
