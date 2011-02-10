@@ -1169,11 +1169,19 @@ function maintenance_message()
 {
 	global $db, $pun_config, $lang_common, $pun_user;
 
+	// Send no-cache headers
+	header('Expires: Thu, 21 Jul 1977 07:30:00 GMT'); // When yours truly first set eyes on this world! :)
+	header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+	header('Cache-Control: post-check=0, pre-check=0', false);
+	header('Pragma: no-cache'); // For HTTP/1.0 compatibility
+
+	// Send the Content-type header in case the web server is setup to send something else
+	header('Content-type: text/html; charset=utf-8');
+
 	// Deal with newlines, tabs and multiple spaces
 	$pattern = array("\t", '  ', '  ');
 	$replace = array('&#160; &#160; ', '&#160; ', ' &#160;');
 	$message = str_replace($pattern, $replace, $pun_config['o_maintenance_message']);
-
 
 	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/maintenance.tpl'))
 	{
