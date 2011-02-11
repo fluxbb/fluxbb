@@ -270,7 +270,7 @@ function forum_hmac($data, $key, $raw_output = false)
 
 	// If key size more than blocksize then we hash it once
 	if (strlen($key) > 64)
-		$key = sha1($key, true); // we have to use raw output here to match the standard
+		$key = pack('H*', sha1($key)); // we have to use raw output here to match the standard
 
 	// Ensure we're padded to exactly one block boundary
 	$key = str_pad($key, 64, chr(0x00));
@@ -285,7 +285,13 @@ function forum_hmac($data, $key, $raw_output = false)
 	}
 
 	// Finally, calculate the HMAC
-	return sha1($hmac_opad.sha1($hmac_ipad.$data, true), $raw_output);
+	$hash = sha1($hmac_opad.pack('H*', sha1($hmac_ipad.$data)));
+
+	// If we want raw output then we need to pack the final result
+	if ($raw_output)
+		$hash = pack('H*', $hash);
+
+	return $hash;
 }
 
 
