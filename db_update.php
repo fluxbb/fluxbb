@@ -1584,7 +1584,7 @@ switch ($stage)
 				<fieldset>
 					<legend><?php echo pun_htmlspecialchars($cur_user['username']); ?></legend>
 					<div class="infldset">
-						<label class="required"><strong><?php echo $lang_update['New username'] ?> <span><?php echo $lang_update['required'] ?></span></strong><br /><input type="text" name="<?php echo 'dupe_users['.$id.']'; ?>" value="<?php if (isset($_POST['dupe_users'][$id])) echo pun_htmlspecialchars($_POST['dupe_users'][$id]); ?>" size="25" maxlength="25" /><br /></label>
+						<label class="required"><strong><?php echo $lang_update['New username'] ?> <span><?php echo $lang_update['Required'] ?></span></strong><br /><input type="text" name="<?php echo 'dupe_users['.$id.']'; ?>" value="<?php if (isset($_POST['dupe_users'][$id])) echo pun_htmlspecialchars($_POST['dupe_users'][$id]); ?>" size="25" maxlength="25" /><br /></label>
 					</div>
 				</fieldset>
 <?php if (!empty($errors[$id])): ?>				<div class="forminfo error-info">
