@@ -1682,9 +1682,12 @@ function forum_list_langs()
 //
 function generate_stopwords_cache_id()
 {
+	$files = glob(PUN_ROOT.'lang/*/stopwords.txt');
+	if ($files === false)
+		return 'cache_id_error';
+
 	$hash = array();
 
-	$files = glob(PUN_ROOT.'lang/*/stopwords.txt');
 	foreach ($files as $file)
 	{
 		$hash[] = $file;
