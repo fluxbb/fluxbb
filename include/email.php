@@ -10,6 +10,7 @@
 if (!defined('PUN'))
 	exit;
 
+require PUN_ROOT.'include/utf8/utils/ascii.php';
 
 //
 // Validate an email address
@@ -43,6 +44,18 @@ function is_banned_email($email)
 
 
 //
+// Only encode with base64, if there is at least one unicode character in the string
+//
+function encode_mail_text($str)
+{
+	if (utf8_is_ascii($str))
+		return $str;
+
+	return '=?UTF-8?B?'.base64_encode($str).'?=';
+}
+
+
+//
 // Wrapper for PHP's mail()
 //
 function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name = '')
@@ -62,15 +75,15 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 	$reply_to_name = pun_trim(preg_replace('#[\n\r:]+#s', '', str_replace('"', '', $reply_to_name)));
 
 	// Set up some headers to take advantage of UTF-8
-	$from = "=?UTF-8?B?".base64_encode($from_name)."?=".' <'.$from_email.'>';
-	$subject = "=?UTF-8?B?".base64_encode($subject)."?=";
+	$from = encode_mail_text($from_name).' <'.$from_email.'>';
+	$subject = encode_mail_text($subject);
 
 	$headers = 'From: '.$from."\r\n".'Date: '.gmdate('r')."\r\n".'MIME-Version: 1.0'."\r\n".'Content-transfer-encoding: 8bit'."\r\n".'Content-type: text/plain; charset=utf-8'."\r\n".'X-Mailer: FluxBB Mailer';
 
 	// If we specified a reply-to email, we deal with it here
 	if (!empty($reply_to_email))
 	{
-		$reply_to = "=?UTF-8?B?".base64_encode($reply_to_name)."?=".' <'.$reply_to_email.'>';
+		$reply_to = encode_mail_text($reply_to_name).' <'.$reply_to_email.'>';
 
 		$headers .= "\r\n".'Reply-To: '.$reply_to;
 	}
