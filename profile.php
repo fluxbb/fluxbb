@@ -1061,7 +1061,7 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 		}
 		if ($pun_user['is_admmod'] && $pun_config['o_topic_subscriptions'] == '1')
 			$quick_searches[] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$id.'">'.$lang_profile['Show subscriptions'].'</a>';
-		
+
 		if (!empty($quick_searches))
 			$posts_field .= (($posts_field != '') ? ' - ' : '').implode(' - ', $quick_searches);
 	}

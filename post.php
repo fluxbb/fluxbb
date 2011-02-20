@@ -148,7 +148,7 @@ if (isset($_POST['form_sent']))
 		{
 			// Censor message to see if that causes problems
 			$censored_message = pun_trim(censor_words($message));
-			
+
 			if ($censored_message == '')
 				$errors[] = $lang_post['No message after censoring'];
 		}

@@ -60,7 +60,7 @@ if (isset($_POST['form_sent']))
 	if ($can_edit_subject)
 	{
 		$subject = pun_trim($_POST['req_subject']);
-		
+
 		if ($pun_config['o_censoring'] == '1')
 			$censored_subject = pun_trim(censor_words($subject));
 
@@ -98,7 +98,7 @@ if (isset($_POST['form_sent']))
 		{
 			// Censor message to see if that causes problems
 			$censored_message = pun_trim(censor_words($message));
-			
+
 			if ($censored_message == '')
 				$errors[] = $lang_post['No message after censoring'];
 		}
