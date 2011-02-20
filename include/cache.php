@@ -251,7 +251,7 @@ function generate_users_info_cache()
 	$result = $db->query('SELECT id, username FROM '.$db->prefix.'users WHERE group_id!='.PUN_UNVERIFIED.' ORDER BY registered DESC LIMIT 1') or error('Unable to fetch newest registered user', __FILE__, __LINE__, $db->error());
 	$stats['last_user'] = $db->fetch_assoc($result);
 
-	// Output stopwords as PHP code
+	// Output users info as PHP code
 	$fh = @fopen(FORUM_CACHE_DIR.'cache_users_info.php', 'wb');
 	if (!$fh)
 		error('Unable to write users info cache file to cache directory. Please make sure PHP has write access to the directory \''.pun_htmlspecialchars(FORUM_CACHE_DIR).'\'', __FILE__, __LINE__);
