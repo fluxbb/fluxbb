@@ -50,7 +50,11 @@ $lang_install = array(
 'Info 3'						=>	'The address of the database server (example: localhost, db.myhost.com or 192.168.0.15). You can specify a custom port number if your database doesn\'t run on the default port (example: localhost:3580). For SQLite support, just enter anything or leave it at \'localhost\'.',
 'Database server hostname'		=>'Database server hostname',
 'Database enter name'			=>	'Enter the name of your database',
+<<<<<<< HEAD
 'Info 4'						=>	'The name of the database that FluxBB will be installed into. The database must exist. For SQLite, this is the relative path to the database file. If the SQLite database file does not exist, FluxBB will attempt to create it.',
+=======
+'Info 4'						=>	'The name of the database that FluxBB will be installed into. The database must exist. For SQLite, this is the relative path to the database file. For security reasons, it is highly recommended to place the SQLite database in a private (not web accessible) directory whenever possible. If the SQLite database file does not exist, FluxBB will attempt to create it.',
+>>>>>>> 3394392... Trying #301 again.
 'Database name'					=>	'Database name',
 'Database enter informations'	=>	'Enter your database username and password',
 'Database username'				=>	'Database username',
