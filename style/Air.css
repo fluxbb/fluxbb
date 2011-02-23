@@ -1185,7 +1185,6 @@ MAIN FORMS
 
 .pun #quickpost .txtarea {
 	padding-right: 12px;
-	padding-left: 200px;
 	position: relative;
 }
 
@@ -1205,15 +1204,11 @@ MAIN FORMS
 }
 
 .pun #quickpost .bblinks {
-	left: 18px;
-	line-height: 1.75em;
-	position:absolute;
-	top: 18px;
-	width: 12em;
+	padding-top: 0;
 }
 
 .pun #quickpost .bblinks li {
-	display: block;
+	display: inline;
 }
 
 .pun #login p.clearb {
