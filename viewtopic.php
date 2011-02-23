@@ -163,7 +163,7 @@ if ($pun_config['o_quickpost'] == '1' &&
 	require PUN_ROOT.'lang/'.$pun_user['language'].'/post.php';
 
 	$required_fields = array('req_email' => $lang_common['Email'], 'req_message' => $lang_common['Message']);
-	$focus_element = array('post');
+	$focus_element = array('quickpostform');
 	$quickpost = true;
 	
 	if (!$pun_user['is_guest'])
