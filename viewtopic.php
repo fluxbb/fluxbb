@@ -163,16 +163,7 @@ if ($pun_config['o_quickpost'] == '1' &&
 	require PUN_ROOT.'lang/'.$pun_user['language'].'/post.php';
 
 	$required_fields = array('req_email' => $lang_common['Email'], 'req_message' => $lang_common['Message']);
-	$focus_element = array('quickpostform');
 	$quickpost = true;
-	
-	if (!$pun_user['is_guest'])
-		$focus_element[] = 'req_message';
-	else
-	{
-		$required_fields['req_username'] = $lang_post['Guest name'];
-		$focus_element[] = 'req_username';
-	}
 }
 
 if (!$pun_user['is_guest'] && $pun_config['o_topic_subscriptions'] == '1')
