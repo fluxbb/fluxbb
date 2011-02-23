@@ -386,7 +386,7 @@ foreach ($alerts as $cur_alert)
 					<legend><?php echo $lang_install['Database hostname'] ?></legend>
 					<div class="infldset">
 						<p><?php echo $lang_install['Info 3'] ?></p>
-						<label class="required"><strong><?php echo $lang_install['Database server hostname'] ?> <span><?php echo $lang_install['Required'] ?></span></strong><br /><input type="text" name="req_db_host" value="<?php echo pun_htmlspecialchars($db_host) ?>" size="50" maxlength="100" /><br /></label>
+						<label class="required"><strong><?php echo $lang_install['Database server hostname'] ?> <span><?php echo $lang_install['Required'] ?></span></strong><br /><input type="text" name="req_db_host" value="<?php echo pun_htmlspecialchars($db_host) ?>" size="50" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -395,7 +395,7 @@ foreach ($alerts as $cur_alert)
 					<legend><?php echo $lang_install['Database enter name'] ?></legend>
 					<div class="infldset">
 						<p><?php echo $lang_install['Info 4'] ?></p>
-						<label class="required"><strong><?php echo $lang_install['Database name'] ?> <span><?php echo $lang_install['Required'] ?></span></strong><br /><input id="req_db_name" type="text" name="req_db_name" value="<?php echo pun_htmlspecialchars($db_name) ?>" size="30" maxlength="50" /><br /></label>
+						<label class="required"><strong><?php echo $lang_install['Database name'] ?> <span><?php echo $lang_install['Required'] ?></span></strong><br /><input id="req_db_name" type="text" name="req_db_name" value="<?php echo pun_htmlspecialchars($db_name) ?>" size="30" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -404,8 +404,8 @@ foreach ($alerts as $cur_alert)
 					<legend><?php echo $lang_install['Database enter informations'] ?></legend>
 					<div class="infldset">
 						<p><?php echo $lang_install['Info 5'] ?></p>
-						<label class="conl"><?php echo $lang_install['Database username'] ?><br /><input type="text" name="db_username" value="<?php echo pun_htmlspecialchars($db_username) ?>" size="30" maxlength="50" /><br /></label>
-						<label class="conl"><?php echo $lang_install['Database password'] ?><br /><input type="password" name="db_password" size="30" maxlength="50" /><br /></label>
+						<label class="conl"><?php echo $lang_install['Database username'] ?><br /><input type="text" name="db_username" value="<?php echo pun_htmlspecialchars($db_username) ?>" size="30" /><br /></label>
+						<label class="conl"><?php echo $lang_install['Database password'] ?><br /><input type="password" name="db_password" size="30" /><br /></label>
 						<div class="clearer"></div>
 					</div>
 				</fieldset>
