@@ -576,65 +576,44 @@ function generate_page_title($page_title, $p = null)
 
 
 //
-// Save array of tracked topics in cookie
+// Create a persistent session
 //
-function set_tracked_topics($tracked_topics)
+function forum_session_start()
 {
-	global $cookie_name, $cookie_path, $cookie_domain, $cookie_secure, $pun_config;
-
-	$cookie_data = '';
-	if (!empty($tracked_topics))
-	{
-		// Sort the arrays (latest read first)
-		arsort($tracked_topics['topics'], SORT_NUMERIC);
-		arsort($tracked_topics['forums'], SORT_NUMERIC);
-
-		// Homebrew serialization (to avoid having to run unserialize() on cookie data)
-		foreach ($tracked_topics['topics'] as $id => $timestamp)
-			$cookie_data .= 't'.$id.'='.$timestamp.';';
-		foreach ($tracked_topics['forums'] as $id => $timestamp)
-			$cookie_data .= 'f'.$id.'='.$timestamp.';';
-
-		// Enforce a 4048 byte size limit (4096 minus some space for the cookie name)
-		if (strlen($cookie_data) > 4048)
-		{
-			$cookie_data = substr($cookie_data, 0, 4048);
-			$cookie_data = substr($cookie_data, 0, strrpos($cookie_data, ';')).';';
-		}
+	global $cookie_name;
+	
+	$name = $cookie_name . '_session';
+	
+	if (!isset($_COOKIE[session_name()]) && isset($_COOKIE[$name])) {
+		// restoring session
+		forum_setcookie(session_name(), $_COOKIE[$name], 0);
+		$_COOKIE[session_name()] = $_COOKIE[$name];
 	}
+	
+	session_start();
 
-	forum_setcookie($cookie_name.'_track', $cookie_data, time() + $pun_config['o_timeout_visit']);
-	$_COOKIE[$cookie_name.'_track'] = $cookie_data; // Set it directly in $_COOKIE as well
+	if (!isset($_COOKIE[$name])) {
+		// creating persistent cookie
+		forum_setcookie($name, session_id(), time()+365*34*3600);
+	}
 }
 
 
 //
-// Extract array of tracked topics from cookie
+// Save array of tracked topics in session
+//
+function set_tracked_topics($tracked_topics)
+{
+	$_SESSION['tracked_topics'] = $tracked_topics;
+}
+
+
+//
+// Extract array of tracked topics from session
 //
 function get_tracked_topics()
 {
-	global $cookie_name;
-
-	$cookie_data = isset($_COOKIE[$cookie_name.'_track']) ? $_COOKIE[$cookie_name.'_track'] : false;
-	if (!$cookie_data)
-		return array('topics' => array(), 'forums' => array());
-
-	if (strlen($cookie_data) > 4048)
-		return array('topics' => array(), 'forums' => array());
-
-	// Unserialize data from cookie
-	$tracked_topics = array('topics' => array(), 'forums' => array());
-	$temp = explode(';', $cookie_data);
-	foreach ($temp as $t)
-	{
-		$type = substr($t, 0, 1) == 'f' ? 'forums' : 'topics';
-		$id = intval(substr($t, 1));
-		$timestamp = intval(substr($t, strpos($t, '=') + 1));
-		if ($id > 0 && $timestamp > 0)
-			$tracked_topics[$type][$id] = $timestamp;
-	}
-
-	return $tracked_topics;
+	return (isset($_SESSION['tracked_topics']) ? $_SESSION['tracked_topics'] : array('topics' => array(), 'forums' => array()));
 }
 
 

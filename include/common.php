@@ -175,6 +175,9 @@ check_bans();
 // Update online list
 update_users_online();
 
+// Load/start session
+forum_session_start();
+
 // Check to see if we logged in without a cookie being set
 if ($pun_user['is_guest'] && isset($_GET['login']))
 	message($lang_common['No cookie']);
