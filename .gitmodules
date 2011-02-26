@@ -1,3 +1,6 @@
 [submodule "include/utf8"]
 	path = include/utf8
 	url = git://github.com/fluxbb/utf8.git
+[submodule "include/cache"]
+	path = include/cache
+	url = git://github.com/fluxbb/cache.git
