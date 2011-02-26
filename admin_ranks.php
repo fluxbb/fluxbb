@@ -42,10 +42,7 @@ if (isset($_POST['add_rank']))
 	$db->query('INSERT INTO '.$db->prefix.'ranks (rank, min_posts) VALUES(\''.$db->escape($rank).'\', '.$min_posts.')') or error('Unable to add rank', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the ranks cache
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-		require PUN_ROOT.'include/cache.php';
-
-	generate_ranks_cache();
+	$cache->delete('ranks');
 
 	redirect('admin_ranks.php', $lang_admin_ranks['Rank added redirect']);
 }
@@ -75,10 +72,7 @@ else if (isset($_POST['update']))
 	$db->query('UPDATE '.$db->prefix.'ranks SET rank=\''.$db->escape($rank).'\', min_posts='.$min_posts.' WHERE id='.$id) or error('Unable to update rank', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the ranks cache
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-		require PUN_ROOT.'include/cache.php';
-
-	generate_ranks_cache();
+	$cache->delete('ranks');
 
 	redirect('admin_ranks.php', $lang_admin_ranks['Rank updated redirect']);
 }
@@ -94,10 +88,7 @@ else if (isset($_POST['remove']))
 	$db->query('DELETE FROM '.$db->prefix.'ranks WHERE id='.$id) or error('Unable to delete rank', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the ranks cache
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-		require PUN_ROOT.'include/cache.php';
-
-	generate_ranks_cache();
+	$cache->delete('ranks');
 
 	redirect('admin_ranks.php', $lang_admin_ranks['Rank removed redirect']);
 }

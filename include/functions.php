@@ -780,7 +780,7 @@ function censor_words($text)
 //
 function get_title($user)
 {
-	global $db, $pun_config, $pun_bans, $lang_common;
+	global $cache, $db, $pun_config, $pun_bans, $lang_common;
 	static $ban_list, $pun_ranks;
 
 	// If not already built in a previous call, build an array of lowercase banned usernames
@@ -793,18 +793,19 @@ function get_title($user)
 	}
 
 	// If not already loaded in a previous call, load the cached ranks
-	if ($pun_config['o_ranks'] == '1' && !defined('PUN_RANKS_LOADED'))
+	if ($pun_config['o_ranks'] == '1' && !isset($pun_ranks))
 	{
-		if (file_exists(FORUM_CACHE_DIR.'cache_ranks.php'))
-			include FORUM_CACHE_DIR.'cache_ranks.php';
-
-		if (!defined('PUN_RANKS_LOADED'))
+		$pun_ranks = $cache->get('ranks');
+		if ($pun_ranks === Cache::NOT_FOUND)
 		{
-			if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-				require PUN_ROOT.'include/cache.php';
+			$pun_ranks = array();
 
-			generate_ranks_cache();
-			require FORUM_CACHE_DIR.'cache_ranks.php';
+			// Get the rank list from the DB
+			$result = $db->query('SELECT * FROM '.$db->prefix.'ranks ORDER BY min_posts') or error('Unable to fetch rank list', __FILE__, __LINE__, $db->error());
+			while ($cur_rank = $db->fetch_assoc($result))
+				$pun_ranks[] = $cur_rank;
+
+			$cache->set('ranks', $pun_ranks);
 		}
 	}
 
