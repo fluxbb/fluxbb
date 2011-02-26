@@ -174,10 +174,10 @@ function authenticate_user($user, $password, $password_is_hash = false)
 //
 function get_current_url($max_length = 0)
 {
-	$protocol = (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') ? 'http://' : 'https://';
-	$port = (isset($_SERVER['SERVER_PORT']) && (($_SERVER['SERVER_PORT'] != '80' && $protocol == 'http://') || ($_SERVER['SERVER_PORT'] != '443' && $protocol == 'https://')) && strpos($_SERVER['HTTP_HOST'], ':') === false) ? ':'.$_SERVER['SERVER_PORT'] : '';
+	$protocol = get_current_protocol();
+	$port = (isset($_SERVER['SERVER_PORT']) && (($_SERVER['SERVER_PORT'] != '80' && $protocol == 'http') || ($_SERVER['SERVER_PORT'] != '443' && $protocol == 'https')) && strpos($_SERVER['HTTP_HOST'], ':') === false) ? ':'.$_SERVER['SERVER_PORT'] : '';
 
-	$url = urldecode($protocol.$_SERVER['HTTP_HOST'].$port.$_SERVER['REQUEST_URI']);
+	$url = urldecode($protocol.'://'.$_SERVER['HTTP_HOST'].$port.$_SERVER['REQUEST_URI']);
 
 	if (strlen($url) <= $max_length || $max_length == 0)
 		return $url;
@@ -186,6 +186,32 @@ function get_current_url($max_length = 0)
 	return null;
 }
 
+
+//
+// Fetch the current protocol in use - http or https
+//
+function get_current_protocol()
+{
+	$protocol = 'http';
+
+	// Check if the server is claiming to using HTTPS
+	if (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off')
+		$protocol = 'https';
+
+	// If we are behind a reverse proxy try to decide which protocol it is using
+	if (defined('FORUM_BEHIND_REVERSE_PROXY'))
+	{
+		// Check if we are behind a Microsoft based reverse proxy
+		if (!empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) != 'off')
+			$protocol = 'https';
+
+		// Check if we're behind a "proper" reverse proxy, and what protocol it's using
+		if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']))
+			$protocol = strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']);
+	}
+
+	return $protocol;
+}
 
 //
 // Fetch the base_url, optionally support HTTPS and HTTP
@@ -200,21 +226,8 @@ function get_base_url($support_https = false)
 
 	if (!isset($base_url))
 	{
-		$protocol = 'http';
-
-		// Check if the server is claiming to using HTTPS
-		if (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off')
-			$protocol = 'https';
-		// Check if we are behind a Microsoft based reverse proxy
-		else if (!empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) != 'off')
-			$protocol = 'https';
-
-		// Check if we're behind a "proper" reverse proxy, and what protocol it's using
-		if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']))
-			$protocol = strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']);
-
 		// Make sure we are using the correct protocol
-		$base_url = str_replace(array('http://', 'https://'), $protocol.'://', $pun_config['o_base_url']);
+		$base_url = str_replace(array('http://', 'https://'), get_current_protocol().'://', $pun_config['o_base_url']);
 	}
 
 	return $base_url;
@@ -1087,7 +1100,23 @@ function pun_hash($str)
 //
 function get_remote_address()
 {
-	return $_SERVER['REMOTE_ADDR'];
+	$remote_addr = $_SERVER['REMOTE_ADDR'];
+
+	// If we are behind a reverse proxy try to find the real users IP
+	if (defined('FORUM_BEHIND_REVERSE_PROXY'))
+	{
+		if (isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+		{
+			// The general format of the field is:
+			// X-Forwarded-For: client1, proxy1, proxy2
+			// where the value is a comma+space separated list of IP addresses, the left-most being the farthest downstream client,
+			// and each successive proxy that passed the request adding the IP address where it received the request from.
+			$remote_addr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+			$remote_addr = trim($remote_addr[0]);
+		}
+	}
+
+	return $remote_addr;
 }
 
 
