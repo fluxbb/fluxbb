@@ -79,6 +79,7 @@ function split_words($text, $idx)
 //
 function validate_search_word($word, $idx)
 {
+	global $cache;
 	static $stopwords;
 
 	// If the word is a keyword we don't want to index it, but we do want to be allowed to search it
@@ -87,16 +88,29 @@ function validate_search_word($word, $idx)
 
 	if (!isset($stopwords))
 	{
-		if (file_exists(FORUM_CACHE_DIR.'cache_stopwords.php'))
-			include FORUM_CACHE_DIR.'cache_stopwords.php';
+		$cache_id = generate_stopwords_cache_id();
 
-		if (!defined('PUN_STOPWORDS_LOADED'))
+		$stopwords = $cache->get('stopwords.'.$cache_id);
+		if ($stopwords === Cache::NOT_FOUND)
 		{
-			if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-				require PUN_ROOT.'include/cache.php';
+			$stopwords = array();
 
-			generate_stopwords_cache();
-			require FORUM_CACHE_DIR.'cache_stopwords.php';
+			$d = dir(PUN_ROOT.'lang');
+			while (($entry = $d->read()) !== false)
+			{
+				if ($entry{0} == '.')
+					continue;
+
+				if (is_dir(PUN_ROOT.'lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/stopwords.txt'))
+					$stopwords = array_merge($stopwords, file(PUN_ROOT.'lang/'.$entry.'/stopwords.txt'));
+			}
+			$d->close();
+
+			// Tidy up and filter the stopwords
+			$stopwords = array_map('pun_trim', $stopwords);
+			$stopwords = array_filter($stopwords);
+
+			$cache->set('stopwords.'.$cache_id, $stopwords);
 		}
 	}
 

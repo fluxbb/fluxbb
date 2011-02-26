@@ -88,42 +88,6 @@ function generate_quickjump_cache($group_id = false)
 
 
 //
-// Generate the stopwords cache PHP script
-//
-function generate_stopwords_cache()
-{
-	$stopwords = array();
-
-	$d = dir(PUN_ROOT.'lang');
-	while (($entry = $d->read()) !== false)
-	{
-		if ($entry{0} == '.')
-			continue;
-
-		if (is_dir(PUN_ROOT.'lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/stopwords.txt'))
-			$stopwords = array_merge($stopwords, file(PUN_ROOT.'lang/'.$entry.'/stopwords.txt'));
-	}
-	$d->close();
-
-	// Tidy up and filter the stopwords
-	$stopwords = array_map('pun_trim', $stopwords);
-	$stopwords = array_filter($stopwords);
-
-	// Output stopwords as PHP code
-	$fh = @fopen(FORUM_CACHE_DIR.'cache_stopwords.php', 'wb');
-	if (!$fh)
-		error('Unable to write stopwords cache file to cache directory. Please make sure PHP has write access to the directory \''.pun_htmlspecialchars(FORUM_CACHE_DIR).'\'', __FILE__, __LINE__);
-
-	fwrite($fh, '<?php'."\n\n".'$cache_id = \''.generate_stopwords_cache_id().'\';'."\n".'if ($cache_id != generate_stopwords_cache_id()) return;'."\n\n".'define(\'PUN_STOPWORDS_LOADED\', 1);'."\n\n".'$stopwords = '.var_export($stopwords, true).';'."\n\n".'?>');
-
-	fclose($fh);
-
-	if (function_exists('apc_delete_file'))
-		@apc_delete_file(FORUM_CACHE_DIR.'cache_stopwords.php');
-}
-
-
-//
 // Load some information about the latest registered users
 //
 function generate_users_info_cache()
