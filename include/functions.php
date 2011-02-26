@@ -200,9 +200,22 @@ function get_base_url($support_https = false)
 
 	if (!isset($base_url))
 	{
+		$protocol = 'http';
+
+		// Check if the server is claiming to using HTTPS
+		if (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off')
+			$protocol = 'https';
+		// Check if we are behind a Microsoft based reverse proxy
+		else if (!empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) != 'off')
+			$protocol = 'https';
+
+		// Check if we're behind a "proper" reverse proxy, and what protocol it's using
+		if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']))
+			$protocol = strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']);
+
 		// Make sure we are using the correct protocol
 		$protocol = (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') ? 'http://' : 'https://';
-		$base_url = str_replace(array('http://', 'https://'), $protocol, $pun_config['o_base_url']);
+		$base_url = str_replace(array('http://', 'https://'), $protocol.'://', $pun_config['o_base_url']);
 	}
 
 	return $base_url;
