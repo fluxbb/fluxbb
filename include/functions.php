@@ -214,7 +214,6 @@ function get_base_url($support_https = false)
 			$protocol = strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']);
 
 		// Make sure we are using the correct protocol
-		$protocol = (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') ? 'http://' : 'https://';
 		$base_url = str_replace(array('http://', 'https://'), $protocol.'://', $pun_config['o_base_url']);
 	}
 
