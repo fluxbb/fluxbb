@@ -1615,7 +1615,7 @@ function remove_bad_characters($array)
 		return array_map('remove_bad_characters', $array);
 
 	// Strip out any invalid characters
-	$array = utf8_bad_strip($array);
+	$array = utf8_bad_clean($array);
 
 	// Remove control characters
 	$array = preg_replace('/[\x{00}-\x{08}\x{0b}-\x{0c}\x{0e}-\x{1f}]/', '', $array);

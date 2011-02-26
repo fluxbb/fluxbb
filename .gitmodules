@@ -1,0 +1,3 @@
+[submodule "include/utf8"]
+	path = include/utf8
+	url = git://github.com/fluxbb/utf8.git
