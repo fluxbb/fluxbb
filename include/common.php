@@ -93,6 +93,10 @@ if (empty($cookie_name))
 if (!defined('FORUM_CACHE_DIR'))
 	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
 
+// Load the cache module
+require PUN_ROOT.'include/cache/cache.php';
+$cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport'); // TODO: Move this config into config.php
+
 // Define a few commonly used constants
 define('PUN_UNVERIFIED', 0);
 define('PUN_ADMIN', 1);
@@ -107,16 +111,17 @@ require PUN_ROOT.'include/dblayer/common_db.php';
 $db->start_transaction();
 
 // Load cached config
-if (file_exists(FORUM_CACHE_DIR.'cache_config.php'))
-	include FORUM_CACHE_DIR.'cache_config.php';
-
-if (!defined('PUN_CONFIG_LOADED'))
+$pun_config = $cache->get('config');
+if ($pun_config === Cache::NOT_FOUND)
 {
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-		require PUN_ROOT.'include/cache.php';
+	$pun_config = array();
 
-	generate_config_cache();
-	require FORUM_CACHE_DIR.'cache_config.php';
+	// Get the forum config from the DB
+	$result = $db->query('SELECT * FROM '.$db->prefix.'config') or error('Unable to fetch forum config', __FILE__, __LINE__, $db->error());
+	while ($cur_config_item = $db->fetch_row($result))
+		$pun_config[$cur_config_item[0]] = $cur_config_item[1];
+
+	$cache->set('config', $pun_config);
 }
 
 // Verify that we are running the proper database schema revision
@@ -158,16 +163,17 @@ if ($pun_config['o_maintenance'] && $pun_user['g_id'] > PUN_ADMIN && !defined('P
 	maintenance_message();
 
 // Load cached bans
-if (file_exists(FORUM_CACHE_DIR.'cache_bans.php'))
-	include FORUM_CACHE_DIR.'cache_bans.php';
-
-if (!defined('PUN_BANS_LOADED'))
+$pun_bans = $cache->get('bans');
+if ($pun_bans === Cache::NOT_FOUND)
 {
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-		require PUN_ROOT.'include/cache.php';
+	$pun_bans = array();
 
-	generate_bans_cache();
-	require FORUM_CACHE_DIR.'cache_bans.php';
+	// Get the ban list from the DB
+	$result = $db->query('SELECT * FROM '.$db->prefix.'bans') or error('Unable to fetch ban list', __FILE__, __LINE__, $db->error());
+	while ($cur_ban = $db->fetch_assoc($result))
+		$pun_bans[] = $cur_ban;
+
+	$cache->set('bans', $pun_bans);
 }
 
 // Check if current user is banned

@@ -12,60 +12,6 @@ if (!defined('PUN'))
 
 
 //
-// Generate the config cache PHP script
-//
-function generate_config_cache()
-{
-	global $db;
-
-	// Get the forum config from the DB
-	$result = $db->query('SELECT * FROM '.$db->prefix.'config', true) or error('Unable to fetch forum config', __FILE__, __LINE__, $db->error());
-	while ($cur_config_item = $db->fetch_row($result))
-		$output[$cur_config_item[0]] = $cur_config_item[1];
-
-	// Output config as PHP code
-	$fh = @fopen(FORUM_CACHE_DIR.'cache_config.php', 'wb');
-	if (!$fh)
-		error('Unable to write configuration cache file to cache directory. Please make sure PHP has write access to the directory \''.pun_htmlspecialchars(FORUM_CACHE_DIR).'\'', __FILE__, __LINE__);
-
-	fwrite($fh, '<?php'."\n\n".'define(\'PUN_CONFIG_LOADED\', 1);'."\n\n".'$pun_config = '.var_export($output, true).';'."\n\n".'?>');
-
-	fclose($fh);
-
-	if (function_exists('apc_delete_file'))
-		@apc_delete_file(FORUM_CACHE_DIR.'cache_config.php');
-}
-
-
-//
-// Generate the bans cache PHP script
-//
-function generate_bans_cache()
-{
-	global $db;
-
-	// Get the ban list from the DB
-	$result = $db->query('SELECT * FROM '.$db->prefix.'bans', true) or error('Unable to fetch ban list', __FILE__, __LINE__, $db->error());
-
-	$output = array();
-	while ($cur_ban = $db->fetch_assoc($result))
-		$output[] = $cur_ban;
-
-	// Output ban list as PHP code
-	$fh = @fopen(FORUM_CACHE_DIR.'cache_bans.php', 'wb');
-	if (!$fh)
-		error('Unable to write bans cache file to cache directory. Please make sure PHP has write access to the directory \''.pun_htmlspecialchars(FORUM_CACHE_DIR).'\'', __FILE__, __LINE__);
-
-	fwrite($fh, '<?php'."\n\n".'define(\'PUN_BANS_LOADED\', 1);'."\n\n".'$pun_bans = '.var_export($output, true).';'."\n\n".'?>');
-
-	fclose($fh);
-
-	if (function_exists('apc_delete_file'))
-		@apc_delete_file(FORUM_CACHE_DIR.'cache_bans.php');
-}
-
-
-//
 // Generate the ranks cache PHP script
 //
 function generate_ranks_cache()

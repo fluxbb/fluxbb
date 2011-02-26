@@ -262,10 +262,7 @@ else if (isset($_POST['add_edit_ban']))
 		$db->query('UPDATE '.$db->prefix.'bans SET username='.$ban_user.', ip='.$ban_ip.', email='.$ban_email.', message='.$ban_message.', expire='.$ban_expire.' WHERE id='.intval($_POST['ban_id'])) or error('Unable to update ban', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the bans cache
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-		require PUN_ROOT.'include/cache.php';
-
-	generate_bans_cache();
+	$cache->delete('bans');
 
 	if ($_POST['mode'] == 'edit')
 		redirect('admin_bans.php', $lang_admin_bans['Ban edited redirect']);
@@ -285,10 +282,7 @@ else if (isset($_GET['del_ban']))
 	$db->query('DELETE FROM '.$db->prefix.'bans WHERE id='.$ban_id) or error('Unable to delete ban', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the bans cache
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-		require PUN_ROOT.'include/cache.php';
-
-	generate_bans_cache();
+	$cache->delete('bans');
 
 	redirect('admin_bans.php', $lang_admin_bans['Ban removed redirect']);
 }

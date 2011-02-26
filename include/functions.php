@@ -341,7 +341,7 @@ function forum_setcookie($name, $value, $expire)
 //
 function check_bans()
 {
-	global $db, $pun_config, $lang_common, $pun_user, $pun_bans;
+	global $cache, $db, $pun_config, $lang_common, $pun_user, $pun_bans;
 
 	// Admins aren't affected
 	if ($pun_user['g_id'] == PUN_ADMIN || !$pun_bans)
@@ -398,12 +398,7 @@ function check_bans()
 
 	// If we removed any expired bans during our run-through, we need to regenerate the bans cache
 	if ($bans_altered)
-	{
-		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-			require PUN_ROOT.'include/cache.php';
-
-		generate_bans_cache();
-	}
+		$cache->delete('bans');
 }
 
 

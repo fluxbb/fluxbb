@@ -34,10 +34,7 @@ if (isset($_POST['form_sent']))
 	}
 
 	// Regenerate the config cache
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-		require PUN_ROOT.'include/cache.php';
-
-	generate_config_cache();
+	$cache->delete('config');
 
 	redirect('admin_permissions.php', $lang_admin_permissions['Perms updated redirect']);
 }

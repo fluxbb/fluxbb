@@ -325,10 +325,7 @@ else if (isset($_POST['set_default_group']))
 	$db->query('UPDATE '.$db->prefix.'config SET conf_value='.$group_id.' WHERE conf_name=\'o_default_user_group\'') or error('Unable to update board config', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the config cache
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-		require PUN_ROOT.'include/cache.php';
-
-	generate_config_cache();
+	$cache->delete('config');
 
 	redirect('admin_groups.php', $lang_admin_groups['Default group redirect']);
 }
