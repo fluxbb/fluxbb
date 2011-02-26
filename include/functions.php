@@ -748,27 +748,30 @@ function forum_clear_cache()
 //
 function censor_words($text)
 {
-	global $db;
-	static $search_for, $replace_with;
+	global $cache, $db;
+	static $censors;
 
 	// If not already built in a previous call, build an array of censor words and their replacement text
-	if (!isset($search_for))
+	if (!isset($censors))
 	{
-		if (file_exists(FORUM_CACHE_DIR.'cache_censoring.php'))
-			include FORUM_CACHE_DIR.'cache_censoring.php';
-
-		if (!defined('PUN_CENSOR_LOADED'))
+		$censors = $cache->get('censors');
+		if ($censors === Cache::NOT_FOUND)
 		{
-			if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-				require PUN_ROOT.'include/cache.php';
+			$censors = array();
 
-			generate_censoring_cache();
-			require FORUM_CACHE_DIR.'cache_censoring.php';
+			$result = $db->query('SELECT search_for, replace_with FROM '.$db->prefix.'censoring') or error('Unable to fetch censoring list', __FILE__, __LINE__, $db->error());
+			while ($cur_censor = $db->fetch_assoc($result))
+			{
+				$cur_censor['search_for'] = '/(?<=[^\p{L}\p{N}])('.str_replace('\*', '[\p{L}\p{N}]*?', preg_quote($cur_censor['search_for'], '/')).')(?=[^\p{L}\p{N}])/iu';
+				$censors[$cur_censor['search_for']] = $cur_censor['replace_with'];
+			}
+
+			$cache->set('censors', $censors);
 		}
 	}
 
-	if (!empty($search_for))
-		$text = substr(preg_replace($search_for, $replace_with, ' '.$text.' '), 1, -1);
+	if (!empty($censors))
+		$text = substr(preg_replace(array_keys($censors), array_values($censors), ' '.$text.' '), 1, -1);
 
 	return $text;
 }
