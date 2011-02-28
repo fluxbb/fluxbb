@@ -445,7 +445,7 @@ else if (isset($_POST['update_group_membership']))
 	$db->query('UPDATE '.$db->prefix.'users SET group_id='.$new_group_id.' WHERE id='.$id) or error('Unable to change user group', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the users info cache
-	$cache->clear('boardstats');
+	$cache->delete('boardstats');
 
 	$result = $db->query('SELECT g_moderator FROM '.$db->prefix.'groups WHERE g_id='.$new_group_id) or error('Unable to fetch group', __FILE__, __LINE__, $db->error());
 	$new_group_mod = $db->result($result);
@@ -604,7 +604,7 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 		delete_avatar($id);
 
 		// Regenerate the users info cache
-		$cache->clear('boardstats');
+		$cache->delete('boardstats');
 
 		redirect('index.php', $lang_profile['User delete redirect']);
 	}

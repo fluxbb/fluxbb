@@ -69,7 +69,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		$db->query('UPDATE '.$db->prefix.'users SET group_id='.$pun_config['o_default_user_group'].' WHERE id='.$cur_user['id']) or error('Unable to update user status', __FILE__, __LINE__, $db->error());
 
 		// Regenerate the users info cache
-		$cache->clear('boardstats');
+		$cache->delete('boardstats');
 	}
 
 	// Remove this users guest entry from the online list

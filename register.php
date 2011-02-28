@@ -220,7 +220,7 @@ if (isset($_POST['form_sent']))
 		}
 
 		// Regenerate the users info cache
-		$cache->clear('boardstats');
+		$cache->delete('boardstats');
 
 		pun_setcookie($new_uid, $password_hash, time() + $pun_config['o_timeout_visit']);
 
