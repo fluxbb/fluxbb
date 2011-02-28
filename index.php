@@ -171,18 +171,8 @@ if ($cur_category > 0)
 else
 	echo '<div id="idx0" class="block"><div class="box"><div class="inbox"><p>'.$lang_index['Empty board'].'</p></div></div></div>';
 
-// Collect some statistics from the database
-if (file_exists(FORUM_CACHE_DIR.'cache_users_info.php'))
-	include FORUM_CACHE_DIR.'cache_users_info.php';
-
-if (!defined('PUN_USERS_INFO_LOADED'))
-{
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-		require PUN_ROOT.'include/cache.php';
-
-	generate_users_info_cache();
-	require FORUM_CACHE_DIR.'cache_users_info.php';
-}
+// Collect some board statistics
+$stats = fetch_board_stats();
 
 $result = $db->query('SELECT SUM(num_topics), SUM(num_posts) FROM '.$db->prefix.'forums') or error('Unable to fetch topic/post count', __FILE__, __LINE__, $db->error());
 list($stats['total_topics'], $stats['total_posts']) = $db->fetch_row($result);

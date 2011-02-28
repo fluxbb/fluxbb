@@ -8,6 +8,31 @@
 
 
 //
+// Collect some board statistics
+//
+function fetch_board_stats()
+{
+	global $cache, $db;
+
+	$stats = $cache->get('boardstats');
+	if ($stats === Cache::NOT_FOUND)
+	{
+		$stats = array();
+
+		$result = $db->query('SELECT COUNT(id)-1 FROM '.$db->prefix.'users WHERE group_id!='.PUN_UNVERIFIED) or error('Unable to fetch total user count', __FILE__, __LINE__, $db->error());
+		$stats['total_users'] = $db->result($result);
+
+		$result = $db->query('SELECT id, username FROM '.$db->prefix.'users WHERE group_id!='.PUN_UNVERIFIED.' ORDER BY registered DESC LIMIT 1') or error('Unable to fetch newest registered user', __FILE__, __LINE__, $db->error());
+		$stats['last_user'] = $db->fetch_assoc($result);
+
+		$cache->set('boardstats', $stats);
+	}
+
+	return $stats;
+}
+
+
+//
 // Return current timestamp (with microseconds) as a float
 //
 function get_microtime()
@@ -725,21 +750,6 @@ function delete_post($post_id, $topic_id)
 	else
 		// Otherwise we just decrement the reply counter
 		$db->query('UPDATE '.$db->prefix.'topics SET num_replies='.$num_replies.' WHERE id='.$topic_id) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
-}
-
-
-//
-// Delete every .php file in the forum's cache directory
-//
-function forum_clear_cache()
-{
-	$d = dir(FORUM_CACHE_DIR);
-	while (($entry = $d->read()) !== false)
-	{
-		if (substr($entry, -4) == '.php')
-			@unlink(FORUM_CACHE_DIR.$entry);
-	}
-	$d->close();
 }
 
 

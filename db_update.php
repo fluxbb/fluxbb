@@ -1785,7 +1785,7 @@ foreach ($errors[$id] as $cur_error)
 			update_forum($row[0]);
 
 		// Empty the PHP cache
-		forum_clear_cache();
+		@$cache->clear();
 
 		// Delete the update lock file
 		@unlink(FORUM_CACHE_DIR.'db_update.lock');

@@ -220,10 +220,7 @@ if (isset($_POST['form_sent']))
 		}
 
 		// Regenerate the users info cache
-		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-			require PUN_ROOT.'include/cache.php';
-
-		generate_users_info_cache();
+		$cache->clear('boardstats');
 
 		pun_setcookie($new_uid, $password_hash, time() + $pun_config['o_timeout_visit']);
 
