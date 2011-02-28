@@ -116,19 +116,4 @@ function generate_users_info_cache()
 }
 
 
-//
-// Delete all feed caches
-//
-function clear_feed_cache()
-{
-	$d = dir(FORUM_CACHE_DIR);
-	while (($entry = $d->read()) !== false)
-	{
-		if (substr($entry, 0, 10) == 'cache_feed' && substr($entry, -4) == '.php')
-			@unlink(FORUM_CACHE_DIR.$entry);
-	}
-	$d->close();
-}
-
-
 define('FORUM_CACHE_FUNCTIONS_LOADED', true);

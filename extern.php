@@ -383,14 +383,13 @@ if ($action == 'feed')
 
 		// Only attempt to cache if caching is enabled and we have all or a single forum
 		if ($pun_config['o_feed_ttl'] > 0 && ($forum_sql == '' || ($forum_name != '' && !isset($_GET['nfid']))))
-			$cache_id = 'feed'.sha1($pun_user['g_id'].'|'.$lang_common['lang_identifier'].'|'.($order_posted ? '1' : '0').($forum_name == '' ? '' : '|'.$fids[0]));
-
-		// Load cached feed
-		if (isset($cache_id) && file_exists(FORUM_CACHE_DIR.'cache_'.$cache_id.'.php'))
-			include FORUM_CACHE_DIR.'cache_'.$cache_id.'.php';
+		{
+			$cache_id = 'feed.'.$pun_user['g_id'].'.'.$lang_common['lang_identifier'].'.'.($order_posted ? '1' : '0').($forum_name == '' ? '' : '.'.$fids[0]);
+			$feed = $cache->get($cache_id);
+		}
 
 		$now = time();
-		if (!isset($feed) || $cache_expire < $now)
+		if (!isset($feed) || $feed === Cache::NOT_FOUND)
 		{
 			// Setup the feed
 			$feed = array(
@@ -402,7 +401,7 @@ if ($action == 'feed')
 			);
 
 			// Fetch $show topics
-			$result = $db->query('SELECT t.id, t.poster, t.subject, t.posted, t.last_post, t.last_poster, p.message, p.hide_smilies, u.email_setting, u.email, p.poster_id, p.poster_email FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'posts AS p ON p.id='.($order_posted ? 't.first_post_id' : 't.last_post_id').' INNER JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.moved_to IS NULL'.$forum_sql.' ORDER BY '.($order_posted ? 't.posted' : 't.last_post').' DESC LIMIT '.(isset($cache_id) ? 50 : $show)) or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
+			$result = $db->query('SELECT t.id, t.poster, t.subject, t.posted, t.last_post, t.last_poster, p.message, p.hide_smilies, u.email_setting, u.email, p.poster_id, p.poster_email FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'posts AS p ON p.id='.($order_posted ? 't.first_post_id' : 't.last_post_id').' INNER JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.moved_to IS NULL'.$forum_sql.' ORDER BY '.($order_posted ? 't.posted' : 't.last_post').' DESC LIMIT 50') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
 			while ($cur_topic = $db->fetch_assoc($result))
 			{
 				if ($pun_config['o_censoring'] == '1')
@@ -436,18 +435,7 @@ if ($action == 'feed')
 
 			// Output feed as PHP code
 			if (isset($cache_id))
-			{
-				$fh = @fopen(FORUM_CACHE_DIR.'cache_'.$cache_id.'.php', 'wb');
-				if (!$fh)
-					error('Unable to write feed cache file to cache directory. Please make sure PHP has write access to the directory \''.pun_htmlspecialchars(FORUM_CACHE_DIR).'\'', __FILE__, __LINE__);
-
-				fwrite($fh, '<?php'."\n\n".'$feed = '.var_export($feed, true).';'."\n\n".'$cache_expire = '.($now + ($pun_config['o_feed_ttl'] * 60)).';'."\n\n".'?>');
-
-				fclose($fh);
-
-				if (function_exists('apc_delete_file'))
-					@apc_delete_file(FORUM_CACHE_DIR.'cache_'.$cache_id.'.php');
-			}
+				$cache->set($cache_id, $feed, $pun_config['o_feed_ttl'] * 60);
 		}
 
 		// If we only want to show a few items but due to caching we have too many

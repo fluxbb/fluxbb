@@ -206,12 +206,6 @@ if (isset($_POST['form_sent']))
 	// Regenerate the config cache
 	$cache->delete('config');
 
-	// Regenerate the feed cache
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-		require PUN_ROOT.'include/cache.php';
-
-	clear_feed_cache();
-
 	redirect('admin_options.php', $lang_admin_options['Options updated redirect']);
 }
 

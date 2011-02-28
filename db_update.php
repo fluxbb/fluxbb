@@ -100,6 +100,10 @@ if (empty($cookie_name))
 if (!defined('FORUM_CACHE_DIR'))
 	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
 
+// Load the cache module
+require PUN_ROOT.'include/cache/cache.php';
+$cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport'); // TODO: Move this config into config.php
+
 // Turn off PHP time limit
 @set_time_limit(0);
 
