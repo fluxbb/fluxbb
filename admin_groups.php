@@ -293,11 +293,7 @@ else if (isset($_POST['add_edit_group']))
 	}
 
 	// Regenerate the quick jump cache
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-		require PUN_ROOT.'include/cache.php';
-
-	$group_id = $_POST['mode'] == 'add' ? $new_group_id : intval($_POST['group_id']);
-	generate_quickjump_cache($group_id);
+	$cache->delete('quickjump');
 
 	if ($_POST['mode'] == 'edit')
 		redirect('admin_groups.php', $lang_admin_groups['Group edited redirect']);

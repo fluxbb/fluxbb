@@ -68,17 +68,60 @@ echo "\t\t\t".'<div class="conl">'."\n";
 // Display the "Jump to" drop list
 if ($pun_config['o_quickjump'] == '1')
 {
-	// Load cached quick jump
-	if (file_exists(FORUM_CACHE_DIR.'cache_quickjump_'.$pun_user['g_id'].'.php'))
-		include FORUM_CACHE_DIR.'cache_quickjump_'.$pun_user['g_id'].'.php';
-
-	if (!defined('PUN_QJ_LOADED'))
+	$quickjump = $cache->get('quickjump');
+	if ($quickjump === Cache::NOT_FOUND)
 	{
-		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-			require PUN_ROOT.'include/cache.php';
+		$quickjump = array();
 
-		generate_quickjump_cache($pun_user['g_id']);
-		require FORUM_CACHE_DIR.'cache_quickjump_'.$pun_user['g_id'].'.php';
+		// Generate the quick jump cache for all groups
+		$group_result = $db->query('SELECT g_id FROM '.$db->prefix.'groups WHERE g_read_board=1') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
+		while ($cur_group = $db->fetch_assoc($group_result))
+		{
+			$quickjump[$cur_group['g_id']] = array();
+
+			$result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.redirect_url FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$cur_group['g_id'].') WHERE fp.read_forum IS NULL OR fp.read_forum=1 ORDER BY c.disp_position, c.id, f.disp_position') or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
+			while ($cur_forum = $db->fetch_assoc($result))
+				$quickjump[$cur_group['g_id']][] = $cur_forum;
+		}
+
+		$cache->set('quickjump', $quickjump);
+	}
+
+	if (!empty($quickjump[$pun_user['g_id']]))
+	{
+?>
+				<form id="qjump" method="get" action="viewforum.php">
+					<div>
+						<label>
+							<span><?php echo $lang_common['Jump to'] ?><br /></span>
+							<select name="id" onchange="window.location=('viewforum.php?id='+this.options[this.selectedIndex].value)">
+<?php
+
+		$cur_category = 0;
+		foreach ($quickjump[$pun_user['g_id']] as $cur_forum)
+		{
+			if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
+			{
+				if ($cur_category)
+					echo "\t\t\t\t\t\t\t\t".'</optgroup>'."\n";
+
+				echo "\t\t\t\t\t\t".'<optgroup label="'.pun_htmlspecialchars($cur_forum['cat_name']).'">'."\n";
+				$cur_category = $cur_forum['cid'];
+			}
+
+			$redirect_tag = ($cur_forum['redirect_url'] != '') ? ' &gt;&gt;&gt;' : '';
+			echo "\t\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'"'. ($forum_id == $cur_forum['fid'] ? ' selected="selected"' : '').'>'.pun_htmlspecialchars($cur_forum['forum_name']).$redirect_tag.'</option>'."\n";
+		}
+
+?>
+								</optgroup>
+							</select>
+							<input type="submit" value="<?php echo $lang_common['Go'] ?>" accesskey="g" />
+						</label>
+					</div>
+				</form>
+<?php
+
 	}
 }
 
