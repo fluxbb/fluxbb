@@ -1030,26 +1030,6 @@ function random_key($len, $readable = false, $hash = false)
 
 
 //
-// If we are running pre PHP 4.3.0, we add our own implementation of file_get_contents
-//
-if (!function_exists('file_get_contents'))
-{
-	function file_get_contents($filename, $use_include_path = 0)
-	{
-		$data = '';
-
-		if ($fh = fopen($filename, 'rb', $use_include_path))
-		{
-			$data = fread($fh, filesize($filename));
-			fclose($fh);
-		}
-
-		return $data;
-	}
-}
-
-
-//
 // Make sure that HTTP_REFERER matches base_url/script
 //
 function confirm_referrer($script, $error_msg = false)
