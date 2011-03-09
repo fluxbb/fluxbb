@@ -121,6 +121,7 @@ function output_rss($feed)
 	echo '<?xml version="1.0" encoding="utf-8"?>'."\n";
 	echo '<rss version="2.0">'."\n";
 	echo "\t".'<channel>'."\n";
+	echo "\t\t".'<atom:link href="'.pun_htmlspecialchars(get_current_url()).'" rel="self" type="application/rss+xml" />'."\n";
 	echo "\t\t".'<title><![CDATA['.escape_cdata($feed['title']).']]></title>'."\n";
 	echo "\t\t".'<link>'.pun_htmlspecialchars($feed['link']).'</link>'."\n";
 	echo "\t\t".'<description><![CDATA['.escape_cdata($feed['description']).']]></description>'."\n";
