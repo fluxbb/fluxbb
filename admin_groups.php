@@ -465,7 +465,7 @@ generate_admin_menu('groups');
 	<div class="blockform">
 		<h2><span><?php echo $lang_admin_groups['Add groups head'] ?></span></h2>
 		<div class="box">
-			<form id="groups" method="post" action="admin_groups.php?action=foo">
+			<form id="groups" method="post" action="admin_groups.php">
 				<div class="inform">
 					<fieldset>
 						<legend><?php echo $lang_admin_groups['Add group subhead'] ?></legend>

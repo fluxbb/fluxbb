@@ -223,7 +223,7 @@ generate_admin_menu('options');
 	<div class="blockform">
 		<h2><span><?php echo $lang_admin_options['Options head'] ?></span></h2>
 		<div class="box">
-			<form method="post" action="admin_options.php?action=foo">
+			<form method="post" action="admin_options.php">
 				<p class="submittop"><input type="submit" name="save" value="<?php echo $lang_admin_common['Save changes'] ?>" /></p>
 				<div class="inform">
 					<input type="hidden" name="form_sent" value="1" />
