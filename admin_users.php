@@ -261,7 +261,7 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 
 	confirm_referrer('admin_users.php');
 	
-	$user_ids = is_array($_POST['users']) ? array_keys($_POST['users']) : explode(',', $_POST['users']);
+	$user_ids = (isset($_POST['users']) && is_array($_POST['users'])) ? array_keys($_POST['users']) : explode(',', $_POST['users']);
 	$user_ids = array_map('intval', $user_ids);
 	
 	// Delete invalid IDs
@@ -377,7 +377,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 
 	confirm_referrer('admin_users.php');
 	
-	$user_ids = is_array($_POST['users']) ? array_keys($_POST['users']) : explode(',', $_POST['users']);
+	$user_ids = (isset($_POST['users']) && is_array($_POST['users'])) ? array_keys($_POST['users']) : explode(',', $_POST['users']);
 	$user_ids = array_map('intval', $user_ids);
 	
 	// Delete invalid IDs
@@ -515,7 +515,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 
 	confirm_referrer('admin_users.php');
 	
-	$user_ids = is_array($_POST['users']) ? array_keys($_POST['users']) : explode(',', $_POST['users']);
+	$user_ids = (isset($_POST['users']) && is_array($_POST['users']) ) ? array_keys($_POST['users']) : explode(',', $_POST['users']);
 	$user_ids = array_map('intval', $user_ids);
 	
 	// Delete invalid IDs
@@ -532,7 +532,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 	// Also, moderators cannot ban other moderators
 	if ($pun_user['g_id'] != PUN_ADMIN)
 	{
-		$result = $db->query('SELECT COUNT(u.*) FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id WHERE g.g_moderator=1 AND u.id IN ('.implode(',', $user_ids).')') or error('Unable to fetch moderator group info', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id WHERE g.g_moderator=1 AND u.id IN ('.implode(',', $user_ids).')') or error('Unable to fetch moderator group info', __FILE__, __LINE__, $db->error());
 		if ($db->result($result) > 0)
 			message($lang_admin_users['No ban mods message']);
 	}
