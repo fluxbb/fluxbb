@@ -261,11 +261,16 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 
 	confirm_referrer('admin_users.php');
 	
-	$user_ids = (isset($_POST['users']) && is_array($_POST['users'])) ? array_keys($_POST['users']) : explode(',', $_POST['users']);
-	$user_ids = array_map('intval', $user_ids);
-	
-	// Delete invalid IDs
-	$user_ids = array_diff($user_ids, array(0, 1));
+	if (isset($_POST['users']))
+	{
+		$user_ids = is_array($_POST['users']) ? array_keys($_POST['users']) : explode(',', $_POST['users']);
+		$user_ids = array_map('intval', $user_ids);
+		
+		// Delete invalid IDs
+		$user_ids = array_diff($user_ids, array(0, 1));
+	}
+	else
+		$user_ids = array();
 	
 	if (empty($user_ids))
 		message($lang_admin_users['No users selected']);
@@ -377,11 +382,16 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 
 	confirm_referrer('admin_users.php');
 	
-	$user_ids = (isset($_POST['users']) && is_array($_POST['users'])) ? array_keys($_POST['users']) : explode(',', $_POST['users']);
-	$user_ids = array_map('intval', $user_ids);
-	
-	// Delete invalid IDs
-	$user_ids = array_diff($user_ids, array(0, 1));
+	if (isset($_POST['users']))
+	{
+		$user_ids = is_array($_POST['users']) ? array_keys($_POST['users']) : explode(',', $_POST['users']);
+		$user_ids = array_map('intval', $user_ids);
+		
+		// Delete invalid IDs
+		$user_ids = array_diff($user_ids, array(0, 1));
+	}
+	else
+		$user_ids = array();
 	
 	if (empty($user_ids))
 		message($lang_admin_users['No users selected']);
@@ -515,11 +525,16 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 
 	confirm_referrer('admin_users.php');
 	
-	$user_ids = (isset($_POST['users']) && is_array($_POST['users']) ) ? array_keys($_POST['users']) : explode(',', $_POST['users']);
-	$user_ids = array_map('intval', $user_ids);
-	
-	// Delete invalid IDs
-	$user_ids = array_diff($user_ids, array(0, 1));
+	if (isset($_POST['users']))
+	{
+		$user_ids = is_array($_POST['users']) ? array_keys($_POST['users']) : explode(',', $_POST['users']);
+		$user_ids = array_map('intval', $user_ids);
+		
+		// Delete invalid IDs
+		$user_ids = array_diff($user_ids, array(0, 1));
+	}
+	else
+		$user_ids = array();
 	
 	if (empty($user_ids))
 		message($lang_admin_users['No users selected']);
