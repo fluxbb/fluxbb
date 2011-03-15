@@ -59,8 +59,8 @@ if (!defined('PUN_DEBUG'))
 require PUN_ROOT.'include/functions.php';
 
 // Load UTF-8 functions
-require PUN_ROOT.'include/utf8/php-utf8.php';
-require PUN_ROOT.'include/utf8/functions/trim.php';
+require PUN_ROOT.'modules/utf8/php-utf8.php';
+require PUN_ROOT.'modules/utf8/functions/trim.php';
 
 // Strip out "bad" UTF-8 characters
 forum_remove_bad_characters();
@@ -101,7 +101,7 @@ if (!defined('FORUM_CACHE_DIR'))
 	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
 
 // Load the cache module
-require PUN_ROOT.'include/cache/cache.php';
+require PUN_ROOT.'modules/cache/cache.php';
 $cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport'); // TODO: Move this config into config.php
 
 // Turn off PHP time limit

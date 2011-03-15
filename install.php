@@ -53,7 +53,7 @@ if (!defined('FORUM_CACHE_DIR'))
 	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
 
 // Load the cache module
-require PUN_ROOT.'include/cache/cache.php';
+require PUN_ROOT.'modules/cache/cache.php';
 $cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport'); // TODO: Move this config into config.php
 
 // Make sure we are running at least MIN_PHP_VERSION
@@ -64,8 +64,8 @@ if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_
 require PUN_ROOT.'include/functions.php';
 
 // Load UTF-8 functions
-require PUN_ROOT.'include/utf8/php-utf8.php';
-require PUN_ROOT.'include/utf8/functions/trim.php';
+require PUN_ROOT.'modules/utf8/php-utf8.php';
+require PUN_ROOT.'modules/utf8/functions/trim.php';
 
 // Strip out "bad" UTF-8 characters
 forum_remove_bad_characters();

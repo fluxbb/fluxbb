@@ -10,7 +10,7 @@
 if (!defined('PUN'))
 	exit;
 
-require PUN_ROOT.'include/utf8/utils/ascii.php';
+require PUN_ROOT.'modules/utf8/utils/ascii.php';
 
 //
 // Validate an email address
