@@ -61,8 +61,9 @@ if (!defined('PUN'))
 // Record the start time (will be used to calculate the generation time for the page)
 $pun_start = get_microtime();
 
-// Make sure PHP reports all errors except E_NOTICE. FluxBB supports E_ALL, but a lot of scripts it may interact with, do not
-error_reporting(E_ALL ^ E_NOTICE);
+// Make sure PHP reports all errors when in debug mode
+if (defined('PUN_DEBUG'))
+	error_reporting(E_ALL);
 
 // Force POSIX locale (to prevent functions such as strtolower() from messing up UTF-8 strings)
 setlocale(LC_CTYPE, 'C');
