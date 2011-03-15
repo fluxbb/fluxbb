@@ -86,7 +86,7 @@ generate_admin_menu('censoring');
 	<div class="blockform">
 		<h2><span><?php echo $lang_admin_censoring['Censoring head'] ?></span></h2>
 		<div class="box">
-			<form id="censoring" method="post" action="admin_censoring.php?action=foo">
+			<form id="censoring" method="post" action="admin_censoring.php">
 				<div class="inform">
 					<fieldset>
 						<legend><?php echo $lang_admin_censoring['Add word subhead'] ?></legend>

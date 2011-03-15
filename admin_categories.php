@@ -164,7 +164,7 @@ generate_admin_menu('categories');
 	<div class="blockform">
 		<h2><span><?php echo $lang_admin_categories['Add categories head'] ?></span></h2>
 		<div class="box">
-			<form method="post" action="admin_categories.php?action=foo">
+			<form method="post" action="admin_categories.php">
 				<div class="inform">
 					<fieldset>
 						<legend><?php echo $lang_admin_categories['Add categories subhead'] ?></legend>
@@ -186,7 +186,7 @@ generate_admin_menu('categories');
 
 <?php if ($num_cats): ?>		<h2 class="block2"><span><?php echo $lang_admin_categories['Delete categories head'] ?></span></h2>
 		<div class="box">
-			<form method="post" action="admin_categories.php?action=foo">
+			<form method="post" action="admin_categories.php">
 				<div class="inform">
 					<fieldset>
 						<legend><?php echo $lang_admin_categories['Delete categories subhead'] ?></legend>
@@ -216,7 +216,7 @@ generate_admin_menu('categories');
 
 <?php if ($num_cats): ?>		<h2 class="block2"><span><?php echo $lang_admin_categories['Edit categories head'] ?></span></h2>
 		<div class="box">
-			<form method="post" action="admin_categories.php?action=foo">
+			<form method="post" action="admin_categories.php">
 				<div class="inform">
 					<fieldset>
 						<legend><?php echo $lang_admin_categories['Edit categories subhead'] ?></legend>
