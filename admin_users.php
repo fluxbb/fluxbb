@@ -280,7 +280,7 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 	
 	// Fetch all user groups
 	$all_groups = array();
-	$result = $db->query('SELECT g_id, g_title FROM '.$db->prefix.'groups WHERE g_id!='.PUN_GUEST.' ORDER BY g_title ASC') or error('Unable to fetch groups', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT g_id, g_title FROM '.$db->prefix.'groups WHERE g_id NOT IN ('.PUN_GUEST.','.PUN_ADMIN.') ORDER BY g_title ASC') or error('Unable to fetch groups', __FILE__, __LINE__, $db->error());
 	while ($row = $db->fetch_row($result))
 		$all_groups[$row[0]] = $row[1];
 
