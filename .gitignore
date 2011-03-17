@@ -1,5 +1,6 @@
 /cache/cache_*.php
 /cache/db_update.lock
+/modules/
 /include/user/*
 /img/avatars/*.png
 /img/avatars/*.jpg
