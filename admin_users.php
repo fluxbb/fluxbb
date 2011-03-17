@@ -275,6 +275,9 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 	if (empty($user_ids))
 		message($lang_admin_users['No users selected']);
 	
+	if (in_array($pun_user['id'], $user_ids))
+		message($lang_admin_users['No move self message']);
+	
 	// Fetch all user groups
 	$all_groups = array();
 	$result = $db->query('SELECT g_id, g_title FROM '.$db->prefix.'groups WHERE g_id!='.PUN_GUEST.' ORDER BY g_title ASC') or error('Unable to fetch groups', __FILE__, __LINE__, $db->error());
@@ -395,6 +398,9 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 	
 	if (empty($user_ids))
 		message($lang_admin_users['No users selected']);
+	
+	if (in_array($pun_user['id'], $user_ids))
+		message($lang_admin_users['No delete self message']);
 
 	// Are we trying to delete any admins?
 	$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'users WHERE id IN ('.implode(',', $user_ids).') AND group_id='.PUN_ADMIN) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
@@ -538,6 +544,9 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 	
 	if (empty($user_ids))
 		message($lang_admin_users['No users selected']);
+	
+	if (in_array($pun_user['id'], $user_ids))
+		message($lang_admin_users['No ban self message']);
 	
 	// Are we trying to ban any admins?
 	$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'users WHERE id IN ('.implode(',', $user_ids).') AND group_id='.PUN_ADMIN) or error('Unable to fetch group info', __FILE__, __LINE__, $db->error());
