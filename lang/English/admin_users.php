@@ -10,6 +10,7 @@ $lang_admin_users = array(
 // Actions: mass delete/ban etc.
 'No users selected'			=>	'No users selected.',
 'No move self message'		=>	'For security reasons, you are not allowed to move yourself to a different group using this function. If you want to demote yourself, please visit your user profile and change your group there.',
+'No move admins message'	=>	'For security reasons, you are not allowed to move multiple administrators to another group. If you want to move these administrators, you can do so on their respective user profiles.',
 'No delete self message'	=>	'For security reasons, you are not allowed to delete yourself using this function. If you really want to delete your user profile, please ask another administrator to demote you and then delete your profile.',
 'No delete admins message'	=>	'Administrators cannot be deleted. In order to delete administrators, you must first move them to a different user group.',
 'No ban self message'		=>	'For security reasons, you are not allowed to ban yourself. Who would want that anyway?',

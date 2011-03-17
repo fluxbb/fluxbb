@@ -278,6 +278,11 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 	if (in_array($pun_user['id'], $user_ids))
 		message($lang_admin_users['No move self message']);
 	
+	// Are we trying to batch move any admins?
+	$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'users WHERE id IN ('.implode(',', $user_ids).') AND group_id='.PUN_ADMIN) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	if ($db->result($result) > 0)
+		message($lang_admin_users['No move admins message']);
+	
 	// Fetch all user groups
 	$all_groups = array();
 	$result = $db->query('SELECT g_id, g_title FROM '.$db->prefix.'groups WHERE g_id NOT IN ('.PUN_GUEST.','.PUN_ADMIN.') ORDER BY g_title ASC') or error('Unable to fetch groups', __FILE__, __LINE__, $db->error());
