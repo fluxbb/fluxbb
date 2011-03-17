@@ -595,10 +595,10 @@ function set_tracked_topics($tracked_topics)
 		foreach ($tracked_topics['forums'] as $id => $timestamp)
 			$cookie_data .= 'f'.$id.'='.$timestamp.';';
 
-		// Enforce a 4048 byte size limit (4096 minus some space for the cookie name)
-		if (strlen($cookie_data) > 4048)
+		// Enforce a 4048 byte size limit (4096 minus some space for the cookie name and headers)
+		if (strlen($cookie_data) > 3744)
 		{
-			$cookie_data = substr($cookie_data, 0, 4048);
+			$cookie_data = substr($cookie_data, 0, 3744);
 			$cookie_data = substr($cookie_data, 0, strrpos($cookie_data, ';')).';';
 		}
 	}
