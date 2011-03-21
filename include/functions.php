@@ -19,11 +19,25 @@ function fetch_board_stats()
 	{
 		$stats = array();
 
-		$result = $db->query('SELECT COUNT(id)-1 FROM '.$db->prefix.'users WHERE group_id!='.PUN_UNVERIFIED) or error('Unable to fetch total user count', __FILE__, __LINE__, $db->error());
-		$stats['total_users'] = $db->result($result);
+		// Count total registered users
+		$query = new SelectQuery(array('total_users' => '(COUNT(u.id) - 1) AS total_users'), 'users AS u');
+		$query->where = 'u.group_id != :group_id';
 
-		$result = $db->query('SELECT id, username FROM '.$db->prefix.'users WHERE group_id!='.PUN_UNVERIFIED.' ORDER BY registered DESC LIMIT 1') or error('Unable to fetch newest registered user', __FILE__, __LINE__, $db->error());
-		$stats['last_user'] = $db->fetch_assoc($result);
+		$params = array(':group_id' => PUN_UNVERIFIED);
+
+		$stats = array_merge($stats, current($db->query($query, $params)));
+		unset ($query, $params);
+
+		// Fetch last user
+		$query = new SelectQuery(array('id' => 'u.id', 'username' => 'u.username'), 'users AS u');
+		$query->where = 'group_id != :group_id';
+		$query->order = array('registered' => 'u.registered DESC');
+		$query->limit = 1;
+
+		$params = array(':group_id' => PUN_UNVERIFIED);
+
+		$stats['last_user'] = current($db->query($query, $params));
+		unset ($query, $params);
 
 		$cache->set('boardstats', $stats);
 	}
@@ -75,11 +89,23 @@ function check_cookie(&$pun_user)
 		}
 
 		// Check if there's a user with the user ID and password hash from the cookie
-		$result = $db->query('SELECT u.*, g.*, o.logged, o.idle FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id LEFT JOIN '.$db->prefix.'online AS o ON o.user_id=u.id WHERE u.id='.intval($cookie['user_id'])) or error('Unable to fetch user information', __FILE__, __LINE__, $db->error());
-		$pun_user = $db->fetch_assoc($result);
+		$query = new SelectQuery(array('user' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'users AS u');
 
-		// If user authorisation failed
-		if (!isset($pun_user['id']) || forum_hmac($pun_user['password'], $cookie_seed.'_password_hash') !== $cookie['password_hash'])
+		$query->joins['g'] = new InnerJoin('groups AS g');
+		$query->joins['g']->on = 'u.group_id = g.g_id';
+
+		$query->joins['o'] = new LeftJoin('online AS o');
+		$query->joins['o']->on = 'o.user_id = u.id';
+
+		$query->where = 'u.id = :user_id';
+
+		$params = array(':user_id' => $cookie['user_id']);
+
+		$result = $db->query($query, $params);
+		unset ($query, $params);
+
+		// If the password is invalid
+		if (empty($result) || forum_hmac($result[0]['password'], $cookie_seed.'_password_hash') !== $cookie['password_hash'])
 		{
 			$expire = $now + 31536000; // The cookie expires after a year
 			pun_setcookie(1, pun_hash(uniqid(rand(), true)), $expire);
@@ -87,6 +113,9 @@ function check_cookie(&$pun_user)
 
 			return;
 		}
+
+		$pun_user = $result[0];
+		unset ($result);
 
 		// Send a new, updated cookie with a new expiration timestamp
 		$expire = ($cookie['expiration_time'] > $now + $pun_config['o_timeout_visit']) ? $now + 1209600 : $now + $pun_config['o_timeout_visit'];
@@ -113,21 +142,12 @@ function check_cookie(&$pun_user)
 			{
 				$pun_user['logged'] = $now;
 
-				// With MySQL/MySQLi/SQLite, REPLACE INTO avoids a user having two rows in the online table
-				switch ($db_type)
-				{
-					case 'mysql':
-					case 'mysqli':
-					case 'mysql_innodb':
-					case 'mysqli_innodb':
-					case 'sqlite':
-						$db->query('REPLACE INTO '.$db->prefix.'online (user_id, ident, logged) VALUES('.$pun_user['id'].', \''.$db->escape($pun_user['username']).'\', '.$pun_user['logged'].')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
-						break;
+				// With non-transactional DBMS REPLACE INTO avoids a user having two rows in the online table
+				$query = new ReplaceQuery(array('user_id' => ':user_id', 'ident' => ':ident', 'logged' => ':logged'), 'online', 'ident');
+				$params = array(':user_id' => $pun_user['id'], ':ident' => $pun_user['username'], ':logged' => $pun_user['logged']);
 
-					default:
-						$db->query('INSERT INTO '.$db->prefix.'online (user_id, ident, logged) SELECT '.$pun_user['id'].', \''.$db->escape($pun_user['username']).'\', '.$pun_user['logged'].' WHERE NOT EXISTS (SELECT 1 FROM '.$db->prefix.'online WHERE user_id='.$pun_user['id'].')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
-						break;
-				}
+				$db->query($query, $params);
+				unset ($query, $params);
 
 				// Reset tracked topics
 				set_tracked_topics(null);
@@ -137,12 +157,24 @@ function check_cookie(&$pun_user)
 				// Special case: We've timed out, but no other user has browsed the forums since we timed out
 				if ($pun_user['logged'] < ($now-$pun_config['o_timeout_visit']))
 				{
-					$db->query('UPDATE '.$db->prefix.'users SET last_visit='.$pun_user['logged'].' WHERE id='.$pun_user['id']) or error('Unable to update user visit data', __FILE__, __LINE__, $db->error());
+					$query = new UpdateQuery(array('last_visit' => ':logged'), 'users');
+					$query->where = 'id = :user_id';
+
+					$params = array(':logged' => $pun_user['logged'], ':user_id' => $pun_user['id']);
+
+					$db->query($query, $params);
+					unset ($query, $params);
+
 					$pun_user['last_visit'] = $pun_user['logged'];
 				}
 
-				$idle_sql = ($pun_user['idle'] == '1') ? ', idle=0' : '';
-				$db->query('UPDATE '.$db->prefix.'online SET logged='.$now.$idle_sql.' WHERE user_id='.$pun_user['id']) or error('Unable to update online list', __FILE__, __LINE__, $db->error());
+				$query = new UpdateQuery(array('logged' => ':now', 'idle' => '0'), 'online');
+				$query->where = 'user_id = :user_id';
+
+				$params = array(':now' => $now, ':user_id' => $pun_user['id']);
+
+				$db->query($query, $params);
+				unset ($query, $params);
 
 				// Update tracked topics with the current expire time
 				if (isset($_COOKIE[$cookie_name.'_track']))
@@ -269,35 +301,48 @@ function set_default_user()
 	$remote_addr = get_remote_address();
 
 	// Fetch guest user
-	$result = $db->query('SELECT u.*, g.*, o.logged, o.last_post, o.last_search FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id LEFT JOIN '.$db->prefix.'online AS o ON o.ident=\''.$remote_addr.'\' WHERE u.id=1') or error('Unable to fetch guest information', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
-		exit('Unable to fetch guest information. The table \''.$db->prefix.'users\' must contain an entry with id = 1 that represents anonymous users.');
+	$query = new SelectQuery(array('user' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'last_post' => 'o.last_post', 'last_search' => 'o.last_search'), 'users AS u');
 
-	$pun_user = $db->fetch_assoc($result);
+	$query->joins['g'] = new InnerJoin('groups AS g');
+	$query->joins['g']->on = 'u.group_id = g.g_id';
+
+	$query->joins['o'] = new LeftJoin('online AS o');
+	$query->joins['o']->on = 'o.ident = :ident';
+
+	$query->where = 'u.id = 1';
+
+	$params = array(':ident' => $remote_addr);
+
+	$result = $db->query($query, $params);
+	unset ($query, $params);
+
+	if (empty($result))
+		exit('Unable to fetch guest information. The table \'users\' must contain an entry with id = 1 that represents anonymous users.');
+
+	$pun_user = $result[0];
+	unset ($result);
 
 	// Update online list
 	if (!$pun_user['logged'])
 	{
 		$pun_user['logged'] = time();
 
-		// With MySQL/MySQLi/SQLite, REPLACE INTO avoids a user having two rows in the online table
-		switch ($db_type)
-		{
-			case 'mysql':
-			case 'mysqli':
-			case 'mysql_innodb':
-			case 'mysqli_innodb':
-			case 'sqlite':
-				$db->query('REPLACE INTO '.$db->prefix.'online (user_id, ident, logged) VALUES(1, \''.$db->escape($remote_addr).'\', '.$pun_user['logged'].')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
-				break;
+		// With non-transactional DBMS REPLACE INTO avoids a user having two rows in the online table
+		$query = new ReplaceQuery(array('user_id' => '1', 'ident' => ':ident', 'logged' => ':logged'), 'online', 'ident');
+		$params = array(':ident' => $remote_addr, ':logged' => $pun_user['logged']);
 
-			default:
-				$db->query('INSERT INTO '.$db->prefix.'online (user_id, ident, logged) SELECT 1, \''.$db->escape($remote_addr).'\', '.$pun_user['logged'].' WHERE NOT EXISTS (SELECT 1 FROM '.$db->prefix.'online WHERE ident=\''.$db->escape($remote_addr).'\')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
-				break;
-		}
+		$db->query($query, $params);
+		unset ($query, $params);
 	}
-	else
-		$db->query('UPDATE '.$db->prefix.'online SET logged='.time().' WHERE ident=\''.$db->escape($remote_addr).'\'') or error('Unable to update online list', __FILE__, __LINE__, $db->error());
+	else {
+		$query = new UpdateQuery(array('logged' => ':now'), 'online');
+		$query->where = 'ident = :ident';
+
+		$params = array(':now' => time(), ':ident' => $remote_addr);
+
+		$db->query($query, $params);
+		unset ($query, $params);
+	}
 
 	$pun_user['disp_topics'] = $pun_config['o_disp_topics_default'];
 	$pun_user['disp_posts'] = $pun_config['o_disp_posts_default'];
@@ -393,12 +438,19 @@ function check_bans()
 	$bans_altered = false;
 	$is_banned = false;
 
+	$query = new DeleteQuery('bans AS b');
+	$query->where = 'b.id = :ban_id';
+
 	foreach ($pun_bans as $cur_ban)
 	{
 		// Has this ban expired?
 		if ($cur_ban['expire'] != '' && $cur_ban['expire'] <= time())
 		{
-			$db->query('DELETE FROM '.$db->prefix.'bans WHERE id='.$cur_ban['id']) or error('Unable to delete expired ban', __FILE__, __LINE__, $db->error());
+			$params = array(':ban_id' => $cur_ban['id']);
+
+			$db->query($query, $params);
+			unset ($params);
+
 			$bans_altered = true;
 			continue;
 		}
@@ -429,10 +481,19 @@ function check_bans()
 
 		if ($is_banned)
 		{
-			$db->query('DELETE FROM '.$db->prefix.'online WHERE ident=\''.$db->escape($pun_user['username']).'\'') or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
+			$query = new DeleteQuery('online');
+			$query->where = 'ident = :username';
+
+			$params = array(':username' => $pun_user['username']);
+
+			$db->query($query, $params);
+			unset ($query, $params);
+
 			message($lang_common['Ban message'].' '.(($cur_ban['expire'] != '') ? $lang_common['Ban message 2'].' '.strtolower(format_time($cur_ban['expire'], true)).'. ' : '').(($cur_ban['message'] != '') ? $lang_common['Ban message 3'].'<br /><br /><strong>'.pun_htmlspecialchars($cur_ban['message']).'</strong><br /><br />' : '<br /><br />').$lang_common['Ban message 4'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
 		}
 	}
+
+	unset ($query);
 
 	// If we removed any expired bans during our run-through, we need to regenerate the bans cache
 	if ($bans_altered)
@@ -501,24 +562,62 @@ function update_users_online()
 	$now = time();
 
 	// Fetch all online list entries that are older than "o_timeout_online"
-	$result = $db->query('SELECT user_id, ident, logged, idle FROM '.$db->prefix.'online WHERE logged<'.($now-$pun_config['o_timeout_online'])) or error('Unable to fetch old entries from online list', __FILE__, __LINE__, $db->error());
-	while ($cur_user = $db->fetch_assoc($result))
+	$query = new SelectQuery(array('user_id' => 'o.user_id', 'ident' => 'o.ident', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'online AS o');
+	$query->where = 'logged < :logged';
+
+	$params = array(':logged' => $now - $pun_config['o_timeout_online']);
+
+	$result = $db->query($query, $params);
+	unset ($query, $params);
+
+	// Query for deleting an online entry
+	$query_delete = new DeleteQuery('online');
+	$query_delete->where = 'ident = :ident';
+
+	// Query for updating users last visit time
+	$query_update_user = new UpdateQuery(array('last_visit' => ':logged'), 'users');
+	$query_update_user->where = 'id = :user_id';
+
+	// Query for updating online idle
+	$query_update_online = new UpdateQuery(array('idle' => 1), 'online');
+	$query_update_online->where = 'user_id = :user_id';
+
+	foreach ($result as $cur_user)
 	{
 		// If the entry is a guest, delete it
 		if ($cur_user['user_id'] == '1')
-			$db->query('DELETE FROM '.$db->prefix.'online WHERE ident=\''.$db->escape($cur_user['ident']).'\'') or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
+		{
+			$params = array(':ident' => $cur_user['ident']);
+
+			$db->query($query_delete, $params);
+			unset ($params);
+		}
 		else
 		{
 			// If the entry is older than "o_timeout_visit", update last_visit for the user in question, then delete him/her from the online list
-			if ($cur_user['logged'] < ($now-$pun_config['o_timeout_visit']))
+			if ($cur_user['logged'] < ($now - $pun_config['o_timeout_visit']))
 			{
-				$db->query('UPDATE '.$db->prefix.'users SET last_visit='.$cur_user['logged'].' WHERE id='.$cur_user['user_id']) or error('Unable to update user visit data', __FILE__, __LINE__, $db->error());
-				$db->query('DELETE FROM '.$db->prefix.'online WHERE user_id='.$cur_user['user_id']) or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
+				$params = array(':logged' => $cur_user['logged'], ':user_id' => $cur_user['user_id']);
+
+				$db->query($query_update_user, $params);
+				unset ($params);
+
+				$params = array(':ident' => $cur_user['ident']);
+
+				$db->query($query_delete, $params);
+				unset ($params);
 			}
 			else if ($cur_user['idle'] == '0')
-				$db->query('UPDATE '.$db->prefix.'online SET idle=1 WHERE user_id='.$cur_user['user_id']) or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
+			{
+				$params = array(':user_id' => $cur_user['user_id']);
+
+				$db->query($query_update_online, $params);
+				unset ($params);
+			}
 		}
 	}
+
+	unset ($result, $query_delete, $query_update_user, $query_update_online);
 }
 
 
@@ -1908,7 +2007,7 @@ function display_saved_queries()
 	global $db, $lang_common;
 
 	// Get the queries so that we can print them out
-	$saved_queries = $db->get_saved_queries();
+	$saved_queries = $db->fetch_debug_queries();
 
 ?>
 
@@ -1926,15 +2025,15 @@ function display_saved_queries()
 			<tbody>
 <?php
 
-	$query_time_total = 0.0;
+	$query_time_total = 0;
 	foreach ($saved_queries as $cur_query)
 	{
-		$query_time_total += $cur_query[1];
+		$query_time_total += $cur_query['duration'];
 
 ?>
 				<tr>
-					<td class="tcl"><?php echo ($cur_query[1] != 0) ? $cur_query[1] : '&#160;' ?></td>
-					<td class="tcr"><?php echo pun_htmlspecialchars($cur_query[0]) ?></td>
+					<td class="tcl"><?php echo forum_number_format($cur_query['duration'], 5) ?></td>
+					<td class="tcr"><?php echo pun_htmlspecialchars($cur_query['sql']) ?></td>
 				</tr>
 <?php
 
@@ -1942,7 +2041,7 @@ function display_saved_queries()
 
 ?>
 				<tr>
-					<td class="tcl" colspan="2"><?php printf($lang_common['Total query time'], $query_time_total.' s') ?></td>
+					<td class="tcl" colspan="2"><?php printf($lang_common['Total query time'], forum_number_format($query_time_total, 5).' s') ?></td>
 				</tr>
 			</tbody>
 			</table>

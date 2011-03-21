@@ -20,11 +20,25 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/index.php';
 // Get list of forums and topics with new posts since last visit
 if (!$pun_user['is_guest'])
 {
-	$result = $db->query('SELECT t.forum_id, t.id, t.last_post FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.last_post>'.$pun_user['last_visit'].' AND t.moved_to IS NULL') or error('Unable to fetch new topics', __FILE__, __LINE__, $db->error());
+	$query = new SelectQuery(array('fid' => 't.forum_id AS fid', 'tid' => 't.id AS tid', 'last_post' => 't.last_post'), 'topics AS t');
+
+	$query->joins['f'] = new InnerJoin('forums AS f');
+	$query->joins['f']->on = 'f.id = t.forum_id';
+
+	$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
+	$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+
+	$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.last_post > :last_visit AND t.moved_to IS NULL';
+
+	$params = array(':group_id' => $pun_user['g_id'], ':last_visit' => $pun_user['last_visit']);
+
+	$result = $db->query($query, $params);
 
 	$new_topics = array();
-	while ($cur_topic = $db->fetch_assoc($result))
-		$new_topics[$cur_topic['forum_id']][$cur_topic['id']] = $cur_topic['last_post'];
+	foreach ($result as $cur_topic)
+		$new_topics[$cur_topic['fid']][$cur_topic['tid']] = $cur_topic['last_post'];
+
+	unset ($query, $params, $result);
 
 	$tracked_topics = get_tracked_topics();
 }
@@ -46,12 +60,26 @@ define('PUN_ACTIVE_PAGE', 'index');
 require PUN_ROOT.'header.php';
 
 // Print the categories and forums
-$result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.forum_desc, f.redirect_url, f.moderators, f.num_topics, f.num_posts, f.last_post, f.last_post_id, f.last_poster FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE fp.read_forum IS NULL OR fp.read_forum=1 ORDER BY c.disp_position, c.id, f.disp_position', true) or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
+$query = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'forum_desc' => 'f.forum_desc', 'redirect_url' => 'f.redirect_url', 'moderators' => 'f.moderators', 'num_topics' => 'f.num_topics', 'num_posts' => 'f.num_posts', 'last_post' => 'f.last_post', 'last_post_id' => 'f.last_post_id', 'last_poster' => 'f.last_poster'), 'categories AS c');
+
+$query->joins['f'] = new InnerJoin('forums AS f');
+$query->joins['f']->on = 'c.id = f.cat_id';
+
+$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
+$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+
+$query->where = 'fp.read_forum IS NULL OR fp.read_forum = 1';
+$query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
+
+$params = array(':group_id' => $pun_user['g_id']);
+
+$result = $db->query($query, $params);
 
 $cur_category = 0;
 $cat_count = 0;
 $forum_count = 0;
-while ($cur_forum = $db->fetch_assoc($result))
+
+foreach ($result as $cur_forum)
 {
 	$moderators = '';
 
@@ -165,6 +193,8 @@ while ($cur_forum = $db->fetch_assoc($result))
 
 }
 
+unset ($query, $params, $result);
+
 // Did we output any categories and forums?
 if ($cur_category > 0)
 	echo "\t\t\t".'</tbody>'."\n\t\t\t".'</table>'."\n\t\t".'</div>'."\n\t".'</div>'."\n".'</div>'."\n\n";
@@ -174,8 +204,11 @@ else
 // Collect some board statistics
 $stats = fetch_board_stats();
 
-$result = $db->query('SELECT SUM(num_topics), SUM(num_posts) FROM '.$db->prefix.'forums') or error('Unable to fetch topic/post count', __FILE__, __LINE__, $db->error());
-list($stats['total_topics'], $stats['total_posts']) = $db->fetch_row($result);
+$query = new SelectQuery(array('total_topics' => 'SUM(f.num_topics) AS total_topics', 'total_posts' => 'SUM(f.num_posts) AS total_posts'), 'forums AS f');
+$params = array();
+
+$stats = array_merge($stats, current($db->query($query, $params)));
+unset ($query, $params);
 
 if ($pun_user['g_view_users'] == '1')
 	$stats['newest_user'] = '<a href="profile.php?id='.$stats['last_user']['id'].'">'.pun_htmlspecialchars($stats['last_user']['username']).'</a>';
@@ -214,11 +247,18 @@ if (!empty($forum_actions))
 if ($pun_config['o_users_online'] == '1')
 {
 	// Fetch users online info and generate strings for output
+	$query = new SelectQuery(array('user_id' => 'o.user_id', 'ident' => 'o.ident'), 'online AS o');
+	$query->where = 'idle = 0';
+	$query->order = array('ident' => 'o.ident ASC');
+
+	$params = array();
+
+	$result = $db->query($query, $params);
+
 	$num_guests = 0;
 	$users = array();
-	$result = $db->query('SELECT user_id, ident FROM '.$db->prefix.'online WHERE idle=0 ORDER BY ident', true) or error('Unable to fetch online list', __FILE__, __LINE__, $db->error());
 
-	while ($pun_user_online = $db->fetch_assoc($result))
+	foreach ($result as $pun_user_online)
 	{
 		if ($pun_user_online['user_id'] > 1)
 		{
@@ -230,6 +270,8 @@ if ($pun_config['o_users_online'] == '1')
 		else
 			++$num_guests;
 	}
+
+	unset ($query, $params, $result);
 
 	$num_users = count($users);
 	echo "\t\t\t\t".'<dd><span>'.sprintf($lang_index['Users online'], '<strong>'.forum_number_format($num_users).'</strong>').'</span></dd>'."\n\t\t\t\t".'<dd><span>'.sprintf($lang_index['Guests online'], '<strong>'.forum_number_format($num_guests).'</strong>').'</span></dd>'."\n\t\t\t".'</dl>'."\n";

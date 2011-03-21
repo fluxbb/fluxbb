@@ -22,15 +22,32 @@ if ($id < 1)
 require PUN_ROOT.'lang/'.$pun_user['language'].'/forum.php';
 
 // Fetch some info about the forum
-if (!$pun_user['is_guest'])
-	$result = $db->query('SELECT f.forum_name, f.redirect_url, f.moderators, f.num_topics, f.sort_by, fp.post_topics, s.user_id AS is_subscribed FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_subscriptions AS s ON (f.id=s.forum_id AND s.user_id='.$pun_user['id'].') LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$id) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
-else
-	$result = $db->query('SELECT f.forum_name, f.redirect_url, f.moderators, f.num_topics, f.sort_by, fp.post_topics, 0 AS is_subscribed FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$id) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
+$query = new SelectQuery(array('forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url', 'moderators' => 'f.moderators', 'num_topics' => 'f.num_topics', 'sort_by' => 'f.sort_by', 'post_topics' => 'fp.post_topics', 'is_subscribed' => '0 AS is_subscribed'), 'forums AS f');
 
-if (!$db->num_rows($result))
+$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
+$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+
+$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id';
+
+$params = array(':group_id' => $pun_user['g_id'], ':forum_id' => $id);
+
+// If we aren't a guest then handle subscription checks
+if (!$pun_user['is_guest'])
+{
+	$query->fields['is_subscribed'] = 's.user_id AS is_subscribed';
+
+	$query->joins['s'] = new LeftJoin('forum_subscriptions AS s');
+	$query->joins['s']->on = 'f.id = s.forum_id AND s.user_id = :user_id';
+
+	$params[':user_id'] = $pun_user['id'];
+}
+
+$result = $db->query($query, $params);
+if (empty($result))
 	message($lang_common['Bad request']);
 
-$cur_forum = $db->fetch_assoc($result);
+$cur_forum = $result[0];
+unset ($query, $params, $result);
 
 // Is this a redirect forum? In that case, redirect!
 if ($cur_forum['redirect_url'] != '')
@@ -46,16 +63,16 @@ $is_admmod = ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1'
 switch ($cur_forum['sort_by'])
 {
 	case 0:
-		$sort_by = 'last_post DESC';
+		$sort_by = 't.last_post DESC';
 		break;
 	case 1:
-		$sort_by = 'posted DESC';
+		$sort_by = 't.posted DESC';
 		break;
 	case 2:
-		$sort_by = 'subject ASC';
+		$sort_by = 't.subject ASC';
 		break;
 	default:
-		$sort_by = 'last_post DESC';
+		$sort_by = 't.last_post DESC';
 		break;
 }
 
@@ -154,34 +171,48 @@ require PUN_ROOT.'header.php';
 <?php
 
 // Retrieve a list of topic IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
-$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE forum_id='.$id.' ORDER BY sticky DESC, '.$sort_by.', id DESC LIMIT '.$start_from.', '.$pun_user['disp_topics']) or error('Unable to fetch topic IDs', __FILE__, __LINE__, $db->error());
+$query = new SelectQuery(array('id' => 't.id'), 'topics AS t');
+$query->where = 't.forum_id = :forum_id';
+$query->order = array('sticky' => 't.sticky DESC', 'sort' => $sort_by, 'id' => 't.id DESC');
+$query->limit = $pun_user['disp_topics'];
+$query->offset = $start_from;
+
+$params = array(':forum_id' => $id);
+
+$topic_ids = $db->query($query, $params);
+unset ($query, $params);
 
 // If there are topics in this forum
-if ($db->num_rows($result))
+if (!empty($topic_ids))
 {
-	$topic_ids = array();
-	for ($i = 0;$cur_topic_id = $db->result($result, $i);$i++)
-		$topic_ids[] = $cur_topic_id;
+	$params = array();
 
-	if (empty($topic_ids))
-		error('The topic table and forum table seem to be out of sync!', __FILE__, __LINE__);
+	$count = count($topic_ids);
+	for ($i = 0;$i < $count;$i++)
+		$params[':t'.$i] = $topic_ids[$i]['id'];
 
 	// Fetch list of topics to display on this page
-	if ($pun_user['is_guest'] || $pun_config['o_show_dot'] == '0')
-	{
-		// Without "the dot"
-		$sql = 'SELECT id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topic_ids).') ORDER BY sticky DESC, '.$sort_by.', id DESC';
-	}
-	else
-	{
-		// With "the dot"
-		$sql = 'SELECT p.poster_id AS has_posted, t.id, t.subject, t.poster, t.posted, t.last_post, t.last_post_id, t.last_poster, t.num_views, t.num_replies, t.closed, t.sticky, t.moved_to FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'posts AS p ON t.id=p.topic_id AND p.poster_id='.$pun_user['id'].' WHERE t.id IN('.implode(',', $topic_ids).') GROUP BY t.id'.($db_type == 'pgsql' ? ', t.subject, t.poster, t.posted, t.last_post, t.last_post_id, t.last_poster, t.num_views, t.num_replies, t.closed, t.sticky, t.moved_to, p.poster_id' : '').' ORDER BY t.sticky DESC, t.'.$sort_by.', t.id DESC';
-	}
+	$query = new SelectQuery(array('has_posted' => '0 AS has_posted', 'tid' => 't.id', 'subject' => 't.subject', 'poster' => 't.poster', 'posted' => 't.posted', 'last_post' => 't.last_post', 'last_post_id' => 't.last_post_id', 'last_poster' => 't.last_poster', 'num_views' => 't.num_views', 'num_replies' => 't.num_replies', 'closed' => 't.closed', 'sticky' => 't.sticky', 'moved_to' => 't.moved_to'), 'topics AS t');
+	$query->where = 't.id IN ('.implode(', ', array_keys($params)).')';
+	$query->order = array('sticky' => 't.sticky DESC', 'sort' => $sort_by, 'id' => 't.id DESC');
 
-	$result = $db->query($sql) or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());
+	// With "the dot"
+	if ($pun_user['is_guest'] || $pun_config['o_show_dot'] == '1' && !$pun_user['is_guest'])
+	{
+		$query->fields['has_posted'] = 'p.poster_id AS has_posted';
+
+		$query->joins['p'] = new LeftJoin('posts AS p');
+		$query->joins['p']->on = 't.id = p.topic_id AND p.poster_id = :user_id';
+
+		$query->group = array('t.id', 't.subject', 't.poster', 't.posted', 't.last_post', 't.last_post_id', 't.last_poster', 't.num_views', 't.num_replies', 't.closed', 't.sticky', 't.moved_to', 'p.poster_id');
+
+		$params[':user_id'] = $pun_user['id'];
+	}
 
 	$topic_count = 0;
-	while ($cur_topic = $db->fetch_assoc($result))
+
+	$result = $db->query($query, $params);
+	foreach ($result as $cur_topic)
 	{
 		++$topic_count;
 		$status_text = array();
@@ -271,6 +302,8 @@ if ($db->num_rows($result))
 <?php
 
 	}
+
+	unset ($result, $query, $params);
 }
 else
 {

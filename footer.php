@@ -74,15 +74,34 @@ if ($pun_config['o_quickjump'] == '1')
 		$quickjump = array();
 
 		// Generate the quick jump cache for all groups
-		$group_result = $db->query('SELECT g_id FROM '.$db->prefix.'groups WHERE g_read_board=1') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
-		while ($cur_group = $db->fetch_assoc($group_result))
-		{
-			$quickjump[$cur_group['g_id']] = array();
+		$query = new SelectQuery(array('gid' => 'g.g_id'), 'groups AS g');
+		$query->where = 'g.g_read_board = 1';
 
-			$result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.redirect_url FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$cur_group['g_id'].') WHERE fp.read_forum IS NULL OR fp.read_forum=1 ORDER BY c.disp_position, c.id, f.disp_position') or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
-			while ($cur_forum = $db->fetch_assoc($result))
-				$quickjump[$cur_group['g_id']][] = $cur_forum;
+		$params = array();
+
+		$result = $db->query($query, $params);
+		unset ($query, $params);
+
+		$query_forums = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url'), 'categories AS c');
+
+		$query_forums->joins['f'] = new InnerJoin('forums AS f');
+		$query_forums->joins['f']->on = 'c.id = f.cat_id';
+
+		$query_forums->joins['fp'] = new LeftJoin('forum_perms AS fp');
+		$query_forums->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+
+		$query_forums->where = 'fp.read_forum IS NULL OR fp.read_forum = 1';
+		$query_forums->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
+
+		foreach ($result as $cur_group)
+		{
+			$params = array(':group_id' => $cur_group['g_id']);
+
+			$quickjump[$cur_group['g_id']] = $db->query($query_forums, $params);
+			unset ($params);
 		}
+
+		unset ($result, $query_forums);
 
 		$cache->set('quickjump', $quickjump);
 	}
@@ -172,7 +191,8 @@ if (defined('PUN_DEBUG'))
 
 	// Calculate script generation time
 	$time_diff = sprintf('%.3f', get_microtime() - $pun_start);
-	echo sprintf($lang_common['Querytime'], $time_diff, $db->get_num_queries());
+	$queries = $db->fetch_debug_queries();
+	echo sprintf($lang_common['Querytime'], $time_diff, count($queries));
 
 	if (function_exists('memory_get_usage'))
 	{
@@ -187,7 +207,7 @@ if (defined('PUN_DEBUG'))
 
 
 // End the transaction
-$db->end_transaction();
+$db->commit_transaction();
 
 // Display executed queries (if enabled)
 if (defined('PUN_SHOW_QUERIES'))
@@ -200,7 +220,7 @@ ob_end_clean();
 
 
 // Close the db connection (and free up any result data)
-$db->close();
+unset ($db);
 
 // Spit out the page
 exit($tpl_main);
