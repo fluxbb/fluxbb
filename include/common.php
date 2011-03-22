@@ -187,3 +187,6 @@ if (!defined('PUN_SEARCH_MIN_WORD'))
 	define('PUN_SEARCH_MIN_WORD', 3);
 if (!defined('PUN_SEARCH_MAX_WORD'))
 	define('PUN_SEARCH_MAX_WORD', 20);
+
+if (!defined('FORUM_MAX_COOKIE_SIZE'))
+	define('FORUM_MAX_COOKIE_SIZE', 4048);
