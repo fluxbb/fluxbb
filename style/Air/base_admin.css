@@ -113,10 +113,14 @@
 
 #punadmin #users1 th, #punadmin #users2 th, #punadmin #bans1 th {
 	font-weight: bold;
-	}
+}
 
 #users2 th, #bans1 th {
 	text-align: left;
+}
+
+#users2 th.tcmod {
+	text-align: center;
 }
 
 #users2 .tcl, #users2 .tc3, #users2 .tc5, #bans1 .tcl, #bans1 .tc3, #bans1 .tc5, #bans1 .tc6 {
