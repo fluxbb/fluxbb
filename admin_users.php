@@ -558,13 +558,10 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 	if ($db->result($result) > 0)
 		message($lang_admin_users['No ban admins message']);
 	
-	// Also, moderators cannot ban other moderators
-	if ($pun_user['g_id'] != PUN_ADMIN)
-	{
-		$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id WHERE g.g_moderator=1 AND u.id IN ('.implode(',', $user_ids).')') or error('Unable to fetch moderator group info', __FILE__, __LINE__, $db->error());
-		if ($db->result($result) > 0)
-			message($lang_admin_users['No ban mods message']);
-	}
+	// Also, we cannot ban moderators
+	$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id WHERE g.g_moderator=1 AND u.id IN ('.implode(',', $user_ids).')') or error('Unable to fetch moderator group info', __FILE__, __LINE__, $db->error());
+	if ($db->result($result) > 0)
+		message($lang_admin_users['No ban mods message']);
 	
 	if (isset($_POST['ban_users_comply']))
 	{

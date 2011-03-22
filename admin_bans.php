@@ -52,13 +52,12 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 			}
 		}
 
-		// Make sure we're not banning an admin
-		if (isset($group_id) && $group_id == PUN_ADMIN)
-			message(sprintf($lang_admin_bans['User is admin message'], pun_htmlspecialchars($ban_user)));
-
-		// Moderators cannot ban other moderators, either
-		if ($pun_user['g_id'] != PUN_ADMIN && isset($group_id))
+		// Make sure we're not banning an admin or moderator
+		if (isset($group_id))
 		{
+			if ($group_id == PUN_ADMIN)
+				message(sprintf($lang_admin_bans['User is admin message'], pun_htmlspecialchars($ban_user)));
+
 			$result = $db->query('SELECT g_moderator FROM '.$db->prefix.'groups WHERE g_id='.$group_id) or error('Unable to fetch group info', __FILE__, __LINE__, $db->error());
 			$is_moderator_group = $db->result($result);
 
@@ -193,6 +192,25 @@ else if (isset($_POST['add_edit_ban']))
 		message($lang_admin_bans['Must enter message']);
 	else if (strtolower($ban_user) == 'guest')
 		message($lang_admin_bans['Cannot ban guest message']);
+	
+	// Make sure we're not banning an admin or moderator
+	if (!empty($ban_user))
+	{
+		$result = $db->query('SELECT group_id FROM '.$db->prefix.'users WHERE username=\''.$db->escape($ban_user).'\' AND id>1') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+		if ($db->num_rows($result))
+		{
+			$group_id = $db->result($result);
+			
+			if ($group_id == PUN_ADMIN)
+				message(sprintf($lang_admin_bans['User is admin message'], pun_htmlspecialchars($ban_user)));
+	
+			$result = $db->query('SELECT g_moderator FROM '.$db->prefix.'groups WHERE g_id='.$group_id) or error('Unable to fetch group info', __FILE__, __LINE__, $db->error());
+			$is_moderator_group = $db->result($result);
+	
+			if ($is_moderator_group)
+				message(sprintf($lang_admin_bans['User is mod message'], pun_htmlspecialchars($ban_user)));
+		}
+	}
 
 	// Validate IP/IP range (it's overkill, I know)
 	if ($ban_ip != '')
