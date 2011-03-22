@@ -356,8 +356,8 @@ function check_bans()
 {
 	global $db, $pun_config, $lang_common, $pun_user, $pun_bans;
 
-	// Admins aren't affected
-	if ($pun_user['g_id'] == PUN_ADMIN || !$pun_bans)
+	// Admins and moderators aren't affected
+	if ($pun_user['is_admmod'] || !$pun_bans)
 		return;
 
 	// Add a dot or a colon (depending on IPv4/IPv6) at the end of the IP address to prevent banned address
