@@ -107,7 +107,7 @@ define('PUN_MEMBER', 4);
 
 // Load the DB module
 require PUN_ROOT.'modules/database/db.php';
-$db = new Database('mysql:dbname='.$db_name.';host='.$db_host, array('username' => $db_username, 'password' => $db_password, 'prefix' => $db_prefix, 'debug' => defined('PUN_DEBUG')), null); // TODO: Tidy the config
+$db = new Database('sqlite:'.$db_name, array('username' => $db_username, 'password' => $db_password, 'prefix' => $db_prefix, 'debug' => defined('PUN_DEBUG')), 'sqlite'); // TODO: Tidy the config
 
 // Start a transaction
 $db->start_transaction();

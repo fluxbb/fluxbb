@@ -24,15 +24,18 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	$form_password = pun_trim($_POST['req_password']);
 	$save_pass = isset($_POST['save_pass']);
 
-	$username_sql = ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb') ? 'username=\''.$db->escape($form_username).'\'' : 'LOWER(username)=LOWER(\''.$db->escape($form_username).'\')';
+	$query = new SelectQuery(array('user' => 'u.*'), 'users AS u');
+	$query->where = 'LOWER(u.username) = LOWER(:username)';
 
-	$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE '.$username_sql) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-	$cur_user = $db->fetch_assoc($result);
+	$params = array(':username' => $form_username);
+
+	$result = $db->query($query, $params);
+	unset ($query, $params);
 
 	$authorized = false;
-
-	if (!empty($cur_user['password']))
+	if (!empty($result))
 	{
+		$cur_user = $result[0];
 		$form_password_hash = pun_hash($form_password); // Will result in a SHA-1 hash
 
 		// If there is a salt in the database we have upgraded from 1.3-legacy though havent yet logged in
@@ -73,7 +76,13 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	}
 
 	// Remove this users guest entry from the online list
-	$db->query('DELETE FROM '.$db->prefix.'online WHERE ident=\''.$db->escape(get_remote_address()).'\'') or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
+	$query = new DeleteQuery('online');
+	$query->where = 'ident = :ident';
+
+	$params = array(':ident' => get_remote_address());
+
+	$db->query($query, $params);
+	unset ($query, $params);
 
 	$expire = ($save_pass == '1') ? time() + 1209600 : time() + $pun_config['o_timeout_visit'];
 	pun_setcookie($cur_user['id'], $form_password_hash, $expire);

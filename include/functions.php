@@ -1523,7 +1523,7 @@ function redirect($destination_url, $message)
 	ob_start();
 
 	// End the transaction
-	$db->end_transaction();
+	$db->commit_transaction();
 
 	// Display executed queries (if enabled)
 	if (defined('PUN_SHOW_QUERIES'))
@@ -1536,7 +1536,7 @@ function redirect($destination_url, $message)
 
 
 	// Close the db connection (and free up any result data)
-	$db->close();
+	unset ($db);
 
 	exit($tpl_redir);
 }

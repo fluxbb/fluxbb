@@ -240,10 +240,16 @@ else
 	{
 		if ($pun_config['o_report_method'] == '0' || $pun_config['o_report_method'] == '2')
 		{
-			$result_header = $db->query('SELECT 1 FROM '.$db->prefix.'reports WHERE zapped IS NULL') or error('Unable to fetch reports info', __FILE__, __LINE__, $db->error());
+			$query = new SelectQuery(array('indicator' => '1'), 'reports AS r');
+			$query->where = 'r.zapped IS NULL';
 
-			if ($db->result($result_header))
+			$params = array();
+
+			$result = $db->query($query, $params);
+			if (!empty($result))
 				$page_statusinfo[] = '<li class="reportlink"><span><strong><a href="admin_reports.php">'.$lang_common['New reports'].'</a></strong></span></li>';
+
+			unset ($result, $query, $params);
 		}
 
 		if ($pun_config['o_maintenance'] == '1')
