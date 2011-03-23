@@ -1033,7 +1033,7 @@ function paginate($num_pages, $cur_page, $link)
 //
 function message($message, $no_back_link = false)
 {
-	global $db, $lang_common, $pun_config, $pun_start, $tpl_main, $pun_user;
+	global $db, $cache, $lang_common, $pun_config, $pun_start, $tpl_main, $pun_user;
 
 	if (!defined('PUN_HEADER'))
 	{
@@ -1415,7 +1415,7 @@ function maintenance_message()
 //
 function redirect($destination_url, $message)
 {
-	global $db, $pun_config, $lang_common, $pun_user;
+	global $db, $cache, $pun_config, $lang_common, $pun_user;
 
 	// Prefix with base_url (unless there's already a valid URI)
 	if (strpos($destination_url, 'http://') !== 0 && strpos($destination_url, 'https://') !== 0 && strpos($destination_url, '/') !== 0)

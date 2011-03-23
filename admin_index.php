@@ -77,9 +77,13 @@ else
 
 
 // Get number of current visitors
-$result = $db->query('SELECT COUNT(user_id) FROM '.$db->prefix.'online WHERE idle=0') or error('Unable to fetch online count', __FILE__, __LINE__, $db->error());
-$num_online = $db->result($result);
+$query = new SelectQuery(array('num_users' => 'COUNT(o.user_id) AS num_users'), 'online AS o');
+$query->where = 'o.idle = 0';
 
+$params = array();
+
+$result = $db->query($query, $params);
+$num_online = $result[0]['num_users'];
 
 // Collect some additional info about MySQL
 if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')

@@ -29,7 +29,11 @@ if (isset($_POST['add_cat']))
 	if ($new_cat_name == '')
 		message($lang_admin_categories['Must enter name message']);
 
-	$db->query('INSERT INTO '.$db->prefix.'categories (cat_name) VALUES(\''.$db->escape($new_cat_name).'\')') or error('Unable to create category', __FILE__, __LINE__, $db->error());
+	$query = new InsertQuery(array('cat_name' => ':cat_name'), 'categories');
+	$params = array(':cat_name' => $new_cat_name);
+
+	$db->query($query, $params);
+	unset ($query, $params);
 
 	redirect('admin_categories.php', $lang_admin_categories['Category added redirect']);
 }
@@ -127,6 +131,9 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 	if (empty($categories))
 		message($lang_common['Bad request']);
 
+	$query = new UpdateQuery(array('cat_name' => ':name', 'disp_position' => ':position'), 'categories');
+	$query->where = 'id = :cid';
+
 	foreach ($categories as $cat_id => $cur_cat)
 	{
 		$cur_cat['name'] = pun_trim($cur_cat['name']);
@@ -138,8 +145,13 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 		if ($cur_cat['order'] == '' || preg_match('/[^0-9]/', $cur_cat['order']))
 			message($lang_admin_categories['Must enter integer message']);
 
-		$db->query('UPDATE '.$db->prefix.'categories SET cat_name=\''.$db->escape($cur_cat['name']).'\', disp_position='.$cur_cat['order'].' WHERE id='.intval($cat_id)) or error('Unable to update category', __FILE__, __LINE__, $db->error());
+		$params = array(':name' => $cur_cat['name'], ':position' => $cur_cat['order'], ':cid' => $cat_id);
+
+		$db->query($query, $params);
+		unset ($params);
 	}
+
+	unset ($query);
 
 	// Regenerate the quick jump cache
 	$cache->delete('quickjump');
@@ -148,11 +160,13 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 }
 
 // Generate an array with all categories
-$result = $db->query('SELECT id, cat_name, disp_position FROM '.$db->prefix.'categories ORDER BY disp_position') or error('Unable to fetch category list', __FILE__, __LINE__, $db->error());
-$num_cats = $db->num_rows($result);
+$query = new SelectQuery(array('cid' => 'c.id', 'name' => 'c.cat_name', 'cposition' => 'c.disp_position'), 'categories AS c');
+$query->order_by = array('cposition' => 'c.disp_position ASC');
 
-for ($i = 0; $i < $num_cats; ++$i)
-	$cat_list[] = $db->fetch_assoc($result);
+$params = array();
+
+$cat_list = $db->query($query, $params);
+unset ($query, $params);
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Categories']);
 define('PUN_ACTIVE_PAGE', 'admin');
@@ -184,7 +198,7 @@ generate_admin_menu('categories');
 			</form>
 		</div>
 
-<?php if ($num_cats): ?>		<h2 class="block2"><span><?php echo $lang_admin_categories['Delete categories head'] ?></span></h2>
+<?php if (!empty($cat_list)): ?>		<h2 class="block2"><span><?php echo $lang_admin_categories['Delete categories head'] ?></span></h2>
 		<div class="box">
 			<form method="post" action="admin_categories.php">
 				<div class="inform">
@@ -214,7 +228,7 @@ generate_admin_menu('categories');
 		</div>
 <?php endif; ?>
 
-<?php if ($num_cats): ?>		<h2 class="block2"><span><?php echo $lang_admin_categories['Edit categories head'] ?></span></h2>
+<?php if (!empty($cat_list)): ?>		<h2 class="block2"><span><?php echo $lang_admin_categories['Edit categories head'] ?></span></h2>
 		<div class="box">
 			<form method="post" action="admin_categories.php">
 				<div class="inform">

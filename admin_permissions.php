@@ -26,12 +26,22 @@ if (isset($_POST['form_sent']))
 
 	$form = array_map('intval', $_POST['form']);
 
+	$query = new UpdateQuery(array('conf_value' => ':value'), 'config');
+	$query->where = 'conf_name = :name';
+
 	foreach ($form as $key => $input)
 	{
 		// Only update values that have changed
 		if (array_key_exists('p_'.$key, $pun_config) && $pun_config['p_'.$key] != $input)
-			$db->query('UPDATE '.$db->prefix.'config SET conf_value='.$input.' WHERE conf_name=\'p_'.$db->escape($key).'\'') or error('Unable to update board config', __FILE__, __LINE__, $db->error());
+		{
+			$params = array(':name' => 'p_'.$key, ':value' => $input);
+
+			$db->query($query, $params);
+			unset ($params);
+		}
 	}
+
+	unset ($query);
 
 	// Regenerate the config cache
 	$cache->delete('config');
