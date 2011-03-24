@@ -250,14 +250,13 @@ else
 
 				$result = $db->query($query, $params);
 				$num_reports = $result[0]['num_reports'];
+				unset ($result, $query, $params);
 
 				$cache->set('num_reports', $num_reports);
 			}
 
 			if ($num_reports > 0)
 				$page_statusinfo[] = '<li class="reportlink"><span><strong><a href="admin_reports.php">'.$lang_common['New reports'].'</a></strong></span></li>';
-
-			unset ($result, $query, $params);
 		}
 
 		if ($pun_config['o_maintenance'] == '1')
