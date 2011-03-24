@@ -426,8 +426,8 @@ function check_bans()
 {
 	global $cache, $db, $pun_config, $lang_common, $pun_user, $pun_bans;
 
-	// Admins aren't affected
-	if ($pun_user['g_id'] == PUN_ADMIN || !$pun_bans)
+	// Admins and moderators aren't affected
+	if ($pun_user['is_admmod'] || !$pun_bans)
 		return;
 
 	// Add a dot or a colon (depending on IPv4/IPv6) at the end of the IP address to prevent banned address
@@ -532,7 +532,7 @@ function check_username($username, $exclude_id = null)
 	// Check that the username (or a too similar username) is not already registered
 	$query = ($exclude_id) ? ' AND id!='.$exclude_id : '';
 
-	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(preg_replace('/[^\p{L}\p{N}]/u', '', $username)).'\')) AND id>1'.$query) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(ucp_preg_replace('/[^\p{L}\p{N}]/u', '', $username)).'\')) AND id>1'.$query) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
 	if ($db->num_rows($result))
 	{
@@ -714,10 +714,10 @@ function set_tracked_topics($tracked_topics)
 		foreach ($tracked_topics['forums'] as $id => $timestamp)
 			$cookie_data .= 'f'.$id.'='.$timestamp.';';
 
-		// Enforce a 4048 byte size limit (4096 minus some space for the cookie name)
-		if (strlen($cookie_data) > 4048)
+		// Enforce a 4048 byte size limit (4096 minus some space for the cookie name and headers)
+		if (strlen($cookie_data) > 3744)
 		{
-			$cookie_data = substr($cookie_data, 0, 4048);
+			$cookie_data = substr($cookie_data, 0, 3744);
 			$cookie_data = substr($cookie_data, 0, strrpos($cookie_data, ';')).';';
 		}
 	}
@@ -893,7 +893,7 @@ function censor_words($text)
 	}
 
 	if (!empty($censors))
-		$text = substr(preg_replace(array_keys($censors), array_values($censors), ' '.$text.' '), 1, -1);
+		$text = substr(ucp_preg_replace(array_keys($censors), array_values($censors), ' '.$text.' '), 1, -1);
 
 	return $text;
 }
@@ -1995,6 +1995,32 @@ function url_valid($url)
 	$m['url'] = $url;
 	for ($i = 0; isset($m[$i]); ++$i) unset($m[$i]);
 	return $m; // return TRUE == array of useful named $matches plus the valid $url.
+}
+
+//
+// Replace string matching regular expression
+//
+// This function takes care of possibly disabled unicode properties in PCRE builds
+//
+function ucp_preg_replace($pattern, $replace, $subject)
+{
+	$replaced = preg_replace($pattern, $replace, $subject);
+	
+	// If preg_replace() returns false, this probably means unicode support is not built-in, so we need to modify the pattern a little
+	if ($replaced === false)
+	{
+		if (is_array($pattern))
+		{
+			foreach ($pattern as $cur_key => $cur_pattern)
+				$pattern[$cur_key] = str_replace('\p{L}\p{N}', '\w', $cur_pattern);
+			
+			$replaced = preg_replace($pattern, $replace, $subject);
+		}
+		else
+			$replaced = preg_replace(str_replace('\p{L}\p{N}', '\w', $pattern), $replace, $subject);
+	}
+	
+	return $replaced;
 }
 
 // DEBUG FUNCTIONS BELOW

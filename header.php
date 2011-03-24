@@ -240,13 +240,21 @@ else
 	{
 		if ($pun_config['o_report_method'] == '0' || $pun_config['o_report_method'] == '2')
 		{
-			$query = new SelectQuery(array('indicator' => '1'), 'reports AS r');
-			$query->where = 'r.zapped IS NULL';
+			$num_reports = $cache->get('num_reports');
+			if ($num_reports === Cache::NOT_FOUND)
+			{
+				$query = new SelectQuery(array('num_reports' => 'COUNT(r.id) AS num_reports'), 'reports AS r');
+				$query->where = 'r.zapped IS NULL';
 
-			$params = array();
+				$params = array();
 
-			$result = $db->query($query, $params);
-			if (!empty($result))
+				$result = $db->query($query, $params);
+				$num_reports = $result[0]['num_reports'];
+
+				$cache->set('num_reports', $num_reports);
+			}
+
+			if ($num_reports > 0)
 				$page_statusinfo[] = '<li class="reportlink"><span><strong><a href="admin_reports.php">'.$lang_common['New reports'].'</a></strong></span></li>';
 
 			unset ($result, $query, $params);
