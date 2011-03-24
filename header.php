@@ -240,9 +240,16 @@ else
 	{
 		if ($pun_config['o_report_method'] == '0' || $pun_config['o_report_method'] == '2')
 		{
-			$result_header = $db->query('SELECT 1 FROM '.$db->prefix.'reports WHERE zapped IS NULL') or error('Unable to fetch reports info', __FILE__, __LINE__, $db->error());
+			$num_reports = $cache->get('num_reports');
+			if ($num_reports === Cache::NOT_FOUND)
+			{
+				$result_header = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'reports WHERE zapped IS NULL') or error('Unable to fetch reports info', __FILE__, __LINE__, $db->error());
+				$num_reports = $db->result($result_header);
 
-			if ($db->result($result_header))
+				$cache->set('num_reports', $num_reports);
+			}
+
+			if ($num_reports > 0)
 				$page_statusinfo[] = '<li class="reportlink"><span><strong><a href="admin_reports.php">'.$lang_common['New reports'].'</a></strong></span></li>';
 		}
 
