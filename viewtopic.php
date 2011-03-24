@@ -162,7 +162,13 @@ if ($pun_config['o_quickpost'] == '1' &&
 	// Load the post.php language file
 	require PUN_ROOT.'lang/'.$pun_user['language'].'/post.php';
 
-	$required_fields = array('req_email' => $lang_common['Email'], 'req_message' => $lang_common['Message']);
+	$required_fields = array('req_message' => $lang_common['Message']);
+	if ($pun_user['is_guest'])
+	{
+		$required_fields['req_username'] = $lang_post['Guest name'];
+		if ($pun_config['p_force_guest_email'] == '1')
+			$required_fields['req_email'] = $lang_common['Email'];
+	}
 	$quickpost = true;
 }
 
