@@ -214,22 +214,40 @@ else if (isset($_GET['report']))
 			message(sprintf($lang_misc['Report flood'], $pun_user['g_email_flood']));
 
 		// Get the topic ID
-		$result = $db->query('SELECT topic_id FROM '.$db->prefix.'posts WHERE id='.$post_id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-		if (!$db->num_rows($result))
+		$query = new SelectQuery(array('topic_id' => 'p.topic_id'), 'posts AS p');
+		$query->where = 'p.id = :post_id';
+
+		$params = array(':post_id' => $post_id);
+
+		$result = $db->query($query, $params);
+		if (empty($result))
 			message($lang_common['Bad request']);
 
-		$topic_id = $db->result($result);
+		$topic_id = $result[0]['topic_id'];
+		unset ($result, $query, $params);
 
 		// Get the subject and forum ID
-		$result = $db->query('SELECT subject, forum_id FROM '.$db->prefix.'topics WHERE id='.$topic_id) or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
-		if (!$db->num_rows($result))
+		$query = new SelectQuery(array('subject' => 't.subject', 'forum_id' => 't.forum_id'), 'topics AS t');
+		$query->where = 't.id = :topic_id';
+
+		$params = array(':topic_id' => $topic_id);
+
+		$result = $db->query($query, $params);
+		if (empty($result))
 			message($lang_common['Bad request']);
 
-		list($subject, $forum_id) = $db->fetch_row($result);
+		list($subject, $forum_id) = $result[0];
+		unset ($result, $query, $params);
 
 		// Should we use the internal report handling?
 		if ($pun_config['o_report_method'] == '0' || $pun_config['o_report_method'] == '2')
-			$db->query('INSERT INTO '.$db->prefix.'reports (post_id, topic_id, forum_id, reported_by, created, message) VALUES('.$post_id.', '.$topic_id.', '.$forum_id.', '.$pun_user['id'].', '.time().', \''.$db->escape($reason).'\')' ) or error('Unable to create report', __FILE__, __LINE__, $db->error());
+		{
+			$query = new InsertQuery(array('post_id' => ':post_id', 'topic_id' => ':topic_id', 'forum_id' => ':forum_id', 'reported_by' => ':user_id', 'created' => ':now', 'message' => ':reason'), 'reports');
+			$params = array(':post_id' => $post_id, ':topic_id' => $topic_id, ':forum_id' => $forum_id, ':user_id' => $pun_user['id'], ':now' => time(), ':reason' => $reason);
+
+			$db->query($query, $params);
+			unset ($query, $params);
+		}
 
 		// Should we email the report?
 		if ($pun_config['o_report_method'] == '1' || $pun_config['o_report_method'] == '2')
@@ -248,7 +266,13 @@ else if (isset($_GET['report']))
 			}
 		}
 
-		$db->query('UPDATE '.$db->prefix.'users SET last_email_sent='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
+		$query = new UpdateQuery(array('last_email_sent' => ':now'), 'users');
+		$query->where = 'id = :user_id';
+
+		$params = array(':now' => time(), ':user_id' => $pun_user['id']);
+
+		$db->query($query, $params);
+		unset ($query, $params);
 
 		$cache->delete('num_reports');
 
@@ -256,11 +280,27 @@ else if (isset($_GET['report']))
 	}
 
 	// Fetch some info about the post, the topic and the forum
-	$result = $db->query('SELECT f.id AS fid, f.forum_name, t.id AS tid, t.subject FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.id='.$post_id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
+	$query = new SelectQuery(array('fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'tid' => 't.id AS tid', 'subject' => 't.subject'), 'posts AS p');
+
+	$query->joins['t'] = new InnerJoin('topics AS t');
+	$query->joins['t']->on = 't.id = p.topic_id';
+
+	$query->joins['f'] = new InnerJoin('forums AS f');
+	$query->joins['f']->on = 'f.id = t.forum_id';
+
+	$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
+	$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :user_id';
+
+	$query->where = '(fp.read_forum IS NULL OR fp.read_forum=1) AND p.id = :post_id';
+
+	$params = array(':user_id' => $pun_user['g_id'], ':post_id' => $post_id);
+
+	$result = $db->query($query, $params);
+	if (empty($result))
 		message($lang_common['Bad request']);
 
-	$cur_post = $db->fetch_assoc($result);
+	$cur_post = $result[0];
+	unset ($result, $query, $params);
 
 	if ($pun_config['o_censoring'] == '1')
 		$cur_post['subject'] = censor_words($cur_post['subject']);

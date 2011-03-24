@@ -27,19 +27,24 @@ if (isset($_POST['zap_id']))
 
 	$zap_id = intval(key($_POST['zap_id']));
 
-	$result = $db->query('SELECT zapped FROM '.$db->prefix.'reports WHERE id='.$zap_id) or error('Unable to fetch report info', __FILE__, __LINE__, $db->error());
-	$zapped = $db->result($result);
+	$query = new UpdateQuery(array('zapped' => ':now', 'zapped_by' => ':user_id'), 'reports');
+	$query->where = 'zapped IS NULL AND :zid';
 
-	if ($zapped == '')
-		$db->query('UPDATE '.$db->prefix.'reports SET zapped='.time().', zapped_by='.$pun_user['id'].' WHERE id='.$zap_id) or error('Unable to zap report', __FILE__, __LINE__, $db->error());
+	$params = array(':now' => time(), ':user_id' => $pun_user['id'], ':zid' => $zap_id);
+
+	$db->query($query, $params);
+	unset ($query, $params);
 
 	// Delete old reports (which cannot be viewed anyway)
-	$result = $db->query('SELECT zapped FROM '.$db->prefix.'reports WHERE zapped IS NOT NULL ORDER BY zapped DESC LIMIT 10,1') or error('Unable to fetch read reports to delete', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result) > 0)
-	{
-		$zapped_threshold = $db->result($result);
-		$db->query('DELETE FROM '.$db->prefix.'reports WHERE zapped <= '.$zapped_threshold) or error('Unable to delete old read reports', __FILE__, __LINE__, $db->error());
-	}
+	$query = new DeleteQuery('reports AS r');
+	$query->where = 'r.zapped IS NOT NULL';
+	$query->order_by = array('zapped' => 'r.zapped DESC');
+	$query->offset = 10;
+
+	$params = array();
+
+	$db->query($query, $params);
+	unset ($query, $params);
 
 	$cache->delete('num_reports');
 
@@ -60,11 +65,31 @@ generate_admin_menu('reports');
 			<form method="post" action="admin_reports.php?action=zap">
 <?php
 
-$result = $db->query('SELECT r.id, r.topic_id, r.forum_id, r.reported_by, r.created, r.message, p.id AS pid, t.subject, f.forum_name, u.username AS reporter FROM '.$db->prefix.'reports AS r LEFT JOIN '.$db->prefix.'posts AS p ON r.post_id=p.id LEFT JOIN '.$db->prefix.'topics AS t ON r.topic_id=t.id LEFT JOIN '.$db->prefix.'forums AS f ON r.forum_id=f.id LEFT JOIN '.$db->prefix.'users AS u ON r.reported_by=u.id WHERE r.zapped IS NULL ORDER BY created DESC') or error('Unable to fetch report list', __FILE__, __LINE__, $db->error());
+$query = new SelectQuery(array('rid' => 'r.id', 'topic_id' => 'r.topic_id', 'forum_id' => 'r.forum_id', 'reported_by' => 'r.reported_by', 'created' => 'r.created', 'message' => 'r.message', 'pid' => 'p.id AS pid', 'subject' => 't.subject', 'forum_name' => 'f.forum_name', 'reporter' => 'u.username AS reporter'), 'reports AS r');
 
-if ($db->num_rows($result))
+$query->joins['f'] = new LeftJoin('forums AS f');
+$query->joins['f']->on = 'r.forum_id = f.id';
+
+$query->joins['p'] = new LeftJoin('posts AS p');
+$query->joins['p']->on = 'r.post_id = p.id';
+
+$query->joins['t'] = new LeftJoin('topics AS t');
+$query->joins['t']->on = 'r.topic_id = t.id';
+
+$query->joins['u'] = new LeftJoin('users AS u');
+$query->joins['u']->on = 'r.reported_by = u.id';
+
+$query->where = 'r.zapped IS NULL';
+$query->order_by = array('created' => 'r.created DESC');
+
+$params = array();
+
+$result = $db->query($query, $params);
+unset ($query, $params);
+
+if (!empty($result))
 {
-	while ($cur_report = $db->fetch_assoc($result))
+	foreach ($result as $cur_report)
 	{
 		$reporter = ($cur_report['reporter'] != '') ? '<a href="profile.php?id='.$cur_report['reported_by'].'">'.pun_htmlspecialchars($cur_report['reporter']).'</a>' : $lang_admin_reports['Deleted user'];
 		$forum = ($cur_report['forum_name'] != '') ? '<span><a href="viewforum.php?id='.$cur_report['forum_id'].'">'.pun_htmlspecialchars($cur_report['forum_name']).'</a></span>' : '<span>'.$lang_admin_reports['Deleted'].'</span>';
@@ -111,6 +136,8 @@ else
 
 }
 
+unset ($result);
+
 ?>
 			</form>
 		</div>
@@ -122,11 +149,35 @@ else
 			<div class="fakeform">
 <?php
 
-$result = $db->query('SELECT r.id, r.topic_id, r.forum_id, r.reported_by, r.message, r.zapped, r.zapped_by AS zapped_by_id, p.id AS pid, t.subject, f.forum_name, u.username AS reporter, u2.username AS zapped_by FROM '.$db->prefix.'reports AS r LEFT JOIN '.$db->prefix.'posts AS p ON r.post_id=p.id LEFT JOIN '.$db->prefix.'topics AS t ON r.topic_id=t.id LEFT JOIN '.$db->prefix.'forums AS f ON r.forum_id=f.id LEFT JOIN '.$db->prefix.'users AS u ON r.reported_by=u.id LEFT JOIN '.$db->prefix.'users AS u2 ON r.zapped_by=u2.id WHERE r.zapped IS NOT NULL ORDER BY zapped DESC LIMIT 10') or error('Unable to fetch report list', __FILE__, __LINE__, $db->error());
+$query = new SelectQuery(array('rid' => 'r.id', 'topic_id' => 'r.topic_id', 'forum_id' => 'r.forum_id', 'reported_by' => 'r.reported_by', 'message' => 'r.message', 'zapped' => 'r.zapped', 'zapped_by_id' => 'r.zapped_by AS zapped_by_id', 'pid' => 'p.id AS pid', 'subject' => 't.subject', 'forum_name' => 'f.forum_name', 'reporter' => 'u.username AS reporter', 'zapped_by' => 'u2.username AS zapped_by'), 'reports AS r');
 
-if ($db->num_rows($result))
+$query->joins['p'] = new LeftJoin('posts AS p');
+$query->joins['p']->on = 'r.post_id = p.id';
+
+$query->joins['t'] = new LeftJoin('topics AS t');
+$query->joins['t']->on = 'r.topic_id = t.id';
+
+$query->joins['f'] = new LeftJoin('forums AS f');
+$query->joins['f']->on = 'r.forum_id = f.id';
+
+$query->joins['u'] = new LeftJoin('users AS u');
+$query->joins['u']->on = 'r.reported_by = u.id';
+
+$query->joins['u2'] = new LeftJoin('users AS u2');
+$query->joins['u2']->on = 'r.zapped_by = u2.id';
+
+$query->where = 'r.zapped IS NOT NULL';
+$query->order_by = array('zapped' => 'r.zapped DESC');
+$query->limit = 10;
+
+$params = array();
+
+$result = $db->query($query, $params);
+unset ($query, $params);
+
+if (!empty($result))
 {
-	while ($cur_report = $db->fetch_assoc($result))
+	foreach ($result as $cur_report)
 	{
 		$reporter = ($cur_report['reporter'] != '') ? '<a href="profile.php?id='.$cur_report['reported_by'].'">'.pun_htmlspecialchars($cur_report['reporter']).'</a>' : $lang_admin_reports['Deleted user'];
 		$forum = ($cur_report['forum_name'] != '') ? '<span><a href="viewforum.php?id='.$cur_report['forum_id'].'">'.pun_htmlspecialchars($cur_report['forum_name']).'</a></span>' : '<span>'.$lang_admin_reports['Deleted'].'</span>';
@@ -174,6 +225,8 @@ else
 <?php
 
 }
+
+unset ($result);
 
 ?>
 			</div>
