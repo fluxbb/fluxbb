@@ -92,6 +92,7 @@ if (isset($_POST['form_sent']))
 	{
 		$username = pun_trim($_POST['req_username']);
 		$email = strtolower(trim(($pun_config['p_force_guest_email'] == '1') ? $_POST['req_email'] : $_POST['email']));
+		$banned_email = false;
 
 		// Load the register.php/profile.php language files
 		require PUN_ROOT.'lang/'.$pun_user['language'].'/prof_reg.php';
@@ -115,8 +116,6 @@ if (isset($_POST['form_sent']))
 
 				$banned_email = true; // Used later when we send an alert email
 			}
-			else
-				$banned_email = false;
 		}
 	}
 
