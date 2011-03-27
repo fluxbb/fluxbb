@@ -484,10 +484,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 			delete_avatar($user_id);
 		
 		// Regenerate the users info cache
-		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-			require PUN_ROOT.'include/cache.php';
-
-		generate_users_info_cache();
+		$cache->delete('boardstats');
 
 		redirect('admin_users.php', $lang_admin_users['Users delete redirect']);
 	}
