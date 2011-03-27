@@ -27,16 +27,28 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
 // If a post ID is specified we determine topic ID and page number so we can redirect to the correct message
 if ($pid)
 {
-	$result = $db->query('SELECT topic_id, posted FROM '.$db->prefix.'posts WHERE id='.$pid) or error('Unable to fetch topic ID', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
+	$query = new SelectQuery(array('topic_id' => 'p.topic_id', 'posted' => 'p.posted'), 'posts AS p');
+	$query->where = 'id = :pid';
+
+	$params = array(':pid' => $pid);
+
+	$result = $db->query($query, $params);
+	if (empty($result))
 		message($lang_common['Bad request']);
 
-	list($id, $posted) = $db->fetch_row($result);
+	list($id, $posted) = $result[0];
+	unset ($result, $query, $params);
 
 	// Determine on what page the post is located (depending on $forum_user['disp_posts'])
-	$result = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id.' AND posted<'.$posted) or error('Unable to count previous posts', __FILE__, __LINE__, $db->error());
-	$num_posts = $db->result($result) + 1;
+	$query = new SelectQuery(array('num_posts' => '(COUNT(p.id) + 1) AS num_posts'), 'posts AS p');
+	$query->where = 'p.topic_id = :tid AND p.posted < :posted';
 
+	$params = array(':tid' => $id, ':posted' => $posted);
+
+	$result = $db->query($query, $params);
+	$num_posts = $result[0]['num_posts'];
+
+	unset ($result, $query, $params);
 	$_GET['p'] = ceil($num_posts / $pun_user['disp_posts']);
 }
 
@@ -49,11 +61,18 @@ else if ($action == 'new')
 		$tracked_topics = get_tracked_topics();
 		$last_viewed = isset($tracked_topics['topics'][$id]) ? $tracked_topics['topics'][$id] : $pun_user['last_visit'];
 
-		$result = $db->query('SELECT MIN(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id.' AND posted>'.$last_viewed) or error('Unable to fetch first new post info', __FILE__, __LINE__, $db->error());
-		$first_new_post_id = $db->result($result);
+		$query = new SelectQuery(array('new_pid' => 'MIN(p.id) AS new_pid'), 'posts AS p');
+		$query->where = 'p.topic_id = :tid AND p.posted > :last_viewed';
 
-		if ($first_new_post_id)
+		$params = array(':tid' => $id, ':last_viewed' => $last_viewed);
+
+		$result = $db->query($query, $params);
+		unset ($query, $params);
+
+		if (!empty($result))
 		{
+			$first_new_post_id = $result[0]['new_pid'];
+
 			header('Location: viewtopic.php?pid='.$first_new_post_id.'#p'.$first_new_post_id);
 			exit;
 		}
@@ -67,27 +86,53 @@ else if ($action == 'new')
 // If action=last, we redirect to the last post
 else if ($action == 'last')
 {
-	$result = $db->query('SELECT MAX(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id) or error('Unable to fetch last post info', __FILE__, __LINE__, $db->error());
-	$last_post_id = $db->result($result);
+	$query = new SelectQuery(array('last_pid' => 'MAX(p.id) AS last_pid'), 'posts AS p');
+	$query->where = 'topic_id = :tid';
 
-	if ($last_post_id)
+	$params = array(':tid' => $id);
+
+	$result = $db->query($query, $params);
+	unset ($query, $params);
+
+	if (!empty($result))
 	{
+		$last_post_id = $result[0]['last_pid'];
+
 		header('Location: viewtopic.php?pid='.$last_post_id.'#p'.$last_post_id);
 		exit;
 	}
 }
 
-
 // Fetch some info about the topic
-if (!$pun_user['is_guest'])
-	$result = $db->query('SELECT t.subject, t.closed, t.num_replies, t.sticky, t.first_post_id, f.id AS forum_id, f.forum_name, f.moderators, fp.post_replies, s.user_id AS is_subscribed FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'topic_subscriptions AS s ON (t.id=s.topic_id AND s.user_id='.$pun_user['id'].') LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$id.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
-else
-	$result = $db->query('SELECT t.subject, t.closed, t.num_replies, t.sticky, t.first_post_id, f.id AS forum_id, f.forum_name, f.moderators, fp.post_replies, 0 AS is_subscribed FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$id.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
+$query = new SelectQuery(array('subject' => 't.subject', 'closed' => 't.closed', 'num_replies' => 't.num_replies', 'sticky' => 't.sticky', 'first_post_id' => 't.first_post_id', 'forum_id' => 'f.id AS forum_id', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'post_replies' => 'fp.post_replies', 'is_subscribed' => '0 AS is_subscribed'), 'topics AS t');
 
-if (!$db->num_rows($result))
+$query->joins['f'] = new InnerJoin('forums AS f');
+$query->joins['f']->on = 'f.id = t.forum_id';
+
+$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
+$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+
+$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.id = :tid AND t.moved_to IS NULL';
+
+$params = array(':group_id' => $pun_user['g_id'], ':tid' => $id);
+
+// If we aren't a guest then handle subscription checks
+if (!$pun_user['is_guest'])
+{
+	$query->fields['is_subscribed'] = 's.user_id AS is_subscribed';
+
+	$query->joins['s'] = new LeftJoin('topic_subscriptions AS s');
+	$query->joins['s']->on = 't.id = s.topic_id AND s.user_id = :user_id';
+
+	$params[':user_id'] = $pun_user['id'];
+}
+
+$result = $db->query($query, $params);
+if (empty($result))
 	message($lang_common['Bad request']);
 
-$cur_topic = $db->fetch_assoc($result);
+$cur_topic = $result[0];
+unset ($query, $params, $result);
 
 // Sort out who the moderators are and if we are currently a moderator (or an admin)
 $mods_array = ($cur_topic['moderators'] != '') ? unserialize($cur_topic['moderators']) : array();
@@ -211,18 +256,44 @@ require PUN_ROOT.'include/parser.php';
 $post_count = 0; // Keep track of post numbers
 
 // Retrieve a list of post IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
-$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE topic_id='.$id.' ORDER BY id LIMIT '.$start_from.','.$pun_user['disp_posts']) or error('Unable to fetch post IDs', __FILE__, __LINE__, $db->error());
+$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+$query->where = 'p.topic_id = :tid';
+$query->order_by = array('id' => 'p.id ASC');
+$query->limit = $pun_user['disp_posts'];
+$query->offset = $start_from;
 
-$post_ids = array();
-for ($i = 0;$cur_post_id = $db->result($result, $i);$i++)
-	$post_ids[] = $cur_post_id;
+$params = array(':tid' => $id);
 
+$post_ids = $db->query($query, $params);
+unset ($query, $params);
+
+// If there are posts in this topic
 if (empty($post_ids))
 	error('The post table and topic table seem to be out of sync!', __FILE__, __LINE__);
 
+// Translate from a 3d array into 2d array: $post_ids[0]['id'] -> $post_ids[0]
+foreach ($post_ids as $key => $value)
+	$post_ids[$key] = $value['id'];
+
 // Retrieve the posts (and their respective poster/online status)
-$result = $db->query('SELECT u.email, u.title, u.url, u.location, u.signature, u.email_setting, u.num_posts, u.registered, u.admin_note, p.id, p.poster AS username, p.poster_id, p.poster_ip, p.poster_email, p.message, p.hide_smilies, p.posted, p.edited, p.edited_by, g.g_id, g.g_user_title, o.user_id AS is_online FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON (o.user_id=u.id AND o.user_id!=1 AND o.idle=0) WHERE p.id IN ('.implode(',', $post_ids).') ORDER BY p.id', true) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-while ($cur_post = $db->fetch_assoc($result))
+$query = new SelectQuery(array('email' => 'u.email', 'title' => 'u.title', 'url' => 'u.url', 'location' => 'u.location', 'signature' => 'u.signature', 'email_setting' => 'u.email_setting', 'num_posts' => 'u.num_posts', 'registered' => 'u.registered', 'admin_note' => 'u.admin_note', 'pid' => 'p.id', 'username' => 'p.poster AS username', 'poster_id' => 'p.poster_id', 'poster_ip' => 'p.poster_ip', 'poster_email' => 'p.poster_email', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'edited' => 'p.edited', 'edited_by' => 'p.edited_by', 'gid' => 'g.g_id', 'g_user_title' => 'g.g_user_title', 'is_online' => 'o.user_id AS is_online'), 'posts AS p');
+
+$query->joins['u'] = new InnerJoin('users AS u');
+$query->joins['u']->on = 'u.id = p.poster_id';
+
+$query->joins['g'] = new InnerJoin('groups AS g');
+$query->joins['g']->on = 'g.g_id = u.group_id';
+
+$query->joins['o'] = new LeftJoin('online AS o');
+$query->joins['o']->on = 'o.user_id = u.id AND o.user_id != 1 AND o.idle = 0';
+
+$query->where = 'p.id IN :pids';
+$query->order_by = array('pid' => 'p.id ASC');
+
+$params = array(':pids' => $post_ids);
+
+$result = $db->query($query, $params);
+foreach ($result as $cur_post)
 {
 	$post_count++;
 	$user_avatar = '';
@@ -389,6 +460,8 @@ while ($cur_post = $db->fetch_assoc($result))
 
 }
 
+unset ($result, $query, $params);
+
 ?>
 <div class="postlinksb">
 	<div class="inbox crumbsplus">
@@ -465,7 +538,15 @@ else
 
 // Increment "num_views" for topic
 if ($pun_config['o_topic_views'] == '1')
-	$db->query('UPDATE '.$db->prefix.'topics SET num_views=num_views+1 WHERE id='.$id) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+{
+	$query = new UpdateQuery(array('num_views' => 'num_views + 1'), 'topics');
+	$query->where = 'id = :tid';
+
+	$params = array(':tid' => $id);
+
+	$db->query($query, $params);
+	unset ($query, $params);
+}
 
 $forum_id = $cur_topic['forum_id'];
 $footer_style = 'viewtopic';

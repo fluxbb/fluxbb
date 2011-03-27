@@ -93,10 +93,16 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	{
 		$ident = ($pun_user['is_guest']) ? get_remote_address() : $pun_user['username'];
 
-		$result = $db->query('SELECT search_data FROM '.$db->prefix.'search_cache WHERE id='.$search_id.' AND ident=\''.$db->escape($ident).'\'') or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
-		if ($row = $db->fetch_assoc($result))
-		{
-			$temp = unserialize($row['search_data']);
+		$query = new SelectQuery(array('search_data' => 'c.search_data'), 'search_cache AS c');
+		$query->where = 'c.id = :search_id AND c.ident = :ident';
+
+		$params = array(':search_id' => $search_id, ':ident' => $ident);
+
+		$result = $db->query($query, $params);
+		unset ($query, $params);
+
+		if (!empty($result))
+			$temp = unserialize($result[0]['search_data']);
 
 			$search_ids = unserialize($temp['search_ids']);
 			$num_hits = $temp['num_hits'];

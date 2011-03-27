@@ -926,9 +926,13 @@ function get_title($user)
 			$pun_ranks = array();
 
 			// Get the rank list from the DB
-			$result = $db->query('SELECT * FROM '.$db->prefix.'ranks ORDER BY min_posts') or error('Unable to fetch rank list', __FILE__, __LINE__, $db->error());
-			while ($cur_rank = $db->fetch_assoc($result))
-				$pun_ranks[] = $cur_rank;
+			$query = new SelectQuery(array('ranks' => 'r.*'), 'ranks AS r');
+			$query->order_by = array('min_posts' => 'r.min_posts ASC');
+
+			$params = array();
+
+			$pun_ranks = $db->query($query, $params);
+			unset ($query, $params);
 
 			$cache->set('ranks', $pun_ranks);
 		}

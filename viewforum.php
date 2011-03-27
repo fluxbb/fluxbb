@@ -185,16 +185,16 @@ unset ($query, $params);
 // If there are topics in this forum
 if (!empty($topic_ids))
 {
-	$params = array();
-
-	$count = count($topic_ids);
-	for ($i = 0;$i < $count;$i++)
-		$params[':t'.$i] = $topic_ids[$i]['id'];
+	// Translate from a 3d array into 2d array: $topics_ids[0]['id'] -> $topics_ids[0]
+	foreach ($topic_ids as $key => $value)
+		$topic_ids[$key] = $value['id'];
 
 	// Fetch list of topics to display on this page
 	$query = new SelectQuery(array('has_posted' => '0 AS has_posted', 'tid' => 't.id', 'subject' => 't.subject', 'poster' => 't.poster', 'posted' => 't.posted', 'last_post' => 't.last_post', 'last_post_id' => 't.last_post_id', 'last_poster' => 't.last_poster', 'num_views' => 't.num_views', 'num_replies' => 't.num_replies', 'closed' => 't.closed', 'sticky' => 't.sticky', 'moved_to' => 't.moved_to'), 'topics AS t');
-	$query->where = 't.id IN ('.implode(', ', array_keys($params)).')';
+	$query->where = 't.id IN :tids';
 	$query->order = array('sticky' => 't.sticky DESC', 'sort' => $sort_by, 'id' => 't.id DESC');
+
+	$params = array(':tids' => $topic_ids);
 
 	// With "the dot"
 	if ($pun_user['is_guest'] || $pun_config['o_show_dot'] == '1' && !$pun_user['is_guest'])
