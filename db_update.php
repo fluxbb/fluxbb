@@ -7,7 +7,7 @@
  */
 
 // The FluxBB version this script updates to
-define('UPDATE_TO', '1.4.4');
+define('UPDATE_TO', '1.4.5');
 
 define('UPDATE_TO_DB_REVISION', 11);
 define('UPDATE_TO_SI_REVISION', 2);
@@ -474,7 +474,7 @@ if (empty($stage))
 <title><?php echo $lang_update['Update'] ?></title>
 <link rel="stylesheet" type="text/css" href="style/<?php echo $default_style ?>.css" />
 </head>
-<body onload="document.getElementById('install').req_db_type.focus();document.getElementById('install').start.disabled=false;">
+<body onload="document.getElementById('install').req_db_pass.focus();document.getElementById('install').start.disabled=false;">
 
 <div id="pundb_update" class="pun">
 <div class="top-box"><div><!-- Top Corners --></div></div>
@@ -493,7 +493,7 @@ if (empty($stage))
 <div class="blockform">
 	<h2><span><?php echo $lang_update['Update'] ?></span></h2>
 	<div class="box">
-		<form method="post" action="db_update.php">
+		<form id="install" method="post" action="db_update.php">
 			<input type="hidden" name="stage" value="start" />
 			<div class="inform">
 				<fieldset>
