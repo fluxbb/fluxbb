@@ -208,7 +208,13 @@ if ($pun_config['o_quickpost'] == '1' &&
 	// Load the post.php language file
 	require PUN_ROOT.'lang/'.$pun_user['language'].'/post.php';
 
-	$required_fields = array('req_email' => $lang_common['Email'], 'req_message' => $lang_common['Message']);
+	$required_fields = array('req_message' => $lang_common['Message']);
+	if ($pun_user['is_guest'])
+	{
+		$required_fields['req_username'] = $lang_post['Guest name'];
+		if ($pun_config['p_force_guest_email'] == '1')
+			$required_fields['req_email'] = $lang_common['Email'];
+	}
 	$quickpost = true;
 }
 
@@ -498,7 +504,6 @@ $cur_index = 1;
 					<legend><?php echo $lang_common['Write message legend'] ?></legend>
 					<div class="infldset txtarea">
 						<input type="hidden" name="form_sent" value="1" />
-						<input type="hidden" name="form_user" value="<?php echo pun_htmlspecialchars($pun_user['username']) ?>" />
 <?php if ($pun_config['o_topic_subscriptions'] == '1' && ($pun_user['auto_notify'] == '1' || $cur_topic['is_subscribed'])): ?>						<input type="hidden" name="subscribe" value="1" />
 <?php endif; ?>
 <?php

@@ -82,10 +82,6 @@ $errors = array();
 // Did someone just hit "Submit" or "Preview"?
 if (isset($_POST['form_sent']))
 {
-	// Make sure form_user is correct
-	if (($pun_user['is_guest'] && $_POST['form_user'] != 'Guest') || (!$pun_user['is_guest'] && $_POST['form_user'] != $pun_user['username']))
-		message($lang_common['Bad request']);
-
 	// Flood protection
 	if (!isset($_POST['preview']) && $pun_user['last_post'] != '' && (time() - $pun_user['last_post']) < $pun_user['g_post_flood'])
 		$errors[] = $lang_post['Flood start'].' '.$pun_user['g_post_flood'].' '.$lang_post['flood end'];
@@ -119,6 +115,7 @@ if (isset($_POST['form_sent']))
 	{
 		$username = pun_trim($_POST['req_username']);
 		$email = strtolower(trim(($pun_config['p_force_guest_email'] == '1') ? $_POST['req_email'] : $_POST['email']));
+		$banned_email = false;
 
 		// Load the register.php/profile.php language files
 		require PUN_ROOT.'lang/'.$pun_user['language'].'/prof_reg.php';
@@ -142,8 +139,6 @@ if (isset($_POST['form_sent']))
 
 				$banned_email = true; // Used later when we send an alert email
 			}
-			else
-				$banned_email = false;
 		}
 	}
 
@@ -625,7 +620,6 @@ $cur_index = 1;
 					<legend><?php echo $lang_common['Write message legend'] ?></legend>
 					<div class="infldset txtarea">
 						<input type="hidden" name="form_sent" value="1" />
-						<input type="hidden" name="form_user" value="<?php echo (!$pun_user['is_guest']) ? pun_htmlspecialchars($pun_user['username']) : 'Guest'; ?>" />
 <?php
 
 if ($pun_user['is_guest'])

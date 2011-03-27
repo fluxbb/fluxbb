@@ -7,7 +7,7 @@
  */
 
 // The FluxBB version this script installs
-define('FORUM_VERSION', '1.4.4');
+define('FORUM_VERSION', '1.4.5');
 
 define('FORUM_DB_REVISION', 11);
 define('FORUM_SI_REVISION', 2);
