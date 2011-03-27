@@ -20,15 +20,38 @@ if ($tid < 1 && $fid < 1 || $tid > 0 && $fid > 0)
 	message($lang_common['Bad request']);
 
 // Fetch some info about the topic and/or the forum
-if ($tid)
-	$result = $db->query('SELECT f.id, f.forum_name, f.moderators, f.redirect_url, fp.post_replies, fp.post_topics, t.subject, t.closed, s.user_id AS is_subscribed FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') LEFT JOIN '.$db->prefix.'topic_subscriptions AS s ON (t.id=s.topic_id AND s.user_id='.$pun_user['id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$tid) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
-else
-	$result = $db->query('SELECT f.id, f.forum_name, f.moderators, f.redirect_url, fp.post_replies, fp.post_topics FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fid) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
+$query = new SelectQuery(array('fid' => 'f.id', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'redirect_url' => 'f.redirect_url', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics'), 'forums AS f');
 
-if (!$db->num_rows($result))
+$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
+$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+
+$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND '.($tid ? 't.id' : 'f.id').' = :id';
+
+$params = array(':group_id' => $pun_user['g_id']);
+$params[':id'] = ($tid ? $tid : $fid);
+
+if ($tid)
+{
+	$query->fields['subect'] = 't.subject';
+	$query->fields['closed'] = 't.closed';
+	$query->fields['is_subscribed'] = 's.user_id AS is_subscribed';
+
+	$query->joins['t'] = new InnerJoin('topics AS t');
+	$query->joins['t']->on = 't.forum_id = f.id';
+
+	$query->joins['s'] = new LeftJoin('topic_subscriptions AS s');
+	$query->joins['s']->on = 't.id = s.topic_id AND s.user_id = :user_id';
+
+	$params[':user_id'] = $pun_user['id'];
+}
+
+$result = $db->query($query, $params);
+if (empty($result))
 	message($lang_common['Bad request']);
 
-$cur_posting = $db->fetch_assoc($result);
+$cur_posting = $result[0];
+unset ($result, $query, $params);
+
 $is_subscribed = $tid && $cur_posting['is_subscribed'];
 
 // Is someone trying to post into a redirect forum?
@@ -425,74 +448,80 @@ if ($tid)
 		if ($qid < 1)
 			message($lang_common['Bad request']);
 
-		$result = $db->query('SELECT poster, message FROM '.$db->prefix.'posts WHERE id='.$qid.' AND topic_id='.$tid) or error('Unable to fetch quote info', __FILE__, __LINE__, $db->error());
-		if (!$db->num_rows($result))
+		$query = new SelectQuery(array('poster' => 'p.poster', 'message' => 'p.message'), 'posts AS p');
+		$query->where = 'p.id = :qid AND p.topic_id = :tid';
+
+		$params = array(':qid' => $qid, ':tid' => $tid);
+
+		$result = $db->query($query, $params);
+		if (empty($result))
 			message($lang_common['Bad request']);
 
-		list($q_poster, $q_message) = $db->fetch_row($result);
+		$cur_quote = $result[0];
+		unset ($result, $query, $params);
 
 		// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
-		if (strpos($q_message, '[code]') !== false && strpos($q_message, '[/code]') !== false)
+		if (strpos($cur_quote['message'], '[code]') !== false && strpos($cur_quote['message'], '[/code]') !== false)
 		{
 			$errors = array();
-			list($inside, $outside) = split_text($q_message, '[code]', '[/code]', $errors);
-			if (!empty($errors)) // Technically this shouldn't happen, since $q_message is an existing post it should only exist if it previously passed validation
+			list($inside, $outside) = split_text($cur_quote['message'], '[code]', '[/code]', $errors);
+			if (!empty($errors)) // Technically this shouldn't happen, since $cur_quote['message'] is an existing post it should only exist if it previously passed validation
 				message($errors[0]);
 
-			$q_message = implode("\1", $outside);
+			$cur_quote['message'] = implode("\1", $outside);
 		}
 
 		// Remove [img] tags from quoted message
-		$q_message = preg_replace('%\[img(?:=(?:[^\[]*?))?\]((ht|f)tps?://)([^\s<"]*?)\[/img\]%U', '\1\3', $q_message);
+		$cur_quote['message'] = preg_replace('%\[img(?:=(?:[^\[]*?))?\]((ht|f)tps?://)([^\s<"]*?)\[/img\]%U', '\1\3', $cur_quote['message']);
 
 		// If we split up the message before we have to concatenate it together again (code tags)
 		if (isset($inside))
 		{
-			$outside = explode("\1", $q_message);
-			$q_message = '';
+			$outside = explode("\1", $cur_quote['message']);
+			$cur_quote['message'] = '';
 
 			$num_tokens = count($outside);
 			for ($i = 0; $i < $num_tokens; ++$i)
 			{
-				$q_message .= $outside[$i];
+				$cur_quote['message'] .= $outside[$i];
 				if (isset($inside[$i]))
-					$q_message .= '[code]'.$inside[$i].'[/code]';
+					$cur_quote['message'] .= '[code]'.$inside[$i].'[/code]';
 			}
 
 			unset($inside);
 		}
 
 		if ($pun_config['o_censoring'] == '1')
-			$q_message = censor_words($q_message);
+			$cur_quote['message'] = censor_words($cur_quote['message']);
 
-		$q_message = pun_htmlspecialchars($q_message);
+		$cur_quote['message'] = pun_htmlspecialchars($cur_quote['message']);
 
 		if ($pun_config['p_message_bbcode'] == '1')
 		{
 			// If username contains a square bracket, we add "" or '' around it (so we know when it starts and ends)
-			if (strpos($q_poster, '[') !== false || strpos($q_poster, ']') !== false)
+			if (strpos($cur_quote['poster'], '[') !== false || strpos($cur_quote['poster'], ']') !== false)
 			{
-				if (strpos($q_poster, '\'') !== false)
-					$q_poster = '"'.$q_poster.'"';
+				if (strpos($cur_quote['poster'], '\'') !== false)
+					$cur_quote['poster'] = '"'.$cur_quote['poster'].'"';
 				else
-					$q_poster = '\''.$q_poster.'\'';
+					$cur_quote['poster'] = '\''.$cur_quote['poster'].'\'';
 			}
 			else
 			{
-				// Get the characters at the start and end of $q_poster
-				$ends = substr($q_poster, 0, 1).substr($q_poster, -1, 1);
+				// Get the characters at the start and end of $cur_quote['poster']
+				$ends = substr($cur_quote['poster'], 0, 1).substr($cur_quote['poster'], -1, 1);
 
 				// Deal with quoting "Username" or 'Username' (becomes '"Username"' or "'Username'")
 				if ($ends == '\'\'')
-					$q_poster = '"'.$q_poster.'"';
+					$cur_quote['poster'] = '"'.$cur_quote['poster'].'"';
 				else if ($ends == '""')
-					$q_poster = '\''.$q_poster.'\'';
+					$cur_quote['poster'] = '\''.$cur_quote['poster'].'\'';
 			}
 
-			$quote = '[quote='.$q_poster.']'.$q_message.'[/quote]'."\n";
+			$quote = '[quote='.$cur_quote['poster'].']'.$cur_quote['message'].'[/quote]'."\n";
 		}
 		else
-			$quote = '> '.$q_poster.' '.$lang_common['wrote']."\n\n".'> '.$q_message."\n";
+			$quote = '> '.$cur_quote['poster'].' '.$lang_common['wrote']."\n\n".'> '.$cur_quote['message']."\n";
 	}
 }
 // If a forum ID was specified in the url (new topic)
@@ -686,18 +715,25 @@ if ($tid && $pun_config['o_topic_review'] != '0')
 {
 	require_once PUN_ROOT.'include/parser.php';
 
-	$result = $db->query('SELECT poster, message, hide_smilies, posted FROM '.$db->prefix.'posts WHERE topic_id='.$tid.' ORDER BY id DESC LIMIT '.$pun_config['o_topic_review']) or error('Unable to fetch topic review', __FILE__, __LINE__, $db->error());
-
 ?>
 
 <div id="postreview">
 	<h2><span><?php echo $lang_post['Topic review'] ?></span></h2>
 <?php
 
+	$query = new SelectQuery(array('poster' => 'p.poster', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted'), 'posts AS p');
+	$query->where = 'p.topic_id = :tid';
+	$query->order_by = array('id' => 'p.id DESC');
+	$query->limit = $pun_config['o_topic_review'];
+
+	$params = array(':tid' => $tid);
+
+	$result = $db->query($query, $params);
+
 	// Set background switching on
 	$post_count = 0;
 
-	while ($cur_post = $db->fetch_assoc($result))
+	foreach ($result as $cur_post)
 	{
 		$post_count++;
 
@@ -727,6 +763,8 @@ if ($tid && $pun_config['o_topic_review'] != '0')
 <?php
 
 	}
+
+	unset ($result, $query, $params);
 
 ?>
 </div>

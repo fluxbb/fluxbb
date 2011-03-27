@@ -26,11 +26,17 @@ if (isset($_GET['get_host']))
 		if ($get_host < 1)
 			message($lang_common['Bad request']);
 
-		$result = $db->query('SELECT poster_ip FROM '.$db->prefix.'posts WHERE id='.$get_host) or error('Unable to fetch post IP address', __FILE__, __LINE__, $db->error());
-		if (!$db->num_rows($result))
+		$query = new SelectQuery(array('poster_ip' => 'p.poster_ip'), 'posts AS p');
+		$query->where = 'id = :pid';
+
+		$params = array(':pid' => $get_host);
+
+		$result = $db->query($query, $params);
+		if (empty($result))
 			message($lang_common['Bad request']);
 
-		$ip = $db->result($result);
+		$ip = $result[0]['poster_ip'];
+		unset ($result, $query, $params);
 	}
 
 	// Load the misc.php language file

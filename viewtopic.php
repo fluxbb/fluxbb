@@ -36,7 +36,8 @@ if ($pid)
 	if (empty($result))
 		message($lang_common['Bad request']);
 
-	list($id, $posted) = $result[0];
+	$id = $result[0]['topic_id'];
+	$posted = $result[0]['posted'];
 	unset ($result, $query, $params);
 
 	// Determine on what page the post is located (depending on $forum_user['disp_posts'])

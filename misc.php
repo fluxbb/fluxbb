@@ -236,14 +236,14 @@ else if (isset($_GET['report']))
 		if (empty($result))
 			message($lang_common['Bad request']);
 
-		list($subject, $forum_id) = $result[0];
+		$cur_post = $result[0];
 		unset ($result, $query, $params);
 
 		// Should we use the internal report handling?
 		if ($pun_config['o_report_method'] == '0' || $pun_config['o_report_method'] == '2')
 		{
 			$query = new InsertQuery(array('post_id' => ':post_id', 'topic_id' => ':topic_id', 'forum_id' => ':forum_id', 'reported_by' => ':user_id', 'created' => ':now', 'message' => ':reason'), 'reports');
-			$params = array(':post_id' => $post_id, ':topic_id' => $topic_id, ':forum_id' => $forum_id, ':user_id' => $pun_user['id'], ':now' => time(), ':reason' => $reason);
+			$params = array(':post_id' => $post_id, ':topic_id' => $topic_id, ':forum_id' => $cur_post['forum_id'], ':user_id' => $pun_user['id'], ':now' => time(), ':reason' => $reason);
 
 			$db->query($query, $params);
 			unset ($query, $params);
@@ -255,7 +255,7 @@ else if (isset($_GET['report']))
 			// We send it to the complete mailing-list in one swoop
 			if ($pun_config['o_mailing_list'] != '')
 			{
-				$mail_subject = sprintf($lang_common['Report notification'], $forum_id, $subject);
+				$mail_subject = sprintf($lang_common['Report notification'], $cur_post['forum_id'], $cur_post['subject']);
 				$mail_message = sprintf($lang_common['Report message 1'], $pun_user['username'], get_base_url().'/viewtopic.php?pid='.$post_id.'#p'.$post_id)."\n";
 				$mail_message .= sprintf($lang_common['Report message 2'], $reason)."\n";
 				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
