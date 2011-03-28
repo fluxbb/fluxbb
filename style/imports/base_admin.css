@@ -38,10 +38,13 @@ TABLE#forumperms .atcl {TEXT-ALIGN: left; WIDTH: 15em; WHITE-SPACE: nowrap}
 /*** User/Ban Search Result Tables ***/
 #users2 TH, #bans1 TH {TEXT-ALIGN: left}
 #users2 TH.tcmod {TEXT-ALIGN: center}
-#users2 .tcl, #users2 .tc3, #users2 .tc5, #bans1 .tcl, #bans1 .tc3, #bans1 .tc5, #bans1 .tc6 {WIDTH: 15%; TEXT-ALIGN: left; PADDING: 4px 6px}
-#users2 .tc2, #bans1 .tc2 {WIDTH: 22%; TEXT-ALIGN: left; PADDING: 4px 6px}
-#users2 .tc4, #bans1 .tc4 {WIDTH: 8%; TEXT-ALIGN: center}
-#users2 .tcr, #bans1 .tcr {WHITE-SPACE: nowrap}
+#users2 .tcl, #bans1 .tcl {WIDTH: auto; TEXT-ALIGN: left; PADDING: 4px 6px}
+#users2 .tc2, #bans1 .tc2 {WIDTH: 18%; TEXT-ALIGN: left; PADDING: 4px 6px}
+#users2 .tc3, #users2 .tc5, #bans1 .tc3, #bans1 .tc5, #bans1 .tc6 {WIDTH: 12%; TEXT-ALIGN: left; PADDING: 4px 6px}
+#users2 .tc4, #bans1 .tc4 {WIDTH: 10%; TEXT-ALIGN: center}
+#users2 .tcr {WIDTH: 20%; WHITE-SPACE: nowrap}
+#bans1 .tcr {WIDTH: 15%; WHITE-SPACE: nowrap}
+#users2 .tcmod {WIDTH: 10%; TEXT-ALIGN: center}
 #adminconsole #linkst, #adminconsole #linksb A {FONT-WEIGHT: bold}
 
 /*** Plugins ***/
