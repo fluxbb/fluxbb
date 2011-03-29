@@ -1004,10 +1004,17 @@ else
 											<option value="0"><?php echo $lang_admin_users['Unverified users'] ?></option>
 <?php
 
-	$result = $db->query('SELECT g_id, g_title FROM '.$db->prefix.'groups WHERE g_id!='.PUN_GUEST.' ORDER BY g_title') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
+	$query = new SelectQuery(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
+	$query->where = 'g.g_id != :group_guest';
+	$query->order_by = array('g_title' => 'g.g_title DESC');
 
-	while ($cur_group = $db->fetch_assoc($result))
+	$params = array(':group_guest' => PUN_GUEST);
+
+	$result = $db->query($query, $params);
+	foreach ($result as $cur_group)
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$cur_group['g_id'].'">'.pun_htmlspecialchars($cur_group['g_title']).'</option>'."\n";
+
+	unset ($result, $query, $params);
 
 ?>
 										</select>
