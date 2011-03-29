@@ -1714,10 +1714,20 @@ else
 							<p><?php echo $lang_profile['Moderator in info'] ?></p>
 <?php
 
-				$result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.moderators FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id WHERE f.redirect_url IS NULL ORDER BY c.disp_position, c.id, f.disp_position') or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
+				$query = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators'), 'categories AS c');
+
+				$query->joins['f'] = new InnerJoin('forums AS f');
+				$query->joins['f']->on = 'c.id = f.cat_id';
+
+				$query->where = 'f.redirect_url IS NULL';
+				$query->order_by = array('cposition' => 'c.disp_position DESC', 'cid' => 'c.id DESC', 'fposition' => 'f.disp_position');
+
+				$params = array();
+
+				$result = $db->query($query, $params);
 
 				$cur_category = 0;
-				while ($cur_forum = $db->fetch_assoc($result))
+				foreach ($result as $cur_forum)
 				{
 					if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
 					{
@@ -1735,6 +1745,8 @@ else
 
 					echo "\n\t\t\t\t\t\t\t\t\t".'<label><input type="checkbox" name="moderator_in['.$cur_forum['fid'].']" value="1"'.((in_array($id, $moderators)) ? ' checked="checked"' : '').' />'.pun_htmlspecialchars($cur_forum['forum_name']).'<br /></label>'."\n";
 				}
+
+				unset ($result, $query, $params);
 
 ?>
 								</div>
