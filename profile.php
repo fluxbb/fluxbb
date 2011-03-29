@@ -10,9 +10,8 @@ define('PUN_ROOT', dirname(__FILE__).'/');
 require PUN_ROOT.'include/common.php';
 
 // Include UTF-8 function
-require PUN_ROOT.'modules/utf8/substr_replace.php';
-require PUN_ROOT.'modules/utf8/ucwords.php'; // utf8_ucwords needs utf8_substr_replace
-require PUN_ROOT.'modules/utf8/strcasecmp.php';
+require PUN_ROOT.'modules/utf8/functions/substr_replace.php';
+require PUN_ROOT.'modules/utf8/functions/strcasecmp.php';
 
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 $section = isset($_GET['section']) ? $_GET['section'] : null;
