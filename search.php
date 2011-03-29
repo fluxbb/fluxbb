@@ -102,6 +102,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		unset ($query, $params);
 
 		if (!empty($result))
+		{
 			$temp = unserialize($result[0]['search_data']);
 
 			$search_ids = unserialize($temp['search_ids']);
