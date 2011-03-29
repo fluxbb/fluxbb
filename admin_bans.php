@@ -32,23 +32,42 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 			if ($user_id < 2)
 				message($lang_common['Bad request']);
 
-			$result = $db->query('SELECT group_id, username, email FROM '.$db->prefix.'users WHERE id='.$user_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-			if ($db->num_rows($result))
-				list($group_id, $ban_user, $ban_email) = $db->fetch_row($result);
-			else
+			$query = new SelectQuery(array('group_id' => 'u.group_id', 'username' => 'u.username', 'email' => 'u.email'), 'users AS u');
+			$query->where = 'id = :user_id';
+
+			$params = array(':user_id' => $user_id);
+
+			$result = $db->query($query, $params);
+			if (empty($result))
 				message($lang_admin_bans['No user ID message']);
+
+			$group_id = $result[0]['group_id'];
+			$ban_user = $reuslt[0]['username'];
+			$ban_email = $result[0]['email'];
+
+			unset ($result, $query, $params);
 		}
 		else // Otherwise the username is in POST
 		{
 			$ban_user = pun_trim($_POST['new_ban_user']);
 
-			if ($ban_user != '')
+			if (!empty($ban_user))
 			{
-				$result = $db->query('SELECT id, group_id, username, email FROM '.$db->prefix.'users WHERE username=\''.$db->escape($ban_user).'\' AND id>1') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-				if ($db->num_rows($result))
-					list($user_id, $group_id, $ban_user, $ban_email) = $db->fetch_row($result);
-				else
+				$query = new SelectQuery(array('id' => 'u.id', 'group_id' => 'u.group_id', 'username' => 'u.username', 'email' => 'u.email'), 'users AS u');
+				$query->where = 'username = :ban_user AND id > 1';
+
+				$params = array(':ban_user' => $ban_user);
+
+				$result = $db->query($query, $params);
+				if (empty($result))
 					message($lang_admin_bans['No user message']);
+
+				$user_id = $result[0]['id'];
+				$group_id = $result[0]['group_id'];
+				$ban_user = $result[0]['username'];
+				$ban_email = $result[0]['email'];
+
+				unset ($result, $query, $params);
 			}
 		}
 
