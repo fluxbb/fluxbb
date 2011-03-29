@@ -165,7 +165,7 @@ generate_admin_menu('index');
 					</dd>
 					<dt><?php echo $lang_admin_index['Database label'] ?></dt>
 					<dd>
-						<?php echo implode(' ', $db->get_version())."\n" ?>
+						<?php echo $db->get_version()."\n" ?>
 <?php if (isset($total_records) && isset($total_size)): ?>						<br /><?php printf($lang_admin_index['Database data rows'], forum_number_format($total_records)) ?>
 						<br /><?php printf($lang_admin_index['Database data size'], $total_size) ?>
 <?php endif; ?>					</dd><?php endif; ?>
