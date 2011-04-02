@@ -1989,7 +1989,7 @@ else
 				$query->joins['f']->on = 'c.id = f.cat_id';
 
 				$query->where = 'f.redirect_url IS NULL';
-				$query->order_by = array('cposition' => 'c.disp_position DESC', 'cid' => 'c.id DESC', 'fposition' => 'f.disp_position');
+				$query->order = array('cposition' => 'c.disp_position DESC', 'cid' => 'c.id DESC', 'fposition' => 'f.disp_position');
 
 				$params = array();
 

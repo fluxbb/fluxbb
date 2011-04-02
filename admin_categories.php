@@ -161,7 +161,7 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 
 // Generate an array with all categories
 $query = new SelectQuery(array('cid' => 'c.id', 'name' => 'c.cat_name', 'cposition' => 'c.disp_position'), 'categories AS c');
-$query->order_by = array('cposition' => 'c.disp_position ASC');
+$query->order = array('cposition' => 'c.disp_position ASC');
 
 $params = array();
 

@@ -98,7 +98,7 @@ require PUN_ROOT.'header.php';
 
 $query = new SelectQuery(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
 $query->where = 'g.g_id != :group_guest';
-$query->order_by = array('g_id' => 'g.g_id DESC');
+$query->order = array('g_id' => 'g.g_id DESC');
 
 $params = array(':group_guest' => PUN_GUEST);
 
@@ -163,7 +163,7 @@ unset ($result, $query, $params);
 // Retrieve a list of user IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
 $query = new SelectQuery(array('id' => 'u.id'), 'users AS u');
 $query->where = 'u.id > 1 AND u.group_id != :group_unverified';
-$query->order_by = array('sort' => 'u.'.$sort_by.' '.$sort_dir, 'uid' => 'u.id ASC');
+$query->order = array('sort' => 'u.'.$sort_by.' '.$sort_dir, 'uid' => 'u.id ASC');
 $query->limit = 50;
 $query->offset = $start_from;
 
@@ -191,7 +191,7 @@ if (!empty($user_ids))
 	$query->joins['g']->on = 'g.g_id = u.group_id';
 
 	$query->where = 'u.id IN :uids';
-	$query->order_by = array('sort' => 'u.'.$sort_by.' '.$sort_dir, 'uid' => 'u.id ASC');
+	$query->order = array('sort' => 'u.'.$sort_by.' '.$sort_dir, 'uid' => 'u.id ASC');
 
 	$params = array(':uids' => $user_ids);
 

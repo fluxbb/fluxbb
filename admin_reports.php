@@ -38,7 +38,7 @@ if (isset($_POST['zap_id']))
 	// Delete old reports (which cannot be viewed anyway)
 	$query = new DeleteQuery('reports AS r');
 	$query->where = 'r.zapped IS NOT NULL';
-	$query->order_by = array('zapped' => 'r.zapped DESC');
+	$query->order = array('zapped' => 'r.zapped DESC');
 	$query->offset = 10;
 
 	$params = array();
@@ -80,7 +80,7 @@ $query->joins['u'] = new LeftJoin('users AS u');
 $query->joins['u']->on = 'r.reported_by = u.id';
 
 $query->where = 'r.zapped IS NULL';
-$query->order_by = array('created' => 'r.created DESC');
+$query->order = array('created' => 'r.created DESC');
 
 $params = array();
 
@@ -167,7 +167,7 @@ $query->joins['u2'] = new LeftJoin('users AS u2');
 $query->joins['u2']->on = 'r.zapped_by = u2.id';
 
 $query->where = 'r.zapped IS NOT NULL';
-$query->order_by = array('zapped' => 'r.zapped DESC');
+$query->order = array('zapped' => 'r.zapped DESC');
 $query->limit = 10;
 
 $params = array();

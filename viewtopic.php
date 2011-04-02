@@ -265,7 +265,7 @@ $post_count = 0; // Keep track of post numbers
 // Retrieve a list of post IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
 $query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
 $query->where = 'p.topic_id = :tid';
-$query->order_by = array('id' => 'p.id ASC');
+$query->order = array('id' => 'p.id ASC');
 $query->limit = $pun_user['disp_posts'];
 $query->offset = $start_from;
 
@@ -295,7 +295,7 @@ $query->joins['o'] = new LeftJoin('online AS o');
 $query->joins['o']->on = 'o.user_id = u.id AND o.user_id != 1 AND o.idle = 0';
 
 $query->where = 'p.id IN :pids';
-$query->order_by = array('pid' => 'p.id ASC');
+$query->order = array('pid' => 'p.id ASC');
 
 $params = array(':pids' => $post_ids);
 

@@ -717,7 +717,7 @@ if ($tid && $pun_config['o_topic_review'] != '0')
 
 	$query = new SelectQuery(array('poster' => 'p.poster', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted'), 'posts AS p');
 	$query->where = 'p.topic_id = :tid';
-	$query->order_by = array('id' => 'p.id DESC');
+	$query->order = array('id' => 'p.id DESC');
 	$query->limit = $pun_config['o_topic_review'];
 
 	$params = array(':tid' => $tid);

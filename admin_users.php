@@ -1006,7 +1006,7 @@ else
 
 	$query = new SelectQuery(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
 	$query->where = 'g.g_id != :group_guest';
-	$query->order_by = array('g_title' => 'g.g_title DESC');
+	$query->order = array('g_title' => 'g.g_title DESC');
 
 	$params = array(':group_guest' => PUN_GUEST);
 

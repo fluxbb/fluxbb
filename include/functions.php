@@ -927,7 +927,7 @@ function get_title($user)
 
 			// Get the rank list from the DB
 			$query = new SelectQuery(array('ranks' => 'r.*'), 'ranks AS r');
-			$query->order_by = array('min_posts' => 'r.min_posts ASC');
+			$query->order = array('min_posts' => 'r.min_posts ASC');
 
 			$params = array();
 
