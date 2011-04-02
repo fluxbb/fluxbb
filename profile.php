@@ -47,14 +47,31 @@ if ($action == 'change_pass')
 
 		$key = $_GET['key'];
 
-		$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch new password', __FILE__, __LINE__, $db->error());
-		$cur_user = $db->fetch_assoc($result);
+		// Fetch user information
+		$query = new SelectQuery(array('*' => '*'), 'users AS u');
+		$query->where = 'u.id = :id';
+		$params = array(':id' => $id);
+		$result = $db->query($query, $params);
+		
+		$cur_user = $result[0];
+		unset($query, $params, $result);
 
 		if ($key == '' || $key != $cur_user['activate_key'])
 			message($lang_profile['Pass key bad'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
 		else
 		{
-			$db->query('UPDATE '.$db->prefix.'users SET password=\''.$cur_user['activate_string'].'\', activate_string=NULL, activate_key=NULL'.(!empty($cur_user['salt']) ? ', salt=NULL' : '').' WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
+			$query = new UpdateQuery(array('password' => ':password', 'activate_string' => ':activate_string', 'activate_key' => ':activate_key'), 'users');
+			$query->where = 'id = :id';
+			$params = array(':id' => $id, ':password' => $cur_user['activate_string'], ':activate_string' => NULL, ':activate_key' => NULL);
+			
+			if (!empty($cur_user['salt']))
+			{
+				$query->fields['salt'] = ':salt';
+				$params[':salt'] = NULL;
+			}
+			
+			$db->query($query, $params);
+			unset($query, $params);
 
 			message($lang_profile['Pass updated'], true);
 		}
@@ -67,11 +84,18 @@ if ($action == 'change_pass')
 			message($lang_common['No permission']);
 		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a users password?
 		{
-			$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-			if (!$db->num_rows($result))
+			$query = new SelectQuery(array('group_id' => 'u.group_id', 'g_moderator' => 'g.g_moderator'), 'users AS u');
+			$query->joins['g'] = new InnerJoin('groups AS g');
+			$query->joins['g']->on = 'g.g_id = u.group_id';
+			$query->where = 'u.id = :id';
+			$params = array(':id' => $id);
+			$result = $db->query($query, $params);
+			
+			if (empty($result))
 				message($lang_common['Bad request']);
 
-			list($group_id, $is_moderator) = $db->fetch_row($result);
+			list($group_id, $is_moderator) = $result[0];
+			unset($query, $params, $result);
 
 			if ($pun_user['g_mod_edit_users'] == '0' || $pun_user['g_mod_change_passwords'] == '0' || $group_id == PUN_ADMIN || $is_moderator == '1')
 				message($lang_common['No permission']);
@@ -92,8 +116,13 @@ if ($action == 'change_pass')
 		if (pun_strlen($new_password1) < 4)
 			message($lang_prof_reg['Pass too short']);
 
-		$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch password', __FILE__, __LINE__, $db->error());
-		$cur_user = $db->fetch_assoc($result);
+		$query = new SelectQuery(array('*'), 'users AS u');
+		$query->where = 'u.id = :id';
+		$params = array(':id' => $id);
+		$result = $db->query($query, $params);
+		
+		$cur_user = $result[0];
+		unset($query, $params, $result);
 
 		$authorized = false;
 
@@ -110,8 +139,19 @@ if ($action == 'change_pass')
 
 		$new_password_hash = pun_hash($new_password1);
 
-		$db->query('UPDATE '.$db->prefix.'users SET password=\''.$new_password_hash.'\''.(!empty($cur_user['salt']) ? ', salt=NULL' : '').' WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
-
+		$query = new UpdateQuery(array('password' => ':password'), 'users');
+		$query->where = 'id = :id';
+		$params = array(':id' => $id, ':password' => $new_password_hash);
+		
+		if (!empty($cur_user['salt']))
+		{
+			$query->fields['salt'] = ':salt';
+			$params[':salt'] = NULL;
+		}
+		
+		$db->query($query, $params);
+		unset($query, $params);
+		
 		if ($pun_user['id'] == $id)
 			pun_setcookie($pun_user['id'], $new_password_hash, time() + $pun_config['o_timeout_visit']);
 
@@ -163,11 +203,18 @@ else if ($action == 'change_email')
 			message($lang_common['No permission']);
 		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a users email?
 		{
-			$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-			if (!$db->num_rows($result))
+			$query = new SelectQuery(array('group_id' => 'u.group_id', 'g_moderator' => 'g.g_moderator'), 'users AS u');
+			$query->joins['g'] = new InnerJoin('groups AS g');
+			$query->joins['g']->on = 'g.g_id = u.group_id';
+			$query->where = 'u.id = :id';
+			$params = array(':id' => $id);
+			$result = $db->query($query, $params);
+			
+			if (empty($result))
 				message($lang_common['Bad request']);
 
-			list($group_id, $is_moderator) = $db->fetch_row($result);
+			list($group_id, $is_moderator) = $result[0];
+			unset($query, $params, $result);
 
 			if ($pun_user['g_mod_edit_users'] == '0' || $group_id == PUN_ADMIN || $is_moderator == '1')
 				message($lang_common['No permission']);
@@ -178,14 +225,23 @@ else if ($action == 'change_email')
 	{
 		$key = $_GET['key'];
 
-		$result = $db->query('SELECT activate_string, activate_key FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch activation data', __FILE__, __LINE__, $db->error());
-		list($new_email, $new_email_key) = $db->fetch_row($result);
+		$query = new SelectQuery(array('activate_string' => 'u.activate_string', 'activate_key' => 'u.activate_key'), 'users AS u');
+		$query->where = 'u.id = :id';
+		$params = array(':id' => $id);
+		$result = $db->query($query, $params);
+		
+		list($new_email, $new_email_key) = $result[0];
+		unset($query, $params, $result);
 
 		if ($key == '' || $key != $new_email_key)
 			message($lang_profile['Email key bad'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
 		else
 		{
-			$db->query('UPDATE '.$db->prefix.'users SET email=activate_string, activate_string=NULL, activate_key=NULL WHERE id='.$id) or error('Unable to update email address', __FILE__, __LINE__, $db->error());
+			$query = new UpdateQuery(array('email' => 'activate_string', 'activate_string' => ':activate_string', 'activate_key' => ':activate_key'), 'users');
+			$query->where = 'id = :id';
+			$params = array(':activate_string' => NULL, ':activate_key' => NULL, ':id' => $id);
+			$db->query($query, $params);
+			unset($query, $params);
 
 			message($lang_profile['Email updated'], true);
 		}
