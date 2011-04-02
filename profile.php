@@ -715,29 +715,64 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 			@set_time_limit(0);
 
 			// Find all posts made by this user
-			$result = $db->query('SELECT p.id, p.topic_id, t.forum_id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE p.poster_id='.$id) or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
-			if ($db->num_rows($result))
+			$query = new SelectQuery(array('id' => 'p.id', 'topic_id' => 'p.topic_id', 'forum_id' => 't.forum_id'), 'posts AS p');
+			$query->joins['t'] = new InnerJoin('topics AS t');
+			$query->joins['t']->on = 't.id = p.topic_id';
+			$query->joins['f'] = new InnerJoin('forums AS f');
+			$query->joins['f']->on = 'f.id = t.forum_id';
+			$query->where = 'p.poster_id = :id';
+			
+			$params = array(':id' => $id);
+			
+			$result = $db->query($query, $params);
+			unset($query, $params);
+			
+			if (!empty($result))
 			{
-				while ($cur_post = $db->fetch_assoc($result))
+				foreach ($result as $cur_post)
 				{
 					// Determine whether this post is the "topic post" or not
-					$result2 = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE topic_id='.$cur_post['topic_id'].' ORDER BY posted LIMIT 1') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-
-					if ($db->result($result2) == $cur_post['id'])
+					$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+					$query->where = 'p.topic_id = :topic_id';
+					$query->order = array('posted' => 'p.posted ASC');
+					$query->limit = 1;
+					
+					$params = array(':topic_id' => $cur_post['topic_id']);
+					
+					$result2 = $db->query($query, $params);
+					
+					if ($result2[0]['id'] == $cur_post['id'])
 						delete_topic($cur_post['topic_id']);
 					else
 						delete_post($cur_post['id'], $cur_post['topic_id']);
+					
+					unset($query, $params, $result2);
 
 					update_forum($cur_post['forum_id']);
 				}
 			}
+			unset($result);
 		}
 		else
+		{
 			// Set all his/her posts to guest
-			$db->query('UPDATE '.$db->prefix.'posts SET poster_id=1 WHERE poster_id='.$id) or error('Unable to update posts', __FILE__, __LINE__, $db->error());
+			$query = new UpdateQuery(array('poster_id' => '1'), 'posts');
+			$query->where = 'poster_id = :id';
+			
+			$params = array(':id' => $id);
+			
+			$db->query($query, $params);
+			unset($query, $params);
+		}
 
 		// Delete the user
-		$db->query('DELETE FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to delete user', __FILE__, __LINE__, $db->error());
+		$query = new DeleteQuery('users');
+		$query->where = 'id = :id';
+		
+		$params = array(':id' => $id);
+		
+		$db->query($query, $params);
+		unset($query, $params);
 
 		// Delete user avatar
 		delete_avatar($id);
@@ -782,11 +817,19 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 else if (isset($_POST['form_sent']))
 {
 	// Fetch the user group of the user we are editing
-	$result = $db->query('SELECT u.username, u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
+	$query = new SelectQuery(array('username' => 'u.username', 'group_id' => 'u.group_id', 'g_moderator' => 'g.g_moderator'), 'users AS u');
+	$query->joins['g'] = new InnerJoin('groups AS g');
+	$query->joins['g']->on = 'g.g_id = u.group_id';
+	$query->where = 'u.id = :id';
+	
+	$params = array(':id' => $id);
+	
+	$result = $db->query($query, $params);
+	if (empty($result))
 		message($lang_common['Bad request']);
 
-	list($old_username, $group_id, $is_moderator) = $db->fetch_row($result);
+	list($old_username, $group_id, $is_moderator) = $result[0];
+	unset($query, $params, $result);
 
 	if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. editing your own profile)
 		(!$pun_user['is_admmod'] ||																	// and we are not an admin or mod
@@ -1007,43 +1050,116 @@ else if (isset($_POST['form_sent']))
 	}
 
 
-	// Single quotes around non-empty values and NULL for empty values
+	// NULL for empty values
 	$temp = array();
 	foreach ($form as $key => $input)
 	{
-		$value = ($input !== '') ? '\''.$db->escape($input).'\'' : 'NULL';
+		$value = ($input !== '') ? $input : NULL;
 
-		$temp[] = $key.'='.$value;
+		$temp[$key] = $value;
 	}
 
 	if (empty($temp))
 		message($lang_common['Bad request']);
 
 
-	$db->query('UPDATE '.$db->prefix.'users SET '.implode(',', $temp).' WHERE id='.$id) or error('Unable to update profile', __FILE__, __LINE__, $db->error());
+	$query = new UpdateQuery(array(), 'users');
+	$query->where = 'id = :id';
+	
+	$params = array(':id' => $id);
+	
+	foreach ($temp as $key => $value)
+	{
+		$query->values[$key] = ':'.$key;
+		$params[':'.$key] = $value;
+	}
+	
+	$db->query($query, $params);
+	unset($query, $params);
 
 	// If we changed the username we have to update some stuff
 	if ($username_updated)
 	{
-		$db->query('UPDATE '.$db->prefix.'posts SET poster=\''.$db->escape($form['username']).'\' WHERE poster_id='.$id) or error('Unable to update posts', __FILE__, __LINE__, $db->error());
-		$db->query('UPDATE '.$db->prefix.'posts SET edited_by=\''.$db->escape($form['username']).'\' WHERE edited_by=\''.$db->escape($old_username).'\'') or error('Unable to update posts', __FILE__, __LINE__, $db->error());
-		$db->query('UPDATE '.$db->prefix.'topics SET poster=\''.$db->escape($form['username']).'\' WHERE poster=\''.$db->escape($old_username).'\'') or error('Unable to update topics', __FILE__, __LINE__, $db->error());
-		$db->query('UPDATE '.$db->prefix.'topics SET last_poster=\''.$db->escape($form['username']).'\' WHERE last_poster=\''.$db->escape($old_username).'\'') or error('Unable to update topics', __FILE__, __LINE__, $db->error());
-		$db->query('UPDATE '.$db->prefix.'forums SET last_poster=\''.$db->escape($form['username']).'\' WHERE last_poster=\''.$db->escape($old_username).'\'') or error('Unable to update forums', __FILE__, __LINE__, $db->error());
-		$db->query('UPDATE '.$db->prefix.'online SET ident=\''.$db->escape($form['username']).'\' WHERE ident=\''.$db->escape($old_username).'\'') or error('Unable to update online list', __FILE__, __LINE__, $db->error());
-
+		// Update all posts by this user
+		$query = new UpdateQuery(array('poster' => ':poster'), 'posts');
+		$query->where = 'poster_id = :poster_id';
+		
+		$params = array(':poster' => $form['username'], ':poster_id' => $id);
+		
+		$db->query($query, $params);
+		unset($query, $params);
+		
+		// Update all posts edited by this user
+		$query = new UpdateQuery(array('edited_by' => ':poster'), 'posts');
+		$query->where = 'edited_by = :old_username';
+		
+		$params = array(':poster' => $form['username'], ':old_username' => $old_username);
+		
+		$db->query($query, $params);
+		unset($query, $params);
+		
+		// Update all topic by this user
+		$query = new UpdateQuery(array('poster' => ':poster'), 'topics');
+		$query->where = 'poster = :old_username';
+		
+		$params = array(':poster' => $form['username'], ':old_username' => $old_username);
+		
+		$db->query($query, $params);
+		unset($query, $params);
+		
+		// Update all topics with a last post by this user
+		$query = new UpdateQuery(array('last_poster' => ':poster'), 'topics');
+		$query->where = 'poster = :old_username';
+		
+		$params = array(':poster' => $form['username'], ':old_username' => $old_username);
+		
+		$db->query($query, $params);
+		unset($query, $params);
+		
+		// Update all forums with a last post by this user
+		$query = new UpdateQuery(array('last_poster' => ':poster'), 'forums');
+		$query->where = 'last_poster = :old_username';
+		
+		$params = array(':poster' => $form['username'], ':old_username' => $old_username);
+		
+		$db->query($query, $params);
+		unset($query, $params);
+		
+		// Update all online table entries about this user
+		$query = new UpdateQuery(array('ident' => ':username'), 'online');
+		$query->where = 'ident = :old_username';
+		
+		$params = array(':username' => $form['username'], ':old_username' => $old_username);
+		
+		$db->query($query, $params);
+		unset($query, $params);
+		
 		// If the user is a moderator or an administrator we have to update the moderator lists
-		$result = $db->query('SELECT group_id FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-		$group_id = $db->result($result);
-
-		$result = $db->query('SELECT g_moderator FROM '.$db->prefix.'groups WHERE g_id='.$group_id) or error('Unable to fetch group', __FILE__, __LINE__, $db->error());
-		$group_mod = $db->result($result);
-
+		$query = new SelectQuery(array('group_id' => 'u.group_id'), 'users AS u');
+		$query->where = 'u.id = :id';
+		
+		$params = array(':id' => $id);
+		
+		$result = $db->query($query, $params);
+		$group_id = $result[0];
+		unset($query, $params, $result);
+		
+		$query = new SelectQuery(array('g_moderator' => 'g.g_moderator'), 'groups AS g');
+		$query->where = 'g.g_id = :g_id';
+		
+		$params = array(':g_id' => $group_id);
+		
+		$result = $db->query($query, $params);
+		$group_mod = $result[0];
+		unset($query, $params, $result);
+		
 		if ($group_id == PUN_ADMIN || $group_mod == '1')
 		{
-			$result = $db->query('SELECT id, moderators FROM '.$db->prefix.'forums') or error('Unable to fetch forum list', __FILE__, __LINE__, $db->error());
-
-			while ($cur_forum = $db->fetch_assoc($result))
+			$query = new SelectQuery(array('id' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
+			$result = $db->query($query);
+			unset($query);
+			
+			foreach ($result as $cur_forum)
 			{
 				$cur_moderators = ($cur_forum['moderators'] != '') ? unserialize($cur_forum['moderators']) : array();
 
@@ -1053,9 +1169,15 @@ else if (isset($_POST['form_sent']))
 					$cur_moderators[$form['username']] = $id;
 					uksort($cur_moderators, 'utf8_strcasecmp');
 
-					$db->query('UPDATE '.$db->prefix.'forums SET moderators=\''.$db->escape(serialize($cur_moderators)).'\' WHERE id='.$cur_forum['id']) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
+					$query = new UpdateQuery(array('moderators' => ':moderators'), 'forums');
+					$query->where = 'id = :id';
+					
+					$params = array(':moderators' => serialize($cur_moderators), ':id' => $cur_forum['id']);
+					$db->query($query, $params);
+					unset($query, $params);
 				}
 			}
+			unset($result);
 		}
 
 		// Regenerate the users info cache
@@ -1812,15 +1934,22 @@ else
 							<select id="group_id" name="group_id">
 <?php
 
-				$result = $db->query('SELECT g_id, g_title FROM '.$db->prefix.'groups WHERE g_id!='.PUN_GUEST.' ORDER BY g_title') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
-
-				while ($cur_group = $db->fetch_assoc($result))
+				$query = new SelectQuery(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
+				$query->where = 'g.g_id != :g_id';
+				$query->order = array('g_title' => 'g.g_title ASC');
+				
+				$params = array(':g_id' => PUN_GUEST);
+				
+				$result = $db->query($query, $params);
+				
+				foreach ($result as $cur_group)
 				{
 					if ($cur_group['g_id'] == $user['g_id'] || ($cur_group['g_id'] == $pun_config['o_default_user_group'] && $user['g_id'] == ''))
 						echo "\t\t\t\t\t\t\t\t".'<option value="'.$cur_group['g_id'].'" selected="selected">'.pun_htmlspecialchars($cur_group['g_title']).'</option>'."\n";
 					else
 						echo "\t\t\t\t\t\t\t\t".'<option value="'.$cur_group['g_id'].'">'.pun_htmlspecialchars($cur_group['g_title']).'</option>'."\n";
 				}
+				unset($query, $params, $result);
 
 ?>
 							</select>
