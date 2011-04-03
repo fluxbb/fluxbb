@@ -610,7 +610,7 @@ else if (isset($_POST['update_forums']))
 			unset($cur_moderators[$username]);
 			$cur_moderators = (!empty($cur_moderators)) ? serialize($cur_moderators) : NULL;
 
-			$params = array(':moderators' => $cur_moderators, ':id' => $cur_forum['id']);
+			$params = array(':moderators' => $cur_moderators, ':forum_id' => $cur_forum['id']);
 
 			$db->query($update_query, $params);
 			unset($params);
