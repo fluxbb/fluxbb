@@ -185,19 +185,26 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 	if ($mode == 'edit')
 	{
-		$result = $db->query('SELECT w.id, w.word, m.subject_match FROM '.$db->prefix.'search_words AS w INNER JOIN '.$db->prefix.'search_matches AS m ON w.id=m.word_id WHERE m.post_id='.$post_id, true) or error('Unable to fetch search index words', __FILE__, __LINE__, $db->error());
-
 		// Declare here to stop array_keys() and array_diff() from complaining if not set
-		$cur_words['post'] = array();
-		$cur_words['subject'] = array();
+		$cur_words = array('post' => array(), 'subject' => array());
 
-		while ($row = $db->fetch_row($result))
+		$query = new SelectQuery(array('wid' => 'w.id', 'word' => 'w.word', 'subject_match' => 'w.subject_match'), 'search_words AS w');
+
+		$query->joins['m'] = new InnerJoin('search_matches AS m');
+		$query->joins['m']->on = 'w.id = m.word_id';
+
+		$query->where = 'm.post_id = :post_id';
+
+		$params = array(':post_id' => $post_id);
+
+		$result = $db->query($query, $params);
+		foreach ($result as $cur_word)
 		{
-			$match_in = ($row[2]) ? 'subject' : 'post';
-			$cur_words[$match_in][$row[1]] = $row[0];
+			$match_in = $cur_word['subject_match'] ? 'subject' : 'post';
+			$cur_words[$match_in][$cur_word['word']] = $cur_word['id'];
 		}
 
-		$db->free_result($result);
+		unset ($query, $params, $result);
 
 		$words['add']['post'] = array_diff($words_message, array_keys($cur_words['post']));
 		$words['add']['subject'] = array_diff($words_subject, array_keys($cur_words['subject']));
@@ -220,33 +227,34 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 	if (!empty($unique_words))
 	{
-		$result = $db->query('SELECT id, word FROM '.$db->prefix.'search_words WHERE word IN(\''.implode('\',\'', array_map(array($db, 'escape'), $unique_words)).'\')', true) or error('Unable to fetch search index words', __FILE__, __LINE__, $db->error());
-
 		$word_ids = array();
-		while ($row = $db->fetch_row($result))
-			$word_ids[$row[1]] = $row[0];
 
-		$db->free_result($result);
+		$query = new SelectQuery(array('id' => 'w.id', 'word' => 'w.word'), 'search_words AS w');
+		$query->where = 'w.word IN :words';
+
+		$params = array(':words' => $unique_words);
+
+		$result = $db->query($query, $params);
+		foreach ($result as $cur_word)
+			$word_ids[$cur_word['word']] = $cur_word['id'];
+
+		unset ($result, $query, $params);
 
 		$new_words = array_diff($unique_words, array_keys($word_ids));
 		unset($unique_words);
 
 		if (!empty($new_words))
 		{
-			switch ($db_type)
-			{
-				case 'mysql':
-				case 'mysqli':
-				case 'mysql_innodb':
-				case 'mysqli_innodb':
-					$db->query('INSERT INTO '.$db->prefix.'search_words (word) VALUES(\''.implode('\'),(\'', array_map(array($db, 'escape'), $new_words)).'\')');
-					break;
+			$insert_query = new InsertQuery(array('word' => ':word'), 'search_words');
 
-				default:
-					foreach ($new_words as $word)
-						$db->query('INSERT INTO '.$db->prefix.'search_words (word) VALUES(\''.$db->escape($word).'\')');
-					break;
+			foreach ($new_words as $cur_word)
+			{
+				$params = array(':word' => $cur_word);
+				$db->query($insert_query, $params);
+				unset ($params);
 			}
+
+			unset ($insert_query);
 		}
 
 		unset($new_words);
@@ -287,6 +295,11 @@ function strip_search_index($post_ids)
 {
 	global $db_type, $db;
 
+	// Convert the post ID string to an array - TODO: pass an array in the first place!
+	if (!is_array($post_ids))
+		$post_ids = array_map('trim', explode(',', $post_ids));
+
+	// TODO
 	switch ($db_type)
 	{
 		case 'mysql':
@@ -322,5 +335,12 @@ function strip_search_index($post_ids)
 			break;
 	}
 
-	$db->query('DELETE FROM '.$db->prefix.'search_matches WHERE post_id IN('.$post_ids.')') or error('Unable to delete search index word match', __FILE__, __LINE__, $db->error());
+	// Delete all matches for the given posts
+	$query = new DeleteQuery('search_matches');
+	$query->where = 'post_id IN :pids';
+
+	$params = array(':pids' => $post_ids);
+
+	$db->query($query, $params);
+	unset ($query, $params);
 }
