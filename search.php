@@ -131,9 +131,25 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				message(sprintf($lang_search['Search flood'], $pun_user['g_search_flood']));
 
 			if (!$pun_user['is_guest'])
-				$db->query('UPDATE '.$db->prefix.'users SET last_search='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
+			{
+				$query = new UpdateQuery(array('last_search' => ':last_search'), 'users');
+				$query->where = 'id = :id';
+				
+				$params = array(':last_search' => time(), ':id' => $pun_user['id']);
+				
+				$db->query($query, $params);
+				unset($query, $params);
+			}
 			else
-				$db->query('UPDATE '.$db->prefix.'online SET last_search='.time().' WHERE ident=\''.$db->escape(get_remote_address()).'\'' ) or error('Unable to update user', __FILE__, __LINE__, $db->error());
+			{
+				$query = new UpdateQuery(array('last_search' => ':last_search'), 'online');
+				$query->where = 'ident = :ident';
+				
+				$params = array(':last_search' => time(), ':ident' => get_remote_address());
+				
+				$db->query($query, $params);
+				unset($query, $params);
+			}
 
 			switch ($sort_by)
 			{
@@ -330,8 +346,19 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				if ($pun_user['is_guest'])
 					message($lang_common['No permission']);
 
-				$result = $db->query('SELECT t.id FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.last_post>'.$pun_user['last_visit'].' AND t.moved_to IS NULL'.(isset($_GET['fid']) ? ' AND t.forum_id='.intval($_GET['fid']) : '').' ORDER BY t.last_post DESC') or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());
-				$num_hits = $db->num_rows($result);
+				$query = new SelectQuery(array('id' => 't.id'), 'topics AS t');
+				$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
+				$query->joins['fp']->on = 'fp.forum_id = t.forum_id AND fp.group_id = :group_id';
+				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.last_post > :last_visit AND t.moved_to IS NULL'.(isset($_GET['fid']) ? ' AND t.forum_id = :forum_id' : '');
+				$query->order = array('last_post' => 't.last_post DESC');
+				
+				$params = array(':group_id' => $pun_user['g_id'], ':last_visit' => $pun_user['visit']);
+				if (isset($_GET['fid']))
+					$params[':forum_id'] = intval($_GET['fid']);
+				
+				$result = $db->query($query, $params);
+				$num_hits = count($result);
+				unset($query, $params, $result);
 
 				if (!$num_hits)
 					message($lang_search['No new posts']);
@@ -810,10 +837,21 @@ require PUN_ROOT.'header.php';
 if ($pun_config['o_search_all_forums'] == '1' || $pun_user['is_admmod'])
 	echo "\t\t\t\t\t\t\t".'<option value="-1">'.$lang_search['All forums'].'</option>'."\n";
 
-$result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.redirect_url FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.redirect_url IS NULL ORDER BY c.disp_position, c.id, f.disp_position', true) or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
+$query = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url'), 'categories AS c');
+$query->joins['f'] = new InnerJoin('forums as f');
+$query->joins['f']->on = 'c.id = f.cat_id';
+$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
+$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.redirect_url IS NULL';
+$query->order = array('c.disp_position' => 'c.disp_position ASC', 'c.id' => 'c.id ASC', 'f.disp_position' => 'f.disp_position ASC');
+
+$params = array(':group_id' => $pun_user['g_id']);
+
+$result = $db->query($query, $params);
+unset($query, $params);
 
 $cur_category = 0;
-while ($cur_forum = $db->fetch_assoc($result))
+foreach ($result as $cur_forum)
 {
 	if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
 	{
@@ -826,6 +864,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 
 	echo "\t\t\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'">'.pun_htmlspecialchars($cur_forum['forum_name']).'</option>'."\n";
 }
+unset($result);
 
 ?>
 							</optgroup>
