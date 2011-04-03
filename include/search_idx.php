@@ -260,6 +260,9 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 		unset($new_words);
 	}
 
+	$delete_query = new DeleteQuery('search_matches');
+	$delete_query->where = 'word_id IN :wids AND post_id = :post_id AND subject_match = :subject_match';
+
 	// Delete matches (only if editing a post)
 	foreach ($words['del'] as $match_in => $wordlist)
 	{
@@ -267,13 +270,18 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 		if (!empty($wordlist))
 		{
-			$sql = '';
-			foreach ($wordlist as $word)
-				$sql .= (($sql != '') ? ',' : '').$cur_words[$match_in][$word];
+			$word_ids = array();
 
-			$db->query('DELETE FROM '.$db->prefix.'search_matches WHERE word_id IN('.$sql.') AND post_id='.$post_id.' AND subject_match='.$subject_match) or error('Unable to delete search index word matches', __FILE__, __LINE__, $db->error());
+			foreach ($wordlist as $cur_word)
+				$word_ids[] = $cur_words[$match_in][$cur_word];
+
+			$params = array(':wids' => $word_ids, ':post_id' => $post_id, ':subject_match' => $subject_match);
+			$db->query($delete_query, $params);
+			unset ($params);
 		}
 	}
+
+	unset ($delete_query);
 
 	// Add new matches
 	foreach ($words['add'] as $match_in => $wordlist)
