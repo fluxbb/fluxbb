@@ -696,19 +696,30 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 		}
 
 		// Delete any subscriptions and remove him/her from the online list (if they happen to be logged in)
-		$query1 = new DeleteQuery('topic_subscriptions');
-		$query2 = new DeleteQuery('forum_subscriptions');
-		$query3 = new DeleteQuery('online');
-		$query1->where = 'user_id = :user_id';
-		$query2->where = 'user_id = :user_id';
-		$query3->where = 'user_id = :user_id';
 
+		// Delete topic subscriptions
+		$query = new DeleteQuery('topic_subscriptions');
+		$query->where = 'user_id = :user_id';
 		$params = array(':user_id' => $id);
 
-		$db->query($query1, $params);
-		$db->query($query2, $params);
-		$db->query($query3, $params);
-		unset($query1, $query2, $query3, $params);
+		$db->query($query, $params);
+		unset($query, $params);
+
+		// Delete forum subscriptions
+		$query = new DeleteQuery('forum_subscriptions');
+		$query->where = 'user_id = :user_id';
+		$params = array(':user_id' => $id);
+
+		$db->query($query, $params);
+		unset($query, $params);
+
+		// Delete online entry
+		$query = new DeleteQuery('online');
+		$query->where = 'user_id = :user_id';
+		$params = array(':user_id' => $id);
+
+		$db->query($query, $params);
+		unset($query, $params);
 
 		// Should we delete all posts made by this user?
 		if (isset($_POST['delete_posts']))
