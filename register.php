@@ -66,11 +66,16 @@ $errors = array();
 if (isset($_POST['form_sent']))
 {
 	// Check that someone from this IP didn't register a user within the last hour (DoS prevention)
-	$result = $db->query('SELECT 1 FROM '.$db->prefix.'users WHERE registration_ip=\''.get_remote_address().'\' AND registered>'.(time() - 3600)) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	$query = new SelectQuery(array('one' => '1'), 'users AS u');
+	$query->where = 'u.registration_ip = :remote_addr AND u.registered > :last_hour';
 
-	if ($db->num_rows($result))
+	$params = array(':remote_addr' => get_remote_address(), ':last_hour' => time() - 3600);
+
+	$result = $db->query($query, $params);
+	if (!empty($result))
 		message($lang_register['Registration flood']);
 
+	unset ($result, $query, $params);
 
 	$username = pun_trim($_POST['req_user']);
 	$email1 = strtolower(trim($_POST['req_email1']));
@@ -118,15 +123,23 @@ if (isset($_POST['form_sent']))
 	// Check if someone else already has registered with that email address
 	$dupe_list = array();
 
-	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE email=\''.$db->escape($email1).'\'') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	$query = new SelectQuery(array('username' => 'u.username'), 'users AS u');
+	$query->where = 'u.email = :email';
+
+	$params = array(':email' => $email1);
+
+	$result = $db->query($query, $params);
+	if (!empty($result))
 	if ($db->num_rows($result))
 	{
 		if ($pun_config['p_allow_dupe_email'] == '0')
 			$errors[] = $lang_prof_reg['Dupe email'];
 
-		while ($cur_dupe = $db->fetch_assoc($result))
+		foreach ($result as $cur_dupe)
 			$dupe_list[] = $cur_dupe['username'];
 	}
+
+	unset ($query, $params, $result);
 
 	// Make sure we got a valid language string
 	if (isset($_POST['language']))
@@ -156,8 +169,13 @@ if (isset($_POST['form_sent']))
 		$password_hash = pun_hash($password1);
 
 		// Add the user
-		$db->query('INSERT INTO '.$db->prefix.'users (username, group_id, password, email, email_setting, timezone, dst, language, style, registered, registration_ip, last_visit) VALUES(\''.$db->escape($username).'\', '.$intial_group_id.', \''.$password_hash.'\', \''.$db->escape($email1).'\', '.$email_setting.', '.$timezone.' , '.$dst.', \''.$db->escape($language).'\', \''.$pun_config['o_default_style'].'\', '.$now.', \''.get_remote_address().'\', '.$now.')') or error('Unable to create user', __FILE__, __LINE__, $db->error());
+		$query = new InsertQuery(array('username' => ':username', 'group_id' => ':group_id', 'password' => ':password', 'email' => ':email', 'email_setting' => ':email_setting', 'timezone' => ':timezone', 'dst' => ':dst', 'language' => ':language', 'style' => ':style', 'registered' => ':registered', 'registration_ip' => ':registration_ip', 'last_visit' => ':last_visit'), 'users');
+		$params = array(':username' => $username, ':group_id' => $intial_group_id, ':password' => $password_hash, ':email' => $email1, ':email_setting' => $email_setting, ':timezone' => $timezone, ':dst' => $dst, ':language' => $language, ':style' => $pun_config['o_default_style'], ':registered' => $now, ':registration_ip' => get_remote_address(), ':last_visit' => $now);
+
+		$db->query($query, $params);
 		$new_uid = $db->insert_id();
+
+		unset ($query, $params);
 
 		// If the mailing list isn't empty, we may need to send out some alerts
 		if ($pun_config['o_mailing_list'] != '')
