@@ -307,11 +307,11 @@ else if (isset($_GET['report']))
 	$query->joins['f']->on = 'f.id = t.forum_id';
 
 	$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-	$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :user_id';
+	$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
 
 	$query->where = '(fp.read_forum IS NULL OR fp.read_forum=1) AND p.id = :post_id';
 
-	$params = array(':user_id' => $pun_user['g_id'], ':post_id' => $post_id);
+	$params = array(':group_id' => $pun_user['g_id'], ':post_id' => $post_id);
 
 	$result = $db->query($query, $params);
 	if (empty($result))
