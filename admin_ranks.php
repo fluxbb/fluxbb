@@ -35,20 +35,21 @@ if (isset($_POST['add_rank']))
 		message($lang_admin_ranks['Must be integer message']);
 
 	// Make sure there isn't already a rank with the same min_posts value
-	$query = new SelectQuery(array('count' => 'COUNT(r.id)'), 'ranks AS r');
+	$query = new SelectQuery(array('one' => '1'), 'ranks AS r');
 	$query->where = 'r.min_posts = :min_posts';
-	
+
 	$params = array(':min_posts' => $min_posts);
-	
+
 	$result = $db->query($query, $params);
-	if ($result[0]['count'] == 0)
+	if (!empty($result))
 		message(sprintf($lang_admin_ranks['Dupe min posts message'], $min_posts));
+
 	unset($query, $params, $result);
 
 	$query = new InsertQuery(array('rank' => ':rank', 'min_posts' => ':min_posts'), 'ranks');
-	
+
 	$params = array(':rank' => $rank, ':min_posts' => $min_posts);
-	
+
 	$db->query($query, $params);
 	unset($query, $params);
 
@@ -76,21 +77,22 @@ else if (isset($_POST['update']))
 		message($lang_admin_ranks['Must be integer message']);
 
 	// Make sure there isn't already a rank with the same min_posts value
-	$query = new SelectQuery(array('count' => 'COUNT(r.id)'), 'ranks AS r');
+	$query = new SelectQuery(array('one' => '1'), 'ranks AS r');
 	$query->where = 'id != :id AND min_posts = :min_posts';
-	
+
 	$params = array(':id' => $id, ':min_posts' => $min_posts);
-	
+
 	$result = $db->query($query, $params);
-	if ($result[0]['count'] > 0)
+	if (!empty($result))
 		message(sprintf($lang_admin_ranks['Dupe min posts message'], $min_posts));
+
 	unset($query, $params, $result);
 
 	$query = new UpdateQuery(array('rank' => ':rank', 'min_posts' => ':min_posts'), 'ranks');
 	$query->where = 'id = :id';
-	
+
 	$params = array(':rank' => $rank, ':min_posts' => $min_posts, ':id' => $id);
-	
+
 	$db->query($query, $params);
 	unset($query, $params);
 
@@ -110,9 +112,9 @@ else if (isset($_POST['remove']))
 
 	$query = new DeleteQuery('ranks');
 	$query->where = 'id = :id';
-	
+
 	$params = array(':id' => $id);
-	
+
 	$db->query($query, $params);
 	unset($query, $params);
 
