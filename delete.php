@@ -20,12 +20,16 @@ if ($id < 1)
 
 // Fetch some info about the post, the topic and the forum
 $query = new SelectQuery(array('fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'redirect_url' => 'f.redirect_url', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics', 'tid' => 't.id AS tid', 'subject' => 't.subject', 'first_post_id' => 't.first_post_id', 'closed' => 't.closed', 'posted' => 'p.posted', 'poster' => 'p.poster', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies'), 'posts AS p');
+
 $query->joins['t'] = new InnerJoin('topics AS t');
 $query->joins['t']->on = 't.id = p.topic_id';
+
 $query->joins['f'] = new InnerJoin('forums AS f');
 $query->joins['f']->on = 'f.id = t.forum_id';
+
 $query->joins['fp'] = new LeftJoin('forum_perms AS fp');
 $query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+
 $query->where = '(fp.read_forum IS NULL OR fp.read_forum=1) AND p.id = :post_id';
 
 $params = array(':group_id' => $pun_user['g_id'], ':post_id' => $id);
@@ -84,9 +88,9 @@ if (isset($_POST['delete']))
 		$query->where = 'p.topic_id = :topic_id AND p.id < :post_id';
 		$query->order = array('id' => 'p.id DESC');
 		$query->limit = 1;
-		
+
 		$params = array(':topic_id' => $cur_post['tid'], ':post_id' => $id);
-		
+
 		$result = $db->query($query, $params);
 		$post_id = $result[0]['id'];
 		unset($query, $params, $result);
