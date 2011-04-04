@@ -48,11 +48,12 @@ if ($action == 'change_pass')
 		$key = $_GET['key'];
 
 		// Fetch user information
-		$query = new SelectQuery(array('*' => '*'), 'users AS u');
+		$query = new SelectQuery(array('users' => 'u.*'), 'users AS u');
 		$query->where = 'u.id = :id';
-		$params = array(':id' => $id);
-		$result = $db->query($query, $params);
 
+		$params = array(':id' => $id);
+
+		$result = $db->query($query, $params);
 		$cur_user = $result[0];
 		unset($query, $params, $result);
 
@@ -61,8 +62,9 @@ if ($action == 'change_pass')
 		else
 		{
 			$query = new UpdateQuery(array('password' => ':password', 'activate_string' => ':activate_string', 'activate_key' => ':activate_key'), 'users');
-			$query->where = 'id = :id';
-			$params = array(':id' => $id, ':password' => $cur_user['activate_string'], ':activate_string' => NULL, ':activate_key' => NULL);
+			$query->where = 'id = :user_id';
+
+			$params = array(':user_id' => $id, ':password' => $cur_user['activate_string'], ':activate_string' => NULL, ':activate_key' => NULL);
 
 			if (!empty($cur_user['salt']))
 			{
@@ -85,16 +87,21 @@ if ($action == 'change_pass')
 		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a users password?
 		{
 			$query = new SelectQuery(array('group_id' => 'u.group_id', 'g_moderator' => 'g.g_moderator'), 'users AS u');
+
 			$query->joins['g'] = new InnerJoin('groups AS g');
 			$query->joins['g']->on = 'g.g_id = u.group_id';
-			$query->where = 'u.id = :id';
-			$params = array(':id' => $id);
-			$result = $db->query($query, $params);
 
+			$query->where = 'u.id = :user_id';
+
+			$params = array(':user_id' => $id);
+
+			$result = $db->query($query, $params);
 			if (empty($result))
 				message($lang_common['Bad request']);
 
-			list($group_id, $is_moderator) = $result[0];
+			$group_id = $result[0]['group_id'];
+			$is_moderator = $result[0]['g_moderator'];
+
 			unset($query, $params, $result);
 
 			if ($pun_user['g_mod_edit_users'] == '0' || $pun_user['g_mod_change_passwords'] == '0' || $group_id == PUN_ADMIN || $is_moderator == '1')
@@ -116,11 +123,12 @@ if ($action == 'change_pass')
 		if (pun_strlen($new_password1) < 4)
 			message($lang_prof_reg['Pass too short']);
 
-		$query = new SelectQuery(array('*'), 'users AS u');
-		$query->where = 'u.id = :id';
-		$params = array(':id' => $id);
-		$result = $db->query($query, $params);
+		$query = new SelectQuery(array('users' => 'u.*'), 'users AS u');
+		$query->where = 'u.id = :user_id';
 
+		$params = array(':user_id' => $id);
+
+		$result = $db->query($query, $params);
 		$cur_user = $result[0];
 		unset($query, $params, $result);
 
@@ -140,8 +148,9 @@ if ($action == 'change_pass')
 		$new_password_hash = pun_hash($new_password1);
 
 		$query = new UpdateQuery(array('password' => ':password'), 'users');
-		$query->where = 'id = :id';
-		$params = array(':id' => $id, ':password' => $new_password_hash);
+		$query->where = 'id = :user_id';
+
+		$params = array(':user_id' => $id, ':password' => $new_password_hash);
 
 		if (!empty($cur_user['salt']))
 		{
@@ -204,16 +213,21 @@ else if ($action == 'change_email')
 		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a users email?
 		{
 			$query = new SelectQuery(array('group_id' => 'u.group_id', 'g_moderator' => 'g.g_moderator'), 'users AS u');
+
 			$query->joins['g'] = new InnerJoin('groups AS g');
 			$query->joins['g']->on = 'g.g_id = u.group_id';
-			$query->where = 'u.id = :id';
-			$params = array(':id' => $id);
-			$result = $db->query($query, $params);
 
+			$query->where = 'u.id = :user_id';
+
+			$params = array(':user_id' => $id);
+
+			$result = $db->query($query, $params);
 			if (empty($result))
 				message($lang_common['Bad request']);
 
-			list($group_id, $is_moderator) = $result[0];
+			$group_id = $result[0]['group_id'];
+			$is_moderator = $result[0]['g_moderator'];
+
 			unset($query, $params, $result);
 
 			if ($pun_user['g_mod_edit_users'] == '0' || $group_id == PUN_ADMIN || $is_moderator == '1')
@@ -226,11 +240,15 @@ else if ($action == 'change_email')
 		$key = $_GET['key'];
 
 		$query = new SelectQuery(array('activate_string' => 'u.activate_string', 'activate_key' => 'u.activate_key'), 'users AS u');
-		$query->where = 'u.id = :id';
-		$params = array(':id' => $id);
+		$query->where = 'u.id = :user_id';
+
+		$params = array(':user_id' => $id);
+
 		$result = $db->query($query, $params);
 
-		list($new_email, $new_email_key) = $result[0];
+		$new_email = $result[0]['activate_string'];
+		$new_email_key = $result[0]['activate_key'];
+
 		unset($query, $params, $result);
 
 		if ($key == '' || $key != $new_email_key)
@@ -238,8 +256,10 @@ else if ($action == 'change_email')
 		else
 		{
 			$query = new UpdateQuery(array('email' => 'activate_string', 'activate_string' => ':activate_string', 'activate_key' => ':activate_key'), 'users');
-			$query->where = 'id = :id';
-			$params = array(':activate_string' => NULL, ':activate_key' => NULL, ':id' => $id);
+			$query->where = 'id = :user_id';
+
+			$params = array(':activate_string' => NULL, ':activate_key' => NULL, ':user_id' => $id);
+
 			$db->query($query, $params);
 			unset($query, $params);
 
