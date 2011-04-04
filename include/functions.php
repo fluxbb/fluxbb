@@ -814,25 +814,50 @@ function delete_topic($topic_id)
 	global $db;
 
 	// Delete the topic and any redirect topics
-	$db->query('DELETE FROM '.$db->prefix.'topics WHERE id='.$topic_id.' OR moved_to='.$topic_id) or error('Unable to delete topic', __FILE__, __LINE__, $db->error());
+	$query = new DeleteQuery('topics');
+	$query->where = 'id = :topic_id OR moved_to = :topic_id';
+	
+	$params = array(':topic_id' => $topic_id);
+	
+	$db->query($query, $params);
+	unset($query, $params);
 
 	// Create a list of the post IDs in this topic
-	$post_ids = '';
-	$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE topic_id='.$topic_id) or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
-	while ($row = $db->fetch_row($result))
-		$post_ids .= ($post_ids != '') ? ','.$row[0] : $row[0];
+	$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+	$query->where = 'p.topic_id = :topic_id';
+	
+	$params = array(':topic_id' => $topic_id);
+	
+	$result = $db->query($query, $params);
+	
+	$post_ids = array();
+	foreach ($result as $row)
+		$post_ids[] = $row['id'];
+	unset($query, $params, $result);
 
 	// Make sure we have a list of post IDs
-	if ($post_ids != '')
+	if (!empty($post_ids))
 	{
 		strip_search_index($post_ids);
 
 		// Delete posts in topic
-		$db->query('DELETE FROM '.$db->prefix.'posts WHERE topic_id='.$topic_id) or error('Unable to delete posts', __FILE__, __LINE__, $db->error());
+		$query = new DeleteQuery('posts');
+		$query->where = 'topic_id = :topic_id';
+		
+		$params = array(':topic_id' => $topic_id);
+		
+		$db->query($query, $params);
+		unset($query, $params);
 	}
 
 	// Delete any subscriptions for this topic
-	$db->query('DELETE FROM '.$db->prefix.'topic_subscriptions WHERE topic_id='.$topic_id) or error('Unable to delete subscriptions', __FILE__, __LINE__, $db->error());
+	$query = new DeleteQuery('topic_subscriptions');
+	$query->where = 'topic_id = :topic_id';
+	
+	$params = array(':topic_id' => $topic_id);
+	
+	$db->query($query, $params);
+	unset($query, $params);
 }
 
 
@@ -843,32 +868,83 @@ function delete_post($post_id, $topic_id)
 {
 	global $db;
 
-	$result = $db->query('SELECT id, poster, posted FROM '.$db->prefix.'posts WHERE topic_id='.$topic_id.' ORDER BY id DESC LIMIT 2') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-	list($last_id, ,) = $db->fetch_row($result);
-	list($second_last_id, $second_poster, $second_posted) = $db->fetch_row($result);
+	$query = new SelectQuery(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
+	$query->where = 'p.topic_id = :topic_id';
+	$query->order = array('p.id DESC');
+	$query->limit = 2;
+	
+	$params = array(':topic_id' => $topic_id);
+	
+	$result = $db->query($query, $params);
+	
+	if (count($result) > 0)
+		$last_id = $result[0]['id'];
+	
+	if (count($result) > 1)
+		list($second_last_id, $second_poster, $second_posted) = array($result[1]['id'], $result[1]['poster'], $result[1]['posted']);
+	else
+		list($second_last_id, $second_poster, $second_posted) = array('', '', '');
+	
+	unset($query, $params, $result);
 
 	// Delete the post
-	$db->query('DELETE FROM '.$db->prefix.'posts WHERE id='.$post_id) or error('Unable to delete post', __FILE__, __LINE__, $db->error());
+	$query = new DeleteQuery('posts');
+	$query->where = 'id = :post_id';
+	
+	$params = array(':post_id' => $post_id);
+	
+	$db->query($query, $params);
+	unset($query, $params);
 
 	strip_search_index($post_id);
 
 	// Count number of replies in the topic
-	$result = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'posts WHERE topic_id='.$topic_id) or error('Unable to fetch post count for topic', __FILE__, __LINE__, $db->error());
-	$num_replies = $db->result($result, 0) - 1;
+	$query = new SelectQuery(array('post_count' => 'COUNT(p.id)'), 'posts AS p');
+	$query->where = 'topic_id = :topic_id';
+	
+	$params = array(':topic_id' => $topic_id);
+	
+	$result = $db->query($query, $params);
+	$num_replies = $result[0]['post_count'] - 1;
+	unset($query, $params, $result);
 
 	// If the message we deleted is the most recent in the topic (at the end of the topic)
 	if ($last_id == $post_id)
 	{
 		// If there is a $second_last_id there is more than 1 reply to the topic
 		if (!empty($second_last_id))
-			$db->query('UPDATE '.$db->prefix.'topics SET last_post='.$second_posted.', last_post_id='.$second_last_id.', last_poster=\''.$db->escape($second_poster).'\', num_replies='.$num_replies.' WHERE id='.$topic_id) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+		{
+			$query = new UpdateQuery(array('last_post' => ':second_posted', 'last_post_id' => ':second_last_id', 'last_poster' => ':second_poster', 'num_replies' => ':num_replies'), 'topics');
+			$query->where = 'id = :topic_id';
+			
+			$params = array(':second_posted' => $second_posted, ':second_last_id' => $second_last_id, ':second_poster' => $second_poster, ':num_replies' => $num_replies, ':topic_id' => $topic_id);
+			
+			$db->query($query, $params);
+			unset($query, $params);
+		}
 		else
+		{
 			// We deleted the only reply, so now last_post/last_post_id/last_poster is posted/id/poster from the topic itself
-			$db->query('UPDATE '.$db->prefix.'topics SET last_post=posted, last_post_id=id, last_poster=poster, num_replies='.$num_replies.' WHERE id='.$topic_id) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+			$query = new UpdateQuery(array('last_post' => 'posted', 'last_post_id' => 'id', 'last_poster' => 'poster', 'num_replies' => ':num_replies'), 'topics');
+			$query->where = 'id = :topic_id';
+			
+			$params = array(':num_replies' => $num_replies, ':topic_id' => $topic_id);
+			
+			$db->query($query, $params);
+			unset($query, $params);
+		}
 	}
 	else
+	{
 		// Otherwise we just decrement the reply counter
-		$db->query('UPDATE '.$db->prefix.'topics SET num_replies='.$num_replies.' WHERE id='.$topic_id) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+		$query = new UpdateQuery(array('num_replies' => ':num_replies'), 'topics');
+		$query->where = 'id = :topic_id';
+		
+		$params = array(':num_replies' => $num_replies, ':topic_id' => $topic_id);
+		
+		$db->query($query, $params);
+		unset($query, $params);
+	}
 }
 
 
