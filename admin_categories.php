@@ -51,34 +51,63 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 	{
 		@set_time_limit(0);
 
-		$result = $db->query('SELECT id FROM '.$db->prefix.'forums WHERE cat_id='.$cat_to_delete) or error('Unable to fetch forum list', __FILE__, __LINE__, $db->error());
-		$num_forums = $db->num_rows($result);
-
-		for ($i = 0; $i < $num_forums; ++$i)
+		$query = new SelectQuery(array('id' => 'f.id'), 'forums AS f');
+		$query->where = 'f.cat_id = :cat_id';
+		
+		$params = array(':cat_id' => $cat_to_delete);
+		
+		$result = $db->query($query, $params);
+		unset($query, $params);
+		
+		foreach ($result as $cur_forum)
 		{
-			$cur_forum = $db->result($result, $i);
-
 			// Prune all posts and topics
-			prune($cur_forum, 1, -1);
+			prune($cur_forum['id'], 1, -1);
 
 			// Delete the forum
-			$db->query('DELETE FROM '.$db->prefix.'forums WHERE id='.$cur_forum) or error('Unable to delete forum', __FILE__, __LINE__, $db->error());
+			$query = new DeleteQuery('forums');
+			$query->where = 'id = :forum_id';
+			
+			$params = array(':forum_id' => $cur_forum['id']);
+			
+			$db->query($query, $params);
+			unset($query, $params);
 		}
+		unset($result);
 
 		// Locate any "orphaned redirect topics" and delete them
-		$result = $db->query('SELECT t1.id FROM '.$db->prefix.'topics AS t1 LEFT JOIN '.$db->prefix.'topics AS t2 ON t1.moved_to=t2.id WHERE t2.id IS NULL AND t1.moved_to IS NOT NULL') or error('Unable to fetch redirect topics', __FILE__, __LINE__, $db->error());
-		$num_orphans = $db->num_rows($result);
-
-		if ($num_orphans)
+		$query = new SelectQuery(array('id' => 't1.id'), 'topics AS t1');
+		$query->joins['t1'] = new LeftJoin('topics AS t2');
+		$query->joins['t1']->on = 't1.moved_to = t2.id';
+		$query->where = 't2.id IS NULL AND t1.moved_to IS NOT NULL';
+		
+		$result = $db->query($query);
+		unset($query);
+		
+		if (!empty($result))
 		{
-			for ($i = 0; $i < $num_orphans; ++$i)
-				$orphans[] = $db->result($result, $i);
+			$orphans = array();
+			foreach ($result as $cur_orphan)
+				$orphans[] = $cur_orphan['id'];
 
-			$db->query('DELETE FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $orphans).')') or error('Unable to delete redirect topics', __FILE__, __LINE__, $db->error());
+			$query = new DeleteQuery('topics');
+			$query->where = 'id IN :orphans';
+			
+			$params = array(':orphans' => $orphans);
+			
+			$db->query($query, $params);
+			unset($query, $params);
 		}
+		unset($result);
 
 		// Delete the category
-		$db->query('DELETE FROM '.$db->prefix.'categories WHERE id='.$cat_to_delete) or error('Unable to delete category', __FILE__, __LINE__, $db->error());
+		$query = new DeleteQuery('categories');
+		$query->where = 'id = :cat_id';
+		
+		$params = array(':cat_id' => $cat_to_delete);
+		
+		$db->query($query, $params);
+		unset($query, $params);
 
 		// Regenerate the quick jump cache
 		$cache->delete('quickjump');
@@ -87,8 +116,14 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 	}
 	else // If the user hasn't comfirmed the delete
 	{
-		$result = $db->query('SELECT cat_name FROM '.$db->prefix.'categories WHERE id='.$cat_to_delete) or error('Unable to fetch category info', __FILE__, __LINE__, $db->error());
-		$cat_name = $db->result($result);
+		$query = new SelectQuery(array('cat_name' => 'c.cat_name'), 'categories AS c');
+		$query->where = 'c.id = :cat_id';
+		
+		$params = array(':cat_id' => $cat_to_delete);
+		
+		$result = $db->query($query, $params);
+		$cat_name = $result[0]['cat_name'];
+		unset($query, $params, $result);
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Categories']);
 		define('PUN_ACTIVE_PAGE', 'admin');
