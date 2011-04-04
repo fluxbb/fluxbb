@@ -31,7 +31,12 @@ if (isset($_POST['add_word']))
 	if ($search_for == '')
 		message($lang_admin_censoring['Must enter word message']);
 
-	$db->query('INSERT INTO '.$db->prefix.'censoring (search_for, replace_with) VALUES (\''.$db->escape($search_for).'\', \''.$db->escape($replace_with).'\')') or error('Unable to add censor word', __FILE__, __LINE__, $db->error());
+	$query = new InsertQuery(array('search_for' => ':search_for', 'replace_with' => ':replace_with'), 'censoring');
+	
+	$params = array(':search_for' => $search_for, ':replace_with' => $replace_with);
+	
+	$db->query($query, $params);
+	unset($query, $params);
 
 	// Regenerate the censoring cache
 	$cache->delete('censors');
@@ -52,7 +57,13 @@ else if (isset($_POST['update']))
 	if ($search_for == '')
 		message($lang_admin_censoring['Must enter word message']);
 
-	$db->query('UPDATE '.$db->prefix.'censoring SET search_for=\''.$db->escape($search_for).'\', replace_with=\''.$db->escape($replace_with).'\' WHERE id='.$id) or error('Unable to update censor word', __FILE__, __LINE__, $db->error());
+	$query = new UpdateQuery(array('search_for' => ':search_for', 'replace_with' => ':replace_with'), 'censoring');
+	$query->where = 'id = :id';
+	
+	$params = array(':search_for' => $search_for, ':replace_with' => $replace_with, ':id' => $id);
+	
+	$db->query($query, $params);
+	unset($query, $params);
 
 	// Regenerate the censoring cache
 	$cache->delete('censors');
@@ -67,7 +78,13 @@ else if (isset($_POST['remove']))
 
 	$id = intval(key($_POST['remove']));
 
-	$db->query('DELETE FROM '.$db->prefix.'censoring WHERE id='.$id) or error('Unable to delete censor word', __FILE__, __LINE__, $db->error());
+	$query = new DeleteQuery('censoring');
+	$query->where = 'id = :id';
+	
+	$params = array(':id' => $id);
+	
+	$db->query($query, $params);
+	unset($query, $params);
 
 	// Regenerate the censoring cache
 	$cache->delete('censors');
@@ -117,8 +134,13 @@ generate_admin_menu('censoring');
 						<div class="infldset">
 <?php
 
-$result = $db->query('SELECT id, search_for, replace_with FROM '.$db->prefix.'censoring ORDER BY id') or error('Unable to fetch censor word list', __FILE__, __LINE__, $db->error());
-if ($db->num_rows($result))
+$query = new SelectQuery(array('id' => 'c.id', 'search_for' => 'c.search_for', 'replace_with' => 'c.replace_with'), 'censoring AS c');
+$query->order = array('id' => 'c.id ASC');
+
+$result = $db->query($query);
+unset($query);
+
+if (!empty($result))
 {
 
 ?>
@@ -133,7 +155,7 @@ if ($db->num_rows($result))
 							<tbody>
 <?php
 
-	while ($cur_word = $db->fetch_assoc($result))
+	foreach ($result as $cur_word)
 		echo "\t\t\t\t\t\t\t\t".'<tr><td class="tcl"><input type="text" name="search_for['.$cur_word['id'].']" value="'.pun_htmlspecialchars($cur_word['search_for']).'" size="24" maxlength="60" /></td><td class="tc2"><input type="text" name="replace_with['.$cur_word['id'].']" value="'.pun_htmlspecialchars($cur_word['replace_with']).'" size="24" maxlength="60" /></td><td><input type="submit" name="update['.$cur_word['id'].']" value="'.$lang_admin_common['Update'].'" />&#160;<input type="submit" name="remove['.$cur_word['id'].']" value="'.$lang_admin_common['Remove'].'" /></td></tr>'."\n";
 
 ?>
@@ -144,6 +166,8 @@ if ($db->num_rows($result))
 }
 else
 	echo "\t\t\t\t\t\t\t".'<p>'.$lang_admin_censoring['No words in list'].'</p>'."\n";
+
+unset($result);
 
 ?>
 						</div>
