@@ -109,36 +109,71 @@ function prune($forum_id, $prune_sticky, $prune_date)
 {
 	global $db;
 
-	$extra_sql = ($prune_date != -1) ? ' AND last_post<'.$prune_date : '';
-
-	if (!$prune_sticky)
-		$extra_sql .= ' AND sticky=\'0\'';
-
 	// Fetch topics to prune
-	$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE forum_id='.$forum_id.$extra_sql, true) or error('Unable to fetch topics', __FILE__, __LINE__, $db->error());
+	$query = new SelectQuery(array('id' => 't.id'), 'topics AS t');
+	$query->where = 't.forum_id = :forum_id';
+	
+	$params = array(':forum_id' => $forum_id);
+	
+	if ($prune_date != -1)
+	{
+		$query->where .= ' AND t.last_post < :prune_date';
+		$params[':prune_date'] = $prune_date;
+	}
+	if (!$prune_sticky)
+		$query->where .= ' AND t.sticky = 0';
+	
+	$result = $db->query($query, $params);
+	
+	$topic_ids = array();
+	foreach ($result as $row)
+		$topic_ids[] = $row['id'];
+	unset($query, $params, $result);
 
-	$topic_ids = '';
-	while ($row = $db->fetch_row($result))
-		$topic_ids .= (($topic_ids != '') ? ',' : '').$row[0];
-
-	if ($topic_ids != '')
+	if (!empty($topic_ids))
 	{
 		// Fetch posts to prune
-		$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE topic_id IN('.$topic_ids.')', true) or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
+		$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+		$query->where = 'p.topic_id IN :topic_ids';
+		
+		$params = array(':topic_ids' => $topic_ids);
+		
+		$result = $db->query($query, $params);
+		
+		$post_ids = array();
+		foreach ($result as $row)
+			$post_ids[] = $row['id'];
+		unset($query, $params, $result);
 
-		$post_ids = '';
-		while ($row = $db->fetch_row($result))
-			$post_ids .= (($post_ids != '') ? ',' : '').$row[0];
-
-		if ($post_ids != '')
+		if (!empty($post_ids))
 		{
 			// Delete topics
-			$db->query('DELETE FROM '.$db->prefix.'topics WHERE id IN('.$topic_ids.')') or error('Unable to prune topics', __FILE__, __LINE__, $db->error());
+			$query = new DeleteQuery('topics');
+			$query->where = 'id IN :topic_ids';
+			
+			$params = array(':topic_ids' => $topic_ids);
+			
+			$db->query($query, $params);
+			unset($query, $params);
+			
 			// Delete subscriptions
-			$db->query('DELETE FROM '.$db->prefix.'topic_subscriptions WHERE topic_id IN('.$topic_ids.')') or error('Unable to prune subscriptions', __FILE__, __LINE__, $db->error());
+			$query = new DeleteQuery('topic_subscriptions');
+			$query->where = 'topic_id IN :topic_ids';
+			
+			$params = array(':topic_ids' => $topic_ids);
+			
+			$db->query($query, $params);
+			unset($query, $params);
+			
 			// Delete posts
-			$db->query('DELETE FROM '.$db->prefix.'posts WHERE id IN('.$post_ids.')') or error('Unable to prune posts', __FILE__, __LINE__, $db->error());
-
+			$query = new DeleteQuery('posts');
+			$query->where = 'id IN :post_ids';
+			
+			$params = array(':post_ids' => $post_ids);
+			
+			$db->query($query, $params);
+			unset($query, $params);
+			
 			// We removed a bunch of posts, so now we have to update the search index
 			require_once PUN_ROOT.'include/search_idx.php';
 			strip_search_index($post_ids);
