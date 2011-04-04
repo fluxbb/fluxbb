@@ -650,13 +650,36 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 		// Run the query and fetch the results
 		if ($show_as == 'posts')
-			$result = $db->query('SELECT p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, p.message, p.hide_smilies, t.id AS tid, t.poster, t.subject, t.first_post_id, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id, f.forum_name FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE p.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
+		{
+			$query = new SelectQuery(array('pid' => 'p.id AS pid', 'pposter' => 'p.poster AS pposter', 'pposted' => 'p.posted AS pposted', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'tid' => 't.id AS tid', 'poster' => 't.poster', 'subject' => 't.subject', 'first_post_id' => 't.first_post_id', 'last_post' => 't.last_post', 'last_post_id' => 't.last_post_id', 'last_poster' => 't.last_poster', 'num_replies' => 't.num_replies', 'forum_id' => 't.forum_id', 'forum_name' => 'f.forum_name'), 'posts AS p');
+			$query->joins['t'] = new InnerJoin('topics AS t');
+			$query->joins['t']->on = 't.id = p.topic_id';
+			$query->joins['f'] = new InnerJoin('forums AS f');
+			$query->joins['f']->on = 'f.id = t.forum_id';
+			$query->where = 'p.id IN :search_ids';
+			$query->order = array($sort_by_sql.' '.$sort_dir);
+			
+			$params = array(':search_ids' => $search_ids);
+			
+			$result = $db->query($query, $params);
+		}
 		else
-			$result = $db->query('SELECT t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.sticky, t.forum_id, f.forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE t.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
+		{
+			$query = new SelectQuery(array('tid' => 't.id AS tid', 'poster' => 't.poster', 'subject' => 't.subject', 'last_post' => 't.last_post', 'last_post_id' => 't.last_post_id', 'last_poster' => 't.last_poster', 'num_replies' => 't.num_replies', 'closed' => 't.closed', 'sticky' => 't.sticky', 'forum_id' => 't.forum_id', 'forum_name' => 'f.forum_name'), 'topics AS t');
+			$query->joins['f'] = new InnerJoin('forums AS f');
+			$query->joins['f']->on = 'f.id = t.forum_id';
+			$query->where = 't.id IN :search_ids';
+			$query->order = array($sort_by_sql.' '.$sort_dir);
+			
+			$params = array(':search_ids' => $search_ids);
+			
+			$result = $db->query($query, $params);
+		}
 
 		$search_set = array();
-		while ($row = $db->fetch_assoc($result))
+		foreach ($result as $row)
 			$search_set[] = $row;
+		unset($query, $params, $result);
 
 		$crumbs_text = array();
 		$crumbs_text['show_as'] = $show_as == 'topics' ? $lang_search['Search topics'] : $lang_search['Search posts'];
