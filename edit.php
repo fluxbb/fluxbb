@@ -19,11 +19,27 @@ if ($id < 1)
 	message($lang_common['Bad request']);
 
 // Fetch some info about the post, the topic and the forum
-$result = $db->query('SELECT f.id AS fid, f.forum_name, f.moderators, f.redirect_url, fp.post_replies, fp.post_topics, t.id AS tid, t.subject, t.posted, t.first_post_id, t.sticky, t.closed, p.poster, p.poster_id, p.message, p.hide_smilies FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.id='.$id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-if (!$db->num_rows($result))
+$query = new SelectQuery(array('fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'redirect_url' => 'f.redirect_url', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics', 'tid' => 't.id AS tid', 'subject' => 't.subject', 'posted' => 't.posted', 'first_post_id' => 't.first_post_id', 'sticky' => 't.sticky', 'closed' => 't.closed', 'poster' => 'p.poster', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies'), 'posts AS p');
+
+$query->joins['t'] = new InnerJoin('topics AS t');
+$query->joins['t']->on = 't.id = p.topic_id';
+
+$query->joins['f'] = new InnerJoin('forums AS f');
+$query->joins['f']->on = 'f.id = t.forum_id';
+
+$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
+$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+
+$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND p.id = :post_id';
+
+$params = array(':group_id' => $pun_user['g_id'], ':post_id' => $id);
+
+$result = $db->query($query, $params);
+if (empty($result))
 	message($lang_common['Bad request']);
 
-$cur_post = $db->fetch_assoc($result);
+$cur_post = $result[0];
+unset ($result, $query, $params);
 
 // Sort out who the moderators are and if we are currently a moderator (or an admin)
 $mods_array = ($cur_post['moderators'] != '') ? unserialize($cur_post['moderators']) : array();
@@ -112,14 +128,18 @@ if (isset($_POST['form_sent']))
 	// Did everything go according to plan?
 	if (empty($errors) && !isset($_POST['preview']))
 	{
-		$edited_sql = (!isset($_POST['silent']) || !$is_admmod) ? ', edited='.time().', edited_by=\''.$db->escape($pun_user['username']).'\'' : '';
-
 		require PUN_ROOT.'include/search_idx.php';
 
 		if ($can_edit_subject)
 		{
 			// Update the topic and any redirect topics
-			$db->query('UPDATE '.$db->prefix.'topics SET subject=\''.$db->escape($subject).'\', sticky='.$stick_topic.' WHERE id='.$cur_post['tid'].' OR moved_to='.$cur_post['tid']) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+			$query = new UpdateQuery(array('subject' => ':subject', 'sticky' => ':sticky'), 'topics');
+			$query->where = 'id = :topic_id';
+
+			$params = array(':subject' => $subject, ':sticky' => $stick_topic, ':topic_id' => $cur_post['tid']);
+
+			$db->query($query, $params);
+			unset ($query, $params);
 
 			// We changed the subject, so we need to take that into account when we update the search words
 			update_search_index('edit', $id, $message, $subject);
@@ -128,7 +148,22 @@ if (isset($_POST['form_sent']))
 			update_search_index('edit', $id, $message);
 
 		// Update the post
-		$db->query('UPDATE '.$db->prefix.'posts SET message=\''.$db->escape($message).'\', hide_smilies='.$hide_smilies.$edited_sql.' WHERE id='.$id) or error('Unable to update post', __FILE__, __LINE__, $db->error());
+		$query = new UpdateQuery(array('message' => ':message', 'hide_smilies' => ':hide_smilies'), 'posts');
+		$query->where = 'id = :post_id';
+
+		$params = array(':message' => $message, ':hide_smilies' => $hide_smilies, ':post_id' => $id);
+
+		if (!isset($_POST['silent']) || !$is_admmod)
+		{
+			$query->fields['edited'] = ':now';
+			$params[':now'] = time();
+
+			$query->fields['edited_by'] = ':edited_by';
+			$params[':edited_by'] = $pun_user['username'];
+		}
+
+		$db->query($query, $params);
+		unset ($query, $params);
 
 		redirect('viewtopic.php?pid='.$id.'#p'.$id, $lang_post['Edit redirect']);
 	}
