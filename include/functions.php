@@ -771,20 +771,49 @@ function update_forum($forum_id)
 {
 	global $db;
 
-	$result = $db->query('SELECT COUNT(id), SUM(num_replies) FROM '.$db->prefix.'topics WHERE forum_id='.$forum_id) or error('Unable to fetch forum topic count', __FILE__, __LINE__, $db->error());
-	list($num_topics, $num_posts) = $db->fetch_row($result);
+	$query = new SelectQuery(array('num_topics' => 'COUNT(t.id) AS num_topics', 'num_replies' => 'SUM(t.num_replies) AS num_replies'), 'topics AS t');
+	$query->where = 't.forum_id = :forum_id';
 
-	$num_posts = $num_posts + $num_topics; // $num_posts is only the sum of all replies (we have to add the topic posts)
+	$params = array(':forum_id' => $forum_id);
 
-	$result = $db->query('SELECT last_post, last_post_id, last_poster FROM '.$db->prefix.'topics WHERE forum_id='.$forum_id.' AND moved_to IS NULL ORDER BY last_post DESC LIMIT 1') or error('Unable to fetch last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result)) // There are topics in the forum
+	$result = $db->query($query, $params);
+
+	$num_topics = $result[0]['num_topics'];
+	$num_posts = $result[0]['num_topics'] + $result[0]['num_replies'];
+
+	unset ($result, $query, $params);
+
+	$query = new SelectQuery(array('last_post' => 't.last_post AS posted', 'last_post_id' => 't.last_post_id AS id', 'last_poster' => 't.last_poster AS poster'), 'topics AS t');
+	$query->where = 't.forum_id = :forum_id AND t.moved_to IS NULL';
+	$query->order = array('last_post' => 't.last_post DESC');
+	$query->limit = 1;
+
+	$params = array(':forum_id' => $forum_id);
+
+	$result = $db->query($query, $params);
+	unset ($query, $params);
+
+	$query = new UpdateQuery(array('num_topics' => ':num_topics', 'num_posts' => ':num_posts', 'last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster'), 'forums');
+	$query->where = 'id = :forum_id';
+
+	// There are topics in the forum
+	if (!empty($result))
 	{
-		list($last_post, $last_post_id, $last_poster) = $db->fetch_row($result);
+		$last_post = $result[0];
+		unset ($result);
 
-		$db->query('UPDATE '.$db->prefix.'forums SET num_topics='.$num_topics.', num_posts='.$num_posts.', last_post='.$last_post.', last_post_id='.$last_post_id.', last_poster=\''.$db->escape($last_poster).'\' WHERE id='.$forum_id) or error('Unable to update last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
+		$params = array(':num_topics' => $num_topics, ':num_posts' => $num_posts, ':last_post' => $last_post['posted'], ':last_post_id' => $last_post['id'], ':last_poster' => $last_post['poster'], ':forum_id' => $forum_id);
 	}
-	else // There are no topics
-		$db->query('UPDATE '.$db->prefix.'forums SET num_topics='.$num_topics.', num_posts='.$num_posts.', last_post=NULL, last_post_id=NULL, last_poster=NULL WHERE id='.$forum_id) or error('Unable to update last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
+	// There are no topics
+	else
+	{
+		unset ($result);
+
+		$params = array(':num_topics' => $num_topics, ':num_posts' => $num_posts, ':last_post' => null, ':last_post_id' => null, ':last_poster' => null, ':forum_id' => $forum_id);
+	}
+
+	$db->query($query, $params);
+	unset ($query, $params);
 }
 
 
@@ -816,20 +845,20 @@ function delete_topic($topic_id)
 	// Delete the topic and any redirect topics
 	$query = new DeleteQuery('topics');
 	$query->where = 'id = :topic_id OR moved_to = :topic_id';
-	
+
 	$params = array(':topic_id' => $topic_id);
-	
+
 	$db->query($query, $params);
 	unset($query, $params);
 
 	// Create a list of the post IDs in this topic
 	$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
 	$query->where = 'p.topic_id = :topic_id';
-	
+
 	$params = array(':topic_id' => $topic_id);
-	
+
 	$result = $db->query($query, $params);
-	
+
 	$post_ids = array();
 	foreach ($result as $row)
 		$post_ids[] = $row['id'];
@@ -843,9 +872,9 @@ function delete_topic($topic_id)
 		// Delete posts in topic
 		$query = new DeleteQuery('posts');
 		$query->where = 'topic_id = :topic_id';
-		
+
 		$params = array(':topic_id' => $topic_id);
-		
+
 		$db->query($query, $params);
 		unset($query, $params);
 	}
@@ -853,9 +882,9 @@ function delete_topic($topic_id)
 	// Delete any subscriptions for this topic
 	$query = new DeleteQuery('topic_subscriptions');
 	$query->where = 'topic_id = :topic_id';
-	
+
 	$params = array(':topic_id' => $topic_id);
-	
+
 	$db->query($query, $params);
 	unset($query, $params);
 }
@@ -872,27 +901,27 @@ function delete_post($post_id, $topic_id)
 	$query->where = 'p.topic_id = :topic_id';
 	$query->order = array('p.id DESC');
 	$query->limit = 2;
-	
+
 	$params = array(':topic_id' => $topic_id);
-	
+
 	$result = $db->query($query, $params);
-	
+
 	if (count($result) > 0)
 		$last_id = $result[0]['id'];
-	
+
 	if (count($result) > 1)
 		list($second_last_id, $second_poster, $second_posted) = array($result[1]['id'], $result[1]['poster'], $result[1]['posted']);
 	else
 		list($second_last_id, $second_poster, $second_posted) = array('', '', '');
-	
+
 	unset($query, $params, $result);
 
 	// Delete the post
 	$query = new DeleteQuery('posts');
 	$query->where = 'id = :post_id';
-	
+
 	$params = array(':post_id' => $post_id);
-	
+
 	$db->query($query, $params);
 	unset($query, $params);
 
@@ -901,9 +930,9 @@ function delete_post($post_id, $topic_id)
 	// Count number of replies in the topic
 	$query = new SelectQuery(array('post_count' => 'COUNT(p.id)'), 'posts AS p');
 	$query->where = 'topic_id = :topic_id';
-	
+
 	$params = array(':topic_id' => $topic_id);
-	
+
 	$result = $db->query($query, $params);
 	$num_replies = $result[0]['post_count'] - 1;
 	unset($query, $params, $result);
@@ -916,9 +945,9 @@ function delete_post($post_id, $topic_id)
 		{
 			$query = new UpdateQuery(array('last_post' => ':second_posted', 'last_post_id' => ':second_last_id', 'last_poster' => ':second_poster', 'num_replies' => ':num_replies'), 'topics');
 			$query->where = 'id = :topic_id';
-			
+
 			$params = array(':second_posted' => $second_posted, ':second_last_id' => $second_last_id, ':second_poster' => $second_poster, ':num_replies' => $num_replies, ':topic_id' => $topic_id);
-			
+
 			$db->query($query, $params);
 			unset($query, $params);
 		}
@@ -927,9 +956,9 @@ function delete_post($post_id, $topic_id)
 			// We deleted the only reply, so now last_post/last_post_id/last_poster is posted/id/poster from the topic itself
 			$query = new UpdateQuery(array('last_post' => 'posted', 'last_post_id' => 'id', 'last_poster' => 'poster', 'num_replies' => ':num_replies'), 'topics');
 			$query->where = 'id = :topic_id';
-			
+
 			$params = array(':num_replies' => $num_replies, ':topic_id' => $topic_id);
-			
+
 			$db->query($query, $params);
 			unset($query, $params);
 		}
@@ -939,9 +968,9 @@ function delete_post($post_id, $topic_id)
 		// Otherwise we just decrement the reply counter
 		$query = new UpdateQuery(array('num_replies' => ':num_replies'), 'topics');
 		$query->where = 'id = :topic_id';
-		
+
 		$params = array(':num_replies' => $num_replies, ':topic_id' => $topic_id);
-		
+
 		$db->query($query, $params);
 		unset($query, $params);
 	}
@@ -1984,36 +2013,36 @@ function url_valid($url)
 		^
 		(?P<scheme>[A-Za-z][A-Za-z0-9+\-.]*):\/\/
 		(?P<authority>
-		  (?:(?P<userinfo>(?:[A-Za-z0-9\-._~!$&\'()*+,;=:]|%[0-9A-Fa-f]{2})*)@)?
-		  (?P<host>
+		(?:(?P<userinfo>(?:[A-Za-z0-9\-._~!$&\'()*+,;=:]|%[0-9A-Fa-f]{2})*)@)?
+		(?P<host>
 			(?P<IP_literal>
-			  \[
-			  (?:
+			\[
+			(?:
 				(?P<IPV6address>
-				  (?:												 (?:[0-9A-Fa-f]{1,4}:){6}
-				  |												   ::(?:[0-9A-Fa-f]{1,4}:){5}
-				  | (?:							 [0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:){4}
-				  | (?:(?:[0-9A-Fa-f]{1,4}:){0,1}[0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:){3}
-				  | (?:(?:[0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:){2}
-				  | (?:(?:[0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})?::	[0-9A-Fa-f]{1,4}:
-				  | (?:(?:[0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})?::
-				  )
-				  (?P<ls32>[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}
-				  | (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}
-					   (?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)
-				  )
+				(?:												 (?:[0-9A-Fa-f]{1,4}:){6}
+				|												   ::(?:[0-9A-Fa-f]{1,4}:){5}
+				| (?:							 [0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:){4}
+				| (?:(?:[0-9A-Fa-f]{1,4}:){0,1}[0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:){3}
+				| (?:(?:[0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:){2}
+				| (?:(?:[0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})?::	[0-9A-Fa-f]{1,4}:
+				| (?:(?:[0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})?::
+				)
+				(?P<ls32>[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}
+				| (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}
+					(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)
+				)
 				|	(?:(?:[0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})?::	[0-9A-Fa-f]{1,4}
 				|	(?:(?:[0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})?::
 				)
-			  | (?P<IPvFuture>[Vv][0-9A-Fa-f]+\.[A-Za-z0-9\-._~!$&\'()*+,;=:]+)
-			  )
-			  \]
+			| (?P<IPvFuture>[Vv][0-9A-Fa-f]+\.[A-Za-z0-9\-._~!$&\'()*+,;=:]+)
 			)
-		  | (?P<IPv4address>(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}
-							   (?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))
-		  | (?P<regname>(?:[A-Za-z0-9\-._~!$&\'()*+,;=]|%[0-9A-Fa-f]{2})+)
-		  )
-		  (?::(?P<port>[0-9]*))?
+			\]
+			)
+		| (?P<IPv4address>(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}
+							(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))
+		| (?P<regname>(?:[A-Za-z0-9\-._~!$&\'()*+,;=]|%[0-9A-Fa-f]{2})+)
+		)
+		(?::(?P<port>[0-9]*))?
 		)
 		(?P<path_abempty>(?:\/(?:[A-Za-z0-9\-._~!$&\'()*+,;=:@]|%[0-9A-Fa-f]{2})*)*)
 		(?:\?(?P<query>		  (?:[A-Za-z0-9\-._~!$&\'()*+,;=:@\\/?]|%[0-9A-Fa-f]{2})*))?
@@ -2039,18 +2068,18 @@ function url_valid($url)
 			^					   # Anchor to beginning of string.
 			(?!.{256})			   # Overall host length is less than 256 chars.
 			(?:					   # Group dot separated host part alternatives.
-			  [0-9A-Za-z]\.		   # Either a single alphanum followed by dot
+			[0-9A-Za-z]\.		   # Either a single alphanum followed by dot
 			|					   # or... part has more than one char (63 chars max).
-			  [0-9A-Za-z]		   # Part first char is alphanum (no dash).
-			  [\-0-9A-Za-z]{0,61}  # Internal chars are alphanum plus dash.
-			  [0-9A-Za-z]		   # Part last char is alphanum (no dash).
-			  \.				   # Each part followed by literal dot.
+			[0-9A-Za-z]		   # Part first char is alphanum (no dash).
+			[\-0-9A-Za-z]{0,61}  # Internal chars are alphanum plus dash.
+			[0-9A-Za-z]		   # Part last char is alphanum (no dash).
+			\.				   # Each part followed by literal dot.
 			)*					   # One or more parts before top level domain.
 			(?:					   # Explicitly specify top level domains.
-			  com|edu|gov|int|mil|net|org|biz|
-			  info|name|pro|aero|coop|museum|
-			  asia|cat|jobs|mobi|tel|travel|
-			  [A-Za-z]{2})		   # Country codes are exqactly two alpha chars.
+			com|edu|gov|int|mil|net|org|biz|
+			info|name|pro|aero|coop|museum|
+			asia|cat|jobs|mobi|tel|travel|
+			[A-Za-z]{2})		   # Country codes are exqactly two alpha chars.
 			$					   # Anchor to end of string.
 			/ix', $m['host'])) return FALSE;
 	}

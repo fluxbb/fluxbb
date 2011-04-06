@@ -286,7 +286,7 @@ if (isset($_POST['form_sent']))
 				$query->joins['b'] = new LeftJoin('bans AS b');
 				$query->joins['b']->on = 'u.username = b.username';
 
-				$query->where = 'b.username IS NULL AND COALESCE(o.logged, u.last_visit) > :last_post AND (fp.read_forum IS NULL OR fp.read_forum = 1) AND s.topic_id = :topic_id AND u.id != :user_id';
+				$query->where = 'b.username IS NULL AND COALESCE(o.logged, u.last_visit) > :last_post AND (fp.read_forum IS NULL OR fp.read_forum = 1) AND ts.topic_id = :topic_id AND u.id != :user_id';
 
 				$params = array(':forum_id' => $cur_posting['id'], ':last_post' => $previous_post_time, ':topic_id' => $tid, ':user_id' => $pun_user['id']);
 
@@ -362,28 +362,52 @@ if (isset($_POST['form_sent']))
 		else if ($fid)
 		{
 			// Create the topic
-			$db->query('INSERT INTO '.$db->prefix.'topics (poster, subject, posted, last_post, last_poster, sticky, forum_id) VALUES(\''.$db->escape($username).'\', \''.$db->escape($subject).'\', '.$now.', '.$now.', \''.$db->escape($username).'\', '.$stick_topic.', '.$fid.')') or error('Unable to create topic', __FILE__, __LINE__, $db->error());
+			$query = new InsertQuery(array('poster' => ':poster', 'subject' => ':subject', 'poster' => ':now', 'last_post' => ':now', 'last_poster' => ':last_poster', 'sticky' => ':sticky', 'forum_id' => ':forum_id'), 'topics');
+			$params = array(':poster' => $username, ':subject' => $subject, ':now' => $now, ':last_poster' => $username, ':sticky' => $stick_topic, ':forum_id' => $fid);
+
+			$db->query($query, $params);
 			$new_tid = $db->insert_id();
+			unset ($query, $params);
 
 			if (!$pun_user['is_guest'])
 			{
 				// To subscribe or not to subscribe, that ...
 				if ($pun_config['o_topic_subscriptions'] == '1' && $subscribe)
-					$db->query('INSERT INTO '.$db->prefix.'topic_subscriptions (user_id, topic_id) VALUES('.$pun_user['id'].' ,'.$new_tid.')') or error('Unable to add subscription', __FILE__, __LINE__, $db->error());
+				{
+					$query = new InsertQuery(array('user_id' => ':user_id', 'topic_id' => ':topic_id'), 'topic_subscriptions');
+					$params = array(':user_id' => $pun_user['id'], ':topic_id' => $new_tid);
+
+					$db->query($query, $params);
+					unset ($query, $params);
+				}
 
 				// Create the post ("topic post")
-				$db->query('INSERT INTO '.$db->prefix.'posts (poster, poster_id, poster_ip, message, hide_smilies, posted, topic_id) VALUES(\''.$db->escape($username).'\', '.$pun_user['id'].', \''.get_remote_address().'\', \''.$db->escape($message).'\', '.$hide_smilies.', '.$now.', '.$new_tid.')') or error('Unable to create post', __FILE__, __LINE__, $db->error());
+				$query = new InsertQuery(array('poster' => ':poster', 'poster_id' => ':poster_id', 'poster_ip' => ':poster_ip', 'message' => ':message', 'hide_smilies' => ':hide_smilies', 'posted' => ':now', 'topic_id' => ':topic_id'), 'posts');
+				$params = array(':poster' => $username, ':poster_id' => $pun_user['id'], ':poster_ip' => get_remote_address(), ':message' => $message, ':hide_smilies' => $hide_smilies, ':now' => $now, ':topic_id' => $new_tid);
+
+				$db->query($query, $params);
+				$new_pid = $db->insert_id();
+				unset ($query, $params);
 			}
 			else
 			{
 				// Create the post ("topic post")
-				$email_sql = ($pun_config['p_force_guest_email'] == '1' || $email != '') ? '\''.$db->escape($email).'\'' : 'NULL';
-				$db->query('INSERT INTO '.$db->prefix.'posts (poster, poster_ip, poster_email, message, hide_smilies, posted, topic_id) VALUES(\''.$db->escape($username).'\', \''.get_remote_address().'\', '.$email_sql.', \''.$db->escape($message).'\', '.$hide_smilies.', '.$now.', '.$new_tid.')') or error('Unable to create post', __FILE__, __LINE__, $db->error());
+				$query = new InsertQuery(array('poster' => ':poster', 'poster_ip' => ':poster_ip', 'poster_email' => ':poster_email', 'message' => ':message', 'hide_smilies' => ':hide_smilies', 'posted' => ':posted', 'topic_id' => ':topic_id'), 'posts');
+				$params = array(':poster' => $username, ':poster_ip' => get_remote_address(), ':poster_email' => empty($email) ? null : $email, ':message' => $message, ':hide_smilies' => $hide_smilies, ':now' => $now, ':topic_id' => $new_tid);
+
+				$db->query($query, $params);
+				$new_pid = $db->insert_id();
+				unset ($query, $params);
 			}
-			$new_pid = $db->insert_id();
 
 			// Update the topic with last_post_id
-			$db->query('UPDATE '.$db->prefix.'topics SET last_post_id='.$new_pid.', first_post_id='.$new_pid.' WHERE id='.$new_tid) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+			$query = new UpdateQuery(array('last_post_id' => ':new_pid', 'first_post_id' => ':new_pid'), 'topics');
+			$query->where = 'id = :topic_id';
+
+			$params = array(':new_pid' => $new_pid, ':topic_id' => $new_tid);
+
+			$db->query($query, $params);
+			unset ($query, $params);
 
 			update_search_index('post', $new_pid, $message, $subject);
 
@@ -393,15 +417,30 @@ if (isset($_POST['form_sent']))
 			if ($pun_config['o_forum_subscriptions'] == '1')
 			{
 				// Get any subscribed users that should be notified (banned users are excluded)
-				$result = $db->query('SELECT u.id, u.email, u.notify_with_post, u.language FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'forum_subscriptions AS s ON u.id=s.user_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id='.$cur_posting['id'].' AND fp.group_id=u.group_id) LEFT JOIN '.$db->prefix.'bans AS b ON u.username=b.username WHERE b.username IS NULL AND (fp.read_forum IS NULL OR fp.read_forum=1) AND s.forum_id='.$cur_posting['id'].' AND u.id!='.$pun_user['id']) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
-				if ($db->num_rows($result))
+				$query = new SelectQuery(array('id' => 'u.id', 'email' => 'u.email', 'notify_with_post' => 'u.notify_with_post', 'language' => 'u.language'), 'users AS u');
+
+				$query->joins['fs'] = new InnerJoin('forum_subscriptions AS fs');
+				$query->joins['fs']->on = 'u.id = fs.user_id';
+
+				$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
+				$query->joins['fp']->on = 'fp.forum_id = :forum_id AND fp.group_id = u.group_id';
+
+				$query->joins['b'] = new LeftJoin('bans AS b');
+				$query->joins['b']->on = 'u.username = b.username';
+
+				$query->where = 'b.username IS NULL AND (fp.read_forum IS NULL OR fp.read_forum = 1) AND fs.forum_id = :forum_id AND u.id != :user_id';
+
+				$params = array(':forum_id' => $cur_posting['id'], ':user_id' => $pun_user['id']);
+
+				$result = $db->query($query, $params);
+				if (!empty($result))
 				{
 					require_once PUN_ROOT.'include/email.php';
 
 					$notification_emails = array();
 
 					// Loop through subscribed users and send emails
-					while ($cur_subscriber = $db->fetch_assoc($result))
+					foreach ($result as $cur_subscriber)
 					{
 						// Is the subscription email for $cur_subscriber['language'] cached or not?
 						if (!isset($notification_emails[$cur_subscriber['language']]))
@@ -459,6 +498,8 @@ if (isset($_POST['form_sent']))
 						}
 					}
 				}
+
+				unset ($result, $query, $params);
 			}
 		}
 
@@ -476,7 +517,13 @@ if (isset($_POST['form_sent']))
 		// If the posting user is logged in, increment his/her post count
 		if (!$pun_user['is_guest'])
 		{
-			$db->query('UPDATE '.$db->prefix.'users SET num_posts=num_posts+1, last_post='.$now.' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
+			$query = new UpdateQuery(array('num_posts' => 'num_posts + 1', 'last_post' => ':now'), 'users');
+			$query->where = 'id = :user_id';
+
+			$params = array(':now' => $now, ':user_id' => $pun_user['id']);
+
+			$db->query($query, $params);
+			unset ($query, $params);
 
 			$tracked_topics = get_tracked_topics();
 			$tracked_topics['topics'][$new_tid] = time();
@@ -484,7 +531,13 @@ if (isset($_POST['form_sent']))
 		}
 		else
 		{
-			$db->query('UPDATE '.$db->prefix.'online SET last_post='.$now.' WHERE ident=\''.$db->escape(get_remote_address()).'\'' ) or error('Unable to update user', __FILE__, __LINE__, $db->error());
+			$query = new UpdateQuery(array('last_post' => ':now'), 'online');
+			$query->where = 'ident = :ident';
+
+			$params = array(':now' => $now, ':ident' => get_remote_address());
+
+			$db->query($query, $params);
+			unset ($query, $params);
 		}
 
 		redirect('viewtopic.php?pid='.$new_pid.'#p'.$new_pid, $lang_post['Post redirect']);
