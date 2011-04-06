@@ -1798,36 +1798,36 @@ function url_valid($url)
 		^
 		(?P<scheme>[A-Za-z][A-Za-z0-9+\-.]*):\/\/
 		(?P<authority>
-		  (?:(?P<userinfo>(?:[A-Za-z0-9\-._~!$&\'()*+,;=:]|%[0-9A-Fa-f]{2})*)@)?
-		  (?P<host>
+		(?:(?P<userinfo>(?:[A-Za-z0-9\-._~!$&\'()*+,;=:]|%[0-9A-Fa-f]{2})*)@)?
+		(?P<host>
 			(?P<IP_literal>
-			  \[
-			  (?:
+			\[
+			(?:
 				(?P<IPV6address>
-				  (?:												 (?:[0-9A-Fa-f]{1,4}:){6}
-				  |												   ::(?:[0-9A-Fa-f]{1,4}:){5}
-				  | (?:							 [0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:){4}
-				  | (?:(?:[0-9A-Fa-f]{1,4}:){0,1}[0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:){3}
-				  | (?:(?:[0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:){2}
-				  | (?:(?:[0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})?::	[0-9A-Fa-f]{1,4}:
-				  | (?:(?:[0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})?::
-				  )
-				  (?P<ls32>[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}
-				  | (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}
-					   (?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)
-				  )
+				(?:												 (?:[0-9A-Fa-f]{1,4}:){6}
+				|												   ::(?:[0-9A-Fa-f]{1,4}:){5}
+				| (?:							 [0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:){4}
+				| (?:(?:[0-9A-Fa-f]{1,4}:){0,1}[0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:){3}
+				| (?:(?:[0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:){2}
+				| (?:(?:[0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})?::	[0-9A-Fa-f]{1,4}:
+				| (?:(?:[0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})?::
+				)
+				(?P<ls32>[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}
+				| (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}
+					(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)
+				)
 				|	(?:(?:[0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})?::	[0-9A-Fa-f]{1,4}
 				|	(?:(?:[0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})?::
 				)
-			  | (?P<IPvFuture>[Vv][0-9A-Fa-f]+\.[A-Za-z0-9\-._~!$&\'()*+,;=:]+)
-			  )
-			  \]
+			| (?P<IPvFuture>[Vv][0-9A-Fa-f]+\.[A-Za-z0-9\-._~!$&\'()*+,;=:]+)
 			)
-		  | (?P<IPv4address>(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}
-							   (?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))
-		  | (?P<regname>(?:[A-Za-z0-9\-._~!$&\'()*+,;=]|%[0-9A-Fa-f]{2})+)
-		  )
-		  (?::(?P<port>[0-9]*))?
+			\]
+			)
+		| (?P<IPv4address>(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}
+							(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))
+		| (?P<regname>(?:[A-Za-z0-9\-._~!$&\'()*+,;=]|%[0-9A-Fa-f]{2})+)
+		)
+		(?::(?P<port>[0-9]*))?
 		)
 		(?P<path_abempty>(?:\/(?:[A-Za-z0-9\-._~!$&\'()*+,;=:@]|%[0-9A-Fa-f]{2})*)*)
 		(?:\?(?P<query>		  (?:[A-Za-z0-9\-._~!$&\'()*+,;=:@\\/?]|%[0-9A-Fa-f]{2})*))?
@@ -1853,18 +1853,18 @@ function url_valid($url)
 			^					   # Anchor to beginning of string.
 			(?!.{256})			   # Overall host length is less than 256 chars.
 			(?:					   # Group dot separated host part alternatives.
-			  [0-9A-Za-z]\.		   # Either a single alphanum followed by dot
+			[0-9A-Za-z]\.		   # Either a single alphanum followed by dot
 			|					   # or... part has more than one char (63 chars max).
-			  [0-9A-Za-z]		   # Part first char is alphanum (no dash).
-			  [\-0-9A-Za-z]{0,61}  # Internal chars are alphanum plus dash.
-			  [0-9A-Za-z]		   # Part last char is alphanum (no dash).
-			  \.				   # Each part followed by literal dot.
+			[0-9A-Za-z]		   # Part first char is alphanum (no dash).
+			[\-0-9A-Za-z]{0,61}  # Internal chars are alphanum plus dash.
+			[0-9A-Za-z]		   # Part last char is alphanum (no dash).
+			\.				   # Each part followed by literal dot.
 			)*					   # One or more parts before top level domain.
 			(?:					   # Explicitly specify top level domains.
-			  com|edu|gov|int|mil|net|org|biz|
-			  info|name|pro|aero|coop|museum|
-			  asia|cat|jobs|mobi|tel|travel|
-			  [A-Za-z]{2})		   # Country codes are exqactly two alpha chars.
+			com|edu|gov|int|mil|net|org|biz|
+			info|name|pro|aero|coop|museum|
+			asia|cat|jobs|mobi|tel|travel|
+			[A-Za-z]{2})		   # Country codes are exqactly two alpha chars.
 			$					   # Anchor to end of string.
 			/ix', $m['host'])) return FALSE;
 	}
