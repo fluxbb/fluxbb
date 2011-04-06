@@ -37,8 +37,4 @@ $lang_admin_common = array(
 'None'					=>	'None',
 'Maintenance mode'		=>	'maintenance mode', // Used for link text in more than one file
 
-// Admin loader
-'No plugin message'		=>	'There is no plugin called %s in the plugin directory.',
-'Plugin failed message'	=>	'Loading of the plugin - <strong>%s</strong> - failed.',
-
 );

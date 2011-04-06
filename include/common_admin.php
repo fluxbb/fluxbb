@@ -69,31 +69,6 @@ function generate_admin_menu($page = '')
 
 	}
 
-	// See if there are any plugins
-	$plugins = forum_list_plugins($is_admin);
-
-	// Did we find any plugins?
-	if (!empty($plugins))
-	{
-
-?>
-		<h2 class="block2"><span><?php echo $lang_admin_common['Plugins menu'] ?></span></h2>
-		<div class="box">
-			<div class="inbox">
-				<ul>
-<?php
-
-		foreach ($plugins as $cur_plugin)
-			echo "\t\t\t\t\t".'<li'.(($page == $cur_plugin[1]) ? ' class="isactive"' : '').'><a href="admin_loader.php?plugin='.$cur_plugin[1].'">'.str_replace('_', ' ', $cur_plugin[0]).'</a></li>'."\n";
-
-?>
-				</ul>
-			</div>
-		</div>
-<?php
-
-	}
-
 ?>
 	</div>
 
