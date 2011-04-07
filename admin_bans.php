@@ -77,8 +77,14 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 			if ($group_id == PUN_ADMIN)
 				message(sprintf($lang_admin_bans['User is admin message'], pun_htmlspecialchars($ban_user)));
 
-			$result = $db->query('SELECT g_moderator FROM '.$db->prefix.'groups WHERE g_id='.$group_id) or error('Unable to fetch group info', __FILE__, __LINE__, $db->error());
-			$is_moderator_group = $db->result($result);
+			$query = new SelectQuery(array('g_moderator' => 'g.g_moderator'), 'groups AS g');
+			$query->where = 'g.g_id = :group_id';
+
+			$params = array(':group_id' => $group_id);
+
+			$result = $db->query($query, $params);
+			$is_moderator_group = $result[0]['g_moderator'];
+			unset ($result, $query, $params);
 
 			if ($is_moderator_group)
 				message(sprintf($lang_admin_bans['User is mod message'], pun_htmlspecialchars($ban_user)));
@@ -87,13 +93,33 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		// If we have a $user_id, we can try to find the last known IP of that user
 		if (isset($user_id))
 		{
-			$result = $db->query('SELECT poster_ip FROM '.$db->prefix.'posts WHERE poster_id='.$user_id.' ORDER BY posted DESC LIMIT 1') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-			$ban_ip = ($db->num_rows($result)) ? $db->result($result) : '';
+			$ban_ip = '';
 
-			if ($ban_ip == '')
+			$query = new SelectQuery(array('poster_ip' => 'p.poster_ip'), 'posts AS p');
+			$query->where = 'p.poster_id = :user_id';
+			$query->order = array('posted' => 'p.posted DESC');
+			$query->limit = 1;
+
+			$params = array(':user_id' => $user_id);
+
+			$result = $db->query($query, $params);
+			if (!empty($result))
+				$ban_ip = $result[0]['poster_ip'];
+
+			unset ($result, $query, $params);
+
+			if (empty($ban_ip))
 			{
-				$result = $db->query('SELECT registration_ip FROM '.$db->prefix.'users WHERE id='.$user_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-				$ban_ip = ($db->num_rows($result)) ? $db->result($result) : '';
+				$query = new SelectQuery(array('registration_ip' => 'u.registration_ip'), 'users AS u');
+				$query->where = 'u.id = :user_id';
+
+				$params = array(':user_id' => $user_id);
+
+				$result = $db->query($query, $params);
+				if (!empty($result))
+					$ban_ip = $result[0]['registration_ip'];
+
+				unset ($result, $query, $params);
 			}
 		}
 
@@ -211,24 +237,30 @@ else if (isset($_POST['add_edit_ban']))
 		message($lang_admin_bans['Must enter message']);
 	else if (strtolower($ban_user) == 'guest')
 		message($lang_admin_bans['Cannot ban guest message']);
-	
+
 	// Make sure we're not banning an admin or moderator
 	if (!empty($ban_user))
 	{
-		$result = $db->query('SELECT group_id FROM '.$db->prefix.'users WHERE username=\''.$db->escape($ban_user).'\' AND id>1') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-		if ($db->num_rows($result))
+		$query = new SelectQuery(array('group_id' => 'u.group_id', 'g_moderator' => 'g.g_moderator'), 'users AS u');
+
+		$query->joins['g'] = new InnerJoin('groups AS g');
+		$query->joins['g']->on = 'g.g_id = u.group_id';
+
+		$query->where = 'u.username = :ban_user AND u.id > 1';
+
+		$params = array(':ban_user' => $ban_user);
+
+		$result = $db->query($query, $params);
+		if (!empty($result))
 		{
-			$group_id = $db->result($result);
-			
-			if ($group_id == PUN_ADMIN)
+			if ($result[0]['group_id'] == PUN_ADMIN)
 				message(sprintf($lang_admin_bans['User is admin message'], pun_htmlspecialchars($ban_user)));
-	
-			$result = $db->query('SELECT g_moderator FROM '.$db->prefix.'groups WHERE g_id='.$group_id) or error('Unable to fetch group info', __FILE__, __LINE__, $db->error());
-			$is_moderator_group = $db->result($result);
-	
-			if ($is_moderator_group)
+
+			if ($result[0]['g_moderator'])
 				message(sprintf($lang_admin_bans['User is mod message'], pun_htmlspecialchars($ban_user)));
 		}
+
+		unset ($result, $query, $params);
 	}
 
 	// Validate IP/IP range (it's overkill, I know)
@@ -326,7 +358,13 @@ else if (isset($_GET['del_ban']))
 	if ($ban_id < 1)
 		message($lang_common['Bad request']);
 
-	$db->query('DELETE FROM '.$db->prefix.'bans WHERE id='.$ban_id) or error('Unable to delete ban', __FILE__, __LINE__, $db->error());
+	$query = new DeleteQuery('bans');
+	$query->where = 'id = :ban_id';
+
+	$params = array(':ban_id' => $ban_id);
+
+	$db->query($query, $params);
+	unset ($query, $params);
 
 	// Regenerate the bans cache
 	$cache->delete('bans');
