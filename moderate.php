@@ -51,10 +51,14 @@ $fid = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 if ($fid < 1)
 	message($lang_common['Bad request']);
 
-$result = $db->query('SELECT moderators FROM '.$db->prefix.'forums WHERE id='.$fid) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
+$query = new SelectQuery(array('moderators' => 'f.moderators'), 'forums AS f');
+$query->where = 'f.id = :forum_id';
 
-$moderators = $db->result($result);
-$mods_array = ($moderators != '') ? unserialize($moderators) : array();
+$params = array(':forum_id' => $fid);
+
+$result = $db->query($query, $params);
+$mods_array = empty($result[0]['moderators']) ? array() : unserialize($result[0]['moderators']);
+unset ($result, $query, $params);
 
 if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] == '0' || !array_key_exists($pun_user['username'], $mods_array)))
 	message($lang_common['No permission']);
@@ -75,11 +79,24 @@ if (isset($_GET['tid']))
 		message($lang_common['Bad request']);
 
 	// Fetch some info about the topic
-	$result = $db->query('SELECT t.subject, t.num_replies, t.first_post_id, f.id AS forum_id, forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fid.' AND t.id='.$tid.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
+	$query = new SelectQuery(array('subject' => 't.subject', 'num_replies' => 't.num_replies', 'first_post_id' => 't.first_post_id', 'forum_id' => 'f.id AS forum_id', 'forum_name' => 'forum_name'), 'topics AS t');
+
+	$query->joins['f'] = new InnerJoin('forums AS f');
+	$query->joins['f']->on = 'f.id = t.forum_id';
+
+	$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
+	$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+
+	$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id AND t.id = :topic_id AND t.moved_to IS NULL';
+
+	$params = array(':group_id' => $pun_user['g_id'], ':forum_id' => $fid, ':topic_id' => $tid);
+
+	$result = $db->query($query, $params);
+	if (empty($result))
 		message($lang_common['Bad request']);
 
-	$cur_topic = $db->fetch_assoc($result);
+	$cur_topic = $result[0];
+	unset ($result, $query, $params);
 
 	// Delete one or more posts
 	if (isset($_POST['delete_posts']) || isset($_POST['delete_posts_comply']))
@@ -108,14 +125,28 @@ if (isset($_GET['tid']))
 			strip_search_index($posts);
 
 			// Get last_post, last_post_id, and last_poster for the topic after deletion
-			$result = $db->query('SELECT id, poster, posted FROM '.$db->prefix.'posts WHERE topic_id='.$tid.' ORDER BY id DESC LIMIT 1') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-			$last_post = $db->fetch_assoc($result);
+			$query = new SelectQuery(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
+			$query->where = 'p.topic_id = :topic_id';
+			$query->order = array('id' => 'p.id DESC');
+			$query->limit = 1;
+
+			$params = array(':topic_id' => $tid);
+
+			$result = $db->query($query, $params);
+			$last_post = $result[0];
+			unset ($result, $query, $params);
 
 			// How many posts did we just delete?
 			$num_posts_deleted = substr_count($posts, ',') + 1;
 
 			// Update the topic
-			$db->query('UPDATE '.$db->prefix.'topics SET last_post='.$last_post['posted'].', last_post_id='.$last_post['id'].', last_poster=\''.$db->escape($last_post['poster']).'\', num_replies=num_replies-'.$num_posts_deleted.' WHERE id='.$tid) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+			$query = new UpdateQuery(array('last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'num_replies' => 'num_replies - :num_deleted'), 'topics');
+			$query->where = 'id = :topic_id';
+
+			$params = array(':last_post' => $last_post['posted'], ':last_post_id' => $last_post['id'], ':last_poster' => $last_post['poster'], ':num_deleted' => $num_posts_deleted, ':topic_id' => $tid);
+
+			$db->query($query, $params);
+			unset ($query, $params);
 
 			update_forum($fid);
 
@@ -217,7 +248,20 @@ if (isset($_GET['tid']))
 			redirect('viewtopic.php?id='.$new_tid, $lang_misc['Split posts redirect']);
 		}
 
-		$result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.post_topics IS NULL OR fp.post_topics=1) AND f.redirect_url IS NULL ORDER BY c.disp_position, c.id, f.disp_position') or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
+		$query = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
+
+		$query->joins['f'] = new InnerJoin('forums AS f');
+		$query->joins['f']->on = 'c.id = f.cat_id';
+
+		$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
+		$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+
+		$query->where = '(fp.post_topics IS NULL OR fp.post_topics = 1) AND f.redirect_url IS NULL';
+		$query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
+
+		$params = array(':group_id' => $pun_user['g_id']);
+
+		$result = $db->query($query, $params);
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Moderate']);
 		$focus_element = array('subject','new_subject');
@@ -240,7 +284,7 @@ if (isset($_GET['tid']))
 <?php
 
 	$cur_category = 0;
-	while ($cur_forum = $db->fetch_assoc($result))
+	foreach ($result as $cur_forum)
 	{
 		if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
 		{
@@ -253,6 +297,8 @@ if (isset($_GET['tid']))
 
 		echo "\t\t\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'"'.($fid == $cur_forum['fid'] ? ' selected="selected"' : '').'>'.pun_htmlspecialchars($cur_forum['forum_name']).'</option>'."\n";
 	}
+
+	unset ($result, $query, $params);
 
 ?>
 							</optgroup>
@@ -323,16 +369,41 @@ if (isset($_GET['tid']))
 	$post_count = 0; // Keep track of post numbers
 
 	// Retrieve a list of post IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
-	$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE topic_id='.$tid.' ORDER BY id LIMIT '.$start_from.','.$pun_user['disp_posts']) or error('Unable to fetch post IDs', __FILE__, __LINE__, $db->error());
+	$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+	$query->where = 'p.topic_id = :topic_id';
+	$query->order = array('id' => 'p.id ASC');
+	$query->offset = $start_from;
+	$query->limit = $pun_user['disp_posts'];
 
-	$post_ids = array();
-	for ($i = 0;$cur_post_id = $db->result($result, $i);$i++)
-		$post_ids[] = $cur_post_id;
+	$params = array(':topic_id' => $tid);
+
+	$post_ids = $db->query($query, $params);
+	unset ($query, $params);
+
+	// If there are posts in this topic
+	if (empty($post_ids))
+		error('The post table and topic table seem to be out of sync!', __FILE__, __LINE__);
+
+	// Translate from a 3d array into 2d array: $post_ids[0]['id'] -> $post_ids[0]
+	foreach ($post_ids as $key => $value)
+		$post_ids[$key] = $value['id'];
 
 	// Retrieve the posts (and their respective poster)
-	$result = $db->query('SELECT u.title, u.num_posts, g.g_id, g.g_user_title, p.id, p.poster, p.poster_id, p.message, p.hide_smilies, p.posted, p.edited, p.edited_by FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE p.id IN ('.implode(',', $post_ids).') ORDER BY p.id', true) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+	$query = new SelectQuery(array('title' => 'u.title', 'num_posts' => 'u.num_posts', 'g_id' => 'g.g_id', 'g_user_title' => 'g.g_user_title', 'id' => 'p.id', 'poster' => 'p.poster', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'edited' => 'p.edited', 'edited_by' => 'p.edited_by'), 'posts AS p');
 
-	while ($cur_post = $db->fetch_assoc($result))
+	$query->joins['u'] = new InnerJoin('users AS u');
+	$query->joins['u']->on = 'u.id = p.poster_id';
+
+	$query->joins['g'] = new Innerjoin('groups AS g');
+	$query->joins['g']->on = 'g.g_id = u.group_id';
+
+	$query->where = 'p.id IN :pids';
+	$query->order = array('id' => 'p.id ASC');
+
+	$params = array(':pids' => $post_ids);
+
+	$result = $db->query($query, $params);
+	foreach ($result as $cur_post)
 	{
 		$post_count++;
 
@@ -394,6 +465,8 @@ if (isset($_GET['tid']))
 <?php
 
 	}
+
+	unset ($result, $query, $params);
 
 ?>
 <div class="postlinksb">
