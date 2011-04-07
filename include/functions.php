@@ -214,11 +214,38 @@ function authenticate_user($user, $password, $password_is_hash = false)
 	global $db, $pun_user;
 
 	// Check if there's a user matching $user and $password
-	$result = $db->query('SELECT u.*, g.*, o.logged, o.idle FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON o.user_id=u.id WHERE '.(is_int($user) ? 'u.id='.intval($user) : 'u.username=\''.$db->escape($user).'\'')) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-	$pun_user = $db->fetch_assoc($result);
+	$query = new SelectQuery(array('users' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'users AS u');
 
-	if (!isset($pun_user['id']) ||
-		($password_is_hash && $password != $pun_user['password']) ||
+	$query->joins['g'] = new InnerJoin('groups AS g');
+	$query->joins['g']->on = 'g.g_id = u.group_id';
+
+	$query->joins['o'] = new LeftJoin('online AS o');
+	$query->joins['o']->on = 'o.user_id = u.id';
+
+	$params = array();
+
+	if (is_int($user))
+	{
+		$query->where = 'u.id = :user_id';
+		$params[':user_id'] = $user;
+	}
+	else
+	{
+		$query->where = 'u.username = :username';
+		$params[':username'] = $user;
+	}
+
+	$result = $db->query($query, $params);
+	if (empty($result))
+	{
+		set_default_user();
+		return;
+	}
+
+	$pun_user = $result[0];
+	unset ($result, $query, $params);
+
+	if (($password_is_hash && $password != $pun_user['password']) ||
 		(!$password_is_hash && pun_hash($password) != $pun_user['password']))
 		set_default_user();
 	else
@@ -993,13 +1020,17 @@ function censor_words($text)
 		{
 			$censors = array();
 
-			$result = $db->query('SELECT search_for, replace_with FROM '.$db->prefix.'censoring') or error('Unable to fetch censoring list', __FILE__, __LINE__, $db->error());
-			while ($cur_censor = $db->fetch_assoc($result))
+			$query = new SelectQuery(array('search_for' => 'c.search_for', 'replace_with' => 'c.replace_with'), 'censoring AS c');
+			$params = array();
+
+			$result = $db->query($query, $params);
+			foreach ($result as $cur_censor)
 			{
 				$cur_censor['search_for'] = '/(?<=[^\p{L}\p{N}])('.str_replace('\*', '[\p{L}\p{N}]*?', preg_quote($cur_censor['search_for'], '/')).')(?=[^\p{L}\p{N}])/iu';
 				$censors[$cur_censor['search_for']] = $cur_censor['replace_with'];
 			}
 
+			unset ($result, $query, $params);
 			$cache->set('censors', $censors);
 		}
 	}
