@@ -131,11 +131,22 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		if ($ban_id < 1)
 			message($lang_common['Bad request']);
 
-		$result = $db->query('SELECT username, ip, email, message, expire FROM '.$db->prefix.'bans WHERE id='.$ban_id) or error('Unable to fetch ban info', __FILE__, __LINE__, $db->error());
-		if ($db->num_rows($result))
-			list($ban_user, $ban_ip, $ban_email, $ban_message, $ban_expire) = $db->fetch_row($result);
-		else
+		$query = new SelectQuery(array('username' => 'b.username', 'ip' => 'b.ip', 'email' => 'b.email', 'message' => 'b.message', 'expire' => 'b.expire'), 'bans AS b');
+		$query->where = 'b.id = :ban_id';
+
+		$params = array(':ban_id' => $ban_id);
+
+		$result = $db->query($query, $params);
+		if (empty($result))
 			message($lang_common['Bad request']);
+
+		$ban_user = $result[0]['username'];
+		$ban_ip = $result[0]['ip'];
+		$ban_email = $result[0]['email'];
+		$ban_message = $result[0]['message'];
+		$ban_expire = $result[0]['expire'];
+
+		unset ($result, $query, $params);
 
 		$diff = ($pun_user['timezone'] + $pun_user['dst']) * 3600;
 		$ban_expire = ($ban_expire != '') ? gmdate('Y-m-d', $ban_expire + $diff) : '';
