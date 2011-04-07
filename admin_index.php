@@ -84,22 +84,7 @@ $params = array();
 
 $result = $db->query($query, $params);
 $num_online = $result[0]['num_users'];
-
-// Collect some additional info about MySQL
-if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
-{
-	// Calculate total db size/row count
-	$result = $db->query('SHOW TABLE STATUS LIKE \''.$db->prefix.'%\'') or error('Unable to fetch table status', __FILE__, __LINE__, $db->error());
-
-	$total_records = $total_size = 0;
-	while ($status = $db->fetch_assoc($result))
-	{
-		$total_records += $status['Rows'];
-		$total_size += $status['Data_length'] + $status['Index_length'];
-	}
-
-	$total_size = file_size($total_size);
-}
+unset ($result, $query, $params);
 
 
 // Check for the existence of various PHP opcode caches/optimizers
@@ -166,10 +151,8 @@ generate_admin_menu('index');
 					<dt><?php echo $lang_admin_index['Database label'] ?></dt>
 					<dd>
 						<?php echo $db->get_version()."\n" ?>
-<?php if (isset($total_records) && isset($total_size)): ?>						<br /><?php printf($lang_admin_index['Database data rows'], forum_number_format($total_records)) ?>
-						<br /><?php printf($lang_admin_index['Database data size'], $total_size) ?>
-<?php endif; ?>					</dd><?php endif; ?>
-				</dl>
+					</dd>
+<?php endif; ?>				</dl>
 			</div>
 		</div>
 	</div>
