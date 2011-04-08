@@ -318,8 +318,14 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 		$new_group = isset($_POST['new_group']) && isset($all_groups[$_POST['new_group']]) ? $_POST['new_group'] : message($lang_admin_users['Invalid group message']);
 
 		// Is the new group a moderator group?
-		$result = $db->query('SELECT g_moderator FROM '.$db->prefix.'groups WHERE g_id='.$new_group) or error('Unable to fetch group info', __FILE__, __LINE__, $db->error());
-		$new_group_mod = $db->result($result);
+		$query = new SelectQuery(array('g_moderator' => 'g.g_moderator'), 'groups AS g');
+		$query->where = 'g.g_id = :group_id';
+
+		$params = array(':group_id' => $new_group);
+
+		$result = $db->query($query, $params);
+		$new_group_mod = $result[0]['g_moderator'];
+		unset ($result, $query, $params);
 
 		// Fetch user groups
 		$user_groups = array();
@@ -344,21 +350,39 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 		if (!empty($user_groups) && $new_group != PUN_ADMIN && $new_group_mod != '1')
 		{
 			// Fetch forum list and clean up their moderator list
-			$result = $db->query('SELECT id, moderators FROM '.$db->prefix.'forums') or error('Unable to fetch forum list', __FILE__, __LINE__, $db->error());
-			while ($cur_forum = $db->fetch_assoc($result))
+			$query = new SelectQuery(array('id' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
+			$params = array();
+
+			$result = $db->query($query, $params);
+			unset ($query, $params);
+
+			$update_query = new UpdateQuery(array('moderators' => ':moderators'), 'forums');
+			$update_query->where = 'id = :forum_id';
+
+			foreach ($result as $cur_forum)
 			{
 				$cur_moderators = ($cur_forum['moderators'] != '') ? unserialize($cur_forum['moderators']) : array();
 
 				foreach ($user_groups as $group_users)
 					$cur_moderators = array_diff($cur_moderators, $group_users);
 
-				$cur_moderators = (!empty($cur_moderators)) ? '\''.$db->escape(serialize($cur_moderators)).'\'' : 'NULL';
-				$db->query('UPDATE '.$db->prefix.'forums SET moderators='.$cur_moderators.' WHERE id='.$cur_forum['id']) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
+				$params = array(':moderators' => empty($cur_moderators) ? null : serialize($cur_moderators), ':forum_id' => $cur_forum['id']);
+
+				$db->query($update_query, $params);
+				unset ($params);
 			}
+
+			unset ($result, $update_query);
 		}
 
 		// Change user group
-		$db->query('UPDATE '.$db->prefix.'users SET group_id='.$new_group.' WHERE id IN ('.implode(',', $user_ids).')') or error('Unable to change user group', __FILE__, __LINE__, $db->error());
+		$query = new UpdateQuery(array('group_id' => ':group_id'), 'users');
+		$query->where = 'id IN :uids';
+
+		$params = array(':group_id' => $new_group, ':uids' => $user_ids);
+
+		$db->query($query, $params);
+		unset ($query, $params);
 
 		redirect('admin_users.php', $lang_admin_users['Users move redirect']);
 	}
@@ -456,24 +480,55 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 		}
 
 		// Fetch forum list and clean up their moderator list
-		$result = $db->query('SELECT id, moderators FROM '.$db->prefix.'forums') or error('Unable to fetch forum list', __FILE__, __LINE__, $db->error());
-		while ($cur_forum = $db->fetch_assoc($result))
+		$query = new SelectQuery(array('id' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
+		$params = array();
+
+		$result = $db->query($query, $params);
+		unset ($query, $params);
+
+		$update_query = new UpdateQuery(array('moderators' => ':moderators'), 'forums');
+		$update_query->where = 'id = :forum_id';
+
+		foreach ($result as $cur_forum)
 		{
 			$cur_moderators = ($cur_forum['moderators'] != '') ? unserialize($cur_forum['moderators']) : array();
 
 			foreach ($user_groups as $group_users)
 				$cur_moderators = array_diff($cur_moderators, $group_users);
 
-			$cur_moderators = (!empty($cur_moderators)) ? '\''.$db->escape(serialize($cur_moderators)).'\'' : 'NULL';
-			$db->query('UPDATE '.$db->prefix.'forums SET moderators='.$cur_moderators.' WHERE id='.$cur_forum['id']) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
+			$params = array(':moderators' => empty($cur_moderators) ? null : serialize ($cur_moderators), ':forum_id' => $cur_forum['id']);
+
+			$db->query($update_query, $params);
+			unset ($params);
 		}
 
+		unset ($result, $update_query);
+
 		// Delete any subscriptions
-		$db->query('DELETE FROM '.$db->prefix.'topic_subscriptions WHERE user_id IN ('.implode(',', $user_ids).')') or error('Unable to delete topic subscriptions', __FILE__, __LINE__, $db->error());
-		$db->query('DELETE FROM '.$db->prefix.'forum_subscriptions WHERE user_id IN ('.implode(',', $user_ids).')') or error('Unable to delete forum subscriptions', __FILE__, __LINE__, $db->error());
+		$query = new DeleteQuery('topic_subscriptions');
+		$query->where = 'user_id IN :uids';
+
+		$params = array(':uids' => $user_ids);
+
+		$db->query($query, $params);
+		unset ($query, $params);
+
+		$query = new DeleteQuery('forum_subscriptions');
+		$query->where = 'user_id IN :uids';
+
+		$params = array(':uids' => $user_ids);
+
+		$db->query($query, $params);
+		unset ($query, $params);
 
 		// Remove them from the online list (if they happen to be logged in)
-		$db->query('DELETE FROM '.$db->prefix.'online WHERE user_id IN ('.implode(',', $user_ids).')') or error('Unable to remove users from online list', __FILE__, __LINE__, $db->error());
+		$query = new DeleteQuery('online');
+		$query->where = 'user_id IN :uids';
+
+		$params = array(':uids' => $user_ids);
+
+		$db->query($query, $params);
+		unset ($query, $params);
 
 		// Should we delete all posts made by these users?
 		if (isset($_POST['delete_posts']))
@@ -500,11 +555,25 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 			}
 		}
 		else
+		{
 			// Set all their posts to guest
-			$db->query('UPDATE '.$db->prefix.'posts SET poster_id=1 WHERE poster_id IN ('.implode(',', $user_ids).')') or error('Unable to update posts', __FILE__, __LINE__, $db->error());
+			$query = new UpdateQuery(array('poster_id' => '1'), 'posts');
+			$query->where = 'poster_id IN :uids';
+
+			$params = array(':uids' => $user_ids);
+
+			$db->query($query, $params);
+			unset ($query, $params);
+		}
 
 		// Delete the users
-		$db->query('DELETE FROM '.$db->prefix.'users WHERE id IN ('.implode(',', $user_ids).')') or error('Unable to delete users', __FILE__, __LINE__, $db->error());
+		$query = new DeleteQuery('users');
+		$query->where = 'id IN :uids';
+
+		$params = array(':uids' => $user_ids);
+
+		$db->query($query, $params);
+		unset ($query, $params);
 
 		// Delete user avatars
 		foreach ($user_ids as $user_id)
