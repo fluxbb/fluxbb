@@ -927,7 +927,7 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 		$params = array(':tids' => $topics, ':forum_id' => $fid);
 
 		$result = $db->query($query, $params);
-		if ($results[0]['num_topics'] != count($topics))
+		if ($result[0]['num_topics'] != count($topics))
 			message($lang_common['Bad request']);
 
 		unset ($result, $query, $params);
@@ -1031,7 +1031,7 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 		$query = new UpdateQuery(array('closed' => ':closed'), 'topics');
 		$query->where = 'id IN :tids AND forum_id = :forum_id';
 
-		$params = array(':closed' => $action, ':tids' => $tids, ':forum_id' => $fid);
+		$params = array(':closed' => $action, ':tids' => $topics, ':forum_id' => $fid);
 
 		$db->query($query, $params);
 		unset ($query, $params);
@@ -1133,16 +1133,16 @@ if ($cur_forum['redirect_url'] != '')
 switch ($cur_forum['sort_by'])
 {
 	case 0:
-		$sort_by = 'last_post DESC';
+		$sort_by = 't.last_post DESC';
 		break;
 	case 1:
-		$sort_by = 'posted DESC';
+		$sort_by = 't.posted DESC';
 		break;
 	case 2:
-		$sort_by = 'subject ASC';
+		$sort_by = 't.subject ASC';
 		break;
 	default:
-		$sort_by = 'last_post DESC';
+		$sort_by = 't.last_post DESC';
 		break;
 }
 
@@ -1194,21 +1194,36 @@ require PUN_ROOT.'header.php';
 
 
 // Retrieve a list of topic IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
-$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE forum_id='.$fid.' ORDER BY sticky DESC, '.$sort_by.', id DESC LIMIT '.$start_from.', '.$pun_user['disp_topics']) or error('Unable to fetch topic IDs', __FILE__, __LINE__, $db->error());
+$query = new SelectQuery(array('id' => 't.id'), 'topics AS t');
+$query->where = 't.forum_id = :forum_id';
+$query->order = array('sticky' => 't.sticky DESC', 'sort' => $sort_by, 'id' => 't.id DESC');
+$query->limit = $pun_user['disp_topics'];
+$query->offset = $start_from;
+
+$params = array(':forum_id' => $fid);
+
+$topic_ids = $db->query($query, $params);
+unset ($query, $params);
 
 // If there are topics in this forum
-if ($db->num_rows($result))
+if (!empty($topic_ids))
 {
-	$topic_ids = array();
-	for ($i = 0;$cur_topic_id = $db->result($result, $i);$i++)
-		$topic_ids[] = $cur_topic_id;
+	// Translate from a 3d array into 2d array: $topics_ids[0]['id'] -> $topics_ids[0]
+	foreach ($topic_ids as $key => $value)
+		$topic_ids[$key] = $value['id'];
 
 	// Select topics
-	$result = $db->query('SELECT id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topic_ids).') ORDER BY sticky DESC, '.$sort_by.', id DESC') or error('Unable to fetch topic list for forum', __FILE__, __LINE__, $db->error());
+	$query = new SelectQuery(array('id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to'), 'topics AS t');
+	$query->where = 't.id IN :tids';
+	$query->order = array('sticky' => 't.sticky DESC', 'sort' => $sort_by, 'id' => 't.id DESC');
+
+	$params = array(':tids' => $topic_ids);
 
 	$button_status = '';
 	$topic_count = 0;
-	while ($cur_topic = $db->fetch_assoc($result))
+
+	$result = $db->query($query, $params);
+	foreach ($result as $cur_topic)
 	{
 
 		++$topic_count;
@@ -1296,6 +1311,8 @@ if ($db->num_rows($result))
 <?php
 
 	}
+
+	unset ($result, $query, $params);
 }
 else
 {
