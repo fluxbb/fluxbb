@@ -42,7 +42,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 				message($lang_admin_bans['No user ID message']);
 
 			$group_id = $result[0]['group_id'];
-			$ban_user = $reuslt[0]['username'];
+			$ban_user = $result[0]['username'];
 			$ban_email = $result[0]['email'];
 
 			unset ($result, $query, $params);
@@ -339,17 +339,38 @@ else if (isset($_POST['add_edit_ban']))
 			message($lang_admin_bans['Invalid date message'].' '.$lang_admin_bans['Invalid date reasons']);
 	}
 	else
-		$ban_expire = 'NULL';
+		$ban_expire = null;
 
-	$ban_user = ($ban_user != '') ? '\''.$db->escape($ban_user).'\'' : 'NULL';
-	$ban_ip = ($ban_ip != '') ? '\''.$db->escape($ban_ip).'\'' : 'NULL';
-	$ban_email = ($ban_email != '') ? '\''.$db->escape($ban_email).'\'' : 'NULL';
-	$ban_message = ($ban_message != '') ? '\''.$db->escape($ban_message).'\'' : 'NULL';
+	$fields = array('username' => ':username', 'ip' => ':ip', 'email' => ':email', 'message' => ':message', 'expire' => ':expire');
+
+	$params = array(
+		':username'	=> empty($ban_user) ? null : $ban_user,
+		':ip'		=> empty($ban_ip) ? null : $ban_ip,
+		':email'	=> empty($ban_email) ? null : $ban_email,
+		':message'	=> empty($ban_message) ? null : $ban_message,
+		':expire'	=> $ban_expire,
+	);
 
 	if ($_POST['mode'] == 'add')
-		$db->query('INSERT INTO '.$db->prefix.'bans (username, ip, email, message, expire, ban_creator) VALUES('.$ban_user.', '.$ban_ip.', '.$ban_email.', '.$ban_message.', '.$ban_expire.', '.$pun_user['id'].')') or error('Unable to add ban', __FILE__, __LINE__, $db->error());
+	{
+		$query = new InsertQuery($fields, 'bans');
+		$query->values['ban_creator'] = ':user_id';
+
+		$params[':user_id'] = $pun_user['id'];
+
+		$db->query($query, $params);
+		unset ($query, $params);
+	}
 	else
-		$db->query('UPDATE '.$db->prefix.'bans SET username='.$ban_user.', ip='.$ban_ip.', email='.$ban_email.', message='.$ban_message.', expire='.$ban_expire.' WHERE id='.intval($_POST['ban_id'])) or error('Unable to update ban', __FILE__, __LINE__, $db->error());
+	{
+		$query = new UpdateQuery($fields, 'bans');
+		$query->where = 'id = :ban_id';
+
+		$params[':ban_id'] = intval($_POST['ban_id']);
+
+		$db->query($query, $params);
+		unset ($query, $params);
+	}
 
 	// Regenerate the bans cache
 	$cache->delete('bans');
