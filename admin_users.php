@@ -521,8 +521,8 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 		$db->query($query, $params);
 		unset ($query, $params);
 
-		// Remove them from the online list (if they happen to be logged in)
-		$query = new DeleteQuery('online');
+		// Remove them from the session list
+		$query = new DeleteQuery('sessions');
 		$query->where = 'user_id IN :uids';
 
 		$params = array(':uids' => $user_ids);

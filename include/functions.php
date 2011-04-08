@@ -6,6 +6,7 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
+require PUN_ROOT.'modules/password/password.php';
 
 //
 // Collect some board statistics
@@ -56,71 +57,95 @@ function get_microtime()
 }
 
 //
+//
+//
+function get_session($session_id)
+{
+	global $db;
+
+	$query = new SelectQuery(array('session_id' => 's.id AS session_id', 'user' => 'u.*', 'group' => 'g.*'), 'sessions AS s');
+
+	$query->joins['u'] = new InnerJoin('users AS u');
+	$query->joins['u']->on = 'u.id = s.user_id';
+
+	$query->joins['g'] = new InnerJoin('groups AS g');
+	$query->joins['g']->on = 'g.g_id = u.group_id';
+
+	$query->where = 's.id = :session_id';
+
+	$params = array(':session_id' => $session_id);
+
+	$result = $db->query($query, $params);
+	unset ($query, $params);
+
+	if (empty($result))
+		return null;
+
+	return $result[0];
+}
+
+
+//
 // Cookie stuff!
 //
-function check_cookie(&$pun_user)
+function check_cookie()
 {
-	global $db, $db_type, $pun_config, $cookie_name, $cookie_seed;
+	global $db, $pun_config, $cookie_name, $cookie_path, $cookie_domain, $cookie_secure;
 
 	$now = time();
 
-	// If the cookie is set and it matches the correct pattern, then read the values from it
-	if (isset($_COOKIE[$cookie_name]) && preg_match('/^(\d+)\|([0-9a-fA-F]+)\|(\d+)\|([0-9a-fA-F]+)$/', $_COOKIE[$cookie_name], $matches))
+	// The cookie contains something, see if it's a valid session ID
+	if (!empty($_COOKIE[$cookie_name]))
 	{
-		$cookie = array(
-			'user_id'			=> intval($matches[1]),
-			'password_hash' 	=> $matches[2],
-			'expiration_time'	=> intval($matches[3]),
-			'cookie_hash'		=> $matches[4],
-		);
+		$pun_user = get_session($_COOKIE[$cookie_name]);
+		if ($pun_user === null)
+			unset ($pun_user);
+		else
+		{
+			$query = new UpdateQuery(array('last_visit' => ':now', 'last_ip' => ':ip'), 'sessions');
+			$query->where = 'id = :session_id';
+
+			$params = array(':session_id' => $pun_user['session_id'], ':now' => $now, ':ip' => get_remote_address());
+
+			$db->query($query, $params);
+			unset ($query, $params);
+		}
 	}
 
-	// If it has a non-guest user, and hasn't expired
-	if (isset($cookie) && $cookie['user_id'] > 1 && $cookie['expiration_time'] > $now)
+	// We didn't find a valid session, so create a new guest session
+	if (!isset($pun_user))
 	{
-		// If the cookie has been tampered with
-		if (forum_hmac($cookie['user_id'].'|'.$cookie['expiration_time'], $cookie_seed.'_cookie_hash') != $cookie['cookie_hash'])
-		{
-			$expire = $now + 31536000; // The cookie expires after a year
-			pun_setcookie(1, pun_hash(uniqid(rand(), true)), $expire);
-			set_default_user();
+		$sid = PasswordHash::random_bytes(32);
 
-			return;
-		}
+		$query = new InsertQuery(array('id' => ':session_id', 'user_id' => '1', 'created' => ':now', 'last_visit' => ':now', 'last_ip' => ':ip'), 'sessions');
+		$params = array(':session_id' => $sid, ':now' => $now, ':ip' => get_remote_address());
 
-		// Check if there's a user with the user ID and password hash from the cookie
-		$query = new SelectQuery(array('user' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'users AS u');
-
-		$query->joins['g'] = new InnerJoin('groups AS g');
-		$query->joins['g']->on = 'u.group_id = g.g_id';
-
-		$query->joins['o'] = new LeftJoin('online AS o');
-		$query->joins['o']->on = 'o.user_id = u.id';
-
-		$query->where = 'u.id = :user_id';
-
-		$params = array(':user_id' => $cookie['user_id']);
-
-		$result = $db->query($query, $params);
+		$db->query($query, $params);
 		unset ($query, $params);
 
-		// If the password is invalid
-		if (empty($result) || forum_hmac($result[0]['password'], $cookie_seed.'_password_hash') !== $cookie['password_hash'])
-		{
-			$expire = $now + 31536000; // The cookie expires after a year
-			pun_setcookie(1, pun_hash(uniqid(rand(), true)), $expire);
-			set_default_user();
+		$pun_user = get_session($sid);
+		unset ($sid);
+	}
 
-			return;
-		}
+	// Enable sending of a P3P header
+	header('P3P: CP="CUR ADM"');
 
-		$pun_user = $result[0];
-		unset ($result);
+	// Send a new, updated cookie with a new expiration timestamp
+	setcookie($cookie_name, $pun_user['session_id'], $now + 1209600, $cookie_path, $cookie_domain, $cookie_secure, true);
 
-		// Send a new, updated cookie with a new expiration timestamp
-		$expire = ($cookie['expiration_time'] > $now + $pun_config['o_timeout_visit']) ? $now + 1209600 : $now + $pun_config['o_timeout_visit'];
-		pun_setcookie($pun_user['id'], $pun_user['password'], $expire);
-
+	if($pun_user['g_id'] == PUN_GUEST)
+	{
+		$pun_user['disp_topics'] = $pun_config['o_disp_topics_default'];
+		$pun_user['disp_posts'] = $pun_config['o_disp_posts_default'];
+		$pun_user['timezone'] = $pun_config['o_default_timezone'];
+		$pun_user['dst'] = $pun_config['o_default_dst'];
+		$pun_user['language'] = $pun_config['o_default_lang'];
+		$pun_user['style'] = $pun_config['o_default_style'];
+		$pun_user['is_guest'] = true;
+		$pun_user['is_admmod'] = false;
+	}
+	else
+	{
 		// Set a default language if the user selected language no longer exists
 		if (!file_exists(PUN_ROOT.'lang/'.$pun_user['language']))
 			$pun_user['language'] = $pun_config['o_default_lang'];
@@ -134,64 +159,11 @@ function check_cookie(&$pun_user)
 		if (!$pun_user['disp_posts'])
 			$pun_user['disp_posts'] = $pun_config['o_disp_posts_default'];
 
-		// Define this if you want this visit to affect the online list and the users last visit data
-		if (!defined('PUN_QUIET_VISIT'))
-		{
-			// Update the online list
-			if (!$pun_user['logged'])
-			{
-				$pun_user['logged'] = $now;
-
-				// With non-transactional DBMS REPLACE INTO avoids a user having two rows in the online table
-				$query = new ReplaceQuery(array('user_id' => ':user_id', 'ident' => ':ident', 'logged' => ':logged'), 'online', 'ident');
-				$params = array(':user_id' => $pun_user['id'], ':ident' => $pun_user['username'], ':logged' => $pun_user['logged']);
-
-				$db->query($query, $params);
-				unset ($query, $params);
-
-				// Reset tracked topics
-				set_tracked_topics(null);
-			}
-			else
-			{
-				// Special case: We've timed out, but no other user has browsed the forums since we timed out
-				if ($pun_user['logged'] < ($now-$pun_config['o_timeout_visit']))
-				{
-					$query = new UpdateQuery(array('last_visit' => ':logged'), 'users');
-					$query->where = 'id = :user_id';
-
-					$params = array(':logged' => $pun_user['logged'], ':user_id' => $pun_user['id']);
-
-					$db->query($query, $params);
-					unset ($query, $params);
-
-					$pun_user['last_visit'] = $pun_user['logged'];
-				}
-
-				$query = new UpdateQuery(array('logged' => ':now', 'idle' => '0'), 'online');
-				$query->where = 'user_id = :user_id';
-
-				$params = array(':now' => $now, ':user_id' => $pun_user['id']);
-
-				$db->query($query, $params);
-				unset ($query, $params);
-
-				// Update tracked topics with the current expire time
-				if (isset($_COOKIE[$cookie_name.'_track']))
-					forum_setcookie($cookie_name.'_track', $_COOKIE[$cookie_name.'_track'], $now + $pun_config['o_timeout_visit']);
-			}
-		}
-		else
-		{
-			if (!$pun_user['logged'])
-				$pun_user['logged'] = $pun_user['last_visit'];
-		}
-
 		$pun_user['is_guest'] = false;
 		$pun_user['is_admmod'] = $pun_user['g_id'] == PUN_ADMIN || $pun_user['g_moderator'] == '1';
 	}
-	else
-		set_default_user();
+
+	return $pun_user;
 }
 
 
@@ -201,55 +173,6 @@ function check_cookie(&$pun_user)
 function escape_cdata($str)
 {
 	return str_replace(']]>', ']]&gt;', $str);
-}
-
-
-//
-// Authenticates the provided username and password against the user database
-// $user can be either a user ID (integer) or a username (string)
-// $password can be either a plaintext password or a password hash including salt ($password_is_hash must be set accordingly)
-//
-function authenticate_user($user, $password, $password_is_hash = false)
-{
-	global $db, $pun_user;
-
-	// Check if there's a user matching $user and $password
-	$query = new SelectQuery(array('users' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'users AS u');
-
-	$query->joins['g'] = new InnerJoin('groups AS g');
-	$query->joins['g']->on = 'g.g_id = u.group_id';
-
-	$query->joins['o'] = new LeftJoin('online AS o');
-	$query->joins['o']->on = 'o.user_id = u.id';
-
-	$params = array();
-
-	if (is_int($user))
-	{
-		$query->where = 'u.id = :user_id';
-		$params[':user_id'] = $user;
-	}
-	else
-	{
-		$query->where = 'u.username = :username';
-		$params[':username'] = $user;
-	}
-
-	$result = $db->query($query, $params);
-	if (empty($result))
-	{
-		set_default_user();
-		return;
-	}
-
-	$pun_user = $result[0];
-	unset ($result, $query, $params);
-
-	if (($password_is_hash && $password != $pun_user['password']) ||
-		(!$password_is_hash && pun_hash($password) != $pun_user['password']))
-		set_default_user();
-	else
-		$pun_user['is_guest'] = false;
 }
 
 
@@ -319,70 +242,6 @@ function get_base_url($support_https = false)
 
 
 //
-// Fill $pun_user with default values (for guests)
-//
-function set_default_user()
-{
-	global $db, $db_type, $pun_user, $pun_config;
-
-	$remote_addr = get_remote_address();
-
-	// Fetch guest user
-	$query = new SelectQuery(array('user' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'last_post' => 'o.last_post', 'last_search' => 'o.last_search'), 'users AS u');
-
-	$query->joins['g'] = new InnerJoin('groups AS g');
-	$query->joins['g']->on = 'u.group_id = g.g_id';
-
-	$query->joins['o'] = new LeftJoin('online AS o');
-	$query->joins['o']->on = 'o.ident = :ident';
-
-	$query->where = 'u.id = 1';
-
-	$params = array(':ident' => $remote_addr);
-
-	$result = $db->query($query, $params);
-	unset ($query, $params);
-
-	if (empty($result))
-		exit('Unable to fetch guest information. The table \'users\' must contain an entry with id = 1 that represents anonymous users.');
-
-	$pun_user = $result[0];
-	unset ($result);
-
-	// Update online list
-	if (!$pun_user['logged'])
-	{
-		$pun_user['logged'] = time();
-
-		// With non-transactional DBMS REPLACE INTO avoids a user having two rows in the online table
-		$query = new ReplaceQuery(array('user_id' => '1', 'ident' => ':ident', 'logged' => ':logged'), 'online', 'ident');
-		$params = array(':ident' => $remote_addr, ':logged' => $pun_user['logged']);
-
-		$db->query($query, $params);
-		unset ($query, $params);
-	}
-	else {
-		$query = new UpdateQuery(array('logged' => ':now'), 'online');
-		$query->where = 'ident = :ident';
-
-		$params = array(':now' => time(), ':ident' => $remote_addr);
-
-		$db->query($query, $params);
-		unset ($query, $params);
-	}
-
-	$pun_user['disp_topics'] = $pun_config['o_disp_topics_default'];
-	$pun_user['disp_posts'] = $pun_config['o_disp_posts_default'];
-	$pun_user['timezone'] = $pun_config['o_default_timezone'];
-	$pun_user['dst'] = $pun_config['o_default_dst'];
-	$pun_user['language'] = $pun_config['o_default_lang'];
-	$pun_user['style'] = $pun_config['o_default_style'];
-	$pun_user['is_guest'] = true;
-	$pun_user['is_admmod'] = false;
-}
-
-
-//
 // SHA1 HMAC with PHP 4 fallback
 //
 function forum_hmac($data, $key, $raw_output = false)
@@ -414,18 +273,6 @@ function forum_hmac($data, $key, $raw_output = false)
 		$hash = pack('H*', $hash);
 
 	return $hash;
-}
-
-
-//
-// Set a cookie, FluxBB style!
-// Wrapper for forum_setcookie
-//
-function pun_setcookie($user_id, $password_hash, $expire)
-{
-	global $cookie_name, $cookie_seed;
-
-	forum_setcookie($cookie_name, $user_id.'|'.forum_hmac($password_hash, $cookie_seed.'_password_hash').'|'.$expire.'|'.forum_hmac($user_id.'|'.$expire, $cookie_seed.'_cookie_hash'), $expire);
 }
 
 
@@ -507,17 +354,7 @@ function check_bans()
 		}
 
 		if ($is_banned)
-		{
-			$query = new DeleteQuery('online');
-			$query->where = 'ident = :username';
-
-			$params = array(':username' => $pun_user['username']);
-
-			$db->query($query, $params);
-			unset ($query, $params);
-
 			message($lang_common['Ban message'].' '.(($cur_ban['expire'] != '') ? $lang_common['Ban message 2'].' '.strtolower(format_time($cur_ban['expire'], true)).'. ' : '').(($cur_ban['message'] != '') ? $lang_common['Ban message 3'].'<br /><br /><strong>'.pun_htmlspecialchars($cur_ban['message']).'</strong><br /><br />' : '<br /><br />').$lang_common['Ban message 4'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
-		}
 	}
 
 	unset ($query);
@@ -675,6 +512,7 @@ function generate_profile_menu($page = '')
 <?php if ($pun_config['o_avatars'] == '1' || $pun_config['o_signatures'] == '1'): ?>					<li<?php if ($page == 'personality') echo ' class="isactive"'; ?>><a href="profile.php?section=personality&amp;id=<?php echo $id ?>"><?php echo $lang_profile['Section personality'] ?></a></li>
 <?php endif; ?>					<li<?php if ($page == 'display') echo ' class="isactive"'; ?>><a href="profile.php?section=display&amp;id=<?php echo $id ?>"><?php echo $lang_profile['Section display'] ?></a></li>
 					<li<?php if ($page == 'privacy') echo ' class="isactive"'; ?>><a href="profile.php?section=privacy&amp;id=<?php echo $id ?>"><?php echo $lang_profile['Section privacy'] ?></a></li>
+					<li<?php if ($page == 'sessions') echo ' class="isactive"'; ?>><a href="profile.php?section=sessions&amp;id=<?php echo $id ?>"><?php echo $lang_profile['Section sessions'] ?></a></li>
 <?php if ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1' && $pun_user['g_mod_ban_users'] == '1')): ?>					<li<?php if ($page == 'admin') echo ' class="isactive"'; ?>><a href="profile.php?section=admin&amp;id=<?php echo $id ?>"><?php echo $lang_profile['Section admin'] ?></a></li>
 <?php endif; ?>				</ul>
 			</div>

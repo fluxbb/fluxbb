@@ -161,9 +161,6 @@ if ($action == 'change_pass')
 		$db->query($query, $params);
 		unset($query, $params);
 
-		if ($pun_user['id'] == $id)
-			pun_setcookie($pun_user['id'], $new_password_hash, time() + $pun_config['o_timeout_visit']);
-
 		redirect('profile.php?section=essentials&amp;id='.$id, $lang_profile['Pass updated redirect']);
 	}
 
@@ -715,8 +712,6 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 			unset($result, $update_query);
 		}
 
-		// Delete any subscriptions and remove him/her from the online list (if they happen to be logged in)
-
 		// Delete topic subscriptions
 		$query = new DeleteQuery('topic_subscriptions');
 		$query->where = 'user_id = :user_id';
@@ -733,9 +728,10 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 		$db->query($query, $params);
 		unset($query, $params);
 
-		// Delete online entry
-		$query = new DeleteQuery('online');
+		// Update session to belong to guest user
+		$query = new UpdateQuery(array('user_id' => '1'), 'sessions');
 		$query->where = 'user_id = :user_id';
+
 		$params = array(':user_id' => $id);
 
 		$db->query($query, $params);
@@ -1164,15 +1160,6 @@ else if (isset($_POST['form_sent']))
 		$query->where = 'last_poster = :old_username';
 
 		$params = array(':poster' => $form['username'], ':old_username' => $old_username);
-
-		$db->query($query, $params);
-		unset($query, $params);
-
-		// Update all online table entries about this user
-		$query = new UpdateQuery(array('ident' => ':username'), 'online');
-		$query->where = 'ident = :old_username';
-
-		$params = array(':username' => $form['username'], ':old_username' => $old_username);
 
 		$db->query($query, $params);
 		unset($query, $params);
@@ -1931,6 +1918,34 @@ else
 		</div>
 	</div>
 <?php
+
+	}
+	else if ($section == 'sessions')
+	{
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section sessions']);
+		define('PUN_ACTIVE_PAGE', 'profile');
+		require PUN_ROOT.'header.php';
+
+		generate_profile_menu('sessions');
+
+		$query = new SelectQuery(array('id' => 's.id', 'created' => 's.created', 'last_visit' => 's.last_visit'), 'sessions AS s');
+		$query->where = 's.user_id = :user_id';
+
+		$params = array(':user_id' => $id);
+
+		$result = $db->query($query, $params);
+
+?>
+	<div class="blockform">
+		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang_profile['Section sessions'] ?></span></h2>
+		<div class="box">
+			<!-- TODO -->
+			<pre><?php print_r($result); ?></pre>
+		</div>
+	</div>
+<?php
+
+		unset ($result, $query, $params);
 
 	}
 	else if ($section == 'admin')

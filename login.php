@@ -25,7 +25,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	$save_pass = isset($_POST['save_pass']);
 
 	$query = new SelectQuery(array('user' => 'u.*'), 'users AS u');
-	$query->where = 'LOWER(u.username) = LOWER(:username)';
+	$query->where = 'u.username LIKE :username';
 
 	$params = array(':username' => $form_username);
 
@@ -82,22 +82,19 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		$params = array(':group_id' => $pun_config['o_default_user_group'], ':id' => $cur_user['id']);
 		$db->query($query, $params);
 		unset($query, $params);
-		
+
 		// Regenerate the users info cache
 		$cache->delete('boardstats');
 	}
 
-	// Remove this users guest entry from the online list
-	$query = new DeleteQuery('online');
-	$query->where = 'ident = :ident';
+	// Update this users session to the correct user ID
+	$query = new UpdateQuery(array('user_id' => ':user_id'), 'sessions');
+	$query->where = 'id = :session_id';
 
-	$params = array(':ident' => get_remote_address());
+	$params = array(':user_id' => $cur_user['id'], ':session_id' => $pun_user['session_id']);
 
 	$db->query($query, $params);
 	unset ($query, $params);
-
-	$expire = ($save_pass == '1') ? time() + 1209600 : time() + $pun_config['o_timeout_visit'];
-	pun_setcookie($cur_user['id'], $form_password_hash, $expire);
 
 	// Reset tracked topics
 	set_tracked_topics(null);
@@ -114,28 +111,14 @@ else if ($action == 'out')
 		exit;
 	}
 
-	// Remove user from "users online" list
-	$query = new DeleteQuery('online');
-	$query->where = 'user_id = :user_id';
-	
-	$params = array(':user_id' => $pun_user['id']);
-	
+	// Update this users session to be a guest
+	$query = new UpdateQuery(array('user_id' => '1'), 'sessions');
+	$query->where = 'id = :session_id';
+
+	$params = array(':session_id' => $pun_user['session_id']);
+
 	$db->query($query, $params);
 	unset($query, $params);
-	
-	// Update last_visit (make sure there's something to update it with)
-	if (isset($pun_user['logged']))
-	{
-		$query = new UpdateQuery(array('last_visit' => ':last_visit'), 'users');
-		$query->where = 'id = :id';
-		
-		$params = array(':last_visit' => $pun_user['logged'], ':id' => $pun_user['id']);
-		
-		$db->query($query, $params);
-		unset($query, $params);
-	}
-
-	pun_setcookie(1, pun_hash(uniqid(rand(), true)), time() + 31536000);
 
 	redirect('index.php', $lang_login['Logout redirect']);
 }
@@ -163,9 +146,9 @@ else if ($action == 'forget' || $action == 'forget_2')
 		{
 			$query = new SelectQuery(array('id' => 'u.id', 'username' => 'u.username', 'last_email_sent' => 'u.last_email_sent'), 'users AS u');
 			$query->where = 'u.email = :email';
-			
+
 			$params = array(':email' => $email);
-			
+
 			$result = $db->query($query, $params);
 			unset($query, $params);
 
@@ -192,12 +175,12 @@ else if ($action == 'forget' || $action == 'forget_2')
 					// Generate a new password and a new password activation code
 					$new_password = random_pass(8);
 					$new_password_key = random_pass(8);
-					
+
 					$query = new UpdateQuery(array('activate_string' => ':activate_string', 'activate_key' => ':activate_key', 'last_email_sent' => ':last_email_sent'), 'users');
 					$query->where = 'id = :id';
-					
+
 					$params = array(':activate_string' => pun_hash($new_password), ':activate_key' => $new_password_key, ':last_email_sent' => time(), ':id' => $cur_hit['id']);
-					
+
 					$db->query($query, $params);
 					unset($params);
 

@@ -240,7 +240,14 @@ if (isset($_POST['form_sent']))
 		// Regenerate the users info cache
 		$cache->delete('boardstats');
 
-		pun_setcookie($new_uid, $password_hash, time() + $pun_config['o_timeout_visit']);
+		// Update this users session to the correct user ID
+		$query = new UpdateQuery(array('user_id' => ':user_id'), 'sessions');
+		$query->where = 'id = :session_id';
+
+		$params = array(':user_id' => $cur_user['id'], ':session_id' => $pun_user['session_id']);
+
+		$db->query($query, $params);
+		unset ($query, $params);
 
 		redirect('index.php', $lang_register['Reg complete']);
 	}

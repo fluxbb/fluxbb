@@ -283,7 +283,7 @@ foreach ($post_ids as $key => $value)
 	$post_ids[$key] = $value['id'];
 
 // Retrieve the posts (and their respective poster/online status)
-$query = new SelectQuery(array('email' => 'u.email', 'title' => 'u.title', 'url' => 'u.url', 'location' => 'u.location', 'signature' => 'u.signature', 'email_setting' => 'u.email_setting', 'num_posts' => 'u.num_posts', 'registered' => 'u.registered', 'admin_note' => 'u.admin_note', 'pid' => 'p.id', 'username' => 'p.poster AS username', 'poster_id' => 'p.poster_id', 'poster_ip' => 'p.poster_ip', 'poster_email' => 'p.poster_email', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'edited' => 'p.edited', 'edited_by' => 'p.edited_by', 'gid' => 'g.g_id', 'g_user_title' => 'g.g_user_title', 'is_online' => 'o.user_id AS is_online'), 'posts AS p');
+$query = new SelectQuery(array('email' => 'u.email', 'title' => 'u.title', 'url' => 'u.url', 'location' => 'u.location', 'signature' => 'u.signature', 'email_setting' => 'u.email_setting', 'num_posts' => 'u.num_posts', 'registered' => 'u.registered', 'admin_note' => 'u.admin_note', 'pid' => 'p.id', 'username' => 'p.poster AS username', 'poster_id' => 'p.poster_id', 'poster_ip' => 'p.poster_ip', 'poster_email' => 'p.poster_email', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'edited' => 'p.edited', 'edited_by' => 'p.edited_by', 'gid' => 'g.g_id', 'g_user_title' => 'g.g_user_title', 'is_online' => 's.user_id AS is_online'), 'posts AS p');
 
 $query->joins['u'] = new InnerJoin('users AS u');
 $query->joins['u']->on = 'u.id = p.poster_id';
@@ -291,13 +291,13 @@ $query->joins['u']->on = 'u.id = p.poster_id';
 $query->joins['g'] = new InnerJoin('groups AS g');
 $query->joins['g']->on = 'g.g_id = u.group_id';
 
-$query->joins['o'] = new LeftJoin('online AS o');
-$query->joins['o']->on = 'o.user_id = u.id AND o.user_id != 1 AND o.idle = 0';
+$query->joins['o'] = new LeftJoin('sessions AS s');
+$query->joins['o']->on = 's.user_id = u.id AND s.user_id != 1 AND s.last_visit > :idle_visit';
 
 $query->where = 'p.id IN :pids';
 $query->order = array('pid' => 'p.id ASC');
 
-$params = array(':pids' => $post_ids);
+$params = array(':pids' => $post_ids, ':idle_visit' => time() - $pun_config['o_timeout_visit']);
 
 $result = $db->query($query, $params);
 foreach ($result as $cur_post)

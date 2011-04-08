@@ -107,7 +107,7 @@ define('PUN_MEMBER', 4);
 
 // Load the DB module
 require PUN_ROOT.'modules/database/db.php';
-$db = new Database('sqlite:'.$db_name, array('username' => $db_username, 'password' => $db_password, 'prefix' => $db_prefix, 'debug' => defined('PUN_DEBUG'))); // TODO: Tidy the config
+$db = new Database($db_type.':host='.$db_host.';dbname='.$db_name.';', array('username' => $db_username, 'password' => $db_password, 'prefix' => $db_prefix, 'debug' => defined('PUN_DEBUG'))); // TODO: Tidy the config
 
 // Start a transaction
 $db->start_transaction();
@@ -156,8 +156,7 @@ $forum_time_formats = array($pun_config['o_time_format'], 'H:i:s', 'H:i', 'g:i:s
 $forum_date_formats = array($pun_config['o_date_format'], 'Y-m-d', 'Y-d-m', 'd-m-Y', 'm-d-Y', 'M j Y', 'jS M Y');
 
 // Check/update/set cookie and fetch user info
-$pun_user = array();
-check_cookie($pun_user);
+$pun_user = check_cookie();
 
 // Attempt to load the common language file
 if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/common.php'))

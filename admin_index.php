@@ -76,14 +76,12 @@ else
 	$server_load = $lang_admin_index['Not available'];
 
 
-// Get number of current visitors
-$query = new SelectQuery(array('num_users' => 'COUNT(o.user_id) AS num_users'), 'online AS o');
-$query->where = 'o.idle = 0';
-
+// Get total number of sessions
+$query = new SelectQuery(array('num_sessions' => 'COUNT(s.id) AS num_sessions'), 'sessions AS s');
 $params = array();
 
 $result = $db->query($query, $params);
-$num_online = $result[0]['num_users'];
+$num_sessions = $result[0]['num_sessions'];
 unset ($result, $query, $params);
 
 
@@ -140,7 +138,7 @@ generate_admin_menu('index');
 					</dd>
 					<dt><?php echo $lang_admin_index['Server load label'] ?></dt>
 					<dd>
-						<?php printf($lang_admin_index['Server load data'], $server_load, $num_online) ?>
+						<?php printf($lang_admin_index['Server load data'], $server_load, $num_sessions) ?>
 					</dd>
 <?php if ($pun_user['g_id'] == PUN_ADMIN): ?>					<dt><?php echo $lang_admin_index['Environment label'] ?></dt>
 					<dd>

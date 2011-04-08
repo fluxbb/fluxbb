@@ -246,29 +246,32 @@ if (!empty($forum_actions))
 
 if ($pun_config['o_users_online'] == '1')
 {
-	// Fetch users online info and generate strings for output
-	$query = new SelectQuery(array('user_id' => 'o.user_id', 'ident' => 'o.ident'), 'online AS o');
-	$query->where = 'idle = 0';
-	$query->order = array('ident' => 'o.ident ASC');
+	// Fetch users session info and generate strings for output
+	$query = new SelectQuery(array('user_id' => 's.user_id', 'username' => 'u.username'), 'sessions AS s');
 
-	$params = array();
+	$query->joins['u'] = new InnerJoin('users AS u');
+	$query->joins['u']->on = 'u.id = s.user_id';
 
-	$result = $db->query($query, $params);
+	$query->where = 's.last_visit > :idle_visit';
+	$query->order = array('username' => 'u.username ASC');
+
+	$params = array(':idle_visit' => time() - $pun_config['o_timeout_visit']);
 
 	$num_guests = 0;
 	$users = array();
 
-	foreach ($result as $pun_user_online)
+	$result = $db->query($query, $params);
+	foreach ($result as $cur_user)
 	{
-		if ($pun_user_online['user_id'] > 1)
+		if ($cur_user['user_id'] > 1)
 		{
 			if ($pun_user['g_view_users'] == '1')
-				$users[] = "\n\t\t\t\t".'<dd><a href="profile.php?id='.$pun_user_online['user_id'].'">'.pun_htmlspecialchars($pun_user_online['ident']).'</a>';
+				$users[] = "\n\t\t\t\t".'<dd><a href="profile.php?id='.$cur_user['user_id'].'">'.pun_htmlspecialchars($cur_user['username']).'</a>';
 			else
-				$users[] = "\n\t\t\t\t".'<dd>'.pun_htmlspecialchars($pun_user_online['ident']);
+				$users[] = "\n\t\t\t\t".'<dd>'.pun_htmlspecialchars($cur_user['username']);
 		}
 		else
-			++$num_guests;
+			$num_guests++;
 	}
 
 	unset ($query, $params, $result);

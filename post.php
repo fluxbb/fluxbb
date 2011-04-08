@@ -280,13 +280,13 @@ if (isset($_POST['form_sent']))
 				$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
 				$query->joins['fp']->on = 'fp.forum_id = :forum_id AND fp.group_id = u.group_id';
 
-				$query->joins['o'] = new LeftJoin('online AS o');
-				$query->joins['o']->on = 'u.id = o.user_id';
+				$query->joins['o'] = new LeftJoin('session AS s');
+				$query->joins['o']->on = 'u.id = s.user_id';
 
 				$query->joins['b'] = new LeftJoin('bans AS b');
 				$query->joins['b']->on = 'u.username = b.username';
 
-				$query->where = 'b.username IS NULL AND COALESCE(o.logged, u.last_visit) > :last_post AND (fp.read_forum IS NULL OR fp.read_forum = 1) AND ts.topic_id = :topic_id AND u.id != :user_id';
+				$query->where = 'b.username IS NULL AND COALESCE(s.last_visit, u.last_visit) > :last_post AND (fp.read_forum IS NULL OR fp.read_forum = 1) AND ts.topic_id = :topic_id AND u.id != :user_id';
 
 				$params = array(':forum_id' => $cur_posting['id'], ':last_post' => $previous_post_time, ':topic_id' => $tid, ':user_id' => $pun_user['id']);
 
@@ -531,10 +531,10 @@ if (isset($_POST['form_sent']))
 		}
 		else
 		{
-			$query = new UpdateQuery(array('last_post' => ':now'), 'online');
-			$query->where = 'ident = :ident';
+			$query = new UpdateQuery(array('last_post' => ':now'), 'session');
+			$query->where = 'id = :session_id';
 
-			$params = array(':now' => $now, ':ident' => get_remote_address());
+			$params = array(':now' => $now, ':session_id' => $pun_user['session_id']);
 
 			$db->query($query, $params);
 			unset ($query, $params);

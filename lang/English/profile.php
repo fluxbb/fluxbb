@@ -11,6 +11,7 @@ $lang_profile = array(
 'Section personality'			=>	'Personality',
 'Section display'				=>	'Display',
 'Section privacy'				=>	'Privacy',
+'Section sessions'				=>	'Sessions',
 'Section admin'					=>	'Administration',
 
 // Miscellaneous
