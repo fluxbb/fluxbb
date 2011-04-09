@@ -1928,7 +1928,7 @@ else
 
 		generate_profile_menu('sessions');
 
-		$query = new SelectQuery(array('id' => 's.id', 'created' => 's.created', 'last_visit' => 's.last_visit'), 'sessions AS s');
+		$query = new SelectQuery(array('id' => 's.id', 'created' => 's.created', 'last_visit' => 's.last_visit', 'last_ip' => 's.last_ip'), 'sessions AS s');
 		$query->where = 's.user_id = :user_id';
 
 		$params = array(':user_id' => $id);
