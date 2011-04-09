@@ -132,31 +132,13 @@ if ($action == 'change_pass')
 		$cur_user = $result[0];
 		unset($query, $params, $result);
 
-		$authorized = false;
-
-		if (!empty($cur_user['password']))
-		{
-			$old_password_hash = pun_hash($old_password);
-
-			if ($cur_user['password'] == $old_password_hash || $pun_user['is_admmod'])
-				$authorized = true;
-		}
-
-		if (!$authorized)
+		if (!$pun_user['is_admmod'] && !PasswordHash::validate($old_password, $cur_user['password']))
 			message($lang_profile['Wrong pass']);
-
-		$new_password_hash = pun_hash($new_password1);
 
 		$query = new UpdateQuery(array('password' => ':password'), 'users');
 		$query->where = 'id = :user_id';
 
-		$params = array(':user_id' => $id, ':password' => $new_password_hash);
-
-		if (!empty($cur_user['salt']))
-		{
-			$query->fields['salt'] = ':salt';
-			$params[':salt'] = NULL;
-		}
+		$params = array(':user_id' => $id, ':password' => PasswordHash::hash($new_password1));
 
 		$db->query($query, $params);
 		unset($query, $params);
@@ -265,7 +247,7 @@ else if ($action == 'change_email')
 	}
 	else if (isset($_POST['form_sent']))
 	{
-		if (pun_hash($_POST['req_password']) !== $pun_user['password'])
+		if (!PasswordHash::validate($_POST['req_password'], $pun_user['password']))
 			message($lang_profile['Wrong pass']);
 
 		require PUN_ROOT.'include/email.php';

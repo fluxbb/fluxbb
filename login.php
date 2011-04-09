@@ -24,7 +24,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	$form_password = pun_trim($_POST['req_password']);
 	$save_pass = isset($_POST['save_pass']);
 
-	$query = new SelectQuery(array('user' => 'u.*'), 'users AS u');
+	$query = new SelectQuery(array('id' => 'u.id', 'group_id' => 'u.group_id', 'password' => 'u.password'), 'users AS u');
 	$query->where = 'u.username LIKE :username';
 
 	$params = array(':username' => $form_username);
@@ -32,47 +32,36 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	$result = $db->query($query, $params);
 	unset ($query, $params);
 
-	$authorized = false;
-	if (!empty($result))
+	// START TEMP PASSWORD UPDATING
+
+	// If it is 40 hex characters (sha1) - 1.4 style
+	if (preg_match('%^[a-zA-Z0-9]{40}$%', $result[0]['password']))
 	{
-		$cur_user = $result[0];
-		$form_password_hash = pun_hash($form_password); // Will result in a SHA-1 hash
-
-		// If there is a salt in the database we have upgraded from 1.3-legacy though havent yet logged in
-		if (!empty($cur_user['salt']))
+		// The password is valid, update it to use the new password type
+		if ($result[0]['password'] == sha1($form_password))
 		{
-			if (sha1($cur_user['salt'].sha1($form_password)) == $cur_user['password']) // 1.3 used sha1(salt.sha1(pass))
-			{
-				$authorized = true;
+			$result[0]['password'] = PasswordHash::hash($form_password);
 
-				$query = new UpdateQuery(array('password' => ':password', 'salt' => ':salt'), 'users');
-				$query->where = 'id = :id';
-				$params = array(':password' => $form_password_hash, ':salt' => NULL, ':id' => $cur_user['id']);
-				$db->query($query, $params);
-				unset($query, $params);
-			}
-		}
-		// If the length isn't 40 then the password isn't using sha1, so it must be md5 from 1.2
-		else if (strlen($cur_user['password']) != 40)
-		{
-			if (md5($form_password) == $cur_user['password'])
-			{
-				$authorized = true;
+			$query = new UpdateQuery(array('password' => ':password'), 'users');
+			$query->where = 'id = :user_id';
 
-				$query = new UpdateQuery(array('password' => ':password'), 'users');
-				$query->where = 'id = :id';
-				$params = array(':password' => $form_password_hash, ':id' => $cur_user['id']);
-				$db->query($query, $params);
-				unset($query, $params);
-			}
+			$params = array(':password' => $result[0]['password'], ':user_id' => $result[0]['id']);
+
+			$db->query($query, $params);
+			unset ($query, $params);
 		}
-		// Otherwise we should have a normal sha1 password
+		// The password is invalid
 		else
-			$authorized = ($cur_user['password'] == $form_password_hash);
+			unset ($result);
 	}
 
-	if (!$authorized)
+	// END TEMP PASSWORD UPDATING
+
+	if (empty($result) || !PasswordHash::validate($form_password, $result[0]['password']))
 		message($lang_login['Wrong user/pass'].' <a href="login.php?action=forget">'.$lang_login['Forgotten pass'].'</a>');
+
+	$cur_user = $result[0];
+	unset ($result);
 
 	// Update the status if this is the first time the user logged in
 	if ($cur_user['group_id'] == PUN_UNVERIFIED)
@@ -105,7 +94,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 
 else if ($action == 'out')
 {
-	if ($pun_user['is_guest'] || !isset($_GET['id']) || $_GET['id'] != $pun_user['id'] || !isset($_GET['csrf_token']) || $_GET['csrf_token'] != pun_hash($pun_user['id'].pun_hash(get_remote_address())))
+	if ($pun_user['is_guest'] || !isset($_GET['id']) || $_GET['id'] != $pun_user['id'] || !isset($_GET['csrf_token']) || $_GET['csrf_token'] != sha1($pun_user['id'].sha1(get_remote_address())))
 	{
 		header('Location: index.php');
 		exit;
@@ -179,7 +168,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 					$query = new UpdateQuery(array('activate_string' => ':activate_string', 'activate_key' => ':activate_key', 'last_email_sent' => ':last_email_sent'), 'users');
 					$query->where = 'id = :id';
 
-					$params = array(':activate_string' => pun_hash($new_password), ':activate_key' => $new_password_key, ':last_email_sent' => time(), ':id' => $cur_hit['id']);
+					$params = array(':activate_string' => PasswordHash::hash($new_password), ':activate_key' => $new_password_key, ':last_email_sent' => time(), ':id' => $cur_hit['id']);
 
 					$db->query($query, $params);
 					unset($params);

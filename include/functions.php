@@ -1104,7 +1104,7 @@ function random_key($len, $readable = false, $hash = false)
 	$key = '';
 
 	if ($hash)
-		$key = substr(pun_hash(uniqid(rand(), true)), 0, $len);
+		$key = substr(sha1(uniqid(rand(), true)), 0, $len);
 	else if ($readable)
 	{
 		$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -1156,15 +1156,6 @@ function confirm_referrer($script, $error_msg = false)
 function random_pass($len)
 {
 	return random_key($len, true);
-}
-
-
-//
-// Compute a hash of $str
-//
-function pun_hash($str)
-{
-	return sha1($str);
 }
 
 
