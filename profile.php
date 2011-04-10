@@ -1910,10 +1910,10 @@ else
 
 		generate_profile_menu('sessions');
 
-		$query = new SelectQuery(array('id' => 's.id', 'created' => 's.created', 'last_visit' => 's.last_visit', 'last_ip' => 's.last_ip'), 'sessions AS s');
+		$query = new SelectQuery(array('id' => 's.id', 'created' => 's.created', 'last_visit' => 's.last_visit', 'last_ip' => 's.last_ip', 'active' => '(s.last_visit > :idle_visit) AS active'), 'sessions AS s');
 		$query->where = 's.user_id = :user_id';
 
-		$params = array(':user_id' => $id);
+		$params = array(':user_id' => $id, ':idle_visit' => time() - $pun_config['o_timeout_visit']);
 
 		$result = $db->query($query, $params);
 
@@ -1921,8 +1921,39 @@ else
 	<div class="blockform">
 		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang_profile['Section sessions'] ?></span></h2>
 		<div class="box">
-			<!-- TODO -->
-			<pre><?php print_r($result); ?></pre>
+			<div class="inbox">
+				<table cellspacing="0">
+				<thead>
+					<tr>
+						<th class="tcl" scope="col"><?php echo $lang_profile['Session ID']; ?></th>
+						<th class="tc2" scope="col"><?php echo $lang_profile['Started']; ?></th>
+						<th class="tc3" scope="col"><?php echo $lang_profile['Last visit']; ?></th>
+						<th class="tc4" scope="col"><?php echo $lang_profile['Last IP']; ?></th>
+						<th class="tcr" scope="col"><?php echo $lang_profile['Status']; ?></th>
+					</tr>
+				</thead>
+				<tbody>
+<?php
+
+		foreach ($result as $cur_session)
+		{
+
+?>
+					<tr>
+						<td class="tcl"><?php echo substr($cur_session['id'], 0, 6).' … '.substr($cur_session['id'], -6); ?></td>
+						<td class="tc2"><?php echo format_time($cur_session['created']); ?></td>
+						<td class="tc3"><?php echo format_time($cur_session['last_visit']) ?></td>
+						<td class="tc4"><?php echo pun_htmlspecialchars($cur_session['last_ip']) ?></td>
+						<td class="tcr"><?php echo $cur_session['active'] == '1' ? $lang_profile['active'] : $lang_profile['idle']; ?></td>
+					</tr>
+<?php
+
+		}
+
+?>
+				</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 <?php

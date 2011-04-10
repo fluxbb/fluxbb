@@ -42,6 +42,15 @@ $lang_profile = array(
 'Change email'					=>	'Change email address',
 'New email'						=>	'New email',
 
+// Session stuff
+'Session ID'					=>	'Session ID',
+'Started'						=>	'Started',
+'Last visit'					=>	'Last visit',
+'Last IP'						=>	'Last IP',
+'Status'						=>	'Status',
+'active'						=>	'active',
+'idle'							=>	'idle',
+
 // Avatar upload stuff
 'Avatars disabled'				=>	'The administrator has disabled avatar support.',
 'Too large ini'					=>	'The selected file was too large to upload. The server didn\'t allow the upload.',
