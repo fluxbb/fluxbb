@@ -33,26 +33,56 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	unset ($query, $params);
 
 	// START TEMP PASSWORD UPDATING
+	// TODO: Once the extension system is in place this should be split into an extension that is automatically installed
+	// when performing an upgrade, but not in a clean install.
 
-	// If it is 40 hex characters (sha1) - 1.4 style
+	// TODO: the upgrade script must convert non-empty salt columns into $13$saltpassword in the password column
+	$needs_updated = false;
+
+	// If it is 40 hex characters (sha1) - (1.2 PHP >= 4.3.0) or (1.4)
 	if (preg_match('%^[a-zA-Z0-9]{40}$%', $result[0]['password']))
 	{
 		// The password is valid, update it to use the new password type
 		if ($result[0]['password'] == sha1($form_password))
-		{
-			$result[0]['password'] = PasswordHash::hash($form_password);
-
-			$query = new UpdateQuery(array('password' => ':password'), 'users');
-			$query->where = 'id = :user_id';
-
-			$params = array(':password' => $result[0]['password'], ':user_id' => $result[0]['id']);
-
-			$db->query($query, $params);
-			unset ($query, $params);
-		}
+			$needs_updated = true;
 		// The password is invalid
 		else
 			unset ($result);
+	}
+	// If it is 40 hex characters (sha1), with a salt - 1.3-legacy
+	else if (preg_match('%^$13$(?<salt>[\033-\126]{12})(?<password>[a-zA-Z0-9]{40})$%', $result[0]['password'], $matches))
+	{
+		// The password is valid, update it to use the new password type
+		if ($matches['password'] == sha1($matches['salt'].sha1($form_password)))
+			$needs_updated = true;
+		// The password is invalid
+		else
+			unset ($result);
+	}
+	// If it is 32 hex characters (md5) - 1.2 PHP < 4.3.0
+	else if (preg_match('%^[a-zA-Z0-9]{32}$%', $result[0]['password']))
+	{
+		// the password is valid, update it to use the new password type
+		if ($result[0]['password'] == md5($form_password))
+			$needs_updated = true;
+		// The password is invalid
+		else
+			unset ($result);
+	}
+
+	// If the password was old-style and valid, update it to the correct style
+	if ($needs_updated)
+	{
+		// Hash their password into the correct style
+		$result[0]['password'] = PasswordHash::hash($form_password);
+
+		$query = new UpdateQuery(array('password' => ':password'), 'users');
+		$query->where = 'id = :user_id';
+
+		$params = array(':password' => $result[0]['password'], ':user_id' => $result[0]['id']);
+
+		$db->query($query, $params);
+		unset ($query, $params);
 	}
 
 	// END TEMP PASSWORD UPDATING
