@@ -84,7 +84,7 @@ if (isset($_POST['form_sent']))
 	{
 		$email2 = strtolower(trim($_POST['req_email2']));
 
-		$password1 = random_pass(8);
+		$password1 = PasswordHash::random_key(8);
 		$password2 = $password1;
 	}
 	else

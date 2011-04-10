@@ -192,8 +192,8 @@ else if ($action == 'forget' || $action == 'forget_2')
 						message($lang_login['Email flood'], true);
 
 					// Generate a new password and a new password activation code
-					$new_password = random_pass(8);
-					$new_password_key = random_pass(8);
+					$new_password = PasswordHash::random_key(8);
+					$new_password_key = PasswordHash::random_key(8);
 
 					$query = new UpdateQuery(array('activate_string' => ':activate_string', 'activate_key' => ':activate_key', 'last_email_sent' => ':last_email_sent'), 'users');
 					$query->where = 'id = :id';

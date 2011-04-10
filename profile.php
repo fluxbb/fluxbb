@@ -300,7 +300,7 @@ else if ($action == 'change_email')
 		}
 		unset($query, $params, $result);
 
-		$new_email_key = random_pass(8);
+		$new_email_key = PasswordHash::random_key(8);
 
 		$query = new UpdateQuery(array('activate_string' => ':activate_string', 'activate_key' => ':activate_key'), 'users');
 		$query->where = 'id = :id';

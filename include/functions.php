@@ -1097,32 +1097,6 @@ function forum_number_format($number, $decimals = 0)
 
 
 //
-// Generate a random key of length $len
-//
-function random_key($len, $readable = false, $hash = false)
-{
-	$key = '';
-
-	if ($hash)
-		$key = substr(sha1(uniqid(rand(), true)), 0, $len);
-	else if ($readable)
-	{
-		$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-		for ($i = 0; $i < $len; ++$i)
-			$key .= substr($chars, (mt_rand() % strlen($chars)), 1);
-	}
-	else
-	{
-		for ($i = 0; $i < $len; ++$i)
-			$key .= chr(mt_rand(33, 126));
-	}
-
-	return $key;
-}
-
-
-//
 // Make sure that HTTP_REFERER matches base_url/script
 //
 function confirm_referrer($script, $error_msg = false)
@@ -1146,16 +1120,6 @@ function confirm_referrer($script, $error_msg = false)
 	// Check the host and path match. Ignore the scheme, port, etc.
 	if ($referrer['host'] != $valid['host'] || $referrer['path'] != $valid['path'])
 		message($error_msg ? $error_msg : $lang_common['Bad referrer']);
-}
-
-
-//
-// Generate a random password of length $len
-// Compatibility wrapper for random_key
-//
-function random_pass($len)
-{
-	return random_key($len, true);
 }
 
 

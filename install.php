@@ -1703,7 +1703,7 @@ else
 		$alerts[] = $lang_install['Alert upload'];
 
 	// Add some random bytes at the end of the cookie name to prevent collisions
-	$cookie_name = 'pun_cookie_'.random_key(6, false, true);
+	$cookie_name = 'pun_cookie_'.PasswordHash::random_key(6);
 
 	// Generate the config.php file data
 	$config = generate_config_file();

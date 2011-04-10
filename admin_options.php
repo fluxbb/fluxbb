@@ -725,7 +725,7 @@ generate_admin_menu('options');
 									<th scope="row"><?php echo $lang_admin_options['SMTP password label'] ?></th>
 									<td>
 										<span><input type="checkbox" name="form[smtp_change_pass]" value="1" />&#160;&#160;<?php echo $lang_admin_options['SMTP change password help'] ?></span>
-<?php $smtp_pass = !empty($pun_config['o_smtp_pass']) ? random_key(pun_strlen($pun_config['o_smtp_pass']), true) : ''; ?>
+<?php $smtp_pass = !empty($pun_config['o_smtp_pass']) ? str_repeat('*', pun_strlen($pun_config['o_smtp_pass'])) : ''; ?>
 										<input type="password" name="form[smtp_pass1]" size="25" maxlength="50" value="<?php echo $smtp_pass ?>" />
 										<input type="password" name="form[smtp_pass2]" size="25" maxlength="50" value="<?php echo $smtp_pass ?>" />
 										<span><?php echo $lang_admin_options['SMTP password help'] ?></span>
