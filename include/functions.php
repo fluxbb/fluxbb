@@ -432,63 +432,46 @@ function update_users_online()
 
 	$now = time();
 
-	// Fetch all online list entries that are older than "o_timeout_online"
-	$query = new SelectQuery(array('user_id' => 'o.user_id', 'ident' => 'o.ident', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'online AS o');
-	$query->where = 'logged < :logged';
+	// Delete all guests whos sessions have timed out
+	$query = new DeleteQuery('sessions');
+	$query->where = 'user_id = 1 AND last_visit < :timeout_online';
 
-	$params = array(':logged' => $now - $pun_config['o_timeout_online']);
+	$params = array(':timeout_online' => $now - $pun_config['o_timeout_online']);
+
+	$db->query($query, $params);
+	unset ($query, $params);
+
+	// Fetch all sessions that are older than o_timeout_online
+	$query = new SelectQuery(array('id' => 's.id', 'user_id' => 's.user_id', 'last_visit' => 's.last_visit'), 'sessions AS s');
+	$query->where = 'user_id != 1 AND last_visit < :timeout_online';
+
+	$params = array(':timeout_online' => $now - 1209600);
 
 	$result = $db->query($query, $params);
 	unset ($query, $params);
 
-	// Query for deleting an online entry
-	$query_delete = new DeleteQuery('online');
-	$query_delete->where = 'ident = :ident';
+	$update_users_query = new UpdateQuery(array('last_visit' => ':last_visit'), 'users');
+	$update_users_query->where = 'id = :user_id';
 
-	// Query for updating users last visit time
-	$query_update_user = new UpdateQuery(array('last_visit' => ':logged'), 'users');
-	$query_update_user->where = 'id = :user_id';
+	$delete_session_query = new DeleteQuery('sessions');
+	$delete_session_query->where = 'id = :session_id';
 
-	// Query for updating online idle
-	$query_update_online = new UpdateQuery(array('idle' => 1), 'online');
-	$query_update_online->where = 'user_id = :user_id';
-
-	foreach ($result as $cur_user)
+	foreach ($result as $cur_session)
 	{
-		// If the entry is a guest, delete it
-		if ($cur_user['user_id'] == '1')
-		{
-			$params = array(':ident' => $cur_user['ident']);
+		// Update a users last visit before we remove their session entry
+		$params = array(':last_visit' => $cur_session['last_visit'], ':user_id' => $cur_session['user_id']);
 
-			$db->query($query_delete, $params);
-			unset ($params);
-		}
-		else
-		{
-			// If the entry is older than "o_timeout_visit", update last_visit for the user in question, then delete him/her from the online list
-			if ($cur_user['logged'] < ($now - $pun_config['o_timeout_visit']))
-			{
-				$params = array(':logged' => $cur_user['logged'], ':user_id' => $cur_user['user_id']);
+		$db->query($update_users_query, $params);
+		unset ($params);
 
-				$db->query($query_update_user, $params);
-				unset ($params);
+		// Remove the session
+		$params = array(':session_id' => $cur_session['id']);
 
-				$params = array(':ident' => $cur_user['ident']);
-
-				$db->query($query_delete, $params);
-				unset ($params);
-			}
-			else if ($cur_user['idle'] == '0')
-			{
-				$params = array(':user_id' => $cur_user['user_id']);
-
-				$db->query($query_update_online, $params);
-				unset ($params);
-			}
-		}
+		$db->query($delete_session_query, $params);
+		unset ($params);
 	}
 
-	unset ($result, $query_delete, $query_update_user, $query_update_online);
+	unset ($result, $update_users_query, $delete_session_query);
 }
 
 
