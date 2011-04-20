@@ -311,6 +311,7 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 	$result = $db->query($query, $params);
 	if ($result[0]['count'] > 0)
 		message($lang_admin_users['No move admins message']);
+
 	unset($query, $params, $result);
 
 	// Fetch all user groups
@@ -355,6 +356,7 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 
 			$user_groups[$cur_user['group_id']][] = $cur_user['id'];
 		}
+
 		unset($query, $params, $result);
 
 		// Are any users moderators?
@@ -506,6 +508,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 
 			$user_groups[$cur_user['group_id']][] = $cur_user['id'];
 		}
+
 		unset($query, $params, $result);
 
 		// Are any users moderators?
@@ -521,6 +524,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 			if ($cur_group['g_moderator'] == '0')
 				unset($user_groups[$cur_group['g_id']]);
 		}
+
 		unset($query, $params, $result);
 
 		// Fetch forum list and clean up their moderator list
@@ -696,6 +700,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 	$result = $db->query($query, $params);
 	if ($result[0]['count'])
 		message($lang_admin_users['No ban admins message']);
+
 	unset($query, $params, $result);
 
 	// Also, we cannot ban moderators
@@ -709,6 +714,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 	$result = $db->query($query, $params);
 	if ($result[0]['count'])
 		message($lang_admin_users['No ban mods message']);
+
 	unset($query, $params, $result);
 
 	if (isset($_POST['ban_users_comply']))
@@ -745,6 +751,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 		$result = $db->query($query, $params);
 		foreach ($result as $cur_user)
 			$user_info[$cur_user['id']] = array('username' => $cur_user['username'], 'email' => $cur_user['email'], 'ip' => $cur_user['registration_ip']);
+
 		unset($query, $params, $result);
 
 		// Overwrite the registration IP with one from the last post (if it exists)
@@ -769,10 +776,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 		}
 
 		// Regenerate the bans cache
-		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-			require PUN_ROOT.'include/cache.php';
-
-		generate_bans_cache();
+		$cache->delete('bans');
 
 		redirect('admin_users.php', $lang_admin_users['Users banned redirect']);
 	}
