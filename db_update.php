@@ -1828,4 +1828,5 @@ $db->end_transaction();
 $db->close();
 
 if ($query_str != '')
-	header('Location: '. get_base_url() . '/db_update.php'. $query_str .'&uid='. $uid);
+	exit('<script type="text/javascript">window.location="db_update.php'.$query_str.'&uid='.$uid.'"</script><noscript><meta http-equiv="refresh" content="0;url=db_update.php'.$query_str.'&uid='.$uid.'" /></noscript>');
+
