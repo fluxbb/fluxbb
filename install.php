@@ -1485,7 +1485,7 @@ else
 			'language'			=> array(
 				'datatype'		=> 'VARCHAR(25)',
 				'allow_null'	=> false,
-				'default'		=> '\'English\''
+				'default'		=> '\''.$db->escape($default_lang).'\''
 			),
 			'style'				=> array(
 				'datatype'		=> 'VARCHAR(25)',
