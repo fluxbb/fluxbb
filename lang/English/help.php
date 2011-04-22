@@ -30,6 +30,11 @@ $lang_help = array(
 'Images info'			=>	'If you want to display an image you can use the img tag. The text appearing after the "=" sign in the opening tag is used for the alt attribute and should be included whenever possible.',
 'FluxBB bbcode test'	=>	'FluxBB bbcode test',
 
+'Test topic'			=>	'Test topic',
+'Test post'				=>	'Test post',
+'Test forum'			=>	'Test forum',
+'Test user'				=>	'Test user',
+
 'Quotes'				=>	'Quotes',
 'Quotes info'			=>	'If you want to quote someone, you should use the quote tag.',
 'Quotes info 2'			=>	'If you don\'t want to quote anyone in particular, you can use the quote tag without specifying a name.',

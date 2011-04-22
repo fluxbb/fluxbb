@@ -150,7 +150,7 @@ function strip_empty_bbcode($text, &$errors)
 	}
 
 	// Remove empty tags
-	while (($new_text = preg_replace('/\[(b|u|s|ins|del|em|i|h|colou?r|quote|img|url|email|list)(?:\=[^\]]*)?\]\s*\[\/\1\]/', '', $text)) !== NULL)
+	while (($new_text = preg_replace('/\[(b|u|s|ins|del|em|i|h|colou?r|quote|img|url|email|list|topic|post|forum|user)(?:\=[^\]]*)?\]\s*\[\/\1\]/', '', $text)) !== NULL)
 	{
 		if ($new_text != $text)
 			$text = $new_text;
@@ -196,7 +196,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	// Start off by making some arrays of bbcode tags and what we need to do with each one
 
 	// List of all the tags
-	$tags = array('quote', 'code', 'b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email', 'img', 'list', '*', 'h');
+	$tags = array('quote', 'code', 'b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email', 'img', 'list', '*', 'h', 'topic', 'post', 'forum', 'user');
 	// List of tags that we need to check are open (You could not put b,i,u in here then illegal nesting like [b][i][/b][/i] would be allowed)
 	$tags_opened = $tags;
 	// and tags we need to check are closed (the same as above, added it just in case)
@@ -208,26 +208,30 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	// Block tags, block tags can only go within another block tag, they cannot be in a normal tag
 	$tags_block = array('quote', 'code', 'list', 'h', '*');
 	// Inline tags, we do not allow new lines in these
-	$tags_inline = array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'h');
+	$tags_inline = array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'h', 'topic', 'post', 'forum', 'user');
 	// Tags we trim interior space
 	$tags_trim = array('img');
 	// Tags we remove quotes from the argument
-	$tags_quotes = array('url', 'email', 'img');
+	$tags_quotes = array('url', 'email', 'img', 'topic', 'post', 'forum', 'user');
 	// Tags we limit bbcode in
 	$tags_limit_bbcode = array(
-		'*' 	=> array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email', 'list', 'img', 'code'),
+		'*' 	=> array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email', 'list', 'img', 'code', 'topic', 'post', 'forum', 'user'),
 		'list' 	=> array('*'),
 		'url' 	=> array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'img'),
 		'email' => array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'img'),
+		'topic' => array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'img'),
+		'post'  => array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'img'),
+		'forum' => array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'img'),
+		'user'  => array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'img'),
 		'img' 	=> array(),
-		'h'		=> array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email'),
+		'h'		=> array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email', 'topic', 'post', 'forum', 'user'),
 	);
 	// Tags we can automatically fix bad nesting
-	$tags_fix = array('quote', 'b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email', 'h');
+	$tags_fix = array('quote', 'b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email', 'h', 'topic', 'post', 'forum', 'user');
 
 	$split_text = preg_split("/(\[[\*a-zA-Z0-9-\/]*?(?:=.*?)?\])/", $text, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
-	$open_tags = array('post');
+	$open_tags = array('fluxbb-bbcode');
 	$open_args = array('');
 	$opened_tag = 0;
 	$new_text = '';
@@ -766,11 +770,27 @@ function do_bbcode($text, $is_signature = false)
 	$pattern[] = '#\[url=([^\[]+?)\](.*?)\[/url\]#e';
 	$pattern[] = '#\[email\]([^\[]*?)\[/email\]#';
 	$pattern[] = '#\[email=([^\[]+?)\](.*?)\[/email\]#';
+	$pattern[] = '#\[topic\]([^\[]*?)\[/topic\]#e';
+	$pattern[] = '#\[topic=([^\[]+?)\](.*?)\[/topic\]#e';
+	$pattern[] = '#\[post\]([^\[]*?)\[/post\]#e';
+	$pattern[] = '#\[post=([^\[]+?)\](.*?)\[/post\]#e';
+	$pattern[] = '#\[forum\]([^\[]*?)\[/forum\]#e';
+	$pattern[] = '#\[forum=([^\[]+?)\](.*?)\[/forum\]#e';
+	$pattern[] = '#\[user\]([^\[]*?)\[/user\]#e';
+	$pattern[] = '#\[user=([^\[]+?)\](.*?)\[/user\]#e';
 
 	$replace[] = 'handle_url_tag(\'$1\')';
 	$replace[] = 'handle_url_tag(\'$1\', \'$2\')';
 	$replace[] = '<a href="mailto:$1">$1</a>';
 	$replace[] = '<a href="mailto:$1">$2</a>';
+	$replace[] = 'handle_url_tag(\''.get_base_url(true).'/viewtopic.php?id=$1\')';
+	$replace[] = 'handle_url_tag(\''.get_base_url(true).'/viewtopic.php?id=$1\', \'$2\')';
+	$replace[] = 'handle_url_tag(\''.get_base_url(true).'/viewtopic.php?pid=$1#p$1\')';
+	$replace[] = 'handle_url_tag(\''.get_base_url(true).'/viewtopic.php?pid=$1#p$1\', \'$2\')';
+	$replace[] = 'handle_url_tag(\''.get_base_url(true).'/viewforum.php?id=$1\')';
+	$replace[] = 'handle_url_tag(\''.get_base_url(true).'/viewforum.php?id=$1\', \'$2\')';
+	$replace[] = 'handle_url_tag(\''.get_base_url(true).'/profile.php?id=$1\')';
+	$replace[] = 'handle_url_tag(\''.get_base_url(true).'/profile.php?id=$1\', \'$2\')';
 
 	// This thing takes a while! :)
 	$text = preg_replace($pattern, $replace, $text);
