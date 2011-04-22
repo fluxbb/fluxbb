@@ -22,44 +22,6 @@ define('PUN_SEARCH_MAX_WORD', 20);
 
 define('PUN_ROOT', dirname(__FILE__).'/');
 
-// If we've been passed a default language, use it
-$install_lang = isset($_REQUEST['install_lang']) ? trim($_REQUEST['install_lang']) : 'English';
-
-// If such a language pack doesn't exist, or isn't up-to-date enough to translate this page, default to English
-if (!file_exists(PUN_ROOT.'lang/'.$install_lang.'/install.php'))
-	$install_lang = 'English';
-
-require PUN_ROOT.'lang/'.$install_lang.'/install.php';
-
-if (file_exists(PUN_ROOT.'config.php'))
-{
-	// Check to see whether FluxBB is already installed
-	include PUN_ROOT.'config.php';
-
-	// If we have the 1.3-legacy constant defined, define the proper 1.4 constant so we don't get an incorrect "need to install" message
-	if (defined('FORUM'))
-		define('PUN', FORUM);
-
-	// If PUN is defined, config.php is probably valid and thus the software is installed
-	if (defined('PUN'))
-		exit($lang_install['Already installed']);
-}
-
-// Define PUN because email.php requires it
-define('PUN', 1);
-
-// If the cache directory is not specified, we use the default setting
-if (!defined('FORUM_CACHE_DIR'))
-	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
-
-// Load the cache module
-require PUN_ROOT.'modules/cache/cache.php';
-$cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport'); // TODO: Move this config into config.php
-
-// Make sure we are running at least MIN_PHP_VERSION
-if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
-	exit(sprintf($lang_install['You are running error'], 'PHP', PHP_VERSION, FORUM_VERSION, MIN_PHP_VERSION));
-
 // Load the functions script
 require PUN_ROOT.'include/functions.php';
 
@@ -99,6 +61,46 @@ if (get_magic_quotes_gpc())
 
 // Turn off PHP time limit
 @set_time_limit(0);
+
+
+// If we've been passed a default language, use it
+$install_lang = isset($_REQUEST['install_lang']) ? trim($_REQUEST['install_lang']) : 'English';
+
+// If such a language pack doesn't exist, or isn't up-to-date enough to translate this page, default to English
+if (!file_exists(PUN_ROOT.'lang/'.$install_lang.'/install.php'))
+	$install_lang = 'English';
+
+require PUN_ROOT.'lang/'.$install_lang.'/install.php';
+
+if (file_exists(PUN_ROOT.'config.php'))
+{
+	// Check to see whether FluxBB is already installed
+	include PUN_ROOT.'config.php';
+
+	// If we have the 1.3-legacy constant defined, define the proper 1.4 constant so we don't get an incorrect "need to install" message
+	if (defined('FORUM'))
+		define('PUN', FORUM);
+
+	// If PUN is defined, config.php is probably valid and thus the software is installed
+	if (defined('PUN'))
+		exit($lang_install['Already installed']);
+}
+
+// Define PUN because email.php requires it
+define('PUN', 1);
+
+// If the cache directory is not specified, we use the default setting
+if (!defined('FORUM_CACHE_DIR'))
+	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
+
+// Load the cache module
+require PUN_ROOT.'modules/cache/cache.php';
+$cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport'); // TODO: Move this config into config.php
+
+// Make sure we are running at least MIN_PHP_VERSION
+if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
+	exit(sprintf($lang_install['You are running error'], 'PHP', PHP_VERSION, FORUM_VERSION, MIN_PHP_VERSION));
+
 
 //
 // Generate output to be used for config.php
@@ -1490,7 +1492,7 @@ else
 			'language'			=> array(
 				'datatype'		=> 'VARCHAR(25)',
 				'allow_null'	=> false,
-				'default'		=> '\'English\''
+				'default'		=> '\''.$db->escape($default_lang).'\''
 			),
 			'style'				=> array(
 				'datatype'		=> 'VARCHAR(25)',
