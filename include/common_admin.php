@@ -14,7 +14,7 @@ if (!defined('PUN'))
 if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/admin_common.php'))
 	$admin_language = $pun_user['language'];
 else if (file_exists(PUN_ROOT.'lang/'.$pun_config['o_default_lang'].'/admin_common.php'))
-	$admin_language = $pun_config['language'];
+	$admin_language = $pun_config['o_default_lang'];
 else
 	$admin_language = 'English';
 
