@@ -739,8 +739,15 @@ else if (isset($_POST['form_sent']))
 			);
 
 			// Add http:// if the URL doesn't contain it already (while allowing https://, too)
-			if ($form['url'] != '' && !preg_match('#^https?://#i', $form['url']))
-				$form['url'] = 'http://'.$form['url'];
+			if ($form['url'] != '')
+			{
+				$url = url_valid($form['url']);
+
+				if ($url === false)
+					message($lang_profile['Invalid website URL']);
+
+				$form['url'] = $url['url'];
+			}
 
 			if ($pun_user['g_id'] == PUN_ADMIN)
 				$form['title'] = pun_trim($_POST['title']);
