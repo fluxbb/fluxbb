@@ -684,9 +684,11 @@ else if (isset($_GET['find_user']))
 	$posts_less = isset($_GET['posts_less']) ? trim($_GET['posts_less']) : '';
 	$last_post_after = isset($_GET['last_post_after']) ? trim($_GET['last_post_after']) : '';
 	$last_post_before = isset($_GET['last_post_before']) ? trim($_GET['last_post_before']) : '';
+	$last_visit_after = isset($_GET['last_visit_after']) ? trim($_GET['last_visit_after']) : '';
+	$last_visit_before = isset($_GET['last_visit_before']) ? trim($_GET['last_visit_before']) : '';
 	$registered_after = isset($_GET['registered_after']) ? trim($_GET['registered_after']) : '';
 	$registered_before = isset($_GET['registered_before']) ? trim($_GET['registered_before']) : '';
-	$order_by = isset($_GET['order_by']) && in_array($_GET['order_by'], array('username', 'email', 'num_posts', 'last_post', 'registered')) ? $_GET['order_by'] : 'username';
+	$order_by = isset($_GET['order_by']) && in_array($_GET['order_by'], array('username', 'email', 'num_posts', 'last_post', 'last_visit', 'registered')) ? $_GET['order_by'] : 'username';
 	$direction = isset($_GET['direction']) && $_GET['direction'] == 'DESC' ? 'DESC' : 'ASC';
 	$user_group = isset($_GET['user_group']) ? intval($_GET['user_group']) : -1;
 
@@ -717,6 +719,26 @@ else if (isset($_GET['find_user']))
 			message($lang_admin_users['Invalid date time message']);
 
 		$conditions[] = 'u.last_post<'.$last_post_before;
+	}
+	if ($last_visit_after != '')
+	{
+		$query_str[] = 'last_visit_after='.$last_visit_after;
+
+		$last_visit_after = strtotime($last_visit_after);
+		if ($last_visit_after === false || $last_visit_after == -1)
+			message($lang_admin_users['Invalid date time message']);
+
+		$conditions[] = 'u.last_visit>'.$last_visit_after;
+	}
+	if ($last_visit_before != '')
+	{
+		$query_str[] = 'last_visit_before='.$last_visit_before;
+
+		$last_visit_before = strtotime($last_visit_before);
+		if ($last_visit_before === false || $last_visit_before == -1)
+			message($lang_admin_users['Invalid date time message']);
+
+		$conditions[] = 'u.last_visit<'.$last_visit_before;
 	}
 	if ($registered_after != '')
 	{
@@ -975,6 +997,16 @@ else
 									<span><?php echo $lang_admin_users['Date help'] ?></span></td>
 								</tr>
 								<tr>
+									<th scope="row"><?php echo $lang_admin_users['Last visit after label'] ?></th>
+									<td><input type="text" name="last_visit_after" size="24" maxlength="19" tabindex="17" />
+									<span><?php echo $lang_admin_users['Date help'] ?></span></td>
+								</tr>
+								<tr>
+									<th scope="row"><?php echo $lang_admin_users['Last visit before label'] ?></th>
+									<td><input type="text" name="last_visit_before" size="24" maxlength="19" tabindex="18" />
+									<span><?php echo $lang_admin_users['Date help'] ?></span></td>
+								</tr>
+								<tr>
 									<th scope="row"><?php echo $lang_admin_users['Registered after label'] ?></th>
 									<td><input type="text" name="registered_after" size="24" maxlength="19" tabindex="19" />
 									<span><?php echo $lang_admin_users['Date help'] ?></span></td>
@@ -992,6 +1024,7 @@ else
 											<option value="email"><?php echo $lang_admin_users['Order by e-mail'] ?></option>
 											<option value="num_posts"><?php echo $lang_admin_users['Order by posts'] ?></option>
 											<option value="last_post"><?php echo $lang_admin_users['Order by last post'] ?></option>
+											<option value="last_visit"><?php echo $lang_admin_users['Order by last visit'] ?></option>
 											<option value="registered"><?php echo $lang_admin_users['Order by registered'] ?></option>
 										</select>&#160;&#160;&#160;<select name="direction" tabindex="22">
 											<option value="ASC" selected="selected"><?php echo $lang_admin_users['Ascending'] ?></option>
