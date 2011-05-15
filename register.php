@@ -242,9 +242,6 @@ $timezone = isset($timezone) ? $timezone : $pun_config['o_default_timezone'];
 $dst = isset($dst) ? $dst : $pun_config['o_default_dst'];
 $email_setting = isset($email_setting) ? $email_setting : $pun_config['o_default_email_setting'];
 
-?>
-<?php
-
 // If there are errors, we display them
 if (!empty($errors))
 {
@@ -280,8 +277,6 @@ if (!empty($errors))
 					<p><?php echo $lang_register['Desc 1'] ?></p>
 					<p><?php echo $lang_register['Desc 2'] ?></p>
 				</div>
-			</div>
-			<div class="inform">
 				<fieldset>
 					<legend><?php echo $lang_register['Username legend'] ?></legend>
 					<div class="infldset">
