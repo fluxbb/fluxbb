@@ -266,7 +266,7 @@ if ($pun_user['g_read_board'] == '1' && $pun_user['g_search'] == '1')
 
 
 // Generate all that jazz
-$tpl_temp = '<div id="brdwelcome" class="inbox">'."\n\t\t\t";
+$tpl_temp = '<div id="brdwelcome" class="inbox">';
 
 // The status information
 if (is_array($page_statusinfo))
@@ -283,10 +283,10 @@ if (!empty($page_topicsearches))
 {
 	$tpl_temp .= "\n\t\t\t".'<ul class="conr">';
 	$tpl_temp .= "\n\t\t\t\t".'<li><span>'.$lang_common['Topic searches'].' '.implode(' | ', $page_topicsearches).'</span></li>';
-	$tpl_temp .= "\n\t\t\t".'</ul>'."\n\t\t\t".'<div class="clearer"></div>';
+	$tpl_temp .= "\n\t\t\t".'</ul>';
 }
 
-$tpl_temp .= "\n\t\t".'</div>';
+$tpl_temp .= "\n\t\t\t".'<div class="clearer"></div>'."\n\t\t".'</div>';
 
 $tpl_main = str_replace('<pun_status>', $tpl_temp, $tpl_main);
 // END SUBST - <pun_status>
