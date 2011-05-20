@@ -239,7 +239,7 @@ else if (isset($_GET['report']))
 			{
 				$mail_subject = sprintf($lang_common['Report notification'], $forum_id, $subject);
 				$mail_message = sprintf($lang_common['Report message 1'], $pun_user['username'], get_base_url().'/viewtopic.php?pid='.$post_id.'#p'.$post_id)."\n";
-				$mail_message .= sprintf($lang_common['Report message 2'], $reason)."\n";
+				$mail_message .= "\n".sprintf($lang_common['Report message 2'], $reason)."\n";
 				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
 
 				require PUN_ROOT.'include/email.php';
