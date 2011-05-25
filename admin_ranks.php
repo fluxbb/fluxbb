@@ -129,9 +129,9 @@ generate_admin_menu('ranks');
 							</thead>
 							<tbody>
 								<tr>
-									<td class="tcl"><input type="text" name="new_rank" size="24" maxlength="50" tabindex="1" /></td>
-									<td class="tc2"><input type="text" name="new_min_posts" size="7" maxlength="7" tabindex="2" /></td>
-									<td><input type="submit" name="add_rank" value="<?php echo $lang_admin_common['Add'] ?>" tabindex="3" /></td>
+									<td class="tcl"><input type="text" name="new_rank" size="24" maxlength="50" /></td>
+									<td class="tc2"><input type="text" name="new_min_posts" size="7" maxlength="7" /></td>
+									<td><input type="submit" name="add_rank" value="<?php echo $lang_admin_common['Add'] ?>" /></td>
 								</tr>
 							</tbody>
 							</table>
