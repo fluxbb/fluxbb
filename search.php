@@ -498,15 +498,27 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			$search_set[] = $row;
 
 		$crumbs_text = array();
+		$crumbs_text['show_as'] = $show_as == 'topics' ? $lang_search['Search topics'] : $lang_search['Search posts'];
 
 		if ($search_type[0] == 'action')
 		{
 			if ($search_type[1] == 'show_user_topics')
-				$crumbs_text['search_type'] = '<a href="search.php?action=show_user_topics&amp;user_id='.$search_type[2].'">'.$lang_search['Search results'].'</a>';
+				$crumbs_text['search_type'] = '<a href="search.php?action=show_user_topics&amp;user_id='.$search_type[2].'">'.sprintf($lang_search['Quick search show_user_topics'], pun_htmlspecialchars($search_set[0]['poster'])).'</a>';
 			else if ($search_type[1] == 'show_user_posts')
-				$crumbs_text['search_type'] = '<a href="search.php?action=show_user_posts&amp;user_id='.$search_type[2].'">'.$lang_search['Search results'].'</a>';
+				$crumbs_text['search_type'] = '<a href="search.php?action=show_user_posts&amp;user_id='.$search_type[2].'">'.sprintf($lang_search['Quick search show_user_posts'], pun_htmlspecialchars($search_set[0]['pposter'])).'</a>';
 			else if ($search_type[1] == 'show_subscriptions')
-				$crumbs_text['search_type'] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$search_type[2].'">'.$lang_search['Quick search show_subscriptions'].'</a>';
+			{
+				// Fetch username of subscriber
+				$subscriber_id = $search_type[2];
+				$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE id='.$subscriber_id) or error('Unable to fetch username of subscriber', __FILE__, __LINE__, $db->error());
+
+				if ($db->num_rows($result))
+					$subscriber_name = $db->result($result);
+				else
+					message($lang_common['Bad request']);
+
+				$crumbs_text['search_type'] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$subscriber_id.'">'.sprintf($lang_search['Quick search show_subscriptions'], pun_htmlspecialchars($subscriber_name)).'</a>';
+			}
 			else
 				$crumbs_text['search_type'] = '<a href="search.php?action='.pun_htmlspecialchars($search_type[1]).'">'.$lang_search['Quick search '.$search_type[1]].'</a>';
 		}
@@ -515,13 +527,22 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			$keywords = $author = '';
 
 			if ($search_type[0] == 'both')
+			{
 				list ($keywords, $author) = $search_type[1];
+				$crumbs_text['search_type'] = sprintf($lang_search['By both show as '.$show_as], pun_htmlspecialchars($keywords), pun_htmlspecialchars($author));
+			}
 			else if ($search_type[0] == 'keywords')
+			{
 				$keywords = $search_type[1];
+				$crumbs_text['search_type'] = sprintf($lang_search['By keywords show as '.$show_as], pun_htmlspecialchars($keywords));
+			}
 			else if ($search_type[0] == 'author')
+			{
 				$author = $search_type[1];
+				$crumbs_text['search_type'] = sprintf($lang_search['By user show as '.$show_as], pun_htmlspecialchars($author));
+			}
 
-			$crumbs_text['search_type'] = '<a href="search.php?action=search&amp;keywords='.urlencode($keywords).'&amp;author='.pun_htmlspecialchars($author).'&amp;forum='.pun_htmlspecialchars($search_type[2]).'&amp;search_in='.pun_htmlspecialchars($search_type[3]).'&amp;sort_by='.pun_htmlspecialchars($sort_by).'&amp;sort_dir='.pun_htmlspecialchars($sort_dir).'&amp;show_as='.pun_htmlspecialchars($show_as).'">'.$lang_search['Search results'].'</a>';
+			$crumbs_text['search_type'] = '<a href="search.php?action=search&amp;keywords='.pun_htmlspecialchars($keywords).'&amp;author='.pun_htmlspecialchars($author).'&amp;forum='.pun_htmlspecialchars($search_type[2]).'&amp;search_in='.pun_htmlspecialchars($search_type[3]).'&amp;sort_by='.pun_htmlspecialchars($sort_by).'&amp;sort_dir='.pun_htmlspecialchars($sort_dir).'&amp;show_as='.pun_htmlspecialchars($show_as).'">'.$crumbs_text['search_type'].'</a>';
 		}
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_search['Search results']);
@@ -533,7 +554,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	<div class="inbox crumbsplus">
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><a href="search.php"><?php echo $lang_search['Search'] ?></a></li>
+			<li><span>»&#160;</span><a href="search.php"><?php echo $crumbs_text['show_as'] ?></a></li>
 			<li><span>»&#160;</span><strong><?php echo $crumbs_text['search_type'] ?></strong></li>
 		</ul>
 		<div class="pagepost">
@@ -734,7 +755,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		</div>
 		<ul class="crumbs">
 			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><a href="search.php"><?php echo $lang_search['Search'] ?></a></li>
+			<li><span>»&#160;</span><a href="search.php"><?php echo $crumbs_text['show_as'] ?></a></li>
 			<li><span>»&#160;</span><strong><?php echo $crumbs_text['search_type'] ?></strong></li>
 		</ul>
 <?php echo (!empty($forum_actions) ? "\t\t".'<p class="subscribelink clearb">'.implode(' - ', $forum_actions).'</p>'."\n" : '') ?>
