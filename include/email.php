@@ -63,7 +63,7 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 	global $pun_config, $lang_common;
 
 	// Default sender/return address
-	$from_name = str_replace('"', '', $pun_config['o_board_title'].' '.$lang_common['Mailer']);
+	$from_name = $pun_config['o_board_title'].' '.$lang_common['Mailer'];
 	$from_email = $pun_config['o_webmaster_email'];
 
 	// Do a little spring cleaning
@@ -75,7 +75,7 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 	$reply_to_name = pun_trim(preg_replace('#[\n\r:]+#s', '', str_replace('"', '', $reply_to_name)));
 
 	// Set up some headers to take advantage of UTF-8
-	$from = encode_mail_text($from_name).' <'.$from_email.'>';
+	$from = '"'.encode_mail_text($from_name).'" <'.$from_email.'>';
 	$subject = encode_mail_text($subject);
 
 	$headers = 'From: '.$from."\r\n".'Date: '.gmdate('r')."\r\n".'MIME-Version: 1.0'."\r\n".'Content-transfer-encoding: 8bit'."\r\n".'Content-type: text/plain; charset=utf-8'."\r\n".'X-Mailer: FluxBB Mailer';
@@ -83,7 +83,7 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 	// If we specified a reply-to email, we deal with it here
 	if (!empty($reply_to_email))
 	{
-		$reply_to = encode_mail_text($reply_to_name).' <'.$reply_to_email.'>';
+		$reply_to = '"'.encode_mail_text($reply_to_name).'" <'.$reply_to_email.'>';
 
 		$headers .= "\r\n".'Reply-To: '.$reply_to;
 	}
