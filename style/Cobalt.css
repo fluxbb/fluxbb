@@ -806,6 +806,14 @@ html, body {
 	display: inline;
 	}
 
+.pun .postfootright li:before {
+	content: " | ";
+	}
+
+.pun .postfootright li:first-child:before {
+	content: "";
+	}
+
 .pun .postfootright a:link, .pun .postfootright a:visited {
 	text-decoration: none
 	}
