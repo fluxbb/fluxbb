@@ -1753,32 +1753,25 @@ function split_text($text, $start, $end, &$errors, $retab = true)
 {
 	global $pun_config, $lang_common;
 
-	$tokens = explode($start, $text);
+	$result = array(0 => array(), 1 => array()); // 0 = inside, 1 = outside
 
-	$outside[] = $tokens[0];
+	// split the text into parts
+	$parts = preg_split('%'.preg_quote($start, '%').'(.*)'.preg_quote($end, '%').'%U', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+	$num_parts = count($parts);
 
-	$num_tokens = count($tokens);
-	for ($i = 1; $i < $num_tokens; ++$i)
-	{
-		$temp = explode($end, $tokens[$i]);
-
-		if (count($temp) != 2)
-		{
-			$errors[] = $lang_common['BBCode code problem'];
-			return array(null, array($text));
-		}
-		$inside[] = $temp[0];
-		$outside[] = $temp[1];
-	}
+	// preg_split results in outside parts having even indices, inside parts having odd
+	for ($i = 0;$i < $num_parts;$i++)
+		$result[1 - ($i % 2)][] = $parts[$i];
 
 	if ($pun_config['o_indent_num_spaces'] != 8 && $retab)
 	{
 		$spaces = str_repeat(' ', $pun_config['o_indent_num_spaces']);
-		$inside = str_replace("\t", $spaces, $inside);
+		$result[1] = str_replace("\t", $spaces, $result[1]);
 	}
 
-	return array($inside, $outside);
+	return $result;
 }
+
 
 //
 // function url_valid($url) {
