@@ -20,7 +20,7 @@ function is_valid_email($email)
 	if (strlen($email) > 80)
 		return false;
 
-	return preg_match('/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|("[^"]+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\d\-]+\.)+[a-zA-Z]{2,}))$/', $email);
+	return preg_match('%^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|("[^"]+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\d\-]+\.)+[a-zA-Z]{2,}))$%', $email);
 }
 
 
@@ -67,12 +67,12 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 	$from_email = $pun_config['o_webmaster_email'];
 
 	// Do a little spring cleaning
-	$to = pun_trim(preg_replace('#[\n\r]+#s', '', $to));
-	$subject = pun_trim(preg_replace('#[\n\r]+#s', '', $subject));
-	$from_email = pun_trim(preg_replace('#[\n\r:]+#s', '', $from_email));
-	$from_name = pun_trim(preg_replace('#[\n\r:]+#s', '', str_replace('"', '', $from_name)));
-	$reply_to_email = pun_trim(preg_replace('#[\n\r:]+#s', '', $reply_to_email));
-	$reply_to_name = pun_trim(preg_replace('#[\n\r:]+#s', '', str_replace('"', '', $reply_to_name)));
+	$to = pun_trim(preg_replace('%[\n\r]+%s', '', $to));
+	$subject = pun_trim(preg_replace('%[\n\r]+%s', '', $subject));
+	$from_email = pun_trim(preg_replace('%[\n\r:]+%s', '', $from_email));
+	$from_name = pun_trim(preg_replace('%[\n\r:]+%s', '', str_replace('"', '', $from_name)));
+	$reply_to_email = pun_trim(preg_replace('%[\n\r:]+%s', '', $reply_to_email));
+	$reply_to_name = pun_trim(preg_replace('%[\n\r:]+%s', '', str_replace('"', '', $reply_to_name)));
 
 	// Set up some headers to take advantage of UTF-8
 	$from = '"'.encode_mail_text($from_name).'" <'.$from_email.'>';

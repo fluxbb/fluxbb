@@ -125,7 +125,7 @@ if (isset($_GET['show_users']))
 {
 	$ip = trim($_GET['show_users']);
 
-	if (!@preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $ip) && !@preg_match('/^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/', $ip))
+	if (!@preg_match('%^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$%', $ip) && !@preg_match('%^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$%', $ip))
 		message($lang_admin_users['Bad IP message']);
 
 	// Fetch user count
@@ -260,26 +260,26 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 		message($lang_common['No permission']);
 
 	confirm_referrer('admin_users.php');
-	
+
 	if (isset($_POST['users']))
 	{
 		$user_ids = is_array($_POST['users']) ? array_keys($_POST['users']) : explode(',', $_POST['users']);
 		$user_ids = array_map('intval', $user_ids);
-		
+
 		// Delete invalid IDs
 		$user_ids = array_diff($user_ids, array(0, 1));
 	}
 	else
 		$user_ids = array();
-	
+
 	if (empty($user_ids))
 		message($lang_admin_users['No users selected']);
-	
+
 	// Are we trying to batch move any admins?
 	$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'users WHERE id IN ('.implode(',', $user_ids).') AND group_id='.PUN_ADMIN) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 	if ($db->result($result) > 0)
 		message($lang_admin_users['No move admins message']);
-	
+
 	// Fetch all user groups
 	$all_groups = array();
 	$result = $db->query('SELECT g_id, g_title FROM '.$db->prefix.'groups WHERE g_id NOT IN ('.PUN_GUEST.','.PUN_ADMIN.') ORDER BY g_title ASC') or error('Unable to fetch groups', __FILE__, __LINE__, $db->error());
@@ -289,11 +289,11 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 	if (isset($_POST['move_users_comply']))
 	{
 		$new_group = isset($_POST['new_group']) && isset($all_groups[$_POST['new_group']]) ? $_POST['new_group'] : message($lang_admin_users['Invalid group message']);
-		
+
 		// Is the new group a moderator group?
 		$result = $db->query('SELECT g_moderator FROM '.$db->prefix.'groups WHERE g_id='.$new_group) or error('Unable to fetch group info', __FILE__, __LINE__, $db->error());
 		$new_group_mod = $db->result($result);
-		
+
 		// Fetch user groups
 		$user_groups = array();
 		$result = $db->query('SELECT id, group_id FROM '.$db->prefix.'users WHERE id IN ('.implode(',', $user_ids).')') or error('Unable to fetch user groups', __FILE__, __LINE__, $db->error());
@@ -301,10 +301,10 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 		{
 			if (!isset($user_groups[$cur_user['group_id']]))
 				$user_groups[$cur_user['group_id']] = array();
-			
+
 			$user_groups[$cur_user['group_id']][] = $cur_user['id'];
 		}
-		
+
 		// Are any users moderators?
 		$group_ids = array_keys($user_groups);
 		$result = $db->query('SELECT g_id, g_moderator FROM '.$db->prefix.'groups WHERE g_id IN ('.implode(',', $group_ids).')') or error('Unable to fetch group moderators', __FILE__, __LINE__, $db->error());
@@ -313,7 +313,7 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 			if ($cur_group['g_moderator'] == '0')
 				unset($user_groups[$cur_group['g_id']]);
 		}
-		
+
 		if (!empty($user_groups) && $new_group != PUN_ADMIN && $new_group_mod != '1')
 		{
 			// Fetch forum list and clean up their moderator list
@@ -321,25 +321,25 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 			while ($cur_forum = $db->fetch_assoc($result))
 			{
 				$cur_moderators = ($cur_forum['moderators'] != '') ? unserialize($cur_forum['moderators']) : array();
-	
+
 				foreach ($user_groups as $group_users)
 					$cur_moderators = array_diff($cur_moderators, $group_users);
-				
+
 				$cur_moderators = (!empty($cur_moderators)) ? '\''.$db->escape(serialize($cur_moderators)).'\'' : 'NULL';
 				$db->query('UPDATE '.$db->prefix.'forums SET moderators='.$cur_moderators.' WHERE id='.$cur_forum['id']) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
 			}
 		}
-		
+
 		// Change user group
 		$db->query('UPDATE '.$db->prefix.'users SET group_id='.$new_group.' WHERE id IN ('.implode(',', $user_ids).')') or error('Unable to change user group', __FILE__, __LINE__, $db->error());
-		
+
 		redirect('admin_users.php', $lang_admin_users['Users move redirect']);
 	}
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Users'], $lang_admin_users['Move users']);
 	define('PUN_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
-	
+
 	generate_admin_menu('users');
 
 ?>
@@ -386,21 +386,21 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 		message($lang_common['No permission']);
 
 	confirm_referrer('admin_users.php');
-	
+
 	if (isset($_POST['users']))
 	{
 		$user_ids = is_array($_POST['users']) ? array_keys($_POST['users']) : explode(',', $_POST['users']);
 		$user_ids = array_map('intval', $user_ids);
-		
+
 		// Delete invalid IDs
 		$user_ids = array_diff($user_ids, array(0, 1));
 	}
 	else
 		$user_ids = array();
-	
+
 	if (empty($user_ids))
 		message($lang_admin_users['No users selected']);
-	
+
 	// Are we trying to delete any admins?
 	$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'users WHERE id IN ('.implode(',', $user_ids).') AND group_id='.PUN_ADMIN) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 	if ($db->result($result) > 0)
@@ -415,10 +415,10 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 		{
 			if (!isset($user_groups[$cur_user['group_id']]))
 				$user_groups[$cur_user['group_id']] = array();
-			
+
 			$user_groups[$cur_user['group_id']][] = $cur_user['id'];
 		}
-		
+
 		// Are any users moderators?
 		$group_ids = array_keys($user_groups);
 		$result = $db->query('SELECT g_id, g_moderator FROM '.$db->prefix.'groups WHERE g_id IN ('.implode(',', $group_ids).')') or error('Unable to fetch group moderators', __FILE__, __LINE__, $db->error());
@@ -427,7 +427,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 			if ($cur_group['g_moderator'] == '0')
 				unset($user_groups[$cur_group['g_id']]);
 		}
-		
+
 		// Fetch forum list and clean up their moderator list
 		$result = $db->query('SELECT id, moderators FROM '.$db->prefix.'forums') or error('Unable to fetch forum list', __FILE__, __LINE__, $db->error());
 		while ($cur_forum = $db->fetch_assoc($result))
@@ -436,18 +436,18 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 
 			foreach ($user_groups as $group_users)
 				$cur_moderators = array_diff($cur_moderators, $group_users);
-			
+
 			$cur_moderators = (!empty($cur_moderators)) ? '\''.$db->escape(serialize($cur_moderators)).'\'' : 'NULL';
 			$db->query('UPDATE '.$db->prefix.'forums SET moderators='.$cur_moderators.' WHERE id='.$cur_forum['id']) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
 		}
-		
+
 		// Delete any subscriptions
 		$db->query('DELETE FROM '.$db->prefix.'topic_subscriptions WHERE user_id IN ('.implode(',', $user_ids).')') or error('Unable to delete topic subscriptions', __FILE__, __LINE__, $db->error());
 		$db->query('DELETE FROM '.$db->prefix.'forum_subscriptions WHERE user_id IN ('.implode(',', $user_ids).')') or error('Unable to delete forum subscriptions', __FILE__, __LINE__, $db->error());
-		
+
 		// Remove them from the online list (if they happen to be logged in)
 		$db->query('DELETE FROM '.$db->prefix.'online WHERE user_id IN ('.implode(',', $user_ids).')') or error('Unable to remove users from online list', __FILE__, __LINE__, $db->error());
-		
+
 		// Should we delete all posts made by these users?
 		if (isset($_POST['delete_posts']))
 		{
@@ -482,7 +482,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 		// Delete user avatars
 		foreach ($user_ids as $user_id)
 			delete_avatar($user_id);
-		
+
 		// Regenerate the users info cache
 		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
 			require PUN_ROOT.'include/cache.php';
@@ -495,7 +495,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Users'], $lang_admin_users['Delete users']);
 	define('PUN_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
-	
+
 	generate_admin_menu('users');
 
 ?>
@@ -535,61 +535,61 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 		message($lang_common['No permission']);
 
 	confirm_referrer('admin_users.php');
-	
+
 	if (isset($_POST['users']))
 	{
 		$user_ids = is_array($_POST['users']) ? array_keys($_POST['users']) : explode(',', $_POST['users']);
 		$user_ids = array_map('intval', $user_ids);
-		
+
 		// Delete invalid IDs
 		$user_ids = array_diff($user_ids, array(0, 1));
 	}
 	else
 		$user_ids = array();
-	
+
 	if (empty($user_ids))
 		message($lang_admin_users['No users selected']);
-	
+
 	// Are we trying to ban any admins?
 	$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'users WHERE id IN ('.implode(',', $user_ids).') AND group_id='.PUN_ADMIN) or error('Unable to fetch group info', __FILE__, __LINE__, $db->error());
 	if ($db->result($result) > 0)
 		message($lang_admin_users['No ban admins message']);
-	
+
 	// Also, we cannot ban moderators
 	$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id WHERE g.g_moderator=1 AND u.id IN ('.implode(',', $user_ids).')') or error('Unable to fetch moderator group info', __FILE__, __LINE__, $db->error());
 	if ($db->result($result) > 0)
 		message($lang_admin_users['No ban mods message']);
-	
+
 	if (isset($_POST['ban_users_comply']))
 	{
 		$ban_message = pun_trim($_POST['ban_message']);
 		$ban_expire = pun_trim($_POST['ban_expire']);
 		$ban_the_ip = isset($_POST['ban_the_ip']) ? intval($_POST['ban_the_ip']) : 0;
-		
+
 		if ($ban_expire != '' && $ban_expire != 'Never')
 		{
 			$ban_expire = strtotime($ban_expire.' GMT');
-	
+
 			if ($ban_expire == -1 || !$ban_expire)
 				message($lang_admin_users['Invalid date message'].' '.$lang_admin_users['Invalid date reasons']);
-	
+
 			$diff = ($pun_user['timezone'] + $pun_user['dst']) * 3600;
 			$ban_expire -= $diff;
-	
+
 			if ($ban_expire <= time())
 				message($lang_admin_users['Invalid date message'].' '.$lang_admin_users['Invalid date reasons']);
 		}
 		else
 			$ban_expire = 'NULL';
-	
+
 		$ban_message = ($ban_message != '') ? '\''.$db->escape($ban_message).'\'' : 'NULL';
-		
+
 		// Fetch user information
 		$user_info = array();
 		$result = $db->query('SELECT id, username, email, registration_ip FROM '.$db->prefix.'users WHERE id IN ('.implode(',', $user_ids).')') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 		while ($cur_user = $db->fetch_assoc($result))
 			$user_info[$cur_user['id']] = array('username' => $cur_user['username'], 'email' => $cur_user['email'], 'ip' => $cur_user['registration_ip']);
-		
+
 		// Overwrite the registration IP with one from the last post (if it exists)
 		if ($ban_the_ip != 0)
 		{
@@ -597,23 +597,23 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 			while ($cur_address = $db->fetch_assoc($result))
 				$user_info[$cur_address['poster_id']]['ip'] = $cur_address['poster_ip'];
 		}
-		
+
 		// And insert the bans!
 		foreach ($user_ids as $user_id)
 		{
 			$ban_username = '\''.$db->escape($user_info[$user_id]['username']).'\'';
 			$ban_email = '\''.$db->escape($user_info[$user_id]['email']).'\'';
 			$ban_ip = ($ban_the_ip != 0) ? '\''.$db->escape($user_info[$user_id]['ip']).'\'' : 'NULL';
-			
+
 			$db->query('INSERT INTO '.$db->prefix.'bans (username, ip, email, message, expire, ban_creator) VALUES('.$ban_username.', '.$ban_ip.', '.$ban_email.', '.$ban_message.', '.$ban_expire.', '.$pun_user['id'].')') or error('Unable to add ban', __FILE__, __LINE__, $db->error());
 		}
-		
+
 		// Regenerate the bans cache
 		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
 			require PUN_ROOT.'include/cache.php';
-	
+
 		generate_bans_cache();
-	
+
 		redirect('admin_users.php', $lang_admin_users['Users banned redirect']);
 	}
 
@@ -696,7 +696,7 @@ else if (isset($_GET['find_user']))
 	$query_str[] = 'direction='.$direction;
 	$query_str[] = 'user_group='.$user_group;
 
-	if (preg_match('/[^0-9]/', $posts_greater.$posts_less))
+	if (preg_match('%[^0-9]%', $posts_greater.$posts_less))
 		message($lang_admin_users['Non numeric message']);
 
 	// Try to convert date/time to timestamps
@@ -797,7 +797,7 @@ else if (isset($_GET['find_user']))
 
 	// Generate paging links
 	$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'admin_users.php?find_user=&amp;'.implode('&amp;', $query_str));
-	
+
 	// Some helper variables for permissions
 	$can_delete = $can_move = $pun_user['g_id'] == PUN_ADMIN;
 	$can_ban = $pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1' && $pun_user['g_mod_ban_users'] == '1');
@@ -867,7 +867,7 @@ else if (isset($_GET['find_user']))
 					<td class="tc5"><?php echo ($user_data['admin_note'] != '') ? pun_htmlspecialchars($user_data['admin_note']) : '&#160;' ?></td>
 					<td class="tcr"><?php echo $actions ?></td>
 <?php if ($can_action): ?>					<td class="tcmod"><input type="checkbox" name="users[<?php echo $user_data['id'] ?>]" value="1" /></td>
-<?php endif; ?> 
+<?php endif; ?>
 				</tr>
 <?php
 

@@ -41,7 +41,7 @@ else
 $tpl_main = file_get_contents($tpl_file);
 
 // START SUBST - <pun_include "*">
-preg_match_all('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_main, $pun_includes, PREG_SET_ORDER);
+preg_match_all('%<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">%i', $tpl_main, $pun_includes, PREG_SET_ORDER);
 
 foreach ($pun_includes as $cur_include)
 {
@@ -212,7 +212,7 @@ else
 // Are there any additional navlinks we should insert into the array before imploding it?
 if ($pun_user['g_read_board'] == '1' && $pun_config['o_additional_navlinks'] != '')
 {
-	if (preg_match_all('#([0-9]+)\s*=\s*(.*?)\n#s', $pun_config['o_additional_navlinks']."\n", $extra_links))
+	if (preg_match_all('%([0-9]+)\s*=\s*(.*?)\n%s', $pun_config['o_additional_navlinks']."\n", $extra_links))
 	{
 		// Insert any additional links into the $links array (at the correct index)
 		$num_links = count($extra_links[1]);
