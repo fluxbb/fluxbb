@@ -1740,6 +1740,8 @@ function forum_list_plugins($is_admin)
 	}
 	$d->close();
 
+	natcasesort($plugins);
+
 	return $plugins;
 }
 
@@ -1897,7 +1899,7 @@ function url_valid($url)
 function ucp_preg_replace($pattern, $replace, $subject)
 {
 	$replaced = preg_replace($pattern, $replace, $subject);
-	
+
 	// If preg_replace() returns false, this probably means unicode support is not built-in, so we need to modify the pattern a little
 	if ($replaced === false)
 	{
@@ -1905,13 +1907,13 @@ function ucp_preg_replace($pattern, $replace, $subject)
 		{
 			foreach ($pattern as $cur_key => $cur_pattern)
 				$pattern[$cur_key] = str_replace('\p{L}\p{N}', '\w', $cur_pattern);
-			
+
 			$replaced = preg_replace($pattern, $replace, $subject);
 		}
 		else
 			$replaced = preg_replace(str_replace('\p{L}\p{N}', '\w', $pattern), $replace, $subject);
 	}
-	
+
 	return $replaced;
 }
 
