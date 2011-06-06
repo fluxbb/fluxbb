@@ -177,9 +177,9 @@ generate_admin_menu('categories');
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row"><?php echo $lang_admin_categories['Add category label'] ?><div><input type="submit" name="add_cat" value="<?php echo $lang_admin_categories['Add new submit'] ?>" tabindex="2" /></div></th>
+									<th scope="row"><?php echo $lang_admin_categories['Add category label'] ?><div><input type="submit" name="add_cat" value="<?php echo $lang_admin_categories['Add new submit'] ?>" /></div></th>
 									<td>
-										<input type="text" name="new_cat_name" size="35" maxlength="80" tabindex="1" />
+										<input type="text" name="new_cat_name" size="35" maxlength="80" />
 										<span><?php printf($lang_admin_categories['Add category help'], '<a href="admin_forums.php">'.$lang_admin_common['Forums'].'</a>') ?></span>
 									</td>
 								</tr>
@@ -199,9 +199,9 @@ generate_admin_menu('categories');
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row"><?php echo $lang_admin_categories['Delete category label'] ?><div><input type="submit" name="del_cat" value="<?php echo $lang_admin_common['Delete'] ?>" tabindex="4" /></div></th>
+									<th scope="row"><?php echo $lang_admin_categories['Delete category label'] ?><div><input type="submit" name="del_cat" value="<?php echo $lang_admin_common['Delete'] ?>" /></div></th>
 									<td>
-										<select name="cat_to_delete" tabindex="3">
+										<select name="cat_to_delete">
 <?php
 
 	foreach ($cat_list as $cur_cat)

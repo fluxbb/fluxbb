@@ -120,21 +120,21 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['Username label'] ?></th>
 									<td>
-										<input type="text" name="ban_user" size="25" maxlength="25" value="<?php if (isset($ban_user)) echo pun_htmlspecialchars($ban_user); ?>" tabindex="1" />
+										<input type="text" name="ban_user" size="25" maxlength="25" value="<?php if (isset($ban_user)) echo pun_htmlspecialchars($ban_user); ?>" />
 										<span><?php echo $lang_admin_bans['Username help'] ?></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['IP label'] ?></th>
 									<td>
-										<input type="text" name="ban_ip" size="45" maxlength="255" value="<?php if (isset($ban_ip)) echo $ban_ip; ?>" tabindex="2" />
+										<input type="text" name="ban_ip" size="45" maxlength="255" value="<?php if (isset($ban_ip)) echo $ban_ip; ?>" />
 										<span><?php echo $lang_admin_bans['IP help'] ?><?php if ($ban_user != '' && isset($user_id)) printf(' '.$lang_admin_bans['IP help link'], '<a href="admin_users.php?ip_stats='.$user_id.'">'.$lang_admin_common['here'].'</a>') ?></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['E-mail label'] ?></th>
 									<td>
-										<input type="text" name="ban_email" size="40" maxlength="80" value="<?php if (isset($ban_email)) echo $ban_email; ?>" tabindex="3" />
+										<input type="text" name="ban_email" size="40" maxlength="80" value="<?php if (isset($ban_email)) echo $ban_email; ?>" />
 										<span><?php echo $lang_admin_bans['E-mail help'] ?></span>
 									</td>
 								</tr>
@@ -151,14 +151,14 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['Ban message label'] ?></th>
 									<td>
-										<input type="text" name="ban_message" size="50" maxlength="255" value="<?php if (isset($ban_message)) echo pun_htmlspecialchars($ban_message); ?>" tabindex="4" />
+										<input type="text" name="ban_message" size="50" maxlength="255" value="<?php if (isset($ban_message)) echo pun_htmlspecialchars($ban_message); ?>" />
 										<span><?php echo $lang_admin_bans['Ban message help'] ?></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['Expire date label'] ?></th>
 									<td>
-										<input type="text" name="ban_expire" size="17" maxlength="10" value="<?php if (isset($ban_expire)) echo $ban_expire; ?>" tabindex="5" />
+										<input type="text" name="ban_expire" size="17" maxlength="10" value="<?php if (isset($ban_expire)) echo $ban_expire; ?>" />
 										<span><?php echo $lang_admin_bans['Expire date help'] ?></span>
 									</td>
 								</tr>
@@ -166,7 +166,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 						</div>
 					</fieldset>
 				</div>
-				<p class="submitend"><input type="submit" name="add_edit_ban" value="<?php echo $lang_admin_common['Save'] ?>" tabindex="6" /></p>
+				<p class="submitend"><input type="submit" name="add_edit_ban" value="<?php echo $lang_admin_common['Save'] ?>" /></p>
 			</form>
 		</div>
 	</div>
@@ -491,9 +491,9 @@ generate_admin_menu('bans');
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row"><?php echo $lang_admin_bans['Username label'] ?><div><input type="submit" name="add_ban" value="<?php echo $lang_admin_common['Add'] ?>" tabindex="2" /></div></th>
+									<th scope="row"><?php echo $lang_admin_bans['Username label'] ?><div><input type="submit" name="add_ban" value="<?php echo $lang_admin_common['Add'] ?>" /></div></th>
 									<td>
-										<input type="text" name="new_ban_user" size="25" maxlength="25" tabindex="1" />
+										<input type="text" name="new_ban_user" size="25" maxlength="25" />
 										<span><?php echo $lang_admin_bans['Username advanced help'] ?></span>
 									</td>
 								</tr>
@@ -507,7 +507,7 @@ generate_admin_menu('bans');
 		<h2 class="block2"><span><?php echo $lang_admin_bans['Ban search head'] ?></span></h2>
 		<div class="box">
 			<form id="find_band" method="get" action="admin_bans.php">
-				<p class="submittop"><input type="submit" name="find_ban" value="<?php echo $lang_admin_bans['Submit search'] ?>" tabindex="3" /></p>
+				<p class="submittop"><input type="submit" name="find_ban" value="<?php echo $lang_admin_bans['Submit search'] ?>" /></p>
 				<div class="inform">
 					<fieldset>
 						<legend><?php echo $lang_admin_bans['Ban search subhead'] ?></legend>
@@ -516,39 +516,39 @@ generate_admin_menu('bans');
 							<table class="aligntop" cellspacing="0">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['Username label'] ?></th>
-									<td><input type="text" name="form[username]" size="25" maxlength="25" tabindex="4" /></td>
+									<td><input type="text" name="form[username]" size="25" maxlength="25" /></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['IP label'] ?></th>
-									<td><input type="text" name="form[ip]" size="30" maxlength="255" tabindex="5" /></td>
+									<td><input type="text" name="form[ip]" size="30" maxlength="255" /></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['E-mail label'] ?></th>
-									<td><input type="text" name="form[email]" size="30" maxlength="80" tabindex="6" /></td>
+									<td><input type="text" name="form[email]" size="30" maxlength="80" /></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['Message label'] ?></th>
-									<td><input type="text" name="form[message]" size="30" maxlength="255" tabindex="7" /></td>
+									<td><input type="text" name="form[message]" size="30" maxlength="255" /></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['Expire after label'] ?></th>
-									<td><input type="text" name="expire_after" size="10" maxlength="10" tabindex="8" />
+									<td><input type="text" name="expire_after" size="10" maxlength="10" />
 									<span><?php echo $lang_admin_bans['Date help'] ?></span></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['Expire before label'] ?></th>
-									<td><input type="text" name="expire_before" size="10" maxlength="10" tabindex="9" />
+									<td><input type="text" name="expire_before" size="10" maxlength="10" />
 									<span><?php echo $lang_admin_bans['Date help'] ?></span></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['Order by label'] ?></th>
 									<td>
-										<select name="order_by" tabindex="10">
+										<select name="order_by">
 											<option value="username" selected="selected"><?php echo $lang_admin_bans['Order by username'] ?></option>
 											<option value="ip"><?php echo $lang_admin_bans['Order by ip'] ?></option>
 											<option value="email"><?php echo $lang_admin_bans['Order by e-mail'] ?></option>
 											<option value="expire"><?php echo $lang_admin_bans['Order by expire'] ?></option>
-										</select>&#160;&#160;&#160;<select name="direction" tabindex="11">
+										</select>&#160;&#160;&#160;<select name="direction">
 											<option value="ASC" selected="selected"><?php echo $lang_admin_bans['Ascending'] ?></option>
 											<option value="DESC"><?php echo $lang_admin_bans['Descending'] ?></option>
 										</select>
@@ -558,7 +558,7 @@ generate_admin_menu('bans');
 						</div>
 					</fieldset>
 				</div>
-				<p class="submitend"><input type="submit" name="find_ban" value="<?php echo $lang_admin_bans['Submit search'] ?>" tabindex="12" /></p>
+				<p class="submitend"><input type="submit" name="find_ban" value="<?php echo $lang_admin_bans['Submit search'] ?>" /></p>
 			</form>
 		</div>
 	</div>

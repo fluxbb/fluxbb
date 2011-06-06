@@ -266,26 +266,26 @@ generate_admin_menu('maintenance');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_maintenance['Posts per cycle label'] ?></th>
 									<td>
-										<input type="text" name="i_per_page" size="7" maxlength="7" value="300" tabindex="1" />
+										<input type="text" name="i_per_page" size="7" maxlength="7" value="300" />
 										<span><?php echo $lang_admin_maintenance['Posts per cycle help'] ?></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_maintenance['Starting post label'] ?></th>
 									<td>
-										<input type="text" name="i_start_at" size="7" maxlength="7" value="<?php echo (isset($first_id)) ? $first_id : 0 ?>" tabindex="2" />
+										<input type="text" name="i_start_at" size="7" maxlength="7" value="<?php echo (isset($first_id)) ? $first_id : 0 ?>" />
 										<span><?php echo $lang_admin_maintenance['Starting post help'] ?></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_maintenance['Empty index label'] ?></th>
 									<td class="inputadmin">
-										<span><input type="checkbox" name="i_empty_index" value="1" tabindex="3" checked="checked" />&#160;&#160;<?php echo $lang_admin_maintenance['Empty index help'] ?></span>
+										<span><input type="checkbox" name="i_empty_index" value="1" checked="checked" />&#160;&#160;<?php echo $lang_admin_maintenance['Empty index help'] ?></span>
 									</td>
 								</tr>
 							</table>
 							<p class="topspace"><?php echo $lang_admin_maintenance['Rebuild completed info'] ?></p>
-							<div class="fsetsubmit"><input type="submit" name="rebuild_index" value="<?php echo $lang_admin_maintenance['Rebuild index'] ?>" tabindex="4" /></div>
+							<div class="fsetsubmit"><input type="submit" name="rebuild_index" value="<?php echo $lang_admin_maintenance['Rebuild index'] ?>" /></div>
 						</div>
 					</fieldset>
 				</div>
@@ -301,21 +301,21 @@ generate_admin_menu('maintenance');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_maintenance['Days old label'] ?></th>
 									<td>
-										<input type="text" name="req_prune_days" size="3" maxlength="3" tabindex="5" />
+										<input type="text" name="req_prune_days" size="3" maxlength="3" />
 										<span><?php echo $lang_admin_maintenance['Days old help'] ?></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_maintenance['Prune sticky label'] ?></th>
 									<td>
-										<input type="radio" name="prune_sticky" value="1" tabindex="6" checked="checked" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&#160;&#160;&#160;<input type="radio" name="prune_sticky" value="0" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong>
+										<input type="radio" name="prune_sticky" value="1" checked="checked" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&#160;&#160;&#160;<input type="radio" name="prune_sticky" value="0" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong>
 										<span><?php echo $lang_admin_maintenance['Prune sticky help'] ?></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_maintenance['Prune from label'] ?></th>
 									<td>
-										<select name="prune_from" tabindex="7">
+										<select name="prune_from">
 											<option value="all"><?php echo $lang_admin_maintenance['All forums'] ?></option>
 <?php
 
@@ -344,7 +344,7 @@ generate_admin_menu('maintenance');
 								</tr>
 							</table>
 							<p class="topspace"><?php printf($lang_admin_maintenance['Prune info'], '<a href="admin_options.php#maintenance">'.$lang_admin_common['Maintenance mode'].'</a>') ?></p>
-							<div class="fsetsubmit"><input type="submit" name="prune" value="<?php echo $lang_admin_common['Prune'] ?>" tabindex="8" /></div>
+							<div class="fsetsubmit"><input type="submit" name="prune" value="<?php echo $lang_admin_common['Prune'] ?>" /></div>
 						</div>
 					</fieldset>
 				</div>

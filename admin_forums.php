@@ -240,7 +240,7 @@ else if (isset($_GET['edit_forum']))
 		<h2><span><?php echo $lang_admin_forums['Edit forum head'] ?></span></h2>
 		<div class="box">
 			<form id="edit_forum" method="post" action="admin_forums.php?edit_forum=<?php echo $forum_id ?>">
-				<p class="submittop"><input type="submit" name="save" value="<?php echo $lang_admin_common['Save changes'] ?>" tabindex="6" /></p>
+				<p class="submittop"><input type="submit" name="save" value="<?php echo $lang_admin_common['Save changes'] ?>" /></p>
 				<div class="inform">
 					<fieldset>
 						<legend><?php echo $lang_admin_forums['Edit details subhead'] ?></legend>
@@ -248,16 +248,16 @@ else if (isset($_GET['edit_forum']))
 							<table class="aligntop" cellspacing="0">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_forums['Forum name label'] ?></th>
-									<td><input type="text" name="forum_name" size="35" maxlength="80" value="<?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?>" tabindex="1" /></td>
+									<td><input type="text" name="forum_name" size="35" maxlength="80" value="<?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?>" /></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_forums['Forum description label'] ?></th>
-									<td><textarea name="forum_desc" rows="3" cols="50" tabindex="2"><?php echo pun_htmlspecialchars($cur_forum['forum_desc']) ?></textarea></td>
+									<td><textarea name="forum_desc" rows="3" cols="50"><?php echo pun_htmlspecialchars($cur_forum['forum_desc']) ?></textarea></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_forums['Category label'] ?></th>
 									<td>
-										<select name="cat_id" tabindex="3">
+										<select name="cat_id">
 <?php
 
 	$result = $db->query('SELECT id, cat_name FROM '.$db->prefix.'categories ORDER BY disp_position') or error('Unable to fetch category list', __FILE__, __LINE__, $db->error());
@@ -274,7 +274,7 @@ else if (isset($_GET['edit_forum']))
 								<tr>
 									<th scope="row"><?php echo $lang_admin_forums['Sort by label'] ?></th>
 									<td>
-										<select name="sort_by" tabindex="4">
+										<select name="sort_by">
 											<option value="0"<?php if ($cur_forum['sort_by'] == '0') echo ' selected="selected"' ?>><?php echo $lang_admin_forums['Last post'] ?></option>
 											<option value="1"<?php if ($cur_forum['sort_by'] == '1') echo ' selected="selected"' ?>><?php echo $lang_admin_forums['Topic start'] ?></option>
 											<option value="2"<?php if ($cur_forum['sort_by'] == '2') echo ' selected="selected"' ?>><?php echo $lang_admin_forums['Subject'] ?></option>
@@ -283,7 +283,7 @@ else if (isset($_GET['edit_forum']))
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_forums['Redirect label'] ?></th>
-									<td><?php echo ($cur_forum['num_topics']) ? $lang_admin_forums['Redirect help'] : '<input type="text" name="redirect_url" size="45" maxlength="100" value="'.pun_htmlspecialchars($cur_forum['redirect_url']).'" tabindex="5" />'; ?></td>
+									<td><?php echo ($cur_forum['num_topics']) ? $lang_admin_forums['Redirect help'] : '<input type="text" name="redirect_url" size="45" maxlength="100" value="'.pun_htmlspecialchars($cur_forum['redirect_url']).'" />'; ?></td>
 								</tr>
 							</table>
 						</div>
@@ -375,9 +375,9 @@ generate_admin_menu('forums');
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row"><?php echo $lang_admin_forums['Add forum label'] ?><div><input type="submit" name="add_forum" value="<?php echo $lang_admin_forums['Add forum'] ?>" tabindex="2" /></div></th>
+									<th scope="row"><?php echo $lang_admin_forums['Add forum label'] ?><div><input type="submit" name="add_forum" value="<?php echo $lang_admin_forums['Add forum'] ?>" /></div></th>
 									<td>
-										<select name="add_to_cat" tabindex="1">
+										<select name="add_to_cat">
 <?php
 
 	$result = $db->query('SELECT id, cat_name FROM '.$db->prefix.'categories ORDER BY disp_position') or error('Unable to fetch category list', __FILE__, __LINE__, $db->error());
@@ -412,10 +412,10 @@ if ($db->num_rows($result) > 0)
 		<h2 class="block2"><span><?php echo $lang_admin_forums['Edit forums head'] ?></span></h2>
 		<div class="box">
 			<form id="edforum" method="post" action="admin_forums.php?action=edit">
-				<p class="submittop"><input type="submit" name="update_positions" value="<?php echo $lang_admin_forums['Update positions'] ?>" tabindex="3" /></p>
+				<p class="submittop"><input type="submit" name="update_positions" value="<?php echo $lang_admin_forums['Update positions'] ?>" /></p>
 <?php
 
-$tabindex_count = 4;
+
 
 $cur_category = 0;
 while ($cur_forum = $db->fetch_assoc($result))
@@ -447,12 +447,12 @@ while ($cur_forum = $db->fetch_assoc($result))
 ?>
 								<tr>
 									<td class="tcl"><a href="admin_forums.php?edit_forum=<?php echo $cur_forum['fid'] ?>"><?php echo $lang_admin_forums['Edit link'] ?></a> | <a href="admin_forums.php?del_forum=<?php echo $cur_forum['fid'] ?>"><?php echo $lang_admin_forums['Delete link'] ?></a></td>
-									<td class="tc2"><input type="text" name="position[<?php echo $cur_forum['fid'] ?>]" size="3" maxlength="3" value="<?php echo $cur_forum['disp_position'] ?>" tabindex="<?php echo $tabindex_count ?>" /></td>
+									<td class="tc2"><input type="text" name="position[<?php echo $cur_forum['fid'] ?>]" size="3" maxlength="3" value="<?php echo $cur_forum['disp_position'] ?>" /></td>
 									<td class="tcr"><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></td>
 								</tr>
 <?php
 
-	$tabindex_count += 2;
+
 }
 
 ?>
@@ -461,7 +461,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 						</div>
 					</fieldset>
 				</div>
-				<p class="submitend"><input type="submit" name="update_positions" value="<?php echo $lang_admin_forums['Update positions'] ?>" tabindex="<?php echo $tabindex_count ?>" /></p>
+				<p class="submitend"><input type="submit" name="update_positions" value="<?php echo $lang_admin_forums['Update positions'] ?>" /></p>
 			</form>
 		</div>
 <?php

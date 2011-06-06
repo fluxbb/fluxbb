@@ -217,17 +217,17 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	$tags_limit_bbcode = array(
 		'*' 	=> array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email', 'list', 'img', 'code', 'topic', 'post', 'forum', 'user'),
 		'list' 	=> array('*'),
-		'url' 	=> array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'img'),
-		'email' => array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'img'),
-		'topic' => array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'img'),
-		'post'  => array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'img'),
-		'forum' => array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'img'),
-		'user'  => array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'img'),
+		'url' 	=> array('img'),
+		'email' => array(),
+		'topic' => array(),
+		'post'  => array(),
+		'forum' => array(),
+		'user'  => array(),
 		'img' 	=> array(),
-		'h'		=> array('b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email', 'topic', 'post', 'forum', 'user'),
+		'h'		=> array(),
 	);
 	// Tags we can automatically fix bad nesting
-	$tags_fix = array('quote', 'b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour', 'url', 'email', 'h', 'topic', 'post', 'forum', 'user');
+	$tags_fix = array('quote', 'b', 'i', 'u', 's', 'ins', 'del', 'em', 'color', 'colour');
 
 	$split_text = preg_split('%(\[[\*a-zA-Z0-9-/]*?(?:=.*?)?\])%', $text, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 

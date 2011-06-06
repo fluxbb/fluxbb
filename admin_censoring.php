@@ -111,9 +111,9 @@ generate_admin_menu('censoring');
 							</thead>
 							<tbody>
 								<tr>
-									<td class="tcl"><input type="text" name="new_search_for" size="24" maxlength="60" tabindex="1" /></td>
-									<td class="tc2"><input type="text" name="new_replace_with" size="24" maxlength="60" tabindex="2" /></td>
-									<td><input type="submit" name="add_word" value="<?php echo $lang_admin_common['Add'] ?>" tabindex="3" /></td>
+									<td class="tcl"><input type="text" name="new_search_for" size="24" maxlength="60" /></td>
+									<td class="tc2"><input type="text" name="new_replace_with" size="24" maxlength="60" /></td>
+									<td><input type="submit" name="add_word" value="<?php echo $lang_admin_common['Add'] ?>" /></td>
 								</tr>
 							</tbody>
 							</table>
