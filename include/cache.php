@@ -183,7 +183,7 @@ function generate_censoring_cache()
 	for ($i = 0; $i < $num_words; $i++)
 	{
 		list($search_for[$i], $replace_with[$i]) = $db->fetch_row($result);
-		$search_for[$i] = '/(?<=[^\p{L}\p{N}])('.str_replace('\*', '[\p{L}\p{N}]*?', preg_quote($search_for[$i], '/')).')(?=[^\p{L}\p{N}])/iu';
+		$search_for[$i] = '%(?<=[^\p{L}\p{N}])('.str_replace('\*', '[\p{L}\p{N}]*?', preg_quote($search_for[$i], '%')).')(?=[^\p{L}\p{N}])%iu';
 	}
 
 	// Output censored words as PHP code

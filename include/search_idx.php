@@ -48,16 +48,16 @@ define('PUN_CJK_HANGUL_REGEX', '['.
 function split_words($text, $idx)
 {
 	// Remove BBCode
-	$text = preg_replace('/\[\/?(b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]/', ' ', $text);
+	$text = preg_replace('%\[/?(b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]%', ' ', $text);
 
 	// Remove any apostrophes or dashes which aren't part of words
-	$text = substr(ucp_preg_replace('/((?<=[^\p{L}\p{N}])[\'\-]|[\'\-](?=[^\p{L}\p{N}]))/u', '', ' '.$text.' '), 1, -1);
+	$text = substr(ucp_preg_replace('%((?<=[^\p{L}\p{N}])[\'\-]|[\'\-](?=[^\p{L}\p{N}]))%u', '', ' '.$text.' '), 1, -1);
 
 	// Remove punctuation and symbols (actually anything that isn't a letter or number), allow apostrophes and dashes (and % * if we aren't indexing)
-	$text = ucp_preg_replace('/(?![\'\-'.($idx ? '' : '%\*').'])[^\p{L}\p{N}]+/u', ' ', $text);
+	$text = ucp_preg_replace('%(?![\'\-'.($idx ? '' : '\%\*').'])[^\p{L}\p{N}]+%u', ' ', $text);
 
 	// Replace multiple whitespace or dashes
-	$text = preg_replace('/(\s){2,}/u', '\1', $text);
+	$text = preg_replace('%(\s){2,}%u', '\1', $text);
 
 	// Fill an array with all the words
 	$words = array_unique(explode(' ', $text));
@@ -128,7 +128,7 @@ function is_keyword($word)
 //
 function is_cjk($word)
 {
-	return preg_match('/^'.PUN_CJK_HANGUL_REGEX.'+$/u', $word) ? true : false;
+	return preg_match('%^'.PUN_CJK_HANGUL_REGEX.'+$%u', $word) ? true : false;
 }
 
 

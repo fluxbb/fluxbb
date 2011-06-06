@@ -251,7 +251,7 @@ if (!empty($_SERVER['HTTP_REFERER']))
 	if (!isset($valid['path']))
 		$valid['path'] = '';
 
-	if ($referrer['host'] == $valid['host'] && preg_match('#^'.preg_quote($valid['path']).'/(.*?)\.php#i', $referrer['path']))
+	if ($referrer['host'] == $valid['host'] && preg_match('%^'.preg_quote($valid['path'], '%').'/(.*?)\.php%i', $referrer['path']))
 		$redirect_url = $_SERVER['HTTP_REFERER'];
 }
 

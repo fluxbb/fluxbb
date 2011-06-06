@@ -25,9 +25,9 @@ class DBLayer
 	var $error_msg = 'Unknown';
 
 	var $datatype_transformations = array(
-		'/^SERIAL$/'															=>	'INTEGER',
-		'/^(TINY|SMALL|MEDIUM|BIG)?INT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$/i'	=>	'INTEGER',
-		'/^(TINY|MEDIUM|LONG)?TEXT$/i'											=>	'TEXT'
+		'%^SERIAL$%'															=>	'INTEGER',
+		'%^(TINY|SMALL|MEDIUM|BIG)?INT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$%i'	=>	'INTEGER',
+		'%^(TINY|MEDIUM|LONG)?TEXT$%i'											=>	'TEXT'
 	);
 
 
@@ -279,7 +279,7 @@ class DBLayer
 		if (!$this->num_rows($result))
 			return false;
 
-		return preg_match('/[\r\n]'.preg_quote($field_name).' /', $this->result($result));
+		return preg_match('%[\r\n]'.preg_quote($field_name, '%').' %', $this->result($result));
 	}
 
 

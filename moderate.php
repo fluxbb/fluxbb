@@ -18,7 +18,7 @@ if (isset($_GET['get_host']))
 		message($lang_common['No permission']);
 
 	// Is get_host an IP address or a post ID?
-	if (@preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $_GET['get_host']) || @preg_match('/^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/', $_GET['get_host']))
+	if (@preg_match('%^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$%', $_GET['get_host']) || @preg_match('%^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$%', $_GET['get_host']))
 		$ip = $_GET['get_host'];
 	else
 	{
@@ -86,7 +86,7 @@ if (isset($_GET['tid']))
 		{
 			confirm_referrer('moderate.php');
 
-			if (@preg_match('/[^0-9,]/', $posts))
+			if (@preg_match('%[^0-9,]%', $posts))
 				message($lang_common['Bad request']);
 
 			// Verify that the post IDs are valid
@@ -153,7 +153,7 @@ if (isset($_GET['tid']))
 		{
 			confirm_referrer('moderate.php');
 
-			if (@preg_match('/[^0-9,]/', $posts))
+			if (@preg_match('%[^0-9,]%', $posts))
 				message($lang_common['Bad request']);
 
 			$move_to_forum = isset($_POST['move_to_forum']) ? intval($_POST['move_to_forum']) : 0;
@@ -420,7 +420,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	{
 		confirm_referrer('moderate.php');
 
-		if (@preg_match('/[^0-9,]/', $_POST['topics']))
+		if (@preg_match('%[^0-9,]%', $_POST['topics']))
 			message($lang_common['Bad request']);
 
 		$topics = explode(',', $_POST['topics']);
@@ -548,7 +548,7 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 	{
 		confirm_referrer('moderate.php');
 
-		if (@preg_match('/[^0-9,]/', $_POST['topics']))
+		if (@preg_match('%[^0-9,]%', $_POST['topics']))
 			message($lang_common['Bad request']);
 
 		$topics = explode(',', $_POST['topics']);
@@ -644,7 +644,7 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 	{
 		confirm_referrer('moderate.php');
 
-		if (@preg_match('/[^0-9,]/', $topics))
+		if (@preg_match('%[^0-9,]%', $topics))
 			message($lang_common['Bad request']);
 
 		require PUN_ROOT.'include/search_idx.php';

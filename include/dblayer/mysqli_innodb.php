@@ -25,7 +25,7 @@ class DBLayer
 	var $error_msg = 'Unknown';
 
 	var $datatype_transformations = array(
-		'/^SERIAL$/'	=>	'INT(10) UNSIGNED AUTO_INCREMENT'
+		'%^SERIAL$%'	=>	'INT(10) UNSIGNED AUTO_INCREMENT'
 	);
 
 
@@ -224,7 +224,7 @@ class DBLayer
 
 		return array(
 			'name'		=> 'MySQL Improved (InnoDB)',
-			'version'	=> preg_replace('/^([^-]+).*$/', '\\1', $this->result($result))
+			'version'	=> preg_replace('%^([^-]+).*$%', '\\1', $this->result($result))
 		);
 	}
 

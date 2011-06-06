@@ -150,7 +150,7 @@ else if (isset($_GET['email']))
 		if (strpos($valid['host'], 'www.') === 0)
 			$valid['host'] = substr($valid['host'], 4);
 
-		if ($referrer['host'] == $valid['host'] && preg_match('#^'.preg_quote($valid['path']).'/(.*?)\.php#i', $referrer['path']))
+		if ($referrer['host'] == $valid['host'] && preg_match('%^'.preg_quote($valid['path'], '%').'/(.*?)\.php%i', $referrer['path']))
 			$redirect_url = $_SERVER['HTTP_REFERER'];
 	}
 

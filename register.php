@@ -131,7 +131,7 @@ if (isset($_POST['form_sent']))
 	// Make sure we got a valid language string
 	if (isset($_POST['language']))
 	{
-		$language = preg_replace('#[\.\\\/]#', '', $_POST['language']);
+		$language = preg_replace('%[\.\\\/]%', '', $_POST['language']);
 		if (!file_exists(PUN_ROOT.'lang/'.$language.'/common.php'))
 			message($lang_common['Bad request']);
 	}
