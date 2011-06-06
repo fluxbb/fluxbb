@@ -444,18 +444,18 @@ class DBLayer
 		$query .= ' DEFAULT '.$default_value;
 
 		$old_columns = array_keys($table['columns']);
-		array_insert($table['columns'], $after_field, $query.',', $field_name);
+		array_insert($table['columns'], $after_field, $query, $field_name);
 
 		$new_table = 'CREATE TABLE '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).' (';
 
 		foreach ($table['columns'] as $cur_column => $column_details)
-			$new_table .= "\n".$cur_column.' '.$column_details;
+			$new_table .= "\n".$cur_column.' '.$column_details.',';
 
 		if (isset($table['unique']))
 			$new_table .= "\n".$table['unique'].',';
 
 		if (isset($table['primary_key']))
-			$new_table .= "\n".$table['primary_key'];
+			$new_table .= "\n".$table['primary_key'].',';
 
 		$new_table = trim($new_table, ',')."\n".');';
 
@@ -509,13 +509,13 @@ class DBLayer
 		$new_table = 'CREATE TABLE '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).' (';
 
 		foreach ($table['columns'] as $cur_column => $column_details)
-			$new_table .= "\n".$cur_column.' '.$column_details;
+			$new_table .= "\n".$cur_column.' '.$column_details.',';
 
 		if (isset($table['unique']))
 			$new_table .= "\n".$table['unique'].',';
 
 		if (isset($table['primary_key']))
-			$new_table .= "\n".$table['primary_key'];
+			$new_table .= "\n".$table['primary_key'].',';
 
 		$new_table = trim($new_table, ',')."\n".');';
 
