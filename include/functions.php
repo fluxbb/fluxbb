@@ -1756,7 +1756,7 @@ function split_text($text, $start, $end, &$errors, $retab = true)
 	$result = array(0 => array(), 1 => array()); // 0 = inside, 1 = outside
 
 	// split the text into parts
-	$parts = preg_split('%'.preg_quote($start, '%').'(.*)'.preg_quote($end, '%').'%U', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+	$parts = preg_split('%'.preg_quote($start, '%').'(.*)'.preg_quote($end, '%').'%Us', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
 	$num_parts = count($parts);
 
 	// preg_split results in outside parts having even indices, inside parts having odd
