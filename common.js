@@ -8,7 +8,7 @@ function select_checkboxes(curFormId, link, new_string)
 		if (inputlist[i].getAttribute("type") == 'checkbox' && inputlist[i].disabled == false)
 			inputlist[i].checked = true;
 	}
-	
+
 	link.setAttribute('onclick', 'return unselect_checkboxes(\'' + curFormId + '\', this, \'' + link.innerHTML + '\')');
 	link.innerHTML = new_string;
 
@@ -24,7 +24,7 @@ function unselect_checkboxes(curFormId, link, new_string)
 		if (inputlist[i].getAttribute("type") == 'checkbox' && inputlist[i].disabled == false)
 			inputlist[i].checked = false;
 	}
-	
+
 	link.setAttribute('onclick', 'return select_checkboxes(\'' + curFormId + '\', this, \'' + link.innerHTML + '\')');
 	link.innerHTML = new_string;
 

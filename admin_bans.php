@@ -192,7 +192,7 @@ else if (isset($_POST['add_edit_ban']))
 		message($lang_admin_bans['Must enter message']);
 	else if (strtolower($ban_user) == 'guest')
 		message($lang_admin_bans['Cannot ban guest message']);
-	
+
 	// Make sure we're not banning an admin or moderator
 	if (!empty($ban_user))
 	{
@@ -200,13 +200,13 @@ else if (isset($_POST['add_edit_ban']))
 		if ($db->num_rows($result))
 		{
 			$group_id = $db->result($result);
-			
+
 			if ($group_id == PUN_ADMIN)
 				message(sprintf($lang_admin_bans['User is admin message'], pun_htmlspecialchars($ban_user)));
-	
+
 			$result = $db->query('SELECT g_moderator FROM '.$db->prefix.'groups WHERE g_id='.$group_id) or error('Unable to fetch group info', __FILE__, __LINE__, $db->error());
 			$is_moderator_group = $db->result($result);
-	
+
 			if ($is_moderator_group)
 				message(sprintf($lang_admin_bans['User is mod message'], pun_htmlspecialchars($ban_user)));
 		}
