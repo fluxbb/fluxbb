@@ -405,7 +405,7 @@ class DBLayer
 		$table['columns'] = array();
 		foreach ($table_lines as $table_line)
 		{
-			$table_line = pun_trim($table_line);
+			$table_line = trim($table_line, " \t\n\r,"); // trim spaces, tabs, newlines, and commas
 			if (substr($table_line, 0, 12) == 'CREATE TABLE')
 				continue;
 			else if (substr($table_line, 0, 11) == 'PRIMARY KEY')
@@ -413,7 +413,7 @@ class DBLayer
 			else if (substr($table_line, 0, 6) == 'UNIQUE')
 				$table['unique'] = $table_line;
 			else if (substr($table_line, 0, strpos($table_line, ' ')) != '')
-				$table['columns'][substr($table_line, 0, strpos($table_line, ' '))] = pun_trim(substr($table_line, strpos($table_line, ' ')));
+				$table['columns'][substr($table_line, 0, strpos($table_line, ' '))] = trim(substr($table_line, strpos($table_line, ' ')));
 		}
 
 		return $table;
