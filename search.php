@@ -498,7 +498,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			$search_set[] = $row;
 
 		$crumbs_text = array();
-		$crumbs_text['show_as'] = $show_as == 'topics' ? $lang_search['Search topics'] : $lang_search['Search posts'];
+		$crumbs_text['show_as'] = $lang_search['Search'];
 
 		if ($search_type[0] == 'action')
 		{
