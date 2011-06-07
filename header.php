@@ -230,7 +230,7 @@ $tpl_main = str_replace('<pun_navlinks>', $tpl_temp, $tpl_main);
 $page_statusinfo = $page_topicsearches = array();
 
 if ($pun_user['is_guest'])
-	$page_statusinfo = '<p>'.$lang_common['Not logged in'].'</p>';
+	$page_statusinfo = '<p class="conl">'.$lang_common['Not logged in'].'</p>';
 else
 {
 	$page_statusinfo[] = '<li><span>'.$lang_common['Logged in as'].' <strong>'.pun_htmlspecialchars($pun_user['username']).'</strong></span></li>';
