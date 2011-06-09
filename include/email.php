@@ -88,19 +88,20 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 		$headers .= "\r\n".'Reply-To: '.$reply_to;
 	}
 
-	// Make sure all linebreaks are CRLF in message (and strip out any NULL bytes)
-	$message = str_replace(array("\n", "\0"), array("\r\n", ''), pun_linebreaks($message));
+	// Make sure all linebreaks are LF in message (and strip out any NULL bytes)
+	$message = str_replace("\0", '', pun_linebreaks($message));
 
 	if ($pun_config['o_smtp_host'] != '')
+	{
+		// Headers should be \r\n
+		// Message should be ??
+		$message = str_replace("\n", "\r\n", $message);
 		smtp_mail($to, $subject, $message, $headers);
+	}
 	else
 	{
-		// Change the linebreaks used in the headers according to OS
-		if (strtoupper(substr(PHP_OS, 0, 3)) == 'MAC')
-			$headers = str_replace("\r\n", "\r", $headers);
-		else if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN')
-			$headers = str_replace("\r\n", "\n", $headers);
-
+		// Headers should be \r\n
+		// Message should be \n
 		mail($to, $subject, $message, $headers);
 	}
 }
