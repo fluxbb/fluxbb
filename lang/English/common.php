@@ -137,24 +137,6 @@ $lang_common = array(
 'Query'								=>	'Query',
 'Total query time'					=>	'Total query time: %s',
 
-// Email related notifications
-'New user notification'				=>	'Alert - New registration',
-'New user message'					=>	'User \'%s\' registered in the forums at %s',
-'Banned email notification'			=>	'Alert - Banned email detected',
-'Banned email register message'		=>	'User \'%s\' registered with banned email address: %s',
-'Banned email change message'		=>	'User \'%s\' changed to banned email address: %s',
-'Banned email post message'			=>	'User \'%s\' posted with banned email address: %s',
-'Duplicate email notification'		=>	'Alert - Duplicate email detected',
-'Duplicate email register message'	=>	'User \'%s\' registered with an email address that also belongs to: %s',
-'Duplicate email change message'	=>	'User \'%s\' changed to an email address that also belongs to: %s',
-'Report notification'				=>	'Report(%d) - \'%s\'',
-'Report message 1'					=>	'User \'%s\' has reported the following message: %s',
-'Report message 2'					=>	'Reason: %s',
-
-'User profile'						=>	'User profile: %s',
-'Post URL'							=>	'Post URL: %s',
-'Email signature'					=>	'Forum Mailer'."\n".'(Do not reply to this message)',
-
 // For extern.php RSS feed
 'RSS description'					=>	'The most recent topics at %s.',
 'RSS description topic'				=>	'The most recent posts in %s.',
