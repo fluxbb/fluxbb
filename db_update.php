@@ -497,6 +497,11 @@ if (empty($stage))
 						<p><?php echo $lang_update['Database password info'] ?></p>
 						<p><strong><?php echo $lang_update['Note']; ?></strong> <?php echo $lang_update['Database password note'] ?></p>
 						<label class="required"><strong><?php echo $lang_update['Database password'] ?> <span><?php echo $lang_update['Required'] ?></span></strong><br /><input type="password" id="req_db_pass" name="req_db_pass" /><br /></label>
+						<p><?php echo $lang_update['Maintenance message info'] ?></p>
+						<div class="txtarea">
+							<label class="required"><strong><?php echo $lang_update['Maintenance message'] ?> <span><?php echo $lang_update['Required'] ?></span></strong><br />
+							<textarea name="req_maintenance_message" rows="4" cols="65"><?php echo pun_htmlspecialchars($pun_config['o_maintenance_message']) ?></textarea><br /></label>
+						</div>
 					</div>
 				</fieldset>
 			</div>
@@ -602,6 +607,25 @@ if (isset($_POST['req_db_pass']))
 
 		fwrite($fh, $uid);
 		fclose($fh);
+
+		// Update maintenance message
+		if ($_POST['req_maintenance_message'] != '')
+			$maintenance_message = pun_trim(pun_linebreaks($_POST['req_maintenance_message']));
+		else
+		{
+			// Load the admin_options.php language file
+			require PUN_ROOT.'lang/'.$default_lang.'/admin_options.php';
+
+			$maintenance_message = $lang_admin_options['Default maintenance message'];
+		}
+
+		$db->query('UPDATE '.$db->prefix.'config SET conf_value=\''.$db->escape($maintenance_message).'\' WHERE conf_name=\'o_maintenance_message\'') or error('Unable to update board config', __FILE__, __LINE__, $db->error());
+
+		// Regenerate the config cache
+		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+			require PUN_ROOT.'include/cache.php';
+
+		generate_config_cache();
 	}
 }
 else if (isset($_GET['uid']))

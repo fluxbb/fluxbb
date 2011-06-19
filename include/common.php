@@ -119,16 +119,6 @@ if (!defined('PUN_CONFIG_LOADED'))
 	require FORUM_CACHE_DIR.'cache_config.php';
 }
 
-// Verify that we are running the proper database schema revision
-if (!isset($pun_config['o_database_revision']) || $pun_config['o_database_revision'] < FORUM_DB_REVISION ||
-		!isset($pun_config['o_searchindex_revision']) || $pun_config['o_searchindex_revision'] < FORUM_SI_REVISION ||
-		!isset($pun_config['o_parser_revision']) || $pun_config['o_parser_revision'] < FORUM_PARSER_REVISION ||
-		version_compare($pun_config['o_cur_version'], FORUM_VERSION, '<'))
-	{
-		header('Location: db_update.php');
-		exit;
-	}
-
 // Enable output buffering
 if (!defined('PUN_DISABLE_BUFFERING'))
 {
@@ -152,6 +142,21 @@ if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/common.php'))
 	include PUN_ROOT.'lang/'.$pun_user['language'].'/common.php';
 else
 	error('There is no valid language pack \''.pun_htmlspecialchars($pun_user['language']).'\' installed. Please reinstall a language of that name');
+
+// Verify that we are running the proper database schema revision
+if (!isset($pun_config['o_database_revision']) || $pun_config['o_database_revision'] < FORUM_DB_REVISION ||
+	!isset($pun_config['o_searchindex_revision']) || $pun_config['o_searchindex_revision'] < FORUM_SI_REVISION ||
+	!isset($pun_config['o_parser_revision']) || $pun_config['o_parser_revision'] < FORUM_PARSER_REVISION ||
+	version_compare($pun_config['o_cur_version'], FORUM_VERSION, '<'))
+{
+	if (file_exists(FORUM_CACHE_DIR.'db_update.lock'))
+		maintenance_message();
+	else
+	{
+		header('Location: db_update.php');
+		exit;
+	}
+}
 
 // Check if we are to display a maintenance message
 if ($pun_config['o_maintenance'] && $pun_user['g_id'] > PUN_ADMIN && !defined('PUN_TURN_OFF_MAINT'))
