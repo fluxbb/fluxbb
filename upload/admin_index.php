@@ -126,11 +126,19 @@ if ($db_type == 'mysql' || $db_type == 'mysqli')
 }
 
 
-// See if MMCache or PHPA is loaded
+// Check for the existence of various PHP opcode caches/optimizers
 if (function_exists('mmcache'))
 	$php_accelerator = '<a href="http://turck-mmcache.sourceforge.net/">Turck MMCache</a>';
 else if (isset($_PHPA))
 	$php_accelerator = '<a href="http://www.php-accelerator.co.uk/">ionCube PHP Accelerator</a>';
+else if (ini_get('apc.enabled'))
+	$php_accelerator ='<a href="http://www.php.net/apc/">Alternative PHP Cache (APC)</a>';
+else if (ini_get('zend_optimizer.optimization_level'))
+	$php_accelerator = '<a href="http://www.zend.com/products/guard/zend-optimizer/">Zend Optimizer</a>';
+else if (ini_get('eaccelerator.enable'))
+	$php_accelerator = '<a href="http://www.eaccelerator.net/">eAccelerator</a>';
+else if (ini_get('xcache.cacher'))
+	$php_accelerator = '<a href="http://xcache.lighttpd.net/">XCache</a>';
 else
 	$php_accelerator = 'N/A';
 

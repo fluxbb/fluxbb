@@ -1212,8 +1212,8 @@ else
 								<?php echo $posts_field ?>
 <?php if ($pun_user['g_id'] < PUN_GUEST): ?>							<label><?php echo $lang_profile['Admin note'] ?><br />
 							<input id="admin_note" type="text" name="admin_note" value="<?php echo pun_htmlspecialchars($user['admin_note']) ?>" size="30" maxlength="30" /><br /></label>
-						</div>
-<?php endif; ?>					</fieldset>
+<?php endif; ?>						</div>
+					</fieldset>
 				</div>
 				<p><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /><?php echo $lang_profile['Instructions'] ?></p>
 			</form>

@@ -275,9 +275,9 @@ generate_admin_menu('options');
 		while (list(, $temp) = @each($styles))
 		{
 			if ($pun_config['o_default_style'] == $temp)
-				echo "\t\t\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.str_replace('_', ' ', $temp).'</option>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.str_replace('_', ' ', $temp).'</option>'."\n";
 			else
-				echo "\t\t\t\t\t\t\t\t\t".'<option value="'.$temp.'">'.str_replace('_', ' ', $temp).'</option>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$temp.'">'.str_replace('_', ' ', $temp).'</option>'."\n";
 		}
 
 ?>
@@ -580,7 +580,7 @@ generate_admin_menu('options');
 									<th scope="row">Subscriptions</th>
 									<td>
 										<input type="radio" name="form[subscriptions]" value="1"<?php if ($pun_config['o_subscriptions'] == '1') echo ' checked="checked"' ?> />&nbsp;<strong>Yes</strong>&nbsp;&nbsp;&nbsp;<input type="radio" name="form[subscriptions]" value="0"<?php if ($pun_config['o_subscriptions'] == '0') echo ' checked="checked"' ?> />&nbsp;<strong>No</strong>
-										<span>Enable users to subscribe to topics (recieve e-mail when someone replies).</span>
+										<span>Enable users to subscribe to topics (receive e-mail when someone replies).</span>
 									</td>
 								</tr>
 								<tr>

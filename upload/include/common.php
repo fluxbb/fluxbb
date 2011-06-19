@@ -147,4 +147,3 @@ check_bans();
 // Update online list
 update_users_online();
 
-

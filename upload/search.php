@@ -528,8 +528,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		while ($forum_list[] = $db->fetch_row($result));
 
 		// Finally, lets loop through the results and output them
-		$count_search_set = count($search_set);
-		for ($i = 0; $i < $count_search_set; ++$i)
+		for ($i = 0; $i < count($search_set); ++$i)
 		{
 			@reset($forum_list);
 			while (list(, $temp) = @each($forum_list))
