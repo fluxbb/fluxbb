@@ -1736,7 +1736,7 @@ function forum_list_plugins($is_admin)
 		$suffix = substr($entry, strlen($entry) - 4);
 
 		if ($suffix == '.php' && ((!$is_admin && $prefix == 'AMP') || ($is_admin && ($prefix == 'AP' || $prefix == 'AMP'))))
-			$plugins[] = array(substr($entry, strpos($entry, '_') + 1, -4), $entry);
+			$plugins[$entry] = substr($entry, strpos($entry, '_') + 1, -4);
 	}
 	$d->close();
 
