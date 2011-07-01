@@ -539,7 +539,19 @@ else if (isset($_POST['ban']))
 	if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_ban_users'] == '0'))
 		message($lang_common['No permission']);
 
-	redirect('admin_bans.php?add_ban='.$id, $lang_profile['Ban redirect']);
+	// Get the username of the user we are banning
+	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch username', __FILE__, __LINE__, $db->error());
+	$username = $db->result($result);
+
+	// Check whether user is already banned
+	$result = $db->query('SELECT id FROM '.$db->prefix.'bans WHERE username = \''.$db->escape($username).'\' ORDER BY expire IS NULL DESC, expire DESC LIMIT 1') or error('Unable to fetch ban ID', __FILE__, __LINE__, $db->error());
+	if ($db->num_rows($result))
+	{
+		$ban_id = $db->result($result);
+		redirect('admin_bans.php?edit_ban='.$ban_id.'&amp;exists', $lang_profile['Ban redirect']);
+	}
+	else
+		redirect('admin_bans.php?add_ban='.$id, $lang_profile['Ban redirect']);
 }
 
 
