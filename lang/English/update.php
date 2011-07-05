@@ -12,6 +12,7 @@ $lang_update = array(
 'Database password info'		=>	'To perform the database update please enter the database password with which FluxBB was installed. If you cannot remember, this is stored in your \'config.php\' file.',
 'Database password note'		=>	'If you are running SQLite (and hence have no database password) please use the database file name instead. This must exactly match the database file name given in your configuration file.',
 'Database password'				=>	'Database password',
+'Maintenance'					=>	'Maintenance',
 'Maintenance message info'		=>	'The message that will be displayed to users during the updating process. This text will not be parsed like regular posts and thus may contain HTML.',
 'Maintenance message'		    =>	'Maintenance message',
 'Next'							=>	'Next',

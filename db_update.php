@@ -459,6 +459,48 @@ $query_str = '';
 // Show form
 if (empty($stage))
 {
+	if (file_exists(FORUM_CACHE_DIR.'db_update.lock'))
+	{
+		// Deal with newlines, tabs and multiple spaces
+		$pattern = array("\t", '  ', '  ');
+		$replace = array('&#160; &#160; ', '&#160; ', ' &#160;');
+		$message = str_replace($pattern, $replace, $pun_config['o_maintenance_message']);
+
+?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title><?php echo $lang_update['Maintenance'] ?></title>
+<link rel="stylesheet" type="text/css" href="style/<?php echo $default_style ?>.css" />
+</head>
+<body>
+
+<div id="punmaint" class="pun">
+<div class="top-box"><div><!-- Top Corners --></div></div>
+<div class="punwrap">
+
+<div id="brdmain">
+<div class="block">
+	<h2><?php echo $lang_update['Maintenance'] ?></h2>
+	<div class="box">
+		<div class="inbox">
+			<p><?php echo $message ?></p>
+		</div>
+	</div>
+</div>
+</div>
+
+</div>
+<div class="end-box"><div><!-- Bottom Corners --></div></div>
+</div>
+
+</body>
+</html>
+<?php
+
+	}
+	else
+	{
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -564,6 +606,7 @@ if (empty($stage))
 </html>
 <?php
 
+	}
 	$db->end_transaction();
 	$db->close();
 	exit;
