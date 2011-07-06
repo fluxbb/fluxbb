@@ -307,7 +307,7 @@ else if (isset($_GET['edit_forum']))
 <?php
 
 	$result = $db->query('SELECT g.g_id, g.g_title, g.g_read_board, g.g_post_replies, g.g_post_topics, fp.read_forum, fp.post_replies, fp.post_topics FROM '.$db->prefix.'groups AS g LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (g.g_id=fp.group_id AND fp.forum_id='.$forum_id.') WHERE g.g_id!='.PUN_ADMIN.' ORDER BY g.g_id') or error('Unable to fetch group forum permission list', __FILE__, __LINE__, $db->error());
-	
+
 	$cur_index = 7;
 
 	while ($cur_perm = $db->fetch_assoc($result))
@@ -417,7 +417,7 @@ if ($db->num_rows($result) > 0)
 				<p class="submittop"><input type="submit" name="update_positions" value="<?php echo $lang_admin_forums['Update positions'] ?>" tabindex="3" /></p>
 <?php
 
-$tabindex_count = 4;
+$cur_index = 4;
 
 $cur_category = 0;
 while ($cur_forum = $db->fetch_assoc($result))
@@ -448,13 +448,12 @@ while ($cur_forum = $db->fetch_assoc($result))
 
 ?>
 								<tr>
-									<td class="tcl"><a href="admin_forums.php?edit_forum=<?php echo $cur_forum['fid'] ?>"><?php echo $lang_admin_forums['Edit link'] ?></a> | <a href="admin_forums.php?del_forum=<?php echo $cur_forum['fid'] ?>"><?php echo $lang_admin_forums['Delete link'] ?></a></td>
-									<td class="tc2"><input type="text" name="position[<?php echo $cur_forum['fid'] ?>]" size="3" maxlength="3" value="<?php echo $cur_forum['disp_position'] ?>" tabindex="<?php echo $tabindex_count ?>" /></td>
+									<td class="tcl"><a href="admin_forums.php?edit_forum=<?php echo $cur_forum['fid'] ?>" tabindex="<?php echo $cur_index++ ?>"><?php echo $lang_admin_forums['Edit link'] ?></a> | <a href="admin_forums.php?del_forum=<?php echo $cur_forum['fid'] ?>" tabindex="<?php echo $cur_index++ ?>"><?php echo $lang_admin_forums['Delete link'] ?></a></td>
+									<td class="tc2"><input type="text" name="position[<?php echo $cur_forum['fid'] ?>]" size="3" maxlength="3" value="<?php echo $cur_forum['disp_position'] ?>" tabindex="<?php echo $cur_index++ ?>" /></td>
 									<td class="tcr"><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></td>
 								</tr>
 <?php
 
-	$tabindex_count += 2;
 }
 
 ?>
@@ -463,7 +462,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 						</div>
 					</fieldset>
 				</div>
-				<p class="submitend"><input type="submit" name="update_positions" value="<?php echo $lang_admin_forums['Update positions'] ?>" tabindex="<?php echo $tabindex_count ?>" /></p>
+				<p class="submitend"><input type="submit" name="update_positions" value="<?php echo $lang_admin_forums['Update positions'] ?>" tabindex="<?php echo $cur_index++ ?>" /></p>
 			</form>
 		</div>
 <?php
