@@ -94,7 +94,7 @@ if (isset($_POST['form_sent']))
 		$email = strtolower(trim(($pun_config['p_force_guest_email'] == '1') ? $_POST['req_email'] : $_POST['email']));
 		$banned_email = false;
 
-		// Load the register.php/profile.php language files
+		// Load the register.php/prof_reg.php language files
 		require PUN_ROOT.'lang/'.$pun_user['language'].'/prof_reg.php';
 		require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
 
@@ -380,10 +380,18 @@ if (isset($_POST['form_sent']))
 		// If we previously found out that the email was banned
 		if ($pun_user['is_guest'] && $banned_email && $pun_config['o_mailing_list'] != '')
 		{
-			$mail_subject = $lang_common['Banned email notification'];
-			$mail_message = sprintf($lang_common['Banned email post message'], $username, $email)."\n";
-			$mail_message .= sprintf($lang_common['Post URL'], get_base_url().'/viewtopic.php?pid='.$new_pid.'#p'.$new_pid)."\n";
-			$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
+			// Load the "banned email post" template
+			$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/banned_email_post.tpl'));
+
+			// The first row contains the subject
+			$first_crlf = strpos($mail_tpl, "\n");
+			$mail_subject = trim(substr($mail_tpl, 8, $first_crlf-8));
+			$mail_message = trim(substr($mail_tpl, $first_crlf));
+
+			$mail_message = str_replace('<username>', $username, $mail_message);
+			$mail_message = str_replace('<email>', $email, $mail_message);
+			$mail_message = str_replace('<post_url>', get_base_url().'/viewtopic.php?pid='.$new_pid.'#p'.$new_pid, $mail_message);
+			$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
 
 			pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
 		}

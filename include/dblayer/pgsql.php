@@ -26,12 +26,12 @@ class DBLayer
 	var $error_msg = 'Unknown';
 
 	var $datatype_transformations = array(
-		'/^(TINY|SMALL)INT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$/i'			=>	'SMALLINT',
-		'/^(MEDIUM)?INT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$/i'				=>	'INTEGER',
-		'/^BIGINT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$/i'						=>	'BIGINT',
-		'/^(TINY|MEDIUM|LONG)?TEXT$/i'										=>	'TEXT',
-		'/^DOUBLE( )?(\\([0-9,]+\\))?( )?(UNSIGNED)?$/i'					=>	'DOUBLE PRECISION',
-		'/^FLOAT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$/i'						=>	'REAL'
+		'%^(TINY|SMALL)INT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$%i'			=>	'SMALLINT',
+		'%^(MEDIUM)?INT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$%i'				=>	'INTEGER',
+		'%^BIGINT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$%i'						=>	'BIGINT',
+		'%^(TINY|MEDIUM|LONG)?TEXT$%i'										=>	'TEXT',
+		'%^DOUBLE( )?(\\([0-9,]+\\))?( )?(UNSIGNED)?$%i'					=>	'DOUBLE PRECISION',
+		'%^FLOAT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$%i'						=>	'REAL'
 	);
 
 
@@ -100,7 +100,7 @@ class DBLayer
 	function query($sql, $unbuffered = false) // $unbuffered is ignored since there is no pgsql_unbuffered_query()
 	{
 		if (strrpos($sql, 'LIMIT') !== false)
-			$sql = preg_replace('#LIMIT ([0-9]+),([ 0-9]+)#', 'LIMIT \\2 OFFSET \\1', $sql);
+			$sql = preg_replace('%LIMIT ([0-9]+),([ 0-9]+)%', 'LIMIT \\2 OFFSET \\1', $sql);
 
 		if (defined('PUN_SHOW_QUERIES'))
 			$q_start = get_microtime();
@@ -173,7 +173,7 @@ class DBLayer
 
 		if ($query_id && $this->last_query_text[$query_id] != '')
 		{
-			if (preg_match('/^INSERT INTO ([a-z0-9\_\-]+)/is', $this->last_query_text[$query_id], $table_name))
+			if (preg_match('%^INSERT INTO ([a-z0-9\_\-]+)%is', $this->last_query_text[$query_id], $table_name))
 			{
 				// Hack (don't ask)
 				if (substr($table_name[1], -6) == 'groups')
@@ -266,7 +266,7 @@ class DBLayer
 
 		return array(
 			'name'		=> 'PostgreSQL',
-			'version'	=> preg_replace('/^[^0-9]+([^\s,-]+).*$/', '\\1', $this->result($result))
+			'version'	=> preg_replace('%^[^0-9]+([^\s,-]+).*$%', '\\1', $this->result($result))
 		);
 	}
 

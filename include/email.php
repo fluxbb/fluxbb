@@ -20,7 +20,7 @@ function is_valid_email($email)
 	if (strlen($email) > 80)
 		return false;
 
-	return preg_match('/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|("[^"]+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\d\-]+\.)+[a-zA-Z]{2,}))$/', $email);
+	return preg_match('%^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|("[^"]+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\d\-]+\.)+[a-zA-Z]{2,}))$%', $email);
 }
 
 
@@ -63,19 +63,19 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 	global $pun_config, $lang_common;
 
 	// Default sender/return address
-	$from_name = str_replace('"', '', $pun_config['o_board_title'].' '.$lang_common['Mailer']);
+	$from_name = $pun_config['o_board_title'].' '.$lang_common['Mailer'];
 	$from_email = $pun_config['o_webmaster_email'];
 
 	// Do a little spring cleaning
-	$to = pun_trim(preg_replace('#[\n\r]+#s', '', $to));
-	$subject = pun_trim(preg_replace('#[\n\r]+#s', '', $subject));
-	$from_email = pun_trim(preg_replace('#[\n\r:]+#s', '', $from_email));
-	$from_name = pun_trim(preg_replace('#[\n\r:]+#s', '', str_replace('"', '', $from_name)));
-	$reply_to_email = pun_trim(preg_replace('#[\n\r:]+#s', '', $reply_to_email));
-	$reply_to_name = pun_trim(preg_replace('#[\n\r:]+#s', '', str_replace('"', '', $reply_to_name)));
+	$to = pun_trim(preg_replace('%[\n\r]+%s', '', $to));
+	$subject = pun_trim(preg_replace('%[\n\r]+%s', '', $subject));
+	$from_email = pun_trim(preg_replace('%[\n\r:]+%s', '', $from_email));
+	$from_name = pun_trim(preg_replace('%[\n\r:]+%s', '', str_replace('"', '', $from_name)));
+	$reply_to_email = pun_trim(preg_replace('%[\n\r:]+%s', '', $reply_to_email));
+	$reply_to_name = pun_trim(preg_replace('%[\n\r:]+%s', '', str_replace('"', '', $reply_to_name)));
 
 	// Set up some headers to take advantage of UTF-8
-	$from = encode_mail_text($from_name).' <'.$from_email.'>';
+	$from = '"'.encode_mail_text($from_name).'" <'.$from_email.'>';
 	$subject = encode_mail_text($subject);
 
 	$headers = 'From: '.$from."\r\n".'Date: '.gmdate('r')."\r\n".'MIME-Version: 1.0'."\r\n".'Content-transfer-encoding: 8bit'."\r\n".'Content-type: text/plain; charset=utf-8'."\r\n".'X-Mailer: FluxBB Mailer';
@@ -83,24 +83,25 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 	// If we specified a reply-to email, we deal with it here
 	if (!empty($reply_to_email))
 	{
-		$reply_to = encode_mail_text($reply_to_name).' <'.$reply_to_email.'>';
+		$reply_to = '"'.encode_mail_text($reply_to_name).'" <'.$reply_to_email.'>';
 
 		$headers .= "\r\n".'Reply-To: '.$reply_to;
 	}
 
-	// Make sure all linebreaks are CRLF in message (and strip out any NULL bytes)
-	$message = str_replace(array("\n", "\0"), array("\r\n", ''), pun_linebreaks($message));
+	// Make sure all linebreaks are LF in message (and strip out any NULL bytes)
+	$message = str_replace("\0", '', pun_linebreaks($message));
 
 	if ($pun_config['o_smtp_host'] != '')
+	{
+		// Headers should be \r\n
+		// Message should be ??
+		$message = str_replace("\n", "\r\n", $message);
 		smtp_mail($to, $subject, $message, $headers);
+	}
 	else
 	{
-		// Change the linebreaks used in the headers according to OS
-		if (strtoupper(substr(PHP_OS, 0, 3)) == 'MAC')
-			$headers = str_replace("\r\n", "\r", $headers);
-		else if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN')
-			$headers = str_replace("\r\n", "\n", $headers);
-
+		// Headers should be \r\n
+		// Message should be \n
 		mail($to, $subject, $message, $headers);
 	}
 }

@@ -50,10 +50,10 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		$keywords = (isset($_GET['keywords'])) ? utf8_strtolower(pun_trim($_GET['keywords'])) : null;
 		$author = (isset($_GET['author'])) ? utf8_strtolower(pun_trim($_GET['author'])) : null;
 
-		if (preg_match('#^[\*%]+$#', $keywords) || (pun_strlen(str_replace(array('*', '%'), '', $keywords)) < PUN_SEARCH_MIN_WORD && !is_cjk($keywords)))
+		if (preg_match('%^[\*\%]+$%', $keywords) || (pun_strlen(str_replace(array('*', '%'), '', $keywords)) < PUN_SEARCH_MIN_WORD && !is_cjk($keywords)))
 			$keywords = '';
 
-		if (preg_match('#^[\*%]+$#', $author) || pun_strlen(str_replace(array('*', '%'), '', $author)) < 2)
+		if (preg_match('%^[\*\%]+$%', $author) || pun_strlen(str_replace(array('*', '%'), '', $author)) < 2)
 			$author = '';
 
 		if (!$keywords && !$author)
@@ -62,9 +62,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		if ($author)
 			$author = str_replace('*', '%', $author);
 
-		$show_as = (isset($_GET['show_as'])) ? $_GET['show_as'] : 'posts';
-		$sort_by = (isset($_GET['sort_by'])) ? intval($_GET['sort_by']) : null;
-		$search_in = (!isset($_GET['search_in']) || $_GET['search_in'] == 'all') ? 0 : (($_GET['search_in'] == 'message') ? 1 : -1);
+		$show_as = (isset($_GET['show_as']) && $_GET['show_as'] == 'topics') ? 'topics' : 'posts';
+		$sort_by = (isset($_GET['sort_by'])) ? intval($_GET['sort_by']) : 0;
+		$search_in = (!isset($_GET['search_in']) || $_GET['search_in'] == '0') ? 0 : (($_GET['search_in'] == '1') ? 1 : -1);
 	}
 	// If it's a user search (by ID)
 	else if ($action == 'show_user_posts' || $action == 'show_user_topics' || $action == 'show_subscriptions')
@@ -283,17 +283,17 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			if ($author && $keywords)
 			{
 				$search_ids = array_intersect_assoc($keyword_results, $author_results);
-				$search_type = array('both', array($keywords, pun_trim($_GET['author'])), $forum, isset($_GET['search_in']) ? $_GET['search_in'] : '');
+				$search_type = array('both', array($keywords, pun_trim($_GET['author'])), $forum, $search_in);
 			}
 			else if ($keywords)
 			{
 				$search_ids = $keyword_results;
-				$search_type = array('keywords', $keywords, $forum, isset($_GET['search_in']) ? $_GET['search_in'] : '');
+				$search_type = array('keywords', $keywords, $forum, $search_in);
 			}
 			else
 			{
 				$search_ids = $author_results;
-				$search_type = array('author', pun_trim($_GET['author']), $forum, isset($_GET['search_in']) ? $_GET['search_in'] : '');
+				$search_type = array('author', pun_trim($_GET['author']), $forum, $search_in);
 			}
 
 			unset($keyword_results, $author_results);
@@ -498,7 +498,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			$search_set[] = $row;
 
 		$crumbs_text = array();
-		$crumbs_text['show_as'] = $show_as == 'topics' ? $lang_search['Search topics'] : $lang_search['Search posts'];
+		$crumbs_text['show_as'] = $lang_search['Search'];
 
 		if ($search_type[0] == 'action')
 		{
@@ -520,7 +520,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$crumbs_text['search_type'] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$subscriber_id.'">'.sprintf($lang_search['Quick search show_subscriptions'], pun_htmlspecialchars($subscriber_name)).'</a>';
 			}
 			else
-				$crumbs_text['search_type'] = '<a href="search.php?action='.pun_htmlspecialchars($search_type[1]).'">'.$lang_search['Quick search '.$search_type[1]].'</a>';
+				$crumbs_text['search_type'] = '<a href="search.php?action='.$search_type[1].'">'.$lang_search['Quick search '.$search_type[1]].'</a>';
 		}
 		else
 		{
@@ -542,7 +542,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$crumbs_text['search_type'] = sprintf($lang_search['By user show as '.$show_as], pun_htmlspecialchars($author));
 			}
 
-			$crumbs_text['search_type'] = '<a href="search.php?action=search&amp;keywords='.pun_htmlspecialchars($keywords).'&amp;author='.pun_htmlspecialchars($author).'&amp;forum='.pun_htmlspecialchars($search_type[2]).'&amp;search_in='.pun_htmlspecialchars($search_type[3]).'&amp;sort_by='.pun_htmlspecialchars($sort_by).'&amp;sort_dir='.pun_htmlspecialchars($sort_dir).'&amp;show_as='.pun_htmlspecialchars($show_as).'">'.$crumbs_text['search_type'].'</a>';
+			$crumbs_text['search_type'] = '<a href="search.php?action=search&amp;keywords='.urlencode($keywords).'&amp;author='.urlencode($author).'&amp;forum='.$search_type[2].'&amp;search_in='.$search_type[3].'&amp;sort_by='.$sort_by.'&amp;sort_dir='.$sort_dir.'&amp;show_as='.$show_as.'">'.$crumbs_text['search_type'].'</a>';
 		}
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_search['Search results']);
@@ -826,9 +826,9 @@ while ($cur_forum = $db->fetch_assoc($result))
 						<br /></label>
 						<label class="conl"><?php echo $lang_search['Search in']."\n" ?>
 						<br /><select id="search_in" name="search_in">
-							<option value="all"><?php echo $lang_search['Message and subject'] ?></option>
-							<option value="message"><?php echo $lang_search['Message only'] ?></option>
-							<option value="topic"><?php echo $lang_search['Topic only'] ?></option>
+							<option value="0"><?php echo $lang_search['Message and subject'] ?></option>
+							<option value="1"><?php echo $lang_search['Message only'] ?></option>
+							<option value="-1"><?php echo $lang_search['Topic only'] ?></option>
 						</select>
 						<br /></label>
 						<p class="clearb"><?php echo $lang_search['Search in info'] ?></p>

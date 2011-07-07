@@ -70,7 +70,7 @@ setlocale(LC_CTYPE, 'C');
 if (get_magic_quotes_runtime())
 	set_magic_quotes_runtime(0);
 
-// Strip slashes from GET/POST/COOKIE (if magic_quotes_gpc is enabled)
+// Strip slashes from GET/POST/COOKIE/REQUEST/FILES (if magic_quotes_gpc is enabled)
 if (get_magic_quotes_gpc())
 {
 	function stripslashes_array($array)
@@ -82,6 +82,7 @@ if (get_magic_quotes_gpc())
 	$_POST = stripslashes_array($_POST);
 	$_COOKIE = stripslashes_array($_COOKIE);
 	$_REQUEST = stripslashes_array($_REQUEST);
+	$_FILES = stripslashes_array($_FILES);
 }
 
 // If a cookie name is not specified in config.php, we use the default (pun_cookie)
@@ -120,13 +121,13 @@ if (!defined('PUN_CONFIG_LOADED'))
 
 // Verify that we are running the proper database schema revision
 if (!isset($pun_config['o_database_revision']) || $pun_config['o_database_revision'] < FORUM_DB_REVISION ||
-		!isset($pun_config['o_searchindex_revision']) || $pun_config['o_searchindex_revision'] < FORUM_SI_REVISION ||
-		!isset($pun_config['o_parser_revision']) || $pun_config['o_parser_revision'] < FORUM_PARSER_REVISION ||
-		version_compare($pun_config['o_cur_version'], FORUM_VERSION, '<'))
-	{
-		header('Location: db_update.php');
-		exit;
-	}
+	!isset($pun_config['o_searchindex_revision']) || $pun_config['o_searchindex_revision'] < FORUM_SI_REVISION ||
+	!isset($pun_config['o_parser_revision']) || $pun_config['o_parser_revision'] < FORUM_PARSER_REVISION ||
+	version_compare($pun_config['o_cur_version'], FORUM_VERSION, '<'))
+{
+	header('Location: db_update.php');
+	exit;
+}
 
 // Enable output buffering
 if (!defined('PUN_DISABLE_BUFFERING'))
