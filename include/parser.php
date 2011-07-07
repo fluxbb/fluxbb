@@ -77,8 +77,9 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
-		list($inside, $outside) = split_text($text, '[code]', '[/code]', $errors);
-		$text = implode("\1", $outside);
+		list($inside, $outside) = split_text_test($text, '[code]', '[/code]', $errors);
+		// $text = implode("\1", $outside);
+		$text = $outside;
 	}
 
 	// Tidy up lists
@@ -145,8 +146,9 @@ function strip_empty_bbcode($text, &$errors)
 	// If the message contains a code tag we have to split it up (empty tags within [code][/code] are fine)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
-		list($inside, $outside) = split_text($text, '[code]', '[/code]', $errors);
-		$text = implode("\1", $outside);
+		list($inside, $outside) = split_text_test($text, '[code]', '[/code]', $errors);
+		// $text = implode("\1", $outside);
+		$text = $outside;
 	}
 
 	// Remove empty tags
@@ -848,8 +850,9 @@ function parse_message($text, $hide_smilies)
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
 	{
-		list($inside, $outside) = split_text($text, '[code]', '[/code]', $errors);
-		$text = implode("\1", $outside);
+		list($inside, $outside) = split_text_test($text, '[code]', '[/code]', $errors);
+		// $text = implode("\1", $outside);
+		$text = $outside;
 	}
 
 	if ($pun_config['p_message_bbcode'] == '1' && strpos($text, '[') !== false && strpos($text, ']') !== false)

@@ -1773,6 +1773,49 @@ function split_text($text, $start, $end, &$errors, $retab = true)
 }
 
 
+function split_text_test($text, $start, $end, &$errors, $retab = true)
+{
+	global $pun_config, $lang_common;
+
+	$inside = array();
+
+	if (preg_match_all('%\[/?code\]%i', $text, $matches)) {
+		$counter = $offset = 0;
+		$start = $end = false;
+		foreach ($matches[0] as $match) {
+			if ($match == '[code]') {
+				if ($counter == 0) {
+					$start = strpos($text, '[code]');
+				}
+				$counter++;
+			} elseif ($match == '[/code]') {
+				$counter--;
+				if ($counter == 0) {
+					$end = strpos($text, '[/code]', $offset + 1);
+				}
+				$offset = strpos($text, '[/code]', $offset + 1);
+			}
+
+			if ($start !== false && $end !== false) {
+				$inside[] = substr($text, $start+6, $end-$start-6);
+				$text = substr_replace($text, "\1", $start, $end-$start+7);
+				$start = false;
+				$end = false;
+				$offset = 0;
+			}
+		}
+	}
+
+	if ($pun_config['o_indent_num_spaces'] != 8 && $retab)
+	{
+		$spaces = str_repeat(' ', $pun_config['o_indent_num_spaces']);
+		$result[1] = str_replace("\t", $spaces, $result[1]);
+	}
+
+	return array($inside, $text);
+}
+
+
 //
 // function url_valid($url) {
 //
