@@ -214,6 +214,11 @@ if (isset($_POST['form_sent']))
 
 					$notification_emails = array();
 
+					if ($pun_config['o_censoring'] == '1')
+						$cleaned_message = bbcode2email($censored_message, -1);
+					else
+						$cleaned_message = bbcode2email($message, -1);
+
 					// Loop through subscribed users and send emails
 					while ($cur_subscriber = $db->fetch_assoc($result))
 					{
@@ -247,7 +252,7 @@ if (isset($_POST['form_sent']))
 								$mail_subject_full = str_replace('<topic_subject>', $cur_posting['subject'], $mail_subject_full);
 								$mail_message_full = str_replace('<topic_subject>', $cur_posting['subject'], $mail_message_full);
 								$mail_message_full = str_replace('<replier>', $username, $mail_message_full);
-								$mail_message_full = str_replace('<message>', $pun_config['o_censoring'] == '1' ? $censored_message : $message, $mail_message_full);
+								$mail_message_full = str_replace('<message>', $cleaned_message, $mail_message_full);
 								$mail_message_full = str_replace('<post_url>', get_base_url().'/viewtopic.php?pid='.$new_pid.'#p'.$new_pid, $mail_message_full);
 								$mail_message_full = str_replace('<unsubscribe_url>', get_base_url().'/misc.php?action=unsubscribe&tid='.$tid, $mail_message_full);
 								$mail_message_full = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message_full);
@@ -270,6 +275,8 @@ if (isset($_POST['form_sent']))
 								pun_mail($cur_subscriber['email'], $notification_emails[$cur_subscriber['language']][2], $notification_emails[$cur_subscriber['language']][3]);
 						}
 					}
+
+					unset($cleaned_message);
 				}
 			}
 		}
@@ -315,6 +322,11 @@ if (isset($_POST['form_sent']))
 
 					$notification_emails = array();
 
+					if ($pun_config['o_censoring'] == '1')
+						$cleaned_message = bbcode2email($censored_message, -1);
+					else
+						$cleaned_message = bbcode2email($message, -1);
+
 					// Loop through subscribed users and send emails
 					while ($cur_subscriber = $db->fetch_assoc($result))
 					{
@@ -350,7 +362,7 @@ if (isset($_POST['form_sent']))
 								$mail_message_full = str_replace('<topic_subject>', $pun_config['o_censoring'] == '1' ? $censored_subject : $subject, $mail_message_full);
 								$mail_message_full = str_replace('<forum_name>', $cur_posting['forum_name'], $mail_message_full);
 								$mail_message_full = str_replace('<poster>', $username, $mail_message_full);
-								$mail_message_full = str_replace('<message>', $pun_config['o_censoring'] == '1' ? $censored_message : $message, $mail_message_full);
+								$mail_message_full = str_replace('<message>', $cleaned_message, $mail_message_full);
 								$mail_message_full = str_replace('<topic_url>', get_base_url().'/viewtopic.php?id='.$new_tid, $mail_message_full);
 								$mail_message_full = str_replace('<unsubscribe_url>', get_base_url().'/misc.php?action=unsubscribe&fid='.$cur_posting['id'], $mail_message_full);
 								$mail_message_full = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message_full);
@@ -373,6 +385,8 @@ if (isset($_POST['form_sent']))
 								pun_mail($cur_subscriber['email'], $notification_emails[$cur_subscriber['language']][2], $notification_emails[$cur_subscriber['language']][3]);
 						}
 					}
+
+					unset($cleaned_message);
 				}
 			}
 		}

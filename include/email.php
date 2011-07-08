@@ -56,6 +56,76 @@ function encode_mail_text($str)
 
 
 //
+// Make a post email safe
+//
+function bbcode2email($text, $wrap_length = 72)
+{
+    // Split code blocks and text so BBcode in codeblocks won't be touched
+    list($code, $text) = extract_blocks($text, '[code]', '[/code]');
+
+    // Strip all bbcodes, except the quote, url, img, email, code and list bbcodes
+    $text = preg_replace('%\[/?(?!(?:quote|url|img|email|list|code|\*))[a-z]+(?:=[^\]]+)?\]%i', '', $text);
+
+    // TODO: Convert URLs and images
+    // TODO: Process lists
+
+    // Match the deepest nested quote bbcode
+    // An adapted example from Mastering Regular Expressions
+    $match_quote_regex = '%
+        \[quote(?:=([^\]]+))?\]
+        (
+            (?>[^\[]*)
+            (?>
+                (?!\[/?quote(?:=[^\]]+)?\])
+                \[
+                [^\[]*
+            )*
+        )
+        \[/quote\]
+    %ix';
+
+    while (preg_match($match_quote_regex, $text, $matches)) {
+        // Put '>' or '> ' at the start of a line
+        $quote = preg_replace(
+            array('%^(?=\>)%m', '%^(?!\>)%m'),
+            array('>', '> '),
+            $matches[1]." said:\n".$matches[2]);
+
+        // Replace the BBcode quote with the email-friendly quote
+        $text = str_replace($matches[0], $quote, $text);
+    }
+
+    // Put code blocks and text together
+    if (isset($code)) {
+        $parts = explode("\1", $text);
+        $text = '';
+        foreach ($parts as $i => $part) {
+            $text .= $part;
+            if (isset($code[$i])) {
+                $text .= trim($code[$i], "\n\r");
+            }
+        }
+    }
+
+    // Wrap lines if $wrap_length is higher than -1
+    if ($wrap_length > -1) {
+        // Split all lines and wrap them individually
+        $parts = explode("\n", $text);
+        foreach ($parts as $k => $part) {
+            preg_match('%^(>+ )?(.*)%', $part, $matches);
+            $parts[$k] = wordwrap($matches[1].$matches[2], $wrap_length -
+                strlen($matches[1]), "\n".$matches[1]);
+        }
+
+        return implode("\n", $parts);
+    }
+    else {
+        return $text;
+    }
+}
+
+
+//
 // Wrapper for PHP's mail()
 //
 function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name = '')

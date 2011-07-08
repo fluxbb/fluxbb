@@ -1773,34 +1773,48 @@ function split_text($text, $start, $end, &$errors, $retab = true)
 }
 
 
-function split_text_test($text, $start, $end, &$errors, $retab = true)
+//
+// Extract blocks from a text with a starting and ending string
+// This function always matches the most outer block so nesting is possible
+//
+function extract_blocks($text, $start, $end, &$errors, $retab = true)
 {
-	global $pun_config, $lang_common;
+	global $pun_config;
 
-	$inside = array();
+	$code = array();
+	$start_len = strlen($start);
+	$end_len = strlen($end);
+	$regex = '%(?:'.preg_quote($start, '%').'|'.preg_quote($end, '%').')%';
+	$matches = array();
 
-	if (preg_match_all('%\[/?code\]%i', $text, $matches)) {
+	if (preg_match_all($regex, $text, $matches))
+	{
 		$counter = $offset = 0;
-		$start = $end = false;
-		foreach ($matches[0] as $match) {
-			if ($match == '[code]') {
-				if ($counter == 0) {
-					$start = strpos($text, '[code]');
-				}
+		$start_pos = $end_pos = false;
+
+		foreach ($matches[0] as $match)
+		{
+			if ($match == $start)
+			{
+				if ($counter == 0)
+					$start_pos = strpos($text, $start);
 				$counter++;
-			} elseif ($match == '[/code]') {
+			}
+			elseif ($match == $end)
+			{
 				$counter--;
-				if ($counter == 0) {
-					$end = strpos($text, '[/code]', $offset + 1);
-				}
-				$offset = strpos($text, '[/code]', $offset + 1);
+				if ($counter == 0)
+					$end_pos = strpos($text, $end, $offset + 1);
+				$offset = strpos($text, $end, $offset + 1);
 			}
 
-			if ($start !== false && $end !== false) {
-				$inside[] = substr($text, $start+6, $end-$start-6);
-				$text = substr_replace($text, "\1", $start, $end-$start+7);
-				$start = false;
-				$end = false;
+			if ($start_pos !== false && $end_pos !== false)
+			{
+				$code[] = substr($text, $start_pos + $start_len,
+					$end_pos - $start_pos - $start_len);
+				$text = substr_replace($text, "\1", $start_pos,
+					$end_pos - $start_pos + $end_len);
+				$start_pos = $end_pos = false;
 				$offset = 0;
 			}
 		}
@@ -1809,10 +1823,10 @@ function split_text_test($text, $start, $end, &$errors, $retab = true)
 	if ($pun_config['o_indent_num_spaces'] != 8 && $retab)
 	{
 		$spaces = str_repeat(' ', $pun_config['o_indent_num_spaces']);
-		$result[1] = str_replace("\t", $spaces, $result[1]);
+		$text = str_replace("\t", $spaces, $text);
 	}
 
-	return array($inside, $text);
+	return array($code, $text);
 }
 
 
