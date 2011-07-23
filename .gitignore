@@ -5,7 +5,7 @@
 /cache/*.cache
 /cache/db_update.lock
 /modules/
-/include/user/*
+/include/user/*.php
 /img/avatars/*.png
 /img/avatars/*.jpg
 /img/avatars/*.gif
