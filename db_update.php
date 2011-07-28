@@ -9,7 +9,7 @@
 // The FluxBB version this script updates to
 define('UPDATE_TO', '1.4.5');
 
-define('UPDATE_TO_DB_REVISION', 11);
+define('UPDATE_TO_DB_REVISION', 12);
 define('UPDATE_TO_SI_REVISION', 2);
 define('UPDATE_TO_PARSER_REVISION', 2);
 
@@ -944,8 +944,8 @@ switch ($stage)
 				$db->add_index('online', 'user_id_ident_idx', array('user_id', 'ident'), true) or error('Unable to add user_id_ident_idx index', __FILE__, __LINE__, $db->error());
 		}
 
-		// Remove the redundant user_id_idx on the online table
-		$db->drop_index('online', 'user_id_idx') or error('Unable to drop user_id_idx index', __FILE__, __LINE__, $db->error());
+		// If it does not exist, add an index to user_id on the online table
+		$db->add_index('online', 'user_id_idx', array('user_id')) or error('Unable to add user_id_idx index', __FILE__, __LINE__, $db->error());
 
 		// Add an index to ident on the online table
 		if ($mysql)
