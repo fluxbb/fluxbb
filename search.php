@@ -28,8 +28,10 @@ require PUN_ROOT.'include/search_idx.php';
 if (isset($_GET['action']) || isset($_GET['search_id']))
 {
 	$action = (isset($_GET['action'])) ? $_GET['action'] : null;
-	$forum = (isset($_GET['forum'])) ? intval($_GET['forum']) : -1;
+	$forums = isset($_GET['forums']) ? (is_array($_GET['forums']) ? $_GET['forums'] : explode(',', $_GET['forums'])) : (isset($_GET['forum']) ? array($_GET['forum']) : array());
 	$sort_dir = (isset($_GET['sort_dir']) && $_GET['sort_dir'] == 'DESC') ? 'DESC' : 'ASC';
+
+	$forums = array_map('intval', $forums);
 
 	// Allow the old action names for backwards compatibility reasons
 	if ($action == 'show_user')
@@ -115,7 +117,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		$keyword_results = $author_results = array();
 
 		// Search a specific forum?
-		$forum_sql = ($forum != -1 || ($forum == -1 && $pun_config['o_search_all_forums'] == '0' && !$pun_user['is_admmod'])) ? ' AND t.forum_id = '.$forum : '';
+		$forum_sql = (!empty($forums) || (empty($forums) && $pun_config['o_search_all_forums'] == '0' && !$pun_user['is_admmod'])) ? ' AND t.forum_id IN ('.implode(',', $forums).')' : '';
 
 		if (!empty($author) || !empty($keywords))
 		{
@@ -283,17 +285,17 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			if ($author && $keywords)
 			{
 				$search_ids = array_intersect_assoc($keyword_results, $author_results);
-				$search_type = array('both', array($keywords, pun_trim($_GET['author'])), $forum, $search_in);
+				$search_type = array('both', array($keywords, pun_trim($_GET['author'])), implode(',', $forums), $search_in);
 			}
 			else if ($keywords)
 			{
 				$search_ids = $keyword_results;
-				$search_type = array('keywords', $keywords, $forum, $search_in);
+				$search_type = array('keywords', $keywords, implode(',', $forums), $search_in);
 			}
 			else
 			{
 				$search_ids = $author_results;
-				$search_type = array('author', pun_trim($_GET['author']), $forum, $search_in);
+				$search_type = array('author', pun_trim($_GET['author']), implode(',', $forums), $search_in);
 			}
 
 			unset($keyword_results, $author_results);
@@ -542,7 +544,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$crumbs_text['search_type'] = sprintf($lang_search['By user show as '.$show_as], pun_htmlspecialchars($author));
 			}
 
-			$crumbs_text['search_type'] = '<a href="search.php?action=search&amp;keywords='.urlencode($keywords).'&amp;author='.urlencode($author).'&amp;forum='.$search_type[2].'&amp;search_in='.$search_type[3].'&amp;sort_by='.$sort_by.'&amp;sort_dir='.$sort_dir.'&amp;show_as='.$show_as.'">'.$crumbs_text['search_type'].'</a>';
+			$crumbs_text['search_type'] = '<a href="search.php?action=search&amp;keywords='.urlencode($keywords).'&amp;author='.urlencode($author).'&amp;forums='.$search_type[2].'&amp;search_in='.$search_type[3].'&amp;sort_by='.$sort_by.'&amp;sort_dir='.$sort_dir.'&amp;show_as='.$show_as.'">'.$crumbs_text['search_type'].'</a>';
 		}
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_search['Search results']);
@@ -796,34 +798,65 @@ require PUN_ROOT.'header.php';
 				<fieldset>
 					<legend><?php echo $lang_search['Search in legend'] ?></legend>
 					<div class="infldset">
-						<label class="conl"><?php echo $lang_search['Forum search']."\n" ?>
-						<br /><select id="forum" name="forum">
 <?php
-
-if ($pun_config['o_search_all_forums'] == '1' || $pun_user['is_admmod'])
-	echo "\t\t\t\t\t\t\t".'<option value="-1">'.$lang_search['All forums'].'</option>'."\n";
 
 $result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.redirect_url FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.redirect_url IS NULL ORDER BY c.disp_position, c.id, f.disp_position', true) or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
 
-$cur_category = 0;
-while ($cur_forum = $db->fetch_assoc($result))
+// We either show a list of forums of which multiple can be selected
+if ($pun_config['o_search_all_forums'] == '1' || $pun_user['is_admmod'])
 {
-	if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
-	{
-		if ($cur_category)
-			echo "\t\t\t\t\t\t\t".'</optgroup>'."\n";
+	echo "\t\t\t\t\t\t".'<div class="conl label">'.$lang_search['Forum search']."\n";
+	echo "\t\t\t\t\t\t".'<br />'."\n";
+	echo "\t\t\t\t\t\t".'<div class="checklist">'."\n";
 
-		echo "\t\t\t\t\t\t\t".'<optgroup label="'.pun_htmlspecialchars($cur_forum['cat_name']).'">'."\n";
-		$cur_category = $cur_forum['cid'];
+	$cur_category = 0;
+	while ($cur_forum = $db->fetch_assoc($result))
+	{
+		if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
+		{
+			if ($cur_category)
+				echo "\t\t\t\t\t\t\t".'</fieldset>'."\n";
+
+			echo "\t\t\t\t\t\t\t".'<fieldset><legend><span>'.pun_htmlspecialchars($cur_forum['cat_name']).'</span></legend>'."\n";
+			$cur_category = $cur_forum['cid'];
+		}
+
+		echo "\t\t\t\t\t\t\t\t".'<div class="checklist-item"><span class="fld-input"><input type="checkbox" name="forums[]" id="forum-'.$cur_forum['fid'].'" value="'.$cur_forum['fid'].'" /></span> <label for="forum-'.$cur_forum['fid'].'">'.pun_htmlspecialchars($cur_forum['forum_name']).'</label></div>'."\n";
 	}
 
-	echo "\t\t\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'">'.pun_htmlspecialchars($cur_forum['forum_name']).'</option>'."\n";
+	echo "\t\t\t\t\t\t\t".'</fieldset>'."\n";
+	echo "\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t".'<p>'.$lang_search['Search multiple forums info'].'</p>'."\n";
+	echo "\t\t\t\t\t\t".'<br /></div>'."\n";
+}
+// ... or a simple select list for one forum only
+else
+{
+	echo "\t\t\t\t\t\t".'<label class="conl">'.$lang_search['Forum search']."\n";
+	echo "\t\t\t\t\t\t".'<br />'."\n";
+	echo "\t\t\t\t\t\t".'<select id="forum" name="forum">'."\n";
+
+	$cur_category = 0;
+	while ($cur_forum = $db->fetch_assoc($result))
+	{
+		if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
+		{
+			if ($cur_category)
+				echo "\t\t\t\t\t\t\t".'</optgroup>'."\n";
+
+			echo "\t\t\t\t\t\t\t".'<optgroup label="'.pun_htmlspecialchars($cur_forum['cat_name']).'">'."\n";
+			$cur_category = $cur_forum['cid'];
+		}
+
+		echo "\t\t\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'">'.pun_htmlspecialchars($cur_forum['forum_name']).'</option>'."\n";
+	}
+
+	echo "\t\t\t\t\t\t\t".'</optgroup>'."\n";
+	echo "\t\t\t\t\t\t".'</select>'."\n";
+	echo "\t\t\t\t\t\t".'<br /></label>'."\n";
 }
 
 ?>
-							</optgroup>
-						</select>
-						<br /></label>
 						<label class="conl"><?php echo $lang_search['Search in']."\n" ?>
 						<br /><select id="search_in" name="search_in">
 							<option value="0"><?php echo $lang_search['Message and subject'] ?></option>
