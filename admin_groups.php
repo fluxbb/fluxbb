@@ -217,12 +217,19 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 										<span><?php echo $lang_admin_groups['E-mail flood help'] ?></span>
 									</td>
 								</tr>
+								<tr>
+									<th scope="row"><?php echo $lang_admin_groups['Report flood label'] ?></th>
+									<td>
+										<input type="text" name="report_flood" size="5" maxlength="4" value="<?php echo $group['g_report_flood'] ?>" tabindex="38" />
+										<span><?php echo $lang_admin_groups['Report flood help'] ?></span>
+									</td>
+								</tr>
 <?php endif; endif; ?>							</table>
 <?php if ($group['g_moderator'] == '1' ): ?>							<p class="warntext"><?php echo $lang_admin_groups['Moderator info'] ?></p>
 <?php endif; ?>						</div>
 					</fieldset>
 				</div>
-				<p class="submitend"><input type="submit" name="add_edit_group" value="<?php echo $lang_admin_common['Save'] ?>" tabindex="38" /></p>
+				<p class="submitend"><input type="submit" name="add_edit_group" value="<?php echo $lang_admin_common['Save'] ?>" tabindex="39" /></p>
 			</form>
 		</div>
 	</div>
@@ -263,6 +270,7 @@ else if (isset($_POST['add_edit_group']))
 	$post_flood = isset($_POST['post_flood']) ? intval($_POST['post_flood']) : '0';
 	$search_flood = isset($_POST['search_flood']) ? intval($_POST['search_flood']) : '0';
 	$email_flood = isset($_POST['email_flood']) ? intval($_POST['email_flood']) : '0';
+	$report_flood = isset($_POST['report_flood']) ? intval($_POST['report_flood']) : '0';
 
 	if ($title == '')
 		message($lang_admin_groups['Must enter title message']);
@@ -275,7 +283,7 @@ else if (isset($_POST['add_edit_group']))
 		if ($db->num_rows($result))
 			message(sprintf($lang_admin_groups['Title already exists message'], pun_htmlspecialchars($title)));
 
-		$db->query('INSERT INTO '.$db->prefix.'groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES(\''.$db->escape($title).'\', '.$user_title.', '.$moderator.', '.$mod_edit_users.', '.$mod_rename_users.', '.$mod_change_passwords.', '.$mod_ban_users.', '.$read_board.', '.$view_users.', '.$post_replies.', '.$post_topics.', '.$edit_posts.', '.$delete_posts.', '.$delete_topics.', '.$set_title.', '.$search.', '.$search_users.', '.$send_email.', '.$post_flood.', '.$search_flood.', '.$email_flood.')') or error('Unable to add group', __FILE__, __LINE__, $db->error());
+		$db->query('INSERT INTO '.$db->prefix.'groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood, g_report_flood) VALUES(\''.$db->escape($title).'\', '.$user_title.', '.$moderator.', '.$mod_edit_users.', '.$mod_rename_users.', '.$mod_change_passwords.', '.$mod_ban_users.', '.$read_board.', '.$view_users.', '.$post_replies.', '.$post_topics.', '.$edit_posts.', '.$delete_posts.', '.$delete_topics.', '.$set_title.', '.$search.', '.$search_users.', '.$send_email.', '.$post_flood.', '.$search_flood.', '.$email_flood.', '.$report_flood.')') or error('Unable to add group', __FILE__, __LINE__, $db->error());
 		$new_group_id = $db->insert_id();
 
 		// Now lets copy the forum specific permissions from the group which this group is based on

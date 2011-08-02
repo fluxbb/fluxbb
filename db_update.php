@@ -820,7 +820,7 @@ switch ($stage)
 				$mod_gid = $db->result($result);
 			else
 			{
-				$db->query('INSERT INTO '.$db->prefix.'groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood) VALUES('."'Moderators', 'Moderator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)") or error('Unable to add group', __FILE__, __LINE__, $db->error());
+				$db->query('INSERT INTO '.$db->prefix.'groups (g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood, g_report_flood) VALUES('."'Moderators', 'Moderator', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0)") or error('Unable to add group', __FILE__, __LINE__, $db->error());
 				$mod_gid = $db->insert_id();
 			}
 
@@ -983,9 +983,14 @@ switch ($stage)
 		$db->add_field('groups', 'g_send_email', 'TINYINT(1)', false, 1, 'g_search_users') or error('Unable to add g_send_email field', __FILE__, __LINE__, $db->error());
 		$db->add_field('groups', 'g_email_flood', 'SMALLINT(6)', false, 60, 'g_search_flood') or error('Unable to add g_email_flood field', __FILE__, __LINE__, $db->error());
 
-		// Set non-default g_send_email and g_flood_email values properly
+		// Add the last_report_sent column to the users table and the g_report_flood
+		// column to the groups table
+		$db->add_field('users', 'last_report_sent', 'INT(10) UNSIGNED', true, null, 'last_email_sent') or error('Unable to add last_report_sent field', __FILE__, __LINE__, $db->error());
+		$db->add_field('groups', 'g_report_flood', 'SMALLINT(6)', false, 60, 'g_email_flood') or error('Unable to add g_report_flood field', __FILE__, __LINE__, $db->error());
+
+		// Set non-default g_send_email, g_flood_email and g_flood_report values properly
 		$db->query('UPDATE '.$db->prefix.'groups SET g_send_email = 0 WHERE g_id = 3') or error('Unable to update group email permissions', __FILE__, __LINE__, $db->error());
-		$db->query('UPDATE '.$db->prefix.'groups SET g_email_flood = 0 WHERE g_id IN (1,2,3)') or error('Unable to update group email permissions', __FILE__, __LINE__, $db->error());
+		$db->query('UPDATE '.$db->prefix.'groups SET g_email_flood = 0, g_report_flood = 0 WHERE g_id IN (1,2,3)') or error('Unable to update group email permissions', __FILE__, __LINE__, $db->error());
 
 		// Add the auto notify/subscription option to the users table
 		$db->add_field('users', 'auto_notify', 'TINYINT(1)', false, 0, 'notify_with_post') or error('Unable to add auto_notify field', __FILE__, __LINE__, $db->error());
