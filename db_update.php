@@ -9,7 +9,7 @@
 // The FluxBB version this script updates to
 define('UPDATE_TO', '1.4.5');
 
-define('UPDATE_TO_DB_REVISION', 12);
+define('UPDATE_TO_DB_REVISION', 13);
 define('UPDATE_TO_SI_REVISION', 2);
 define('UPDATE_TO_PARSER_REVISION', 2);
 
@@ -1152,6 +1152,10 @@ switch ($stage)
 		// Change the default style if the old doesn't exist anymore
 		if ($pun_config['o_default_style'] != $default_style)
 			$db->query('UPDATE '.$db->prefix.'config SET conf_value = \''.$db->escape($default_style).'\' WHERE conf_name = \'o_default_style\'') or error('Unable to update default style config', __FILE__, __LINE__, $db->error());
+
+		// For MySQL(i) without InnoDB, change the engine of the online table (for performance reasons)
+		if ($db_type == 'mysql' || $db_type == 'mysqli')
+			$db->query('ALTER TABLE '.$db->prefix.'online ENGINE = MyISAM') or error('Unable to change engine type of online table to MyISAM', __FILE__, __LINE__, $db->error());
 
 		// Should we do charset conversion or not?
 		if (strpos($cur_version, '1.2') === 0 && isset($_POST['convert_charset']))
