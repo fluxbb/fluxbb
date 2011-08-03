@@ -805,7 +805,7 @@ $result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name,
 // We either show a list of forums of which multiple can be selected
 if ($pun_config['o_search_all_forums'] == '1' || $pun_user['is_admmod'])
 {
-	echo "\t\t\t\t\t\t".'<div class="conl label">'.$lang_search['Forum search']."\n";
+	echo "\t\t\t\t\t\t".'<div class="conl multiselect">'.$lang_search['Forum search']."\n";
 	echo "\t\t\t\t\t\t".'<br />'."\n";
 	echo "\t\t\t\t\t\t".'<div class="checklist">'."\n";
 
@@ -826,8 +826,8 @@ if ($pun_config['o_search_all_forums'] == '1' || $pun_user['is_admmod'])
 
 	echo "\t\t\t\t\t\t\t".'</fieldset>'."\n";
 	echo "\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t".'<p>'.$lang_search['Search multiple forums info'].'</p>'."\n";
-	echo "\t\t\t\t\t\t".'<br /></div>'."\n";
+	// echo "\t\t\t\t\t\t".'<p>'.$lang_search['Search multiple forums info'].'</p>'."\n";
+	echo "\t\t\t\t\t\t".'</div>'."\n";
 }
 // ... or a simple select list for one forum only
 else
@@ -864,7 +864,8 @@ else
 							<option value="-1"><?php echo $lang_search['Topic only'] ?></option>
 						</select>
 						<br /></label>
-						<p class="clearb"><?php echo $lang_search['Search in info'] ?></p>
+						<p class="clearl"><?php echo $lang_search['Search in info'] ?></p>
+<?php echo ($pun_config['o_search_all_forums'] == '1' || $pun_user['is_admmod'] ? '<p>'.$lang_search['Search multiple forums info'].'</p>' : '') ?>
 					</div>
 				</fieldset>
 			</div>
