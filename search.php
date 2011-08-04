@@ -826,7 +826,6 @@ if ($pun_config['o_search_all_forums'] == '1' || $pun_user['is_admmod'])
 
 	echo "\t\t\t\t\t\t\t".'</fieldset>'."\n";
 	echo "\t\t\t\t\t\t".'</div>'."\n";
-	// echo "\t\t\t\t\t\t".'<p>'.$lang_search['Search multiple forums info'].'</p>'."\n";
 	echo "\t\t\t\t\t\t".'</div>'."\n";
 }
 // ... or a simple select list for one forum only
