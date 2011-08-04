@@ -1282,7 +1282,6 @@ MAIN FORMS
 
 .pun .multiselect {
 	float: left;
-	color: #357082;
 	padding-bottom: 7px;
 }
 
@@ -1664,6 +1663,7 @@ html, body, .pun {
 .pun .checklist {
 	background: white;
 	border-color: #ccc;
+	color: #357082;
 }
 
 /* Status Indicators
