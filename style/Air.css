@@ -1660,10 +1660,13 @@ html, body, .pun {
 	background: #d59b9b;
 }
 
+.pun .multiselect {
+	color: #357082;
+}
+
 .pun .checklist {
 	background: white;
 	border-color: #ccc;
-	color: #357082;
 }
 
 /* Status Indicators
