@@ -84,7 +84,8 @@ function bbcode2email($text, $wrap_length = 72)
         \[/quote\]
     %ix';
 
-    while (preg_match($match_quote_regex, $text, $matches)) {
+    while (preg_match($match_quote_regex, $text, $matches))
+    {
         // Put '>' or '> ' at the start of a line
         $quote = preg_replace(
             array('%^(?=\>)%m', '%^(?!\>)%m'),
@@ -96,22 +97,25 @@ function bbcode2email($text, $wrap_length = 72)
     }
 
     // Put code blocks and text together
-    if (isset($code)) {
+    if (isset($code))
+    {
         $parts = explode("\1", $text);
         $text = '';
-        foreach ($parts as $i => $part) {
+        foreach ($parts as $i => $part)
+        {
             $text .= $part;
-            if (isset($code[$i])) {
+            if (isset($code[$i]))
                 $text .= trim($code[$i], "\n\r");
-            }
         }
     }
 
     // Wrap lines if $wrap_length is higher than -1
-    if ($wrap_length > -1) {
+    if ($wrap_length > -1)
+    {
         // Split all lines and wrap them individually
         $parts = explode("\n", $text);
-        foreach ($parts as $k => $part) {
+        foreach ($parts as $k => $part)
+        {
             preg_match('%^(>+ )?(.*)%', $part, $matches);
             $parts[$k] = wordwrap($matches[1].$matches[2], $wrap_length -
                 strlen($matches[1]), "\n".$matches[1]);
@@ -119,9 +123,8 @@ function bbcode2email($text, $wrap_length = 72)
 
         return implode("\n", $parts);
     }
-    else {
+    else
         return $text;
-    }
 }
 
 
