@@ -60,40 +60,110 @@ function encode_mail_text($str)
 //
 function bbcode2email($text, $wrap_length = 72)
 {
+    static $base_url;
+
+    if (!isset($base_url))
+        $base_url = get_base_url();
+
+    $text = pun_trim($text, "\t\n ");
+
+    $shortcut_urls = array(
+        'topic' => '/viewtopic.php?id=$1',
+        'post' => '/viewtopic.php?pid=$1#p$1',
+        'forum' => '/viewforum.php?id=$1',
+        'user' => '/profile.php?id=$1',
+    );
+
     // Split code blocks and text so BBcode in codeblocks won't be touched
     list($code, $text) = extract_blocks($text, '[code]', '[/code]');
 
-    // Strip all bbcodes, except the quote, url, img, email, code and list bbcodes
-    $text = preg_replace('%\[/?(?!(?:quote|url|img|email|list|code|\*))[a-z]+(?:=[^\]]+)?\]%i', '', $text);
+    // Strip all bbcodes, except the quote, url, img, email, code and list items bbcodes
+    $text = preg_replace(array(
+        '%\[/?(?!(?:quote|url|topic|post|user|forum|img|email|code|list|\*))[a-z]+(?:=[^\]]+)?\]%i',
+        '%\n\[/?list(?:=[^\]]+)?\]%i' // A separate regex for the list tags to get rid of some whitespace
+    ), '', $text);
 
-    // TODO: Convert URLs and images
-    // TODO: Process lists
-
-    // Match the deepest nested quote bbcode
+    // Match the deepest nested bbcode
     // An adapted example from Mastering Regular Expressions
     $match_quote_regex = '%
-        \[quote(?:=([^\]]+))?\]
+        \[(quote|\*|url|img|email|topic|post|user|forum)(?:=([^\]]+))?\]
         (
             (?>[^\[]*)
             (?>
-                (?!\[/?quote(?:=[^\]]+)?\])
+                (?!\[/?\1(?:=[^\]]+)?\])
                 \[
                 [^\[]*
             )*
         )
-        \[/quote\]
+        \[/\1\]
     %ix';
 
+    $url_index = 1;
+    $url_stack = array();
     while (preg_match($match_quote_regex, $text, $matches))
     {
-        // Put '>' or '> ' at the start of a line
-        $quote = preg_replace(
-            array('%^(?=\>)%m', '%^(?!\>)%m'),
-            array('>', '> '),
-            $matches[1]." said:\n".$matches[2]);
+        // Quotes
+        if ($matches[1] == 'quote')
+        {
+            // Put '>' or '> ' at the start of a line
+            $replacement = preg_replace(
+                array('%^(?=\>)%m', '%^(?!\>)%m'),
+                array('>', '> '),
+                $matches[2]." said:\n".$matches[3]);
+        }
 
-        // Replace the BBcode quote with the email-friendly quote
-        $text = str_replace($matches[0], $quote, $text);
+        // List items
+        elseif ($matches[1] == '*')
+        {
+            $replacement = ' * '.$matches[3];
+        }
+
+        // URLs and emails
+        elseif (in_array($matches[1], array('url', 'email')))
+        {
+            if (!empty($matches[2]))
+            {
+                $replacement = '['.$matches[3].']['.$url_index.']';
+                $url_stack[$url_index] = $matches[2];
+                $url_index++;
+            }
+            else
+                $replacement = '['.$matches[3].']';
+        }
+
+        // Images
+        elseif ($matches[1] == 'img')
+        {
+            if (!empty($matches[2]))
+                $replacement = '['.$matches[2].']['.$url_index.']';
+            else
+                $replacement = '['.basename($matches[3]).']['.$url_index.']';
+
+            $url_stack[$url_index] = $matches[3];
+            $url_index++;
+        }
+
+        // Topic, post, forum and user URLs
+        elseif (in_array($matches[1], array('topic', 'post', 'forum', 'user')))
+        {
+            $url = isset($shortcut_urls[$matches[1]]) ? $base_url.$shortcut_urls[$matches[1]] : '';
+
+            if (!empty($matches[2]))
+            {
+                $replacement = '['.$matches[3].']['.$url_index.']';
+                $url_stack[$url_index] = str_replace('$1', $matches[2], $url);
+                $url_index++;
+            }
+            else
+                $replacement = '['.str_replace('$1', $matches[3], $url).']';
+        }
+
+        // Update the main text if there is a replacment
+        if (!is_null($replacement))
+        {
+            $text = str_replace($matches[0], $replacement, $text);
+            $replacement = null;
+        }
     }
 
     // Put code blocks and text together
@@ -107,6 +177,14 @@ function bbcode2email($text, $wrap_length = 72)
             if (isset($code[$i]))
                 $text .= trim($code[$i], "\n\r");
         }
+    }
+
+    // Put URLs at the bottom
+    if ($url_stack)
+    {
+        $text .= "\n\n";
+        foreach ($url_stack as $i => $url)
+            $text .= "\n".' ['.$i.']: '.$url;
     }
 
     // Wrap lines if $wrap_length is higher than -1
