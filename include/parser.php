@@ -230,6 +230,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	$current_nest = '';
 	$current_depth = array();
 	$limit_bbcode = $tags;
+	$count_ignored = array();
 
 	foreach ($split_text as $current)
 	{
@@ -240,7 +241,6 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		if (substr($current, 0, 1) != '[' || substr($current, -1, 1) != ']')
 		{
 			// It's not a bbcode tag so we put it on the end and continue
-
 			// If we are nested too deeply don't add to the end
 			if ($current_nest)
 				continue;
@@ -352,13 +352,29 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			$current = strtolower($current);
 
 		// This is if we are currently in a tag which escapes other bbcode such as code
+		// We keep a cound of ignored bbcodes (code tags) so we can nest them, but
+		// only balanced sets of tags can be nested
 		if ($current_ignore)
 		{
+			// Increase the current ignored tags counter
+			if ('['.$current_ignore.']' == $current)
+			{
+				if (!isset($count_ignored[$current_tag]))
+					$count_ignored[$current_tag] = 2;
+				else
+					$count_ignored[$current_tag]++;
+			}
+
+			// Decrease the current ignored tags counter
 			if ('[/'.$current_ignore.']' == $current)
+				$count_ignored[$current_tag]--;
+
+			if ('[/'.$current_ignore.']' == $current && $count_ignored[$current_tag] == 0)
 			{
 				// We've finished the ignored section
 				$current = '[/'.$current_tag.']';
 				$current_ignore = '';
+				$count_ignored = array();
 			}
 
 			$new_text .= $current;
@@ -393,7 +409,6 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		if (substr($current, 1, 1) == '/')
 		{
 			// This is if we are closing a tag
-
 			if ($opened_tag == 0 || !in_array($current_tag, $open_tags))
 			{
 				// We tried to close a tag which is not open
