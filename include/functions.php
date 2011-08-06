@@ -1777,7 +1777,7 @@ function split_text($text, $start, $end, &$errors, $retab = true)
 // Extract blocks from a text with a starting and ending string
 // This function always matches the most outer block so nesting is possible
 //
-function extract_blocks($text, $start, $end, &$errors, $retab = true)
+function extract_blocks($text, $start, $end, &$errors = array(), $retab = true)
 {
 	global $pun_config;
 
