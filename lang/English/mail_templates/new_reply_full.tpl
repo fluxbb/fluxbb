@@ -14,5 +14,5 @@ The post is located at <post_url>
 You can unsubscribe by going to <unsubscribe_url>
 
 --
-<board_mailer>
+<board_mailer> Mailer
 (Do not reply to this message)

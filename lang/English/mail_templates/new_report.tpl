@@ -5,5 +5,5 @@ User '<username>' has reported the following message: <post_url>
 Reason: <reason>
 
 --
-<board_mailer>
+<board_mailer> Mailer
 (Do not reply to this message)

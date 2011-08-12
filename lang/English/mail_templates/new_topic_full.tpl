@@ -14,5 +14,5 @@ The topic is located at <topic_url>
 You can unsubscribe by going to <unsubscribe_url>
 
 --
-<board_mailer>
+<board_mailer> Mailer
 (Do not reply to this message)

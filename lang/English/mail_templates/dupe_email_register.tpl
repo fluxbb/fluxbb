@@ -5,5 +5,5 @@ User '<username>' registered with an email address that also belongs to: <dupe_l
 User profile: <profile_url>
 
 --
-<board_mailer>
+<board_mailer> Mailer
 (Do not reply to this message)

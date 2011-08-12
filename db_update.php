@@ -1611,7 +1611,7 @@ switch ($stage)
 					$mail_message = str_replace('<base_url>', get_base_url().'/', $mail_message);
 					$mail_message = str_replace('<old_username>', $old_username, $mail_message);
 					$mail_message = str_replace('<new_username>', $username, $mail_message);
-					$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' Mailer', $mail_message);
+					$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
 
 					pun_mail($cur_user['email'], $mail_subject, $mail_message);
 

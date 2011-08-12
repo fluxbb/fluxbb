@@ -214,7 +214,7 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 	global $pun_config, $lang_common;
 
 	// Default sender/return address
-	$from_name = $pun_config['o_board_title'].' '.$lang_common['Mailer'];
+	$from_name = sprintf($lang_common['Mailer'], $pun_config['o_board_title']);
 	$from_email = $pun_config['o_webmaster_email'];
 
 	// Do a little spring cleaning

@@ -125,7 +125,7 @@ else if (isset($_GET['email']))
 		$mail_message = str_replace('<sender>', $pun_user['username'], $mail_message);
 		$mail_message = str_replace('<board_title>', $pun_config['o_board_title'], $mail_message);
 		$mail_message = str_replace('<mail_message>', $message, $mail_message);
-		$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
+		$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
 
 		require_once PUN_ROOT.'include/email.php';
 
@@ -250,7 +250,7 @@ else if (isset($_GET['report']))
 				$mail_message = str_replace('<username>', $pun_user['username'], $mail_message);
 				$mail_message = str_replace('<post_url>', get_base_url().'/viewtopic.php?pid='.$post_id.'#p'.$post_id, $mail_message);
 				$mail_message = str_replace('<reason>', $reason, $mail_message);
-				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
+				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
 
 				require PUN_ROOT.'include/email.php';
 

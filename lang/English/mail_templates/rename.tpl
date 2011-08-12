@@ -8,5 +8,5 @@ New username: <new_username>
 We apologise for any inconvenience caused.
 
 --
-<board_mailer>
+<board_mailer> Mailer
 (Do not reply to this message)
