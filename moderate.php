@@ -556,12 +556,11 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 			message($lang_misc['Not enough topics selected']);
 
 		// Verify that the topic IDs are valid (redirect links will point to the merged topic after the merge)
-		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topics).') AND forum_id='.$fid) or error('Unable to check topics', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topics).') AND forum_id='.$fid.' ORDER BY id ASC') or error('Unable to check topics', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result) != count($topics))
 			message($lang_common['Bad request']);
 
-		// Fetch the topic that we're merging into
-		$result = $db->query('SELECT MIN(t.id) FROM '.$db->prefix.'topics AS t WHERE t.id IN('.implode(',', $topics).')') or error('Unable to get topic', __FILE__, __LINE__, $db->error());
+		// The topic that we are merging into is the one with the smallest ID
 		$merge_to_tid = $db->result($result);
 
 		// Make any redirect topics point to our new, merged topic
