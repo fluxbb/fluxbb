@@ -555,8 +555,7 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 		if (count($topics) < 2)
 			message($lang_misc['Not enough topics selected']);
 
-		// Verify that the topic IDs are valid (moved topics can not be merged?)
-		// $result = $db->query('SELECT 1 FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topics).') AND moved_to IS NULL AND forum_id='.$fid) or error('Unable to check topics', __FILE__, __LINE__, $db->error());
+		// Verify that the topic IDs are valid (redirect links will point to the merged topic after the merge)
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topics).') AND forum_id='.$fid) or error('Unable to check topics', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result) != count($topics))
 			message($lang_common['Bad request']);
