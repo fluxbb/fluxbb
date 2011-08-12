@@ -1641,12 +1641,14 @@ function remove_bad_characters($array)
 //
 function file_size($size)
 {
+	global $lang_common;
+
 	$units = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB');
 
 	for ($i = 0; $size > 1024; $i++)
 		$size /= 1024;
 
-	return round($size, 2).' '.$units[$i];
+	return sprintf($lang_common['Size unit '.$units[$i]], round($size, 2));;
 }
 
 
