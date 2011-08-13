@@ -78,29 +78,10 @@ $start_from = $pun_user['disp_topics'] * ($p - 1);
 // Generate paging links
 $paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'viewforum.php?id='.$id);
 
-
-// Add relationship meta tags
-$page_head = array();
-$page_head['up'] = '<link rel="up" href="index.php" title="'.$lang_common['Forum index'].'" />';
-
-if ($num_pages > 1)
-{
-	if ($p > 1)
-	{
-		$page_head['first'] = '<link rel="first" href="viewforum.php?id='.$id.'&amp;p=1" title="'.sprintf($lang_common['Page'], 1).'" />';
-		$page_head['prev'] = '<link rel="prev" href="viewforum.php?id='.$id.'&amp;p='.($p-1).'" title="'.sprintf($lang_common['Page'], $p-1).'" />';
-	}
-	if ($p < $num_pages)
-	{
-		$page_head['next'] = '<link rel="next" href="viewforum.php?id='.$id.'&amp;p='.($p+1).'" title="'.sprintf($lang_common['Page'], $p+1).'" />';
-		$page_head['last'] = '<link rel="last" href="viewforum.php?id='.$id.'&amp;p='.$num_pages.'" title="'.sprintf($lang_common['Page'], $num_pages).'" />';
-	}
-}
-
 if ($pun_config['o_feed_type'] == '1')
-	$page_head['feed'] = '<link rel="alternate" type="application/rss+xml" href="extern.php?action=feed&amp;fid='.$id.'&amp;type=rss" title="'.$lang_common['RSS forum feed'].'" />';
+	$page_head = array('feed' => '<link rel="alternate" type="application/rss+xml" href="extern.php?action=feed&amp;fid='.$id.'&amp;type=rss" title="'.$lang_common['RSS forum feed'].'" />');
 else if ($pun_config['o_feed_type'] == '2')
-	$page_head['feed'] = '<link rel="alternate" type="application/atom+xml" href="extern.php?action=feed&amp;fid='.$id.'&amp;type=atom" title="'.$lang_common['Atom forum feed'].'" />';
+	$page_head = array('feed' => '<link rel="alternate" type="application/atom+xml" href="extern.php?action=feed&amp;fid='.$id.'&amp;type=atom" title="'.$lang_common['Atom forum feed'].'" />');
 
 $forum_actions = array();
 

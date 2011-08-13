@@ -125,7 +125,7 @@ else if (isset($_GET['email']))
 		$mail_message = str_replace('<sender>', $pun_user['username'], $mail_message);
 		$mail_message = str_replace('<board_title>', $pun_config['o_board_title'], $mail_message);
 		$mail_message = str_replace('<mail_message>', $message, $mail_message);
-		$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
+		$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
 
 		require_once PUN_ROOT.'include/email.php';
 
@@ -150,7 +150,7 @@ else if (isset($_GET['email']))
 		if (strpos($valid['host'], 'www.') === 0)
 			$valid['host'] = substr($valid['host'], 4);
 
-		if ($referrer['host'] == $valid['host'] && preg_match('#^'.preg_quote($valid['path']).'/(.*?)\.php#i', $referrer['path']))
+		if ($referrer['host'] == $valid['host'] && preg_match('%^'.preg_quote($valid['path'], '%').'/(.*?)\.php%i', $referrer['path']))
 			$redirect_url = $_SERVER['HTTP_REFERER'];
 	}
 
@@ -210,8 +210,8 @@ else if (isset($_GET['report']))
 		else if (strlen($reason) > 65535) // TEXT field can only hold 65535 bytes
 			message($lang_misc['Reason too long']);
 
-		if ($pun_user['last_email_sent'] != '' && (time() - $pun_user['last_email_sent']) < $pun_user['g_email_flood'] && (time() - $pun_user['last_email_sent']) >= 0)
-			message(sprintf($lang_misc['Report flood'], $pun_user['g_email_flood']));
+		if ($pun_user['last_report_sent'] != '' && (time() - $pun_user['last_report_sent']) < $pun_user['g_report_flood'] && (time() - $pun_user['last_report_sent']) >= 0)
+			message(sprintf($lang_misc['Report flood'], $pun_user['g_report_flood']));
 
 		// Get the topic ID
 		$result = $db->query('SELECT topic_id FROM '.$db->prefix.'posts WHERE id='.$post_id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
@@ -237,10 +237,20 @@ else if (isset($_GET['report']))
 			// We send it to the complete mailing-list in one swoop
 			if ($pun_config['o_mailing_list'] != '')
 			{
-				$mail_subject = sprintf($lang_common['Report notification'], $forum_id, $subject);
-				$mail_message = sprintf($lang_common['Report message 1'], $pun_user['username'], get_base_url().'/viewtopic.php?pid='.$post_id.'#p'.$post_id)."\n";
-				$mail_message .= sprintf($lang_common['Report message 2'], $reason)."\n";
-				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
+				// Load the "new report" template
+				$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/new_report.tpl'));
+
+				// The first row contains the subject
+				$first_crlf = strpos($mail_tpl, "\n");
+				$mail_subject = trim(substr($mail_tpl, 8, $first_crlf-8));
+				$mail_message = trim(substr($mail_tpl, $first_crlf));
+
+				$mail_subject = str_replace('<forum_id>', $forum_id, $mail_subject);
+				$mail_subject = str_replace('<topic_subject>', $subject, $mail_subject);
+				$mail_message = str_replace('<username>', $pun_user['username'], $mail_message);
+				$mail_message = str_replace('<post_url>', get_base_url().'/viewtopic.php?pid='.$post_id.'#p'.$post_id, $mail_message);
+				$mail_message = str_replace('<reason>', $reason, $mail_message);
+				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
 
 				require PUN_ROOT.'include/email.php';
 
@@ -248,7 +258,7 @@ else if (isset($_GET['report']))
 			}
 		}
 
-		$db->query('UPDATE '.$db->prefix.'users SET last_email_sent='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
+		$db->query('UPDATE '.$db->prefix.'users SET last_report_sent='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 
 		$cache->delete('num_reports');
 

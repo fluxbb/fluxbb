@@ -51,7 +51,7 @@ function check_cookie(&$pun_user)
 	$now = time();
 
 	// If the cookie is set and it matches the correct pattern, then read the values from it
-	if (isset($_COOKIE[$cookie_name]) && preg_match('/^(\d+)\|([0-9a-fA-F]+)\|(\d+)\|([0-9a-fA-F]+)$/', $_COOKIE[$cookie_name], $matches))
+	if (isset($_COOKIE[$cookie_name]) && preg_match('%^(\d+)\|([0-9a-fA-F]+)\|(\d+)\|([0-9a-fA-F]+)$%', $_COOKIE[$cookie_name], $matches))
 	{
 		$cookie = array(
 			'user_id'			=> intval($matches[1]),
@@ -271,7 +271,7 @@ function set_default_user()
 	// Fetch guest user
 	$result = $db->query('SELECT u.*, g.*, o.logged, o.last_post, o.last_search FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id LEFT JOIN '.$db->prefix.'online AS o ON o.ident=\''.$remote_addr.'\' WHERE u.id=1') or error('Unable to fetch guest information', __FILE__, __LINE__, $db->error());
 	if (!$db->num_rows($result))
-		exit('Unable to fetch guest information. The table \''.$db->prefix.'users\' must contain an entry with id = 1 that represents anonymous users.');
+		exit('Unable to fetch guest information. Your database must contain both a guest user and a guest user group.');
 
 	$pun_user = $db->fetch_assoc($result);
 
@@ -448,7 +448,7 @@ function check_username($username, $exclude_id = null)
 	global $db, $pun_config, $errors, $lang_prof_reg, $lang_register, $lang_common, $pun_bans;
 
 	// Convert multiple whitespace characters into one (to prevent people from registering with indistinguishable usernames)
-	$username = preg_replace('#\s+#s', ' ', $username);
+	$username = preg_replace('%\s+%s', ' ', $username);
 
 	// Validate username
 	if (pun_strlen($username) < 2)
@@ -457,11 +457,11 @@ function check_username($username, $exclude_id = null)
 		$errors[] = $lang_prof_reg['Username too long'];
 	else if (!strcasecmp($username, 'Guest') || !strcasecmp($username, $lang_common['Guest']))
 		$errors[] = $lang_prof_reg['Username guest'];
-	else if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $username) || preg_match('/((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))/', $username))
+	else if (preg_match('%[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}%', $username) || preg_match('%((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))%', $username))
 		$errors[] = $lang_prof_reg['Username IP'];
 	else if ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
 		$errors[] = $lang_prof_reg['Username reserved chars'];
-	else if (preg_match('/(?:\[\/?(?:b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list|\*|topic|post|forum|user)\]|\[(?:img|url|quote|list)=)/i', $username))
+	else if (preg_match('%(?:\[/?(?:b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list|\*|topic|post|forum|user)\]|\[(?:img|url|quote|list)=)%i', $username))
 		$errors[] = $lang_prof_reg['Username BBCode'];
 
 	// Check username for any censored words
@@ -471,7 +471,7 @@ function check_username($username, $exclude_id = null)
 	// Check that the username (or a too similar username) is not already registered
 	$query = ($exclude_id) ? ' AND id!='.$exclude_id : '';
 
-	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(ucp_preg_replace('/[^\p{L}\p{N}]/u', '', $username)).'\')) AND id>1'.$query) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(ucp_preg_replace('%[^\p{L}\p{N}]%u', '', $username)).'\')) AND id>1'.$query) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
 	if ($db->num_rows($result))
 	{
@@ -1233,7 +1233,7 @@ function maintenance_message()
 	$tpl_maint = file_get_contents($tpl_file);
 
 	// START SUBST - <pun_include "*">
-	preg_match_all('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_maint, $pun_includes, PREG_SET_ORDER);
+	preg_match_all('%<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">%i', $tpl_maint, $pun_includes, PREG_SET_ORDER);
 
 	foreach ($pun_includes as $cur_include)
 	{
@@ -1323,7 +1323,7 @@ function redirect($destination_url, $message)
 		$destination_url = get_base_url(true).'/'.$destination_url;
 
 	// Do a little spring cleaning
-	$destination_url = preg_replace('/([\r\n])|(%0[ad])|(;\s*data\s*:)/i', '', $destination_url);
+	$destination_url = preg_replace('%([\r\n])|(\%0[ad])|(;\s*data\s*:)%i', '', $destination_url);
 
 	// If the delay is 0 seconds, we might as well skip the redirect all together
 	if ($pun_config['o_redirect_delay'] == '0')
@@ -1352,7 +1352,7 @@ function redirect($destination_url, $message)
 	$tpl_redir = file_get_contents($tpl_file);
 
 	// START SUBST - <pun_include "*">
-	preg_match_all('#<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">#', $tpl_redir, $pun_includes, PREG_SET_ORDER);
+	preg_match_all('%<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">%i', $tpl_redir, $pun_includes, PREG_SET_ORDER);
 
 	foreach ($pun_includes as $cur_include)
 	{
@@ -1636,7 +1636,7 @@ function remove_bad_characters($array)
 	$array = utf8_bad_clean($array);
 
 	// Remove control characters
-	$array = preg_replace('/[\x{00}-\x{08}\x{0b}-\x{0c}\x{0e}-\x{1f}]/', '', $array);
+	$array = preg_replace('%[\x{00}-\x{08}\x{0b}-\x{0c}\x{0e}-\x{1f}]%', '', $array);
 
 	// Replace some "bad" characters
 	$array = str_replace(array_keys($bad_utf8_chars), array_values($bad_utf8_chars), $array);
@@ -1650,12 +1650,14 @@ function remove_bad_characters($array)
 //
 function file_size($size)
 {
+	global $lang_common;
+
 	$units = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB');
 
 	for ($i = 0; $size > 1024; $i++)
 		$size /= 1024;
 
-	return round($size, 2).' '.$units[$i];
+	return sprintf($lang_common['Size unit '.$units[$i]], round($size, 2));;
 }
 
 
@@ -1735,32 +1737,82 @@ function split_text($text, $start, $end, &$errors, $retab = true)
 {
 	global $pun_config, $lang_common;
 
-	$tokens = explode($start, $text);
+	$result = array(0 => array(), 1 => array()); // 0 = inside, 1 = outside
 
-	$outside[] = $tokens[0];
+	// split the text into parts
+	$parts = preg_split('%'.preg_quote($start, '%').'(.*)'.preg_quote($end, '%').'%Us', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+	$num_parts = count($parts);
 
-	$num_tokens = count($tokens);
-	for ($i = 1; $i < $num_tokens; ++$i)
+	// preg_split results in outside parts having even indices, inside parts having odd
+	for ($i = 0;$i < $num_parts;$i++)
+		$result[1 - ($i % 2)][] = $parts[$i];
+
+	if ($pun_config['o_indent_num_spaces'] != 8 && $retab)
 	{
-		$temp = explode($end, $tokens[$i]);
+		$spaces = str_repeat(' ', $pun_config['o_indent_num_spaces']);
+		$result[1] = str_replace("\t", $spaces, $result[1]);
+	}
 
-		if (count($temp) != 2)
+	return $result;
+}
+
+
+//
+// Extract blocks from a text with a starting and ending string
+// This function always matches the most outer block so nesting is possible
+//
+function extract_blocks($text, $start, $end, &$errors = array(), $retab = true)
+{
+	global $pun_config;
+
+	$code = array();
+	$start_len = strlen($start);
+	$end_len = strlen($end);
+	$regex = '%(?:'.preg_quote($start, '%').'|'.preg_quote($end, '%').')%';
+	$matches = array();
+
+	if (preg_match_all($regex, $text, $matches))
+	{
+		$counter = $offset = 0;
+		$start_pos = $end_pos = false;
+
+		foreach ($matches[0] as $match)
 		{
-			$errors[] = $lang_common['BBCode code problem'];
-			return array(null, array($text));
+			if ($match == $start)
+			{
+				if ($counter == 0)
+					$start_pos = strpos($text, $start);
+				$counter++;
+			}
+			elseif ($match == $end)
+			{
+				$counter--;
+				if ($counter == 0)
+					$end_pos = strpos($text, $end, $offset + 1);
+				$offset = strpos($text, $end, $offset + 1);
+			}
+
+			if ($start_pos !== false && $end_pos !== false)
+			{
+				$code[] = substr($text, $start_pos + $start_len,
+					$end_pos - $start_pos - $start_len);
+				$text = substr_replace($text, "\1", $start_pos,
+					$end_pos - $start_pos + $end_len);
+				$start_pos = $end_pos = false;
+				$offset = 0;
+			}
 		}
-		$inside[] = $temp[0];
-		$outside[] = $temp[1];
 	}
 
 	if ($pun_config['o_indent_num_spaces'] != 8 && $retab)
 	{
 		$spaces = str_repeat(' ', $pun_config['o_indent_num_spaces']);
-		$inside = str_replace("\t", $spaces, $inside);
+		$text = str_replace("\t", $spaces, $text);
 	}
 
-	return array($inside, $outside);
+	return array($code, $text);
 }
+
 
 //
 // function url_valid($url) {

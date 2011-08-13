@@ -8,5 +8,5 @@ To change your email address, please visit the following page:
 <activation_url>
 
 --
-<board_mailer>
+<board_mailer> Mailer
 (Do not reply to this message)

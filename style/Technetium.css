@@ -63,6 +63,9 @@ body {
 	min-height: 1px
 	}
 
+.clearl {
+	clear: left;
+	}
 
 /* Hidden Elements
 ----------------------------------------------------------------*/
@@ -776,6 +779,51 @@ body {
 	padding: 6px 15px;
 	}
 
+.pun .multiselect {
+	float: left;
+	padding-bottom: 7px;
+	}
+
+.pun .checklist {
+	border-width: 1px;
+	border-style: solid;
+	max-height: 9em;
+	width: 20em;
+	overflow: auto;
+	padding: 0.25em 0.5em;
+	margin: 0.25em 16px 0 0.15em;
+	}
+
+.pun .checklist legend {
+	padding: 0;
+	}
+
+.pun .checklist legend span {
+	width: auto;
+	max-width: 25em;
+	}
+
+.pun .checklist .checklist-item {
+	position: relative;
+	}
+
+.pun .checklist .checklist-item label {
+	padding: 0 0 0 1.75em;
+	}
+
+.pun .checklist .checklist-item .fld-input {
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding: 0;
+	margin: 0;
+	}
+
+.pun .checklist .checklist-item input {
+	margin: 0;
+	height: 1.55em;
+	width: 1.55em;
+	}
 
 /*****************************************************************
 7. PROFILES AND ADMIN
@@ -919,6 +967,14 @@ body {
 
 .pun .postfootright li {
 	display: inline;
+	}
+
+.pun .postfootright li:before {
+	content: " | ";
+	}
+
+.pun .postfootright li:first-child:before {
+	content: "";
 	}
 
 .pun .postfootright a:link, .pun .postfootright a:visited {
@@ -1170,6 +1226,14 @@ body {
 	padding-left: 16px;
 	}
 
+.pun .multiselect {
+	color: #122434;
+	}
+
+.pun .checklist {
+	background: white;
+	border-color: #A2B5CC;
+	}
 
 /* Posts
 ----------------------------------------------------------------*/

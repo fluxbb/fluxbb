@@ -70,7 +70,7 @@ if (@file_exists('/proc/loadavg') && is_readable('/proc/loadavg'))
 	$load_averages = @explode(' ', $load_averages);
 	$server_load = isset($load_averages[2]) ? $load_averages[0].' '.$load_averages[1].' '.$load_averages[2] : $lang_admin_index['Not available'];
 }
-else if (!in_array(PHP_OS, array('WINNT', 'WIN32')) && preg_match('/averages?: ([0-9\.]+),?\s+([0-9\.]+),?\s+([0-9\.]+)/i', @exec('uptime'), $load_averages))
+else if (!in_array(PHP_OS, array('WINNT', 'WIN32')) && preg_match('%averages?: ([0-9\.]+),?\s+([0-9\.]+),?\s+([0-9\.]+)%i', @exec('uptime'), $load_averages))
 	$server_load = $load_averages[1].' '.$load_averages[2].' '.$load_averages[3];
 else
 	$server_load = $lang_admin_index['Not available'];
@@ -147,24 +147,25 @@ generate_admin_menu('index');
 				<dl>
 					<dt><?php echo $lang_admin_index['FluxBB version label'] ?></dt>
 					<dd>
-						<?php printf($lang_admin_index['FluxBB version data'], $pun_config['o_cur_version'], '<a href="admin_index.php?action=check_upgrade">'.$lang_admin_index['Check for upgrade'].'</a>') ?>
+						<?php printf($lang_admin_index['FluxBB version data']."\n", $pun_config['o_cur_version'], '<a href="admin_index.php?action=check_upgrade">'.$lang_admin_index['Check for upgrade'].'</a>') ?>
 					</dd>
 					<dt><?php echo $lang_admin_index['Server load label'] ?></dt>
 					<dd>
-						<?php printf($lang_admin_index['Server load data'], $server_load, $num_online) ?>
+						<?php printf($lang_admin_index['Server load data']."\n", $server_load, $num_online) ?>
 					</dd>
 <?php if ($pun_user['g_id'] == PUN_ADMIN): ?>					<dt><?php echo $lang_admin_index['Environment label'] ?></dt>
 					<dd>
 						<?php printf($lang_admin_index['Environment data OS'], PHP_OS) ?><br />
 						<?php printf($lang_admin_index['Environment data version'], phpversion(), '<a href="admin_index.php?action=phpinfo">'.$lang_admin_index['Show info'].'</a>') ?><br />
-						<?php printf($lang_admin_index['Environment data acc'], $php_accelerator) ?>
+						<?php printf($lang_admin_index['Environment data acc']."\n", $php_accelerator) ?>
 					</dd>
 					<dt><?php echo $lang_admin_index['Database label'] ?></dt>
 					<dd>
 						<?php echo implode(' ', $db->get_version())."\n" ?>
-<?php if (isset($total_records) && isset($total_size)): ?>						<br /><?php printf($lang_admin_index['Database data rows'], forum_number_format($total_records)) ?>
-						<br /><?php printf($lang_admin_index['Database data size'], $total_size) ?>
-<?php endif; ?>					</dd><?php endif; ?>
+<?php if (isset($total_records) && isset($total_size)): ?>						<br /><?php printf($lang_admin_index['Database data rows']."\n", forum_number_format($total_records)) ?>
+						<br /><?php printf($lang_admin_index['Database data size']."\n", $total_size) ?>
+<?php endif; ?>					</dd>
+<?php endif; ?>
 				</dl>
 			</div>
 		</div>

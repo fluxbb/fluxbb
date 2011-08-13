@@ -192,7 +192,7 @@ else if (isset($_POST['add_edit_ban']))
 		message($lang_admin_bans['Must enter message']);
 	else if (strtolower($ban_user) == 'guest')
 		message($lang_admin_bans['Cannot ban guest message']);
-	
+
 	// Make sure we're not banning an admin or moderator
 	if (!empty($ban_user))
 	{
@@ -200,13 +200,13 @@ else if (isset($_POST['add_edit_ban']))
 		if ($db->num_rows($result))
 		{
 			$group_id = $db->result($result);
-			
+
 			if ($group_id == PUN_ADMIN)
 				message(sprintf($lang_admin_bans['User is admin message'], pun_htmlspecialchars($ban_user)));
-	
+
 			$result = $db->query('SELECT g_moderator FROM '.$db->prefix.'groups WHERE g_id='.$group_id) or error('Unable to fetch group info', __FILE__, __LINE__, $db->error());
 			$is_moderator_group = $db->result($result);
-	
+
 			if ($is_moderator_group)
 				message(sprintf($lang_admin_bans['User is mod message'], pun_htmlspecialchars($ban_user)));
 		}
@@ -215,7 +215,7 @@ else if (isset($_POST['add_edit_ban']))
 	// Validate IP/IP range (it's overkill, I know)
 	if ($ban_ip != '')
 	{
-		$ban_ip = preg_replace('/\s{2,}/S', ' ', $ban_ip);
+		$ban_ip = preg_replace('%\s{2,}%S', ' ', $ban_ip);
 		$addresses = explode(' ', $ban_ip);
 		$addresses = array_map('pun_trim', $addresses);
 
@@ -244,7 +244,7 @@ else if (isset($_POST['add_edit_ban']))
 				{
 					$octets[$c] = (strlen($octets[$c]) > 1) ? ltrim($octets[$c], "0") : $octets[$c];
 
-					if ($c > 3 || preg_match('/[^0-9]/', $octets[$c]) || intval($octets[$c]) > 255)
+					if ($c > 3 || preg_match('%[^0-9]%', $octets[$c]) || intval($octets[$c]) > 255)
 						message($lang_admin_bans['Invalid IP message']);
 				}
 
@@ -259,7 +259,7 @@ else if (isset($_POST['add_edit_ban']))
 	require PUN_ROOT.'include/email.php';
 	if ($ban_email != '' && !is_valid_email($ban_email))
 	{
-		if (!preg_match('/^[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/', $ban_email))
+		if (!preg_match('%^[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$%', $ban_email))
 			message($lang_admin_bans['Invalid e-mail message']);
 	}
 

@@ -173,7 +173,7 @@ if ($action == 'prune')
 	}
 
 	$prune_days = trim($_POST['req_prune_days']);
-	if ($prune_days == '' || preg_match('/[^0-9]/', $prune_days))
+	if ($prune_days == '' || preg_match('%[^0-9]%', $prune_days))
 		message($lang_admin_maintenance['Days must be integer message']);
 
 	$prune_date = time() - ($prune_days * 86400);

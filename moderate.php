@@ -18,7 +18,7 @@ if (isset($_GET['get_host']))
 		message($lang_common['No permission']);
 
 	// Is get_host an IP address or a post ID?
-	if (@preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $_GET['get_host']) || @preg_match('/^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/', $_GET['get_host']))
+	if (@preg_match('%^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$%', $_GET['get_host']) || @preg_match('%^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$%', $_GET['get_host']))
 		$ip = $_GET['get_host'];
 	else
 	{
@@ -86,7 +86,7 @@ if (isset($_GET['tid']))
 		{
 			confirm_referrer('moderate.php');
 
-			if (@preg_match('/[^0-9,]/', $posts))
+			if (@preg_match('%[^0-9,]%', $posts))
 				message($lang_common['Bad request']);
 
 			// Verify that the post IDs are valid
@@ -153,7 +153,7 @@ if (isset($_GET['tid']))
 		{
 			confirm_referrer('moderate.php');
 
-			if (@preg_match('/[^0-9,]/', $posts))
+			if (@preg_match('%[^0-9,]%', $posts))
 				message($lang_common['Bad request']);
 
 			$move_to_forum = isset($_POST['move_to_forum']) ? intval($_POST['move_to_forum']) : 0;
@@ -420,7 +420,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	{
 		confirm_referrer('moderate.php');
 
-		if (@preg_match('/[^0-9,]/', $_POST['topics']))
+		if (@preg_match('%[^0-9,]%', $_POST['topics']))
 			message($lang_common['Bad request']);
 
 		$topics = explode(',', $_POST['topics']);
@@ -548,21 +548,19 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 	{
 		confirm_referrer('moderate.php');
 
-		if (@preg_match('/[^0-9,]/', $_POST['topics']))
+		if (@preg_match('%[^0-9,]%', $_POST['topics']))
 			message($lang_common['Bad request']);
 
 		$topics = explode(',', $_POST['topics']);
 		if (count($topics) < 2)
 			message($lang_misc['Not enough topics selected']);
 
-		// Verify that the topic IDs are valid (moved topics can not be merged?)
-		// $result = $db->query('SELECT 1 FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topics).') AND moved_to IS NULL AND forum_id='.$fid) or error('Unable to check topics', __FILE__, __LINE__, $db->error());
-		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topics).') AND forum_id='.$fid) or error('Unable to check topics', __FILE__, __LINE__, $db->error());
+		// Verify that the topic IDs are valid (redirect links will point to the merged topic after the merge)
+		$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topics).') AND forum_id='.$fid.' ORDER BY id ASC') or error('Unable to check topics', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result) != count($topics))
 			message($lang_common['Bad request']);
 
-		// Fetch the topic that we're merging into
-		$result = $db->query('SELECT MIN(t.id) FROM '.$db->prefix.'topics AS t WHERE t.id IN('.implode(',', $topics).')') or error('Unable to get topic', __FILE__, __LINE__, $db->error());
+		// The topic that we are merging into is the one with the smallest ID
 		$merge_to_tid = $db->result($result);
 
 		// Make any redirect topics point to our new, merged topic
@@ -644,7 +642,7 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 	{
 		confirm_referrer('moderate.php');
 
-		if (@preg_match('/[^0-9,]/', $topics))
+		if (@preg_match('%[^0-9,]%', $topics))
 			message($lang_common['Bad request']);
 
 		require PUN_ROOT.'include/search_idx.php';

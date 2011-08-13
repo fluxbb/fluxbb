@@ -25,9 +25,9 @@ class DBLayer
 	var $error_msg = 'Unknown';
 
 	var $datatype_transformations = array(
-		'/^SERIAL$/'															=>	'INTEGER',
-		'/^(TINY|SMALL|MEDIUM|BIG)?INT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$/i'	=>	'INTEGER',
-		'/^(TINY|MEDIUM|LONG)?TEXT$/i'											=>	'TEXT'
+		'%^SERIAL$%'															=>	'INTEGER',
+		'%^(TINY|SMALL|MEDIUM|BIG)?INT( )?(\\([0-9]+\\))?( )?(UNSIGNED)?$%i'	=>	'INTEGER',
+		'%^(TINY|MEDIUM|LONG)?TEXT$%i'											=>	'TEXT'
 	);
 
 
@@ -279,7 +279,7 @@ class DBLayer
 		if (!$this->num_rows($result))
 			return false;
 
-		return preg_match('/[\r\n]'.preg_quote($field_name).' /', $this->result($result));
+		return preg_match('%[\r\n]'.preg_quote($field_name, '%').' %', $this->result($result));
 	}
 
 
@@ -405,7 +405,7 @@ class DBLayer
 		$table['columns'] = array();
 		foreach ($table_lines as $table_line)
 		{
-			$table_line = pun_trim($table_line);
+			$table_line = trim($table_line, " \t\n\r,"); // trim spaces, tabs, newlines, and commas
 			if (substr($table_line, 0, 12) == 'CREATE TABLE')
 				continue;
 			else if (substr($table_line, 0, 11) == 'PRIMARY KEY')
@@ -413,7 +413,7 @@ class DBLayer
 			else if (substr($table_line, 0, 6) == 'UNIQUE')
 				$table['unique'] = $table_line;
 			else if (substr($table_line, 0, strpos($table_line, ' ')) != '')
-				$table['columns'][substr($table_line, 0, strpos($table_line, ' '))] = pun_trim(substr($table_line, strpos($table_line, ' ')));
+				$table['columns'][substr($table_line, 0, strpos($table_line, ' '))] = trim(substr($table_line, strpos($table_line, ' ')));
 		}
 
 		return $table;
@@ -444,18 +444,18 @@ class DBLayer
 		$query .= ' DEFAULT '.$default_value;
 
 		$old_columns = array_keys($table['columns']);
-		array_insert($table['columns'], $after_field, $query.',', $field_name);
+		array_insert($table['columns'], $after_field, $query, $field_name);
 
 		$new_table = 'CREATE TABLE '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).' (';
 
 		foreach ($table['columns'] as $cur_column => $column_details)
-			$new_table .= "\n".$cur_column.' '.$column_details;
+			$new_table .= "\n".$cur_column.' '.$column_details.',';
 
 		if (isset($table['unique']))
 			$new_table .= "\n".$table['unique'].',';
 
 		if (isset($table['primary_key']))
-			$new_table .= "\n".$table['primary_key'];
+			$new_table .= "\n".$table['primary_key'].',';
 
 		$new_table = trim($new_table, ',')."\n".');';
 
@@ -509,13 +509,13 @@ class DBLayer
 		$new_table = 'CREATE TABLE '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).' (';
 
 		foreach ($table['columns'] as $cur_column => $column_details)
-			$new_table .= "\n".$cur_column.' '.$column_details;
+			$new_table .= "\n".$cur_column.' '.$column_details.',';
 
 		if (isset($table['unique']))
 			$new_table .= "\n".$table['unique'].',';
 
 		if (isset($table['primary_key']))
-			$new_table .= "\n".$table['primary_key'];
+			$new_table .= "\n".$table['primary_key'].',';
 
 		$new_table = trim($new_table, ',')."\n".');';
 
