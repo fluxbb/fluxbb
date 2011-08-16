@@ -127,14 +127,14 @@ if ($pun_config === Cache::NOT_FOUND)
 }
 
 // Verify that we are running the proper database schema revision
-if (!isset($pun_config['o_database_revision']) || $pun_config['o_database_revision'] < FORUM_DB_REVISION ||
+/*if (!isset($pun_config['o_database_revision']) || $pun_config['o_database_revision'] < FORUM_DB_REVISION ||
 	!isset($pun_config['o_searchindex_revision']) || $pun_config['o_searchindex_revision'] < FORUM_SI_REVISION ||
 	!isset($pun_config['o_parser_revision']) || $pun_config['o_parser_revision'] < FORUM_PARSER_REVISION ||
 	version_compare($pun_config['o_cur_version'], FORUM_VERSION, '<'))
 {
 	header('Location: db_update.php');
 	exit;
-}
+}*/
 
 // Enable output buffering
 if (!defined('PUN_DISABLE_BUFFERING'))
