@@ -285,10 +285,18 @@ else if ($action == 'change_email')
 				message($lang_prof_reg['Banned email']);
 			else if ($pun_config['o_mailing_list'] != '')
 			{
-				$mail_subject = $lang_common['Banned email notification'];
-				$mail_message = sprintf($lang_common['Banned email change message'], $pun_user['username'], $new_email)."\n";
-				$mail_message .= sprintf($lang_common['User profile'], get_base_url().'/profile.php?id='.$id)."\n";
-				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
+				// Load the "banned email change" template
+				$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/banned_email_change.tpl'));
+
+				// The first row contains the subject
+				$first_crlf = strpos($mail_tpl, "\n");
+				$mail_subject = trim(substr($mail_tpl, 8, $first_crlf-8));
+				$mail_message = trim(substr($mail_tpl, $first_crlf));
+
+				$mail_message = str_replace('<username>', $pun_user['username'], $mail_message);
+				$mail_message = str_replace('<email>', $new_email, $mail_message);
+				$mail_message = str_replace('<profile_url>', get_base_url().'/profile.php?id='.$id, $mail_message);
+				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
 
 				pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
 			}
@@ -311,10 +319,18 @@ else if ($action == 'change_email')
 				foreach ($result as $cur_dupe)
 					$dupe_list[] = $cur_dupe['username'];
 
-				$mail_subject = $lang_common['Duplicate email notification'];
-				$mail_message = sprintf($lang_common['Duplicate email change message'], $pun_user['username'], implode(', ', $dupe_list))."\n";
-				$mail_message .= sprintf($lang_common['User profile'], get_base_url().'/profile.php?id='.$id)."\n";
-				$mail_message .= "\n".'--'."\n".$lang_common['Email signature'];
+				// Load the "dupe email change" template
+				$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/dupe_email_change.tpl'));
+
+				// The first row contains the subject
+				$first_crlf = strpos($mail_tpl, "\n");
+				$mail_subject = trim(substr($mail_tpl, 8, $first_crlf-8));
+				$mail_message = trim(substr($mail_tpl, $first_crlf));
+
+				$mail_message = str_replace('<username>', $pun_user['username'], $mail_message);
+				$mail_message = str_replace('<dupe_list>', implode(', ', $dupe_list), $mail_message);
+				$mail_message = str_replace('<profile_url>', get_base_url().'/profile.php?id='.$id, $mail_message);
+				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
 
 				pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
 			}
@@ -342,7 +358,7 @@ else if ($action == 'change_email')
 		$mail_message = str_replace('<username>', $pun_user['username'], $mail_message);
 		$mail_message = str_replace('<base_url>', get_base_url(), $mail_message);
 		$mail_message = str_replace('<activation_url>', get_base_url().'/profile.php?action=change_email&id='.$id.'&key='.$new_email_key, $mail_message);
-		$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
+		$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
 
 		pun_mail($new_email, $mail_subject, $mail_message);
 
@@ -648,7 +664,19 @@ else if (isset($_POST['ban']))
 	if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_ban_users'] == '0'))
 		message($lang_common['No permission']);
 
-	redirect('admin_bans.php?add_ban='.$id, $lang_profile['Ban redirect']);
+	// Get the username of the user we are banning
+	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch username', __FILE__, __LINE__, $db->error());
+	$username = $db->result($result);
+
+	// Check whether user is already banned
+	$result = $db->query('SELECT id FROM '.$db->prefix.'bans WHERE username = \''.$db->escape($username).'\' ORDER BY expire IS NULL DESC, expire DESC LIMIT 1') or error('Unable to fetch ban ID', __FILE__, __LINE__, $db->error());
+	if ($db->num_rows($result))
+	{
+		$ban_id = $db->result($result);
+		redirect('admin_bans.php?edit_ban='.$ban_id.'&amp;exists', $lang_profile['Ban redirect']);
+	}
+	else
+		redirect('admin_bans.php?add_ban='.$id, $lang_profile['Ban redirect']);
 }
 
 
@@ -958,8 +986,15 @@ else if (isset($_POST['form_sent']))
 			);
 
 			// Add http:// if the URL doesn't contain it already (while allowing https://, too)
-			if ($form['url'] != '' && !preg_match('#^https?://#i', $form['url']))
-				$form['url'] = 'http://'.$form['url'];
+			if ($form['url'] != '')
+			{
+				$url = url_valid($form['url']);
+
+				if ($url === false)
+					message($lang_profile['Invalid website URL']);
+
+				$form['url'] = $url['url'];
+			}
 
 			if ($pun_user['g_id'] == PUN_ADMIN)
 				$form['title'] = pun_trim($_POST['title']);
@@ -992,7 +1027,7 @@ else if (isset($_POST['form_sent']))
 			);
 
 			// If the ICQ UIN contains anything other than digits it's invalid
-			if (preg_match('/[^0-9]/', $form['icq']))
+			if (preg_match('%[^0-9]%', $form['icq']))
 				message($lang_prof_reg['Bad ICQ']);
 
 			break;

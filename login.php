@@ -181,7 +181,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 
 				// Do the generic replacements first (they apply to all emails sent out here)
 				$mail_message = str_replace('<base_url>', get_base_url().'/', $mail_message);
-				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
+				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
 
 				// Loop through users we found
 				foreach ($result as $cur_hit)
@@ -296,7 +296,7 @@ if (!empty($_SERVER['HTTP_REFERER']))
 	if (!isset($valid['path']))
 		$valid['path'] = '';
 
-	if ($referrer['host'] == $valid['host'] && preg_match('#^'.preg_quote($valid['path']).'/(.*?)\.php#i', $referrer['path']))
+	if ($referrer['host'] == $valid['host'] && preg_match('%^'.preg_quote($valid['path'], '%').'/(.*?)\.php%i', $referrer['path']))
 		$redirect_url = $_SERVER['HTTP_REFERER'];
 }
 
@@ -328,11 +328,11 @@ require PUN_ROOT.'header.php';
 						</div>
 
 						<p class="clearb"><?php echo $lang_login['Login info'] ?></p>
-						<p class="actions"><span><a href="register.php" tabindex="4"><?php echo $lang_login['Not registered'] ?></a></span> <span><a href="login.php?action=forget" tabindex="5"><?php echo $lang_login['Forgotten pass'] ?></a></span></p>
+						<p class="actions"><span><a href="register.php" tabindex="5"><?php echo $lang_login['Not registered'] ?></a></span> <span><a href="login.php?action=forget" tabindex="6"><?php echo $lang_login['Forgotten pass'] ?></a></span></p>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="login" value="<?php echo $lang_common['Login'] ?>" tabindex="3" /></p>
+			<p class="buttons"><input type="submit" name="login" value="<?php echo $lang_common['Login'] ?>" tabindex="4" /></p>
 		</form>
 	</div>
 </div>

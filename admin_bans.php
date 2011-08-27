@@ -277,7 +277,7 @@ else if (isset($_POST['add_edit_ban']))
 	// Validate IP/IP range (it's overkill, I know)
 	if ($ban_ip != '')
 	{
-		$ban_ip = preg_replace('/\s{2,}/S', ' ', $ban_ip);
+		$ban_ip = preg_replace('%\s{2,}%S', ' ', $ban_ip);
 		$addresses = explode(' ', $ban_ip);
 		$addresses = array_map('pun_trim', $addresses);
 
@@ -306,7 +306,7 @@ else if (isset($_POST['add_edit_ban']))
 				{
 					$octets[$c] = (strlen($octets[$c]) > 1) ? ltrim($octets[$c], "0") : $octets[$c];
 
-					if ($c > 3 || preg_match('/[^0-9]/', $octets[$c]) || intval($octets[$c]) > 255)
+					if ($c > 3 || preg_match('%[^0-9]%', $octets[$c]) || intval($octets[$c]) > 255)
 						message($lang_admin_bans['Invalid IP message']);
 				}
 
@@ -321,7 +321,7 @@ else if (isset($_POST['add_edit_ban']))
 	require PUN_ROOT.'include/email.php';
 	if ($ban_email != '' && !is_valid_email($ban_email))
 	{
-		if (!preg_match('/^[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/', $ban_email))
+		if (!preg_match('%^[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$%', $ban_email))
 			message($lang_admin_bans['Invalid e-mail message']);
 	}
 

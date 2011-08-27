@@ -144,7 +144,7 @@ if (isset($_GET['show_users']))
 {
 	$ip = trim($_GET['show_users']);
 
-	if (!@preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $ip) && !@preg_match('/^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/', $ip))
+	if (!@preg_match('%^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$%', $ip) && !@preg_match('%^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$%', $ip))
 		message($lang_admin_users['Bad IP message']);
 
 	// Fetch user count: TODO: Again, we really shouldn't fetch all the data just to count it...
@@ -848,9 +848,11 @@ else if (isset($_GET['find_user']))
 	$posts_less = isset($_GET['posts_less']) ? trim($_GET['posts_less']) : '';
 	$last_post_after = isset($_GET['last_post_after']) ? trim($_GET['last_post_after']) : '';
 	$last_post_before = isset($_GET['last_post_before']) ? trim($_GET['last_post_before']) : '';
+	$last_visit_after = isset($_GET['last_visit_after']) ? trim($_GET['last_visit_after']) : '';
+	$last_visit_before = isset($_GET['last_visit_before']) ? trim($_GET['last_visit_before']) : '';
 	$registered_after = isset($_GET['registered_after']) ? trim($_GET['registered_after']) : '';
 	$registered_before = isset($_GET['registered_before']) ? trim($_GET['registered_before']) : '';
-	$order_by = isset($_GET['order_by']) && in_array($_GET['order_by'], array('username', 'email', 'num_posts', 'last_post', 'registered')) ? $_GET['order_by'] : 'username';
+	$order_by = isset($_GET['order_by']) && in_array($_GET['order_by'], array('username', 'email', 'num_posts', 'last_post', 'last_visit', 'registered')) ? $_GET['order_by'] : 'username';
 	$direction = isset($_GET['direction']) && $_GET['direction'] == 'DESC' ? 'DESC' : 'ASC';
 	$user_group = isset($_GET['user_group']) ? intval($_GET['user_group']) : -1;
 
@@ -858,7 +860,7 @@ else if (isset($_GET['find_user']))
 	$query_str[] = 'direction='.$direction;
 	$query_str[] = 'user_group='.$user_group;
 
-	if (preg_match('/[^0-9]/', $posts_greater.$posts_less))
+	if (preg_match('%[^0-9]%', $posts_greater.$posts_less))
 		message($lang_admin_users['Non numeric message']);
 
 	// Try to convert date/time to timestamps
@@ -881,6 +883,26 @@ else if (isset($_GET['find_user']))
 			message($lang_admin_users['Invalid date time message']);
 
 		$conditions[] = 'u.last_post<'.$last_post_before;
+	}
+	if ($last_visit_after != '')
+	{
+		$query_str[] = 'last_visit_after='.$last_visit_after;
+
+		$last_visit_after = strtotime($last_visit_after);
+		if ($last_visit_after === false || $last_visit_after == -1)
+			message($lang_admin_users['Invalid date time message']);
+
+		$conditions[] = 'u.last_visit>'.$last_visit_after;
+	}
+	if ($last_visit_before != '')
+	{
+		$query_str[] = 'last_visit_before='.$last_visit_before;
+
+		$last_visit_before = strtotime($last_visit_before);
+		if ($last_visit_before === false || $last_visit_before == -1)
+			message($lang_admin_users['Invalid date time message']);
+
+		$conditions[] = 'u.last_visit<'.$last_visit_before;
 	}
 	if ($registered_after != '')
 	{
@@ -1139,6 +1161,16 @@ else
 									<span><?php echo $lang_admin_users['Date help'] ?></span></td>
 								</tr>
 								<tr>
+									<th scope="row"><?php echo $lang_admin_users['Last visit after label'] ?></th>
+									<td><input type="text" name="last_visit_after" size="24" maxlength="19" tabindex="17" />
+									<span><?php echo $lang_admin_users['Date help'] ?></span></td>
+								</tr>
+								<tr>
+									<th scope="row"><?php echo $lang_admin_users['Last visit before label'] ?></th>
+									<td><input type="text" name="last_visit_before" size="24" maxlength="19" tabindex="18" />
+									<span><?php echo $lang_admin_users['Date help'] ?></span></td>
+								</tr>
+								<tr>
 									<th scope="row"><?php echo $lang_admin_users['Registered after label'] ?></th>
 									<td><input type="text" name="registered_after" size="24" maxlength="19" tabindex="19" />
 									<span><?php echo $lang_admin_users['Date help'] ?></span></td>
@@ -1156,6 +1188,7 @@ else
 											<option value="email"><?php echo $lang_admin_users['Order by e-mail'] ?></option>
 											<option value="num_posts"><?php echo $lang_admin_users['Order by posts'] ?></option>
 											<option value="last_post"><?php echo $lang_admin_users['Order by last post'] ?></option>
+											<option value="last_visit"><?php echo $lang_admin_users['Order by last visit'] ?></option>
 											<option value="registered"><?php echo $lang_admin_users['Order by registered'] ?></option>
 										</select>&#160;&#160;&#160;<select name="direction" tabindex="22">
 											<option value="ASC" selected="selected"><?php echo $lang_admin_users['Ascending'] ?></option>

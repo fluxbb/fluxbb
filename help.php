@@ -55,12 +55,21 @@ require PUN_ROOT.'header.php';
 		<p><?php echo $lang_help['Links info'] ?></p>
 		<p><code>[url=<?php echo pun_htmlspecialchars(get_base_url(true).'/') ?>]<?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?>[/url]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/') ?>"><?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?></a></samp></p>
 		<p><code>[url]<?php echo pun_htmlspecialchars(get_base_url(true).'/') ?>[/url]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/') ?>"><?php echo pun_htmlspecialchars(get_base_url(true).'/') ?></a></samp></p>
+		<p><code>[url=/help.php]<?php echo $lang_help['This help page'] ?>[/url]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo get_base_url(true).'/help.php' ?>"><?php echo $lang_help['This help page'] ?></a></samp></p>
 		<p><code>[email]myname@mydomain.com[/email]</code> <?php echo $lang_help['produces'] ?> <samp><a href="mailto:myname@mydomain.com">myname@mydomain.com</a></samp></p>
 		<p><code>[email=myname@mydomain.com]<?php echo $lang_help['My email address'] ?>[/email]</code> <?php echo $lang_help['produces'] ?> <samp><a href="mailto:myname@mydomain.com"><?php echo $lang_help['My email address'] ?></a></samp></p>
+		<p><code>[topic=1]<?php echo $lang_help['Test topic'] ?>[/topic]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/viewtopic.php?id=1') ?>"><?php echo $lang_help['Test topic'] ?></a></samp></p>
+		<p><code>[topic]1[/topic]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/viewtopic.php?id=1') ?>"><?php echo pun_htmlspecialchars(get_base_url(true).'/viewtopic.php?id=1') ?></a></samp></p>
+		<p><code>[post=1]<?php echo $lang_help['Test post'] ?>[/post]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/viewtopic.php?pid=1#p1') ?>"><?php echo $lang_help['Test post'] ?></a></samp></p>
+		<p><code>[post]1[/post]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/viewtopic.php?pid=1#p1') ?>"><?php echo pun_htmlspecialchars(get_base_url(true).'/viewtopic.php?pid=1#p1') ?></a></samp></p>
+		<p><code>[forum=1]<?php echo $lang_help['Test forum'] ?>[/forum]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/viewforum.php?id=1') ?>"><?php echo $lang_help['Test forum'] ?></a></samp></p>
+		<p><code>[forum]1[/forum]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/viewforum.php?id=1') ?>"><?php echo pun_htmlspecialchars(get_base_url(true).'/viewforum.php?id=1') ?></a></samp></p>
+		<p><code>[user=2]<?php echo $lang_help['Test user'] ?>[/user]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/profile.php?id=2') ?>"><?php echo $lang_help['Test user'] ?></a></samp></p>
+		<p><code>[user]2[/user]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/profile.php?id=2') ?>"><?php echo pun_htmlspecialchars(get_base_url(true).'/profile.php?id=2') ?></a></samp></p>
 	</div>
 	<div class="inbox">
 		<p><a name="img"></a><?php echo $lang_help['Images info'] ?></p>
-		<p><code>[img=<?php echo $lang_help['FluxBB bbcode test'] ?>]<?php echo pun_htmlspecialchars(get_base_url(true)) ?>/img/test.png[/img]</code> <?php echo $lang_help['produces'] ?> <samp><img src="<?php echo pun_htmlspecialchars(get_base_url(true)) ?>/img/test.png" alt="<?php echo $lang_help['FluxBB bbcode test'] ?>" /></samp></p>
+		<p><code>[img=<?php echo $lang_help['FluxBB bbcode test'] ?>]<?php echo pun_htmlspecialchars(get_base_url(true)) ?>/img/test.png[/img]</code> <?php echo $lang_help['produces'] ?> <samp><img style="height: 21px" src="<?php echo pun_htmlspecialchars(get_base_url(true)) ?>/img/test.png" alt="<?php echo $lang_help['FluxBB bbcode test'] ?>" /></samp></p>
 	</div>
 </div>
 <h2><span><?php echo $lang_help['Quotes'] ?></span></h2>

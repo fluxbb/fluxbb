@@ -48,6 +48,9 @@
 	min-height: 1px
 	}
 
+.clearl {
+	clear: left;
+	}
 
 /* Hidden Elements
 ----------------------------------------------------------------*/
@@ -72,6 +75,7 @@
 
 .pun {
 	font: 68.75%/1.4545em Verdana, Helvetica, Arial, sans-serif;
+	line-height: normal;
 	}
 
 .pun table, .pun td, .pun th, .pun input, .pun select, .pun optgroup, .pun textarea, .pun samp, .pun legend {
@@ -108,7 +112,7 @@
 .pun h2 {
 	font-size: 1em;
 	font-weight: normal;
-	padding: 4px 7px;
+	padding: 4px 6px;
 	}
 
 .pun h3 {
@@ -209,6 +213,11 @@
 /* Page Layout
 ----------------------------------------------------------------*/
 
+html, body {
+	margin: 0;
+	padding: 0
+	}
+
 .pun {
 	margin: 12px 20px
 	}
@@ -223,6 +232,10 @@
 
 #brdheader {
 	margin: 0 0 12px 0;
+	}
+
+#brdtitle p {
+	padding-top: 0px
 	}
 
 #announce, #brdstats {
@@ -281,19 +294,9 @@
 ----------------------------------------------------------------*/
 
 #brdtitle h1 {
-	font-size: 1.454em;
+	font-size: 1.4em;
 	font-weight: bold;
-	line-height: 1em;
 	padding: 3px 0 0 0;
-	}
-
-#brddesc {
-	padding: 3px 0;
-	}
-
-#brddesc * {
-	padding-top: 0;
-	padding-bottom: 0;
 	}
 
 #brdmenu li {
@@ -435,12 +438,11 @@
 
 .pun td, .pun th {
 	padding: 4px 6px;
-	line-height: 1.273em;
 	text-align: left;
 	font-weight: normal;
 	}
 
-.pun td {
+.pun td, .pun th {
 	border-style: solid none none solid;
 	border-width: 1px;
 	}
@@ -525,7 +527,8 @@
 	}
 
 .pun .icon {
-	border-width: 7px;
+	margin: 0.1em 0 0 0.2em;
+	border-width: 0.6em;
 	border-style: solid;
 	height: 0;
 	width: 0;
@@ -598,14 +601,6 @@
 	margin-right: 10px
 	}
 
-.pun select {
-	padding-top: 1px;
-	padding-bottom: 1px;
-	}
-
-.pun fieldset .rbox {
-	}
-
 .pun fieldset .rbox br {
 	display: none;
 	}
@@ -665,6 +660,58 @@
 	margin-right: 12px;
 	}
 
+.pun .multiselect {
+	float: left;
+	padding-bottom: 7px;
+	}
+
+.pun .checklist {
+	border-width: 1px;
+	border-style: solid;
+	max-height: 9em;
+	width: 20em;
+	overflow: auto;
+	padding: 0.3em 0.5em;
+	margin: 0.25em 16px 0 0.15em;
+	}
+
+.pun .checklist fieldset {
+	border: 0;
+	padding: 0;
+	}
+
+.pun .checklist legend {
+	padding: 0;
+	}
+
+.pun .checklist legend span {
+	width: auto;
+	max-width: 25em;
+	}
+
+.pun .checklist .checklist-item {
+	position: relative;
+	margin: .2em 0;
+	}
+
+.pun .checklist .checklist-item label {
+	padding: 0 0 0 2.1em;
+	}
+
+.pun .checklist .checklist-item .fld-input {
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding: 0;
+	margin: 0;
+	}
+
+.pun .checklist .checklist-item input {
+	margin: 0;
+	height: 1.15em;
+	width: 1.55em;
+	}
+
 /*****************************************************************
 7. PROFILES AND ADMIN
 *****************************************************************/
@@ -674,12 +721,12 @@
 	}
 
 .pun .block2col .blockform, .pun .block2col .block {
-	margin-left: 17em
+	margin-left: 14em
 	}
 
 .pun .blockmenu {
 	float:left;
-	width: 16em
+	width: 13em
 	}
 
 .pun .blockmenu li {
@@ -756,7 +803,7 @@
 	}
 
 .pun .postleft dl {
-	padding: 0.75em 6px;
+	padding: 6px;
 	}
 
 .pun .postleft .usercontacts, .pun .postleft .icon {
@@ -807,12 +854,19 @@
 
 .pun .postfootright ul, .pun .postfootright div, .pun .postfootright p,
 .pun .postfootleft p {
-	padding: 6px 6px 6px 6px;
+	padding: 10px 6px 5px 6px;
 	}
 
 .pun .postfootright li {
 	display: inline;
-	margin-left: 12px;
+	}
+
+.pun .postfootright li:before {
+	content: " | ";
+	}
+
+.pun .postfootright li:first-child:before {
+	content: "";
 	}
 
 .pun .postfootright a:link, .pun .postfootright a:visited {
@@ -926,6 +980,14 @@
 	text-align: center;
 	}
 
+#brdwelcome, #brdfooter dl a, div.blockmenu li, div.rbox input {
+	line-height: 1.4em
+	}
+
+#announce div.inbox div {
+	padding: 3px 0
+	}
+
 /*****************************************************************
 COLOUR SCHEME
 *****************************************************************/
@@ -971,6 +1033,14 @@ body {
 .pun .usercontent * {
 	background: transparent;
 	color: #333
+	}
+
+.pun .multiselect, .pun .checklist {
+	color: #333;
+	}
+
+.pun .checklist {
+	border-color: #ACA899;
 	}
 
 /* posts
@@ -1020,8 +1090,12 @@ body {
 	border-color: #cedeb9
 	}
 
-.pun th, .pun fieldset {
+.pun th {
 	border-color: #d1d1d1
+	}
+
+.pun fieldset {
+	border-color: #aca899
 	}
 
 #adminconsole td, #adminconsole th {

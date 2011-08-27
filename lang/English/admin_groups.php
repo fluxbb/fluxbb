@@ -26,7 +26,7 @@ $lang_admin_groups = array(
 'Group delete head'				=>	'Group delete',
 'Confirm delete subhead'		=>	'Confirm delete group',
 'Confirm delete info'			=>	'Are you sure that you want to delete the group <strong>%s</strong>?',
-'Confirm delete warn'			=>	'WARNING! After you deleted a group you can not restore it.',
+'Confirm delete warn'			=>	'WARNING! After you deleted a group you cannot restore it.',
 'Delete group head'				=>	'Delete group',
 'Move users subhead'			=>	'Move users currently in group',
 'Move users info'				=>	'The group <strong>%s</strong> currently has <strong>%s</strong> members. Please select a group to which these members will be assigned upon deletion.',
@@ -77,6 +77,8 @@ $lang_admin_groups = array(
 'Search flood help'				=>	'Number of seconds that users in this group have to wait between searches. Set to 0 to disable.',
 'E-mail flood label'			=>	'Email flood interval',
 'E-mail flood help'				=>	'Number of seconds that users in this group have to wait between emails. Set to 0 to disable.',
+'Report flood label'			=>	'Report flood interval',
+'Report flood help'				=>	'Number of seconds that users in this group have to wait between reports. Set to 0 to disable.',
 'Moderator info'				=>	'Please note that in order for a user in this group to have moderator abilities, he/she must be assigned to moderate one or more forums. This is done via the user administration page of the user\'s profile.',
 
 );

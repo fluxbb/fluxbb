@@ -177,7 +177,7 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 		if ($cur_cat['name'] == '')
 			message($lang_admin_categories['Must enter name message']);
 
-		if ($cur_cat['order'] == '' || preg_match('/[^0-9]/', $cur_cat['order']))
+		if ($cur_cat['order'] == '' || preg_match('%[^0-9]%', $cur_cat['order']))
 			message($lang_admin_categories['Must enter integer message']);
 
 		$params = array(':name' => $cur_cat['name'], ':position' => $cur_cat['order'], ':cid' => $cat_id);

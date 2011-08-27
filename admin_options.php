@@ -118,7 +118,7 @@ if (isset($_POST['form_sent']))
 		message($lang_admin_options['Invalid webmaster e-mail message']);
 
 	if ($form['mailing_list'] != '')
-		$form['mailing_list'] = strtolower(preg_replace('/\s/S', '', $form['mailing_list']));
+		$form['mailing_list'] = strtolower(preg_replace('%\s%S', '', $form['mailing_list']));
 
 	// Make sure avatars_dir doesn't end with a slash
 	if (substr($form['avatars_dir'], -1) == '/')
