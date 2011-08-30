@@ -129,6 +129,7 @@ $default_lang = $pun_config['o_default_lang'];
 if (!file_exists(PUN_ROOT.'lang/'.$default_lang.'/update.php'))
 	$default_lang = 'English';
 
+require PUN_ROOT.'lang/'.$default_lang.'/common.php';
 require PUN_ROOT.'lang/'.$default_lang.'/update.php';
 
 // Check current version
@@ -467,7 +468,7 @@ if (empty($stage))
 		$message = str_replace($pattern, $replace, $pun_config['o_maintenance_message']);
 
 ?>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="<?php echo $lang_common['lang_direction'] ?>">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo $lang_update['Maintenance'] ?></title>
@@ -505,7 +506,7 @@ if (empty($stage))
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="<?php echo $lang_common['lang_direction'] ?>">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo $lang_update['Update'] ?></title>
@@ -1627,7 +1628,7 @@ switch ($stage)
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="<?php echo $lang_common['lang_direction'] ?>">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo $lang_update['Update'] ?></title>
@@ -1864,7 +1865,7 @@ foreach ($errors[$id] as $cur_error)
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="<?php echo $lang_common['lang_direction'] ?>">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo $lang_update['Update'] ?></title>
@@ -1905,4 +1906,3 @@ $db->close();
 
 if ($query_str != '')
 	exit('<script type="text/javascript">window.location="db_update.php'.$query_str.'&uid='.$uid.'"</script><noscript><meta http-equiv="refresh" content="0;url=db_update.php'.$query_str.'&uid='.$uid.'" /></noscript>');
-
