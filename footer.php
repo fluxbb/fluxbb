@@ -129,7 +129,7 @@ if ($pun_config['o_quickjump'] == '1')
 			}
 
 			$redirect_tag = ($cur_forum['redirect_url'] != '') ? ' &gt;&gt;&gt;' : '';
-			echo "\t\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'"'. ($forum_id == $cur_forum['fid'] ? ' selected="selected"' : '').'>'.pun_htmlspecialchars($cur_forum['forum_name']).$redirect_tag.'</option>'."\n";
+			echo "\t\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'"'. (isset($forum_id) && $forum_id == $cur_forum['fid'] ? ' selected="selected"' : '').'>'.pun_htmlspecialchars($cur_forum['forum_name']).$redirect_tag.'</option>'."\n";
 		}
 
 ?>
