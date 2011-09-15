@@ -56,7 +56,7 @@ class Flux_Lang
 		if (file_exists($this->langDir.'/'.$lang))
 			$this->defaultLang = $lang;
 		else
-			throw new Exception('Default language pack "'.$lang.'" does not exist.');
+			throw new Exception('It seems like default language pack "'.$lang.'" does not exist.');
 	}
 
 	/**
@@ -70,7 +70,7 @@ class Flux_Lang
 		if (file_exists($this->langDir.'/'.$lang))
 			$this->lang = $lang;
 		else
-			throw new Exception('Language pack "'.$lang.'" does not exist.');
+			throw new Exception('It seems like language pack "'.$lang.'" does not exist.');
 	}
 
 	/**
