@@ -46,12 +46,12 @@ function get_microtime()
 //
 function check_cookie(&$pun_user)
 {
-	global $db, $db_type, $pun_config, $cookie_name, $cookie_seed;
+	global $db, $db_type, $pun_config, $flux_config;
 
 	$now = time();
 
 	// If the cookie is set and it matches the correct pattern, then read the values from it
-	if (isset($_COOKIE[$cookie_name]) && preg_match('%^(\d+)\|([0-9a-fA-F]+)\|(\d+)\|([0-9a-fA-F]+)$%', $_COOKIE[$cookie_name], $matches))
+	if (isset($_COOKIE[$flux_config['cookie']['name']]) && preg_match('%^(\d+)\|([0-9a-fA-F]+)\|(\d+)\|([0-9a-fA-F]+)$%', $_COOKIE[$flux_config['cookie']['name']], $matches))
 	{
 		$cookie = array(
 			'user_id'			=> intval($matches[1]),
@@ -65,7 +65,7 @@ function check_cookie(&$pun_user)
 	if (isset($cookie) && $cookie['user_id'] > 1 && $cookie['expiration_time'] > $now)
 	{
 		// If the cookie has been tampered with
-		if (forum_hmac($cookie['user_id'].'|'.$cookie['expiration_time'], $cookie_seed.'_cookie_hash') != $cookie['cookie_hash'])
+		if (forum_hmac($cookie['user_id'].'|'.$cookie['expiration_time'], $flux_config['cookie']['seed'].'_cookie_hash') != $cookie['cookie_hash'])
 		{
 			$expire = $now + 31536000; // The cookie expires after a year
 			pun_setcookie(1, pun_hash(uniqid(rand(), true)), $expire);
@@ -79,7 +79,7 @@ function check_cookie(&$pun_user)
 		$pun_user = $db->fetch_assoc($result);
 
 		// If user authorisation failed
-		if (!isset($pun_user['id']) || forum_hmac($pun_user['password'], $cookie_seed.'_password_hash') !== $cookie['password_hash'])
+		if (!isset($pun_user['id']) || forum_hmac($pun_user['password'], $flux_config['cookie']['seed'].'_password_hash') !== $cookie['password_hash'])
 		{
 			$expire = $now + 31536000; // The cookie expires after a year
 			pun_setcookie(1, pun_hash(uniqid(rand(), true)), $expire);
@@ -145,8 +145,8 @@ function check_cookie(&$pun_user)
 				$db->query('UPDATE '.$db->prefix.'online SET logged='.$now.$idle_sql.' WHERE user_id='.$pun_user['id']) or error('Unable to update online list', __FILE__, __LINE__, $db->error());
 
 				// Update tracked topics with the current expire time
-				if (isset($_COOKIE[$cookie_name.'_track']))
-					forum_setcookie($cookie_name.'_track', $_COOKIE[$cookie_name.'_track'], $now + $pun_config['o_timeout_visit']);
+				if (isset($_COOKIE[$flux_config['cookie']['name'].'_track']))
+					forum_setcookie($flux_config['cookie']['name'].'_track', $_COOKIE[$flux_config['cookie']['name'].'_track'], $now + $pun_config['o_timeout_visit']);
 			}
 		}
 		else
@@ -351,9 +351,9 @@ function forum_hmac($data, $key, $raw_output = false)
 //
 function pun_setcookie($user_id, $password_hash, $expire)
 {
-	global $cookie_name, $cookie_seed;
+	global $flux_config;
 
-	forum_setcookie($cookie_name, $user_id.'|'.forum_hmac($password_hash, $cookie_seed.'_password_hash').'|'.$expire.'|'.forum_hmac($user_id.'|'.$expire, $cookie_seed.'_cookie_hash'), $expire);
+	forum_setcookie($flux_config['cookie']['name'], $user_id.'|'.forum_hmac($password_hash, $flux_config['cookie']['seed'].'_password_hash').'|'.$expire.'|'.forum_hmac($user_id.'|'.$expire, $flux_config['cookie']['seed'].'_cookie_hash'), $expire);
 }
 
 
@@ -362,15 +362,15 @@ function pun_setcookie($user_id, $password_hash, $expire)
 //
 function forum_setcookie($name, $value, $expire)
 {
-	global $cookie_path, $cookie_domain, $cookie_secure;
+	global $flux_config;
 
 	// Enable sending of a P3P header
 	header('P3P: CP="CUR ADM"');
 
 	if (version_compare(PHP_VERSION, '5.2.0', '>='))
-		setcookie($name, $value, $expire, $cookie_path, $cookie_domain, $cookie_secure, true);
+		setcookie($name, $value, $expire, $flux_config['cookie']['path'], $flux_config['cookie']['domain'], $$flux_config['cookie']['secure'], true);
 	else
-		setcookie($name, $value, $expire, $cookie_path.'; HttpOnly', $cookie_domain, $cookie_secure);
+		setcookie($name, $value, $expire, $flux_config['cookie']['path'].'; HttpOnly', $flux_config['cookie']['domain'], $flux_config['cookie']['secure']);
 }
 
 
@@ -600,7 +600,7 @@ function generate_page_title($page_title, $p = null)
 //
 function set_tracked_topics($tracked_topics)
 {
-	global $cookie_name, $cookie_path, $cookie_domain, $cookie_secure, $pun_config;
+	global $flux_config, $pun_config;
 
 	$cookie_data = '';
 	if (!empty($tracked_topics))
@@ -623,8 +623,8 @@ function set_tracked_topics($tracked_topics)
 		}
 	}
 
-	forum_setcookie($cookie_name.'_track', $cookie_data, time() + $pun_config['o_timeout_visit']);
-	$_COOKIE[$cookie_name.'_track'] = $cookie_data; // Set it directly in $_COOKIE as well
+	forum_setcookie($flux_config['cookie']['name'].'_track', $cookie_data, time() + $pun_config['o_timeout_visit']);
+	$_COOKIE[$flux_config['cookie']['name'].'_track'] = $cookie_data; // Set it directly in $_COOKIE as well
 }
 
 
@@ -633,9 +633,9 @@ function set_tracked_topics($tracked_topics)
 //
 function get_tracked_topics()
 {
-	global $cookie_name;
+	global $flux_config;
 
-	$cookie_data = isset($_COOKIE[$cookie_name.'_track']) ? $_COOKIE[$cookie_name.'_track'] : false;
+	$cookie_data = isset($_COOKIE[$flux_config['cookie']['name'].'_track']) ? $_COOKIE[$flux_config['cookie']['name'].'_track'] : false;
 	if (!$cookie_data)
 		return array('topics' => array(), 'forums' => array());
 

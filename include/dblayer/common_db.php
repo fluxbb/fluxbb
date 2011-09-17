@@ -45,4 +45,4 @@ switch ($db_type)
 
 
 // Create the database adapter object (and open/connect to/select db)
-$db = new DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect);
+$db = new DBLayer($flux_config['db']['host'], $flux_config['db']['username'], $flux_config['db']['password'], $flux_config['db']['name'], $flux_config['db']['prefix'], $flux_config['db']['p_connect']);
