@@ -91,13 +91,9 @@ if (get_magic_quotes_gpc())
 if (empty($cookie_name))
 	$cookie_name = 'pun_cookie';
 
-// If the cache directory is not specified, we use the default setting
-if (!defined('FORUM_CACHE_DIR'))
-	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
-
 // Load the cache module
 require PUN_ROOT.'modules/cache/cache.php';
-$cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport'); // TODO: Move this config into config.php
+$cache = Cache::load($flux_config['cache']['type'], array('dir' => $flux_config['cache']['dir']), 'varexport'); // TODO: Move this config into config.php
 
 // Define a few commonly used constants
 define('PUN_UNVERIFIED', 0);
