@@ -11,9 +11,9 @@ require PUN_ROOT.'include/common.php';
 
 
 if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view']);
+	message($lang->t('No view'));
 else if ($pun_user['g_view_users'] == '0')
-	message($lang_common['No permission']);
+	message($lang->t('No permission'));
 
 // Load the userlist.php language file
 require PUN_ROOT.'lang/'.$pun_user['language'].'/userlist.php';
@@ -49,12 +49,12 @@ $num_pages = ceil($num_users / 50);
 $p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : intval($_GET['p']);
 $start_from = 50 * ($p - 1);
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['User list']);
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('User list'));
 if ($pun_user['g_search_users'] == '1')
 	$focus_element = array('userlist', 'username');
 
 // Generate paging links
-$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'userlist.php?username='.urlencode($username).'&amp;show_group='.$show_group.'&amp;sort_by='.$sort_by.'&amp;sort_dir='.$sort_dir);
+$paging_links = '<span class="pages-label">'.$lang->t('Pages').' </span>'.paginate($num_pages, $p, 'userlist.php?username='.urlencode($username).'&amp;show_group='.$show_group.'&amp;sort_by='.$sort_by.'&amp;sort_dir='.$sort_dir);
 
 
 define('PUN_ALLOW_INDEX', 1);
@@ -70,7 +70,7 @@ require PUN_ROOT.'header.php';
 				<fieldset>
 					<legend><?php echo $lang_ul['User find legend'] ?></legend>
 					<div class="infldset">
-<?php if ($pun_user['g_search_users'] == '1'): ?>						<label class="conl"><?php echo $lang_common['Username'] ?><br /><input type="text" name="username" value="<?php echo pun_htmlspecialchars($username) ?>" size="25" maxlength="25" /><br /></label>
+<?php if ($pun_user['g_search_users'] == '1'): ?>						<label class="conl"><?php echo $lang->t('Username') ?><br /><input type="text" name="username" value="<?php echo pun_htmlspecialchars($username) ?>" size="25" maxlength="25" /><br /></label>
 <?php endif; ?>						<label class="conl"><?php echo $lang_ul['User group']."\n" ?>
 						<br /><select name="show_group">
 							<option value="-1"<?php if ($show_group == -1) echo ' selected="selected"' ?>><?php echo $lang_ul['All users'] ?></option>
@@ -91,8 +91,8 @@ while ($cur_group = $db->fetch_assoc($result))
 						<br /></label>
 						<label class="conl"><?php echo $lang_search['Sort by']."\n" ?>
 						<br /><select name="sort_by">
-							<option value="username"<?php if ($sort_by == 'username') echo ' selected="selected"' ?>><?php echo $lang_common['Username'] ?></option>
-							<option value="registered"<?php if ($sort_by == 'registered') echo ' selected="selected"' ?>><?php echo $lang_common['Registered'] ?></option>
+							<option value="username"<?php if ($sort_by == 'username') echo ' selected="selected"' ?>><?php echo $lang->t('Username') ?></option>
+							<option value="registered"<?php if ($sort_by == 'registered') echo ' selected="selected"' ?>><?php echo $lang->t('Registered') ?></option>
 <?php if ($show_post_count): ?>							<option value="num_posts"<?php if ($sort_by == 'num_posts') echo ' selected="selected"' ?>><?php echo $lang_ul['No of posts'] ?></option>
 <?php endif; ?>						</select>
 						<br /></label>
@@ -106,7 +106,7 @@ while ($cur_group = $db->fetch_assoc($result))
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="search" value="<?php echo $lang_common['Submit'] ?>" accesskey="s" /></p>
+			<p class="buttons"><input type="submit" name="search" value="<?php echo $lang->t('Submit') ?>" accesskey="s" /></p>
 		</form>
 	</div>
 </div>
@@ -119,16 +119,16 @@ while ($cur_group = $db->fetch_assoc($result))
 </div>
 
 <div id="users1" class="blocktable">
-	<h2><span><?php echo $lang_common['User list'] ?></span></h2>
+	<h2><span><?php echo $lang->t('User list') ?></span></h2>
 	<div class="box">
 		<div class="inbox">
 			<table cellspacing="0">
 			<thead>
 				<tr>
-					<th class="tcl" scope="col"><?php echo $lang_common['Username'] ?></th>
-					<th class="tc2" scope="col"><?php echo $lang_common['Title'] ?></th>
-<?php if ($show_post_count): ?>					<th class="tc3" scope="col"><?php echo $lang_common['Posts'] ?></th>
-<?php endif; ?>					<th class="tcr" scope="col"><?php echo $lang_common['Registered'] ?></th>
+					<th class="tcl" scope="col"><?php echo $lang->t('Username') ?></th>
+					<th class="tc2" scope="col"><?php echo $lang->t('Title') ?></th>
+<?php if ($show_post_count): ?>					<th class="tc3" scope="col"><?php echo $lang->t('Posts') ?></th>
+<?php endif; ?>					<th class="tcr" scope="col"><?php echo $lang->t('Registered') ?></th>
 				</tr>
 			</thead>
 			<tbody>

@@ -379,7 +379,7 @@ function forum_setcookie($name, $value, $expire)
 //
 function check_bans()
 {
-	global $cache, $db, $pun_config, $lang_common, $pun_user, $pun_bans;
+	global $cache, $db, $pun_config, $lang, $pun_user, $pun_bans;
 
 	// Admins and moderators aren't affected
 	if ($pun_user['is_admmod'] || !$pun_bans)
@@ -430,7 +430,7 @@ function check_bans()
 		if ($is_banned)
 		{
 			$db->query('DELETE FROM '.$db->prefix.'online WHERE ident=\''.$db->escape($pun_user['username']).'\'') or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
-			message($lang_common['Ban message'].' '.(($cur_ban['expire'] != '') ? $lang_common['Ban message 2'].' '.strtolower(format_time($cur_ban['expire'], true)).'. ' : '').(($cur_ban['message'] != '') ? $lang_common['Ban message 3'].'<br /><br /><strong>'.pun_htmlspecialchars($cur_ban['message']).'</strong><br /><br />' : '<br /><br />').$lang_common['Ban message 4'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
+			message($lang->t('Ban message').' '.(($cur_ban['expire'] != '') ? $lang->t('Ban message 2').' '.strtolower(format_time($cur_ban['expire'], true)).'. ' : '').(($cur_ban['message'] != '') ? $lang->t('Ban message 3').'<br /><br /><strong>'.pun_htmlspecialchars($cur_ban['message']).'</strong><br /><br />' : '<br /><br />').$lang->t('Ban message 4').' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
 		}
 	}
 
@@ -445,7 +445,7 @@ function check_bans()
 //
 function check_username($username, $exclude_id = null)
 {
-	global $db, $pun_config, $errors, $lang_prof_reg, $lang_register, $lang_common, $pun_bans;
+	global $db, $pun_config, $errors, $lang_prof_reg, $lang_register, $lang, $pun_bans;
 
 	// Convert multiple whitespace characters into one (to prevent people from registering with indistinguishable usernames)
 	$username = preg_replace('%\s+%s', ' ', $username);
@@ -455,7 +455,7 @@ function check_username($username, $exclude_id = null)
 		$errors[] = $lang_prof_reg['Username too short'];
 	else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
 		$errors[] = $lang_prof_reg['Username too long'];
-	else if (!strcasecmp($username, 'Guest') || !strcasecmp($username, $lang_common['Guest']))
+	else if (!strcasecmp($username, 'Guest') || !strcasecmp($username, $lang->t('Guest')))
 		$errors[] = $lang_prof_reg['Username guest'];
 	else if (preg_match('%[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}%', $username) || preg_match('%((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))%', $username))
 		$errors[] = $lang_prof_reg['Username IP'];
@@ -582,14 +582,14 @@ function generate_avatar_markup($user_id)
 //
 function generate_page_title($page_title, $p = null)
 {
-	global $pun_config, $lang_common;
+	global $pun_config, $lang;
 
 	$page_title = array_reverse($page_title);
 
 	if ($p != null)
-		$page_title[0] .= ' ('.sprintf($lang_common['Page'], forum_number_format($p)).')';
+		$page_title[0] .= ' ('.sprintf($lang->t('Page'), forum_number_format($p)).')';
 
-	$crumbs = implode($lang_common['Title separator'], $page_title);
+	$crumbs = implode($lang->t('Title separator'), $page_title);
 
 	return $crumbs;
 }
@@ -806,7 +806,7 @@ function censor_words($text)
 //
 function get_title($user)
 {
-	global $cache, $db, $pun_config, $pun_bans, $lang_common;
+	global $cache, $db, $pun_config, $pun_bans, $lang;
 	static $ban_list, $pun_ranks;
 
 	// If not already built in a previous call, build an array of lowercase banned usernames
@@ -840,13 +840,13 @@ function get_title($user)
 		$user_title = pun_htmlspecialchars($user['title']);
 	// If the user is banned
 	else if (in_array(strtolower($user['username']), $ban_list))
-		$user_title = $lang_common['Banned'];
+		$user_title = $lang->t('Banned');
 	// If the user group has a default user title
 	else if ($user['g_user_title'] != '')
 		$user_title = pun_htmlspecialchars($user['g_user_title']);
 	// If the user is a guest
 	else if ($user['g_id'] == PUN_GUEST)
-		$user_title = $lang_common['Guest'];
+		$user_title = $lang->t('Guest');
 	else
 	{
 		// Are there any ranks?
@@ -861,7 +861,7 @@ function get_title($user)
 
 		// If the user didn't "reach" any rank (or if ranks are disabled), we assign the default
 		if (!isset($user_title))
-			$user_title = $lang_common['Member'];
+			$user_title = $lang->t('Member');
 	}
 
 	return $user_title;
@@ -873,7 +873,7 @@ function get_title($user)
 //
 function paginate($num_pages, $cur_page, $link)
 {
-	global $lang_common;
+	global $lang;
 
 	$pages = array();
 	$link_to_all = false;
@@ -891,14 +891,14 @@ function paginate($num_pages, $cur_page, $link)
 	{
 		// Add a previous page link
 		if ($num_pages > 1 && $cur_page > 1)
-			$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p='.($cur_page - 1).'">'.$lang_common['Previous'].'</a>';
+			$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p='.($cur_page - 1).'">'.$lang->t('Previous').'</a>';
 
 		if ($cur_page > 3)
 		{
 			$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p=1">1</a>';
 
 			if ($cur_page > 5)
-				$pages[] = '<span class="spacer">'.$lang_common['Spacer'].'</span>';
+				$pages[] = '<span class="spacer">'.$lang->t('Spacer').'</span>';
 		}
 
 		// Don't ask me how the following works. It just does, OK? :-)
@@ -915,14 +915,14 @@ function paginate($num_pages, $cur_page, $link)
 		if ($cur_page <= ($num_pages-3))
 		{
 			if ($cur_page != ($num_pages-3) && $cur_page != ($num_pages-4))
-				$pages[] = '<span class="spacer">'.$lang_common['Spacer'].'</span>';
+				$pages[] = '<span class="spacer">'.$lang->t('Spacer').'</span>';
 
 			$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p='.$num_pages.'">'.forum_number_format($num_pages).'</a>';
 		}
 
 		// Add a next page link
 		if ($num_pages > 1 && !$link_to_all && $cur_page < $num_pages)
-			$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p='.($cur_page +1).'">'.$lang_common['Next'].'</a>';
+			$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p='.($cur_page +1).'">'.$lang->t('Next').'</a>';
 	}
 
 	return implode(' ', $pages);
@@ -934,11 +934,11 @@ function paginate($num_pages, $cur_page, $link)
 //
 function message($message, $no_back_link = false)
 {
-	global $db, $lang_common, $pun_config, $pun_start, $tpl_main, $pun_user;
+	global $db, $lang, $pun_config, $pun_start, $tpl_main, $pun_user;
 
 	if (!defined('PUN_HEADER'))
 	{
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Info']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Info'));
 		define('PUN_ACTIVE_PAGE', 'index');
 		require PUN_ROOT.'header.php';
 	}
@@ -946,11 +946,11 @@ function message($message, $no_back_link = false)
 ?>
 
 <div id="msg" class="block">
-	<h2><span><?php echo $lang_common['Info'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Info') ?></span></h2>
 	<div class="box">
 		<div class="inbox">
 			<p><?php echo $message ?></p>
-<?php if (!$no_back_link): ?>			<p><a href="javascript: history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+<?php if (!$no_back_link): ?>			<p><a href="javascript: history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 <?php endif; ?>		</div>
 	</div>
 </div>
@@ -965,10 +965,10 @@ function message($message, $no_back_link = false)
 //
 function format_time($timestamp, $date_only = false, $date_format = null, $time_format = null, $time_only = false, $no_text = false)
 {
-	global $pun_config, $lang_common, $pun_user, $forum_date_formats, $forum_time_formats;
+	global $pun_config, $lang, $pun_user, $forum_date_formats, $forum_time_formats;
 
 	if ($timestamp == '')
-		return $lang_common['Never'];
+		return $lang->t('Never');
 
 	$diff = ($pun_user['timezone'] + $pun_user['dst']) * 3600;
 	$timestamp += $diff;
@@ -987,9 +987,9 @@ function format_time($timestamp, $date_only = false, $date_format = null, $time_
 	if(!$no_text)
 	{
 		if ($date == $today)
-			$date = $lang_common['Today'];
+			$date = $lang->t('Today');
 		else if ($date == $yesterday)
-			$date = $lang_common['Yesterday'];
+			$date = $lang->t('Yesterday');
 	}
 
 	if ($date_only)
@@ -1006,9 +1006,9 @@ function format_time($timestamp, $date_only = false, $date_format = null, $time_
 //
 function forum_number_format($number, $decimals = 0)
 {
-	global $lang_common;
+	global $lang;
 
-	return is_numeric($number) ? number_format($number, $decimals, $lang_common['lang_decimal_point'], $lang_common['lang_thousands_sep']) : $number;
+	return is_numeric($number) ? number_format($number, $decimals, $lang->t('lang_decimal_point'), $lang->t('lang_thousands_sep')) : $number;
 }
 
 
@@ -1043,11 +1043,11 @@ function random_key($len, $readable = false, $hash = false)
 //
 function confirm_referrer($script, $error_msg = false)
 {
-	global $pun_config, $lang_common;
+	global $pun_config, $lang;
 
 	// There is no referrer
 	if (empty($_SERVER['HTTP_REFERER']))
-		message($error_msg ? $error_msg : $lang_common['Bad referrer']);
+		message($error_msg ? $error_msg : $lang->t('Bad referrer'));
 
 	$referrer = parse_url(strtolower($_SERVER['HTTP_REFERER']));
 	// Remove www subdomain if it exists
@@ -1061,7 +1061,7 @@ function confirm_referrer($script, $error_msg = false)
 
 	// Check the host and path match. Ignore the scheme, port, etc.
 	if ($referrer['host'] != $valid['host'] || $referrer['path'] != $valid['path'])
-		message($error_msg ? $error_msg : $lang_common['Bad referrer']);
+		message($error_msg ? $error_msg : $lang->t('Bad referrer'));
 }
 
 
@@ -1203,7 +1203,7 @@ function array_insert(&$input, $offset, $element, $key = null)
 //
 function maintenance_message()
 {
-	global $db, $pun_config, $lang_common, $pun_user;
+	global $db, $pun_config, $lang, $pun_user;
 
 	// Send no-cache headers
 	header('Expires: Thu, 21 Jul 1977 07:30:00 GMT'); // When yours truly first set eyes on this world! :)
@@ -1245,7 +1245,7 @@ function maintenance_message()
 		else if (file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
 			require PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
 		else
-			error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file)));
+			error(sprintf($lang->t('Pun include error'), htmlspecialchars($cur_include[0]), basename($tpl_file)));
 
 		$tpl_temp = ob_get_contents();
 		$tpl_maint = str_replace($cur_include[0], $tpl_temp, $tpl_maint);
@@ -1255,19 +1255,19 @@ function maintenance_message()
 
 
 	// START SUBST - <pun_language>
-	$tpl_maint = str_replace('<pun_language>', $lang_common['lang_identifier'], $tpl_maint);
+	$tpl_maint = str_replace('<pun_language>', $lang->t('lang_identifier'), $tpl_maint);
 	// END SUBST - <pun_language>
 
 
 	// START SUBST - <pun_content_direction>
-	$tpl_maint = str_replace('<pun_content_direction>', $lang_common['lang_direction'], $tpl_maint);
+	$tpl_maint = str_replace('<pun_content_direction>', $lang->t('lang_direction'), $tpl_maint);
 	// END SUBST - <pun_content_direction>
 
 
 	// START SUBST - <pun_head>
 	ob_start();
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Maintenance']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Maintenance'));
 
 ?>
 <title><?php echo generate_page_title($page_title) ?></title>
@@ -1285,7 +1285,7 @@ function maintenance_message()
 
 ?>
 <div class="block">
-	<h2><?php echo $lang_common['Maintenance'] ?></h2>
+	<h2><?php echo $lang->t('Maintenance') ?></h2>
 	<div class="box">
 		<div class="inbox">
 			<p><?php echo $message ?></p>
@@ -1316,7 +1316,7 @@ function maintenance_message()
 //
 function redirect($destination_url, $message)
 {
-	global $db, $pun_config, $lang_common, $pun_user;
+	global $db, $pun_config, $lang, $pun_user;
 
 	// Prefix with base_url (unless there's already a valid URI)
 	if (strpos($destination_url, 'http://') !== 0 && strpos($destination_url, 'https://') !== 0 && strpos($destination_url, '/') !== 0)
@@ -1364,7 +1364,7 @@ function redirect($destination_url, $message)
 		else if (file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
 			require PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
 		else
-			error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file)));
+			error(sprintf($lang->t('Pun include error'), htmlspecialchars($cur_include[0]), basename($tpl_file)));
 
 		$tpl_temp = ob_get_contents();
 		$tpl_redir = str_replace($cur_include[0], $tpl_temp, $tpl_redir);
@@ -1374,19 +1374,19 @@ function redirect($destination_url, $message)
 
 
 	// START SUBST - <pun_language>
-	$tpl_redir = str_replace('<pun_language>', $lang_common['lang_identifier'], $tpl_redir);
+	$tpl_redir = str_replace('<pun_language>', $lang->t('lang_identifier'), $tpl_redir);
 	// END SUBST - <pun_language>
 
 
 	// START SUBST - <pun_content_direction>
-	$tpl_redir = str_replace('<pun_content_direction>', $lang_common['lang_direction'], $tpl_redir);
+	$tpl_redir = str_replace('<pun_content_direction>', $lang->t('lang_direction'), $tpl_redir);
 	// END SUBST - <pun_content_direction>
 
 
 	// START SUBST - <pun_head>
 	ob_start();
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Redirecting']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Redirecting'));
 
 ?>
 <meta http-equiv="refresh" content="<?php echo $pun_config['o_redirect_delay'] ?>;URL=<?php echo str_replace(array('<', '>', '"'), array('&lt;', '&gt;', '&quot;'), $destination_url) ?>" />
@@ -1405,10 +1405,10 @@ function redirect($destination_url, $message)
 
 ?>
 <div class="block">
-	<h2><?php echo $lang_common['Redirecting'] ?></h2>
+	<h2><?php echo $lang->t('Redirecting') ?></h2>
 	<div class="box">
 		<div class="inbox">
-			<p><?php echo $message.'<br /><br /><a href="'.$destination_url.'">'.$lang_common['Click redirect'].'</a>' ?></p>
+			<p><?php echo $message.'<br /><br /><a href="'.$destination_url.'">'.$lang->t('Click redirect').'</a>' ?></p>
 		</div>
 	</div>
 </div>
@@ -1448,7 +1448,7 @@ function redirect($destination_url, $message)
 //
 function error($message, $file = null, $line = null, $db_error = false)
 {
-	global $pun_config, $lang_common;
+	global $pun_config;
 
 	// Set some default settings if the script failed before $pun_config could be populated
 	if (empty($pun_config))
@@ -1456,15 +1456,6 @@ function error($message, $file = null, $line = null, $db_error = false)
 		$pun_config = array(
 			'o_board_title'	=> 'FluxBB',
 			'o_gzip'		=> '0'
-		);
-	}
-
-	// Set some default translations if the script failed before $lang_common could be populated
-	if (empty($lang_common))
-	{
-		$lang_common = array(
-			'Title separator'	=> ' / ',
-			'Page'				=> 'Page %s'
 		);
 	}
 
@@ -1484,55 +1475,10 @@ function error($message, $file = null, $line = null, $db_error = false)
 	// Send the Content-type header in case the web server is setup to send something else
 	header('Content-type: text/html; charset=utf-8');
 
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<?php $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), 'Error') ?>
-<title><?php echo generate_page_title($page_title) ?></title>
-<style type="text/css">
-<!--
-BODY {MARGIN: 10% 20% auto 20%; font: 10px Verdana, Arial, Helvetica, sans-serif}
-#errorbox {BORDER: 1px solid #B84623}
-H2 {MARGIN: 0; COLOR: #FFFFFF; BACKGROUND-COLOR: #B84623; FONT-SIZE: 1.1em; PADDING: 5px 4px}
-#errorbox DIV {PADDING: 6px 5px; BACKGROUND-COLOR: #F1F1F1}
--->
-</style>
-</head>
-<body>
-
-<div id="errorbox">
-	<h2>An error was encountered</h2>
-	<div>
-<?php
-
-	if (defined('PUN_DEBUG') && $file !== null && $line !== null)
-	{
-		echo "\t\t".'<strong>File:</strong> '.$file.'<br />'."\n\t\t".'<strong>Line:</strong> '.$line.'<br /><br />'."\n\t\t".'<strong>FluxBB reported</strong>: '.$message."\n";
-
-		if ($db_error)
-		{
-			echo "\t\t".'<br /><br /><strong>Database reported:</strong> '.pun_htmlspecialchars($db_error['error_msg']).(($db_error['error_no']) ? ' (Errno: '.$db_error['error_no'].')' : '')."\n";
-
-			if ($db_error['error_sql'] != '')
-				echo "\t\t".'<br /><br /><strong>Failed query:</strong> '.pun_htmlspecialchars($db_error['error_sql'])."\n";
-		}
-	}
-	else
-		echo "\t\t".'Error: <strong>'.$message.'.</strong>'."\n";
-
-?>
-	</div>
-</div>
-
-</body>
-</html>
-<?php
-
-	// If a database connection was established (before this error) we close it
-	if ($db_error)
-		$GLOBALS['db']->close();
+	echo 'Error in file '.$file.', line '.$line.':<br />';
+	echo $message;
+	if ($db_error != false)
+		echo '<br />DB Error: '.$db_error;
 
 	exit;
 }
@@ -1650,14 +1596,14 @@ function remove_bad_characters($array)
 //
 function file_size($size)
 {
-	global $lang_common;
+	global $lang;
 
 	$units = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB');
 
 	for ($i = 0; $size > 1024; $i++)
 		$size /= 1024;
 
-	return sprintf($lang_common['Size unit '.$units[$i]], round($size, 2));;
+	return sprintf($lang->t('Size unit '.$units[$i]), round($size, 2));;
 }
 
 
@@ -1735,7 +1681,7 @@ function generate_stopwords_cache_id()
 //
 function split_text($text, $start, $end, &$errors, $retab = true)
 {
-	global $pun_config, $lang_common;
+	global $pun_config, $lang;
 
 	$result = array(0 => array(), 1 => array()); // 0 = inside, 1 = outside
 
@@ -1958,7 +1904,7 @@ function ucp_preg_replace($pattern, $replace, $subject)
 //
 function display_saved_queries()
 {
-	global $db, $lang_common;
+	global $db, $lang;
 
 	// Get the queries so that we can print them out
 	$saved_queries = $db->get_saved_queries();
@@ -1966,14 +1912,14 @@ function display_saved_queries()
 ?>
 
 <div id="debug" class="blocktable">
-	<h2><span><?php echo $lang_common['Debug table'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Debug table') ?></span></h2>
 	<div class="box">
 		<div class="inbox">
 			<table cellspacing="0">
 			<thead>
 				<tr>
-					<th class="tcl" scope="col"><?php echo $lang_common['Query times'] ?></th>
-					<th class="tcr" scope="col"><?php echo $lang_common['Query'] ?></th>
+					<th class="tcl" scope="col"><?php echo $lang->t('Query times') ?></th>
+					<th class="tcr" scope="col"><?php echo $lang->t('Query') ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -1995,7 +1941,7 @@ function display_saved_queries()
 
 ?>
 				<tr>
-					<td class="tcl" colspan="2"><?php printf($lang_common['Total query time'], $query_time_total.' s') ?></td>
+					<td class="tcl" colspan="2"><?php printf($lang->t('Total query time'), $query_time_total.' s') ?></td>
 				</tr>
 			</tbody>
 			</table>

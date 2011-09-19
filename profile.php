@@ -17,14 +17,14 @@ $action = isset($_GET['action']) ? $_GET['action'] : null;
 $section = isset($_GET['section']) ? $_GET['section'] : null;
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id < 2)
-	message($lang_common['Bad request']);
+	message($lang->t('Bad request'));
 
 if ($action != 'change_pass' || !isset($_GET['key']))
 {
 	if ($pun_user['g_read_board'] == '0')
-		message($lang_common['No view']);
+		message($lang->t('No view'));
 	else if ($pun_user['g_view_users'] == '0' && ($pun_user['is_guest'] || $pun_user['id'] != $id))
-		message($lang_common['No permission']);
+		message($lang->t('No permission'));
 }
 
 // Load the profile.php/register.php language file
@@ -64,17 +64,17 @@ if ($action == 'change_pass')
 	if ($pun_user['id'] != $id)
 	{
 		if (!$pun_user['is_admmod']) // A regular user trying to change another users password?
-			message($lang_common['No permission']);
+			message($lang->t('No permission'));
 		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a users password?
 		{
 			$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 			if (!$db->num_rows($result))
-				message($lang_common['Bad request']);
+				message($lang->t('Bad request'));
 
 			list($group_id, $is_moderator) = $db->fetch_row($result);
 
 			if ($pun_user['g_mod_edit_users'] == '0' || $pun_user['g_mod_change_passwords'] == '0' || $group_id == PUN_ADMIN || $is_moderator == '1')
-				message($lang_common['No permission']);
+				message($lang->t('No permission'));
 		}
 	}
 
@@ -118,7 +118,7 @@ if ($action == 'change_pass')
 		redirect('profile.php?section=essentials&amp;id='.$id, $lang_profile['Pass updated redirect']);
 	}
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Change pass']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Change pass']);
 	$required_fields = array('req_old_password' => $lang_profile['Old pass'], 'req_new_password1' => $lang_profile['New pass'], 'req_new_password2' => $lang_profile['Confirm new pass']);
 	$focus_element = array('change_pass', ((!$pun_user['is_admmod']) ? 'req_old_password' : 'req_new_password1'));
 	define('PUN_ACTIVE_PAGE', 'profile');
@@ -134,17 +134,17 @@ if ($action == 'change_pass')
 				<fieldset>
 					<legend><?php echo $lang_profile['Change pass legend'] ?></legend>
 					<div class="infldset">
-<?php if (!$pun_user['is_admmod']): ?>						<label class="required"><strong><?php echo $lang_profile['Old pass'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br />
+<?php if (!$pun_user['is_admmod']): ?>						<label class="required"><strong><?php echo $lang_profile['Old pass'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
 						<input type="password" name="req_old_password" size="16" /><br /></label>
-<?php endif; ?>						<label class="conl required"><strong><?php echo $lang_profile['New pass'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br />
+<?php endif; ?>						<label class="conl required"><strong><?php echo $lang_profile['New pass'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
 						<input type="password" name="req_new_password1" size="16" /><br /></label>
-						<label class="conl required"><strong><?php echo $lang_profile['Confirm new pass'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br />
+						<label class="conl required"><strong><?php echo $lang_profile['Confirm new pass'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
 						<input type="password" name="req_new_password2" size="16" /><br /></label>
 						<p class="clearb"><?php echo $lang_profile['Pass info'] ?></p>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>
@@ -160,17 +160,17 @@ else if ($action == 'change_email')
 	if ($pun_user['id'] != $id)
 	{
 		if (!$pun_user['is_admmod']) // A regular user trying to change another users email?
-			message($lang_common['No permission']);
+			message($lang->t('No permission'));
 		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a users email?
 		{
 			$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 			if (!$db->num_rows($result))
-				message($lang_common['Bad request']);
+				message($lang->t('Bad request'));
 
 			list($group_id, $is_moderator) = $db->fetch_row($result);
 
 			if ($pun_user['g_mod_edit_users'] == '0' || $group_id == PUN_ADMIN || $is_moderator == '1')
-				message($lang_common['No permission']);
+				message($lang->t('No permission'));
 		}
 	}
 
@@ -200,7 +200,7 @@ else if ($action == 'change_email')
 		// Validate the email address
 		$new_email = strtolower(trim($_POST['req_new_email']));
 		if (!is_valid_email($new_email))
-			message($lang_common['Invalid email']);
+			message($lang->t('Invalid email'));
 
 		// Check if it's a banned email address
 		if (is_banned_email($new_email))
@@ -277,8 +277,8 @@ else if ($action == 'change_email')
 		message($lang_profile['Activate email sent'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
 	}
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Change email']);
-	$required_fields = array('req_new_email' => $lang_profile['New email'], 'req_password' => $lang_common['Password']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Change email']);
+	$required_fields = array('req_new_email' => $lang_profile['New email'], 'req_password' => $lang->t('Password'));
 	$focus_element = array('change_email', 'req_new_email');
 	define('PUN_ACTIVE_PAGE', 'profile');
 	require PUN_ROOT.'header.php';
@@ -293,13 +293,13 @@ else if ($action == 'change_email')
 					<legend><?php echo $lang_profile['Email legend'] ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
-						<label class="required"><strong><?php echo $lang_profile['New email'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_new_email" size="50" maxlength="80" /><br /></label>
-						<label class="required"><strong><?php echo $lang_common['Password'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="password" name="req_password" size="16" /><br /></label>
+						<label class="required"><strong><?php echo $lang_profile['New email'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input type="text" name="req_new_email" size="50" maxlength="80" /><br /></label>
+						<label class="required"><strong><?php echo $lang->t('Password') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input type="password" name="req_password" size="16" /><br /></label>
 						<p><?php echo $lang_profile['Email instructions'] ?></p>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="new_email" value="<?php echo $lang_common['Submit'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="new_email" value="<?php echo $lang->t('Submit') ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>
@@ -315,7 +315,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 		message($lang_profile['Avatars disabled']);
 
 	if ($pun_user['id'] != $id && !$pun_user['is_admmod'])
-		message($lang_common['No permission']);
+		message($lang->t('No permission'));
 
 	if (isset($_POST['form_sent']))
 	{
@@ -403,7 +403,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 		redirect('profile.php?section=personality&amp;id='.$id, $lang_profile['Avatar upload redirect']);
 	}
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Upload avatar']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Upload avatar']);
 	$required_fields = array('req_file' => $lang_profile['File']);
 	$focus_element = array('upload_avatar', 'req_file');
 	define('PUN_ACTIVE_PAGE', 'profile');
@@ -420,12 +420,12 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $pun_config['o_avatars_size'] ?>" />
-						<label class="required"><strong><?php echo $lang_profile['File'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input name="req_file" type="file" size="40" /><br /></label>
-						<p><?php echo $lang_profile['Avatar desc'].' '.$pun_config['o_avatars_width'].' x '.$pun_config['o_avatars_height'].' '.$lang_profile['pixels'].' '.$lang_common['and'].' '.forum_number_format($pun_config['o_avatars_size']).' '.$lang_profile['bytes'].' ('.file_size($pun_config['o_avatars_size']).').' ?></p>
+						<label class="required"><strong><?php echo $lang_profile['File'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input name="req_file" type="file" size="40" /><br /></label>
+						<p><?php echo $lang_profile['Avatar desc'].' '.$pun_config['o_avatars_width'].' x '.$pun_config['o_avatars_height'].' '.$lang_profile['pixels'].' '.$lang->t('and').' '.forum_number_format($pun_config['o_avatars_size']).' '.$lang_profile['bytes'].' ('.file_size($pun_config['o_avatars_size']).').' ?></p>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="upload" value="<?php echo $lang_profile['Upload'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="upload" value="<?php echo $lang_profile['Upload'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>
@@ -438,7 +438,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 else if ($action == 'delete_avatar')
 {
 	if ($pun_user['id'] != $id && !$pun_user['is_admmod'])
-		message($lang_common['No permission']);
+		message($lang->t('No permission'));
 
 	confirm_referrer('profile.php');
 
@@ -451,7 +451,7 @@ else if ($action == 'delete_avatar')
 else if (isset($_POST['update_group_membership']))
 {
 	if ($pun_user['g_id'] > PUN_ADMIN)
-		message($lang_common['No permission']);
+		message($lang->t('No permission'));
 
 	confirm_referrer('profile.php');
 
@@ -492,7 +492,7 @@ else if (isset($_POST['update_group_membership']))
 else if (isset($_POST['update_forums']))
 {
 	if ($pun_user['g_id'] > PUN_ADMIN)
-		message($lang_common['No permission']);
+		message($lang->t('No permission'));
 
 	confirm_referrer('profile.php');
 
@@ -533,7 +533,7 @@ else if (isset($_POST['update_forums']))
 else if (isset($_POST['ban']))
 {
 	if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_ban_users'] == '0'))
-		message($lang_common['No permission']);
+		message($lang->t('No permission'));
 
 	// Get the username of the user we are banning
 	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch username', __FILE__, __LINE__, $db->error());
@@ -554,7 +554,7 @@ else if (isset($_POST['ban']))
 else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 {
 	if ($pun_user['g_id'] > PUN_ADMIN)
-		message($lang_common['No permission']);
+		message($lang->t('No permission'));
 
 	confirm_referrer('profile.php');
 
@@ -636,7 +636,7 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 		redirect('index.php', $lang_profile['User delete redirect']);
 	}
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Confirm delete user']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Confirm delete user']);
 	define('PUN_ACTIVE_PAGE', 'profile');
 	require PUN_ROOT.'header.php';
 
@@ -657,7 +657,7 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="delete_user_comply" value="<?php echo $lang_profile['Delete'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="delete_user_comply" value="<?php echo $lang_profile['Delete'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>
@@ -672,7 +672,7 @@ else if (isset($_POST['form_sent']))
 	// Fetch the user group of the user we are editing
 	$result = $db->query('SELECT u.username, u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 	if (!$db->num_rows($result))
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	list($old_username, $group_id, $is_moderator) = $db->fetch_row($result);
 
@@ -682,7 +682,7 @@ else if (isset($_POST['form_sent']))
 		($pun_user['g_mod_edit_users'] == '0' ||													// mods aren't allowed to edit users
 		$group_id == PUN_ADMIN ||																	// or the user is an admin
 		$is_moderator))))																			// or the user is another mod
-		message($lang_common['No permission']);
+		message($lang->t('No permission'));
 
 	if ($pun_user['is_admmod'])
 		confirm_referrer('profile.php');
@@ -707,7 +707,7 @@ else if (isset($_POST['form_sent']))
 				$languages = forum_list_langs();
 				$form['language'] = pun_trim($_POST['form']['language']);
 				if (!in_array($form['language'], $languages))
-					message($lang_common['Bad request']);
+					message($lang->t('Bad request'));
 			}
 
 			if ($pun_user['is_admmod'])
@@ -745,7 +745,7 @@ else if (isset($_POST['form_sent']))
 				// Validate the email address
 				$form['email'] = strtolower(trim($_POST['req_email']));
 				if (!is_valid_email($form['email']))
-					message($lang_common['Invalid email']);
+					message($lang->t('Invalid email'));
 			}
 
 			break;
@@ -780,7 +780,7 @@ else if (isset($_POST['form_sent']))
 				{
 					// A list of words that the title may not contain
 					// If the language is English, there will be some duplicates, but it's not the end of the world
-					$forbidden = array('member', 'moderator', 'administrator', 'banned', 'guest', utf8_strtolower($lang_common['Member']), utf8_strtolower($lang_common['Moderator']), utf8_strtolower($lang_common['Administrator']), utf8_strtolower($lang_common['Banned']), utf8_strtolower($lang_common['Guest']));
+					$forbidden = array('member', 'moderator', 'administrator', 'banned', 'guest', utf8_strtolower($lang->t('Member')), utf8_strtolower($lang->t('Moderator')), utf8_strtolower($lang->t('Administrator')), utf8_strtolower($lang->t('Banned')), utf8_strtolower($lang->t('Guest')));
 
 					if (in_array(utf8_strtolower($form['title']), $forbidden))
 						message($lang_profile['Forbidden title']);
@@ -877,7 +877,7 @@ else if (isset($_POST['form_sent']))
 				$styles = forum_list_styles();
 				$form['style'] = pun_trim($_POST['form']['style']);
 				if (!in_array($form['style'], $styles))
-					message($lang_common['Bad request']);
+					message($lang->t('Bad request'));
 			}
 
 			break;
@@ -898,7 +898,7 @@ else if (isset($_POST['form_sent']))
 		}
 
 		default:
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 	}
 
 
@@ -912,7 +912,7 @@ else if (isset($_POST['form_sent']))
 	}
 
 	if (empty($temp))
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 
 	$db->query('UPDATE '.$db->prefix.'users SET '.implode(',', $temp).' WHERE id='.$id) or error('Unable to update profile', __FILE__, __LINE__, $db->error());
@@ -963,7 +963,7 @@ else if (isset($_POST['form_sent']))
 
 $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.msn, u.aim, u.yahoo, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, u.date_format, u.time_format, u.last_visit, g.g_id, g.g_user_title, g.g_moderator FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 if (!$db->num_rows($result))
-	message($lang_common['Bad request']);
+	message($lang->t('Bad request'));
 
 $user = $db->fetch_assoc($result);
 
@@ -986,11 +986,11 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 {
 	$user_personal = array();
 
-	$user_personal[] = '<dt>'.$lang_common['Username'].'</dt>';
+	$user_personal[] = '<dt>'.$lang->t('Username').'</dt>';
 	$user_personal[] = '<dd>'.pun_htmlspecialchars($user['username']).'</dd>';
 
 	$user_title_field = get_title($user);
-	$user_personal[] = '<dt>'.$lang_common['Title'].'</dt>';
+	$user_personal[] = '<dt>'.$lang->t('Title').'</dt>';
 	$user_personal[] = '<dd>'.(($pun_config['o_censoring'] == '1') ? censor_words($user_title_field) : $user_title_field).'</dd>';
 
 	if ($user['realname'] != '')
@@ -1015,12 +1015,12 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 	if ($user['email_setting'] == '0' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
 		$email_field = '<a href="mailto:'.$user['email'].'">'.$user['email'].'</a>';
 	else if ($user['email_setting'] == '1' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
-		$email_field = '<a href="misc.php?email='.$id.'">'.$lang_common['Send email'].'</a>';
+		$email_field = '<a href="misc.php?email='.$id.'">'.$lang->t('Send email').'</a>';
 	else
 		$email_field = '';
 	if ($email_field != '')
 	{
-		$user_personal[] = '<dt>'.$lang_common['Email'].'</dt>';
+		$user_personal[] = '<dt>'.$lang->t('Email').'</dt>';
 		$user_personal[] = '<dd><span class="email">'.$email_field.'</span></dd>';
 	}
 
@@ -1098,17 +1098,17 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 	}
 	if ($posts_field != '')
 	{
-		$user_activity[] = '<dt>'.$lang_common['Posts'].'</dt>';
+		$user_activity[] = '<dt>'.$lang->t('Posts').'</dt>';
 		$user_activity[] = '<dd>'.$posts_field.'</dd>';
 	}
 
 	if ($user['num_posts'] > 0)
 	{
-		$user_activity[] = '<dt>'.$lang_common['Last post'].'</dt>';
+		$user_activity[] = '<dt>'.$lang->t('Last post').'</dt>';
 		$user_activity[] = '<dd>'.$last_post.'</dd>';
 	}
 
-	$user_activity[] = '<dt>'.$lang_common['Registered'].'</dt>';
+	$user_activity[] = '<dt>'.$lang->t('Registered').'</dt>';
 	$user_activity[] = '<dd>'.format_time($user['registered'], true).'</dd>';
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), sprintf($lang_profile['Users profile'], pun_htmlspecialchars($user['username'])));
@@ -1118,7 +1118,7 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 
 ?>
 <div id="viewprofile" class="block">
-	<h2><span><?php echo $lang_common['Profile'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Profile') ?></span></h2>
 	<div class="box">
 		<div class="fakeform">
 			<div class="inform">
@@ -1180,27 +1180,27 @@ else
 		if ($pun_user['is_admmod'])
 		{
 			if ($pun_user['g_id'] == PUN_ADMIN || $pun_user['g_mod_rename_users'] == '1')
-				$username_field = '<label class="required"><strong>'.$lang_common['Username'].' <span>'.$lang_common['Required'].'</span></strong><br /><input type="text" name="req_username" value="'.pun_htmlspecialchars($user['username']).'" size="25" maxlength="25" /><br /></label>'."\n";
+				$username_field = '<label class="required"><strong>'.$lang->t('Username').' <span>'.$lang->t('Required').'</span></strong><br /><input type="text" name="req_username" value="'.pun_htmlspecialchars($user['username']).'" size="25" maxlength="25" /><br /></label>'."\n";
 			else
 				$username_field = '<p>'.sprintf($lang_profile['Username info'], pun_htmlspecialchars($user['username'])).'</p>'."\n";
 
-			$email_field = '<label class="required"><strong>'.$lang_common['Email'].' <span>'.$lang_common['Required'].'</span></strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label><p><span class="email"><a href="misc.php?email='.$id.'">'.$lang_common['Send email'].'</a></span></p>'."\n";
+			$email_field = '<label class="required"><strong>'.$lang->t('Email').' <span>'.$lang->t('Required').'</span></strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label><p><span class="email"><a href="misc.php?email='.$id.'">'.$lang->t('Send email').'</a></span></p>'."\n";
 		}
 		else
 		{
-			$username_field = '<p>'.$lang_common['Username'].': '.pun_htmlspecialchars($user['username']).'</p>'."\n";
+			$username_field = '<p>'.$lang->t('Username').': '.pun_htmlspecialchars($user['username']).'</p>'."\n";
 
 			if ($pun_config['o_regs_verify'] == '1')
 				$email_field = '<p>'.sprintf($lang_profile['Email info'], $user['email'].' - <a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang_profile['Change email'].'</a>').'</p>'."\n";
 			else
-				$email_field = '<label class="required"><strong>'.$lang_common['Email'].' <span>'.$lang_common['Required'].'</span></strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label>'."\n";
+				$email_field = '<label class="required"><strong>'.$lang->t('Email').' <span>'.$lang->t('Required').'</span></strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label>'."\n";
 		}
 
 		$posts_field = '';
 		$posts_actions = array();
 
 		if ($pun_user['g_id'] == PUN_ADMIN)
-			$posts_field .= '<label>'.$lang_common['Posts'].'<br /><input type="text" name="num_posts" value="'.$user['num_posts'].'" size="8" maxlength="8" /><br /></label>';
+			$posts_field .= '<label>'.$lang->t('Posts').'<br /><input type="text" name="num_posts" value="'.$user['num_posts'].'" size="8" maxlength="8" /><br /></label>';
 		else if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
 			$posts_actions[] = sprintf($lang_profile['Posts info'], forum_number_format($user['num_posts']));
 
@@ -1216,8 +1216,8 @@ else
 		$posts_field .= (!empty($posts_actions) ? '<p class="actions">'.implode(' - ', $posts_actions).'</p>' : '')."\n";
 
 
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section essentials']);
-		$required_fields = array('req_username' => $lang_common['Username'], 'req_email' => $lang_common['Email']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Section essentials']);
+		$required_fields = array('req_username' => $lang->t('Username'), 'req_email' => $lang->t('Email'));
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
@@ -1378,7 +1378,7 @@ else
 <?php endif; ?>						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
+				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
 			</form>
 		</div>
 	</div>
@@ -1388,9 +1388,9 @@ else
 	else if ($section == 'personal')
 	{
 		if ($pun_user['g_set_title'] == '1')
-			$title_field = '<label>'.$lang_common['Title'].' <em>('.$lang_profile['Leave blank'].')</em><br /><input type="text" name="title" value="'.pun_htmlspecialchars($user['title']).'" size="30" maxlength="50" /><br /></label>'."\n";
+			$title_field = '<label>'.$lang->t('Title').' <em>('.$lang_profile['Leave blank'].')</em><br /><input type="text" name="title" value="'.pun_htmlspecialchars($user['title']).'" size="30" maxlength="50" /><br /></label>'."\n";
 
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section personal']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Section personal']);
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
@@ -1413,7 +1413,7 @@ else
 						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
+				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
 			</form>
 		</div>
 	</div>
@@ -1423,7 +1423,7 @@ else
 	else if ($section == 'messaging')
 	{
 
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section messaging']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Section messaging']);
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
@@ -1447,7 +1447,7 @@ else
 						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
+				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
 			</form>
 		</div>
 	</div>
@@ -1457,7 +1457,7 @@ else
 	else if ($section == 'personality')
 	{
 		if ($pun_config['o_avatars'] == '0' && $pun_config['o_signatures'] == '0')
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
 		$avatar_field = '<span><a href="profile.php?action=upload_avatar&amp;id='.$id.'">'.$lang_profile['Change avatar'].'</a></span>';
 
@@ -1472,7 +1472,7 @@ else
 		else
 			$signature_preview = '<p>'.$lang_profile['No sig'].'</p>'."\n";
 
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section personality']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Section personality']);
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
@@ -1505,15 +1505,15 @@ else
 								<textarea name="signature" rows="4" cols="65"><?php echo pun_htmlspecialchars($user['signature']) ?></textarea><br /></label>
 							</div>
 							<ul class="bblinks">
-								<li><span><a href="help.php#bbcode" onclick="window.open(this.href); return false;"><?php echo $lang_common['BBCode'] ?></a> <?php echo ($pun_config['p_sig_bbcode'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
-								<li><span><a href="help.php#img" onclick="window.open(this.href); return false;"><?php echo $lang_common['img tag'] ?></a> <?php echo ($pun_config['p_sig_bbcode'] == '1' && $pun_config['p_sig_img_tag'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
-								<li><span><a href="help.php#smilies" onclick="window.open(this.href); return false;"><?php echo $lang_common['Smilies'] ?></a> <?php echo ($pun_config['o_smilies_sig'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
+								<li><span><a href="help.php#bbcode" onclick="window.open(this.href); return false;"><?php echo $lang->t('BBCode') ?></a> <?php echo ($pun_config['p_sig_bbcode'] == '1') ? $lang->t('on') : $lang->t('off'); ?></span></li>
+								<li><span><a href="help.php#img" onclick="window.open(this.href); return false;"><?php echo $lang->t('img tag') ?></a> <?php echo ($pun_config['p_sig_bbcode'] == '1' && $pun_config['p_sig_img_tag'] == '1') ? $lang->t('on') : $lang->t('off'); ?></span></li>
+								<li><span><a href="help.php#smilies" onclick="window.open(this.href); return false;"><?php echo $lang->t('Smilies') ?></a> <?php echo ($pun_config['o_smilies_sig'] == '1') ? $lang->t('on') : $lang->t('off'); ?></span></li>
 							</ul>
 							<?php echo $signature_preview ?>
 						</div>
 					</fieldset>
 				</div>
-<?php endif; ?>				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
+<?php endif; ?>				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
 			</form>
 		</div>
 	</div>
@@ -1522,7 +1522,7 @@ else
 	}
 	else if ($section == 'display')
 	{
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section display']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Section display']);
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
@@ -1600,7 +1600,7 @@ else
 						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
+				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
 			</form>
 		</div>
 	</div>
@@ -1609,7 +1609,7 @@ else
 	}
 	else if ($section == 'privacy')
 	{
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section privacy']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Section privacy']);
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
@@ -1646,7 +1646,7 @@ else
 						</div>
 					</fieldset>
 				</div>
-<?php endif; ?>				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang_common['Submit'] ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
+<?php endif; ?>				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
 			</form>
 		</div>
 	</div>
@@ -1656,9 +1656,9 @@ else
 	else if ($section == 'admin')
 	{
 		if (!$pun_user['is_admmod'] || ($pun_user['g_moderator'] == '1' && $pun_user['g_mod_ban_users'] == '0'))
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section admin']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Section admin']);
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
@@ -1782,7 +1782,7 @@ else
 
 	}
 	else
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 ?>
 	<div class="clearer"></div>

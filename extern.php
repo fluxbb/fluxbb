@@ -71,7 +71,7 @@ if ($pun_user['is_guest'] && isset($_SERVER['PHP_AUTH_USER']))
 if ($pun_user['g_read_board'] == '0')
 {
 	http_authenticate_user();
-	exit($lang_common['No view']);
+	exit($lang->t('No view'));
 }
 
 $action = isset($_GET['action']) ? strtolower($_GET['action']) : 'feed';
@@ -110,7 +110,7 @@ function http_authenticate_user()
 //
 function output_rss($feed)
 {
-	global $lang_common, $pun_config;
+	global $lang, $pun_config;
 
 	// Send XML/no cache headers
 	header('Content-Type: application/xml; charset=utf-8');
@@ -155,7 +155,7 @@ function output_rss($feed)
 //
 function output_atom($feed)
 {
-	global $lang_common, $pun_config;
+	global $lang, $pun_config;
 
 	// Send XML/no cache headers
 	header('Content-Type: application/atom+xml; charset=utf-8');
@@ -211,7 +211,7 @@ function output_atom($feed)
 //
 function output_xml($feed)
 {
-	global $lang_common, $pun_config;
+	global $lang, $pun_config;
 
 	// Send XML/no cache headers
 	header('Content-Type: application/xml; charset=utf-8');
@@ -298,7 +298,7 @@ if ($action == 'feed')
 		if (!$db->num_rows($result))
 		{
 			http_authenticate_user();
-			exit($lang_common['Bad request']);
+			exit($lang->t('Bad request'));
 		}
 
 		$cur_topic = $db->fetch_assoc($result);
@@ -308,9 +308,9 @@ if ($action == 'feed')
 
 		// Setup the feed
 		$feed = array(
-			'title' 		=>	$pun_config['o_board_title'].$lang_common['Title separator'].$cur_topic['subject'],
+			'title' 		=>	$pun_config['o_board_title'].$lang->t('Title separator').$cur_topic['subject'],
 			'link'			=>	get_base_url(true).'/viewtopic.php?id='.$tid,
-			'description'		=>	sprintf($lang_common['RSS description topic'], $cur_topic['subject']),
+			'description'		=>	sprintf($lang->t('RSS description topic'), $cur_topic['subject']),
 			'items'			=>	array(),
 			'type'			=>	'posts'
 		);
@@ -323,7 +323,7 @@ if ($action == 'feed')
 
 			$item = array(
 				'id'			=>	$cur_post['id'],
-				'title'			=>	$cur_topic['first_post_id'] == $cur_post['id'] ? $cur_topic['subject'] : $lang_common['RSS reply'].$cur_topic['subject'],
+				'title'			=>	$cur_topic['first_post_id'] == $cur_post['id'] ? $cur_topic['subject'] : $lang->t('RSS reply').$cur_topic['subject'],
 				'link'			=>	get_base_url(true).'/viewtopic.php?pid='.$cur_post['id'].'#p'.$cur_post['id'],
 				'description'		=>	$cur_post['message'],
 				'author'		=>	array(
@@ -368,7 +368,7 @@ if ($action == 'feed')
 				// Fetch forum name
 				$result = $db->query('SELECT f.forum_name FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fids[0]) or error('Unable to fetch forum name', __FILE__, __LINE__, $db->error());
 				if ($db->num_rows($result))
-					$forum_name = $lang_common['Title separator'].$db->result($result);
+					$forum_name = $lang->t('Title separator').$db->result($result);
 			}
 		}
 
@@ -385,7 +385,7 @@ if ($action == 'feed')
 		// Only attempt to cache if caching is enabled and we have all or a single forum
 		if ($pun_config['o_feed_ttl'] > 0 && ($forum_sql == '' || ($forum_name != '' && !isset($_GET['nfid']))))
 		{
-			$cache_id = 'feed.'.$pun_user['g_id'].'.'.$lang_common['lang_identifier'].'.'.($order_posted ? '1' : '0').($forum_name == '' ? '' : '.'.$fids[0]);
+			$cache_id = 'feed.'.$pun_user['g_id'].'.'.$lang->t('lang_identifier').'.'.($order_posted ? '1' : '0').($forum_name == '' ? '' : '.'.$fids[0]);
 			$feed = $cache->get($cache_id);
 		}
 
@@ -396,7 +396,7 @@ if ($action == 'feed')
 			$feed = array(
 				'title' 		=>	$pun_config['o_board_title'].$forum_name,
 				'link'			=>	'/index.php',
-				'description'	=>	sprintf($lang_common['RSS description'], $pun_config['o_board_title']),
+				'description'	=>	sprintf($lang->t('RSS description'), $pun_config['o_board_title']),
 				'items'			=>	array(),
 				'type'			=>	'topics'
 			);
@@ -527,4 +527,4 @@ else if ($action == 'stats')
 }
 
 // If we end up here, the script was called with some wacky parameters
-exit($lang_common['Bad request']);
+exit($lang->t('Bad request'));

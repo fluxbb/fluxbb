@@ -14,7 +14,7 @@ require PUN_ROOT.'include/common.php';
 
 
 if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view']);
+	message($lang->t('No view'));
 
 
 // Load the help.php language file
@@ -79,7 +79,7 @@ require PUN_ROOT.'header.php';
 		<p><code>[quote=James]<?php echo $lang_help['Quote text'] ?>[/quote]</code></p>
 		<p><?php echo $lang_help['produces quote box'] ?></p>
 		<div class="postmsg">
-			<div class="quotebox"><cite>James <?php echo $lang_common['wrote'] ?></cite><blockquote><div><p><?php echo $lang_help['Quote text'] ?></p></div></blockquote></div>
+			<div class="quotebox"><cite>James <?php echo $lang->t('wrote') ?></cite><blockquote><div><p><?php echo $lang_help['Quote text'] ?></p></div></blockquote></div>
 		</div>
 		<p><?php echo $lang_help['Quotes info 2'] ?></p>
 		<p><code>[quote]<?php echo $lang_help['Quote text'] ?>[/quote]</code></p>
@@ -144,7 +144,7 @@ foreach ($smilies as $smiley_text => $smiley_img)
 	$smiley_groups[$smiley_img][] = $smiley_text;
 
 foreach ($smiley_groups as $smiley_img => $smiley_texts)
-	echo "\t\t".'<p><code>'.implode('</code> '.$lang_common['and'].' <code>', $smiley_texts).'</code> <span>'.$lang_help['produces'].'</span> <samp><img src="'.pun_htmlspecialchars(get_base_url(true)).'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.$smiley_texts[0].'" /></samp></p>'."\n";
+	echo "\t\t".'<p><code>'.implode('</code> '.$lang->t('and').' <code>', $smiley_texts).'</code> <span>'.$lang_help['produces'].'</span> <samp><img src="'.pun_htmlspecialchars(get_base_url(true)).'/img/smilies/'.$smiley_img.'" width="15" height="15" alt="'.$smiley_texts[0].'" /></samp></p>'."\n";
 
 ?>
 	</div>
