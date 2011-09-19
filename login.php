@@ -121,7 +121,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 		// Validate the email address
 		$email = strtolower(trim($_POST['req_email']));
 		if (!is_valid_email($email))
-			$errors[] = $lang_common['Invalid email'];
+			$errors[] = $lang->t('Invalid email');
 
 		// Did everything go according to plan?
 		if (empty($errors))
@@ -170,7 +170,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 		}
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_login['Request pass']);
-	$required_fields = array('req_email' => $lang_common['Email']);
+	$required_fields = array('req_email' => $lang->t('Email'));
 	$focus_element = array('request_pass', 'req_email');
 	define ('PUN_ACTIVE_PAGE', 'login');
 	require PUN_ROOT.'header.php';
@@ -209,12 +209,12 @@ if (!empty($errors))
 					<legend><?php echo $lang_login['Request pass legend'] ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
-						<label class="required"><strong><?php echo $lang_common['Email'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="80" /><br /></label>
+						<label class="required"><strong><?php echo $lang->t('Email') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="80" /><br /></label>
 						<p><?php echo $lang_login['Request pass info'] ?></p>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="request_pass" value="<?php echo $lang_common['Submit'] ?>" /><?php if (empty($errors)): ?> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a><?php endif; ?></p>
+			<p class="buttons"><input type="submit" name="request_pass" value="<?php echo $lang->t('Submit') ?>" /><?php if (empty($errors)): ?> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a><?php endif; ?></p>
 		</form>
 	</div>
 </div>
@@ -255,15 +255,15 @@ if (!empty($_SERVER['HTTP_REFERER']))
 if (!isset($redirect_url))
 	$redirect_url = 'index.php';
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Login']);
-$required_fields = array('req_username' => $lang_common['Username'], 'req_password' => $lang_common['Password']);
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Login'));
+$required_fields = array('req_username' => $lang->t('Username'), 'req_password' => $lang->t('Password'));
 $focus_element = array('login', 'req_username');
 define('PUN_ACTIVE_PAGE', 'login');
 require PUN_ROOT.'header.php';
 
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_common['Login'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Login') ?></span></h2>
 	<div class="box">
 		<form id="login" method="post" action="login.php?action=in" onsubmit="return process_form(this)">
 			<div class="inform">
@@ -272,8 +272,8 @@ require PUN_ROOT.'header.php';
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="redirect_url" value="<?php echo pun_htmlspecialchars($redirect_url) ?>" />
-						<label class="conl required"><strong><?php echo $lang_common['Username'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" tabindex="1" /><br /></label>
-						<label class="conl required"><strong><?php echo $lang_common['Password'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="password" name="req_password" size="25" tabindex="2" /><br /></label>
+						<label class="conl required"><strong><?php echo $lang->t('Username') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" tabindex="1" /><br /></label>
+						<label class="conl required"><strong><?php echo $lang->t('Password') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input type="password" name="req_password" size="25" tabindex="2" /><br /></label>
 
 						<div class="rbox clearb">
 							<label><input type="checkbox" name="save_pass" value="1" tabindex="3" /><?php echo $lang_login['Remember me'] ?><br /></label>
@@ -284,7 +284,7 @@ require PUN_ROOT.'header.php';
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="login" value="<?php echo $lang_common['Login'] ?>" tabindex="4" /></p>
+			<p class="buttons"><input type="submit" name="login" value="<?php echo $lang->t('Login') ?>" tabindex="4" /></p>
 		</form>
 	</div>
 </div>

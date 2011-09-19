@@ -150,11 +150,16 @@ $forum_date_formats = array($pun_config['o_date_format'], 'Y-m-d', 'Y-d-m', 'd-m
 $pun_user = array();
 check_cookie($pun_user);
 
-// Attempt to load the common language file
-if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/common.php'))
-	include PUN_ROOT.'lang/'.$pun_user['language'].'/common.php';
-else
-	error('There is no valid language pack \''.pun_htmlspecialchars($pun_user['language']).'\' installed. Please reinstall a language of that name');
+// Load the language system
+require PUN_ROOT.'include/classes/lang.php';
+$lang = new Flux_Lang();
+$lang->setDefaultLanguage('English');
+$lang->setLanguage($pun_user['language']);
+
+// Load the common language file
+$lang->load('common');
+
+include PUN_ROOT.'lang/English/common.php';
 
 // Check if we are to display a maintenance message
 if ($pun_config['o_maintenance'] && $pun_user['g_id'] > PUN_ADMIN && !defined('PUN_TURN_OFF_MAINT'))
@@ -182,7 +187,7 @@ update_users_online();
 
 // Check to see if we logged in without a cookie being set
 if ($pun_user['is_guest'] && isset($_GET['login']))
-	message($lang_common['No cookie']);
+	message($lang->t('No cookie'));
 
 // The maximum size of a post, in bytes, since the field is now MEDIUMTEXT this allows ~16MB but lets cap at 1MB...
 if (!defined('PUN_MAX_POSTSIZE'))

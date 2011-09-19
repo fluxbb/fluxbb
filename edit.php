@@ -11,17 +11,17 @@ require PUN_ROOT.'include/common.php';
 
 
 if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view']);
+	message($lang->t('No view'));
 
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id < 1)
-	message($lang_common['Bad request']);
+	message($lang->t('Bad request'));
 
 // Fetch some info about the post, the topic and the forum
 $result = $db->query('SELECT f.id AS fid, f.forum_name, f.moderators, f.redirect_url, fp.post_replies, fp.post_topics, t.id AS tid, t.subject, t.posted, t.first_post_id, t.sticky, t.closed, p.poster, p.poster_id, p.message, p.hide_smilies FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.id='.$id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 if (!$db->num_rows($result))
-	message($lang_common['Bad request']);
+	message($lang->t('Bad request'));
 
 $cur_post = $db->fetch_assoc($result);
 
@@ -42,7 +42,7 @@ if (($pun_user['g_edit_posts'] == '0' ||
 	$cur_post['poster_id'] != $pun_user['id'] ||
 	$cur_post['closed'] == '1') &&
 	!$is_admmod)
-	message($lang_common['No permission']);
+	message($lang->t('No permission'));
 
 // Load the post.php/edit.php language file
 require PUN_ROOT.'lang/'.$pun_user['language'].'/post.php';
@@ -137,7 +137,7 @@ if (isset($_POST['form_sent']))
 
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_post['Edit post']);
-$required_fields = array('req_subject' => $lang_common['Subject'], 'req_message' => $lang_common['Message']);
+$required_fields = array('req_subject' => $lang->t('Subject'), 'req_message' => $lang->t('Message'));
 $focus_element = array('edit', 'req_message');
 define('PUN_ACTIVE_PAGE', 'index');
 require PUN_ROOT.'header.php';
@@ -148,7 +148,7 @@ $cur_index = 1;
 <div class="linkst">
 	<div class="inbox">
 		<ul class="crumbs">
-			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li><a href="index.php"><?php echo $lang->t('Index') ?></a></li>
 			<li><span>»&#160;</span><a href="viewforum.php?id=<?php echo $cur_post['fid'] ?>"><?php echo pun_htmlspecialchars($cur_post['forum_name']) ?></a></li>
 			<li><span>»&#160;</span><a href="viewtopic.php?id=<?php echo $cur_post['tid'] ?>"><?php echo pun_htmlspecialchars($cur_post['subject']) ?></a></li>
 			<li><span>»&#160;</span><strong><?php echo $lang_post['Edit post'] ?></strong></li>
@@ -217,14 +217,14 @@ else if (isset($_POST['preview']))
 					<legend><?php echo $lang_post['Edit post legend'] ?></legend>
 					<input type="hidden" name="form_sent" value="1" />
 					<div class="infldset txtarea">
-<?php if ($can_edit_subject): ?>						<label class="required"><strong><?php echo $lang_common['Subject'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br />
+<?php if ($can_edit_subject): ?>						<label class="required"><strong><?php echo $lang->t('Subject') ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
 						<input class="longinput" type="text" name="req_subject" size="80" maxlength="70" tabindex="<?php echo $cur_index++ ?>" value="<?php echo pun_htmlspecialchars(isset($_POST['req_subject']) ? $_POST['req_subject'] : $cur_post['subject']) ?>" /><br /></label>
-<?php endif; ?>						<label class="required"><strong><?php echo $lang_common['Message'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br />
+<?php endif; ?>						<label class="required"><strong><?php echo $lang->t('Message') ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
 						<textarea name="req_message" rows="20" cols="95" tabindex="<?php echo $cur_index++ ?>"><?php echo pun_htmlspecialchars(isset($_POST['req_message']) ? $message : $cur_post['message']) ?></textarea><br /></label>
 						<ul class="bblinks">
-							<li><span><a href="help.php#bbcode" onclick="window.open(this.href); return false;"><?php echo $lang_common['BBCode'] ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
-							<li><span><a href="help.php#img" onclick="window.open(this.href); return false;"><?php echo $lang_common['img tag'] ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1' && $pun_config['p_message_img_tag'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
-							<li><span><a href="help.php#smilies" onclick="window.open(this.href); return false;"><?php echo $lang_common['Smilies'] ?></a> <?php echo ($pun_config['o_smilies'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
+							<li><span><a href="help.php#bbcode" onclick="window.open(this.href); return false;"><?php echo $lang->t('BBCode') ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1') ? $lang->t('on') : $lang->t('off'); ?></span></li>
+							<li><span><a href="help.php#img" onclick="window.open(this.href); return false;"><?php echo $lang->t('img tag') ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1' && $pun_config['p_message_img_tag'] == '1') ? $lang->t('on') : $lang->t('off'); ?></span></li>
+							<li><span><a href="help.php#smilies" onclick="window.open(this.href); return false;"><?php echo $lang->t('Smilies') ?></a> <?php echo ($pun_config['o_smilies'] == '1') ? $lang->t('on') : $lang->t('off'); ?></span></li>
 						</ul>
 					</div>
 				</fieldset>
@@ -234,9 +234,9 @@ $checkboxes = array();
 if ($can_edit_subject && $is_admmod)
 {
 	if (isset($_POST['stick_topic']) || $cur_post['sticky'] == '1')
-		$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" checked="checked" tabindex="'.($cur_index++).'" />'.$lang_common['Stick topic'].'<br /></label>';
+		$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" checked="checked" tabindex="'.($cur_index++).'" />'.$lang->t('Stick topic').'<br /></label>';
 	else
-		$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" tabindex="'.($cur_index++).'" />'.$lang_common['Stick topic'].'<br /></label>';
+		$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" tabindex="'.($cur_index++).'" />'.$lang->t('Stick topic').'<br /></label>';
 }
 
 if ($pun_config['o_smilies'] == '1')
@@ -262,7 +262,7 @@ if (!empty($checkboxes))
 			</div>
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_common['Options'] ?></legend>
+					<legend><?php echo $lang->t('Options') ?></legend>
 					<div class="infldset">
 						<div class="rbox">
 							<?php echo implode("\n\t\t\t\t\t\t\t", $checkboxes)."\n" ?>
@@ -275,7 +275,7 @@ if (!empty($checkboxes))
 
 ?>
 			</div>
-			<p class="buttons"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="s" /> <input type="submit" name="preview" value="<?php echo $lang_post['Preview'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="submit" value="<?php echo $lang->t('Submit') ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="s" /> <input type="submit" name="preview" value="<?php echo $lang_post['Preview'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>

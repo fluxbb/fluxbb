@@ -15,7 +15,7 @@ require PUN_ROOT.'include/common_admin.php';
 
 
 if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_ban_users'] == '0'))
-	message($lang_common['No permission']);
+	message($lang->t('No permission'));
 
 // Load the admin_bans.php language file
 require PUN_ROOT.'lang/'.$admin_language.'/admin_bans.php';
@@ -30,7 +30,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		{
 			$user_id = intval($_GET['add_ban']);
 			if ($user_id < 2)
-				message($lang_common['Bad request']);
+				message($lang->t('Bad request'));
 
 			$result = $db->query('SELECT group_id, username, email FROM '.$db->prefix.'users WHERE id='.$user_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 			if ($db->num_rows($result))
@@ -84,13 +84,13 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 	{
 		$ban_id = intval($_GET['edit_ban']);
 		if ($ban_id < 1)
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
 		$result = $db->query('SELECT username, ip, email, message, expire FROM '.$db->prefix.'bans WHERE id='.$ban_id) or error('Unable to fetch ban info', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result))
 			list($ban_user, $ban_ip, $ban_email, $ban_message, $ban_expire) = $db->fetch_row($result);
 		else
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
 		$diff = ($pun_user['timezone'] + $pun_user['dst']) * 3600;
 		$ban_expire = ($ban_expire != '') ? gmdate('Y-m-d', $ban_expire + $diff) : '';
@@ -305,7 +305,7 @@ else if (isset($_GET['del_ban']))
 
 	$ban_id = intval($_GET['del_ban']);
 	if ($ban_id < 1)
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	$db->query('DELETE FROM '.$db->prefix.'bans WHERE id='.$ban_id) or error('Unable to delete ban', __FILE__, __LINE__, $db->error());
 
@@ -375,7 +375,7 @@ else if (isset($_GET['find_ban']))
 	$start_from = 50 * ($p - 1);
 
 	// Generate paging links
-	$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'admin_bans.php?find_ban=&amp;'.implode('&amp;', $query_str));
+	$paging_links = '<span class="pages-label">'.$lang->t('Pages').' </span>'.paginate($num_pages, $p, 'admin_bans.php?find_ban=&amp;'.implode('&amp;', $query_str));
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Bans'], $lang_admin_bans['Results head']);
 	define('PUN_ACTIVE_PAGE', 'admin');

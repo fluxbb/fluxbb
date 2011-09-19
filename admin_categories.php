@@ -15,7 +15,7 @@ require PUN_ROOT.'include/common_admin.php';
 
 
 if ($pun_user['g_id'] != PUN_ADMIN)
-	message($lang_common['No permission']);
+	message($lang->t('No permission'));
 
 // Load the admin_categories.php language file
 require PUN_ROOT.'lang/'.$admin_language.'/admin_categories.php';
@@ -41,7 +41,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 
 	$cat_to_delete = intval($_POST['cat_to_delete']);
 	if ($cat_to_delete < 1)
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	if (isset($_POST['del_cat_comply'])) // Delete a category with all forums and posts
 	{
@@ -125,7 +125,7 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 
 	$categories = $_POST['cat'];
 	if (empty($categories))
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	foreach ($categories as $cat_id => $cur_cat)
 	{
