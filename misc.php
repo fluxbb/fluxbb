@@ -22,7 +22,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : null;
 if ($action == 'rules')
 {
 	if ($pun_config['o_rules'] == '0' || ($pun_user['is_guest'] && $pun_user['g_read_board'] == '0' && $pun_config['o_regs_allow'] == '0'))
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	// Load the register.php language file
 	require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
@@ -49,7 +49,7 @@ if ($action == 'rules')
 else if ($action == 'markread')
 {
 	if ($pun_user['is_guest'])
-		message($lang_common['No permission']);
+		message($lang->t('No permission'));
 
 	$db->query('UPDATE '.$db->prefix.'users SET last_visit='.$pun_user['logged'].' WHERE id='.$pun_user['id']) or error('Unable to update user last visit data', __FILE__, __LINE__, $db->error());
 
@@ -64,11 +64,11 @@ else if ($action == 'markread')
 else if ($action == 'markforumread')
 {
 	if ($pun_user['is_guest'])
-		message($lang_common['No permission']);
+		message($lang->t('No permission'));
 
 	$fid = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 	if ($fid < 1)
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	$tracked_topics = get_tracked_topics();
 	$tracked_topics['forums'][$fid] = time();
@@ -81,15 +81,15 @@ else if ($action == 'markforumread')
 else if (isset($_GET['email']))
 {
 	if ($pun_user['is_guest'] || $pun_user['g_send_email'] == '0')
-		message($lang_common['No permission']);
+		message($lang->t('No permission'));
 
 	$recipient_id = intval($_GET['email']);
 	if ($recipient_id < 2)
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	$result = $db->query('SELECT username, email, email_setting FROM '.$db->prefix.'users WHERE id='.$recipient_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 	if (!$db->num_rows($result))
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	list($recipient, $recipient_email, $email_setting) = $db->fetch_row($result);
 
@@ -174,15 +174,15 @@ else if (isset($_GET['email']))
 					<div class="infldset txtarea">
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="redirect_url" value="<?php echo pun_htmlspecialchars($redirect_url) ?>" />
-						<label class="required"><strong><?php echo $lang_misc['Email subject'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br />
+						<label class="required"><strong><?php echo $lang_misc['Email subject'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
 						<input class="longinput" type="text" name="req_subject" size="75" maxlength="70" tabindex="1" /><br /></label>
-						<label class="required"><strong><?php echo $lang_misc['Email message'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br />
+						<label class="required"><strong><?php echo $lang_misc['Email message'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
 						<textarea name="req_message" rows="10" cols="75" tabindex="2"></textarea><br /></label>
 						<p><?php echo $lang_misc['Email disclosure note'] ?></p>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" tabindex="3" accesskey="s" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="submit" value="<?php echo $lang->t('Submit') ?>" tabindex="3" accesskey="s" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>
@@ -195,11 +195,11 @@ else if (isset($_GET['email']))
 else if (isset($_GET['report']))
 {
 	if ($pun_user['is_guest'])
-		message($lang_common['No permission']);
+		message($lang->t('No permission'));
 
 	$post_id = intval($_GET['report']);
 	if ($post_id < 1)
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	if (isset($_POST['form_sent']))
 	{
@@ -216,14 +216,14 @@ else if (isset($_GET['report']))
 		// Get the topic ID
 		$result = $db->query('SELECT topic_id FROM '.$db->prefix.'posts WHERE id='.$post_id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
 		$topic_id = $db->result($result);
 
 		// Get the subject and forum ID
 		$result = $db->query('SELECT subject, forum_id FROM '.$db->prefix.'topics WHERE id='.$topic_id) or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
 		list($subject, $forum_id) = $db->fetch_row($result);
 
@@ -268,7 +268,7 @@ else if (isset($_GET['report']))
 	// Fetch some info about the post, the topic and the forum
 	$result = $db->query('SELECT f.id AS fid, f.forum_name, t.id AS tid, t.subject FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.id='.$post_id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 	if (!$db->num_rows($result))
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	$cur_post = $db->fetch_assoc($result);
 
@@ -285,7 +285,7 @@ else if (isset($_GET['report']))
 <div class="linkst">
 	<div class="inbox">
 		<ul class="crumbs">
-			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li><a href="index.php"><?php echo $lang->t('Index') ?></a></li>
 			<li><span>»&#160;</span><a href="viewforum.php?id=<?php echo $cur_post['fid'] ?>"><?php echo pun_htmlspecialchars($cur_post['forum_name']) ?></a></li>
 			<li><span>»&#160;</span><a href="viewtopic.php?pid=<?php echo $post_id ?>#p<?php echo $post_id ?>"><?php echo pun_htmlspecialchars($cur_post['subject']) ?></a></li>
 			<li><span>»&#160;</span><strong><?php echo $lang_misc['Report post'] ?></strong></li>
@@ -302,11 +302,11 @@ else if (isset($_GET['report']))
 					<legend><?php echo $lang_misc['Reason desc'] ?></legend>
 					<div class="infldset txtarea">
 						<input type="hidden" name="form_sent" value="1" />
-						<label class="required"><strong><?php echo $lang_misc['Reason'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><textarea name="req_reason" rows="5" cols="60"></textarea><br /></label>
+						<label class="required"><strong><?php echo $lang_misc['Reason'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><textarea name="req_reason" rows="5" cols="60"></textarea><br /></label>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" accesskey="s" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="submit" value="<?php echo $lang->t('Submit') ?>" accesskey="s" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>
@@ -319,22 +319,22 @@ else if (isset($_GET['report']))
 else if ($action == 'subscribe')
 {
 	if ($pun_user['is_guest'])
-		message($lang_common['No permission']);
+		message($lang->t('No permission'));
 
 	$topic_id = isset($_GET['tid']) ? intval($_GET['tid']) : 0;
 	$forum_id = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 	if ($topic_id < 1 && $forum_id < 1)
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	if ($topic_id)
 	{
 		if ($pun_config['o_topic_subscriptions'] != '1')
-			message($lang_common['No permission']);
+			message($lang->t('No permission'));
 
 		// Make sure the user can view the topic
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$topic_id.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topic_subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$topic_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result))
@@ -348,12 +348,12 @@ else if ($action == 'subscribe')
 	if ($forum_id)
 	{
 		if ($pun_config['o_forum_subscriptions'] != '1')
-			message($lang_common['No permission']);
+			message($lang->t('No permission'));
 
 		// Make sure the user can view the forum
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$forum_id) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forum_subscriptions WHERE user_id='.$pun_user['id'].' AND forum_id='.$forum_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result))
@@ -369,17 +369,17 @@ else if ($action == 'subscribe')
 else if ($action == 'unsubscribe')
 {
 	if ($pun_user['is_guest'])
-		message($lang_common['No permission']);
+		message($lang->t('No permission'));
 
 	$topic_id = isset($_GET['tid']) ? intval($_GET['tid']) : 0;
 	$forum_id = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 	if ($topic_id < 1 && $forum_id < 1)
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	if ($topic_id)
 	{
 		if ($pun_config['o_topic_subscriptions'] != '1')
-			message($lang_common['No permission']);
+			message($lang->t('No permission'));
 
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topic_subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$topic_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
@@ -393,7 +393,7 @@ else if ($action == 'unsubscribe')
 	if ($forum_id)
 	{
 		if ($pun_config['o_forum_subscriptions'] != '1')
-			message($lang_common['No permission']);
+			message($lang->t('No permission'));
 
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forum_subscriptions WHERE user_id='.$pun_user['id'].' AND forum_id='.$forum_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
@@ -407,4 +407,4 @@ else if ($action == 'unsubscribe')
 
 
 else
-	message($lang_common['Bad request']);
+	message($lang->t('Bad request'));

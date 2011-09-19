@@ -15,7 +15,7 @@ require PUN_ROOT.'include/common_admin.php';
 
 
 if ($pun_user['g_id'] != PUN_ADMIN)
-	message($lang_common['No permission']);
+	message($lang->t('No permission'));
 
 // Load the admin_options.php language file
 require PUN_ROOT.'lang/'.$admin_language.'/admin_options.php';
@@ -96,11 +96,11 @@ if (isset($_POST['form_sent']))
 
 	$languages = forum_list_langs();
 	if (!in_array($form['default_lang'], $languages))
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	$styles = forum_list_styles();
 	if (!in_array($form['default_style'], $styles))
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	if ($form['time_format'] == '')
 		$form['time_format'] = 'H:i:s';
@@ -175,16 +175,16 @@ if (isset($_POST['form_sent']))
 		$form['disp_posts_default'] = 75;
 
 	if ($form['feed_type'] < 0 || $form['feed_type'] > 2)
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	if ($form['feed_ttl'] < 0)
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	if ($form['report_method'] < 0 || $form['report_method'] > 2)
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	if ($form['default_email_setting'] < 0 || $form['default_email_setting'] > 2)
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	if ($form['timeout_online'] >= $form['timeout_visit'])
 		message($lang_admin_options['Timeout error message']);
