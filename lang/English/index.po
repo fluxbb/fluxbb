@@ -1,0 +1,51 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in index.php
+msgid "Topics"
+msgstr "Topics"
+
+msgid "Link to"
+msgstr "Link to:"
+
+msgid "Empty board"
+msgstr "Board is empty."
+
+msgid "Newest user"
+msgstr "Newest registered user: %s"
+
+msgid "Users online"
+msgstr "Registered users online: %s"
+
+msgid "Guests online"
+msgstr "Guests online: %s"
+
+msgid "No of users"
+msgstr "Total number of registered users: %s"
+
+msgid "No of topics"
+msgstr "Total number of topics: %s"
+
+msgid "No of posts"
+msgstr "Total number of posts: %s"
+
+msgid "Online"
+msgstr "Online:"
+
+msgid "Board info"
+msgstr "Board information"
+
+msgid "Board stats"
+msgstr "Board statistics"
+
+msgid "User info"
+msgstr "User information"
+

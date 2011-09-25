@@ -15,7 +15,7 @@ if ($pun_user['g_read_board'] == '0')
 
 
 // Load the index.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/index.php';
+$lang->load('index');
 
 // Get list of forums and topics with new posts since last visit
 if (!$pun_user['is_guest'])
@@ -72,7 +72,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 			<thead>
 				<tr>
 					<th class="tcl" scope="col"><?php echo $lang->t('Forum') ?></th>
-					<th class="tc2" scope="col"><?php echo $lang_index['Topics'] ?></th>
+					<th class="tc2" scope="col"><?php echo $lang->t('Topics') ?></th>
 					<th class="tc3" scope="col"><?php echo $lang->t('Posts') ?></th>
 					<th class="tcr" scope="col"><?php echo $lang->t('Last post') ?></th>
 				</tr>
@@ -108,7 +108,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 	// Is this a redirect forum?
 	if ($cur_forum['redirect_url'] != '')
 	{
-		$forum_field = '<h3><span class="redirtext">'.$lang_index['Link to'].'</span> <a href="'.pun_htmlspecialchars($cur_forum['redirect_url']).'" title="'.$lang_index['Link to'].' '.pun_htmlspecialchars($cur_forum['redirect_url']).'">'.pun_htmlspecialchars($cur_forum['forum_name']).'</a></h3>';
+		$forum_field = '<h3><span class="redirtext">'.$lang->t('Link to').'</span> <a href="'.pun_htmlspecialchars($cur_forum['redirect_url']).'" title="'.$lang->t('Link to').' '.pun_htmlspecialchars($cur_forum['redirect_url']).'">'.pun_htmlspecialchars($cur_forum['forum_name']).'</a></h3>';
 		$num_topics = $num_posts = '-';
 		$item_status .= ' iredirect';
 		$icon_type = 'icon';
@@ -169,7 +169,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 if ($cur_category > 0)
 	echo "\t\t\t".'</tbody>'."\n\t\t\t".'</table>'."\n\t\t".'</div>'."\n\t".'</div>'."\n".'</div>'."\n\n";
 else
-	echo '<div id="idx0" class="block"><div class="box"><div class="inbox"><p>'.$lang_index['Empty board'].'</p></div></div></div>';
+	echo '<div id="idx0" class="block"><div class="box"><div class="inbox"><p>'.$lang->t('Empty board').'</p></div></div></div>';
 
 // Collect some board statistics
 $stats = fetch_board_stats();
@@ -197,18 +197,18 @@ if (!empty($forum_actions))
 
 ?>
 <div id="brdstats" class="block">
-	<h2><span><?php echo $lang_index['Board info'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Board info') ?></span></h2>
 	<div class="box">
 		<div class="inbox">
 			<dl class="conr">
-				<dt><strong><?php echo $lang_index['Board stats'] ?></strong></dt>
-				<dd><span><?php printf($lang_index['No of users'], '<strong>'.forum_number_format($stats['total_users']).'</strong>') ?></span></dd>
-				<dd><span><?php printf($lang_index['No of topics'], '<strong>'.forum_number_format($stats['total_topics']).'</strong>') ?></span></dd>
-				<dd><span><?php printf($lang_index['No of posts'], '<strong>'.forum_number_format($stats['total_posts']).'</strong>') ?></span></dd>
+				<dt><strong><?php echo $lang->t('Board stats') ?></strong></dt>
+				<dd><span><?php printf($lang->t('No of users'), '<strong>'.forum_number_format($stats['total_users']).'</strong>') ?></span></dd>
+				<dd><span><?php printf($lang->t('No of topics'), '<strong>'.forum_number_format($stats['total_topics']).'</strong>') ?></span></dd>
+				<dd><span><?php printf($lang->t('No of posts'), '<strong>'.forum_number_format($stats['total_posts']).'</strong>') ?></span></dd>
 			</dl>
 			<dl class="conl">
-				<dt><strong><?php echo $lang_index['User info'] ?></strong></dt>
-				<dd><span><?php printf($lang_index['Newest user'], $stats['newest_user']) ?></span></dd>
+				<dt><strong><?php echo $lang->t('User info') ?></strong></dt>
+				<dd><span><?php printf($lang->t('Newest user'), $stats['newest_user']) ?></span></dd>
 <?php
 
 if ($pun_config['o_users_online'] == '1')
@@ -232,11 +232,11 @@ if ($pun_config['o_users_online'] == '1')
 	}
 
 	$num_users = count($users);
-	echo "\t\t\t\t".'<dd><span>'.sprintf($lang_index['Users online'], '<strong>'.forum_number_format($num_users).'</strong>').'</span></dd>'."\n\t\t\t\t".'<dd><span>'.sprintf($lang_index['Guests online'], '<strong>'.forum_number_format($num_guests).'</strong>').'</span></dd>'."\n\t\t\t".'</dl>'."\n";
+	echo "\t\t\t\t".'<dd><span>'.sprintf($lang->t('Users online'), '<strong>'.forum_number_format($num_users).'</strong>').'</span></dd>'."\n\t\t\t\t".'<dd><span>'.sprintf($lang->t('Guests online'), '<strong>'.forum_number_format($num_guests).'</strong>').'</span></dd>'."\n\t\t\t".'</dl>'."\n";
 
 
 	if ($num_users > 0)
-		echo "\t\t\t".'<dl id="onlinelist" class="clearb">'."\n\t\t\t\t".'<dt><strong>'.$lang_index['Online'].' </strong></dt>'."\t\t\t\t".implode(',</dd> ', $users).'</dd>'."\n\t\t\t".'</dl>'."\n";
+		echo "\t\t\t".'<dl id="onlinelist" class="clearb">'."\n\t\t\t\t".'<dt><strong>'.$lang->t('Online').' </strong></dt>'."\t\t\t\t".implode(',</dd> ', $users).'</dd>'."\n\t\t\t".'</dl>'."\n";
 	else
 		echo "\t\t\t".'<div class="clearer"></div>'."\n";
 
