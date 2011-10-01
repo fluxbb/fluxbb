@@ -34,6 +34,13 @@ class Flux_Lang
 	protected $lang = 'en';
 
 	/**
+	 * The resources that have been loaded so far
+	 *
+	 * @var array
+	 */
+	protected $loadedResources = array();
+
+	/**
 	 * Set the directory where language packs are located
 	 *
 	 * @param string $dir
@@ -86,6 +93,12 @@ class Flux_Lang
 	 */
 	public function load($resource)
 	{
+		// Don't load twice
+		if (in_array($resource, $this->loadedResources))
+			return;
+
+		$this->loadedResources[] = $resource;
+
 		$default_filename = $this->langDir.'/'.$this->defaultLang.'/'.$resource.'.mo';
 		$filename = $this->langDir.'/'.$this->lang.'/'.$resource.'.mo';
 
