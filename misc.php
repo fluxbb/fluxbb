@@ -14,7 +14,7 @@ require PUN_ROOT.'include/common.php';
 
 
 // Load the misc.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/misc.php';
+$lang->load('misc');
 
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 
@@ -25,15 +25,15 @@ if ($action == 'rules')
 		message($lang->t('Bad request'));
 
 	// Load the register.php language file
-	require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
+	$lang->load('register');
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_register['Forum rules']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Forum rules'));
 	define('PUN_ACTIVE_PAGE', 'rules');
 	require PUN_ROOT.'header.php';
 
 ?>
 <div id="rules" class="block">
-	<div class="hd"><h2><span><?php echo $lang_register['Forum rules'] ?></span></h2></div>
+	<div class="hd"><h2><span><?php echo $lang->t('Forum rules') ?></span></h2></div>
 	<div class="box">
 		<div id="rules-block" class="inbox">
 			<div class="usercontent"><?php echo $pun_config['o_rules_message'] ?></div>
@@ -56,7 +56,7 @@ else if ($action == 'markread')
 	// Reset tracked topics
 	set_tracked_topics(null);
 
-	redirect('index.php', $lang_misc['Mark read redirect']);
+	redirect('index.php', $lang->t('Mark read redirect'));
 }
 
 
@@ -74,7 +74,7 @@ else if ($action == 'markforumread')
 	$tracked_topics['forums'][$fid] = time();
 	set_tracked_topics($tracked_topics);
 
-	redirect('viewforum.php?id='.$fid, $lang_misc['Mark forum read redirect']);
+	redirect('viewforum.php?id='.$fid, $lang->t('Mark forum read redirect'));
 }
 
 
@@ -94,7 +94,7 @@ else if (isset($_GET['email']))
 	list($recipient, $recipient_email, $email_setting) = $db->fetch_row($result);
 
 	if ($email_setting == 2 && !$pun_user['is_admmod'])
-		message($lang_misc['Form email disabled']);
+		message($lang->t('Form email disabled'));
 
 
 	if (isset($_POST['form_sent']))
@@ -104,14 +104,14 @@ else if (isset($_GET['email']))
 		$message = pun_trim($_POST['req_message']);
 
 		if ($subject == '')
-			message($lang_misc['No email subject']);
+			message($lang->t('No email subject'));
 		else if ($message == '')
-			message($lang_misc['No email message']);
+			message($lang->t('No email message'));
 		else if (pun_strlen($message) > PUN_MAX_POSTSIZE)
-			message($lang_misc['Too long email message']);
+			message($lang->t('Too long email message'));
 
 		if ($pun_user['last_email_sent'] != '' && (time() - $pun_user['last_email_sent']) < $pun_user['g_email_flood'] && (time() - $pun_user['last_email_sent']) >= 0)
-			message(sprintf($lang_misc['Email flood'], $pun_user['g_email_flood']));
+			message(sprintf($lang->t('Email flood'), $pun_user['g_email_flood']));
 
 		// Load the "form email" template
 		$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/form_email.tpl'));
@@ -133,7 +133,7 @@ else if (isset($_GET['email']))
 
 		$db->query('UPDATE '.$db->prefix.'users SET last_email_sent='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 
-		redirect(htmlspecialchars($_POST['redirect_url']), $lang_misc['Email sent redirect']);
+		redirect(htmlspecialchars($_POST['redirect_url']), $lang->t('Email sent redirect'));
 	}
 
 
@@ -157,28 +157,28 @@ else if (isset($_GET['email']))
 	if (!isset($redirect_url))
 		$redirect_url = 'profile.php?id='.$recipient_id;
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Send email to'].' '.pun_htmlspecialchars($recipient));
-	$required_fields = array('req_subject' => $lang_misc['Email subject'], 'req_message' => $lang_misc['Email message']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Send email to').' '.pun_htmlspecialchars($recipient));
+	$required_fields = array('req_subject' => $lang->t('Email subject'), 'req_message' => $lang->t('Email message'));
 	$focus_element = array('email', 'req_subject');
 	define('PUN_ACTIVE_PAGE', 'index');
 	require PUN_ROOT.'header.php';
 
 ?>
 <div id="emailform" class="blockform">
-	<h2><span><?php echo $lang_misc['Send email to'] ?> <?php echo pun_htmlspecialchars($recipient) ?></span></h2>
+	<h2><span><?php echo $lang->t('Send email to') ?> <?php echo pun_htmlspecialchars($recipient) ?></span></h2>
 	<div class="box">
 		<form id="email" method="post" action="misc.php?email=<?php echo $recipient_id ?>" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_misc['Write email'] ?></legend>
+					<legend><?php echo $lang->t('Write email') ?></legend>
 					<div class="infldset txtarea">
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="redirect_url" value="<?php echo pun_htmlspecialchars($redirect_url) ?>" />
-						<label class="required"><strong><?php echo $lang_misc['Email subject'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
+						<label class="required"><strong><?php echo $lang->t('Email subject') ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
 						<input class="longinput" type="text" name="req_subject" size="75" maxlength="70" tabindex="1" /><br /></label>
-						<label class="required"><strong><?php echo $lang_misc['Email message'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
+						<label class="required"><strong><?php echo $lang->t('Email message') ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
 						<textarea name="req_message" rows="10" cols="75" tabindex="2"></textarea><br /></label>
-						<p><?php echo $lang_misc['Email disclosure note'] ?></p>
+						<p><?php echo $lang->t('Email disclosure note') ?></p>
 					</div>
 				</fieldset>
 			</div>
@@ -206,12 +206,12 @@ else if (isset($_GET['report']))
 		// Clean up reason from POST
 		$reason = pun_linebreaks(pun_trim($_POST['req_reason']));
 		if ($reason == '')
-			message($lang_misc['No reason']);
+			message($lang->t('No reason'));
 		else if (strlen($reason) > 65535) // TEXT field can only hold 65535 bytes
-			message($lang_misc['Reason too long']);
+			message($lang->t('Reason too long'));
 
 		if ($pun_user['last_report_sent'] != '' && (time() - $pun_user['last_report_sent']) < $pun_user['g_report_flood'] && (time() - $pun_user['last_report_sent']) >= 0)
-			message(sprintf($lang_misc['Report flood'], $pun_user['g_report_flood']));
+			message(sprintf($lang->t('Report flood'), $pun_user['g_report_flood']));
 
 		// Get the topic ID
 		$result = $db->query('SELECT topic_id FROM '.$db->prefix.'posts WHERE id='.$post_id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
@@ -262,7 +262,7 @@ else if (isset($_GET['report']))
 
 		$cache->delete('num_reports');
 
-		redirect('viewtopic.php?pid='.$post_id.'#p'.$post_id, $lang_misc['Report redirect']);
+		redirect('viewtopic.php?pid='.$post_id.'#p'.$post_id, $lang->t('Report redirect'));
 	}
 
 	// Fetch some info about the post, the topic and the forum
@@ -275,8 +275,8 @@ else if (isset($_GET['report']))
 	if ($pun_config['o_censoring'] == '1')
 		$cur_post['subject'] = censor_words($cur_post['subject']);
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Report post']);
-	$required_fields = array('req_reason' => $lang_misc['Reason']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Report post'));
+	$required_fields = array('req_reason' => $lang->t('Reason'));
 	$focus_element = array('report', 'req_reason');
 	define('PUN_ACTIVE_PAGE', 'index');
 	require PUN_ROOT.'header.php';
@@ -288,21 +288,21 @@ else if (isset($_GET['report']))
 			<li><a href="index.php"><?php echo $lang->t('Index') ?></a></li>
 			<li><span>»&#160;</span><a href="viewforum.php?id=<?php echo $cur_post['fid'] ?>"><?php echo pun_htmlspecialchars($cur_post['forum_name']) ?></a></li>
 			<li><span>»&#160;</span><a href="viewtopic.php?pid=<?php echo $post_id ?>#p<?php echo $post_id ?>"><?php echo pun_htmlspecialchars($cur_post['subject']) ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_misc['Report post'] ?></strong></li>
+			<li><span>»&#160;</span><strong><?php echo $lang->t('Report post') ?></strong></li>
 		</ul>
 	</div>
 </div>
 
 <div id="reportform" class="blockform">
-	<h2><span><?php echo $lang_misc['Report post'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Report post') ?></span></h2>
 	<div class="box">
 		<form id="report" method="post" action="misc.php?report=<?php echo $post_id ?>" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_misc['Reason desc'] ?></legend>
+					<legend><?php echo $lang->t('Reason desc') ?></legend>
 					<div class="infldset txtarea">
 						<input type="hidden" name="form_sent" value="1" />
-						<label class="required"><strong><?php echo $lang_misc['Reason'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><textarea name="req_reason" rows="5" cols="60"></textarea><br /></label>
+						<label class="required"><strong><?php echo $lang->t('Reason') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><textarea name="req_reason" rows="5" cols="60"></textarea><br /></label>
 					</div>
 				</fieldset>
 			</div>
@@ -338,11 +338,11 @@ else if ($action == 'subscribe')
 
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topic_subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$topic_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result))
-			message($lang_misc['Already subscribed topic']);
+			message($lang->t('Already subscribed topic'));
 
 		$db->query('INSERT INTO '.$db->prefix.'topic_subscriptions (user_id, topic_id) VALUES('.$pun_user['id'].' ,'.$topic_id.')') or error('Unable to add subscription', __FILE__, __LINE__, $db->error());
 
-		redirect('viewtopic.php?id='.$topic_id, $lang_misc['Subscribe redirect']);
+		redirect('viewtopic.php?id='.$topic_id, $lang->t('Subscribe redirect'));
 	}
 
 	if ($forum_id)
@@ -357,11 +357,11 @@ else if ($action == 'subscribe')
 
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forum_subscriptions WHERE user_id='.$pun_user['id'].' AND forum_id='.$forum_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result))
-			message($lang_misc['Already subscribed forum']);
+			message($lang->t('Already subscribed forum'));
 
 		$db->query('INSERT INTO '.$db->prefix.'forum_subscriptions (user_id, forum_id) VALUES('.$pun_user['id'].' ,'.$forum_id.')') or error('Unable to add subscription', __FILE__, __LINE__, $db->error());
 
-		redirect('viewforum.php?id='.$forum_id, $lang_misc['Subscribe redirect']);
+		redirect('viewforum.php?id='.$forum_id, $lang->t('Subscribe redirect'));
 	}
 }
 
@@ -383,11 +383,11 @@ else if ($action == 'unsubscribe')
 
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topic_subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$topic_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
-			message($lang_misc['Not subscribed topic']);
+			message($lang->t('Not subscribed topic'));
 
 		$db->query('DELETE FROM '.$db->prefix.'topic_subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$topic_id) or error('Unable to remove subscription', __FILE__, __LINE__, $db->error());
 
-		redirect('viewtopic.php?id='.$topic_id, $lang_misc['Unsubscribe redirect']);
+		redirect('viewtopic.php?id='.$topic_id, $lang->t('Unsubscribe redirect'));
 	}
 
 	if ($forum_id)
@@ -397,11 +397,11 @@ else if ($action == 'unsubscribe')
 
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forum_subscriptions WHERE user_id='.$pun_user['id'].' AND forum_id='.$forum_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
-			message($lang_misc['Not subscribed forum']);
+			message($lang->t('Not subscribed forum'));
 
 		$db->query('DELETE FROM '.$db->prefix.'forum_subscriptions WHERE user_id='.$pun_user['id'].' AND forum_id='.$forum_id) or error('Unable to remove subscription', __FILE__, __LINE__, $db->error());
 
-		redirect('viewforum.php?id='.$forum_id, $lang_misc['Unsubscribe redirect']);
+		redirect('viewforum.php?id='.$forum_id, $lang->t('Unsubscribe redirect'));
 	}
 }
 

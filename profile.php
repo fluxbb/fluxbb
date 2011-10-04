@@ -28,10 +28,10 @@ if ($action != 'change_pass' || !isset($_GET['key']))
 }
 
 // Load the profile.php/register.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/prof_reg.php';
+$lang->load('prof_reg');
 
 // Load the profile.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/profile.php';
+$lang->load('profile');
 
 
 if ($action == 'change_pass')
@@ -51,12 +51,12 @@ if ($action == 'change_pass')
 		$cur_user = $db->fetch_assoc($result);
 
 		if ($key == '' || $key != $cur_user['activate_key'])
-			message($lang_profile['Pass key bad'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
+			message($lang->t('Pass key bad').' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
 		else
 		{
 			$db->query('UPDATE '.$db->prefix.'users SET password=\''.$cur_user['activate_string'].'\', activate_string=NULL, activate_key=NULL'.(!empty($cur_user['salt']) ? ', salt=NULL' : '').' WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
 
-			message($lang_profile['Pass updated'], true);
+			message($lang->t('Pass updated'), true);
 		}
 	}
 
@@ -88,9 +88,9 @@ if ($action == 'change_pass')
 		$new_password2 = pun_trim($_POST['req_new_password2']);
 
 		if ($new_password1 != $new_password2)
-			message($lang_prof_reg['Pass not match']);
+			message($lang->t('Pass not match'));
 		if (pun_strlen($new_password1) < 4)
-			message($lang_prof_reg['Pass too short']);
+			message($lang->t('Pass too short'));
 
 		$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch password', __FILE__, __LINE__, $db->error());
 		$cur_user = $db->fetch_assoc($result);
@@ -106,7 +106,7 @@ if ($action == 'change_pass')
 		}
 
 		if (!$authorized)
-			message($lang_profile['Wrong pass']);
+			message($lang->t('Wrong pass'));
 
 		$new_password_hash = pun_hash($new_password1);
 
@@ -115,32 +115,32 @@ if ($action == 'change_pass')
 		if ($pun_user['id'] == $id)
 			pun_setcookie($pun_user['id'], $new_password_hash, time() + $pun_config['o_timeout_visit']);
 
-		redirect('profile.php?section=essentials&amp;id='.$id, $lang_profile['Pass updated redirect']);
+		redirect('profile.php?section=essentials&amp;id='.$id, $lang->t('Pass updated redirect'));
 	}
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Change pass']);
-	$required_fields = array('req_old_password' => $lang_profile['Old pass'], 'req_new_password1' => $lang_profile['New pass'], 'req_new_password2' => $lang_profile['Confirm new pass']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang->t('Change pass'));
+	$required_fields = array('req_old_password' => $lang->t('Old pass'), 'req_new_password1' => $lang->t('New pass'), 'req_new_password2' => $lang->t('Confirm new pass'));
 	$focus_element = array('change_pass', ((!$pun_user['is_admmod']) ? 'req_old_password' : 'req_new_password1'));
 	define('PUN_ACTIVE_PAGE', 'profile');
 	require PUN_ROOT.'header.php';
 
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_profile['Change pass'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Change pass') ?></span></h2>
 	<div class="box">
 		<form id="change_pass" method="post" action="profile.php?action=change_pass&amp;id=<?php echo $id ?>" onsubmit="return process_form(this)">
 			<div class="inform">
 				<input type="hidden" name="form_sent" value="1" />
 				<fieldset>
-					<legend><?php echo $lang_profile['Change pass legend'] ?></legend>
+					<legend><?php echo $lang->t('Change pass legend') ?></legend>
 					<div class="infldset">
-<?php if (!$pun_user['is_admmod']): ?>						<label class="required"><strong><?php echo $lang_profile['Old pass'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
+<?php if (!$pun_user['is_admmod']): ?>						<label class="required"><strong><?php echo $lang->t('Old pass') ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
 						<input type="password" name="req_old_password" size="16" /><br /></label>
-<?php endif; ?>						<label class="conl required"><strong><?php echo $lang_profile['New pass'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
+<?php endif; ?>						<label class="conl required"><strong><?php echo $lang->t('New pass') ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
 						<input type="password" name="req_new_password1" size="16" /><br /></label>
-						<label class="conl required"><strong><?php echo $lang_profile['Confirm new pass'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
+						<label class="conl required"><strong><?php echo $lang->t('Confirm new pass') ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
 						<input type="password" name="req_new_password2" size="16" /><br /></label>
-						<p class="clearb"><?php echo $lang_profile['Pass info'] ?></p>
+						<p class="clearb"><?php echo $lang->t('Pass info') ?></p>
 					</div>
 				</fieldset>
 			</div>
@@ -182,18 +182,18 @@ else if ($action == 'change_email')
 		list($new_email, $new_email_key) = $db->fetch_row($result);
 
 		if ($key == '' || $key != $new_email_key)
-			message($lang_profile['Email key bad'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
+			message($lang->t('Email key bad').' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
 		else
 		{
 			$db->query('UPDATE '.$db->prefix.'users SET email=activate_string, activate_string=NULL, activate_key=NULL WHERE id='.$id) or error('Unable to update email address', __FILE__, __LINE__, $db->error());
 
-			message($lang_profile['Email updated'], true);
+			message($lang->t('Email updated'), true);
 		}
 	}
 	else if (isset($_POST['form_sent']))
 	{
 		if (pun_hash($_POST['req_password']) !== $pun_user['password'])
-			message($lang_profile['Wrong pass']);
+			message($lang->t('Wrong pass'));
 
 		require PUN_ROOT.'include/email.php';
 
@@ -206,7 +206,7 @@ else if ($action == 'change_email')
 		if (is_banned_email($new_email))
 		{
 			if ($pun_config['p_allow_banned_email'] == '0')
-				message($lang_prof_reg['Banned email']);
+				message($lang->t('Banned email'));
 			else if ($pun_config['o_mailing_list'] != '')
 			{
 				// Load the "banned email change" template
@@ -231,7 +231,7 @@ else if ($action == 'change_email')
 		if ($db->num_rows($result))
 		{
 			if ($pun_config['p_allow_dupe_email'] == '0')
-				message($lang_prof_reg['Dupe email']);
+				message($lang->t('Dupe email'));
 			else if ($pun_config['o_mailing_list'] != '')
 			{
 				while ($cur_dupe = $db->fetch_assoc($result))
@@ -274,28 +274,28 @@ else if ($action == 'change_email')
 
 		pun_mail($new_email, $mail_subject, $mail_message);
 
-		message($lang_profile['Activate email sent'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
+		message($lang->t('Activate email sent').' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
 	}
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Change email']);
-	$required_fields = array('req_new_email' => $lang_profile['New email'], 'req_password' => $lang->t('Password'));
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang->t('Change email'));
+	$required_fields = array('req_new_email' => $lang->t('New email'), 'req_password' => $lang->t('Password'));
 	$focus_element = array('change_email', 'req_new_email');
 	define('PUN_ACTIVE_PAGE', 'profile');
 	require PUN_ROOT.'header.php';
 
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_profile['Change email'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Change email') ?></span></h2>
 	<div class="box">
 		<form id="change_email" method="post" action="profile.php?action=change_email&amp;id=<?php echo $id ?>" id="change_email" onsubmit="return process_form(this)">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_profile['Email legend'] ?></legend>
+					<legend><?php echo $lang->t('Email legend') ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
-						<label class="required"><strong><?php echo $lang_profile['New email'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input type="text" name="req_new_email" size="50" maxlength="80" /><br /></label>
+						<label class="required"><strong><?php echo $lang->t('New email') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input type="text" name="req_new_email" size="50" maxlength="80" /><br /></label>
 						<label class="required"><strong><?php echo $lang->t('Password') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input type="password" name="req_password" size="16" /><br /></label>
-						<p><?php echo $lang_profile['Email instructions'] ?></p>
+						<p><?php echo $lang->t('Email instructions') ?></p>
 					</div>
 				</fieldset>
 			</div>
@@ -312,7 +312,7 @@ else if ($action == 'change_email')
 else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 {
 	if ($pun_config['o_avatars'] == '0')
-		message($lang_profile['Avatars disabled']);
+		message($lang->t('Avatars disabled'));
 
 	if ($pun_user['id'] != $id && !$pun_user['is_admmod'])
 		message($lang->t('No permission'));
@@ -320,7 +320,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 	if (isset($_POST['form_sent']))
 	{
 		if (!isset($_FILES['req_file']))
-			message($lang_profile['No file']);
+			message($lang->t('No file'));
 
 		$uploaded_file = $_FILES['req_file'];
 
@@ -331,25 +331,25 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 			{
 				case 1: // UPLOAD_ERR_INI_SIZE
 				case 2: // UPLOAD_ERR_FORM_SIZE
-					message($lang_profile['Too large ini']);
+					message($lang->t('Too large ini'));
 					break;
 
 				case 3: // UPLOAD_ERR_PARTIAL
-					message($lang_profile['Partial upload']);
+					message($lang->t('Partial upload'));
 					break;
 
 				case 4: // UPLOAD_ERR_NO_FILE
-					message($lang_profile['No file']);
+					message($lang->t('No file'));
 					break;
 
 				case 6: // UPLOAD_ERR_NO_TMP_DIR
-					message($lang_profile['No tmp directory']);
+					message($lang->t('No tmp directory'));
 					break;
 
 				default:
 					// No error occured, but was something actually uploaded?
 					if ($uploaded_file['size'] == 0)
-						message($lang_profile['No file']);
+						message($lang->t('No file'));
 					break;
 			}
 		}
@@ -359,15 +359,15 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 			// Preliminary file check, adequate in most cases
 			$allowed_types = array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png');
 			if (!in_array($uploaded_file['type'], $allowed_types))
-				message($lang_profile['Bad type']);
+				message($lang->t('Bad type'));
 
 			// Make sure the file isn't too big
 			if ($uploaded_file['size'] > $pun_config['o_avatars_size'])
-				message($lang_profile['Too large'].' '.forum_number_format($pun_config['o_avatars_size']).' '.$lang_profile['bytes'].'.');
+				message($lang->t('Too large').' '.forum_number_format($pun_config['o_avatars_size']).' '.$lang->t('bytes').'.');
 
 			// Move the file to the avatar directory. We do this before checking the width/height to circumvent open_basedir restrictions
 			if (!@move_uploaded_file($uploaded_file['tmp_name'], PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$id.'.tmp'))
-				message($lang_profile['Move failed'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
+				message($lang->t('Move failed').' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
 
 			list($width, $height, $type,) = @getimagesize(PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$id.'.tmp');
 
@@ -382,14 +382,14 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 			{
 				// Invalid type
 				@unlink(PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$id.'.tmp');
-				message($lang_profile['Bad type']);
+				message($lang->t('Bad type'));
 			}
 
 			// Now check the width/height
 			if (empty($width) || empty($height) || $width > $pun_config['o_avatars_width'] || $height > $pun_config['o_avatars_height'])
 			{
 				@unlink(PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$id.'.tmp');
-				message($lang_profile['Too wide or high'].' '.$pun_config['o_avatars_width'].'x'.$pun_config['o_avatars_height'].' '.$lang_profile['pixels'].'.');
+				message($lang->t('Too wide or high').' '.$pun_config['o_avatars_width'].'x'.$pun_config['o_avatars_height'].' '.$lang->t('pixels').'.');
 			}
 
 			// Delete any old avatars and put the new one in place
@@ -398,34 +398,34 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 			@chmod(PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$id.$extension, 0644);
 		}
 		else
-			message($lang_profile['Unknown failure']);
+			message($lang->t('Unknown failure'));
 
-		redirect('profile.php?section=personality&amp;id='.$id, $lang_profile['Avatar upload redirect']);
+		redirect('profile.php?section=personality&amp;id='.$id, $lang->t('Avatar upload redirect'));
 	}
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Upload avatar']);
-	$required_fields = array('req_file' => $lang_profile['File']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang->t('Upload avatar'));
+	$required_fields = array('req_file' => $lang->t('File'));
 	$focus_element = array('upload_avatar', 'req_file');
 	define('PUN_ACTIVE_PAGE', 'profile');
 	require PUN_ROOT.'header.php';
 
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_profile['Upload avatar'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Upload avatar') ?></span></h2>
 	<div class="box">
 		<form id="upload_avatar" method="post" enctype="multipart/form-data" action="profile.php?action=upload_avatar2&amp;id=<?php echo $id ?>" onsubmit="return process_form(this)">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_profile['Upload avatar legend'] ?></legend>
+					<legend><?php echo $lang->t('Upload avatar legend') ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $pun_config['o_avatars_size'] ?>" />
-						<label class="required"><strong><?php echo $lang_profile['File'] ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input name="req_file" type="file" size="40" /><br /></label>
-						<p><?php echo $lang_profile['Avatar desc'].' '.$pun_config['o_avatars_width'].' x '.$pun_config['o_avatars_height'].' '.$lang_profile['pixels'].' '.$lang->t('and').' '.forum_number_format($pun_config['o_avatars_size']).' '.$lang_profile['bytes'].' ('.file_size($pun_config['o_avatars_size']).').' ?></p>
+						<label class="required"><strong><?php echo $lang->t('File') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input name="req_file" type="file" size="40" /><br /></label>
+						<p><?php echo $lang->t('Avatar desc').' '.$pun_config['o_avatars_width'].' x '.$pun_config['o_avatars_height'].' '.$lang->t('pixels').' '.$lang->t('and').' '.forum_number_format($pun_config['o_avatars_size']).' '.$lang->t('bytes').' ('.file_size($pun_config['o_avatars_size']).').' ?></p>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="upload" value="<?php echo $lang_profile['Upload'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
+			<p class="buttons"><input type="submit" name="upload" value="<?php echo $lang->t('Upload') ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>
@@ -444,7 +444,7 @@ else if ($action == 'delete_avatar')
 
 	delete_avatar($id);
 
-	redirect('profile.php?section=personality&amp;id='.$id, $lang_profile['Avatar deleted redirect']);
+	redirect('profile.php?section=personality&amp;id='.$id, $lang->t('Avatar deleted redirect'));
 }
 
 
@@ -485,7 +485,7 @@ else if (isset($_POST['update_group_membership']))
 		}
 	}
 
-	redirect('profile.php?section=admin&amp;id='.$id, $lang_profile['Group membership redirect']);
+	redirect('profile.php?section=admin&amp;id='.$id, $lang->t('Group membership redirect'));
 }
 
 
@@ -526,7 +526,7 @@ else if (isset($_POST['update_forums']))
 		}
 	}
 
-	redirect('profile.php?section=admin&amp;id='.$id, $lang_profile['Update forums redirect']);
+	redirect('profile.php?section=admin&amp;id='.$id, $lang->t('Update forums redirect'));
 }
 
 
@@ -544,10 +544,10 @@ else if (isset($_POST['ban']))
 	if ($db->num_rows($result))
 	{
 		$ban_id = $db->result($result);
-		redirect('admin_bans.php?edit_ban='.$ban_id.'&amp;exists', $lang_profile['Ban redirect']);
+		redirect('admin_bans.php?edit_ban='.$ban_id.'&amp;exists', $lang->t('Ban redirect'));
 	}
 	else
-		redirect('admin_bans.php?add_ban='.$id, $lang_profile['Ban redirect']);
+		redirect('admin_bans.php?add_ban='.$id, $lang->t('Ban redirect'));
 }
 
 
@@ -563,7 +563,7 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 	list($group_id, $username) = $db->fetch_row($result);
 
 	if ($group_id == PUN_ADMIN)
-		message($lang_profile['No delete admin message']);
+		message($lang->t('No delete admin message'));
 
 	if (isset($_POST['delete_user_comply']))
 	{
@@ -633,31 +633,31 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 		// Regenerate the users info cache
 		$cache->delete('boardstats');
 
-		redirect('index.php', $lang_profile['User delete redirect']);
+		redirect('index.php', $lang->t('User delete redirect'));
 	}
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Confirm delete user']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang->t('Confirm delete user'));
 	define('PUN_ACTIVE_PAGE', 'profile');
 	require PUN_ROOT.'header.php';
 
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_profile['Confirm delete user'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Confirm delete user') ?></span></h2>
 	<div class="box">
 		<form id="confirm_del_user" method="post" action="profile.php?id=<?php echo $id ?>">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_profile['Confirm delete legend'] ?></legend>
+					<legend><?php echo $lang->t('Confirm delete legend') ?></legend>
 					<div class="infldset">
-						<p><?php echo $lang_profile['Confirmation info'].' <strong>'.pun_htmlspecialchars($username).'</strong>.' ?></p>
+						<p><?php echo $lang->t('Confirmation info').' <strong>'.pun_htmlspecialchars($username).'</strong>.' ?></p>
 						<div class="rbox">
-							<label><input type="checkbox" name="delete_posts" value="1" checked="checked" /><?php echo $lang_profile['Delete posts'] ?><br /></label>
+							<label><input type="checkbox" name="delete_posts" value="1" checked="checked" /><?php echo $lang->t('Delete posts') ?><br /></label>
 						</div>
-						<p class="warntext"><strong><?php echo $lang_profile['Delete warning'] ?></strong></p>
+						<p class="warntext"><strong><?php echo $lang->t('Delete warning') ?></strong></p>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="delete_user_comply" value="<?php echo $lang_profile['Delete'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
+			<p class="buttons"><input type="submit" name="delete_user_comply" value="<?php echo $lang->t('Delete') ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>
@@ -722,8 +722,8 @@ else if (isset($_POST['form_sent']))
 					if ($form['username'] != $old_username)
 					{
 						// Check username
-						require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
-
+						$lang->load('register');
+						
 						$errors = array();
 						check_username($form['username'], $id);
 						if (!empty($errors))
@@ -765,7 +765,7 @@ else if (isset($_POST['form_sent']))
 				$url = url_valid($form['url']);
 
 				if ($url === false)
-					message($lang_profile['Invalid website URL']);
+					message($lang->t('Invalid website URL'));
 
 				$form['url'] = $url['url'];
 			}
@@ -783,7 +783,7 @@ else if (isset($_POST['form_sent']))
 					$forbidden = array('member', 'moderator', 'administrator', 'banned', 'guest', utf8_strtolower($lang->t('Member')), utf8_strtolower($lang->t('Moderator')), utf8_strtolower($lang->t('Administrator')), utf8_strtolower($lang->t('Banned')), utf8_strtolower($lang->t('Guest')));
 
 					if (in_array(utf8_strtolower($form['title']), $forbidden))
-						message($lang_profile['Forbidden title']);
+						message($lang->t('Forbidden title'));
 				}
 			}
 
@@ -802,7 +802,7 @@ else if (isset($_POST['form_sent']))
 
 			// If the ICQ UIN contains anything other than digits it's invalid
 			if (preg_match('%[^0-9]%', $form['icq']))
-				message($lang_prof_reg['Bad ICQ']);
+				message($lang->t('Bad ICQ'));
 
 			break;
 		}
@@ -818,9 +818,9 @@ else if (isset($_POST['form_sent']))
 
 				// Validate signature
 				if (pun_strlen($form['signature']) > $pun_config['p_sig_length'])
-					message(sprintf($lang_prof_reg['Sig too long'], $pun_config['p_sig_length'], pun_strlen($form['signature']) - $pun_config['p_sig_length']));
+					message(sprintf($lang->t('Sig too long'), $pun_config['p_sig_length'], pun_strlen($form['signature']) - $pun_config['p_sig_length']));
 				else if (substr_count($form['signature'], "\n") > ($pun_config['p_sig_lines']-1))
-					message(sprintf($lang_prof_reg['Sig too many lines'], $pun_config['p_sig_lines']));
+					message(sprintf($lang->t('Sig too many lines'), $pun_config['p_sig_lines']));
 				else if ($form['signature'] && $pun_config['p_sig_all_caps'] == '0' && is_all_uppercase($form['signature']) && !$pun_user['is_admmod'])
 					$form['signature'] = utf8_ucwords(utf8_strtolower($form['signature']));
 
@@ -957,7 +957,7 @@ else if (isset($_POST['form_sent']))
 		$cache->delete('boardstats');
 	}
 
-	redirect('profile.php?section='.$section.'&amp;id='.$id, $lang_profile['Profile redirect']);
+	redirect('profile.php?section='.$section.'&amp;id='.$id, $lang->t('Profile redirect'));
 }
 
 
@@ -995,20 +995,20 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 
 	if ($user['realname'] != '')
 	{
-		$user_personal[] = '<dt>'.$lang_profile['Realname'].'</dt>';
+		$user_personal[] = '<dt>'.$lang->t('Realname').'</dt>';
 		$user_personal[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['realname']) : $user['realname']).'</dd>';
 	}
 
 	if ($user['location'] != '')
 	{
-		$user_personal[] = '<dt>'.$lang_profile['Location'].'</dt>';
+		$user_personal[] = '<dt>'.$lang->t('Location').'</dt>';
 		$user_personal[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['location']) : $user['location']).'</dd>';
 	}
 
 	if ($user['url'] != '')
 	{
 		$user['url'] = pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['url']) : $user['url']);
-		$user_personal[] = '<dt>'.$lang_profile['Website'].'</dt>';
+		$user_personal[] = '<dt>'.$lang->t('Website').'</dt>';
 		$user_personal[] = '<dd><span class="website"><a href="'.$user['url'].'">'.$user['url'].'</a></span></dd>';
 	}
 
@@ -1028,31 +1028,31 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 
 	if ($user['jabber'] != '')
 	{
-		$user_messaging[] = '<dt>'.$lang_profile['Jabber'].'</dt>';
+		$user_messaging[] = '<dt>'.$lang->t('Jabber').'</dt>';
 		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['jabber']) : $user['jabber']).'</dd>';
 	}
 
 	if ($user['icq'] != '')
 	{
-		$user_messaging[] = '<dt>'.$lang_profile['ICQ'].'</dt>';
+		$user_messaging[] = '<dt>'.$lang->t('ICQ').'</dt>';
 		$user_messaging[] = '<dd>'.$user['icq'].'</dd>';
 	}
 
 	if ($user['msn'] != '')
 	{
-		$user_messaging[] = '<dt>'.$lang_profile['MSN'].'</dt>';
+		$user_messaging[] = '<dt>'.$lang->t('MSN').'</dt>';
 		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['msn']) : $user['msn']).'</dd>';
 	}
 
 	if ($user['aim'] != '')
 	{
-		$user_messaging[] = '<dt>'.$lang_profile['AOL IM'].'</dt>';
+		$user_messaging[] = '<dt>'.$lang->t('AOL IM').'</dt>';
 		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['aim']) : $user['aim']).'</dd>';
 	}
 
 	if ($user['yahoo'] != '')
 	{
-		$user_messaging[] = '<dt>'.$lang_profile['Yahoo'].'</dt>';
+		$user_messaging[] = '<dt>'.$lang->t('Yahoo').'</dt>';
 		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['yahoo']) : $user['yahoo']).'</dd>';
 	}
 
@@ -1063,7 +1063,7 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 		$avatar_field = generate_avatar_markup($id);
 		if ($avatar_field != '')
 		{
-			$user_personality[] = '<dt>'.$lang_profile['Avatar'].'</dt>';
+			$user_personality[] = '<dt>'.$lang->t('Avatar').'</dt>';
 			$user_personality[] = '<dd>'.$avatar_field.'</dd>';
 		}
 	}
@@ -1072,7 +1072,7 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 	{
 		if (isset($parsed_signature))
 		{
-			$user_personality[] = '<dt>'.$lang_profile['Signature'].'</dt>';
+			$user_personality[] = '<dt>'.$lang->t('Signature').'</dt>';
 			$user_personality[] = '<dd><div class="postsignature postmsg">'.$parsed_signature.'</div></dd>';
 		}
 	}
@@ -1087,11 +1087,11 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 		$quick_searches = array();
 		if ($user['num_posts'] > 0)
 		{
-			$quick_searches[] = '<a href="search.php?action=show_user_topics&amp;user_id='.$id.'">'.$lang_profile['Show topics'].'</a>';
-			$quick_searches[] = '<a href="search.php?action=show_user_posts&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a>';
+			$quick_searches[] = '<a href="search.php?action=show_user_topics&amp;user_id='.$id.'">'.$lang->t('Show topics').'</a>';
+			$quick_searches[] = '<a href="search.php?action=show_user_posts&amp;user_id='.$id.'">'.$lang->t('Show posts').'</a>';
 		}
 		if ($pun_user['is_admmod'] && $pun_config['o_topic_subscriptions'] == '1')
-			$quick_searches[] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$id.'">'.$lang_profile['Show subscriptions'].'</a>';
+			$quick_searches[] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$id.'">'.$lang->t('Show subscriptions').'</a>';
 
 		if (!empty($quick_searches))
 			$posts_field .= (($posts_field != '') ? ' - ' : '').implode(' - ', $quick_searches);
@@ -1111,7 +1111,7 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 	$user_activity[] = '<dt>'.$lang->t('Registered').'</dt>';
 	$user_activity[] = '<dd>'.format_time($user['registered'], true).'</dd>';
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), sprintf($lang_profile['Users profile'], pun_htmlspecialchars($user['username'])));
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), sprintf($lang->t('Users profile'), pun_htmlspecialchars($user['username'])));
 	define('PUN_ALLOW_INDEX', 1);
 	define('PUN_ACTIVE_PAGE', 'index');
 	require PUN_ROOT.'header.php';
@@ -1123,7 +1123,7 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 		<div class="fakeform">
 			<div class="inform">
 				<fieldset>
-				<legend><?php echo $lang_profile['Section personal'] ?></legend>
+				<legend><?php echo $lang->t('Section personal') ?></legend>
 					<div class="infldset">
 						<dl>
 							<?php echo implode("\n\t\t\t\t\t\t\t", $user_personal)."\n" ?>
@@ -1134,7 +1134,7 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 			</div>
 <?php if (!empty($user_messaging)): ?>			<div class="inform">
 				<fieldset>
-				<legend><?php echo $lang_profile['Section messaging'] ?></legend>
+				<legend><?php echo $lang->t('Section messaging') ?></legend>
 					<div class="infldset">
 						<dl>
 							<?php echo implode("\n\t\t\t\t\t\t\t", $user_messaging)."\n" ?>
@@ -1145,7 +1145,7 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 			</div>
 <?php endif; if (!empty($user_personality)): ?>			<div class="inform">
 				<fieldset>
-				<legend><?php echo $lang_profile['Section personality'] ?></legend>
+				<legend><?php echo $lang->t('Section personality') ?></legend>
 					<div class="infldset">
 						<dl>
 							<?php echo implode("\n\t\t\t\t\t\t\t", $user_personality)."\n" ?>
@@ -1156,7 +1156,7 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 			</div>
 <?php endif; ?>			<div class="inform">
 				<fieldset>
-				<legend><?php echo $lang_profile['User activity'] ?></legend>
+				<legend><?php echo $lang->t('User activity') ?></legend>
 					<div class="infldset">
 						<dl>
 							<?php echo implode("\n\t\t\t\t\t\t\t", $user_activity)."\n" ?>
@@ -1182,7 +1182,7 @@ else
 			if ($pun_user['g_id'] == PUN_ADMIN || $pun_user['g_mod_rename_users'] == '1')
 				$username_field = '<label class="required"><strong>'.$lang->t('Username').' <span>'.$lang->t('Required').'</span></strong><br /><input type="text" name="req_username" value="'.pun_htmlspecialchars($user['username']).'" size="25" maxlength="25" /><br /></label>'."\n";
 			else
-				$username_field = '<p>'.sprintf($lang_profile['Username info'], pun_htmlspecialchars($user['username'])).'</p>'."\n";
+				$username_field = '<p>'.sprintf($lang->t('Username info'), pun_htmlspecialchars($user['username'])).'</p>'."\n";
 
 			$email_field = '<label class="required"><strong>'.$lang->t('Email').' <span>'.$lang->t('Required').'</span></strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label><p><span class="email"><a href="misc.php?email='.$id.'">'.$lang->t('Send email').'</a></span></p>'."\n";
 		}
@@ -1191,7 +1191,7 @@ else
 			$username_field = '<p>'.$lang->t('Username').': '.pun_htmlspecialchars($user['username']).'</p>'."\n";
 
 			if ($pun_config['o_regs_verify'] == '1')
-				$email_field = '<p>'.sprintf($lang_profile['Email info'], $user['email'].' - <a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang_profile['Change email'].'</a>').'</p>'."\n";
+				$email_field = '<p>'.sprintf($lang->t('Email info'), $user['email'].' - <a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang->t('Change email').'</a>').'</p>'."\n";
 			else
 				$email_field = '<label class="required"><strong>'.$lang->t('Email').' <span>'.$lang->t('Required').'</span></strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label>'."\n";
 		}
@@ -1202,21 +1202,21 @@ else
 		if ($pun_user['g_id'] == PUN_ADMIN)
 			$posts_field .= '<label>'.$lang->t('Posts').'<br /><input type="text" name="num_posts" value="'.$user['num_posts'].'" size="8" maxlength="8" /><br /></label>';
 		else if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
-			$posts_actions[] = sprintf($lang_profile['Posts info'], forum_number_format($user['num_posts']));
+			$posts_actions[] = sprintf($lang->t('Posts info'), forum_number_format($user['num_posts']));
 
 		if ($pun_user['g_search'] == '1' || $pun_user['g_id'] == PUN_ADMIN)
 		{
-			$posts_actions[] = '<a href="search.php?action=show_user_topics&amp;user_id='.$id.'">'.$lang_profile['Show topics'].'</a>';
-			$posts_actions[] = '<a href="search.php?action=show_user_posts&amp;user_id='.$id.'">'.$lang_profile['Show posts'].'</a>';
+			$posts_actions[] = '<a href="search.php?action=show_user_topics&amp;user_id='.$id.'">'.$lang->t('Show topics').'</a>';
+			$posts_actions[] = '<a href="search.php?action=show_user_posts&amp;user_id='.$id.'">'.$lang->t('Show posts').'</a>';
 
 			if ($pun_config['o_topic_subscriptions'] == '1')
-				$posts_actions[] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$id.'">'.$lang_profile['Show subscriptions'].'</a>';
+				$posts_actions[] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$id.'">'.$lang->t('Show subscriptions').'</a>';
 		}
 
 		$posts_field .= (!empty($posts_actions) ? '<p class="actions">'.implode(' - ', $posts_actions).'</p>' : '')."\n";
 
 
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Section essentials']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang->t('Section essentials'));
 		$required_fields = array('req_username' => $lang->t('Username'), 'req_email' => $lang->t('Email'));
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
@@ -1225,22 +1225,22 @@ else
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang_profile['Section essentials'] ?></span></h2>
+		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang->t('Section essentials') ?></span></h2>
 		<div class="box">
 			<form id="profile1" method="post" action="profile.php?section=essentials&amp;id=<?php echo $id ?>" onsubmit="return process_form(this)">
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_profile['Username and pass legend'] ?></legend>
+						<legend><?php echo $lang->t('Username and pass legend') ?></legend>
 						<div class="infldset">
 							<input type="hidden" name="form_sent" value="1" />
 							<?php echo $username_field ?>
-<?php if ($pun_user['id'] == $id || $pun_user['g_id'] == PUN_ADMIN || ($user['g_moderator'] == '0' && $pun_user['g_mod_change_passwords'] == '1')): ?>							<p class="actions"><span><a href="profile.php?action=change_pass&amp;id=<?php echo $id ?>"><?php echo $lang_profile['Change pass'] ?></a></span></p>
+<?php if ($pun_user['id'] == $id || $pun_user['g_id'] == PUN_ADMIN || ($user['g_moderator'] == '0' && $pun_user['g_mod_change_passwords'] == '1')): ?>							<p class="actions"><span><a href="profile.php?action=change_pass&amp;id=<?php echo $id ?>"><?php echo $lang->t('Change pass') ?></a></span></p>
 <?php endif; ?>						</div>
 					</fieldset>
 				</div>
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_prof_reg['Email legend'] ?></legend>
+						<legend><?php echo $lang->t('Email legend') ?></legend>
 						<div class="infldset">
 							<?php echo $email_field ?>
 						</div>
@@ -1248,57 +1248,57 @@ else
 				</div>
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_prof_reg['Localisation legend'] ?></legend>
+						<legend><?php echo $lang->t('Localisation legend') ?></legend>
 						<div class="infldset">
-							<p><?php echo $lang_prof_reg['Time zone info'] ?></p>
-							<label><?php echo $lang_prof_reg['Time zone']."\n" ?>
+							<p><?php echo $lang->t('Time zone info') ?></p>
+							<label><?php echo $lang->t('Time zone')."\n" ?>
 							<br /><select name="form[timezone]">
-								<option value="-12"<?php if ($user['timezone'] == -12) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-12:00'] ?></option>
-								<option value="-11"<?php if ($user['timezone'] == -11) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-11:00'] ?></option>
-								<option value="-10"<?php if ($user['timezone'] == -10) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-10:00'] ?></option>
-								<option value="-9.5"<?php if ($user['timezone'] == -9.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-09:30'] ?></option>
-								<option value="-9"<?php if ($user['timezone'] == -9) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-09:00'] ?></option>
-								<option value="-8.5"<?php if ($user['timezone'] == -8.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-08:30'] ?></option>
-								<option value="-8"<?php if ($user['timezone'] == -8) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-08:00'] ?></option>
-								<option value="-7"<?php if ($user['timezone'] == -7) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-07:00'] ?></option>
-								<option value="-6"<?php if ($user['timezone'] == -6) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-06:00'] ?></option>
-								<option value="-5"<?php if ($user['timezone'] == -5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-05:00'] ?></option>
-								<option value="-4"<?php if ($user['timezone'] == -4) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-04:00'] ?></option>
-								<option value="-3.5"<?php if ($user['timezone'] == -3.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-03:30'] ?></option>
-								<option value="-3"<?php if ($user['timezone'] == -3) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-03:00'] ?></option>
-								<option value="-2"<?php if ($user['timezone'] == -2) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-02:00'] ?></option>
-								<option value="-1"<?php if ($user['timezone'] == -1) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC-01:00'] ?></option>
-								<option value="0"<?php if ($user['timezone'] == 0) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC'] ?></option>
-								<option value="1"<?php if ($user['timezone'] == 1) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+01:00'] ?></option>
-								<option value="2"<?php if ($user['timezone'] == 2) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+02:00'] ?></option>
-								<option value="3"<?php if ($user['timezone'] == 3) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+03:00'] ?></option>
-								<option value="3.5"<?php if ($user['timezone'] == 3.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+03:30'] ?></option>
-								<option value="4"<?php if ($user['timezone'] == 4) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+04:00'] ?></option>
-								<option value="4.5"<?php if ($user['timezone'] == 4.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+04:30'] ?></option>
-								<option value="5"<?php if ($user['timezone'] == 5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+05:00'] ?></option>
-								<option value="5.5"<?php if ($user['timezone'] == 5.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+05:30'] ?></option>
-								<option value="5.75"<?php if ($user['timezone'] == 5.75) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+05:45'] ?></option>
-								<option value="6"<?php if ($user['timezone'] == 6) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+06:00'] ?></option>
-								<option value="6.5"<?php if ($user['timezone'] == 6.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+06:30'] ?></option>
-								<option value="7"<?php if ($user['timezone'] == 7) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+07:00'] ?></option>
-								<option value="8"<?php if ($user['timezone'] == 8) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+08:00'] ?></option>
-								<option value="8.75"<?php if ($user['timezone'] == 8.75) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+08:45'] ?></option>
-								<option value="9"<?php if ($user['timezone'] == 9) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+09:00'] ?></option>
-								<option value="9.5"<?php if ($user['timezone'] == 9.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+09:30'] ?></option>
-								<option value="10"<?php if ($user['timezone'] == 10) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+10:00'] ?></option>
-								<option value="10.5"<?php if ($user['timezone'] == 10.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+10:30'] ?></option>
-								<option value="11"<?php if ($user['timezone'] == 11) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+11:00'] ?></option>
-								<option value="11.5"<?php if ($user['timezone'] == 11.5) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+11:30'] ?></option>
-								<option value="12"<?php if ($user['timezone'] == 12) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+12:00'] ?></option>
-								<option value="12.75"<?php if ($user['timezone'] == 12.75) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+12:45'] ?></option>
-								<option value="13"<?php if ($user['timezone'] == 13) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+13:00'] ?></option>
-								<option value="14"<?php if ($user['timezone'] == 14) echo ' selected="selected"' ?>><?php echo $lang_prof_reg['UTC+14:00'] ?></option>
+								<option value="-12"<?php if ($user['timezone'] == -12) echo ' selected="selected"' ?>><?php echo $lang->t('UTC-12:00') ?></option>
+								<option value="-11"<?php if ($user['timezone'] == -11) echo ' selected="selected"' ?>><?php echo $lang->t('UTC-11:00') ?></option>
+								<option value="-10"<?php if ($user['timezone'] == -10) echo ' selected="selected"' ?>><?php echo $lang->t('UTC-10:00') ?></option>
+								<option value="-9.5"<?php if ($user['timezone'] == -9.5) echo ' selected="selected"' ?>><?php echo $lang->t('UTC-09:30') ?></option>
+								<option value="-9"<?php if ($user['timezone'] == -9) echo ' selected="selected"' ?>><?php echo $lang->t('UTC-09:00') ?></option>
+								<option value="-8.5"<?php if ($user['timezone'] == -8.5) echo ' selected="selected"' ?>><?php echo $lang->t('UTC-08:30') ?></option>
+								<option value="-8"<?php if ($user['timezone'] == -8) echo ' selected="selected"' ?>><?php echo $lang->t('UTC-08:00') ?></option>
+								<option value="-7"<?php if ($user['timezone'] == -7) echo ' selected="selected"' ?>><?php echo $lang->t('UTC-07:00') ?></option>
+								<option value="-6"<?php if ($user['timezone'] == -6) echo ' selected="selected"' ?>><?php echo $lang->t('UTC-06:00') ?></option>
+								<option value="-5"<?php if ($user['timezone'] == -5) echo ' selected="selected"' ?>><?php echo $lang->t('UTC-05:00') ?></option>
+								<option value="-4"<?php if ($user['timezone'] == -4) echo ' selected="selected"' ?>><?php echo $lang->t('UTC-04:00') ?></option>
+								<option value="-3.5"<?php if ($user['timezone'] == -3.5) echo ' selected="selected"' ?>><?php echo $lang->t('UTC-03:30') ?></option>
+								<option value="-3"<?php if ($user['timezone'] == -3) echo ' selected="selected"' ?>><?php echo $lang->t('UTC-03:00') ?></option>
+								<option value="-2"<?php if ($user['timezone'] == -2) echo ' selected="selected"' ?>><?php echo $lang->t('UTC-02:00') ?></option>
+								<option value="-1"<?php if ($user['timezone'] == -1) echo ' selected="selected"' ?>><?php echo $lang->t('UTC-01:00') ?></option>
+								<option value="0"<?php if ($user['timezone'] == 0) echo ' selected="selected"' ?>><?php echo $lang->t('UTC') ?></option>
+								<option value="1"<?php if ($user['timezone'] == 1) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+01:00') ?></option>
+								<option value="2"<?php if ($user['timezone'] == 2) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+02:00') ?></option>
+								<option value="3"<?php if ($user['timezone'] == 3) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+03:00') ?></option>
+								<option value="3.5"<?php if ($user['timezone'] == 3.5) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+03:30') ?></option>
+								<option value="4"<?php if ($user['timezone'] == 4) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+04:00') ?></option>
+								<option value="4.5"<?php if ($user['timezone'] == 4.5) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+04:30') ?></option>
+								<option value="5"<?php if ($user['timezone'] == 5) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+05:00') ?></option>
+								<option value="5.5"<?php if ($user['timezone'] == 5.5) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+05:30') ?></option>
+								<option value="5.75"<?php if ($user['timezone'] == 5.75) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+05:45') ?></option>
+								<option value="6"<?php if ($user['timezone'] == 6) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+06:00') ?></option>
+								<option value="6.5"<?php if ($user['timezone'] == 6.5) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+06:30') ?></option>
+								<option value="7"<?php if ($user['timezone'] == 7) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+07:00') ?></option>
+								<option value="8"<?php if ($user['timezone'] == 8) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+08:00') ?></option>
+								<option value="8.75"<?php if ($user['timezone'] == 8.75) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+08:45') ?></option>
+								<option value="9"<?php if ($user['timezone'] == 9) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+09:00') ?></option>
+								<option value="9.5"<?php if ($user['timezone'] == 9.5) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+09:30') ?></option>
+								<option value="10"<?php if ($user['timezone'] == 10) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+10:00') ?></option>
+								<option value="10.5"<?php if ($user['timezone'] == 10.5) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+10:30') ?></option>
+								<option value="11"<?php if ($user['timezone'] == 11) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+11:00') ?></option>
+								<option value="11.5"<?php if ($user['timezone'] == 11.5) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+11:30') ?></option>
+								<option value="12"<?php if ($user['timezone'] == 12) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+12:00') ?></option>
+								<option value="12.75"<?php if ($user['timezone'] == 12.75) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+12:45') ?></option>
+								<option value="13"<?php if ($user['timezone'] == 13) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+13:00') ?></option>
+								<option value="14"<?php if ($user['timezone'] == 14) echo ' selected="selected"' ?>><?php echo $lang->t('UTC+14:00') ?></option>
 							</select>
 							<br /></label>
 							<div class="rbox">
-								<label><input type="checkbox" name="form[dst]" value="1"<?php if ($user['dst'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['DST'] ?><br /></label>
+								<label><input type="checkbox" name="form[dst]" value="1"<?php if ($user['dst'] == '1') echo ' checked="checked"' ?> /><?php echo $lang->t('DST') ?><br /></label>
 							</div>
-							<label><?php echo $lang_prof_reg['Time format'] ?>
+							<label><?php echo $lang->t('Time format') ?>
 
 							<br /><select name="form[time_format]">
 <?php
@@ -1309,13 +1309,13 @@ else
 										echo ' selected="selected"';
 									echo '>'. format_time(time(), false, null, $time_format, true, true);
 									if ($key == 0)
-										echo ' ('.$lang_prof_reg['Default'].')';
+										echo ' ('.$lang->t('Default').')';
 									echo "</option>\n";
 								}
 								?>
 							</select>
 							<br /></label>
-							<label><?php echo $lang_prof_reg['Date format'] ?>
+							<label><?php echo $lang->t('Date format') ?>
 
 							<br /><select name="form[date_format]">
 <?php
@@ -1326,7 +1326,7 @@ else
 										echo ' selected="selected"';
 									echo '>'. format_time(time(), true, $date_format, null, false, true);
 									if ($key == 0)
-										echo ' ('.$lang_prof_reg['Default'].')';
+										echo ' ('.$lang->t('Default').')';
 									echo "</option>\n";
 								}
 								?>
@@ -1342,7 +1342,7 @@ else
 		{
 
 ?>
-							<label><?php echo $lang_prof_reg['Language'] ?>
+							<label><?php echo $lang->t('Language') ?>
 							<br /><select name="form[language]">
 <?php
 
@@ -1367,18 +1367,18 @@ else
 				</div>
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_profile['User activity'] ?></legend>
+						<legend><?php echo $lang->t('User activity') ?></legend>
 						<div class="infldset">
-							<p><?php printf($lang_profile['Registered info'], format_time($user['registered'], true).(($pun_user['is_admmod']) ? ' (<a href="moderate.php?get_host='.pun_htmlspecialchars($user['registration_ip']).'">'.pun_htmlspecialchars($user['registration_ip']).'</a>)' : '')) ?></p>
-							<p><?php printf($lang_profile['Last post info'], $last_post) ?></p>
-							<p><?php printf($lang_profile['Last visit info'], format_time($user['last_visit'])) ?></p>
+							<p><?php printf($lang->t('Registered info'), format_time($user['registered'], true).(($pun_user['is_admmod']) ? ' (<a href="moderate.php?get_host='.pun_htmlspecialchars($user['registration_ip']).'">'.pun_htmlspecialchars($user['registration_ip']).'</a>)' : '')) ?></p>
+							<p><?php printf($lang->t('Last post info'), $last_post) ?></p>
+							<p><?php printf($lang->t('Last visit info'), format_time($user['last_visit'])) ?></p>
 							<?php echo $posts_field ?>
-<?php if ($pun_user['is_admmod']): ?>							<label><?php echo $lang_profile['Admin note'] ?><br />
+<?php if ($pun_user['is_admmod']): ?>							<label><?php echo $lang->t('Admin note') ?><br />
 							<input id="admin_note" type="text" name="admin_note" value="<?php echo pun_htmlspecialchars($user['admin_note']) ?>" size="30" maxlength="30" /><br /></label>
 <?php endif; ?>						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
+				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang->t('Instructions') ?></p>
 			</form>
 		</div>
 	</div>
@@ -1388,9 +1388,9 @@ else
 	else if ($section == 'personal')
 	{
 		if ($pun_user['g_set_title'] == '1')
-			$title_field = '<label>'.$lang->t('Title').' <em>('.$lang_profile['Leave blank'].')</em><br /><input type="text" name="title" value="'.pun_htmlspecialchars($user['title']).'" size="30" maxlength="50" /><br /></label>'."\n";
+			$title_field = '<label>'.$lang->t('Title').' <em>('.$lang->t('Leave blank').')</em><br /><input type="text" name="title" value="'.pun_htmlspecialchars($user['title']).'" size="30" maxlength="50" /><br /></label>'."\n";
 
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Section personal']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang->t('Section personal'));
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
@@ -1398,22 +1398,22 @@ else
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang_profile['Section personal'] ?></span></h2>
+		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang->t('Section personal') ?></span></h2>
 		<div class="box">
 			<form id="profile2" method="post" action="profile.php?section=personal&amp;id=<?php echo $id ?>">
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_profile['Personal details legend'] ?></legend>
+						<legend><?php echo $lang->t('Personal details legend') ?></legend>
 						<div class="infldset">
 							<input type="hidden" name="form_sent" value="1" />
-							<label><?php echo $lang_profile['Realname'] ?><br /><input type="text" name="form[realname]" value="<?php echo pun_htmlspecialchars($user['realname']) ?>" size="40" maxlength="40" /><br /></label>
+							<label><?php echo $lang->t('Realname') ?><br /><input type="text" name="form[realname]" value="<?php echo pun_htmlspecialchars($user['realname']) ?>" size="40" maxlength="40" /><br /></label>
 <?php if (isset($title_field)): ?>							<?php echo $title_field ?>
-<?php endif; ?>							<label><?php echo $lang_profile['Location'] ?><br /><input type="text" name="form[location]" value="<?php echo pun_htmlspecialchars($user['location']) ?>" size="30" maxlength="30" /><br /></label>
-							<label><?php echo $lang_profile['Website'] ?><br /><input type="text" name="form[url]" value="<?php echo pun_htmlspecialchars($user['url']) ?>" size="50" maxlength="80" /><br /></label>
+<?php endif; ?>							<label><?php echo $lang->t('Location') ?><br /><input type="text" name="form[location]" value="<?php echo pun_htmlspecialchars($user['location']) ?>" size="30" maxlength="30" /><br /></label>
+							<label><?php echo $lang->t('Website') ?><br /><input type="text" name="form[url]" value="<?php echo pun_htmlspecialchars($user['url']) ?>" size="50" maxlength="80" /><br /></label>
 						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
+				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang->t('Instructions') ?></p>
 			</form>
 		</div>
 	</div>
@@ -1423,7 +1423,7 @@ else
 	else if ($section == 'messaging')
 	{
 
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Section messaging']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang->t('Section messaging'));
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
@@ -1431,23 +1431,23 @@ else
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang_profile['Section messaging'] ?></span></h2>
+		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang->t('Section messaging') ?></span></h2>
 		<div class="box">
 			<form id="profile3" method="post" action="profile.php?section=messaging&amp;id=<?php echo $id ?>">
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_profile['Contact details legend'] ?></legend>
+						<legend><?php echo $lang->t('Contact details legend') ?></legend>
 						<div class="infldset">
 							<input type="hidden" name="form_sent" value="1" />
-							<label><?php echo $lang_profile['Jabber'] ?><br /><input id="jabber" type="text" name="form[jabber]" value="<?php echo pun_htmlspecialchars($user['jabber']) ?>" size="40" maxlength="75" /><br /></label>
-							<label><?php echo $lang_profile['ICQ'] ?><br /><input id="icq" type="text" name="form[icq]" value="<?php echo $user['icq'] ?>" size="12" maxlength="12" /><br /></label>
-							<label><?php echo $lang_profile['MSN'] ?><br /><input id="msn" type="text" name="form[msn]" value="<?php echo pun_htmlspecialchars($user['msn']) ?>" size="40" maxlength="50" /><br /></label>
-							<label><?php echo $lang_profile['AOL IM'] ?><br /><input id="aim" type="text" name="form[aim]" value="<?php echo pun_htmlspecialchars($user['aim']) ?>" size="20" maxlength="30" /><br /></label>
-							<label><?php echo $lang_profile['Yahoo'] ?><br /><input id="yahoo" type="text" name="form[yahoo]" value="<?php echo pun_htmlspecialchars($user['yahoo']) ?>" size="20" maxlength="30" /><br /></label>
+							<label><?php echo $lang->t('Jabber') ?><br /><input id="jabber" type="text" name="form[jabber]" value="<?php echo pun_htmlspecialchars($user['jabber']) ?>" size="40" maxlength="75" /><br /></label>
+							<label><?php echo $lang->t('ICQ') ?><br /><input id="icq" type="text" name="form[icq]" value="<?php echo $user['icq'] ?>" size="12" maxlength="12" /><br /></label>
+							<label><?php echo $lang->t('MSN') ?><br /><input id="msn" type="text" name="form[msn]" value="<?php echo pun_htmlspecialchars($user['msn']) ?>" size="40" maxlength="50" /><br /></label>
+							<label><?php echo $lang->t('AOL IM') ?><br /><input id="aim" type="text" name="form[aim]" value="<?php echo pun_htmlspecialchars($user['aim']) ?>" size="20" maxlength="30" /><br /></label>
+							<label><?php echo $lang->t('Yahoo') ?><br /><input id="yahoo" type="text" name="form[yahoo]" value="<?php echo pun_htmlspecialchars($user['yahoo']) ?>" size="20" maxlength="30" /><br /></label>
 						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
+				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang->t('Instructions') ?></p>
 			</form>
 		</div>
 	</div>
@@ -1459,20 +1459,20 @@ else
 		if ($pun_config['o_avatars'] == '0' && $pun_config['o_signatures'] == '0')
 			message($lang->t('Bad request'));
 
-		$avatar_field = '<span><a href="profile.php?action=upload_avatar&amp;id='.$id.'">'.$lang_profile['Change avatar'].'</a></span>';
+		$avatar_field = '<span><a href="profile.php?action=upload_avatar&amp;id='.$id.'">'.$lang->t('Change avatar').'</a></span>';
 
 		$user_avatar = generate_avatar_markup($id);
 		if ($user_avatar)
-			$avatar_field .= ' <span><a href="profile.php?action=delete_avatar&amp;id='.$id.'">'.$lang_profile['Delete avatar'].'</a></span>';
+			$avatar_field .= ' <span><a href="profile.php?action=delete_avatar&amp;id='.$id.'">'.$lang->t('Delete avatar').'</a></span>';
 		else
-			$avatar_field = '<span><a href="profile.php?action=upload_avatar&amp;id='.$id.'">'.$lang_profile['Upload avatar'].'</a></span>';
+			$avatar_field = '<span><a href="profile.php?action=upload_avatar&amp;id='.$id.'">'.$lang->t('Upload avatar').'</a></span>';
 
 		if ($user['signature'] != '')
-			$signature_preview = '<p>'.$lang_profile['Sig preview'].'</p>'."\n\t\t\t\t\t\t\t".'<div class="postsignature postmsg">'."\n\t\t\t\t\t\t\t\t".'<hr />'."\n\t\t\t\t\t\t\t\t".$parsed_signature."\n\t\t\t\t\t\t\t".'</div>'."\n";
+			$signature_preview = '<p>'.$lang->t('Sig preview').'</p>'."\n\t\t\t\t\t\t\t".'<div class="postsignature postmsg">'."\n\t\t\t\t\t\t\t\t".'<hr />'."\n\t\t\t\t\t\t\t\t".$parsed_signature."\n\t\t\t\t\t\t\t".'</div>'."\n";
 		else
-			$signature_preview = '<p>'.$lang_profile['No sig'].'</p>'."\n";
+			$signature_preview = '<p>'.$lang->t('No sig').'</p>'."\n";
 
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Section personality']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang->t('Section personality'));
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
@@ -1481,27 +1481,27 @@ else
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang_profile['Section personality'] ?></span></h2>
+		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang->t('Section personality') ?></span></h2>
 		<div class="box">
 			<form id="profile4" method="post" action="profile.php?section=personality&amp;id=<?php echo $id ?>">
 				<div><input type="hidden" name="form_sent" value="1" /></div>
 <?php if ($pun_config['o_avatars'] == '1'): ?>				<div class="inform">
 					<fieldset id="profileavatar">
-						<legend><?php echo $lang_profile['Avatar legend'] ?></legend>
+						<legend><?php echo $lang->t('Avatar legend') ?></legend>
 						<div class="infldset">
 <?php if ($user_avatar): ?>							<div class="useravatar"><?php echo $user_avatar ?></div>
-<?php endif; ?>							<p><?php echo $lang_profile['Avatar info'] ?></p>
+<?php endif; ?>							<p><?php echo $lang->t('Avatar info') ?></p>
 							<p class="clearb actions"><?php echo $avatar_field ?></p>
 						</div>
 					</fieldset>
 				</div>
 <?php endif; if ($pun_config['o_signatures'] == '1'): ?>				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_profile['Signature legend'] ?></legend>
+						<legend><?php echo $lang->t('Signature legend') ?></legend>
 						<div class="infldset">
-							<p><?php echo $lang_profile['Signature info'] ?></p>
+							<p><?php echo $lang->t('Signature info') ?></p>
 							<div class="txtarea">
-								<label><?php printf($lang_profile['Sig max size'], forum_number_format($pun_config['p_sig_length']), $pun_config['p_sig_lines']) ?><br />
+								<label><?php printf($lang->t('Sig max size'), forum_number_format($pun_config['p_sig_length']), $pun_config['p_sig_lines']) ?><br />
 								<textarea name="signature" rows="4" cols="65"><?php echo pun_htmlspecialchars($user['signature']) ?></textarea><br /></label>
 							</div>
 							<ul class="bblinks">
@@ -1513,7 +1513,7 @@ else
 						</div>
 					</fieldset>
 				</div>
-<?php endif; ?>				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
+<?php endif; ?>				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang->t('Instructions') ?></p>
 			</form>
 		</div>
 	</div>
@@ -1522,7 +1522,7 @@ else
 	}
 	else if ($section == 'display')
 	{
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Section display']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang->t('Section display'));
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
@@ -1530,7 +1530,7 @@ else
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang_profile['Section display'] ?></span></h2>
+		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang->t('Section display') ?></span></h2>
 		<div class="box">
 			<form id="profile5" method="post" action="profile.php?section=display&amp;id=<?php echo $id ?>">
 				<div><input type="hidden" name="form_sent" value="1" /></div>
@@ -1547,9 +1547,9 @@ else
 ?>
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_profile['Style legend'] ?></legend>
+						<legend><?php echo $lang->t('Style legend') ?></legend>
 						<div class="infldset">
-							<label><?php echo $lang_profile['Styles'] ?><br />
+							<label><?php echo $lang->t('Styles') ?><br />
 							<select name="form[style]">
 <?php
 
@@ -1575,15 +1575,15 @@ else
 <?php if ($pun_config['o_smilies'] == '1' || $pun_config['o_smilies_sig'] == '1' || $pun_config['o_signatures'] == '1' || $pun_config['o_avatars'] == '1' || ($pun_config['p_message_bbcode'] == '1' && $pun_config['p_message_img_tag'] == '1')): ?>
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_profile['Post display legend'] ?></legend>
+						<legend><?php echo $lang->t('Post display legend') ?></legend>
 						<div class="infldset">
-							<p><?php echo $lang_profile['Post display info'] ?></p>
+							<p><?php echo $lang->t('Post display info') ?></p>
 							<div class="rbox">
-<?php if ($pun_config['o_smilies'] == '1' || $pun_config['o_smilies_sig'] == '1'): ?>								<label><input type="checkbox" name="form[show_smilies]" value="1"<?php if ($user['show_smilies'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_profile['Show smilies'] ?><br /></label>
-<?php endif; if ($pun_config['o_signatures'] == '1'): ?>								<label><input type="checkbox" name="form[show_sig]" value="1"<?php if ($user['show_sig'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_profile['Show sigs'] ?><br /></label>
-<?php endif; if ($pun_config['o_avatars'] == '1'): ?>								<label><input type="checkbox" name="form[show_avatars]" value="1"<?php if ($user['show_avatars'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_profile['Show avatars'] ?><br /></label>
-<?php endif; if ($pun_config['p_message_bbcode'] == '1' && $pun_config['p_message_img_tag'] == '1'): ?>								<label><input type="checkbox" name="form[show_img]" value="1"<?php if ($user['show_img'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_profile['Show images'] ?><br /></label>
-<?php endif; if ($pun_config['o_signatures'] == '1' && $pun_config['p_sig_bbcode'] == '1' && $pun_config['p_sig_img_tag'] == '1'): ?>								<label><input type="checkbox" name="form[show_img_sig]" value="1"<?php if ($user['show_img_sig'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_profile['Show images sigs'] ?><br /></label>
+<?php if ($pun_config['o_smilies'] == '1' || $pun_config['o_smilies_sig'] == '1'): ?>								<label><input type="checkbox" name="form[show_smilies]" value="1"<?php if ($user['show_smilies'] == '1') echo ' checked="checked"' ?> /><?php echo $lang->t('Show smilies') ?><br /></label>
+<?php endif; if ($pun_config['o_signatures'] == '1'): ?>								<label><input type="checkbox" name="form[show_sig]" value="1"<?php if ($user['show_sig'] == '1') echo ' checked="checked"' ?> /><?php echo $lang->t('Show sigs') ?><br /></label>
+<?php endif; if ($pun_config['o_avatars'] == '1'): ?>								<label><input type="checkbox" name="form[show_avatars]" value="1"<?php if ($user['show_avatars'] == '1') echo ' checked="checked"' ?> /><?php echo $lang->t('Show avatars') ?><br /></label>
+<?php endif; if ($pun_config['p_message_bbcode'] == '1' && $pun_config['p_message_img_tag'] == '1'): ?>								<label><input type="checkbox" name="form[show_img]" value="1"<?php if ($user['show_img'] == '1') echo ' checked="checked"' ?> /><?php echo $lang->t('Show images') ?><br /></label>
+<?php endif; if ($pun_config['o_signatures'] == '1' && $pun_config['p_sig_bbcode'] == '1' && $pun_config['p_sig_img_tag'] == '1'): ?>								<label><input type="checkbox" name="form[show_img_sig]" value="1"<?php if ($user['show_img_sig'] == '1') echo ' checked="checked"' ?> /><?php echo $lang->t('Show images sigs') ?><br /></label>
 <?php endif; ?>
 							</div>
 						</div>
@@ -1592,15 +1592,15 @@ else
 <?php endif; ?>
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_profile['Pagination legend'] ?></legend>
+						<legend><?php echo $lang->t('Pagination legend') ?></legend>
 						<div class="infldset">
-							<label class="conl"><?php echo $lang_profile['Topics per page'] ?><br /><input type="text" name="form[disp_topics]" value="<?php echo $user['disp_topics'] ?>" size="6" maxlength="3" /><br /></label>
-							<label class="conl"><?php echo $lang_profile['Posts per page'] ?><br /><input type="text" name="form[disp_posts]" value="<?php echo $user['disp_posts'] ?>" size="6" maxlength="3" /><br /></label>
-							<p class="clearb"><?php echo $lang_profile['Paginate info'] ?> <?php echo $lang_profile['Leave blank'] ?></p>
+							<label class="conl"><?php echo $lang->t('Topics per page') ?><br /><input type="text" name="form[disp_topics]" value="<?php echo $user['disp_topics'] ?>" size="6" maxlength="3" /><br /></label>
+							<label class="conl"><?php echo $lang->t('Posts per page') ?><br /><input type="text" name="form[disp_posts]" value="<?php echo $user['disp_posts'] ?>" size="6" maxlength="3" /><br /></label>
+							<p class="clearb"><?php echo $lang->t('Paginate info') ?> <?php echo $lang->t('Leave blank') ?></p>
 						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
+				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang->t('Instructions') ?></p>
 			</form>
 		</div>
 	</div>
@@ -1609,7 +1609,7 @@ else
 	}
 	else if ($section == 'privacy')
 	{
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Section privacy']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang->t('Section privacy'));
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
@@ -1617,36 +1617,36 @@ else
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang_profile['Section privacy'] ?></span></h2>
+		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang->t('Section privacy') ?></span></h2>
 		<div class="box">
 			<form id="profile6" method="post" action="profile.php?section=privacy&amp;id=<?php echo $id ?>">
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_prof_reg['Privacy options legend'] ?></legend>
+						<legend><?php echo $lang->t('Privacy options legend') ?></legend>
 						<div class="infldset">
 							<input type="hidden" name="form_sent" value="1" />
-							<p><?php echo $lang_prof_reg['Email setting info'] ?></p>
+							<p><?php echo $lang->t('Email setting info') ?></p>
 							<div class="rbox">
-								<label><input type="radio" name="form[email_setting]" value="0"<?php if ($user['email_setting'] == '0') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['Email setting 1'] ?><br /></label>
-								<label><input type="radio" name="form[email_setting]" value="1"<?php if ($user['email_setting'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['Email setting 2'] ?><br /></label>
-								<label><input type="radio" name="form[email_setting]" value="2"<?php if ($user['email_setting'] == '2') echo ' checked="checked"' ?> /><?php echo $lang_prof_reg['Email setting 3'] ?><br /></label>
+								<label><input type="radio" name="form[email_setting]" value="0"<?php if ($user['email_setting'] == '0') echo ' checked="checked"' ?> /><?php echo $lang->t('Email setting 1') ?><br /></label>
+								<label><input type="radio" name="form[email_setting]" value="1"<?php if ($user['email_setting'] == '1') echo ' checked="checked"' ?> /><?php echo $lang->t('Email setting 2') ?><br /></label>
+								<label><input type="radio" name="form[email_setting]" value="2"<?php if ($user['email_setting'] == '2') echo ' checked="checked"' ?> /><?php echo $lang->t('Email setting 3') ?><br /></label>
 							</div>
 						</div>
 					</fieldset>
 				</div>
 <?php if ($pun_config['o_forum_subscriptions'] == '1' || $pun_config['o_topic_subscriptions'] == '1'): ?>				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_profile['Subscription legend'] ?></legend>
+						<legend><?php echo $lang->t('Subscription legend') ?></legend>
 						<div class="infldset">
 							<div class="rbox">
-								<label><input type="checkbox" name="form[notify_with_post]" value="1"<?php if ($user['notify_with_post'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_profile['Notify full'] ?><br /></label>
-<?php if ($pun_config['o_topic_subscriptions'] == '1'): ?>								<label><input type="checkbox" name="form[auto_notify]" value="1"<?php if ($user['auto_notify'] == '1') echo ' checked="checked"' ?> /><?php echo $lang_profile['Auto notify full'] ?><br /></label>
+								<label><input type="checkbox" name="form[notify_with_post]" value="1"<?php if ($user['notify_with_post'] == '1') echo ' checked="checked"' ?> /><?php echo $lang->t('Notify full') ?><br /></label>
+<?php if ($pun_config['o_topic_subscriptions'] == '1'): ?>								<label><input type="checkbox" name="form[auto_notify]" value="1"<?php if ($user['auto_notify'] == '1') echo ' checked="checked"' ?> /><?php echo $lang->t('Auto notify full') ?><br /></label>
 <?php endif; ?>
 							</div>
 						</div>
 					</fieldset>
 				</div>
-<?php endif; ?>				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang_profile['Instructions'] ?></p>
+<?php endif; ?>				<p class="buttons"><input type="submit" name="update" value="<?php echo $lang->t('Submit') ?>" /> <?php echo $lang->t('Instructions') ?></p>
 			</form>
 		</div>
 	</div>
@@ -1658,7 +1658,7 @@ else
 		if (!$pun_user['is_admmod'] || ($pun_user['g_moderator'] == '1' && $pun_user['g_mod_ban_users'] == '0'))
 			message($lang->t('Bad request'));
 
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang_profile['Section admin']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang->t('Section admin'));
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
@@ -1666,7 +1666,7 @@ else
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang_profile['Section admin'] ?></span></h2>
+		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang->t('Section admin') ?></span></h2>
 		<div class="box">
 			<form id="profile7" method="post" action="profile.php?section=admin&amp;id=<?php echo $id ?>">
 				<div class="inform">
@@ -1678,9 +1678,9 @@ else
 		{
 
 ?>
-						<legend><?php echo $lang_profile['Delete ban legend'] ?></legend>
+						<legend><?php echo $lang->t('Delete ban legend') ?></legend>
 						<div class="infldset">
-							<p><input type="submit" name="ban" value="<?php echo $lang_profile['Ban user'] ?>" /></p>
+							<p><input type="submit" name="ban" value="<?php echo $lang->t('Ban user') ?>" /></p>
 						</div>
 					</fieldset>
 				</div>
@@ -1693,7 +1693,7 @@ else
 			{
 
 ?>
-						<legend><?php echo $lang_profile['Group membership legend'] ?></legend>
+						<legend><?php echo $lang->t('Group membership legend') ?></legend>
 						<div class="infldset">
 							<select id="group_id" name="group_id">
 <?php
@@ -1710,7 +1710,7 @@ else
 
 ?>
 							</select>
-							<input type="submit" name="update_group_membership" value="<?php echo $lang_profile['Save'] ?>" />
+							<input type="submit" name="update_group_membership" value="<?php echo $lang->t('Save') ?>" />
 						</div>
 					</fieldset>
 				</div>
@@ -1721,9 +1721,9 @@ else
 			}
 
 ?>
-						<legend><?php echo $lang_profile['Delete ban legend'] ?></legend>
+						<legend><?php echo $lang->t('Delete ban legend') ?></legend>
 						<div class="infldset">
-							<input type="submit" name="delete_user" value="<?php echo $lang_profile['Delete user'] ?>" /> <input type="submit" name="ban" value="<?php echo $lang_profile['Ban user'] ?>" />
+							<input type="submit" name="delete_user" value="<?php echo $lang->t('Delete user') ?>" /> <input type="submit" name="ban" value="<?php echo $lang->t('Ban user') ?>" />
 						</div>
 					</fieldset>
 				</div>
@@ -1735,9 +1735,9 @@ else
 ?>
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_profile['Set mods legend'] ?></legend>
+						<legend><?php echo $lang->t('Set mods legend') ?></legend>
 						<div class="infldset">
-							<p><?php echo $lang_profile['Moderator in info'] ?></p>
+							<p><?php echo $lang->t('Moderator in info') ?></p>
 <?php
 
 				$result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.moderators FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id WHERE f.redirect_url IS NULL ORDER BY c.disp_position, c.id, f.disp_position') or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
@@ -1765,7 +1765,7 @@ else
 ?>
 								</div>
 							</div>
-							<br class="clearb" /><input type="submit" name="update_forums" value="<?php echo $lang_profile['Update forums'] ?>" />
+							<br class="clearb" /><input type="submit" name="update_forums" value="<?php echo $lang->t('Update forums') ?>" />
 						</div>
 					</fieldset>
 				</div>

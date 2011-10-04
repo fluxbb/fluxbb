@@ -32,14 +32,14 @@ if (isset($footer_style) && ($footer_style == 'viewforum' || $footer_style == 'v
 	if ($footer_style == 'viewforum')
 	{
 		echo "\t\t\t".'<dl>'."\n";
-		echo "\t\t\t\t".'<dt><strong>'.$lang_forum['Mod controls'].'</strong></dt>'."\n";
+		echo "\t\t\t\t".'<dt><strong>'.$lang->t('Mod controls').'</strong></dt>'."\n";
 		echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;p='.$p.'">'.$lang->t('Moderate forum').'</a></span></dd>'."\n";
 		echo "\t\t\t".'</dl>'."\n";
 	}
 	else if ($footer_style == 'viewtopic')
 	{
 		echo "\t\t\t".'<dl>'."\n";
-		echo "\t\t\t\t".'<dt><strong>'.$lang_topic['Mod controls'].'</strong></dt>'."\n";
+		echo "\t\t\t\t".'<dt><strong>'.$lang->t('Mod controls').'</strong></dt>'."\n";
 		echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;tid='.$id.'&amp;p='.$p.'">'.$lang->t('Moderate topic').'</a></span></dd>'."\n";
 		echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;move_topics='.$id.'">'.$lang->t('Move topic').'</a></span></dd>'."\n";
 

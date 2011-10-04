@@ -15,11 +15,9 @@ if ($pun_user['g_read_board'] == '0')
 else if ($pun_user['g_view_users'] == '0')
 	message($lang->t('No permission'));
 
-// Load the userlist.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/userlist.php';
-
-// Load the search.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/search.php';
+// Load the userlist.php and search.php language files
+$lang->load('userlist');
+$lang->load('search');
 
 
 // Determine if we are allowed to view post counts
@@ -63,17 +61,17 @@ require PUN_ROOT.'header.php';
 
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_search['User search'] ?></span></h2>
+	<h2><span><?php echo $lang->t('User search') ?></span></h2>
 	<div class="box">
 		<form id="userlist" method="get" action="userlist.php">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_ul['User find legend'] ?></legend>
+					<legend><?php echo $lang->t('User find legend') ?></legend>
 					<div class="infldset">
 <?php if ($pun_user['g_search_users'] == '1'): ?>						<label class="conl"><?php echo $lang->t('Username') ?><br /><input type="text" name="username" value="<?php echo pun_htmlspecialchars($username) ?>" size="25" maxlength="25" /><br /></label>
-<?php endif; ?>						<label class="conl"><?php echo $lang_ul['User group']."\n" ?>
+<?php endif; ?>						<label class="conl"><?php echo $lang->t('User group')."\n" ?>
 						<br /><select name="show_group">
-							<option value="-1"<?php if ($show_group == -1) echo ' selected="selected"' ?>><?php echo $lang_ul['All users'] ?></option>
+							<option value="-1"<?php if ($show_group == -1) echo ' selected="selected"' ?>><?php echo $lang->t('All users') ?></option>
 <?php
 
 $result = $db->query('SELECT g_id, g_title FROM '.$db->prefix.'groups WHERE g_id!='.PUN_GUEST.' ORDER BY g_id') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
@@ -89,20 +87,20 @@ while ($cur_group = $db->fetch_assoc($result))
 ?>
 						</select>
 						<br /></label>
-						<label class="conl"><?php echo $lang_search['Sort by']."\n" ?>
+						<label class="conl"><?php echo $lang->t('Sort by')."\n" ?>
 						<br /><select name="sort_by">
 							<option value="username"<?php if ($sort_by == 'username') echo ' selected="selected"' ?>><?php echo $lang->t('Username') ?></option>
 							<option value="registered"<?php if ($sort_by == 'registered') echo ' selected="selected"' ?>><?php echo $lang->t('Registered') ?></option>
-<?php if ($show_post_count): ?>							<option value="num_posts"<?php if ($sort_by == 'num_posts') echo ' selected="selected"' ?>><?php echo $lang_ul['No of posts'] ?></option>
+<?php if ($show_post_count): ?>							<option value="num_posts"<?php if ($sort_by == 'num_posts') echo ' selected="selected"' ?>><?php echo $lang->t('No of posts') ?></option>
 <?php endif; ?>						</select>
 						<br /></label>
-						<label class="conl"><?php echo $lang_search['Sort order']."\n" ?>
+						<label class="conl"><?php echo $lang->t('Sort order')."\n" ?>
 						<br /><select name="sort_dir">
-							<option value="ASC"<?php if ($sort_dir == 'ASC') echo ' selected="selected"' ?>><?php echo $lang_search['Ascending'] ?></option>
-							<option value="DESC"<?php if ($sort_dir == 'DESC') echo ' selected="selected"' ?>><?php echo $lang_search['Descending'] ?></option>
+							<option value="ASC"<?php if ($sort_dir == 'ASC') echo ' selected="selected"' ?>><?php echo $lang->t('Ascending') ?></option>
+							<option value="DESC"<?php if ($sort_dir == 'DESC') echo ' selected="selected"' ?>><?php echo $lang->t('Descending') ?></option>
 						</select>
 						<br /></label>
-						<p class="clearb"><?php echo ($pun_user['g_search_users'] == '1' ? $lang_ul['User search info'].' ' : '').$lang_ul['User sort info']; ?></p>
+						<p class="clearb"><?php echo ($pun_user['g_search_users'] == '1' ? $lang->t('User search info').' ' : '').$lang->t('User sort info'); ?></p>
 					</div>
 				</fieldset>
 			</div>
@@ -163,7 +161,7 @@ if ($db->num_rows($result))
 	}
 }
 else
-	echo "\t\t\t".'<tr>'."\n\t\t\t\t\t".'<td class="tcl" colspan="'.(($show_post_count) ? 4 : 3).'">'.$lang_search['No hits'].'</td></tr>'."\n";
+	echo "\t\t\t".'<tr>'."\n\t\t\t\t\t".'<td class="tcl" colspan="'.(($show_post_count) ? 4 : 3).'">'.$lang->t('No hits').'</td></tr>'."\n";
 
 ?>
 			</tbody>

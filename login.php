@@ -14,7 +14,7 @@ require PUN_ROOT.'include/common.php';
 
 
 // Load the login.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/login.php';
+$lang->load('login');
 
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 
@@ -61,7 +61,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	}
 
 	if (!$authorized)
-		message($lang_login['Wrong user/pass'].' <a href="login.php?action=forget">'.$lang_login['Forgotten pass'].'</a>');
+		message($lang->t('Wrong user/pass').' <a href="login.php?action=forget">'.$lang->t('Forgotten pass').'</a>');
 
 	// Update the status if this is the first time the user logged in
 	if ($cur_user['group_id'] == PUN_UNVERIFIED)
@@ -81,7 +81,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	// Reset tracked topics
 	set_tracked_topics(null);
 
-	redirect(htmlspecialchars($_POST['redirect_url']), $lang_login['Login redirect']);
+	redirect(htmlspecialchars($_POST['redirect_url']), $lang->t('Login redirect'));
 }
 
 
@@ -102,7 +102,7 @@ else if ($action == 'out')
 
 	pun_setcookie(1, pun_hash(uniqid(rand(), true)), time() + 31536000);
 
-	redirect('index.php', $lang_login['Logout redirect']);
+	redirect('index.php', $lang->t('Logout redirect'));
 }
 
 
@@ -146,7 +146,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 				while ($cur_hit = $db->fetch_assoc($result))
 				{
 					if ($cur_hit['last_email_sent'] != '' && (time() - $cur_hit['last_email_sent']) < 3600 && (time() - $cur_hit['last_email_sent']) >= 0)
-						message($lang_login['Email flood'], true);
+						message($lang->t('Email flood'), true);
 
 					// Generate a new password and a new password activation code
 					$new_password = random_pass(8);
@@ -162,14 +162,14 @@ else if ($action == 'forget' || $action == 'forget_2')
 					pun_mail($email, $mail_subject, $cur_mail_message);
 				}
 
-				message($lang_login['Forget mail'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
+				message($lang->t('Forget mail').' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
 			}
 			else
-				$errors[] = $lang_login['No email match'].' '.htmlspecialchars($email).'.';
+				$errors[] = $lang->t('No email match').' '.htmlspecialchars($email).'.';
 			}
 		}
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_login['Request pass']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Request pass'));
 	$required_fields = array('req_email' => $lang->t('Email'));
 	$focus_element = array('request_pass', 'req_email');
 	define ('PUN_ACTIVE_PAGE', 'login');
@@ -181,10 +181,10 @@ if (!empty($errors))
 
 ?>
 <div id="posterror" class="block">
-	<h2><span><?php echo $lang_login['New password errors'] ?></span></h2>
+	<h2><span><?php echo $lang->t('New password errors') ?></span></h2>
 	<div class="box">
 		<div class="inbox error-info">
-			<p><?php echo $lang_login['New passworderrors info'] ?></p>
+			<p><?php echo $lang->t('New passworderrors info') ?></p>
 			<ul class="error-list">
 <?php
 
@@ -201,16 +201,16 @@ if (!empty($errors))
 }
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_login['Request pass'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Request pass') ?></span></h2>
 	<div class="box">
 		<form id="request_pass" method="post" action="login.php?action=forget_2" onsubmit="this.request_pass.disabled=true;if(process_form(this)){return true;}else{this.request_pass.disabled=false;return false;}">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_login['Request pass legend'] ?></legend>
+					<legend><?php echo $lang->t('Request pass legend') ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
 						<label class="required"><strong><?php echo $lang->t('Email') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="80" /><br /></label>
-						<p><?php echo $lang_login['Request pass info'] ?></p>
+						<p><?php echo $lang->t('Request pass info') ?></p>
 					</div>
 				</fieldset>
 			</div>
@@ -268,7 +268,7 @@ require PUN_ROOT.'header.php';
 		<form id="login" method="post" action="login.php?action=in" onsubmit="return process_form(this)">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_login['Login legend'] ?></legend>
+					<legend><?php echo $lang->t('Login legend') ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="redirect_url" value="<?php echo pun_htmlspecialchars($redirect_url) ?>" />
@@ -276,11 +276,11 @@ require PUN_ROOT.'header.php';
 						<label class="conl required"><strong><?php echo $lang->t('Password') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input type="password" name="req_password" size="25" tabindex="2" /><br /></label>
 
 						<div class="rbox clearb">
-							<label><input type="checkbox" name="save_pass" value="1" tabindex="3" /><?php echo $lang_login['Remember me'] ?><br /></label>
+							<label><input type="checkbox" name="save_pass" value="1" tabindex="3" /><?php echo $lang->t('Remember me') ?><br /></label>
 						</div>
 
-						<p class="clearb"><?php echo $lang_login['Login info'] ?></p>
-						<p class="actions"><span><a href="register.php" tabindex="5"><?php echo $lang_login['Not registered'] ?></a></span> <span><a href="login.php?action=forget" tabindex="6"><?php echo $lang_login['Forgotten pass'] ?></a></span></p>
+						<p class="clearb"><?php echo $lang->t('Login info') ?></p>
+						<p class="actions"><span><a href="register.php" tabindex="5"><?php echo $lang->t('Not registered') ?></a></span> <span><a href="login.php?action=forget" tabindex="6"><?php echo $lang->t('Forgotten pass') ?></a></span></p>
 					</div>
 				</fieldset>
 			</div>
