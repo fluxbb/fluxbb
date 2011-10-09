@@ -18,7 +18,7 @@ if ($pun_user['g_id'] != PUN_ADMIN)
 	message($lang->t('No permission'));
 
 // Load the admin_forums.php language file
-require PUN_ROOT.'lang/'.$admin_language.'/admin_forums.php';
+$lang->load('admin_forums');
 
 // Add a "default" forum
 if (isset($_POST['add_forum']))
@@ -29,12 +29,12 @@ if (isset($_POST['add_forum']))
 	if ($add_to_cat < 1)
 		message($lang->t('Bad request'));
 
-	$db->query('INSERT INTO '.$db->prefix.'forums (forum_name, cat_id) VALUES(\''.$db->escape($lang_admin_forums['New forum']).'\', '.$add_to_cat.')') or error('Unable to create forum', __FILE__, __LINE__, $db->error());
+	$db->query('INSERT INTO '.$db->prefix.'forums (forum_name, cat_id) VALUES(\''.$db->escape($lang->t('New forum')).'\', '.$add_to_cat.')') or error('Unable to create forum', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the quick jump cache
 	$cache->delete('quickjump');
 
-	redirect('admin_forums.php', $lang_admin_forums['Forum added redirect']);
+	redirect('admin_forums.php', $lang->t('Forum added redirect'));
 }
 
 // Delete a forum
@@ -75,14 +75,14 @@ else if (isset($_GET['del_forum']))
 		// Regenerate the quick jump cache
 		$cache->delete('quickjump');
 
-		redirect('admin_forums.php', $lang_admin_forums['Forum deleted redirect']);
+		redirect('admin_forums.php', $lang->t('Forum deleted redirect'));
 	}
 	else // If the user hasn't confirmed the delete
 	{
 		$result = $db->query('SELECT forum_name FROM '.$db->prefix.'forums WHERE id='.$forum_id) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
 		$forum_name = pun_htmlspecialchars($db->result($result));
 
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Forums']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Admin'), $lang->t('Forums'));
 		define('PUN_ACTIVE_PAGE', 'admin');
 		require PUN_ROOT.'header.php';
 
@@ -90,19 +90,19 @@ else if (isset($_GET['del_forum']))
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo $lang_admin_forums['Confirm delete head'] ?></span></h2>
+		<h2><span><?php echo $lang->t('Confirm delete head') ?></span></h2>
 		<div class="box">
 			<form method="post" action="admin_forums.php?del_forum=<?php echo $forum_id ?>">
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_admin_forums['Confirm delete subhead'] ?></legend>
+						<legend><?php echo $lang->t('Confirm delete subhead') ?></legend>
 						<div class="infldset">
-							<p><?php printf($lang_admin_forums['Confirm delete info'], $forum_name) ?></p>
-							<p class="warntext"><?php echo $lang_admin_forums['Confirm delete warn'] ?></p>
+							<p><?php printf($lang->t('Confirm delete info'), $forum_name) ?></p>
+							<p class="warntext"><?php echo $lang->t('Confirm delete warn') ?></p>
 						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="del_forum_comply" value="<?php echo $lang_admin_common['Delete'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_admin_common['Go back'] ?></a></p>
+				<p class="buttons"><input type="submit" name="del_forum_comply" value="<?php echo $lang->t('Delete') ?>" /><a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 			</form>
 		</div>
 	</div>
@@ -123,7 +123,7 @@ else if (isset($_POST['update_positions']))
 	{
 		$disp_position = trim($disp_position);
 		if ($disp_position == '' || preg_match('%[^0-9]%', $disp_position))
-			message($lang_admin_forums['Must be integer message']);
+			message($lang->t('Must be integer message'));
 
 		$db->query('UPDATE '.$db->prefix.'forums SET disp_position='.$disp_position.' WHERE id='.intval($forum_id)) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
 	}
@@ -131,7 +131,7 @@ else if (isset($_POST['update_positions']))
 	// Regenerate the quick jump cache
 	$cache->delete('quickjump');
 
-	redirect('admin_forums.php', $lang_admin_forums['Forums updated redirect']);
+	redirect('admin_forums.php', $lang->t('Forums updated redirect'));
 }
 
 else if (isset($_GET['edit_forum']))
@@ -153,7 +153,7 @@ else if (isset($_GET['edit_forum']))
 		$redirect_url = isset($_POST['redirect_url']) ? trim($_POST['redirect_url']) : null;
 
 		if ($forum_name == '')
-			message($lang_admin_forums['Must enter name message']);
+			message($lang->t('Must enter name message'));
 
 		if ($cat_id < 1)
 			message($lang->t('Bad request'));
@@ -193,7 +193,7 @@ else if (isset($_GET['edit_forum']))
 		// Regenerate the quick jump cache
 		$cache->delete('quickjump');
 
-		redirect('admin_forums.php', $lang_admin_forums['Forum updated redirect']);
+		redirect('admin_forums.php', $lang->t('Forum updated redirect'));
 	}
 	else if (isset($_POST['revert_perms']))
 	{
@@ -204,7 +204,7 @@ else if (isset($_GET['edit_forum']))
 		// Regenerate the quick jump cache
 		$cache->delete('quickjump');
 
-		redirect('admin_forums.php?edit_forum='.$forum_id, $lang_admin_forums['Perms reverted redirect']);
+		redirect('admin_forums.php?edit_forum='.$forum_id, $lang->t('Perms reverted redirect'));
 	}
 
 	// Fetch forum info
@@ -214,7 +214,7 @@ else if (isset($_GET['edit_forum']))
 
 	$cur_forum = $db->fetch_assoc($result);
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Forums']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Admin'), $lang->t('Forums'));
 	define('PUN_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
 
@@ -222,25 +222,25 @@ else if (isset($_GET['edit_forum']))
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo $lang_admin_forums['Edit forum head'] ?></span></h2>
+		<h2><span><?php echo $lang->t('Edit forum head') ?></span></h2>
 		<div class="box">
 			<form id="edit_forum" method="post" action="admin_forums.php?edit_forum=<?php echo $forum_id ?>">
-				<p class="submittop"><input type="submit" name="save" value="<?php echo $lang_admin_common['Save changes'] ?>" tabindex="6" /></p>
+				<p class="submittop"><input type="submit" name="save" value="<?php echo $lang->t('Save changes') ?>" tabindex="6" /></p>
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_admin_forums['Edit details subhead'] ?></legend>
+						<legend><?php echo $lang->t('Edit details subhead') ?></legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row"><?php echo $lang_admin_forums['Forum name label'] ?></th>
+									<th scope="row"><?php echo $lang->t('Forum name label') ?></th>
 									<td><input type="text" name="forum_name" size="35" maxlength="80" value="<?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?>" tabindex="1" /></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang_admin_forums['Forum description label'] ?></th>
+									<th scope="row"><?php echo $lang->t('Forum description label') ?></th>
 									<td><textarea name="forum_desc" rows="3" cols="50" tabindex="2"><?php echo pun_htmlspecialchars($cur_forum['forum_desc']) ?></textarea></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang_admin_forums['Category label'] ?></th>
+									<th scope="row"><?php echo $lang->t('Category label') ?></th>
 									<td>
 										<select name="cat_id" tabindex="3">
 <?php
@@ -257,18 +257,18 @@ else if (isset($_GET['edit_forum']))
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang_admin_forums['Sort by label'] ?></th>
+									<th scope="row"><?php echo $lang->t('Sort by label') ?></th>
 									<td>
 										<select name="sort_by" tabindex="4">
-											<option value="0"<?php if ($cur_forum['sort_by'] == '0') echo ' selected="selected"' ?>><?php echo $lang_admin_forums['Last post'] ?></option>
-											<option value="1"<?php if ($cur_forum['sort_by'] == '1') echo ' selected="selected"' ?>><?php echo $lang_admin_forums['Topic start'] ?></option>
-											<option value="2"<?php if ($cur_forum['sort_by'] == '2') echo ' selected="selected"' ?>><?php echo $lang_admin_forums['Subject'] ?></option>
+											<option value="0"<?php if ($cur_forum['sort_by'] == '0') echo ' selected="selected"' ?>><?php echo $lang->t('Last post') ?></option>
+											<option value="1"<?php if ($cur_forum['sort_by'] == '1') echo ' selected="selected"' ?>><?php echo $lang->t('Topic start') ?></option>
+											<option value="2"<?php if ($cur_forum['sort_by'] == '2') echo ' selected="selected"' ?>><?php echo $lang->t('Subject') ?></option>
 										</select>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang_admin_forums['Redirect label'] ?></th>
-									<td><?php echo ($cur_forum['num_topics']) ? $lang_admin_forums['Redirect help'] : '<input type="text" name="redirect_url" size="45" maxlength="100" value="'.pun_htmlspecialchars($cur_forum['redirect_url']).'" tabindex="5" />'; ?></td>
+									<th scope="row"><?php echo $lang->t('Redirect label') ?></th>
+									<td><?php echo ($cur_forum['num_topics']) ? $lang->t('Redirect help') : '<input type="text" name="redirect_url" size="45" maxlength="100" value="'.pun_htmlspecialchars($cur_forum['redirect_url']).'" tabindex="5" />'; ?></td>
 								</tr>
 							</table>
 						</div>
@@ -276,16 +276,16 @@ else if (isset($_GET['edit_forum']))
 				</div>
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_admin_forums['Group permissions subhead'] ?></legend>
+						<legend><?php echo $lang->t('Group permissions subhead') ?></legend>
 						<div class="infldset">
-							<p><?php printf($lang_admin_forums['Group permissions info'], '<a href="admin_groups.php">'.$lang_admin_common['User groups'].'</a>') ?></p>
+							<p><?php printf($lang->t('Group permissions info'), '<a href="admin_groups.php">'.$lang->t('User groups').'</a>') ?></p>
 							<table id="forumperms" cellspacing="0">
 							<thead>
 								<tr>
 									<th class="atcl">&#160;</th>
-									<th><?php echo $lang_admin_forums['Read forum label'] ?></th>
-									<th><?php echo $lang_admin_forums['Post replies label'] ?></th>
-									<th><?php echo $lang_admin_forums['Post topics label'] ?></th>
+									<th><?php echo $lang->t('Read forum label') ?></th>
+									<th><?php echo $lang->t('Post replies label') ?></th>
+									<th><?php echo $lang->t('Post topics label') ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -329,11 +329,11 @@ else if (isset($_GET['edit_forum']))
 ?>
 							</tbody>
 							</table>
-							<div class="fsetsubmit"><input type="submit" name="revert_perms" value="<?php echo $lang_admin_forums['Revert to default'] ?>" tabindex="<?php echo $cur_index++ ?>" /></div>
+							<div class="fsetsubmit"><input type="submit" name="revert_perms" value="<?php echo $lang->t('Revert to default') ?>" tabindex="<?php echo $cur_index++ ?>" /></div>
 						</div>
 					</fieldset>
 				</div>
-				<p class="submitend"><input type="submit" name="save" value="<?php echo $lang_admin_common['Save changes'] ?>" tabindex="<?php echo $cur_index++ ?>" /></p>
+				<p class="submitend"><input type="submit" name="save" value="<?php echo $lang->t('Save changes') ?>" tabindex="<?php echo $cur_index++ ?>" /></p>
 			</form>
 		</div>
 	</div>
@@ -345,7 +345,7 @@ else if (isset($_GET['edit_forum']))
 	require PUN_ROOT.'footer.php';
 }
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Forums']);
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Admin'), $lang->t('Forums'));
 define('PUN_ACTIVE_PAGE', 'admin');
 require PUN_ROOT.'header.php';
 
@@ -353,16 +353,16 @@ generate_admin_menu('forums');
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo $lang_admin_forums['Add forum head'] ?></span></h2>
+		<h2><span><?php echo $lang->t('Add forum head') ?></span></h2>
 		<div class="box">
 			<form method="post" action="admin_forums.php?action=adddel">
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_admin_forums['Create new subhead'] ?></legend>
+						<legend><?php echo $lang->t('Create new subhead') ?></legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row"><?php echo $lang_admin_forums['Add forum label'] ?><div><input type="submit" name="add_forum" value="<?php echo $lang_admin_forums['Add forum'] ?>" tabindex="2" /></div></th>
+									<th scope="row"><?php echo $lang->t('Add forum label') ?><div><input type="submit" name="add_forum" value="<?php echo $lang->t('Add forum') ?>" tabindex="2" /></div></th>
 									<td>
 										<select name="add_to_cat" tabindex="1">
 <?php
@@ -374,11 +374,11 @@ generate_admin_menu('forums');
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$cur_cat['id'].'">'.pun_htmlspecialchars($cur_cat['cat_name']).'</option>'."\n";
 	}
 	else
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="0" disabled="disabled">'.$lang_admin_forums['No categories exist'].'</option>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="0" disabled="disabled">'.$lang->t('No categories exist').'</option>'."\n";
 
 ?>
 										</select>
-										<span><?php echo $lang_admin_forums['Add forum help'] ?></span>
+										<span><?php echo $lang->t('Add forum help') ?></span>
 									</td>
 								</tr>
 							</table>
@@ -396,10 +396,10 @@ if ($db->num_rows($result) > 0)
 {
 
 ?>
-		<h2 class="block2"><span><?php echo $lang_admin_forums['Edit forums head'] ?></span></h2>
+		<h2 class="block2"><span><?php echo $lang->t('Edit forums head') ?></span></h2>
 		<div class="box">
 			<form id="edforum" method="post" action="admin_forums.php?action=edit">
-				<p class="submittop"><input type="submit" name="update_positions" value="<?php echo $lang_admin_forums['Update positions'] ?>" tabindex="3" /></p>
+				<p class="submittop"><input type="submit" name="update_positions" value="<?php echo $lang->t('Update positions') ?>" tabindex="3" /></p>
 <?php
 
 $cur_index = 4;
@@ -415,14 +415,14 @@ while ($cur_forum = $db->fetch_assoc($result))
 ?>
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_admin_forums['Category subhead'] ?> <?php echo pun_htmlspecialchars($cur_forum['cat_name']) ?></legend>
+						<legend><?php echo $lang->t('Category subhead') ?> <?php echo pun_htmlspecialchars($cur_forum['cat_name']) ?></legend>
 						<div class="infldset">
 							<table cellspacing="0">
 							<thead>
 								<tr>
-									<th class="tcl"><?php echo $lang_admin_common['Action'] ?></th>
-									<th class="tc2"><?php echo $lang_admin_forums['Position label'] ?></th>
-									<th class="tcr"><?php echo $lang_admin_forums['Forum label'] ?></th>
+									<th class="tcl"><?php echo $lang->t('Action') ?></th>
+									<th class="tc2"><?php echo $lang->t('Position label') ?></th>
+									<th class="tcr"><?php echo $lang->t('Forum label') ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -433,7 +433,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 
 ?>
 								<tr>
-									<td class="tcl"><a href="admin_forums.php?edit_forum=<?php echo $cur_forum['fid'] ?>" tabindex="<?php echo $cur_index++ ?>"><?php echo $lang_admin_forums['Edit link'] ?></a> | <a href="admin_forums.php?del_forum=<?php echo $cur_forum['fid'] ?>" tabindex="<?php echo $cur_index++ ?>"><?php echo $lang_admin_forums['Delete link'] ?></a></td>
+									<td class="tcl"><a href="admin_forums.php?edit_forum=<?php echo $cur_forum['fid'] ?>" tabindex="<?php echo $cur_index++ ?>"><?php echo $lang->t('Edit link') ?></a> | <a href="admin_forums.php?del_forum=<?php echo $cur_forum['fid'] ?>" tabindex="<?php echo $cur_index++ ?>"><?php echo $lang->t('Delete link') ?></a></td>
 									<td class="tc2"><input type="text" name="position[<?php echo $cur_forum['fid'] ?>]" size="3" maxlength="3" value="<?php echo $cur_forum['disp_position'] ?>" tabindex="<?php echo $cur_index++ ?>" /></td>
 									<td class="tcr"><strong><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></strong></td>
 								</tr>
@@ -447,7 +447,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 						</div>
 					</fieldset>
 				</div>
-				<p class="submitend"><input type="submit" name="update_positions" value="<?php echo $lang_admin_forums['Update positions'] ?>" tabindex="<?php echo $cur_index++ ?>" /></p>
+				<p class="submitend"><input type="submit" name="update_positions" value="<?php echo $lang->t('Update positions') ?>" tabindex="<?php echo $cur_index++ ?>" /></p>
 			</form>
 		</div>
 <?php

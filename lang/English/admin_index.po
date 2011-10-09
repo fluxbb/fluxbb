@@ -1,0 +1,144 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in admin_index.php
+msgid "fopen disabled message"
+msgstr "Unable to check for upgrade since 'allow_url_fopen' is disabled on this system."
+
+msgid "Upgrade check failed message"
+msgstr "Check for upgrade failed for unknown reasons."
+
+msgid "Running latest version message"
+msgstr "You are running the latest version of FluxBB."
+
+msgid "New version available message"
+msgstr "A new version of FluxBB has been released. You can download the latest version at %s."
+
+msgid "PHPinfo disabled message"
+msgstr "The PHP function phpinfo() has been disabled on this server."
+
+msgid "Not available"
+msgstr "Not available"
+
+msgid "Forum admin head"
+msgstr "Forum administration"
+
+msgid "NA"
+msgstr "N/A"
+
+msgid "Welcome to admin"
+msgstr "Welcome to the FluxBB administration control panel. From here you can control vital aspects of the board. Depending on whether you are an administrator or a moderator you can:"
+
+msgid "Welcome 1"
+msgstr "Organize categories and forums."
+
+msgid "Welcome 2"
+msgstr "Set forum-wide options and preferences."
+
+msgid "Welcome 3"
+msgstr "Control permissions for users and guests."
+
+msgid "Welcome 4"
+msgstr "View IP statistics for users."
+
+msgid "Welcome 5"
+msgstr "Ban users."
+
+msgid "Welcome 6"
+msgstr "Censor words."
+
+msgid "Welcome 7"
+msgstr "Set up user ranks."
+
+msgid "Welcome 8"
+msgstr "Prune old posts."
+
+msgid "Welcome 9"
+msgstr "Handle post reports."
+
+msgid "Statistics head"
+msgstr "Statistics"
+
+msgid "FluxBB version label"
+msgstr "FluxBB version"
+
+msgid "Check for upgrade"
+msgstr "Check for upgrade"
+
+msgid "FluxBB version data"
+msgstr "v%s - %s"
+
+msgid "Server load label"
+msgstr "Server load"
+
+msgid "Server load data"
+msgstr "%s - %s user(s) online"
+
+msgid "Environment label"
+msgstr "Environment"
+
+msgid "Environment data OS"
+msgstr "Operating system: %s"
+
+msgid "Show info"
+msgstr "Show info"
+
+msgid "Environment data version"
+msgstr "PHP: %s - %s"
+
+msgid "Environment data acc"
+msgstr "Accelerator: %s"
+
+msgid "Turck MMCache"
+msgstr "Turck MMCache"
+
+msgid "Turck MMCache link"
+msgstr "turck-mmcache.sourceforge.net/"
+
+msgid "ionCube PHP Accelerator"
+msgstr "ionCube PHP Accelerator"
+
+msgid "ionCube PHP Accelerator link"
+msgstr "www.php-accelerator.co.uk/"
+
+msgid "Alternative PHP Cache (APC)"
+msgstr "Alternative PHP Cache (APC)"
+
+msgid "Alternative PHP Cache (APC) link"
+msgstr "www.php.net/apc/"
+
+msgid "Zend Optimizer"
+msgstr "Zend Optimizer"
+
+msgid "Zend Optimizer link"
+msgstr "www.zend.com/products/guard/zend-optimizer/"
+
+msgid "eAccelerator"
+msgstr "eAccelerator"
+
+msgid "eAccelerator link"
+msgstr "www.eaccelerator.net/"
+
+msgid "XCache"
+msgstr "XCache"
+
+msgid "XCache link"
+msgstr "xcache.lighttpd.net/"
+
+msgid "Database label"
+msgstr "Database"
+
+msgid "Database data rows"
+msgstr "Rows: %s"
+
+msgid "Database data size"
+msgstr "Size: %s"
+

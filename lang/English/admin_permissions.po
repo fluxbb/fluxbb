@@ -1,0 +1,99 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in admin-permissions.php
+msgid "Perms updated redirect"
+msgstr "Permissions updated. Redirecting …"
+
+msgid "Permissions head"
+msgstr "Permissions"
+
+msgid "Posting subhead"
+msgstr "Posting"
+
+msgid "BBCode label"
+msgstr "BBCode"
+
+msgid "BBCode help"
+msgstr "Allow BBCode in posts (recommended)."
+
+msgid "Image tag label"
+msgstr "Image tag"
+
+msgid "Image tag help"
+msgstr "Allow the BBCode [img][/img] tag in posts."
+
+msgid "All caps message label"
+msgstr "All caps message"
+
+msgid "All caps message help"
+msgstr "Allow a message to contain only capital letters."
+
+msgid "All caps subject label"
+msgstr "All caps subject"
+
+msgid "All caps subject help"
+msgstr "Allow a subject to contain only capital letters."
+
+msgid "Require e-mail label"
+msgstr "Require guest email"
+
+msgid "Require e-mail help"
+msgstr "Require guests to supply an email address when posting."
+
+msgid "Signatures subhead"
+msgstr "Signatures"
+
+msgid "BBCode sigs label"
+msgstr "BBCodes in signatures"
+
+msgid "BBCode sigs help"
+msgstr "Allow BBCodes in user signatures."
+
+msgid "Image tag sigs label"
+msgstr "Image tag in signatures"
+
+msgid "Image tag sigs help"
+msgstr "Allow the BBCode [img][/img] tag in user signatures (not recommended)."
+
+msgid "All caps sigs label"
+msgstr "All caps signature"
+
+msgid "All caps sigs help"
+msgstr "Allow a signature to contain only capital letters."
+
+msgid "Max sig length label"
+msgstr "Maximum signature length"
+
+msgid "Max sig length help"
+msgstr "The maximum number of characters a user signature may contain."
+
+msgid "Max sig lines label"
+msgstr "Maximum signature lines"
+
+msgid "Max sig lines help"
+msgstr "The maximum number of lines a user signature may contain."
+
+msgid "Registration subhead"
+msgstr "Registration"
+
+msgid "Banned e-mail label"
+msgstr "Allow banned email addresses"
+
+msgid "Banned e-mail help"
+msgstr "Allow users to register with or change to a banned email address/domain. If left at its default setting (yes), this action will be allowed, but an alert email will be sent to the mailing list (an effective way of detecting multiple registrations)."
+
+msgid "Duplicate e-mail label"
+msgstr "Allow duplicate email addresses"
+
+msgid "Duplicate e-mail help"
+msgstr "Controls whether users should be allowed to register with an email address that another user already has. If allowed, an alert email will be sent to the mailing list if a duplicate is detected."
+

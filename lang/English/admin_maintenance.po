@@ -1,0 +1,111 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in admin_maintenance.php
+msgid "Maintenance head"
+msgstr "Forum maintenance"
+
+msgid "Rebuild index subhead"
+msgstr "Rebuild search index"
+
+msgid "Rebuild index info"
+msgstr "If you've added, edited or removed posts manually in the database or if you're having problems searching, you should rebuild the search index. For best performance, you should put the forum in %s during rebuilding. <strong>Rebuilding the search index can take a long time and will increase server load during the rebuild process!</strong>"
+
+msgid "Posts per cycle label"
+msgstr "Posts per cycle"
+
+msgid "Posts per cycle help"
+msgstr "The number of posts to process per pageview. E.g. if you were to enter 300, three hundred posts would be processed and then the page would refresh. This is to prevent the script from timing out during the rebuild process."
+
+msgid "Starting post label"
+msgstr "Starting post ID"
+
+msgid "Starting post help"
+msgstr "The post ID to start rebuilding at. The default value is the first available ID in the database. Normally you wouldn't want to change this."
+
+msgid "Empty index label"
+msgstr "Empty index"
+
+msgid "Empty index help"
+msgstr "Select this if you want the search index to be emptied before rebuilding (see below)."
+
+msgid "Rebuild completed info"
+msgstr "Once the process has completed, you will be redirected back to this page. It is highly recommended that you have JavaScript enabled in your browser during rebuilding (for automatic redirect when a cycle has completed). If you are forced to abort the rebuild process, make a note of the last processed post ID and enter that ID+1 in \"Starting post ID\" when/if you want to continue (\"Empty index\" must not be selected)."
+
+msgid "Rebuild index"
+msgstr "Rebuild index"
+
+msgid "Rebuilding search index"
+msgstr "Rebuilding search index"
+
+msgid "Rebuilding index info"
+msgstr "Rebuilding index. This might be a good time to put on some coffee :-)"
+
+msgid "Processing post"
+msgstr "Processing post <strong>%s</strong> …"
+
+msgid "Click here"
+msgstr "Click here"
+
+msgid "Javascript redirect failed"
+msgstr "JavaScript redirect unsuccessful. %s to continue …"
+
+msgid "Posts must be integer message"
+msgstr "Posts per cycle must be a positive integer value."
+
+msgid "Days must be integer message"
+msgstr "Days to prune must be a positive integer value."
+
+msgid "No old topics message"
+msgstr "There are no topics that are %s days old. Please decrease the value of \"Days old\" and try again."
+
+msgid "Posts pruned redirect"
+msgstr "Posts pruned. Redirecting …"
+
+msgid "Prune head"
+msgstr "Prune"
+
+msgid "Prune subhead"
+msgstr "Prune old posts"
+
+msgid "Days old label"
+msgstr "Days old"
+
+msgid "Days old help"
+msgstr "The number of days \"old\" a topic must be to be pruned. E.g. if you were to enter 30, every topic that didn't contain a post dated less than 30 days old would be deleted."
+
+msgid "Prune sticky label"
+msgstr "Prune sticky topics"
+
+msgid "Prune sticky help"
+msgstr "When enabled, sticky topics will also be pruned."
+
+msgid "Prune from label"
+msgstr "Prune from forum"
+
+msgid "All forums"
+msgstr "All forums"
+
+msgid "Prune from help"
+msgstr "The forum from which you want to prune posts."
+
+msgid "Prune info"
+msgstr "Use this feature with caution. <strong>Pruned posts can never be recovered.</strong> For best performance, you should put the forum in %s during pruning."
+
+msgid "Confirm prune subhead"
+msgstr "Confirm prune posts"
+
+msgid "Confirm prune info"
+msgstr "Are you sure that you want to prune all topics older than %s days from %s (%s topics)."
+
+msgid "Confirm prune warn"
+msgstr "WARNING! Pruning posts deletes them permanently."
+

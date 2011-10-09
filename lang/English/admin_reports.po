@@ -1,0 +1,54 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in admin_reports.php
+msgid "Report zapped redirect"
+msgstr "Report marked as read. Redirecting …"
+
+msgid "New reports head"
+msgstr "New reports"
+
+msgid "Deleted user"
+msgstr "Deleted user"
+
+msgid "Deleted"
+msgstr "Deleted"
+
+msgid "Post ID"
+msgstr "Post #%s"
+
+msgid "Report subhead"
+msgstr "Reported %s"
+
+msgid "Reported by"
+msgstr "Reported by %s"
+
+msgid "Reason"
+msgstr "Reason"
+
+msgid "Zap"
+msgstr "Mark as read"
+
+msgid "No new reports"
+msgstr "There are no new reports."
+
+msgid "Last 10 head"
+msgstr "10 last read reports"
+
+msgid "NA"
+msgstr "N/A"
+
+msgid "Zapped subhead"
+msgstr "Marked as read %s by %s"
+
+msgid "No zapped reports"
+msgstr "There are no read reports."
+
