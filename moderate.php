@@ -174,7 +174,7 @@ if (isset($_GET['tid']))
 				message($lang->t('Bad request'));
 
 			// Load the post.php language file
-			require PUN_ROOT.'lang/'.$pun_user['language'].'/post.php';
+			$lang->load('post');
 
 			// Check subject
 			$new_subject = isset($_POST['new_subject']) ? pun_trim($_POST['new_subject']) : '';
@@ -269,7 +269,7 @@ if (isset($_GET['tid']))
 	// Show the moderate posts view
 
 	// Load the viewtopic.php language file
-	require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
+	$lang->load('topic');
 
 	// Used to disable the Move and Delete buttons if there are no replies to this topic
 	$button_status = ($cur_topic['num_replies'] == 0) ? ' disabled="disabled"' : '';
@@ -776,7 +776,7 @@ else if (isset($_GET['unstick']))
 // No specific forum moderation action was specified in the query string, so we'll display the moderator forum
 
 // Load the viewforum.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/forum.php';
+$lang->load('forum');
 
 // Fetch some info about the forum
 $result = $db->query('SELECT f.forum_name, f.redirect_url, f.num_topics, f.sort_by FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fid) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());

@@ -50,7 +50,7 @@ if ((($tid && (($cur_posting['post_replies'] == '' && $pun_user['g_post_replies'
 	message($lang->t('No permission'));
 
 // Load the post.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/post.php';
+$lang->load('post');
 
 // Start with a clean slate
 $errors = array();
@@ -95,9 +95,9 @@ if (isset($_POST['form_sent']))
 		$banned_email = false;
 
 		// Load the register.php/prof_reg.php language files
-		require PUN_ROOT.'lang/'.$pun_user['language'].'/prof_reg.php';
-		require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
-
+		$lang->load('prof_reg');
+		$lang->load('register');
+		
 		// It's a guest, so we have to validate the username
 		check_username($username);
 
@@ -112,7 +112,7 @@ if (isset($_POST['form_sent']))
 			if ($pun_user['is_guest'] && is_banned_email($email))
 			{
 				if ($pun_config['p_allow_banned_email'] == '0')
-					$errors[] = $lang_prof_reg['Banned email'];
+					$errors[] = $lang->t('Banned email');
 
 				$banned_email = true; // Used later when we send an alert email
 			}
