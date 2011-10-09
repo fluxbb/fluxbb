@@ -1,0 +1,42 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in viewforum.php
+msgid "Post topic"
+msgstr "Post new topic"
+
+msgid "Views"
+msgstr "Views"
+
+msgid "Moved"
+msgstr "Moved:"
+
+msgid "Sticky"
+msgstr "Sticky:"
+
+msgid "Closed"
+msgstr "Closed:"
+
+msgid "Empty forum"
+msgstr "Forum is empty."
+
+msgid "Mod controls"
+msgstr "Moderator controls"
+
+msgid "Is subscribed"
+msgstr "You are currently subscribed to this forum"
+
+msgid "Unsubscribe"
+msgstr "Unsubscribe"
+
+msgid "Subscribe"
+msgstr "Subscribe to this forum"
+

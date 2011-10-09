@@ -1,0 +1,381 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in profile.php
+# Navigation and sections
+msgid "Profile menu"
+msgstr "Profile menu"
+
+msgid "Section essentials"
+msgstr "Essentials"
+
+msgid "Section personal"
+msgstr "Personal"
+
+msgid "Section messaging"
+msgstr "Messaging"
+
+msgid "Section personality"
+msgstr "Personality"
+
+msgid "Section display"
+msgstr "Display"
+
+msgid "Section privacy"
+msgstr "Privacy"
+
+msgid "Section admin"
+msgstr "Administration"
+
+# Miscellaneous
+msgid "Username and pass legend"
+msgstr "Enter your username and password"
+
+msgid "Personal details legend"
+msgstr "Enter your personal details"
+
+msgid "Contact details legend"
+msgstr "Enter your messaging details"
+
+msgid "User activity"
+msgstr "User activity"
+
+msgid "Paginate info"
+msgstr "Enter the number of topics and posts you wish to view on each page."
+
+# Password stuff
+msgid "Pass key bad"
+msgstr "The specified password activation key was incorrect or has expired. Please re-request a new password. If that fails, contact the forum administrator at"
+
+msgid "Pass updated"
+msgstr "Your password has been updated. You can now login with your new password."
+
+msgid "Pass updated redirect"
+msgstr "Password updated. Redirecting …"
+
+msgid "Wrong pass"
+msgstr "Wrong old password."
+
+msgid "Change pass"
+msgstr "Change password"
+
+msgid "Change pass legend"
+msgstr "Enter and confirm your new password"
+
+msgid "Old pass"
+msgstr "Old password"
+
+msgid "New pass"
+msgstr "New password"
+
+msgid "Confirm new pass"
+msgstr "Confirm new password"
+
+msgid "Pass info"
+msgstr "Passwords must be at least 4 characters long. Passwords are case sensitive."
+
+# Email stuff
+msgid "Email key bad"
+msgstr "The specified email activation key was incorrect or has expired. Please re-request change of email address. If that fails, contact the forum administrator at"
+
+msgid "Email updated"
+msgstr "Your email address has been updated."
+
+msgid "Activate email sent"
+msgstr "An email has been sent to the specified address with instructions on how to activate the new email address. If it doesn't arrive you can contact the forum administrator at"
+
+msgid "Email legend"
+msgstr "Enter your new email address"
+
+msgid "Email instructions"
+msgstr "An email will be sent to your new address with an activation link. You must click the link in the email you receive to activate the new address."
+
+msgid "Change email"
+msgstr "Change email address"
+
+msgid "New email"
+msgstr "New email"
+
+# Avatar upload stuff
+msgid "Avatars disabled"
+msgstr "The administrator has disabled avatar support."
+
+msgid "Too large ini"
+msgstr "The selected file was too large to upload. The server didn't allow the upload."
+
+msgid "Partial upload"
+msgstr "The selected file was only partially uploaded. Please try again."
+
+msgid "No tmp directory"
+msgstr "PHP was unable to save the uploaded file to a temporary location."
+
+msgid "No file"
+msgstr "You did not select a file for upload."
+
+msgid "Bad type"
+msgstr "The file you tried to upload is not of an allowed type. Allowed types are gif, jpeg and png."
+
+msgid "Too wide or high"
+msgstr "The file you tried to upload is wider and/or higher than the maximum allowed"
+
+msgid "Too large"
+msgstr "The file you tried to upload is larger than the maximum allowed"
+
+msgid "pixels"
+msgstr "pixels"
+
+msgid "bytes"
+msgstr "bytes"
+
+msgid "Move failed"
+msgstr "The server was unable to save the uploaded file. Please contact the forum administrator at"
+
+msgid "Unknown failure"
+msgstr "An unknown error occurred. Please try again."
+
+msgid "Avatar upload redirect"
+msgstr "Avatar uploaded. Redirecting …"
+
+msgid "Avatar deleted redirect"
+msgstr "Avatar deleted. Redirecting …"
+
+msgid "Avatar desc"
+msgstr "An avatar is a small image that will be displayed under your username in your posts. It must not be any bigger than"
+
+msgid "Upload avatar"
+msgstr "Upload avatar"
+
+msgid "Upload avatar legend"
+msgstr "Enter an avatar file to upload"
+
+msgid "Delete avatar"
+msgstr "Delete avatar"
+
+# only for admins
+msgid "File"
+msgstr "File"
+
+msgid "Upload"
+msgstr "Upload"
+
+# submit button
+# Form validation stuff
+msgid "Forbidden title"
+msgstr "The title you entered contains a forbidden word. You must choose a different title."
+
+msgid "Profile redirect"
+msgstr "Profile updated. Redirecting …"
+
+# Profile display stuff
+msgid "Users profile"
+msgstr "%s's profile"
+
+msgid "Username info"
+msgstr "Username: %s"
+
+msgid "Email info"
+msgstr "Email: %s"
+
+msgid "Posts info"
+msgstr "Posts: %s"
+
+msgid "Registered info"
+msgstr "Registered: %s"
+
+msgid "Last post info"
+msgstr "Last post: %s"
+
+msgid "Last visit info"
+msgstr "Last visit: %s"
+
+msgid "Show posts"
+msgstr "Show all posts"
+
+msgid "Show topics"
+msgstr "Show all topics"
+
+msgid "Show subscriptions"
+msgstr "Show all subscriptions"
+
+msgid "Realname"
+msgstr "Real name"
+
+msgid "Location"
+msgstr "Location"
+
+msgid "Website"
+msgstr "Website"
+
+msgid "Invalid website URL"
+msgstr "The website URL you entered is invalid."
+
+msgid "Jabber"
+msgstr "Jabber"
+
+msgid "ICQ"
+msgstr "ICQ"
+
+msgid "MSN"
+msgstr "MSN Messenger"
+
+msgid "AOL IM"
+msgstr "AOL IM"
+
+msgid "Yahoo"
+msgstr "Yahoo! Messenger"
+
+msgid "Avatar"
+msgstr "Avatar"
+
+msgid "Signature"
+msgstr "Signature"
+
+msgid "Sig max size"
+msgstr "Max length: %s characters / Max lines: %s"
+
+msgid "Avatar legend"
+msgstr "Set your avatar display options"
+
+msgid "Avatar info"
+msgstr "An avatar is a small image that will be displayed with all your posts. You can upload an avatar by clicking the link below."
+
+msgid "Change avatar"
+msgstr "Change avatar"
+
+msgid "Signature legend"
+msgstr "Compose your signature"
+
+msgid "Signature info"
+msgstr "A signature is a small piece of text that is attached to your posts. In it, you can enter just about anything you like. Perhaps you would like to enter your favourite quote or your star sign. It's up to you! In your signature you can use BBCode if it is allowed in this particular forum. You can see the features that are allowed/enabled listed below whenever you edit your signature."
+
+msgid "Sig preview"
+msgstr "Current signature preview:"
+
+msgid "No sig"
+msgstr "No signature currently stored in profile."
+
+msgid "Signature quote/code/list/h"
+msgstr "The quote, code, list, and heading BBCodes are not allowed in signatures."
+
+msgid "Topics per page"
+msgstr "Topics"
+
+msgid "Posts per page"
+msgstr "Posts"
+
+msgid "Leave blank"
+msgstr "Leave blank to use forum default."
+
+msgid "Subscription legend"
+msgstr "Set your subscription options"
+
+msgid "Notify full"
+msgstr "Include a plain text version of new posts in subscription notification emails."
+
+msgid "Auto notify full"
+msgstr "Automatically subscribe to every topic you post in."
+
+msgid "Show smilies"
+msgstr "Show smilies as graphic icons."
+
+msgid "Show images"
+msgstr "Show images in posts."
+
+msgid "Show images sigs"
+msgstr "Show images in user signatures."
+
+msgid "Show avatars"
+msgstr "Show user avatars in posts."
+
+msgid "Show sigs"
+msgstr "Show user signatures."
+
+msgid "Style legend"
+msgstr "Select your preferred style"
+
+msgid "Styles"
+msgstr "Styles"
+
+msgid "Admin note"
+msgstr "Admin note"
+
+msgid "Pagination legend"
+msgstr "Enter your pagination options"
+
+msgid "Post display legend"
+msgstr "Set your options for viewing posts"
+
+msgid "Post display info"
+msgstr "If you are on a slow connection, disabling these options, particularly showing images in posts and signatures, will make pages load faster."
+
+msgid "Instructions"
+msgstr "When you update your profile, you will be redirected back to this page."
+
+# Administration stuff
+msgid "Group membership legend"
+msgstr "Choose user group"
+
+msgid "Save"
+msgstr "Save"
+
+msgid "Set mods legend"
+msgstr "Set moderator access"
+
+msgid "Moderator in info"
+msgstr "Choose which forums this user should be allowed to moderate. Note: This only applies to moderators. Administrators always have full permissions in all forums."
+
+msgid "Update forums"
+msgstr "Update forums"
+
+msgid "Delete ban legend"
+msgstr "Delete (administrators only) or ban user"
+
+msgid "Delete user"
+msgstr "Delete user"
+
+msgid "Ban user"
+msgstr "Ban user"
+
+msgid "Confirm delete legend"
+msgstr "Important: read before deleting user"
+
+msgid "Confirm delete user"
+msgstr "Confirm delete user"
+
+msgid "Confirmation info"
+msgstr "Please confirm that you want to delete the user"
+
+# the username will be appended to this string
+msgid "Delete warning"
+msgstr "Warning! Deleted users and/or posts cannot be restored. If you choose not to delete the posts made by this user, the posts can only be deleted manually at a later time."
+
+msgid "Delete posts"
+msgstr "Delete any posts and topics this user has made."
+
+msgid "Delete"
+msgstr "Delete"
+
+# submit button (confirm user delete)
+msgid "User delete redirect"
+msgstr "User deleted. Redirecting …"
+
+msgid "Group membership redirect"
+msgstr "Group membership saved. Redirecting …"
+
+msgid "Update forums redirect"
+msgstr "Forum moderator rights updated. Redirecting …"
+
+msgid "Ban redirect"
+msgstr "Redirecting …"
+
+msgid "No delete admin message"
+msgstr "Administrators cannot be deleted. In order to delete this user, you must first move him/her to a different user group."
+

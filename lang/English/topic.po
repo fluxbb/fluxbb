@@ -1,0 +1,89 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in viewtopic.php
+msgid "Post reply"
+msgstr "Post reply"
+
+msgid "Topic closed"
+msgstr "Topic closed"
+
+msgid "From"
+msgstr "From:"
+
+# User location
+msgid "IP address logged"
+msgstr "IP address logged"
+
+msgid "Note"
+msgstr "Note:"
+
+# Admin note
+msgid "Posts"
+msgstr "Posts:"
+
+msgid "Registered"
+msgstr "Registered:"
+
+msgid "Replies"
+msgstr "Replies:"
+
+msgid "Website"
+msgstr "Website"
+
+msgid "Guest"
+msgstr "Guest"
+
+msgid "Online"
+msgstr "Online"
+
+msgid "Offline"
+msgstr "Offline"
+
+msgid "Last edit"
+msgstr "Last edited by"
+
+msgid "Report"
+msgstr "Report"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Quote"
+msgstr "Quote"
+
+msgid "Is subscribed"
+msgstr "You are currently subscribed to this topic"
+
+msgid "Unsubscribe"
+msgstr "Unsubscribe"
+
+msgid "Subscribe"
+msgstr "Subscribe to this topic"
+
+msgid "Quick post"
+msgstr "Quick post"
+
+msgid "Mod controls"
+msgstr "Moderator controls"
+
+msgid "New icon"
+msgstr "New post"
+
+msgid "Re"
+msgstr "Re:"
+
+msgid "Preview"
+msgstr "Preview"
+

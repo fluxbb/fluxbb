@@ -1,0 +1,176 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in search.php
+# The search form
+msgid "User search"
+msgstr "User search"
+
+msgid "No search permission"
+msgstr "You do not have permission to use the search feature."
+
+msgid "Search flood"
+msgstr "At least %s seconds have to pass between searches. Please wait a while and try searching again."
+
+msgid "Search"
+msgstr "Search"
+
+msgid "Search criteria legend"
+msgstr "Enter your search criteria"
+
+msgid "Search info"
+msgstr "To search by keyword, enter a term or terms to search for. Separate terms with spaces. Use AND, OR and NOT to refine your search. To search by author enter the username of the author whose posts you wish to search for. Use wildcard character * for partial matches."
+
+msgid "Keyword search"
+msgstr "Keyword search"
+
+msgid "Author search"
+msgstr "Author search"
+
+msgid "Search in legend"
+msgstr "Select where to search"
+
+msgid "Search in info"
+msgstr "Choose in which forum you would like to search and if you want to search in topic subjects, message text or both."
+
+msgid "Search multiple forums info"
+msgstr "If no forums are selected, all forums will be searched."
+
+msgid "Forum search"
+msgstr "Forum"
+
+msgid "All forums"
+msgstr "All forums"
+
+msgid "Search in"
+msgstr "Search in"
+
+msgid "Message and subject"
+msgstr "Message text and topic subject"
+
+msgid "Message only"
+msgstr "Message text only"
+
+msgid "Topic only"
+msgstr "Topic subject only"
+
+msgid "Sort by"
+msgstr "Sort by"
+
+msgid "Sort order"
+msgstr "Sort order"
+
+msgid "Search results legend"
+msgstr "Select how to view search results"
+
+msgid "Search results info"
+msgstr "You can choose how you wish to sort and show your results."
+
+msgid "Sort by post time"
+msgstr "Post time"
+
+msgid "Sort by author"
+msgstr "Author"
+
+msgid "Sort by subject"
+msgstr "Subject"
+
+msgid "Sort by forum"
+msgstr "Forum"
+
+msgid "Ascending"
+msgstr "Ascending"
+
+msgid "Descending"
+msgstr "Descending"
+
+msgid "Show as"
+msgstr "Show results as"
+
+msgid "Show as topics"
+msgstr "Topics"
+
+msgid "Show as posts"
+msgstr "Posts"
+
+# Results
+msgid "Search results"
+msgstr "Search results"
+
+msgid "Quick search show_new"
+msgstr "New"
+
+msgid "Quick search show_recent"
+msgstr "Active"
+
+msgid "Quick search show_unanswered"
+msgstr "Unanswered"
+
+msgid "Quick search show_replies"
+msgstr "Posted"
+
+msgid "Quick search show_user_topics"
+msgstr "Topics by %s"
+
+msgid "Quick search show_user_posts"
+msgstr "Posts by %s"
+
+msgid "Quick search show_subscriptions"
+msgstr "Subscribed by %s"
+
+msgid "By keywords show as topics"
+msgstr "Topics with posts containing '%s'"
+
+msgid "By keywords show as posts"
+msgstr "Posts containing '%s'"
+
+msgid "By user show as topics"
+msgstr "Topics with posts by %s"
+
+msgid "By user show as posts"
+msgstr "Posts by %s"
+
+msgid "By both show as topics"
+msgstr "Topics with posts containing '%s', by %s"
+
+msgid "By both show as posts"
+msgstr "Posts containing '%s', by %s"
+
+msgid "No terms"
+msgstr "You have to enter at least one keyword and/or an author to search for."
+
+msgid "No hits"
+msgstr "Your search returned no hits."
+
+msgid "No user posts"
+msgstr "There are no posts by this user in this forum."
+
+msgid "No user topics"
+msgstr "There are no topics by this user in this forum."
+
+msgid "No subscriptions"
+msgstr "This user is currently not subscribed to any topics."
+
+msgid "No new posts"
+msgstr "There are no topics with new posts since your last visit."
+
+msgid "No recent posts"
+msgstr "No new posts have been made within the last 24 hours."
+
+msgid "No unanswered"
+msgstr "There are no unanswered posts in this forum."
+
+msgid "Go to post"
+msgstr "Go to post"
+
+msgid "Go to topic"
+msgstr "Go to topic"
+

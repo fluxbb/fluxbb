@@ -1,0 +1,85 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in register.php
+# Miscellaneous
+msgid "No new regs"
+msgstr "This forum is not accepting new registrations."
+
+msgid "Reg cancel redirect"
+msgstr "Registration cancelled. Redirecting …"
+
+msgid "Forum rules"
+msgstr "Forum rules"
+
+msgid "Rules legend"
+msgstr "You must agree to the following in order to register"
+
+msgid "Registration flood"
+msgstr "A new user was registered with the same IP address as you within the last hour. To prevent registration flooding, at least an hour has to pass between registrations from the same IP. Sorry for the inconvenience."
+
+msgid "Agree"
+msgstr "Agree"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Register"
+msgstr "Register"
+
+# Form validation stuff (some of these are also used in post.php)
+msgid "Registration errors"
+msgstr "Registration errors"
+
+msgid "Registration errors info"
+msgstr "The following errors need to be corrected before you can register:"
+
+msgid "Username censor"
+msgstr "The username you entered contains one or more censored words. Please choose a different username."
+
+msgid "Username dupe 1"
+msgstr "Someone is already registered with the username"
+
+msgid "Username dupe 2"
+msgstr "The username you entered is too similar. The username must differ from that by at least one alphanumerical character (a-z or 0-9). Please choose a different username."
+
+msgid "Email not match"
+msgstr "Email addresses do not match."
+
+# Registration email stuff
+msgid "Reg email"
+msgstr "Thank you for registering. Your password has been sent to the specified address. If it doesn't arrive you can contact the forum administrator at"
+
+msgid "Reg complete"
+msgstr "Registration complete. Logging in and redirecting …"
+
+# Register info
+msgid "Desc 1"
+msgstr "Registration will grant you access to a number of features and capabilities otherwise unavailable. These functions include the ability to edit and delete posts, design your own signature that accompanies your posts and much more. If you have any questions regarding this forum you should ask an administrator."
+
+msgid "Desc 2"
+msgstr "Below is a form you must fill out in order to register. Once you are registered you should visit your profile and review the different settings you can change. The fields below only make up a small part of all the settings you can alter in your profile."
+
+msgid "Username legend"
+msgstr "Please enter a username between 2 and 25 characters long"
+
+msgid "Pass legend"
+msgstr "Please enter and confirm your chosen password"
+
+msgid "Pass info"
+msgstr "Passwords must be at least 4 characters long. Passwords are case sensitive."
+
+msgid "Email info"
+msgstr "You must enter a valid email address as your randomly generated password will be sent to that address."
+
+msgid "Confirm email"
+msgstr "Confirm email address"
+
