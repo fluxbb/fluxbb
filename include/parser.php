@@ -64,14 +64,14 @@ $smilies = array(
 //
 function preparse_bbcode($text, &$errors, $is_signature = false)
 {
-	global $pun_config, $lang, $lang_post, $re_list;
+	global $pun_config, $lang, $lang, $re_list;
 
 	if ($is_signature)
 	{
-		global $lang_profile;
-
+		$lang->load('profile');
+		
 		if (preg_match('%\[/?(?:quote|code|list|h)\b[^\]]*\]%i', $text))
-			$errors[] = $lang_profile['Signature quote/code/list/h'];
+			$errors[] = $lang->t('Signature quote/code/list/h');
 	}
 
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
@@ -122,7 +122,8 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 			$text = $new_text;
 			if ($new_text == '')
 			{
-				$errors[] = $lang_post['Empty after strip'];
+				$lang->load('post');
+				$errors[] = $lang->t('Empty after strip');
 				break;
 			}
 		}
