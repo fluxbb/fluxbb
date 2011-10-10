@@ -159,8 +159,6 @@ $lang->setLanguage($pun_user['language']);
 // Load the common language file
 $lang->load('common');
 
-include PUN_ROOT.'lang/English/common.php';
-
 // Check if we are to display a maintenance message
 if ($pun_config['o_maintenance'] && $pun_user['g_id'] > PUN_ADMIN && !defined('PUN_TURN_OFF_MAINT'))
 	maintenance_message();
