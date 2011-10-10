@@ -704,9 +704,7 @@ else if (isset($_POST['form_sent']))
 			// Make sure we got a valid language string
 			if (isset($_POST['form']['language']))
 			{
-				$languages = forum_list_langs();
-				$form['language'] = pun_trim($_POST['form']['language']);
-				if (!in_array($form['language'], $languages))
+				if (!Flux_Lang::languageExists($form['language']))
 					message($lang->t('Bad request'));
 			}
 
@@ -723,7 +721,7 @@ else if (isset($_POST['form_sent']))
 					{
 						// Check username
 						$lang->load('register');
-						
+
 						$errors = array();
 						check_username($form['username'], $id);
 						if (!empty($errors))
@@ -1335,7 +1333,7 @@ else
 
 <?php
 
-		$languages = forum_list_langs();
+		$languages = Flux_Lang::getLanguageList();
 
 		// Only display the language selection box if there's more than one language available
 		if (count($languages) > 1)

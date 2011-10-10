@@ -199,8 +199,7 @@ else
 	if ($title == '')
 		$alerts[] = $lang->t('No board title');
 
-	$languages = forum_list_langs();
-	if (!in_array($default_lang, $languages))
+	if (!Flux_Lang::languageExists($default_lang))
 		$alerts[] = $lang->t('Error default language');
 
 	$styles = forum_list_styles();
@@ -246,7 +245,7 @@ if (!isset($_POST['form_sent']) || !empty($alerts))
 		error($lang->t('No DB extensions'));
 
 	// Fetch a list of installed languages
-	$languages = forum_list_langs();
+	$languages = Flux_Lang::getLanguageList();
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -497,7 +496,7 @@ foreach ($alerts as $cur_alert)
 						<label class="required"><strong><?php echo $lang->t('Default language') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><select id="req_default_lang" name="req_default_lang">
 <?php
 
-		$languages = forum_list_langs();
+		$languages = Flux_Lang::getLanguageList();
 		foreach ($languages as $temp)
 		{
 			if ($temp == $default_lang)

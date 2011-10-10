@@ -1637,30 +1637,6 @@ function forum_list_styles()
 
 
 //
-// Fetch a list of available language packs
-//
-function forum_list_langs()
-{
-	$languages = array();
-
-	$d = dir(PUN_ROOT.'lang');
-	while (($entry = $d->read()) !== false)
-	{
-		if ($entry{0} == '.')
-			continue;
-
-		if (is_dir(PUN_ROOT.'lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/common.php'))
-			$languages[] = $entry;
-	}
-	$d->close();
-
-	natcasesort($languages);
-
-	return $languages;
-}
-
-
-//
 // Generate a cache ID based on the last modification time for all stopwords files
 //
 function generate_stopwords_cache_id()

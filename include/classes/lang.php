@@ -17,7 +17,7 @@ class Flux_Lang
 	 *
 	 * @var string
 	 */
-	protected $langDir = 'lang/';
+	protected static $langDir = 'lang/';
 
 	/**
 	 * The default language
@@ -41,15 +41,44 @@ class Flux_Lang
 	protected $loadedResources = array();
 
 	/**
+	 * Get a list of all available languages
+	 *
+	 * @return array
+	 */
+	public static function getLanguageList()
+	{
+		$return = array();
+		foreach (glob(self::$langDir.'*', GLOB_ONLYDIR) as $dir)
+		{
+			$return[] = end(explode('/', $dir));
+		}
+
+		// TODO: Do we need sorting here?
+		natcasesort($return);
+		return $return;
+	}
+
+	/**
+	 * Check whether the given language exists
+	 *
+	 * @param string $lang
+	 * @return bool
+	 */
+	public static function languageExists($lang)
+	{
+		return in_array($lang, self::getLanguageList());
+	}
+
+	/**
 	 * Set the directory where language packs are located
 	 *
 	 * @param string $dir
 	 * @return void
 	 */
-	public function setLanguageDirectory($dir)
+	public static function setLanguageDirectory($dir)
 	{
 		// Remove any trailing slashes
-		$this->langDir = rtrim($dir, '/');
+		self::$langDir = rtrim($dir, '/');
 	}
 
 	/**
@@ -60,7 +89,7 @@ class Flux_Lang
 	 */
 	public function setDefaultLanguage($lang)
 	{
-		if (file_exists($this->langDir.'/'.$lang))
+		if (file_exists(self::$langDir.'/'.$lang))
 			$this->defaultLang = $lang;
 		else
 			throw new Exception('It seems like default language pack "'.$lang.'" does not exist.');
@@ -74,7 +103,7 @@ class Flux_Lang
 	 */
 	public function setLanguage($lang)
 	{
-		if (file_exists($this->langDir.'/'.$lang))
+		if (file_exists(self::$langDir.'/'.$lang))
 			$this->lang = $lang;
 		else
 			throw new Exception('It seems like language pack "'.$lang.'" does not exist.');
@@ -99,8 +128,8 @@ class Flux_Lang
 
 		$this->loadedResources[] = $resource;
 
-		$default_filename = $this->langDir.'/'.$this->defaultLang.'/'.$resource.'.mo';
-		$filename = $this->langDir.'/'.$this->lang.'/'.$resource.'.mo';
+		$default_filename = self::$langDir.'/'.$this->defaultLang.'/'.$resource.'.mo';
+		$filename = self::$langDir.'/'.$this->lang.'/'.$resource.'.mo';
 
 		$cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport');
 		// TODO: Handle Cache config globally. How?

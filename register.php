@@ -131,8 +131,7 @@ if (isset($_POST['form_sent']))
 	// Make sure we got a valid language string
 	if (isset($_POST['language']))
 	{
-		$language = preg_replace('%[\.\\\/]%', '', $_POST['language']);
-		if (!file_exists(PUN_ROOT.'lang/'.$language.'/common.php'))
+		if (!Flux_Lang::languageExists($_POST['language']))
 			message($lang->t('Bad request'));
 	}
 	else
@@ -382,7 +381,7 @@ if (!empty($errors))
 						</div>
 <?php
 
-		$languages = forum_list_langs();
+		$languages = Flux_Lang::getLanguageList();
 
 		// Only display the language selection box if there's more than one language available
 		if (count($languages) > 1)

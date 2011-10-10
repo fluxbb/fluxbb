@@ -94,8 +94,7 @@ if (isset($_POST['form_sent']))
 	if (substr($form['base_url'], -1) == '/')
 		$form['base_url'] = substr($form['base_url'], 0, -1);
 
-	$languages = forum_list_langs();
-	if (!in_array($form['default_lang'], $languages))
+	if (!Flux_Lang::languageExists($form['default_lang']))
 		message($lang->t('Bad request'));
 
 	$styles = forum_list_styles();
@@ -309,7 +308,7 @@ generate_admin_menu('options');
 										<select name="form[default_lang]">
 <?php
 
-		$languages = forum_list_langs();
+		$languages = Flux_Lang::getLanguageList();
 
 		foreach ($languages as $temp)
 		{
