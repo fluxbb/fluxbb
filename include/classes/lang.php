@@ -1,6 +1,6 @@
 <?php
 
-require_once PUN_ROOT.'modules/gettext/gettext.php';
+require_once PUN_ROOT.'modules/gettext/Gettext.php';
 require_once PUN_ROOT.'modules/cache/cache.php';
 
 class Flux_Lang
@@ -17,7 +17,7 @@ class Flux_Lang
 	 *
 	 * @var string
 	 */
-	protected static $langDir = 'lang/';
+	protected static $langDir = 'lang';
 
 	/**
 	 * The default language
@@ -128,8 +128,8 @@ class Flux_Lang
 
 		$this->loadedResources[] = $resource;
 
-		$default_filename = self::$langDir.'/'.$this->defaultLang.'/'.$resource.'.mo';
-		$filename = self::$langDir.'/'.$this->lang.'/'.$resource.'.mo';
+		$default_filename = self::$langDir.'/'.$this->defaultLang.'/'.$resource.'.po';
+		$filename = self::$langDir.'/'.$this->lang.'/'.$resource.'.po';
 
 		$cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport');
 		// TODO: Handle Cache config globally. How?
@@ -138,7 +138,7 @@ class Flux_Lang
 		$trans_cache = $cache->get($this->lang.'_'.$resource);
 		if ($trans_cache === Cache::NOT_FOUND)
 		{
-			$trans_cache = Gettext::parse($filename);
+			$trans_cache = Flux_Gettext::parse($filename);
 
 			// If this is not the default language, load that, too
 			if ($this->defaultLang != $this->lang)
@@ -146,7 +146,7 @@ class Flux_Lang
 				$def_trans_cache = $cache->get($this->defaultLang.'_'.$resource);
 				if ($def_trans_cache === Cache::NOT_FOUND)
 				{
-					$def_trans_cache = Gettext::parse($default_filename);
+					$def_trans_cache = Flux_Gettext::parse($default_filename);
 
 					$cache->set($this->defaultLang.'_'.$resource, $def_trans_cache);
 				}
@@ -172,6 +172,13 @@ class Flux_Lang
 	 */
 	public function t($str)
 	{
-		return isset($this->translationTable[$str]) ? $this->translationTable[$str][0] : $str;
+		if (isset($this->translationTable[$str]))
+		{
+			$args = func_get_args();
+			$args[0] = $this->translationTable[$args[0]];
+			return call_user_func_array('sprintf', $args);
+		}
+
+		return $str;
 	}
 }
