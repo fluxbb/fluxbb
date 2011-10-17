@@ -7,9 +7,6 @@
 [submodule "modules/utf8"]
 	path = modules/utf8
 	url = git://github.com/fluxbb/utf8.git
-[submodule "modules/gettext"]
-	path = modules/gettext
-	url = git://github.com/fluxbb/gettext.git
 [submodule "modules/password"]
 	path = modules/password
 	url = git://github.com/fluxbb/password.git
