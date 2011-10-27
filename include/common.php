@@ -107,11 +107,12 @@ define('PUN_GUEST', 3);
 define('PUN_MEMBER', 4);
 
 // Load the DB module
-require PUN_ROOT.'modules/database/db.php';
-$db = new Database($db_dsn, array('username' => $db_username, 'password' => $db_password, 'prefix' => $db_prefix, 'debug' => defined('PUN_DEBUG')));
+require PUN_ROOT.'modules/database/src/Database/Adapter.php';
+require PUN_ROOT.'modules/database/src/Database/Query.php';
+$db = Flux_Database_Adapter::factory($flux_config['db']['type'], $flux_config['db']);
 
 // Start a transaction
-$db->start_transaction();
+$db->startTransaction();
 
 // Load cached config
 $pun_config = $cache->get('config');
@@ -120,10 +121,10 @@ if ($pun_config === Cache::NOT_FOUND)
 	$pun_config = array();
 
 	// Get the forum config from the DB
-	$query = new SelectQuery(array('conf_name' => 'c.conf_name', 'conf_value' => 'c.conf_value'), 'config AS c');
+	$query = $db->select(array('conf_name' => 'c.conf_name', 'conf_value' => 'c.conf_value'), 'config AS c');
 	$params = array();
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	foreach ($result as $cur_config_item)
 		$pun_config[$cur_config_item['conf_name']] = $cur_config_item['conf_value'];
 
@@ -175,10 +176,10 @@ $pun_bans = $cache->get('bans');
 if ($pun_bans === Cache::NOT_FOUND)
 {
 	// Get the ban list from the DB
-	$query = new SelectQuery(array('id' => 'b.id', 'username' => 'b.username', 'ip' => 'b.ip', 'email' => 'b.email', 'message' => 'b.message', 'expire' => 'b.expire', 'ban_creator' => 'b.ban_creator'), 'bans AS b');
+	$query = $db->select(array('id' => 'b.id', 'username' => 'b.username', 'ip' => 'b.ip', 'email' => 'b.email', 'message' => 'b.message', 'expire' => 'b.expire', 'ban_creator' => 'b.ban_creator'), 'bans AS b');
 	$params = array();
 
-	$pun_bans = $db->query($query, $params);
+	$pun_bans = $query->run($params);
 	unset ($query, $params);
 
 	$cache->set('bans', $pun_bans);

@@ -29,10 +29,10 @@ if (isset($_POST['add_forum']))
 	if ($add_to_cat < 1)
 		message($lang_common['Bad request']);
 
-	$query = new InsertQuery(array('forum_name' => ':forum_name', 'cat_id' => ':cat_id'), 'forums');
+	$query = $db->insert(array('forum_name' => ':forum_name', 'cat_id' => ':cat_id'), 'forums');
 	$params = array(':forum_name' => $lang_admin_forums['New forum'], ':cat_id' => $add_to_cat);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 
 	// Regenerate the quick jump cache
@@ -58,16 +58,15 @@ else if (isset($_GET['del_forum']))
 		prune($forum_id, 1, -1);
 
 		// Locate any "orphaned redirect topics" and delete them
-		$query = new SelectQuery(array('id' => 't1.id'), 'topics AS t1');
+		$query = $db->select(array('id' => 't1.id'), 'topics AS t1');
 
-		$query->joins['t2'] = new LeftJoin('topics AS t2');
-		$query->joins['t2']->on = 't1.moved_to = t2.id';
+		$query->LeftJoin('t2', 'topics AS t2', 't1.moved_to = t2.id');
 
 		$query->where = 't2.id IS NULL AND t1.moved_to IS NOT NULL';
 
 		$params = array();
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		unset ($query, $params);
 
 		if (!empty($result))
@@ -76,42 +75,42 @@ else if (isset($_GET['del_forum']))
 			foreach ($result as $cur_orphan)
 				$orphans[] = $cur_orphan['id'];
 
-			$query = new DeleteQuery('topics');
+			$query = $db->delete('topics');
 			$query->where = 'id IN :tids';
 
 			$params = array(':tids' => $orphans);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 		}
 
 		unset ($result);
 
 		// Delete the forum
-		$query = new DeleteQuery('forums');
+		$query = $db->delete('forums');
 		$query->where = 'id = :forum_id';
 
 		$params = array(':forum_id' => $forum_id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Delete any forum specific group permissions
-		$query = new DeleteQuery('forum_perms');
+		$query = $db->delete('forum_perms');
 		$query->where = 'forum_id = :forum_id';
 
 		$params = array(':forum_id' => $forum_id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Delete any subscriptions for this forum
-		$query = new DeleteQuery('forum_subscriptions');
+		$query = $db->delete('forum_subscriptions');
 		$query->where = 'forum_id = :forum_id';
 
 		$params = array(':forum_id' => $forum_id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Regenerate the quick jump cache
@@ -121,12 +120,12 @@ else if (isset($_GET['del_forum']))
 	}
 	else // If the user hasn't confirmed the delete
 	{
-		$query = new SelectQuery(array('forum_name' => 'f.forum_name'), 'forums AS f');
+		$query = $db->select(array('forum_name' => 'f.forum_name'), 'forums AS f');
 		$query->where = 'f.id = :forum_id';
 
 		$params = array(':forum_id' => $forum_id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		$forum_name = pun_htmlspecialchars($result[0]['forum_name']);
 		unset ($reuslt, $query, $params);
 
@@ -167,7 +166,7 @@ else if (isset($_POST['update_positions']))
 {
 	confirm_referrer('admin_forums.php');
 
-	$query = new UpdateQuery(array('disp_position' => ':position'), 'forums');
+	$query = $db->update(array('disp_position' => ':position'), 'forums');
 	$query->where = 'id = :forum_id';
 
 	foreach ($_POST['position'] as $forum_id => $disp_position)
@@ -177,7 +176,7 @@ else if (isset($_POST['update_positions']))
 			message($lang_admin_forums['Must be integer message']);
 
 		$params = array(':position' => $disp_position, ':forum_id' => $forum_id);
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($params);
 	}
 
@@ -213,29 +212,29 @@ else if (isset($_GET['edit_forum']))
 		if ($cat_id < 1)
 			message($lang_common['Bad request']);
 
-		$query = new UpdateQuery(array('forum_name' => ':forum_name', 'forum_desc' => ':forum_desc', 'redirect_url' => ':redirect_url', 'sort_by' => ':sort_by', 'cat_id' => ':cat_id'), 'forums');
+		$query = $db->update(array('forum_name' => ':forum_name', 'forum_desc' => ':forum_desc', 'redirect_url' => ':redirect_url', 'sort_by' => ':sort_by', 'cat_id' => ':cat_id'), 'forums');
 		$query->where = 'id = :forum_id';
 
 		$params = array(':forum_name' => $forum_name, ':forum_desc' => empty($forum_desc) ? null : $forum_desc, ':redirect_url' => empty($redirect_url) ? null : $redirect_url, ':sort_by' => $sort_by, ':cat_id' => $cat_id, ':forum_id' => $forum_id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Now let's deal with the permissions
 		if (isset($_POST['read_forum_old']))
 		{
-			$query = new SelectQuery(array('g_id' => 'g.g_id', 'g_read_board' => 'g.g_read_board', 'g_post_replies' => 'g.g_post_replies', 'g_post_topics' => 'g.g_post_topics'), 'groups AS g');
+			$query = $db->select(array('g_id' => 'g.g_id', 'g_read_board' => 'g.g_read_board', 'g_post_replies' => 'g.g_post_replies', 'g_post_topics' => 'g.g_post_topics'), 'groups AS g');
 			$query->where = 'g.g_id != :group_admin';
 
 			$params = array(':group_admin' => PUN_ADMIN);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			unset ($query, $params);
 
-			$delete_query = new DeleteQuery('forum_perms');
+			$delete_query = $db->delete('forum_perms');
 			$delete_query->where = 'group_id = :group_id AND forum_id = :forum_id';
 
-			$replace_query = new ReplaceQuery(array('group_id' => ':group_id', 'forum_id' => ':forum_id', 'read_forum' => ':read_forum', 'post_replies' => ':post_replies', 'post_topics' => ':post_topics'), 'forum_perms', array('group_id', 'forum_id'));
+			$replace_query = $db->replace(array('group_id' => ':group_id', 'forum_id' => ':forum_id', 'read_forum' => ':read_forum', 'post_replies' => ':post_replies', 'post_topics' => ':post_topics'), 'forum_perms', array('group_id', 'forum_id'));
 
 			foreach ($result as $cur_group)
 			{
@@ -251,14 +250,14 @@ else if (isset($_GET['edit_forum']))
 					{
 						$params = array(':group_id' => $cur_group['g_id'], ':forum_id' => $forum_id);
 
-						$db->query($delete_query, $params);
+						$delete_query->run($params);
 						unset ($params);
 					}
 					else
 					{
 						$params = array(':group_id' => $cur_group['g_id'], ':forum_id' => $forum_id, ':read_forum' => $read_forum_new, ':post_replies' => $post_replies_new, ':post_topics' => $post_topics_new);
 
-						$db->query($replace_query, $params);
+						$replace_query->run($params);
 						unset ($params);
 					}
 				}
@@ -276,12 +275,12 @@ else if (isset($_GET['edit_forum']))
 	{
 		confirm_referrer('admin_forums.php');
 
-		$query = new DeleteQuery('forum_perms');
+		$query = $db->delete('forum_perms');
 		$query->where = 'forum_id = :forum_id';
 
 		$params = array(':forum_id' => $forum_id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Regenerate the quick jump cache
@@ -291,12 +290,12 @@ else if (isset($_GET['edit_forum']))
 	}
 
 	// Fetch forum info
-	$query = new SelectQuery(array('id' => 'f.id', 'forum_name' => 'f.forum_name', 'forum_desc' => 'f.forum_desc', 'redirect_url' => 'f.redirect_url', 'num_topics' => 'f.num_topics', 'sort_by' => 'f.sort_by', 'cat_id' => 'f.cat_id'), 'forums AS f');
+	$query = $db->select(array('id' => 'f.id', 'forum_name' => 'f.forum_name', 'forum_desc' => 'f.forum_desc', 'redirect_url' => 'f.redirect_url', 'num_topics' => 'f.num_topics', 'sort_by' => 'f.sort_by', 'cat_id' => 'f.cat_id'), 'forums AS f');
 	$query->where = 'f.id = :forum_id';
 
 	$params = array(':forum_id' => $forum_id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if (empty($result))
 		message($lang_common['Bad request']);
 
@@ -334,12 +333,12 @@ else if (isset($_GET['edit_forum']))
 										<select name="cat_id" tabindex="3">
 <?php
 
-	$query = new SelectQuery(array('id' => 'c.id', 'cat_name' => 'c.cat_name'), 'categories AS c');
+	$query = $db->select(array('id' => 'c.id', 'cat_name' => 'c.cat_name'), 'categories AS c');
 	$query->order = array('cposition' => 'c.disp_position ASC');
 
 	$params = array();
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	foreach ($result as $cur_cat)
 	{
 		$selected = ($cur_cat['id'] == $cur_forum['cat_id']) ? ' selected="selected"' : '';
@@ -387,17 +386,16 @@ else if (isset($_GET['edit_forum']))
 							<tbody>
 <?php
 
-	$query = new SelectQuery(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title', 'g_read_board' => 'g.g_read_board', 'g_post_replies' => 'g.g_post_replies', 'g_post_topics' => 'g.g_post_topics', 'read_forum' => 'fp.read_forum', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics'), 'groups AS g');
+	$query = $db->select(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title', 'g_read_board' => 'g.g_read_board', 'g_post_replies' => 'g.g_post_replies', 'g_post_topics' => 'g.g_post_topics', 'read_forum' => 'fp.read_forum', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics'), 'groups AS g');
 
-	$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-	$query->joins['fp']->on = 'g.g_id = fp.group_id AND fp.forum_id = :forum_id';
+	$query->LeftJoin('fp', 'forum_perms AS fp', 'g.g_id = fp.group_id AND fp.forum_id = :forum_id');
 
 	$query->where = 'g.g_id != :group_admin';
 	$query->order = array('g_id' => 'g.g_id ASC');
 
 	$params = array(':forum_id' => $forum_id, ':group_admin' => PUN_ADMIN);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 
 	$cur_index = 7;
 	foreach ($result as $cur_perm)
@@ -474,12 +472,12 @@ generate_admin_menu('forums');
 										<select name="add_to_cat" tabindex="1">
 <?php
 
-	$query = new SelectQuery(array('id' => 'c.id', 'cat_name' => 'c.cat_name'), 'categories AS c');
+	$query = $db->select(array('id' => 'c.id', 'cat_name' => 'c.cat_name'), 'categories AS c');
 	$query->order = array('cposition' => 'c.disp_position ASC');
 
 	$params = array();
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if (!empty($result))
 	{
 		foreach ($result as $cur_cat)
@@ -504,16 +502,15 @@ generate_admin_menu('forums');
 <?php
 
 // Display all the categories and forums
-$query = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'fposition' => 'f.disp_position'), 'categories AS c');
+$query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'fposition' => 'f.disp_position'), 'categories AS c');
 
-$query->joins['f'] = new InnerJoin('forums AS f');
-$query->joins['f']->on = 'c.id = f.cat_id';
+$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
 $query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
 
 $params = array();
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 if (!empty($result))
 {
 

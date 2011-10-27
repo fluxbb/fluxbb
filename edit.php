@@ -19,22 +19,19 @@ if ($id < 1)
 	message($lang_common['Bad request']);
 
 // Fetch some info about the post, the topic and the forum
-$query = new SelectQuery(array('fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'redirect_url' => 'f.redirect_url', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics', 'tid' => 't.id AS tid', 'subject' => 't.subject', 'posted' => 't.posted', 'first_post_id' => 't.first_post_id', 'sticky' => 't.sticky', 'closed' => 't.closed', 'poster' => 'p.poster', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies'), 'posts AS p');
+$query = $db->select(array('fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'redirect_url' => 'f.redirect_url', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics', 'tid' => 't.id AS tid', 'subject' => 't.subject', 'posted' => 't.posted', 'first_post_id' => 't.first_post_id', 'sticky' => 't.sticky', 'closed' => 't.closed', 'poster' => 'p.poster', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies'), 'posts AS p');
 
-$query->joins['t'] = new InnerJoin('topics AS t');
-$query->joins['t']->on = 't.id = p.topic_id';
+$query->InnerJoin('t', 'topics AS t', 't.id = p.topic_id');
 
-$query->joins['f'] = new InnerJoin('forums AS f');
-$query->joins['f']->on = 'f.id = t.forum_id';
+$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
-$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND p.id = :post_id';
 
 $params = array(':group_id' => $pun_user['g_id'], ':post_id' => $id);
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 if (empty($result))
 	message($lang_common['Bad request']);
 
@@ -133,12 +130,12 @@ if (isset($_POST['form_sent']))
 		if ($can_edit_subject)
 		{
 			// Update the topic and any redirect topics
-			$query = new UpdateQuery(array('subject' => ':subject', 'sticky' => ':sticky'), 'topics');
+			$query = $db->update(array('subject' => ':subject', 'sticky' => ':sticky'), 'topics');
 			$query->where = 'id = :topic_id';
 
 			$params = array(':subject' => $subject, ':sticky' => $stick_topic, ':topic_id' => $cur_post['tid']);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			// We changed the subject, so we need to take that into account when we update the search words
@@ -148,7 +145,7 @@ if (isset($_POST['form_sent']))
 			update_search_index('edit', $id, $message);
 
 		// Update the post
-		$query = new UpdateQuery(array('message' => ':message', 'hide_smilies' => ':hide_smilies'), 'posts');
+		$query = $db->update(array('message' => ':message', 'hide_smilies' => ':hide_smilies'), 'posts');
 		$query->where = 'id = :post_id';
 
 		$params = array(':message' => $message, ':hide_smilies' => $hide_smilies, ':post_id' => $id);
@@ -162,7 +159,7 @@ if (isset($_POST['form_sent']))
 			$params[':edited_by'] = $pun_user['username'];
 		}
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		redirect('viewtopic.php?pid='.$id.'#p'.$id, $lang_post['Edit redirect']);

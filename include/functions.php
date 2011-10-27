@@ -20,23 +20,23 @@ function fetch_board_stats()
 		$stats = array();
 
 		// Count total registered users
-		$query = new SelectQuery(array('total_users' => '(COUNT(u.id) - 1) AS total_users'), 'users AS u');
+		$query = $db->select(array('total_users' => '(COUNT(u.id) - 1) AS total_users'), 'users AS u');
 		$query->where = 'u.group_id != :group_id';
 
 		$params = array(':group_id' => PUN_UNVERIFIED);
 
-		$stats = array_merge($stats, current($db->query($query, $params)));
+		$stats = array_merge($stats, current($query->run($params)));
 		unset ($query, $params);
 
 		// Fetch last user
-		$query = new SelectQuery(array('id' => 'u.id', 'username' => 'u.username'), 'users AS u');
+		$query = $db->select(array('id' => 'u.id', 'username' => 'u.username'), 'users AS u');
 		$query->where = 'group_id != :group_id';
 		$query->order = array('registered' => 'u.registered DESC');
 		$query->limit = 1;
 
 		$params = array(':group_id' => PUN_UNVERIFIED);
 
-		$stats['last_user'] = current($db->query($query, $params));
+		$stats['last_user'] = current($query->run($params));
 		unset ($query, $params);
 
 		$cache->set('boardstats', $stats);
@@ -89,19 +89,17 @@ function check_cookie(&$pun_user)
 		}
 
 		// Check if there's a user with the user ID and password hash from the cookie
-		$query = new SelectQuery(array('user' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'users AS u');
+		$query = $db->select(array('user' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'users AS u');
 
-		$query->joins['g'] = new InnerJoin('groups AS g');
-		$query->joins['g']->on = 'u.group_id = g.g_id';
+		$query->InnerJoin('g', 'groups AS g', 'u.group_id = g.g_id');
 
-		$query->joins['o'] = new LeftJoin('online AS o');
-		$query->joins['o']->on = 'o.user_id = u.id';
+		$query->LeftJoin('o', 'online AS o', 'o.user_id = u.id');
 
 		$query->where = 'u.id = :user_id';
 
 		$params = array(':user_id' => $cookie['user_id']);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		unset ($query, $params);
 
 		// If the password is invalid
@@ -143,10 +141,10 @@ function check_cookie(&$pun_user)
 				$pun_user['logged'] = $now;
 
 				// With non-transactional DBMS REPLACE INTO avoids a user having two rows in the online table
-				$query = new ReplaceQuery(array('user_id' => ':user_id', 'ident' => ':ident', 'logged' => ':logged'), 'online', 'ident');
+				$query = $db->replace(array('user_id' => ':user_id', 'ident' => ':ident', 'logged' => ':logged'), 'online', 'ident');
 				$params = array(':user_id' => $pun_user['id'], ':ident' => $pun_user['username'], ':logged' => $pun_user['logged']);
 
-				$db->query($query, $params);
+				$query->run($params);
 				unset ($query, $params);
 
 				// Reset tracked topics
@@ -157,23 +155,23 @@ function check_cookie(&$pun_user)
 				// Special case: We've timed out, but no other user has browsed the forums since we timed out
 				if ($pun_user['logged'] < ($now-$pun_config['o_timeout_visit']))
 				{
-					$query = new UpdateQuery(array('last_visit' => ':logged'), 'users');
+					$query = $db->update(array('last_visit' => ':logged'), 'users');
 					$query->where = 'id = :user_id';
 
 					$params = array(':logged' => $pun_user['logged'], ':user_id' => $pun_user['id']);
 
-					$db->query($query, $params);
+					$query->run($params);
 					unset ($query, $params);
 
 					$pun_user['last_visit'] = $pun_user['logged'];
 				}
 
-				$query = new UpdateQuery(array('logged' => ':now', 'idle' => '0'), 'online');
+				$query = $db->update(array('logged' => ':now', 'idle' => '0'), 'online');
 				$query->where = 'user_id = :user_id';
 
 				$params = array(':now' => $now, ':user_id' => $pun_user['id']);
 
-				$db->query($query, $params);
+				$query->run($params);
 				unset ($query, $params);
 
 				// Update tracked topics with the current expire time
@@ -214,13 +212,11 @@ function authenticate_user($user, $password, $password_is_hash = false)
 	global $db, $pun_user;
 
 	// Check if there's a user matching $user and $password
-	$query = new SelectQuery(array('users' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'users AS u');
+	$query = $db->select(array('users' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'users AS u');
 
-	$query->joins['g'] = new InnerJoin('groups AS g');
-	$query->joins['g']->on = 'g.g_id = u.group_id';
+	$query->InnerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
 
-	$query->joins['o'] = new LeftJoin('online AS o');
-	$query->joins['o']->on = 'o.user_id = u.id';
+	$query->LeftJoin('o', 'online AS o', 'o.user_id = u.id');
 
 	$params = array();
 
@@ -235,7 +231,7 @@ function authenticate_user($user, $password, $password_is_hash = false)
 		$params[':username'] = $user;
 	}
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if (empty($result))
 	{
 		set_default_user();
@@ -328,19 +324,17 @@ function set_default_user()
 	$remote_addr = get_remote_address();
 
 	// Fetch guest user
-	$query = new SelectQuery(array('user' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'last_post' => 'o.last_post', 'last_search' => 'o.last_search'), 'users AS u');
+	$query = $db->select(array('user' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'last_post' => 'o.last_post', 'last_search' => 'o.last_search'), 'users AS u');
 
-	$query->joins['g'] = new InnerJoin('groups AS g');
-	$query->joins['g']->on = 'u.group_id = g.g_id';
+	$query->InnerJoin('g', 'groups AS g', 'u.group_id = g.g_id');
 
-	$query->joins['o'] = new LeftJoin('online AS o');
-	$query->joins['o']->on = 'o.ident = :ident';
+	$query->LeftJoin('o', 'online AS o', 'o.ident = :ident');
 
 	$query->where = 'u.id = 1';
 
 	$params = array(':ident' => $remote_addr);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	unset ($query, $params);
 
 	if (empty($result))
@@ -355,19 +349,19 @@ function set_default_user()
 		$pun_user['logged'] = time();
 
 		// With non-transactional DBMS REPLACE INTO avoids a user having two rows in the online table
-		$query = new ReplaceQuery(array('user_id' => '1', 'ident' => ':ident', 'logged' => ':logged'), 'online', 'ident');
+		$query = $db->replace(array('user_id' => '1', 'ident' => ':ident', 'logged' => ':logged'), 'online', 'ident');
 		$params = array(':ident' => $remote_addr, ':logged' => $pun_user['logged']);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 	}
 	else {
-		$query = new UpdateQuery(array('logged' => ':now'), 'online');
+		$query = $db->update(array('logged' => ':now'), 'online');
 		$query->where = 'ident = :ident';
 
 		$params = array(':now' => time(), ':ident' => $remote_addr);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 	}
 
@@ -465,7 +459,7 @@ function check_bans()
 	$bans_altered = false;
 	$is_banned = false;
 
-	$query = new DeleteQuery('bans AS b');
+	$query = $db->delete('bans AS b');
 	$query->where = 'b.id = :ban_id';
 
 	foreach ($pun_bans as $cur_ban)
@@ -475,7 +469,7 @@ function check_bans()
 		{
 			$params = array(':ban_id' => $cur_ban['id']);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($params);
 
 			$bans_altered = true;
@@ -508,12 +502,12 @@ function check_bans()
 
 		if ($is_banned)
 		{
-			$query = new DeleteQuery('online');
+			$query = $db->delete('online');
 			$query->where = 'ident = :username';
 
 			$params = array(':username' => $pun_user['username']);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			message($lang_common['Ban message'].' '.(($cur_ban['expire'] != '') ? $lang_common['Ban message 2'].' '.strtolower(format_time($cur_ban['expire'], true)).'. ' : '').(($cur_ban['message'] != '') ? $lang_common['Ban message 3'].'<br /><br /><strong>'.pun_htmlspecialchars($cur_ban['message']).'</strong><br /><br />' : '<br /><br />').$lang_common['Ban message 4'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
@@ -557,7 +551,7 @@ function check_username($username, $exclude_id = null)
 		$errors[] = $lang_register['Username censor'];
 
 	// Check that the username (or a too similar username) is not already registered
-	$query = new SelectQuery(array('username' => 'u.username'), 'users AS u');
+	$query = $db->select(array('username' => 'u.username'), 'users AS u');
 	$query->where = '(u.username LIKE :username OR u.username LIKE :clean_username) AND u.id > 1';
 
 	$params = array(':username' => $username, ':clean_username' => ucp_preg_replace('%[^\p{L}\p{N}]%u', '', $username));
@@ -568,7 +562,7 @@ function check_username($username, $exclude_id = null)
 		$params[':exclude_id'] = $exclude_id;
 	}
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if (!empty($result))
 		$errors[] = $lang_register['Username dupe 1'].' '.pun_htmlspecialchars($result[0]['username']).'. '.$lang_register['Username dupe 2'];
 
@@ -596,24 +590,24 @@ function update_users_online()
 	$now = time();
 
 	// Fetch all online list entries that are older than "o_timeout_online"
-	$query = new SelectQuery(array('user_id' => 'o.user_id', 'ident' => 'o.ident', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'online AS o');
+	$query = $db->select(array('user_id' => 'o.user_id', 'ident' => 'o.ident', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'online AS o');
 	$query->where = 'logged < :logged';
 
 	$params = array(':logged' => $now - $pun_config['o_timeout_online']);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	unset ($query, $params);
 
 	// Query for deleting an online entry
-	$query_delete = new DeleteQuery('online');
+	$query_delete = $db->delete('online');
 	$query_delete->where = 'ident = :ident';
 
 	// Query for updating users last visit time
-	$query_update_user = new UpdateQuery(array('last_visit' => ':logged'), 'users');
+	$query_update_user = $db->update(array('last_visit' => ':logged'), 'users');
 	$query_update_user->where = 'id = :user_id';
 
 	// Query for updating online idle
-	$query_update_online = new UpdateQuery(array('idle' => 1), 'online');
+	$query_update_online = $db->update(array('idle' => 1), 'online');
 	$query_update_online->where = 'user_id = :user_id';
 
 	foreach ($result as $cur_user)
@@ -623,7 +617,7 @@ function update_users_online()
 		{
 			$params = array(':ident' => $cur_user['ident']);
 
-			$db->query($query_delete, $params);
+			$query_delete->run($params);
 			unset ($params);
 		}
 		else
@@ -633,19 +627,19 @@ function update_users_online()
 			{
 				$params = array(':logged' => $cur_user['logged'], ':user_id' => $cur_user['user_id']);
 
-				$db->query($query_update_user, $params);
+				$query_update_user->run($params);
 				unset ($params);
 
 				$params = array(':ident' => $cur_user['ident']);
 
-				$db->query($query_delete, $params);
+				$query_delete->run($params);
 				unset ($params);
 			}
 			else if ($cur_user['idle'] == '0')
 			{
 				$params = array(':user_id' => $cur_user['user_id']);
 
-				$db->query($query_update_online, $params);
+				$query_update_online->run($params);
 				unset ($params);
 			}
 		}
@@ -798,29 +792,29 @@ function update_forum($forum_id)
 {
 	global $db;
 
-	$query = new SelectQuery(array('num_topics' => 'COUNT(t.id) AS num_topics', 'num_replies' => 'SUM(t.num_replies) AS num_replies'), 'topics AS t');
+	$query = $db->select(array('num_topics' => 'COUNT(t.id) AS num_topics', 'num_replies' => 'SUM(t.num_replies) AS num_replies'), 'topics AS t');
 	$query->where = 't.forum_id = :forum_id';
 
 	$params = array(':forum_id' => $forum_id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 
 	$num_topics = $result[0]['num_topics'];
 	$num_posts = $result[0]['num_topics'] + $result[0]['num_replies'];
 
 	unset ($result, $query, $params);
 
-	$query = new SelectQuery(array('last_post' => 't.last_post AS posted', 'last_post_id' => 't.last_post_id AS id', 'last_poster' => 't.last_poster AS poster'), 'topics AS t');
+	$query = $db->select(array('last_post' => 't.last_post AS posted', 'last_post_id' => 't.last_post_id AS id', 'last_poster' => 't.last_poster AS poster'), 'topics AS t');
 	$query->where = 't.forum_id = :forum_id AND t.moved_to IS NULL';
 	$query->order = array('last_post' => 't.last_post DESC');
 	$query->limit = 1;
 
 	$params = array(':forum_id' => $forum_id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	unset ($query, $params);
 
-	$query = new UpdateQuery(array('num_topics' => ':num_topics', 'num_posts' => ':num_posts', 'last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster'), 'forums');
+	$query = $db->update(array('num_topics' => ':num_topics', 'num_posts' => ':num_posts', 'last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster'), 'forums');
 	$query->where = 'id = :forum_id';
 
 	// There are topics in the forum
@@ -839,7 +833,7 @@ function update_forum($forum_id)
 		$params = array(':num_topics' => $num_topics, ':num_posts' => $num_posts, ':last_post' => null, ':last_post_id' => null, ':last_poster' => null, ':forum_id' => $forum_id);
 	}
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 }
 
@@ -870,21 +864,21 @@ function delete_topic($topic_id)
 	global $db;
 
 	// Delete the topic and any redirect topics
-	$query = new DeleteQuery('topics');
+	$query = $db->delete('topics');
 	$query->where = 'id = :topic_id OR moved_to = :topic_id';
 
 	$params = array(':topic_id' => $topic_id);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
 	// Create a list of the post IDs in this topic
-	$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+	$query = $db->select(array('id' => 'p.id'), 'posts AS p');
 	$query->where = 'p.topic_id = :topic_id';
 
 	$params = array(':topic_id' => $topic_id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 
 	$post_ids = array();
 	foreach ($result as $row)
@@ -897,22 +891,22 @@ function delete_topic($topic_id)
 		strip_search_index($post_ids);
 
 		// Delete posts in topic
-		$query = new DeleteQuery('posts');
+		$query = $db->delete('posts');
 		$query->where = 'topic_id = :topic_id';
 
 		$params = array(':topic_id' => $topic_id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 	}
 
 	// Delete any subscriptions for this topic
-	$query = new DeleteQuery('topic_subscriptions');
+	$query = $db->delete('topic_subscriptions');
 	$query->where = 'topic_id = :topic_id';
 
 	$params = array(':topic_id' => $topic_id);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 }
 
@@ -924,14 +918,14 @@ function delete_post($post_id, $topic_id)
 {
 	global $db;
 
-	$query = new SelectQuery(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
+	$query = $db->select(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
 	$query->where = 'p.topic_id = :topic_id';
 	$query->order = array('p.id DESC');
 	$query->limit = 2;
 
 	$params = array(':topic_id' => $topic_id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 
 	if (count($result) > 0)
 		$last_id = $result[0]['id'];
@@ -944,23 +938,23 @@ function delete_post($post_id, $topic_id)
 	unset($query, $params, $result);
 
 	// Delete the post
-	$query = new DeleteQuery('posts');
+	$query = $db->delete('posts');
 	$query->where = 'id = :post_id';
 
 	$params = array(':post_id' => $post_id);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
 	strip_search_index($post_id);
 
 	// Count number of replies in the topic
-	$query = new SelectQuery(array('post_count' => 'COUNT(p.id)'), 'posts AS p');
+	$query = $db->select(array('post_count' => 'COUNT(p.id)'), 'posts AS p');
 	$query->where = 'topic_id = :topic_id';
 
 	$params = array(':topic_id' => $topic_id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	$num_replies = $result[0]['post_count'] - 1;
 	unset($query, $params, $result);
 
@@ -970,35 +964,35 @@ function delete_post($post_id, $topic_id)
 		// If there is a $second_last_id there is more than 1 reply to the topic
 		if (!empty($second_last_id))
 		{
-			$query = new UpdateQuery(array('last_post' => ':second_posted', 'last_post_id' => ':second_last_id', 'last_poster' => ':second_poster', 'num_replies' => ':num_replies'), 'topics');
+			$query = $db->update(array('last_post' => ':second_posted', 'last_post_id' => ':second_last_id', 'last_poster' => ':second_poster', 'num_replies' => ':num_replies'), 'topics');
 			$query->where = 'id = :topic_id';
 
 			$params = array(':second_posted' => $second_posted, ':second_last_id' => $second_last_id, ':second_poster' => $second_poster, ':num_replies' => $num_replies, ':topic_id' => $topic_id);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset($query, $params);
 		}
 		else
 		{
 			// We deleted the only reply, so now last_post/last_post_id/last_poster is posted/id/poster from the topic itself
-			$query = new UpdateQuery(array('last_post' => 'posted', 'last_post_id' => 'id', 'last_poster' => 'poster', 'num_replies' => ':num_replies'), 'topics');
+			$query = $db->update(array('last_post' => 'posted', 'last_post_id' => 'id', 'last_poster' => 'poster', 'num_replies' => ':num_replies'), 'topics');
 			$query->where = 'id = :topic_id';
 
 			$params = array(':num_replies' => $num_replies, ':topic_id' => $topic_id);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset($query, $params);
 		}
 	}
 	else
 	{
 		// Otherwise we just decrement the reply counter
-		$query = new UpdateQuery(array('num_replies' => ':num_replies'), 'topics');
+		$query = $db->update(array('num_replies' => ':num_replies'), 'topics');
 		$query->where = 'id = :topic_id';
 
 		$params = array(':num_replies' => $num_replies, ':topic_id' => $topic_id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 	}
 }
@@ -1020,10 +1014,10 @@ function censor_words($text)
 		{
 			$censors = array();
 
-			$query = new SelectQuery(array('search_for' => 'c.search_for', 'replace_with' => 'c.replace_with'), 'censoring AS c');
+			$query = $db->select(array('search_for' => 'c.search_for', 'replace_with' => 'c.replace_with'), 'censoring AS c');
 			$params = array();
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			foreach ($result as $cur_censor)
 			{
 				$cur_censor['search_for'] = '/(?<=[^\p{L}\p{N}])('.str_replace('\*', '[\p{L}\p{N}]*?', preg_quote($cur_censor['search_for'], '/')).')(?=[^\p{L}\p{N}])/iu';
@@ -1069,12 +1063,12 @@ function get_title($user)
 			$pun_ranks = array();
 
 			// Get the rank list from the DB
-			$query = new SelectQuery(array('ranks' => 'r.*'), 'ranks AS r');
+			$query = $db->select(array('ranks' => 'r.*'), 'ranks AS r');
 			$query->order = array('min_posts' => 'r.min_posts ASC');
 
 			$params = array();
 
-			$pun_ranks = $db->query($query, $params);
+			$pun_ranks = $query->run($params);
 			unset ($query, $params);
 
 			$cache->set('ranks', $pun_ranks);
@@ -1670,7 +1664,7 @@ function redirect($destination_url, $message)
 	ob_start();
 
 	// End the transaction
-	$db->commit_transaction();
+	$db->commitTransaction();
 
 	// Display executed queries (if enabled)
 	if (defined('PUN_SHOW_QUERIES'))
@@ -2207,7 +2201,7 @@ function display_saved_queries()
 	global $db, $lang_common;
 
 	// Get the queries so that we can print them out
-	$saved_queries = $db->get_debug_queries();
+	$saved_queries = $db->getDebugQueries();
 
 ?>
 

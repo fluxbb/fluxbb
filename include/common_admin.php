@@ -85,7 +85,7 @@ function prune($forum_id, $prune_sticky, $prune_date)
 	global $db;
 
 	// Fetch topics to prune
-	$query = new SelectQuery(array('id' => 't.id'), 'topics AS t');
+	$query = $db->select(array('id' => 't.id'), 'topics AS t');
 	$query->where = 't.forum_id = :forum_id';
 	
 	$params = array(':forum_id' => $forum_id);
@@ -98,7 +98,7 @@ function prune($forum_id, $prune_sticky, $prune_date)
 	if (!$prune_sticky)
 		$query->where .= ' AND t.sticky = 0';
 	
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	
 	$topic_ids = array();
 	foreach ($result as $row)
@@ -108,12 +108,12 @@ function prune($forum_id, $prune_sticky, $prune_date)
 	if (!empty($topic_ids))
 	{
 		// Fetch posts to prune
-		$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+		$query = $db->select(array('id' => 'p.id'), 'posts AS p');
 		$query->where = 'p.topic_id IN :topic_ids';
 		
 		$params = array(':topic_ids' => $topic_ids);
 		
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		
 		$post_ids = array();
 		foreach ($result as $row)
@@ -123,30 +123,30 @@ function prune($forum_id, $prune_sticky, $prune_date)
 		if (!empty($post_ids))
 		{
 			// Delete topics
-			$query = new DeleteQuery('topics');
+			$query = $db->delete('topics');
 			$query->where = 'id IN :topic_ids';
 			
 			$params = array(':topic_ids' => $topic_ids);
 			
-			$db->query($query, $params);
+			$query->run($params);
 			unset($query, $params);
 			
 			// Delete subscriptions
-			$query = new DeleteQuery('topic_subscriptions');
+			$query = $db->delete('topic_subscriptions');
 			$query->where = 'topic_id IN :topic_ids';
 			
 			$params = array(':topic_ids' => $topic_ids);
 			
-			$db->query($query, $params);
+			$query->run($params);
 			unset($query, $params);
 			
 			// Delete posts
-			$query = new DeleteQuery('posts');
+			$query = $db->delete('posts');
 			$query->where = 'id IN :post_ids';
 			
 			$params = array(':post_ids' => $post_ids);
 			
-			$db->query($query, $params);
+			$query->run($params);
 			unset($query, $params);
 			
 			// We removed a bunch of posts, so now we have to update the search index

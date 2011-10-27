@@ -35,22 +35,22 @@ if (isset($_POST['add_rank']))
 		message($lang_admin_ranks['Must be integer message']);
 
 	// Make sure there isn't already a rank with the same min_posts value
-	$query = new SelectQuery(array('one' => '1'), 'ranks AS r');
+	$query = $db->select(array('one' => '1'), 'ranks AS r');
 	$query->where = 'r.min_posts = :min_posts';
 
 	$params = array(':min_posts' => $min_posts);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if (!empty($result))
 		message(sprintf($lang_admin_ranks['Dupe min posts message'], $min_posts));
 
 	unset($query, $params, $result);
 
-	$query = new InsertQuery(array('rank' => ':rank', 'min_posts' => ':min_posts'), 'ranks');
+	$query = $db->insert(array('rank' => ':rank', 'min_posts' => ':min_posts'), 'ranks');
 
 	$params = array(':rank' => $rank, ':min_posts' => $min_posts);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
 	// Regenerate the ranks cache
@@ -77,23 +77,23 @@ else if (isset($_POST['update']))
 		message($lang_admin_ranks['Must be integer message']);
 
 	// Make sure there isn't already a rank with the same min_posts value
-	$query = new SelectQuery(array('one' => '1'), 'ranks AS r');
+	$query = $db->select(array('one' => '1'), 'ranks AS r');
 	$query->where = 'id != :id AND min_posts = :min_posts';
 
 	$params = array(':id' => $id, ':min_posts' => $min_posts);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if (!empty($result))
 		message(sprintf($lang_admin_ranks['Dupe min posts message'], $min_posts));
 
 	unset($query, $params, $result);
 
-	$query = new UpdateQuery(array('rank' => ':rank', 'min_posts' => ':min_posts'), 'ranks');
+	$query = $db->update(array('rank' => ':rank', 'min_posts' => ':min_posts'), 'ranks');
 	$query->where = 'id = :id';
 
 	$params = array(':rank' => $rank, ':min_posts' => $min_posts, ':id' => $id);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
 	// Regenerate the ranks cache
@@ -110,12 +110,12 @@ else if (isset($_POST['remove']))
 
 	$id = intval(key($_POST['remove']));
 
-	$query = new DeleteQuery('ranks');
+	$query = $db->delete('ranks');
 	$query->where = 'id = :id';
 
 	$params = array(':id' => $id);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
 	// Regenerate the ranks cache
@@ -166,7 +166,7 @@ generate_admin_menu('ranks');
 						<div class="infldset">
 <?php
 
-$query = new SelectQuery(array('id' => 'r.id', 'rank' => 'r.rank', 'min_posts' => 'r.min_posts'), 'ranks AS r');
+$query = $db->select(array('id' => 'r.id', 'rank' => 'r.rank', 'min_posts' => 'r.min_posts'), 'ranks AS r');
 $query->order = array('min_posts' => 'r.min_posts ASC');
 
 $result = $db->query($query);

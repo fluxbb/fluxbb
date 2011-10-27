@@ -95,12 +95,12 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	{
 		$ident = ($pun_user['is_guest']) ? get_remote_address() : $pun_user['username'];
 
-		$query = new SelectQuery(array('search_data' => 'c.search_data'), 'search_cache AS c');
+		$query = $db->select(array('search_data' => 'c.search_data'), 'search_cache AS c');
 		$query->where = 'c.id = :search_id AND c.ident = :ident';
 
 		$params = array(':search_id' => $search_id, ':ident' => $ident);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		unset ($query, $params);
 
 		if (!empty($result))
@@ -134,22 +134,22 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 			if (!$pun_user['is_guest'])
 			{
-				$query = new UpdateQuery(array('last_search' => ':last_search'), 'users');
+				$query = $db->update(array('last_search' => ':last_search'), 'users');
 				$query->where = 'id = :id';
 
 				$params = array(':last_search' => time(), ':id' => $pun_user['id']);
 
-				$db->query($query, $params);
+				$query->run($params);
 				unset($query, $params);
 			}
 			else
 			{
-				$query = new UpdateQuery(array('last_search' => ':last_search'), 'online');
+				$query = $db->update(array('last_search' => ':last_search'), 'online');
 				$query->where = 'ident = :ident';
 
 				$params = array(':last_search' => time(), ':ident' => get_remote_address());
 
-				$db->query($query, $params);
+				$query->run($params);
 				unset($query, $params);
 			}
 
@@ -279,12 +279,12 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			// If it's a search for author name (and that author name isn't Guest)
 			if ($author && $author != 'guest' && $author != utf8_strtolower($lang_common['Guest']))
 			{
-				$query = new SelectQuery(array('id' => 'u.id'), 'users AS u');
+				$query = $db->select(array('id' => 'u.id'), 'users AS u');
 				$query->where = 'u.username LIKE :author';
 
 				$params = array(':author' => $author);
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				if (!empty($result))
 				{
 					$user_ids = array();
@@ -293,20 +293,18 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 					unset ($result, $query, $params);
 
-					$query = new SelectQuery(array('post_id' => 'p.id AS post_id', 'topic_id' => 'p.topic_id'), 'posts AS p');
+					$query = $db->select(array('post_id' => 'p.id AS post_id', 'topic_id' => 'p.topic_id'), 'posts AS p');
 
-					$query->joins['t'] = new InnerJoin('topics AS t');
-					$query->joins['t']->on = 't.id = p.topic_id';
+					$query->InnerJoin('t', 'topics AS t', 't.id = p.topic_id');
 
-					$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-					$query->joins['fp']->on = 'fp.forum_id = t.forum_id AND fp.group_id = :group_id';
+					$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 					$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND p.poster_id IN :uids '.$forum_sql; // TODO
 					$query->order = array('sort' => $sort_by_sql.' '.$sort_dir);
 
 					$params = array(':group_id' => $pun_user['g_id'], ':uids' => $user_ids);
 
-					$result = $db->query($query, $params);
+					$result = $query->run($params);
 					foreach ($result as $cur_post)
 						$author_results[$cur_post['post_id']] = $cur_post['topic_id'];
 
@@ -361,10 +359,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				if ($pun_user['is_guest'])
 					message($lang_common['No permission']);
 
-				$query = new SelectQuery(array('id' => 't.id'), 'topics AS t');
+				$query = $db->select(array('id' => 't.id'), 'topics AS t');
 
-				$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-				$query->joins['fp']->on = 'fp.forum_id = t.forum_id AND fp.group_id = :group_id';
+				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.last_post > :last_visit AND t.moved_to IS NULL';
 				$query->order = array('last_post' => 't.last_post DESC');
@@ -377,7 +374,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					$params[':forum_id'] = intval($_GET['fid']);
 				}
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				if (empty($result))
 					message($lang_search['No new posts']);
 
@@ -389,10 +386,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			// If it's a search for recent posts (in a certain time interval)
 			else if ($action == 'show_recent')
 			{
-				$query = new SelectQuery(array('id' => 't.id'), 'topics AS t');
+				$query = $db->select(array('id' => 't.id'), 'topics AS t');
 
-				$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-				$query->joins['fp']->on = 'fp.forum_id = t.forum_id AND fp.group_id = :group_id';
+				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.last_post > :last_time AND t.moved_to IS NULL';
 				$query->order = array('last_post' => 't.last_post DESC');
@@ -405,7 +401,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					$params[':forum_id'] = intval($_GET['fid']);
 				}
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				if (empty($result))
 					message($lang_search['No recent posts']);
 
@@ -417,13 +413,11 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			// If it's a search for topics in which the user has posted
 			else if ($action == 'show_replies')
 			{
-				$query = new SelectQuery(array('id' => 't.id'), 'topics AS t');
+				$query = $db->select(array('id' => 't.id'), 'topics AS t');
 
-				$query->joins['p'] = new InnerJoin('posts AS p');
-				$query->joins['p']->on = 't.id = p.topic_id';
+				$query->InnerJoin('p', 'posts AS p', 't.id = p.topic_id');
 
-				$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-				$query->joins['fp']->on = 'fp.forum_id = t.forum_id AND fp.group_id = :group_id';
+				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND p.poster_id = :poster_id';
 				$query->group = array('id' => 't.id', 'last_post' => 't.last_post');
@@ -431,7 +425,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 				$params = array(':group_id' => $pun_user['g_id'], ':poster_id' => $pun_user['id']);
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				if (empty($result))
 					message($lang_search['No user posts']);
 
@@ -445,20 +439,18 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			{
 				$show_as = 'posts';
 
-				$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+				$query = $db->select(array('id' => 'p.id'), 'posts AS p');
 
-				$query->joins['t'] = new InnerJoin('topics AS t');
-				$query->joins['t']->on = 'p.topic_id = t.id';
+				$query->InnerJoin('t', 'topics AS t', 'p.topic_id = t.id');
 
-				$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-				$query->joins['fp']->on = 'fp.forum_id = t.forum_id AND fp.group_id = :group_id';
+				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND p.poster_id = :poster_id';
 				$query->order = array('posted' => 'p.posted DESC');
 
 				$params = array(':group_id' => $pun_user['g_id'], ':poster_id' => $user_id);
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				if (empty($result))
 					message($lang_search['No user posts']);
 
@@ -473,20 +465,18 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			// If it's a search for topics by a specific user ID
 			else if ($action == 'show_user_topics')
 			{
-				$query = new SelectQuery(array('id' => 't.id'), 'topics AS t');
+				$query = $db->select(array('id' => 't.id'), 'topics AS t');
 
-				$query->joins['p'] = new InnerJoin('posts AS p');
-				$query->joins['p']->on = 't.first_post_id = p.id';
+				$query->InnerJoin('p', 'posts AS p', 't.first_post_id = p.id');
 
-				$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-				$query->joins['fp']->on = 'fp.forum_id = t.forum_id AND fp.group_id = :group_id';
+				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND p.poster_id = :poster_id';
 				$query->order = array('last_post' => 't.last_post DESC');
 
 				$params = array(':group_id' => $pun_user['g_id'], ':poster_id' => $user_id);
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				if (empty($result))
 					message($lang_search['No user topics']);
 
@@ -504,20 +494,18 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				if ($pun_user['is_guest'])
 					message($lang_common['Bad request']);
 
-				$query = new SelectQuery(array('id' => 't.id'), 'topics AS t');
+				$query = $db->select(array('id' => 't.id'), 'topics AS t');
 
-				$query->joins['s'] = new InnerJoin('topic_subscriptions AS s');
-				$query->joins['s']->on = 't.id = s.topic_id AND s.user_id = :user_id';
+				$query->InnerJoin('s', 'topic_subscriptions AS s', 't.id = s.topic_id AND s.user_id = :user_id');
 
-				$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-				$query->joins['fp']->on = 'fp.forum_id = t.forum_id AND fp.group_id = :group_id';
+				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 				$query->where = 'fp.read_forum IS NULL OR fp.read_forum = 1';
 				$query->order = array('last_post' => 't.last_post DESC');
 
 				$params = array(':user_id' => $user_id, ':group_id' => $pun_user['g_id']);
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				if (empty($result))
 					message($lang_search['No subscriptions']);
 
@@ -532,17 +520,16 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			// If it's a search for unanswered posts
 			else
 			{
-				$query = new SelectQuery(array('id' => 't.id'), 'topics AS t');
+				$query = $db->select(array('id' => 't.id'), 'topics AS t');
 
-				$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-				$query->joins['fp']->on = 'fp.forum_id = t.forum_id AND fp.group_id = :group_id';
+				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.num_replies = 0 AND t.moved_to IS NULL';
 				$query->order = array('last_post' => 't.last_post DESC');
 
 				$params = array(':group_id' => $pun_user['g_id']);
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				if (empty($result))
 					message($lang_search['No unanswered']);
 
@@ -556,22 +543,22 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			message($lang_common['Bad request']);
 
 		// Prune "old" search results
-		$query = new SelectQuery(array('ident' => 'o.ident'), 'online AS o');
+		$query = $db->select(array('ident' => 'o.ident'), 'online AS o');
 		$params = array();
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (!empty($result))
 		{
 			$old_searches = array();
 			foreach ($result as $cur_ident)
 				$old_searches[] = $cur_ident['ident'];
 
-			$query = new DeleteQuery('search_cache');
+			$query = $db->delete('search_cache');
 			$query->where = 'ident NOT IN :os';
 
 			$params = array(':os' => $old_searches);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 		}
 
@@ -592,15 +579,15 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		$search_id = mt_rand(1, 2147483647);
 		$ident = $pun_user['is_guest'] ? get_remote_address() : $pun_user['username'];
 
-		$query = new InsertQuery(array('id' => ':id', 'ident' => ':ident', 'search_data' => ':search_data'), 'search_cache');
+		$query = $db->insert(array('id' => ':id', 'ident' => ':ident', 'search_data' => ':search_data'), 'search_cache');
 		$params = array(':id' => $search_id, ':ident' => $ident, ':search_data' => $temp);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		if ($search_type[0] != 'action')
 		{
-			$db->commit_transaction();
+			$db->commitTransaction();
 			unset ($db);
 
 			// Redirect the user to the cached result page
@@ -653,35 +640,32 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		// Run the query and fetch the results
 		if ($show_as == 'posts')
 		{
-			$query = new SelectQuery(array('pid' => 'p.id AS pid', 'pposter' => 'p.poster AS pposter', 'pposted' => 'p.posted AS pposted', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'tid' => 't.id AS tid', 'poster' => 't.poster', 'subject' => 't.subject', 'first_post_id' => 't.first_post_id', 'last_post' => 't.last_post', 'last_post_id' => 't.last_post_id', 'last_poster' => 't.last_poster', 'num_replies' => 't.num_replies', 'forum_id' => 't.forum_id', 'forum_name' => 'f.forum_name'), 'posts AS p');
+			$query = $db->select(array('pid' => 'p.id AS pid', 'pposter' => 'p.poster AS pposter', 'pposted' => 'p.posted AS pposted', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'tid' => 't.id AS tid', 'poster' => 't.poster', 'subject' => 't.subject', 'first_post_id' => 't.first_post_id', 'last_post' => 't.last_post', 'last_post_id' => 't.last_post_id', 'last_poster' => 't.last_poster', 'num_replies' => 't.num_replies', 'forum_id' => 't.forum_id', 'forum_name' => 'f.forum_name'), 'posts AS p');
 
-			$query->joins['t'] = new InnerJoin('topics AS t');
-			$query->joins['t']->on = 't.id = p.topic_id';
+			$query->InnerJoin('t', 'topics AS t', 't.id = p.topic_id');
 
-			$query->joins['f'] = new InnerJoin('forums AS f');
-			$query->joins['f']->on = 'f.id = t.forum_id';
+			$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
 			$query->where = 'p.id IN :search_ids';
 			$query->order = array($sort_by_sql.' '.$sort_dir);
 
 			$params = array(':search_ids' => $search_ids);
 
-			$search_set = $db->query($query, $params);
+			$search_set = $query->run($params);
 			unset($query, $params);
 		}
 		else
 		{
-			$query = new SelectQuery(array('tid' => 't.id AS tid', 'poster' => 't.poster', 'subject' => 't.subject', 'last_post' => 't.last_post', 'last_post_id' => 't.last_post_id', 'last_poster' => 't.last_poster', 'num_replies' => 't.num_replies', 'closed' => 't.closed', 'sticky' => 't.sticky', 'forum_id' => 't.forum_id', 'forum_name' => 'f.forum_name'), 'topics AS t');
+			$query = $db->select(array('tid' => 't.id AS tid', 'poster' => 't.poster', 'subject' => 't.subject', 'last_post' => 't.last_post', 'last_post_id' => 't.last_post_id', 'last_poster' => 't.last_poster', 'num_replies' => 't.num_replies', 'closed' => 't.closed', 'sticky' => 't.sticky', 'forum_id' => 't.forum_id', 'forum_name' => 'f.forum_name'), 'topics AS t');
 
-			$query->joins['f'] = new InnerJoin('forums AS f');
-			$query->joins['f']->on = 'f.id = t.forum_id';
+			$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
 			$query->where = 't.id IN :search_ids';
 			$query->order = array($sort_by_sql.' '.$sort_dir);
 
 			$params = array(':search_ids' => $search_ids);
 
-			$search_set = $db->query($query, $params);
+			$search_set = $query->run($params);
 			unset($query, $params);
 		}
 
@@ -699,12 +683,12 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				// Fetch username of subscriber
 				$subscriber_id = $search_type[2];
 
-				$query = new SelectQuery(array('username' => 'u.username'), 'users AS u');
+				$query = $db->select(array('username' => 'u.username'), 'users AS u');
 				$query->where = 'id = :subscriber_id';
 
 				$params = array(':subscriber_id' => $subscriber_id);
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				if (empty($result))
 					message($lang_common['Bad request']);
 
@@ -992,20 +976,18 @@ require PUN_ROOT.'header.php';
 					<div class="infldset">
 <?php
 
-$query = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url'), 'categories AS c');
+$query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url'), 'categories AS c');
 
-$query->joins['f'] = new InnerJoin('forums AS f');
-$query->joins['f']->on = 'c.id = f.cat_id';
+$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
-$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.redirect_url IS NULL';
 $query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
 
 $params = array(':group_id' => $pun_user['g_id']);
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 unset($query, $params);
 
 // We either show a list of forums of which multiple can be selected

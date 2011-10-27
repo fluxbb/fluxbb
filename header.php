@@ -239,12 +239,12 @@ else
 			$num_reports = $cache->get('num_reports');
 			if ($num_reports === Cache::NOT_FOUND)
 			{
-				$query = new SelectQuery(array('num_reports' => 'COUNT(r.id) AS num_reports'), 'reports AS r');
+				$query = $db->select(array('num_reports' => 'COUNT(r.id) AS num_reports'), 'reports AS r');
 				$query->where = 'r.zapped IS NULL';
 
 				$params = array();
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				$num_reports = $result[0]['num_reports'];
 				unset ($result, $query, $params);
 

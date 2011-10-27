@@ -24,12 +24,12 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	$form_password = pun_trim($_POST['req_password']);
 	$save_pass = isset($_POST['save_pass']);
 
-	$query = new SelectQuery(array('user' => 'u.*'), 'users AS u');
+	$query = $db->select(array('user' => 'u.*'), 'users AS u');
 	$query->where = 'LOWER(u.username) = LOWER(:username)';
 
 	$params = array(':username' => $form_username);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	unset ($query, $params);
 
 	$authorized = false;
@@ -45,10 +45,10 @@ if (isset($_POST['form_sent']) && $action == 'in')
 			{
 				$authorized = true;
 
-				$query = new UpdateQuery(array('password' => ':password', 'salt' => ':salt'), 'users');
+				$query = $db->update(array('password' => ':password', 'salt' => ':salt'), 'users');
 				$query->where = 'id = :id';
 				$params = array(':password' => $form_password_hash, ':salt' => NULL, ':id' => $cur_user['id']);
-				$db->query($query, $params);
+				$query->run($params);
 				unset($query, $params);
 			}
 		}
@@ -59,10 +59,10 @@ if (isset($_POST['form_sent']) && $action == 'in')
 			{
 				$authorized = true;
 
-				$query = new UpdateQuery(array('password' => ':password'), 'users');
+				$query = $db->update(array('password' => ':password'), 'users');
 				$query->where = 'id = :id';
 				$params = array(':password' => $form_password_hash, ':id' => $cur_user['id']);
-				$db->query($query, $params);
+				$query->run($params);
 				unset($query, $params);
 			}
 		}
@@ -77,10 +77,10 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	// Update the status if this is the first time the user logged in
 	if ($cur_user['group_id'] == PUN_UNVERIFIED)
 	{
-		$query = new UpdateQuery(array('group_id' => ':group_id'), 'users');
+		$query = $db->update(array('group_id' => ':group_id'), 'users');
 		$query->where = 'id = :id';
 		$params = array(':group_id' => $pun_config['o_default_user_group'], ':id' => $cur_user['id']);
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 		
 		// Regenerate the users info cache
@@ -88,12 +88,12 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	}
 
 	// Remove this users guest entry from the online list
-	$query = new DeleteQuery('online');
+	$query = $db->delete('online');
 	$query->where = 'ident = :ident';
 
 	$params = array(':ident' => get_remote_address());
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 
 	$expire = ($save_pass == '1') ? time() + 1209600 : time() + $pun_config['o_timeout_visit'];
@@ -115,23 +115,23 @@ else if ($action == 'out')
 	}
 
 	// Remove user from "users online" list
-	$query = new DeleteQuery('online');
+	$query = $db->delete('online');
 	$query->where = 'user_id = :user_id';
 	
 	$params = array(':user_id' => $pun_user['id']);
 	
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 	
 	// Update last_visit (make sure there's something to update it with)
 	if (isset($pun_user['logged']))
 	{
-		$query = new UpdateQuery(array('last_visit' => ':last_visit'), 'users');
+		$query = $db->update(array('last_visit' => ':last_visit'), 'users');
 		$query->where = 'id = :id';
 		
 		$params = array(':last_visit' => $pun_user['logged'], ':id' => $pun_user['id']);
 		
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 	}
 
@@ -161,12 +161,12 @@ else if ($action == 'forget' || $action == 'forget_2')
 		// Did everything go according to plan?
 		if (empty($errors))
 		{
-			$query = new SelectQuery(array('id' => 'u.id', 'username' => 'u.username', 'last_email_sent' => 'u.last_email_sent'), 'users AS u');
+			$query = $db->select(array('id' => 'u.id', 'username' => 'u.username', 'last_email_sent' => 'u.last_email_sent'), 'users AS u');
 			$query->where = 'u.email = :email';
 			
 			$params = array(':email' => $email);
 			
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			unset($query, $params);
 
 			if (!empty($result))
@@ -193,12 +193,12 @@ else if ($action == 'forget' || $action == 'forget_2')
 					$new_password = random_pass(8);
 					$new_password_key = random_pass(8);
 					
-					$query = new UpdateQuery(array('activate_string' => ':activate_string', 'activate_key' => ':activate_key', 'last_email_sent' => ':last_email_sent'), 'users');
+					$query = $db->update(array('activate_string' => ':activate_string', 'activate_key' => ':activate_key', 'last_email_sent' => ':last_email_sent'), 'users');
 					$query->where = 'id = :id';
 					
 					$params = array(':activate_string' => pun_hash($new_password), ':activate_key' => $new_password_key, ':last_email_sent' => time(), ':id' => $cur_hit['id']);
 					
-					$db->query($query, $params);
+					$query->run($params);
 					unset($params);
 
 					// Do the user specific replacements to the template

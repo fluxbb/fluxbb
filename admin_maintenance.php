@@ -41,16 +41,16 @@ if ($action == 'rebuild')
 		// This is the only potentially "dangerous" thing we can do here, so we check the referer
 		confirm_referrer('admin_maintenance.php');
 
-		$query = new TruncateQuery('search_matches');
+		$query = $db->truncate('search_matches');
 		$params = array();
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
-		$query = new TruncateQuery('search_words');
+		$query = $db->truncate('search_words');
 		$params = array();
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 	}
 
@@ -88,10 +88,9 @@ h1 {
 	require PUN_ROOT.'include/search_idx.php';
 
 	// Fetch posts to process this cycle
-	$query = new SelectQuery(array('id' => 'p.id', 'message' => 'p.message', 'subject' => 't.subject', 'first_post_id' => 't.first_post_id'), 'posts AS p');
+	$query = $db->select(array('id' => 'p.id', 'message' => 'p.message', 'subject' => 't.subject', 'first_post_id' => 't.first_post_id'), 'posts AS p');
 
-	$query->joins['t'] = new InnerJoin('topics AS t');
-	$query->joins['t']->on = 't.id = p.topic_id';
+	$query->InnerJoin('t', 'topics AS t', 't.id = p.topic_id');
 
 	$query->where = 'p.id >= :start_at';
 	$query->order = array('pid' => 'p.id ASC');
@@ -99,7 +98,7 @@ h1 {
 
 	$params = array(':start_at' => $start_at);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 
 	$end_at = 0;
 	foreach ($result as $cur_item)
@@ -119,19 +118,19 @@ h1 {
 	// Check if there is more work to do
 	if ($end_at > 0)
 	{
-		$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+		$query = $db->select(array('id' => 'p.id'), 'posts AS p');
 		$query->where = 'p.id > :end_at';
 		$query->order = array('pid' => 'p.id ASC');
 		$query->limit = 1;
 
 		$params = array(':end_at' => $end_at);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (!empty($result))
 			$query_str = '?action=rebuild&i_per_page='.$per_page.'&i_start_at='.$result[0]['id'];
 	}
 
-	$db->commit_transaction();
+	$db->commitTransaction();
 	unset ($db);
 
 	exit('<script type="text/javascript">window.location="admin_maintenance.php'.$query_str.'"</script><hr /><p>'.sprintf($lang_admin_maintenance['Javascript redirect failed'], '<a href="admin_maintenance.php'.$query_str.'">'.$lang_admin_maintenance['Click here'].'</a>').'</p>');
@@ -153,10 +152,10 @@ if ($action == 'prune')
 
 		if ($prune_from == 'all')
 		{
-			$query = new SelectQuery(array('id' => 'f.id'), 'forums AS f');
+			$query = $db->select(array('id' => 'f.id'), 'forums AS f');
 			$params = array();
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			foreach ($result as $cur_forum)
 			{
 				prune($cur_forum['id'], $prune_sticky, $prune_date);
@@ -173,16 +172,15 @@ if ($action == 'prune')
 		}
 
 		// Locate any "orphaned redirect topics" and delete them
-		$query = new SelectQuery(array('id' => 't1.id'), 'topics AS t1');
+		$query = $db->select(array('id' => 't1.id'), 'topics AS t1');
 
-		$query->joins['t2'] = new LeftJoin('topics AS t2');
-		$query->joins['t2']->on = 't1.moved_to = t2.id';
+		$query->LeftJoin('t2', 'topics AS t2', 't1.moved_to = t2.id');
 
 		$query->where = 't2.id IS NULL AND t1.moved_to IS NOT NULL';
 
 		$params = array();
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		unset ($query, $params);
 
 		if (!empty($result))
@@ -191,12 +189,12 @@ if ($action == 'prune')
 			foreach ($result as $cur_orphan)
 				$orphans[] = $cur_orphan['id'];
 
-			$query = new DeleteQuery('topics');
+			$query = $db->delete('topics');
 			$query->where = 'id IN :tids';
 
 			$params = array(':tids' => $orphans);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 		}
 
@@ -212,7 +210,7 @@ if ($action == 'prune')
 	$prune_date = time() - ($prune_days * 86400);
 
 	// Concatenate together the query for counting number of topics to prune
-	$query = new SelectQuery(array('num_topics' => 'COUNT(t.id) AS num_topics'), 'topics AS t');
+	$query = $db->select(array('num_topics' => 'COUNT(t.id) AS num_topics'), 'topics AS t');
 	$query->where = 't.last_post < :prune_date AND t.moved_to IS NULL';
 
 	$params = array(':prune_date' => $prune_date);
@@ -228,19 +226,19 @@ if ($action == 'prune')
 		$params[':prune_from'] = $prune_from;
 
 		// Fetch the forum name (just for cosmetic reasons)
-		$name_query = new SelectQuery(array('forum_name' => 'f.forum_name'), 'forums AS f');
+		$name_query = $db->select(array('forum_name' => 'f.forum_name'), 'forums AS f');
 		$name_query->where = 'f.id = :forum_id';
 
 		$name_params = array(':forum_id' => $prune_from);
 
-		$result = $db->query($name_query, $name_params);
+		$result = $name_query->run($name_params);
 		$forum = '"'.pun_htmlspecialchars($result[0]['forum_name']).'"';
 		unset ($result, $name_query, $name_params);
 	}
 	else
 		$forum = $lang_admin_maintenance['All forums'];
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	$num_topics = $result[0]['num_topics'];
 	unset ($result, $query, $params);
 
@@ -286,13 +284,13 @@ if ($action == 'prune')
 
 
 // Get the first post ID from the db
-$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+$query = $db->select(array('id' => 'p.id'), 'posts AS p');
 $query->order = array('id' => 'p.id ASC');
 $query->limit = 1;
 
 $params = array();
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 if (!empty($result))
 	$first_id = $result[0]['id'];
 
@@ -372,17 +370,16 @@ generate_admin_menu('maintenance');
 											<option value="all"><?php echo $lang_admin_maintenance['All forums'] ?></option>
 <?php
 
-	$query = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
+	$query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
 
-	$query->joins['f'] = new InnerJoin('forums AS f');
-	$query->joins['f']->on = 'c.id = f.cat_id';
+	$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
 	$query->where = 'f.redirect_url IS NULL';
 	$query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position');
 
 	$params = array();
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 
 	$cur_category = 0;
 	foreach ($result as $forum);

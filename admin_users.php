@@ -29,13 +29,13 @@ if (isset($_GET['ip_stats']))
 
 	// Fetch ip count: TODO: This query is horrible - why do we fetch all the data just to count it? We should use something like
 	// SELECT COUNT(DISTINCT poster_ip) FROM posts WHERE poster_id = :poster_id - though PostgreSQL doesn't seem to support that :(
-	$query = new SelectQuery(array('poster_ip' => 'p.poster_ip', 'last_used' => 'MAX(p.posted) AS last_used'), 'posts AS p');
+	$query = $db->select(array('poster_ip' => 'p.poster_ip', 'last_used' => 'MAX(p.posted) AS last_used'), 'posts AS p');
 	$query->where = 'p.poster_id = :poster_id';
 	$query->group = array('poster_ip' => 'p.poster_ip');
 
 	$params = array(':poster_id' => $ip_stats);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	$num_ips = count($result);
 	unset ($result, $query, $params);
 
@@ -83,7 +83,7 @@ if (isset($_GET['ip_stats']))
 			<tbody>
 <?php
 
-	$query = new SelectQuery(array('poster_ip' => 'p.poster_ip', 'last_used' => 'MAX(p.posted) AS last_used', 'used_times' => 'COUNT(p.id) AS used_times'), 'posts AS p');
+	$query = $db->select(array('poster_ip' => 'p.poster_ip', 'last_used' => 'MAX(p.posted) AS last_used', 'used_times' => 'COUNT(p.id) AS used_times'), 'posts AS p');
 	$query->where = 'p.poster_id = :poster_id';
 	$query->group = array('poster_ip' => 'p.poster_ip');
 	$query->order = array('last_used' => 'last_used DESC');
@@ -92,7 +92,7 @@ if (isset($_GET['ip_stats']))
 
 	$params = array(':poster_id' => $ip_stats);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if (!empty($result))
 	{
 		foreach ($result as $cur_ip)
@@ -197,13 +197,13 @@ if (isset($_GET['show_users']))
 			<tbody>
 <?php
 
-	$query = new SelectQuery(array('poster_id' => 'p.poster_id', 'poster' => 'p.poster'), 'posts AS p', true);
+	$query = $db->select(array('poster_id' => 'p.poster_id', 'poster' => 'p.poster'), 'posts AS p', true);
 	$query->where = 'p.poster_ip = :poster_ip';
 	$query->order = array('poster' => 'p.poster DESC');
 
 	$params = array(':poster_ip' => $ip);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	$num_posts = count($result);
 	unset ($result, $query, $params);
 
@@ -303,25 +303,25 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 		message($lang_admin_users['No users selected']);
 
 	// Are we trying to batch move any admins?
-	$query = new SelectQuery(array('count' => 'COUNT(u.*) AS count'), 'users AS u');
+	$query = $db->select(array('count' => 'COUNT(u.*) AS count'), 'users AS u');
 	$query->where = 'u.id IN :user_ids AND u.group_id = :group_id';
 
 	$params = array(':user_ids' => $user_ids, ':group_id' => PUN_ADMIN);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if ($result[0]['count'] > 0)
 		message($lang_admin_users['No move admins message']);
 
 	unset($query, $params, $result);
 
 	// Fetch all user groups
-	$query = new SelectQuery(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
+	$query = $db->select(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
 	$query->where = 'g.g_id NOT IN :group_ids';
 	$query->order = array('g_title' => 'g.g_title ASC');
 
 	$params = array(':group_ids' => array(PUN_GUEST, PUN_ADMIN));
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	$all_groups = array();
 	foreach ($result as $row)
 		$all_groups[$row['g_id']] = $row['g_title'];
@@ -332,23 +332,23 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 		$new_group = isset($_POST['new_group']) && isset($all_groups[$_POST['new_group']]) ? $_POST['new_group'] : message($lang_admin_users['Invalid group message']);
 
 		// Is the new group a moderator group?
-		$query = new SelectQuery(array('g_moderator' => 'g.g_moderator'), 'groups AS g');
+		$query = $db->select(array('g_moderator' => 'g.g_moderator'), 'groups AS g');
 		$query->where = 'g.g_id = :group_id';
 
 		$params = array(':group_id' => $new_group);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		$new_group_mod = $result[0]['g_moderator'];
 		unset ($result, $query, $params);
 
 		// Fetch user groups
 		$user_groups = array();
-		$query = new SelectQuery(array('id' => 'u.id', 'group_id' => 'u.group_id'), 'users AS u');
+		$query = $db->select(array('id' => 'u.id', 'group_id' => 'u.group_id'), 'users AS u');
 		$query->where = 'u.id IN :user_ids';
 
 		$params = array(':user_ids' => $user_ids);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		foreach ($result as $cur_user)
 		{
 			if (!isset($user_groups[$cur_user['group_id']]))
@@ -361,12 +361,12 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 
 		// Are any users moderators?
 		$group_ids = array_keys($user_groups);
-		$query = new SelectQuery(array('g_id' => 'g.g_id', 'g_moderator' => 'g.g_moderator'), 'groups AS g');
+		$query = $db->select(array('g_id' => 'g.g_id', 'g_moderator' => 'g.g_moderator'), 'groups AS g');
 		$query->where = 'g.g_id IN :group_ids';
 
 		$params = array(':group_ids' => $group_ids);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		foreach ($result as $cur_group)
 		{
 			if ($cur_group['g_moderator'] == '0')
@@ -377,13 +377,13 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 		if (!empty($user_groups) && $new_group != PUN_ADMIN && $new_group_mod != '1')
 		{
 			// Fetch forum list and clean up their moderator list
-			$query = new SelectQuery(array('id' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
+			$query = $db->select(array('id' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
 			$params = array();
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			unset ($query, $params);
 
-			$update_query = new UpdateQuery(array('moderators' => ':moderators'), 'forums');
+			$update_query = $db->update(array('moderators' => ':moderators'), 'forums');
 			$update_query->where = 'id = :forum_id';
 
 			foreach ($result as $cur_forum)
@@ -395,7 +395,7 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 
 				$params = array(':moderators' => empty($cur_moderators) ? null : serialize($cur_moderators), ':forum_id' => $cur_forum['id']);
 
-				$db->query($update_query, $params);
+				$update_query->run($params);
 				unset ($params);
 			}
 
@@ -403,12 +403,12 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 		}
 
 		// Change user group
-		$query = new UpdateQuery(array('group_id' => ':group_id'), 'users');
+		$query = $db->update(array('group_id' => ':group_id'), 'users');
 		$query->where = 'id IN :uids';
 
 		$params = array(':group_id' => $new_group, ':uids' => $user_ids);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		redirect('admin_users.php', $lang_admin_users['Users move redirect']);
@@ -480,12 +480,12 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 		message($lang_admin_users['No users selected']);
 
 	// Are we trying to delete any admins?
-	$query = new SelectQuery(array('count' => 'COUNT(u.*) AS count'), 'users AS u');
+	$query = $db->select(array('count' => 'COUNT(u.*) AS count'), 'users AS u');
 	$query->where = 'u.id IN :user_ids AND group_id = :group_id';
 
 	$params = array(':user_ids' => $user_ids, ':group_id' => PUN_ADMIN);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if ($result[0]['count'] > 0)
 		message($lang_admin_users['No delete admins message']);
 	unset($query, $params, $result);
@@ -493,12 +493,12 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 	if (isset($_POST['delete_users_comply']))
 	{
 		// Fetch user groups
-		$query = new SelectQuery(array('id' => 'u.id', 'group_id' => 'u.group_id'), 'users AS u');
+		$query = $db->select(array('id' => 'u.id', 'group_id' => 'u.group_id'), 'users AS u');
 		$query->where = 'u.id IN :user_ids';
 
 		$params = array(':user_ids' => $user_ids);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 
 		$user_groups = array();
 		foreach ($result as $cur_user)
@@ -513,12 +513,12 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 
 		// Are any users moderators?
 		$group_ids = array_keys($user_groups);
-		$query = new SelectQuery(array('g_id' => 'g.g_id', 'g_moderator' => 'g.g_moderator'), 'groups AS g');
+		$query = $db->select(array('g_id' => 'g.g_id', 'g_moderator' => 'g.g_moderator'), 'groups AS g');
 		$query->where = 'g.g_id IN :group_ids';
 
 		$params = array(':group_ids' => $group_ids);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		foreach ($result as $cur_group)
 		{
 			if ($cur_group['g_moderator'] == '0')
@@ -528,13 +528,13 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 		unset($query, $params, $result);
 
 		// Fetch forum list and clean up their moderator list
-		$query = new SelectQuery(array('id' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
+		$query = $db->select(array('id' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
 		$params = array();
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		unset ($query, $params);
 
-		$update_query = new UpdateQuery(array('moderators' => ':moderators'), 'forums');
+		$update_query = $db->update(array('moderators' => ':moderators'), 'forums');
 		$update_query->where = 'id = :forum_id';
 
 		foreach ($result as $cur_forum)
@@ -546,36 +546,36 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 
 			$params = array(':moderators' => empty($cur_moderators) ? null : serialize ($cur_moderators), ':forum_id' => $cur_forum['id']);
 
-			$db->query($update_query, $params);
+			$update_query->run($params);
 			unset ($params);
 		}
 
 		unset ($result, $update_query);
 
 		// Delete any subscriptions
-		$query = new DeleteQuery('topic_subscriptions');
+		$query = $db->delete('topic_subscriptions');
 		$query->where = 'user_id IN :uids';
 
 		$params = array(':uids' => $user_ids);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
-		$query = new DeleteQuery('forum_subscriptions');
+		$query = $db->delete('forum_subscriptions');
 		$query->where = 'user_id IN :uids';
 
 		$params = array(':uids' => $user_ids);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Remove them from the online list (if they happen to be logged in)
-		$query = new DeleteQuery('online');
+		$query = $db->delete('online');
 		$query->where = 'user_id IN :uids';
 
 		$params = array(':uids' => $user_ids);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Should we delete all posts made by these users?
@@ -605,22 +605,22 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 		else
 		{
 			// Set all their posts to guest
-			$query = new UpdateQuery(array('poster_id' => '1'), 'posts');
+			$query = $db->update(array('poster_id' => '1'), 'posts');
 			$query->where = 'poster_id IN :uids';
 
 			$params = array(':uids' => $user_ids);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 		}
 
 		// Delete the users
-		$query = new DeleteQuery('users');
+		$query = $db->delete('users');
 		$query->where = 'id IN :uids';
 
 		$params = array(':uids' => $user_ids);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Delete user avatars
@@ -692,26 +692,25 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 		message($lang_admin_users['No users selected']);
 
 	// Are we trying to ban any admins?
-	$query = new SelectQuery(array('count' => 'COUNT(u.*) AS count'), 'users AS u');
+	$query = $db->select(array('count' => 'COUNT(u.*) AS count'), 'users AS u');
 	$query->where = 'u.id IN :user_ids AND u.group_id = :group_id';
 
 	$params = array(':user_ids' => $user_ids, ':group_id' => PUN_ADMIN);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if ($result[0]['count'])
 		message($lang_admin_users['No ban admins message']);
 
 	unset($query, $params, $result);
 
 	// Also, we cannot ban moderators
-	$query = new SelectQuery(array('count' => 'COUNT(u.*) AS count'), 'users AS u');
-	$query->joins['g'] = new InnerJoin('groups AS g');
-	$query->joins['g']->on = 'u.group_id = g.g_id';
+	$query = $db->select(array('count' => 'COUNT(u.*) AS count'), 'users AS u');
+	$query->InnerJoin('g', 'groups AS g', 'u.group_id = g.g_id');
 	$query->where = 'g.g_moderator = 1 AND u.id IN :user_ids';
 
 	$params = array(':user_ids' => $user_ids);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if ($result[0]['count'])
 		message($lang_admin_users['No ban mods message']);
 
@@ -743,12 +742,12 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 
 		// Fetch user information
 		$user_info = array();
-		$query = new SelectQuery(array('id' => 'u.id', 'username' => 'u.username', 'email' => 'u.email', 'registration_ip' => 'u.registration_ip'), 'users AS u');
+		$query = $db->select(array('id' => 'u.id', 'username' => 'u.username', 'email' => 'u.email', 'registration_ip' => 'u.registration_ip'), 'users AS u');
 		$query->where = 'u.id IN :user_ids';
 
 		$params = array(':user_ids' => $user_ids);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		foreach ($result as $cur_user)
 			$user_info[$cur_user['id']] = array('username' => $cur_user['username'], 'email' => $cur_user['email'], 'ip' => $cur_user['registration_ip']);
 
@@ -769,9 +768,9 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 			$ban_email = $user_info[$user_id]['email'];
 			$ban_ip = ($ban_the_ip != 0) ? $user_info[$user_id]['ip'] : NULL;
 
-			$query = new InsertQuery(array('username' => ':username', 'ip' => ':ip', 'email' => ':email', 'message' => ':message', 'expire' => ':expire', 'ban_creator' => ':user_id'), 'bans');
+			$query = $db->insert(array('username' => ':username', 'ip' => ':ip', 'email' => ':email', 'message' => ':message', 'expire' => ':expire', 'ban_creator' => ':user_id'), 'bans');
 			$params = array(':username' => $ban_username, ':ip' => $ban_ip, ':email' => $ban_email, ':message' => $ban_message, ':expire' => $ban_expire, ':user_id' => $pun_user['id']);
-			$db->query($query, $params);
+			$query->run($params);
 			unset($query, $params);
 		}
 
@@ -1204,13 +1203,13 @@ else
 											<option value="0"><?php echo $lang_admin_users['Unverified users'] ?></option>
 <?php
 
-	$query = new SelectQuery(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
+	$query = $db->select(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
 	$query->where = 'g.g_id != :group_guest';
 	$query->order = array('g_title' => 'g.g_title DESC');
 
 	$params = array(':group_guest' => PUN_GUEST);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	foreach ($result as $cur_group)
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$cur_group['g_id'].'">'.pun_htmlspecialchars($cur_group['g_title']).'</option>'."\n";
 
