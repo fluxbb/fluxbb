@@ -51,12 +51,12 @@ else if ($action == 'markread')
 	if ($pun_user['is_guest'])
 		message($lang_common['No permission']);
 
-	$query = new UpdateQuery(array('last_visit' => ':logged'), 'users');
+	$query = $db->update(array('last_visit' => ':logged'), 'users');
 	$query->where = 'id = :user_id';
 
 	$params = array(':logged' => $pun_user['logged'], ':user_id' => $pun_user['id']);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 
 	// Reset tracked topics
@@ -93,12 +93,12 @@ else if (isset($_GET['email']))
 	if ($recipient_id < 2)
 		message($lang_common['Bad request']);
 
-	$query = new SelectQuery(array('username' => 'u.username', 'email' => 'u.email', 'email_setting' => 'u.email_setting'), 'users AS u');
+	$query = $db->select(array('username' => 'u.username', 'email' => 'u.email', 'email_setting' => 'u.email_setting'), 'users AS u');
 	$query->where = 'u.id = :recipient_id';
 
 	$params = array(':recipient_id' => $recipient_id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if (empty($result))
 		message($lang_common['Bad request']);
 
@@ -143,12 +143,12 @@ else if (isset($_GET['email']))
 
 		pun_mail($recipient['email'], $mail_subject, $mail_message, $pun_user['email'], $pun_user['username']);
 
-		$query = new UpdateQuery(array('last_email_sent' => ':now'), 'users');
+		$query = $db->update(array('last_email_sent' => ':now'), 'users');
 		$query->where = 'id = :user_id';
 
 		$params = array(':now' => time(), ':user_id' => $pun_user['id']);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		redirect(htmlspecialchars($_POST['redirect_url']), $lang_misc['Email sent redirect']);
@@ -232,12 +232,12 @@ else if (isset($_GET['report']))
 			message(sprintf($lang_misc['Report flood'], $pun_user['g_report_flood']));
 
 		// Get the topic ID
-		$query = new SelectQuery(array('topic_id' => 'p.topic_id'), 'posts AS p');
+		$query = $db->select(array('topic_id' => 'p.topic_id'), 'posts AS p');
 		$query->where = 'p.id = :post_id';
 
 		$params = array(':post_id' => $post_id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (empty($result))
 			message($lang_common['Bad request']);
 
@@ -245,12 +245,12 @@ else if (isset($_GET['report']))
 		unset ($result, $query, $params);
 
 		// Get the subject and forum ID
-		$query = new SelectQuery(array('subject' => 't.subject', 'forum_id' => 't.forum_id'), 'topics AS t');
+		$query = $db->select(array('subject' => 't.subject', 'forum_id' => 't.forum_id'), 'topics AS t');
 		$query->where = 't.id = :topic_id';
 
 		$params = array(':topic_id' => $topic_id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (empty($result))
 			message($lang_common['Bad request']);
 
@@ -260,10 +260,10 @@ else if (isset($_GET['report']))
 		// Should we use the internal report handling?
 		if ($pun_config['o_report_method'] == '0' || $pun_config['o_report_method'] == '2')
 		{
-			$query = new InsertQuery(array('post_id' => ':post_id', 'topic_id' => ':topic_id', 'forum_id' => ':forum_id', 'reported_by' => ':user_id', 'created' => ':now', 'message' => ':reason'), 'reports');
+			$query = $db->insert(array('post_id' => ':post_id', 'topic_id' => ':topic_id', 'forum_id' => ':forum_id', 'reported_by' => ':user_id', 'created' => ':now', 'message' => ':reason'), 'reports');
 			$params = array(':post_id' => $post_id, ':topic_id' => $topic_id, ':forum_id' => $cur_post['forum_id'], ':user_id' => $pun_user['id'], ':now' => time(), ':reason' => $reason);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 		}
 
@@ -294,12 +294,12 @@ else if (isset($_GET['report']))
 			}
 		}
 
-		$query = new UpdateQuery(array('last_report_sent' => ':now'), 'users');
+		$query = $db->update(array('last_report_sent' => ':now'), 'users');
 		$query->where = 'id = :user_id';
 
 		$params = array(':now' => time(), ':user_id' => $pun_user['id']);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		$cache->delete('num_reports');
@@ -308,22 +308,19 @@ else if (isset($_GET['report']))
 	}
 
 	// Fetch some info about the post, the topic and the forum
-	$query = new SelectQuery(array('fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'tid' => 't.id AS tid', 'subject' => 't.subject'), 'posts AS p');
+	$query = $db->select(array('fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'tid' => 't.id AS tid', 'subject' => 't.subject'), 'posts AS p');
 
-	$query->joins['t'] = new InnerJoin('topics AS t');
-	$query->joins['t']->on = 't.id = p.topic_id';
+	$query->InnerJoin('t', 'topics AS t', 't.id = p.topic_id');
 
-	$query->joins['f'] = new InnerJoin('forums AS f');
-	$query->joins['f']->on = 'f.id = t.forum_id';
+	$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
-	$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-	$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+	$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 	$query->where = '(fp.read_forum IS NULL OR fp.read_forum=1) AND p.id = :post_id';
 
 	$params = array(':group_id' => $pun_user['g_id'], ':post_id' => $post_id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if (empty($result))
 		message($lang_common['Bad request']);
 
@@ -390,37 +387,36 @@ else if ($action == 'subscribe')
 			message($lang_common['No permission']);
 
 		// Make sure the user can view the topic
-		$query = new SelectQuery(array('one' => '1'), 'topics AS t');
+		$query = $db->select(array('one' => '1'), 'topics AS t');
 
-		$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-		$query->joins['fp']->on = 'fp.forum_id = t.forum_id AND fp.group_id = :group_id';
+		$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 		$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.id = :topic_id AND t.moved_to IS NULL';
 
 		$params = array(':group_id' => $pun_user['g_id'], ':topic_id' => $topic_id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (empty($result))
 			message($lang_common['Bad request']);
 
 		unset ($result, $query, $params);
 
 		// Make sure the user isn't already subscribed
-		$query = new SelectQuery(array('one' => '1'), 'topic_subscriptions AS ts');
+		$query = $db->select(array('one' => '1'), 'topic_subscriptions AS ts');
 		$query->where = 'ts.user_id = :user_id AND ts.topic_id = :topic_id';
 
 		$params = array(':user_id' => $pun_user['id'], ':topic_id' => $topic_id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (!empty($result))
 			message($lang_misc['Already subscribed topic']);
 
 		unset ($result, $query, $params);
 
-		$query = new InsertQuery(array('user_id' => ':user_id', 'topic_id' => ':topic_id'), 'topic_subscriptions');
+		$query = $db->insert(array('user_id' => ':user_id', 'topic_id' => ':topic_id'), 'topic_subscriptions');
 		$params = array(':user_id' => $pun_user['id'], ':topic_id' => $topic_id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		redirect('viewtopic.php?id='.$topic_id, $lang_misc['Subscribe redirect']);
@@ -432,37 +428,36 @@ else if ($action == 'subscribe')
 			message($lang_common['No permission']);
 
 		// Make sure the user can view the forum
-		$query = new SelectQuery(array('one' => '1'), 'forums AS f');
+		$query = $db->select(array('one' => '1'), 'forums AS f');
 
-		$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-		$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+		$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 		$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id';
 
 		$params = array(':group_id' => $pun_user['g_id'], ':forum_id' => $forum_id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (empty($result))
 			message($lang_common['Bad request']);
 
 		unset ($result, $query, $params);
 
 		// Make sure the user isn't already subscribed
-		$query = new SelectQuery(array('one' => '1'), 'forum_subscriptions AS fs');
+		$query = $db->select(array('one' => '1'), 'forum_subscriptions AS fs');
 		$query->where = 'fs.user_id = :user_id AND fs.forum_id = :forum_id';
 
 		$params = array(':user_id' => $pun_user['id'], ':forum_id' => $forum_id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (!empty($result))
 			message($lang_misc['Already subscribed forum']);
 
 		unset ($result, $query, $params);
 
-		$query = new InsertQuery(array('user_id' => ':user_id', 'forum_id' => ':forum_id'), 'forum_subscriptions');
+		$query = $db->insert(array('user_id' => ':user_id', 'forum_id' => ':forum_id'), 'forum_subscriptions');
 		$params = array(':user_id' => $pun_user['id'], ':forum_id' => $forum_id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		redirect('viewforum.php?id='.$forum_id, $lang_misc['Subscribe redirect']);
@@ -486,23 +481,23 @@ else if ($action == 'unsubscribe')
 			message($lang_common['No permission']);
 
 		// Make sure the user is already subscribed
-		$query = new SelectQuery(array('one' => '1'), 'topic_subscriptions AS ts');
+		$query = $db->select(array('one' => '1'), 'topic_subscriptions AS ts');
 		$query->where = 'ts.user_id = :user_id AND ts.topic_id = :topic_id';
 
 		$params = array(':user_id' => $pun_user['id'], ':topic_id' => $topic_id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (empty($result))
 			message($lang_misc['Not subscribed topic']);
 
 		unset ($result, $query, $params);
 
-		$query = new DeleteQuery('topic_subscriptions');
+		$query = $db->delete('topic_subscriptions');
 		$query->where = 'user_id = :user_id AND topic_id = :topic_id';
 
 		$params = array(':user_id' => $pun_user['id'], ':topic_id' => $topic_id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		redirect('viewtopic.php?id='.$topic_id, $lang_misc['Unsubscribe redirect']);
@@ -513,23 +508,23 @@ else if ($action == 'unsubscribe')
 		if ($pun_config['o_forum_subscriptions'] != '1')
 			message($lang_common['No permission']);
 
-		$query = new SelectQuery(array('one' => '1'), 'forum_subscriptions AS fs');
+		$query = $db->select(array('one' => '1'), 'forum_subscriptions AS fs');
 		$query->where = 'fs.user_id = :user_id AND fs.forum_id = :forum_id';
 
 		$params = array(':user_id' => $pun_user['id'], ':forum_id' => $forum_id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (empty($result))
 			message($lang_misc['Not subscribed forum']);
 
 		unset ($result, $query, $params);
 
-		$query = new DeleteQuery('forum_subscriptions');
+		$query = $db->delete('forum_subscriptions');
 		$query->where = 'user_id = :user_id AND forum_id = :forum_id';
 
 		$params = array(':user_id' => $pun_user['id'], ':forum_id' => $forum_id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		redirect('viewforum.php?id='.$forum_id, $lang_misc['Unsubscribe redirect']);

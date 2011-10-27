@@ -31,11 +31,11 @@ if (isset($_POST['add_word']))
 	if ($search_for == '')
 		message($lang_admin_censoring['Must enter word message']);
 
-	$query = new InsertQuery(array('search_for' => ':search_for', 'replace_with' => ':replace_with'), 'censoring');
+	$query = $db->insert(array('search_for' => ':search_for', 'replace_with' => ':replace_with'), 'censoring');
 	
 	$params = array(':search_for' => $search_for, ':replace_with' => $replace_with);
 	
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
 	// Regenerate the censoring cache
@@ -57,12 +57,12 @@ else if (isset($_POST['update']))
 	if ($search_for == '')
 		message($lang_admin_censoring['Must enter word message']);
 
-	$query = new UpdateQuery(array('search_for' => ':search_for', 'replace_with' => ':replace_with'), 'censoring');
+	$query = $db->update(array('search_for' => ':search_for', 'replace_with' => ':replace_with'), 'censoring');
 	$query->where = 'id = :id';
 	
 	$params = array(':search_for' => $search_for, ':replace_with' => $replace_with, ':id' => $id);
 	
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
 	// Regenerate the censoring cache
@@ -78,12 +78,12 @@ else if (isset($_POST['remove']))
 
 	$id = intval(key($_POST['remove']));
 
-	$query = new DeleteQuery('censoring');
+	$query = $db->delete('censoring');
 	$query->where = 'id = :id';
 	
 	$params = array(':id' => $id);
 	
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
 	// Regenerate the censoring cache
@@ -134,7 +134,7 @@ generate_admin_menu('censoring');
 						<div class="infldset">
 <?php
 
-$query = new SelectQuery(array('id' => 'c.id', 'search_for' => 'c.search_for', 'replace_with' => 'c.replace_with'), 'censoring AS c');
+$query = $db->select(array('id' => 'c.id', 'search_for' => 'c.search_for', 'replace_with' => 'c.replace_with'), 'censoring AS c');
 $query->order = array('id' => 'c.id ASC');
 
 $result = $db->query($query);

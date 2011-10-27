@@ -48,12 +48,12 @@ if ($action == 'change_pass')
 		$key = $_GET['key'];
 
 		// Fetch user information
-		$query = new SelectQuery(array('users' => 'u.*'), 'users AS u');
+		$query = $db->select(array('users' => 'u.*'), 'users AS u');
 		$query->where = 'u.id = :id';
 
 		$params = array(':id' => $id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		$cur_user = $result[0];
 		unset($query, $params, $result);
 
@@ -61,7 +61,7 @@ if ($action == 'change_pass')
 			message($lang_profile['Pass key bad'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
 		else
 		{
-			$query = new UpdateQuery(array('password' => ':password', 'activate_string' => ':activate_string', 'activate_key' => ':activate_key'), 'users');
+			$query = $db->update(array('password' => ':password', 'activate_string' => ':activate_string', 'activate_key' => ':activate_key'), 'users');
 			$query->where = 'id = :user_id';
 
 			$params = array(':user_id' => $id, ':password' => $cur_user['activate_string'], ':activate_string' => NULL, ':activate_key' => NULL);
@@ -72,7 +72,7 @@ if ($action == 'change_pass')
 				$params[':salt'] = NULL;
 			}
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset($query, $params);
 
 			message($lang_profile['Pass updated'], true);
@@ -86,16 +86,15 @@ if ($action == 'change_pass')
 			message($lang_common['No permission']);
 		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a users password?
 		{
-			$query = new SelectQuery(array('group_id' => 'u.group_id', 'g_moderator' => 'g.g_moderator'), 'users AS u');
+			$query = $db->select(array('group_id' => 'u.group_id', 'g_moderator' => 'g.g_moderator'), 'users AS u');
 
-			$query->joins['g'] = new InnerJoin('groups AS g');
-			$query->joins['g']->on = 'g.g_id = u.group_id';
+			$query->InnerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
 
 			$query->where = 'u.id = :user_id';
 
 			$params = array(':user_id' => $id);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			if (empty($result))
 				message($lang_common['Bad request']);
 
@@ -123,12 +122,12 @@ if ($action == 'change_pass')
 		if (pun_strlen($new_password1) < 4)
 			message($lang_prof_reg['Pass too short']);
 
-		$query = new SelectQuery(array('users' => 'u.*'), 'users AS u');
+		$query = $db->select(array('users' => 'u.*'), 'users AS u');
 		$query->where = 'u.id = :user_id';
 
 		$params = array(':user_id' => $id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		$cur_user = $result[0];
 		unset($query, $params, $result);
 
@@ -147,7 +146,7 @@ if ($action == 'change_pass')
 
 		$new_password_hash = pun_hash($new_password1);
 
-		$query = new UpdateQuery(array('password' => ':password'), 'users');
+		$query = $db->update(array('password' => ':password'), 'users');
 		$query->where = 'id = :user_id';
 
 		$params = array(':user_id' => $id, ':password' => $new_password_hash);
@@ -158,7 +157,7 @@ if ($action == 'change_pass')
 			$params[':salt'] = NULL;
 		}
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 
 		if ($pun_user['id'] == $id)
@@ -212,16 +211,15 @@ else if ($action == 'change_email')
 			message($lang_common['No permission']);
 		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a users email?
 		{
-			$query = new SelectQuery(array('group_id' => 'u.group_id', 'g_moderator' => 'g.g_moderator'), 'users AS u');
+			$query = $db->select(array('group_id' => 'u.group_id', 'g_moderator' => 'g.g_moderator'), 'users AS u');
 
-			$query->joins['g'] = new InnerJoin('groups AS g');
-			$query->joins['g']->on = 'g.g_id = u.group_id';
+			$query->InnerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
 
 			$query->where = 'u.id = :user_id';
 
 			$params = array(':user_id' => $id);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			if (empty($result))
 				message($lang_common['Bad request']);
 
@@ -239,12 +237,12 @@ else if ($action == 'change_email')
 	{
 		$key = $_GET['key'];
 
-		$query = new SelectQuery(array('activate_string' => 'u.activate_string', 'activate_key' => 'u.activate_key'), 'users AS u');
+		$query = $db->select(array('activate_string' => 'u.activate_string', 'activate_key' => 'u.activate_key'), 'users AS u');
 		$query->where = 'u.id = :user_id';
 
 		$params = array(':user_id' => $id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 
 		$new_email = $result[0]['activate_string'];
 		$new_email_key = $result[0]['activate_key'];
@@ -255,12 +253,12 @@ else if ($action == 'change_email')
 			message($lang_profile['Email key bad'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.');
 		else
 		{
-			$query = new UpdateQuery(array('email' => 'activate_string', 'activate_string' => ':activate_string', 'activate_key' => ':activate_key'), 'users');
+			$query = $db->update(array('email' => 'activate_string', 'activate_string' => ':activate_string', 'activate_key' => ':activate_key'), 'users');
 			$query->where = 'id = :user_id';
 
 			$params = array(':activate_string' => NULL, ':activate_key' => NULL, ':user_id' => $id);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset($query, $params);
 
 			message($lang_profile['Email updated'], true);
@@ -303,12 +301,12 @@ else if ($action == 'change_email')
 		}
 
 		// Check if someone else already has registered with that email address
-		$query = new SelectQuery(array('id' => 'u.id', 'username' => 'u.username'), 'users AS u');
+		$query = $db->select(array('id' => 'u.id', 'username' => 'u.username'), 'users AS u');
 		$query->where = 'u.email = :email';
 
 		$params = array(':email' => $new_email);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (!empty($result))
 		{
 			if ($pun_config['p_allow_dupe_email'] == '0')
@@ -339,12 +337,12 @@ else if ($action == 'change_email')
 
 		$new_email_key = random_pass(8);
 
-		$query = new UpdateQuery(array('activate_string' => ':activate_string', 'activate_key' => ':activate_key'), 'users');
+		$query = $db->update(array('activate_string' => ':activate_string', 'activate_key' => ':activate_key'), 'users');
 		$query->where = 'id = :id';
 
 		$params = array(':activate_string' => $new_email, ':activate_key' => $new_email_key, ':id' => $id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 
 		// Load the "activate email" template
@@ -545,34 +543,34 @@ else if (isset($_POST['update_group_membership']))
 
 	$new_group_id = intval($_POST['group_id']);
 
-	$query = new UpdateQuery(array('group_id' => ':group_id'), 'users');
+	$query = $db->update(array('group_id' => ':group_id'), 'users');
 	$query->where = 'id = :id';
 
 	$params = array(':group_id' => $new_group_id, ':id' => $id);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
 	// Regenerate the users info cache
 	$cache->delete('boardstats');
 
-	$query = new SelectQuery(array('g_moderator' => 'g.g_moderator'), 'groups AS g');
+	$query = $db->select(array('g_moderator' => 'g.g_moderator'), 'groups AS g');
 	$query->where = 'g.g_id = :group_id';
 
 	$params = array(':group_id' => $new_group_id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	$new_group_mod = $result[0];
 	unset($query, $params, $result);
 
 	// If the user was a moderator or an administrator, we remove him/her from the moderator list in all forums as well
 	if ($new_group_id != PUN_ADMIN && $new_group_mod != '1')
 	{
-		$query = new SelectQuery(array('fid' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
+		$query = $db->select(array('fid' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
 		$result = $db->query($query);
 		unset($query);
 
-		$update_query = new UpdateQuery(array('moderators' => ':moderators'), 'forums');
+		$update_query = $db->update(array('moderators' => ':moderators'), 'forums');
 		$update_query->where = 'id = :forum_id';
 
 		foreach ($result as $cur_forum)
@@ -587,7 +585,7 @@ else if (isset($_POST['update_group_membership']))
 
 				$params = array(':moderators' => $cur_moderators, ':forum_id' => $cur_forum['id']);
 
-				$db->query($update_query, $params);
+				$update_query->run($params);
 				unset($params);
 			}
 		}
@@ -607,23 +605,23 @@ else if (isset($_POST['update_forums']))
 	confirm_referrer('profile.php');
 
 	// Get the username of the user we are processing
-	$query = new SelectQuery(array('username' => 'u.username'), 'users AS u');
+	$query = $db->select(array('username' => 'u.username'), 'users AS u');
 	$query->where = 'u.id = :id';
 
 	$params = array(':id' => $id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	$username = $result[0]['username'];
 	unset($query, $params, $result);
 
 	$moderator_in = (isset($_POST['moderator_in'])) ? array_keys($_POST['moderator_in']) : array();
 
 	// Loop through all forums
-	$query = new SelectQuery(array('fid' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
+	$query = $db->select(array('fid' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
 	$result = $db->query($query);
 	unset($query);
 
-	$update_query = new UpdateQuery(array('moderators' => ':moderators'), 'forums');
+	$update_query = $db->update(array('moderators' => ':moderators'), 'forums');
 	$update_query->where = 'id = :forum_id';
 
 	foreach ($result as $cur_forum)
@@ -637,7 +635,7 @@ else if (isset($_POST['update_forums']))
 
 			$params = array(':moderators' => serialize($cur_moderators), ':forum_id' => $cur_forum['id']);
 
-			$db->query($update_query, $params);
+			$update_query->run($params);
 			unset($params);
 		}
 		// If the user shouldn't have moderator access (and he/she already has it)
@@ -648,7 +646,7 @@ else if (isset($_POST['update_forums']))
 
 			$params = array(':moderators' => $cur_moderators, ':forum_id' => $cur_forum['id']);
 
-			$db->query($update_query, $params);
+			$update_query->run($params);
 			unset($params);
 		}
 	}
@@ -688,12 +686,12 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 	confirm_referrer('profile.php');
 
 	// Get the username and group of the user we are deleting
-	$query = new SelectQuery(array('group_id' => 'u.group_id', 'username' => 'u.username'), 'users AS u');
+	$query = $db->select(array('group_id' => 'u.group_id', 'username' => 'u.username'), 'users AS u');
 	$query->where = 'u.id = :id';
 
 	$params = array(':id' => $id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 
 	$group_id = $result[0]['group_id'];
 	$username = $result[0]['username'];
@@ -706,22 +704,22 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 	if (isset($_POST['delete_user_comply']))
 	{
 		// If the user is a moderator or an administrator, we remove him/her from the moderator list in all forums as well
-		$query = new SelectQuery(array('g_moderator' => 'g.g_moderator'), 'groups AS g');
+		$query = $db->select(array('g_moderator' => 'g.g_moderator'), 'groups AS g');
 		$query->where = 'g.g_id = :g_id';
 
 		$params = array(':g_id' => $group_id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		$group_mod = $result[0]['g_moderator'];
 		unset($query, $params, $result);
 
 		if ($group_id == PUN_ADMIN || $group_mod == '1')
 		{
-			$query = new SelectQuery(array('fid' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
+			$query = $db->select(array('fid' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
 			$result = $db->query($query);
 			unset($query);
 
-			$update_query = new UpdateQuery(array('moderators' => ':moderators'), 'forums');
+			$update_query = $db->update(array('moderators' => ':moderators'), 'forums');
 			$update_query->where = 'id = :forum_id';
 
 			foreach ($result as $cur_forum)
@@ -735,7 +733,7 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 
 					$params = array(':moderators' => $cur_moderators, ':forum_id' => $cur_forum['id']);
 
-					$db->query($update_query, $params);
+					$update_query->run($params);
 					unset($params);
 				}
 			}
@@ -746,27 +744,27 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 		// Delete any subscriptions and remove him/her from the online list (if they happen to be logged in)
 
 		// Delete topic subscriptions
-		$query = new DeleteQuery('topic_subscriptions');
+		$query = $db->delete('topic_subscriptions');
 		$query->where = 'user_id = :user_id';
 		$params = array(':user_id' => $id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 
 		// Delete forum subscriptions
-		$query = new DeleteQuery('forum_subscriptions');
+		$query = $db->delete('forum_subscriptions');
 		$query->where = 'user_id = :user_id';
 		$params = array(':user_id' => $id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 
 		// Delete online entry
-		$query = new DeleteQuery('online');
+		$query = $db->delete('online');
 		$query->where = 'user_id = :user_id';
 		$params = array(':user_id' => $id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 
 		// Should we delete all posts made by this user?
@@ -776,25 +774,23 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 			@set_time_limit(0);
 
 			// Find all posts made by this user
-			$query = new SelectQuery(array('pid' => 'p.id', 'topic_id' => 'p.topic_id', 'forum_id' => 't.forum_id'), 'posts AS p');
+			$query = $db->select(array('pid' => 'p.id', 'topic_id' => 'p.topic_id', 'forum_id' => 't.forum_id'), 'posts AS p');
 
-			$query->joins['t'] = new InnerJoin('topics AS t');
-			$query->joins['t']->on = 't.id = p.topic_id';
+			$query->InnerJoin('t', 'topics AS t', 't.id = p.topic_id');
 
-			$query->joins['f'] = new InnerJoin('forums AS f');
-			$query->joins['f']->on = 'f.id = t.forum_id';
+			$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
 			$query->where = 'p.poster_id = :id';
 
 			$params = array(':id' => $id);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			unset($query, $params);
 
 			if (!empty($result))
 			{
 				// Determine whether this post is the "topic post" or not
-				$query = new SelectQuery(array('pid' => 'p.id'), 'posts AS p');
+				$query = $db->select(array('pid' => 'p.id'), 'posts AS p');
 				$query->where = 'p.topic_id = :topic_id';
 				$query->order = array('posted' => 'p.posted ASC');
 				$query->limit = 1;
@@ -802,7 +798,7 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 				foreach ($result as $cur_post)
 				{
 					$params = array(':topic_id' => $cur_post['topic_id']);
-					$result2 = $db->query($query, $params);
+					$result2 = $query->run($params);
 
 					if ($result2[0]['id'] == $cur_post['id'])
 						delete_topic($cur_post['topic_id']);
@@ -822,22 +818,22 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 		else
 		{
 			// Set all his/her posts to guest
-			$query = new UpdateQuery(array('poster_id' => '1'), 'posts');
+			$query = $db->update(array('poster_id' => '1'), 'posts');
 			$query->where = 'poster_id = :id';
 
 			$params = array(':id' => $id);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset($query, $params);
 		}
 
 		// Delete the user
-		$query = new DeleteQuery('users');
+		$query = $db->delete('users');
 		$query->where = 'id = :id';
 
 		$params = array(':id' => $id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 
 		// Delete user avatar
@@ -883,16 +879,15 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 else if (isset($_POST['form_sent']))
 {
 	// Fetch the user group of the user we are editing
-	$query = new SelectQuery(array('username' => 'u.username', 'group_id' => 'u.group_id', 'g_moderator' => 'g.g_moderator'), 'users AS u');
+	$query = $db->select(array('username' => 'u.username', 'group_id' => 'u.group_id', 'g_moderator' => 'g.g_moderator'), 'users AS u');
 
-	$query->joins['g'] = new InnerJoin('groups AS g');
-	$query->joins['g']->on = 'g.g_id = u.group_id';
+	$query->InnerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
 
 	$query->where = 'u.id = :id';
 
 	$params = array(':id' => $id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if (empty($result))
 		message($lang_common['Bad request']);
 
@@ -1141,7 +1136,7 @@ else if (isset($_POST['form_sent']))
 		message($lang_common['Bad request']);
 
 
-	$query = new UpdateQuery(array(), 'users');
+	$query = $db->update(array(), 'users');
 	$query->where = 'id = :id';
 
 	$params = array(':id' => $id);
@@ -1152,92 +1147,92 @@ else if (isset($_POST['form_sent']))
 		$params[':'.$key] = $value;
 	}
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
 	// If we changed the username we have to update some stuff
 	if ($username_updated)
 	{
 		// Update all posts by this user
-		$query = new UpdateQuery(array('poster' => ':poster'), 'posts');
+		$query = $db->update(array('poster' => ':poster'), 'posts');
 		$query->where = 'poster_id = :poster_id';
 
 		$params = array(':poster' => $form['username'], ':poster_id' => $id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 
 		// Update all posts edited by this user
-		$query = new UpdateQuery(array('edited_by' => ':poster'), 'posts');
+		$query = $db->update(array('edited_by' => ':poster'), 'posts');
 		$query->where = 'edited_by = :old_username';
 
 		$params = array(':poster' => $form['username'], ':old_username' => $old_username);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 
 		// Update all topic by this user
-		$query = new UpdateQuery(array('poster' => ':poster'), 'topics');
+		$query = $db->update(array('poster' => ':poster'), 'topics');
 		$query->where = 'poster = :old_username';
 
 		$params = array(':poster' => $form['username'], ':old_username' => $old_username);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 
 		// Update all topics with a last post by this user
-		$query = new UpdateQuery(array('last_poster' => ':poster'), 'topics');
+		$query = $db->update(array('last_poster' => ':poster'), 'topics');
 		$query->where = 'poster = :old_username';
 
 		$params = array(':poster' => $form['username'], ':old_username' => $old_username);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 
 		// Update all forums with a last post by this user
-		$query = new UpdateQuery(array('last_poster' => ':poster'), 'forums');
+		$query = $db->update(array('last_poster' => ':poster'), 'forums');
 		$query->where = 'last_poster = :old_username';
 
 		$params = array(':poster' => $form['username'], ':old_username' => $old_username);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 
 		// Update all online table entries about this user
-		$query = new UpdateQuery(array('ident' => ':username'), 'online');
+		$query = $db->update(array('ident' => ':username'), 'online');
 		$query->where = 'ident = :old_username';
 
 		$params = array(':username' => $form['username'], ':old_username' => $old_username);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 
 		// If the user is a moderator or an administrator we have to update the moderator lists
-		$query = new SelectQuery(array('group_id' => 'u.group_id'), 'users AS u');
+		$query = $db->select(array('group_id' => 'u.group_id'), 'users AS u');
 		$query->where = 'u.id = :id';
 
 		$params = array(':id' => $id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		$group_id = $result[0];
 		unset($query, $params, $result);
 
-		$query = new SelectQuery(array('g_moderator' => 'g.g_moderator'), 'groups AS g');
+		$query = $db->select(array('g_moderator' => 'g.g_moderator'), 'groups AS g');
 		$query->where = 'g.g_id = :g_id';
 
 		$params = array(':g_id' => $group_id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		$group_mod = $result[0];
 		unset($query, $params, $result);
 
 		if ($group_id == PUN_ADMIN || $group_mod == '1')
 		{
-			$query = new SelectQuery(array('fid' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
+			$query = $db->select(array('fid' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
 			$result = $db->query($query);
 			unset($query);
 
-			$update_query = new UpdateQuery(array('moderators' => ':moderators'), 'forums');
+			$update_query = $db->update(array('moderators' => ':moderators'), 'forums');
 			$update_query->where = 'id = :forum_id';
 
 			foreach ($result as $cur_forum)
@@ -1251,7 +1246,7 @@ else if (isset($_POST['form_sent']))
 					uksort($cur_moderators, 'utf8_strcasecmp');
 
 					$params = array(':moderators' => serialize($cur_moderators), ':forum_id' => $cur_forum['id']);
-					$db->query($update_query, $params);
+					$update_query->run($params);
 					unset($params);
 				}
 			}
@@ -1266,16 +1261,15 @@ else if (isset($_POST['form_sent']))
 	redirect('profile.php?section='.$section.'&amp;id='.$id, $lang_profile['Profile redirect']);
 }
 
-$query = new SelectQuery(array('user' => 'u.*', 'group' => 'g.*'), 'users AS u');
+$query = $db->select(array('user' => 'u.*', 'group' => 'g.*'), 'users AS u');
 
-$query->joins['g'] = new LeftJoin('groups AS g');
-$query->joins['g']->on = 'g.g_id = u.group_id';
+$query->LeftJoin('g', 'groups AS g', 'g.g_id = u.group_id');
 
 $query->where = 'u.id = :user_id';
 
 $params = array(':user_id' => $id);
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 if (empty($result))
 	message($lang_common['Bad request']);
 
@@ -2013,13 +2007,13 @@ else
 							<select id="group_id" name="group_id">
 <?php
 
-				$query = new SelectQuery(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
+				$query = $db->select(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
 				$query->where = 'g.g_id != :g_id';
 				$query->order = array('g_title' => 'g.g_title ASC');
 
 				$params = array(':g_id' => PUN_GUEST);
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 
 				foreach ($result as $cur_group)
 				{
@@ -2062,17 +2056,16 @@ else
 							<p><?php echo $lang_profile['Moderator in info'] ?></p>
 <?php
 
-				$query = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators'), 'categories AS c');
+				$query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators'), 'categories AS c');
 
-				$query->joins['f'] = new InnerJoin('forums AS f');
-				$query->joins['f']->on = 'c.id = f.cat_id';
+				$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
 				$query->where = 'f.redirect_url IS NULL';
 				$query->order = array('cposition' => 'c.disp_position DESC', 'cid' => 'c.id DESC', 'fposition' => 'f.disp_position');
 
 				$params = array();
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 
 				$cur_category = 0;
 				foreach ($result as $cur_forum)

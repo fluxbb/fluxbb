@@ -596,13 +596,13 @@ else
 		case 'mysqli':
 		case 'mysql_innodb':
 		case 'mysqli_innodb':
-			$mysql_info = $db->get_version();
+			$mysql_info = $db->getVersion();
 			if (version_compare($mysql_info['version'], MIN_MYSQL_VERSION, '<'))
 				error(sprintf($lang_install['You are running error'], 'MySQL', $mysql_info['version'], FORUM_VERSION, MIN_MYSQL_VERSION));
 			break;
 
 		case 'pgsql':
-			$pgsql_info = $db->get_version();
+			$pgsql_info = $db->getVersion();
 			if (version_compare($pgsql_info['version'], MIN_PGSQL_VERSION, '<'))
 				error(sprintf($lang_install['You are running error'], 'PostgreSQL', $pgsql_info['version'], FORUM_VERSION, MIN_PGSQL_VERSION));
 			break;
@@ -630,7 +630,7 @@ else
 
 
 	// Start a transaction
-	$db->start_transaction();
+	$db->startTransaction();
 
 
 	// Create all tables
@@ -1579,14 +1579,14 @@ else
 	$db->query('INSERT INTO '.$db->prefix.'groups ('.($db_type != 'pgsql' ? 'g_id, ' : '').'g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood, g_report_flood) VALUES('.($db_type != 'pgsql' ? '4, ' : '').'\''.$db->escape($lang_install['Members']).'\', NULL, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 60, 30, 60, 60)') or error('Unable to add group', __FILE__, __LINE__, $db->error());
 
 	// Insert guest and first admin user
-	$query = new InsertQuery(array('group_id' => ':group_id', 'username' => ':username', 'password' => ':password', 'email' => ':email'), 'users');
+	$query = $db->insert(array('group_id' => ':group_id', 'username' => ':username', 'password' => ':password', 'email' => ':email'), 'users');
 	$params = array(':group_id' => 3, ':username' => $lang_install['Guest'], ':password', $lang_install['Guest'], ':email' => $lang_install['Guest']);
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
-	$query = new InsertQuery(array('group_id' => ':group_id', 'username' => ':username', 'password' => ':password', 'email' => ':email', 'language' => ':language', 'style' => ':style', 'num_posts' => ':num_posts', 'last_post' => ':last_post', 'registered' => ':registered', 'registration_ip' => ':registration_ip', 'last_visit' => ':last_visit'), 'users');
+	$query = $db->insert(array('group_id' => ':group_id', 'username' => ':username', 'password' => ':password', 'email' => ':email', 'language' => ':language', 'style' => ':style', 'num_posts' => ':num_posts', 'last_post' => ':last_post', 'registered' => ':registered', 'registration_ip' => ':registration_ip', 'last_visit' => ':last_visit'), 'users');
 	$params = array(':group_id' => 1, ':username' => $username, ':password' => pun_hash($password1), ':email' => $email, ':language' => $default_lang, ':style' => $default_style, ':num_posts' => 1, ':last_post' => $now, ':registered' => $now, ':registration_ip' => get_remote_address(), ':last_visit' => $now);
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
 	// Enable/disable avatars depending on file_uploads setting in PHP configuration
@@ -1674,12 +1674,12 @@ else
 		'p_force_guest_email'		=> 1
 	);
 
-	$query = new InsertQuery(array('conf_name' => ':conf_name', 'conf_value' => ':conf_value'), 'config');
+	$query = $db->insert(array('conf_name' => ':conf_name', 'conf_value' => ':conf_value'), 'config');
 
 	foreach ($config as $conf_name => $conf_value)
 	{
 		$params = array(':conf_name' => $conf_name, ':conf_value' => $conf_value);
-		$db->query($query, $params);
+		$query->run($params);
 		unset($params);
 	}
 	unset($query);
@@ -1688,36 +1688,36 @@ else
 	$subject = $lang_install['Test post'];
 	$message = $lang_install['Message'];
 
-	$query = new InsertQuery(array('rank' => ':rank', 'min_posts' => ':min_posts'), 'ranks');
+	$query = $db->insert(array('rank' => ':rank', 'min_posts' => ':min_posts'), 'ranks');
 
 	// Insert default ranks
 	$params = array(':rank' => $lang_install['New member'], ':min_posts' => 0);
-	$db->query($query, $params);
+	$query->run($params);
 
 	$params = array(':rank' => $lang_install['Member'], ':min_posts' => 10);
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
 	// Insert first category and forum
-	$query = new InsertQuery(array('cat_name' => ':cat_name', 'disp_position' => ':disp_position'), 'categories');
+	$query = $db->insert(array('cat_name' => ':cat_name', 'disp_position' => ':disp_position'), 'categories');
 	$params = array(':cat_name' => $lang_install['Test category'], ':disp_position' => 1);
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
-	$query = new InsertQuery(array('forum_name' => ':forum_name', 'forum_desc' => ':forum_desc', 'num_topics' => ':num_topics', 'num_posts' => ':num_posts', 'last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'disp_position' => ':disp_position', 'cat_id' => ':cat_id'), 'forums');
+	$query = $db->insert(array('forum_name' => ':forum_name', 'forum_desc' => ':forum_desc', 'num_topics' => ':num_topics', 'num_posts' => ':num_posts', 'last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'disp_position' => ':disp_position', 'cat_id' => ':cat_id'), 'forums');
 	$params = array(':forum_name' => $lang_install['Test forum'], ':forum_desc' => $lang_install['This is just a test forum'], ':num_topics' => 1, ':num_posts' => 1, ':last_post' => $now, ':last_post_id' => 1, ':last_poster' => $username, ':disp_position' => 1, ':cat_id' => 1);
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
 	// Insert first topic and post
-	$query = new InsertQuery(array('poster' => ':poster', 'subject' => ':subject', 'posted' => ':posted', 'first_post_id' => ':first_post_id', 'last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'forum_id' => ':forum_id'), 'topics');
+	$query = $db->insert(array('poster' => ':poster', 'subject' => ':subject', 'posted' => ':posted', 'first_post_id' => ':first_post_id', 'last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'forum_id' => ':forum_id'), 'topics');
 	$params = array(':poster' => $username, ':subject' => $subject, ':posted' => $now, ':first_post_id' => 1, ':last_post' => $now, ':last_post_id' => 1, ':last_poster' => $username, ':forum_id' => 1);
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
-	$query = new InsertQuery(array('poster' => ':poster', 'poster_id' => ':poster_id', 'poster_ip' => ':poster_ip', 'message' => ':message', 'posted' => ':posted', 'topic_id' => ':topic_id'), 'posts');
+	$query = $db->insert(array('poster' => ':poster', 'poster_id' => ':poster_id', 'poster_ip' => ':poster_ip', 'message' => ':message', 'posted' => ':posted', 'topic_id' => ':topic_id'), 'posts');
 	$params = array(':poster' => $username, ':poster_id' => 2, ':poster_ip' => get_remote_address(), ':message' => $message, ':posted' => $now, ':topic_id' => 1);
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
 	// Index the test post so searching for it works

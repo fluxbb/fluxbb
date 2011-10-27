@@ -20,19 +20,17 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/index.php';
 // Get list of forums and topics with new posts since last visit
 if (!$pun_user['is_guest'])
 {
-	$query = new SelectQuery(array('fid' => 't.forum_id AS fid', 'tid' => 't.id AS tid', 'last_post' => 't.last_post'), 'topics AS t');
+	$query = $db->select(array('fid' => 't.forum_id AS fid', 'tid' => 't.id AS tid', 'last_post' => 't.last_post'), 'topics AS t');
 
-	$query->joins['f'] = new InnerJoin('forums AS f');
-	$query->joins['f']->on = 'f.id = t.forum_id';
+	$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
-	$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-	$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+	$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 	$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.last_post > :last_visit AND t.moved_to IS NULL';
 
 	$params = array(':group_id' => $pun_user['g_id'], ':last_visit' => $pun_user['last_visit']);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 
 	$new_topics = array();
 	foreach ($result as $cur_topic)
@@ -60,20 +58,18 @@ define('PUN_ACTIVE_PAGE', 'index');
 require PUN_ROOT.'header.php';
 
 // Print the categories and forums
-$query = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'forum_desc' => 'f.forum_desc', 'redirect_url' => 'f.redirect_url', 'moderators' => 'f.moderators', 'num_topics' => 'f.num_topics', 'num_posts' => 'f.num_posts', 'last_post' => 'f.last_post', 'last_post_id' => 'f.last_post_id', 'last_poster' => 'f.last_poster'), 'categories AS c');
+$query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'forum_desc' => 'f.forum_desc', 'redirect_url' => 'f.redirect_url', 'moderators' => 'f.moderators', 'num_topics' => 'f.num_topics', 'num_posts' => 'f.num_posts', 'last_post' => 'f.last_post', 'last_post_id' => 'f.last_post_id', 'last_poster' => 'f.last_poster'), 'categories AS c');
 
-$query->joins['f'] = new InnerJoin('forums AS f');
-$query->joins['f']->on = 'c.id = f.cat_id';
+$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
-$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = 'fp.read_forum IS NULL OR fp.read_forum = 1';
 $query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
 
 $params = array(':group_id' => $pun_user['g_id']);
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 
 $cur_category = 0;
 $cat_count = 0;
@@ -204,10 +200,10 @@ else
 // Collect some board statistics
 $stats = fetch_board_stats();
 
-$query = new SelectQuery(array('total_topics' => 'SUM(f.num_topics) AS total_topics', 'total_posts' => 'SUM(f.num_posts) AS total_posts'), 'forums AS f');
+$query = $db->select(array('total_topics' => 'SUM(f.num_topics) AS total_topics', 'total_posts' => 'SUM(f.num_posts) AS total_posts'), 'forums AS f');
 $params = array();
 
-$stats = array_merge($stats, current($db->query($query, $params)));
+$stats = array_merge($stats, current($query->run($params)));
 unset ($query, $params);
 
 if ($pun_user['g_view_users'] == '1')
@@ -247,13 +243,13 @@ if (!empty($forum_actions))
 if ($pun_config['o_users_online'] == '1')
 {
 	// Fetch users online info and generate strings for output
-	$query = new SelectQuery(array('user_id' => 'o.user_id', 'ident' => 'o.ident'), 'online AS o');
+	$query = $db->select(array('user_id' => 'o.user_id', 'ident' => 'o.ident'), 'online AS o');
 	$query->where = 'idle = 0';
 	$query->order = array('ident' => 'o.ident ASC');
 
 	$params = array();
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 
 	$num_guests = 0;
 	$users = array();

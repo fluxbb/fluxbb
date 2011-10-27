@@ -47,7 +47,7 @@ if ($show_group > -1)
 }
 
 // Fetch user count
-$query = new SelectQuery(array('num_users' => 'COUNT(u.id) AS num_users'), 'users AS u');
+$query = $db->select(array('num_users' => 'COUNT(u.id) AS num_users'), 'users AS u');
 $query->where = 'u.id > 1 AND u.group_id != :group_unverified';
 
 $params = array(':group_unverified' => PUN_UNVERIFIED);
@@ -58,7 +58,7 @@ if (!empty($where_sql))
 if (!empty($where_params))
 	$params = array_merge($params, $where_params);
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 $num_users = $result[0]['num_users'];
 
 unset ($result, $query, $params);
@@ -96,13 +96,13 @@ require PUN_ROOT.'header.php';
 							<option value="-1"<?php if ($show_group == -1) echo ' selected="selected"' ?>><?php echo $lang_ul['All users'] ?></option>
 <?php
 
-$query = new SelectQuery(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
+$query = $db->select(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
 $query->where = 'g.g_id != :group_guest';
 $query->order = array('g_id' => 'g.g_id DESC');
 
 $params = array(':group_guest' => PUN_GUEST);
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 foreach ($result as $cur_group)
 {
 	if ($cur_group['g_id'] == $show_group)
@@ -162,7 +162,7 @@ unset ($result, $query, $params);
 <?php
 
 // Retrieve a list of user IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
-$query = new SelectQuery(array('id' => 'u.id'), 'users AS u');
+$query = $db->select(array('id' => 'u.id'), 'users AS u');
 $query->where = 'u.id > 1 AND u.group_id != :group_unverified';
 $query->order = array('sort' => 'u.'.$sort_by.' '.$sort_dir, 'uid' => 'u.id ASC');
 $query->limit = 50;
@@ -176,7 +176,7 @@ if (!empty($where_sql))
 if (!empty($where_params))
 	$params = array_merge($params, $where_params);
 
-$user_ids = $db->query($query, $params);
+$user_ids = $query->run($params);
 unset ($query, $params);
 
 if (!empty($user_ids))
@@ -186,17 +186,16 @@ if (!empty($user_ids))
 		$user_ids[$key] = $value['id'];
 
 	// Grab the users
-	$query = new SelectQuery(array('uid' => 'u.id', 'username' => 'u.username', 'title' => 'u.title', 'num_posts' => 'u.num_posts', 'registered' => 'u.registered', 'g_id' => 'g.g_id', 'g_user_title' => 'g.g_user_title'), 'users AS u');
+	$query = $db->select(array('uid' => 'u.id', 'username' => 'u.username', 'title' => 'u.title', 'num_posts' => 'u.num_posts', 'registered' => 'u.registered', 'g_id' => 'g.g_id', 'g_user_title' => 'g.g_user_title'), 'users AS u');
 
-	$query->joins['g'] = new InnerJoin('groups AS g');
-	$query->joins['g']->on = 'g.g_id = u.group_id';
+	$query->InnerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
 
 	$query->where = 'u.id IN :uids';
 	$query->order = array('sort' => 'u.'.$sort_by.' '.$sort_dir, 'uid' => 'u.id ASC');
 
 	$params = array(':uids' => $user_ids);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	foreach ($result as $user_data)
 	{
 		$user_title_field = get_title($user_data);

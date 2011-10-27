@@ -189,7 +189,7 @@ if (isset($_POST['form_sent']))
 	if ($form['timeout_online'] >= $form['timeout_visit'])
 		message($lang_admin_options['Timeout error message']);
 
-	$query = new UpdateQuery(array('conf_value' => ':value'), 'config');
+	$query = $db->update(array('conf_value' => ':value'), 'config');
 	$query->where = 'conf_name = :name';
 
 	foreach ($form as $key => $input)
@@ -199,7 +199,7 @@ if (isset($_POST['form_sent']))
 		{
 			$params = array(':name' => 'o_'.$key, ':value' => $input != '' || is_int($input) ? $input : 'NULL');
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($params);
 		}
 	}

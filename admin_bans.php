@@ -32,12 +32,12 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 			if ($user_id < 2)
 				message($lang_common['Bad request']);
 
-			$query = new SelectQuery(array('group_id' => 'u.group_id', 'username' => 'u.username', 'email' => 'u.email'), 'users AS u');
+			$query = $db->select(array('group_id' => 'u.group_id', 'username' => 'u.username', 'email' => 'u.email'), 'users AS u');
 			$query->where = 'id = :user_id';
 
 			$params = array(':user_id' => $user_id);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			if (empty($result))
 				message($lang_admin_bans['No user ID message']);
 
@@ -53,12 +53,12 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 
 			if (!empty($ban_user))
 			{
-				$query = new SelectQuery(array('id' => 'u.id', 'group_id' => 'u.group_id', 'username' => 'u.username', 'email' => 'u.email'), 'users AS u');
+				$query = $db->select(array('id' => 'u.id', 'group_id' => 'u.group_id', 'username' => 'u.username', 'email' => 'u.email'), 'users AS u');
 				$query->where = 'username = :ban_user AND id > 1';
 
 				$params = array(':ban_user' => $ban_user);
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				if (empty($result))
 					message($lang_admin_bans['No user message']);
 
@@ -77,12 +77,12 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 			if ($group_id == PUN_ADMIN)
 				message(sprintf($lang_admin_bans['User is admin message'], pun_htmlspecialchars($ban_user)));
 
-			$query = new SelectQuery(array('g_moderator' => 'g.g_moderator'), 'groups AS g');
+			$query = $db->select(array('g_moderator' => 'g.g_moderator'), 'groups AS g');
 			$query->where = 'g.g_id = :group_id';
 
 			$params = array(':group_id' => $group_id);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			$is_moderator_group = $result[0]['g_moderator'];
 			unset ($result, $query, $params);
 
@@ -95,14 +95,14 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		{
 			$ban_ip = '';
 
-			$query = new SelectQuery(array('poster_ip' => 'p.poster_ip'), 'posts AS p');
+			$query = $db->select(array('poster_ip' => 'p.poster_ip'), 'posts AS p');
 			$query->where = 'p.poster_id = :user_id';
 			$query->order = array('posted' => 'p.posted DESC');
 			$query->limit = 1;
 
 			$params = array(':user_id' => $user_id);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			if (!empty($result))
 				$ban_ip = $result[0]['poster_ip'];
 
@@ -110,12 +110,12 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 
 			if (empty($ban_ip))
 			{
-				$query = new SelectQuery(array('registration_ip' => 'u.registration_ip'), 'users AS u');
+				$query = $db->select(array('registration_ip' => 'u.registration_ip'), 'users AS u');
 				$query->where = 'u.id = :user_id';
 
 				$params = array(':user_id' => $user_id);
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				if (!empty($result))
 					$ban_ip = $result[0]['registration_ip'];
 
@@ -131,12 +131,12 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		if ($ban_id < 1)
 			message($lang_common['Bad request']);
 
-		$query = new SelectQuery(array('username' => 'b.username', 'ip' => 'b.ip', 'email' => 'b.email', 'message' => 'b.message', 'expire' => 'b.expire'), 'bans AS b');
+		$query = $db->select(array('username' => 'b.username', 'ip' => 'b.ip', 'email' => 'b.email', 'message' => 'b.message', 'expire' => 'b.expire'), 'bans AS b');
 		$query->where = 'b.id = :ban_id';
 
 		$params = array(':ban_id' => $ban_id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (empty($result))
 			message($lang_common['Bad request']);
 
@@ -252,16 +252,15 @@ else if (isset($_POST['add_edit_ban']))
 	// Make sure we're not banning an admin or moderator
 	if (!empty($ban_user))
 	{
-		$query = new SelectQuery(array('group_id' => 'u.group_id', 'g_moderator' => 'g.g_moderator'), 'users AS u');
+		$query = $db->select(array('group_id' => 'u.group_id', 'g_moderator' => 'g.g_moderator'), 'users AS u');
 
-		$query->joins['g'] = new InnerJoin('groups AS g');
-		$query->joins['g']->on = 'g.g_id = u.group_id';
+		$query->InnerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
 
 		$query->where = 'u.username = :ban_user AND u.id > 1';
 
 		$params = array(':ban_user' => $ban_user);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (!empty($result))
 		{
 			if ($result[0]['group_id'] == PUN_ADMIN)
@@ -353,22 +352,22 @@ else if (isset($_POST['add_edit_ban']))
 
 	if ($_POST['mode'] == 'add')
 	{
-		$query = new InsertQuery($fields, 'bans');
+		$query = $db->insert($fields, 'bans');
 		$query->values['ban_creator'] = ':user_id';
 
 		$params[':user_id'] = $pun_user['id'];
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 	}
 	else
 	{
-		$query = new UpdateQuery($fields, 'bans');
+		$query = $db->update($fields, 'bans');
 		$query->where = 'id = :ban_id';
 
 		$params[':ban_id'] = intval($_POST['ban_id']);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 	}
 
@@ -390,12 +389,12 @@ else if (isset($_GET['del_ban']))
 	if ($ban_id < 1)
 		message($lang_common['Bad request']);
 
-	$query = new DeleteQuery('bans');
+	$query = $db->delete('bans');
 	$query->where = 'id = :ban_id';
 
 	$params = array(':ban_id' => $ban_id);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 
 	// Regenerate the bans cache
