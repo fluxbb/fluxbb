@@ -74,15 +74,32 @@ if ($pun_config['o_quickjump'] == '1')
 		$quickjump = array();
 
 		// Generate the quick jump cache for all groups
-		$group_result = $db->query('SELECT g_id FROM '.$db->prefix.'groups WHERE g_read_board=1') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
-		while ($cur_group = $db->fetch_assoc($group_result))
-		{
-			$quickjump[$cur_group['g_id']] = array();
+		$query = $db->select(array('gid' => 'g.g_id'), 'groups AS g');
+		$query->where = 'g.g_read_board = 1';
 
-			$result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.redirect_url FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$cur_group['g_id'].') WHERE fp.read_forum IS NULL OR fp.read_forum=1 ORDER BY c.disp_position, c.id, f.disp_position') or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
-			while ($cur_forum = $db->fetch_assoc($result))
-				$quickjump[$cur_group['g_id']][] = $cur_forum;
+		$params = array();
+
+		$result = $query->run($params);
+		unset ($query, $params);
+
+		$query_forums = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url'), 'categories AS c');
+
+		$query_forums->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
+
+		$query_forums->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+
+		$query_forums->where = 'fp.read_forum IS NULL OR fp.read_forum = 1';
+		$query_forums->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
+
+		foreach ($result as $cur_group)
+		{
+			$params = array(':group_id' => $cur_group['g_id']);
+
+			$quickjump[$cur_group['g_id']] = $query_forums->run($params);
+			unset ($params);
 		}
+
+		unset ($result, $query_forums);
 
 		$cache->set('quickjump', $quickjump);
 	}
@@ -110,7 +127,7 @@ if ($pun_config['o_quickjump'] == '1')
 			}
 
 			$redirect_tag = ($cur_forum['redirect_url'] != '') ? ' &gt;&gt;&gt;' : '';
-			echo "\t\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'"'. ($forum_id == $cur_forum['fid'] ? ' selected="selected"' : '').'>'.pun_htmlspecialchars($cur_forum['forum_name']).$redirect_tag.'</option>'."\n";
+			echo "\t\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'"'. (isset($forum_id) && $forum_id == $cur_forum['fid'] ? ' selected="selected"' : '').'>'.pun_htmlspecialchars($cur_forum['forum_name']).$redirect_tag.'</option>'."\n";
 		}
 
 ?>
@@ -172,7 +189,8 @@ if (defined('PUN_DEBUG'))
 
 	// Calculate script generation time
 	$time_diff = sprintf('%.3f', get_microtime() - $pun_start);
-	echo sprintf($lang->t('Querytime'), $time_diff, $db->get_num_queries());
+	$queries = $db->getDebugQueries();
+	echo sprintf($lang->t('Querytime'), $time_diff, count($queries));
 
 	if (function_exists('memory_get_usage'))
 	{
@@ -187,7 +205,7 @@ if (defined('PUN_DEBUG'))
 
 
 // End the transaction
-$db->end_transaction();
+$db->commitTransaction();
 
 // Display executed queries (if enabled)
 if (defined('PUN_SHOW_QUERIES'))
@@ -200,7 +218,7 @@ ob_end_clean();
 
 
 // Close the db connection (and free up any result data)
-$db->close();
+unset ($db);
 
 // Spit out the page
 exit($tpl_main);

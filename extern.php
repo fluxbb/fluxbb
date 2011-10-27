@@ -8,23 +8,23 @@
 
 /*-----------------------------------------------------------------------------
 
-  INSTRUCTIONS
+INSTRUCTIONS
 
-  This script is used to include information about your board from
-  pages outside the forums and to syndicate news about recent
-  discussions via RSS/Atom/XML. The script can display a list of
-  recent discussions, a list of active users or a collection of
-  general board statistics. The script can be called directly via
-  an URL, from a PHP include command or through the use of Server
-  Side Includes (SSI).
+This script is used to include information about your board from
+pages outside the forums and to syndicate news about recent
+discussions via RSS/Atom/XML. The script can display a list of
+recent discussions, a list of active users or a collection of
+general board statistics. The script can be called directly via
+an URL, from a PHP include command or through the use of Server
+Side Includes (SSI).
 
-  The scripts behaviour is controlled via variables supplied in the
-  URL to the script. The different variables are: action (what to
-  do), show (how many items to display), fid (the ID or IDs of
-  the forum(s) to poll for topics), nfid (the ID or IDs of forums
-  that should be excluded), tid (the ID of the topic from which to
-  display posts) and type (output as HTML or RSS). The only
-  mandatory variable is action. Possible/default values are:
+The scripts behaviour is controlled via variables supplied in the
+URL to the script. The different variables are: action (what to
+do), show (how many items to display), fid (the ID or IDs of
+the forum(s) to poll for topics), nfid (the ID or IDs of forums
+that should be excluded), tid (the ID of the topic from which to
+display posts) and type (output as HTML or RSS). The only
+mandatory variable is action. Possible/default values are:
 
 	action: feed - show most recent topics/posts (HTML or RSS)
 			online - show users online (HTML)
@@ -50,7 +50,7 @@
 	order:  last_post - show topics ordered by when they were last
 						posted in, giving information about the reply.
 			posted - show topics ordered by when they were first
-					 posted, giving information about the original post.
+					posted, giving information about the original post.
 
 -----------------------------------------------------------------------------*/
 
@@ -294,14 +294,23 @@ if ($action == 'feed')
 		$tid = intval($_GET['tid']);
 
 		// Fetch topic subject
-		$result = $db->query('SELECT t.subject, t.first_post_id FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.moved_to IS NULL AND t.id='.$tid) or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
-		if (!$db->num_rows($result))
+		$query = $db->select(array('subject' => 't.subject', 'first_post_id' => 't.first_post_id'), 'topics AS t');
+
+		$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
+
+		$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.moved_to IS NULL AND t.id = :topic_id';
+
+		$params = array(':group_id' => $pun_user['g_id'], ':topic_id' => $tid);
+
+		$result = $query->run($params);
+		if (empty($result))
 		{
 			http_authenticate_user();
 			exit($lang->t('Bad request'));
 		}
 
-		$cur_topic = $db->fetch_assoc($result);
+		$cur_topic = $result[0];
+		unset ($result, $query, $params);
 
 		if ($pun_config['o_censoring'] == '1')
 			$cur_topic['subject'] = censor_words($cur_topic['subject']);
@@ -316,8 +325,18 @@ if ($action == 'feed')
 		);
 
 		// Fetch $show posts
-		$result = $db->query('SELECT p.id, p.poster, p.message, p.hide_smilies, p.posted, p.poster_id, u.email_setting, u.email, p.poster_email FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id WHERE p.topic_id='.$tid.' ORDER BY p.posted DESC LIMIT '.$show) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-		while ($cur_post = $db->fetch_assoc($result))
+		$query = $db->select(array('pid' => 'p.id', 'poster' => 'p.poster', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'posted_id' => 'p.poster_id', 'email_setting' => 'u.email_setting', 'email' => 'u.email', 'poster_email' => 'p.poster_email'), 'posts AS p');
+
+		$query->InnerJoin('u', 'users AS u', 'u.id = p.poster_id');
+
+		$query->where = 'p.topic_id = :topic_id';
+		$query->order = array('posted' => 'p.posted DESC');
+		$query->limit = $show;
+
+		$params = array(':topic_id' => $tid);
+
+		$result = $query->run($params);
+		foreach ($result as $cur_post)
 		{
 			$cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 
@@ -345,6 +364,8 @@ if ($action == 'feed')
 			$feed['items'][] = $item;
 		}
 
+		unset ($result, $query, $params);
+
 		$output_func = 'output_'.$type;
 		$output_func($feed);
 	}
@@ -352,7 +373,21 @@ if ($action == 'feed')
 	{
 		$order_posted = isset($_GET['order']) && strtolower($_GET['order']) == 'posted';
 		$forum_name = '';
-		$forum_sql = '';
+
+		$post_query = $db->select(array('t.id, t.poster, t.subject, t.posted, t.last_post, t.last_poster, p.message, p.hide_smilies, u.email_setting, u.email, p.poster_id, p.poster_email'), 'topics AS t');
+
+		$post_query->InnerJoin('p', 'posts AS p', 'p.id = '.($order_posted ? 't.first_post_id' : 't.last_post_id');
+
+		$post_query->joins['u'] = new InnerJoin('users AS u');
+		$post_query->joins['u']->on = 'u.id = p.poster_id');
+
+		$post_query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
+
+		$post_query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.moved_to IS NULL';
+		$post_query->order = array('sort' => ($order_posted ? 't.posted' : 't.last_post').' DESC');
+		$post_query->limit = 50;
+
+		$post_params = array(':group_id' => $pun_user['g_id']);
 
 		// Were any forum IDs supplied?
 		if (isset($_GET['fid']) && is_scalar($_GET['fid']) && $_GET['fid'] != '')
@@ -361,14 +396,27 @@ if ($action == 'feed')
 			$fids = array_map('intval', $fids);
 
 			if (!empty($fids))
-				$forum_sql .= ' AND t.forum_id IN('.implode(',', $fids).')';
+			{
+				$post_query->where .= ' AND t.forum_id IN :fids';
+				$post_params[':fids'] = $fids;
+			}
 
 			if (count($fids) == 1)
 			{
 				// Fetch forum name
-				$result = $db->query('SELECT f.forum_name FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fids[0]) or error('Unable to fetch forum name', __FILE__, __LINE__, $db->error());
-				if ($db->num_rows($result))
-					$forum_name = $lang->t('Title separator').$db->result($result);
+				$query = $db->select(array('forum_name' => 'f.forum_name'), 'forums AS f');
+
+				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+
+				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id';
+
+				$params = array(':group_id' => $pun_user['g_id'], ':forum_id' => $fids[0]);
+
+				$result = $query->run($params);
+				if (!empty($result))
+					$forum_name = $lang->t('Title separator').$result[0]['forum_name'];
+
+				unset ($result, $query, $params);
 			}
 		}
 
@@ -379,7 +427,10 @@ if ($action == 'feed')
 			$nfids = array_map('intval', $nfids);
 
 			if (!empty($nfids))
-				$forum_sql .= ' AND t.forum_id NOT IN('.implode(',', $nfids).')';
+			{
+				$post_query->where .= ' AND t.forum_id NOT IN :nfids';
+				$post_params[':nfids'] = $nfids;
+			}
 		}
 
 		// Only attempt to cache if caching is enabled and we have all or a single forum
@@ -401,9 +452,9 @@ if ($action == 'feed')
 				'type'			=>	'topics'
 			);
 
-			// Fetch $show topics
-			$result = $db->query('SELECT t.id, t.poster, t.subject, t.posted, t.last_post, t.last_poster, p.message, p.hide_smilies, u.email_setting, u.email, p.poster_id, p.poster_email FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'posts AS p ON p.id='.($order_posted ? 't.first_post_id' : 't.last_post_id').' INNER JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.moved_to IS NULL'.$forum_sql.' ORDER BY '.($order_posted ? 't.posted' : 't.last_post').' DESC LIMIT 50') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
-			while ($cur_topic = $db->fetch_assoc($result))
+			// Fetch topics
+			$result = $post_query->run($post_params);
+			foreach ($result as $cur_topic)
 			{
 				if ($pun_config['o_censoring'] == '1')
 					$cur_topic['subject'] = censor_words($cur_topic['subject']);
@@ -433,6 +484,8 @@ if ($action == 'feed')
 
 				$feed['items'][] = $item;
 			}
+
+			unset ($result, $post_query, $post_params);
 
 			// Output feed as PHP code
 			if (isset($cache_id))
@@ -471,9 +524,14 @@ else if ($action == 'online' || $action == 'online_full')
 	$num_guests = $num_users = 0;
 	$users = array();
 
-	$result = $db->query('SELECT user_id, ident FROM '.$db->prefix.'online WHERE idle=0 ORDER BY ident', true) or error('Unable to fetch online list', __FILE__, __LINE__, $db->error());
+	$query = $db->select(array('user_id' => 'o.user_id', 'ident' => 'o.ident'), 'online AS o');
+	$query->where = 'o.idle = 0';
+	$query->order = array('ident' => 'o.ident ASC');
 
-	while ($pun_user_online = $db->fetch_assoc($result))
+	$params = array();
+
+	$result = $query->run($params);
+	foreach ($result as $pun_user_online)
 	{
 		if ($pun_user_online['user_id'] > 1)
 		{
@@ -483,6 +541,8 @@ else if ($action == 'online' || $action == 'online_full')
 		else
 			++$num_guests;
 	}
+
+	unset ($result, $query, $params);
 
 	// Send the Content-type header in case the web server is setup to send something else
 	header('Content-type: text/html; charset=utf-8');
@@ -509,8 +569,11 @@ else if ($action == 'stats')
 	// Collect some board statistics
 	$stats = fetch_board_stats();
 
-	$result = $db->query('SELECT SUM(num_topics), SUM(num_posts) FROM '.$db->prefix.'forums') or error('Unable to fetch topic/post count', __FILE__, __LINE__, $db->error());
-	list($stats['total_topics'], $stats['total_posts']) = $db->fetch_row($result);
+	$query = $db->select(array('total_topics' => 'SUM(f.num_topics) AS total_topics', 'total_posts' => 'SUM(num_posts) AS total_posts'), 'forums AS f');
+	$params = array();
+
+	$stats = array_merge($stats, current($query->run($params)));
+	unset ($query, $params);
 
 	// Send the Content-type header in case the web server is setup to send something else
 	header('Content-type: text/html; charset=utf-8');

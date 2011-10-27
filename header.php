@@ -239,8 +239,14 @@ else
 			$num_reports = $cache->get('num_reports');
 			if ($num_reports === Cache::NOT_FOUND)
 			{
-				$result_header = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'reports WHERE zapped IS NULL') or error('Unable to fetch reports info', __FILE__, __LINE__, $db->error());
-				$num_reports = $db->result($result_header);
+				$query = $db->select(array('num_reports' => 'COUNT(r.id) AS num_reports'), 'reports AS r');
+				$query->where = 'r.zapped IS NULL';
+
+				$params = array();
+
+				$result = $query->run($params);
+				$num_reports = $result[0]['num_reports'];
+				unset ($result, $query, $params);
 
 				$cache->set('num_reports', $num_reports);
 			}

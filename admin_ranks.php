@@ -35,11 +35,23 @@ if (isset($_POST['add_rank']))
 		message($lang->t('Must be integer message'));
 
 	// Make sure there isn't already a rank with the same min_posts value
-	$result = $db->query('SELECT 1 FROM '.$db->prefix.'ranks WHERE min_posts='.$min_posts) or error('Unable to fetch rank info', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result))
+	$query = $db->select(array('one' => '1'), 'ranks AS r');
+	$query->where = 'r.min_posts = :min_posts';
+
+	$params = array(':min_posts' => $min_posts);
+
+	$result = $query->run($params);
+	if (!empty($result))
 		message(sprintf($lang->t('Dupe min posts message'), $min_posts));
 
-	$db->query('INSERT INTO '.$db->prefix.'ranks (rank, min_posts) VALUES(\''.$db->escape($rank).'\', '.$min_posts.')') or error('Unable to add rank', __FILE__, __LINE__, $db->error());
+	unset($query, $params, $result);
+
+	$query = $db->insert(array('rank' => ':rank', 'min_posts' => ':min_posts'), 'ranks');
+
+	$params = array(':rank' => $rank, ':min_posts' => $min_posts);
+
+	$query->run($params);
+	unset($query, $params);
 
 	// Regenerate the ranks cache
 	$cache->delete('ranks');
@@ -65,11 +77,24 @@ else if (isset($_POST['update']))
 		message($lang->t('Must be integer message'));
 
 	// Make sure there isn't already a rank with the same min_posts value
-	$result = $db->query('SELECT 1 FROM '.$db->prefix.'ranks WHERE id!='.$id.' AND min_posts='.$min_posts) or error('Unable to fetch rank info', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result))
+	$query = $db->select(array('one' => '1'), 'ranks AS r');
+	$query->where = 'id != :id AND min_posts = :min_posts';
+
+	$params = array(':id' => $id, ':min_posts' => $min_posts);
+
+	$result = $query->run($params);
+	if (!empty($result))
 		message(sprintf($lang->t('Dupe min posts message'), $min_posts));
 
-	$db->query('UPDATE '.$db->prefix.'ranks SET rank=\''.$db->escape($rank).'\', min_posts='.$min_posts.' WHERE id='.$id) or error('Unable to update rank', __FILE__, __LINE__, $db->error());
+	unset($query, $params, $result);
+
+	$query = $db->update(array('rank' => ':rank', 'min_posts' => ':min_posts'), 'ranks');
+	$query->where = 'id = :id';
+
+	$params = array(':rank' => $rank, ':min_posts' => $min_posts, ':id' => $id);
+
+	$query->run($params);
+	unset($query, $params);
 
 	// Regenerate the ranks cache
 	$cache->delete('ranks');
@@ -85,7 +110,13 @@ else if (isset($_POST['remove']))
 
 	$id = intval(key($_POST['remove']));
 
-	$db->query('DELETE FROM '.$db->prefix.'ranks WHERE id='.$id) or error('Unable to delete rank', __FILE__, __LINE__, $db->error());
+	$query = $db->delete('ranks');
+	$query->where = 'id = :id';
+
+	$params = array(':id' => $id);
+
+	$query->run($params);
+	unset($query, $params);
 
 	// Regenerate the ranks cache
 	$cache->delete('ranks');
@@ -135,8 +166,13 @@ generate_admin_menu('ranks');
 						<div class="infldset">
 <?php
 
-$result = $db->query('SELECT id, rank, min_posts FROM '.$db->prefix.'ranks ORDER BY min_posts') or error('Unable to fetch rank list', __FILE__, __LINE__, $db->error());
-if ($db->num_rows($result))
+$query = $db->select(array('id' => 'r.id', 'rank' => 'r.rank', 'min_posts' => 'r.min_posts'), 'ranks AS r');
+$query->order = array('min_posts' => 'r.min_posts ASC');
+
+$result = $db->query($query);
+unset($query);
+
+if (!empty($result))
 {
 
 ?>
@@ -151,7 +187,7 @@ if ($db->num_rows($result))
 							<tbody>
 <?php
 
-	while ($cur_rank = $db->fetch_assoc($result))
+	foreach ($result as $cur_rank)
 		echo "\t\t\t\t\t\t\t\t".'<tr><td class="tcl"><input type="text" name="rank['.$cur_rank['id'].']" value="'.pun_htmlspecialchars($cur_rank['rank']).'" size="24" maxlength="50" /></td><td class="tc2"><input type="text" name="min_posts['.$cur_rank['id'].']" value="'.$cur_rank['min_posts'].'" size="7" maxlength="7" /></td><td><input type="submit" name="update['.$cur_rank['id'].']" value="'.$lang->t('Update').'" />&#160;<input type="submit" name="remove['.$cur_rank['id'].']" value="'.$lang->t('Remove').'" /></td></tr>'."\n";
 
 ?>
@@ -162,6 +198,8 @@ if ($db->num_rows($result))
 }
 else
 	echo "\t\t\t\t\t\t\t".'<p>'.$lang->t('No ranks in list').'</p>'."\n";
+
+unset($result);
 
 ?>
 						</div>

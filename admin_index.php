@@ -77,25 +77,14 @@ else
 
 
 // Get number of current visitors
-$result = $db->query('SELECT COUNT(user_id) FROM '.$db->prefix.'online WHERE idle=0') or error('Unable to fetch online count', __FILE__, __LINE__, $db->error());
-$num_online = $db->result($result);
+$query = $db->select(array('num_users' => 'COUNT(o.user_id) AS num_users'), 'online AS o');
+$query->where = 'o.idle = 0';
 
+$params = array();
 
-// Collect some additional info about MySQL
-if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
-{
-	// Calculate total db size/row count
-	$result = $db->query('SHOW TABLE STATUS LIKE \''.$db->prefix.'%\'') or error('Unable to fetch table status', __FILE__, __LINE__, $db->error());
-
-	$total_records = $total_size = 0;
-	while ($status = $db->fetch_assoc($result))
-	{
-		$total_records += $status['Rows'];
-		$total_size += $status['Data_length'] + $status['Index_length'];
-	}
-
-	$total_size = file_size($total_size);
-}
+$result = $query->run($params);
+$num_online = $result[0]['num_users'];
+unset ($result, $query, $params);
 
 
 // Check for the existence of various PHP opcode caches/optimizers
@@ -161,7 +150,7 @@ generate_admin_menu('index');
 					</dd>
 					<dt><?php echo $lang->t('Database label') ?></dt>
 					<dd>
-						<?php echo implode(' ', $db->get_version())."\n" ?>
+						<?php echo $db->getVersion()."\n" ?>
 <?php if (isset($total_records) && isset($total_size)): ?>						<br /><?php printf($lang->t('Database data rows')."\n", forum_number_format($total_records)) ?>
 						<br /><?php printf($lang->t('Database data size')."\n", $total_size) ?>
 <?php endif; ?>					</dd>

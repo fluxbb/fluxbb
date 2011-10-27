@@ -19,11 +19,25 @@ function fetch_board_stats()
 	{
 		$stats = array();
 
-		$result = $db->query('SELECT COUNT(id)-1 FROM '.$db->prefix.'users WHERE group_id!='.PUN_UNVERIFIED) or error('Unable to fetch total user count', __FILE__, __LINE__, $db->error());
-		$stats['total_users'] = $db->result($result);
+		// Count total registered users
+		$query = $db->select(array('total_users' => '(COUNT(u.id) - 1) AS total_users'), 'users AS u');
+		$query->where = 'u.group_id != :group_id';
 
-		$result = $db->query('SELECT id, username FROM '.$db->prefix.'users WHERE group_id!='.PUN_UNVERIFIED.' ORDER BY registered DESC LIMIT 1') or error('Unable to fetch newest registered user', __FILE__, __LINE__, $db->error());
-		$stats['last_user'] = $db->fetch_assoc($result);
+		$params = array(':group_id' => PUN_UNVERIFIED);
+
+		$stats = array_merge($stats, current($query->run($params)));
+		unset ($query, $params);
+
+		// Fetch last user
+		$query = $db->select(array('id' => 'u.id', 'username' => 'u.username'), 'users AS u');
+		$query->where = 'group_id != :group_id';
+		$query->order = array('registered' => 'u.registered DESC');
+		$query->limit = 1;
+
+		$params = array(':group_id' => PUN_UNVERIFIED);
+
+		$stats['last_user'] = current($query->run($params));
+		unset ($query, $params);
 
 		$cache->set('boardstats', $stats);
 	}
@@ -75,11 +89,21 @@ function check_cookie(&$pun_user)
 		}
 
 		// Check if there's a user with the user ID and password hash from the cookie
-		$result = $db->query('SELECT u.*, g.*, o.logged, o.idle FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id LEFT JOIN '.$db->prefix.'online AS o ON o.user_id=u.id WHERE u.id='.intval($cookie['user_id'])) or error('Unable to fetch user information', __FILE__, __LINE__, $db->error());
-		$pun_user = $db->fetch_assoc($result);
+		$query = $db->select(array('user' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'users AS u');
 
-		// If user authorisation failed
-		if (!isset($pun_user['id']) || forum_hmac($pun_user['password'], $flux_config['cookie']['seed'].'_password_hash') !== $cookie['password_hash'])
+		$query->InnerJoin('g', 'groups AS g', 'u.group_id = g.g_id');
+
+		$query->LeftJoin('o', 'online AS o', 'o.user_id = u.id');
+
+		$query->where = 'u.id = :user_id';
+
+		$params = array(':user_id' => $cookie['user_id']);
+
+		$result = $query->run($params);
+		unset ($query, $params);
+
+		// If the password is invalid
+		if (empty($result) || forum_hmac($result[0]['password'], $flux_config['cookie']['seed'].'_password_hash') !== $cookie['password_hash'])
 		{
 			$expire = $now + 31536000; // The cookie expires after a year
 			pun_setcookie(1, pun_hash(uniqid(rand(), true)), $expire);
@@ -87,6 +111,9 @@ function check_cookie(&$pun_user)
 
 			return;
 		}
+
+		$pun_user = $result[0];
+		unset ($result);
 
 		// Send a new, updated cookie with a new expiration timestamp
 		$expire = ($cookie['expiration_time'] > $now + $pun_config['o_timeout_visit']) ? $now + 1209600 : $now + $pun_config['o_timeout_visit'];
@@ -113,21 +140,12 @@ function check_cookie(&$pun_user)
 			{
 				$pun_user['logged'] = $now;
 
-				// With MySQL/MySQLi/SQLite, REPLACE INTO avoids a user having two rows in the online table
-				switch ($db_type)
-				{
-					case 'mysql':
-					case 'mysqli':
-					case 'mysql_innodb':
-					case 'mysqli_innodb':
-					case 'sqlite':
-						$db->query('REPLACE INTO '.$db->prefix.'online (user_id, ident, logged) VALUES('.$pun_user['id'].', \''.$db->escape($pun_user['username']).'\', '.$pun_user['logged'].')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
-						break;
+				// With non-transactional DBMS REPLACE INTO avoids a user having two rows in the online table
+				$query = $db->replace(array('user_id' => ':user_id', 'ident' => ':ident', 'logged' => ':logged'), 'online', 'ident');
+				$params = array(':user_id' => $pun_user['id'], ':ident' => $pun_user['username'], ':logged' => $pun_user['logged']);
 
-					default:
-						$db->query('INSERT INTO '.$db->prefix.'online (user_id, ident, logged) SELECT '.$pun_user['id'].', \''.$db->escape($pun_user['username']).'\', '.$pun_user['logged'].' WHERE NOT EXISTS (SELECT 1 FROM '.$db->prefix.'online WHERE user_id='.$pun_user['id'].')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
-						break;
-				}
+				$query->run($params);
+				unset ($query, $params);
 
 				// Reset tracked topics
 				set_tracked_topics(null);
@@ -137,12 +155,24 @@ function check_cookie(&$pun_user)
 				// Special case: We've timed out, but no other user has browsed the forums since we timed out
 				if ($pun_user['logged'] < ($now-$pun_config['o_timeout_visit']))
 				{
-					$db->query('UPDATE '.$db->prefix.'users SET last_visit='.$pun_user['logged'].' WHERE id='.$pun_user['id']) or error('Unable to update user visit data', __FILE__, __LINE__, $db->error());
+					$query = $db->update(array('last_visit' => ':logged'), 'users');
+					$query->where = 'id = :user_id';
+
+					$params = array(':logged' => $pun_user['logged'], ':user_id' => $pun_user['id']);
+
+					$query->run($params);
+					unset ($query, $params);
+
 					$pun_user['last_visit'] = $pun_user['logged'];
 				}
 
-				$idle_sql = ($pun_user['idle'] == '1') ? ', idle=0' : '';
-				$db->query('UPDATE '.$db->prefix.'online SET logged='.$now.$idle_sql.' WHERE user_id='.$pun_user['id']) or error('Unable to update online list', __FILE__, __LINE__, $db->error());
+				$query = $db->update(array('logged' => ':now', 'idle' => '0'), 'online');
+				$query->where = 'user_id = :user_id';
+
+				$params = array(':now' => $now, ':user_id' => $pun_user['id']);
+
+				$query->run($params);
+				unset ($query, $params);
 
 				// Update tracked topics with the current expire time
 				if (isset($_COOKIE[$flux_config['cookie']['name'].'_track']))
@@ -182,11 +212,36 @@ function authenticate_user($user, $password, $password_is_hash = false)
 	global $db, $pun_user;
 
 	// Check if there's a user matching $user and $password
-	$result = $db->query('SELECT u.*, g.*, o.logged, o.idle FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON o.user_id=u.id WHERE '.(is_int($user) ? 'u.id='.intval($user) : 'u.username=\''.$db->escape($user).'\'')) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-	$pun_user = $db->fetch_assoc($result);
+	$query = $db->select(array('users' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'users AS u');
 
-	if (!isset($pun_user['id']) ||
-		($password_is_hash && $password != $pun_user['password']) ||
+	$query->InnerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
+
+	$query->LeftJoin('o', 'online AS o', 'o.user_id = u.id');
+
+	$params = array();
+
+	if (is_int($user))
+	{
+		$query->where = 'u.id = :user_id';
+		$params[':user_id'] = $user;
+	}
+	else
+	{
+		$query->where = 'u.username = :username';
+		$params[':username'] = $user;
+	}
+
+	$result = $query->run($params);
+	if (empty($result))
+	{
+		set_default_user();
+		return;
+	}
+
+	$pun_user = $result[0];
+	unset ($result, $query, $params);
+
+	if (($password_is_hash && $password != $pun_user['password']) ||
 		(!$password_is_hash && pun_hash($password) != $pun_user['password']))
 		set_default_user();
 	else
@@ -269,35 +324,46 @@ function set_default_user()
 	$remote_addr = get_remote_address();
 
 	// Fetch guest user
-	$result = $db->query('SELECT u.*, g.*, o.logged, o.last_post, o.last_search FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id LEFT JOIN '.$db->prefix.'online AS o ON o.ident=\''.$remote_addr.'\' WHERE u.id=1') or error('Unable to fetch guest information', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
+	$query = $db->select(array('user' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'last_post' => 'o.last_post', 'last_search' => 'o.last_search'), 'users AS u');
+
+	$query->InnerJoin('g', 'groups AS g', 'u.group_id = g.g_id');
+
+	$query->LeftJoin('o', 'online AS o', 'o.ident = :ident');
+
+	$query->where = 'u.id = 1';
+
+	$params = array(':ident' => $remote_addr);
+
+	$result = $query->run($params);
+	unset ($query, $params);
+
+	if (empty($result))
 		exit('Unable to fetch guest information. Your database must contain both a guest user and a guest user group.');
 
-	$pun_user = $db->fetch_assoc($result);
+	$pun_user = $result[0];
+	unset ($result);
 
 	// Update online list
 	if (!$pun_user['logged'])
 	{
 		$pun_user['logged'] = time();
 
-		// With MySQL/MySQLi/SQLite, REPLACE INTO avoids a user having two rows in the online table
-		switch ($db_type)
-		{
-			case 'mysql':
-			case 'mysqli':
-			case 'mysql_innodb':
-			case 'mysqli_innodb':
-			case 'sqlite':
-				$db->query('REPLACE INTO '.$db->prefix.'online (user_id, ident, logged) VALUES(1, \''.$db->escape($remote_addr).'\', '.$pun_user['logged'].')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
-				break;
+		// With non-transactional DBMS REPLACE INTO avoids a user having two rows in the online table
+		$query = $db->replace(array('user_id' => '1', 'ident' => ':ident', 'logged' => ':logged'), 'online', 'ident');
+		$params = array(':ident' => $remote_addr, ':logged' => $pun_user['logged']);
 
-			default:
-				$db->query('INSERT INTO '.$db->prefix.'online (user_id, ident, logged) SELECT 1, \''.$db->escape($remote_addr).'\', '.$pun_user['logged'].' WHERE NOT EXISTS (SELECT 1 FROM '.$db->prefix.'online WHERE ident=\''.$db->escape($remote_addr).'\')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
-				break;
-		}
+		$query->run($params);
+		unset ($query, $params);
 	}
-	else
-		$db->query('UPDATE '.$db->prefix.'online SET logged='.time().' WHERE ident=\''.$db->escape($remote_addr).'\'') or error('Unable to update online list', __FILE__, __LINE__, $db->error());
+	else {
+		$query = $db->update(array('logged' => ':now'), 'online');
+		$query->where = 'ident = :ident';
+
+		$params = array(':now' => time(), ':ident' => $remote_addr);
+
+		$query->run($params);
+		unset ($query, $params);
+	}
 
 	$pun_user['disp_topics'] = $pun_config['o_disp_topics_default'];
 	$pun_user['disp_posts'] = $pun_config['o_disp_posts_default'];
@@ -393,12 +459,19 @@ function check_bans()
 	$bans_altered = false;
 	$is_banned = false;
 
+	$query = $db->delete('bans AS b');
+	$query->where = 'b.id = :ban_id';
+
 	foreach ($pun_bans as $cur_ban)
 	{
 		// Has this ban expired?
 		if ($cur_ban['expire'] != '' && $cur_ban['expire'] <= time())
 		{
-			$db->query('DELETE FROM '.$db->prefix.'bans WHERE id='.$cur_ban['id']) or error('Unable to delete expired ban', __FILE__, __LINE__, $db->error());
+			$params = array(':ban_id' => $cur_ban['id']);
+
+			$query->run($params);
+			unset ($params);
+
 			$bans_altered = true;
 			continue;
 		}
@@ -429,10 +502,19 @@ function check_bans()
 
 		if ($is_banned)
 		{
-			$db->query('DELETE FROM '.$db->prefix.'online WHERE ident=\''.$db->escape($pun_user['username']).'\'') or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
-			message($lang->t('Ban message').' '.(($cur_ban['expire'] != '') ? $lang->t('Ban message 2').' '.strtolower(format_time($cur_ban['expire'], true)).'. ' : '').(($cur_ban['message'] != '') ? $lang->t('Ban message 3').'<br /><br /><strong>'.pun_htmlspecialchars($cur_ban['message']).'</strong><br /><br />' : '<br /><br />').$lang->t('Ban message 4').' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
+			$query = $db->delete('online');
+			$query->where = 'ident = :username';
+
+			$params = array(':username' => $pun_user['username']);
+
+			$query->run($params);
+			unset ($query, $params);
+
+			message($lang->t('Ban message').' '.(($cur_ban['expire'] != '') ? $lang->t('Ban message 2').' '.strtolower(format_time($cur_ban['expire'], true)).'. ' : '').(($cur_ban['message'] != '') ? $lang->t('Ban message 3').'<br /><br /><strong>'.pun_htmlspecialchars($cur_ban['message']).'</strong><br /><br />' : '<br /><br />').$lang_common['Ban message 4'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
 		}
 	}
+
+	unset ($query);
 
 	// If we removed any expired bans during our run-through, we need to regenerate the bans cache
 	if ($bans_altered)
@@ -472,15 +554,22 @@ function check_username($username, $exclude_id = null)
 		$errors[] = $lang->t('Username censor');
 
 	// Check that the username (or a too similar username) is not already registered
-	$query = ($exclude_id) ? ' AND id!='.$exclude_id : '';
+	$query = $db->select(array('username' => 'u.username'), 'users AS u');
+	$query->where = '(u.username LIKE :username OR u.username LIKE :clean_username) AND u.id > 1';
 
-	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(ucp_preg_replace('%[^\p{L}\p{N}]%u', '', $username)).'\')) AND id>1'.$query) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	$params = array(':username' => $username, ':clean_username' => ucp_preg_replace('%[^\p{L}\p{N}]%u', '', $username));
 
-	if ($db->num_rows($result))
+	if ($exclude_id)
 	{
-		$busy = $db->result($result);
-		$errors[] = $lang->t('Username dupe 1').' '.pun_htmlspecialchars($busy).'. '.$lang->t('Username dupe 2');
+		$query->where .= ' AND u.id != :exclude_id';
+		$params[':exclude_id'] = $exclude_id;
 	}
+
+	$result = $query->run($params);
+	if (!empty($result))
+		$errors[] = $lang->t('Username dupe 1').' '.pun_htmlspecialchars($result[0]['username']).'. '.$lang->t('Username dupe 2');
+
+	unset ($query, $params, $result);
 
 	// Check username for any banned usernames
 	foreach ($pun_bans as $cur_ban)
@@ -504,24 +593,62 @@ function update_users_online()
 	$now = time();
 
 	// Fetch all online list entries that are older than "o_timeout_online"
-	$result = $db->query('SELECT user_id, ident, logged, idle FROM '.$db->prefix.'online WHERE logged<'.($now-$pun_config['o_timeout_online'])) or error('Unable to fetch old entries from online list', __FILE__, __LINE__, $db->error());
-	while ($cur_user = $db->fetch_assoc($result))
+	$query = $db->select(array('user_id' => 'o.user_id', 'ident' => 'o.ident', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'online AS o');
+	$query->where = 'logged < :logged';
+
+	$params = array(':logged' => $now - $pun_config['o_timeout_online']);
+
+	$result = $query->run($params);
+	unset ($query, $params);
+
+	// Query for deleting an online entry
+	$query_delete = $db->delete('online');
+	$query_delete->where = 'ident = :ident';
+
+	// Query for updating users last visit time
+	$query_update_user = $db->update(array('last_visit' => ':logged'), 'users');
+	$query_update_user->where = 'id = :user_id';
+
+	// Query for updating online idle
+	$query_update_online = $db->update(array('idle' => 1), 'online');
+	$query_update_online->where = 'user_id = :user_id';
+
+	foreach ($result as $cur_user)
 	{
 		// If the entry is a guest, delete it
 		if ($cur_user['user_id'] == '1')
-			$db->query('DELETE FROM '.$db->prefix.'online WHERE ident=\''.$db->escape($cur_user['ident']).'\'') or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
+		{
+			$params = array(':ident' => $cur_user['ident']);
+
+			$query_delete->run($params);
+			unset ($params);
+		}
 		else
 		{
 			// If the entry is older than "o_timeout_visit", update last_visit for the user in question, then delete him/her from the online list
-			if ($cur_user['logged'] < ($now-$pun_config['o_timeout_visit']))
+			if ($cur_user['logged'] < ($now - $pun_config['o_timeout_visit']))
 			{
-				$db->query('UPDATE '.$db->prefix.'users SET last_visit='.$cur_user['logged'].' WHERE id='.$cur_user['user_id']) or error('Unable to update user visit data', __FILE__, __LINE__, $db->error());
-				$db->query('DELETE FROM '.$db->prefix.'online WHERE user_id='.$cur_user['user_id']) or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
+				$params = array(':logged' => $cur_user['logged'], ':user_id' => $cur_user['user_id']);
+
+				$query_update_user->run($params);
+				unset ($params);
+
+				$params = array(':ident' => $cur_user['ident']);
+
+				$query_delete->run($params);
+				unset ($params);
 			}
 			else if ($cur_user['idle'] == '0')
-				$db->query('UPDATE '.$db->prefix.'online SET idle=1 WHERE user_id='.$cur_user['user_id']) or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
+			{
+				$params = array(':user_id' => $cur_user['user_id']);
+
+				$query_update_online->run($params);
+				unset ($params);
+			}
 		}
 	}
+
+	unset ($result, $query_delete, $query_update_user, $query_update_online);
 }
 
 
@@ -670,20 +797,49 @@ function update_forum($forum_id)
 {
 	global $db;
 
-	$result = $db->query('SELECT COUNT(id), SUM(num_replies) FROM '.$db->prefix.'topics WHERE forum_id='.$forum_id) or error('Unable to fetch forum topic count', __FILE__, __LINE__, $db->error());
-	list($num_topics, $num_posts) = $db->fetch_row($result);
+	$query = $db->select(array('num_topics' => 'COUNT(t.id) AS num_topics', 'num_replies' => 'SUM(t.num_replies) AS num_replies'), 'topics AS t');
+	$query->where = 't.forum_id = :forum_id';
 
-	$num_posts = $num_posts + $num_topics; // $num_posts is only the sum of all replies (we have to add the topic posts)
+	$params = array(':forum_id' => $forum_id);
 
-	$result = $db->query('SELECT last_post, last_post_id, last_poster FROM '.$db->prefix.'topics WHERE forum_id='.$forum_id.' AND moved_to IS NULL ORDER BY last_post DESC LIMIT 1') or error('Unable to fetch last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result)) // There are topics in the forum
+	$result = $query->run($params);
+
+	$num_topics = $result[0]['num_topics'];
+	$num_posts = $result[0]['num_topics'] + $result[0]['num_replies'];
+
+	unset ($result, $query, $params);
+
+	$query = $db->select(array('last_post' => 't.last_post AS posted', 'last_post_id' => 't.last_post_id AS id', 'last_poster' => 't.last_poster AS poster'), 'topics AS t');
+	$query->where = 't.forum_id = :forum_id AND t.moved_to IS NULL';
+	$query->order = array('last_post' => 't.last_post DESC');
+	$query->limit = 1;
+
+	$params = array(':forum_id' => $forum_id);
+
+	$result = $query->run($params);
+	unset ($query, $params);
+
+	$query = $db->update(array('num_topics' => ':num_topics', 'num_posts' => ':num_posts', 'last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster'), 'forums');
+	$query->where = 'id = :forum_id';
+
+	// There are topics in the forum
+	if (!empty($result))
 	{
-		list($last_post, $last_post_id, $last_poster) = $db->fetch_row($result);
+		$last_post = $result[0];
+		unset ($result);
 
-		$db->query('UPDATE '.$db->prefix.'forums SET num_topics='.$num_topics.', num_posts='.$num_posts.', last_post='.$last_post.', last_post_id='.$last_post_id.', last_poster=\''.$db->escape($last_poster).'\' WHERE id='.$forum_id) or error('Unable to update last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
+		$params = array(':num_topics' => $num_topics, ':num_posts' => $num_posts, ':last_post' => $last_post['posted'], ':last_post_id' => $last_post['id'], ':last_poster' => $last_post['poster'], ':forum_id' => $forum_id);
 	}
-	else // There are no topics
-		$db->query('UPDATE '.$db->prefix.'forums SET num_topics='.$num_topics.', num_posts='.$num_posts.', last_post=NULL, last_post_id=NULL, last_poster=NULL WHERE id='.$forum_id) or error('Unable to update last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
+	// There are no topics
+	else
+	{
+		unset ($result);
+
+		$params = array(':num_topics' => $num_topics, ':num_posts' => $num_posts, ':last_post' => null, ':last_post_id' => null, ':last_poster' => null, ':forum_id' => $forum_id);
+	}
+
+	$query->run($params);
+	unset ($query, $params);
 }
 
 
@@ -713,25 +869,50 @@ function delete_topic($topic_id)
 	global $db;
 
 	// Delete the topic and any redirect topics
-	$db->query('DELETE FROM '.$db->prefix.'topics WHERE id='.$topic_id.' OR moved_to='.$topic_id) or error('Unable to delete topic', __FILE__, __LINE__, $db->error());
+	$query = $db->delete('topics');
+	$query->where = 'id = :topic_id OR moved_to = :topic_id';
+
+	$params = array(':topic_id' => $topic_id);
+
+	$query->run($params);
+	unset($query, $params);
 
 	// Create a list of the post IDs in this topic
-	$post_ids = '';
-	$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE topic_id='.$topic_id) or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
-	while ($row = $db->fetch_row($result))
-		$post_ids .= ($post_ids != '') ? ','.$row[0] : $row[0];
+	$query = $db->select(array('id' => 'p.id'), 'posts AS p');
+	$query->where = 'p.topic_id = :topic_id';
+
+	$params = array(':topic_id' => $topic_id);
+
+	$result = $query->run($params);
+
+	$post_ids = array();
+	foreach ($result as $row)
+		$post_ids[] = $row['id'];
+	unset($query, $params, $result);
 
 	// Make sure we have a list of post IDs
-	if ($post_ids != '')
+	if (!empty($post_ids))
 	{
 		strip_search_index($post_ids);
 
 		// Delete posts in topic
-		$db->query('DELETE FROM '.$db->prefix.'posts WHERE topic_id='.$topic_id) or error('Unable to delete posts', __FILE__, __LINE__, $db->error());
+		$query = $db->delete('posts');
+		$query->where = 'topic_id = :topic_id';
+
+		$params = array(':topic_id' => $topic_id);
+
+		$query->run($params);
+		unset($query, $params);
 	}
 
 	// Delete any subscriptions for this topic
-	$db->query('DELETE FROM '.$db->prefix.'topic_subscriptions WHERE topic_id='.$topic_id) or error('Unable to delete subscriptions', __FILE__, __LINE__, $db->error());
+	$query = $db->delete('topic_subscriptions');
+	$query->where = 'topic_id = :topic_id';
+
+	$params = array(':topic_id' => $topic_id);
+
+	$query->run($params);
+	unset($query, $params);
 }
 
 
@@ -742,32 +923,83 @@ function delete_post($post_id, $topic_id)
 {
 	global $db;
 
-	$result = $db->query('SELECT id, poster, posted FROM '.$db->prefix.'posts WHERE topic_id='.$topic_id.' ORDER BY id DESC LIMIT 2') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-	list($last_id, ,) = $db->fetch_row($result);
-	list($second_last_id, $second_poster, $second_posted) = $db->fetch_row($result);
+	$query = $db->select(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
+	$query->where = 'p.topic_id = :topic_id';
+	$query->order = array('p.id DESC');
+	$query->limit = 2;
+
+	$params = array(':topic_id' => $topic_id);
+
+	$result = $query->run($params);
+
+	if (count($result) > 0)
+		$last_id = $result[0]['id'];
+
+	if (count($result) > 1)
+		list($second_last_id, $second_poster, $second_posted) = array($result[1]['id'], $result[1]['poster'], $result[1]['posted']);
+	else
+		list($second_last_id, $second_poster, $second_posted) = array('', '', '');
+
+	unset($query, $params, $result);
 
 	// Delete the post
-	$db->query('DELETE FROM '.$db->prefix.'posts WHERE id='.$post_id) or error('Unable to delete post', __FILE__, __LINE__, $db->error());
+	$query = $db->delete('posts');
+	$query->where = 'id = :post_id';
+
+	$params = array(':post_id' => $post_id);
+
+	$query->run($params);
+	unset($query, $params);
 
 	strip_search_index($post_id);
 
 	// Count number of replies in the topic
-	$result = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'posts WHERE topic_id='.$topic_id) or error('Unable to fetch post count for topic', __FILE__, __LINE__, $db->error());
-	$num_replies = $db->result($result, 0) - 1;
+	$query = $db->select(array('post_count' => 'COUNT(p.id)'), 'posts AS p');
+	$query->where = 'topic_id = :topic_id';
+
+	$params = array(':topic_id' => $topic_id);
+
+	$result = $query->run($params);
+	$num_replies = $result[0]['post_count'] - 1;
+	unset($query, $params, $result);
 
 	// If the message we deleted is the most recent in the topic (at the end of the topic)
 	if ($last_id == $post_id)
 	{
 		// If there is a $second_last_id there is more than 1 reply to the topic
 		if (!empty($second_last_id))
-			$db->query('UPDATE '.$db->prefix.'topics SET last_post='.$second_posted.', last_post_id='.$second_last_id.', last_poster=\''.$db->escape($second_poster).'\', num_replies='.$num_replies.' WHERE id='.$topic_id) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+		{
+			$query = $db->update(array('last_post' => ':second_posted', 'last_post_id' => ':second_last_id', 'last_poster' => ':second_poster', 'num_replies' => ':num_replies'), 'topics');
+			$query->where = 'id = :topic_id';
+
+			$params = array(':second_posted' => $second_posted, ':second_last_id' => $second_last_id, ':second_poster' => $second_poster, ':num_replies' => $num_replies, ':topic_id' => $topic_id);
+
+			$query->run($params);
+			unset($query, $params);
+		}
 		else
+		{
 			// We deleted the only reply, so now last_post/last_post_id/last_poster is posted/id/poster from the topic itself
-			$db->query('UPDATE '.$db->prefix.'topics SET last_post=posted, last_post_id=id, last_poster=poster, num_replies='.$num_replies.' WHERE id='.$topic_id) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+			$query = $db->update(array('last_post' => 'posted', 'last_post_id' => 'id', 'last_poster' => 'poster', 'num_replies' => ':num_replies'), 'topics');
+			$query->where = 'id = :topic_id';
+
+			$params = array(':num_replies' => $num_replies, ':topic_id' => $topic_id);
+
+			$query->run($params);
+			unset($query, $params);
+		}
 	}
 	else
+	{
 		// Otherwise we just decrement the reply counter
-		$db->query('UPDATE '.$db->prefix.'topics SET num_replies='.$num_replies.' WHERE id='.$topic_id) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+		$query = $db->update(array('num_replies' => ':num_replies'), 'topics');
+		$query->where = 'id = :topic_id';
+
+		$params = array(':num_replies' => $num_replies, ':topic_id' => $topic_id);
+
+		$query->run($params);
+		unset($query, $params);
+	}
 }
 
 
@@ -787,13 +1019,17 @@ function censor_words($text)
 		{
 			$censors = array();
 
-			$result = $db->query('SELECT search_for, replace_with FROM '.$db->prefix.'censoring') or error('Unable to fetch censoring list', __FILE__, __LINE__, $db->error());
-			while ($cur_censor = $db->fetch_assoc($result))
+			$query = $db->select(array('search_for' => 'c.search_for', 'replace_with' => 'c.replace_with'), 'censoring AS c');
+			$params = array();
+
+			$result = $query->run($params);
+			foreach ($result as $cur_censor)
 			{
 				$cur_censor['search_for'] = '/(?<=[^\p{L}\p{N}])('.str_replace('\*', '[\p{L}\p{N}]*?', preg_quote($cur_censor['search_for'], '/')).')(?=[^\p{L}\p{N}])/iu';
 				$censors[$cur_censor['search_for']] = $cur_censor['replace_with'];
 			}
 
+			unset ($result, $query, $params);
 			$cache->set('censors', $censors);
 		}
 	}
@@ -832,9 +1068,13 @@ function get_title($user)
 			$pun_ranks = array();
 
 			// Get the rank list from the DB
-			$result = $db->query('SELECT * FROM '.$db->prefix.'ranks ORDER BY min_posts') or error('Unable to fetch rank list', __FILE__, __LINE__, $db->error());
-			while ($cur_rank = $db->fetch_assoc($result))
-				$pun_ranks[] = $cur_rank;
+			$query = $db->select(array('ranks' => 'r.*'), 'ranks AS r');
+			$query->order = array('min_posts' => 'r.min_posts ASC');
+
+			$params = array();
+
+			$pun_ranks = $query->run($params);
+			unset ($query, $params);
 
 			$cache->set('ranks', $pun_ranks);
 		}
@@ -939,7 +1179,7 @@ function paginate($num_pages, $cur_page, $link)
 //
 function message($message, $no_back_link = false)
 {
-	global $db, $lang, $pun_config, $pun_start, $tpl_main, $pun_user;
+	global $db, $cache, $lang, $pun_config, $pun_start, $tpl_main, $pun_user;
 
 	if (!defined('PUN_HEADER'))
 	{
@@ -1321,7 +1561,7 @@ function maintenance_message()
 //
 function redirect($destination_url, $message)
 {
-	global $db, $pun_config, $lang, $pun_user;
+	global $db, $cache, $pun_config, $lang, $pun_user;
 
 	// Prefix with base_url (unless there's already a valid URI)
 	if (strpos($destination_url, 'http://') !== 0 && strpos($destination_url, 'https://') !== 0 && strpos($destination_url, '/') !== 0)
@@ -1429,7 +1669,7 @@ function redirect($destination_url, $message)
 	ob_start();
 
 	// End the transaction
-	$db->end_transaction();
+	$db->commitTransaction();
 
 	// Display executed queries (if enabled)
 	if (defined('PUN_SHOW_QUERIES'))
@@ -1442,7 +1682,7 @@ function redirect($destination_url, $message)
 
 
 	// Close the db connection (and free up any result data)
-	$db->close();
+	unset ($db);
 
 	exit($tpl_redir);
 }
@@ -1888,7 +2128,7 @@ function display_saved_queries()
 	global $db, $lang;
 
 	// Get the queries so that we can print them out
-	$saved_queries = $db->get_saved_queries();
+	$saved_queries = $db->getDebugQueries();
 
 ?>
 
@@ -1906,15 +2146,15 @@ function display_saved_queries()
 			<tbody>
 <?php
 
-	$query_time_total = 0.0;
+	$query_time_total = 0;
 	foreach ($saved_queries as $cur_query)
 	{
-		$query_time_total += $cur_query[1];
+		$query_time_total += $cur_query['duration'];
 
 ?>
 				<tr>
-					<td class="tcl"><?php echo ($cur_query[1] != 0) ? $cur_query[1] : '&#160;' ?></td>
-					<td class="tcr"><?php echo pun_htmlspecialchars($cur_query[0]) ?></td>
+					<td class="tcl"><?php echo forum_number_format($cur_query['duration'], 5) ?></td>
+					<td class="tcr"><?php echo pun_htmlspecialchars($cur_query['sql']) ?></td>
 				</tr>
 <?php
 
@@ -1922,7 +2162,7 @@ function display_saved_queries()
 
 ?>
 				<tr>
-					<td class="tcl" colspan="2"><?php printf($lang->t('Total query time'), $query_time_total.' s') ?></td>
+					<td class="tcl" colspan="2"><?php printf($lang->t('Total query time'), forum_number_format($query_time_total, 5).' s') ?></td>
 				</tr>
 			</tbody>
 			</table>

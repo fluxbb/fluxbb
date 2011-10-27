@@ -19,11 +19,24 @@ if ($id < 1)
 	message($lang->t('Bad request'));
 
 // Fetch some info about the post, the topic and the forum
-$result = $db->query('SELECT f.id AS fid, f.forum_name, f.moderators, f.redirect_url, fp.post_replies, fp.post_topics, t.id AS tid, t.subject, t.first_post_id, t.closed, p.posted, p.poster, p.poster_id, p.message, p.hide_smilies FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.id='.$id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-if (!$db->num_rows($result))
+$query = $db->select(array('fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'redirect_url' => 'f.redirect_url', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics', 'tid' => 't.id AS tid', 'subject' => 't.subject', 'first_post_id' => 't.first_post_id', 'closed' => 't.closed', 'posted' => 'p.posted', 'poster' => 'p.poster', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies'), 'posts AS p');
+
+$query->InnerJoin('t', 'topics AS t', 't.id = p.topic_id');
+
+$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
+
+$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+
+$query->where = '(fp.read_forum IS NULL OR fp.read_forum=1) AND p.id = :post_id';
+
+$params = array(':group_id' => $pun_user['g_id'], ':post_id' => $id);
+
+$result = $query->run($params);
+if (empty($result))
 	message($lang->t('Bad request'));
 
-$cur_post = $db->fetch_assoc($result);
+$cur_post = $result[0];
+unset($query, $params, $result);
 
 if ($pun_config['o_censoring'] == '1')
 	$cur_post['subject'] = censor_words($cur_post['subject']);
@@ -68,8 +81,16 @@ if (isset($_POST['delete']))
 		update_forum($cur_post['fid']);
 
 		// Redirect towards the previous post
-		$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE topic_id='.$cur_post['tid'].' AND id < '.$id.' ORDER BY id DESC LIMIT 1') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-		$post_id = $db->result($result);
+		$query = $db->select(array('id' => 'p.id'), 'posts AS p');
+		$query->where = 'p.topic_id = :topic_id AND p.id < :post_id';
+		$query->order = array('id' => 'p.id DESC');
+		$query->limit = 1;
+
+		$params = array(':topic_id' => $cur_post['tid'], ':post_id' => $id);
+
+		$result = $query->run($params);
+		$post_id = $result[0]['id'];
+		unset($query, $params, $result);
 
 		redirect('viewtopic.php?pid='.$post_id.'#p'.$post_id, $lang->t('Post del redirect'));
 	}

@@ -594,13 +594,13 @@ else
 		case 'mysqli':
 		case 'mysql_innodb':
 		case 'mysqli_innodb':
-			$mysql_info = $db->get_version();
+			$mysql_info = $db->getVersion();
 			if (version_compare($mysql_info['version'], MIN_MYSQL_VERSION, '<'))
 				error(sprintf($lang->t('You are running error'), 'MySQL', $mysql_info['version'], FORUM_VERSION, MIN_MYSQL_VERSION));
 			break;
 
 		case 'pgsql':
-			$pgsql_info = $db->get_version();
+			$pgsql_info = $db->getVersion();
 			if (version_compare($pgsql_info['version'], MIN_PGSQL_VERSION, '<'))
 				error(sprintf($lang->t('You are running error'), 'PostgreSQL', $pgsql_info['version'], FORUM_VERSION, MIN_PGSQL_VERSION));
 			break;
@@ -628,7 +628,7 @@ else
 
 
 	// Start a transaction
-	$db->start_transaction();
+	$db->startTransaction();
 
 
 	// Create all tables
@@ -1577,124 +1577,146 @@ else
 	$db->query('INSERT INTO '.$db->prefix.'groups ('.($db_type != 'pgsql' ? 'g_id, ' : '').'g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood, g_report_flood) VALUES('.($db_type != 'pgsql' ? '4, ' : '').'\''.$db->escape($lang->t('Members')).'\', NULL, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 60, 30, 60, 60)') or error('Unable to add group', __FILE__, __LINE__, $db->error());
 
 	// Insert guest and first admin user
-	$db->query('INSERT INTO '.$db_prefix.'users (group_id, username, password, email) VALUES(3, \''.$db->escape($lang->t('Guest')).'\', \''.$db->escape($lang->t('Guest')).'\', \''.$db->escape($lang->t('Guest')).'\')')
-		or error('Unable to add guest user. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+	$query = $db->insert(array('group_id' => ':group_id', 'username' => ':username', 'password' => ':password', 'email' => ':email'), 'users');
+	$params = array(':group_id' => 3, ':username' => $lang->t('Guest'), ':password', $lang->t('Guest'), ':email' => $lang->t('Guest'));
+	$query->run($params);
+	unset($query, $params);
 
-	$db->query('INSERT INTO '.$db_prefix.'users (group_id, username, password, email, language, style, num_posts, last_post, registered, registration_ip, last_visit) VALUES(1, \''.$db->escape($username).'\', \''.pun_hash($password1).'\', \''.$email.'\', \''.$db->escape($default_lang).'\', \''.$db->escape($default_style).'\', 1, '.$now.', '.$now.', \''.get_remote_address().'\', '.$now.')')
-		or error('Unable to add administrator user. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+	$query = $db->insert(array('group_id' => ':group_id', 'username' => ':username', 'password' => ':password', 'email' => ':email', 'language' => ':language', 'style' => ':style', 'num_posts' => ':num_posts', 'last_post' => ':last_post', 'registered' => ':registered', 'registration_ip' => ':registration_ip', 'last_visit' => ':last_visit'), 'users');
+	$params = array(':group_id' => 1, ':username' => $username, ':password' => pun_hash($password1), ':email' => $email, ':language' => $default_lang, ':style' => $default_style, ':num_posts' => 1, ':last_post' => $now, ':registered' => $now, ':registration_ip' => get_remote_address(), ':last_visit' => $now);
+	$query->run($params);
+	unset($query, $params);
 
 	// Enable/disable avatars depending on file_uploads setting in PHP configuration
 	$avatars = in_array(strtolower(@ini_get('file_uploads')), array('on', 'true', '1')) ? 1 : 0;
 
 	// Insert config data
 	$config = array(
-		'o_cur_version'				=> "'".FORUM_VERSION."'",
-		'o_database_revision'		=> "'".FORUM_DB_REVISION."'",
-		'o_searchindex_revision'	=> "'".FORUM_SI_REVISION."'",
-		'o_parser_revision'			=> "'".FORUM_PARSER_REVISION."'",
-		'o_board_title'				=> "'".$db->escape($title)."'",
-		'o_board_desc'				=> "'".$db->escape($description)."'",
-		'o_default_timezone'		=> "'0'",
-		'o_time_format'				=> "'H:i:s'",
-		'o_date_format'				=> "'Y-m-d'",
-		'o_timeout_visit'			=> "'1800'",
-		'o_timeout_online'			=> "'300'",
-		'o_redirect_delay'			=> "'1'",
-		'o_show_version'			=> "'0'",
-		'o_show_user_info'			=> "'1'",
-		'o_show_post_count'			=> "'1'",
-		'o_signatures'				=> "'1'",
-		'o_smilies'					=> "'1'",
-		'o_smilies_sig'				=> "'1'",
-		'o_make_links'				=> "'1'",
-		'o_default_lang'			=> "'".$db->escape($default_lang)."'",
-		'o_default_style'			=> "'".$db->escape($default_style)."'",
-		'o_default_user_group'		=> "'4'",
-		'o_topic_review'			=> "'15'",
-		'o_disp_topics_default'		=> "'30'",
-		'o_disp_posts_default'		=> "'25'",
-		'o_indent_num_spaces'		=> "'4'",
-		'o_quote_depth'				=> "'3'",
-		'o_quickpost'				=> "'1'",
-		'o_users_online'			=> "'1'",
-		'o_censoring'				=> "'0'",
-		'o_ranks'					=> "'1'",
-		'o_show_dot'				=> "'0'",
-		'o_topic_views'				=> "'1'",
-		'o_quickjump'				=> "'1'",
-		'o_gzip'					=> "'0'",
-		'o_additional_navlinks'		=> "''",
-		'o_report_method'			=> "'0'",
-		'o_regs_report'				=> "'0'",
-		'o_default_email_setting'	=> "'1'",
-		'o_mailing_list'			=> "'".$email."'",
-		'o_avatars'					=> "'".$avatars."'",
-		'o_avatars_dir'				=> "'img/avatars'",
-		'o_avatars_width'			=> "'60'",
-		'o_avatars_height'			=> "'60'",
-		'o_avatars_size'			=> "'10240'",
-		'o_search_all_forums'		=> "'1'",
-		'o_base_url'				=> "'".$db->escape($base_url)."'",
-		'o_admin_email'				=> "'".$email."'",
-		'o_webmaster_email'			=> "'".$email."'",
-		'o_forum_subscriptions'		=> "'1'",
-		'o_topic_subscriptions'		=> "'1'",
-		'o_smtp_host'				=> "NULL",
-		'o_smtp_user'				=> "NULL",
-		'o_smtp_pass'				=> "NULL",
-		'o_smtp_ssl'				=> "'0'",
-		'o_regs_allow'				=> "'1'",
-		'o_regs_verify'				=> "'0'",
-		'o_announcement'			=> "'0'",
-		'o_announcement_message'	=> "'".$db->escape($lang->t('Announcement'))."'",
-		'o_rules'					=> "'0'",
-		'o_rules_message'			=> "'".$db->escape($lang->t('Rules'))."'",
-		'o_maintenance'				=> "'0'",
-		'o_maintenance_message'		=> "'".$db->escape($lang->t('Maintenance message'))."'",
-		'o_default_dst'				=> "'0'",
-		'o_feed_type'				=> "'2'",
-		'o_feed_ttl'				=> "'0'",
-		'p_message_bbcode'			=> "'1'",
-		'p_message_img_tag'			=> "'1'",
-		'p_message_all_caps'		=> "'1'",
-		'p_subject_all_caps'		=> "'1'",
-		'p_sig_all_caps'			=> "'1'",
-		'p_sig_bbcode'				=> "'1'",
-		'p_sig_img_tag'				=> "'0'",
-		'p_sig_length'				=> "'400'",
-		'p_sig_lines'				=> "'4'",
-		'p_allow_banned_email'		=> "'1'",
-		'p_allow_dupe_email'		=> "'0'",
-		'p_force_guest_email'		=> "'1'"
+		'o_cur_version'				=> FORUM_VERSION,
+		'o_database_revision'		=> FORUM_DB_REVISION,
+		'o_searchindex_revision'	=> FORUM_SI_REVISION,
+		'o_parser_revision'			=> FORUM_PARSER_REVISION,
+		'o_board_title'				=> $title,
+		'o_board_desc'				=> $description,
+		'o_default_timezone'		=> 0,
+		'o_time_format'				=> 'H:i:s',
+		'o_date_format'				=> 'Y-m-d',
+		'o_timeout_visit'			=> 1800,
+		'o_timeout_online'			=> 300,
+		'o_redirect_delay'			=> 1,
+		'o_show_version'			=> 0,
+		'o_show_user_info'			=> 1,
+		'o_show_post_count'			=> 1,
+		'o_signatures'				=> 1,
+		'o_smilies'					=> 1,
+		'o_smilies_sig'				=> 1,
+		'o_make_links'				=> 1,
+		'o_default_lang'			=> $default_lang,
+		'o_default_style'			=> $default_style,
+		'o_default_user_group'		=> 4,
+		'o_topic_review'			=> 15,
+		'o_disp_topics_default'		=> 30,
+		'o_disp_posts_default'		=> 25,
+		'o_indent_num_spaces'		=> 4,
+		'o_quote_depth'				=> 3,
+		'o_quickpost'				=> 1,
+		'o_users_online'			=> 1,
+		'o_censoring'				=> 0,
+		'o_ranks'					=> 1,
+		'o_show_dot'				=> 0,
+		'o_topic_views'				=> 1,
+		'o_quickjump'				=> 1,
+		'o_gzip'					=> 0,
+		'o_additional_navlinks'		=> '',
+		'o_report_method'			=> 0,
+		'o_regs_report'				=> 0,
+		'o_default_email_setting'	=> 1,
+		'o_mailing_list'			=> $email,
+		'o_avatars'					=> $avatars,
+		'o_avatars_dir'				=> 'img/avatars',
+		'o_avatars_width'			=> 60,
+		'o_avatars_height'			=> 60,
+		'o_avatars_size'			=> 10240,
+		'o_search_all_forums'		=> 1,
+		'o_base_url'				=> $base_url,
+		'o_admin_email'				=> $email,
+		'o_webmaster_email'			=> $email,
+		'o_forum_subscriptions'		=> 1,
+		'o_topic_subscriptions'		=> 1,
+		'o_smtp_host'				=> NULL,
+		'o_smtp_user'				=> NULL,
+		'o_smtp_pass'				=> NULL,
+		'o_smtp_ssl'				=> 0,
+		'o_regs_allow'				=> 1,
+		'o_regs_verify'				=> 0,
+		'o_announcement'			=> 0,
+		'o_announcement_message'	=> $lang->t('Announcement'),
+		'o_rules'					=> 0,
+		'o_rules_message'			=> $lang->t('Rules'),
+		'o_maintenance'				=> 0,
+		'o_maintenance_message'		=> $lang->t('Maintenance message'),
+		'o_default_dst'				=> 0,
+		'o_feed_type'				=> 2,
+		'o_feed_ttl'				=> 0,
+		'p_message_bbcode'			=> 1,
+		'p_message_img_tag'			=> 1,
+		'p_message_all_caps'		=> 1,
+		'p_subject_all_caps'		=> 1,
+		'p_sig_all_caps'			=> 1,
+		'p_sig_bbcode'				=> 1,
+		'p_sig_img_tag'				=> 0,
+		'p_sig_length'				=> 400,
+		'p_sig_lines'				=> 4,
+		'p_allow_banned_email'		=> 1,
+		'p_allow_dupe_email'		=> 0,
+		'p_force_guest_email'		=> 1
 	);
+
+	$query = $db->insert(array('conf_name' => ':conf_name', 'conf_value' => ':conf_value'), 'config');
 
 	foreach ($config as $conf_name => $conf_value)
 	{
-		$db->query('INSERT INTO '.$db_prefix."config (conf_name, conf_value) VALUES('$conf_name', $conf_value)")
-			or error('Unable to insert into table '.$db_prefix.'config. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+		$params = array(':conf_name' => $conf_name, ':conf_value' => $conf_value);
+		$query->run($params);
+		unset($params);
 	}
+	unset($query);
 
 	// Insert some other default data
 	$subject = $lang->t('Test post');
 	$message = $lang->t('Message');
 
-	$db->query('INSERT INTO '.$db_prefix.'ranks (rank, min_posts) VALUES(\''.$db->escape($lang->t('New member')).'\', 0)')
-		or error('Unable to insert into table '.$db_prefix.'ranks. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+	$query = $db->insert(array('rank' => ':rank', 'min_posts' => ':min_posts'), 'ranks');
 
-	$db->query('INSERT INTO '.$db_prefix.'ranks (rank, min_posts) VALUES(\''.$db->escape($lang->t('Member')).'\', 10)')
-		or error('Unable to insert into table '.$db_prefix.'ranks. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+	// Insert default ranks
+	$params = array(':rank' => $lang->t('New member'), ':min_posts' => 0);
+	$query->run($params);
 
-	$db->query('INSERT INTO '.$db_prefix.'categories (cat_name, disp_position) VALUES(\''.$db->escape($lang->t('Test category')).'\', 1)')
-		or error('Unable to insert into table '.$db_prefix.'categories. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+	$params = array(':rank' => $lang->t('Member'), ':min_posts' => 10);
+	$query->run($params);
+	unset($query, $params);
 
-	$db->query('INSERT INTO '.$db_prefix.'forums (forum_name, forum_desc, num_topics, num_posts, last_post, last_post_id, last_poster, disp_position, cat_id) VALUES(\''.$db->escape($lang->t('Test forum')).'\', \''.$db->escape($lang->t('This is just a test forum')).'\', 1, 1, '.$now.', 1, \''.$db->escape($username).'\', 1, 1)')
-		or error('Unable to insert into table '.$db_prefix.'forums. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+	// Insert first category and forum
+	$query = $db->insert(array('cat_name' => ':cat_name', 'disp_position' => ':disp_position'), 'categories');
+	$params = array(':cat_name' => $lang->t('Test category'), ':disp_position' => 1);
+	$query->run($params);
+	unset($query, $params);
 
-	$db->query('INSERT INTO '.$db_prefix.'topics (poster, subject, posted, first_post_id, last_post, last_post_id, last_poster, forum_id) VALUES(\''.$db->escape($username).'\', \''.$db->escape($subject).'\', '.$now.', 1, '.$now.', 1, \''.$db->escape($username).'\', 1)')
-		or error('Unable to insert into table '.$db_prefix.'topics. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+	$query = $db->insert(array('forum_name' => ':forum_name', 'forum_desc' => ':forum_desc', 'num_topics' => ':num_topics', 'num_posts' => ':num_posts', 'last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'disp_position' => ':disp_position', 'cat_id' => ':cat_id'), 'forums');
+	$params = array(':forum_name' => $lang->t('Test forum'), ':forum_desc' => $lang->t('This is just a test forum'), ':num_topics' => 1, ':num_posts' => 1, ':last_post' => $now, ':last_post_id' => 1, ':last_poster' => $username, ':disp_position' => 1, ':cat_id' => 1);
+	$query->run($params);
+	unset($query, $params);
 
-	$db->query('INSERT INTO '.$db_prefix.'posts (poster, poster_id, poster_ip, message, posted, topic_id) VALUES(\''.$db->escape($username).'\', 2, \''.get_remote_address().'\', \''.$db->escape($message).'\', '.$now.', 1)')
-		or error('Unable to insert into table '.$db_prefix.'posts. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+	// Insert first topic and post
+	$query = $db->insert(array('poster' => ':poster', 'subject' => ':subject', 'posted' => ':posted', 'first_post_id' => ':first_post_id', 'last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'forum_id' => ':forum_id'), 'topics');
+	$params = array(':poster' => $username, ':subject' => $subject, ':posted' => $now, ':first_post_id' => 1, ':last_post' => $now, ':last_post_id' => 1, ':last_poster' => $username, ':forum_id' => 1);
+	$query->run($params);
+	unset($query, $params);
+
+	$query = $db->insert(array('poster' => ':poster', 'poster_id' => ':poster_id', 'poster_ip' => ':poster_ip', 'message' => ':message', 'posted' => ':posted', 'topic_id' => ':topic_id'), 'posts');
+	$params = array(':poster' => $username, ':poster_id' => 2, ':poster_ip' => get_remote_address(), ':message' => $message, ':posted' => $now, ':topic_id' => 1);
+	$query->run($params);
+	unset($query, $params);
 
 	// Index the test post so searching for it works
 	require PUN_ROOT.'include/search_idx.php';

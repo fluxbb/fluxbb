@@ -102,11 +102,13 @@ define('PUN_MOD', 2);
 define('PUN_GUEST', 3);
 define('PUN_MEMBER', 4);
 
-// Load DB abstraction layer and connect
-require PUN_ROOT.'include/dblayer/common_db.php';
+// Load the DB module
+require PUN_ROOT.'modules/database/src/Database/Adapter.php';
+require PUN_ROOT.'modules/database/src/Database/Query.php';
+$db = Flux_Database_Adapter::factory($flux_config['db']['type'], $flux_config['db']);
 
 // Start a transaction
-$db->start_transaction();
+$db->startTransaction();
 
 // Load cached config
 $pun_config = $cache->get('config');
@@ -115,9 +117,14 @@ if ($pun_config === Cache::NOT_FOUND)
 	$pun_config = array();
 
 	// Get the forum config from the DB
-	$result = $db->query('SELECT * FROM '.$db->prefix.'config') or error('Unable to fetch forum config', __FILE__, __LINE__, $db->error());
-	while ($cur_config_item = $db->fetch_row($result))
-		$pun_config[$cur_config_item[0]] = $cur_config_item[1];
+	$query = $db->select(array('conf_name' => 'c.conf_name', 'conf_value' => 'c.conf_value'), 'config AS c');
+	$params = array();
+
+	$result = $query->run($params);
+	foreach ($result as $cur_config_item)
+		$pun_config[$cur_config_item['conf_name']] = $cur_config_item['conf_value'];
+
+	unset ($query, $params, $result);
 
 	$cache->set('config', $pun_config);
 }
@@ -167,12 +174,12 @@ if ($pun_config['o_maintenance'] && $pun_user['g_id'] > PUN_ADMIN && !defined('P
 $pun_bans = $cache->get('bans');
 if ($pun_bans === Cache::NOT_FOUND)
 {
-	$pun_bans = array();
-
 	// Get the ban list from the DB
-	$result = $db->query('SELECT * FROM '.$db->prefix.'bans') or error('Unable to fetch ban list', __FILE__, __LINE__, $db->error());
-	while ($cur_ban = $db->fetch_assoc($result))
-		$pun_bans[] = $cur_ban;
+	$query = $db->select(array('id' => 'b.id', 'username' => 'b.username', 'ip' => 'b.ip', 'email' => 'b.email', 'message' => 'b.message', 'expire' => 'b.expire', 'ban_creator' => 'b.ban_creator'), 'bans AS b');
+	$params = array();
+
+	$pun_bans = $query->run($params);
+	unset ($query, $params);
 
 	$cache->set('bans', $pun_bans);
 }

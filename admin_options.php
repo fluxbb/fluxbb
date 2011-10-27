@@ -188,19 +188,22 @@ if (isset($_POST['form_sent']))
 	if ($form['timeout_online'] >= $form['timeout_visit'])
 		message($lang->t('Timeout error message'));
 
+	$query = $db->update(array('conf_value' => ':value'), 'config');
+	$query->where = 'conf_name = :name';
+
 	foreach ($form as $key => $input)
 	{
 		// Only update values that have changed
 		if (array_key_exists('o_'.$key, $pun_config) && $pun_config['o_'.$key] != $input)
 		{
-			if ($input != '' || is_int($input))
-				$value = '\''.$db->escape($input).'\'';
-			else
-				$value = 'NULL';
+			$params = array(':name' => 'o_'.$key, ':value' => $input != '' || is_int($input) ? $input : 'NULL');
 
-			$db->query('UPDATE '.$db->prefix.'config SET conf_value='.$value.' WHERE conf_name=\'o_'.$db->escape($key).'\'') or error('Unable to update board config', __FILE__, __LINE__, $db->error());
+			$query->run($params);
+			unset ($params);
 		}
 	}
+
+	unset ($query);
 
 	// Regenerate the config cache
 	$cache->delete('config');
