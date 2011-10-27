@@ -188,7 +188,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 		// Declare here to stop array_keys() and array_diff() from complaining if not set
 		$cur_words = array('post' => array(), 'subject' => array());
 
-		$query = $db->select(array('wid' => 'w.id', 'word' => 'w.word', 'subject_match' => 'w.subject_match'), 'search_words AS w');
+		$query = $db->select(array('wid' => 'w.id', 'word' => 'w.word', 'subject_match' => 'm.subject_match'), 'search_words AS w');
 
 		$query->InnerJoin('m', 'search_matches AS m', 'w.id = m.word_id');
 
@@ -288,7 +288,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 		$subject_match = ($match_in == 'subject') ? 1 : 0;
 
 		if (!empty($wordlist))
-			$db->query('INSERT INTO '.$db->prefix.'search_matches (post_id, word_id, subject_match) SELECT '.$post_id.', id, '.$subject_match.' FROM '.$db->prefix.'search_words WHERE word IN(\''.implode('\',\'', array_map(array($db, 'escape'), $wordlist)).'\')') or error('Unable to insert search index word matches', __FILE__, __LINE__, $db->error());
+			$db->query('INSERT INTO '.$db->prefix.'search_matches (post_id, word_id, subject_match) SELECT '.$post_id.', id, '.$subject_match.' FROM '.$db->prefix.'search_words WHERE word IN('.implode(',', array_map(array($db, 'quote'), $wordlist)).')') or error('Unable to insert search index word matches', __FILE__, __LINE__, $db->error());
 	}
 
 	unset($words);
