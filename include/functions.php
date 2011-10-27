@@ -510,7 +510,7 @@ function check_bans()
 			$query->run($params);
 			unset ($query, $params);
 
-			message($lang->t('Ban message').' '.(($cur_ban['expire'] != '') ? $lang->t('Ban message 2').' '.strtolower(format_time($cur_ban['expire'], true)).'. ' : '').(($cur_ban['message'] != '') ? $lang->t('Ban message 3').'<br /><br /><strong>'.pun_htmlspecialchars($cur_ban['message']).'</strong><br /><br />' : '<br /><br />').$lang_common['Ban message 4'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
+			message($lang->t('Ban message').' '.(($cur_ban['expire'] != '') ? $lang->t('Ban message 2').' '.strtolower(format_time($cur_ban['expire'], true)).'. ' : '').(($cur_ban['message'] != '') ? $lang->t('Ban message 3').'<br /><br /><strong>'.pun_htmlspecialchars($cur_ban['message']).'</strong><br /><br />' : '<br /><br />').$lang->t('Ban message 4').' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
 		}
 	}
 

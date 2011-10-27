@@ -695,7 +695,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$subscriber_name = $result[0]['username'];
 				unset ($result, $query, $params);
 
-				$crumbs_text['search_type'] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$subscriber_id.'">'.sprintf($lang_search['Quick search show_subscriptions'], pun_htmlspecialchars($subscriber_name)).'</a>';
+				$crumbs_text['search_type'] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$subscriber_id.'">'.sprintf($lang->t('Quick search show_subscriptions'), pun_htmlspecialchars($subscriber_name)).'</a>';
 			}
 			else
 				$crumbs_text['search_type'] = '<a href="search.php?action='.$search_type[1].'">'.$lang->t('Quick search '.$search_type[1)].'</a>';

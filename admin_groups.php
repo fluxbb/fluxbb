@@ -27,7 +27,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 	{
 		$base_group = intval($_POST['base_group']);
 		if ($base_group < 1)
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
 		$query = $db->select(array('groups' => 'g.*'), 'groups AS g');
 		$query->where = 'g.g_id = :group_id';
@@ -36,7 +36,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 
 		$result = $query->run($params);
 		if (empty($result))
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
 		$group = $result[0];
 		unset ($result, $query, $params);

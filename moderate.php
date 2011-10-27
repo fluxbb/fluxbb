@@ -108,7 +108,7 @@ if (isset($_GET['tid']))
 
 			$posts = explode(',', $_POST['posts']);
 			if (empty($posts))
-				message($lang_misc['No posts selected']);
+				message($lang->t('No posts selected'));
 
 			// How many posts did we just delete?
 			$num_posts_deleted = count($posts);
@@ -339,7 +339,7 @@ if (isset($_GET['tid']))
 
 		$posts = isset($_POST['posts']) ? $_POST['posts'] : array();
 		if (empty($posts))
-			message($lang_misc['No posts selected']);
+			message($lang->t('No posts selected'));
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Moderate'));
 		$focus_element = array('subject','new_subject');
@@ -967,7 +967,7 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 
 	$topics = isset($_POST['topics']) ? $_POST['topics'] : array();
 	if (empty($topics))
-		message($lang_misc['No topics selected']);
+		message($lang->t('No topics selected'));
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Moderate'));
 	define('PUN_ACTIVE_PAGE', 'index');
