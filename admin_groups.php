@@ -29,12 +29,12 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 		if ($base_group < 1)
 			message($lang_common['Bad request']);
 
-		$query = new SelectQuery(array('groups' => 'g.*'), 'groups AS g');
+		$query = $db->select(array('groups' => 'g.*'), 'groups AS g');
 		$query->where = 'g.g_id = :group_id';
 
 		$params = array(':group_id' => $base_group);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (empty($result))
 			message($lang_common['Bad request']);
 
@@ -49,12 +49,12 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 		if ($group_id < 1)
 			message($lang_common['Bad request']);
 
-		$query = new SelectQuery(array('groups' => 'g.*'), 'groups AS g');
+		$query = $db->select(array('groups' => 'g.*'), 'groups AS g');
 		$query->where = 'g.g_id = :group_id';
 
 		$params = array(':group_id' => $group_id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (empty($result))
 			message($lang_common['Bad request']);
 
@@ -298,40 +298,40 @@ else if (isset($_POST['add_edit_group']))
 
 	if ($_POST['mode'] == 'add')
 	{
-		$query = new SelectQuery(array('one' => '1'), 'groups AS g');
+		$query = $db->select(array('one' => '1'), 'groups AS g');
 		$query->where = 'g.g_title = :group_title';
 
 		$params = array(':group_title' => $title);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (!empty($result))
 			message(sprintf($lang_admin_groups['Title already exists message'], pun_htmlspecialchars($title)));
 
 		unset ($result, $query, $params);
 
-		$query = new InsertQuery($query_fields, 'groups');
+		$query = $db->insert($query_fields, 'groups');
 		$params = $query_params;
 
-		$db->query($query, $params);
-		$new_group_id = $db->insert_id();
+		$query->run($params);
+		$new_group_id = $db->insertId();
 		unset ($query, $params);
 
 		// Now lets copy the forum specific permissions from the group which this group is based on
-		$query = new SelectQuery(array('forum_id' => 'fp.forum_id', 'read_forum' => 'fp.read_forum', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics'), 'forum_perms AS fp');
+		$query = $db->select(array('forum_id' => 'fp.forum_id', 'read_forum' => 'fp.read_forum', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics'), 'forum_perms AS fp');
 		$query->where = 'fp.group_id = :group_id';
 
 		$params = array(':group_id' => $base_group);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		unset ($query, $params);
 
-		$insert_query = new InsertQuery(array('group_id' => ':group_id', 'forum_id' => ':forum_id', 'read_forum' => ':read_forum', 'post_replies' => ':post_replies', 'post_topics' => ':post_topics'), 'forum_perms');
+		$insert_query = $db->insert(array('group_id' => ':group_id', 'forum_id' => ':forum_id', 'read_forum' => ':read_forum', 'post_replies' => ':post_replies', 'post_topics' => ':post_topics'), 'forum_perms');
 
 		foreach ($result as $cur_forum_perm)
 		{
 			$params = array(':group_id' => $new_group_id, ':forum_id' => $cur_forum_perm['forum_id'], ':read_forum' => $cur_forum_perm['read_forum'], ':post_replies' => $cur_forum_perm['post_replies'], ':post_topics' => $cur_forum_perm['post_topics']);
 
-			$db->query($insert_query, $params);
+			$insert_query->run($params);
 			unset ($params);
 		}
 
@@ -339,24 +339,24 @@ else if (isset($_POST['add_edit_group']))
 	}
 	else
 	{
-		$query = new SelectQuery(array('one' => '1'), 'groups AS g');
+		$query = $db->select(array('one' => '1'), 'groups AS g');
 		$query->where = 'g.g_title = :title AND g.g_id != :group_id';
 
 		$params = array(':title' => $title, ':group_id' => intval($_POST['group_id']));
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (!empty($result))
 			message(sprintf($lang_admin_groups['Title already exists message'], pun_htmlspecialchars($title)));
 
 		unset ($result, $query, $params);
 
-		$query = new UpdateQuery($query_fields, 'groups');
+		$query = $db->update($query_fields, 'groups');
 		$query->where = 'g_id = :group_id';
 
 		$params = $query_params;
 		$params[':group_id'] = intval($_POST['group_id']);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 	}
 
@@ -384,23 +384,23 @@ else if (isset($_POST['set_default_group']))
 		message($lang_common['Bad request']);
 
 	// Make sure it's not a moderator group
-	$query = new SelectQuery(array('one' => '1'), 'groups AS g');
+	$query = $db->select(array('one' => '1'), 'groups AS g');
 	$query->where = 'g.g_id = :group_id AND g.g_moderator = 0';
 
 	$params = array(':group_id' => $group_id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if (empty($result))
 		message($lang_common['Bad request']);
 
 	unset ($result, $query, $params);
 
-	$query = new UpdateQuery(array('conf_value' => ':group_id'), 'config');
+	$query = $db->update(array('conf_value' => ':group_id'), 'config');
 	$query->where = 'conf_name = \'o_default_user_group\'';
 
 	$params = array(':group_id' => $group_id);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 
 	// Regenerate the config cache
@@ -424,17 +424,16 @@ else if (isset($_GET['del_group']))
 		message($lang_admin_groups['Cannot remove default message']);
 
 	// Check if this group has any members
-	$query = new SelectQuery(array('g_title' => 'g.g_title', 'num_members' => 'COUNT(u.id) AS num_members'), 'groups AS g');
+	$query = $db->select(array('g_title' => 'g.g_title', 'num_members' => 'COUNT(u.id) AS num_members'), 'groups AS g');
 
-	$query->joins['u'] = new InnerJoin('users AS u');
-	$query->joins['u']->on = 'g.g_id = u.group_id';
+	$query->InnerJoin('u', 'users AS u', 'g.g_id = u.group_id');
 
 	$query->where = 'g.g_id = :group_id';
 	$query->group = array('g_id' => 'g.g_id', 'g_title' => 'g.g_title');
 
 	$params = array(':group_id' => $group_id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	unset ($query, $params);
 
 	// If the group doesn't have any members or if we've already selected a group to move the members to
@@ -446,43 +445,43 @@ else if (isset($_GET['del_group']))
 			{
 				$move_to_group = intval($_POST['move_to_group']);
 
-				$query = new UpdateQuery(array('group_id' => ':new_group_id'), 'users');
+				$query = $db->update(array('group_id' => ':new_group_id'), 'users');
 				$query->where = 'group_id = :old_group_id';
 
 				$params = array(':new_group_id' => $move_to_group, ':old_group_id' => $group_id);
 
-				$db->query($query, $params);
+				$query->run($params);
 				unset ($query, $params);
 			}
 
 			// Delete the group
-			$query = new DeleteQuery('groups');
+			$query = $db->delete('groups');
 			$query->where = 'g_id = :group_id';
 
 			$params = array(':group_id' => $group_id);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			// Delete any forum specific permissions
-			$query = new DeleteQuery('forum_perms');
+			$query = $db->delete('forum_perms');
 			$query->where = 'group_id = :group_id';
 
 			$params = array(':group_id' => $group_id);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			redirect('admin_groups.php', $lang_admin_groups['Group removed redirect']);
 		}
 		else
 		{
-			$query = new SelectQuery(array('g_title' => 'g.g_title'), 'groups AS g');
+			$query = $db->select(array('g_title' => 'g.g_title'), 'groups AS g');
 			$query->where = 'g.g_id = :group_id';
 
 			$params = array(':group_id' => $group_id);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			$group_title = $result[0]['g_title'];
 			unset ($result, $query, $params);
 
@@ -544,13 +543,13 @@ else if (isset($_GET['del_group']))
 							<select name="move_to_group">
 <?php
 
-	$query = new SelectQuery(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
+	$query = $db->select(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
 	$query->where = 'g.g_id != :group_guest AND g.g_id != :group_id';
 	$query->order = array('g_title' => 'g.g_title ASC');
 
 	$params = array(':group_guest' => PUN_GUEST, ':group_id' => $group_id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	foreach ($result as $cur_group)
 	{
 		if ($cur_group['g_id'] == PUN_MEMBER) // Pre-select the pre-defined Members group
@@ -601,13 +600,13 @@ generate_admin_menu('groups');
 										<select id="base_group" name="base_group" tabindex="1">
 <?php
 
-$query = new SelectQuery(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
+$query = $db->select(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
 $query->where = 'g.g_id != :group_admin AND g.g_id != :group_guest';
 $query->order = array('g_title' => 'g.g_title ASC');
 
 $params = array(':group_guest' => PUN_GUEST, ':group_admin' => PUN_ADMIN);
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 foreach ($result as $cur_group)
 {
 	if ($cur_group['g_id'] == $pun_config['o_default_user_group'])
@@ -638,13 +637,13 @@ unset ($result, $query, $params);
 										<select id="default_group" name="default_group" tabindex="3">
 <?php
 
-$query = new SelectQuery(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
+$query = $db->select(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
 $query->where = 'g.g_id > :group_guest AND g.g_moderator = 0';
 $query->order = array('g_title' => 'g.g_title ASC');
 
 $params = array(':group_guest' => PUN_GUEST);
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 foreach ($result as $cur_group)
 {
 	if ($cur_group['g_id'] == $pun_config['o_default_user_group'])
@@ -678,12 +677,12 @@ unset ($result, $query, $params);
 							<table cellspacing="0">
 <?php
 
-$query = new SelectQuery(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
+$query = $db->select(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title'), 'groups AS g');
 $query->order = array('g_id' => 'g.g_id ASC');
 
 $params = array();
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 
 $cur_index = 5;
 foreach ($result as $cur_group)

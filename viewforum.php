@@ -22,10 +22,9 @@ if ($id < 1)
 require PUN_ROOT.'lang/'.$pun_user['language'].'/forum.php';
 
 // Fetch some info about the forum
-$query = new SelectQuery(array('forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url', 'moderators' => 'f.moderators', 'num_topics' => 'f.num_topics', 'sort_by' => 'f.sort_by', 'post_topics' => 'fp.post_topics', 'is_subscribed' => '0 AS is_subscribed'), 'forums AS f');
+$query = $db->select(array('forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url', 'moderators' => 'f.moderators', 'num_topics' => 'f.num_topics', 'sort_by' => 'f.sort_by', 'post_topics' => 'fp.post_topics', 'is_subscribed' => '0 AS is_subscribed'), 'forums AS f');
 
-$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id';
 
@@ -36,13 +35,12 @@ if (!$pun_user['is_guest'])
 {
 	$query->fields['is_subscribed'] = 's.user_id AS is_subscribed';
 
-	$query->joins['s'] = new LeftJoin('forum_subscriptions AS s');
-	$query->joins['s']->on = 'f.id = s.forum_id AND s.user_id = :user_id';
+	$query->LeftJoin('s', 'forum_subscriptions AS s', 'f.id = s.forum_id AND s.user_id = :user_id');
 
 	$params[':user_id'] = $pun_user['id'];
 }
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 if (empty($result))
 	message($lang_common['Bad request']);
 
@@ -152,7 +150,7 @@ require PUN_ROOT.'header.php';
 <?php
 
 // Retrieve a list of topic IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
-$query = new SelectQuery(array('id' => 't.id'), 'topics AS t');
+$query = $db->select(array('id' => 't.id'), 'topics AS t');
 $query->where = 't.forum_id = :forum_id';
 $query->order = array('sticky' => 't.sticky DESC', 'sort' => $sort_by, 'id' => 't.id DESC');
 $query->limit = $pun_user['disp_topics'];
@@ -160,7 +158,7 @@ $query->offset = $start_from;
 
 $params = array(':forum_id' => $id);
 
-$topic_ids = $db->query($query, $params);
+$topic_ids = $query->run($params);
 unset ($query, $params);
 
 // If there are topics in this forum
@@ -171,7 +169,7 @@ if (!empty($topic_ids))
 		$topic_ids[$key] = $value['id'];
 
 	// Fetch list of topics to display on this page
-	$query = new SelectQuery(array('has_posted' => '0 AS has_posted', 'tid' => 't.id', 'subject' => 't.subject', 'poster' => 't.poster', 'posted' => 't.posted', 'last_post' => 't.last_post', 'last_post_id' => 't.last_post_id', 'last_poster' => 't.last_poster', 'num_views' => 't.num_views', 'num_replies' => 't.num_replies', 'closed' => 't.closed', 'sticky' => 't.sticky', 'moved_to' => 't.moved_to'), 'topics AS t');
+	$query = $db->select(array('has_posted' => '0 AS has_posted', 'tid' => 't.id', 'subject' => 't.subject', 'poster' => 't.poster', 'posted' => 't.posted', 'last_post' => 't.last_post', 'last_post_id' => 't.last_post_id', 'last_poster' => 't.last_poster', 'num_views' => 't.num_views', 'num_replies' => 't.num_replies', 'closed' => 't.closed', 'sticky' => 't.sticky', 'moved_to' => 't.moved_to'), 'topics AS t');
 	$query->where = 't.id IN :tids';
 	$query->order = array('sticky' => 't.sticky DESC', 'sort' => $sort_by, 'id' => 't.id DESC');
 
@@ -182,8 +180,7 @@ if (!empty($topic_ids))
 	{
 		$query->fields['has_posted'] = 'p.poster_id AS has_posted';
 
-		$query->joins['p'] = new LeftJoin('posts AS p');
-		$query->joins['p']->on = 't.id = p.topic_id AND p.poster_id = :user_id';
+		$query->LeftJoin('p', 'posts AS p', 't.id = p.topic_id AND p.poster_id = :user_id');
 
 		$query->group = array('t.id', 't.subject', 't.poster', 't.posted', 't.last_post', 't.last_post_id', 't.last_poster', 't.num_views', 't.num_replies', 't.closed', 't.sticky', 't.moved_to', 'p.poster_id');
 
@@ -192,7 +189,7 @@ if (!empty($topic_ids))
 
 	$topic_count = 0;
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	foreach ($result as $cur_topic)
 	{
 		++$topic_count;

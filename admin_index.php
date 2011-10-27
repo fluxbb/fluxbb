@@ -77,12 +77,12 @@ else
 
 
 // Get number of current visitors
-$query = new SelectQuery(array('num_users' => 'COUNT(o.user_id) AS num_users'), 'online AS o');
+$query = $db->select(array('num_users' => 'COUNT(o.user_id) AS num_users'), 'online AS o');
 $query->where = 'o.idle = 0';
 
 $params = array();
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 $num_online = $result[0]['num_users'];
 unset ($result, $query, $params);
 
@@ -150,7 +150,7 @@ generate_admin_menu('index');
 					</dd>
 					<dt><?php echo $lang_admin_index['Database label'] ?></dt>
 					<dd>
-						<?php echo $db->get_version()."\n" ?>
+						<?php echo $db->getVersion()."\n" ?>
 <?php if (isset($total_records) && isset($total_size)): ?>						<br /><?php printf($lang_admin_index['Database data rows']."\n", forum_number_format($total_records)) ?>
 						<br /><?php printf($lang_admin_index['Database data size']."\n", $total_size) ?>
 <?php endif; ?>					</dd>

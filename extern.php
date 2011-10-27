@@ -294,16 +294,15 @@ if ($action == 'feed')
 		$tid = intval($_GET['tid']);
 
 		// Fetch topic subject
-		$query = new SelectQuery(array('subject' => 't.subject', 'first_post_id' => 't.first_post_id'), 'topics AS t');
+		$query = $db->select(array('subject' => 't.subject', 'first_post_id' => 't.first_post_id'), 'topics AS t');
 
-		$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-		$query->joins['fp']->on = 'fp.forum_id = t.forum_id AND fp.group_id = :group_id';
+		$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 		$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.moved_to IS NULL AND t.id = :topic_id';
 
 		$params = array(':group_id' => $pun_user['g_id'], ':topic_id' => $tid);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (empty($result))
 		{
 			http_authenticate_user();
@@ -326,10 +325,9 @@ if ($action == 'feed')
 		);
 
 		// Fetch $show posts
-		$query = new SelectQuery(array('pid' => 'p.id', 'poster' => 'p.poster', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'posted_id' => 'p.poster_id', 'email_setting' => 'u.email_setting', 'email' => 'u.email', 'poster_email' => 'p.poster_email'), 'posts AS p');
+		$query = $db->select(array('pid' => 'p.id', 'poster' => 'p.poster', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'posted_id' => 'p.poster_id', 'email_setting' => 'u.email_setting', 'email' => 'u.email', 'poster_email' => 'p.poster_email'), 'posts AS p');
 
-		$query->joins['u'] = new InnerJoin('users AS u');
-		$query->joins['u']->on = 'u.id = p.poster_id';
+		$query->InnerJoin('u', 'users AS u', 'u.id = p.poster_id');
 
 		$query->where = 'p.topic_id = :topic_id';
 		$query->order = array('posted' => 'p.posted DESC');
@@ -337,7 +335,7 @@ if ($action == 'feed')
 
 		$params = array(':topic_id' => $tid);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		foreach ($result as $cur_post)
 		{
 			$cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
@@ -376,16 +374,14 @@ if ($action == 'feed')
 		$order_posted = isset($_GET['order']) && strtolower($_GET['order']) == 'posted';
 		$forum_name = '';
 
-		$post_query = new SelectQuery(array('t.id, t.poster, t.subject, t.posted, t.last_post, t.last_poster, p.message, p.hide_smilies, u.email_setting, u.email, p.poster_id, p.poster_email'), 'topics AS t');
+		$post_query = $db->select(array('t.id, t.poster, t.subject, t.posted, t.last_post, t.last_poster, p.message, p.hide_smilies, u.email_setting, u.email, p.poster_id, p.poster_email'), 'topics AS t');
 
-		$post_query->joins['p'] = new InnerJoin('posts AS p');
-		$post_query->joins['p']->on = 'p.id = '.($order_posted ? 't.first_post_id' : 't.last_post_id');
+		$post_query->InnerJoin('p', 'posts AS p', 'p.id = '.($order_posted ? 't.first_post_id' : 't.last_post_id');
 
 		$post_query->joins['u'] = new InnerJoin('users AS u');
-		$post_query->joins['u']->on = 'u.id = p.poster_id';
+		$post_query->joins['u']->on = 'u.id = p.poster_id');
 
-		$post_query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-		$post_query->joins['fp']->on = 'fp.forum_id = t.forum_id AND fp.group_id = :group_id';
+		$post_query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 		$post_query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.moved_to IS NULL';
 		$post_query->order = array('sort' => ($order_posted ? 't.posted' : 't.last_post').' DESC');
@@ -408,16 +404,15 @@ if ($action == 'feed')
 			if (count($fids) == 1)
 			{
 				// Fetch forum name
-				$query = new SelectQuery(array('forum_name' => 'f.forum_name'), 'forums AS f');
+				$query = $db->select(array('forum_name' => 'f.forum_name'), 'forums AS f');
 
-				$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-				$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id';
 
 				$params = array(':group_id' => $pun_user['g_id'], ':forum_id' => $fids[0]);
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				if (!empty($result))
 					$forum_name = $lang_common['Title separator'].$result[0]['forum_name'];
 
@@ -458,7 +453,7 @@ if ($action == 'feed')
 			);
 
 			// Fetch topics
-			$result = $db->query($post_query, $post_params);
+			$result = $post_query->run($post_params);
 			foreach ($result as $cur_topic)
 			{
 				if ($pun_config['o_censoring'] == '1')
@@ -529,13 +524,13 @@ else if ($action == 'online' || $action == 'online_full')
 	$num_guests = $num_users = 0;
 	$users = array();
 
-	$query = new SelectQuery(array('user_id' => 'o.user_id', 'ident' => 'o.ident'), 'online AS o');
+	$query = $db->select(array('user_id' => 'o.user_id', 'ident' => 'o.ident'), 'online AS o');
 	$query->where = 'o.idle = 0';
 	$query->order = array('ident' => 'o.ident ASC');
 
 	$params = array();
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	foreach ($result as $pun_user_online)
 	{
 		if ($pun_user_online['user_id'] > 1)
@@ -574,10 +569,10 @@ else if ($action == 'stats')
 	// Collect some board statistics
 	$stats = fetch_board_stats();
 
-	$query = new SelectQuery(array('total_topics' => 'SUM(f.num_topics) AS total_topics', 'total_posts' => 'SUM(num_posts) AS total_posts'), 'forums AS f');
+	$query = $db->select(array('total_topics' => 'SUM(f.num_topics) AS total_topics', 'total_posts' => 'SUM(num_posts) AS total_posts'), 'forums AS f');
 	$params = array();
 
-	$stats = array_merge($stats, current($db->query($query, $params)));
+	$stats = array_merge($stats, current($query->run($params)));
 	unset ($query, $params);
 
 	// Send the Content-type header in case the web server is setup to send something else

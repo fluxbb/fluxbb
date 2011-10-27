@@ -26,7 +26,7 @@ if (isset($_POST['form_sent']))
 
 	$form = array_map('intval', $_POST['form']);
 
-	$query = new UpdateQuery(array('conf_value' => ':value'), 'config');
+	$query = $db->update(array('conf_value' => ':value'), 'config');
 	$query->where = 'conf_name = :name';
 
 	foreach ($form as $key => $input)
@@ -36,7 +36,7 @@ if (isset($_POST['form_sent']))
 		{
 			$params = array(':name' => 'p_'.$key, ':value' => $input);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($params);
 		}
 	}

@@ -29,10 +29,10 @@ if (isset($_POST['add_cat']))
 	if ($new_cat_name == '')
 		message($lang_admin_categories['Must enter name message']);
 
-	$query = new InsertQuery(array('cat_name' => ':cat_name'), 'categories');
+	$query = $db->insert(array('cat_name' => ':cat_name'), 'categories');
 	$params = array(':cat_name' => $new_cat_name);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 
 	redirect('admin_categories.php', $lang_admin_categories['Category added redirect']);
@@ -51,12 +51,12 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 	{
 		@set_time_limit(0);
 
-		$query = new SelectQuery(array('id' => 'f.id'), 'forums AS f');
+		$query = $db->select(array('id' => 'f.id'), 'forums AS f');
 		$query->where = 'f.cat_id = :cat_id';
 		
 		$params = array(':cat_id' => $cat_to_delete);
 		
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		unset($query, $params);
 		
 		foreach ($result as $cur_forum)
@@ -65,20 +65,19 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 			prune($cur_forum['id'], 1, -1);
 
 			// Delete the forum
-			$query = new DeleteQuery('forums');
+			$query = $db->delete('forums');
 			$query->where = 'id = :forum_id';
 			
 			$params = array(':forum_id' => $cur_forum['id']);
 			
-			$db->query($query, $params);
+			$query->run($params);
 			unset($query, $params);
 		}
 		unset($result);
 
 		// Locate any "orphaned redirect topics" and delete them
-		$query = new SelectQuery(array('id' => 't1.id'), 'topics AS t1');
-		$query->joins['t1'] = new LeftJoin('topics AS t2');
-		$query->joins['t1']->on = 't1.moved_to = t2.id';
+		$query = $db->select(array('id' => 't1.id'), 'topics AS t1');
+		$query->LeftJoin('t1', 'topics AS t2', 't1.moved_to = t2.id');
 		$query->where = 't2.id IS NULL AND t1.moved_to IS NOT NULL';
 		
 		$result = $db->query($query);
@@ -90,23 +89,23 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 			foreach ($result as $cur_orphan)
 				$orphans[] = $cur_orphan['id'];
 
-			$query = new DeleteQuery('topics');
+			$query = $db->delete('topics');
 			$query->where = 'id IN :orphans';
 			
 			$params = array(':orphans' => $orphans);
 			
-			$db->query($query, $params);
+			$query->run($params);
 			unset($query, $params);
 		}
 		unset($result);
 
 		// Delete the category
-		$query = new DeleteQuery('categories');
+		$query = $db->delete('categories');
 		$query->where = 'id = :cat_id';
 		
 		$params = array(':cat_id' => $cat_to_delete);
 		
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 
 		// Regenerate the quick jump cache
@@ -116,12 +115,12 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 	}
 	else // If the user hasn't comfirmed the delete
 	{
-		$query = new SelectQuery(array('cat_name' => 'c.cat_name'), 'categories AS c');
+		$query = $db->select(array('cat_name' => 'c.cat_name'), 'categories AS c');
 		$query->where = 'c.id = :cat_id';
 		
 		$params = array(':cat_id' => $cat_to_delete);
 		
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		$cat_name = $result[0]['cat_name'];
 		unset($query, $params, $result);
 
@@ -166,7 +165,7 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 	if (empty($categories))
 		message($lang_common['Bad request']);
 
-	$query = new UpdateQuery(array('cat_name' => ':name', 'disp_position' => ':position'), 'categories');
+	$query = $db->update(array('cat_name' => ':name', 'disp_position' => ':position'), 'categories');
 	$query->where = 'id = :cid';
 
 	foreach ($categories as $cat_id => $cur_cat)
@@ -182,7 +181,7 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 
 		$params = array(':name' => $cur_cat['name'], ':position' => $cur_cat['order'], ':cid' => $cat_id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($params);
 	}
 
@@ -195,12 +194,12 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 }
 
 // Generate an array with all categories
-$query = new SelectQuery(array('cid' => 'c.id', 'name' => 'c.cat_name', 'cposition' => 'c.disp_position'), 'categories AS c');
+$query = $db->select(array('cid' => 'c.id', 'name' => 'c.cat_name', 'cposition' => 'c.disp_position'), 'categories AS c');
 $query->order = array('cposition' => 'c.disp_position ASC');
 
 $params = array();
 
-$cat_list = $db->query($query, $params);
+$cat_list = $query->run($params);
 unset ($query, $params);
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Categories']);

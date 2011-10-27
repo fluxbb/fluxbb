@@ -74,21 +74,19 @@ if ($pun_config['o_quickjump'] == '1')
 		$quickjump = array();
 
 		// Generate the quick jump cache for all groups
-		$query = new SelectQuery(array('gid' => 'g.g_id'), 'groups AS g');
+		$query = $db->select(array('gid' => 'g.g_id'), 'groups AS g');
 		$query->where = 'g.g_read_board = 1';
 
 		$params = array();
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		unset ($query, $params);
 
-		$query_forums = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url'), 'categories AS c');
+		$query_forums = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url'), 'categories AS c');
 
-		$query_forums->joins['f'] = new InnerJoin('forums AS f');
-		$query_forums->joins['f']->on = 'c.id = f.cat_id';
+		$query_forums->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
-		$query_forums->joins['fp'] = new LeftJoin('forum_perms AS fp');
-		$query_forums->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+		$query_forums->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 		$query_forums->where = 'fp.read_forum IS NULL OR fp.read_forum = 1';
 		$query_forums->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
@@ -97,7 +95,7 @@ if ($pun_config['o_quickjump'] == '1')
 		{
 			$params = array(':group_id' => $cur_group['g_id']);
 
-			$quickjump[$cur_group['g_id']] = $db->query($query_forums, $params);
+			$quickjump[$cur_group['g_id']] = $query_forums->run($params);
 			unset ($params);
 		}
 
@@ -191,7 +189,7 @@ if (defined('PUN_DEBUG'))
 
 	// Calculate script generation time
 	$time_diff = sprintf('%.3f', get_microtime() - $pun_start);
-	$queries = $db->get_debug_queries();
+	$queries = $db->getDebugQueries();
 	echo sprintf($lang_common['Querytime'], $time_diff, count($queries));
 
 	if (function_exists('memory_get_usage'))
@@ -207,7 +205,7 @@ if (defined('PUN_DEBUG'))
 
 
 // End the transaction
-$db->commit_transaction();
+$db->commitTransaction();
 
 // Display executed queries (if enabled)
 if (defined('PUN_SHOW_QUERIES'))

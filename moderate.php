@@ -26,12 +26,12 @@ if (isset($_GET['get_host']))
 		if ($get_host < 1)
 			message($lang_common['Bad request']);
 
-		$query = new SelectQuery(array('poster_ip' => 'p.poster_ip'), 'posts AS p');
+		$query = $db->select(array('poster_ip' => 'p.poster_ip'), 'posts AS p');
 		$query->where = 'id = :pid';
 
 		$params = array(':pid' => $get_host);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (empty($result))
 			message($lang_common['Bad request']);
 
@@ -51,12 +51,12 @@ $fid = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 if ($fid < 1)
 	message($lang_common['Bad request']);
 
-$query = new SelectQuery(array('moderators' => 'f.moderators'), 'forums AS f');
+$query = $db->select(array('moderators' => 'f.moderators'), 'forums AS f');
 $query->where = 'f.id = :forum_id';
 
 $params = array(':forum_id' => $fid);
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 $mods_array = empty($result[0]['moderators']) ? array() : unserialize($result[0]['moderators']);
 unset ($result, $query, $params);
 
@@ -79,19 +79,17 @@ if (isset($_GET['tid']))
 		message($lang_common['Bad request']);
 
 	// Fetch some info about the topic
-	$query = new SelectQuery(array('subject' => 't.subject', 'num_replies' => 't.num_replies', 'first_post_id' => 't.first_post_id', 'forum_id' => 'f.id AS forum_id', 'forum_name' => 'forum_name'), 'topics AS t');
+	$query = $db->select(array('subject' => 't.subject', 'num_replies' => 't.num_replies', 'first_post_id' => 't.first_post_id', 'forum_id' => 'f.id AS forum_id', 'forum_name' => 'forum_name'), 'topics AS t');
 
-	$query->joins['f'] = new InnerJoin('forums AS f');
-	$query->joins['f']->on = 'f.id = t.forum_id';
+	$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
-	$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-	$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+	$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 	$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id AND t.id = :topic_id AND t.moved_to IS NULL';
 
 	$params = array(':group_id' => $pun_user['g_id'], ':forum_id' => $fid, ':topic_id' => $tid);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if (empty($result))
 		message($lang_common['Bad request']);
 
@@ -116,48 +114,48 @@ if (isset($_GET['tid']))
 			$num_posts_deleted = count($posts);
 
 			// Verify that the post IDs are valid
-			$query = new SelectQuery(array('num_posts' => 'COUNT(p.id) AS num_posts'), 'posts AS p');
+			$query = $db->select(array('num_posts' => 'COUNT(p.id) AS num_posts'), 'posts AS p');
 			$query->where = 'p.id IN :pids AND p.topic_id = :topic_id';
 
 			$params = array(':pids' => $posts, ':topic_id' => $tid);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			if ($result[0]['num_posts'] != $num_posts_deleted)
 				message($lang_common['Bad request']);
 
 			unset ($result, $query, $params);
 
 			// Delete the posts
-			$query = new DeleteQuery('posts');
+			$query = $db->delete('posts');
 			$query->where = 'id IN :pids';
 
 			$params = array(':pids' => $posts);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			require PUN_ROOT.'include/search_idx.php';
 			strip_search_index($posts);
 
 			// Get last_post, last_post_id, and last_poster for the topic after deletion
-			$query = new SelectQuery(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
+			$query = $db->select(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
 			$query->where = 'p.topic_id = :topic_id';
 			$query->order = array('id' => 'p.id DESC');
 			$query->limit = 1;
 
 			$params = array(':topic_id' => $tid);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			$last_post = $result[0];
 			unset ($result, $query, $params);
 
 			// Update the topic
-			$query = new UpdateQuery(array('last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'num_replies' => 'num_replies - :num_deleted'), 'topics');
+			$query = $db->update(array('last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'num_replies' => 'num_replies - :num_deleted'), 'topics');
 			$query->where = 'id = :topic_id';
 
 			$params = array(':last_post' => $last_post['posted'], ':last_post_id' => $last_post['id'], ':last_poster' => $last_post['poster'], ':num_deleted' => $num_posts_deleted, ':topic_id' => $tid);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			update_forum($fid);
@@ -216,28 +214,27 @@ if (isset($_GET['tid']))
 			$num_posts_splitted = count($posts);
 
 			// Verify that the post IDs are valid
-			$query = new SelectQuery(array('num_posts' => 'COUNT(p.id) AS num_posts'), 'posts AS p');
+			$query = $db->select(array('num_posts' => 'COUNT(p.id) AS num_posts'), 'posts AS p');
 			$query->where = 'p.id IN :pids AND p.topic_id = :topic_id';
 
 			$params = array(':pids' => $posts, ':topic_id' => $tid);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			if ($result[0]['num_posts'] != $num_posts_splitted)
 				message($lang_common['Bad request']);
 
 			unset ($result, $query, $params);
 
 			// Verify that the move to forum ID is valid
-			$query = new SelectQuery(array('one' => '1'), 'forums AS f');
+			$query = $db->select(array('one' => '1'), 'forums AS f');
 
-			$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-			$query->joins['fp']->on = 'fp.group_id = :group_id AND fp.forum_id = :forum_id';
+			$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.group_id = :group_id AND fp.forum_id = :forum_id');
 
 			$query->where = 'f.redirect_url IS NULL AND (fp.post_topics IS NULL OR fp.post_topics = 1)';
 
 			$params = array(':group_id' => $pun_user['g_id'], ':forum_id' => $move_to_forum);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			if (empty($result))
 				message($lang_common['Bad request']);
 
@@ -255,70 +252,70 @@ if (isset($_GET['tid']))
 				message($lang_post['Too long subject']);
 
 			// Get data from the new first post
-			$query = new SelectQuery(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
+			$query = $db->select(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
 			$query->where = 'p.id IN :pids';
 			$query->order = array('id' => 'o.id ASC');
 			$query->limit = 1;
 
 			$params = array(':pids' => $posts);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			$first_post = $result[0];
 			unset ($result, $query, $params);
 
 			// Create the new topic
-			$query = new InsertQuery(array('poster' => ':poster', 'subject' => ':subject', 'posted' => ':posted', 'first_post_id' => ':first_post_id', 'forum_id' => ':forum_id'), 'topics');
+			$query = $db->insert(array('poster' => ':poster', 'subject' => ':subject', 'posted' => ':posted', 'first_post_id' => ':first_post_id', 'forum_id' => ':forum_id'), 'topics');
 			$params = array(':poster' => $first_post['poster'], ':subject' => $new_subject, ':posted' => $first_post['posted'], ':first_post_id' => $first_post['id'], ':forum_id' => $move_to_forum);
 
-			$db->query($query, $params);
-			$new_tid = $db->insert_id();
+			$query->run($params);
+			$new_tid = $db->insertId();
 			unset ($query, $params);
 
 			// Move the posts to the new topic
-			$query = new UpdateQuery(array('topic_id' => ':topic_id'), 'posts');
+			$query = $db->update(array('topic_id' => ':topic_id'), 'posts');
 			$query->where = 'id IN :pids';
 
 			$params = array(':topic_id' => $new_tid, ':pids' => $posts);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			// Get last_post, last_post_id, and last_poster from the topic and update it
-			$query = new SelectQuery(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
+			$query = $db->select(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
 			$query->where = 'p.topic_id = :topic_id';
 			$query->order = array('id' => 'p.id DESC');
 			$query->limit = 1;
 
 			$params = array(':topic_id' => $tid);
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			$last_post = $result[0];
 			unset ($result, $query, $params);
 
-			$query = new UpdateQuery(array('last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'num_replies' => 'num_replies - :num_splitted'), 'topics');
+			$query = $db->update(array('last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'num_replies' => 'num_replies - :num_splitted'), 'topics');
 			$query->where = 'id = :topic_id';
 
 			$params = array(':last_post' => $last_post['posted'], ':last_post_id' => $last_post['id'], ':last_poster' => $last_post['poster'], ':num_splitted' => $num_posts_splitted, ':topic_id' => $tid);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			// Get last_post, last_post_id, and last_poster from the new topic and update it
-			$query = new SelectQuery(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
+			$query = $db->select(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
 			$query->where = 'p.topic_id = :topic_id';
 			$query->order = array('id' => 'p.id DESC');
 			$query->limit = 1;
 
 			$params = array(':topic_id' => $new_tid);
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			$last_post = $result[0];
 			unset ($result, $query, $params);
 
-			$query = new UpdateQuery(array('last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'num_replies' => ':num_replies'), 'topics');
+			$query = $db->update(array('last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'num_replies' => ':num_replies'), 'topics');
 			$query->where = 'id = :topic_id';
 
 			$params = array(':last_post' => $last_post['posted'], ':last_post_id' => $last_post['id'], ':last_poster' => $last_post['poster'], ':num_replies' => $num_posts_splitted - 1, ':topic_id' => $new_tid);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			update_forum($fid);
@@ -327,20 +324,18 @@ if (isset($_GET['tid']))
 			redirect('viewtopic.php?id='.$new_tid, $lang_misc['Split posts redirect']);
 		}
 
-		$query = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
+		$query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
 
-		$query->joins['f'] = new InnerJoin('forums AS f');
-		$query->joins['f']->on = 'c.id = f.cat_id';
+		$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
-		$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-		$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+		$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 		$query->where = '(fp.post_topics IS NULL OR fp.post_topics = 1) AND f.redirect_url IS NULL';
 		$query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
 
 		$params = array(':group_id' => $pun_user['g_id']);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 
 		$posts = isset($_POST['posts']) ? $_POST['posts'] : array();
 		if (empty($posts))
@@ -452,7 +447,7 @@ if (isset($_GET['tid']))
 	$post_count = 0; // Keep track of post numbers
 
 	// Retrieve a list of post IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
-	$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+	$query = $db->select(array('id' => 'p.id'), 'posts AS p');
 	$query->where = 'p.topic_id = :topic_id';
 	$query->order = array('id' => 'p.id ASC');
 	$query->offset = $start_from;
@@ -460,7 +455,7 @@ if (isset($_GET['tid']))
 
 	$params = array(':topic_id' => $tid);
 
-	$post_ids = $db->query($query, $params);
+	$post_ids = $query->run($params);
 	unset ($query, $params);
 
 	// If there are posts in this topic
@@ -472,20 +467,18 @@ if (isset($_GET['tid']))
 		$post_ids[$key] = $value['id'];
 
 	// Retrieve the posts (and their respective poster)
-	$query = new SelectQuery(array('title' => 'u.title', 'num_posts' => 'u.num_posts', 'g_id' => 'g.g_id', 'g_user_title' => 'g.g_user_title', 'id' => 'p.id', 'poster' => 'p.poster', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'edited' => 'p.edited', 'edited_by' => 'p.edited_by'), 'posts AS p');
+	$query = $db->select(array('title' => 'u.title', 'num_posts' => 'u.num_posts', 'g_id' => 'g.g_id', 'g_user_title' => 'g.g_user_title', 'id' => 'p.id', 'poster' => 'p.poster', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'edited' => 'p.edited', 'edited_by' => 'p.edited_by'), 'posts AS p');
 
-	$query->joins['u'] = new InnerJoin('users AS u');
-	$query->joins['u']->on = 'u.id = p.poster_id';
+	$query->InnerJoin('u', 'users AS u', 'u.id = p.poster_id');
 
-	$query->joins['g'] = new Innerjoin('groups AS g');
-	$query->joins['g']->on = 'g.g_id = u.group_id';
+	$query->Innerjoin('g', 'groups AS g', 'g.g_id = u.group_id');
 
 	$query->where = 'p.id IN :pids';
 	$query->order = array('id' => 'p.id ASC');
 
 	$params = array(':pids' => $post_ids);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	foreach ($result as $cur_post)
 	{
 		$post_count++;
@@ -591,22 +584,21 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 			message($lang_common['Bad request']);
 
 		// Verify that the topic IDs are valid
-		$query = new SelectQuery(array('num_topics' => 'COUNT(t.id) AS num_topics'), 'topics AS t');
+		$query = $db->select(array('num_topics' => 'COUNT(t.id) AS num_topics'), 'topics AS t');
 		$query->where = 't.id IN :tids AND t.forum_id = :forum_id';
 
 		$params = array(':tids' => $topics, ':forum_id' => $fid);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if ($result[0]['num_topics'] != count($topics))
 			message($lang_common['Bad request']);
 
 		unset ($result, $query, $params);
 
 		// Verify that the move to forum ID is valid
-		$query = new SelectQuery(array('one' => '1'), 'forums AS f');
+		$query = $db->select(array('one' => '1'), 'forums AS f');
 
-		$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-		$query->joins['fp']->on = 'fp.group_id = :group_id AND fp.forum_id = :forum_id';
+		$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.group_id = :group_id AND fp.forum_id = :forum_id');
 
 		$query->where = 'f.redirect_url IS NULL AND (fp.post_topics IS NULL OR fp.post_topics = 1)';
 
@@ -618,41 +610,41 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		unset ($result, $query, $params);
 
 		// Delete any redirect topics if there are any (only if we moved/copied the topic back to where it was once moved from)
-		$query = new DeleteQuery('topics');
+		$query = $db->delete('topics');
 		$query->where = 'forum_id = :forum_id AND moved_to IN :tids';
 
 		$params = array(':forum_id' => $move_to_forum, ':tids' => $topics);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Move the topic(s)
-		$query = new UpdateQuery(array('forum_id' => ':forum_id'), 'topics');
+		$query = $db->update(array('forum_id' => ':forum_id'), 'topics');
 		$query->where = 'id IN :tids';
 
 		$params = array(':forum_id' => $move_to_forum, ':tids' => $topics);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Should we create redirect topics?
 		if (isset($_POST['with_redirect']))
 		{
-			$query = new SelectQuery(array('poster' => 't.poster', 'subject' => 't.subject', 'posted' => 't.posted', 'last_post' => 't.last_post'), 'topics AS t');
+			$query = $db->select(array('poster' => 't.poster', 'subject' => 't.subject', 'posted' => 't.posted', 'last_post' => 't.last_post'), 'topics AS t');
 			$query->where = 't.id IN :tids';
 
 			$params = array(':tids' => $topics);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			unset ($query, $params);
 
-			$insert_query = new InsertQuery(array('poster' => ':poster', 'subject' => ':subject', 'posted' => ':posted', 'last_post' => ':last_post', 'moved_to' => ':moved_to', 'forum_id' => ':forum_id'), 'topics');
+			$insert_query = $db->insert(array('poster' => ':poster', 'subject' => ':subject', 'posted' => ':posted', 'last_post' => ':last_post', 'moved_to' => ':moved_to', 'forum_id' => ':forum_id'), 'topics');
 
 			foreach ($result as $cur_topic)
 			{
 				$params = array(':poster' => $cur_topic['poster'], ':subject' => $cur_topic['subject'], ':posted' => $cur_topic['posted'], ':last_post' => $cur_topic['last_post'], ':moved_to' => $cur_topic,':forum_id' => $fid);
 
-				$db->query($insert_query, $params);
+				$insert_query->run($params);
 				unset ($params);
 			}
 
@@ -684,20 +676,18 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		$action = 'single';
 	}
 
-	$query = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
+	$query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
 
-	$query->joins['f'] = new InnerJoin('forums AS f');
-	$query->joins['f']->on = 'c.id = f.cat_id';
+	$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
-	$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-	$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+	$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 	$query->where = '(fp.post_topics IS NULL OR fp.post_topics = 1) AND f.redirect_url IS NULL';
 	$query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
 
 	$params = array(':group_id' => $pun_user['g_id']);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	unset ($query, $params);
 
 	if (count($result) < 2)
@@ -773,13 +763,13 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 			message($lang_misc['Not enough topics selected']);
 
 		// Verify that the topic IDs are valid (redirect links will point to the merged topic after the merge)
-		$query = new SelectQuery(array('id' => 't.id'), 'topics AS t');
+		$query = $db->select(array('id' => 't.id'), 'topics AS t');
 		$query->where = 't.id IN :tids AND t.forum_id = :forum_id';
 		$query->order = array('id' => 't.id ASC');
 
 		$params = array(':tids' => $topics, ':forum_id' => $fid);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (count($result[0]) != count($topics))
 			message($lang_common['Bad request']);
 
@@ -788,7 +778,7 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 		unset ($result, $query, $params);
 
 		// Make any redirect topics point to our new, merged topic
-		$query = new UpdateQuery(array('moved_to' => ':merge_id'), 'topics');
+		$query = $db->update(array('moved_to' => ':merge_id'), 'topics');
 		$query->where = 'moved_to IN :tids';
 
 		$params = array(':merge_id' => $merge_to_tid, ':tids' => $topics);
@@ -797,66 +787,66 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 		if (isset($_POST['with_redirect']))
 			$query->where .= ' OR (id IN :tids AND id != :merge_id)';
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Merge the posts into the topic
-		$query = new UpdateQuery(array('topic_id' => ':merge_id'), 'posts');
+		$query = $db->update(array('topic_id' => ':merge_id'), 'posts');
 		$query->where = 'topic_id IN :tids';
 
 		$params = array(':merge_id' => $merge_to_tid, ':tids' => $topics);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Delete any subscriptions
-		$query = new DeleteQuery('topic_subscriptions');
+		$query = $db->delete('topic_subscriptions');
 		$query->where = 'topic_id IN :tids AND topic_id != :merge_id';
 
 		$params = array(':merge_id' => $merge_to_tid, ':tids' => $topics);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Without redirection the old topics are removed
 		if (!isset($_POST['with_redirect']))
 		{
-			$query = new DeleteQuery('topics');
+			$query = $db->delete('topics');
 			$query->where = 'id IN :tids AND id != :merge_id';
 
 			$params = array(':merge_id' => $merge_to_tid, ':tids' => $topics);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 		}
 
 		// Count number of replies in the topic
-		$query = new SelectQuery(array('num_replies' => '(COUNT(p.id) - 1) AS num_replies'), 'posts AS p');
+		$query = $db->select(array('num_replies' => '(COUNT(p.id) - 1) AS num_replies'), 'posts AS p');
 		$query->where = 'p.topic_id = :merge_to';
 
 		$params = array(':merge_to' => $merge_to_tid);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		$num_replies = $result[0]['num_replies'];
 		unset ($result, $query, $params);
 
 		// Get last_post, last_post_id and last_poster
-		$query = new SelectQuery(array('posted' => 'p.posted', 'id' => 'p.id', 'poster' => 'p.poster'), 'posts AS p');
+		$query = $db->select(array('posted' => 'p.posted', 'id' => 'p.id', 'poster' => 'p.poster'), 'posts AS p');
 		$query->where = 'p.topic_id = :merge_to';
 		$query->order = array('id' => 'p.id DESC');
 		$query->limit = 1;
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		$last_post = $result[0];
 		unset ($result, $query, $params);
 
 		// Update topic
-		$query = new UpdateQuery(array('num_replies' => ':num_replies', 'last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster'), 'topics');
+		$query = $db->update(array('num_replies' => ':num_replies', 'last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster'), 'topics');
 		$query->where = 'id = :merge_to';
 
 		$params = array(':num_replies' => $num_replies, ':last_post' => $last_post['posted'], ':last_post_id' => $last_post['id'], ':last_poster' => $last_post['poster'], ':merge_to' => $merge_to_tid);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Update the forum FROM which the topic was moved and redirect
@@ -914,42 +904,42 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 		require PUN_ROOT.'include/search_idx.php';
 
 		// Verify that the topic IDs are valid
-		$query = new SelectQuery(array('num_topics' => 'COUNT(t.id) AS num_topics'), 'topics AS t');
+		$query = $db->select(array('num_topics' => 'COUNT(t.id) AS num_topics'), 'topics AS t');
 		$query->where = 'id IN :tids AND forum_id = :forum_id';
 
 		$params = array(':tids' => $topics, ':forum_id' => $fid);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if ($result[0]['num_topics'] != count($topics))
 			message($lang_common['Bad request']);
 
 		unset ($result, $query, $params);
 
 		// Delete the topics and any redirect topics
-		$query = new DeleteQuery('topics');
+		$query = $db->delete('topics');
 		$query->where = 'id IN :tids OR moved_to IN :tids';
 
 		$params = array(':tids' => $topics);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Delete any subscriptions
-		$query = new DeleteQuery('topic_subscriptions');
+		$query = $db->delete('topic_subscriptions');
 		$query->where = 'topic_id IN :tids';
 
 		$params = array(':tids' => $topics);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Create a list of the post IDs in this topic and then strip the search index
-		$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+		$query = $db->select(array('id' => 'p.id'), 'posts AS p');
 		$query->where = 'p.topic_id IN :tids';
 
 		$params = array(':tids' => $topics);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 
 		$post_ids = array();
 		foreach ($result as $cur_post)
@@ -962,12 +952,12 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 			strip_search_index($post_ids);
 
 		// Delete posts
-		$query = new DeleteQuery('posts');
+		$query = $db->delete('posts');
 		$query->where = 'topic_id IN :tids';
 
 		$params = array(':tids' => $topics);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		update_forum($fid);
@@ -1021,12 +1011,12 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 		if (empty($topics))
 			message($lang_misc['No topics selected']);
 
-		$query = new UpdateQuery(array('closed' => ':closed'), 'topics');
+		$query = $db->update(array('closed' => ':closed'), 'topics');
 		$query->where = 'id IN :tids AND forum_id = :forum_id';
 
 		$params = array(':closed' => $action, ':tids' => $topics, ':forum_id' => $fid);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		$redirect_msg = ($action) ? $lang_misc['Close topics redirect'] : $lang_misc['Open topics redirect'];
@@ -1041,12 +1031,12 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 		if ($topic_id < 1)
 			message($lang_common['Bad request']);
 
-		$query = new UpdateQuery(array('closed' => ':closed'), 'topics');
+		$query = $db->update(array('closed' => ':closed'), 'topics');
 		$query->where = 'id = :topic_id AND forum_id = :forum_id';
 
 		$params = array(':closed' => $action, ':topic_id' => $topic_id, ':forum_id' => $fid);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		$redirect_msg = ($action) ? $lang_misc['Close topic redirect'] : $lang_misc['Open topic redirect'];
@@ -1064,12 +1054,12 @@ else if (isset($_GET['stick']))
 	if ($stick < 1)
 		message($lang_common['Bad request']);
 
-	$query = new UpdateQuery(array('sticky' => '1'), 'topics');
+	$query = $db->update(array('sticky' => '1'), 'topics');
 	$query->where = 'id = :topic_id AND forum_id = :forum_id';
 
 	$params = array(':topic_id' => $stick, ':forum_id' => $fid);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 
 	redirect('viewtopic.php?id='.$stick, $lang_misc['Stick topic redirect']);
@@ -1085,12 +1075,12 @@ else if (isset($_GET['unstick']))
 	if ($unstick < 1)
 		message($lang_common['Bad request']);
 
-	$query = new UpdateQuery(array('sticky' => '0'), 'topics');
+	$query = $db->update(array('sticky' => '0'), 'topics');
 	$query->where = 'id = :topic_id AND forum_id = :forum_id';
 
 	$params = array(':topic_id' => $unstick, ':forum_id' => $fid);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 
 	redirect('viewtopic.php?id='.$unstick, $lang_misc['Unstick topic redirect']);
@@ -1103,16 +1093,15 @@ else if (isset($_GET['unstick']))
 require PUN_ROOT.'lang/'.$pun_user['language'].'/forum.php';
 
 // Fetch some info about the forum
-$query = new SelectQuery(array('forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url', 'num_topics' => 'f.num_topics', 'sort_by' => 'f.sort_by'), 'forums AS f');
+$query = $db->select(array('forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url', 'num_topics' => 'f.num_topics', 'sort_by' => 'f.sort_by'), 'forums AS f');
 
-$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id';
 
 $params = array(':group_id' => $pun_user['g_id'], ':forum_id' => $fid);
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 if (empty($result))
 	message($lang_common['Bad request']);
 
@@ -1187,7 +1176,7 @@ require PUN_ROOT.'header.php';
 
 
 // Retrieve a list of topic IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
-$query = new SelectQuery(array('id' => 't.id'), 'topics AS t');
+$query = $db->select(array('id' => 't.id'), 'topics AS t');
 $query->where = 't.forum_id = :forum_id';
 $query->order = array('sticky' => 't.sticky DESC', 'sort' => $sort_by, 'id' => 't.id DESC');
 $query->limit = $pun_user['disp_topics'];
@@ -1195,7 +1184,7 @@ $query->offset = $start_from;
 
 $params = array(':forum_id' => $fid);
 
-$topic_ids = $db->query($query, $params);
+$topic_ids = $query->run($params);
 unset ($query, $params);
 
 // If there are topics in this forum
@@ -1206,7 +1195,7 @@ if (!empty($topic_ids))
 		$topic_ids[$key] = $value['id'];
 
 	// Select topics
-	$query = new SelectQuery(array('id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to'), 'topics AS t');
+	$query = $db->select(array('id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to'), 'topics AS t');
 	$query->where = 't.id IN :tids';
 	$query->order = array('sticky' => 't.sticky DESC', 'sort' => $sort_by, 'id' => 't.id DESC');
 
@@ -1215,7 +1204,7 @@ if (!empty($topic_ids))
 	$button_status = '';
 	$topic_count = 0;
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	foreach ($result as $cur_topic)
 	{
 

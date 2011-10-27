@@ -188,16 +188,15 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 		// Declare here to stop array_keys() and array_diff() from complaining if not set
 		$cur_words = array('post' => array(), 'subject' => array());
 
-		$query = new SelectQuery(array('wid' => 'w.id', 'word' => 'w.word', 'subject_match' => 'w.subject_match'), 'search_words AS w');
+		$query = $db->select(array('wid' => 'w.id', 'word' => 'w.word', 'subject_match' => 'w.subject_match'), 'search_words AS w');
 
-		$query->joins['m'] = new InnerJoin('search_matches AS m');
-		$query->joins['m']->on = 'w.id = m.word_id';
+		$query->InnerJoin('m', 'search_matches AS m', 'w.id = m.word_id');
 
 		$query->where = 'm.post_id = :post_id';
 
 		$params = array(':post_id' => $post_id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		foreach ($result as $cur_word)
 		{
 			$match_in = $cur_word['subject_match'] ? 'subject' : 'post';
@@ -229,12 +228,12 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 	{
 		$word_ids = array();
 
-		$query = new SelectQuery(array('id' => 'w.id', 'word' => 'w.word'), 'search_words AS w');
+		$query = $db->select(array('id' => 'w.id', 'word' => 'w.word'), 'search_words AS w');
 		$query->where = 'w.word IN :words';
 
 		$params = array(':words' => $unique_words);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		foreach ($result as $cur_word)
 			$word_ids[$cur_word['word']] = $cur_word['id'];
 
@@ -245,12 +244,12 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 		if (!empty($new_words))
 		{
-			$insert_query = new InsertQuery(array('word' => ':word'), 'search_words');
+			$insert_query = $db->insert(array('word' => ':word'), 'search_words');
 
 			foreach ($new_words as $cur_word)
 			{
 				$params = array(':word' => $cur_word);
-				$db->query($insert_query, $params);
+				$insert_query->run($params);
 				unset ($params);
 			}
 
@@ -260,7 +259,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 		unset($new_words);
 	}
 
-	$delete_query = new DeleteQuery('search_matches');
+	$delete_query = $db->delete('search_matches');
 	$delete_query->where = 'word_id IN :wids AND post_id = :post_id AND subject_match = :subject_match';
 
 	// Delete matches (only if editing a post)
@@ -276,7 +275,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 				$word_ids[] = $cur_words[$match_in][$cur_word];
 
 			$params = array(':wids' => $word_ids, ':post_id' => $post_id, ':subject_match' => $subject_match);
-			$db->query($delete_query, $params);
+			$delete_query->run($params);
 			unset ($params);
 		}
 	}
@@ -344,11 +343,11 @@ function strip_search_index($post_ids)
 	}
 
 	// Delete all matches for the given posts
-	$query = new DeleteQuery('search_matches');
+	$query = $db->delete('search_matches');
 	$query->where = 'post_id IN :pids';
 
 	$params = array(':pids' => $post_ids);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 }

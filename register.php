@@ -66,12 +66,12 @@ $errors = array();
 if (isset($_POST['form_sent']))
 {
 	// Check that someone from this IP didn't register a user within the last hour (DoS prevention)
-	$query = new SelectQuery(array('one' => '1'), 'users AS u');
+	$query = $db->select(array('one' => '1'), 'users AS u');
 	$query->where = 'u.registration_ip = :remote_addr AND u.registered > :last_hour';
 
 	$params = array(':remote_addr' => get_remote_address(), ':last_hour' => time() - 3600);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if (!empty($result))
 		message($lang_register['Registration flood']);
 
@@ -123,12 +123,12 @@ if (isset($_POST['form_sent']))
 	// Check if someone else already has registered with that email address
 	$dupe_list = array();
 
-	$query = new SelectQuery(array('username' => 'u.username'), 'users AS u');
+	$query = $db->select(array('username' => 'u.username'), 'users AS u');
 	$query->where = 'u.email = :email';
 
 	$params = array(':email' => $email1);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if (!empty($result))
 	if ($db->num_rows($result))
 	{
@@ -169,11 +169,11 @@ if (isset($_POST['form_sent']))
 		$password_hash = pun_hash($password1);
 
 		// Add the user
-		$query = new InsertQuery(array('username' => ':username', 'group_id' => ':group_id', 'password' => ':password', 'email' => ':email', 'email_setting' => ':email_setting', 'timezone' => ':timezone', 'dst' => ':dst', 'language' => ':language', 'style' => ':style', 'registered' => ':registered', 'registration_ip' => ':registration_ip', 'last_visit' => ':last_visit'), 'users');
+		$query = $db->insert(array('username' => ':username', 'group_id' => ':group_id', 'password' => ':password', 'email' => ':email', 'email_setting' => ':email_setting', 'timezone' => ':timezone', 'dst' => ':dst', 'language' => ':language', 'style' => ':style', 'registered' => ':registered', 'registration_ip' => ':registration_ip', 'last_visit' => ':last_visit'), 'users');
 		$params = array(':username' => $username, ':group_id' => $intial_group_id, ':password' => $password_hash, ':email' => $email1, ':email_setting' => $email_setting, ':timezone' => $timezone, ':dst' => $dst, ':language' => $language, ':style' => $pun_config['o_default_style'], ':registered' => $now, ':registration_ip' => get_remote_address(), ':last_visit' => $now);
 
-		$db->query($query, $params);
-		$new_uid = $db->insert_id();
+		$query->run($params);
+		$new_uid = $db->insertId();
 
 		unset ($query, $params);
 

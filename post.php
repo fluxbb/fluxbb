@@ -20,10 +20,9 @@ if ($tid < 1 && $fid < 1 || $tid > 0 && $fid > 0)
 	message($lang_common['Bad request']);
 
 // Fetch some info about the topic and/or the forum
-$query = new SelectQuery(array('fid' => 'f.id', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'redirect_url' => 'f.redirect_url', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics'), 'forums AS f');
+$query = $db->select(array('fid' => 'f.id', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'redirect_url' => 'f.redirect_url', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics'), 'forums AS f');
 
-$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND '.($tid ? 't.id' : 'f.id').' = :id';
 
@@ -36,16 +35,14 @@ if ($tid)
 	$query->fields['closed'] = 't.closed';
 	$query->fields['is_subscribed'] = 's.user_id AS is_subscribed';
 
-	$query->joins['t'] = new InnerJoin('topics AS t');
-	$query->joins['t']->on = 't.forum_id = f.id';
+	$query->InnerJoin('t', 'topics AS t', 't.forum_id = f.id');
 
-	$query->joins['s'] = new LeftJoin('topic_subscriptions AS s');
-	$query->joins['s']->on = 't.id = s.topic_id AND s.user_id = :user_id';
+	$query->LeftJoin('s', 'topic_subscriptions AS s', 't.id = s.topic_id AND s.user_id = :user_id');
 
 	$params[':user_id'] = $pun_user['id'];
 }
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 if (empty($result))
 	message($lang_common['Bad request']);
 
@@ -191,11 +188,11 @@ if (isset($_POST['form_sent']))
 				$new_tid = $tid;
 
 				// Insert the new post
-				$query = new InsertQuery(array('poster' => ':poster', 'poster_id' => ':poster_id', 'poster_ip' => ':poster_ip', 'message' => ':message', 'hide_smilies' => ':hide_smilies', 'posted' => ':now', 'topic_id' => ':topic_id'), 'posts');
+				$query = $db->insert(array('poster' => ':poster', 'poster_id' => ':poster_id', 'poster_ip' => ':poster_ip', 'message' => ':message', 'hide_smilies' => ':hide_smilies', 'posted' => ':now', 'topic_id' => ':topic_id'), 'posts');
 				$params = array(':poster' => $username, ':poster_id' => $pun_user['id'], ':poster_ip' => get_remote_address(), ':message' => $message, ':hide_smilies' => $hide_smilies, ':now' => $now, ':topic_id' => $tid);
 
-				$db->query($query, $params);
-				$new_pid = $db->insert_id();
+				$query->run($params);
+				$new_pid = $db->insertId();
 				unset ($query, $params);
 
 				// To subscribe or not to subscribe, that ...
@@ -203,20 +200,20 @@ if (isset($_POST['form_sent']))
 				{
 					if ($subscribe && !$is_subscribed)
 					{
-						$query = new InsertQuery(array('user_id' => ':user_id', 'topic_id' => ':topic_id'), 'topic_subscriptions');
+						$query = $db->insert(array('user_id' => ':user_id', 'topic_id' => ':topic_id'), 'topic_subscriptions');
 						$params = array(':user_id' => $pun_user['id'], ':topic_id' => $tid);
 
-						$db->query($query, $params);
+						$query->run($params);
 						unset ($query, $params);
 					}
 					else if (!$subscribe && $is_subscribed)
 					{
-						$query = new DeleteQuery('topic_subscriptions');
+						$query = $db->delete('topic_subscriptions');
 						$query->where = 'user_id = :user_id AND topic_id = :topic_id';
 
 						$params = array(':user_id' => $pun_user['id'], ':topic_id' => $tid);
 
-						$db->query($query, $params);
+						$query->run($params);
 						unset ($query, $params);
 					}
 				}
@@ -224,31 +221,31 @@ if (isset($_POST['form_sent']))
 			else
 			{
 				// It's a guest. Insert the new post
-				$query = new InsertQuery(array('poster' => ':poster', 'poster_ip' => ':poster_ip', 'poster_email' => ':poster_email', 'message' => ':message', 'hide_smilies' => ':hide_smilies', 'posted' => ':now', 'topic_id' => ':topic_id'), 'posts');
+				$query = $db->insert(array('poster' => ':poster', 'poster_ip' => ':poster_ip', 'poster_email' => ':poster_email', 'message' => ':message', 'hide_smilies' => ':hide_smilies', 'posted' => ':now', 'topic_id' => ':topic_id'), 'posts');
 				$params = array(':poster' => $username, ':poster_ip' => get_remote_address(), ':poster_email' => empty($email) ? null : $email, ':message' => $message, ':hide_smilies' => $hide_smilies, ':now' => $now, ':topic_id' => $tid);
 
-				$db->query($query, $params);
-				$new_pid = $db->insert_id();
+				$query->run($params);
+				$new_pid = $db->insertId();
 				unset ($query, $params);
 			}
 
 			// Count number of replies in the topic
-			$query = new SelectQuery(array('num_replies' => '(COUNT(p.id) - 1) AS num_replies'), 'posts AS p');
+			$query = $db->select(array('num_replies' => '(COUNT(p.id) - 1) AS num_replies'), 'posts AS p');
 			$query->where = 'p.topic_id = :topic_id';
 
 			$params = array(':topic_id' => $tid);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			$num_replies = $result[0]['num_replies'];
 			unset ($result, $query, $params);
 
 			// Update topic
-			$query = new UpdateQuery(array('num_replies' => ':num_replies', 'last_post' => ':now', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster'), 'topics');
+			$query = $db->update(array('num_replies' => ':num_replies', 'last_post' => ':now', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster'), 'topics');
 			$query->where = 'id = :topic_id';
 
 			$params = array(':num_replies' => $num_replies, ':now' => $now, ':last_post_id' => $new_pid, ':last_poster' => $username, ':topic_id' => $tid);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			update_search_index('post', $new_pid, $message);
@@ -259,7 +256,7 @@ if (isset($_POST['form_sent']))
 			if ($pun_config['o_topic_subscriptions'] == '1')
 			{
 				// Get the post time for the previous post in this topic
-				$query = new SelectQuery(array('posted' => 'p.posted'), 'posts AS p');
+				$query = $db->select(array('posted' => 'p.posted'), 'posts AS p');
 				$query->where = 'p.topic_id = :topic_id';
 				$query->order = array('pid' => 'p.id DESC');
 				$query->offset = 1;
@@ -267,30 +264,26 @@ if (isset($_POST['form_sent']))
 
 				$params = array(':topic_id' => $tid);
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				$previous_post_time = $result[0]['posted'];
 				unset ($result, $query, $params);
 
 				// Get any subscribed users that should be notified (banned users are excluded)
-				$query = new SelectQuery(array('id' => 'u.id', 'email' => 'u.email', 'notify_with_post' => 'u.notify_with_post', 'language' => 'u.language'), 'users AS u');
+				$query = $db->select(array('id' => 'u.id', 'email' => 'u.email', 'notify_with_post' => 'u.notify_with_post', 'language' => 'u.language'), 'users AS u');
 
-				$query->joins['ts'] = new InnerJoin('topic_subscriptions AS ts');
-				$query->joins['ts']->on = 'u.id = ts.user_id';
+				$query->InnerJoin('ts', 'topic_subscriptions AS ts', 'u.id = ts.user_id');
 
-				$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-				$query->joins['fp']->on = 'fp.forum_id = :forum_id AND fp.group_id = u.group_id';
+				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = :forum_id AND fp.group_id = u.group_id');
 
-				$query->joins['o'] = new LeftJoin('online AS o');
-				$query->joins['o']->on = 'u.id = o.user_id';
+				$query->LeftJoin('o', 'online AS o', 'u.id = o.user_id');
 
-				$query->joins['b'] = new LeftJoin('bans AS b');
-				$query->joins['b']->on = 'u.username = b.username';
+				$query->LeftJoin('b', 'bans AS b', 'u.username = b.username');
 
 				$query->where = 'b.username IS NULL AND COALESCE(o.logged, u.last_visit) > :last_post AND (fp.read_forum IS NULL OR fp.read_forum = 1) AND ts.topic_id = :topic_id AND u.id != :user_id';
 
 				$params = array(':forum_id' => $cur_posting['id'], ':last_post' => $previous_post_time, ':topic_id' => $tid, ':user_id' => $pun_user['id']);
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				if (!empty($result))
 				{
 					require_once PUN_ROOT.'include/email.php';
@@ -369,11 +362,11 @@ if (isset($_POST['form_sent']))
 		else if ($fid)
 		{
 			// Create the topic
-			$query = new InsertQuery(array('poster' => ':poster', 'subject' => ':subject', 'poster' => ':now', 'last_post' => ':now', 'last_poster' => ':last_poster', 'sticky' => ':sticky', 'forum_id' => ':forum_id'), 'topics');
+			$query = $db->insert(array('poster' => ':poster', 'subject' => ':subject', 'poster' => ':now', 'last_post' => ':now', 'last_poster' => ':last_poster', 'sticky' => ':sticky', 'forum_id' => ':forum_id'), 'topics');
 			$params = array(':poster' => $username, ':subject' => $subject, ':now' => $now, ':last_poster' => $username, ':sticky' => $stick_topic, ':forum_id' => $fid);
 
-			$db->query($query, $params);
-			$new_tid = $db->insert_id();
+			$query->run($params);
+			$new_tid = $db->insertId();
 			unset ($query, $params);
 
 			if (!$pun_user['is_guest'])
@@ -381,39 +374,39 @@ if (isset($_POST['form_sent']))
 				// To subscribe or not to subscribe, that ...
 				if ($pun_config['o_topic_subscriptions'] == '1' && $subscribe)
 				{
-					$query = new InsertQuery(array('user_id' => ':user_id', 'topic_id' => ':topic_id'), 'topic_subscriptions');
+					$query = $db->insert(array('user_id' => ':user_id', 'topic_id' => ':topic_id'), 'topic_subscriptions');
 					$params = array(':user_id' => $pun_user['id'], ':topic_id' => $new_tid);
 
-					$db->query($query, $params);
+					$query->run($params);
 					unset ($query, $params);
 				}
 
 				// Create the post ("topic post")
-				$query = new InsertQuery(array('poster' => ':poster', 'poster_id' => ':poster_id', 'poster_ip' => ':poster_ip', 'message' => ':message', 'hide_smilies' => ':hide_smilies', 'posted' => ':now', 'topic_id' => ':topic_id'), 'posts');
+				$query = $db->insert(array('poster' => ':poster', 'poster_id' => ':poster_id', 'poster_ip' => ':poster_ip', 'message' => ':message', 'hide_smilies' => ':hide_smilies', 'posted' => ':now', 'topic_id' => ':topic_id'), 'posts');
 				$params = array(':poster' => $username, ':poster_id' => $pun_user['id'], ':poster_ip' => get_remote_address(), ':message' => $message, ':hide_smilies' => $hide_smilies, ':now' => $now, ':topic_id' => $new_tid);
 
-				$db->query($query, $params);
-				$new_pid = $db->insert_id();
+				$query->run($params);
+				$new_pid = $db->insertId();
 				unset ($query, $params);
 			}
 			else
 			{
 				// Create the post ("topic post")
-				$query = new InsertQuery(array('poster' => ':poster', 'poster_ip' => ':poster_ip', 'poster_email' => ':poster_email', 'message' => ':message', 'hide_smilies' => ':hide_smilies', 'posted' => ':posted', 'topic_id' => ':topic_id'), 'posts');
+				$query = $db->insert(array('poster' => ':poster', 'poster_ip' => ':poster_ip', 'poster_email' => ':poster_email', 'message' => ':message', 'hide_smilies' => ':hide_smilies', 'posted' => ':posted', 'topic_id' => ':topic_id'), 'posts');
 				$params = array(':poster' => $username, ':poster_ip' => get_remote_address(), ':poster_email' => empty($email) ? null : $email, ':message' => $message, ':hide_smilies' => $hide_smilies, ':now' => $now, ':topic_id' => $new_tid);
 
-				$db->query($query, $params);
-				$new_pid = $db->insert_id();
+				$query->run($params);
+				$new_pid = $db->insertId();
 				unset ($query, $params);
 			}
 
 			// Update the topic with last_post_id
-			$query = new UpdateQuery(array('last_post_id' => ':new_pid', 'first_post_id' => ':new_pid'), 'topics');
+			$query = $db->update(array('last_post_id' => ':new_pid', 'first_post_id' => ':new_pid'), 'topics');
 			$query->where = 'id = :topic_id';
 
 			$params = array(':new_pid' => $new_pid, ':topic_id' => $new_tid);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			update_search_index('post', $new_pid, $message, $subject);
@@ -424,22 +417,19 @@ if (isset($_POST['form_sent']))
 			if ($pun_config['o_forum_subscriptions'] == '1')
 			{
 				// Get any subscribed users that should be notified (banned users are excluded)
-				$query = new SelectQuery(array('id' => 'u.id', 'email' => 'u.email', 'notify_with_post' => 'u.notify_with_post', 'language' => 'u.language'), 'users AS u');
+				$query = $db->select(array('id' => 'u.id', 'email' => 'u.email', 'notify_with_post' => 'u.notify_with_post', 'language' => 'u.language'), 'users AS u');
 
-				$query->joins['fs'] = new InnerJoin('forum_subscriptions AS fs');
-				$query->joins['fs']->on = 'u.id = fs.user_id';
+				$query->InnerJoin('fs', 'forum_subscriptions AS fs', 'u.id = fs.user_id');
 
-				$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-				$query->joins['fp']->on = 'fp.forum_id = :forum_id AND fp.group_id = u.group_id';
+				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = :forum_id AND fp.group_id = u.group_id');
 
-				$query->joins['b'] = new LeftJoin('bans AS b');
-				$query->joins['b']->on = 'u.username = b.username';
+				$query->LeftJoin('b', 'bans AS b', 'u.username = b.username');
 
 				$query->where = 'b.username IS NULL AND (fp.read_forum IS NULL OR fp.read_forum = 1) AND fs.forum_id = :forum_id AND u.id != :user_id';
 
 				$params = array(':forum_id' => $cur_posting['id'], ':user_id' => $pun_user['id']);
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				if (!empty($result))
 				{
 					require_once PUN_ROOT.'include/email.php';
@@ -539,12 +529,12 @@ if (isset($_POST['form_sent']))
 		// If the posting user is logged in, increment his/her post count
 		if (!$pun_user['is_guest'])
 		{
-			$query = new UpdateQuery(array('num_posts' => 'num_posts + 1', 'last_post' => ':now'), 'users');
+			$query = $db->update(array('num_posts' => 'num_posts + 1', 'last_post' => ':now'), 'users');
 			$query->where = 'id = :user_id';
 
 			$params = array(':now' => $now, ':user_id' => $pun_user['id']);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			$tracked_topics = get_tracked_topics();
@@ -553,12 +543,12 @@ if (isset($_POST['form_sent']))
 		}
 		else
 		{
-			$query = new UpdateQuery(array('last_post' => ':now'), 'online');
+			$query = $db->update(array('last_post' => ':now'), 'online');
 			$query->where = 'ident = :ident';
 
 			$params = array(':now' => $now, ':ident' => get_remote_address());
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 		}
 
@@ -580,12 +570,12 @@ if ($tid)
 		if ($qid < 1)
 			message($lang_common['Bad request']);
 
-		$query = new SelectQuery(array('poster' => 'p.poster', 'message' => 'p.message'), 'posts AS p');
+		$query = $db->select(array('poster' => 'p.poster', 'message' => 'p.message'), 'posts AS p');
 		$query->where = 'p.id = :qid AND p.topic_id = :tid';
 
 		$params = array(':qid' => $qid, ':tid' => $tid);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (empty($result))
 			message($lang_common['Bad request']);
 
@@ -852,14 +842,14 @@ if ($tid && $pun_config['o_topic_review'] != '0')
 	<h2><span><?php echo $lang_post['Topic review'] ?></span></h2>
 <?php
 
-	$query = new SelectQuery(array('poster' => 'p.poster', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted'), 'posts AS p');
+	$query = $db->select(array('poster' => 'p.poster', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted'), 'posts AS p');
 	$query->where = 'p.topic_id = :tid';
 	$query->order = array('id' => 'p.id DESC');
 	$query->limit = $pun_config['o_topic_review'];
 
 	$params = array(':tid' => $tid);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 
 	// Set background switching on
 	$post_count = 0;

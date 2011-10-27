@@ -27,23 +27,23 @@ if (isset($_POST['zap_id']))
 
 	$zap_id = intval(key($_POST['zap_id']));
 
-	$query = new UpdateQuery(array('zapped' => ':now', 'zapped_by' => ':user_id'), 'reports');
+	$query = $db->update(array('zapped' => ':now', 'zapped_by' => ':user_id'), 'reports');
 	$query->where = 'zapped IS NULL AND :zid';
 
 	$params = array(':now' => time(), ':user_id' => $pun_user['id'], ':zid' => $zap_id);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 
 	// Delete old reports (which cannot be viewed anyway)
-	$query = new DeleteQuery('reports AS r');
+	$query = $db->delete('reports AS r');
 	$query->where = 'r.zapped IS NOT NULL';
 	$query->order = array('zapped' => 'r.zapped DESC');
 	$query->offset = 10;
 
 	$params = array();
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 
 	$cache->delete('num_reports');
@@ -65,26 +65,22 @@ generate_admin_menu('reports');
 			<form method="post" action="admin_reports.php?action=zap">
 <?php
 
-$query = new SelectQuery(array('rid' => 'r.id', 'topic_id' => 'r.topic_id', 'forum_id' => 'r.forum_id', 'reported_by' => 'r.reported_by', 'created' => 'r.created', 'message' => 'r.message', 'pid' => 'p.id AS pid', 'subject' => 't.subject', 'forum_name' => 'f.forum_name', 'reporter' => 'u.username AS reporter'), 'reports AS r');
+$query = $db->select(array('rid' => 'r.id', 'topic_id' => 'r.topic_id', 'forum_id' => 'r.forum_id', 'reported_by' => 'r.reported_by', 'created' => 'r.created', 'message' => 'r.message', 'pid' => 'p.id AS pid', 'subject' => 't.subject', 'forum_name' => 'f.forum_name', 'reporter' => 'u.username AS reporter'), 'reports AS r');
 
-$query->joins['f'] = new LeftJoin('forums AS f');
-$query->joins['f']->on = 'r.forum_id = f.id';
+$query->LeftJoin('f', 'forums AS f', 'r.forum_id = f.id');
 
-$query->joins['p'] = new LeftJoin('posts AS p');
-$query->joins['p']->on = 'r.post_id = p.id';
+$query->LeftJoin('p', 'posts AS p', 'r.post_id = p.id');
 
-$query->joins['t'] = new LeftJoin('topics AS t');
-$query->joins['t']->on = 'r.topic_id = t.id';
+$query->LeftJoin('t', 'topics AS t', 'r.topic_id = t.id');
 
-$query->joins['u'] = new LeftJoin('users AS u');
-$query->joins['u']->on = 'r.reported_by = u.id';
+$query->LeftJoin('u', 'users AS u', 'r.reported_by = u.id');
 
 $query->where = 'r.zapped IS NULL';
 $query->order = array('created' => 'r.created DESC');
 
 $params = array();
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 unset ($query, $params);
 
 if (!empty($result))
@@ -149,22 +145,17 @@ unset ($result);
 			<div class="fakeform">
 <?php
 
-$query = new SelectQuery(array('rid' => 'r.id', 'topic_id' => 'r.topic_id', 'forum_id' => 'r.forum_id', 'reported_by' => 'r.reported_by', 'message' => 'r.message', 'zapped' => 'r.zapped', 'zapped_by_id' => 'r.zapped_by AS zapped_by_id', 'pid' => 'p.id AS pid', 'subject' => 't.subject', 'forum_name' => 'f.forum_name', 'reporter' => 'u.username AS reporter', 'zapped_by' => 'u2.username AS zapped_by'), 'reports AS r');
+$query = $db->select(array('rid' => 'r.id', 'topic_id' => 'r.topic_id', 'forum_id' => 'r.forum_id', 'reported_by' => 'r.reported_by', 'message' => 'r.message', 'zapped' => 'r.zapped', 'zapped_by_id' => 'r.zapped_by AS zapped_by_id', 'pid' => 'p.id AS pid', 'subject' => 't.subject', 'forum_name' => 'f.forum_name', 'reporter' => 'u.username AS reporter', 'zapped_by' => 'u2.username AS zapped_by'), 'reports AS r');
 
-$query->joins['p'] = new LeftJoin('posts AS p');
-$query->joins['p']->on = 'r.post_id = p.id';
+$query->LeftJoin('p', 'posts AS p', 'r.post_id = p.id');
 
-$query->joins['t'] = new LeftJoin('topics AS t');
-$query->joins['t']->on = 'r.topic_id = t.id';
+$query->LeftJoin('t', 'topics AS t', 'r.topic_id = t.id');
 
-$query->joins['f'] = new LeftJoin('forums AS f');
-$query->joins['f']->on = 'r.forum_id = f.id';
+$query->LeftJoin('f', 'forums AS f', 'r.forum_id = f.id');
 
-$query->joins['u'] = new LeftJoin('users AS u');
-$query->joins['u']->on = 'r.reported_by = u.id';
+$query->LeftJoin('u', 'users AS u', 'r.reported_by = u.id');
 
-$query->joins['u2'] = new LeftJoin('users AS u2');
-$query->joins['u2']->on = 'r.zapped_by = u2.id';
+$query->LeftJoin('u2', 'users AS u2', 'r.zapped_by = u2.id');
 
 $query->where = 'r.zapped IS NOT NULL';
 $query->order = array('zapped' => 'r.zapped DESC');
@@ -172,7 +163,7 @@ $query->limit = 10;
 
 $params = array();
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 unset ($query, $params);
 
 if (!empty($result))
