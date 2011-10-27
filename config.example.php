@@ -4,7 +4,7 @@ $flux_config = array();
 
 $flux_config['db']['type']			= 'mysql';
 $flux_config['db']['host']			= 'localhost';
-$flux_config['db']['name']			= 'fluxbb__2.0';
+$flux_config['db']['dbname']		= 'fluxbb__2.0';
 $flux_config['db']['username']		= 'root';
 $flux_config['db']['password']		= '';
 $flux_config['db']['prefix']		= 'forum_';
