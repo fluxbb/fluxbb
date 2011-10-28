@@ -42,7 +42,7 @@ if (isset($_GET['get_host']))
 	// Load the misc.php language file
 	$lang->load('misc');
 
-	message(sprintf($lang->t('Host info 1'), $ip).'<br />'.sprintf($lang->t('Host info 2'), @gethostbyaddr($ip)).'<br /><br /><a href="admin_users.php?show_users='.$ip.'">'.$lang->t('Show more users').'</a>');
+	message($lang->t('Host info 1', $ip).'<br />'.$lang->t('Host info 2', @gethostbyaddr($ip)).'<br /><br /><a href="admin_users.php?show_users='.$ip.'">'.$lang->t('Show more users').'</a>');
 }
 
 

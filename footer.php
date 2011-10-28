@@ -174,7 +174,7 @@ else if ($footer_style == 'viewtopic')
 }
 
 ?>
-				<p id="poweredby"><?php printf($lang->t('Powered by'), '<a href="http://fluxbb.org/">FluxBB</a>'.(($pun_config['o_show_version'] == '1') ? ' '.$pun_config['o_cur_version'] : '')) ?></p>
+				<p id="poweredby"><?php echo $lang->t('Powered by', '<a href="http://fluxbb.org/">FluxBB</a>'.(($pun_config['o_show_version'] == '1') ? ' '.$pun_config['o_cur_version'] : '')) ?></p>
 			</div>
 			<div class="clearer"></div>
 		</div>
@@ -190,14 +190,14 @@ if (defined('PUN_DEBUG'))
 	// Calculate script generation time
 	$time_diff = sprintf('%.3f', get_microtime() - $pun_start);
 	$queries = $db->getDebugQueries();
-	echo sprintf($lang->t('Querytime'), $time_diff, count($queries));
+	echo $lang->t('Querytime', $time_diff, count($queries));
 
 	if (function_exists('memory_get_usage'))
 	{
-		echo ' - '.sprintf($lang->t('Memory usage'), file_size(memory_get_usage()));
+		echo ' - '.$lang->t('Memory usage', file_size(memory_get_usage()));
 
 		if (function_exists('memory_get_peak_usage'))
-			echo ' '.sprintf($lang->t('Peak usage'), file_size(memory_get_peak_usage()));
+			echo ' '.$lang->t('Peak usage', file_size(memory_get_peak_usage()));
 	}
 
 	echo ' ]</p>'."\n";

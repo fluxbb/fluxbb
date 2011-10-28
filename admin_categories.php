@@ -140,7 +140,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 					<fieldset>
 						<legend><?php echo $lang->t('Confirm delete subhead') ?></legend>
 						<div class="infldset">
-							<p><?php printf($lang->t('Confirm delete info'), pun_htmlspecialchars($cat_name)) ?></p>
+							<p><?php echo $lang->t('Confirm delete info', pun_htmlspecialchars($cat_name)) ?></p>
 							<p class="warntext"><?php echo $lang->t('Delete category warn') ?></p>
 						</div>
 					</fieldset>
@@ -222,7 +222,7 @@ generate_admin_menu('categories');
 									<th scope="row"><?php echo $lang->t('Add category label') ?><div><input type="submit" name="add_cat" value="<?php echo $lang->t('Add new submit') ?>" tabindex="2" /></div></th>
 									<td>
 										<input type="text" name="new_cat_name" size="35" maxlength="80" tabindex="1" />
-										<span><?php printf($lang->t('Add category help'), '<a href="admin_forums.php">'.$lang->t('Forums').'</a>') ?></span>
+										<span><?php echo $lang->t('Add category help', '<a href="admin_forums.php">'.$lang->t('Forums').'</a>') ?></span>
 									</td>
 								</tr>
 							</table>

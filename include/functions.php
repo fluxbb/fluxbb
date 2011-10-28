@@ -719,7 +719,7 @@ function generate_page_title($page_title, $p = null)
 	$page_title = array_reverse($page_title);
 
 	if ($p != null)
-		$page_title[0] .= ' ('.sprintf($lang->t('Page'), forum_number_format($p)).')';
+		$page_title[0] .= ' ('.$lang->t('Page', forum_number_format($p)).')';
 
 	$crumbs = implode($lang->t('Title separator'), $page_title);
 
@@ -1490,7 +1490,7 @@ function maintenance_message()
 		else if (file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
 			require PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
 		else
-			error(sprintf($lang->t('Pun include error'), htmlspecialchars($cur_include[0]), basename($tpl_file)));
+			error($lang->t('Pun include error', htmlspecialchars($cur_include[0]), basename($tpl_file)));
 
 		$tpl_temp = ob_get_contents();
 		$tpl_maint = str_replace($cur_include[0], $tpl_temp, $tpl_maint);
@@ -1609,7 +1609,7 @@ function redirect($destination_url, $message)
 		else if (file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
 			require PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
 		else
-			error(sprintf($lang->t('Pun include error'), htmlspecialchars($cur_include[0]), basename($tpl_file)));
+			error($lang->t('Pun include error', htmlspecialchars($cur_include[0]), basename($tpl_file)));
 
 		$tpl_temp = ob_get_contents();
 		$tpl_redir = str_replace($cur_include[0], $tpl_temp, $tpl_redir);
@@ -1848,7 +1848,7 @@ function file_size($size)
 	for ($i = 0; $size > 1024; $i++)
 		$size /= 1024;
 
-	return sprintf($lang->t('Size unit '.$units[$i]), round($size, 2));;
+	return $lang->t('Size unit '.$units[$i], round($size, 2));;
 }
 
 
@@ -2162,7 +2162,7 @@ function display_saved_queries()
 
 ?>
 				<tr>
-					<td class="tcl" colspan="2"><?php printf($lang->t('Total query time'), forum_number_format($query_time_total, 5).' s') ?></td>
+					<td class="tcl" colspan="2"><?php echo $lang->t('Total query time', forum_number_format($query_time_total, 5).' s') ?></td>
 				</tr>
 			</tbody>
 			</table>

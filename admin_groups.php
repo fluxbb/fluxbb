@@ -305,7 +305,7 @@ else if (isset($_POST['add_edit_group']))
 
 		$result = $query->run($params);
 		if (!empty($result))
-			message(sprintf($lang->t('Title already exists message'), pun_htmlspecialchars($title)));
+			message($lang->t('Title already exists message', pun_htmlspecialchars($title)));
 
 		unset ($result, $query, $params);
 
@@ -346,7 +346,7 @@ else if (isset($_POST['add_edit_group']))
 
 		$result = $query->run($params);
 		if (!empty($result))
-			message(sprintf($lang->t('Title already exists message'), pun_htmlspecialchars($title)));
+			message($lang->t('Title already exists message', pun_htmlspecialchars($title)));
 
 		unset ($result, $query, $params);
 
@@ -501,7 +501,7 @@ else if (isset($_GET['del_group']))
 					<fieldset>
 						<legend><?php echo $lang->t('Confirm delete subhead') ?></legend>
 						<div class="infldset">
-							<p><?php printf($lang->t('Confirm delete info'), pun_htmlspecialchars($group_title)) ?></p>
+							<p><?php echo $lang->t('Confirm delete info', pun_htmlspecialchars($group_title)) ?></p>
 							<p class="warntext"><?php echo $lang->t('Confirm delete warn') ?></p>
 						</div>
 					</fieldset>
@@ -538,7 +538,7 @@ else if (isset($_GET['del_group']))
 					<fieldset>
 						<legend><?php echo $lang->t('Move users subhead') ?></legend>
 						<div class="infldset">
-							<p><?php printf($lang->t('Move users info'), pun_htmlspecialchars($group_title), forum_number_format($group_members)) ?></p>
+							<p><?php echo $lang->t('Move users info', pun_htmlspecialchars($group_title), forum_number_format($group_members)) ?></p>
 							<label><?php echo $lang->t('Move users label') ?>
 							<select name="move_to_group">
 <?php

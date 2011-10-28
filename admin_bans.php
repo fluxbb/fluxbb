@@ -75,7 +75,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		if (isset($group_id))
 		{
 			if ($group_id == PUN_ADMIN)
-				message(sprintf($lang->t('User is admin message'), pun_htmlspecialchars($ban_user)));
+				message($lang->t('User is admin message', pun_htmlspecialchars($ban_user)));
 
 			$query = $db->select(array('g_moderator' => 'g.g_moderator'), 'groups AS g');
 			$query->where = 'g.g_id = :group_id';
@@ -87,7 +87,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 			unset ($result, $query, $params);
 
 			if ($is_moderator_group)
-				message(sprintf($lang->t('User is mod message'), pun_htmlspecialchars($ban_user)));
+				message($lang->t('User is mod message', pun_htmlspecialchars($ban_user)));
 		}
 
 		// If we have a $user_id, we can try to find the last known IP of that user
@@ -264,10 +264,10 @@ else if (isset($_POST['add_edit_ban']))
 		if (!empty($result))
 		{
 			if ($result[0]['group_id'] == PUN_ADMIN)
-				message(sprintf($lang->t('User is admin message'), pun_htmlspecialchars($ban_user)));
+				message($lang->t('User is admin message', pun_htmlspecialchars($ban_user)));
 
 			if ($result[0]['g_moderator'])
-				message(sprintf($lang->t('User is mod message'), pun_htmlspecialchars($ban_user)));
+				message($lang->t('User is mod message', pun_htmlspecialchars($ban_user)));
 		}
 
 		unset ($result, $query, $params);
