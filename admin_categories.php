@@ -53,12 +53,12 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 
 		$query = $db->select(array('id' => 'f.id'), 'forums AS f');
 		$query->where = 'f.cat_id = :cat_id';
-		
+
 		$params = array(':cat_id' => $cat_to_delete);
-		
+
 		$result = $query->run($params);
 		unset($query, $params);
-		
+
 		foreach ($result as $cur_forum)
 		{
 			// Prune all posts and topics
@@ -67,9 +67,9 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 			// Delete the forum
 			$query = $db->delete('forums');
 			$query->where = 'id = :forum_id';
-			
+
 			$params = array(':forum_id' => $cur_forum['id']);
-			
+
 			$query->run($params);
 			unset($query, $params);
 		}
@@ -79,10 +79,10 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 		$query = $db->select(array('id' => 't1.id'), 'topics AS t1');
 		$query->LeftJoin('t1', 'topics AS t2', 't1.moved_to = t2.id');
 		$query->where = 't2.id IS NULL AND t1.moved_to IS NOT NULL';
-		
-		$result = $db->query($query);
+
+		$result = $query->run();
 		unset($query);
-		
+
 		if (!empty($result))
 		{
 			$orphans = array();
@@ -91,9 +91,9 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 
 			$query = $db->delete('topics');
 			$query->where = 'id IN :orphans';
-			
+
 			$params = array(':orphans' => $orphans);
-			
+
 			$query->run($params);
 			unset($query, $params);
 		}
@@ -102,9 +102,9 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 		// Delete the category
 		$query = $db->delete('categories');
 		$query->where = 'id = :cat_id';
-		
+
 		$params = array(':cat_id' => $cat_to_delete);
-		
+
 		$query->run($params);
 		unset($query, $params);
 
@@ -117,9 +117,9 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 	{
 		$query = $db->select(array('cat_name' => 'c.cat_name'), 'categories AS c');
 		$query->where = 'c.id = :cat_id';
-		
+
 		$params = array(':cat_id' => $cat_to_delete);
-		
+
 		$result = $query->run($params);
 		$cat_name = $result[0]['cat_name'];
 		unset($query, $params, $result);
