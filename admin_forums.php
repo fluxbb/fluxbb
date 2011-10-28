@@ -144,7 +144,7 @@ else if (isset($_GET['del_forum']))
 					<fieldset>
 						<legend><?php echo $lang->t('Confirm delete subhead') ?></legend>
 						<div class="infldset">
-							<p><?php printf($lang->t('Confirm delete info'), $forum_name) ?></p>
+							<p><?php echo $lang->t('Confirm delete info', $forum_name) ?></p>
 							<p class="warntext"><?php echo $lang->t('Confirm delete warn') ?></p>
 						</div>
 					</fieldset>
@@ -373,7 +373,7 @@ else if (isset($_GET['edit_forum']))
 					<fieldset>
 						<legend><?php echo $lang->t('Group permissions subhead') ?></legend>
 						<div class="infldset">
-							<p><?php printf($lang->t('Group permissions info'), '<a href="admin_groups.php">'.$lang->t('User groups').'</a>') ?></p>
+							<p><?php echo $lang->t('Group permissions info', '<a href="admin_groups.php">'.$lang->t('User groups').'</a>') ?></p>
 							<table id="forumperms" cellspacing="0">
 							<thead>
 								<tr>

@@ -98,7 +98,7 @@ $cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport'); // T
 
 // Make sure we are running at least MIN_PHP_VERSION
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
-	exit(sprintf($lang->t('You are running error'), 'PHP', PHP_VERSION, FORUM_VERSION, MIN_PHP_VERSION));
+	exit($lang->t('You are running error', 'PHP', PHP_VERSION, FORUM_VERSION, MIN_PHP_VERSION));
 
 
 //
@@ -209,11 +209,11 @@ else
 
 // Check if the cache directory is writable
 if (!@is_writable(FORUM_CACHE_DIR))
-	$alerts[] = sprintf($lang->t('Alert cache'), FORUM_CACHE_DIR);
+	$alerts[] = $lang->t('Alert cache', FORUM_CACHE_DIR);
 
 // Check if default avatar directory is writable
 if (!@is_writable(PUN_ROOT.'img/avatars/'))
-	$alerts[] = sprintf($lang->t('Alert avatar'), PUN_ROOT.'img/avatars/');
+	$alerts[] = $lang->t('Alert avatar', PUN_ROOT.'img/avatars/');
 
 if (!isset($_POST['form_sent']) || !empty($alerts))
 {
@@ -577,7 +577,7 @@ else
 			break;
 
 		default:
-			error(sprintf($lang->t('DB type not valid'), pun_htmlspecialchars($db_type)));
+			error($lang->t('DB type not valid', pun_htmlspecialchars($db_type)));
 	}
 
 	// Create the database object (and connect/select db)
@@ -585,7 +585,7 @@ else
 
 	// Validate prefix
 	if (strlen($db_prefix) > 0 && (!preg_match('%^[a-zA-Z_][a-zA-Z0-9_]*$%', $db_prefix) || strlen($db_prefix) > 40))
-		error(sprintf($lang->t('Table prefix error'), $db->prefix));
+		error($lang->t('Table prefix error', $db->prefix));
 
 	// Do some DB type specific checks
 	switch ($db_type)
@@ -596,13 +596,13 @@ else
 		case 'mysqli_innodb':
 			$mysql_info = $db->getVersion();
 			if (version_compare($mysql_info['version'], MIN_MYSQL_VERSION, '<'))
-				error(sprintf($lang->t('You are running error'), 'MySQL', $mysql_info['version'], FORUM_VERSION, MIN_MYSQL_VERSION));
+				error($lang->t('You are running error', 'MySQL', $mysql_info['version'], FORUM_VERSION, MIN_MYSQL_VERSION));
 			break;
 
 		case 'pgsql':
 			$pgsql_info = $db->getVersion();
 			if (version_compare($pgsql_info['version'], MIN_PGSQL_VERSION, '<'))
-				error(sprintf($lang->t('You are running error'), 'PostgreSQL', $pgsql_info['version'], FORUM_VERSION, MIN_PGSQL_VERSION));
+				error($lang->t('You are running error', 'PostgreSQL', $pgsql_info['version'], FORUM_VERSION, MIN_PGSQL_VERSION));
 			break;
 
 		case 'sqlite':
@@ -615,7 +615,7 @@ else
 	// Make sure FluxBB isn't already installed
 	$result = $db->query('SELECT 1 FROM '.$db_prefix.'users WHERE id=1');
 	if ($db->num_rows($result))
-		error(sprintf($lang->t('Existing table error'), $db_prefix, $db_name));
+		error($lang->t('Existing table error', $db_prefix, $db_name));
 
 	// Check if InnoDB is available
 	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')

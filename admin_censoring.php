@@ -108,7 +108,7 @@ generate_admin_menu('censoring');
 					<fieldset>
 						<legend><?php echo $lang->t('Add word subhead') ?></legend>
 						<div class="infldset">
-							<p><?php echo $lang->t('Add word info').' '.($pun_config['o_censoring'] == '1' ? sprintf($lang->t('Censoring enabled'), '<a href="admin_options.php#censoring">'.$lang->t('Options').'</a>') : sprintf($lang->t('Censoring disabled'), '<a href="admin_options.php#censoring">'.$lang->t('Options').'</a>')) ?></p>
+							<p><?php echo $lang->t('Add word info').' '.($pun_config['o_censoring'] == '1' ? $lang->t('Censoring enabled', '<a href="admin_options.php#censoring">'.$lang->t('Options').'</a>') : $lang->t('Censoring disabled', '<a href="admin_options.php#censoring">'.$lang->t('Options').'</a>')) ?></p>
 							<table cellspacing="0">
 							<thead>
 								<tr>

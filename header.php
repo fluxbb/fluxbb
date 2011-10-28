@@ -53,7 +53,7 @@ foreach ($pun_includes as $cur_include)
 	else if (file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
 		require PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
 	else
-		error(sprintf($lang->t('Pun include error'), htmlspecialchars($cur_include[0]), basename($tpl_file)));
+		error($lang->t('Pun include error', htmlspecialchars($cur_include[0]), basename($tpl_file)));
 
 	$tpl_temp = ob_get_contents();
 	$tpl_main = str_replace($cur_include[0], $tpl_temp, $tpl_main);
@@ -230,7 +230,7 @@ if ($pun_user['is_guest'])
 else
 {
 	$page_statusinfo[] = '<li><span>'.$lang->t('Logged in as').' <strong>'.pun_htmlspecialchars($pun_user['username']).'</strong></span></li>';
-	$page_statusinfo[] = '<li><span>'.sprintf($lang->t('Last visit'), format_time($pun_user['last_visit'])).'</span></li>';
+	$page_statusinfo[] = '<li><span>'.$lang->t('Last visit', format_time($pun_user['last_visit'])).'</span></li>';
 
 	if ($pun_user['is_admmod'])
 	{

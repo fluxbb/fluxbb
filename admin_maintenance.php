@@ -103,7 +103,7 @@ h1 {
 	$end_at = 0;
 	foreach ($result as $cur_item)
 	{
-		echo '<p><span>'.sprintf($lang->t('Processing post'), $cur_item['id']).'</span></p>'."\n";
+		echo '<p><span>'.$lang->t('Processing post', $cur_item['id']).'</span></p>'."\n";
 
 		if ($cur_item['id'] == $cur_item['first_post_id'])
 			update_search_index('post', $cur_item['id'], $cur_item['message'], $cur_item['subject']);
@@ -133,7 +133,7 @@ h1 {
 	$db->commitTransaction();
 	unset ($db);
 
-	exit('<script type="text/javascript">window.location="admin_maintenance.php'.$query_str.'"</script><hr /><p>'.sprintf($lang->t('Javascript redirect failed'), '<a href="admin_maintenance.php'.$query_str.'">'.$lang->t('Click here').'</a>').'</p>');
+	exit('<script type="text/javascript">window.location="admin_maintenance.php'.$query_str.'"</script><hr /><p>'.$lang->t('Javascript redirect failed', '<a href="admin_maintenance.php'.$query_str.'">'.$lang->t('Click here').'</a>').'</p>');
 }
 
 if ($action == 'prune')
@@ -243,7 +243,7 @@ if ($action == 'prune')
 	unset ($result, $query, $params);
 
 	if (!$num_topics)
-		message(sprintf($lang->t('No old topics message'), $prune_days));
+		message($lang->t('No old topics message', $prune_days));
 
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Admin'), $lang->t('Prune'));
@@ -265,7 +265,7 @@ if ($action == 'prune')
 					<fieldset>
 						<legend><?php echo $lang->t('Confirm prune subhead') ?></legend>
 						<div class="infldset">
-							<p><?php printf($lang->t('Confirm prune info'), $prune_days, $forum, forum_number_format($num_topics)) ?></p>
+							<p><?php echo $lang->t('Confirm prune info', $prune_days, $forum, forum_number_format($num_topics)) ?></p>
 							<p class="warntext"><?php echo $lang->t('Confirm prune warn') ?></p>
 						</div>
 					</fieldset>
@@ -312,7 +312,7 @@ generate_admin_menu('maintenance');
 					<fieldset>
 						<legend><?php echo $lang->t('Rebuild index subhead') ?></legend>
 						<div class="infldset">
-							<p><?php printf($lang->t('Rebuild index info'), '<a href="admin_options.php#maintenance">'.$lang->t('Maintenance mode').'</a>') ?></p>
+							<p><?php echo $lang->t('Rebuild index info', '<a href="admin_options.php#maintenance">'.$lang->t('Maintenance mode').'</a>') ?></p>
 							<table class="aligntop" cellspacing="0">
 								<tr>
 									<th scope="row"><?php echo $lang->t('Posts per cycle label') ?></th>
@@ -405,7 +405,7 @@ generate_admin_menu('maintenance');
 									</td>
 								</tr>
 							</table>
-							<p class="topspace"><?php printf($lang->t('Prune info'), '<a href="admin_options.php#maintenance">'.$lang->t('Maintenance mode').'</a>') ?></p>
+							<p class="topspace"><?php echo $lang->t('Prune info', '<a href="admin_options.php#maintenance">'.$lang->t('Maintenance mode').'</a>') ?></p>
 							<div class="fsetsubmit"><input type="submit" name="prune" value="<?php echo $lang->t('Prune') ?>" tabindex="8" /></div>
 						</div>
 					</fieldset>

@@ -130,7 +130,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		{
 			// Flood protection
 			if ($pun_user['last_search'] && (time() - $pun_user['last_search']) < $pun_user['g_search_flood'] && (time() - $pun_user['last_search']) >= 0)
-				message(sprintf($lang->t('Search flood'), $pun_user['g_search_flood']));
+				message($lang->t('Search flood', $pun_user['g_search_flood']));
 
 			if (!$pun_user['is_guest'])
 			{
@@ -675,9 +675,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		if ($search_type[0] == 'action')
 		{
 			if ($search_type[1] == 'show_user_topics')
-				$crumbs_text['search_type'] = '<a href="search.php?action=show_user_topics&amp;user_id='.$search_type[2].'">'.sprintf($lang->t('Quick search show_user_topics'), pun_htmlspecialchars($search_set[0]['poster'])).'</a>';
+				$crumbs_text['search_type'] = '<a href="search.php?action=show_user_topics&amp;user_id='.$search_type[2].'">'.$lang->t('Quick search show_user_topics', pun_htmlspecialchars($search_set[0]['poster'])).'</a>';
 			else if ($search_type[1] == 'show_user_posts')
-				$crumbs_text['search_type'] = '<a href="search.php?action=show_user_posts&amp;user_id='.$search_type[2].'">'.sprintf($lang->t('Quick search show_user_posts'), pun_htmlspecialchars($search_set[0]['pposter'])).'</a>';
+				$crumbs_text['search_type'] = '<a href="search.php?action=show_user_posts&amp;user_id='.$search_type[2].'">'.$lang->t('Quick search show_user_posts', pun_htmlspecialchars($search_set[0]['pposter'])).'</a>';
 			else if ($search_type[1] == 'show_subscriptions')
 			{
 				// Fetch username of subscriber
@@ -695,10 +695,10 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$subscriber_name = $result[0]['username'];
 				unset ($result, $query, $params);
 
-				$crumbs_text['search_type'] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$subscriber_id.'">'.sprintf($lang->t('Quick search show_subscriptions'), pun_htmlspecialchars($subscriber_name)).'</a>';
+				$crumbs_text['search_type'] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$subscriber_id.'">'.$lang->t('Quick search show_subscriptions', pun_htmlspecialchars($subscriber_name)).'</a>';
 			}
 			else
-				$crumbs_text['search_type'] = '<a href="search.php?action='.$search_type[1].'">'.$lang->t('Quick search '.$search_type[1)].'</a>';
+				$crumbs_text['search_type'] = '<a href="search.php?action='.$search_type[1].'">'.$lang->t('Quick search '.$search_type[1]).'</a>';
 		}
 		else
 		{
@@ -707,17 +707,17 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			if ($search_type[0] == 'both')
 			{
 				list ($keywords, $author) = $search_type[1];
-				$crumbs_text['search_type'] = sprintf($lang->t('By both show as '.$show_as), pun_htmlspecialchars($keywords), pun_htmlspecialchars($author));
+				$crumbs_text['search_type'] = $lang->t('By both show as '.$show_as, pun_htmlspecialchars($keywords), pun_htmlspecialchars($author));
 			}
 			else if ($search_type[0] == 'keywords')
 			{
 				$keywords = $search_type[1];
-				$crumbs_text['search_type'] = sprintf($lang->t('By keywords show as '.$show_as), pun_htmlspecialchars($keywords));
+				$crumbs_text['search_type'] = $lang->t('By keywords show as '.$show_as, pun_htmlspecialchars($keywords));
 			}
 			else if ($search_type[0] == 'author')
 			{
 				$author = $search_type[1];
-				$crumbs_text['search_type'] = sprintf($lang->t('By user show as '.$show_as), pun_htmlspecialchars($author));
+				$crumbs_text['search_type'] = $lang->t('By user show as '.$show_as, pun_htmlspecialchars($author));
 			}
 
 			$crumbs_text['search_type'] = '<a href="search.php?action=search&amp;keywords='.urlencode($keywords).'&amp;author='.urlencode($author).'&amp;forums='.$search_type[2].'&amp;search_in='.$search_type[3].'&amp;sort_by='.$sort_by.'&amp;sort_dir='.$sort_dir.'&amp;show_as='.$show_as.'">'.$crumbs_text['search_type'].'</a>';

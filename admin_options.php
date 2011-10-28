@@ -366,14 +366,14 @@ generate_admin_menu('options');
 									<th scope="row"><?php echo $lang->t('Time format label') ?></th>
 									<td>
 										<input type="text" name="form[time_format]" size="25" maxlength="25" value="<?php echo pun_htmlspecialchars($pun_config['o_time_format']) ?>" />
-										<span><?php printf($lang->t('Time format help'), gmdate($pun_config['o_time_format'], $timestamp), '<a href="http://www.php.net/manual/en/function.date.php">'.$lang->t('PHP manual').'</a>') ?></span>
+										<span><?php echo $lang->t('Time format help', gmdate($pun_config['o_time_format'], $timestamp), '<a href="http://www.php.net/manual/en/function.date.php">'.$lang->t('PHP manual').'</a>') ?></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang->t('Date format label') ?></th>
 									<td>
 										<input type="text" name="form[date_format]" size="25" maxlength="25" value="<?php echo pun_htmlspecialchars($pun_config['o_date_format']) ?>" />
-										<span><?php printf($lang->t('Date format help'), gmdate($pun_config['o_date_format'], $timestamp), '<a href="http://www.php.net/manual/en/function.date.php">'.$lang->t('PHP manual').'</a>') ?></span>
+										<span><?php echo $lang->t('Date format help', gmdate($pun_config['o_date_format'], $timestamp), '<a href="http://www.php.net/manual/en/function.date.php">'.$lang->t('PHP manual').'</a>') ?></span>
 									</td>
 								</tr>
 								<tr>
@@ -510,7 +510,7 @@ generate_admin_menu('options');
 									<th scope="row"><a name="censoring"><?php echo $lang->t('Censor words label') ?></a></th>
 									<td>
 										<input type="radio" name="form[censoring]" value="1"<?php if ($pun_config['o_censoring'] == '1') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang->t('Yes') ?></strong>&#160;&#160;&#160;<input type="radio" name="form[censoring]" value="0"<?php if ($pun_config['o_censoring'] == '0') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang->t('No') ?></strong>
-										<span><?php printf($lang->t('Censor words help'), '<a href="admin_censoring.php">'.$lang->t('Censoring').'</a>') ?></span>
+										<span><?php echo $lang->t('Censor words help', '<a href="admin_censoring.php">'.$lang->t('Censoring').'</a>') ?></span>
 									</td>
 								</tr>
 								<tr>
@@ -524,7 +524,7 @@ generate_admin_menu('options');
 									<th scope="row"><a name="ranks"><?php echo $lang->t('User ranks label') ?></a></th>
 									<td>
 										<input type="radio" name="form[ranks]" value="1"<?php if ($pun_config['o_ranks'] == '1') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang->t('Yes') ?></strong>&#160;&#160;&#160;<input type="radio" name="form[ranks]" value="0"<?php if ($pun_config['o_ranks'] == '0') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang->t('No') ?></strong>
-										<span><?php printf($lang->t('User ranks help'), '<a href="admin_ranks.php">'.$lang->t('Ranks').'</a>') ?></span>
+										<span><?php echo $lang->t('User ranks help', '<a href="admin_ranks.php">'.$lang->t('Ranks').'</a>') ?></span>
 									</td>
 								</tr>
 								<tr>
@@ -595,7 +595,7 @@ generate_admin_menu('options');
 		$times = array(5, 15, 30, 60);
 
 		foreach ($times as $time)
-			echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$time.'"'.($pun_config['o_feed_ttl'] == $time ? ' selected="selected"' : '').'>'.sprintf($lang->t('Minutes'), $time).'</option>'."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$time.'"'.($pun_config['o_feed_ttl'] == $time ? ' selected="selected"' : '').'>'.$lang->t('Minutes', $time).'</option>'."\n";
 
 ?>
 										</select>

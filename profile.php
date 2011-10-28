@@ -1037,9 +1037,9 @@ else if (isset($_POST['form_sent']))
 
 				// Validate signature
 				if (pun_strlen($form['signature']) > $pun_config['p_sig_length'])
-					message(sprintf($lang->t('Sig too long'), $pun_config['p_sig_length'], pun_strlen($form['signature']) - $pun_config['p_sig_length']));
+					message($lang->t('Sig too long', $pun_config['p_sig_length'], pun_strlen($form['signature']) - $pun_config['p_sig_length']));
 				else if (substr_count($form['signature'], "\n") > ($pun_config['p_sig_lines']-1))
-					message(sprintf($lang->t('Sig too many lines'), $pun_config['p_sig_lines']));
+					message($lang->t('Sig too many lines', $pun_config['p_sig_lines']));
 				else if ($form['signature'] && $pun_config['p_sig_all_caps'] == '0' && is_all_uppercase($form['signature']) && !$pun_user['is_admmod'])
 					$form['signature'] = utf8_ucwords(utf8_strtolower($form['signature']));
 
@@ -1418,7 +1418,7 @@ if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. edit
 	$user_activity[] = '<dt>'.$lang->t('Registered').'</dt>';
 	$user_activity[] = '<dd>'.format_time($user['registered'], true).'</dd>';
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), sprintf($lang->t('Users profile'), pun_htmlspecialchars($user['username'])));
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Users profile', pun_htmlspecialchars($user['username'])));
 	define('PUN_ALLOW_INDEX', 1);
 	define('PUN_ACTIVE_PAGE', 'index');
 	require PUN_ROOT.'header.php';
@@ -1489,7 +1489,7 @@ else
 			if ($pun_user['g_id'] == PUN_ADMIN || $pun_user['g_mod_rename_users'] == '1')
 				$username_field = '<label class="required"><strong>'.$lang->t('Username').' <span>'.$lang->t('Required').'</span></strong><br /><input type="text" name="req_username" value="'.pun_htmlspecialchars($user['username']).'" size="25" maxlength="25" /><br /></label>'."\n";
 			else
-				$username_field = '<p>'.sprintf($lang->t('Username info'), pun_htmlspecialchars($user['username'])).'</p>'."\n";
+				$username_field = '<p>'.$lang->t('Username info', pun_htmlspecialchars($user['username'])).'</p>'."\n";
 
 			$email_field = '<label class="required"><strong>'.$lang->t('Email').' <span>'.$lang->t('Required').'</span></strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label><p><span class="email"><a href="misc.php?email='.$id.'">'.$lang->t('Send email').'</a></span></p>'."\n";
 		}
@@ -1498,7 +1498,7 @@ else
 			$username_field = '<p>'.$lang->t('Username').': '.pun_htmlspecialchars($user['username']).'</p>'."\n";
 
 			if ($pun_config['o_regs_verify'] == '1')
-				$email_field = '<p>'.sprintf($lang->t('Email info'), $user['email'].' - <a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang->t('Change email').'</a>').'</p>'."\n";
+				$email_field = '<p>'.$lang->t('Email info', $user['email'].' - <a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang->t('Change email').'</a>').'</p>'."\n";
 			else
 				$email_field = '<label class="required"><strong>'.$lang->t('Email').' <span>'.$lang->t('Required').'</span></strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label>'."\n";
 		}
@@ -1509,7 +1509,7 @@ else
 		if ($pun_user['g_id'] == PUN_ADMIN)
 			$posts_field .= '<label>'.$lang->t('Posts').'<br /><input type="text" name="num_posts" value="'.$user['num_posts'].'" size="8" maxlength="8" /><br /></label>';
 		else if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
-			$posts_actions[] = sprintf($lang->t('Posts info'), forum_number_format($user['num_posts']));
+			$posts_actions[] = $lang->t('Posts info', forum_number_format($user['num_posts']));
 
 		if ($pun_user['g_search'] == '1' || $pun_user['g_id'] == PUN_ADMIN)
 		{
@@ -1676,9 +1676,9 @@ else
 					<fieldset>
 						<legend><?php echo $lang->t('User activity') ?></legend>
 						<div class="infldset">
-							<p><?php printf($lang->t('Registered info'), format_time($user['registered'], true).(($pun_user['is_admmod']) ? ' (<a href="moderate.php?get_host='.pun_htmlspecialchars($user['registration_ip']).'">'.pun_htmlspecialchars($user['registration_ip']).'</a>)' : '')) ?></p>
-							<p><?php printf($lang->t('Last post info'), $last_post) ?></p>
-							<p><?php printf($lang->t('Last visit info'), format_time($user['last_visit'])) ?></p>
+							<p><?php echo $lang->t('Registered info', format_time($user['registered'], true).(($pun_user['is_admmod']) ? ' (<a href="moderate.php?get_host='.pun_htmlspecialchars($user['registration_ip']).'">'.pun_htmlspecialchars($user['registration_ip']).'</a>)' : '')) ?></p>
+							<p><?php echo $lang->t('Last post info', $last_post) ?></p>
+							<p><?php echo $lang->t('Last visit info', format_time($user['last_visit'])) ?></p>
 							<?php echo $posts_field ?>
 <?php if ($pun_user['is_admmod']): ?>							<label><?php echo $lang->t('Admin note') ?><br />
 							<input id="admin_note" type="text" name="admin_note" value="<?php echo pun_htmlspecialchars($user['admin_note']) ?>" size="30" maxlength="30" /><br /></label>
@@ -1808,7 +1808,7 @@ else
 						<div class="infldset">
 							<p><?php echo $lang->t('Signature info') ?></p>
 							<div class="txtarea">
-								<label><?php printf($lang->t('Sig max size'), forum_number_format($pun_config['p_sig_length']), $pun_config['p_sig_lines']) ?><br />
+								<label><?php echo $lang->t('Sig max size', forum_number_format($pun_config['p_sig_length']), $pun_config['p_sig_lines']) ?><br />
 								<textarea name="signature" rows="4" cols="65"><?php echo pun_htmlspecialchars($user['signature']) ?></textarea><br /></label>
 							</div>
 							<ul class="bblinks">
