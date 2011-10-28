@@ -434,7 +434,7 @@ function forum_setcookie($name, $value, $expire)
 	header('P3P: CP="CUR ADM"');
 
 	if (version_compare(PHP_VERSION, '5.2.0', '>='))
-		setcookie($name, $value, $expire, $flux_config['cookie']['path'], $flux_config['cookie']['domain'], $$flux_config['cookie']['secure'], true);
+		setcookie($name, $value, $expire, $flux_config['cookie']['path'], $flux_config['cookie']['domain'], $flux_config['cookie']['secure'], true);
 	else
 		setcookie($name, $value, $expire, $flux_config['cookie']['path'].'; HttpOnly', $flux_config['cookie']['domain'], $flux_config['cookie']['secure']);
 }
