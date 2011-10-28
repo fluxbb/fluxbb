@@ -567,7 +567,7 @@ else if (isset($_POST['update_group_membership']))
 	if ($new_group_id != PUN_ADMIN && $new_group_mod != '1')
 	{
 		$query = $db->select(array('fid' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
-		$result = $db->query($query);
+		$result = $query->run();
 		unset($query);
 
 		$update_query = $db->update(array('moderators' => ':moderators'), 'forums');
@@ -618,7 +618,7 @@ else if (isset($_POST['update_forums']))
 
 	// Loop through all forums
 	$query = $db->select(array('fid' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
-	$result = $db->query($query);
+	$result = $query->run();
 	unset($query);
 
 	$update_query = $db->update(array('moderators' => ':moderators'), 'forums');
@@ -716,7 +716,7 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 		if ($group_id == PUN_ADMIN || $group_mod == '1')
 		{
 			$query = $db->select(array('fid' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
-			$result = $db->query($query);
+			$result = $query->run();
 			unset($query);
 
 			$update_query = $db->update(array('moderators' => ':moderators'), 'forums');
@@ -1227,7 +1227,7 @@ else if (isset($_POST['form_sent']))
 		if ($group_id == PUN_ADMIN || $group_mod == '1')
 		{
 			$query = $db->select(array('fid' => 'f.id', 'moderators' => 'f.moderators'), 'forums AS f');
-			$result = $db->query($query);
+			$result = $query->run();
 			unset($query);
 
 			$update_query = $db->update(array('moderators' => ':moderators'), 'forums');

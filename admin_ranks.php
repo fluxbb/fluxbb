@@ -169,7 +169,7 @@ generate_admin_menu('ranks');
 $query = $db->select(array('id' => 'r.id', 'rank' => 'r.rank', 'min_posts' => 'r.min_posts'), 'ranks AS r');
 $query->order = array('min_posts' => 'r.min_posts ASC');
 
-$result = $db->query($query);
+$result = $query->run();
 unset($query);
 
 if (!empty($result))

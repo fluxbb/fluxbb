@@ -32,9 +32,9 @@ if (isset($_POST['add_word']))
 		message($lang->t('Must enter word message'));
 
 	$query = $db->insert(array('search_for' => ':search_for', 'replace_with' => ':replace_with'), 'censoring');
-	
+
 	$params = array(':search_for' => $search_for, ':replace_with' => $replace_with);
-	
+
 	$query->run($params);
 	unset($query, $params);
 
@@ -59,9 +59,9 @@ else if (isset($_POST['update']))
 
 	$query = $db->update(array('search_for' => ':search_for', 'replace_with' => ':replace_with'), 'censoring');
 	$query->where = 'id = :id';
-	
+
 	$params = array(':search_for' => $search_for, ':replace_with' => $replace_with, ':id' => $id);
-	
+
 	$query->run($params);
 	unset($query, $params);
 
@@ -80,9 +80,9 @@ else if (isset($_POST['remove']))
 
 	$query = $db->delete('censoring');
 	$query->where = 'id = :id';
-	
+
 	$params = array(':id' => $id);
-	
+
 	$query->run($params);
 	unset($query, $params);
 
@@ -137,7 +137,7 @@ generate_admin_menu('censoring');
 $query = $db->select(array('id' => 'c.id', 'search_for' => 'c.search_for', 'replace_with' => 'c.replace_with'), 'censoring AS c');
 $query->order = array('id' => 'c.id ASC');
 
-$result = $db->query($query);
+$result = $query->run();
 unset($query);
 
 if (!empty($result))
