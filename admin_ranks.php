@@ -42,7 +42,7 @@ if (isset($_POST['add_rank']))
 
 	$result = $query->run($params);
 	if (!empty($result))
-		message(sprintf($lang->t('Dupe min posts message'), $min_posts));
+		message($lang->t('Dupe min posts message', $min_posts));
 
 	unset($query, $params, $result);
 
@@ -84,7 +84,7 @@ else if (isset($_POST['update']))
 
 	$result = $query->run($params);
 	if (!empty($result))
-		message(sprintf($lang->t('Dupe min posts message'), $min_posts));
+		message($lang->t('Dupe min posts message', $min_posts));
 
 	unset($query, $params, $result);
 
@@ -140,7 +140,7 @@ generate_admin_menu('ranks');
 					<fieldset>
 						<legend><?php echo $lang->t('Add rank subhead') ?></legend>
 						<div class="infldset">
-							<p><?php echo $lang->t('Add rank info').' '.($pun_config['o_ranks'] == '1' ? sprintf($lang->t('Ranks enabled'), '<a href="admin_options.php#ranks">'.$lang->t('Options').'</a>') : sprintf($lang->t('Ranks disabled'), '<a href="admin_options.php#ranks">'.$lang->t('Options').'</a>')) ?></p>
+							<p><?php echo $lang->t('Add rank info').' '.($pun_config['o_ranks'] == '1' ? $lang->t('Ranks enabled', '<a href="admin_options.php#ranks">'.$lang->t('Options').'</a>') : $lang->t('Ranks disabled', '<a href="admin_options.php#ranks">'.$lang->t('Options').'</a>')) ?></p>
 							<table cellspacing="0">
 							<thead>
 								<tr>

@@ -319,7 +319,7 @@ if ($action == 'feed')
 		$feed = array(
 			'title' 		=>	$pun_config['o_board_title'].$lang->t('Title separator').$cur_topic['subject'],
 			'link'			=>	get_base_url(true).'/viewtopic.php?id='.$tid,
-			'description'		=>	sprintf($lang->t('RSS description topic'), $cur_topic['subject']),
+			'description'		=>	$lang->t('RSS description topic', $cur_topic['subject']),
 			'items'			=>	array(),
 			'type'			=>	'posts'
 		);
@@ -447,7 +447,7 @@ if ($action == 'feed')
 			$feed = array(
 				'title' 		=>	$pun_config['o_board_title'].$forum_name,
 				'link'			=>	'/index.php',
-				'description'	=>	sprintf($lang->t('RSS description'), $pun_config['o_board_title']),
+				'description'	=>	$lang->t('RSS description', $pun_config['o_board_title']),
 				'items'			=>	array(),
 				'type'			=>	'topics'
 			);
@@ -550,12 +550,12 @@ else if ($action == 'online' || $action == 'online_full')
 	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 	header('Pragma: public');
 
-	echo sprintf($lang->t('Guests online'), forum_number_format($num_guests)).'<br />'."\n";
+	echo $lang->t('Guests online', forum_number_format($num_guests)).'<br />'."\n";
 
 	if ($action == 'online_full' && !empty($users))
-		echo sprintf($lang->t('Users online'), implode(', ', $users)).'<br />'."\n";
+		echo $lang->t('Users online', implode(', ', $users)).'<br />'."\n";
 	else
-		echo sprintf($lang->t('Users online'), forum_number_format($num_users)).'<br />'."\n";
+		echo $lang->t('Users online', forum_number_format($num_users)).'<br />'."\n";
 
 	exit;
 }
@@ -581,10 +581,10 @@ else if ($action == 'stats')
 	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 	header('Pragma: public');
 
-	echo sprintf($lang->t('No of users'), forum_number_format($stats['total_users'])).'<br />'."\n";
-	echo sprintf($lang->t('Newest user'), (($pun_user['g_view_users'] == '1') ? '<a href="'.pun_htmlspecialchars(get_base_url(true)).'/profile.php?id='.$stats['last_user']['id'].'">'.pun_htmlspecialchars($stats['last_user']['username']).'</a>' : pun_htmlspecialchars($stats['last_user']['username']))).'<br />'."\n";
-	echo sprintf($lang->t('No of topics'), forum_number_format($stats['total_topics'])).'<br />'."\n";
-	echo sprintf($lang->t('No of posts'), forum_number_format($stats['total_posts'])).'<br />'."\n";
+	echo $lang->t('No of users', forum_number_format($stats['total_users'])).'<br />'."\n";
+	echo $lang->t('Newest user', (($pun_user['g_view_users'] == '1') ? '<a href="'.pun_htmlspecialchars(get_base_url(true)).'/profile.php?id='.$stats['last_user']['id'].'">'.pun_htmlspecialchars($stats['last_user']['username']).'</a>' : pun_htmlspecialchars($stats['last_user']['username']))).'<br />'."\n";
+	echo $lang->t('No of topics', forum_number_format($stats['total_topics'])).'<br />'."\n";
+	echo $lang->t('No of posts', forum_number_format($stats['total_posts'])).'<br />'."\n";
 
 	exit;
 }

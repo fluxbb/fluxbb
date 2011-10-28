@@ -231,13 +231,13 @@ if (!empty($forum_actions))
 		<div class="inbox">
 			<dl class="conr">
 				<dt><strong><?php echo $lang->t('Board stats') ?></strong></dt>
-				<dd><span><?php printf($lang->t('No of users'), '<strong>'.forum_number_format($stats['total_users']).'</strong>') ?></span></dd>
-				<dd><span><?php printf($lang->t('No of topics'), '<strong>'.forum_number_format($stats['total_topics']).'</strong>') ?></span></dd>
-				<dd><span><?php printf($lang->t('No of posts'), '<strong>'.forum_number_format($stats['total_posts']).'</strong>') ?></span></dd>
+				<dd><span><?php echo $lang->t('No of users', '<strong>'.forum_number_format($stats['total_users']).'</strong>') ?></span></dd>
+				<dd><span><?php echo $lang->t('No of topics', '<strong>'.forum_number_format($stats['total_topics']).'</strong>') ?></span></dd>
+				<dd><span><?php echo $lang->t('No of posts', '<strong>'.forum_number_format($stats['total_posts']).'</strong>') ?></span></dd>
 			</dl>
 			<dl class="conl">
 				<dt><strong><?php echo $lang->t('User info') ?></strong></dt>
-				<dd><span><?php printf($lang->t('Newest user'), $stats['newest_user']) ?></span></dd>
+				<dd><span><?php echo $lang->t('Newest user', $stats['newest_user']) ?></span></dd>
 <?php
 
 if ($pun_config['o_users_online'] == '1')
@@ -270,7 +270,7 @@ if ($pun_config['o_users_online'] == '1')
 	unset ($query, $params, $result);
 
 	$num_users = count($users);
-	echo "\t\t\t\t".'<dd><span>'.sprintf($lang->t('Users online'), '<strong>'.forum_number_format($num_users).'</strong>').'</span></dd>'."\n\t\t\t\t".'<dd><span>'.sprintf($lang->t('Guests online'), '<strong>'.forum_number_format($num_guests).'</strong>').'</span></dd>'."\n\t\t\t".'</dl>'."\n";
+	echo "\t\t\t\t".'<dd><span>'.$lang->t('Users online', '<strong>'.forum_number_format($num_users).'</strong>').'</span></dd>'."\n\t\t\t\t".'<dd><span>'.$lang->t('Guests online', '<strong>'.forum_number_format($num_guests).'</strong>').'</span></dd>'."\n\t\t\t".'</dl>'."\n";
 
 
 	if ($num_users > 0)

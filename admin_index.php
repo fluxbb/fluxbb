@@ -35,7 +35,7 @@ if ($action == 'check_upgrade')
 	if (version_compare($pun_config['o_cur_version'], $latest_version, '>='))
 		message($lang->t('Running latest version message'));
 	else
-		message(sprintf($lang->t('New version available message'), '<a href="http://fluxbb.org/">FluxBB.org</a>'));
+		message($lang->t('New version available message', '<a href="http://fluxbb.org/">FluxBB.org</a>'));
 }
 
 
@@ -144,8 +144,8 @@ generate_admin_menu('index');
 					</dd>
 <?php if ($pun_user['g_id'] == PUN_ADMIN): ?>					<dt><?php echo $lang->t('Environment label') ?></dt>
 					<dd>
-						<?php printf($lang->t('Environment data OS'), PHP_OS) ?><br />
-						<?php printf($lang->t('Environment data version'), phpversion(), '<a href="admin_index.php?action=phpinfo">'.$lang->t('Show info').'</a>') ?><br />
+						<?php echo $lang->t('Environment data OS', PHP_OS) ?><br />
+						<?php echo $lang->t('Environment data version', phpversion(), '<a href="admin_index.php?action=phpinfo">'.$lang->t('Show info').'</a>') ?><br />
 						<?php printf($lang->t('Environment data acc')."\n", $php_accelerator) ?>
 					</dd>
 					<dt><?php echo $lang->t('Database label') ?></dt>
