@@ -776,14 +776,14 @@ function do_bbcode($text, $is_signature = false)
 	$pattern[] = '%\[url=([^\[]+?)\](.*?)\[/url\]%e';
 	$pattern[] = '%\[email\]([^\[]*?)\[/email\]%';
 	$pattern[] = '%\[email=([^\[]+?)\](.*?)\[/email\]%';
-	$pattern[] = '%\[topic\]([^\[]*?)\[/topic\]%e';
-	$pattern[] = '%\[topic=([^\[]+?)\](.*?)\[/topic\]%e';
-	$pattern[] = '%\[post\]([^\[]*?)\[/post\]%e';
-	$pattern[] = '%\[post=([^\[]+?)\](.*?)\[/post\]%e';
-	$pattern[] = '%\[forum\]([^\[]*?)\[/forum\]%e';
-	$pattern[] = '%\[forum=([^\[]+?)\](.*?)\[/forum\]%e';
-	$pattern[] = '%\[user\]([^\[]*?)\[/user\]%e';
-	$pattern[] = '%\[user=([^\[]+?)\](.*?)\[/user\]%e';
+	$pattern[] = '%\[topic\]([1-9]\d*)\[/topic\]%e';
+	$pattern[] = '%\[topic=([1-9]\d*)\](.*?)\[/topic\]%e';
+	$pattern[] = '%\[post\]([1-9]\d*)\[/post\]%e';
+	$pattern[] = '%\[post=([1-9]\d*)\](.*?)\[/post\]%e';
+	$pattern[] = '%\[forum\]([1-9]\d*)\[/forum\]%e';
+	$pattern[] = '%\[forum=([1-9]\d*)\](.*?)\[/forum\]%e';
+	$pattern[] = '%\[user\]([1-9]\d*)\[/user\]%e';
+	$pattern[] = '%\[user=([1-9]\d*)\](.*?)\[/user\]%e';
 
 	$replace[] = 'handle_url_tag(\'$1\')';
 	$replace[] = 'handle_url_tag(\'$1\', \'$2\')';
