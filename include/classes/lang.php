@@ -48,7 +48,7 @@ class Flux_Lang
 	public static function getLanguageList()
 	{
 		$return = array();
-		foreach (glob(self::$langDir.'*', GLOB_ONLYDIR) as $dir)
+		foreach (glob(self::$langDir.'/*', GLOB_ONLYDIR) as $dir)
 		{
 			$return[] = end(explode('/', $dir));
 		}
