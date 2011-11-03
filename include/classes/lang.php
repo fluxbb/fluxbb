@@ -122,6 +122,8 @@ class Flux_Lang
 	 */
 	public function load($resource)
 	{
+		global $cache;
+
 		// Don't load twice
 		if (in_array($resource, $this->loadedResources))
 			return;
@@ -130,9 +132,6 @@ class Flux_Lang
 
 		$default_filename = self::$langDir.'/'.$this->defaultLang.'/'.$resource.'.po';
 		$filename = self::$langDir.'/'.$this->lang.'/'.$resource.'.po';
-
-		$cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport');
-		// TODO: Handle Cache config globally. How?
 
 		// TODO: Slash allowed? - I'd rather use that than an underscore
 		$trans_cache = $cache->get($this->lang.'_'.$resource);
