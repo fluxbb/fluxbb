@@ -140,8 +140,8 @@ function check_cookie(&$pun_user)
 			{
 				$pun_user['logged'] = $now;
 
-				// With non-transactional DBMS REPLACE INTO avoids a user having two rows in the online table
-				$query = $db->replace(array('user_id' => ':user_id', 'ident' => ':ident', 'logged' => ':logged'), 'online', 'ident');
+				// REPLACE INTO avoids a user having two rows in the online table
+				$query = $db->replace(array('user_id' => ':user_id', 'logged' => ':logged'), 'online', array('ident' => ':ident'));
 				$params = array(':user_id' => $pun_user['id'], ':ident' => $pun_user['username'], ':logged' => $pun_user['logged']);
 
 				$query->run($params);
@@ -348,8 +348,8 @@ function set_default_user()
 	{
 		$pun_user['logged'] = time();
 
-		// With non-transactional DBMS REPLACE INTO avoids a user having two rows in the online table
-		$query = $db->replace(array('user_id' => '1', 'ident' => ':ident', 'logged' => ':logged'), 'online', 'ident');
+		// REPLACE INTO avoids a user having two rows in the online table
+		$query = $db->replace(array('user_id' => '1', 'logged' => ':logged'), 'online', array('ident' => ':ident'));
 		$params = array(':ident' => $remote_addr, ':logged' => $pun_user['logged']);
 
 		$query->run($params);

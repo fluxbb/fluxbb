@@ -234,7 +234,7 @@ else if (isset($_GET['edit_forum']))
 			$delete_query = $db->delete('forum_perms');
 			$delete_query->where = 'group_id = :group_id AND forum_id = :forum_id';
 
-			$replace_query = $db->replace(array('group_id' => ':group_id', 'forum_id' => ':forum_id', 'read_forum' => ':read_forum', 'post_replies' => ':post_replies', 'post_topics' => ':post_topics'), 'forum_perms', array('group_id', 'forum_id'));
+			$replace_query = $db->replace(array('read_forum' => ':read_forum', 'post_replies' => ':post_replies', 'post_topics' => ':post_topics'), 'forum_perms', array('group_id' => ':group_id', 'forum_id' => ':forum_id'));
 
 			foreach ($result as $cur_group)
 			{
