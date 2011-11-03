@@ -104,7 +104,6 @@ define('PUN_MEMBER', 4);
 
 // Load the DB module
 require PUN_ROOT.'modules/database/src/Database/Adapter.php';
-require PUN_ROOT.'modules/database/src/Database/Query.php';
 $db = Flux_Database_Adapter::factory($flux_config['db']['type'], $flux_config['db']);
 
 // Start a transaction

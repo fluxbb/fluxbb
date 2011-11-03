@@ -103,6 +103,9 @@ $cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport'); // T
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
 	exit($lang->t('You are running error', 'PHP', PHP_VERSION, FORUM_VERSION, MIN_PHP_VERSION));
 
+// Load the DB module
+require PUN_ROOT.'modules/database/src/Database/Adapter.php';
+
 
 //
 // Generate output to be used for config.php
@@ -221,21 +224,7 @@ if (!@is_writable(PUN_ROOT.'img/avatars/'))
 if (!isset($_POST['form_sent']) || !empty($alerts))
 {
 	// Determine available database extensions
-	$dual_mysql = false;
-	$db_extensions = array();
-	$mysql_innodb = false;
-	if (extension_loaded('pdo_mysql'))
-	{
-		$db_extensions[] = array('mysql', 'MySQL');
-//		$mysql_innodb = true;
-//
-//		if (count($db_extensions) > 2)
-//			$dual_mysql = true;
-	}
-	if (extension_loaded('pdo_sqlite'))
-		$db_extensions[] = array('SQLite', 'SQLite');
-	if (extension_loaded('pdo_pgsql'))
-		$db_extensions[] = array('PgSQL', 'PostgreSQL');
+	$db_extensions = Flux_Database_Adapter::getDriverList();
 
 	if (empty($db_extensions))
 		error($lang->t('No DB extensions'));
@@ -362,18 +351,18 @@ foreach ($alerts as $cur_alert)
 				<legend><?php echo $lang->t('Select database') ?></legend>
 					<div class="infldset">
 						<p><?php echo $lang->t('Info 2') ?></p>
-<?php if ($dual_mysql): ?>						<p><?php echo $lang->t('Dual MySQL') ?></p>
+<?php /*if ($dual_mysql): ?>						<p><?php echo $lang->t('Dual MySQL') ?></p>
 <?php endif; ?><?php if ($mysql_innodb): ?>						<p><?php echo $lang->t('InnoDB') ?></p>
-<?php endif; ?>						<label class="required"><strong><?php echo $lang->t('Database type') ?> <span><?php echo $lang->t('Required') ?></span></strong>
+<?php endif;*/ ?>						<label class="required"><strong><?php echo $lang->t('Database type') ?> <span><?php echo $lang->t('Required') ?></span></strong>
 						<br /><select name="req_db_type">
 <?php
 
-	foreach ($db_extensions as $temp)
+	foreach ($db_extensions as $cur_extension)
 	{
-		if ($temp[0] == $db_type)
-			echo "\t\t\t\t\t\t\t".'<option value="'.$temp[0].'" selected="selected">'.$temp[1].'</option>'."\n";
+		if ($cur_extension == $db_type)
+			echo "\t\t\t\t\t\t\t".'<option value="'.$cur_extension.'" selected="selected">'.$cur_extension.'</option>'."\n";
 		else
-			echo "\t\t\t\t\t\t\t".'<option value="'.$temp[0].'">'.$temp[1].'</option>'."\n";
+			echo "\t\t\t\t\t\t\t".'<option value="'.$cur_extension.'">'.$cur_extension.'</option>'."\n";
 	}
 
 ?>
@@ -545,43 +534,10 @@ foreach ($alerts as $cur_alert)
 }
 else
 {
-//	// Load the appropriate DB layer class
-//	switch ($db_type)
-//	{
-//		case 'mysql':
-//			require PUN_ROOT.'include/dblayer/mysql.php';
-//			break;
-
-//		case 'mysql_innodb':
-//			require PUN_ROOT.'include/dblayer/mysql_innodb.php';
-//			break;
-
-//		case 'mysqli':
-//			require PUN_ROOT.'include/dblayer/mysqli.php';
-//			break;
-
-//		case 'mysqli_innodb':
-//			require PUN_ROOT.'include/dblayer/mysqli_innodb.php';
-//			break;
-
-//		case 'pgsql':
-//			require PUN_ROOT.'include/dblayer/pgsql.php';
-//			break;
-
-//		case 'sqlite':
-//			require PUN_ROOT.'include/dblayer/sqlite.php';
-//			break;
-
-//		default:
-//			error($lang->t('DB type not valid', pun_htmlspecialchars($db_type)));
-//	}
+	if (!Flux_Database_Adapter::driverExists($db_type))
+		error($lang->t('DB type not valid', pun_htmlspecialchars($db_type)));
 
 	// Create the database object (and connect/select db)
-//	$db = new DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, false);
-
-	// Load the DB module
-	require PUN_ROOT.'modules/database/src/Database/Adapter.php';
-	require PUN_ROOT.'modules/database/src/Database/Query.php';
 	$options = array('host' => $db_host, 'dbname' => $db_name, 'username' => $db_username, 'password' => $db_password, 'prefix' => $db_prefix);
 	$db = Flux_Database_Adapter::factory($db_type, $options);
 
