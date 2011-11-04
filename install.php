@@ -77,6 +77,11 @@ if (file_exists(PUN_ROOT.'config.php'))
 if (!defined('FORUM_CACHE_DIR'))
 	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
 
+// Load the cache module
+require_once PUN_ROOT.'modules/cache/cache.php';
+$cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport'); // TODO: Move this config into config.php
+// TODO: according to the comment above - how do you want to move this to config when it doesn't exist? :)
+
 // Load the language system
 require PUN_ROOT.'include/classes/lang.php';
 $lang = new Flux_Lang();
@@ -94,10 +99,6 @@ if (defined('PUN'))
 
 // Define PUN because email.php requires it
 define('PUN', 1);
-
-// Load the cache module
-require_once PUN_ROOT.'modules/cache/cache.php';
-$cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport'); // TODO: Move this config into config.php
 
 // Make sure we are running at least MIN_PHP_VERSION
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
