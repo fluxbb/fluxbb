@@ -663,18 +663,30 @@ else if (isset($_POST['ban']))
 		message($lang->t('No permission'));
 
 	// Get the username of the user we are banning
-	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch username', __FILE__, __LINE__, $db->error());
-	$username = $db->result($result);
-
+	$query = $db->select(array('username' => 'u.username'), 'users AS u');
+	$query->where = 'id = :id';
+	$params = array(':id' => $id);
+	$result = $query->run($params);
+	$username = $result[0]['username'];
+	unset($query, $params, $result);
+	
 	// Check whether user is already banned
-	$result = $db->query('SELECT id FROM '.$db->prefix.'bans WHERE username = \''.$db->escape($username).'\' ORDER BY expire IS NULL DESC, expire DESC LIMIT 1') or error('Unable to fetch ban ID', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result))
+	$query = $db->select(array('id' => 'b.id'), 'bans AS b');
+	$query->where = 'username = :username';
+	$query->order = array('expire1' => 'b.expire IS NULL DESC', 'expire2' => 'expire DESC');
+	$query->limit = 1;
+	$params = array(':username' => $username);
+	$result = $query->run($params);
+	
+	if (count($result))
 	{
-		$ban_id = $db->result($result);
+		$ban_id = $result[0]['id'];
 		redirect('admin_bans.php?edit_ban='.$ban_id.'&amp;exists', $lang->t('Ban redirect'));
 	}
 	else
 		redirect('admin_bans.php?add_ban='.$id, $lang->t('Ban redirect'));
+	
+	unset($query, $params, $result);
 }
 
 
