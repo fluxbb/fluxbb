@@ -578,10 +578,10 @@ else
 		$query->where = 'id = :id';
 		$params = array(':id' => 1);
 		$result = $query->run($params);
-		
+
 		if (!empty($result))
-			error($lang->t('Existing table error', $query->getTable(), $db_name));
-		
+			error($lang->t('Existing table error', $db->prefix.'users', $db_name));
+
 		unset($query, $params, $result);
 	}
 
