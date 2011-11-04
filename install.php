@@ -577,10 +577,12 @@ else
 		$query = $db->select(array('1' => '1'), 'users AS u');
 		$query->where = 'id = :id';
 		$params = array(':id' => 1);
-		$result = $query->run();
+		$result = $query->run($params);
 		
-		if ($result->fetchColumn())
+		if (!empty($result))
 			error($lang->t('Existing table error', $query->getTable(), $db_name));
+		
+		unset($query, $params, $result);
 	}
 
 	// Start a transaction
