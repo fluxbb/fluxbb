@@ -53,7 +53,7 @@ msgid "Username 4"
 msgstr "Usernames may not be in the form of an IP address."
 
 msgid "Username 5"
-msgstr "Usernames may not contain all the characters ', \" and [ or ] at once.'"
+msgstr "Usernames may not contain all the characters ', \" and [ or ] at once."
 
 msgid "Username 6"
 msgstr "Usernames may not contain any of the text formatting tags (BBCode) that the forum uses."
