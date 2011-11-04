@@ -574,19 +574,14 @@ else
 	if ($db->tableExists('users')->run())
 	{
 		// Make sure FluxBB isn't already installed
-		$result = $db->query('SELECT 1 FROM '.$db_prefix.'users WHERE id=1');
+		$query = $db->select(array('1' => '1'), 'users AS u');
+		$query->where = 'id = :id';
+		$params = array(':id' => 1);
+		$result = $query->run();
+		
 		if ($result->fetchColumn())
-			error($lang->t('Existing table error', $db_prefix, $db_name));
+			error($lang->t('Existing table error', $query->getTable(), $db_name));
 	}
-
-//	// Check if InnoDB is available
-//	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
-//	{
-//		$result = $db->query('SHOW VARIABLES LIKE \'have_innodb\'');
-//		list (, $result) = $db->fetch_row($result);
-//		if ((strtoupper($result) != 'YES'))
-//			error($lang->t('InnoDB off'));
-//	}
 
 	// Start a transaction
 	$db->startTransaction();

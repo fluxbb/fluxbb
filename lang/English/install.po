@@ -263,7 +263,7 @@ msgid "Prefix reserved"
 msgstr "The table prefix 'sqlite_' is reserved for use by the SQLite engine. Please choose a different prefix"
 
 msgid "Existing table error"
-msgstr "A table called '%susers' is already present in the database '%s'. This could mean that FluxBB is already installed or that another piece of software is installed and is occupying one or more of the table names FluxBB requires. If you want to install multiple copies of FluxBB in the same database, you must choose a different table prefix"
+msgstr "A table called '%s' is already present in the database '%s'. This could mean that FluxBB is already installed or that another piece of software is installed and is occupying one or more of the table names FluxBB requires. If you want to install multiple copies of FluxBB in the same database, you must choose a different table prefix"
 
 msgid "InnoDB off"
 msgstr "InnoDB does not seem to be enabled. Please choose a database layer that does not have InnoDB support, or enable InnoDB on your MySQL server"
