@@ -21,7 +21,7 @@ ob_start();
 
 ?>
 <div id="brdfooter" class="block">
-	<h2><span><?php echo $lang_common['Board footer'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Board footer') ?></span></h2>
 	<div class="box">
 <?php
 
@@ -32,26 +32,26 @@ if (isset($footer_style) && ($footer_style == 'viewforum' || $footer_style == 'v
 	if ($footer_style == 'viewforum')
 	{
 		echo "\t\t\t".'<dl>'."\n";
-		echo "\t\t\t\t".'<dt><strong>'.$lang_forum['Mod controls'].'</strong></dt>'."\n";
-		echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;p='.$p.'">'.$lang_common['Moderate forum'].'</a></span></dd>'."\n";
+		echo "\t\t\t\t".'<dt><strong>'.$lang->t('Mod controls').'</strong></dt>'."\n";
+		echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;p='.$p.'">'.$lang->t('Moderate forum').'</a></span></dd>'."\n";
 		echo "\t\t\t".'</dl>'."\n";
 	}
 	else if ($footer_style == 'viewtopic')
 	{
 		echo "\t\t\t".'<dl>'."\n";
-		echo "\t\t\t\t".'<dt><strong>'.$lang_topic['Mod controls'].'</strong></dt>'."\n";
-		echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;tid='.$id.'&amp;p='.$p.'">'.$lang_common['Moderate topic'].'</a></span></dd>'."\n";
-		echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;move_topics='.$id.'">'.$lang_common['Move topic'].'</a></span></dd>'."\n";
+		echo "\t\t\t\t".'<dt><strong>'.$lang->t('Mod controls').'</strong></dt>'."\n";
+		echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;tid='.$id.'&amp;p='.$p.'">'.$lang->t('Moderate topic').'</a></span></dd>'."\n";
+		echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;move_topics='.$id.'">'.$lang->t('Move topic').'</a></span></dd>'."\n";
 
 		if ($cur_topic['closed'] == '1')
-			echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;open='.$id.'">'.$lang_common['Open topic'].'</a></span></dd>'."\n";
+			echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;open='.$id.'">'.$lang->t('Open topic').'</a></span></dd>'."\n";
 		else
-			echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;close='.$id.'">'.$lang_common['Close topic'].'</a></span></dd>'."\n";
+			echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;close='.$id.'">'.$lang->t('Close topic').'</a></span></dd>'."\n";
 
 		if ($cur_topic['sticky'] == '1')
-			echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;unstick='.$id.'">'.$lang_common['Unstick topic'].'</a></span></dd>'."\n";
+			echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;unstick='.$id.'">'.$lang->t('Unstick topic').'</a></span></dd>'."\n";
 		else
-			echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;stick='.$id.'">'.$lang_common['Stick topic'].'</a></span></dd>'."\n";
+			echo "\t\t\t\t".'<dd><span><a href="moderate.php?fid='.$forum_id.'&amp;stick='.$id.'">'.$lang->t('Stick topic').'</a></span></dd>'."\n";
 
 		echo "\t\t\t".'</dl>'."\n";
 	}
@@ -74,21 +74,19 @@ if ($pun_config['o_quickjump'] == '1')
 		$quickjump = array();
 
 		// Generate the quick jump cache for all groups
-		$query = new SelectQuery(array('gid' => 'g.g_id'), 'groups AS g');
+		$query = $db->select(array('gid' => 'g.g_id'), 'groups AS g');
 		$query->where = 'g.g_read_board = 1';
 
 		$params = array();
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		unset ($query, $params);
 
-		$query_forums = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url'), 'categories AS c');
+		$query_forums = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url'), 'categories AS c');
 
-		$query_forums->joins['f'] = new InnerJoin('forums AS f');
-		$query_forums->joins['f']->on = 'c.id = f.cat_id';
+		$query_forums->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
-		$query_forums->joins['fp'] = new LeftJoin('forum_perms AS fp');
-		$query_forums->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+		$query_forums->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 		$query_forums->where = 'fp.read_forum IS NULL OR fp.read_forum = 1';
 		$query_forums->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
@@ -97,7 +95,7 @@ if ($pun_config['o_quickjump'] == '1')
 		{
 			$params = array(':group_id' => $cur_group['g_id']);
 
-			$quickjump[$cur_group['g_id']] = $db->query($query_forums, $params);
+			$quickjump[$cur_group['g_id']] = $query_forums->run($params);
 			unset ($params);
 		}
 
@@ -112,7 +110,7 @@ if ($pun_config['o_quickjump'] == '1')
 				<form id="qjump" method="get" action="viewforum.php">
 					<div>
 						<label>
-							<span><?php echo $lang_common['Jump to'] ?><br /></span>
+							<span><?php echo $lang->t('Jump to') ?><br /></span>
 							<select name="id" onchange="window.location=('viewforum.php?id='+this.options[this.selectedIndex].value)">
 <?php
 
@@ -129,13 +127,13 @@ if ($pun_config['o_quickjump'] == '1')
 			}
 
 			$redirect_tag = ($cur_forum['redirect_url'] != '') ? ' &gt;&gt;&gt;' : '';
-			echo "\t\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'"'. ($forum_id == $cur_forum['fid'] ? ' selected="selected"' : '').'>'.pun_htmlspecialchars($cur_forum['forum_name']).$redirect_tag.'</option>'."\n";
+			echo "\t\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'"'. (isset($forum_id) && $forum_id == $cur_forum['fid'] ? ' selected="selected"' : '').'>'.pun_htmlspecialchars($cur_forum['forum_name']).$redirect_tag.'</option>'."\n";
 		}
 
 ?>
 								</optgroup>
 							</select>
-							<input type="submit" value="<?php echo $lang_common['Go'] ?>" accesskey="g" />
+							<input type="submit" value="<?php echo $lang->t('Go') ?>" accesskey="g" />
 						</label>
 					</div>
 				</form>
@@ -156,27 +154,27 @@ $footer_style = isset($footer_style) ? $footer_style : NULL;
 if ($footer_style == 'index')
 {
 	if ($pun_config['o_feed_type'] == '1')
-		echo "\t\t\t\t".'<p id="feedlinks"><span class="rss"><a href="extern.php?action=feed&amp;type=rss">'.$lang_common['RSS active topics feed'].'</a></span></p>'."\n";
+		echo "\t\t\t\t".'<p id="feedlinks"><span class="rss"><a href="extern.php?action=feed&amp;type=rss">'.$lang->t('RSS active topics feed').'</a></span></p>'."\n";
 	else if ($pun_config['o_feed_type'] == '2')
-		echo "\t\t\t\t".'<p id="feedlinks"><span class="atom"><a href="extern.php?action=feed&amp;type=atom">'.$lang_common['Atom active topics feed'].'</a></span></p>'."\n";
+		echo "\t\t\t\t".'<p id="feedlinks"><span class="atom"><a href="extern.php?action=feed&amp;type=atom">'.$lang->t('Atom active topics feed').'</a></span></p>'."\n";
 }
 else if ($footer_style == 'viewforum')
 {
 	if ($pun_config['o_feed_type'] == '1')
-		echo "\t\t\t\t".'<p id="feedlinks"><span class="rss"><a href="extern.php?action=feed&amp;fid='.$forum_id.'&amp;type=rss">'.$lang_common['RSS forum feed'].'</a></span></p>'."\n";
+		echo "\t\t\t\t".'<p id="feedlinks"><span class="rss"><a href="extern.php?action=feed&amp;fid='.$forum_id.'&amp;type=rss">'.$lang->t('RSS forum feed').'</a></span></p>'."\n";
 	else if ($pun_config['o_feed_type'] == '2')
-		echo "\t\t\t\t".'<p id="feedlinks"><span class="atom"><a href="extern.php?action=feed&amp;fid='.$forum_id.'&amp;type=atom">'.$lang_common['Atom forum feed'].'</a></span></p>'."\n";
+		echo "\t\t\t\t".'<p id="feedlinks"><span class="atom"><a href="extern.php?action=feed&amp;fid='.$forum_id.'&amp;type=atom">'.$lang->t('Atom forum feed').'</a></span></p>'."\n";
 }
 else if ($footer_style == 'viewtopic')
 {
 	if ($pun_config['o_feed_type'] == '1')
-		echo "\t\t\t\t".'<p id="feedlinks"><span class="rss"><a href="extern.php?action=feed&amp;tid='.$id.'&amp;type=rss">'.$lang_common['RSS topic feed'].'</a></span></p>'."\n";
+		echo "\t\t\t\t".'<p id="feedlinks"><span class="rss"><a href="extern.php?action=feed&amp;tid='.$id.'&amp;type=rss">'.$lang->t('RSS topic feed').'</a></span></p>'."\n";
 	else if ($pun_config['o_feed_type'] == '2')
-		echo "\t\t\t\t".'<p id="feedlinks"><span class="atom"><a href="extern.php?action=feed&amp;tid='.$id.'&amp;type=atom">'.$lang_common['Atom topic feed'].'</a></span></p>'."\n";
+		echo "\t\t\t\t".'<p id="feedlinks"><span class="atom"><a href="extern.php?action=feed&amp;tid='.$id.'&amp;type=atom">'.$lang->t('Atom topic feed').'</a></span></p>'."\n";
 }
 
 ?>
-				<p id="poweredby"><?php printf($lang_common['Powered by'], '<a href="http://fluxbb.org/">FluxBB</a>'.(($pun_config['o_show_version'] == '1') ? ' '.$pun_config['o_cur_version'] : '')) ?></p>
+				<p id="poweredby"><?php echo $lang->t('Powered by', '<a href="http://fluxbb.org/">FluxBB</a>'.(($pun_config['o_show_version'] == '1') ? ' '.$pun_config['o_cur_version'] : '')) ?></p>
 			</div>
 			<div class="clearer"></div>
 		</div>
@@ -191,15 +189,15 @@ if (defined('PUN_DEBUG'))
 
 	// Calculate script generation time
 	$time_diff = sprintf('%.3f', get_microtime() - $pun_start);
-	$queries = $db->get_debug_queries();
-	echo sprintf($lang_common['Querytime'], $time_diff, count($queries));
+	$queries = $db->getDebugQueries();
+	echo $lang->t('Querytime', $time_diff, count($queries));
 
 	if (function_exists('memory_get_usage'))
 	{
-		echo ' - '.sprintf($lang_common['Memory usage'], file_size(memory_get_usage()));
+		echo ' - '.$lang->t('Memory usage', file_size(memory_get_usage()));
 
 		if (function_exists('memory_get_peak_usage'))
-			echo ' '.sprintf($lang_common['Peak usage'], file_size(memory_get_peak_usage()));
+			echo ' '.$lang->t('Peak usage', file_size(memory_get_peak_usage()));
 	}
 
 	echo ' ]</p>'."\n";
@@ -207,7 +205,7 @@ if (defined('PUN_DEBUG'))
 
 
 // End the transaction
-$db->commit_transaction();
+$db->commitTransaction();
 
 // Display executed queries (if enabled)
 if (defined('PUN_SHOW_QUERIES'))

@@ -48,16 +48,16 @@ define('PUN_CJK_HANGUL_REGEX', '['.
 function split_words($text, $idx)
 {
 	// Remove BBCode
-	$text = preg_replace('/\[\/?(b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]/', ' ', $text);
+	$text = preg_replace('%\[/?(b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]%', ' ', $text);
 
 	// Remove any apostrophes or dashes which aren't part of words
-	$text = substr(ucp_preg_replace('/((?<=[^\p{L}\p{N}])[\'\-]|[\'\-](?=[^\p{L}\p{N}]))/u', '', ' '.$text.' '), 1, -1);
+	$text = substr(ucp_preg_replace('%((?<=[^\p{L}\p{N}])[\'\-]|[\'\-](?=[^\p{L}\p{N}]))%u', '', ' '.$text.' '), 1, -1);
 
 	// Remove punctuation and symbols (actually anything that isn't a letter or number), allow apostrophes and dashes (and % * if we aren't indexing)
-	$text = ucp_preg_replace('/(?![\'\-'.($idx ? '' : '%\*').'])[^\p{L}\p{N}]+/u', ' ', $text);
+	$text = ucp_preg_replace('%(?![\'\-'.($idx ? '' : '\%\*').'])[^\p{L}\p{N}]+%u', ' ', $text);
 
 	// Replace multiple whitespace or dashes
-	$text = preg_replace('/(\s){2,}/u', '\1', $text);
+	$text = preg_replace('%(\s){2,}%u', '\1', $text);
 
 	// Fill an array with all the words
 	$words = array_unique(explode(' ', $text));
@@ -142,7 +142,7 @@ function is_keyword($word)
 //
 function is_cjk($word)
 {
-	return preg_match('/^'.PUN_CJK_HANGUL_REGEX.'+$/u', $word) ? true : false;
+	return preg_match('%^'.PUN_CJK_HANGUL_REGEX.'+$%u', $word) ? true : false;
 }
 
 
@@ -156,9 +156,9 @@ function strip_bbcode($text)
 	if (!isset($patterns))
 	{
 		$patterns = array(
-			'%\[img=([^\]]*+)\][^[]*+\[/img\]%'									=>	'$1',	// Keep the alt description
-			'%\[(url|email)=[^\]]*+\]([^[]*+(?:(?!\[/\1\])\[[^[]*+)*)\[/\1\]%' =>	'$2',	// Keep the text
-			'%\[(img|url|email)\]([^[]*+(?:(?!\[/\1\])\[[^[]*+)*)\[/\1\]%'		=>	'',		// Remove the whole thing
+			'%\[img=([^\]]*+)\]([^[]*+)\[/img\]%'									=>	'$2 $1',	// Keep the url and description
+			'%\[(url|email)=([^\]]*+)\]([^[]*+(?:(?!\[/\1\])\[[^[]*+)*)\[/\1\]%'	=>	'$2 $3',	// Keep the url and text
+			'%\[(img|url|email)\]([^[]*+(?:(?!\[/\1\])\[[^[]*+)*)\[/\1\]%'			=>	'$2',		// Keep the url
 		);
 	}
 
@@ -188,16 +188,15 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 		// Declare here to stop array_keys() and array_diff() from complaining if not set
 		$cur_words = array('post' => array(), 'subject' => array());
 
-		$query = new SelectQuery(array('wid' => 'w.id', 'word' => 'w.word', 'subject_match' => 'w.subject_match'), 'search_words AS w');
+		$query = $db->select(array('wid' => 'w.id', 'word' => 'w.word', 'subject_match' => 'm.subject_match'), 'search_words AS w');
 
-		$query->joins['m'] = new InnerJoin('search_matches AS m');
-		$query->joins['m']->on = 'w.id = m.word_id';
+		$query->InnerJoin('m', 'search_matches AS m', 'w.id = m.word_id');
 
 		$query->where = 'm.post_id = :post_id';
 
 		$params = array(':post_id' => $post_id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		foreach ($result as $cur_word)
 		{
 			$match_in = $cur_word['subject_match'] ? 'subject' : 'post';
@@ -229,12 +228,12 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 	{
 		$word_ids = array();
 
-		$query = new SelectQuery(array('id' => 'w.id', 'word' => 'w.word'), 'search_words AS w');
+		$query = $db->select(array('id' => 'w.id', 'word' => 'w.word'), 'search_words AS w');
 		$query->where = 'w.word IN :words';
 
 		$params = array(':words' => $unique_words);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		foreach ($result as $cur_word)
 			$word_ids[$cur_word['word']] = $cur_word['id'];
 
@@ -245,12 +244,12 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 		if (!empty($new_words))
 		{
-			$insert_query = new InsertQuery(array('word' => ':word'), 'search_words');
+			$insert_query = $db->insert(array('word' => ':word'), 'search_words');
 
 			foreach ($new_words as $cur_word)
 			{
 				$params = array(':word' => $cur_word);
-				$db->query($insert_query, $params);
+				$insert_query->run($params);
 				unset ($params);
 			}
 
@@ -260,7 +259,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 		unset($new_words);
 	}
 
-	$delete_query = new DeleteQuery('search_matches');
+	$delete_query = $db->delete('search_matches');
 	$delete_query->where = 'word_id IN :wids AND post_id = :post_id AND subject_match = :subject_match';
 
 	// Delete matches (only if editing a post)
@@ -276,7 +275,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 				$word_ids[] = $cur_words[$match_in][$cur_word];
 
 			$params = array(':wids' => $word_ids, ':post_id' => $post_id, ':subject_match' => $subject_match);
-			$db->query($delete_query, $params);
+			$delete_query->run($params);
 			unset ($params);
 		}
 	}
@@ -289,7 +288,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 		$subject_match = ($match_in == 'subject') ? 1 : 0;
 
 		if (!empty($wordlist))
-			$db->query('INSERT INTO '.$db->prefix.'search_matches (post_id, word_id, subject_match) SELECT '.$post_id.', id, '.$subject_match.' FROM '.$db->prefix.'search_words WHERE word IN(\''.implode('\',\'', array_map(array($db, 'escape'), $wordlist)).'\')') or error('Unable to insert search index word matches', __FILE__, __LINE__, $db->error());
+			$db->query('INSERT INTO '.$db->prefix.'search_matches (post_id, word_id, subject_match) SELECT '.$post_id.', id, '.$subject_match.' FROM '.$db->prefix.'search_words WHERE word IN('.implode(',', array_map(array($db, 'quote'), $wordlist)).')') or error('Unable to insert search index word matches', __FILE__, __LINE__, $db->error());
 	}
 
 	unset($words);
@@ -344,11 +343,11 @@ function strip_search_index($post_ids)
 	}
 
 	// Delete all matches for the given posts
-	$query = new DeleteQuery('search_matches');
+	$query = $db->delete('search_matches');
 	$query->where = 'post_id IN :pids';
 
 	$params = array(':pids' => $post_ids);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 }

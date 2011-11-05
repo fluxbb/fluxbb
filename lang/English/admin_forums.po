@@ -1,0 +1,140 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in admin-forums.php
+msgid "Forum added redirect"
+msgstr "Forum added. Redirecting …"
+
+msgid "Forum deleted redirect"
+msgstr "Forum deleted. Redirecting …"
+
+msgid "Forums updated redirect"
+msgstr "Forums updated. Redirecting …"
+
+msgid "Forum updated redirect"
+msgstr "Forum updated. Redirecting …"
+
+msgid "Perms reverted redirect"
+msgstr "Permissions reverted to defaults. Redirecting …"
+
+msgid "Must enter name message"
+msgstr "You must enter a forum name."
+
+msgid "Must be integer message"
+msgstr "Position must be a positive integer value."
+
+msgid "New forum"
+msgstr "New forum"
+
+# Entry page
+msgid "Add forum head"
+msgstr "Add forum"
+
+msgid "Create new subhead"
+msgstr "Create a new forum"
+
+msgid "Add forum label"
+msgstr "Add forum to category"
+
+msgid "Add forum help"
+msgstr "Select the category to which you wish to add a new forum."
+
+msgid "Add forum"
+msgstr "Add forum"
+
+msgid "No categories exist"
+msgstr "No categories exist"
+
+msgid "Edit forums head"
+msgstr "Edit forums"
+
+msgid "Category subhead"
+msgstr "Category:"
+
+msgid "Forum label"
+msgstr "Forum"
+
+msgid "Edit link"
+msgstr "Edit"
+
+msgid "Delete link"
+msgstr "Delete"
+
+msgid "Position label"
+msgstr "Position"
+
+msgid "Update positions"
+msgstr "Update positions"
+
+msgid "Confirm delete head"
+msgstr "Confirm delete forum"
+
+msgid "Confirm delete subhead"
+msgstr "Important! Read before deleting"
+
+msgid "Confirm delete info"
+msgstr "Are you sure that you want to delete the forum <strong>%s</strong>?"
+
+msgid "Confirm delete warn"
+msgstr "WARNING! Deleting a forum will delete all posts (if any) in that forum!"
+
+# Detailed edit page
+msgid "Edit forum head"
+msgstr "Edit forum"
+
+msgid "Edit details subhead"
+msgstr "Edit forum details"
+
+msgid "Forum name label"
+msgstr "Forum name"
+
+msgid "Forum description label"
+msgstr "Description (HTML)"
+
+msgid "Category label"
+msgstr "Category"
+
+msgid "Sort by label"
+msgstr "Sort topics by"
+
+msgid "Last post"
+msgstr "Last post"
+
+msgid "Topic start"
+msgstr "Topic start"
+
+msgid "Subject"
+msgstr "Subject"
+
+msgid "Redirect label"
+msgstr "Redirect URL"
+
+msgid "Redirect help"
+msgstr "Only available in empty forums"
+
+msgid "Group permissions subhead"
+msgstr "Edit group permissions for this forum"
+
+msgid "Group permissions info"
+msgstr "In this form, you can set the forum specific permissions for the different user groups. If you haven't made any changes to this forum's group permissions, what you see below is the default based on settings in %s. Administrators always have full permissions and are thus excluded. Permission settings that differ from the default permissions for the user group are marked red. The \"Read forum\" permission checkbox will be disabled if the group in question lacks the \"Read board\" permission. For redirect forums, only the \"Read forum\" permission is editable."
+
+msgid "Read forum label"
+msgstr "Read forum"
+
+msgid "Post replies label"
+msgstr "Post replies"
+
+msgid "Post topics label"
+msgstr "Post topics"
+
+msgid "Revert to default"
+msgstr "Revert to default"
+

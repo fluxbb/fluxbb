@@ -15,60 +15,60 @@ require PUN_ROOT.'include/common.php';
 if (isset($_GET['get_host']))
 {
 	if (!$pun_user['is_admmod'])
-		message($lang_common['No permission']);
+		message($lang->t('No permission'));
 
 	// Is get_host an IP address or a post ID?
-	if (@preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $_GET['get_host']) || @preg_match('/^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/', $_GET['get_host']))
+	if (@preg_match('%^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$%', $_GET['get_host']) || @preg_match('%^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$%', $_GET['get_host']))
 		$ip = $_GET['get_host'];
 	else
 	{
 		$get_host = intval($_GET['get_host']);
 		if ($get_host < 1)
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
-		$query = new SelectQuery(array('poster_ip' => 'p.poster_ip'), 'posts AS p');
+		$query = $db->select(array('poster_ip' => 'p.poster_ip'), 'posts AS p');
 		$query->where = 'id = :pid';
 
 		$params = array(':pid' => $get_host);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (empty($result))
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
 		$ip = $result[0]['poster_ip'];
 		unset ($result, $query, $params);
 	}
 
 	// Load the misc.php language file
-	require PUN_ROOT.'lang/'.$pun_user['language'].'/misc.php';
+	$lang->load('misc');
 
-	message(sprintf($lang_misc['Host info 1'], $ip).'<br />'.sprintf($lang_misc['Host info 2'], @gethostbyaddr($ip)).'<br /><br /><a href="admin_users.php?show_users='.$ip.'">'.$lang_misc['Show more users'].'</a>');
+	message($lang->t('Host info 1', $ip).'<br />'.$lang->t('Host info 2', @gethostbyaddr($ip)).'<br /><br /><a href="admin_users.php?show_users='.$ip.'">'.$lang->t('Show more users').'</a>');
 }
 
 
 // All other functions require moderator/admin access
 $fid = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 if ($fid < 1)
-	message($lang_common['Bad request']);
+	message($lang->t('Bad request'));
 
-$query = new SelectQuery(array('moderators' => 'f.moderators'), 'forums AS f');
+$query = $db->select(array('moderators' => 'f.moderators'), 'forums AS f');
 $query->where = 'f.id = :forum_id';
 
 $params = array(':forum_id' => $fid);
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 $mods_array = empty($result[0]['moderators']) ? array() : unserialize($result[0]['moderators']);
 unset ($result, $query, $params);
 
 if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] == '0' || !array_key_exists($pun_user['username'], $mods_array)))
-	message($lang_common['No permission']);
+	message($lang->t('No permission'));
 
 // Get topic/forum tracking data
 if (!$pun_user['is_guest'])
 	$tracked_topics = get_tracked_topics();
 
 // Load the misc.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/misc.php';
+$lang->load('misc');
 
 
 // All other topic moderation features require a topic ID in GET
@@ -76,24 +76,22 @@ if (isset($_GET['tid']))
 {
 	$tid = intval($_GET['tid']);
 	if ($tid < 1)
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	// Fetch some info about the topic
-	$query = new SelectQuery(array('subject' => 't.subject', 'num_replies' => 't.num_replies', 'first_post_id' => 't.first_post_id', 'forum_id' => 'f.id AS forum_id', 'forum_name' => 'forum_name'), 'topics AS t');
+	$query = $db->select(array('subject' => 't.subject', 'num_replies' => 't.num_replies', 'first_post_id' => 't.first_post_id', 'forum_id' => 'f.id AS forum_id', 'forum_name' => 'forum_name'), 'topics AS t');
 
-	$query->joins['f'] = new InnerJoin('forums AS f');
-	$query->joins['f']->on = 'f.id = t.forum_id';
+	$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
-	$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-	$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+	$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 	$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id AND t.id = :topic_id AND t.moved_to IS NULL';
 
 	$params = array(':group_id' => $pun_user['g_id'], ':forum_id' => $fid, ':topic_id' => $tid);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	if (empty($result))
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	$cur_topic = $result[0];
 	unset ($result, $query, $params);
@@ -105,89 +103,89 @@ if (isset($_GET['tid']))
 		{
 			confirm_referrer('moderate.php');
 
-			if (@preg_match('/[^0-9,]/', $_POST['posts']))
-				message($lang_common['Bad request']);
+			if (@preg_match('%[^0-9,]%', $_POST['posts']))
+				message($lang->t('Bad request'));
 
 			$posts = explode(',', $_POST['posts']);
 			if (empty($posts))
-				message($lang_misc['No posts selected']);
+				message($lang->t('No posts selected'));
 
 			// How many posts did we just delete?
 			$num_posts_deleted = count($posts);
 
 			// Verify that the post IDs are valid
-			$query = new SelectQuery(array('num_posts' => 'COUNT(p.id) AS num_posts'), 'posts AS p');
+			$query = $db->select(array('num_posts' => 'COUNT(p.id) AS num_posts'), 'posts AS p');
 			$query->where = 'p.id IN :pids AND p.topic_id = :topic_id';
 
 			$params = array(':pids' => $posts, ':topic_id' => $tid);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			if ($result[0]['num_posts'] != $num_posts_deleted)
-				message($lang_common['Bad request']);
+				message($lang->t('Bad request'));
 
 			unset ($result, $query, $params);
 
 			// Delete the posts
-			$query = new DeleteQuery('posts');
+			$query = $db->delete('posts');
 			$query->where = 'id IN :pids';
 
 			$params = array(':pids' => $posts);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			require PUN_ROOT.'include/search_idx.php';
 			strip_search_index($posts);
 
 			// Get last_post, last_post_id, and last_poster for the topic after deletion
-			$query = new SelectQuery(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
+			$query = $db->select(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
 			$query->where = 'p.topic_id = :topic_id';
 			$query->order = array('id' => 'p.id DESC');
 			$query->limit = 1;
 
 			$params = array(':topic_id' => $tid);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			$last_post = $result[0];
 			unset ($result, $query, $params);
 
 			// Update the topic
-			$query = new UpdateQuery(array('last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'num_replies' => 'num_replies - :num_deleted'), 'topics');
+			$query = $db->update(array('last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'num_replies' => 'num_replies - :num_deleted'), 'topics');
 			$query->where = 'id = :topic_id';
 
 			$params = array(':last_post' => $last_post['posted'], ':last_post_id' => $last_post['id'], ':last_poster' => $last_post['poster'], ':num_deleted' => $num_posts_deleted, ':topic_id' => $tid);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			update_forum($fid);
 
-			redirect('viewtopic.php?id='.$tid, $lang_misc['Delete posts redirect']);
+			redirect('viewtopic.php?id='.$tid, $lang->t('Delete posts redirect'));
 		}
 
 		$posts = isset($_POST['posts']) ? $_POST['posts'] : array();
 		if (empty($posts))
-			message($lang_misc['No posts selected']);
+			message($lang->t('No posts selected'));
 
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Moderate']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Moderate'));
 		define('PUN_ACTIVE_PAGE', 'index');
 		require PUN_ROOT.'header.php';
 
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_misc['Delete posts'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Delete posts') ?></span></h2>
 	<div class="box">
 		<form method="post" action="moderate.php?fid=<?php echo $fid ?>&amp;tid=<?php echo $tid ?>">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_misc['Confirm delete legend'] ?></legend>
+					<legend><?php echo $lang->t('Confirm delete legend') ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="posts" value="<?php echo implode(',', array_map('intval', array_keys($posts))) ?>" />
-						<p><?php echo $lang_misc['Delete posts comply'] ?></p>
+						<p><?php echo $lang->t('Delete posts comply') ?></p>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="delete_posts_comply" value="<?php echo $lang_misc['Delete'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="delete_posts_comply" value="<?php echo $lang->t('Delete') ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>
@@ -201,168 +199,165 @@ if (isset($_GET['tid']))
 		{
 			confirm_referrer('moderate.php');
 
-			if (@preg_match('/[^0-9,]/', $_POST['posts']))
-				message($lang_common['Bad request']);
+			if (@preg_match('%[^0-9,]%', $_POST['posts']))
+				message($lang->t('Bad request'));
 
 			$posts = explode(',', $_POST['posts']);
 			if (empty($posts))
-				message($lang_misc['No posts selected']);
+				message($lang->t('No posts selected'));
 
 			$move_to_forum = isset($_POST['move_to_forum']) ? intval($_POST['move_to_forum']) : 0;
 			if ($move_to_forum < 1)
-				message($lang_common['Bad request']);
+				message($lang->t('Bad request'));
 
 			// How many posts did we just split off?
 			$num_posts_splitted = count($posts);
 
 			// Verify that the post IDs are valid
-			$query = new SelectQuery(array('num_posts' => 'COUNT(p.id) AS num_posts'), 'posts AS p');
+			$query = $db->select(array('num_posts' => 'COUNT(p.id) AS num_posts'), 'posts AS p');
 			$query->where = 'p.id IN :pids AND p.topic_id = :topic_id';
 
 			$params = array(':pids' => $posts, ':topic_id' => $tid);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			if ($result[0]['num_posts'] != $num_posts_splitted)
-				message($lang_common['Bad request']);
+				message($lang->t('Bad request'));
 
 			unset ($result, $query, $params);
 
 			// Verify that the move to forum ID is valid
-			$query = new SelectQuery(array('one' => '1'), 'forums AS f');
+			$query = $db->select(array('one' => '1'), 'forums AS f');
 
-			$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-			$query->joins['fp']->on = 'fp.group_id = :group_id AND fp.forum_id = :forum_id';
+			$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.group_id = :group_id AND fp.forum_id = :forum_id');
 
 			$query->where = 'f.redirect_url IS NULL AND (fp.post_topics IS NULL OR fp.post_topics = 1)';
 
 			$params = array(':group_id' => $pun_user['g_id'], ':forum_id' => $move_to_forum);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			if (empty($result))
-				message($lang_common['Bad request']);
+				message($lang->t('Bad request'));
 
 			unset ($result, $query, $params);
 
 			// Load the post.php language file
-			require PUN_ROOT.'lang/'.$pun_user['language'].'/post.php';
+			$lang->load('post');
 
 			// Check subject
 			$new_subject = isset($_POST['new_subject']) ? pun_trim($_POST['new_subject']) : '';
 
 			if ($new_subject == '')
-				message($lang_post['No subject']);
+				message($lang->t('No subject'));
 			else if (pun_strlen($new_subject) > 70)
-				message($lang_post['Too long subject']);
+				message($lang->t('Too long subject'));
 
 			// Get data from the new first post
-			$query = new SelectQuery(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
+			$query = $db->select(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
 			$query->where = 'p.id IN :pids';
 			$query->order = array('id' => 'o.id ASC');
 			$query->limit = 1;
 
 			$params = array(':pids' => $posts);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			$first_post = $result[0];
 			unset ($result, $query, $params);
 
 			// Create the new topic
-			$query = new InsertQuery(array('poster' => ':poster', 'subject' => ':subject', 'posted' => ':posted', 'first_post_id' => ':first_post_id', 'forum_id' => ':forum_id'), 'topics');
+			$query = $db->insert(array('poster' => ':poster', 'subject' => ':subject', 'posted' => ':posted', 'first_post_id' => ':first_post_id', 'forum_id' => ':forum_id'), 'topics');
 			$params = array(':poster' => $first_post['poster'], ':subject' => $new_subject, ':posted' => $first_post['posted'], ':first_post_id' => $first_post['id'], ':forum_id' => $move_to_forum);
 
-			$db->query($query, $params);
-			$new_tid = $db->insert_id();
+			$query->run($params);
+			$new_tid = $db->insertId();
 			unset ($query, $params);
 
 			// Move the posts to the new topic
-			$query = new UpdateQuery(array('topic_id' => ':topic_id'), 'posts');
+			$query = $db->update(array('topic_id' => ':topic_id'), 'posts');
 			$query->where = 'id IN :pids';
 
 			$params = array(':topic_id' => $new_tid, ':pids' => $posts);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			// Get last_post, last_post_id, and last_poster from the topic and update it
-			$query = new SelectQuery(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
+			$query = $db->select(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
 			$query->where = 'p.topic_id = :topic_id';
 			$query->order = array('id' => 'p.id DESC');
 			$query->limit = 1;
 
 			$params = array(':topic_id' => $tid);
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			$last_post = $result[0];
 			unset ($result, $query, $params);
 
-			$query = new UpdateQuery(array('last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'num_replies' => 'num_replies - :num_splitted'), 'topics');
+			$query = $db->update(array('last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'num_replies' => 'num_replies - :num_splitted'), 'topics');
 			$query->where = 'id = :topic_id';
 
 			$params = array(':last_post' => $last_post['posted'], ':last_post_id' => $last_post['id'], ':last_poster' => $last_post['poster'], ':num_splitted' => $num_posts_splitted, ':topic_id' => $tid);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			// Get last_post, last_post_id, and last_poster from the new topic and update it
-			$query = new SelectQuery(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
+			$query = $db->select(array('id' => 'p.id', 'poster' => 'p.poster', 'posted' => 'p.posted'), 'posts AS p');
 			$query->where = 'p.topic_id = :topic_id';
 			$query->order = array('id' => 'p.id DESC');
 			$query->limit = 1;
 
 			$params = array(':topic_id' => $new_tid);
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			$last_post = $result[0];
 			unset ($result, $query, $params);
 
-			$query = new UpdateQuery(array('last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'num_replies' => ':num_replies'), 'topics');
+			$query = $db->update(array('last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster', 'num_replies' => ':num_replies'), 'topics');
 			$query->where = 'id = :topic_id';
 
 			$params = array(':last_post' => $last_post['posted'], ':last_post_id' => $last_post['id'], ':last_poster' => $last_post['poster'], ':num_replies' => $num_posts_splitted - 1, ':topic_id' => $new_tid);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			update_forum($fid);
 			update_forum($move_to_forum);
 
-			redirect('viewtopic.php?id='.$new_tid, $lang_misc['Split posts redirect']);
+			redirect('viewtopic.php?id='.$new_tid, $lang->t('Split posts redirect'));
 		}
 
-		$query = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
+		$query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
 
-		$query->joins['f'] = new InnerJoin('forums AS f');
-		$query->joins['f']->on = 'c.id = f.cat_id';
+		$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
-		$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-		$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+		$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 		$query->where = '(fp.post_topics IS NULL OR fp.post_topics = 1) AND f.redirect_url IS NULL';
 		$query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
 
 		$params = array(':group_id' => $pun_user['g_id']);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 
 		$posts = isset($_POST['posts']) ? $_POST['posts'] : array();
 		if (empty($posts))
-			message($lang_misc['No posts selected']);
+			message($lang->t('No posts selected'));
 
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Moderate']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Moderate'));
 		$focus_element = array('subject','new_subject');
 		define('PUN_ACTIVE_PAGE', 'index');
 		require PUN_ROOT.'header.php';
 
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_misc['Split posts'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Split posts') ?></span></h2>
 	<div class="box">
 		<form id="subject" method="post" action="moderate.php?fid=<?php echo $fid ?>&amp;tid=<?php echo $tid ?>">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_misc['Confirm split legend'] ?></legend>
+					<legend><?php echo $lang->t('Confirm split legend') ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="posts" value="<?php echo implode(',', array_map('intval', array_keys($posts))) ?>" />
-						<label class="required"><strong><?php echo $lang_misc['New subject'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="new_subject" size="80" maxlength="70" /><br /></label>
-						<label><?php echo $lang_misc['Move to'] ?>
+						<label class="required"><strong><?php echo $lang->t('New subject') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input type="text" name="new_subject" size="80" maxlength="70" /><br /></label>
+						<label><?php echo $lang->t('Move to') ?>
 						<br /><select name="move_to_forum">
 <?php
 
@@ -387,11 +382,11 @@ if (isset($_GET['tid']))
 							</optgroup>
 						</select>
 						<br /></label>
-						<p><?php echo $lang_misc['Split posts comply'] ?></p>
+						<p><?php echo $lang->t('Split posts comply') ?></p>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="split_posts_comply" value="<?php echo $lang_misc['Split'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="split_posts_comply" value="<?php echo $lang->t('Split') ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>
@@ -404,7 +399,7 @@ if (isset($_GET['tid']))
 	// Show the moderate posts view
 
 	// Load the viewtopic.php language file
-	require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
+	$lang->load('topic');
 
 	// Used to disable the Move and Delete buttons if there are no replies to this topic
 	$button_status = ($cur_topic['num_replies'] == 0) ? ' disabled="disabled"' : '';
@@ -417,7 +412,7 @@ if (isset($_GET['tid']))
 	$start_from = $pun_user['disp_posts'] * ($p - 1);
 
 	// Generate paging links
-	$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'moderate.php?fid='.$fid.'&amp;tid='.$tid);
+	$paging_links = '<span class="pages-label">'.$lang->t('Pages').' </span>'.paginate($num_pages, $p, 'moderate.php?fid='.$fid.'&amp;tid='.$tid);
 
 
 	if ($pun_config['o_censoring'] == '1')
@@ -432,10 +427,10 @@ if (isset($_GET['tid']))
 <div class="linkst">
 	<div class="inbox crumbsplus">
 		<ul class="crumbs">
-			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li><a href="index.php"><?php echo $lang->t('Index') ?></a></li>
 			<li><span>»&#160;</span><a href="viewforum.php?id=<?php echo $fid ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
 			<li><span>»&#160;</span><a href="viewtopic.php?id=<?php echo $tid ?>"><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_misc['Moderate'] ?></strong></li>
+			<li><span>»&#160;</span><strong><?php echo $lang->t('Moderate') ?></strong></li>
 		</ul>
 		<div class="pagepost">
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
@@ -452,7 +447,7 @@ if (isset($_GET['tid']))
 	$post_count = 0; // Keep track of post numbers
 
 	// Retrieve a list of post IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
-	$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+	$query = $db->select(array('id' => 'p.id'), 'posts AS p');
 	$query->where = 'p.topic_id = :topic_id';
 	$query->order = array('id' => 'p.id ASC');
 	$query->offset = $start_from;
@@ -460,7 +455,7 @@ if (isset($_GET['tid']))
 
 	$params = array(':topic_id' => $tid);
 
-	$post_ids = $db->query($query, $params);
+	$post_ids = $query->run($params);
 	unset ($query, $params);
 
 	// If there are posts in this topic
@@ -472,20 +467,18 @@ if (isset($_GET['tid']))
 		$post_ids[$key] = $value['id'];
 
 	// Retrieve the posts (and their respective poster)
-	$query = new SelectQuery(array('title' => 'u.title', 'num_posts' => 'u.num_posts', 'g_id' => 'g.g_id', 'g_user_title' => 'g.g_user_title', 'id' => 'p.id', 'poster' => 'p.poster', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'edited' => 'p.edited', 'edited_by' => 'p.edited_by'), 'posts AS p');
+	$query = $db->select(array('title' => 'u.title', 'num_posts' => 'u.num_posts', 'g_id' => 'g.g_id', 'g_user_title' => 'g.g_user_title', 'id' => 'p.id', 'poster' => 'p.poster', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'edited' => 'p.edited', 'edited_by' => 'p.edited_by'), 'posts AS p');
 
-	$query->joins['u'] = new InnerJoin('users AS u');
-	$query->joins['u']->on = 'u.id = p.poster_id';
+	$query->InnerJoin('u', 'users AS u', 'u.id = p.poster_id');
 
-	$query->joins['g'] = new Innerjoin('groups AS g');
-	$query->joins['g']->on = 'g.g_id = u.group_id';
+	$query->Innerjoin('g', 'groups AS g', 'g.g_id = u.group_id');
 
 	$query->where = 'p.id IN :pids';
 	$query->order = array('id' => 'p.id ASC');
 
 	$params = array(':pids' => $post_ids);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	foreach ($result as $cur_post)
 	{
 		$post_count++;
@@ -509,7 +502,7 @@ if (isset($_GET['tid']))
 		else
 		{
 			$poster = pun_htmlspecialchars($cur_post['poster']);
-			$user_title = $lang_topic['Guest'];
+			$user_title = $lang->t('Guest');
 		}
 
 		// Perform the main parsing of the message (BBCode, smilies, censor words etc)
@@ -529,17 +522,17 @@ if (isset($_GET['tid']))
 					</dl>
 				</div>
 				<div class="postright">
-					<h3 class="nosize"><?php echo $lang_common['Message'] ?></h3>
+					<h3 class="nosize"><?php echo $lang->t('Message') ?></h3>
 					<div class="postmsg">
 						<?php echo $cur_post['message']."\n" ?>
-<?php if ($cur_post['edited'] != '') echo "\t\t\t\t\t\t".'<p class="postedit"><em>'.$lang_topic['Last edit'].' '.pun_htmlspecialchars($cur_post['edited_by']).' ('.format_time($cur_post['edited']).')</em></p>'."\n"; ?>
+<?php if ($cur_post['edited'] != '') echo "\t\t\t\t\t\t".'<p class="postedit"><em>'.$lang->t('Last edit').' '.pun_htmlspecialchars($cur_post['edited_by']).' ('.format_time($cur_post['edited']).')</em></p>'."\n"; ?>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="inbox">
 			<div class="postfoot clearb">
-				<div class="postfootright"><?php echo ($cur_post['id'] != $cur_topic['first_post_id']) ? '<p class="multidelete"><label><strong>'.$lang_misc['Select'].'</strong>&#160;<input type="checkbox" name="posts['.$cur_post['id'].']" value="1" /></label></p>' : '<p>'.$lang_misc['Cannot select first'].'</p>' ?></div>
+				<div class="postfootright"><?php echo ($cur_post['id'] != $cur_topic['first_post_id']) ? '<p class="multidelete"><label><strong>'.$lang->t('Select').'</strong>&#160;<input type="checkbox" name="posts['.$cur_post['id'].']" value="1" /></label></p>' : '<p>'.$lang->t('Cannot select first').'</p>' ?></div>
 			</div>
 		</div>
 	</div>
@@ -556,14 +549,14 @@ if (isset($_GET['tid']))
 	<div class="inbox crumbsplus">
 		<div class="pagepost">
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
-			<p class="conr modbuttons"><input type="submit" name="split_posts" value="<?php echo $lang_misc['Split'] ?>"<?php echo $button_status ?> /> <input type="submit" name="delete_posts" value="<?php echo $lang_misc['Delete'] ?>"<?php echo $button_status ?> /></p>
+			<p class="conr modbuttons"><input type="submit" name="split_posts" value="<?php echo $lang->t('Split') ?>"<?php echo $button_status ?> /> <input type="submit" name="delete_posts" value="<?php echo $lang->t('Delete') ?>"<?php echo $button_status ?> /></p>
 			<div class="clearer"></div>
 		</div>
 		<ul class="crumbs">
-			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li><a href="index.php"><?php echo $lang->t('Index') ?></a></li>
 			<li><span>»&#160;</span><a href="viewforum.php?id=<?php echo $fid ?>"><?php echo pun_htmlspecialchars($cur_topic['forum_name']) ?></a></li>
 			<li><span>»&#160;</span><a href="viewtopic.php?id=<?php echo $tid ?>"><?php echo pun_htmlspecialchars($cur_topic['subject']) ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_misc['Moderate'] ?></strong></li>
+			<li><span>»&#160;</span><strong><?php echo $lang->t('Moderate') ?></strong></li>
 		</ul>
 		<div class="clearer"></div>
 	</div>
@@ -582,77 +575,76 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	{
 		confirm_referrer('moderate.php');
 
-		if (@preg_match('/[^0-9,]/', $_POST['topics']))
-			message($lang_common['Bad request']);
+		if (@preg_match('%[^0-9,]%', $_POST['topics']))
+			message($lang->t('Bad request'));
 
 		$topics = explode(',', $_POST['topics']);
 		$move_to_forum = isset($_POST['move_to_forum']) ? intval($_POST['move_to_forum']) : 0;
 		if (empty($topics) || $move_to_forum < 1)
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
 		// Verify that the topic IDs are valid
-		$query = new SelectQuery(array('num_topics' => 'COUNT(t.id) AS num_topics'), 'topics AS t');
+		$query = $db->select(array('num_topics' => 'COUNT(t.id) AS num_topics'), 'topics AS t');
 		$query->where = 't.id IN :tids AND t.forum_id = :forum_id';
 
 		$params = array(':tids' => $topics, ':forum_id' => $fid);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if ($result[0]['num_topics'] != count($topics))
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
 		unset ($result, $query, $params);
 
 		// Verify that the move to forum ID is valid
-		$query = new SelectQuery(array('one' => '1'), 'forums AS f');
+		$query = $db->select(array('one' => '1'), 'forums AS f');
 
-		$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-		$query->joins['fp']->on = 'fp.group_id = :group_id AND fp.forum_id = :forum_id';
+		$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.group_id = :group_id AND fp.forum_id = :forum_id');
 
 		$query->where = 'f.redirect_url IS NULL AND (fp.post_topics IS NULL OR fp.post_topics = 1)';
 
 		$params = array(':group_id' => $pun_user['g_id'], ':forum_id' => $move_to_forum);
 
 		if (empty($result))
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
 		unset ($result, $query, $params);
 
 		// Delete any redirect topics if there are any (only if we moved/copied the topic back to where it was once moved from)
-		$query = new DeleteQuery('topics');
+		$query = $db->delete('topics');
 		$query->where = 'forum_id = :forum_id AND moved_to IN :tids';
 
 		$params = array(':forum_id' => $move_to_forum, ':tids' => $topics);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Move the topic(s)
-		$query = new UpdateQuery(array('forum_id' => ':forum_id'), 'topics');
+		$query = $db->update(array('forum_id' => ':forum_id'), 'topics');
 		$query->where = 'id IN :tids';
 
 		$params = array(':forum_id' => $move_to_forum, ':tids' => $topics);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Should we create redirect topics?
 		if (isset($_POST['with_redirect']))
 		{
-			$query = new SelectQuery(array('poster' => 't.poster', 'subject' => 't.subject', 'posted' => 't.posted', 'last_post' => 't.last_post'), 'topics AS t');
+			$query = $db->select(array('poster' => 't.poster', 'subject' => 't.subject', 'posted' => 't.posted', 'last_post' => 't.last_post'), 'topics AS t');
 			$query->where = 't.id IN :tids';
 
 			$params = array(':tids' => $topics);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			unset ($query, $params);
 
-			$insert_query = new InsertQuery(array('poster' => ':poster', 'subject' => ':subject', 'posted' => ':posted', 'last_post' => ':last_post', 'moved_to' => ':moved_to', 'forum_id' => ':forum_id'), 'topics');
+			$insert_query = $db->insert(array('poster' => ':poster', 'subject' => ':subject', 'posted' => ':posted', 'last_post' => ':last_post', 'moved_to' => ':moved_to', 'forum_id' => ':forum_id'), 'topics');
 
 			foreach ($result as $cur_topic)
 			{
 				$params = array(':poster' => $cur_topic['poster'], ':subject' => $cur_topic['subject'], ':posted' => $cur_topic['posted'], ':last_post' => $cur_topic['last_post'], ':moved_to' => $cur_topic,':forum_id' => $fid);
 
-				$db->query($insert_query, $params);
+				$insert_query->run($params);
 				unset ($params);
 			}
 
@@ -662,7 +654,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		update_forum($fid); // Update the forum FROM which the topic was moved
 		update_forum($move_to_forum); // Update the forum TO which the topic was moved
 
-		$redirect_msg = (count($topics) > 1) ? $lang_misc['Move topics redirect'] : $lang_misc['Move topic redirect'];
+		$redirect_msg = (count($topics) > 1) ? $lang->t('Move topics redirect') : $lang->t('Move topic redirect');
 		redirect('viewforum.php?id='.$move_to_forum, $redirect_msg);
 	}
 
@@ -670,7 +662,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	{
 		$topics = isset($_POST['topics']) ? $_POST['topics'] : array();
 		if (empty($topics))
-			message($lang_misc['No topics selected']);
+			message($lang->t('No topics selected'));
 
 		$topics = implode(',', array_map('intval', array_keys($topics)));
 		$action = 'multi';
@@ -679,45 +671,43 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	{
 		$topics = intval($_GET['move_topics']);
 		if ($topics < 1)
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
 		$action = 'single';
 	}
 
-	$query = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
+	$query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
 
-	$query->joins['f'] = new InnerJoin('forums AS f');
-	$query->joins['f']->on = 'c.id = f.cat_id';
+	$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
-	$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-	$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+	$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 	$query->where = '(fp.post_topics IS NULL OR fp.post_topics = 1) AND f.redirect_url IS NULL';
 	$query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
 
 	$params = array(':group_id' => $pun_user['g_id']);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	unset ($query, $params);
 
 	if (count($result) < 2)
-		message($lang_misc['Nowhere to move']);
+		message($lang->t('Nowhere to move'));
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Moderate']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Moderate'));
 	define('PUN_ACTIVE_PAGE', 'index');
 	require PUN_ROOT.'header.php';
 
 ?>
 <div class="blockform">
-	<h2><span><?php echo ($action == 'single') ? $lang_misc['Move topic'] : $lang_misc['Move topics'] ?></span></h2>
+	<h2><span><?php echo ($action == 'single') ? $lang->t('Move topic') : $lang->t('Move topics') ?></span></h2>
 	<div class="box">
 		<form method="post" action="moderate.php?fid=<?php echo $fid ?>">
 			<div class="inform">
 			<input type="hidden" name="topics" value="<?php echo $topics ?>" />
 				<fieldset>
-					<legend><?php echo $lang_misc['Move legend'] ?></legend>
+					<legend><?php echo $lang->t('Move legend') ?></legend>
 					<div class="infldset">
-						<label><?php echo $lang_misc['Move to'] ?>
+						<label><?php echo $lang->t('Move to') ?>
 						<br /><select name="move_to_forum">
 <?php
 
@@ -744,12 +734,12 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 						</select>
 						<br /></label>
 						<div class="rbox">
-							<label><input type="checkbox" name="with_redirect" value="1"<?php if ($action == 'single') echo ' checked="checked"' ?> /><?php echo $lang_misc['Leave redirect'] ?><br /></label>
+							<label><input type="checkbox" name="with_redirect" value="1"<?php if ($action == 'single') echo ' checked="checked"' ?> /><?php echo $lang->t('Leave redirect') ?><br /></label>
 						</div>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="move_topics_to" value="<?php echo $lang_misc['Move'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="move_topics_to" value="<?php echo $lang->t('Move') ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>
@@ -765,37 +755,30 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 	{
 		confirm_referrer('moderate.php');
 
-		if (@preg_match('/[^0-9,]/', $_POST['topics']))
-			message($lang_common['Bad request']);
+		if (@preg_match('%[^0-9,]%', $_POST['topics']))
+			message($lang->t('Bad request'));
 
 		$topics = explode(',', $_POST['topics']);
 		if (count($topics) < 2)
-			message($lang_misc['Not enough topics selected']);
+			message($lang->t('Not enough topics selected'));
 
-		// Verify that the topic IDs are valid (moved topics can not be merged?)
-		$query = new SelectQuery(array('num_topics' => 'COUNT(t.id) AS num_topics'), 'topics AS t');
+		// Verify that the topic IDs are valid (redirect links will point to the merged topic after the merge)
+		$query = $db->select(array('id' => 't.id'), 'topics AS t');
 		$query->where = 't.id IN :tids AND t.forum_id = :forum_id';
+		$query->order = array('id' => 't.id ASC');
 
 		$params = array(':tids' => $topics, ':forum_id' => $fid);
 
-		$result = $db->query($query, $params);
-		if ($result[0]['num_topics'] != count($topics))
-			message($lang_common['Bad request']);
+		$result = $query->run($params);
+		if (count($result[0]) != count($topics))
+			message($lang->t('Bad request'));
 
-		unset ($result, $query, $params);
-
-		// Fetch the topic that we're merging into
-		$query = new SelectQuery(array('merge_to' => 'MIN(t.id) AS merge_to'), 'topics AS t');
-		$query->where = 't.id IN :tids';
-
-		$params = array(':tids' => $topics);
-
-		$result = $db->query($query, $params);
-		$merge_to_tid = $result[0]['merge_to'];
+		// The topic that we are merging into is the one with the smallest ID
+		$merge_to_tid = $result[0]['id'];
 		unset ($result, $query, $params);
 
 		// Make any redirect topics point to our new, merged topic
-		$query = new UpdateQuery(array('moved_to' => ':merge_id'), 'topics');
+		$query = $db->update(array('moved_to' => ':merge_id'), 'topics');
 		$query->where = 'moved_to IN :tids';
 
 		$params = array(':merge_id' => $merge_to_tid, ':tids' => $topics);
@@ -804,98 +787,98 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 		if (isset($_POST['with_redirect']))
 			$query->where .= ' OR (id IN :tids AND id != :merge_id)';
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Merge the posts into the topic
-		$query = new UpdateQuery(array('topic_id' => ':merge_id'), 'posts');
+		$query = $db->update(array('topic_id' => ':merge_id'), 'posts');
 		$query->where = 'topic_id IN :tids';
 
 		$params = array(':merge_id' => $merge_to_tid, ':tids' => $topics);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Delete any subscriptions
-		$query = new DeleteQuery('topic_subscriptions');
+		$query = $db->delete('topic_subscriptions');
 		$query->where = 'topic_id IN :tids AND topic_id != :merge_id';
 
 		$params = array(':merge_id' => $merge_to_tid, ':tids' => $topics);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Without redirection the old topics are removed
 		if (!isset($_POST['with_redirect']))
 		{
-			$query = new DeleteQuery('topics');
+			$query = $db->delete('topics');
 			$query->where = 'id IN :tids AND id != :merge_id';
 
 			$params = array(':merge_id' => $merge_to_tid, ':tids' => $topics);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 		}
 
 		// Count number of replies in the topic
-		$query = new SelectQuery(array('num_replies' => '(COUNT(p.id) - 1) AS num_replies'), 'posts AS p');
+		$query = $db->select(array('num_replies' => '(COUNT(p.id) - 1) AS num_replies'), 'posts AS p');
 		$query->where = 'p.topic_id = :merge_to';
 
 		$params = array(':merge_to' => $merge_to_tid);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		$num_replies = $result[0]['num_replies'];
 		unset ($result, $query, $params);
 
 		// Get last_post, last_post_id and last_poster
-		$query = new SelectQuery(array('posted' => 'p.posted', 'id' => 'p.id', 'poster' => 'p.poster'), 'posts AS p');
+		$query = $db->select(array('posted' => 'p.posted', 'id' => 'p.id', 'poster' => 'p.poster'), 'posts AS p');
 		$query->where = 'p.topic_id = :merge_to';
 		$query->order = array('id' => 'p.id DESC');
 		$query->limit = 1;
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		$last_post = $result[0];
 		unset ($result, $query, $params);
 
 		// Update topic
-		$query = new UpdateQuery(array('num_replies' => ':num_replies', 'last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster'), 'topics');
+		$query = $db->update(array('num_replies' => ':num_replies', 'last_post' => ':last_post', 'last_post_id' => ':last_post_id', 'last_poster' => ':last_poster'), 'topics');
 		$query->where = 'id = :merge_to';
 
 		$params = array(':num_replies' => $num_replies, ':last_post' => $last_post['posted'], ':last_post_id' => $last_post['id'], ':last_poster' => $last_post['poster'], ':merge_to' => $merge_to_tid);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Update the forum FROM which the topic was moved and redirect
 		update_forum($fid);
-		redirect('viewforum.php?id='.$fid, $lang_misc['Merge topics redirect']);
+		redirect('viewforum.php?id='.$fid, $lang->t('Merge topics redirect'));
 	}
 
 	$topics = isset($_POST['topics']) ? $_POST['topics'] : array();
 	if (count($topics) < 2)
-		message($lang_misc['Not enough topics selected']);
+		message($lang->t('Not enough topics selected'));
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Moderate']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Moderate'));
 	define('PUN_ACTIVE_PAGE', 'index');
 	require PUN_ROOT.'header.php';
 
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_misc['Merge topics'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Merge topics') ?></span></h2>
 	<div class="box">
 		<form method="post" action="moderate.php?fid=<?php echo $fid ?>">
 			<input type="hidden" name="topics" value="<?php echo implode(',', array_map('intval', array_keys($topics))) ?>" />
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_misc['Confirm merge legend'] ?></legend>
+					<legend><?php echo $lang->t('Confirm merge legend') ?></legend>
 					<div class="infldset">
 						<div class="rbox">
-							<label><input type="checkbox" name="with_redirect" value="1" /><?php echo $lang_misc['Leave redirect'] ?><br /></label>
+							<label><input type="checkbox" name="with_redirect" value="1" /><?php echo $lang->t('Leave redirect') ?><br /></label>
 						</div>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="merge_topics_comply" value="<?php echo $lang_misc['Merge'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="merge_topics_comply" value="<?php echo $lang->t('Merge') ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>
@@ -911,52 +894,52 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 	{
 		confirm_referrer('moderate.php');
 
-		if (@preg_match('/[^0-9,]/', $_POST['topics']))
-			message($lang_common['Bad request']);
+		if (@preg_match('%[^0-9,]%', $_POST['topics']))
+			message($lang->t('Bad request'));
 
 		$topics = explode(',', $_POST['topics']);
 		if (empty($topics))
-			message($lang_misc['No topics selected']);
+			message($lang->t('No topics selected'));
 
 		require PUN_ROOT.'include/search_idx.php';
 
 		// Verify that the topic IDs are valid
-		$query = new SelectQuery(array('num_topics' => 'COUNT(t.id) AS num_topics'), 'topics AS t');
+		$query = $db->select(array('num_topics' => 'COUNT(t.id) AS num_topics'), 'topics AS t');
 		$query->where = 'id IN :tids AND forum_id = :forum_id';
 
 		$params = array(':tids' => $topics, ':forum_id' => $fid);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if ($result[0]['num_topics'] != count($topics))
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
 		unset ($result, $query, $params);
 
 		// Delete the topics and any redirect topics
-		$query = new DeleteQuery('topics');
+		$query = $db->delete('topics');
 		$query->where = 'id IN :tids OR moved_to IN :tids';
 
 		$params = array(':tids' => $topics);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Delete any subscriptions
-		$query = new DeleteQuery('topic_subscriptions');
+		$query = $db->delete('topic_subscriptions');
 		$query->where = 'topic_id IN :tids';
 
 		$params = array(':tids' => $topics);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		// Create a list of the post IDs in this topic and then strip the search index
-		$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+		$query = $db->select(array('id' => 'p.id'), 'posts AS p');
 		$query->where = 'p.topic_id IN :tids';
 
 		$params = array(':tids' => $topics);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 
 		$post_ids = array();
 		foreach ($result as $cur_post)
@@ -969,42 +952,42 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 			strip_search_index($post_ids);
 
 		// Delete posts
-		$query = new DeleteQuery('posts');
+		$query = $db->delete('posts');
 		$query->where = 'topic_id IN :tids';
 
 		$params = array(':tids' => $topics);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		update_forum($fid);
 
-		redirect('viewforum.php?id='.$fid, $lang_misc['Delete topics redirect']);
+		redirect('viewforum.php?id='.$fid, $lang->t('Delete topics redirect'));
 	}
 
 	$topics = isset($_POST['topics']) ? $_POST['topics'] : array();
 	if (empty($topics))
-		message($lang_misc['No topics selected']);
+		message($lang->t('No topics selected'));
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Moderate']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Moderate'));
 	define('PUN_ACTIVE_PAGE', 'index');
 	require PUN_ROOT.'header.php';
 
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_misc['Delete topics'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Delete topics') ?></span></h2>
 	<div class="box">
 		<form method="post" action="moderate.php?fid=<?php echo $fid ?>">
 			<input type="hidden" name="topics" value="<?php echo implode(',', array_map('intval', array_keys($topics))) ?>" />
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_misc['Confirm delete legend'] ?></legend>
+					<legend><?php echo $lang->t('Confirm delete legend') ?></legend>
 					<div class="infldset">
-						<p><?php echo $lang_misc['Delete topics comply'] ?></p>
+						<p><?php echo $lang->t('Delete topics comply') ?></p>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="delete_topics_comply" value="<?php echo $lang_misc['Delete'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="delete_topics_comply" value="<?php echo $lang->t('Delete') ?>" /><a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>
@@ -1026,17 +1009,17 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 
 		$topics = isset($_POST['topics']) ? @array_map('intval', @array_keys($_POST['topics'])) : array();
 		if (empty($topics))
-			message($lang_misc['No topics selected']);
+			message($lang->t('No topics selected'));
 
-		$query = new UpdateQuery(array('closed' => ':closed'), 'topics');
+		$query = $db->update(array('closed' => ':closed'), 'topics');
 		$query->where = 'id IN :tids AND forum_id = :forum_id';
 
 		$params = array(':closed' => $action, ':tids' => $topics, ':forum_id' => $fid);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
-		$redirect_msg = ($action) ? $lang_misc['Close topics redirect'] : $lang_misc['Open topics redirect'];
+		$redirect_msg = ($action) ? $lang->t('Close topics redirect') : $lang->t('Open topics redirect');
 		redirect('moderate.php?fid='.$fid, $redirect_msg);
 	}
 	// Or just one in $_GET
@@ -1046,17 +1029,17 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 
 		$topic_id = ($action) ? intval($_GET['close']) : intval($_GET['open']);
 		if ($topic_id < 1)
-			message($lang_common['Bad request']);
+			message($lang->t('Bad request'));
 
-		$query = new UpdateQuery(array('closed' => ':closed'), 'topics');
+		$query = $db->update(array('closed' => ':closed'), 'topics');
 		$query->where = 'id = :topic_id AND forum_id = :forum_id';
 
 		$params = array(':closed' => $action, ':topic_id' => $topic_id, ':forum_id' => $fid);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
-		$redirect_msg = ($action) ? $lang_misc['Close topic redirect'] : $lang_misc['Open topic redirect'];
+		$redirect_msg = ($action) ? $lang->t('Close topic redirect') : $lang->t('Open topic redirect');
 		redirect('viewtopic.php?id='.$topic_id, $redirect_msg);
 	}
 }
@@ -1069,17 +1052,17 @@ else if (isset($_GET['stick']))
 
 	$stick = intval($_GET['stick']);
 	if ($stick < 1)
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
-	$query = new UpdateQuery(array('sticky' => '1'), 'topics');
+	$query = $db->update(array('sticky' => '1'), 'topics');
 	$query->where = 'id = :topic_id AND forum_id = :forum_id';
 
 	$params = array(':topic_id' => $stick, ':forum_id' => $fid);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 
-	redirect('viewtopic.php?id='.$stick, $lang_misc['Stick topic redirect']);
+	redirect('viewtopic.php?id='.$stick, $lang->t('Stick topic redirect'));
 }
 
 
@@ -1090,45 +1073,44 @@ else if (isset($_GET['unstick']))
 
 	$unstick = intval($_GET['unstick']);
 	if ($unstick < 1)
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
-	$query = new UpdateQuery(array('sticky' => '0'), 'topics');
+	$query = $db->update(array('sticky' => '0'), 'topics');
 	$query->where = 'id = :topic_id AND forum_id = :forum_id';
 
 	$params = array(':topic_id' => $unstick, ':forum_id' => $fid);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 
-	redirect('viewtopic.php?id='.$unstick, $lang_misc['Unstick topic redirect']);
+	redirect('viewtopic.php?id='.$unstick, $lang->t('Unstick topic redirect'));
 }
 
 
 // No specific forum moderation action was specified in the query string, so we'll display the moderator forum
 
 // Load the viewforum.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/forum.php';
+$lang->load('forum');
 
 // Fetch some info about the forum
-$query = new SelectQuery(array('forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url', 'num_topics' => 'f.num_topics', 'sort_by' => 'f.sort_by'), 'forums AS f');
+$query = $db->select(array('forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url', 'num_topics' => 'f.num_topics', 'sort_by' => 'f.sort_by'), 'forums AS f');
 
-$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id';
 
 $params = array(':group_id' => $pun_user['g_id'], ':forum_id' => $fid);
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 if (empty($result))
-	message($lang_common['Bad request']);
+	message($lang->t('Bad request'));
 
 $cur_forum = $result[0];
 unset ($result, $query, $params);
 
 // Is this a redirect forum? In that case, abort!
 if ($cur_forum['redirect_url'] != '')
-	message($lang_common['Bad request']);
+	message($lang->t('Bad request'));
 
 switch ($cur_forum['sort_by'])
 {
@@ -1153,7 +1135,7 @@ $p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : in
 $start_from = $pun_user['disp_topics'] * ($p - 1);
 
 // Generate paging links
-$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'moderate.php?fid='.$fid);
+$paging_links = '<span class="pages-label">'.$lang->t('Pages').' </span>'.paginate($num_pages, $p, 'moderate.php?fid='.$fid);
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), pun_htmlspecialchars($cur_forum['forum_name']));
 define('PUN_ACTIVE_PAGE', 'index');
@@ -1163,9 +1145,9 @@ require PUN_ROOT.'header.php';
 <div class="linkst">
 	<div class="inbox crumbsplus">
 		<ul class="crumbs">
-			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li><a href="index.php"><?php echo $lang->t('Index') ?></a></li>
 			<li><span>»&#160;</span><a href="viewforum.php?id=<?php echo $fid ?>"><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_misc['Moderate'] ?></strong></li>
+			<li><span>»&#160;</span><strong><?php echo $lang->t('Moderate') ?></strong></li>
 		</ul>
 		<div class="pagepost">
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
@@ -1182,11 +1164,11 @@ require PUN_ROOT.'header.php';
 			<table cellspacing="0">
 			<thead>
 				<tr>
-					<th class="tcl" scope="col"><?php echo $lang_common['Topic'] ?></th>
-					<th class="tc2" scope="col"><?php echo $lang_common['Replies'] ?></th>
-<?php if ($pun_config['o_topic_views'] == '1'): ?>					<th class="tc3" scope="col"><?php echo $lang_forum['Views'] ?></th>
-<?php endif; ?>					<th class="tcr"><?php echo $lang_common['Last post'] ?></th>
-					<th class="tcmod" scope="col"><?php echo $lang_misc['Select'] ?></th>
+					<th class="tcl" scope="col"><?php echo $lang->t('Topic') ?></th>
+					<th class="tc2" scope="col"><?php echo $lang->t('Replies') ?></th>
+<?php if ($pun_config['o_topic_views'] == '1'): ?>					<th class="tc3" scope="col"><?php echo $lang->t('Views') ?></th>
+<?php endif; ?>					<th class="tcr"><?php echo $lang->t('Last post') ?></th>
+					<th class="tcmod" scope="col"><?php echo $lang->t('Select') ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -1194,7 +1176,7 @@ require PUN_ROOT.'header.php';
 
 
 // Retrieve a list of topic IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
-$query = new SelectQuery(array('id' => 't.id'), 'topics AS t');
+$query = $db->select(array('id' => 't.id'), 'topics AS t');
 $query->where = 't.forum_id = :forum_id';
 $query->order = array('sticky' => 't.sticky DESC', 'sort' => $sort_by, 'id' => 't.id DESC');
 $query->limit = $pun_user['disp_topics'];
@@ -1202,7 +1184,7 @@ $query->offset = $start_from;
 
 $params = array(':forum_id' => $fid);
 
-$topic_ids = $db->query($query, $params);
+$topic_ids = $query->run($params);
 unset ($query, $params);
 
 // If there are topics in this forum
@@ -1213,7 +1195,7 @@ if (!empty($topic_ids))
 		$topic_ids[$key] = $value['id'];
 
 	// Select topics
-	$query = new SelectQuery(array('id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to'), 'topics AS t');
+	$query = $db->select(array('id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to'), 'topics AS t');
 	$query->where = 't.id IN :tids';
 	$query->order = array('sticky' => 't.sticky DESC', 'sort' => $sort_by, 'id' => 't.id DESC');
 
@@ -1222,7 +1204,7 @@ if (!empty($topic_ids))
 	$button_status = '';
 	$topic_count = 0;
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	foreach ($result as $cur_topic)
 	{
 
@@ -1233,7 +1215,7 @@ if (!empty($topic_ids))
 
 		if ($cur_topic['moved_to'] == null)
 		{
-			$last_post = '<a href="viewtopic.php?pid='.$cur_topic['last_post_id'].'#p'.$cur_topic['last_post_id'].'">'.format_time($cur_topic['last_post']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['last_poster']).'</span>';
+			$last_post = '<a href="viewtopic.php?pid='.$cur_topic['last_post_id'].'#p'.$cur_topic['last_post_id'].'">'.format_time($cur_topic['last_post']).'</a> <span class="byuser">'.$lang->t('by').' '.pun_htmlspecialchars($cur_topic['last_poster']).'</span>';
 			$ghost_topic = false;
 		}
 		else
@@ -1248,21 +1230,21 @@ if (!empty($topic_ids))
 		if ($cur_topic['sticky'] == '1')
 		{
 			$item_status .= ' isticky';
-			$status_text[] = '<span class="stickytext">'.$lang_forum['Sticky'].'</span>';
+			$status_text[] = '<span class="stickytext">'.$lang->t('Sticky').'</span>';
 		}
 
 		if ($cur_topic['moved_to'] != 0)
 		{
-			$subject = '<a href="viewtopic.php?id='.$cur_topic['moved_to'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
-			$status_text[] = '<span class="movedtext">'.$lang_forum['Moved'].'</span>';
+			$subject = '<a href="viewtopic.php?id='.$cur_topic['moved_to'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang->t('by').' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
+			$status_text[] = '<span class="movedtext">'.$lang->t('Moved').'</span>';
 			$item_status .= ' imoved';
 		}
 		else if ($cur_topic['closed'] == '0')
-			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
+			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang->t('by').' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
 		else
 		{
-			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
-			$status_text[] = '<span class="closedtext">'.$lang_forum['Closed'].'</span>';
+			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang->t('by').' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
+			$status_text[] = '<span class="closedtext">'.$lang->t('Closed').'</span>';
 			$item_status .= ' iclosed';
 		}
 
@@ -1271,7 +1253,7 @@ if (!empty($topic_ids))
 			$item_status .= ' inew';
 			$icon_type = 'icon icon-new';
 			$subject = '<strong>'.$subject.'</strong>';
-			$subject_new_posts = '<span class="newtext">[ <a href="viewtopic.php?id='.$cur_topic['id'].'&amp;action=new" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a> ]</span>';
+			$subject_new_posts = '<span class="newtext">[ <a href="viewtopic.php?id='.$cur_topic['id'].'&amp;action=new" title="'.$lang->t('New posts info').'">'.$lang->t('New posts').'</a> ]</span>';
 		}
 		else
 			$subject_new_posts = null;
@@ -1318,7 +1300,7 @@ else
 {
 	$colspan = ($pun_config['o_topic_views'] == '1') ? 5 : 4;
 	$button_status = ' disabled="disabled"';
-	echo "\t\t\t\t\t".'<tr><td class="tcl" colspan="'.$colspan.'">'.$lang_forum['Empty forum'].'</td></tr>'."\n";
+	echo "\t\t\t\t\t".'<tr><td class="tcl" colspan="'.$colspan.'">'.$lang->t('Empty forum').'</td></tr>'."\n";
 }
 
 ?>
@@ -1332,13 +1314,13 @@ else
 	<div class="inbox crumbsplus">
 		<div class="pagepost">
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
-			<p class="conr modbuttons"><input type="submit" name="move_topics" value="<?php echo $lang_misc['Move'] ?>"<?php echo $button_status ?> /> <input type="submit" name="delete_topics" value="<?php echo $lang_misc['Delete'] ?>"<?php echo $button_status ?> /> <input type="submit" name="merge_topics" value="<?php echo $lang_misc['Merge'] ?>"<?php echo $button_status ?> /> <input type="submit" name="open" value="<?php echo $lang_misc['Open'] ?>"<?php echo $button_status ?> /> <input type="submit" name="close" value="<?php echo $lang_misc['Close'] ?>"<?php echo $button_status ?> /></p>
+			<p class="conr modbuttons"><input type="submit" name="move_topics" value="<?php echo $lang->t('Move') ?>"<?php echo $button_status ?> /> <input type="submit" name="delete_topics" value="<?php echo $lang->t('Delete') ?>"<?php echo $button_status ?> /> <input type="submit" name="merge_topics" value="<?php echo $lang->t('Merge') ?>"<?php echo $button_status ?> /> <input type="submit" name="open" value="<?php echo $lang->t('Open') ?>"<?php echo $button_status ?> /> <input type="submit" name="close" value="<?php echo $lang->t('Close') ?>"<?php echo $button_status ?> /></p>
 			<div class="clearer"></div>
 		</div>
 		<ul class="crumbs">
-			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li><a href="index.php"><?php echo $lang->t('Index') ?></a></li>
 			<li><span>»&#160;</span><a href="viewforum.php?id=<?php echo $fid ?>"><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_misc['Moderate'] ?></strong></li>
+			<li><span>»&#160;</span><strong><?php echo $lang->t('Moderate') ?></strong></li>
 		</ul>
 		<div class="clearer"></div>
 	</div>

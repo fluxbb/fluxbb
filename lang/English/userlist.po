@@ -1,0 +1,30 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in userlist.php
+msgid "User find legend"
+msgstr "Find and sort users"
+
+msgid "User search info"
+msgstr "Enter a username to search for and/or a user group to filter by. The username field can be left blank. Use the wildcard character * for partial matches."
+
+msgid "User sort info"
+msgstr "Sort users by name, date registered or number of posts and in ascending/descending order."
+
+msgid "User group"
+msgstr "User group"
+
+msgid "No of posts"
+msgstr "Number of posts"
+
+msgid "All users"
+msgstr "All"
+

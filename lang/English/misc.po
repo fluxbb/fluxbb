@@ -1,0 +1,231 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in various scripts
+msgid "Mark read redirect"
+msgstr "All topics and forums have been marked as read. Redirecting …"
+
+msgid "Mark forum read redirect"
+msgstr "All topics in the specified forum have been marked as read. Redirecting …"
+
+# Send email
+msgid "Form email disabled"
+msgstr "The user you are trying to send an email to has disabled form email."
+
+msgid "No email subject"
+msgstr "You must enter a subject."
+
+msgid "No email message"
+msgstr "You must enter a message."
+
+msgid "Too long email message"
+msgstr "Messages cannot be longer than 65535 characters (64 KB)."
+
+msgid "Email flood"
+msgstr "At least %s seconds have to pass between sent emails. Please wait a while and try sending again."
+
+msgid "Email sent redirect"
+msgstr "Email sent. Redirecting …"
+
+msgid "Send email to"
+msgstr "Send email to"
+
+msgid "Email subject"
+msgstr "Subject"
+
+msgid "Email message"
+msgstr "Message"
+
+msgid "Email disclosure note"
+msgstr "Please note that by using this form, your email address will be disclosed to the recipient."
+
+msgid "Write email"
+msgstr "Write and submit your email message"
+
+# Report
+msgid "No reason"
+msgstr "You must enter a reason."
+
+msgid "Reason too long"
+msgstr "Your message must be under 65535 bytes (~64kb)."
+
+msgid "Report flood"
+msgstr "At least %s seconds have to pass between reports. Please wait a while and try sending again."
+
+msgid "Report redirect"
+msgstr "Post reported. Redirecting …"
+
+msgid "Report post"
+msgstr "Report post"
+
+msgid "Reason"
+msgstr "Reason"
+
+msgid "Reason desc"
+msgstr "Please enter a short reason why you are reporting this post"
+
+# Subscriptions
+msgid "Already subscribed topic"
+msgstr "You are already subscribed to this topic."
+
+msgid "Already subscribed forum"
+msgstr "You are already subscribed to this forum."
+
+msgid "Subscribe redirect"
+msgstr "Your subscription has been added. Redirecting …"
+
+msgid "Not subscribed topic"
+msgstr "You are not subscribed to this topic."
+
+msgid "Not subscribed forum"
+msgstr "You are not subscribed to this forum."
+
+msgid "Unsubscribe redirect"
+msgstr "Your subscription has been removed. Redirecting …"
+
+# General forum and topic moderation
+msgid "Moderate"
+msgstr "Moderate"
+
+msgid "Select"
+msgstr "Select"
+
+# the header of a column of checkboxes
+msgid "Move"
+msgstr "Move"
+
+msgid "Split"
+msgstr "Split"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Merge"
+msgstr "Merge"
+
+# Moderate forum
+msgid "Open"
+msgstr "Open"
+
+msgid "Close"
+msgstr "Close"
+
+msgid "Move topic"
+msgstr "Move topic"
+
+msgid "Move topics"
+msgstr "Move topics"
+
+msgid "Move legend"
+msgstr "Select destination of move"
+
+msgid "Move to"
+msgstr "Move to"
+
+msgid "Nowhere to move"
+msgstr "There are no forums into which you can move topics."
+
+msgid "Leave redirect"
+msgstr "Leave redirect topic(s)"
+
+msgid "Move topic redirect"
+msgstr "Topic moved. Redirecting …"
+
+msgid "Move topics redirect"
+msgstr "Topics moved. Redirecting …"
+
+msgid "Confirm delete legend"
+msgstr "Please confirm deletion"
+
+msgid "Delete topics"
+msgstr "Delete topics"
+
+msgid "Delete topics comply"
+msgstr "Are you sure you want to delete the selected topics?"
+
+msgid "Delete topics redirect"
+msgstr "Topics deleted. Redirecting …"
+
+msgid "Open topic redirect"
+msgstr "Topic opened. Redirecting …"
+
+msgid "Open topics redirect"
+msgstr "Topics opened. Redirecting …"
+
+msgid "Close topic redirect"
+msgstr "Topic closed. Redirecting …"
+
+msgid "Close topics redirect"
+msgstr "Topics closed. Redirecting …"
+
+msgid "No topics selected"
+msgstr "You must select at least one topic for move/delete/open/close."
+
+msgid "Not enough topics selected"
+msgstr "You must select at least two topics for merge."
+
+msgid "Stick topic redirect"
+msgstr "Topic sticked. Redirecting …"
+
+msgid "Unstick topic redirect"
+msgstr "Topic unsticked. Redirecting …"
+
+msgid "Merge topics"
+msgstr "Merge topics"
+
+msgid "Merge topics redirect"
+msgstr "Topics merged. Redirecting …"
+
+msgid "Confirm merge legend"
+msgstr "Please confirm merge"
+
+msgid "New subject"
+msgstr "New subject"
+
+# Split multiple posts in topic
+msgid "Confirm split legend"
+msgstr "Please confirm split of selected posts and select destination of move."
+
+msgid "Split posts"
+msgstr "Split posts"
+
+msgid "Split posts comply"
+msgstr "Are you sure you want to split the selected posts?"
+
+msgid "Split posts redirect"
+msgstr "Posts have been split. Redirecting …"
+
+# Delete multiple posts in topic
+msgid "Delete posts"
+msgstr "Delete posts"
+
+msgid "Cannot select first"
+msgstr "First post cannot be selected for split/delete."
+
+msgid "Delete posts comply"
+msgstr "Are you sure you want to delete the selected posts?"
+
+msgid "Delete posts redirect"
+msgstr "Posts deleted. Redirecting …"
+
+msgid "No posts selected"
+msgstr "You must select at least one post for split/delete."
+
+# Get host
+msgid "Host info 1"
+msgstr "The IP address is: %s"
+
+msgid "Host info 2"
+msgstr "The host name is: %s"
+
+msgid "Show more users"
+msgstr "Show more users for this IP"
+

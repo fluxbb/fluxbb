@@ -1,0 +1,198 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in db_update.php
+msgid "Update"
+msgstr "Update FluxBB"
+
+msgid "Update message"
+msgstr "Your FluxBB database is out-of-date and must be upgraded in order to continue. If you are the board administrator, please follow the instructions below to complete the upgrade."
+
+msgid "Note"
+msgstr "Note:"
+
+msgid "Members message"
+msgstr "This process is for board administators only. If you are a member there is nothing to worry about - the forums will be back shortly!"
+
+msgid "Administrator only"
+msgstr "This step is for the board administrator only!"
+
+msgid "Database password info"
+msgstr "To perform the database update please enter the database password with which FluxBB was installed. If you cannot remember, this is stored in your 'config.php' file."
+
+msgid "Database password note"
+msgstr "If you are running SQLite (and hence have no database password) please use the database file name instead. This must exactly match the database file name given in your configuration file."
+
+msgid "Database password"
+msgstr "Database password"
+
+msgid "Maintenance"
+msgstr "Maintenance"
+
+msgid "Maintenance message info"
+msgstr "The message that will be displayed to users during the updating process. This text will not be parsed like regular posts and thus may contain HTML."
+
+msgid "Maintenance message"
+msgstr "Maintenance message"
+
+msgid "Next"
+msgstr "Next"
+
+msgid "You are running error"
+msgstr "You are running %1$s version %2$s. FluxBB %3$s requires at least %1$s %4$s to run properly. You must upgrade your %1$s installation before you can continue."
+
+msgid "Version mismatch error"
+msgstr "Version mismatch. The database '%s' doesn't seem to be running a FluxBB database schema supported by this update script."
+
+msgid "Invalid file error"
+msgstr "Invalid database file name. When using SQLite the database file name must be entered exactly as it appears in your '%s'"
+
+msgid "Invalid password error"
+msgstr "Invalid database password. To upgrade FluxBB you must enter your database password exactly as it appears in your '%s'"
+
+msgid "No password error"
+msgstr "No database password provided"
+
+msgid "Script runs error"
+msgstr "It appears the update script is already being ran by someone else. If this is not the case, please manually delete the file '%s' and try again"
+
+msgid "No update error"
+msgstr "Your forum is already as up-to-date as this script can make it"
+
+msgid "Intro 1"
+msgstr "This script will update your forum database. The update procedure might take anything from a second to hours depending on the speed of the server and the size of the forum database. Don't forget to make a backup of the database before continuing."
+
+msgid "Intro 2"
+msgstr "Did you read the update instructions in the documentation? If not, start there."
+
+msgid "No charset conversion"
+msgstr "<strong>IMPORTANT!</strong> FluxBB has detected that this PHP environment does not have support for the encoding mechanisms required to do UTF-8 conversion from character sets other than ISO-8859-1. What this means is that if the current character set is not ISO-8859-1, FluxBB won't be able to convert your forum database to UTF-8 and you will have to do it manually. Instructions for doing manual charset conversion can be found in the update instructions."
+
+msgid "Enable conversion"
+msgstr "<strong>Enable conversion:</strong> When enabled this update script will, after it has made the required structural changes to the database, convert all text in the database from the current character set to UTF-8. This conversion is required if you're upgrading from version 1.2."
+
+msgid "Current character set"
+msgstr "<strong>Current character set:</strong> If the primary language in your forum is English, you can leave this at the default value. However, if your forum is non-English, you should enter the character set of the primary language pack used in the forum. <em>Getting this wrong can corrupt your database so don't just guess!</em> Note: This is required even if the old database is UTF-8."
+
+msgid "Charset conversion"
+msgstr "Charset conversion"
+
+msgid "Enable conversion label"
+msgstr "<strong>Enable conversion</strong> (perform database charset conversion)."
+
+msgid "Current character set label"
+msgstr "Current character set"
+
+msgid "Current character set info"
+msgstr "Accept default for English forums otherwise the character set of the primary language pack."
+
+msgid "Start update"
+msgstr "Start update"
+
+msgid "Error converting users"
+msgstr "Error converting users"
+
+msgid "Error info 1"
+msgstr "There was an error converting some users. This can occur when converting from FluxBB v1.2 if multiple users have registered with very similar usernames, for example \"bob\" and \"böb\"."
+
+msgid "Error info 2"
+msgstr "Below is a list of users who failed to convert. Please choose a new username for each user. Users who are renamed will automatically be sent an email alerting them of the change."
+
+msgid "New username"
+msgstr "New username"
+
+msgid "Required"
+msgstr "(Required)"
+
+msgid "Correct errors"
+msgstr "The following errors need to be corrected:"
+
+msgid "Rename users"
+msgstr "Rename users"
+
+msgid "Successfully updated"
+msgstr "Your forum database was successfully updated. You may now %s."
+
+msgid "go to index"
+msgstr "go to the forum index"
+
+msgid "Unable to lock error"
+msgstr "Unable to write update lock. Please make sure PHP has write access to the directory '%s' and no-one else is currently running the update script."
+
+msgid "Converting"
+msgstr "Converting %s …"
+
+msgid "Converting item"
+msgstr "Converting %1$s %2$s …"
+
+msgid "Preparsing item"
+msgstr "Preparsing %1$s %2$s …"
+
+msgid "Rebuilding index item"
+msgstr "Rebuilding index for %1$s %2$s"
+
+msgid "ban"
+msgstr "ban"
+
+msgid "categories"
+msgstr "categories"
+
+msgid "censor words"
+msgstr "censor words"
+
+msgid "configuration"
+msgstr "configuration"
+
+msgid "forums"
+msgstr "forums"
+
+msgid "groups"
+msgstr "groups"
+
+msgid "post"
+msgstr "post"
+
+msgid "ranks"
+msgstr "ranks"
+
+msgid "report"
+msgstr "report"
+
+msgid "topic"
+msgstr "topic"
+
+msgid "user"
+msgstr "user"
+
+msgid "signature"
+msgstr "signature"
+
+msgid "Username too short error"
+msgstr "Usernames must be at least 2 characters long. Please choose another (longer) username."
+
+msgid "Username too long error"
+msgstr "Usernames must not be more than 25 characters long. Please choose another (shorter) username."
+
+msgid "Username Guest reserved error"
+msgstr "The username guest is reserved. Please choose another username."
+
+msgid "Username IP format error"
+msgstr "Usernames may not be in the form of an IP address. Please choose another username."
+
+msgid "Username bad characters error"
+msgstr "Usernames may not contain all the characters ', \" and [ or ] at once. Please choose another username."
+
+msgid "Username BBCode error"
+msgstr "Usernames may not contain any of the text formatting tags (BBCode) that the forum uses. Please choose another username."
+
+msgid "Username duplicate error"
+msgstr "Someone is already registered with the username %s. The username you entered is too similar. The username must differ from that by at least one alphanumerical character (a-z or 0-9). Please choose a different username."
+

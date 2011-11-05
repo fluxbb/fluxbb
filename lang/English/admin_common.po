@@ -1,0 +1,106 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in admin_common
+# The menu
+msgid "Admin menu"
+msgstr "Admin menu"
+
+msgid "Plugins menu"
+msgstr "Plugins menu"
+
+msgid "Moderator menu"
+msgstr "Moderator menu"
+
+msgid "Index"
+msgstr "Index"
+
+msgid "Categories"
+msgstr "Categories"
+
+msgid "Forums"
+msgstr "Forums"
+
+msgid "Users"
+msgstr "Users"
+
+msgid "User groups"
+msgstr "User groups"
+
+msgid "Options"
+msgstr "Options"
+
+msgid "Permissions"
+msgstr "Permissions"
+
+msgid "Censoring"
+msgstr "Censoring"
+
+msgid "Ranks"
+msgstr "Ranks"
+
+msgid "Bans"
+msgstr "Bans"
+
+msgid "Prune"
+msgstr "Prune"
+
+msgid "Maintenance"
+msgstr "Maintenance"
+
+msgid "Reports"
+msgstr "Reports"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "Go back"
+msgstr "Go back"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Update"
+msgstr "Update"
+
+msgid "Add"
+msgstr "Add"
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Remove"
+msgstr "Remove"
+
+msgid "Yes"
+msgstr "Yes"
+
+msgid "No"
+msgstr "No"
+
+msgid "Save changes"
+msgstr "Save changes"
+
+msgid "Save"
+msgstr "Save"
+
+msgid "here"
+msgstr "here"
+
+msgid "Action"
+msgstr "Action"
+
+msgid "None"
+msgstr "None"
+
+msgid "Maintenance mode"
+msgstr "maintenance mode"
+

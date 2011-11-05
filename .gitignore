@@ -1,5 +1,8 @@
+/*.sublime-project
 /.project
 /.settings/
+/nbproject/
+*.sublime-project
 /cache/cache_*.php
 /cache/*.cache
 /cache/db_update.lock
@@ -8,3 +11,4 @@
 /img/avatars/*.jpg
 /img/avatars/*.gif
 /config.php
+/lang/*/*.mo

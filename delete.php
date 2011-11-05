@@ -11,32 +11,29 @@ require PUN_ROOT.'include/common.php';
 
 
 if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view']);
+	message($lang->t('No view'));
 
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id < 1)
-	message($lang_common['Bad request']);
+	message($lang->t('Bad request'));
 
 // Fetch some info about the post, the topic and the forum
-$query = new SelectQuery(array('fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'redirect_url' => 'f.redirect_url', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics', 'tid' => 't.id AS tid', 'subject' => 't.subject', 'first_post_id' => 't.first_post_id', 'closed' => 't.closed', 'posted' => 'p.posted', 'poster' => 'p.poster', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies'), 'posts AS p');
+$query = $db->select(array('fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'redirect_url' => 'f.redirect_url', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics', 'tid' => 't.id AS tid', 'subject' => 't.subject', 'first_post_id' => 't.first_post_id', 'closed' => 't.closed', 'posted' => 'p.posted', 'poster' => 'p.poster', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies'), 'posts AS p');
 
-$query->joins['t'] = new InnerJoin('topics AS t');
-$query->joins['t']->on = 't.id = p.topic_id';
+$query->InnerJoin('t', 'topics AS t', 't.id = p.topic_id');
 
-$query->joins['f'] = new InnerJoin('forums AS f');
-$query->joins['f']->on = 'f.id = t.forum_id';
+$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
-$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = '(fp.read_forum IS NULL OR fp.read_forum=1) AND p.id = :post_id';
 
 $params = array(':group_id' => $pun_user['g_id'], ':post_id' => $id);
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 if (empty($result))
-	message($lang_common['Bad request']);
+	message($lang->t('Bad request'));
 
 $cur_post = $result[0];
 unset($query, $params, $result);
@@ -56,10 +53,10 @@ if (($pun_user['g_delete_posts'] == '0' ||
 	$cur_post['poster_id'] != $pun_user['id'] ||
 	$cur_post['closed'] == '1') &&
 	!$is_admmod)
-	message($lang_common['No permission']);
+	message($lang->t('No permission'));
 
 // Load the delete.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/delete.php';
+$lang->load('delete');
 
 
 if (isset($_POST['delete']))
@@ -75,7 +72,7 @@ if (isset($_POST['delete']))
 		delete_topic($cur_post['tid']);
 		update_forum($cur_post['fid']);
 
-		redirect('viewforum.php?id='.$cur_post['fid'], $lang_delete['Topic del redirect']);
+		redirect('viewforum.php?id='.$cur_post['fid'], $lang->t('Topic del redirect'));
 	}
 	else
 	{
@@ -84,23 +81,23 @@ if (isset($_POST['delete']))
 		update_forum($cur_post['fid']);
 
 		// Redirect towards the previous post
-		$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+		$query = $db->select(array('id' => 'p.id'), 'posts AS p');
 		$query->where = 'p.topic_id = :topic_id AND p.id < :post_id';
 		$query->order = array('id' => 'p.id DESC');
 		$query->limit = 1;
 
 		$params = array(':topic_id' => $cur_post['tid'], ':post_id' => $id);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		$post_id = $result[0]['id'];
 		unset($query, $params, $result);
 
-		redirect('viewtopic.php?pid='.$post_id.'#p'.$post_id, $lang_delete['Post del redirect']);
+		redirect('viewtopic.php?pid='.$post_id.'#p'.$post_id, $lang->t('Post del redirect'));
 	}
 }
 
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_delete['Delete post']);
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Delete post'));
 define ('PUN_ACTIVE_PAGE', 'index');
 require PUN_ROOT.'header.php';
 
@@ -111,25 +108,25 @@ $cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smili
 <div class="linkst">
 	<div class="inbox">
 		<ul class="crumbs">
-			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li><a href="index.php"><?php echo $lang->t('Index') ?></a></li>
 			<li><span>»&#160;</span><a href="viewforum.php?id=<?php echo $cur_post['fid'] ?>"><?php echo pun_htmlspecialchars($cur_post['forum_name']) ?></a></li>
 			<li><span>»&#160;</span><a href="viewtopic.php?pid=<?php echo $id ?>#p<?php echo $id ?>"><?php echo pun_htmlspecialchars($cur_post['subject']) ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_delete['Delete post'] ?></strong></li>
+			<li><span>»&#160;</span><strong><?php echo $lang->t('Delete post') ?></strong></li>
 		</ul>
 	</div>
 </div>
 
 <div class="blockform">
-	<h2><span><?php echo $lang_delete['Delete post'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Delete post') ?></span></h2>
 	<div class="box">
 		<form method="post" action="delete.php?id=<?php echo $id ?>">
 			<div class="inform">
 				<div class="forminfo">
-					<h3><span><?php printf($is_topic_post ? $lang_delete['Topic by'] : $lang_delete['Reply by'], '<strong>'.pun_htmlspecialchars($cur_post['poster']).'</strong>', format_time($cur_post['posted'])) ?></span></h3>
-					<p><?php echo ($is_topic_post) ? '<strong>'.$lang_delete['Topic warning'].'</strong>' : '<strong>'.$lang_delete['Warning'].'</strong>' ?><br /><?php echo $lang_delete['Delete info'] ?></p>
+					<h3><span><?php echo $lang->t($is_topic_post ? 'Topic by' : 'Reply by', '<strong>'.pun_htmlspecialchars($cur_post['poster']).'</strong>', format_time($cur_post['posted'])) ?></span></h3>
+					<p><?php echo ($is_topic_post) ? '<strong>'.$lang->t('Topic warning').'</strong>' : '<strong>'.$lang->t('Warning').'</strong>' ?><br /><?php echo $lang->t('Delete info') ?></p>
 				</div>
 			</div>
-			<p class="buttons"><input type="submit" name="delete" value="<?php echo $lang_delete['Delete'] ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="delete" value="<?php echo $lang->t('Delete') ?>" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>

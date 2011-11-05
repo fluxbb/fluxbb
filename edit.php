@@ -11,32 +11,29 @@ require PUN_ROOT.'include/common.php';
 
 
 if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view']);
+	message($lang->t('No view'));
 
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id < 1)
-	message($lang_common['Bad request']);
+	message($lang->t('Bad request'));
 
 // Fetch some info about the post, the topic and the forum
-$query = new SelectQuery(array('fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'redirect_url' => 'f.redirect_url', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics', 'tid' => 't.id AS tid', 'subject' => 't.subject', 'posted' => 't.posted', 'first_post_id' => 't.first_post_id', 'sticky' => 't.sticky', 'closed' => 't.closed', 'poster' => 'p.poster', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies'), 'posts AS p');
+$query = $db->select(array('fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'redirect_url' => 'f.redirect_url', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics', 'tid' => 't.id AS tid', 'subject' => 't.subject', 'posted' => 't.posted', 'first_post_id' => 't.first_post_id', 'sticky' => 't.sticky', 'closed' => 't.closed', 'poster' => 'p.poster', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies'), 'posts AS p');
 
-$query->joins['t'] = new InnerJoin('topics AS t');
-$query->joins['t']->on = 't.id = p.topic_id';
+$query->InnerJoin('t', 'topics AS t', 't.id = p.topic_id');
 
-$query->joins['f'] = new InnerJoin('forums AS f');
-$query->joins['f']->on = 'f.id = t.forum_id';
+$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
-$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND p.id = :post_id';
 
 $params = array(':group_id' => $pun_user['g_id'], ':post_id' => $id);
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 if (empty($result))
-	message($lang_common['Bad request']);
+	message($lang->t('Bad request'));
 
 $cur_post = $result[0];
 unset ($result, $query, $params);
@@ -58,10 +55,10 @@ if (($pun_user['g_edit_posts'] == '0' ||
 	$cur_post['poster_id'] != $pun_user['id'] ||
 	$cur_post['closed'] == '1') &&
 	!$is_admmod)
-	message($lang_common['No permission']);
+	message($lang->t('No permission'));
 
 // Load the post.php/edit.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/post.php';
+$lang->load('post');
 
 // Start with a clean slate
 $errors = array();
@@ -81,13 +78,13 @@ if (isset($_POST['form_sent']))
 			$censored_subject = pun_trim(censor_words($subject));
 
 		if ($subject == '')
-			$errors[] = $lang_post['No subject'];
+			$errors[] = $lang->t('No subject');
 		else if ($pun_config['o_censoring'] == '1' && $censored_subject == '')
-			$errors[] = $lang_post['No subject after censoring'];
+			$errors[] = $lang->t('No subject after censoring');
 		else if (pun_strlen($subject) > 70)
-			$errors[] = $lang_post['Too long subject'];
+			$errors[] = $lang->t('Too long subject');
 		else if ($pun_config['p_subject_all_caps'] == '0' && is_all_uppercase($subject) && !$pun_user['is_admmod'])
-			$errors[] = $lang_post['All caps subject'];
+			$errors[] = $lang->t('All caps subject');
 	}
 
 	// Clean up message from POST
@@ -95,9 +92,9 @@ if (isset($_POST['form_sent']))
 
 	// Here we use strlen() not pun_strlen() as we want to limit the post to PUN_MAX_POSTSIZE bytes, not characters
 	if (strlen($message) > PUN_MAX_POSTSIZE)
-		$errors[] = sprintf($lang_post['Too long message'], forum_number_format(PUN_MAX_POSTSIZE));
+		$errors[] = $lang->t('Too long message', forum_number_format(PUN_MAX_POSTSIZE));
 	else if ($pun_config['p_message_all_caps'] == '0' && is_all_uppercase($message) && !$pun_user['is_admmod'])
-		$errors[] = $lang_post['All caps message'];
+		$errors[] = $lang->t('All caps message');
 
 	// Validate BBCode syntax
 	if ($pun_config['p_message_bbcode'] == '1')
@@ -109,14 +106,14 @@ if (isset($_POST['form_sent']))
 	if (empty($errors))
 	{
 		if ($message == '')
-			$errors[] = $lang_post['No message'];
+			$errors[] = $lang->t('No message');
 		else if ($pun_config['o_censoring'] == '1')
 		{
 			// Censor message to see if that causes problems
 			$censored_message = pun_trim(censor_words($message));
 
 			if ($censored_message == '')
-				$errors[] = $lang_post['No message after censoring'];
+				$errors[] = $lang->t('No message after censoring');
 		}
 	}
 
@@ -133,12 +130,12 @@ if (isset($_POST['form_sent']))
 		if ($can_edit_subject)
 		{
 			// Update the topic and any redirect topics
-			$query = new UpdateQuery(array('subject' => ':subject', 'sticky' => ':sticky'), 'topics');
+			$query = $db->update(array('subject' => ':subject', 'sticky' => ':sticky'), 'topics');
 			$query->where = 'id = :topic_id';
 
 			$params = array(':subject' => $subject, ':sticky' => $stick_topic, ':topic_id' => $cur_post['tid']);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 
 			// We changed the subject, so we need to take that into account when we update the search words
@@ -148,7 +145,7 @@ if (isset($_POST['form_sent']))
 			update_search_index('edit', $id, $message);
 
 		// Update the post
-		$query = new UpdateQuery(array('message' => ':message', 'hide_smilies' => ':hide_smilies'), 'posts');
+		$query = $db->update(array('message' => ':message', 'hide_smilies' => ':hide_smilies'), 'posts');
 		$query->where = 'id = :post_id';
 
 		$params = array(':message' => $message, ':hide_smilies' => $hide_smilies, ':post_id' => $id);
@@ -162,17 +159,17 @@ if (isset($_POST['form_sent']))
 			$params[':edited_by'] = $pun_user['username'];
 		}
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
-		redirect('viewtopic.php?pid='.$id.'#p'.$id, $lang_post['Edit redirect']);
+		redirect('viewtopic.php?pid='.$id.'#p'.$id, $lang->t('Edit redirect'));
 	}
 }
 
 
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_post['Edit post']);
-$required_fields = array('req_subject' => $lang_common['Subject'], 'req_message' => $lang_common['Message']);
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Edit post'));
+$required_fields = array('req_subject' => $lang->t('Subject'), 'req_message' => $lang->t('Message'));
 $focus_element = array('edit', 'req_message');
 define('PUN_ACTIVE_PAGE', 'index');
 require PUN_ROOT.'header.php';
@@ -183,10 +180,10 @@ $cur_index = 1;
 <div class="linkst">
 	<div class="inbox">
 		<ul class="crumbs">
-			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li><a href="index.php"><?php echo $lang->t('Index') ?></a></li>
 			<li><span>»&#160;</span><a href="viewforum.php?id=<?php echo $cur_post['fid'] ?>"><?php echo pun_htmlspecialchars($cur_post['forum_name']) ?></a></li>
 			<li><span>»&#160;</span><a href="viewtopic.php?id=<?php echo $cur_post['tid'] ?>"><?php echo pun_htmlspecialchars($cur_post['subject']) ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_post['Edit post'] ?></strong></li>
+			<li><span>»&#160;</span><strong><?php echo $lang->t('Edit post') ?></strong></li>
 		</ul>
 	</div>
 </div>
@@ -199,10 +196,10 @@ if (!empty($errors))
 
 ?>
 <div id="posterror" class="block">
-	<h2><span><?php echo $lang_post['Post errors'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Post errors') ?></span></h2>
 	<div class="box">
 		<div class="inbox error-info">
-			<p><?php echo $lang_post['Post errors info'] ?></p>
+			<p><?php echo $lang->t('Post errors info') ?></p>
 			<ul class="error-list">
 <?php
 
@@ -224,7 +221,7 @@ else if (isset($_POST['preview']))
 
 ?>
 <div id="postpreview" class="blockpost">
-	<h2><span><?php echo $lang_post['Post preview'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Post preview') ?></span></h2>
 	<div class="box">
 		<div class="inbox">
 			<div class="postbody">
@@ -244,22 +241,22 @@ else if (isset($_POST['preview']))
 
 ?>
 <div id="editform" class="blockform">
-	<h2><span><?php echo $lang_post['Edit post'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Edit post') ?></span></h2>
 	<div class="box">
 		<form id="edit" method="post" action="edit.php?id=<?php echo $id ?>&amp;action=edit" onsubmit="return process_form(this)">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_post['Edit post legend'] ?></legend>
+					<legend><?php echo $lang->t('Edit post legend') ?></legend>
 					<input type="hidden" name="form_sent" value="1" />
 					<div class="infldset txtarea">
-<?php if ($can_edit_subject): ?>						<label class="required"><strong><?php echo $lang_common['Subject'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br />
+<?php if ($can_edit_subject): ?>						<label class="required"><strong><?php echo $lang->t('Subject') ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
 						<input class="longinput" type="text" name="req_subject" size="80" maxlength="70" tabindex="<?php echo $cur_index++ ?>" value="<?php echo pun_htmlspecialchars(isset($_POST['req_subject']) ? $_POST['req_subject'] : $cur_post['subject']) ?>" /><br /></label>
-<?php endif; ?>						<label class="required"><strong><?php echo $lang_common['Message'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br />
+<?php endif; ?>						<label class="required"><strong><?php echo $lang->t('Message') ?> <span><?php echo $lang->t('Required') ?></span></strong><br />
 						<textarea name="req_message" rows="20" cols="95" tabindex="<?php echo $cur_index++ ?>"><?php echo pun_htmlspecialchars(isset($_POST['req_message']) ? $message : $cur_post['message']) ?></textarea><br /></label>
 						<ul class="bblinks">
-							<li><span><a href="help.php#bbcode" onclick="window.open(this.href); return false;"><?php echo $lang_common['BBCode'] ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
-							<li><span><a href="help.php#img" onclick="window.open(this.href); return false;"><?php echo $lang_common['img tag'] ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1' && $pun_config['p_message_img_tag'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
-							<li><span><a href="help.php#smilies" onclick="window.open(this.href); return false;"><?php echo $lang_common['Smilies'] ?></a> <?php echo ($pun_config['o_smilies'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
+							<li><span><a href="help.php#bbcode" onclick="window.open(this.href); return false;"><?php echo $lang->t('BBCode') ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1') ? $lang->t('on') : $lang->t('off'); ?></span></li>
+							<li><span><a href="help.php#img" onclick="window.open(this.href); return false;"><?php echo $lang->t('img tag') ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1' && $pun_config['p_message_img_tag'] == '1') ? $lang->t('on') : $lang->t('off'); ?></span></li>
+							<li><span><a href="help.php#smilies" onclick="window.open(this.href); return false;"><?php echo $lang->t('Smilies') ?></a> <?php echo ($pun_config['o_smilies'] == '1') ? $lang->t('on') : $lang->t('off'); ?></span></li>
 						</ul>
 					</div>
 				</fieldset>
@@ -269,25 +266,25 @@ $checkboxes = array();
 if ($can_edit_subject && $is_admmod)
 {
 	if (isset($_POST['stick_topic']) || $cur_post['sticky'] == '1')
-		$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" checked="checked" tabindex="'.($cur_index++).'" />'.$lang_common['Stick topic'].'<br /></label>';
+		$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" checked="checked" tabindex="'.($cur_index++).'" />'.$lang->t('Stick topic').'<br /></label>';
 	else
-		$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" tabindex="'.($cur_index++).'" />'.$lang_common['Stick topic'].'<br /></label>';
+		$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" tabindex="'.($cur_index++).'" />'.$lang->t('Stick topic').'<br /></label>';
 }
 
 if ($pun_config['o_smilies'] == '1')
 {
 	if (isset($_POST['hide_smilies']) || $cur_post['hide_smilies'] == '1')
-		$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" checked="checked" tabindex="'.($cur_index++).'" />'.$lang_post['Hide smilies'].'<br /></label>';
+		$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" checked="checked" tabindex="'.($cur_index++).'" />'.$lang->t('Hide smilies').'<br /></label>';
 	else
-		$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'" />'.$lang_post['Hide smilies'].'<br /></label>';
+		$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'" />'.$lang->t('Hide smilies').'<br /></label>';
 }
 
 if ($is_admmod)
 {
 	if ((isset($_POST['form_sent']) && isset($_POST['silent'])) || !isset($_POST['form_sent']))
-		$checkboxes[] = '<label><input type="checkbox" name="silent" value="1" tabindex="'.($cur_index++).'" checked="checked" />'.$lang_post['Silent edit'].'<br /></label>';
+		$checkboxes[] = '<label><input type="checkbox" name="silent" value="1" tabindex="'.($cur_index++).'" checked="checked" />'.$lang->t('Silent edit').'<br /></label>';
 	else
-		$checkboxes[] = '<label><input type="checkbox" name="silent" value="1" tabindex="'.($cur_index++).'" />'.$lang_post['Silent edit'].'<br /></label>';
+		$checkboxes[] = '<label><input type="checkbox" name="silent" value="1" tabindex="'.($cur_index++).'" />'.$lang->t('Silent edit').'<br /></label>';
 }
 
 if (!empty($checkboxes))
@@ -297,7 +294,7 @@ if (!empty($checkboxes))
 			</div>
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_common['Options'] ?></legend>
+					<legend><?php echo $lang->t('Options') ?></legend>
 					<div class="infldset">
 						<div class="rbox">
 							<?php echo implode("\n\t\t\t\t\t\t\t", $checkboxes)."\n" ?>
@@ -310,7 +307,7 @@ if (!empty($checkboxes))
 
 ?>
 			</div>
-			<p class="buttons"><input type="submit" name="submit" value="<?php echo $lang_common['Submit'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="s" /> <input type="submit" name="preview" value="<?php echo $lang_post['Preview'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+			<p class="buttons"><input type="submit" name="submit" value="<?php echo $lang->t('Submit') ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="s" /> <input type="submit" name="preview" value="<?php echo $lang->t('Preview') ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 		</form>
 	</div>
 </div>

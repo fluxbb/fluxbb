@@ -17,10 +17,10 @@ require PUN_ROOT.'include/common_admin.php';
 
 
 if ($pun_user['g_id'] != PUN_ADMIN)
-	message($lang_common['No permission']);
+	message($lang->t('No permission'));
 
 // Load the admin_maintenance.php language file
-require PUN_ROOT.'lang/'.$admin_language.'/admin_maintenance.php';
+$lang->load('admin_maintenance');
 
 $action = isset($_REQUEST['action']) ? trim($_REQUEST['action']) : '';
 
@@ -31,7 +31,7 @@ if ($action == 'rebuild')
 
 	// Check per page is > 0
 	if ($per_page < 1)
-		message($lang_admin_maintenance['Posts must be integer message']);
+		message($lang->t('Posts must be integer message'));
 
 	@set_time_limit(0);
 
@@ -41,20 +41,20 @@ if ($action == 'rebuild')
 		// This is the only potentially "dangerous" thing we can do here, so we check the referer
 		confirm_referrer('admin_maintenance.php');
 
-		$query = new TruncateQuery('search_matches');
+		$query = $db->truncate('search_matches');
 		$params = array();
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
-		$query = new TruncateQuery('search_words');
+		$query = $db->truncate('search_words');
 		$params = array();
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 	}
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_maintenance['Rebuilding search index']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Rebuilding search index'));
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -78,7 +78,7 @@ h1 {
 </head>
 <body>
 
-<h1><?php echo $lang_admin_maintenance['Rebuilding index info'] ?></h1>
+<h1><?php echo $lang->t('Rebuilding index info') ?></h1>
 <hr />
 
 <?php
@@ -88,10 +88,9 @@ h1 {
 	require PUN_ROOT.'include/search_idx.php';
 
 	// Fetch posts to process this cycle
-	$query = new SelectQuery(array('id' => 'p.id', 'message' => 'p.message', 'subject' => 't.subject', 'first_post_id' => 't.first_post_id'), 'posts AS p');
+	$query = $db->select(array('id' => 'p.id', 'message' => 'p.message', 'subject' => 't.subject', 'first_post_id' => 't.first_post_id'), 'posts AS p');
 
-	$query->joins['t'] = new InnerJoin('topics AS t');
-	$query->joins['t']->on = 't.id = p.topic_id';
+	$query->InnerJoin('t', 'topics AS t', 't.id = p.topic_id');
 
 	$query->where = 'p.id >= :start_at';
 	$query->order = array('pid' => 'p.id ASC');
@@ -99,12 +98,12 @@ h1 {
 
 	$params = array(':start_at' => $start_at);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 
 	$end_at = 0;
 	foreach ($result as $cur_item)
 	{
-		echo '<p><span>'.sprintf($lang_admin_maintenance['Processing post'], $cur_item['id']).'</span></p>'."\n";
+		echo '<p><span>'.$lang->t('Processing post', $cur_item['id']).'</span></p>'."\n";
 
 		if ($cur_item['id'] == $cur_item['first_post_id'])
 			update_search_index('post', $cur_item['id'], $cur_item['message'], $cur_item['subject']);
@@ -119,22 +118,22 @@ h1 {
 	// Check if there is more work to do
 	if ($end_at > 0)
 	{
-		$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+		$query = $db->select(array('id' => 'p.id'), 'posts AS p');
 		$query->where = 'p.id > :end_at';
 		$query->order = array('pid' => 'p.id ASC');
 		$query->limit = 1;
 
 		$params = array(':end_at' => $end_at);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (!empty($result))
 			$query_str = '?action=rebuild&i_per_page='.$per_page.'&i_start_at='.$result[0]['id'];
 	}
 
-	$db->commit_transaction();
+	$db->commitTransaction();
 	unset ($db);
 
-	exit('<script type="text/javascript">window.location="admin_maintenance.php'.$query_str.'"</script><hr /><p>'.sprintf($lang_admin_maintenance['Javascript redirect failed'], '<a href="admin_maintenance.php'.$query_str.'">'.$lang_admin_maintenance['Click here'].'</a>').'</p>');
+	exit('<script type="text/javascript">window.location="admin_maintenance.php'.$query_str.'"</script><hr /><p>'.$lang->t('Javascript redirect failed', '<a href="admin_maintenance.php'.$query_str.'">'.$lang->t('Click here').'</a>').'</p>');
 }
 
 if ($action == 'prune')
@@ -153,10 +152,10 @@ if ($action == 'prune')
 
 		if ($prune_from == 'all')
 		{
-			$query = new SelectQuery(array('id' => 'f.id'), 'forums AS f');
+			$query = $db->select(array('id' => 'f.id'), 'forums AS f');
 			$params = array();
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
 			foreach ($result as $cur_forum)
 			{
 				prune($cur_forum['id'], $prune_sticky, $prune_date);
@@ -173,16 +172,15 @@ if ($action == 'prune')
 		}
 
 		// Locate any "orphaned redirect topics" and delete them
-		$query = new SelectQuery(array('id' => 't1.id'), 'topics AS t1');
+		$query = $db->select(array('id' => 't1.id'), 'topics AS t1');
 
-		$query->joins['t2'] = new LeftJoin('topics AS t2');
-		$query->joins['t2']->on = 't1.moved_to = t2.id';
+		$query->LeftJoin('t2', 'topics AS t2', 't1.moved_to = t2.id');
 
 		$query->where = 't2.id IS NULL AND t1.moved_to IS NOT NULL';
 
 		$params = array();
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		unset ($query, $params);
 
 		if (!empty($result))
@@ -191,28 +189,28 @@ if ($action == 'prune')
 			foreach ($result as $cur_orphan)
 				$orphans[] = $cur_orphan['id'];
 
-			$query = new DeleteQuery('topics');
+			$query = $db->delete('topics');
 			$query->where = 'id IN :tids';
 
 			$params = array(':tids' => $orphans);
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 		}
 
 		unset ($result);
 
-		redirect('admin_maintenance.php', $lang_admin_maintenance['Posts pruned redirect']);
+		redirect('admin_maintenance.php', $lang->t('Posts pruned redirect'));
 	}
 
 	$prune_days = trim($_POST['req_prune_days']);
-	if ($prune_days == '' || preg_match('/[^0-9]/', $prune_days))
-		message($lang_admin_maintenance['Days must be integer message']);
+	if ($prune_days == '' || preg_match('%[^0-9]%', $prune_days))
+		message($lang->t('Days must be integer message'));
 
 	$prune_date = time() - ($prune_days * 86400);
 
 	// Concatenate together the query for counting number of topics to prune
-	$query = new SelectQuery(array('num_topics' => 'COUNT(t.id) AS num_topics'), 'topics AS t');
+	$query = $db->select(array('num_topics' => 'COUNT(t.id) AS num_topics'), 'topics AS t');
 	$query->where = 't.last_post < :prune_date AND t.moved_to IS NULL';
 
 	$params = array(':prune_date' => $prune_date);
@@ -228,27 +226,27 @@ if ($action == 'prune')
 		$params[':prune_from'] = $prune_from;
 
 		// Fetch the forum name (just for cosmetic reasons)
-		$name_query = new SelectQuery(array('forum_name' => 'f.forum_name'), 'forums AS f');
+		$name_query = $db->select(array('forum_name' => 'f.forum_name'), 'forums AS f');
 		$name_query->where = 'f.id = :forum_id';
 
 		$name_params = array(':forum_id' => $prune_from);
 
-		$result = $db->query($name_query, $name_params);
+		$result = $name_query->run($name_params);
 		$forum = '"'.pun_htmlspecialchars($result[0]['forum_name']).'"';
 		unset ($result, $name_query, $name_params);
 	}
 	else
-		$forum = $lang_admin_maintenance['All forums'];
+		$forum = $lang->t('All forums');
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	$num_topics = $result[0]['num_topics'];
 	unset ($result, $query, $params);
 
 	if (!$num_topics)
-		message(sprintf($lang_admin_maintenance['No old topics message'], $prune_days));
+		message($lang->t('No old topics message', $prune_days));
 
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Prune']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Admin'), $lang->t('Prune'));
 	define('PUN_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
 
@@ -256,7 +254,7 @@ if ($action == 'prune')
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo $lang_admin_maintenance['Prune head'] ?></span></h2>
+		<h2><span><?php echo $lang->t('Prune head') ?></span></h2>
 		<div class="box">
 			<form method="post" action="admin_maintenance.php">
 				<div class="inform">
@@ -265,14 +263,14 @@ if ($action == 'prune')
 					<input type="hidden" name="prune_sticky" value="<?php echo $prune_sticky ?>" />
 					<input type="hidden" name="prune_from" value="<?php echo $prune_from ?>" />
 					<fieldset>
-						<legend><?php echo $lang_admin_maintenance['Confirm prune subhead'] ?></legend>
+						<legend><?php echo $lang->t('Confirm prune subhead') ?></legend>
 						<div class="infldset">
-							<p><?php printf($lang_admin_maintenance['Confirm prune info'], $prune_days, $forum, forum_number_format($num_topics)) ?></p>
-							<p class="warntext"><?php echo $lang_admin_maintenance['Confirm prune warn'] ?></p>
+							<p><?php echo $lang->t('Confirm prune info', $prune_days, $forum, forum_number_format($num_topics)) ?></p>
+							<p class="warntext"><?php echo $lang->t('Confirm prune warn') ?></p>
 						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="prune_comply" value="<?php echo $lang_admin_common['Prune'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_admin_common['Go back'] ?></a></p>
+				<p class="buttons"><input type="submit" name="prune_comply" value="<?php echo $lang->t('Prune') ?>" /><a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 			</form>
 		</div>
 	</div>
@@ -286,19 +284,19 @@ if ($action == 'prune')
 
 
 // Get the first post ID from the db
-$query = new SelectQuery(array('id' => 'p.id'), 'posts AS p');
+$query = $db->select(array('id' => 'p.id'), 'posts AS p');
 $query->order = array('id' => 'p.id ASC');
 $query->limit = 1;
 
 $params = array();
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 if (!empty($result))
 	$first_id = $result[0]['id'];
 
 unset ($result, $query, $params);
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Maintenance']);
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Admin'), $lang->t('Maintenance'));
 define('PUN_ACTIVE_PAGE', 'admin');
 require PUN_ROOT.'header.php';
 
@@ -306,39 +304,39 @@ generate_admin_menu('maintenance');
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo $lang_admin_maintenance['Maintenance head'] ?></span></h2>
+		<h2><span><?php echo $lang->t('Maintenance head') ?></span></h2>
 		<div class="box">
 			<form method="get" action="admin_maintenance.php">
 				<div class="inform">
 					<input type="hidden" name="action" value="rebuild" />
 					<fieldset>
-						<legend><?php echo $lang_admin_maintenance['Rebuild index subhead'] ?></legend>
+						<legend><?php echo $lang->t('Rebuild index subhead') ?></legend>
 						<div class="infldset">
-							<p><?php printf($lang_admin_maintenance['Rebuild index info'], '<a href="admin_options.php#maintenance">'.$lang_admin_common['Maintenance mode'].'</a>') ?></p>
+							<p><?php echo $lang->t('Rebuild index info', '<a href="admin_options.php#maintenance">'.$lang->t('Maintenance mode').'</a>') ?></p>
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row"><?php echo $lang_admin_maintenance['Posts per cycle label'] ?></th>
+									<th scope="row"><?php echo $lang->t('Posts per cycle label') ?></th>
 									<td>
 										<input type="text" name="i_per_page" size="7" maxlength="7" value="300" tabindex="1" />
-										<span><?php echo $lang_admin_maintenance['Posts per cycle help'] ?></span>
+										<span><?php echo $lang->t('Posts per cycle help') ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang_admin_maintenance['Starting post label'] ?></th>
+									<th scope="row"><?php echo $lang->t('Starting post label') ?></th>
 									<td>
 										<input type="text" name="i_start_at" size="7" maxlength="7" value="<?php echo (isset($first_id)) ? $first_id : 0 ?>" tabindex="2" />
-										<span><?php echo $lang_admin_maintenance['Starting post help'] ?></span>
+										<span><?php echo $lang->t('Starting post help') ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang_admin_maintenance['Empty index label'] ?></th>
+									<th scope="row"><?php echo $lang->t('Empty index label') ?></th>
 									<td class="inputadmin">
-										<span><input type="checkbox" name="i_empty_index" value="1" tabindex="3" checked="checked" />&#160;&#160;<?php echo $lang_admin_maintenance['Empty index help'] ?></span>
+										<span><input type="checkbox" name="i_empty_index" value="1" tabindex="3" checked="checked" />&#160;&#160;<?php echo $lang->t('Empty index help') ?></span>
 									</td>
 								</tr>
 							</table>
-							<p class="topspace"><?php echo $lang_admin_maintenance['Rebuild completed info'] ?></p>
-							<div class="fsetsubmit"><input type="submit" name="rebuild_index" value="<?php echo $lang_admin_maintenance['Rebuild index'] ?>" tabindex="4" /></div>
+							<p class="topspace"><?php echo $lang->t('Rebuild completed info') ?></p>
+							<div class="fsetsubmit"><input type="submit" name="rebuild_index" value="<?php echo $lang->t('Rebuild index') ?>" tabindex="4" /></div>
 						</div>
 					</fieldset>
 				</div>
@@ -348,41 +346,40 @@ generate_admin_menu('maintenance');
 				<div class="inform">
 					<input type="hidden" name="action" value="prune" />
 					<fieldset>
-						<legend><?php echo $lang_admin_maintenance['Prune subhead'] ?></legend>
+						<legend><?php echo $lang->t('Prune subhead') ?></legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row"><?php echo $lang_admin_maintenance['Days old label'] ?></th>
+									<th scope="row"><?php echo $lang->t('Days old label') ?></th>
 									<td>
 										<input type="text" name="req_prune_days" size="3" maxlength="3" tabindex="5" />
-										<span><?php echo $lang_admin_maintenance['Days old help'] ?></span>
+										<span><?php echo $lang->t('Days old help') ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang_admin_maintenance['Prune sticky label'] ?></th>
+									<th scope="row"><?php echo $lang->t('Prune sticky label') ?></th>
 									<td>
-										<input type="radio" name="prune_sticky" value="1" tabindex="6" checked="checked" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&#160;&#160;&#160;<input type="radio" name="prune_sticky" value="0" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong>
-										<span><?php echo $lang_admin_maintenance['Prune sticky help'] ?></span>
+										<input type="radio" name="prune_sticky" value="1" tabindex="6" checked="checked" />&#160;<strong><?php echo $lang->t('Yes') ?></strong>&#160;&#160;&#160;<input type="radio" name="prune_sticky" value="0" />&#160;<strong><?php echo $lang->t('No') ?></strong>
+										<span><?php echo $lang->t('Prune sticky help') ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang_admin_maintenance['Prune from label'] ?></th>
+									<th scope="row"><?php echo $lang->t('Prune from label') ?></th>
 									<td>
 										<select name="prune_from" tabindex="7">
-											<option value="all"><?php echo $lang_admin_maintenance['All forums'] ?></option>
+											<option value="all"><?php echo $lang->t('All forums') ?></option>
 <?php
 
-	$query = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
+	$query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
 
-	$query->joins['f'] = new InnerJoin('forums AS f');
-	$query->joins['f']->on = 'c.id = f.cat_id';
+	$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
 	$query->where = 'f.redirect_url IS NULL';
 	$query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position');
 
 	$params = array();
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 
 	$cur_category = 0;
 	foreach ($result as $forum);
@@ -404,12 +401,12 @@ generate_admin_menu('maintenance');
 ?>
 											</optgroup>
 										</select>
-										<span><?php echo $lang_admin_maintenance['Prune from help'] ?></span>
+										<span><?php echo $lang->t('Prune from help') ?></span>
 									</td>
 								</tr>
 							</table>
-							<p class="topspace"><?php printf($lang_admin_maintenance['Prune info'], '<a href="admin_options.php#maintenance">'.$lang_admin_common['Maintenance mode'].'</a>') ?></p>
-							<div class="fsetsubmit"><input type="submit" name="prune" value="<?php echo $lang_admin_common['Prune'] ?>" tabindex="8" /></div>
+							<p class="topspace"><?php echo $lang->t('Prune info', '<a href="admin_options.php#maintenance">'.$lang->t('Maintenance mode').'</a>') ?></p>
+							<div class="fsetsubmit"><input type="submit" name="prune" value="<?php echo $lang->t('Prune') ?>" tabindex="8" /></div>
 						</div>
 					</fieldset>
 				</div>

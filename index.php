@@ -11,28 +11,26 @@ require PUN_ROOT.'include/common.php';
 
 
 if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view']);
+	message($lang->t('No view'));
 
 
 // Load the index.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/index.php';
+$lang->load('index');
 
 // Get list of forums and topics with new posts since last visit
 if (!$pun_user['is_guest'])
 {
-	$query = new SelectQuery(array('fid' => 't.forum_id AS fid', 'tid' => 't.id AS tid', 'last_post' => 't.last_post'), 'topics AS t');
+	$query = $db->select(array('fid' => 't.forum_id AS fid', 'tid' => 't.id AS tid', 'last_post' => 't.last_post'), 'topics AS t');
 
-	$query->joins['f'] = new InnerJoin('forums AS f');
-	$query->joins['f']->on = 'f.id = t.forum_id';
+	$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
-	$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-	$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+	$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 	$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.last_post > :last_visit AND t.moved_to IS NULL';
 
 	$params = array(':group_id' => $pun_user['g_id'], ':last_visit' => $pun_user['last_visit']);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 
 	$new_topics = array();
 	foreach ($result as $cur_topic)
@@ -44,15 +42,15 @@ if (!$pun_user['is_guest'])
 }
 
 if ($pun_config['o_feed_type'] == '1')
-	$page_head = array('feed' => '<link rel="alternate" type="application/rss+xml" href="extern.php?action=feed&amp;type=rss" title="'.$lang_common['RSS active topics feed'].'" />');
+	$page_head = array('feed' => '<link rel="alternate" type="application/rss+xml" href="extern.php?action=feed&amp;type=rss" title="'.$lang->t('RSS active topics feed').'" />');
 else if ($pun_config['o_feed_type'] == '2')
-	$page_head = array('feed' => '<link rel="alternate" type="application/atom+xml" href="extern.php?action=feed&amp;type=atom" title="'.$lang_common['Atom active topics feed'].'" />');
+	$page_head = array('feed' => '<link rel="alternate" type="application/atom+xml" href="extern.php?action=feed&amp;type=atom" title="'.$lang->t('Atom active topics feed').'" />');
 
 $forum_actions = array();
 
 // Display a "mark all as read" link
 if (!$pun_user['is_guest'])
-	$forum_actions[] = '<a href="misc.php?action=markread">'.$lang_common['Mark all as read'].'</a>';
+	$forum_actions[] = '<a href="misc.php?action=markread">'.$lang->t('Mark all as read').'</a>';
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']));
 define('PUN_ALLOW_INDEX', 1);
@@ -60,20 +58,18 @@ define('PUN_ACTIVE_PAGE', 'index');
 require PUN_ROOT.'header.php';
 
 // Print the categories and forums
-$query = new SelectQuery(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'forum_desc' => 'f.forum_desc', 'redirect_url' => 'f.redirect_url', 'moderators' => 'f.moderators', 'num_topics' => 'f.num_topics', 'num_posts' => 'f.num_posts', 'last_post' => 'f.last_post', 'last_post_id' => 'f.last_post_id', 'last_poster' => 'f.last_poster'), 'categories AS c');
+$query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'forum_desc' => 'f.forum_desc', 'redirect_url' => 'f.redirect_url', 'moderators' => 'f.moderators', 'num_topics' => 'f.num_topics', 'num_posts' => 'f.num_posts', 'last_post' => 'f.last_post', 'last_post_id' => 'f.last_post_id', 'last_poster' => 'f.last_poster'), 'categories AS c');
 
-$query->joins['f'] = new InnerJoin('forums AS f');
-$query->joins['f']->on = 'c.id = f.cat_id';
+$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
-$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = 'fp.read_forum IS NULL OR fp.read_forum = 1';
 $query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
 
 $params = array(':group_id' => $pun_user['g_id']);
 
-$result = $db->query($query, $params);
+$result = $query->run($params);
 
 $cur_category = 0;
 $cat_count = 0;
@@ -99,10 +95,10 @@ foreach ($result as $cur_forum)
 			<table cellspacing="0">
 			<thead>
 				<tr>
-					<th class="tcl" scope="col"><?php echo $lang_common['Forum'] ?></th>
-					<th class="tc2" scope="col"><?php echo $lang_index['Topics'] ?></th>
-					<th class="tc3" scope="col"><?php echo $lang_common['Posts'] ?></th>
-					<th class="tcr" scope="col"><?php echo $lang_common['Last post'] ?></th>
+					<th class="tcl" scope="col"><?php echo $lang->t('Forum') ?></th>
+					<th class="tc2" scope="col"><?php echo $lang->t('Topics') ?></th>
+					<th class="tc3" scope="col"><?php echo $lang->t('Posts') ?></th>
+					<th class="tcr" scope="col"><?php echo $lang->t('Last post') ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -125,7 +121,7 @@ foreach ($result as $cur_forum)
 			if ((empty($tracked_topics['topics'][$check_topic_id]) || $tracked_topics['topics'][$check_topic_id] < $check_last_post) && (empty($tracked_topics['forums'][$cur_forum['fid']]) || $tracked_topics['forums'][$cur_forum['fid']] < $check_last_post))
 			{
 				$item_status .= ' inew';
-				$forum_field_new = '<span class="newtext">[ <a href="search.php?action=show_new&amp;fid='.$cur_forum['fid'].'">'.$lang_common['New posts'].'</a> ]</span>';
+				$forum_field_new = '<span class="newtext">[ <a href="search.php?action=show_new&amp;fid='.$cur_forum['fid'].'">'.$lang->t('New posts').'</a> ]</span>';
 				$icon_type = 'icon icon-new';
 
 				break;
@@ -136,7 +132,7 @@ foreach ($result as $cur_forum)
 	// Is this a redirect forum?
 	if ($cur_forum['redirect_url'] != '')
 	{
-		$forum_field = '<h3><span class="redirtext">'.$lang_index['Link to'].'</span> <a href="'.pun_htmlspecialchars($cur_forum['redirect_url']).'" title="'.$lang_index['Link to'].' '.pun_htmlspecialchars($cur_forum['redirect_url']).'">'.pun_htmlspecialchars($cur_forum['forum_name']).'</a></h3>';
+		$forum_field = '<h3><span class="redirtext">'.$lang->t('Link to').'</span> <a href="'.pun_htmlspecialchars($cur_forum['redirect_url']).'" title="'.$lang->t('Link to').' '.pun_htmlspecialchars($cur_forum['redirect_url']).'">'.pun_htmlspecialchars($cur_forum['forum_name']).'</a></h3>';
 		$num_topics = $num_posts = '-';
 		$item_status .= ' iredirect';
 		$icon_type = 'icon';
@@ -153,11 +149,11 @@ foreach ($result as $cur_forum)
 
 	// If there is a last_post/last_poster
 	if ($cur_forum['last_post'] != '')
-		$last_post = '<a href="viewtopic.php?pid='.$cur_forum['last_post_id'].'#p'.$cur_forum['last_post_id'].'">'.format_time($cur_forum['last_post']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_forum['last_poster']).'</span>';
+		$last_post = '<a href="viewtopic.php?pid='.$cur_forum['last_post_id'].'#p'.$cur_forum['last_post_id'].'">'.format_time($cur_forum['last_post']).'</a> <span class="byuser">'.$lang->t('by').' '.pun_htmlspecialchars($cur_forum['last_poster']).'</span>';
 	else if ($cur_forum['redirect_url'] != '')
 		$last_post = '- - -';
 	else
-		$last_post = $lang_common['Never'];
+		$last_post = $lang->t('Never');
 
 	if ($cur_forum['moderators'] != '')
 	{
@@ -172,7 +168,7 @@ foreach ($result as $cur_forum)
 				$moderators[] = pun_htmlspecialchars($mod_username);
 		}
 
-		$moderators = "\t\t\t\t\t\t\t\t".'<p class="modlist">(<em>'.$lang_common['Moderated by'].'</em> '.implode(', ', $moderators).')</p>'."\n";
+		$moderators = "\t\t\t\t\t\t\t\t".'<p class="modlist">(<em>'.$lang->t('Moderated by').'</em> '.implode(', ', $moderators).')</p>'."\n";
 	}
 
 ?>
@@ -199,15 +195,15 @@ unset ($query, $params, $result);
 if ($cur_category > 0)
 	echo "\t\t\t".'</tbody>'."\n\t\t\t".'</table>'."\n\t\t".'</div>'."\n\t".'</div>'."\n".'</div>'."\n\n";
 else
-	echo '<div id="idx0" class="block"><div class="box"><div class="inbox"><p>'.$lang_index['Empty board'].'</p></div></div></div>';
+	echo '<div id="idx0" class="block"><div class="box"><div class="inbox"><p>'.$lang->t('Empty board').'</p></div></div></div>';
 
 // Collect some board statistics
 $stats = fetch_board_stats();
 
-$query = new SelectQuery(array('total_topics' => 'SUM(f.num_topics) AS total_topics', 'total_posts' => 'SUM(f.num_posts) AS total_posts'), 'forums AS f');
+$query = $db->select(array('total_topics' => 'SUM(f.num_topics) AS total_topics', 'total_posts' => 'SUM(f.num_posts) AS total_posts'), 'forums AS f');
 $params = array();
 
-$stats = array_merge($stats, current($db->query($query, $params)));
+$stats = array_merge($stats, current($query->run($params)));
 unset ($query, $params);
 
 if ($pun_user['g_view_users'] == '1')
@@ -230,32 +226,29 @@ if (!empty($forum_actions))
 
 ?>
 <div id="brdstats" class="block">
-	<h2><span><?php echo $lang_index['Board info'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Board info') ?></span></h2>
 	<div class="box">
 		<div class="inbox">
 			<dl class="conr">
-				<dt><strong><?php echo $lang_index['Board stats'] ?></strong></dt>
-				<dd><span><?php printf($lang_index['No of users'], '<strong>'.forum_number_format($stats['total_users']).'</strong>') ?></span></dd>
-				<dd><span><?php printf($lang_index['No of topics'], '<strong>'.forum_number_format($stats['total_topics']).'</strong>') ?></span></dd>
-				<dd><span><?php printf($lang_index['No of posts'], '<strong>'.forum_number_format($stats['total_posts']).'</strong>') ?></span></dd>
+				<dt><strong><?php echo $lang->t('Board stats') ?></strong></dt>
+				<dd><span><?php echo $lang->t('No of users', '<strong>'.forum_number_format($stats['total_users']).'</strong>') ?></span></dd>
+				<dd><span><?php echo $lang->t('No of topics', '<strong>'.forum_number_format($stats['total_topics']).'</strong>') ?></span></dd>
+				<dd><span><?php echo $lang->t('No of posts', '<strong>'.forum_number_format($stats['total_posts']).'</strong>') ?></span></dd>
 			</dl>
 			<dl class="conl">
-				<dt><strong><?php echo $lang_index['User info'] ?></strong></dt>
-				<dd><span><?php printf($lang_index['Newest user'], $stats['newest_user']) ?></span></dd>
+				<dt><strong><?php echo $lang->t('User info') ?></strong></dt>
+				<dd><span><?php echo $lang->t('Newest user', $stats['newest_user']) ?></span></dd>
 <?php
 
 if ($pun_config['o_users_online'] == '1')
 {
 	// Fetch users session info and generate strings for output
-	$query = new SelectQuery(array('user_id' => 's.user_id', 'username' => 'u.username'), 'sessions AS s');
+	$query = $db->select(array('user_id' => 's.user_id', 'username' => 'u.username'), 'sessions AS s');
 
 	$query->joins['u'] = new InnerJoin('users AS u');
 	$query->joins['u']->on = 'u.id = s.user_id';
 
-	$query->where = 's.last_visit > :idle_visit';
-	$query->order = array('username' => 'u.username ASC');
-
-	$params = array(':idle_visit' => time() - $pun_config['o_timeout_visit']);
+	$result = $query->run($params);
 
 	$num_guests = 0;
 	$users = array();
@@ -277,11 +270,11 @@ if ($pun_config['o_users_online'] == '1')
 	unset ($query, $params, $result);
 
 	$num_users = count($users);
-	echo "\t\t\t\t".'<dd><span>'.sprintf($lang_index['Users online'], '<strong>'.forum_number_format($num_users).'</strong>').'</span></dd>'."\n\t\t\t\t".'<dd><span>'.sprintf($lang_index['Guests online'], '<strong>'.forum_number_format($num_guests).'</strong>').'</span></dd>'."\n\t\t\t".'</dl>'."\n";
+	echo "\t\t\t\t".'<dd><span>'.$lang->t('Users online', '<strong>'.forum_number_format($num_users).'</strong>').'</span></dd>'."\n\t\t\t\t".'<dd><span>'.$lang->t('Guests online', '<strong>'.forum_number_format($num_guests).'</strong>').'</span></dd>'."\n\t\t\t".'</dl>'."\n";
 
 
 	if ($num_users > 0)
-		echo "\t\t\t".'<dl id="onlinelist" class="clearb">'."\n\t\t\t\t".'<dt><strong>'.$lang_index['Online'].' </strong></dt>'."\t\t\t\t".implode(',</dd> ', $users).'</dd>'."\n\t\t\t".'</dl>'."\n";
+		echo "\t\t\t".'<dl id="onlinelist" class="clearb">'."\n\t\t\t\t".'<dt><strong>'.$lang->t('Online').' </strong></dt>'."\t\t\t\t".implode(',</dd> ', $users).'</dd>'."\n\t\t\t".'</dl>'."\n";
 	else
 		echo "\t\t\t".'<div class="clearer"></div>'."\n";
 

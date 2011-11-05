@@ -71,7 +71,7 @@ if ($pun_user['is_guest'] && isset($_SERVER['PHP_AUTH_USER']))
 if ($pun_user['g_read_board'] == '0')
 {
 	http_authenticate_user();
-	exit($lang_common['No view']);
+	exit($lang->t('No view'));
 }
 
 $action = isset($_GET['action']) ? strtolower($_GET['action']) : 'feed';
@@ -110,7 +110,7 @@ function http_authenticate_user()
 //
 function output_rss($feed)
 {
-	global $lang_common, $pun_config;
+	global $lang, $pun_config;
 
 	// Send XML/no cache headers
 	header('Content-Type: application/xml; charset=utf-8');
@@ -155,7 +155,7 @@ function output_rss($feed)
 //
 function output_atom($feed)
 {
-	global $lang_common, $pun_config;
+	global $lang, $pun_config;
 
 	// Send XML/no cache headers
 	header('Content-Type: application/atom+xml; charset=utf-8');
@@ -211,7 +211,7 @@ function output_atom($feed)
 //
 function output_xml($feed)
 {
-	global $lang_common, $pun_config;
+	global $lang, $pun_config;
 
 	// Send XML/no cache headers
 	header('Content-Type: application/xml; charset=utf-8');
@@ -294,20 +294,19 @@ if ($action == 'feed')
 		$tid = intval($_GET['tid']);
 
 		// Fetch topic subject
-		$query = new SelectQuery(array('subject' => 't.subject', 'first_post_id' => 't.first_post_id'), 'topics AS t');
+		$query = $db->select(array('subject' => 't.subject', 'first_post_id' => 't.first_post_id'), 'topics AS t');
 
-		$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-		$query->joins['fp']->on = 'fp.forum_id = t.forum_id AND fp.group_id = :group_id';
+		$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 		$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.moved_to IS NULL AND t.id = :topic_id';
 
 		$params = array(':group_id' => $pun_user['g_id'], ':topic_id' => $tid);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		if (empty($result))
 		{
 			http_authenticate_user();
-			exit($lang_common['Bad request']);
+			exit($lang->t('Bad request'));
 		}
 
 		$cur_topic = $result[0];
@@ -318,18 +317,17 @@ if ($action == 'feed')
 
 		// Setup the feed
 		$feed = array(
-			'title' 		=>	$pun_config['o_board_title'].$lang_common['Title separator'].$cur_topic['subject'],
+			'title' 		=>	$pun_config['o_board_title'].$lang->t('Title separator').$cur_topic['subject'],
 			'link'			=>	get_base_url(true).'/viewtopic.php?id='.$tid,
-			'description'		=>	sprintf($lang_common['RSS description topic'], $cur_topic['subject']),
+			'description'		=>	$lang->t('RSS description topic', $cur_topic['subject']),
 			'items'			=>	array(),
 			'type'			=>	'posts'
 		);
 
 		// Fetch $show posts
-		$query = new SelectQuery(array('pid' => 'p.id', 'poster' => 'p.poster', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'posted_id' => 'p.poster_id', 'email_setting' => 'u.email_setting', 'email' => 'u.email', 'poster_email' => 'p.poster_email'), 'posts AS p');
+		$query = $db->select(array('pid' => 'p.id', 'poster' => 'p.poster', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'posted_id' => 'p.poster_id', 'email_setting' => 'u.email_setting', 'email' => 'u.email', 'poster_email' => 'p.poster_email'), 'posts AS p');
 
-		$query->joins['u'] = new InnerJoin('users AS u');
-		$query->joins['u']->on = 'u.id = p.poster_id';
+		$query->InnerJoin('u', 'users AS u', 'u.id = p.poster_id');
 
 		$query->where = 'p.topic_id = :topic_id';
 		$query->order = array('posted' => 'p.posted DESC');
@@ -337,14 +335,14 @@ if ($action == 'feed')
 
 		$params = array(':topic_id' => $tid);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 		foreach ($result as $cur_post)
 		{
 			$cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 
 			$item = array(
 				'id'			=>	$cur_post['id'],
-				'title'			=>	$cur_topic['first_post_id'] == $cur_post['id'] ? $cur_topic['subject'] : $lang_common['RSS reply'].$cur_topic['subject'],
+				'title'			=>	$cur_topic['first_post_id'] == $cur_post['id'] ? $cur_topic['subject'] : $lang->t('RSS reply').$cur_topic['subject'],
 				'link'			=>	get_base_url(true).'/viewtopic.php?pid='.$cur_post['id'].'#p'.$cur_post['id'],
 				'description'		=>	$cur_post['message'],
 				'author'		=>	array(
@@ -376,16 +374,14 @@ if ($action == 'feed')
 		$order_posted = isset($_GET['order']) && strtolower($_GET['order']) == 'posted';
 		$forum_name = '';
 
-		$post_query = new SelectQuery(array('t.id, t.poster, t.subject, t.posted, t.last_post, t.last_poster, p.message, p.hide_smilies, u.email_setting, u.email, p.poster_id, p.poster_email'), 'topics AS t');
+		$post_query = $db->select(array('t.id, t.poster, t.subject, t.posted, t.last_post, t.last_poster, p.message, p.hide_smilies, u.email_setting, u.email, p.poster_id, p.poster_email'), 'topics AS t');
 
-		$post_query->joins['p'] = new InnerJoin('posts AS p');
-		$post_query->joins['p']->on = 'p.id = '.($order_posted ? 't.first_post_id' : 't.last_post_id');
+		$post_query->InnerJoin('p', 'posts AS p', 'p.id = '.($order_posted ? 't.first_post_id' : 't.last_post_id');
 
 		$post_query->joins['u'] = new InnerJoin('users AS u');
-		$post_query->joins['u']->on = 'u.id = p.poster_id';
+		$post_query->joins['u']->on = 'u.id = p.poster_id');
 
-		$post_query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-		$post_query->joins['fp']->on = 'fp.forum_id = t.forum_id AND fp.group_id = :group_id';
+		$post_query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 		$post_query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.moved_to IS NULL';
 		$post_query->order = array('sort' => ($order_posted ? 't.posted' : 't.last_post').' DESC');
@@ -408,18 +404,17 @@ if ($action == 'feed')
 			if (count($fids) == 1)
 			{
 				// Fetch forum name
-				$query = new SelectQuery(array('forum_name' => 'f.forum_name'), 'forums AS f');
+				$query = $db->select(array('forum_name' => 'f.forum_name'), 'forums AS f');
 
-				$query->joins['fp'] = new LeftJoin('forum_perms AS fp');
-				$query->joins['fp']->on = 'fp.forum_id = f.id AND fp.group_id = :group_id';
+				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id';
 
 				$params = array(':group_id' => $pun_user['g_id'], ':forum_id' => $fids[0]);
 
-				$result = $db->query($query, $params);
+				$result = $query->run($params);
 				if (!empty($result))
-					$forum_name = $lang_common['Title separator'].$result[0]['forum_name'];
+					$forum_name = $lang->t('Title separator').$result[0]['forum_name'];
 
 				unset ($result, $query, $params);
 			}
@@ -441,7 +436,7 @@ if ($action == 'feed')
 		// Only attempt to cache if caching is enabled and we have all or a single forum
 		if ($pun_config['o_feed_ttl'] > 0 && ($forum_sql == '' || ($forum_name != '' && !isset($_GET['nfid']))))
 		{
-			$cache_id = 'feed.'.$pun_user['g_id'].'.'.$lang_common['lang_identifier'].'.'.($order_posted ? '1' : '0').($forum_name == '' ? '' : '.'.$fids[0]);
+			$cache_id = 'feed.'.$pun_user['g_id'].'.'.$lang->t('lang_identifier').'.'.($order_posted ? '1' : '0').($forum_name == '' ? '' : '.'.$fids[0]);
 			$feed = $cache->get($cache_id);
 		}
 
@@ -452,13 +447,13 @@ if ($action == 'feed')
 			$feed = array(
 				'title' 		=>	$pun_config['o_board_title'].$forum_name,
 				'link'			=>	'/index.php',
-				'description'	=>	sprintf($lang_common['RSS description'], $pun_config['o_board_title']),
+				'description'	=>	$lang->t('RSS description', $pun_config['o_board_title']),
 				'items'			=>	array(),
 				'type'			=>	'topics'
 			);
 
 			// Fetch topics
-			$result = $db->query($post_query, $post_params);
+			$result = $post_query->run($post_params);
 			foreach ($result as $cur_topic)
 			{
 				if ($pun_config['o_censoring'] == '1')
@@ -523,19 +518,19 @@ if ($action == 'feed')
 else if ($action == 'online' || $action == 'online_full')
 {
 	// Load the index.php language file
-	require PUN_ROOT.'lang/'.$pun_config['o_default_lang'].'/index.php';
+	$lang->load('index');
 
 	// Fetch users online info and generate strings for output
 	$num_guests = $num_users = 0;
 	$users = array();
 
-	$query = new SelectQuery(array('user_id' => 'o.user_id', 'ident' => 'o.ident'), 'online AS o');
+	$query = $db->select(array('user_id' => 'o.user_id', 'ident' => 'o.ident'), 'online AS o');
 	$query->where = 'o.idle = 0';
 	$query->order = array('ident' => 'o.ident ASC');
 
 	$params = array();
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	foreach ($result as $pun_user_online)
 	{
 		if ($pun_user_online['user_id'] > 1)
@@ -555,12 +550,12 @@ else if ($action == 'online' || $action == 'online_full')
 	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 	header('Pragma: public');
 
-	echo sprintf($lang_index['Guests online'], forum_number_format($num_guests)).'<br />'."\n";
+	echo $lang->t('Guests online', forum_number_format($num_guests)).'<br />'."\n";
 
 	if ($action == 'online_full' && !empty($users))
-		echo sprintf($lang_index['Users online'], implode(', ', $users)).'<br />'."\n";
+		echo $lang->t('Users online', implode(', ', $users)).'<br />'."\n";
 	else
-		echo sprintf($lang_index['Users online'], forum_number_format($num_users)).'<br />'."\n";
+		echo $lang->t('Users online', forum_number_format($num_users)).'<br />'."\n";
 
 	exit;
 }
@@ -569,15 +564,15 @@ else if ($action == 'online' || $action == 'online_full')
 else if ($action == 'stats')
 {
 	// Load the index.php language file
-	require PUN_ROOT.'lang/'.$pun_config['o_default_lang'].'/index.php';
+	$lang->load('index');
 
 	// Collect some board statistics
 	$stats = fetch_board_stats();
 
-	$query = new SelectQuery(array('total_topics' => 'SUM(f.num_topics) AS total_topics', 'total_posts' => 'SUM(num_posts) AS total_posts'), 'forums AS f');
+	$query = $db->select(array('total_topics' => 'SUM(f.num_topics) AS total_topics', 'total_posts' => 'SUM(num_posts) AS total_posts'), 'forums AS f');
 	$params = array();
 
-	$stats = array_merge($stats, current($db->query($query, $params)));
+	$stats = array_merge($stats, current($query->run($params)));
 	unset ($query, $params);
 
 	// Send the Content-type header in case the web server is setup to send something else
@@ -586,13 +581,13 @@ else if ($action == 'stats')
 	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 	header('Pragma: public');
 
-	echo sprintf($lang_index['No of users'], forum_number_format($stats['total_users'])).'<br />'."\n";
-	echo sprintf($lang_index['Newest user'], (($pun_user['g_view_users'] == '1') ? '<a href="'.pun_htmlspecialchars(get_base_url(true)).'/profile.php?id='.$stats['last_user']['id'].'">'.pun_htmlspecialchars($stats['last_user']['username']).'</a>' : pun_htmlspecialchars($stats['last_user']['username']))).'<br />'."\n";
-	echo sprintf($lang_index['No of topics'], forum_number_format($stats['total_topics'])).'<br />'."\n";
-	echo sprintf($lang_index['No of posts'], forum_number_format($stats['total_posts'])).'<br />'."\n";
+	echo $lang->t('No of users', forum_number_format($stats['total_users'])).'<br />'."\n";
+	echo $lang->t('Newest user', (($pun_user['g_view_users'] == '1') ? '<a href="'.pun_htmlspecialchars(get_base_url(true)).'/profile.php?id='.$stats['last_user']['id'].'">'.pun_htmlspecialchars($stats['last_user']['username']).'</a>' : pun_htmlspecialchars($stats['last_user']['username']))).'<br />'."\n";
+	echo $lang->t('No of topics', forum_number_format($stats['total_topics'])).'<br />'."\n";
+	echo $lang->t('No of posts', forum_number_format($stats['total_posts'])).'<br />'."\n";
 
 	exit;
 }
 
 // If we end up here, the script was called with some wacky parameters
-exit($lang_common['Bad request']);
+exit($lang->t('Bad request'));

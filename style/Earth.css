@@ -151,6 +151,10 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	clear: none;
 }
 
+.clearl {
+	clear: left;
+}
+
 /*****************************************************************
 2. COMMON STYLES
 *****************************************************************/
@@ -767,8 +771,8 @@ MAIN POSTS
 }
 
 .pun .blockpost .postleft, .pun .blockpost .postfootleft {
-	width: 206px;
-	padding: 7px 0 7px 12px;
+	width: 194px;
+	padding: 7px 12px 7px 12px;
 	float: left;
 	margin-left: -218px;
 	position: relative;
@@ -1275,6 +1279,52 @@ MAIN FORMS
 	padding: 7px 12px;
 }
 
+.pun .multiselect {
+	float: left;
+	padding-bottom: 7px;
+}
+
+.pun .checklist {
+	border-width: 1px;
+	border-style: solid;
+	max-height: 9em;
+	width: 20em;
+	overflow: auto;
+	padding: 0.25em 0.5em;
+	margin: 0.25em 16px 0 0.15em;
+}
+
+.pun .checklist legend {
+	padding: 0;
+}
+
+.pun .checklist legend span {
+	width: auto;
+	max-width: 25em;
+}
+
+.pun .checklist .checklist-item {
+	position: relative;
+}
+
+.pun .checklist .checklist-item label {
+	padding: 0 0 0 1.75em;
+}
+
+.pun .checklist .checklist-item .fld-input {
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding: 0;
+	margin: 0;
+}
+
+.pun .checklist .checklist-item input {
+	margin: 0;
+	height: 1.55em;
+	width: 1.55em;
+}
+
 /*****************************************************************
 PROFILES (+ ADMIN MENU)
 *****************************************************************/
@@ -1607,6 +1657,15 @@ html, body, .pun {
 
 #adminconsole fieldset td.nodefault {
 	background: #d59b9b;
+}
+
+.pun .multiselect {
+	color: #83866A;
+}
+
+.pun .checklist {
+	background: white;
+	border-color: #ccc;
 }
 
 /* Status Indicators

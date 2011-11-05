@@ -1,0 +1,222 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in both profile.php and register.php
+msgid "Email legend"
+msgstr "Enter a valid email address"
+
+msgid "Email legend 2"
+msgstr "Enter and confirm a valid email address"
+
+msgid "Localisation legend"
+msgstr "Set your localisation options"
+
+msgid "Time zone"
+msgstr "Time zone"
+
+msgid "Time zone info"
+msgstr "For the forum to display times correctly you must select your local time zone. If Daylight Savings Time is in effect you should also check the option provided which will advance times by 1 hour."
+
+msgid "DST"
+msgstr "Daylight Savings Time is in effect (advance time by 1 hour)."
+
+msgid "Time format"
+msgstr "Time format"
+
+msgid "Date format"
+msgstr "Date format"
+
+msgid "Default"
+msgstr "Default"
+
+msgid "Language"
+msgstr "Language"
+
+msgid "Email setting info"
+msgstr "Select whether you want your email address to be viewable to other users or not and if you want other users to be able to send you email via the forum (form email) or not."
+
+msgid "Email setting 1"
+msgstr "Display your email address."
+
+msgid "Email setting 2"
+msgstr "Hide your email address but allow form email."
+
+msgid "Email setting 3"
+msgstr "Hide your email address and disallow form email."
+
+msgid "Privacy options legend"
+msgstr "Set your privacy options"
+
+msgid "Confirm pass"
+msgstr "Confirm password"
+
+msgid "Username too short"
+msgstr "Usernames must be at least 2 characters long. Please choose another (longer) username."
+
+msgid "Username too long"
+msgstr "Usernames must not be more than 25 characters long. Please choose another (shorter) username."
+
+msgid "Username guest"
+msgstr "The username guest is reserved. Please choose another username."
+
+msgid "Username IP"
+msgstr "Usernames may not be in the form of an IP address. Please choose another username."
+
+msgid "Username reserved chars"
+msgstr "Usernames may not contain all the characters ', \" and [ or ] at once. Please choose another username."
+
+msgid "Username BBCode"
+msgstr "Usernames may not contain any of the text formatting tags (BBCode) that the forum uses. Please choose another username."
+
+msgid "Banned username"
+msgstr "The username you entered is banned in this forum. Please choose another username."
+
+msgid "Pass too short"
+msgstr "Passwords must be at least 4 characters long. Please choose another (longer) password."
+
+msgid "Pass not match"
+msgstr "Passwords do not match."
+
+msgid "Banned email"
+msgstr "The email address you entered is banned in this forum. Please choose another email address."
+
+msgid "Dupe email"
+msgstr "Someone else is already registered with that email address. Please choose another email address."
+
+msgid "Sig too long"
+msgstr "Signatures cannot be longer than %1$s characters. Please reduce your signature by %2$s characters."
+
+msgid "Sig too many lines"
+msgstr "Signatures cannot have more than %s lines."
+
+msgid "Bad ICQ"
+msgstr "You entered an invalid ICQ UIN. Please go back and correct."
+
+msgid "UTC-12:00"
+msgstr "(UTC-12:00) International Date Line West"
+
+msgid "UTC-11:00"
+msgstr "(UTC-11:00) Niue, Samoa"
+
+msgid "UTC-10:00"
+msgstr "(UTC-10:00) Hawaii-Aleutian, Cook Island"
+
+msgid "UTC-09:30"
+msgstr "(UTC-09:30) Marquesas Islands"
+
+msgid "UTC-09:00"
+msgstr "(UTC-09:00) Alaska, Gambier Island"
+
+msgid "UTC-08:30"
+msgstr "(UTC-08:30) Pitcairn Islands"
+
+msgid "UTC-08:00"
+msgstr "(UTC-08:00) Pacific"
+
+msgid "UTC-07:00"
+msgstr "(UTC-07:00) Mountain"
+
+msgid "UTC-06:00"
+msgstr "(UTC-06:00) Central"
+
+msgid "UTC-05:00"
+msgstr "(UTC-05:00) Eastern"
+
+msgid "UTC-04:00"
+msgstr "(UTC-04:00) Atlantic"
+
+msgid "UTC-03:30"
+msgstr "(UTC-03:30) Newfoundland"
+
+msgid "UTC-03:00"
+msgstr "(UTC-03:00) Amazon, Central Greenland"
+
+msgid "UTC-02:00"
+msgstr "(UTC-02:00) Mid-Atlantic"
+
+msgid "UTC-01:00"
+msgstr "(UTC-01:00) Azores, Cape Verde, Eastern Greenland"
+
+msgid "UTC"
+msgstr "(UTC) Western European, Greenwich"
+
+msgid "UTC+01:00"
+msgstr "(UTC+01:00) Central European, West African"
+
+msgid "UTC+02:00"
+msgstr "(UTC+02:00) Eastern European, Central African"
+
+msgid "UTC+03:00"
+msgstr "(UTC+03:00) Moscow, Eastern African"
+
+msgid "UTC+03:30"
+msgstr "(UTC+03:30) Iran"
+
+msgid "UTC+04:00"
+msgstr "(UTC+04:00) Gulf, Samara"
+
+msgid "UTC+04:30"
+msgstr "(UTC+04:30) Afghanistan"
+
+msgid "UTC+05:00"
+msgstr "(UTC+05:00) Pakistan, Yekaterinburg"
+
+msgid "UTC+05:30"
+msgstr "(UTC+05:30) India, Sri Lanka"
+
+msgid "UTC+05:45"
+msgstr "(UTC+05:45) Nepal"
+
+msgid "UTC+06:00"
+msgstr "(UTC+06:00) Bangladesh, Bhutan, Novosibirsk"
+
+msgid "UTC+06:30"
+msgstr "(UTC+06:30) Cocos Islands, Myanmar"
+
+msgid "UTC+07:00"
+msgstr "(UTC+07:00) Indochina, Krasnoyarsk"
+
+msgid "UTC+08:00"
+msgstr "(UTC+08:00) Greater China, Australian Western, Irkutsk"
+
+msgid "UTC+08:45"
+msgstr "(UTC+08:45) Southeastern Western Australia"
+
+msgid "UTC+09:00"
+msgstr "(UTC+09:00) Japan, Korea, Chita"
+
+msgid "UTC+09:30"
+msgstr "(UTC+09:30) Australian Central"
+
+msgid "UTC+10:00"
+msgstr "(UTC+10:00) Australian Eastern, Vladivostok"
+
+msgid "UTC+10:30"
+msgstr "(UTC+10:30) Lord Howe"
+
+msgid "UTC+11:00"
+msgstr "(UTC+11:00) Solomon Island, Magadan"
+
+msgid "UTC+11:30"
+msgstr "(UTC+11:30) Norfolk Island"
+
+msgid "UTC+12:00"
+msgstr "(UTC+12:00) New Zealand, Fiji, Kamchatka"
+
+msgid "UTC+12:45"
+msgstr "(UTC+12:45) Chatham Islands"
+
+msgid "UTC+13:00"
+msgstr "(UTC+13:00) Tonga, Phoenix Islands"
+
+msgid "UTC+14:00"
+msgstr "(UTC+14:00) Line Islands"
+

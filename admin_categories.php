@@ -15,10 +15,10 @@ require PUN_ROOT.'include/common_admin.php';
 
 
 if ($pun_user['g_id'] != PUN_ADMIN)
-	message($lang_common['No permission']);
+	message($lang->t('No permission'));
 
 // Load the admin_categories.php language file
-require PUN_ROOT.'lang/'.$admin_language.'/admin_categories.php';
+$lang->load('admin_categories');
 
 // Add a new category
 if (isset($_POST['add_cat']))
@@ -27,15 +27,15 @@ if (isset($_POST['add_cat']))
 
 	$new_cat_name = pun_trim($_POST['new_cat_name']);
 	if ($new_cat_name == '')
-		message($lang_admin_categories['Must enter name message']);
+		message($lang->t('Must enter name message'));
 
-	$query = new InsertQuery(array('cat_name' => ':cat_name'), 'categories');
+	$query = $db->insert(array('cat_name' => ':cat_name'), 'categories');
 	$params = array(':cat_name' => $new_cat_name);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 
-	redirect('admin_categories.php', $lang_admin_categories['Category added redirect']);
+	redirect('admin_categories.php', $lang->t('Category added redirect'));
 }
 
 // Delete a category
@@ -45,87 +45,86 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 
 	$cat_to_delete = intval($_POST['cat_to_delete']);
 	if ($cat_to_delete < 1)
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
 	if (isset($_POST['del_cat_comply'])) // Delete a category with all forums and posts
 	{
 		@set_time_limit(0);
 
-		$query = new SelectQuery(array('id' => 'f.id'), 'forums AS f');
+		$query = $db->select(array('id' => 'f.id'), 'forums AS f');
 		$query->where = 'f.cat_id = :cat_id';
-		
+
 		$params = array(':cat_id' => $cat_to_delete);
-		
-		$result = $db->query($query, $params);
+
+		$result = $query->run($params);
 		unset($query, $params);
-		
+
 		foreach ($result as $cur_forum)
 		{
 			// Prune all posts and topics
 			prune($cur_forum['id'], 1, -1);
 
 			// Delete the forum
-			$query = new DeleteQuery('forums');
+			$query = $db->delete('forums');
 			$query->where = 'id = :forum_id';
-			
+
 			$params = array(':forum_id' => $cur_forum['id']);
-			
-			$db->query($query, $params);
+
+			$query->run($params);
 			unset($query, $params);
 		}
 		unset($result);
 
 		// Locate any "orphaned redirect topics" and delete them
-		$query = new SelectQuery(array('id' => 't1.id'), 'topics AS t1');
-		$query->joins['t1'] = new LeftJoin('topics AS t2');
-		$query->joins['t1']->on = 't1.moved_to = t2.id';
+		$query = $db->select(array('id' => 't1.id'), 'topics AS t1');
+		$query->LeftJoin('t1', 'topics AS t2', 't1.moved_to = t2.id');
 		$query->where = 't2.id IS NULL AND t1.moved_to IS NOT NULL';
-		
-		$result = $db->query($query);
+
+		$result = $query->run();
 		unset($query);
-		
+
 		if (!empty($result))
 		{
 			$orphans = array();
 			foreach ($result as $cur_orphan)
 				$orphans[] = $cur_orphan['id'];
 
-			$query = new DeleteQuery('topics');
+			$query = $db->delete('topics');
 			$query->where = 'id IN :orphans';
-			
+
 			$params = array(':orphans' => $orphans);
-			
-			$db->query($query, $params);
+
+			$query->run($params);
 			unset($query, $params);
 		}
 		unset($result);
 
 		// Delete the category
-		$query = new DeleteQuery('categories');
+		$query = $db->delete('categories');
 		$query->where = 'id = :cat_id';
-		
+
 		$params = array(':cat_id' => $cat_to_delete);
-		
-		$db->query($query, $params);
+
+		$query->run($params);
 		unset($query, $params);
 
 		// Regenerate the quick jump cache
 		$cache->delete('quickjump');
 
-		redirect('admin_categories.php', $lang_admin_categories['Category deleted redirect']);
+		redirect('admin_categories.php', $lang->t('Category deleted redirect'));
 	}
 	else // If the user hasn't comfirmed the delete
 	{
-		$query = new SelectQuery(array('cat_name' => 'c.cat_name'), 'categories AS c');
+		$query = $db->select(array('cat_name' => 'c.cat_name'), 'categories AS c');
 		$query->where = 'c.id = :cat_id';
-		
+
 		$params = array(':cat_id' => $cat_to_delete);
-		
-		$result = $db->query($query, $params);
+
+		$result = $query->run($params);
 		$cat_name = $result[0]['cat_name'];
 		unset($query, $params, $result);
 
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Categories']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Admin'), $lang->t('Categories'));
 		define('PUN_ACTIVE_PAGE', 'admin');
 		require PUN_ROOT.'header.php';
 
@@ -133,20 +132,20 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo $lang_admin_categories['Delete category head'] ?></span></h2>
+		<h2><span><?php echo $lang->t('Delete category head') ?></span></h2>
 		<div class="box">
 			<form method="post" action="admin_categories.php">
 				<div class="inform">
 				<input type="hidden" name="cat_to_delete" value="<?php echo $cat_to_delete ?>" />
 					<fieldset>
-						<legend><?php echo $lang_admin_categories['Confirm delete subhead'] ?></legend>
+						<legend><?php echo $lang->t('Confirm delete subhead') ?></legend>
 						<div class="infldset">
-							<p><?php printf($lang_admin_categories['Confirm delete info'], pun_htmlspecialchars($cat_name)) ?></p>
-							<p class="warntext"><?php echo $lang_admin_categories['Delete category warn'] ?></p>
+							<p><?php echo $lang->t('Confirm delete info', pun_htmlspecialchars($cat_name)) ?></p>
+							<p class="warntext"><?php echo $lang->t('Delete category warn') ?></p>
 						</div>
 					</fieldset>
 				</div>
-				<p class="buttons"><input type="submit" name="del_cat_comply" value="<?php echo $lang_admin_common['Delete'] ?>" /><a href="javascript:history.go(-1)"><?php echo $lang_admin_common['Go back'] ?></a></p>
+				<p class="buttons"><input type="submit" name="del_cat_comply" value="<?php echo $lang->t('Delete') ?>" /><a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a></p>
 			</form>
 		</div>
 	</div>
@@ -164,9 +163,9 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 
 	$categories = $_POST['cat'];
 	if (empty($categories))
-		message($lang_common['Bad request']);
+		message($lang->t('Bad request'));
 
-	$query = new UpdateQuery(array('cat_name' => ':name', 'disp_position' => ':position'), 'categories');
+	$query = $db->update(array('cat_name' => ':name', 'disp_position' => ':position'), 'categories');
 	$query->where = 'id = :cid';
 
 	foreach ($categories as $cat_id => $cur_cat)
@@ -175,14 +174,14 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 		$cur_cat['order'] = trim($cur_cat['order']);
 
 		if ($cur_cat['name'] == '')
-			message($lang_admin_categories['Must enter name message']);
+			message($lang->t('Must enter name message'));
 
-		if ($cur_cat['order'] == '' || preg_match('/[^0-9]/', $cur_cat['order']))
-			message($lang_admin_categories['Must enter integer message']);
+		if ($cur_cat['order'] == '' || preg_match('%[^0-9]%', $cur_cat['order']))
+			message($lang->t('Must enter integer message'));
 
 		$params = array(':name' => $cur_cat['name'], ':position' => $cur_cat['order'], ':cid' => $cat_id);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($params);
 	}
 
@@ -191,19 +190,19 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 	// Regenerate the quick jump cache
 	$cache->delete('quickjump');
 
-	redirect('admin_categories.php', $lang_admin_categories['Categories updated redirect']);
+	redirect('admin_categories.php', $lang->t('Categories updated redirect'));
 }
 
 // Generate an array with all categories
-$query = new SelectQuery(array('cid' => 'c.id', 'name' => 'c.cat_name', 'cposition' => 'c.disp_position'), 'categories AS c');
+$query = $db->select(array('cid' => 'c.id', 'name' => 'c.cat_name', 'cposition' => 'c.disp_position'), 'categories AS c');
 $query->order = array('cposition' => 'c.disp_position ASC');
 
 $params = array();
 
-$cat_list = $db->query($query, $params);
+$cat_list = $query->run($params);
 unset ($query, $params);
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Categories']);
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Admin'), $lang->t('Categories'));
 define('PUN_ACTIVE_PAGE', 'admin');
 require PUN_ROOT.'header.php';
 
@@ -211,19 +210,19 @@ generate_admin_menu('categories');
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo $lang_admin_categories['Add categories head'] ?></span></h2>
+		<h2><span><?php echo $lang->t('Add categories head') ?></span></h2>
 		<div class="box">
 			<form method="post" action="admin_categories.php">
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_admin_categories['Add categories subhead'] ?></legend>
+						<legend><?php echo $lang->t('Add categories subhead') ?></legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row"><?php echo $lang_admin_categories['Add category label'] ?><div><input type="submit" name="add_cat" value="<?php echo $lang_admin_categories['Add new submit'] ?>" tabindex="2" /></div></th>
+									<th scope="row"><?php echo $lang->t('Add category label') ?><div><input type="submit" name="add_cat" value="<?php echo $lang->t('Add new submit') ?>" tabindex="2" /></div></th>
 									<td>
 										<input type="text" name="new_cat_name" size="35" maxlength="80" tabindex="1" />
-										<span><?php printf($lang_admin_categories['Add category help'], '<a href="admin_forums.php">'.$lang_admin_common['Forums'].'</a>') ?></span>
+										<span><?php echo $lang->t('Add category help', '<a href="admin_forums.php">'.$lang->t('Forums').'</a>') ?></span>
 									</td>
 								</tr>
 							</table>
@@ -233,16 +232,16 @@ generate_admin_menu('categories');
 			</form>
 		</div>
 
-<?php if (!empty($cat_list)): ?>		<h2 class="block2"><span><?php echo $lang_admin_categories['Delete categories head'] ?></span></h2>
+<?php if (!empty($cat_list)): ?>		<h2 class="block2"><span><?php echo $lang->t('Delete categories head') ?></span></h2>
 		<div class="box">
 			<form method="post" action="admin_categories.php">
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_admin_categories['Delete categories subhead'] ?></legend>
+						<legend><?php echo $lang->t('Delete categories subhead') ?></legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row"><?php echo $lang_admin_categories['Delete category label'] ?><div><input type="submit" name="del_cat" value="<?php echo $lang_admin_common['Delete'] ?>" tabindex="4" /></div></th>
+									<th scope="row"><?php echo $lang->t('Delete category label') ?><div><input type="submit" name="del_cat" value="<?php echo $lang->t('Delete') ?>" tabindex="4" /></div></th>
 									<td>
 										<select name="cat_to_delete" tabindex="3">
 <?php
@@ -252,7 +251,7 @@ generate_admin_menu('categories');
 
 ?>
 										</select>
-										<span><?php echo $lang_admin_categories['Delete category help'] ?></span>
+										<span><?php echo $lang->t('Delete category help') ?></span>
 									</td>
 								</tr>
 							</table>
@@ -263,18 +262,18 @@ generate_admin_menu('categories');
 		</div>
 <?php endif; ?>
 
-<?php if (!empty($cat_list)): ?>		<h2 class="block2"><span><?php echo $lang_admin_categories['Edit categories head'] ?></span></h2>
+<?php if (!empty($cat_list)): ?>		<h2 class="block2"><span><?php echo $lang->t('Edit categories head') ?></span></h2>
 		<div class="box">
 			<form method="post" action="admin_categories.php">
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang_admin_categories['Edit categories subhead'] ?></legend>
+						<legend><?php echo $lang->t('Edit categories subhead') ?></legend>
 						<div class="infldset">
 							<table id="categoryedit" cellspacing="0" >
 							<thead>
 								<tr>
-									<th class="tcl" scope="col"><?php echo $lang_admin_categories['Category name label'] ?></th>
-									<th scope="col"><?php echo $lang_admin_categories['Category position label'] ?></th>
+									<th class="tcl" scope="col"><?php echo $lang->t('Category name label') ?></th>
+									<th scope="col"><?php echo $lang->t('Category position label') ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -295,7 +294,7 @@ generate_admin_menu('categories');
 ?>
 							</tbody>
 							</table>
-							<div class="fsetsubmit"><input type="submit" name="update" value="<?php echo $lang_admin_common['Update'] ?>" /></div>
+							<div class="fsetsubmit"><input type="submit" name="update" value="<?php echo $lang->t('Update') ?>" /></div>
 						</div>
 					</fieldset>
 				</div>

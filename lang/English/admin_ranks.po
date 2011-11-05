@@ -1,0 +1,60 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in admin_ranks.php
+msgid "Must be integer message"
+msgstr "Minimum posts must be a positive integer value."
+
+msgid "Dupe min posts message"
+msgstr "There is already a rank with a minimun posts value of %s."
+
+msgid "Must enter title message"
+msgstr "You must enter a rank title."
+
+msgid "Rank added redirect"
+msgstr "Rank added. Redirecting …"
+
+msgid "Rank updated redirect"
+msgstr "Rank updated. Redirecting …"
+
+msgid "Rank removed redirect"
+msgstr "Rank removed. Redirecting …"
+
+msgid "Ranks head"
+msgstr "Ranks"
+
+msgid "Add rank subhead"
+msgstr "Add rank"
+
+msgid "Add rank info"
+msgstr "Enter a rank and the minimum number of posts a user must have made to attain the rank. Different ranks cannot have the same value for minimum posts. If a title is set for a user, the title will be displayed instead of any rank."
+
+msgid "Ranks enabled"
+msgstr "<strong>User ranks is enabled in %s.</strong>"
+
+msgid "Ranks disabled"
+msgstr "<strong>User ranks is disabled in %s.</strong>"
+
+msgid "Rank title label"
+msgstr "Rank title"
+
+msgid "Minimum posts label"
+msgstr "Minimum posts"
+
+msgid "Actions label"
+msgstr "Actions"
+
+msgid "Edit remove subhead"
+msgstr "Edit/remove ranks"
+
+msgid "No ranks in list"
+msgstr "No ranks in list"
+

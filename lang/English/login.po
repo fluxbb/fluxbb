@@ -1,0 +1,62 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in login.php
+# Miscellaneous
+msgid "Wrong user/pass"
+msgstr "Wrong username and/or password."
+
+msgid "Forgotten pass"
+msgstr "Forgotten your password?"
+
+msgid "Login redirect"
+msgstr "Logged in successfully. Redirecting …"
+
+msgid "Logout redirect"
+msgstr "Logged out. Redirecting …"
+
+msgid "No email match"
+msgstr "There is no user registered with the email address"
+
+msgid "Request pass"
+msgstr "Request password"
+
+msgid "Request pass legend"
+msgstr "Enter the email address with which you registered"
+
+msgid "Request pass info"
+msgstr "A new password together with a link to activate the new password will be sent to that address."
+
+msgid "Not registered"
+msgstr "Not registered yet?"
+
+msgid "Login legend"
+msgstr "Enter your username and password below"
+
+msgid "Remember me"
+msgstr "Log me in automatically each time I visit."
+
+msgid "Login info"
+msgstr "If you have not registered or have forgotten your password click on the appropriate link below."
+
+msgid "New password errors"
+msgstr "Password request error"
+
+msgid "New passworderrors info"
+msgstr "The following error needs to be corrected before a new password can be sent:"
+
+# Forget password mail stuff
+msgid "Forget mail"
+msgstr "An email has been sent to the specified address with instructions on how to change your password. If it does not arrive you can contact the forum administrator at"
+
+msgid "Email flood"
+msgstr "This account has already requested a password reset in the past hour. Please wait a while before requesting a new password again."
+

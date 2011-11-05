@@ -1,0 +1,180 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in admin_bans.php
+msgid "No user message"
+msgstr "No user by that username registered. If you want to add a ban not tied to a specific username just leave the username blank."
+
+msgid "No user ID message"
+msgstr "No user by that ID registered."
+
+msgid "User is admin message"
+msgstr "The user %s is an administrator and can't be banned. If you want to ban an administrator, you must first demote him/her."
+
+msgid "User is mod message"
+msgstr "The user %s is a moderator and can't be banned. If you want to ban a moderator, you must first demote him/her."
+
+msgid "Must enter message"
+msgstr "You must enter either a username, an IP address or an email address (at least)."
+
+msgid "Cannot ban guest message"
+msgstr "The guest user cannot be banned."
+
+msgid "Invalid IP message"
+msgstr "You entered an invalid IP/IP-range."
+
+msgid "Invalid e-mail message"
+msgstr "The email address (e.g. user@domain.com) or partial email address domain (e.g. domain.com) you entered is invalid."
+
+msgid "Invalid date message"
+msgstr "You entered an invalid expire date."
+
+msgid "Invalid date reasons"
+msgstr "The format should be YYYY-MM-DD and the date must be at least one day in the future."
+
+msgid "Ban added redirect"
+msgstr "Ban added. Redirecting …"
+
+msgid "Ban edited redirect"
+msgstr "Ban edited. Redirecting …"
+
+msgid "Ban removed redirect"
+msgstr "Ban removed. Redirecting …"
+
+msgid "New ban head"
+msgstr "New ban"
+
+msgid "Add ban subhead"
+msgstr "Add ban"
+
+msgid "Username label"
+msgstr "Username"
+
+msgid "Username help"
+msgstr "The username to ban (case-insensitive)."
+
+msgid "Username advanced help"
+msgstr "The username to ban (case-insensitive). The next page will let you enter a custom IP and email. If you just want to ban a specific IP/IP-range or email just leave it blank."
+
+msgid "Ban search head"
+msgstr "Ban search"
+
+msgid "Ban search subhead"
+msgstr "Enter search criteria"
+
+msgid "Ban search info"
+msgstr "Search for bans in the database. You can enter one or more terms to search for. Wildcards in the form of asterisks (*) are accepted. To show all bans leave all fields empty."
+
+msgid "Date help"
+msgstr "(yyyy-mm-dd)"
+
+msgid "Message label"
+msgstr "Message"
+
+msgid "Expire after label"
+msgstr "Expire after"
+
+msgid "Expire before label"
+msgstr "Expire before"
+
+msgid "Order by label"
+msgstr "Order by"
+
+msgid "Order by username"
+msgstr "Username"
+
+msgid "Order by ip"
+msgstr "IP"
+
+msgid "Order by e-mail"
+msgstr "Email"
+
+msgid "Order by expire"
+msgstr "Expire date"
+
+msgid "Ascending"
+msgstr "Ascending"
+
+msgid "Descending"
+msgstr "Descending"
+
+msgid "Submit search"
+msgstr "Submit search"
+
+msgid "E-mail label"
+msgstr "Email"
+
+msgid "E-mail help"
+msgstr "The email or email domain you wish to ban (e.g. someone@somewhere.com or somewhere.com). See \"Allow banned email addresses\" in Permissions for more info."
+
+msgid "IP label"
+msgstr "IP address/IP-ranges"
+
+msgid "IP help"
+msgstr "The IP address or IP-ranges you wish to ban (e.g. 150.11.110.1 or 150.11.110). Separate addresses with spaces. If an IP is entered already it is the last known IP of this user in the database."
+
+msgid "IP help link"
+msgstr "Click %s to see IP statistics for this user."
+
+msgid "Ban advanced head"
+msgstr "Ban advanced settings"
+
+msgid "Ban advanced subhead"
+msgstr "Supplement ban with IP and email"
+
+msgid "Ban message label"
+msgstr "Ban message"
+
+msgid "Ban message help"
+msgstr "A message that will be displayed to the banned user when he/she visits the board."
+
+msgid "Message expiry subhead"
+msgstr "Ban message and expiry"
+
+msgid "Ban IP range info"
+msgstr "You should be very careful when banning an IP-range because of the possibility of multiple users matching the same partial IP."
+
+msgid "Expire date label"
+msgstr "Expire date"
+
+msgid "Expire date help"
+msgstr "The date when this ban should be automatically removed (format: yyyy-mm-dd). Leave blank to remove manually."
+
+msgid "Results head"
+msgstr "Search Results"
+
+msgid "Results username head"
+msgstr "Username"
+
+msgid "Results e-mail head"
+msgstr "Email"
+
+msgid "Results IP address head"
+msgstr "IP/IP-ranges"
+
+msgid "Results expire head"
+msgstr "Expires"
+
+msgid "Results message head"
+msgstr "Message"
+
+msgid "Results banned by head"
+msgstr "Banned by"
+
+msgid "Results actions head"
+msgstr "Actions"
+
+msgid "No match"
+msgstr "No match"
+
+msgid "Unknown"
+msgstr "Unknown"
+

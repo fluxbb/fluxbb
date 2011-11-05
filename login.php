@@ -14,7 +14,7 @@ require PUN_ROOT.'include/common.php';
 
 
 // Load the login.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/login.php';
+$lang->load('login');
 
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 
@@ -24,12 +24,12 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	$form_password = pun_trim($_POST['req_password']);
 	$save_pass = isset($_POST['save_pass']);
 
-	$query = new SelectQuery(array('id' => 'u.id', 'group_id' => 'u.group_id', 'password' => 'u.password'), 'users AS u');
+	$query = $db->select(array('id' => 'u.id', 'group_id' => 'u.group_id', 'password' => 'u.password'), 'users AS u');
 	$query->where = 'u.username LIKE :username';
 
 	$params = array(':username' => $form_username);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	unset ($query, $params);
 
 	// START TEMP PASSWORD UPDATING
@@ -76,19 +76,20 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		// Hash their password into the correct style
 		$result[0]['password'] = PasswordHash::hash($form_password);
 
-		$query = new UpdateQuery(array('password' => ':password'), 'users');
+		$query = $db->update(array('password' => ':password'), 'users');
 		$query->where = 'id = :user_id';
 
 		$params = array(':password' => $result[0]['password'], ':user_id' => $result[0]['id']);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 	}
 
 	// END TEMP PASSWORD UPDATING
 
 	if (empty($result) || !PasswordHash::validate($form_password, $result[0]['password']))
-		message($lang_login['Wrong user/pass'].' <a href="login.php?action=forget">'.$lang_login['Forgotten pass'].'</a>');
+		message($lang->t('Wrong user/pass').' <a href="login.php?action=forget">'.$lang->t('Forgotten pass').'</a>');
+
 
 	$cur_user = $result[0];
 	unset ($result);
@@ -96,10 +97,10 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	// Update the status if this is the first time the user logged in
 	if ($cur_user['group_id'] == PUN_UNVERIFIED)
 	{
-		$query = new UpdateQuery(array('group_id' => ':group_id'), 'users');
+		$query = $db->update(array('group_id' => ':group_id'), 'users');
 		$query->where = 'id = :id';
 		$params = array(':group_id' => $pun_config['o_default_user_group'], ':id' => $cur_user['id']);
-		$db->query($query, $params);
+		$query->run($params);
 		unset($query, $params);
 
 		// Regenerate the users info cache
@@ -107,18 +108,18 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	}
 
 	// Update this users session to the correct user ID
-	$query = new UpdateQuery(array('user_id' => ':user_id'), 'sessions');
+	$query = $db->update(array('user_id' => ':user_id'), 'sessions');
 	$query->where = 'id = :session_id';
 
 	$params = array(':user_id' => $cur_user['id'], ':session_id' => $pun_user['session_id']);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset ($query, $params);
 
 	// Reset tracked topics
 	set_tracked_topics(null);
 
-	redirect(htmlspecialchars($_POST['redirect_url']), $lang_login['Login redirect']);
+	redirect(htmlspecialchars($_POST['redirect_url']), $lang->t('Login redirect'));
 }
 
 
@@ -131,15 +132,15 @@ else if ($action == 'out')
 	}
 
 	// Update this users session to be a guest
-	$query = new UpdateQuery(array('user_id' => '1'), 'sessions');
+	$query = $db->update(array('user_id' => '1'), 'sessions');
 	$query->where = 'id = :session_id';
 
 	$params = array(':session_id' => $pun_user['session_id']);
 
-	$db->query($query, $params);
+	$query->run($params);
 	unset($query, $params);
 
-	redirect('index.php', $lang_login['Logout redirect']);
+	redirect('index.php', $lang->t('Logout redirect'));
 }
 
 
@@ -158,17 +159,18 @@ else if ($action == 'forget' || $action == 'forget_2')
 		// Validate the email address
 		$email = strtolower(trim($_POST['req_email']));
 		if (!is_valid_email($email))
-			$errors[] = $lang_common['Invalid email'];
+			$errors[] = $lang->t('Invalid email');
 
 		// Did everything go according to plan?
 		if (empty($errors))
 		{
-			$query = new SelectQuery(array('id' => 'u.id', 'username' => 'u.username', 'last_email_sent' => 'u.last_email_sent'), 'users AS u');
+			$query = $db->select(array('id' => 'u.id', 'username' => 'u.username', 'last_email_sent' => 'u.last_email_sent'), 'users AS u');
 			$query->where = 'u.email = :email';
 
 			$params = array(':email' => $email);
 
-			$result = $db->query($query, $params);
+			$result = $query->run($params);
+
 			unset($query, $params);
 
 			if (!empty($result))
@@ -183,24 +185,25 @@ else if ($action == 'forget' || $action == 'forget_2')
 
 				// Do the generic replacements first (they apply to all emails sent out here)
 				$mail_message = str_replace('<base_url>', get_base_url().'/', $mail_message);
-				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'].' '.$lang_common['Mailer'], $mail_message);
+				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
 
 				// Loop through users we found
 				foreach ($result as $cur_hit)
 				{
 					if ($cur_hit['last_email_sent'] != '' && (time() - $cur_hit['last_email_sent']) < 3600 && (time() - $cur_hit['last_email_sent']) >= 0)
-						message($lang_login['Email flood'], true);
+						message($lang->t('Email flood'), true);
 
 					// Generate a new password and a new password activation code
 					$new_password = PasswordHash::random_key(8);
 					$new_password_key = PasswordHash::random_key(8);
 
-					$query = new UpdateQuery(array('activate_string' => ':activate_string', 'activate_key' => ':activate_key', 'last_email_sent' => ':last_email_sent'), 'users');
+					$query = $db->update(array('activate_string' => ':activate_string', 'activate_key' => ':activate_key', 'last_email_sent' => ':last_email_sent'), 'users');
 					$query->where = 'id = :id';
 
 					$params = array(':activate_string' => PasswordHash::hash($new_password), ':activate_key' => $new_password_key, ':last_email_sent' => time(), ':id' => $cur_hit['id']);
 
-					$db->query($query, $params);
+					$query->run($params);
+
 					unset($params);
 
 					// Do the user specific replacements to the template
@@ -212,15 +215,15 @@ else if ($action == 'forget' || $action == 'forget_2')
 				}
 				unset($result);
 
-				message($lang_login['Forget mail'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
+				message($lang->t('Forget mail').' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
 			}
 			else
-				$errors[] = $lang_login['No email match'].' '.htmlspecialchars($email).'.';
+				$errors[] = $lang->t('No email match').' '.htmlspecialchars($email).'.';
 			}
 		}
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_login['Request pass']);
-	$required_fields = array('req_email' => $lang_common['Email']);
+	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Request pass'));
+	$required_fields = array('req_email' => $lang->t('Email'));
 	$focus_element = array('request_pass', 'req_email');
 	define ('PUN_ACTIVE_PAGE', 'login');
 	require PUN_ROOT.'header.php';
@@ -231,10 +234,10 @@ if (!empty($errors))
 
 ?>
 <div id="posterror" class="block">
-	<h2><span><?php echo $lang_login['New password errors'] ?></span></h2>
+	<h2><span><?php echo $lang->t('New password errors') ?></span></h2>
 	<div class="box">
 		<div class="inbox error-info">
-			<p><?php echo $lang_login['New passworderrors info'] ?></p>
+			<p><?php echo $lang->t('New passworderrors info') ?></p>
 			<ul class="error-list">
 <?php
 
@@ -251,20 +254,20 @@ if (!empty($errors))
 }
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_login['Request pass'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Request pass') ?></span></h2>
 	<div class="box">
 		<form id="request_pass" method="post" action="login.php?action=forget_2" onsubmit="this.request_pass.disabled=true;if(process_form(this)){return true;}else{this.request_pass.disabled=false;return false;}">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_login['Request pass legend'] ?></legend>
+					<legend><?php echo $lang->t('Request pass legend') ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
-						<label class="required"><strong><?php echo $lang_common['Email'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="80" /><br /></label>
-						<p><?php echo $lang_login['Request pass info'] ?></p>
+						<label class="required"><strong><?php echo $lang->t('Email') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="80" /><br /></label>
+						<p><?php echo $lang->t('Request pass info') ?></p>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="request_pass" value="<?php echo $lang_common['Submit'] ?>" /><?php if (empty($errors)): ?> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a><?php endif; ?></p>
+			<p class="buttons"><input type="submit" name="request_pass" value="<?php echo $lang->t('Submit') ?>" /><?php if (empty($errors)): ?> <a href="javascript:history.go(-1)"><?php echo $lang->t('Go back') ?></a><?php endif; ?></p>
 		</form>
 	</div>
 </div>
@@ -298,43 +301,43 @@ if (!empty($_SERVER['HTTP_REFERER']))
 	if (!isset($valid['path']))
 		$valid['path'] = '';
 
-	if ($referrer['host'] == $valid['host'] && preg_match('#^'.preg_quote($valid['path']).'/(.*?)\.php#i', $referrer['path']))
+	if ($referrer['host'] == $valid['host'] && preg_match('%^'.preg_quote($valid['path'], '%').'/(.*?)\.php%i', $referrer['path']))
 		$redirect_url = $_SERVER['HTTP_REFERER'];
 }
 
 if (!isset($redirect_url))
 	$redirect_url = 'index.php';
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Login']);
-$required_fields = array('req_username' => $lang_common['Username'], 'req_password' => $lang_common['Password']);
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Login'));
+$required_fields = array('req_username' => $lang->t('Username'), 'req_password' => $lang->t('Password'));
 $focus_element = array('login', 'req_username');
 define('PUN_ACTIVE_PAGE', 'login');
 require PUN_ROOT.'header.php';
 
 ?>
 <div class="blockform">
-	<h2><span><?php echo $lang_common['Login'] ?></span></h2>
+	<h2><span><?php echo $lang->t('Login') ?></span></h2>
 	<div class="box">
 		<form id="login" method="post" action="login.php?action=in" onsubmit="return process_form(this)">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_login['Login legend'] ?></legend>
+					<legend><?php echo $lang->t('Login legend') ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="redirect_url" value="<?php echo pun_htmlspecialchars($redirect_url) ?>" />
-						<label class="conl required"><strong><?php echo $lang_common['Username'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" tabindex="1" /><br /></label>
-						<label class="conl required"><strong><?php echo $lang_common['Password'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="password" name="req_password" size="25" tabindex="2" /><br /></label>
+						<label class="conl required"><strong><?php echo $lang->t('Username') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" tabindex="1" /><br /></label>
+						<label class="conl required"><strong><?php echo $lang->t('Password') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input type="password" name="req_password" size="25" tabindex="2" /><br /></label>
 
 						<div class="rbox clearb">
-							<label><input type="checkbox" name="save_pass" value="1" tabindex="3" /><?php echo $lang_login['Remember me'] ?><br /></label>
+							<label><input type="checkbox" name="save_pass" value="1" tabindex="3" /><?php echo $lang->t('Remember me') ?><br /></label>
 						</div>
 
-						<p class="clearb"><?php echo $lang_login['Login info'] ?></p>
-						<p class="actions"><span><a href="register.php" tabindex="4"><?php echo $lang_login['Not registered'] ?></a></span> <span><a href="login.php?action=forget" tabindex="5"><?php echo $lang_login['Forgotten pass'] ?></a></span></p>
+						<p class="clearb"><?php echo $lang->t('Login info') ?></p>
+						<p class="actions"><span><a href="register.php" tabindex="5"><?php echo $lang->t('Not registered') ?></a></span> <span><a href="login.php?action=forget" tabindex="6"><?php echo $lang->t('Forgotten pass') ?></a></span></p>
 					</div>
 				</fieldset>
 			</div>
-			<p class="buttons"><input type="submit" name="login" value="<?php echo $lang_common['Login'] ?>" tabindex="3" /></p>
+			<p class="buttons"><input type="submit" name="login" value="<?php echo $lang->t('Login') ?>" tabindex="4" /></p>
 		</form>
 	</div>
 </div>

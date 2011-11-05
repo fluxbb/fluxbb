@@ -8,5 +8,5 @@ Password: <password>
 Login at <login_url> to activate the account.
 
 --
-<board_mailer>
+<board_mailer> Mailer
 (Do not reply to this message)

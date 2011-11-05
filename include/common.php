@@ -10,9 +10,9 @@ if (!defined('PUN_ROOT'))
 	exit('The constant PUN_ROOT must be defined and point to a valid FluxBB installation root directory.');
 
 // Define the version and database revision that this code was written for
-define('FORUM_VERSION', '1.4.5');
+define('FORUM_VERSION', '1.4.6');
 
-define('FORUM_DB_REVISION', 11);
+define('FORUM_DB_REVISION', 15);
 define('FORUM_SI_REVISION', 2);
 define('FORUM_PARSER_REVISION', 2);
 
@@ -72,7 +72,7 @@ setlocale(LC_CTYPE, 'C');
 if (get_magic_quotes_runtime())
 	set_magic_quotes_runtime(0);
 
-// Strip slashes from GET/POST/COOKIE (if magic_quotes_gpc is enabled)
+// Strip slashes from GET/POST/COOKIE/REQUEST/FILES (if magic_quotes_gpc is enabled)
 if (get_magic_quotes_gpc())
 {
 	function stripslashes_array($array)
@@ -84,19 +84,16 @@ if (get_magic_quotes_gpc())
 	$_POST = stripslashes_array($_POST);
 	$_COOKIE = stripslashes_array($_COOKIE);
 	$_REQUEST = stripslashes_array($_REQUEST);
+	$_FILES = stripslashes_array($_FILES);
 }
 
 // If a cookie name is not specified in config.php, we use the default (pun_cookie)
 if (empty($cookie_name))
 	$cookie_name = 'pun_cookie';
 
-// If the cache directory is not specified, we use the default setting
-if (!defined('FORUM_CACHE_DIR'))
-	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
-
 // Load the cache module
 require PUN_ROOT.'modules/cache/cache.php';
-$cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport'); // TODO: Move this config into config.php
+$cache = Cache::load($flux_config['cache']['type'], array('dir' => $flux_config['cache']['dir']), 'varexport'); // TODO: Move this config into config.php
 
 // Define a few commonly used constants
 define('PUN_UNVERIFIED', 0);
@@ -106,11 +103,12 @@ define('PUN_GUEST', 3);
 define('PUN_MEMBER', 4);
 
 // Load the DB module
-require PUN_ROOT.'modules/database/db.php';
-$db = new Database($db_type.':host='.$db_host.';dbname='.$db_name.';', array('username' => $db_username, 'password' => $db_password, 'prefix' => $db_prefix, 'debug' => defined('PUN_DEBUG'))); // TODO: Tidy the config
+require PUN_ROOT.'modules/database/src/Database/Adapter.php';
+$db_options = array_merge($flux_config['db'], array('debug' => defined('PUN_DEBUG')));
+$db = Flux_Database_Adapter::factory($flux_config['db']['type'], $db_options);
 
 // Start a transaction
-$db->start_transaction();
+$db->startTransaction();
 
 // Load cached config
 $pun_config = $cache->get('config');
@@ -119,10 +117,10 @@ if ($pun_config === Cache::NOT_FOUND)
 	$pun_config = array();
 
 	// Get the forum config from the DB
-	$query = new SelectQuery(array('conf_name' => 'c.conf_name', 'conf_value' => 'c.conf_value'), 'config AS c');
+	$query = $db->select(array('conf_name' => 'c.conf_name', 'conf_value' => 'c.conf_value'), 'config AS c');
 	$params = array();
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	foreach ($result as $cur_config_item)
 		$pun_config[$cur_config_item['conf_name']] = $cur_config_item['conf_value'];
 
@@ -132,14 +130,14 @@ if ($pun_config === Cache::NOT_FOUND)
 }
 
 // Verify that we are running the proper database schema revision
-//if (!isset($pun_config['o_database_revision']) || $pun_config['o_database_revision'] < FORUM_DB_REVISION ||
-//		!isset($pun_config['o_searchindex_revision']) || $pun_config['o_searchindex_revision'] < FORUM_SI_REVISION ||
-//		!isset($pun_config['o_parser_revision']) || $pun_config['o_parser_revision'] < FORUM_PARSER_REVISION ||
-//		version_compare($pun_config['o_cur_version'], FORUM_VERSION, '<'))
-//	{
-//		header('Location: db_update.php');
-//		exit;
-//	}
+/*if (!isset($pun_config['o_database_revision']) || $pun_config['o_database_revision'] < FORUM_DB_REVISION ||
+	!isset($pun_config['o_searchindex_revision']) || $pun_config['o_searchindex_revision'] < FORUM_SI_REVISION ||
+	!isset($pun_config['o_parser_revision']) || $pun_config['o_parser_revision'] < FORUM_PARSER_REVISION ||
+	version_compare($pun_config['o_cur_version'], FORUM_VERSION, '<'))
+{
+	header('Location: db_update.php');
+	exit;
+}*/
 
 // Enable output buffering
 if (!defined('PUN_DISABLE_BUFFERING'))
@@ -158,11 +156,14 @@ $forum_date_formats = array($pun_config['o_date_format'], 'Y-m-d', 'Y-d-m', 'd-m
 // Check/update/set cookie and fetch user info
 $pun_user = check_cookie();
 
-// Attempt to load the common language file
-if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/common.php'))
-	include PUN_ROOT.'lang/'.$pun_user['language'].'/common.php';
-else
-	error('There is no valid language pack \''.pun_htmlspecialchars($pun_user['language']).'\' installed. Please reinstall a language of that name');
+// Load the language system
+require PUN_ROOT.'include/classes/lang.php';
+$lang = new Flux_Lang();
+$lang->setDefaultLanguage('English');
+$lang->setLanguage($pun_user['language']);
+
+// Load the common language file
+$lang->load('common');
 
 // Check if we are to display a maintenance message
 if ($pun_config['o_maintenance'] && $pun_user['g_id'] > PUN_ADMIN && !defined('PUN_TURN_OFF_MAINT'))
@@ -173,10 +174,10 @@ $pun_bans = $cache->get('bans');
 if ($pun_bans === Cache::NOT_FOUND)
 {
 	// Get the ban list from the DB
-	$query = new SelectQuery(array('id' => 'b.id', 'username' => 'b.username', 'ip' => 'b.ip', 'email' => 'b.email', 'message' => 'b.message', 'expire' => 'b.expire', 'ban_creator' => 'b.ban_creator'), 'bans AS b');
+	$query = $db->select(array('id' => 'b.id', 'username' => 'b.username', 'ip' => 'b.ip', 'email' => 'b.email', 'message' => 'b.message', 'expire' => 'b.expire', 'ban_creator' => 'b.ban_creator'), 'bans AS b');
 	$params = array();
 
-	$pun_bans = $db->query($query, $params);
+	$pun_bans = $query->run($params);
 	unset ($query, $params);
 
 	$cache->set('bans', $pun_bans);
@@ -190,7 +191,7 @@ update_users_online();
 
 // Check to see if we logged in without a cookie being set
 if ($pun_user['is_guest'] && isset($_GET['login']))
-	message($lang_common['No cookie']);
+	message($lang->t('No cookie'));
 
 // The maximum size of a post, in bytes, since the field is now MEDIUMTEXT this allows ~16MB but lets cap at 1MB...
 if (!defined('PUN_MAX_POSTSIZE'))

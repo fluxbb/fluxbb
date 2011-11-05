@@ -1,0 +1,310 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in admin-users.php
+msgid "Non numeric message"
+msgstr "You entered a non-numeric value into a numeric only column."
+
+msgid "Invalid date time message"
+msgstr "You entered an invalid date/time."
+
+msgid "Not verified"
+msgstr "Not verified"
+
+# Actions: mass delete/ban etc.
+msgid "No users selected"
+msgstr "No users selected."
+
+msgid "No move admins message"
+msgstr "For security reasons, you are not allowed to move multiple administrators to another group. If you want to move these administrators, you can do so on their respective user profiles."
+
+msgid "No delete admins message"
+msgstr "Administrators cannot be deleted. In order to delete administrators, you must first move them to a different user group."
+
+msgid "No ban admins message"
+msgstr "Administrators cannot be banned. In order to ban administrators, you must first move them to a different user group."
+
+msgid "No ban mods message"
+msgstr "Moderators cannot be banned. In order to ban moderators, you must first move them to a different user group."
+
+msgid "Move users"
+msgstr "Change user group"
+
+msgid "Move users subhead"
+msgstr "Select new user group"
+
+msgid "New group label"
+msgstr "New group"
+
+msgid "New group help"
+msgstr "Select the group to which the selected users will be moved. For security reasons, it is not possible to move multiple users to the administrator group."
+
+msgid "Invalid group message"
+msgstr "Invalid group ID."
+
+msgid "Users move redirect"
+msgstr "User group changed. Redirecting …"
+
+msgid "Delete users"
+msgstr "Delete users"
+
+msgid "Confirm delete legend"
+msgstr "Important: read before deleting users"
+
+msgid "Confirm delete info"
+msgstr "Please confirm that you want to delete these users."
+
+msgid "Delete posts"
+msgstr "Delete any posts and topics these users have made."
+
+msgid "Delete warning"
+msgstr "Warning! Deleted users and/or posts cannot be restored. If you choose not to delete the posts made by these users, the posts can only be deleted manually at a later time."
+
+msgid "Users delete redirect"
+msgstr "Users deleted. Redirecting …"
+
+msgid "Ban users"
+msgstr "Ban users"
+
+msgid "Message expiry subhead"
+msgstr "Ban message and expiry"
+
+msgid "Ban message label"
+msgstr "Ban message"
+
+msgid "Ban message help"
+msgstr "A message that will be displayed to the banned users when they visit the board."
+
+msgid "Expire date label"
+msgstr "Expire date"
+
+msgid "Expire date help"
+msgstr "The date when these bans should be automatically removed (format: yyyy-mm-dd). Leave blank to remove manually."
+
+msgid "Ban IP label"
+msgstr "Ban IP addresses"
+
+msgid "Ban IP help"
+msgstr "Also ban the IP addresses of the banned users to make registering a new account more difficult for them."
+
+msgid "Invalid date message"
+msgstr "You entered an invalid expire date."
+
+msgid "Invalid date reasons"
+msgstr "The format should be YYYY-MM-DD and the date must be at least one day in the future."
+
+msgid "Users banned redirect"
+msgstr "Users banned. Redirecting …"
+
+msgid "User search head"
+msgstr "User search"
+
+msgid "User search subhead"
+msgstr "Enter search criteria"
+
+msgid "User search info"
+msgstr "Search for users in the database. You can enter one or more terms to search for. Wildcards in the form of asterisks (*) are accepted."
+
+msgid "Username label"
+msgstr "Username"
+
+msgid "E-mail address label"
+msgstr "Email address"
+
+msgid "Title label"
+msgstr "Title"
+
+msgid "Real name label"
+msgstr "Real name"
+
+msgid "Website label"
+msgstr "Website"
+
+msgid "Jabber label"
+msgstr "Jabber"
+
+msgid "ICQ label"
+msgstr "ICQ"
+
+msgid "MSN label"
+msgstr "MSN Messenger"
+
+msgid "AOL label"
+msgstr "AOL IM"
+
+msgid "Yahoo label"
+msgstr "Yahoo Messenger"
+
+msgid "Location label"
+msgstr "Location"
+
+msgid "Signature label"
+msgstr "Signature"
+
+msgid "Admin note label"
+msgstr "Admin note"
+
+msgid "Posts more than label"
+msgstr "Number of posts greater than"
+
+msgid "Posts less than label"
+msgstr "Number of posts less than"
+
+msgid "Last post after label"
+msgstr "Last post is after"
+
+msgid "Date help"
+msgstr "(yyyy-mm-dd hh:mm:ss)"
+
+msgid "Last post before label"
+msgstr "Last post is before"
+
+msgid "Last visit after label"
+msgstr "Last visit is after"
+
+msgid "Last visit before label"
+msgstr "Last visit is before"
+
+msgid "Registered after label"
+msgstr "Registered after"
+
+msgid "Registered before label"
+msgstr "Registered before"
+
+msgid "Order by label"
+msgstr "Order by"
+
+msgid "Order by username"
+msgstr "Username"
+
+msgid "Order by e-mail"
+msgstr "Email"
+
+msgid "Order by posts"
+msgstr "Number of posts"
+
+msgid "Order by last post"
+msgstr "Last post"
+
+msgid "Order by last visit"
+msgstr "Last visit"
+
+msgid "Order by registered"
+msgstr "Registered"
+
+msgid "Ascending"
+msgstr "Ascending"
+
+msgid "Descending"
+msgstr "Descending"
+
+msgid "User group label"
+msgstr "User group"
+
+msgid "All groups"
+msgstr "All groups"
+
+msgid "Unverified users"
+msgstr "Unverified users"
+
+msgid "Submit search"
+msgstr "Submit search"
+
+msgid "IP search head"
+msgstr "IP search"
+
+msgid "IP search subhead"
+msgstr "Enter IP to search for"
+
+msgid "IP address label"
+msgstr "IP address"
+
+msgid "IP address help"
+msgstr "The IP address to search for in the post database."
+
+msgid "Find IP address"
+msgstr "Find IP address"
+
+msgid "Results head"
+msgstr "Search Results"
+
+msgid "Results username head"
+msgstr "Username"
+
+msgid "Results e-mail head"
+msgstr "Email"
+
+msgid "Results title head"
+msgstr "Title/Status"
+
+msgid "Results posts head"
+msgstr "Posts"
+
+msgid "Results admin note head"
+msgstr "Admin note"
+
+msgid "Results actions head"
+msgstr "Actions"
+
+msgid "Results IP address head"
+msgstr "IP address"
+
+msgid "Results last used head"
+msgstr "Last used"
+
+msgid "Results times found head"
+msgstr "Times found"
+
+msgid "Results action head"
+msgstr "Action"
+
+msgid "Results find more link"
+msgstr "Find more users for this ip"
+
+msgid "Results no posts found"
+msgstr "There are currently no posts by that user in the forum."
+
+msgid "Select"
+msgstr "Select"
+
+msgid "Select all"
+msgstr "Select all"
+
+msgid "Unselect all"
+msgstr "Unselect all"
+
+msgid "Ban"
+msgstr "Ban"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Change group"
+msgstr "Change group"
+
+msgid "Bad IP message"
+msgstr "The supplied IP address is not correctly formatted."
+
+msgid "Results view IP link"
+msgstr "View IP stats"
+
+msgid "Results show posts link"
+msgstr "Show posts"
+
+msgid "Results guest"
+msgstr "Guest"
+
+msgid "Results no IP found"
+msgstr "The supplied IP address could not be found in the database."
+
+msgid "No match"
+msgstr "No match"
+

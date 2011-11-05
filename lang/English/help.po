@@ -1,0 +1,162 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Language definitions used in help.php
+msgid "Help"
+msgstr "Help"
+
+msgid "produces"
+msgstr "produces"
+
+msgid "BBCode"
+msgstr "BBCode"
+
+msgid "BBCode info 1"
+msgstr "BBCode is a collection of formatting tags that are used to change the look of text in this forum. BBCode is based on the same principal as, and is very similar to, HTML. Below is a list of all the available BBCodes and instructions on how to use them."
+
+msgid "BBCode info 2"
+msgstr "Administrators have the ability to enable or disable BBCode. You can tell if BBCode is enabled or disabled out in the left margin whenever you post a message or edit your signature."
+
+msgid "Text style"
+msgstr "Text style"
+
+msgid "Text style info"
+msgstr "The following tags change the appearance of text:"
+
+msgid "Bold text"
+msgstr "Bold text"
+
+msgid "Underlined text"
+msgstr "Underlined text"
+
+msgid "Italic text"
+msgstr "Italic text"
+
+msgid "Strike-through text"
+msgstr "Strike-through text"
+
+msgid "Red text"
+msgstr "Red text"
+
+msgid "Blue text"
+msgstr "Blue text"
+
+msgid "Heading text"
+msgstr "Heading text"
+
+msgid "Deleted text"
+msgstr "Deleted text"
+
+msgid "Inserted text"
+msgstr "Inserted text"
+
+msgid "Emphasised text"
+msgstr "Emphasised text"
+
+msgid "Links and images"
+msgstr "Links and images"
+
+msgid "Links info"
+msgstr "You can create links to other documents or to email addresses using the following tags:"
+
+msgid "This help page"
+msgstr "This help page"
+
+msgid "My email address"
+msgstr "My email address"
+
+msgid "Images info"
+msgstr "If you want to display an image you can use the img tag. The text appearing after the \"=\" sign in the opening tag is used for the alt attribute and should be included whenever possible."
+
+msgid "FluxBB bbcode test"
+msgstr "FluxBB bbcode test"
+
+msgid "Test topic"
+msgstr "Test topic"
+
+msgid "Test post"
+msgstr "Test post"
+
+msgid "Test forum"
+msgstr "Test forum"
+
+msgid "Test user"
+msgstr "Test user"
+
+msgid "Quotes"
+msgstr "Quotes"
+
+msgid "Quotes info"
+msgstr "If you want to quote someone, you should use the quote tag."
+
+msgid "Quotes info 2"
+msgstr "If you don't want to quote anyone in particular, you can use the quote tag without specifying a name."
+
+msgid "Quote text"
+msgstr "This is the text i want to quote."
+
+msgid "produces quote box"
+msgstr "produces a quote box like this:"
+
+msgid "quote note"
+msgstr "Note: If a username contains the characters [ or ] you can enclose it in quote marks."
+
+msgid "Code"
+msgstr "Code"
+
+msgid "Code info"
+msgstr "When displaying source code you should make sure that you use the code tag. Text displayed with the code tag will use a monospaced font and will not be affected by other tags."
+
+msgid "Code text"
+msgstr "This is some code."
+
+msgid "produces code box"
+msgstr "produces a code box like this:"
+
+msgid "Nested tags"
+msgstr "Nested tags"
+
+msgid "Nested tags info"
+msgstr "BBCode can be nested to create more advanced formatting. For example:"
+
+msgid "Bold, underlined text"
+msgstr "Bold, underlined text"
+
+msgid "Lists"
+msgstr "Lists"
+
+msgid "List info"
+msgstr "To create a list you can use the list tag. You can create 3 types of lists using the list tag."
+
+msgid "List text 1"
+msgstr "Example list item 1."
+
+msgid "List text 2"
+msgstr "Example list item 2."
+
+msgid "List text 3"
+msgstr "Example list item 3."
+
+msgid "produces list"
+msgstr "produces a bulleted list."
+
+msgid "produces decimal list"
+msgstr "produces a numbered list."
+
+msgid "produces alpha list"
+msgstr "produces an alphabetically labelled list."
+
+msgid "Smilies"
+msgstr "Smilies"
+
+msgid "Smilies info"
+msgstr "If you like (and if it is enabled), the forum can convert a series of smilies to images representations of that smiley. This forum recognizes the following smilies and replaces them with images:"
+
