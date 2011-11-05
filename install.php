@@ -790,7 +790,7 @@ else
 	unset ($query);
 
 	$query = $db->createTable('search_cache');
-	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
+	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT);
 	$query->field('ident', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200))->default = '\'\'';
 	$query->field('search_data', Flux_Database_Query_Helper_TableColumn::TYPE_TEXT); // MEDIUMTEXT
 	$query->run();
@@ -804,9 +804,9 @@ else
 	unset ($query);
 
 	$query = $db->createTable('search_matches');
-	$query->field('post_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT)->default = '\'0\''; // INT(10) UNSIGNED
-	$query->field('word_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT)->default = '\'0\''; // INT(10) UNSIGNED
-	$query->field('subject_match', Flux_Database_Query_Helper_TableColumn::TYPE_INT); // TINYINT(1)
+	$query->field('post_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT)->default = '\'0\''; // INT(10) UNSIGNED
+	$query->field('word_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT)->default = '\'0\''; // INT(10) UNSIGNED
+	$query->field('subject_match', Flux_Database_Query_Helper_TableColumn::TYPE_INT)->default = '\'0\''; // TINYINT(1)
 	$query->run();
 
 	unset ($query);
@@ -846,8 +846,8 @@ else
 	unset ($query);
 
 	$query = $db->createTable('topic_subscriptions');
-	$query->field('user_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT)->default = '\'0\''; // INT(10) UNSIGNED
-	$query->field('topic_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT)->default = '\'0\''; // INT(10) UNSIGNED
+	$query->field('user_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT)->default = '\'0\''; // INT(10) UNSIGNED
+	$query->field('topic_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT)->default = '\'0\''; // INT(10) UNSIGNED
 	// TODO: 'PRIMARY KEY'	=> array('user_id', 'topic_id')
 	$query->run();
 
