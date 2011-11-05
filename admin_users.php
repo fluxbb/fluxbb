@@ -148,8 +148,14 @@ if (isset($_GET['show_users']))
 		message($lang->t('Bad IP message'));
 
 	// Fetch user count: TODO: Again, we really shouldn't fetch all the data just to count it...
-	$result = $db->query('SELECT DISTINCT poster_id, poster FROM '.$db->prefix.'posts WHERE poster_ip='.$db->quote($ip)) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-	$num_users = $result->rowCount();
+	$query = $db->select(array('poster_id' => 'p.poster_id', 'poster' => 'p.poster'), 'posts AS p', true);
+	$query->where = 'poster_ip = :poster_ip';
+
+	$params = array(':poster_ip' => $ip);
+	$result = $query->run($params);
+
+	$num_users = count($result);
+	unset ($result, $query, $params);
 
 	// Determine the user offset (based on $_GET['p'])
 	$num_pages = ceil($num_users / 50);
@@ -223,7 +229,7 @@ if (isset($_GET['show_users']))
 			$params = array(':poster_id' => $poster_id);
 			$result_user = $query->run($params);
 
-			if (count($result_user))
+			if (!empty($result_user))
 			{
 				$user_data = $result_user[0];
 
