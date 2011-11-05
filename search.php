@@ -217,10 +217,26 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 								$result = $db->query('SELECT p.id AS post_id, p.topic_id, '.$sort_by_sql.' AS sort_by FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE ('.$where_cond.') AND (fp.read_forum IS NULL OR fp.read_forum=1)'.$forum_sql, true) or error('Unable to search for posts', __FILE__, __LINE__, $db->error());
 							}
 							else
-								$result = $db->query('SELECT m.post_id, p.topic_id, '.$sort_by_sql.' AS sort_by FROM '.$db->prefix.'search_words AS w INNER JOIN '.$db->prefix.'search_matches AS m ON m.word_id = w.id INNER JOIN '.$db->prefix.'posts AS p ON p.id=m.post_id INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE w.word LIKE '.$db->quote(str_replace('*', '%', $cur_word)).$search_in_cond.' AND (fp.read_forum IS NULL OR fp.read_forum=1)'.$forum_sql, true) or error('Unable to search for posts', __FILE__, __LINE__, $db->error());
+								$query = $db->select(array('post_id' => 'm.post_id', 'topic_id' => 'p.topic_id'), 'search_words AS w');
+
+								$query->innerJoin('m', 'search_matches AS m', 'm.word_id = w.id');
+								$query->innerJoin('p', 'posts AS p', 'p.id=m.post_id');
+								$query->innerJoin('t', 'topics AS t', 't.id=p.topic_id');
+								
+								$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
+
+								$query->where = 'w.word LIKE '.$db->quote(str_replace('*', '%', $cur_word)).$search_in_cond.' AND (fp.read_forum IS NULL OR fp.read_forum=1)'.$forum_sql;
+								
+								$query->fields['sort_by'] = $sort_by_sql.' AS sort_by';
+								
+								$query->order = array('sort' => $sort_by_sql.' '.$sort_dir);
+
+								$params[':group_id'] = 1;
+
+								$result = $query->run($params);
 
 							$row = array();
-							while ($temp = $db->fetch_assoc($result))
+							foreach ($result as $temp)
 							{
 								$row[$temp['post_id']] = $temp['topic_id'];
 
@@ -254,7 +270,8 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 							}
 
 							++$word_count;
-							$db->free_result($result);
+							//$db->free_result($result);
+							// TODO: set new free_result
 
 							break;
 						}
