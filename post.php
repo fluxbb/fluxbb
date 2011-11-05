@@ -275,7 +275,7 @@ if (isset($_POST['form_sent']))
 
 				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = :forum_id AND fp.group_id = u.group_id');
 
-				$query->LeftJoin('s', 'session AS s', 'u.id = s.user_id');
+				$query->LeftJoin('s', 'sessions AS s', 'u.id = s.user_id');
 
 				$query->LeftJoin('b', 'bans AS b', 'u.username = b.username');
 
