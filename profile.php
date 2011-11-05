@@ -1946,32 +1946,32 @@ else
 	}
 	else if ($section == 'sessions')
 	{
-		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section sessions']);
+		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang->t('Profile'), $lang->t('Section sessions'));
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
 		generate_profile_menu('sessions');
 
-		$query = new SelectQuery(array('id' => 's.id', 'created' => 's.created', 'last_visit' => 's.last_visit', 'last_ip' => 's.last_ip', 'active' => '(s.last_visit > :idle_visit) AS active'), 'sessions AS s');
+		$query = $db->select(array('id' => 's.id', 'created' => 's.created', 'last_visit' => 's.last_visit', 'last_ip' => 's.last_ip', 'active' => '(s.last_visit > :idle_visit) AS active'), 'sessions AS s');
 		$query->where = 's.user_id = :user_id';
 
 		$params = array(':user_id' => $id, ':idle_visit' => time() - $pun_config['o_timeout_visit']);
 
-		$result = $db->query($query, $params);
+		$result = $query->run($params);
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang_profile['Section sessions'] ?></span></h2>
+		<h2><span><?php echo pun_htmlspecialchars($user['username']).' - '.$lang->t('Section sessions') ?></span></h2>
 		<div class="box">
 			<div class="inbox">
 				<table cellspacing="0">
 				<thead>
 					<tr>
-						<th class="tcl" scope="col"><?php echo $lang_profile['Session ID']; ?></th>
-						<th class="tc2" scope="col"><?php echo $lang_profile['Started']; ?></th>
-						<th class="tc3" scope="col"><?php echo $lang_profile['Last visit']; ?></th>
-						<th class="tc4" scope="col"><?php echo $lang_profile['Last IP']; ?></th>
-						<th class="tcr" scope="col"><?php echo $lang_profile['Status']; ?></th>
+						<th class="tcl" scope="col"><?php echo $lang->t('Session ID') ?></th>
+						<th class="tc2" scope="col"><?php echo $lang->t('Started') ?></th>
+						<th class="tc3" scope="col"><?php echo $lang->t('Last visit') ?></th>
+						<th class="tc4" scope="col"><?php echo $lang->t('Last IP') ?></th>
+						<th class="tcr" scope="col"><?php echo $lang->t('Status') ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -1986,7 +1986,7 @@ else
 						<td class="tc2"><?php echo format_time($cur_session['created']); ?></td>
 						<td class="tc3"><?php echo format_time($cur_session['last_visit']) ?></td>
 						<td class="tc4"><?php echo pun_htmlspecialchars($cur_session['last_ip']) ?></td>
-						<td class="tcr"><?php echo $cur_session['active'] == '1' ? $lang_profile['active'] : $lang_profile['idle']; ?></td>
+						<td class="tcr"><?php echo $cur_session['active'] == '1' ? $lang->t('active') : $lang->t('idle') ?></td>
 					</tr>
 <?php
 

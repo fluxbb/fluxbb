@@ -77,7 +77,7 @@ else
 
 
 // Get total number of sessions
-$query = new select(array('num_sessions' => 'COUNT(s.id) AS num_sessions'), 'sessions AS s');
+$query = $db->select(array('num_sessions' => 'COUNT(s.id) AS num_sessions'), 'sessions AS s');
 $params = array();
 
 $result = $query->run($params);

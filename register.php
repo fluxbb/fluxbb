@@ -264,12 +264,12 @@ if (isset($_POST['form_sent']))
 		$cache->delete('boardstats');
 
 		// Update this users session to the correct user ID
-		$query = new UpdateQuery(array('user_id' => ':user_id'), 'sessions');
+		$query = $db->update(array('user_id' => ':user_id'), 'sessions');
 		$query->where = 'id = :session_id';
 
 		$params = array(':user_id' => $cur_user['id'], ':session_id' => $pun_user['session_id']);
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		redirect('index.php', $lang->t('Reg complete'));

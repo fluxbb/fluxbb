@@ -63,19 +63,17 @@ function get_session($session_id)
 {
 	global $db;
 
-	$query = new SelectQuery(array('session_id' => 's.id AS session_id', 'user' => 'u.*', 'group' => 'g.*'), 'sessions AS s');
+	$query = $db->select(array('session_id' => 's.id AS session_id', 'user' => 'u.*', 'group' => 'g.*'), 'sessions AS s');
 
-	$query->joins['u'] = new InnerJoin('users AS u');
-	$query->joins['u']->on = 'u.id = s.user_id';
+	$query->InnerJoin('u', 'users AS u', 'u.id = s.user_id');
 
-	$query->joins['g'] = new InnerJoin('groups AS g');
-	$query->joins['g']->on = 'g.g_id = u.group_id';
+	$query->InnerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
 
 	$query->where = 's.id = :session_id';
 
 	$params = array(':session_id' => $session_id);
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	unset ($query, $params);
 
 	if (empty($result))
@@ -91,9 +89,11 @@ function get_session($session_id)
 //
 function check_cookie()
 {
-	global $db, $pun_config, $cookie_name, $cookie_path, $cookie_domain, $cookie_secure;
+	global $db, $pun_config, $flux_config;
 
 	$now = time();
+
+	$cookie_name = $flux_config['cookie']['name'];
 
 	// The cookie contains something, see if it's a valid session ID
 	if (!empty($_COOKIE[$cookie_name]))
@@ -103,12 +103,12 @@ function check_cookie()
 			unset ($pun_user);
 		else
 		{
-			$query = new UpdateQuery(array('last_visit' => ':now', 'last_ip' => ':ip'), 'sessions');
+			$query = $db->update(array('last_visit' => ':now', 'last_ip' => ':ip'), 'sessions');
 			$query->where = 'id = :session_id';
 
 			$params = array(':session_id' => $pun_user['session_id'], ':now' => $now, ':ip' => get_remote_address());
 
-			$db->query($query, $params);
+			$query->run($params);
 			unset ($query, $params);
 		}
 	}
@@ -118,10 +118,10 @@ function check_cookie()
 	{
 		$sid = PasswordHash::random_bytes(32);
 
-		$query = new InsertQuery(array('id' => ':session_id', 'user_id' => '1', 'created' => ':now', 'last_visit' => ':now', 'last_ip' => ':ip'), 'sessions');
+		$query = $db->insert(array('id' => ':session_id', 'user_id' => '1', 'created' => ':now', 'last_visit' => ':now', 'last_ip' => ':ip'), 'sessions');
 		$params = array(':session_id' => $sid, ':now' => $now, ':ip' => get_remote_address());
 
-		$db->query($query, $params);
+		$query->run($params);
 		unset ($query, $params);
 
 		$pun_user = get_session($sid);
@@ -132,7 +132,7 @@ function check_cookie()
 	header('P3P: CP="CUR ADM"');
 
 	// Send a new, updated cookie with a new expiration timestamp
-	setcookie($cookie_name, $pun_user['session_id'], $now + 1209600, $cookie_path, $cookie_domain, $cookie_secure, true);
+	setcookie($cookie_name, $pun_user['session_id'], $now + 1209600, $flux_config['cookie']['path'], $flux_config['cookie']['domain'], $flux_config['cookie']['secure'], true);
 
 	if($pun_user['g_id'] == PUN_GUEST)
 	{
@@ -355,7 +355,7 @@ function check_bans()
 		}
 
 		if ($is_banned)
-			message($lang->t('Ban message').' '.(($cur_ban['expire'] != '') ? $lang_common['Ban message 2'].' '.strtolower(format_time($cur_ban['expire'], true)).'. ' : '').(($cur_ban['message'] != '') ? $lang->t('Ban message 3').'<br /><br /><strong>'.pun_htmlspecialchars($cur_ban['message']).'</strong><br /><br />' : '<br /><br />').$lang->t('Ban message 4').' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
+			message($lang->t('Ban message').' '.(($cur_ban['expire'] != '') ? $lang->t('Ban message 2').' '.strtolower(format_time($cur_ban['expire'], true)).'. ' : '').(($cur_ban['message'] != '') ? $lang->t('Ban message 3').'<br /><br /><strong>'.pun_htmlspecialchars($cur_ban['message']).'</strong><br /><br />' : '<br /><br />').$lang->t('Ban message 4').' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
 	}
 
 	unset ($query);
@@ -455,9 +455,8 @@ function update_users_online()
 	$result = $query->run($params);
 	unset ($query, $params);
 
-	$update_users_query = new UpdateQuery(array('last_visit' => ':last_visit'), 'users');
+	$update_users_query = $db->update(array('last_visit' => ':last_visit'), 'users');
 	$update_users_query->where = 'id = :user_id';
-
 
 	$delete_session_query = $db->delete('sessions');
 	$delete_session_query->where = 'id = :session_id';

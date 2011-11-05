@@ -245,15 +245,17 @@ if ($pun_config['o_users_online'] == '1')
 	// Fetch users session info and generate strings for output
 	$query = $db->select(array('user_id' => 's.user_id', 'username' => 'u.username'), 'sessions AS s');
 
-	$query->joins['u'] = new InnerJoin('users AS u');
-	$query->joins['u']->on = 'u.id = s.user_id';
+	$query->InnerJoin('u', 'users AS u', 'u.id = s.user_id');
 
-	$result = $query->run($params);
+	$query->where = 's.last_visit > :idle_visit';
+	$query->order = array('username' => 'u.username ASC');
+
+	$params = array(':idle_visit' => time() - $pun_config['o_timeout_visit']);
 
 	$num_guests = 0;
 	$users = array();
 
-	$result = $db->query($query, $params);
+	$result = $query->run($params);
 	foreach ($result as $cur_user)
 	{
 		if ($cur_user['user_id'] > 1)

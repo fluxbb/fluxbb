@@ -115,7 +115,7 @@ function generate_config_file()
 {
 	global $db_type, $db_host, $db_name, $db_username, $db_password, $db_prefix, $cookie_name, $cookie_seed;
 
-	return '<?php'."\n\n".'$flux_config = array();'."\n\n".'$flux_config[\'db\'][\'type\'] = \''.$db_type."';\n".'$flux_config[\'db\'][\'host\'] = \''.$db_host."';\n".'$flux_config[\'db\'][\'dbname\'] = \''.addslashes($db_name)."';\n".'$flux_config[\'db\'][\'username\'] = \''.addslashes($db_username)."';\n".'$flux_config[\'db\'][\'password\'] = \''.addslashes($db_password)."';\n".'$flux_config[\'db\'][\'prefix\'] = \''.addslashes($db_prefix)."';\n\n".'$flux_config[\'cache\'][\'type\'] = '."'file';\n".'$flux_config[\'cache\'][\'dir\'] = PUN_ROOT.\'cache/\';'."\n\n".'$flux_config[\'cookie\'][\'name\'] = '."'".$cookie_name."';\n".'$flux_config[\'cookie\'][\'domain\'] = '."'';\n".'$flux_config[\'cookie\'][\'path\'] = '."'/';\n".'$flux_config[\'cookie\'][\'secure\'] = 0;'."\n".'$flux_config[\'cookie\'][\'seed\'] = \''.random_key(16, false, true)."';\n\ndefine('PUN', 1);\n";
+	return '<?php'."\n\n".'$flux_config = array();'."\n\n".'$flux_config[\'db\'][\'type\'] = \''.$db_type."';\n".'$flux_config[\'db\'][\'host\'] = \''.$db_host."';\n".'$flux_config[\'db\'][\'dbname\'] = \''.addslashes($db_name)."';\n".'$flux_config[\'db\'][\'username\'] = \''.addslashes($db_username)."';\n".'$flux_config[\'db\'][\'password\'] = \''.addslashes($db_password)."';\n".'$flux_config[\'db\'][\'prefix\'] = \''.addslashes($db_prefix)."';\n\n".'$flux_config[\'cache\'][\'type\'] = '."'file';\n".'$flux_config[\'cache\'][\'dir\'] = PUN_ROOT.\'cache/\';'."\n\n".'$flux_config[\'cookie\'][\'name\'] = '."'".$cookie_name."';\n".'$flux_config[\'cookie\'][\'domain\'] = '."'';\n".'$flux_config[\'cookie\'][\'path\'] = '."'/';\n".'$flux_config[\'cookie\'][\'secure\'] = 0;'."\n".'$flux_config[\'cookie\'][\'seed\'] = \''.PasswordHash::random_key(16)."';\n\ndefine('PUN', 1);\n";
 }
 
 
@@ -696,13 +696,12 @@ else
 
 	unset ($query);
 
-	$query = $db->createTable('online');
-	$query->field('user_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT)->default = 1; // INT(10) UNSIGNED
-	$query->field('ident', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200))->default = '\'\'';
-	$query->field('logged', Flux_Database_Query_Helper_TableColumn::TYPE_UINT)->default = '\'0\''; // INT(10) UNSIGNED
-	$query->field('idle', Flux_Database_Query_Helper_TableColumn::TYPE_INT)->default = '\'0\''; // TINYINT(1)
-	$query->field('last_post', Flux_Database_Query_Helper_TableColumn::TYPE_UINT); // INT(10) UNSIGNED
-	$query->field('last_search', Flux_Database_Query_Helper_TableColumn::TYPE_UINT); // INT(10) UNSIGNED
+	$query = $db->createTable('sessions');
+	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(64));
+	$query->field('user_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT)->default = 1;
+	$query->field('created', Flux_Database_Query_Helper_TableColumn::TYPE_UINT)->default = '\'0\'';
+	$query->field('last_visit', Flux_Database_Query_Helper_TableColumn::TYPE_INT)->default = '\'0\'';
+	$query->field('last_ip', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200))->default = '\'0.0.0.0\'';
 	$query->run();
 
 	unset ($query);
@@ -721,17 +720,17 @@ else
 //	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 //		$schema['ENGINE'] = 'InnoDB';
 
-	$query = $db->addIndex('online', 'ident_idx');
-	$query->fields = array('ident'); // before was ident(25) for mysql
-	$query->run();
+//	$query = $db->addIndex('online', 'ident_idx');
+//	$query->fields = array('ident'); // before was ident(25) for mysql
+//	$query->run();
 
-	unset ($query);
+//	unset ($query);
 
-	$query = $db->addIndex('online', 'logged_idx');
-	$query->fields = array('logged');
-	$query->run();
+//	$query = $db->addIndex('online', 'logged_idx');
+//	$query->fields = array('logged');
+//	$query->run();
 
-	unset ($query);
+//	unset ($query);
 
 	$query = $db->createTable('posts');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
@@ -908,7 +907,7 @@ else
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
 	$query->field('group_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT)->default = 3; // INT(10) UNSIGNED
 	$query->field('username', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200))->default = '\'\'';
-	$query->field('password', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(40))->default = '\'\'';
+	$query->field('password', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(64))->default = '\'\'';
 	$query->field('email', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80))->default = '\'\'';
 	$query->field('title', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50))->default = NULL;
 

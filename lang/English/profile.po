@@ -32,6 +32,9 @@ msgstr "Display"
 msgid "Section privacy"
 msgstr "Privacy"
 
+msgid "Section sessions"
+msgstr "Sessions"
+
 msgid "Section admin"
 msgstr "Administration"
 
