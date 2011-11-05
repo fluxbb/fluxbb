@@ -214,18 +214,18 @@ if (isset($_GET['show_users']))
 		$query->where = 'u.id > 1 AND u.id = :poster_id';
 
 		// Loop through users and print out some info
-		for ($i = 0; $i < $num_posts; ++$i)
+		foreach ($result as $cur_post)
 		{
-			$poster_id = $result[$i]['poster_id'];
-			$poster = $result[$i]['poster'];
+			$poster_id = $cur_post['poster_id'];
+			$poster = $cur_post['poster'];
 
 			// TODO: Do we really need a query within a query here...?
 			$params = array(':poster_id' => $poster_id);
-			$result = $query->run($params);
+			$result_user = $query->run($params);
 
-			if (count($result))
+			if (count($result_user))
 			{
-				$user_data = $result[0];
+				$user_data = $result_user[0];
 
 				$user_title = get_title($user_data);
 
@@ -260,10 +260,12 @@ if (isset($_GET['show_users']))
 			}
 		}
 
-		unset ($query, $params, $result);
+		unset ($query, $params, $result_user);
 	}
 	else
 		echo "\t\t\t\t".'<tr><td class="tcl" colspan="6">'.$lang->t('Results no IP found').'</td></tr>'."\n";
+
+	unset ($result);
 
 ?>
 			</tbody>
