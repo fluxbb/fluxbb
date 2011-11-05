@@ -447,7 +447,7 @@ else if (isset($_GET['find_ban']))
 	{
 		if ($input != '' && in_array($key, array('username', 'ip', 'email', 'message')))
 		{
-			$conditions[] = 'b.'.$db->escape($key).' '.$like_command.' \''.$db->escape(str_replace('*', '%', $input)).'\'';
+			$conditions[] = 'b.'.$key.' '.$like_command.' '.$db->quote(str_replace('*', '%', $input));
 			$query_str[] = 'form%5B'.$key.'%5D='.urlencode($input);
 		}
 	}
@@ -504,7 +504,7 @@ else if (isset($_GET['find_ban']))
 			<tbody>
 <?php
 
-	$result = $db->query('SELECT b.id, b.username, b.ip, b.email, b.message, b.expire, b.ban_creator, u.username AS ban_creator_username FROM '.$db->prefix.'bans AS b LEFT JOIN '.$db->prefix.'users AS u ON b.ban_creator=u.id WHERE b.id>0'.(!empty($conditions) ? ' AND '.implode(' AND ', $conditions) : '').' ORDER BY '.$db->escape($order_by).' '.$db->escape($direction).' LIMIT '.$start_from.', 50') or error('Unable to fetch ban list', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT b.id, b.username, b.ip, b.email, b.message, b.expire, b.ban_creator, u.username AS ban_creator_username FROM '.$db->prefix.'bans AS b LEFT JOIN '.$db->prefix.'users AS u ON b.ban_creator=u.id WHERE b.id>0'.(!empty($conditions) ? ' AND '.implode(' AND ', $conditions) : '').' ORDER BY '.$order_by.' '.$direction.' LIMIT '.$start_from.', 50') or error('Unable to fetch ban list', __FILE__, __LINE__, $db->error());
 	if ($db->num_rows($result))
 	{
 		while ($ban_data = $db->fetch_assoc($result))

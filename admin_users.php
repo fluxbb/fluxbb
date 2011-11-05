@@ -148,8 +148,8 @@ if (isset($_GET['show_users']))
 		message($lang->t('Bad IP message'));
 
 	// Fetch user count: TODO: Again, we really shouldn't fetch all the data just to count it...
-	$result = $db->query('SELECT DISTINCT poster_id, poster FROM '.$db->prefix.'posts WHERE poster_ip=\''.$db->escape($ip).'\'') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-	$num_users = $db->num_rows($result);
+	$result = $db->query('SELECT DISTINCT poster_id, poster FROM '.$db->prefix.'posts WHERE poster_ip='.$db->quote($ip)) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+	$num_users = $result->rowCount();
 
 	// Determine the user offset (based on $_GET['p'])
 	$num_pages = ceil($num_users / 50);
@@ -205,20 +205,28 @@ if (isset($_GET['show_users']))
 
 	$result = $query->run($params);
 	$num_posts = count($result);
-	unset ($result, $query, $params);
+	unset ($query, $params);
 
 	if ($num_posts)
 	{
+		$query = $db->select(array('id' => 'u.id', 'username' => 'u.username', 'email' => 'u.email', 'title' => 'u.title', 'num_posts' => 'u.num_posts', 'admin_note' => 'u.admin_note', 'g_id' => 'g.g_id', 'g_user_title' => 'g.g_user_title'), 'users AS u');
+		$query->InnerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
+		$query->where = 'u.id > 1 AND u.id = :poster_id';
+
 		// Loop through users and print out some info
 		for ($i = 0; $i < $num_posts; ++$i)
 		{
-			list($poster_id, $poster) = $db->fetch_row($result);
+			$poster_id = $result[$i]['poster_id'];
+			$poster = $result[$i]['poster'];
 
 			// TODO: Do we really need a query within a query here...?
-			$result2 = $db->query('SELECT u.id, u.username, u.email, u.title, u.num_posts, u.admin_note, g.g_id, g.g_user_title FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id>1 AND u.id='.$poster_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+			$params = array(':poster_id' => $poster_id);
+			$result = $query->run($params);
 
-			if (($user_data = $db->fetch_assoc($result2)))
+			if (count($result))
 			{
+				$user_data = $result[0];
+
 				$user_title = get_title($user_data);
 
 				$actions = '<a href="admin_users.php?ip_stats='.$user_data['id'].'">'.$lang->t('Results view IP link').'</a> | <a href="search.php?action=show_user_posts&amp;user_id='.$user_data['id'].'">'.$lang->t('Results show posts link').'</a>';
@@ -251,6 +259,8 @@ if (isset($_GET['show_users']))
 
 			}
 		}
+
+		unset ($query, $params, $result);
 	}
 	else
 		echo "\t\t\t\t".'<tr><td class="tcl" colspan="6">'.$lang->t('Results no IP found').'</td></tr>'."\n";
@@ -738,7 +748,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 		else
 			$ban_expire = 'NULL';
 
-		$ban_message = ($ban_message != '') ? '\''.$db->escape($ban_message).'\'' : 'NULL';
+		$ban_message = ($ban_message != '') ? $db->quote($ban_message) : 'NULL';
 
 		// Fetch user information
 		$user_info = array();
@@ -929,7 +939,7 @@ else if (isset($_GET['find_user']))
 	{
 		if ($input != '' && in_array($key, array('username', 'email', 'title', 'realname', 'url', 'jabber', 'icq', 'msn', 'aim', 'yahoo', 'location', 'signature', 'admin_note')))
 		{
-			$conditions[] = 'u.'.$db->escape($key).' '.$like_command.' \''.$db->escape(str_replace('*', '%', $input)).'\'';
+			$conditions[] = 'u.'.$key.' '.$like_command.' '.$db->quote(str_replace('*', '%', $input));
 			$query_str[] = 'form%5B'.$key.'%5D='.urlencode($input);
 		}
 	}
@@ -1008,7 +1018,7 @@ else if (isset($_GET['find_user']))
 			<tbody>
 <?php
 
-	$result = $db->query('SELECT u.id, u.username, u.email, u.title, u.num_posts, u.admin_note, g.g_id, g.g_user_title FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id>1'.(!empty($conditions) ? ' AND '.implode(' AND ', $conditions) : '').' ORDER BY '.$db->escape($order_by).' '.$db->escape($direction).' LIMIT '.$start_from.', 50') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT u.id, u.username, u.email, u.title, u.num_posts, u.admin_note, g.g_id, g.g_user_title FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id>1'.(!empty($conditions) ? ' AND '.implode(' AND ', $conditions) : '').' ORDER BY '.$order_by.' '.$direction.' LIMIT '.$start_from.', 50') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 	if ($db->num_rows($result))
 	{
 		while ($user_data = $db->fetch_assoc($result))
