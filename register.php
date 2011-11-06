@@ -130,7 +130,6 @@ if (isset($_POST['form_sent']))
 
 	$result = $query->run($params);
 	if (!empty($result))
-	if ($db->num_rows($result))
 	{
 		if ($pun_config['p_allow_dupe_email'] == '0')
 			$errors[] = $lang->t('Dupe email');

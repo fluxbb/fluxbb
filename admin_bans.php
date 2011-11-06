@@ -453,8 +453,12 @@ else if (isset($_GET['find_ban']))
 	}
 
 	// Fetch ban count
-	$result = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'bans as b WHERE b.id>0'.(!empty($conditions) ? ' AND '.implode(' AND ', $conditions) : '')) or error('Unable to fetch ban list', __FILE__, __LINE__, $db->error());
-	$num_bans = $db->result($result);
+	$query = $db->select(array('count' => 'COUNT(b.id) AS num_bans'), 'bans as b');
+	$query->where = 'b.id > 0'.(!empty($conditions) ? ' AND '.implode(' AND ', $conditions) : '');
+
+	$result = $query->run();
+
+	$num_bans = $result[0]['num_bans'];
 
 	// Determine the ban offset (based on $_GET['p'])
 	$num_pages = ceil($num_bans / 50);
@@ -504,10 +508,18 @@ else if (isset($_GET['find_ban']))
 			<tbody>
 <?php
 
-	$result = $db->query('SELECT b.id, b.username, b.ip, b.email, b.message, b.expire, b.ban_creator, u.username AS ban_creator_username FROM '.$db->prefix.'bans AS b LEFT JOIN '.$db->prefix.'users AS u ON b.ban_creator=u.id WHERE b.id>0'.(!empty($conditions) ? ' AND '.implode(' AND ', $conditions) : '').' ORDER BY '.$order_by.' '.$direction.' LIMIT '.$start_from.', 50') or error('Unable to fetch ban list', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result))
+	$query = $db->select(array('id' => 'b.id', 'username' => 'b.username', 'email' => 'b.email', 'message' => 'b.message', 'expire' => 'b.expire', 'ban_creator' => 'b.ban_creator', 'ban_creator_username' => 'u.username AS ban_creator_username'), 'bans AS b');
+	$query->LeftJoin('u', 'users AS u', 'b.ban_creator = u.id');
+	$query->where = 'b.id > 0'.(!empty($conditions) ? ' AND '.implode(' AND ', $conditions) : '');
+	$query->order = array('order' => $order_by.' '.$direction);
+	$query->limit = '50';
+	$query->offset = $start_from;
+
+	$result = $query->run();
+
+	if (!empty($result))
 	{
-		while ($ban_data = $db->fetch_assoc($result))
+		foreach ($result as $ban_data)
 		{
 
 			$actions = '<a href="admin_bans.php?edit_ban='.$ban_data['id'].'">'.$lang->t('Edit').'</a> | <a href="admin_bans.php?del_ban='.$ban_data['id'].'">'.$lang->t('Remove').'</a>';
@@ -529,6 +541,8 @@ else if (isset($_GET['find_ban']))
 	}
 	else
 		echo "\t\t\t\t".'<tr><td class="tcl" colspan="7">'.$lang->t('No match').'</td></tr>'."\n";
+
+	unset ($result, $query);
 
 ?>
 			</tbody>
