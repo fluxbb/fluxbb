@@ -254,7 +254,7 @@ else if (isset($_POST['add_edit_ban']))
 	{
 		$query = $db->select(array('group_id' => 'u.group_id', 'g_moderator' => 'g.g_moderator'), 'users AS u');
 
-		$query->InnerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
+		$query->innerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
 
 		$query->where = 'u.username = :ban_user AND u.id > 1';
 
@@ -509,7 +509,7 @@ else if (isset($_GET['find_ban']))
 <?php
 
 	$query = $db->select(array('id' => 'b.id', 'username' => 'b.username', 'email' => 'b.email', 'message' => 'b.message', 'expire' => 'b.expire', 'ban_creator' => 'b.ban_creator', 'ban_creator_username' => 'u.username AS ban_creator_username'), 'bans AS b');
-	$query->LeftJoin('u', 'users AS u', 'b.ban_creator = u.id');
+	$query->leftJoin('u', 'users AS u', 'b.ban_creator = u.id');
 	$query->where = 'b.id > 0'.(!empty($conditions) ? ' AND '.implode(' AND ', $conditions) : '');
 	$query->order = array('order' => $order_by.' '.$direction);
 	$query->limit = '50';

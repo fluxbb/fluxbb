@@ -216,7 +216,7 @@ if (isset($_GET['show_users']))
 	if ($num_posts)
 	{
 		$query = $db->select(array('id' => 'u.id', 'username' => 'u.username', 'email' => 'u.email', 'title' => 'u.title', 'num_posts' => 'u.num_posts', 'admin_note' => 'u.admin_note', 'g_id' => 'g.g_id', 'g_user_title' => 'g.g_user_title'), 'users AS u');
-		$query->InnerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
+		$query->innerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
 		$query->where = 'u.id > 1 AND u.id = :poster_id';
 
 		// Loop through users and print out some info
@@ -604,8 +604,8 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 
 			// Find all posts made by this user
 			$query = $db->select(array('id' => 'p.id', 'topic_id' => 'p.topic_id', 'forum_id' => 't.forum_id'), 'posts AS p');
-			$query->InnerJoin('t', 'topics AS t', 't.id = p.topic_id');
-			$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
+			$query->innerJoin('t', 'topics AS t', 't.id = p.topic_id');
+			$query->innerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 			$query->where = 'p.poster_id IN :uids';
 
 			$params = array(':uids' => $user_ids);
@@ -742,7 +742,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 
 	// Also, we cannot ban moderators
 	$query = $db->select(array('count' => 'COUNT(u.*) AS count'), 'users AS u');
-	$query->InnerJoin('g', 'groups AS g', 'u.group_id = g.g_id');
+	$query->innerJoin('g', 'groups AS g', 'u.group_id = g.g_id');
 	$query->where = 'g.g_moderator = 1 AND u.id IN :user_ids';
 
 	$params = array(':user_ids' => $user_ids);
@@ -987,7 +987,7 @@ else if (isset($_GET['find_user']))
 
 	// Fetch user count
 	$query = $db->select(array('count' => 'COUNT(u.id) AS num_users'), 'users AS u ');
-	$query->LeftJoin('g', 'groups AS g', 'g.g_id = u.group_id');
+	$query->leftJoin('g', 'groups AS g', 'g.g_id = u.group_id');
 	$query->where = 'u.id > 1'.(!empty($conditions) ? ' AND '.implode(' AND ', $conditions) : '');
 
 	$result = $query->run();
@@ -1051,7 +1051,7 @@ else if (isset($_GET['find_user']))
 <?php
 
 	$query = $db->select(array('id' => 'u.id', 'username' => 'u.username', 'email' => 'u.email', 'title' => 'u.title', 'num_posts' => 'u.num_posts', 'admin_note' => 'u.admin_note', 'g_id' => 'g.g_id', 'g_user_title' => 'g.g_user_title'), 'users AS u');
-	$query->LeftJoin('g', 'groups AS g', 'g.g_id = u.group_id');
+	$query->leftJoin('g', 'groups AS g', 'g.g_id = u.group_id');
 	$query->where = 'u.id > 1'.(!empty($conditions) ? ' AND '.implode(' AND ', $conditions) : '');
 	$query->order = array('order' => $order_by.' '.$direction);
 	$query->limit = '50';

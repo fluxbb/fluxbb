@@ -107,9 +107,9 @@ else if ($action == 'last')
 // Fetch some info about the topic
 $query = $db->select(array('subject' => 't.subject', 'closed' => 't.closed', 'num_replies' => 't.num_replies', 'sticky' => 't.sticky', 'first_post_id' => 't.first_post_id', 'forum_id' => 'f.id AS forum_id', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'post_replies' => 'fp.post_replies', 'is_subscribed' => '0 AS is_subscribed'), 'topics AS t');
 
-$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
+$query->innerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
-$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.id = :tid AND t.moved_to IS NULL';
 
@@ -120,7 +120,7 @@ if (!$pun_user['is_guest'])
 {
 	$query->fields['is_subscribed'] = 's.user_id AS is_subscribed';
 
-	$query->LeftJoin('s', 'topic_subscriptions AS s', 't.id = s.topic_id AND s.user_id = :user_id');
+	$query->leftJoin('s', 'topic_subscriptions AS s', 't.id = s.topic_id AND s.user_id = :user_id');
 
 	$params[':user_id'] = $pun_user['id'];
 }
@@ -263,11 +263,11 @@ foreach ($post_ids as $key => $value)
 // Retrieve the posts (and their respective poster/online status)
 $query = $db->select(array('email' => 'u.email', 'title' => 'u.title', 'url' => 'u.url', 'location' => 'u.location', 'signature' => 'u.signature', 'email_setting' => 'u.email_setting', 'num_posts' => 'u.num_posts', 'registered' => 'u.registered', 'admin_note' => 'u.admin_note', 'pid' => 'p.id', 'username' => 'p.poster AS username', 'poster_id' => 'p.poster_id', 'poster_ip' => 'p.poster_ip', 'poster_email' => 'p.poster_email', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'edited' => 'p.edited', 'edited_by' => 'p.edited_by', 'gid' => 'g.g_id', 'g_user_title' => 'g.g_user_title', 'is_online' => 'o.user_id AS is_online'), 'posts AS p');
 
-$query->InnerJoin('u', 'users AS u', 'u.id = p.poster_id');
+$query->innerJoin('u', 'users AS u', 'u.id = p.poster_id');
 
-$query->InnerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
+$query->innerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
 
-$query->LeftJoin('o', 'online AS o', 'o.user_id = u.id AND o.user_id != 1 AND o.idle = 0');
+$query->leftJoin('o', 'online AS o', 'o.user_id = u.id AND o.user_id != 1 AND o.idle = 0');
 
 $query->where = 'p.id IN :pids';
 $query->order = array('pid' => 'p.id ASC');

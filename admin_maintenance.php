@@ -90,7 +90,7 @@ h1 {
 	// Fetch posts to process this cycle
 	$query = $db->select(array('id' => 'p.id', 'message' => 'p.message', 'subject' => 't.subject', 'first_post_id' => 't.first_post_id'), 'posts AS p');
 
-	$query->InnerJoin('t', 'topics AS t', 't.id = p.topic_id');
+	$query->innerJoin('t', 'topics AS t', 't.id = p.topic_id');
 
 	$query->where = 'p.id >= :start_at';
 	$query->order = array('pid' => 'p.id ASC');
@@ -174,7 +174,7 @@ if ($action == 'prune')
 		// Locate any "orphaned redirect topics" and delete them
 		$query = $db->select(array('id' => 't1.id'), 'topics AS t1');
 
-		$query->LeftJoin('t2', 'topics AS t2', 't1.moved_to = t2.id');
+		$query->leftJoin('t2', 'topics AS t2', 't1.moved_to = t2.id');
 
 		$query->where = 't2.id IS NULL AND t1.moved_to IS NOT NULL';
 
@@ -372,7 +372,7 @@ generate_admin_menu('maintenance');
 
 	$query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
 
-	$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
+	$query->innerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
 	$query->where = 'f.redirect_url IS NULL';
 	$query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position');

@@ -84,9 +84,9 @@ if ($pun_config['o_quickjump'] == '1')
 
 		$query_forums = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url'), 'categories AS c');
 
-		$query_forums->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
+		$query_forums->innerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
-		$query_forums->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+		$query_forums->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 		$query_forums->where = 'fp.read_forum IS NULL OR fp.read_forum = 1';
 		$query_forums->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');

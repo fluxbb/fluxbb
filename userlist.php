@@ -186,7 +186,7 @@ if (!empty($user_ids))
 	// Grab the users
 	$query = $db->select(array('uid' => 'u.id', 'username' => 'u.username', 'title' => 'u.title', 'num_posts' => 'u.num_posts', 'registered' => 'u.registered', 'g_id' => 'g.g_id', 'g_user_title' => 'g.g_user_title'), 'users AS u');
 
-	$query->InnerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
+	$query->innerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
 
 	$query->where = 'u.id IN :uids';
 	$query->order = array('sort' => 'u.'.$sort_by.' '.$sort_dir, 'uid' => 'u.id ASC');

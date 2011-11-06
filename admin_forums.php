@@ -60,7 +60,7 @@ else if (isset($_GET['del_forum']))
 		// Locate any "orphaned redirect topics" and delete them
 		$query = $db->select(array('id' => 't1.id'), 'topics AS t1');
 
-		$query->LeftJoin('t2', 'topics AS t2', 't1.moved_to = t2.id');
+		$query->leftJoin('t2', 'topics AS t2', 't1.moved_to = t2.id');
 
 		$query->where = 't2.id IS NULL AND t1.moved_to IS NOT NULL';
 
@@ -388,7 +388,7 @@ else if (isset($_GET['edit_forum']))
 
 	$query = $db->select(array('g_id' => 'g.g_id', 'g_title' => 'g.g_title', 'g_read_board' => 'g.g_read_board', 'g_post_replies' => 'g.g_post_replies', 'g_post_topics' => 'g.g_post_topics', 'read_forum' => 'fp.read_forum', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics'), 'groups AS g');
 
-	$query->LeftJoin('fp', 'forum_perms AS fp', 'g.g_id = fp.group_id AND fp.forum_id = :forum_id');
+	$query->leftJoin('fp', 'forum_perms AS fp', 'g.g_id = fp.group_id AND fp.forum_id = :forum_id');
 
 	$query->where = 'g.g_id != :group_admin';
 	$query->order = array('g_id' => 'g.g_id ASC');
@@ -504,7 +504,7 @@ generate_admin_menu('forums');
 // Display all the categories and forums
 $query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'fposition' => 'f.disp_position'), 'categories AS c');
 
-$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
+$query->innerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
 $query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
 

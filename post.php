@@ -22,7 +22,7 @@ if ($tid < 1 && $fid < 1 || $tid > 0 && $fid > 0)
 // Fetch some info about the topic and/or the forum
 $query = $db->select(array('fid' => 'f.id', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'redirect_url' => 'f.redirect_url', 'post_replies' => 'fp.post_replies', 'post_topics' => 'fp.post_topics'), 'forums AS f');
 
-$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND '.($tid ? 't.id' : 'f.id').' = :id';
 
@@ -35,9 +35,9 @@ if ($tid)
 	$query->fields['closed'] = 't.closed';
 	$query->fields['is_subscribed'] = 's.user_id AS is_subscribed';
 
-	$query->InnerJoin('t', 'topics AS t', 't.forum_id = f.id');
+	$query->innerJoin('t', 'topics AS t', 't.forum_id = f.id');
 
-	$query->LeftJoin('s', 'topic_subscriptions AS s', 't.id = s.topic_id AND s.user_id = :user_id');
+	$query->leftJoin('s', 'topic_subscriptions AS s', 't.id = s.topic_id AND s.user_id = :user_id');
 
 	$params[':user_id'] = $pun_user['id'];
 }
@@ -271,13 +271,13 @@ if (isset($_POST['form_sent']))
 				// Get any subscribed users that should be notified (banned users are excluded)
 				$query = $db->select(array('id' => 'u.id', 'email' => 'u.email', 'notify_with_post' => 'u.notify_with_post', 'language' => 'u.language'), 'users AS u');
 
-				$query->InnerJoin('ts', 'topic_subscriptions AS ts', 'u.id = ts.user_id');
+				$query->innerJoin('ts', 'topic_subscriptions AS ts', 'u.id = ts.user_id');
 
-				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = :forum_id AND fp.group_id = u.group_id');
+				$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = :forum_id AND fp.group_id = u.group_id');
 
-				$query->LeftJoin('o', 'online AS o', 'u.id = o.user_id');
+				$query->leftJoin('o', 'online AS o', 'u.id = o.user_id');
 
-				$query->LeftJoin('b', 'bans AS b', 'u.username = b.username');
+				$query->leftJoin('b', 'bans AS b', 'u.username = b.username');
 
 				$query->where = 'b.username IS NULL AND COALESCE(o.logged, u.last_visit) > :last_post AND (fp.read_forum IS NULL OR fp.read_forum = 1) AND ts.topic_id = :topic_id AND u.id != :user_id';
 
@@ -419,11 +419,11 @@ if (isset($_POST['form_sent']))
 				// Get any subscribed users that should be notified (banned users are excluded)
 				$query = $db->select(array('id' => 'u.id', 'email' => 'u.email', 'notify_with_post' => 'u.notify_with_post', 'language' => 'u.language'), 'users AS u');
 
-				$query->InnerJoin('fs', 'forum_subscriptions AS fs', 'u.id = fs.user_id');
+				$query->innerJoin('fs', 'forum_subscriptions AS fs', 'u.id = fs.user_id');
 
-				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = :forum_id AND fp.group_id = u.group_id');
+				$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = :forum_id AND fp.group_id = u.group_id');
 
-				$query->LeftJoin('b', 'bans AS b', 'u.username = b.username');
+				$query->leftJoin('b', 'bans AS b', 'u.username = b.username');
 
 				$query->where = 'b.username IS NULL AND (fp.read_forum IS NULL OR fp.read_forum = 1) AND fs.forum_id = :forum_id AND u.id != :user_id';
 

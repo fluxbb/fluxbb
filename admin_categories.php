@@ -77,7 +77,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 
 		// Locate any "orphaned redirect topics" and delete them
 		$query = $db->select(array('id' => 't1.id'), 'topics AS t1');
-		$query->LeftJoin('t1', 'topics AS t2', 't1.moved_to = t2.id');
+		$query->leftJoin('t1', 'topics AS t2', 't1.moved_to = t2.id');
 		$query->where = 't2.id IS NULL AND t1.moved_to IS NOT NULL';
 
 		$result = $query->run();

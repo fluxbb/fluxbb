@@ -310,11 +310,11 @@ else if (isset($_GET['report']))
 	// Fetch some info about the post, the topic and the forum
 	$query = $db->select(array('fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'tid' => 't.id AS tid', 'subject' => 't.subject'), 'posts AS p');
 
-	$query->InnerJoin('t', 'topics AS t', 't.id = p.topic_id');
+	$query->innerJoin('t', 'topics AS t', 't.id = p.topic_id');
 
-	$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
+	$query->innerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
-	$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+	$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 	$query->where = '(fp.read_forum IS NULL OR fp.read_forum=1) AND p.id = :post_id';
 
@@ -389,7 +389,7 @@ else if ($action == 'subscribe')
 		// Make sure the user can view the topic
 		$query = $db->select(array('one' => '1'), 'topics AS t');
 
-		$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
+		$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 		$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.id = :topic_id AND t.moved_to IS NULL';
 
@@ -430,7 +430,7 @@ else if ($action == 'subscribe')
 		// Make sure the user can view the forum
 		$query = $db->select(array('one' => '1'), 'forums AS f');
 
-		$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+		$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 		$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id';
 

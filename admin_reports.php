@@ -67,13 +67,13 @@ generate_admin_menu('reports');
 
 $query = $db->select(array('rid' => 'r.id', 'topic_id' => 'r.topic_id', 'forum_id' => 'r.forum_id', 'reported_by' => 'r.reported_by', 'created' => 'r.created', 'message' => 'r.message', 'pid' => 'p.id AS pid', 'subject' => 't.subject', 'forum_name' => 'f.forum_name', 'reporter' => 'u.username AS reporter'), 'reports AS r');
 
-$query->LeftJoin('f', 'forums AS f', 'r.forum_id = f.id');
+$query->leftJoin('f', 'forums AS f', 'r.forum_id = f.id');
 
-$query->LeftJoin('p', 'posts AS p', 'r.post_id = p.id');
+$query->leftJoin('p', 'posts AS p', 'r.post_id = p.id');
 
-$query->LeftJoin('t', 'topics AS t', 'r.topic_id = t.id');
+$query->leftJoin('t', 'topics AS t', 'r.topic_id = t.id');
 
-$query->LeftJoin('u', 'users AS u', 'r.reported_by = u.id');
+$query->leftJoin('u', 'users AS u', 'r.reported_by = u.id');
 
 $query->where = 'r.zapped IS NULL';
 $query->order = array('created' => 'r.created DESC');
@@ -147,15 +147,15 @@ unset ($result);
 
 $query = $db->select(array('rid' => 'r.id', 'topic_id' => 'r.topic_id', 'forum_id' => 'r.forum_id', 'reported_by' => 'r.reported_by', 'message' => 'r.message', 'zapped' => 'r.zapped', 'zapped_by_id' => 'r.zapped_by AS zapped_by_id', 'pid' => 'p.id AS pid', 'subject' => 't.subject', 'forum_name' => 'f.forum_name', 'reporter' => 'u.username AS reporter', 'zapped_by' => 'u2.username AS zapped_by'), 'reports AS r');
 
-$query->LeftJoin('p', 'posts AS p', 'r.post_id = p.id');
+$query->leftJoin('p', 'posts AS p', 'r.post_id = p.id');
 
-$query->LeftJoin('t', 'topics AS t', 'r.topic_id = t.id');
+$query->leftJoin('t', 'topics AS t', 'r.topic_id = t.id');
 
-$query->LeftJoin('f', 'forums AS f', 'r.forum_id = f.id');
+$query->leftJoin('f', 'forums AS f', 'r.forum_id = f.id');
 
-$query->LeftJoin('u', 'users AS u', 'r.reported_by = u.id');
+$query->leftJoin('u', 'users AS u', 'r.reported_by = u.id');
 
-$query->LeftJoin('u2', 'users AS u2', 'r.zapped_by = u2.id');
+$query->leftJoin('u2', 'users AS u2', 'r.zapped_by = u2.id');
 
 $query->where = 'r.zapped IS NOT NULL';
 $query->order = array('zapped' => 'r.zapped DESC');

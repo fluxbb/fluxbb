@@ -91,9 +91,9 @@ function check_cookie(&$pun_user)
 		// Check if there's a user with the user ID and password hash from the cookie
 		$query = $db->select(array('user' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'users AS u');
 
-		$query->InnerJoin('g', 'groups AS g', 'u.group_id = g.g_id');
+		$query->innerJoin('g', 'groups AS g', 'u.group_id = g.g_id');
 
-		$query->LeftJoin('o', 'online AS o', 'o.user_id = u.id');
+		$query->leftJoin('o', 'online AS o', 'o.user_id = u.id');
 
 		$query->where = 'u.id = :user_id';
 
@@ -214,9 +214,9 @@ function authenticate_user($user, $password, $password_is_hash = false)
 	// Check if there's a user matching $user and $password
 	$query = $db->select(array('users' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'idle' => 'o.idle'), 'users AS u');
 
-	$query->InnerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
+	$query->innerJoin('g', 'groups AS g', 'g.g_id = u.group_id');
 
-	$query->LeftJoin('o', 'online AS o', 'o.user_id = u.id');
+	$query->leftJoin('o', 'online AS o', 'o.user_id = u.id');
 
 	$params = array();
 
@@ -326,9 +326,9 @@ function set_default_user()
 	// Fetch guest user
 	$query = $db->select(array('user' => 'u.*', 'group' => 'g.*', 'logged' => 'o.logged', 'last_post' => 'o.last_post', 'last_search' => 'o.last_search'), 'users AS u');
 
-	$query->InnerJoin('g', 'groups AS g', 'u.group_id = g.g_id');
+	$query->innerJoin('g', 'groups AS g', 'u.group_id = g.g_id');
 
-	$query->LeftJoin('o', 'online AS o', 'o.ident = :ident');
+	$query->leftJoin('o', 'online AS o', 'o.ident = :ident');
 
 	$query->where = 'u.id = 1';
 
