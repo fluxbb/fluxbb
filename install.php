@@ -78,7 +78,7 @@ if (!defined('FORUM_CACHE_DIR'))
 	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
 
 // Load the cache module
-require_once PUN_ROOT.'modules/cache/cache.php';
+require PUN_ROOT.'modules/cache/cache.php';
 $cache = Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport'); // TODO: Move this config into config.php
 // TODO: according to the comment above - how do you want to move this to config when it doesn't exist? :)
 
