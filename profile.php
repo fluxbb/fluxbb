@@ -669,7 +669,7 @@ else if (isset($_POST['ban']))
 	$result = $query->run($params);
 	$username = $result[0]['username'];
 	unset($query, $params, $result);
-	
+
 	// Check whether user is already banned
 	$query = $db->select(array('id' => 'b.id'), 'bans AS b');
 	$query->where = 'username = :username';
@@ -677,7 +677,7 @@ else if (isset($_POST['ban']))
 	$query->limit = 1;
 	$params = array(':username' => $username);
 	$result = $query->run($params);
-	
+
 	if (count($result))
 	{
 		$ban_id = $result[0]['id'];
@@ -685,7 +685,7 @@ else if (isset($_POST['ban']))
 	}
 	else
 		redirect('admin_bans.php?add_ban='.$id, $lang->t('Ban redirect'));
-	
+
 	unset($query, $params, $result);
 }
 
@@ -937,6 +937,7 @@ else if (isset($_POST['form_sent']))
 			// Make sure we got a valid language string
 			if (isset($_POST['form']['language']))
 			{
+				$form['language'] = pun_trim($_POST['form']['language']);
 				if (!Flux_Lang::languageExists($form['language']))
 					message($lang->t('Bad request'));
 			}
