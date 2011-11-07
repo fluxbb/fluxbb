@@ -217,7 +217,8 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 								$result = $db->query('SELECT p.id AS post_id, p.topic_id, '.$sort_by_sql.' AS sort_by FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE ('.$where_cond.') AND (fp.read_forum IS NULL OR fp.read_forum=1)'.$forum_sql, true) or error('Unable to search for posts', __FILE__, __LINE__, $db->error());
 							}
 							else
-								$query = $db->select(array('post_id' => 'm.post_id', 'topic_id' => 'p.topic_id'), 'search_words AS w');
+							{
+								$query = $db->select(array('post_id' => 'm.post_id', 'topic_id' => 'p.topic_id', $sort_by_sql.' AS sort_by'), 'search_words AS w');
 
 								$query->innerJoin('m', 'search_matches AS m', 'm.word_id = w.id');
 								$query->innerJoin('p', 'posts AS p', 'p.id=m.post_id');
@@ -231,12 +232,12 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 								
 								$query->order = array('sort' => $sort_by_sql.' '.$sort_dir);
 
-								$params[':group_id'] = 1;
+								$params = array(':group_id' => 1);
 
 								$result = $query->run($params);
-
+							}
 							$row = array();
-							foreach ($result as $temp)
+							while ($temp = $db->fetch_assoc($result))
 							{
 								$row[$temp['post_id']] = $temp['topic_id'];
 
@@ -270,8 +271,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 							}
 
 							++$word_count;
-							//$db->free_result($result);
-							// TODO: set new free_result
+							$db->free_result($result);
 
 							break;
 						}
@@ -312,9 +312,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 					$query = $db->select(array('post_id' => 'p.id AS post_id', 'topic_id' => 'p.topic_id'), 'posts AS p');
 
-					$query->InnerJoin('t', 'topics AS t', 't.id = p.topic_id');
+					$query->innerJoin('t', 'topics AS t', 't.id = p.topic_id');
 
-					$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
+					$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 					$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND p.poster_id IN :uids '.$forum_sql; // TODO
 					$query->order = array('sort' => $sort_by_sql.' '.$sort_dir);
@@ -378,7 +378,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 				$query = $db->select(array('id' => 't.id'), 'topics AS t');
 
-				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
+				$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.last_post > :last_visit AND t.moved_to IS NULL';
 				$query->order = array('last_post' => 't.last_post DESC');
@@ -405,7 +405,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			{
 				$query = $db->select(array('id' => 't.id'), 'topics AS t');
 
-				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
+				$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.last_post > :last_time AND t.moved_to IS NULL';
 				$query->order = array('last_post' => 't.last_post DESC');
@@ -432,9 +432,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			{
 				$query = $db->select(array('id' => 't.id'), 'topics AS t');
 
-				$query->InnerJoin('p', 'posts AS p', 't.id = p.topic_id');
+				$query->innerJoin('p', 'posts AS p', 't.id = p.topic_id');
 
-				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
+				$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND p.poster_id = :poster_id';
 				$query->group = array('id' => 't.id', 'last_post' => 't.last_post');
@@ -458,9 +458,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 				$query = $db->select(array('id' => 'p.id'), 'posts AS p');
 
-				$query->InnerJoin('t', 'topics AS t', 'p.topic_id = t.id');
+				$query->innerJoin('t', 'topics AS t', 'p.topic_id = t.id');
 
-				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
+				$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND p.poster_id = :poster_id';
 				$query->order = array('posted' => 'p.posted DESC');
@@ -484,9 +484,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			{
 				$query = $db->select(array('id' => 't.id'), 'topics AS t');
 
-				$query->InnerJoin('p', 'posts AS p', 't.first_post_id = p.id');
+				$query->innerJoin('p', 'posts AS p', 't.first_post_id = p.id');
 
-				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
+				$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND p.poster_id = :poster_id';
 				$query->order = array('last_post' => 't.last_post DESC');
@@ -513,9 +513,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 				$query = $db->select(array('id' => 't.id'), 'topics AS t');
 
-				$query->InnerJoin('s', 'topic_subscriptions AS s', 't.id = s.topic_id AND s.user_id = :user_id');
+				$query->innerJoin('s', 'topic_subscriptions AS s', 't.id = s.topic_id AND s.user_id = :user_id');
 
-				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
+				$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 				$query->where = 'fp.read_forum IS NULL OR fp.read_forum = 1';
 				$query->order = array('last_post' => 't.last_post DESC');
@@ -539,7 +539,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			{
 				$query = $db->select(array('id' => 't.id'), 'topics AS t');
 
-				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
+				$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.num_replies = 0 AND t.moved_to IS NULL';
 				$query->order = array('last_post' => 't.last_post DESC');
@@ -659,9 +659,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		{
 			$query = $db->select(array('pid' => 'p.id AS pid', 'pposter' => 'p.poster AS pposter', 'pposted' => 'p.posted AS pposted', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'tid' => 't.id AS tid', 'poster' => 't.poster', 'subject' => 't.subject', 'first_post_id' => 't.first_post_id', 'last_post' => 't.last_post', 'last_post_id' => 't.last_post_id', 'last_poster' => 't.last_poster', 'num_replies' => 't.num_replies', 'forum_id' => 't.forum_id', 'forum_name' => 'f.forum_name'), 'posts AS p');
 
-			$query->InnerJoin('t', 'topics AS t', 't.id = p.topic_id');
+			$query->innerJoin('t', 'topics AS t', 't.id = p.topic_id');
 
-			$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
+			$query->innerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
 			$query->where = 'p.id IN :search_ids';
 			$query->order = array($sort_by_sql.' '.$sort_dir);
@@ -675,7 +675,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		{
 			$query = $db->select(array('tid' => 't.id AS tid', 'poster' => 't.poster', 'subject' => 't.subject', 'last_post' => 't.last_post', 'last_post_id' => 't.last_post_id', 'last_poster' => 't.last_poster', 'num_replies' => 't.num_replies', 'closed' => 't.closed', 'sticky' => 't.sticky', 'forum_id' => 't.forum_id', 'forum_name' => 'f.forum_name'), 'topics AS t');
 
-			$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
+			$query->innerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
 			$query->where = 't.id IN :search_ids';
 			$query->order = array($sort_by_sql.' '.$sort_dir);
@@ -995,9 +995,9 @@ require PUN_ROOT.'header.php';
 
 $query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url'), 'categories AS c');
 
-$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
+$query->innerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
-$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.redirect_url IS NULL';
 $query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
