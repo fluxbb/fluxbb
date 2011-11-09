@@ -620,14 +620,14 @@ else
 
 	$query = $db->createTable('censoring');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
-	$query->field('search_for', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(60), '', false);
-	$query->field('replace_with', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(60), '', false);
+	$query->field('search_for', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(60), '\'\'', false);
+	$query->field('replace_with', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(60), '\'\'', false);
 	$query->run();
 
 	unset ($query);
 
 	$query = $db->createTable('config');
-	$query->field('conf_name', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(255), '', true, Flux_Database_Query_Helper_TableColumn::KEY_PRIMARY);
+	$query->field('conf_name', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(255), '\'\'', true, Flux_Database_Query_Helper_TableColumn::KEY_PRIMARY);
 	$query->field('conf_value', Flux_Database_Query_Helper_TableColumn::TYPE_TEXT);
 	$query->run();
 
@@ -666,7 +666,7 @@ else
 
 	$query = $db->createTable('groups');
 	$query->field('g_id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
-	$query->field('g_title', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50), '', false);
+	$query->field('g_title', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50), '\'\'', false);
 	$query->field('g_user_title', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50));
 	$query->field('g_moderator', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false); // TINYINT(1)
 	$query->field('g_mod_edit_users', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false); // TINYINT(1)
@@ -694,7 +694,7 @@ else
 
 	$query = $db->createTable('online');
 	$query->field('user_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, 1, false);
-	$query->field('ident', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '', false);
+	$query->field('ident', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '\'\'', false);
 	$query->field('logged', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
 	$query->field('idle', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false); // TINYINT(1)
 	$query->field('last_post', Flux_Database_Query_Helper_TableColumn::TYPE_UINT);
@@ -731,7 +731,7 @@ else
 
 	$query = $db->createTable('posts');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
-	$query->field('poster', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '', false);
+	$query->field('poster', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '\'\'', false);
 	$query->field('poster_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, 1, false);
 	$query->field('poster_ip', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(39));
 	$query->field('poster_email', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80));
@@ -759,7 +759,7 @@ else
 
 	$query = $db->createTable('ranks');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
-	$query->field('rank', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50), '', false);
+	$query->field('rank', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50), '\'\'', false);
 	$query->field('min_posts', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\''); // MEDIUMINT(8) UNSIGNED
 	$query->run();
 
@@ -787,7 +787,7 @@ else
 
 	$query = $db->createTable('search_cache');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
-	$query->field('ident', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '');
+	$query->field('ident', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '\'\'');
 	$query->field('search_data', Flux_Database_Query_Helper_TableColumn::TYPE_TEXT); // MEDIUMTEXT
 	$query->run();
 
@@ -821,7 +821,7 @@ else
 
 	$query = $db->createTable('search_words');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
-	$query->field('word', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(20), '');
+	$query->field('word', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(20), '\'\'');
 	// TODO: 'collation'		=> 'bin'
 	//$field->key = Flux_Database_Query_Helper_TableColumn::KEY_PRIMARY; // can't set the second primary key? (first is the id)
 	$query->run();
@@ -858,8 +858,8 @@ else
 
 	$query = $db->createTable('topics');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
-	$query->field('poster', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '', false);
-	$query->field('subject', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(255), '', false);
+	$query->field('poster', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '\'\'', false);
+	$query->field('subject', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(255), '\'\'', false);
 	$query->field('posted', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
 	$query->field('first_post_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
 	$query->field('last_post', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
@@ -902,10 +902,10 @@ else
 	$query = $db->createTable('users');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
 	$query->field('group_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, 3, false);
-	$query->field('username', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '', false);
-	$query->field('password', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(40), '', false);
-	$query->field('email', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80), '', false);
-	$query->field('title', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50), '', false);
+	$query->field('username', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '\'\'', false);
+	$query->field('password', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(40), '\'\'', false);
+	$query->field('email', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80), '\'\'', false);
+	$query->field('title', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50), NULL, false);
 	$query->field('realname', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(40));
 	$query->field('url', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(100));
 	$query->field('jabber', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80));
@@ -930,6 +930,7 @@ else
 	$query->field('dst', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false); // TINYINT(1)
 	$query->field('time_format', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false); // TINYINT(1)
 	$query->field('date_format', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false); // TINYINT(1)
+	// TODO: $db->quote() should not be needed here
 	$query->field('language', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(25), $db->quote($default_lang), false);
 	$query->field('style', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(25), $db->quote($default_style), false);
 	$query->field('num_posts', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'');
