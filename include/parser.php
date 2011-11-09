@@ -153,16 +153,17 @@ function strip_empty_bbcode($text, &$errors)
 	}
 
 	// If we split up the message before we have to concatenate it together again (code tags)
-    if (isset($inside)) {
-        $parts = explode("\1", $text);
-        $text = '';
-        foreach ($parts as $i => $part)
-        {
-            $text .= $part;
-            if (isset($inside[$i]))
-                $text .= '[code]'.$inside[$i].'[/code]';
-        }
-    }
+	if (isset($inside))
+	{
+		$parts = explode("\1", $text);
+		$text = '';
+		foreach ($parts as $i => $part)
+		{
+			$text .= $part;
+			if (isset($inside[$i]))
+				$text .= '[code]'.$inside[$i].'[/code]';
+		}
+	}
 
 	// Remove empty code tags
 	while (($new_text = preg_replace('%\[(code)\]\s*\[/\1\]%', '', $text)) !== NULL)
@@ -867,19 +868,20 @@ function parse_message($text, $hide_smilies)
 	$text = str_replace($pattern, $replace, $text);
 
 	// If we split up the message before we have to concatenate it together again (code tags)
-    if (isset($inside)) {
-        $parts = explode("\1", $text);
-        $text = '';
-        foreach ($parts as $i => $part)
-        {
-            $text .= $part;
-            if (isset($inside[$i]))
-            {
-                $num_lines = (substr_count($inside[$i], "\n"));
-                $text .= '</p><div class="codebox"><pre'.(($num_lines > 28) ? ' class="vscroll"' : '').'><code>'.pun_trim($inside[$i], "\n\r").'</code></pre></div><p>';
-            }
-        }
-    }
+	if (isset($inside))
+	{
+		$parts = explode("\1", $text);
+		$text = '';
+		foreach ($parts as $i => $part)
+		{
+			$text .= $part;
+			if (isset($inside[$i]))
+			{
+				$num_lines = (substr_count($inside[$i], "\n"));
+				$text .= '</p><div class="codebox"><pre'.(($num_lines > 28) ? ' class="vscroll"' : '').'><code>'.pun_trim($inside[$i], "\n\r").'</code></pre></div><p>';
+			}
+		}
+	}
 
 	// Add paragraph tag around post, but make sure there are no empty paragraphs
 	$text = preg_replace('%<br />\s*?<br />((\s*<br />)*)%i', "</p>$1<p>", $text);
