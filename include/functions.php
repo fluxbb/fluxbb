@@ -2128,7 +2128,7 @@ function display_saved_queries()
 	global $db, $lang;
 
 	// Get the queries so that we can print them out
-	$saved_queries = $db->getDebugQueries();
+	$saved_queries = $db->getExecutedQueries();
 
 ?>
 
