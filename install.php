@@ -597,15 +597,8 @@ else
 	$query->field('message', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(255));
 	$query->field('expire', Flux_Database_Query_Helper_TableColumn::TYPE_UINT);
 	$query->field('ban_creator', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
-	$query->run();
 
-	unset ($query);
-
-//	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
-//		$schema['INDEXES']['username_idx'] = array('username(25)');
-
-	$query = $db->addIndex('bans', 'username_idx');
-	$query->fields = array('username'); // before was array('username(25)'); for mysql
+	$query->index('username_idx', array('username'.($db_type == 'MySQL' ? '(25)' : '')));
 	$query->run();
 
 	unset ($query);
@@ -699,32 +692,10 @@ else
 	$query->field('idle', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false); // TINYINT(1)
 	$query->field('last_post', Flux_Database_Query_Helper_TableColumn::TYPE_UINT);
 	$query->field('last_search', Flux_Database_Query_Helper_TableColumn::TYPE_UINT);
-	$query->run();
 
-	unset ($query);
-
-	// TODO: unique keys
-//		'UNIQUE KEYS'	=> array(
-//			'user_id_ident_idx'	=> array('user_id', 'ident')
-//		),
-
-//	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
-//	{
-//		$schema['UNIQUE KEYS']['user_id_ident_idx'] = array('user_id', 'ident(25)');
-//		$schema['INDEXES']['ident_idx'] = array('ident(25)');
-//	}
-
-//	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
-//		$schema['ENGINE'] = 'InnoDB';
-
-	$query = $db->addIndex('online', 'ident_idx');
-	$query->fields = array('ident'); // before was ident(25) for mysql
-	$query->run();
-
-	unset ($query);
-
-	$query = $db->addIndex('online', 'logged_idx');
-	$query->fields = array('logged');
+	$query->index('user_id_ident_idx', array('user_id', 'ident'.($db_type == 'MySQL' ? '(25)' : '')), true);
+	$query->index('ident_idx', array('ident'.($db_type == 'MySQL' ? '(25)' : '')));
+	$query->index('logged_idx', array('logged'));
 	$query->run();
 
 	unset ($query);
@@ -741,18 +712,9 @@ else
 	$query->field('edited', Flux_Database_Query_Helper_TableColumn::TYPE_UINT);
 	$query->field('edited_by', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200));
 	$query->field('topic_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
-	$query->run();
 
-	unset ($query);
-
-	$query = $db->addIndex('posts', 'topic_id_idx');
-	$query->fields = array('topic_id');
-	$query->run();
-
-	unset ($query);
-
-	$query = $db->addIndex('posts', 'multi_idx');
-	$query->fields = array('poster_id', 'topic_id');
+	$query->index('topic_id_idx', array('topic_id'));
+	$query->index('multi_idx', array('poster_id', 'topic_id'));
 	$query->run();
 
 	unset ($query);
@@ -775,12 +737,8 @@ else
 	$query->field('message', Flux_Database_Query_Helper_TableColumn::TYPE_TEXT);
 	$query->field('zapped', Flux_Database_Query_Helper_TableColumn::TYPE_UINT);
 	$query->field('zapped_by', Flux_Database_Query_Helper_TableColumn::TYPE_UINT);
-	$query->run();
 
-	unset ($query);
-
-	$query = $db->addIndex('reports', 'zapped_idx');
-	$query->fields = array('zapped');
+	$query->index('zapped_idx', array('zapped'));
 	$query->run();
 
 	unset ($query);
@@ -789,12 +747,7 @@ else
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
 	$query->field('ident', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '\'\'');
 	$query->field('search_data', Flux_Database_Query_Helper_TableColumn::TYPE_TEXT); // MEDIUMTEXT
-	$query->run();
-
-	unset ($query);
-
-	$query = $db->addIndex('search_cache', 'ident_idx');
-	$query->fields = array('ident'); // for mysql ident(8)
+	$query->index('ident_idx', array('ident'.($db_type == 'MySQL' ? '(8)' : '')));
 	$query->run();
 
 	unset ($query);
@@ -803,18 +756,8 @@ else
 	$query->field('post_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
 	$query->field('word_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
 	$query->field('subject_match', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false); // TINYINT(1)
-	$query->run();
-
-	unset ($query);
-
-	$query = $db->addIndex('search_matches', 'word_id_idx');
-	$query->fields = array('word_id');
-	$query->run();
-
-	unset ($query);
-
-	$query = $db->addIndex('search_matches', 'post_id_idx');
-	$query->fields = array('post_id');
+	$query->index('word_id_idx', array('word_id'));
+	$query->index('post_id_idx', array('post_id'));
 	$query->run();
 
 	unset ($query);
@@ -824,6 +767,7 @@ else
 	$query->field('word', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(20), '\'\'');
 	// TODO: 'collation'		=> 'bin'
 	//$field->key = Flux_Database_Query_Helper_TableColumn::KEY_PRIMARY; // can't set the second primary key? (first is the id)
+	$query->index('id_idx', array('id'));
 	$query->run();
 
 //	if ($db_type == 'sqlite')
@@ -831,12 +775,6 @@ else
 //		$schema['PRIMARY KEY'] = array('id');
 //		$schema['UNIQUE KEYS'] = array('word_idx'	=> array('word'));
 //	}
-
-	unset ($query);
-
-	$query = $db->addIndex('search_words', 'id_idx');
-	$query->fields = array('id');
-	$query->run();
 
 	unset ($query);
 
@@ -871,30 +809,11 @@ else
 	$query->field('sticky', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false); // TINYINT(1)
 	$query->field('moved_to', Flux_Database_Query_Helper_TableColumn::TYPE_UINT);
 	$query->field('forum_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
-	$query->run();
 
-	unset ($query);
-
-	$query = $db->addIndex('topics', 'forum_id_idx');
-	$query->fields = array('forum_id');
-	$query->run();
-
-	unset ($query);
-
-	$query = $db->addIndex('topics', 'moved_to_idx');
-	$query->fields = array('moved_to');
-	$query->run();
-
-	unset ($query);
-
-	$query = $db->addIndex('topics', 'last_post_idx');
-	$query->fields = array('last_post');
-	$query->run();
-
-	unset ($query);
-
-	$query = $db->addIndex('topics', 'first_post_id_idx');
-	$query->fields = array('first_post_id');
+	$query->index('forum_id_idx', array('forum_id'));
+	$query->index('moved_to_idx', array('moved_to'));
+	$query->index('last_post_idx', array('last_post'));
+	$query->index('first_post_id_idx', array('first_post_id'));
 	$query->run();
 
 	unset ($query);
@@ -905,7 +824,7 @@ else
 	$query->field('username', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '\'\'', false);
 	$query->field('password', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(40), '\'\'', false);
 	$query->field('email', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80), '\'\'', false);
-	$query->field('title', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50), NULL, false);
+	$query->field('title', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50), 'NULL');
 	$query->field('realname', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(40));
 	$query->field('url', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(100));
 	$query->field('jabber', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80));
@@ -933,7 +852,7 @@ else
 	// TODO: $db->quote() should not be needed here
 	$query->field('language', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(25), $db->quote($default_lang), false);
 	$query->field('style', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(25), $db->quote($default_style), false);
-	$query->field('num_posts', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'');
+	$query->field('num_posts', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
 	$query->field('last_post', Flux_Database_Query_Helper_TableColumn::TYPE_UINT);
 	$query->field('last_search', Flux_Database_Query_Helper_TableColumn::TYPE_UINT);
 	$query->field('last_email_sent', Flux_Database_Query_Helper_TableColumn::TYPE_UINT);
@@ -944,20 +863,13 @@ else
 	$query->field('admin_note', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(30));
 	$query->field('activate_string', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80));
 	$query->field('activate_key', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(8));
+
+	$query->index('username_idx', array('username'.($db_type == 'MySQL' ? '(25)' : '')), true);
+	$query->index('registered_idx', array('registered'));
 	$query->run();
 
 	unset ($query);
 
-	$query = $db->addIndex('users', 'registered_idx');
-	$query->fields = array('registered');
-	$query->run();
-
-	unset ($query);
-
-	// TODO:
-//		'UNIQUE KEYS'	=> array(
-//			'username_idx'		=> array('username') // username(25) for mysql
-//		),
 
 	$now = time();
 
@@ -973,11 +885,11 @@ else
 	$query->run($params);
 	unset($params);
 
-	$params = array(':g_id' => 3, ':g_title' => $lang->t('Guests'), ':g_user_title' => NULL, ':g_moderator' => 0, ':g_mod_edit_users' => 0, ':g_mod_rename_users' => 0, ':g_mod_change_passwords' => 0, ':g_mod_ban_users' => 0, ':g_read_board' => 1, ':g_view_users' => 1, ':g_post_replies' => 0, ':g_post_topics' => 0, ':g_edit_posts' => 0, ':g_delete_posts' => 0, ':g_delete_topics' => 0, ':g_set_title' => 0, ':g_search' => 1, ':g_search_users' => 1, ':g_send_email' => 0, ':g_post_flood' => 60, ':g_search_flood' => 30, ':g_email_flood' => 0, ':g_report_flood' => 0);
+	$params = array(':g_id' => 3, ':g_title' => $lang->t('Guests'), ':g_user_title' => 0, ':g_moderator' => 0, ':g_mod_edit_users' => 0, ':g_mod_rename_users' => 0, ':g_mod_change_passwords' => 0, ':g_mod_ban_users' => 0, ':g_read_board' => 1, ':g_view_users' => 1, ':g_post_replies' => 0, ':g_post_topics' => 0, ':g_edit_posts' => 0, ':g_delete_posts' => 0, ':g_delete_topics' => 0, ':g_set_title' => 0, ':g_search' => 1, ':g_search_users' => 1, ':g_send_email' => 0, ':g_post_flood' => 60, ':g_search_flood' => 30, ':g_email_flood' => 0, ':g_report_flood' => 0);
 	$query->run($params);
 	unset($params);
 
-	$params = array(':g_id' => 4, ':g_title' => $lang->t('Members'), ':g_user_title' => NULL, ':g_moderator' => 0, ':g_mod_edit_users' => 0, ':g_mod_rename_users' => 0, ':g_mod_change_passwords' => 0, ':g_mod_ban_users' => 0, ':g_read_board' => 1, ':g_view_users' => 1, ':g_post_replies' => 1, ':g_post_topics' => 1, ':g_edit_posts' => 1, ':g_delete_posts' => 1, ':g_delete_topics' => 1, ':g_set_title' => 0, ':g_search' => 1, ':g_search_users' => 1, ':g_send_email' => 1, ':g_post_flood' => 60, ':g_search_flood' => 30, ':g_email_flood' => 60, ':g_report_flood' => 60);
+	$params = array(':g_id' => 4, ':g_title' => $lang->t('Members'), ':g_user_title' => 0, ':g_moderator' => 0, ':g_mod_edit_users' => 0, ':g_mod_rename_users' => 0, ':g_mod_change_passwords' => 0, ':g_mod_ban_users' => 0, ':g_read_board' => 1, ':g_view_users' => 1, ':g_post_replies' => 1, ':g_post_topics' => 1, ':g_edit_posts' => 1, ':g_delete_posts' => 1, ':g_delete_topics' => 1, ':g_set_title' => 0, ':g_search' => 1, ':g_search_users' => 1, ':g_send_email' => 1, ':g_post_flood' => 60, ':g_search_flood' => 30, ':g_email_flood' => 60, ':g_report_flood' => 60);
 	$query->run($params);
 	unset($params);
 
