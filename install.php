@@ -599,6 +599,7 @@ else
 	$query->field('ban_creator', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
 
 	$query->index('username_idx', array('username'.($db_type == 'MySQL' ? '(25)' : '')));
+	$query->index('PRIMARY', array('id'));
 	$query->run();
 
 	unset ($query);
@@ -607,6 +608,7 @@ else
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
 	$query->field('cat_name', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80), '\'New Category\'', false);
 	$query->field('disp_position', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false);
+	$query->index('PRIMARY', array('id'));
 	$query->run();
 
 	unset ($query);
@@ -615,26 +617,28 @@ else
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
 	$query->field('search_for', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(60), '\'\'', false);
 	$query->field('replace_with', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(60), '\'\'', false);
+	$query->index('PRIMARY', array('id'));
 	$query->run();
 
 	unset ($query);
 
 	$query = $db->createTable('config');
-	$query->field('conf_name', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(255), '\'\'', true, Flux_Database_Query_Helper_TableColumn::KEY_PRIMARY);
+	$query->field('conf_name', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(255), '\'\'', true);
 	$query->field('conf_value', Flux_Database_Query_Helper_TableColumn::TYPE_TEXT);
+
+	$query->index('PRIMARY', array('conf_name'));
 	$query->run();
 
 	unset ($query);
 
-	// TODO: before was two primary keys for forum_perms?
-	// 'PRIMARY KEY'	=> array('group_id', 'forum_id')
-
 	$query = $db->createTable('forum_perms');
-	$query->field('group_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', true, Flux_Database_Query_Helper_TableColumn::KEY_PRIMARY);
+	$query->field('group_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', true);
 	$query->field('forum_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false);
 	$query->field('read_forum', Flux_Database_Query_Helper_TableColumn::TYPE_INT, 1, false); // TINYINT(1)
 	$query->field('post_replies', Flux_Database_Query_Helper_TableColumn::TYPE_INT, 1, false); // TINYINT(1)
 	$query->field('post_topics', Flux_Database_Query_Helper_TableColumn::TYPE_INT, 1, false); // TINYINT(1)
+
+	$query->index('PRIMARY', array('group_id', 'forum_id'));
 	$query->run();
 
 	unset ($query);
@@ -653,6 +657,7 @@ else
 	$query->field('sort_by', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false); // TINYINT(1)
 	$query->field('disp_position', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false);
 	$query->field('cat_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
+	$query->index('PRIMARY', array('id'));
 	$query->run();
 
 	unset ($query);
@@ -681,6 +686,7 @@ else
 	$query->field('g_search_flood', Flux_Database_Query_Helper_TableColumn::TYPE_INT, 30, false); // SMALLINT(6)
 	$query->field('g_email_flood', Flux_Database_Query_Helper_TableColumn::TYPE_INT, 60, false); // SMALLINT(6)
 	$query->field('g_report_flood', Flux_Database_Query_Helper_TableColumn::TYPE_INT, 60); // SMALLINT(6)
+	$query->index('PRIMARY', array('g_id'));
 	$query->run();
 
 	unset ($query);
@@ -715,6 +721,7 @@ else
 
 	$query->index('topic_id_idx', array('topic_id'));
 	$query->index('multi_idx', array('poster_id', 'topic_id'));
+	$query->index('PRIMARY', array('id'));
 	$query->run();
 
 	unset ($query);
@@ -723,6 +730,7 @@ else
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
 	$query->field('rank', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50), '\'\'', false);
 	$query->field('min_posts', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\''); // MEDIUMINT(8) UNSIGNED
+	$query->index('PRIMARY', array('id'));
 	$query->run();
 
 	unset ($query);
@@ -739,6 +747,7 @@ else
 	$query->field('zapped_by', Flux_Database_Query_Helper_TableColumn::TYPE_UINT);
 
 	$query->index('zapped_idx', array('zapped'));
+	$query->index('PRIMARY', array('id'));
 	$query->run();
 
 	unset ($query);
@@ -748,6 +757,7 @@ else
 	$query->field('ident', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '\'\'');
 	$query->field('search_data', Flux_Database_Query_Helper_TableColumn::TYPE_TEXT); // MEDIUMTEXT
 	$query->index('ident_idx', array('ident'.($db_type == 'MySQL' ? '(8)' : '')));
+	$query->index('PRIMARY', array('id'));
 	$query->run();
 
 	unset ($query);
@@ -766,22 +776,25 @@ else
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
 	$query->field('word', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(20), '\'\'');
 	// TODO: 'collation'		=> 'bin'
-	//$field->key = Flux_Database_Query_Helper_TableColumn::KEY_PRIMARY; // can't set the second primary key? (first is the id)
 	$query->index('id_idx', array('id'));
-	$query->run();
+	$query->index('PRIMARY', array('id', 'word'));
 
-//	if ($db_type == 'sqlite')
-//	{
-//		$schema['PRIMARY KEY'] = array('id');
-//		$schema['UNIQUE KEYS'] = array('word_idx'	=> array('word'));
-//	}
+	if ($db_type == 'SQLite')
+	{
+		$query->primary = array('id');
+		// TODO: change unique keys for sqlite
+		//$schema['UNIQUE KEYS'] = array('word_idx'	=> array('word'));
+	}
+
+	$query->run();
 
 	unset ($query);
 
 	$query = $db->createTable('topic_subscriptions');
 	$query->field('user_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
 	$query->field('topic_id', Flux_Database_Query_Helper_TableColumn::TYPE_UINT, '\'0\'', false);
-	// TODO: 'PRIMARY KEY'	=> array('user_id', 'topic_id')
+
+	$query->index('PRIMARY', array('user_id', 'topic_id'));
 	$query->run();
 
 	unset ($query);
@@ -789,7 +802,8 @@ else
 	$query = $db->createTable('forum_subscriptions');
 	$query->field('user_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'');
 	$query->field('forum_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'');
-	// TODO: 'PRIMARY KEY'	=> array('user_id', 'forum_id')
+
+	$query->index('PRIMARY', array('user_id', 'forum_id'));
 	$query->run();
 
 	unset ($query);
@@ -814,6 +828,7 @@ else
 	$query->index('moved_to_idx', array('moved_to'));
 	$query->index('last_post_idx', array('last_post'));
 	$query->index('first_post_id_idx', array('first_post_id'));
+	$query->index('PRIMARY', array('id'));
 	$query->run();
 
 	unset ($query);
@@ -866,6 +881,7 @@ else
 
 	$query->index('username_idx', array('username'.($db_type == 'MySQL' ? '(25)' : '')), true);
 	$query->index('registered_idx', array('registered'));
+	$query->index('PRIMARY', array('id'));
 	$query->run();
 
 	unset ($query);
