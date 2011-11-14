@@ -28,7 +28,7 @@ require PUN_ROOT.'include/search_idx.php';
 if (isset($_GET['action']) || isset($_GET['search_id']))
 {
 	$action = (isset($_GET['action'])) ? $_GET['action'] : null;
-	$forums = isset($_GET['forums']) ? (is_array($_GET['forums']) ? $_GET['forums'] : explode(',', $_GET['forums'])) : (isset($_GET['forum']) ? array($_GET['forum']) : array());
+	$forums = isset($_GET['forums']) ? (is_array($_GET['forums']) ? $_GET['forums'] : array_filter(explode(',', $_GET['forums']))) : (isset($_GET['forum']) ? array($_GET['forum']) : array());
 	$sort_dir = (isset($_GET['sort_dir']) && $_GET['sort_dir'] == 'DESC') ? 'DESC' : 'ASC';
 
 	$forums = array_map('intval', $forums);
