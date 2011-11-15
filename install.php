@@ -858,7 +858,7 @@ else
 	$query->field('show_img_sig', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 1, false);
 	$query->field('show_avatars', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 1, false);
 	$query->field('show_sig', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 1, false);
-	$query->field('timezone', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(10), '\'0\'', false); // FLOAT
+	$query->field('timezone', Flux_Database_Query_Helper_TableColumn::TYPE_FLOAT, '\'0\'', false);
 	$query->field('dst', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
 	$query->field('time_format', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
 	$query->field('date_format', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
