@@ -22,9 +22,9 @@ if (!$pun_user['is_guest'])
 {
 	$query = $db->select(array('fid' => 't.forum_id AS fid', 'tid' => 't.id AS tid', 'last_post' => 't.last_post'), 'topics AS t');
 
-	$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
+	$query->innerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
-	$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+	$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 	$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.last_post > :last_visit AND t.moved_to IS NULL';
 
@@ -60,9 +60,9 @@ require PUN_ROOT.'header.php';
 // Print the categories and forums
 $query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name', 'forum_desc' => 'f.forum_desc', 'redirect_url' => 'f.redirect_url', 'moderators' => 'f.moderators', 'num_topics' => 'f.num_topics', 'num_posts' => 'f.num_posts', 'last_post' => 'f.last_post', 'last_post_id' => 'f.last_post_id', 'last_poster' => 'f.last_poster'), 'categories AS c');
 
-$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
+$query->innerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
-$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = 'fp.read_forum IS NULL OR fp.read_forum = 1';
 $query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');

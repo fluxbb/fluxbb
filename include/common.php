@@ -10,7 +10,7 @@ if (!defined('PUN_ROOT'))
 	exit('The constant PUN_ROOT must be defined and point to a valid FluxBB installation root directory.');
 
 // Define the version and database revision that this code was written for
-define('FORUM_VERSION', '1.4.6');
+define('FORUM_VERSION', '1.4.7');
 
 define('FORUM_DB_REVISION', 15);
 define('FORUM_SI_REVISION', 2);

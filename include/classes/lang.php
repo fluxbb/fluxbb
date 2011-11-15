@@ -50,7 +50,8 @@ class Flux_Lang
 		$return = array();
 		foreach (glob(self::$langDir.'/*', GLOB_ONLYDIR) as $dir)
 		{
-			$return[] = end(explode('/', $dir));
+			$dirs = explode('/', $dir);
+			$return[] = end($dirs);
 		}
 
 		// TODO: Do we need sorting here?

@@ -296,7 +296,7 @@ if ($action == 'feed')
 		// Fetch topic subject
 		$query = $db->select(array('subject' => 't.subject', 'first_post_id' => 't.first_post_id'), 'topics AS t');
 
-		$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
+		$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 		$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.moved_to IS NULL AND t.id = :topic_id';
 
@@ -327,7 +327,7 @@ if ($action == 'feed')
 		// Fetch $show posts
 		$query = $db->select(array('pid' => 'p.id', 'poster' => 'p.poster', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'posted_id' => 'p.poster_id', 'email_setting' => 'u.email_setting', 'email' => 'u.email', 'poster_email' => 'p.poster_email'), 'posts AS p');
 
-		$query->InnerJoin('u', 'users AS u', 'u.id = p.poster_id');
+		$query->innerJoin('u', 'users AS u', 'u.id = p.poster_id');
 
 		$query->where = 'p.topic_id = :topic_id';
 		$query->order = array('posted' => 'p.posted DESC');
@@ -376,12 +376,12 @@ if ($action == 'feed')
 
 		$post_query = $db->select(array('t.id, t.poster, t.subject, t.posted, t.last_post, t.last_poster, p.message, p.hide_smilies, u.email_setting, u.email, p.poster_id, p.poster_email'), 'topics AS t');
 
-		$post_query->InnerJoin('p', 'posts AS p', 'p.id = '.($order_posted ? 't.first_post_id' : 't.last_post_id');
+		$post_query->innerJoin('p', 'posts AS p', 'p.id = '.($order_posted ? 't.first_post_id' : 't.last_post_id');
 
 		$post_query->joins['u'] = new InnerJoin('users AS u');
 		$post_query->joins['u']->on = 'u.id = p.poster_id');
 
-		$post_query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
+		$post_query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
 		$post_query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND t.moved_to IS NULL';
 		$post_query->order = array('sort' => ($order_posted ? 't.posted' : 't.last_post').' DESC');
@@ -406,7 +406,7 @@ if ($action == 'feed')
 				// Fetch forum name
 				$query = $db->select(array('forum_name' => 'f.forum_name'), 'forums AS f');
 
-				$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+				$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 				$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id';
 

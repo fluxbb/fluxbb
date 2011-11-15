@@ -24,7 +24,7 @@ $lang->load('forum');
 // Fetch some info about the forum
 $query = $db->select(array('forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url', 'moderators' => 'f.moderators', 'num_topics' => 'f.num_topics', 'sort_by' => 'f.sort_by', 'post_topics' => 'fp.post_topics', 'is_subscribed' => '0 AS is_subscribed'), 'forums AS f');
 
-$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id';
 
@@ -35,7 +35,7 @@ if (!$pun_user['is_guest'])
 {
 	$query->fields['is_subscribed'] = 's.user_id AS is_subscribed';
 
-	$query->LeftJoin('s', 'forum_subscriptions AS s', 'f.id = s.forum_id AND s.user_id = :user_id');
+	$query->leftJoin('s', 'forum_subscriptions AS s', 'f.id = s.forum_id AND s.user_id = :user_id');
 
 	$params[':user_id'] = $pun_user['id'];
 }
@@ -180,7 +180,7 @@ if (!empty($topic_ids))
 	{
 		$query->fields['has_posted'] = 'p.poster_id AS has_posted';
 
-		$query->LeftJoin('p', 'posts AS p', 't.id = p.topic_id AND p.poster_id = :user_id');
+		$query->leftJoin('p', 'posts AS p', 't.id = p.topic_id AND p.poster_id = :user_id');
 
 		$query->group = array('t.id', 't.subject', 't.poster', 't.posted', 't.last_post', 't.last_post_id', 't.last_poster', 't.num_views', 't.num_replies', 't.closed', 't.sticky', 't.moved_to', 'p.poster_id');
 

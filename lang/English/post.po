@@ -27,7 +27,7 @@ msgid "No message after censoring"
 msgstr "You must enter a message. After applying censoring filters, your message was empty."
 
 msgid "Too long message"
-msgstr "Posts cannot be longer that %s bytes."
+msgstr "Posts cannot be longer than %s bytes."
 
 msgid "All caps subject"
 msgstr "Subjects cannot contain only capital letters."

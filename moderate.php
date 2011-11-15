@@ -81,9 +81,9 @@ if (isset($_GET['tid']))
 	// Fetch some info about the topic
 	$query = $db->select(array('subject' => 't.subject', 'num_replies' => 't.num_replies', 'first_post_id' => 't.first_post_id', 'forum_id' => 'f.id AS forum_id', 'forum_name' => 'forum_name'), 'topics AS t');
 
-	$query->InnerJoin('f', 'forums AS f', 'f.id = t.forum_id');
+	$query->innerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
-	$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+	$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 	$query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id AND t.id = :topic_id AND t.moved_to IS NULL';
 
@@ -228,7 +228,7 @@ if (isset($_GET['tid']))
 			// Verify that the move to forum ID is valid
 			$query = $db->select(array('one' => '1'), 'forums AS f');
 
-			$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.group_id = :group_id AND fp.forum_id = :forum_id');
+			$query->leftJoin('fp', 'forum_perms AS fp', 'fp.group_id = :group_id AND fp.forum_id = :forum_id');
 
 			$query->where = 'f.redirect_url IS NULL AND (fp.post_topics IS NULL OR fp.post_topics = 1)';
 
@@ -326,9 +326,9 @@ if (isset($_GET['tid']))
 
 		$query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
 
-		$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
+		$query->innerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
-		$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+		$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 		$query->where = '(fp.post_topics IS NULL OR fp.post_topics = 1) AND f.redirect_url IS NULL';
 		$query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
@@ -469,7 +469,7 @@ if (isset($_GET['tid']))
 	// Retrieve the posts (and their respective poster)
 	$query = $db->select(array('title' => 'u.title', 'num_posts' => 'u.num_posts', 'g_id' => 'g.g_id', 'g_user_title' => 'g.g_user_title', 'id' => 'p.id', 'poster' => 'p.poster', 'poster_id' => 'p.poster_id', 'message' => 'p.message', 'hide_smilies' => 'p.hide_smilies', 'posted' => 'p.posted', 'edited' => 'p.edited', 'edited_by' => 'p.edited_by'), 'posts AS p');
 
-	$query->InnerJoin('u', 'users AS u', 'u.id = p.poster_id');
+	$query->innerJoin('u', 'users AS u', 'u.id = p.poster_id');
 
 	$query->Innerjoin('g', 'groups AS g', 'g.g_id = u.group_id');
 
@@ -598,7 +598,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 		// Verify that the move to forum ID is valid
 		$query = $db->select(array('one' => '1'), 'forums AS f');
 
-		$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.group_id = :group_id AND fp.forum_id = :forum_id');
+		$query->leftJoin('fp', 'forum_perms AS fp', 'fp.group_id = :group_id AND fp.forum_id = :forum_id');
 
 		$query->where = 'f.redirect_url IS NULL AND (fp.post_topics IS NULL OR fp.post_topics = 1)';
 
@@ -678,9 +678,9 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 
 	$query = $db->select(array('cid' => 'c.id AS cid', 'cat_name' => 'c.cat_name', 'fid' => 'f.id AS fid', 'forum_name' => 'f.forum_name'), 'categories AS c');
 
-	$query->InnerJoin('f', 'forums AS f', 'c.id = f.cat_id');
+	$query->innerJoin('f', 'forums AS f', 'c.id = f.cat_id');
 
-	$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+	$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 	$query->where = '(fp.post_topics IS NULL OR fp.post_topics = 1) AND f.redirect_url IS NULL';
 	$query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC', 'fposition' => 'f.disp_position ASC');
@@ -1095,7 +1095,7 @@ $lang->load('forum');
 // Fetch some info about the forum
 $query = $db->select(array('forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url', 'num_topics' => 'f.num_topics', 'sort_by' => 'f.sort_by'), 'forums AS f');
 
-$query->LeftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+$query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
 
 $query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id';
 

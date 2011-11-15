@@ -426,7 +426,7 @@ else if (isset($_GET['del_group']))
 	// Check if this group has any members
 	$query = $db->select(array('g_title' => 'g.g_title', 'num_members' => 'COUNT(u.id) AS num_members'), 'groups AS g');
 
-	$query->InnerJoin('u', 'users AS u', 'g.g_id = u.group_id');
+	$query->innerJoin('u', 'users AS u', 'g.g_id = u.group_id');
 
 	$query->where = 'g.g_id = :group_id';
 	$query->group = array('g_id' => 'g.g_id', 'g_title' => 'g.g_title');

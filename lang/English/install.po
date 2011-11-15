@@ -305,7 +305,7 @@ msgid "Maintenance message"
 msgstr "The forums are temporarily down for maintenance. Please try again in a few minutes."
 
 msgid "Test post"
-msgstr "Test post"
+msgstr "Test topic"
 
 msgid "Message"
 msgstr "If you are looking at this (which I guess you are), the install of FluxBB appears to have worked! Now log in and head over to the administration control panel to configure your forum."

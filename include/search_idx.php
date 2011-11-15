@@ -190,7 +190,7 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 
 		$query = $db->select(array('wid' => 'w.id', 'word' => 'w.word', 'subject_match' => 'm.subject_match'), 'search_words AS w');
 
-		$query->InnerJoin('m', 'search_matches AS m', 'w.id = m.word_id');
+		$query->innerJoin('m', 'search_matches AS m', 'w.id = m.word_id');
 
 		$query->where = 'm.post_id = :post_id';
 
