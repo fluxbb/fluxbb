@@ -105,7 +105,7 @@ else if ($action == 'last')
 }
 
 // Fetch some info about the topic
-$query = $db->select(array('subject' => 't.subject', 'closed' => 't.closed', 'num_replies' => 't.num_replies', 'sticky' => 't.sticky', 'first_post_id' => 't.first_post_id', 'forum_id' => 'f.id AS forum_id', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'post_replies' => 'fp.post_replies', 'is_subscribed' => '0 AS is_subscribed'), 'topics AS t');
+$query = $db->select(array('subject' => 't.subject', 'closed' => 't.closed', 'num_replies' => 't.num_replies', 'sticky' => 't.sticky', 'first_post_id' => 't.first_post_id', 'last_post' => 't.last_post', 'forum_id' => 'f.id AS forum_id', 'forum_name' => 'f.forum_name', 'moderators' => 'f.moderators', 'post_replies' => 'fp.post_replies', 'is_subscribed' => '0 AS is_subscribed'), 'topics AS t');
 
 $query->innerJoin('f', 'forums AS f', 'f.id = t.forum_id');
 
@@ -122,7 +122,14 @@ if (!$pun_user['is_guest'])
 
 	$query->leftJoin('s', 'topic_subscriptions AS s', 't.id = s.topic_id AND s.user_id = :user_id');
 
-	$params[':user_id'] = $pun_user['id'];
+	// Topic/forum tracing
+	$query->fields['mark_time'] = 'tt.mark_time';
+	$query->fields['forum_mark_time'] = 'ft.mark_time as forum_mark_time';
+
+	$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :tt_user_id AND t.id = tt.topic_id');
+	$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :ft_user_id AND t.id = ft.forum_id');
+
+	$params[':user_id'] = $params[':tt_user_id'] = $params[':ft_user_id'] = $pun_user['id'];
 }
 
 $result = $query->run($params);
@@ -158,9 +165,20 @@ else
 // Add/update this topic in our list of tracked topics
 if (!$pun_user['is_guest'])
 {
-	$tracked_topics = get_tracked_topics();
-	$tracked_topics['topics'][$id] = time();
-	set_tracked_topics($tracked_topics);
+	// Get topic tracking info
+	if (!isset($topic_tracking_info))
+	{
+		$tmp_topic_data = array($id => $cur_topic);
+		$topic_tracking_info = get_topic_tracking($cur_topic['forum_id'], $id, $tmp_topic_data, array($cur_topic['forum_id'] => $cur_topic['forum_mark_time']));
+		unset($tmp_topic_data);
+	}
+
+	// Only mark topic if it's currently unread. Also make sure we do not set topic tracking back if earlier pages are viewed.
+	if (isset($topic_tracking_info[$id]) && $cur_topic['last_post'] > $topic_tracking_info[$id] && $cur_topic['last_post'] > $topic_tracking_info[$id])
+	{
+		mark_read('topic', $cur_topic['forum_id'], $id, $cur_topic['last_post']);
+		update_forum_tracking_info($cur_topic['forum_id'], $cur_topic['last_post'], (isset($cur_topic['forum_mark_time'])) ? $cur_topic['forum_mark_time'] : false, false);
+	}
 }
 
 

@@ -760,6 +760,141 @@ function set_tracked_topics($tracked_topics)
 }
 
 
+function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, $user_id = 0)
+{
+	global $db, $pun_user;
+
+	if ($mode == 'topic')
+	{
+		if (!$post_time)
+			$post_time = time();
+
+		// Query for updating users last visit time
+		$query = $db->replace(array('mark_time' => ':mark_time', 'forum_id' => ':forum_id'), 'topics_track', array('user_id' => ':user_id', 'topic_id' => ':topic_id'));
+
+		$params = array(':mark_time' => $post_time, ':forum_id' => $forum_id, ':user_id' => $pun_user['id'], ':topic_id' => $topic_id);
+		$query->run($params);
+
+		unset ($query, $params);
+	}
+}
+
+/**
+* Get topic tracking info by using already fetched info
+*/
+function get_topic_tracking($forum_id, $topic_ids, &$rowset, $forum_mark_time)
+{
+	global $pun_user;
+
+	$last_read = array();
+
+	if (!is_array($topic_ids))
+		$topic_ids = array($topic_ids);
+
+	foreach ($topic_ids as $topic_id)
+	{
+		if (!empty($rowset[$topic_id]['mark_time']))
+			$last_read[$topic_id] = $rowset[$topic_id]['mark_time'];
+	}
+
+	$topic_ids = array_diff($topic_ids, array_keys($last_read));
+
+	if (sizeof($topic_ids))
+	{
+		$mark_time = array();
+
+		if (!empty($forum_mark_time[$forum_id]) && $forum_mark_time[$forum_id] !== false)
+			$mark_time[$forum_id] = $forum_mark_time[$forum_id];
+
+		$user_lastmark = (isset($mark_time[$forum_id])) ? $mark_time[$forum_id] : $pun_user['mark_time'];
+
+		foreach ($topic_ids as $topic_id)
+		{
+			$last_read[$topic_id] = $user_lastmark;
+		}
+	}
+
+	return $last_read;
+}
+
+
+function get_unread_topics()
+{
+	global $flux_config, $pun_user, $db;
+
+	$unread_topics = array();
+
+	// Fetch all online list entries that are older than "o_timeout_online"
+	$query = $db->select(array('id' => 't.id', 'last_post' => 't.last_post', 'topic_mark_time' => 'tt.mark_time AS topic_mark_time', 'forum_mark_time' => 'ft.mark_time as forum_mark_time'), 'topics AS t');
+	$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = '.$pun_user['id'].' AND t.id = tt.topic_id');
+	$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = '.$pun_user['id'].' AND t.id = ft.forum_id');
+	$query->where = 't.posted > :mark_time AND (
+				(tt.mark_time IS NOT NULL AND t.last_post > tt.mark_time) OR
+				(tt.mark_time IS NULL AND ft.mark_time IS NOT NULL AND t.last_post > ft.mark_time) OR
+				(tt.mark_time IS NULL AND ft.mark_time IS NULL)
+				)';
+	$query->limit = 1001;
+
+	$params = array(':mark_time' => $pun_user['mark_time']);
+
+	$result = $query->run($params);
+
+	foreach ($result as $cur_topic)
+	{
+		$mark_time = $pun_user['last_mark'];
+		if ($cur_topic['topic_mark_time'])
+			$mark_time = $cur_topic['topic_mark_time'];
+		elseif ($cur_topic['forum_mark_time'])
+			$mark_time = $cur_topic['forum_mark_time'];
+
+		$unread_topics[$cur_topic['id']] = $mark_time;
+	}
+	unset ($result, $query, $params);
+
+	return $unread_topics;
+}
+
+
+function update_forum_tracking_info($forum_id, $forum_last_post_time, $f_mark_time = false, $mark_time_forum = false)
+{
+	global $db, $tracking_topics, $pun_user;
+
+	// Determine the users last forum mark time if not given.
+	if ($mark_time_forum === false)
+		$mark_time_forum = (!empty($f_mark_time)) ? $f_mark_time : $pun_user['mark_time'];
+
+	// Check the forum for any left unread topics.
+	// If there are none, we mark the forum as read.
+	if ($mark_time_forum >= $forum_last_post_time)
+	{
+		// We do not need to mark read, this happened before. Therefore setting this to true
+		$row = true;
+	}
+	else
+	{
+		$query = $db->select(array('id' => 't.id'), 'topics AS t');
+		$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :user_id AND t.id = tt.topic_id');
+		$query->where = 't.id = :forum_id
+				AND t.last_post > :mark_time
+				AND t.moved_to = 0
+				AND (tt.topic_id IS NULL OR tt.mark_time < t.last_post)';
+//		$query->group = 't.id';
+
+		$params = array(':user_id' => $pun_user['id'], ':forum_id' => $forum_id, ':mark_time' => $mark_time_forum);
+
+		$result = $query->run($params);
+		$row = !empty($result);
+	}
+
+	if (!$row)
+	{
+		mark_read('topics', $forum_id);
+		return true;
+	}
+
+	return false;
+}
+
 //
 // Extract array of tracked topics from cookie
 //

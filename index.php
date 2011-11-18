@@ -69,6 +69,14 @@ $query->order = array('cposition' => 'c.disp_position ASC', 'cid' => 'c.id ASC',
 
 $params = array(':group_id' => $pun_user['g_id']);
 
+if (!$pun_user['is_guest'])
+{
+	// Topic/forum tracing
+	$query->fields['mark_time'] = 'ft.mark_time AS forum_mark_time';
+	$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :user_id AND f.id = ft.forum_id');
+	$params[':user_id'] = $pun_user['id'];
+}
+
 $result = $query->run($params);
 
 $cur_category = 0;
@@ -112,20 +120,18 @@ foreach ($result as $cur_forum)
 	$forum_field_new = '';
 	$icon_type = 'icon';
 
-	// Are there new posts since our last visit?
-	if (!$pun_user['is_guest'] && $cur_forum['last_post'] > $pun_user['last_visit'] && (empty($tracked_topics['forums'][$cur_forum['fid']]) || $cur_forum['last_post'] > $tracked_topics['forums'][$cur_forum['fid']]))
-	{
-		// There are new posts in this forum, but have we read all of them already?
-		foreach ($new_topics[$cur_forum['fid']] as $check_topic_id => $check_last_post)
-		{
-			if ((empty($tracked_topics['topics'][$check_topic_id]) || $tracked_topics['topics'][$check_topic_id] < $check_last_post) && (empty($tracked_topics['forums'][$cur_forum['fid']]) || $tracked_topics['forums'][$cur_forum['fid']] < $check_last_post))
-			{
-				$item_status .= ' inew';
-				$forum_field_new = '<span class="newtext">[ <a href="search.php?action=show_new&amp;fid='.$cur_forum['fid'].'">'.$lang->t('New posts').'</a> ]</span>';
-				$icon_type = 'icon icon-new';
 
-				break;
-			}
+	// Are there new posts since our last visit?
+	if (!$pun_user['is_guest'])
+	{
+		 if (empty($cur_forum['mark_time']))
+			$cur_forum['mark_time'] = $pun_user['mark_time'];
+
+		if ($cur_forum['last_post'] > $cur_forum['mark_time'])
+		{
+			$item_status .= ' inew';
+			$forum_field_new = '<span class="newtext">[ <a href="search.php?action=show_new&amp;fid='.$cur_forum['fid'].'">'.$lang->t('New posts').'</a> ]</span>';
+			$icon_type = 'icon icon-new';
 		}
 	}
 

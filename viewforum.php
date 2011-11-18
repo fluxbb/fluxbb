@@ -37,7 +37,12 @@ if (!$pun_user['is_guest'])
 
 	$query->leftJoin('s', 'forum_subscriptions AS s', 'f.id = s.forum_id AND s.user_id = :user_id');
 
-	$params[':user_id'] = $pun_user['id'];
+	// Topic/forum tracing
+	$query->fields['mark_time'] = 'ft.mark_time AS forum_mark_time';
+
+	$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :ft_user_id AND f.id = ft.forum_id');
+
+	$params[':user_id'] = $params[':ft_user_id'] = $pun_user['id'];
 }
 
 $result = $query->run($params);
@@ -81,8 +86,7 @@ else
 	$post_link = '';
 
 // Get topic/forum tracking data
-if (!$pun_user['is_guest'])
-	$tracked_topics = get_tracked_topics();
+$topic_tracking_info = array();
 
 // Determine the topic offset (based on $_GET['p'])
 $num_pages = ceil($cur_forum['num_topics'] / $pun_user['disp_topics']);
@@ -168,6 +172,11 @@ if (!empty($topic_ids))
 	foreach ($topic_ids as $key => $value)
 		$topic_ids[$key] = $value['id'];
 
+	if (!$pun_user['is_guest'])
+		$topic_tracking_info = get_topic_tracking($id, $topic_ids, $rowset, array($id => $cur_forum['forum_mark_time']), false);
+
+		print_r($topic_tracking_info);
+
 	// Fetch list of topics to display on this page
 	$query = $db->select(array('has_posted' => '0 AS has_posted', 'tid' => 't.id', 'subject' => 't.subject', 'poster' => 't.poster', 'posted' => 't.posted', 'last_post' => 't.last_post', 'last_post_id' => 't.last_post_id', 'last_poster' => 't.last_poster', 'num_views' => 't.num_views', 'num_replies' => 't.num_replies', 'closed' => 't.closed', 'sticky' => 't.sticky', 'moved_to' => 't.moved_to'), 'topics AS t');
 	$query->where = 't.id IN :tids';
@@ -190,6 +199,7 @@ if (!empty($topic_ids))
 	$topic_count = 0;
 
 	$result = $query->run($params);
+
 	foreach ($result as $cur_topic)
 	{
 		++$topic_count;
@@ -226,7 +236,7 @@ if (!empty($topic_ids))
 			$item_status .= ' iclosed';
 		}
 
-		if (!$pun_user['is_guest'] && $cur_topic['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$cur_topic['id']]) || $tracked_topics['topics'][$cur_topic['id']] < $cur_topic['last_post']) && (!isset($tracked_topics['forums'][$id]) || $tracked_topics['forums'][$id] < $cur_topic['last_post']) && $cur_topic['moved_to'] == null)
+		if (!$pun_user['is_guest'] && (isset($topic_tracking_info[$cur_topic['id']]) && $cur_topic['last_post'] > $topic_tracking_info[$cur_topic['id']]) && $cur_topic['moved_to'] == null)
 		{
 			$item_status .= ' inew';
 			$icon_type = 'icon icon-new';
