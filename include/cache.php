@@ -20,6 +20,8 @@ function generate_config_cache()
 
 	// Get the forum config from the DB
 	$result = $db->query('SELECT * FROM '.$db->prefix.'config', true) or error('Unable to fetch forum config', __FILE__, __LINE__, $db->error());
+
+	$output = array();
 	while ($cur_config_item = $db->fetch_row($result))
 		$output[$cur_config_item[0]] = $cur_config_item[1];
 
