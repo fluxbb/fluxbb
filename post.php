@@ -117,7 +117,7 @@ if (isset($_POST['form_sent']))
 		// Load the register.php/prof_reg.php language files
 		$lang->load('prof_reg');
 		$lang->load('register');
-		
+
 		// It's a guest, so we have to validate the username
 		check_username($username);
 
@@ -362,7 +362,7 @@ if (isset($_POST['form_sent']))
 		else if ($fid)
 		{
 			// Create the topic
-			$query = $db->insert(array('poster' => ':poster', 'subject' => ':subject', 'poster' => ':now', 'last_post' => ':now', 'last_poster' => ':last_poster', 'sticky' => ':sticky', 'forum_id' => ':forum_id'), 'topics');
+			$query = $db->insert(array('poster' => ':poster', 'subject' => ':subject', 'posted' => ':now', 'last_post' => ':now', 'last_poster' => ':last_poster', 'sticky' => ':sticky', 'forum_id' => ':forum_id'), 'topics');
 			$params = array(':poster' => $username, ':subject' => $subject, ':now' => $now, ':last_poster' => $username, ':sticky' => $stick_topic, ':forum_id' => $fid);
 
 			$query->run($params);
