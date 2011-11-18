@@ -353,18 +353,13 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			$current = strtolower($current);
 
 		// This is if we are currently in a tag which escapes other bbcode such as code
-		// We keep a cound of ignored bbcodes (code tags) so we can nest them, but
+		// We keep a count of ignored bbcodes (code tags) so we can nest them, but
 		// only balanced sets of tags can be nested
 		if ($current_ignore)
 		{
 			// Increase the current ignored tags counter
 			if ('['.$current_ignore.']' == $current)
-			{
-				if (!isset($count_ignored[$current_tag]))
-					$count_ignored[$current_tag] = 2;
-				else
-					$count_ignored[$current_tag]++;
-			}
+				$count_ignored[$current_tag]++;
 
 			// Decrease the current ignored tags counter
 			if ('[/'.$current_ignore.']' == $current)
@@ -532,6 +527,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			{
 				// It's an ignore tag so we don't need to worry about what's inside it
 				$current_ignore = $current_tag;
+				$count_ignored[$current_tag] = 1;
 				$new_text .= $current;
 				continue;
 			}
