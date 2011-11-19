@@ -25,7 +25,7 @@ $query->run();
 unset ($query);
 
 $query = $db->addField('users');
-$query->field('mark_time', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'');
+$query->field('last_mark', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'');
 $query->run();
 
 unset ($query);

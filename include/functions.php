@@ -764,70 +764,84 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 {
 	global $db, $pun_user;
 
-	if ($mode == 'topics')
+	if ($mode == 'all')
+	{
+		if ($forum_id === false || empty($forum_id))
+		{
+			$query = $db->delete('topics_track');
+			$query->where = 'user_id = :user_id ';
+
+			$params = array(':user_id' => $pun_user['id']);
+			$query->run($params);
+
+			unset ($query, $params);
+
+			$query = $db->delete('forums_track');
+			$query->where = 'user_id = :user_id ';
+
+			$params = array(':user_id' => $pun_user['id']);
+			$query->run($params);
+
+			unset ($query, $params);
+
+			$query = $db->update(array('last_mark' => ':last_mark'), 'users');
+			$query->where = 'user_id = :user_id';
+
+			$params = array(':last_mark' => time(), ':user_id' => $pun_user['id']);
+			$query->run($params);
+
+			unset ($query, $params);
+		}
+	}
+	else if ($mode == 'topics')
 	{
 		// Mark all topics in forums read
 		if (!is_array($forum_id))
 			$forum_id = array($forum_id);
 
-		// Add 0 to forums array to mark global announcements correctly
-		// $forum_id[] = 0;
-
 		// Query for deleting an online entry
 		$query = $db->delete('topics_track');
-		$query->where = 'user_id = :user_id AND forum_id = IN (:forum_ids)';
+		$query->where = 'user_id = :user_id AND forum_id IN (:forum_ids)';
 
 		$params = array(':user_id' => $pun_user['id'], ':forum_ids' => $forum_id);
 		$query->run($params);
 
 		unset ($query, $params);
 
-	//	$query = $db->select(array('forum_id' => 'forum_id'), 'forums_track');
-//		$query->where = 'user_id = :user_id AND forum_id = IN (:forum_ids)';
+		$query = $db->select(array('forum_id' => 'forum_id'), 'forums_track');
+		$query->where = 'user_id = :user_id AND forum_id IN (:forum_ids)';
 
-//		$params = array(':user_id' => $pun_user['id'], ':forum_ids' => $forum_id);
-//		$result = $query->run($params);
+		$params = array(':user_id' => $pun_user['id'], ':forum_ids' => $forum_id);
+		$result = $query->run($params);
 
-//		unset ($query, $params);
+		$forums_update = array();
+		foreach ($result as $cur_forum)
+			$forums_update[] = $cur_forum['forum_id'];
 
-// TODO:
-		$sql = 'SELECT forum_id
-			FROM ' . FORUMS_TRACK_TABLE . "
-			WHERE user_id = {$user->data['user_id']}
-				AND " . $db->sql_in_set('forum_id', $forum_id);
-		$result = $db->sql_query($sql);
+		unset ($query, $params, $result);
 
-		$sql_update = array();
-		while ($row = $db->sql_fetchrow($result))
+		if (!empty($forums_update))
 		{
-			$sql_update[] = (int) $row['forum_id'];
-		}
-		$db->sql_freeresult($result);
+			$query = $db->update(array('mark_time' => ':mark_time'), 'forums_track');
+			$query->where = 'user_id = :user_id AND forum_id IN (:forum_ids)';
 
-		if (sizeof($sql_update))
-		{
-			$sql = 'UPDATE ' . FORUMS_TRACK_TABLE . '
-				SET mark_time = ' . time() . "
-				WHERE user_id = {$user->data['user_id']}
-					AND " . $db->sql_in_set('forum_id', $sql_update);
-			$db->sql_query($sql);
+			$params = array(':mark_time' => time(), ':user_id' => $pun_user['id'], ':forum_ids' => $forums_update);
+			$query->run($params);
+
+			unset ($query, $params);
 		}
 
-		if ($sql_insert = array_diff($forum_id, $sql_update))
+		if ($forums_insert = array_diff($forum_id, $forums_update))
 		{
-			$sql_ary = array();
-			foreach ($sql_insert as $f_id)
+			$query = $db->insert(array('user_id' => ':user_id', 'forum_id' => ':forum_id', 'mark_time' => ':mark_time'), 'forums_track');
+			foreach ($forums_insert as $fid)
 			{
-				$sql_ary[] = array(
-					'user_id'	=> (int) $user->data['user_id'],
-					'forum_id'	=> (int) $f_id,
-					'mark_time'	=> time()
-				);
+				$params = array(':user_id' => $pun_user['id'], ':forum_id' => $fid, ':mark_time' => time());
+				$query->run($params);
 			}
 
-			$db->sql_multi_insert(FORUMS_TRACK_TABLE, $sql_ary);
+			unset ($query, $params);
 		}
-
 
 		return;
 	}
@@ -873,7 +887,7 @@ function get_topic_tracking($forum_id, $topic_ids, &$rowset, $forum_mark_time)
 		if (!empty($forum_mark_time[$forum_id]) && $forum_mark_time[$forum_id] !== false)
 			$mark_time[$forum_id] = $forum_mark_time[$forum_id];
 
-		$user_lastmark = (isset($mark_time[$forum_id])) ? $mark_time[$forum_id] : $pun_user['mark_time'];
+		$user_lastmark = (isset($mark_time[$forum_id])) ? $mark_time[$forum_id] : $pun_user['last_mark'];
 
 		foreach ($topic_ids as $topic_id)
 		{
@@ -895,14 +909,14 @@ function get_unread_topics()
 	$query = $db->select(array('id' => 't.id', 'last_post' => 't.last_post', 'topic_mark_time' => 'tt.mark_time AS topic_mark_time', 'forum_mark_time' => 'ft.mark_time as forum_mark_time'), 'topics AS t');
 	$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = '.$pun_user['id'].' AND t.id = tt.topic_id');
 	$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = '.$pun_user['id'].' AND t.id = ft.forum_id');
-	$query->where = 't.posted > :mark_time AND (
+	$query->where = 't.posted > :last_mark AND (
 				(tt.mark_time IS NOT NULL AND t.last_post > tt.mark_time) OR
 				(tt.mark_time IS NULL AND ft.mark_time IS NOT NULL AND t.last_post > ft.mark_time) OR
 				(tt.mark_time IS NULL AND ft.mark_time IS NULL)
 				)';
 	$query->limit = 1001;
 
-	$params = array(':mark_time' => $pun_user['mark_time']);
+	$params = array(':last_mark' => $pun_user['last_mark']);
 
 	$result = $query->run($params);
 
@@ -928,7 +942,7 @@ function update_forum_tracking_info($forum_id, $forum_last_post_time, $f_mark_ti
 
 	// Determine the users last forum mark time if not given.
 	if ($mark_time_forum === false)
-		$mark_time_forum = (!empty($f_mark_time)) ? $f_mark_time : $pun_user['mark_time'];
+		$mark_time_forum = (!empty($f_mark_time)) ? $f_mark_time : $pun_user['last_mark'];
 
 	// Check the forum for any left unread topics.
 	// If there are none, we mark the forum as read.
@@ -939,11 +953,11 @@ function update_forum_tracking_info($forum_id, $forum_last_post_time, $f_mark_ti
 	}
 	else
 	{
-		$query = $db->select(array('id' => 't.id'), 'topics AS t');
+		$query = $db->select(array('forum_id' => 't.forum_id'), 'topics AS t');
 		$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :user_id AND t.id = tt.topic_id');
-		$query->where = 't.id = :forum_id
+		$query->where = 't.forum_id = :forum_id
 				AND t.last_post > :mark_time
-				AND t.moved_to = 0
+				AND t.moved_to IS NULL
 				AND (tt.topic_id IS NULL OR tt.mark_time < t.last_post)';
 //		$query->group = 't.id';
 

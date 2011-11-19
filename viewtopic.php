@@ -161,27 +161,6 @@ else
 	$post_link = "\t\t\t".'<p class="postlink conr">'.$post_link.'</p>'."\n";
 }
 
-
-// Add/update this topic in our list of tracked topics
-if (!$pun_user['is_guest'])
-{
-	// Get topic tracking info
-	if (!isset($topic_tracking_info))
-	{
-		$tmp_topic_data = array($id => $cur_topic);
-		$topic_tracking_info = get_topic_tracking($cur_topic['forum_id'], $id, $tmp_topic_data, array($cur_topic['forum_id'] => $cur_topic['forum_mark_time']));
-		unset($tmp_topic_data);
-	}
-
-	// Only mark topic if it's currently unread. Also make sure we do not set topic tracking back if earlier pages are viewed.
-	if (isset($topic_tracking_info[$id]) && $cur_topic['last_post'] > $topic_tracking_info[$id] && $cur_topic['last_post'] > $topic_tracking_info[$id])
-	{
-		mark_read('topic', $cur_topic['forum_id'], $id, $cur_topic['last_post']);
-		update_forum_tracking_info($cur_topic['forum_id'], $cur_topic['last_post'], (isset($cur_topic['forum_mark_time'])) ? $cur_topic['forum_mark_time'] : false, false);
-	}
-}
-
-
 // Determine the post offset (based on $_GET['p'])
 $num_pages = ceil(($cur_topic['num_replies'] + 1) / $pun_user['disp_posts']);
 
@@ -293,6 +272,28 @@ $query->order = array('pid' => 'p.id ASC');
 $params = array(':pids' => $post_ids);
 
 $result = $query->run($params);
+
+// Add/update this topic in our list of tracked topics
+if (!$pun_user['is_guest'])
+{
+	// Get topic tracking info
+	if (!isset($topic_tracking_info))
+	{
+		$tmp_topic_data = array($id => $cur_topic);
+		$topic_tracking_info = get_topic_tracking($cur_topic['forum_id'], $id, $tmp_topic_data, array($cur_topic['forum_id'] => $cur_topic['forum_mark_time']));
+		unset($tmp_topic_data);
+	}
+
+	$last_read_post = $result[count($result) - 1]['posted'];
+
+	// Only mark topic if it's currently unread. Also make sure we do not set topic tracking back if earlier pages are viewed.
+	if (isset($topic_tracking_info[$id]) && $last_read_post > $topic_tracking_info[$id] && $last_read_post > $topic_tracking_info[$id])
+	{
+		mark_read('topic', $cur_topic['forum_id'], $id, $last_read_post);
+		update_forum_tracking_info($cur_topic['forum_id'], $last_read_post, (isset($cur_topic['forum_mark_time'])) ? $cur_topic['forum_mark_time'] : false, false);
+	}
+}
+
 foreach ($result as $cur_post)
 {
 	$post_count++;

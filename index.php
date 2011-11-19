@@ -124,10 +124,10 @@ foreach ($result as $cur_forum)
 	// Are there new posts since our last visit?
 	if (!$pun_user['is_guest'])
 	{
-		 if (empty($cur_forum['mark_time']))
-			$cur_forum['mark_time'] = $pun_user['mark_time'];
+		 if (empty($cur_forum['forum_mark_time']))
+			$cur_forum['forum_mark_time'] = $pun_user['last_mark'];
 
-		if ($cur_forum['last_post'] > $cur_forum['mark_time'])
+		if ($cur_forum['last_post'] > $cur_forum['forum_mark_time'])
 		{
 			$item_status .= ' inew';
 			$forum_field_new = '<span class="newtext">[ <a href="search.php?action=show_new&amp;fid='.$cur_forum['fid'].'">'.$lang->t('New posts').'</a> ]</span>';
