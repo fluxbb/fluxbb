@@ -143,7 +143,8 @@ if (isset($_POST['form_sent']))
 	// Make sure we got a valid language string
 	if (isset($_POST['language']))
 	{
-		if (!Flux_Lang::languageExists($_POST['language']))
+		$language = $_POST['language'];
+		if (!Flux_Lang::languageExists($language))
 			message($lang->t('Bad request'));
 	}
 	else
