@@ -281,13 +281,6 @@ if (!$pun_user['is_guest'])
 		$topic_tracking_info = get_topic_tracking($cur_topic['forum_id'], $id, array($id => $cur_topic), array($cur_topic['forum_id'] => $cur_topic['forum_mark_time']));
 
 	$max_post_time = $result[count($result) - 1]['posted'];
-
-	// Only mark topic if it's currently unread. Also make sure we do not set topic tracking back if earlier pages are viewed.
-	if (isset($topic_tracking_info[$id]) && $cur_topic['last_post'] > $topic_tracking_info[$id] && $max_post_time > $topic_tracking_info[$id])
-	{
-		mark_read('topic', $cur_topic['forum_id'], $id, $max_post_time);
-		update_forum_tracking_info($cur_topic['forum_id'], $cur_topic['last_post'], (isset($cur_topic['forum_mark_time'])) ? $cur_topic['forum_mark_time'] : false);
-	}
 }
 
 foreach ($result as $cur_post)
@@ -299,6 +292,7 @@ foreach ($result as $cur_post)
 	$post_actions = array();
 	$is_online = '';
 	$signature = '';
+	$icon_type = 'icon';
 
 	// If the poster is a registered user
 	if ($cur_post['poster_id'] > 1)
@@ -404,6 +398,18 @@ foreach ($result as $cur_post)
 		$post_actions[] = '<li class="postquote"><span><a href="post.php?tid='.$id.'&amp;qid='.$cur_post['id'].'">'.$lang->t('Quote').'</a></span></li>';
 	}
 
+	if (!$pun_user['is_guest'] && (isset($topic_tracking_info[$id]) && $cur_post['posted'] > $topic_tracking_info[$id]))
+	{
+		$item_status = 'inew';
+		$icon_type = 'icon icon-new';
+		$icon_text = $lang->t('New icon');
+	}
+	else
+	{
+		$item_status = '';
+		$icon_text = '<!-- -->';
+	}
+
 	// Perform the main parsing of the message (BBCode, smilies, censor words etc)
 	$cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
 
@@ -420,8 +426,8 @@ foreach ($result as $cur_post)
 	}
 
 ?>
-<div id="p<?php echo $cur_post['id'] ?>" class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if ($cur_post['id'] == $cur_topic['first_post_id']) echo ' firstpost'; ?><?php if ($post_count == 1) echo ' blockpost1'; ?>">
-	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?></span> <a href="viewtopic.php?pid=<?php echo $cur_post['id'].'#p'.$cur_post['id'] ?>"><?php echo format_time($cur_post['posted']) ?></a></span></h2>
+<div id="p<?php echo $cur_post['id'] ?>" class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if ($cur_post['id'] == $cur_topic['first_post_id']) echo ' firstpost'; ?><?php if ($post_count == 1) echo ' blockpost1'; ?><?php if ($item_status != '') echo ' '.$item_status ?>">
+	<h2><span><span class="conr">#<?php echo ($start_from + $post_count) ?></span><div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo $icon_text ?></div></div> &nbsp; <a href="viewtopic.php?pid=<?php echo $cur_post['id'].'#p'.$cur_post['id'] ?>"><?php echo format_time($cur_post['posted']) ?></a></span></h2>
 	<div class="box">
 		<div class="inbox">
 			<div class="postbody">
@@ -542,6 +548,16 @@ if ($pun_config['o_topic_views'] == '1')
 
 	$query->run($params);
 	unset ($query, $params);
+}
+
+if (!$pun_user['is_guest'])
+{
+	// Only mark topic if it's currently unread. Also make sure we do not set topic tracking back if earlier pages are viewed.
+	if (isset($topic_tracking_info[$id]) && $cur_topic['last_post'] > $topic_tracking_info[$id] && $max_post_time > $topic_tracking_info[$id])
+	{
+		mark_read('topic', $cur_topic['forum_id'], $id, $max_post_time);
+		update_forum_tracking_info($cur_topic['forum_id'], $cur_topic['last_post'], (isset($cur_topic['forum_mark_time'])) ? $cur_topic['forum_mark_time'] : false);
+	}
 }
 
 $forum_id = $cur_topic['forum_id'];

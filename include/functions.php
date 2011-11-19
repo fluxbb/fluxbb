@@ -906,7 +906,7 @@ function get_unread_topics()
 	// Fetch all online list entries that are older than "o_timeout_online"
 	$query = $db->select(array('id' => 't.id', 'last_post' => 't.last_post', 'topic_mark_time' => 'tt.mark_time AS topic_mark_time', 'forum_mark_time' => 'ft.mark_time as forum_mark_time'), 'topics AS t');
 	$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :tt_user_id AND t.id = tt.topic_id');
-	$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :ft_user_id AND t.id = ft.forum_id');
+	$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :ft_user_id AND t.forum_id = ft.forum_id');
 	$query->where = 't.posted > :last_mark AND (
 				(tt.mark_time IS NOT NULL AND t.last_post > tt.mark_time) OR
 				(tt.mark_time IS NULL AND ft.mark_time IS NOT NULL AND t.last_post > ft.mark_time) OR
