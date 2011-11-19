@@ -1170,7 +1170,7 @@ function delete_post($post_id, $topic_id)
 	strip_search_index($post_id);
 
 	// Count number of replies in the topic
-	$query = $db->select(array('post_count' => 'COUNT(p.id)'), 'posts AS p');
+	$query = $db->select(array('post_count' => 'COUNT(p.id) AS post_count'), 'posts AS p');
 	$query->where = 'topic_id = :topic_id';
 
 	$params = array(':topic_id' => $topic_id);
