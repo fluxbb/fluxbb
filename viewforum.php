@@ -190,7 +190,7 @@ if (!empty($topic_ids))
 
 	if (!$pun_user['is_guest'])
 	{
-		// Topic/forum tracing
+		// Topic tracking
 		$query->fields['mark_time'] = 'tt.mark_time';
 		$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :tt_user_id AND t.id = tt.topic_id');
 		$params[':tt_user_id'] = $pun_user['id'];
