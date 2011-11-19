@@ -51,16 +51,7 @@ else if ($action == 'markread')
 	if ($pun_user['is_guest'])
 		message($lang->t('No permission'));
 
-	$query = $db->update(array('last_visit' => ':logged'), 'users');
-	$query->where = 'id = :user_id';
-
-	$params = array(':logged' => $pun_user['logged'], ':user_id' => $pun_user['id']);
-
-	$query->run($params);
-	unset ($query, $params);
-
-	// Reset tracked topics
-	set_tracked_topics(null);
+	mark_read('all');
 
 	redirect('index.php', $lang->t('Mark read redirect'));
 }
@@ -76,9 +67,7 @@ else if ($action == 'markforumread')
 	if ($fid < 1)
 		message($lang->t('Bad request'));
 
-	$tracked_topics = get_tracked_topics();
-	$tracked_topics['forums'][$fid] = time();
-	set_tracked_topics($tracked_topics);
+	mark_read('forum', $fid);
 
 	redirect('viewforum.php?id='.$fid, $lang->t('Mark forum read redirect'));
 }

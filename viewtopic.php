@@ -279,9 +279,7 @@ if (!$pun_user['is_guest'])
 	// Get topic tracking info
 	if (!isset($topic_tracking_info))
 	{
-		$tmp_topic_data = array($id => $cur_topic);
-		$topic_tracking_info = get_topic_tracking($cur_topic['forum_id'], $id, $tmp_topic_data, array($cur_topic['forum_id'] => $cur_topic['forum_mark_time']));
-		unset($tmp_topic_data);
+		$topic_tracking_info = get_topic_tracking($cur_topic['forum_id'], $id, array($id => $cur_topic), array($cur_topic['forum_id'] => $cur_topic['forum_mark_time']));
 	}
 
 	$last_read_post = $result[count($result) - 1]['posted'];
@@ -290,7 +288,7 @@ if (!$pun_user['is_guest'])
 	if (isset($topic_tracking_info[$id]) && $last_read_post > $topic_tracking_info[$id] && $last_read_post > $topic_tracking_info[$id])
 	{
 		mark_read('topic', $cur_topic['forum_id'], $id, $last_read_post);
-		update_forum_tracking_info($cur_topic['forum_id'], $last_read_post, (isset($cur_topic['forum_mark_time'])) ? $cur_topic['forum_mark_time'] : false, false);
+		update_forum_tracking_info($cur_topic['forum_id'], $last_read_post, (isset($cur_topic['forum_mark_time'])) ? $cur_topic['forum_mark_time'] : false);
 	}
 }
 

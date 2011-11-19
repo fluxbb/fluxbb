@@ -769,7 +769,7 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 		if ($forum_id === false || empty($forum_id))
 		{
 			$query = $db->delete('topics_track');
-			$query->where = 'user_id = :user_id ';
+			$query->where = 'user_id = :user_id';
 
 			$params = array(':user_id' => $pun_user['id']);
 			$query->run($params);
@@ -777,7 +777,7 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 			unset ($query, $params);
 
 			$query = $db->delete('forums_track');
-			$query->where = 'user_id = :user_id ';
+			$query->where = 'user_id = :user_id';
 
 			$params = array(':user_id' => $pun_user['id']);
 			$query->run($params);
@@ -785,7 +785,7 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 			unset ($query, $params);
 
 			$query = $db->update(array('last_mark' => ':last_mark'), 'users');
-			$query->where = 'user_id = :user_id';
+			$query->where = 'id = :user_id';
 
 			$params = array(':last_mark' => time(), ':user_id' => $pun_user['id']);
 			$query->run($params);
@@ -793,7 +793,7 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 			unset ($query, $params);
 		}
 	}
-	else if ($mode == 'topics')
+	else if ($mode == 'forum')
 	{
 		// Mark all topics in forums read
 		if (!is_array($forum_id))
@@ -842,8 +842,6 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 
 			unset ($query, $params);
 		}
-
-		return;
 	}
 	else if ($mode == 'topic')
 	{
@@ -863,7 +861,7 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 /**
 * Get topic tracking info by using already fetched info
 */
-function get_topic_tracking($forum_id, $topic_ids, &$rowset, $forum_mark_time)
+function get_topic_tracking($forum_id, $topic_ids, $topic_list, $forum_mark_time)
 {
 	global $pun_user;
 
@@ -874,13 +872,13 @@ function get_topic_tracking($forum_id, $topic_ids, &$rowset, $forum_mark_time)
 
 	foreach ($topic_ids as $topic_id)
 	{
-		if (!empty($rowset[$topic_id]['mark_time']))
-			$last_read[$topic_id] = $rowset[$topic_id]['mark_time'];
+		if (!empty($topic_list[$topic_id]['mark_time']))
+			$last_read[$topic_id] = $topic_list[$topic_id]['mark_time'];
 	}
 
 	$topic_ids = array_diff($topic_ids, array_keys($last_read));
 
-	if (sizeof($topic_ids))
+	if (!empty($topic_ids))
 	{
 		$mark_time = array();
 
@@ -907,16 +905,15 @@ function get_unread_topics()
 
 	// Fetch all online list entries that are older than "o_timeout_online"
 	$query = $db->select(array('id' => 't.id', 'last_post' => 't.last_post', 'topic_mark_time' => 'tt.mark_time AS topic_mark_time', 'forum_mark_time' => 'ft.mark_time as forum_mark_time'), 'topics AS t');
-	$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = '.$pun_user['id'].' AND t.id = tt.topic_id');
-	$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = '.$pun_user['id'].' AND t.id = ft.forum_id');
+	$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :tt_user_id AND t.id = tt.topic_id');
+	$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :ft_user_id AND t.id = ft.forum_id');
 	$query->where = 't.posted > :last_mark AND (
 				(tt.mark_time IS NOT NULL AND t.last_post > tt.mark_time) OR
 				(tt.mark_time IS NULL AND ft.mark_time IS NOT NULL AND t.last_post > ft.mark_time) OR
-				(tt.mark_time IS NULL AND ft.mark_time IS NULL)
-				)';
+				(tt.mark_time IS NULL AND ft.mark_time IS NULL))';
 	$query->limit = 1001;
 
-	$params = array(':last_mark' => $pun_user['last_mark']);
+	$params = array(':last_mark' => $pun_user['last_mark'], ':tt_user_id' => $pun_user['id'], ':ft_user_id' => $pun_user['id']);
 
 	$result = $query->run($params);
 
@@ -936,44 +933,37 @@ function get_unread_topics()
 }
 
 
-function update_forum_tracking_info($forum_id, $forum_last_post_time, $f_mark_time = false, $mark_time_forum = false)
+function update_forum_tracking_info($forum_id, $forum_last_post_time, $mark_time_forum = false)
 {
-	global $db, $tracking_topics, $pun_user;
+	global $db, $pun_user;
 
 	// Determine the users last forum mark time if not given.
 	if ($mark_time_forum === false)
-		$mark_time_forum = (!empty($f_mark_time)) ? $f_mark_time : $pun_user['last_mark'];
+		$mark_time_forum = $pun_user['last_mark'];
 
 	// Check the forum for any left unread topics.
 	// If there are none, we mark the forum as read.
 	if ($mark_time_forum >= $forum_last_post_time)
 	{
-		// We do not need to mark read, this happened before. Therefore setting this to true
-		$row = true;
+		// We do not need to mark read, this happened before.
+		return false;
 	}
 	else
 	{
-		$query = $db->select(array('forum_id' => 't.forum_id'), 'topics AS t');
+		$query = $db->select(array('1' => '1'), 'topics AS t');
 		$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :user_id AND t.id = tt.topic_id');
-		$query->where = 't.forum_id = :forum_id
-				AND t.last_post > :mark_time
-				AND t.moved_to IS NULL
-				AND (tt.topic_id IS NULL OR tt.mark_time < t.last_post)';
-//		$query->group = 't.id';
+		$query->where = 't.forum_id = :forum_id AND t.last_post > :mark_time AND t.moved_to IS NULL AND (tt.topic_id IS NULL OR tt.mark_time < t.last_post)';
+		$query->limit = 1;
 
 		$params = array(':user_id' => $pun_user['id'], ':forum_id' => $forum_id, ':mark_time' => $mark_time_forum);
 
 		$result = $query->run($params);
-		$row = !empty($result);
+		if (!empty($result))
+			return false;
 	}
 
-	if (!$row)
-	{
-		mark_read('topics', $forum_id);
-		return true;
-	}
-
-	return false;
+	mark_read('forum', $forum_id);
+	return true;
 }
 
 //
@@ -1123,6 +1113,15 @@ function delete_topic($topic_id)
 
 	// Delete any subscriptions for this topic
 	$query = $db->delete('topic_subscriptions');
+	$query->where = 'topic_id = :topic_id';
+
+	$params = array(':topic_id' => $topic_id);
+
+	$query->run($params);
+	unset($query, $params);
+
+	// Delete topic tracking data
+	$query = $db->delete('topics_track');
 	$query->where = 'topic_id = :topic_id';
 
 	$params = array(':topic_id' => $topic_id);

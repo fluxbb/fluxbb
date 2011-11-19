@@ -85,9 +85,6 @@ if (($cur_forum['post_topics'] == '' && $pun_user['g_post_topics'] == '1') || $c
 else
 	$post_link = '';
 
-// Get topic/forum tracking data
-$topic_tracking_info = array();
-
 // Determine the topic offset (based on $_GET['p'])
 $num_pages = ceil($cur_forum['num_topics'] / $pun_user['disp_topics']);
 
@@ -203,16 +200,15 @@ if (!empty($topic_ids))
 
 	$result = $query->run($params);
 
+	// Get topic tracking data
 	if (!$pun_user['is_guest'])
 	{
-		// Generate topic forum list...
-		$rowset = array();
+		// Generate topic list...
+		$topic_list = array();
 		foreach ($result as $cur_topic)
-			$rowset[$cur_topic['id']] = $cur_topic;
+			$topic_list[$cur_topic['id']] = $cur_topic;
 
-		$topic_tracking_info = get_topic_tracking($id, $topic_ids, $rowset, array($id => $cur_forum['forum_mark_time']), false);
-
-		print_r($topic_tracking_info);
+		$topic_tracking_info = get_topic_tracking($id, $topic_ids, $topic_list, array($id => $cur_forum['forum_mark_time']), false);
 	}
 
 	foreach ($result as $cur_topic)
