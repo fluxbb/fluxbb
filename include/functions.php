@@ -764,7 +764,74 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 {
 	global $db, $pun_user;
 
-	if ($mode == 'topic')
+	if ($mode == 'topics')
+	{
+		// Mark all topics in forums read
+		if (!is_array($forum_id))
+			$forum_id = array($forum_id);
+
+		// Add 0 to forums array to mark global announcements correctly
+		// $forum_id[] = 0;
+
+		// Query for deleting an online entry
+		$query = $db->delete('topics_track');
+		$query->where = 'user_id = :user_id AND forum_id = IN (:forum_ids)';
+
+		$params = array(':user_id' => $pun_user['id'], ':forum_ids' => $forum_id);
+		$query->run($params);
+
+		unset ($query, $params);
+
+	//	$query = $db->select(array('forum_id' => 'forum_id'), 'forums_track');
+//		$query->where = 'user_id = :user_id AND forum_id = IN (:forum_ids)';
+
+//		$params = array(':user_id' => $pun_user['id'], ':forum_ids' => $forum_id);
+//		$result = $query->run($params);
+
+//		unset ($query, $params);
+
+// TODO:
+		$sql = 'SELECT forum_id
+			FROM ' . FORUMS_TRACK_TABLE . "
+			WHERE user_id = {$user->data['user_id']}
+				AND " . $db->sql_in_set('forum_id', $forum_id);
+		$result = $db->sql_query($sql);
+
+		$sql_update = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$sql_update[] = (int) $row['forum_id'];
+		}
+		$db->sql_freeresult($result);
+
+		if (sizeof($sql_update))
+		{
+			$sql = 'UPDATE ' . FORUMS_TRACK_TABLE . '
+				SET mark_time = ' . time() . "
+				WHERE user_id = {$user->data['user_id']}
+					AND " . $db->sql_in_set('forum_id', $sql_update);
+			$db->sql_query($sql);
+		}
+
+		if ($sql_insert = array_diff($forum_id, $sql_update))
+		{
+			$sql_ary = array();
+			foreach ($sql_insert as $f_id)
+			{
+				$sql_ary[] = array(
+					'user_id'	=> (int) $user->data['user_id'],
+					'forum_id'	=> (int) $f_id,
+					'mark_time'	=> time()
+				);
+			}
+
+			$db->sql_multi_insert(FORUMS_TRACK_TABLE, $sql_ary);
+		}
+
+
+		return;
+	}
+	else if ($mode == 'topic')
 	{
 		if (!$post_time)
 			$post_time = time();

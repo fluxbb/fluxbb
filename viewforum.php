@@ -172,11 +172,6 @@ if (!empty($topic_ids))
 	foreach ($topic_ids as $key => $value)
 		$topic_ids[$key] = $value['id'];
 
-	if (!$pun_user['is_guest'])
-		$topic_tracking_info = get_topic_tracking($id, $topic_ids, $rowset, array($id => $cur_forum['forum_mark_time']), false);
-
-		print_r($topic_tracking_info);
-
 	// Fetch list of topics to display on this page
 	$query = $db->select(array('has_posted' => '0 AS has_posted', 'tid' => 't.id', 'subject' => 't.subject', 'poster' => 't.poster', 'posted' => 't.posted', 'last_post' => 't.last_post', 'last_post_id' => 't.last_post_id', 'last_poster' => 't.last_poster', 'num_views' => 't.num_views', 'num_replies' => 't.num_replies', 'closed' => 't.closed', 'sticky' => 't.sticky', 'moved_to' => 't.moved_to'), 'topics AS t');
 	$query->where = 't.id IN :tids';
@@ -196,9 +191,29 @@ if (!empty($topic_ids))
 		$params[':user_id'] = $pun_user['id'];
 	}
 
+	if (!$pun_user['is_guest'])
+	{
+		// Topic/forum tracing
+		$query->fields['mark_time'] = 'tt.mark_time';
+		$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :tt_user_id AND t.id = tt.topic_id');
+		$params[':tt_user_id'] = $pun_user['id'];
+	}
+
 	$topic_count = 0;
 
 	$result = $query->run($params);
+
+	if (!$pun_user['is_guest'])
+	{
+		// Generate topic forum list...
+		$rowset = array();
+		foreach ($result as $cur_topic)
+			$rowset[$cur_topic['id']] = $cur_topic;
+
+		$topic_tracking_info = get_topic_tracking($id, $topic_ids, $rowset, array($id => $cur_forum['forum_mark_time']), false);
+
+		print_r($topic_tracking_info);
+	}
 
 	foreach ($result as $cur_topic)
 	{
