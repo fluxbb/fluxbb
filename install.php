@@ -596,7 +596,7 @@ else
 	$query->field('email', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80));
 	$query->field('message', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(255));
 	$query->field('expire', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED);
-	$query->field('ban_creator', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
+	$query->field('ban_creator', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
 
 	$query->index('username_idx', array('username' => 'username(25)'));
 	$query->index('PRIMARY', array('id'));
@@ -606,8 +606,8 @@ else
 
 	$query = $db->createTable('categories');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
-	$query->field('cat_name', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80), '\'New Category\'', false);
-	$query->field('disp_position', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false);
+	$query->field('cat_name', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80), 'New Category', false);
+	$query->field('disp_position', Flux_Database_Query_Helper_TableColumn::TYPE_INT, 0, false);
 	$query->index('PRIMARY', array('id'));
 	$query->run();
 
@@ -615,15 +615,15 @@ else
 
 	$query = $db->createTable('censoring');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
-	$query->field('search_for', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(60), '\'\'', false);
-	$query->field('replace_with', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(60), '\'\'', false);
+	$query->field('search_for', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(60), '', false);
+	$query->field('replace_with', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(60), '', false);
 	$query->index('PRIMARY', array('id'));
 	$query->run();
 
 	unset ($query);
 
 	$query = $db->createTable('config');
-	$query->field('conf_name', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(255), '\'\'', true);
+	$query->field('conf_name', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(255), '', true);
 	$query->field('conf_value', Flux_Database_Query_Helper_TableColumn::TYPE_TEXT);
 
 	$query->index('PRIMARY', array('conf_name'));
@@ -632,8 +632,8 @@ else
 	unset ($query);
 
 	$query = $db->createTable('forum_perms');
-	$query->field('group_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', true);
-	$query->field('forum_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false);
+	$query->field('group_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT, 0, true);
+	$query->field('forum_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT, 0, false);
 	$query->field('read_forum', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 1, false);
 	$query->field('post_replies', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 1, false);
 	$query->field('post_topics', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 1, false);
@@ -645,18 +645,18 @@ else
 
 	$query = $db->createTable('forums');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
-	$query->field('forum_name', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80), '\'New forum\'', false);
+	$query->field('forum_name', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80), 'New forum', false);
 	$query->field('forum_desc', Flux_Database_Query_Helper_TableColumn::TYPE_TEXT);
 	$query->field('redirect_url', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(100));
 	$query->field('moderators', Flux_Database_Query_Helper_TableColumn::TYPE_TEXT);
-	$query->field('num_topics', Flux_Database_Query_Helper_TableColumn::TYPE_MEDIUMINT_UNSIGNED, '\'0\'', false);
-	$query->field('num_posts', Flux_Database_Query_Helper_TableColumn::TYPE_MEDIUMINT_UNSIGNED, '\'0\'', false);
+	$query->field('num_topics', Flux_Database_Query_Helper_TableColumn::TYPE_MEDIUMINT_UNSIGNED, 0, false);
+	$query->field('num_posts', Flux_Database_Query_Helper_TableColumn::TYPE_MEDIUMINT_UNSIGNED, 0, false);
 	$query->field('last_post', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED);
 	$query->field('last_post_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED);
 	$query->field('last_poster', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200));
-	$query->field('sort_by', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
-	$query->field('disp_position', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'', false);
-	$query->field('cat_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
+	$query->field('sort_by', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
+	$query->field('disp_position', Flux_Database_Query_Helper_TableColumn::TYPE_INT, 0, false);
+	$query->field('cat_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
 	$query->index('PRIMARY', array('id'));
 	$query->run();
 
@@ -664,13 +664,13 @@ else
 
 	$query = $db->createTable('groups');
 	$query->field('g_id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
-	$query->field('g_title', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50), '\'\'', false);
+	$query->field('g_title', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50), '', false);
 	$query->field('g_user_title', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50));
-	$query->field('g_moderator', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
-	$query->field('g_mod_edit_users', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
-	$query->field('g_mod_rename_users', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
-	$query->field('g_mod_change_passwords', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
-	$query->field('g_mod_ban_users', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
+	$query->field('g_moderator', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
+	$query->field('g_mod_edit_users', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
+	$query->field('g_mod_rename_users', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
+	$query->field('g_mod_change_passwords', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
+	$query->field('g_mod_ban_users', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
 	$query->field('g_read_board', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 1, false);
 	$query->field('g_view_users', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 1, false);
 	$query->field('g_post_replies', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 1, false);
@@ -693,9 +693,9 @@ else
 
 	$query = $db->createTable('online');
 	$query->field('user_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 1, false);
-	$query->field('ident', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '\'\'', false);
-	$query->field('logged', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
-	$query->field('idle', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
+	$query->field('ident', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '', false);
+	$query->field('logged', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
+	$query->field('idle', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
 	$query->field('last_post', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED);
 	$query->field('last_search', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED);
 
@@ -708,16 +708,16 @@ else
 
 	$query = $db->createTable('posts');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
-	$query->field('poster', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '\'\'', false);
+	$query->field('poster', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '', false);
 	$query->field('poster_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 1, false);
 	$query->field('poster_ip', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(39));
 	$query->field('poster_email', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80));
 	$query->field('message', Flux_Database_Query_Helper_TableColumn::TYPE_MEDIUMTEXT);
-	$query->field('hide_smilies', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
-	$query->field('posted', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
+	$query->field('hide_smilies', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
+	$query->field('posted', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
 	$query->field('edited', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED);
 	$query->field('edited_by', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200));
-	$query->field('topic_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
+	$query->field('topic_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
 
 	$query->index('topic_id_idx', array('topic_id'));
 	$query->index('multi_idx', array('poster_id', 'topic_id'));
@@ -728,8 +728,8 @@ else
 
 	$query = $db->createTable('ranks');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
-	$query->field('rank', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50), '\'\'', false);
-	$query->field('min_posts', Flux_Database_Query_Helper_TableColumn::TYPE_MEDIUMINT_UNSIGNED, '\'0\'', false);
+	$query->field('rank', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50), '', false);
+	$query->field('min_posts', Flux_Database_Query_Helper_TableColumn::TYPE_MEDIUMINT_UNSIGNED, 0, false);
 	$query->index('PRIMARY', array('id'));
 	$query->run();
 
@@ -737,11 +737,11 @@ else
 
 	$query = $db->createTable('reports');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
-	$query->field('post_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
-	$query->field('topic_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
-	$query->field('forum_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
-	$query->field('reported_by', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
-	$query->field('created', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
+	$query->field('post_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
+	$query->field('topic_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
+	$query->field('forum_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
+	$query->field('reported_by', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
+	$query->field('created', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
 	$query->field('message', Flux_Database_Query_Helper_TableColumn::TYPE_TEXT);
 	$query->field('zapped', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED);
 	$query->field('zapped_by', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED);
@@ -753,8 +753,8 @@ else
 	unset ($query);
 
 	$query = $db->createTable('search_cache');
-	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
-	$query->field('ident', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '\'\'', false);
+	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
+	$query->field('ident', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '', false);
 	$query->field('search_data', Flux_Database_Query_Helper_TableColumn::TYPE_MEDIUMTEXT);
 	$query->index('ident_idx', array('ident' => 'ident(8)'));
 	$query->index('PRIMARY', array('id'));
@@ -763,9 +763,9 @@ else
 	unset ($query);
 
 	$query = $db->createTable('search_matches');
-	$query->field('post_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
-	$query->field('word_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
-	$query->field('subject_match', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
+	$query->field('post_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
+	$query->field('word_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
+	$query->field('subject_match', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
 	$query->index('word_id_idx', array('word_id'));
 	$query->index('post_id_idx', array('post_id'));
 	$query->run();
@@ -774,7 +774,7 @@ else
 
 	$query = $db->createTable('search_words');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
-	$query->field('word', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(20), '\'\'', true, 'bin');
+	$query->field('word', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(20), '', true, 'bin');
 	$query->index('id_idx', array('id'));
 	$query->index('PRIMARY', array('word'));
 
@@ -789,8 +789,8 @@ else
 	unset ($query);
 
 	$query = $db->createTable('topic_subscriptions');
-	$query->field('user_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
-	$query->field('topic_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
+	$query->field('user_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
+	$query->field('topic_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
 
 	$query->index('PRIMARY', array('user_id', 'topic_id'));
 	$query->run();
@@ -798,8 +798,8 @@ else
 	unset ($query);
 
 	$query = $db->createTable('forum_subscriptions');
-	$query->field('user_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'');
-	$query->field('forum_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'');
+	$query->field('user_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0);
+	$query->field('forum_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0);
 
 	$query->index('PRIMARY', array('user_id', 'forum_id'));
 	$query->run();
@@ -808,19 +808,19 @@ else
 
 	$query = $db->createTable('topics');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
-	$query->field('poster', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '\'\'', false);
-	$query->field('subject', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(255), '\'\'', false);
-	$query->field('posted', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
-	$query->field('first_post_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
-	$query->field('last_post', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
-	$query->field('last_post_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
+	$query->field('poster', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '', false);
+	$query->field('subject', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(255), '', false);
+	$query->field('posted', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
+	$query->field('first_post_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
+	$query->field('last_post', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
+	$query->field('last_post_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
 	$query->field('last_poster', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200));
-	$query->field('num_views', Flux_Database_Query_Helper_TableColumn::TYPE_MEDIUMINT_UNSIGNED, '\'0\'', false);
-	$query->field('num_replies', Flux_Database_Query_Helper_TableColumn::TYPE_MEDIUMINT_UNSIGNED, '\'0\'', false);
-	$query->field('closed', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
-	$query->field('sticky', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
+	$query->field('num_views', Flux_Database_Query_Helper_TableColumn::TYPE_MEDIUMINT_UNSIGNED, 0, false);
+	$query->field('num_replies', Flux_Database_Query_Helper_TableColumn::TYPE_MEDIUMINT_UNSIGNED, 0, false);
+	$query->field('closed', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
+	$query->field('sticky', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
 	$query->field('moved_to', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED);
-	$query->field('forum_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
+	$query->field('forum_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
 
 	$query->index('forum_id_idx', array('forum_id'));
 	$query->index('moved_to_idx', array('moved_to'));
@@ -834,10 +834,10 @@ else
 	$query = $db->createTable('users');
 	$query->field('id', Flux_Database_Query_Helper_TableColumn::TYPE_SERIAL);
 	$query->field('group_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 3, false);
-	$query->field('username', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '\'\'', false);
-	$query->field('password', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(40), '\'\'', false);
-	$query->field('email', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80), '\'\'', false);
-	$query->field('title', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50), 'NULL');
+	$query->field('username', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '', false);
+	$query->field('password', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(40), '', false);
+	$query->field('email', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80), '', false);
+	$query->field('title', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(50), NULL);
 	$query->field('realname', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(40));
 	$query->field('url', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(100));
 	$query->field('jabber', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80));
@@ -851,28 +851,27 @@ else
 	$query->field('disp_posts', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT_UNSIGNED);
 
 	$query->field('email_setting', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 1, false);
-	$query->field('notify_with_post', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
-	$query->field('auto_notify', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
+	$query->field('notify_with_post', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
+	$query->field('auto_notify', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
 	$query->field('show_smilies', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 1, false);
 	$query->field('show_img', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 1, false);
 	$query->field('show_img_sig', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 1, false);
 	$query->field('show_avatars', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 1, false);
 	$query->field('show_sig', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 1, false);
-	$query->field('timezone', Flux_Database_Query_Helper_TableColumn::TYPE_FLOAT, '\'0\'', false);
-	$query->field('dst', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
-	$query->field('time_format', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
-	$query->field('date_format', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, '\'0\'', false);
-	// TODO: $db->quote() should not be needed here
-	$query->field('language', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(25), $db->quote($default_lang), false);
-	$query->field('style', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(25), $db->quote($default_style), false);
-	$query->field('num_posts', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
+	$query->field('timezone', Flux_Database_Query_Helper_TableColumn::TYPE_FLOAT, 0, false);
+	$query->field('dst', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
+	$query->field('time_format', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
+	$query->field('date_format', Flux_Database_Query_Helper_TableColumn::TYPE_TINYINT, 0, false);
+	$query->field('language', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(25),$default_lang, false);
+	$query->field('style', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(25), $default_style, false);
+	$query->field('num_posts', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
 	$query->field('last_post', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED);
 	$query->field('last_search', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED);
 	$query->field('last_email_sent', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED);
 	$query->field('last_report_sent', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED);
-	$query->field('registered', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
-	$query->field('registration_ip', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(39), '\'0.0.0.0\'', false);
-	$query->field('last_visit', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'', false);
+	$query->field('registered', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
+	$query->field('registration_ip', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(39), '0.0.0.0', false);
+	$query->field('last_visit', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, 0, false);
 	$query->field('admin_note', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(30));
 	$query->field('activate_string', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80));
 	$query->field('activate_key', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(8));
@@ -926,11 +925,11 @@ else
 	$query->run($params);
 	unset($params);
 
-	$params = array(':g_id' => 3, ':g_title' => $lang->t('Guests'), ':g_user_title' => 0, ':g_moderator' => 0, ':g_mod_edit_users' => 0, ':g_mod_rename_users' => 0, ':g_mod_change_passwords' => 0, ':g_mod_ban_users' => 0, ':g_read_board' => 1, ':g_view_users' => 1, ':g_post_replies' => 0, ':g_post_topics' => 0, ':g_edit_posts' => 0, ':g_delete_posts' => 0, ':g_delete_topics' => 0, ':g_set_title' => 0, ':g_search' => 1, ':g_search_users' => 1, ':g_send_email' => 0, ':g_post_flood' => 60, ':g_search_flood' => 30, ':g_email_flood' => 0, ':g_report_flood' => 0);
+	$params = array(':g_id' => 3, ':g_title' => $lang->t('Guests'), ':g_user_title' => NULL, ':g_moderator' => 0, ':g_mod_edit_users' => 0, ':g_mod_rename_users' => 0, ':g_mod_change_passwords' => 0, ':g_mod_ban_users' => 0, ':g_read_board' => 1, ':g_view_users' => 1, ':g_post_replies' => 0, ':g_post_topics' => 0, ':g_edit_posts' => 0, ':g_delete_posts' => 0, ':g_delete_topics' => 0, ':g_set_title' => 0, ':g_search' => 1, ':g_search_users' => 1, ':g_send_email' => 0, ':g_post_flood' => 60, ':g_search_flood' => 30, ':g_email_flood' => 0, ':g_report_flood' => 0);
 	$query->run($params);
 	unset($params);
 
-	$params = array(':g_id' => 4, ':g_title' => $lang->t('Members'), ':g_user_title' => 0, ':g_moderator' => 0, ':g_mod_edit_users' => 0, ':g_mod_rename_users' => 0, ':g_mod_change_passwords' => 0, ':g_mod_ban_users' => 0, ':g_read_board' => 1, ':g_view_users' => 1, ':g_post_replies' => 1, ':g_post_topics' => 1, ':g_edit_posts' => 1, ':g_delete_posts' => 1, ':g_delete_topics' => 1, ':g_set_title' => 0, ':g_search' => 1, ':g_search_users' => 1, ':g_send_email' => 1, ':g_post_flood' => 60, ':g_search_flood' => 30, ':g_email_flood' => 60, ':g_report_flood' => 60);
+	$params = array(':g_id' => 4, ':g_title' => $lang->t('Members'), ':g_user_title' => NULL, ':g_moderator' => 0, ':g_mod_edit_users' => 0, ':g_mod_rename_users' => 0, ':g_mod_change_passwords' => 0, ':g_mod_ban_users' => 0, ':g_read_board' => 1, ':g_view_users' => 1, ':g_post_replies' => 1, ':g_post_topics' => 1, ':g_edit_posts' => 1, ':g_delete_posts' => 1, ':g_delete_topics' => 1, ':g_set_title' => 0, ':g_search' => 1, ':g_search_users' => 1, ':g_send_email' => 1, ':g_post_flood' => 60, ':g_search_flood' => 30, ':g_email_flood' => 60, ':g_report_flood' => 60);
 	$query->run($params);
 	unset($params);
 
