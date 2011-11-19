@@ -127,7 +127,7 @@ if (!$pun_user['is_guest'])
 	$query->fields['forum_mark_time'] = 'ft.mark_time as forum_mark_time';
 
 	$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :tt_user_id AND t.id = tt.topic_id');
-	$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :ft_user_id AND t.id = ft.forum_id');
+	$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :ft_user_id AND t.forum_id = ft.forum_id');
 
 	$params[':user_id'] = $params[':tt_user_id'] = $params[':ft_user_id'] = $pun_user['id'];
 }
@@ -278,17 +278,15 @@ if (!$pun_user['is_guest'])
 {
 	// Get topic tracking info
 	if (!isset($topic_tracking_info))
-	{
 		$topic_tracking_info = get_topic_tracking($cur_topic['forum_id'], $id, array($id => $cur_topic), array($cur_topic['forum_id'] => $cur_topic['forum_mark_time']));
-	}
 
-	$last_read_post = $result[count($result) - 1]['posted'];
+	$max_post_time = $result[count($result) - 1]['posted'];
 
 	// Only mark topic if it's currently unread. Also make sure we do not set topic tracking back if earlier pages are viewed.
-	if (isset($topic_tracking_info[$id]) && $last_read_post > $topic_tracking_info[$id] && $last_read_post > $topic_tracking_info[$id])
+	if (isset($topic_tracking_info[$id]) && $cur_topic['last_post'] > $topic_tracking_info[$id] && $max_post_time > $topic_tracking_info[$id])
 	{
-		mark_read('topic', $cur_topic['forum_id'], $id, $last_read_post);
-		update_forum_tracking_info($cur_topic['forum_id'], $last_read_post, (isset($cur_topic['forum_mark_time'])) ? $cur_topic['forum_mark_time'] : false);
+		mark_read('topic', $cur_topic['forum_id'], $id, $max_post_time);
+		update_forum_tracking_info($cur_topic['forum_id'], $cur_topic['last_post'], (isset($cur_topic['forum_mark_time'])) ? $cur_topic['forum_mark_time'] : false);
 	}
 }
 

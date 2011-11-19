@@ -933,32 +933,33 @@ function get_unread_topics()
 }
 
 
-function update_forum_tracking_info($forum_id, $forum_last_post_time, $mark_time_forum = false)
+function update_forum_tracking_info($forum_id, $last_post, $mark_time = false)
 {
 	global $db, $pun_user;
 
 	// Determine the users last forum mark time if not given.
-	if ($mark_time_forum === false)
-		$mark_time_forum = $pun_user['last_mark'];
+	if ($mark_time === false)
+		$mark_time = $pun_user['last_mark'];
 
 	// Check the forum for any left unread topics.
 	// If there are none, we mark the forum as read.
-	if ($mark_time_forum >= $forum_last_post_time)
+	if ($mark_time >= $last_post)
 	{
 		// We do not need to mark read, this happened before.
 		return false;
 	}
 	else
 	{
-		$query = $db->select(array('1' => '1'), 'topics AS t');
+		$query = $db->select(array('forum_id' => 't.forum_id'), 'topics AS t');
 		$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :user_id AND t.id = tt.topic_id');
 		$query->where = 't.forum_id = :forum_id AND t.last_post > :mark_time AND t.moved_to IS NULL AND (tt.topic_id IS NULL OR tt.mark_time < t.last_post)';
 		$query->limit = 1;
+		$query->group = array('forum_id' => 't.forum_id');
 
-		$params = array(':user_id' => $pun_user['id'], ':forum_id' => $forum_id, ':mark_time' => $mark_time_forum);
+		$params = array(':user_id' => $pun_user['id'], ':forum_id' => $forum_id, ':mark_time' => $mark_time);
 
 		$result = $query->run($params);
-		if (!empty($result))
+		if (!empty($result[0]['forum_id']))
 			return false;
 	}
 
