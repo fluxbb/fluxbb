@@ -63,9 +63,6 @@ unset ($result, $query, $params);
 if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] == '0' || !array_key_exists($pun_user['username'], $mods_array)))
 	message($lang->t('No permission'));
 
-// Get topic/forum tracking data
-if (!$pun_user['is_guest'])
-	$tracked_topics = get_tracked_topics();
 
 // Load the misc.php language file
 $lang->load('misc');
@@ -1093,13 +1090,15 @@ else if (isset($_GET['unstick']))
 $lang->load('forum');
 
 // Fetch some info about the forum
-$query = $db->select(array('forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url', 'num_topics' => 'f.num_topics', 'sort_by' => 'f.sort_by'), 'forums AS f');
+$query = $db->select(array('forum_name' => 'f.forum_name', 'redirect_url' => 'f.redirect_url', 'num_topics' => 'f.num_topics', 'sort_by' => 'f.sort_by', 'mark_time' => 'ft.mark_time AS forum_mark_time'), 'forums AS f');
 
 $query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = f.id AND fp.group_id = :group_id');
+$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :ft_user_id AND f.id = ft.forum_id');
 
 $query->where = '(fp.read_forum IS NULL OR fp.read_forum = 1) AND f.id = :forum_id';
 
-$params = array(':group_id' => $pun_user['g_id'], ':forum_id' => $fid);
+$params = array(':group_id' => $pun_user['g_id'], ':forum_id' => $fid, 'ft_user_id' => $pun_user['id']);
+
 
 $result = $query->run($params);
 if (empty($result))
@@ -1195,16 +1194,29 @@ if (!empty($topic_ids))
 		$topic_ids[$key] = $value['id'];
 
 	// Select topics
-	$query = $db->select(array('id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to'), 'topics AS t');
+	$query = $db->select(array('id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to, tt.mark_time'), 'topics AS t');
+	$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :tt_user_id AND t.id = tt.topic_id');
 	$query->where = 't.id IN :tids';
 	$query->order = array('sticky' => 't.sticky DESC', 'sort' => $sort_by, 'id' => 't.id DESC');
 
-	$params = array(':tids' => $topic_ids);
+	$params = array(':tids' => $topic_ids, ':tt_user_id' => $pun_user['id']);
 
 	$button_status = '';
 	$topic_count = 0;
 
 	$result = $query->run($params);
+
+	// Get topic tracking data
+	if (!$pun_user['is_guest'])
+	{
+		// Generate topic list...
+		$topic_list = array();
+		foreach ($result as $cur_topic)
+			$topic_list[$cur_topic['id']] = $cur_topic;
+
+		$topic_tracking_info = get_topic_tracking($fid, $topic_ids, $topic_list, array($fid => $cur_forum['forum_mark_time']), false);
+	}
+
 	foreach ($result as $cur_topic)
 	{
 
@@ -1248,7 +1260,7 @@ if (!empty($topic_ids))
 			$item_status .= ' iclosed';
 		}
 
-		if (!$ghost_topic && $cur_topic['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$cur_topic['id']]) || $tracked_topics['topics'][$cur_topic['id']] < $cur_topic['last_post']) && (!isset($tracked_topics['forums'][$fid]) || $tracked_topics['forums'][$fid] < $cur_topic['last_post']))
+		if (!$ghost_topic && isset($topic_tracking_info[$cur_topic['id']]) && $cur_topic['last_post'] > $topic_tracking_info[$cur_topic['id']])
 		{
 			$item_status .= ' inew';
 			$icon_type = 'icon icon-new';

@@ -536,10 +536,6 @@ if (isset($_POST['form_sent']))
 
 			$query->run($params);
 			unset ($query, $params);
-
-			$tracked_topics = get_tracked_topics();
-			$tracked_topics['topics'][$new_tid] = time();
-			set_tracked_topics($tracked_topics);
 		}
 		else
 		{

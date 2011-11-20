@@ -37,8 +37,6 @@ if (!$pun_user['is_guest'])
 		$new_topics[$cur_topic['fid']][$cur_topic['tid']] = $cur_topic['last_post'];
 
 	unset ($query, $params, $result);
-
-	$tracked_topics = get_tracked_topics();
 }
 
 if ($pun_config['o_feed_type'] == '1')

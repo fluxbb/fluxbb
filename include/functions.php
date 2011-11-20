@@ -727,39 +727,6 @@ function generate_page_title($page_title, $p = null)
 }
 
 
-//
-// Save array of tracked topics in cookie
-//
-function set_tracked_topics($tracked_topics)
-{
-	global $flux_config, $pun_config;
-
-	$cookie_data = '';
-	if (!empty($tracked_topics))
-	{
-		// Sort the arrays (latest read first)
-		arsort($tracked_topics['topics'], SORT_NUMERIC);
-		arsort($tracked_topics['forums'], SORT_NUMERIC);
-
-		// Homebrew serialization (to avoid having to run unserialize() on cookie data)
-		foreach ($tracked_topics['topics'] as $id => $timestamp)
-			$cookie_data .= 't'.$id.'='.$timestamp.';';
-		foreach ($tracked_topics['forums'] as $id => $timestamp)
-			$cookie_data .= 'f'.$id.'='.$timestamp.';';
-
-		// Enforce a byte size limit (4096 minus some space for the cookie name - defaults to 4048)
-		if (strlen($cookie_data) > FORUM_MAX_COOKIE_SIZE)
-		{
-			$cookie_data = substr($cookie_data, 0, FORUM_MAX_COOKIE_SIZE);
-			$cookie_data = substr($cookie_data, 0, strrpos($cookie_data, ';')).';';
-		}
-	}
-
-	forum_setcookie($flux_config['cookie']['name'].'_track', $cookie_data, time() + $pun_config['o_timeout_visit']);
-	$_COOKIE[$flux_config['cookie']['name'].'_track'] = $cookie_data; // Set it directly in $_COOKIE as well
-}
-
-
 function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, $user_id = 0)
 {
 	global $db, $pun_user;
@@ -799,7 +766,50 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 		if (!is_array($forum_id))
 			$forum_id = array($forum_id);
 
-		// Query for deleting an online entry
+		// Check whether there are some unread topics
+		$query = $db->select(array('1' => '1'), 'topics AS t');
+		$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :tt_user_id AND t.id = tt.topic_id');
+		$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :ft_user_id AND t.forum_id = ft.forum_id');
+		$query->where = 't.forum_id NOT IN :forum_ids AND t.last_post > :last_mark AND (
+					(tt.mark_time IS NOT NULL AND t.last_post > tt.mark_time) OR
+					(tt.mark_time IS NULL AND ft.mark_time IS NOT NULL AND t.last_post > ft.mark_time) OR
+					(tt.mark_time IS NULL AND ft.mark_time IS NULL))';
+		$query->limit = 1;
+
+		$params = array(':last_mark' => $pun_user['last_mark'], ':tt_user_id' => $pun_user['id'], ':ft_user_id' => $pun_user['id'], ':forum_ids' => $forum_id);
+
+		$result = $query->run($params);
+		unset ($query, $params);
+
+		// If there aren't, delete user's topic and forum tracks and update user's last_mark value
+		if (empty($result))
+		{
+			$query = $db->delete('topics_track');
+			$query->where = 'user_id = :user_id';
+
+			$params = array(':user_id' => $pun_user['id']);
+			$query->run($params);
+			unset ($query, $params);
+
+			$query = $db->delete('forums_track');
+			$query->where = 'user_id = :user_id';
+
+			$params = array(':user_id' => $pun_user['id']);
+			$query->run($params);
+			unset ($query, $params);
+
+			$query = $db->update(array('last_mark' => ':last_mark'), 'users');
+			$query->where = 'id = :user_id';
+
+			$params = array(':last_mark' => time(), ':user_id' => $pun_user['id']);
+			$query->run($params);
+
+			unset ($query, $params);
+			return false;
+		}
+		unset ($result);
+
+		// Delete user's topic track entries
 		$query = $db->delete('topics_track');
 		$query->where = 'user_id = :user_id AND forum_id IN (:forum_ids)';
 
@@ -842,6 +852,7 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 
 			unset ($query, $params);
 		}
+
 	}
 	else if ($mode == 'topic')
 	{
@@ -903,11 +914,11 @@ function get_unread_topics()
 
 	$unread_topics = array();
 
-	// Fetch all online list entries that are older than "o_timeout_online"
-	$query = $db->select(array('id' => 't.id', 'last_post' => 't.last_post', 'topic_mark_time' => 'tt.mark_time AS topic_mark_time', 'forum_mark_time' => 'ft.mark_time as forum_mark_time'), 'topics AS t');
+	// Fetch all unread topics
+	$query = $db->select(array('id' => 't.id', 'topic_mark_time' => 'tt.mark_time AS topic_mark_time', 'forum_mark_time' => 'ft.mark_time as forum_mark_time'), 'topics AS t');
 	$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :tt_user_id AND t.id = tt.topic_id');
 	$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :ft_user_id AND t.forum_id = ft.forum_id');
-	$query->where = 't.posted > :last_mark AND (
+	$query->where = 't.last_post > :last_mark AND (
 				(tt.mark_time IS NOT NULL AND t.last_post > tt.mark_time) OR
 				(tt.mark_time IS NULL AND ft.mark_time IS NOT NULL AND t.last_post > ft.mark_time) OR
 				(tt.mark_time IS NULL AND ft.mark_time IS NULL))';
@@ -950,7 +961,7 @@ function update_forum_tracking_info($forum_id, $last_post, $mark_time = false)
 	}
 	else
 	{
-		$query = $db->select(array('forum_id' => 't.forum_id'), 'topics AS t');
+		$query = $db->select(array('1' => '1'), 'topics AS t');
 		$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :user_id AND t.id = tt.topic_id');
 		$query->where = 't.forum_id = :forum_id AND t.last_post > :mark_time AND t.moved_to IS NULL AND (tt.topic_id IS NULL OR tt.mark_time < t.last_post)';
 		$query->limit = 1;
@@ -966,36 +977,6 @@ function update_forum_tracking_info($forum_id, $last_post, $mark_time = false)
 	mark_read('forum', $forum_id);
 	return true;
 }
-
-//
-// Extract array of tracked topics from cookie
-//
-function get_tracked_topics()
-{
-	global $flux_config;
-
-	$cookie_data = isset($_COOKIE[$flux_config['cookie']['name'].'_track']) ? $_COOKIE[$flux_config['cookie']['name'].'_track'] : false;
-	if (!$cookie_data)
-		return array('topics' => array(), 'forums' => array());
-
-	if (strlen($cookie_data) > 4048)
-		return array('topics' => array(), 'forums' => array());
-
-	// Unserialize data from cookie
-	$tracked_topics = array('topics' => array(), 'forums' => array());
-	$temp = explode(';', $cookie_data);
-	foreach ($temp as $t)
-	{
-		$type = substr($t, 0, 1) == 'f' ? 'forums' : 'topics';
-		$id = intval(substr($t, 1));
-		$timestamp = intval(substr($t, strpos($t, '=') + 1));
-		if ($id > 0 && $timestamp > 0)
-			$tracked_topics[$type][$id] = $timestamp;
-	}
-
-	return $tracked_topics;
-}
-
 
 //
 // Update posts, topics, last_post, last_post_id and last_poster for a forum

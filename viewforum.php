@@ -37,11 +37,9 @@ if (!$pun_user['is_guest'])
 
 	$query->leftJoin('s', 'forum_subscriptions AS s', 'f.id = s.forum_id AND s.user_id = :user_id');
 
-	// Topic/forum tracing
+	// Topic tracking
 	$query->fields['mark_time'] = 'ft.mark_time AS forum_mark_time';
-
 	$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :ft_user_id AND f.id = ft.forum_id');
-
 	$params[':user_id'] = $params[':ft_user_id'] = $pun_user['id'];
 }
 
@@ -247,7 +245,7 @@ if (!empty($topic_ids))
 			$item_status .= ' iclosed';
 		}
 
-		if (!$pun_user['is_guest'] && (isset($topic_tracking_info[$cur_topic['id']]) && $cur_topic['last_post'] > $topic_tracking_info[$cur_topic['id']]) && $cur_topic['moved_to'] == null)
+		if (!$pun_user['is_guest'] && isset($topic_tracking_info[$cur_topic['id']]) && $cur_topic['last_post'] > $topic_tracking_info[$cur_topic['id']] && $cur_topic['moved_to'] == null)
 		{
 			$item_status .= ' inew';
 			$icon_type = 'icon icon-new';

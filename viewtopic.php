@@ -59,15 +59,20 @@ else if ($action == 'new')
 	if (!$pun_user['is_guest'])
 	{
 		// We need to check if this topic has been viewed recently by the user
-		$tracked_topics = get_tracked_topics();
-		$last_viewed = isset($tracked_topics['topics'][$id]) ? $tracked_topics['topics'][$id] : $pun_user['last_visit'];
-
 		$query = $db->select(array('new_pid' => 'MIN(p.id) AS new_pid'), 'posts AS p');
-		$query->where = 'p.topic_id = :tid AND p.posted > :last_viewed';
+		$query->innerJoin('t', 'topics AS t', 't.id = p.topic_id');
+		$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :tt_user_id AND t.id = tt.topic_id');
+		$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :ft_user_id AND t.forum_id = ft.forum_id');
+		$query->where = 'p.topic_id = :tid AND p.posted > :last_mark AND (
+					(tt.mark_time IS NOT NULL AND t.last_post > tt.mark_time) OR
+					(tt.mark_time IS NULL AND ft.mark_time IS NOT NULL AND t.last_post > ft.mark_time) OR
+					(tt.mark_time IS NULL AND ft.mark_time IS NULL))';
+		$query->limit = 1001;
 
-		$params = array(':tid' => $id, ':last_viewed' => $last_viewed);
+		$params = array(':tid' => $id, ':last_mark' => $pun_user['last_mark'], ':tt_user_id' => $pun_user['id'], ':ft_user_id' => $pun_user['id']);
 
 		$result = $query->run($params);
+
 		unset ($query, $params);
 
 		if (!empty($result))
@@ -122,7 +127,7 @@ if (!$pun_user['is_guest'])
 
 	$query->leftJoin('s', 'topic_subscriptions AS s', 't.id = s.topic_id AND s.user_id = :user_id');
 
-	// Topic/forum tracing
+	// Topic tracking
 	$query->fields['mark_time'] = 'tt.mark_time';
 	$query->fields['forum_mark_time'] = 'ft.mark_time as forum_mark_time';
 
@@ -398,7 +403,7 @@ foreach ($result as $cur_post)
 		$post_actions[] = '<li class="postquote"><span><a href="post.php?tid='.$id.'&amp;qid='.$cur_post['id'].'">'.$lang->t('Quote').'</a></span></li>';
 	}
 
-	if (!$pun_user['is_guest'] && (isset($topic_tracking_info[$id]) && $cur_post['posted'] > $topic_tracking_info[$id]))
+	if (!$pun_user['is_guest'] && isset($topic_tracking_info[$id]) && $cur_post['posted'] > $topic_tracking_info[$id])
 	{
 		$item_status = 'inew';
 		$icon_type = 'icon icon-new';
