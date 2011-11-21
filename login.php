@@ -82,7 +82,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		$params = array(':group_id' => $pun_config['o_default_user_group'], ':id' => $cur_user['id']);
 		$query->run($params);
 		unset($query, $params);
-		
+
 		// Regenerate the users info cache
 		$cache->delete('boardstats');
 	}
@@ -100,7 +100,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	pun_setcookie($cur_user['id'], $form_password_hash, $expire);
 
 	// Reset tracked topics
-	set_tracked_topics(null);
+//	set_tracked_topics(null);
 
 	redirect(htmlspecialchars($_POST['redirect_url']), $lang->t('Login redirect'));
 }
@@ -117,20 +117,20 @@ else if ($action == 'out')
 	// Remove user from "users online" list
 	$query = $db->delete('online');
 	$query->where = 'user_id = :user_id';
-	
+
 	$params = array(':user_id' => $pun_user['id']);
-	
+
 	$query->run($params);
 	unset($query, $params);
-	
+
 	// Update last_visit (make sure there's something to update it with)
 	if (isset($pun_user['logged']))
 	{
 		$query = $db->update(array('last_visit' => ':last_visit'), 'users');
 		$query->where = 'id = :id';
-		
+
 		$params = array(':last_visit' => $pun_user['logged'], ':id' => $pun_user['id']);
-		
+
 		$query->run($params);
 		unset($query, $params);
 	}
@@ -163,9 +163,9 @@ else if ($action == 'forget' || $action == 'forget_2')
 		{
 			$query = $db->select(array('id' => 'u.id', 'username' => 'u.username', 'last_email_sent' => 'u.last_email_sent'), 'users AS u');
 			$query->where = 'u.email = :email';
-			
+
 			$params = array(':email' => $email);
-			
+
 			$result = $query->run($params);
 			unset($query, $params);
 
@@ -192,12 +192,12 @@ else if ($action == 'forget' || $action == 'forget_2')
 					// Generate a new password and a new password activation code
 					$new_password = random_pass(8);
 					$new_password_key = random_pass(8);
-					
+
 					$query = $db->update(array('activate_string' => ':activate_string', 'activate_key' => ':activate_key', 'last_email_sent' => ':last_email_sent'), 'users');
 					$query->where = 'id = :id';
-					
+
 					$params = array(':activate_string' => pun_hash($new_password), ':activate_key' => $new_password_key, ':last_email_sent' => time(), ':id' => $cur_hit['id']);
-					
+
 					$query->run($params);
 					unset($params);
 

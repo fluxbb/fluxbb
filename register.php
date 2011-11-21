@@ -168,8 +168,8 @@ if (isset($_POST['form_sent']))
 		$password_hash = pun_hash($password1);
 
 		// Add the user
-		$query = $db->insert(array('username' => ':username', 'group_id' => ':group_id', 'password' => ':password', 'email' => ':email', 'email_setting' => ':email_setting', 'timezone' => ':timezone', 'dst' => ':dst', 'language' => ':language', 'style' => ':style', 'registered' => ':registered', 'registration_ip' => ':registration_ip', 'last_visit' => ':last_visit'), 'users');
-		$params = array(':username' => $username, ':group_id' => $intial_group_id, ':password' => $password_hash, ':email' => $email1, ':email_setting' => $email_setting, ':timezone' => $timezone, ':dst' => $dst, ':language' => $language, ':style' => $pun_config['o_default_style'], ':registered' => $now, ':registration_ip' => get_remote_address(), ':last_visit' => $now);
+		$query = $db->insert(array('username' => ':username', 'group_id' => ':group_id', 'password' => ':password', 'email' => ':email', 'email_setting' => ':email_setting', 'timezone' => ':timezone', 'dst' => ':dst', 'language' => ':language', 'style' => ':style', 'registered' => ':registered', 'registration_ip' => ':registration_ip', 'last_visit' => ':last_visit', 'last_mark' => ':last_mark'), 'users');
+		$params = array(':username' => $username, ':group_id' => $intial_group_id, ':password' => $password_hash, ':email' => $email1, ':email_setting' => $email_setting, ':timezone' => $timezone, ':dst' => $dst, ':language' => $language, ':style' => $pun_config['o_default_style'], ':registered' => $now, ':registration_ip' => get_remote_address(), ':last_visit' => $now, ':last_mark' => $now);
 
 		$query->run($params);
 		$new_uid = $db->insertId();

@@ -148,7 +148,7 @@ function check_cookie(&$pun_user)
 				unset ($query, $params);
 
 				// Reset tracked topics
-				set_tracked_topics(null);
+//				set_tracked_topics(null);
 			}
 			else
 			{
