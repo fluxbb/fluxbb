@@ -20,6 +20,7 @@ $query->field('forum_id', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIG
 $query->field('mark_time', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'');
 
 $query->index('PRIMARY', array('user_id', 'topic_id'));
+$query->index('forum_id_idx', array('forum_id'));
 $query->run();
 
 unset ($query);

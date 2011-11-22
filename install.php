@@ -875,6 +875,7 @@ else
 	$query->field('admin_note', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(30));
 	$query->field('activate_string', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(80));
 	$query->field('activate_key', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(8));
+	$query->field('last_mark', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'');
 
 	$query->index('username_idx', array('username' => 'username(25)'), true);
 	$query->index('registered_idx', array('registered'));
@@ -900,12 +901,7 @@ else
 	$query->field('mark_time', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'');
 
 	$query->index('PRIMARY', array('user_id', 'topic_id'));
-	$query->run();
-
-	unset ($query);
-
-	$query = $db->addField('users');
-	$query->field('last_mark', Flux_Database_Query_Helper_TableColumn::TYPE_INT_UNSIGNED, '\'0\'');
+	$query->index('forum_id_idx', array('forum_id'));
 	$query->run();
 
 	unset ($query);
