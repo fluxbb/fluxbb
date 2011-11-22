@@ -727,42 +727,43 @@ function generate_page_title($page_title, $p = null)
 }
 
 
-function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, $user_id = 0)
+function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0)
 {
 	global $db, $pun_user;
 
 	if ($mode == 'all')
 	{
-		if ($forum_id === false || empty($forum_id))
-		{
-			$query = $db->delete('topics_track');
-			$query->where = 'user_id = :user_id';
+		if ($forum_id !== false || !empty($forum_id))
+			return false;
 
-			$params = array(':user_id' => $pun_user['id']);
-			$query->run($params);
+		$query = $db->delete('topics_track');
+		$query->where = 'user_id = :user_id';
 
-			unset ($query, $params);
+		$params = array(':user_id' => $pun_user['id']);
+		$query->run($params);
 
-			$query = $db->delete('forums_track');
-			$query->where = 'user_id = :user_id';
+		unset ($query, $params);
 
-			$params = array(':user_id' => $pun_user['id']);
-			$query->run($params);
+		$query = $db->delete('forums_track');
+		$query->where = 'user_id = :user_id';
 
-			unset ($query, $params);
+		$params = array(':user_id' => $pun_user['id']);
+		$query->run($params);
 
-			$query = $db->update(array('last_mark' => ':last_mark'), 'users');
-			$query->where = 'id = :user_id';
+		unset ($query, $params);
 
-			$params = array(':last_mark' => time(), ':user_id' => $pun_user['id']);
-			$query->run($params);
+		$query = $db->update(array('last_mark' => ':last_mark'), 'users');
+		$query->where = 'id = :user_id';
 
-			unset ($query, $params);
-		}
+		$params = array(':last_mark' => time(), ':user_id' => $pun_user['id']);
+		$query->run($params);
+
+		unset ($query, $params);
 	}
 	else if ($mode == 'forum')
 	{
 		// Mark all topics in forums read
+		// TODO: Do we need forums array? Will subforums be implemented in 2.0?
 		if (!is_array($forum_id))
 			$forum_id = array($forum_id);
 
@@ -818,40 +819,14 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 
 		unset ($query, $params);
 
-		$query = $db->select(array('forum_id' => 'forum_id'), 'forums_track');
-		$query->where = 'user_id = :user_id AND forum_id IN (:forum_ids)';
-
-		$params = array(':user_id' => $pun_user['id'], ':forum_ids' => $forum_id);
-		$result = $query->run($params);
-
-		$forums_update = array();
-		foreach ($result as $cur_forum)
-			$forums_update[] = $cur_forum['forum_id'];
-
-		unset ($query, $params, $result);
-
-		if (!empty($forums_update))
+		// Update forum last mark value for the current user (or insert when it does not exist)
+		$query = $db->replace(array('mark_time' => ':mark_time'), 'forums_track', array('user_id' => ':user_id', 'forum_id' => ':forum_id'));
+		foreach ($forum_id as $fid)
 		{
-			$query = $db->update(array('mark_time' => ':mark_time'), 'forums_track');
-			$query->where = 'user_id = :user_id AND forum_id IN (:forum_ids)';
-
-			$params = array(':mark_time' => time(), ':user_id' => $pun_user['id'], ':forum_ids' => $forums_update);
+			$params = array(':user_id' => $pun_user['id'], ':forum_id' => $fid, ':mark_time' => time());
 			$query->run($params);
-
-			unset ($query, $params);
 		}
-
-		if ($forums_insert = array_diff($forum_id, $forums_update))
-		{
-			$query = $db->insert(array('user_id' => ':user_id', 'forum_id' => ':forum_id', 'mark_time' => ':mark_time'), 'forums_track');
-			foreach ($forums_insert as $fid)
-			{
-				$params = array(':user_id' => $pun_user['id'], ':forum_id' => $fid, ':mark_time' => time());
-				$query->run($params);
-			}
-
-			unset ($query, $params);
-		}
+		unset ($query, $params);
 
 	}
 	else if ($mode == 'topic')
@@ -859,8 +834,8 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 		if (!$post_time)
 			$post_time = time();
 
-		// Query for updating users last visit time
-		$query = $db->replace(array('mark_time' => ':mark_time', 'forum_id' => ':forum_id'), 'topics_track', array('user_id' => ':user_id', 'topic_id' => ':topic_id'));
+		// Update topic track last mark value (or insert when it does not exist)
+		$query = $db->replace(array('mark_time' => ':mark_time'), 'topics_track', array('user_id' => ':user_id', 'topic_id' => ':topic_id', 'forum_id' => ':forum_id'));
 
 		$params = array(':mark_time' => $post_time, ':forum_id' => $forum_id, ':user_id' => $pun_user['id'], ':topic_id' => $topic_id);
 		$query->run($params);
