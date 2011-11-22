@@ -698,8 +698,8 @@ else
 	$query->field('last_visit', Flux_Database_Query_Helper_TableColumn::TYPE_INT, '\'0\'');
 	$query->field('last_ip', Flux_Database_Query_Helper_TableColumn::TYPE_VARCHAR(200), '\'0.0.0.0\'');
 
-	// TODO: primary key!
-	$query->index('user_id_idx', array('user_id'), true);
+	$query->index('PRIMARY', array('id'));
+	$query->index('user_id_idx', array('user_id'));
 	$query->run();
 
 	unset ($query);
