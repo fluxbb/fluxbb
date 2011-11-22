@@ -243,7 +243,7 @@ if (!empty($forum_actions))
 if ($pun_config['o_users_online'] == '1')
 {
 	// Fetch users session info and generate strings for output
-	$query = $db->select(array('user_id' => 's.user_id', 'username' => 'u.username'), 'sessions AS s');
+	$query = $db->select(array('user_id' => 's.user_id', 'username' => 'u.username'), 'sessions AS s', true);
 
 	$query->InnerJoin('u', 'users AS u', 'u.id = s.user_id');
 
