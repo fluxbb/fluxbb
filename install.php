@@ -982,9 +982,9 @@ else
 		'o_regs_allow'				=> 1,
 		'o_regs_verify'				=> 0,
 		'o_announcement'			=> 0,
-		'o_announcement_message'	=> $lang->t('Announcement'),
+		'o_announcement_message'	=> $lang->t('Enter announcement'),
 		'o_rules'					=> 0,
-		'o_rules_message'			=> $lang->t('Rules'),
+		'o_rules_message'			=> $lang->t('Enter rules'),
 		'o_maintenance'				=> 0,
 		'o_maintenance_message'		=> $lang->t('Maintenance message'),
 		'o_default_dst'				=> 0,
@@ -1016,7 +1016,7 @@ else
 
 	// Insert some other default data
 	$subject = $lang->t('Test post');
-	$message = $lang->t('Message');
+	$message = $lang->t('Test post example');
 
 	$query = $db->insert(array('rank' => ':rank', 'min_posts' => ':min_posts'), 'ranks');
 

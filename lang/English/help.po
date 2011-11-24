@@ -16,7 +16,7 @@ msgstr "Help"
 msgid "produces"
 msgstr "produces"
 
-msgid "BBCode"
+msgid "BBCode help"
 msgstr "BBCode"
 
 msgid "BBCode info 1"
@@ -154,7 +154,7 @@ msgstr "produces a numbered list."
 msgid "produces alpha list"
 msgstr "produces an alphabetically labelled list."
 
-msgid "Smilies"
+msgid "Smilies help"
 msgstr "Smilies"
 
 msgid "Smilies info"

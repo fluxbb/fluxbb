@@ -282,7 +282,7 @@ msgstr "Logout"
 msgid "Logged in as"
 msgstr "Logged in as"
 
-msgid "Admin"
+msgid "Administration"
 msgstr "Administration"
 
 msgid "Last visit"
