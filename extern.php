@@ -376,7 +376,7 @@ if ($action == 'feed')
 
 		$post_query = $db->select(array('t.id, t.poster, t.subject, t.posted, t.last_post, t.last_poster, p.message, p.hide_smilies, u.email_setting, u.email, p.poster_id, p.poster_email'), 'topics AS t');
 
-		$post_query->innerJoin('p', 'posts AS p', 'p.id = '.($order_posted ? 't.first_post_id' : 't.last_post_id');
+		$post_query->innerJoin('p', 'posts AS p', 'p.id = '.($order_posted ? 't.first_post_id' : 't.last_post_id'));
 
 		$post_query->joins['u'] = new InnerJoin('users AS u');
 		$post_query->joins['u']->on = 'u.id = p.poster_id');
