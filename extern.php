@@ -378,8 +378,7 @@ if ($action == 'feed')
 
 		$post_query->innerJoin('p', 'posts AS p', 'p.id = '.($order_posted ? 't.first_post_id' : 't.last_post_id'));
 
-		$post_query->joins['u'] = new InnerJoin('users AS u');
-		$post_query->joins['u']->on = 'u.id = p.poster_id');
+		$post_query->innerJoin('u', 'users AS u', 'u.id = p.poster_id');
 
 		$post_query->leftJoin('fp', 'forum_perms AS fp', 'fp.forum_id = t.forum_id AND fp.group_id = :group_id');
 
