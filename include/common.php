@@ -71,7 +71,7 @@ if (get_magic_quotes_runtime())
 	set_magic_quotes_runtime(0);
 
 // Strip slashes from GET/POST/COOKIE/REQUEST/FILES (if magic_quotes_gpc is enabled)
-if (get_magic_quotes_gpc())
+if (!defined('FORUM_DISABLE_STRIPSLASHES') && get_magic_quotes_gpc())
 {
 	function stripslashes_array($array)
 	{
