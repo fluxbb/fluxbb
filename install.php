@@ -205,11 +205,11 @@ else
 }
 
 // Check if the cache directory is writable
-if (!@is_writable(FORUM_CACHE_DIR))
+if (!forum_is_writable(FORUM_CACHE_DIR))
 	$alerts[] = sprintf($lang_install['Alert cache'], FORUM_CACHE_DIR);
 
 // Check if default avatar directory is writable
-if (!@is_writable(PUN_ROOT.'img/avatars/'))
+if (!forum_is_writable(PUN_ROOT.'img/avatars/'))
 	$alerts[] = sprintf($lang_install['Alert avatar'], PUN_ROOT.'img/avatars/');
 
 if (!isset($_POST['form_sent']) || !empty($alerts))
@@ -1715,7 +1715,7 @@ else
 
 	// Attempt to write config.php and serve it up for download if writing fails
 	$written = false;
-	if (is_writable(PUN_ROOT))
+	if (forum_is_writable(PUN_ROOT))
 	{
 		$fh = @fopen(PUN_ROOT.'config.php', 'wb');
 		if ($fh)

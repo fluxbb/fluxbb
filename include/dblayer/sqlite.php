@@ -49,7 +49,7 @@ class DBLayer
 		if (!is_readable($db_name))
 			error('Unable to open database \''.$db_name.'\' for reading. Permission denied', __FILE__, __LINE__);
 
-		if (!is_writable($db_name))
+		if (!forum_is_writable($db_name))
 			error('Unable to open database \''.$db_name.'\' for writing. Permission denied', __FILE__, __LINE__);
 
 		if ($p_connect)
