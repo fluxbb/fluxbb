@@ -508,7 +508,7 @@ else if (isset($_GET['find_ban']))
 			<tbody>
 <?php
 
-	$query = $db->select(array('id' => 'b.id', 'username' => 'b.username', 'email' => 'b.email', 'message' => 'b.message', 'expire' => 'b.expire', 'ban_creator' => 'b.ban_creator', 'ban_creator_username' => 'u.username AS ban_creator_username'), 'bans AS b');
+	$query = $db->select(array('id' => 'b.id', 'username' => 'b.username', 'ip' => 'b.ip', 'email' => 'b.email', 'message' => 'b.message', 'expire' => 'b.expire', 'ban_creator' => 'b.ban_creator', 'ban_creator_username' => 'u.username AS ban_creator_username'), 'bans AS b');
 	$query->leftJoin('u', 'users AS u', 'b.ban_creator = u.id');
 	$query->where = 'b.id > 0'.(!empty($conditions) ? ' AND '.implode(' AND ', $conditions) : '');
 	$query->order = array('order' => $order_by.' '.$direction);
