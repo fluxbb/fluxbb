@@ -730,7 +730,7 @@ function generate_page_title($page_title, $p = null)
 //
 // Mark as read specified data (all, forum, topic)
 //
-function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, $last_post = 0, $mark_time = 0)
+function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, $last_post = 0, $mark_time = false)
 {
 	global $db, $pun_user;
 
@@ -837,6 +837,10 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 		if (!$post_time)
 			$post_time = time();
 
+		// Determine the users last forum mark time if not given.
+		if ($mark_time === false)
+			$mark_time = $pun_user['last_mark'];
+
 		// Update topic track last mark value (or insert when it does not exist)
 		$query = $db->replace(array('mark_time' => ':mark_time'), 'topics_track', array('user_id' => ':user_id', 'topic_id' => ':topic_id', 'forum_id' => ':forum_id'));
 
@@ -845,21 +849,9 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 
 		unset ($query, $params);
 
-		// Check whether there are some unread topics for the forum of current topic
-		// If there aren't, mark forum read
-
-		// Determine the users last forum mark time if not given.
-		if ($mark_time === false)
-			$mark_time = $pun_user['last_mark'];
-
-		// Check the forum for any left unread topics.
+		// Check the forum for any left unread topics (if we do not mark forum as read before).
 		// If there are none, we mark the forum as read.
-		if ($mark_time >= $last_post)
-		{
-			// We do not need to mark read, this happened before.
-			return false;
-		}
-		else
+		if ($mark_time < $last_post)
 		{
 			$query = $db->select(array('1' => '1'), 'topics AS t');
 			$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :user_id AND t.id = tt.topic_id');
@@ -869,11 +861,9 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 			$params = array(':user_id' => $pun_user['id'], ':forum_id' => $forum_id, ':mark_time' => $mark_time);
 
 			$result = $query->run($params);
-			if (!empty($result[0]))
-				return false;
+			if (empty($result[0]))
+				mark_read('forum', $forum_id);
 		}
-
-		mark_read('forum', $forum_id);
 	}
 }
 
