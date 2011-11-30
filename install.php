@@ -113,9 +113,9 @@ require PUN_ROOT.'modules/database/src/Database/Adapter.php';
 //
 function generate_config_file()
 {
-	global $db_type, $db_host, $db_name, $db_username, $db_password, $db_prefix, $cookie_name, $cookie_seed;
+	global $db_type, $db_host, $db_name, $db_username, $db_password, $db_prefix, $cookie_name, $cookie_seed, $base_url;
 
-	return '<?php'."\n\n".'$flux_config = array();'."\n\n".'$flux_config[\'db\'][\'type\'] = \''.$db_type."';\n".'$flux_config[\'db\'][\'host\'] = \''.$db_host."';\n".'$flux_config[\'db\'][\'dbname\'] = \''.addslashes($db_name)."';\n".'$flux_config[\'db\'][\'username\'] = \''.addslashes($db_username)."';\n".'$flux_config[\'db\'][\'password\'] = \''.addslashes($db_password)."';\n".'$flux_config[\'db\'][\'prefix\'] = \''.addslashes($db_prefix)."';\n\n".'$flux_config[\'cache\'][\'type\'] = '."'file';\n".'$flux_config[\'cache\'][\'dir\'] = PUN_ROOT.\'cache/\';'."\n\n".'$flux_config[\'cookie\'][\'name\'] = '."'".$cookie_name."';\n".'$flux_config[\'cookie\'][\'domain\'] = '."'';\n".'$flux_config[\'cookie\'][\'path\'] = '."'/';\n".'$flux_config[\'cookie\'][\'secure\'] = 0;'."\n".'$flux_config[\'cookie\'][\'seed\'] = \''.random_key(16, false, true)."';\n\ndefine('PUN', 1);\n";
+	return '<?php'."\n\n".'$flux_config = array();'."\n\n".'$flux_config[\'db\'][\'type\'] = \''.$db_type."';\n".'$flux_config[\'db\'][\'host\'] = \''.$db_host."';\n".'$flux_config[\'db\'][\'dbname\'] = \''.addslashes($db_name)."';\n".'$flux_config[\'db\'][\'username\'] = \''.addslashes($db_username)."';\n".'$flux_config[\'db\'][\'password\'] = \''.addslashes($db_password)."';\n".'$flux_config[\'db\'][\'prefix\'] = \''.addslashes($db_prefix)."';\n\n".'$flux_config[\'cache\'][\'type\'] = '."'file';\n".'$flux_config[\'cache\'][\'dir\'] = PUN_ROOT.\'cache/\';'."\n\n".'$flux_config[\'cookie\'][\'name\'] = '."'".$cookie_name."';\n".'$flux_config[\'cookie\'][\'domain\'] = '."'';\n".'$flux_config[\'cookie\'][\'path\'] = '."'/';\n".'$flux_config[\'cookie\'][\'secure\'] = 0;'."\n".'$flux_config[\'cookie\'][\'seed\'] = \''.random_key(16, false, true).'\';'."\n\n".'$flux_config[\'base_url\'] = \''.$base_url.'\';'."\n\n".'define(\'PUN\', 1);'."\n";
 }
 
 
@@ -132,6 +132,7 @@ if (isset($_POST['generate_config']))
 	$db_prefix = $_POST['db_prefix'];
 	$cookie_name = $_POST['cookie_name'];
 	$cookie_seed = $_POST['cookie_seed'];
+	$base_url = $_POST['base_url'];
 
 	echo generate_config_file();
 	exit;
@@ -993,7 +994,6 @@ else
 		'o_avatars_height'			=> 60,
 		'o_avatars_size'			=> 10240,
 		'o_search_all_forums'		=> 1,
-		'o_base_url'				=> $base_url,
 		'o_admin_email'				=> $email,
 		'o_webmaster_email'			=> $email,
 		'o_forum_subscriptions'		=> 1,
@@ -1005,9 +1005,9 @@ else
 		'o_regs_allow'				=> 1,
 		'o_regs_verify'				=> 0,
 		'o_announcement'			=> 0,
-		'o_announcement_message'	=> $lang->t('Announcement'),
+		'o_announcement_message'	=> $lang->t('Enter announcement'),
 		'o_rules'					=> 0,
-		'o_rules_message'			=> $lang->t('Rules'),
+		'o_rules_message'			=> $lang->t('Enter rules'),
 		'o_maintenance'				=> 0,
 		'o_maintenance_message'		=> $lang->t('Maintenance message'),
 		'o_default_dst'				=> 0,
@@ -1039,7 +1039,7 @@ else
 
 	// Insert some other default data
 	$subject = $lang->t('Test post');
-	$message = $lang->t('Message');
+	$message = $lang->t('Test post example');
 
 	$query = $db->insert(array('rank' => ':rank', 'min_posts' => ':min_posts'), 'ranks');
 
@@ -1158,6 +1158,7 @@ if (!$written)
 				<input type="hidden" name="db_prefix" value="<?php echo pun_htmlspecialchars($db_prefix); ?>" />
 				<input type="hidden" name="cookie_name" value="<?php echo pun_htmlspecialchars($cookie_name); ?>" />
 				<input type="hidden" name="cookie_seed" value="<?php echo pun_htmlspecialchars($cookie_seed); ?>" />
+				<input type="hidden" name="base_url" value="<?php echo pun_htmlspecialchars($base_url); ?>" />
 
 <?php if (!empty($alerts)): ?>				<div class="forminfo error-info">
 					<ul class="error-list">

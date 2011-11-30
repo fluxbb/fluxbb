@@ -332,10 +332,10 @@ foreach ($result as $cur_post)
 				$user_info[] = '<dd><span>'.$lang->t('From').' '.pun_htmlspecialchars($cur_post['location']).'</span></dd>';
 			}
 
-			$user_info[] = '<dd><span>'.$lang->t('Registered').' '.format_time($cur_post['registered'], true).'</span></dd>';
+			$user_info[] = '<dd><span>'.$lang->t('Registered date').' '.format_time($cur_post['registered'], true).'</span></dd>';
 
 			if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
-				$user_info[] = '<dd><span>'.$lang->t('Posts').' '.forum_number_format($cur_post['num_posts']).'</span></dd>';
+				$user_info[] = '<dd><span>'.$lang->t('Num posts').' '.forum_number_format($cur_post['num_posts']).'</span></dd>';
 
 			// Now let's deal with the contact links (Email and URL)
 			if ((($cur_post['email_setting'] == '0' && !$pun_user['is_guest']) || $pun_user['is_admmod']) && $pun_user['g_send_email'] == '1')

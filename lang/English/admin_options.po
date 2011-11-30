@@ -11,7 +11,7 @@ msgstr ""
 
 # Language definitions used in admin-options.php
 msgid "Bad HTTP Referer message"
-msgstr "Bad HTTP_REFERER. If you have moved these forums from one location to another or switched domains, you need to update the Base URL manually in the database (look for o_base_url in the config table) and then clear the cache by deleting all .php files in the /cache directory."
+msgstr "Bad HTTP_REFERER. If you have moved these forums from one location to another or switched domains, you need to update the Base URL manually in config.php file."
 
 msgid "Must enter title message"
 msgstr "You must enter a board title."
@@ -58,12 +58,6 @@ msgstr "Board description"
 
 msgid "Board desc help"
 msgstr "A short description of this bulletin board (shown at the top of every page). This field may contain HTML."
-
-msgid "Base URL label"
-msgstr "Base URL"
-
-msgid "Base URL help"
-msgstr "The complete URL of the board without trailing slash (i.e. http://www.mydomain.com/forums). This <strong>must</strong> be correct in order for all admin and moderator features to work. If you get \"Bad referer\" errors, it's probably incorrect."
 
 msgid "Timezone label"
 msgstr "Default time zone"

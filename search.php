@@ -862,7 +862,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				<div class="postleft">
 					<dl>
 						<dt><?php echo $pposter ?></dt>
-<?php if ($cur_search['pid'] == $cur_search['first_post_id']) : ?>						<dd><span><?php echo $lang->t('Replies').' '.forum_number_format($cur_search['num_replies']) ?></span></dd>
+<?php if ($cur_search['pid'] == $cur_search['first_post_id']) : ?>						<dd><span><?php echo $lang->t('Num replies').' '.forum_number_format($cur_search['num_replies']) ?></span></dd>
 <?php endif; ?>
 						<dd><div class="<?php echo $icon_type ?>"><div class="nosize"><?php echo $icon_text ?></div></div></dd>
 					</dl>

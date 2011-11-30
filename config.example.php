@@ -20,5 +20,6 @@ $flux_config['cookie']['path']		= '/';
 $flux_config['cookie']['secure']	= 0;
 $flux_config['cookie']['seed']		= '123456789abc';
 
+$flux_config['base_url'] = 'http://localhost/fluxbb';
 
 define('PUN', 1);

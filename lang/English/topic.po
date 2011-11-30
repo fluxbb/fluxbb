@@ -27,13 +27,13 @@ msgid "Note"
 msgstr "Note:"
 
 # Admin note
-msgid "Posts"
+msgid "Num posts"
 msgstr "Posts:"
 
-msgid "Registered"
+msgid "Registered date"
 msgstr "Registered:"
 
-msgid "Replies"
+msgid "Num replies"
 msgstr "Replies:"
 
 msgid "Website"
