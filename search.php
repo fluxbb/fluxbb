@@ -795,10 +795,10 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			$post_count = 0;
 		}
 
-		// Get topic tracking data
+		// Get tracked topics
 		if (!$pun_user['is_guest'])
 		{
-			$topic_tracking_info = array();
+			$tracked_topics = array();
 
 			// Generate topic forum list...
 			$forum_list = $topic_list = array();
@@ -811,7 +811,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			}
 
 			foreach ($forum_list as $f_id => $cur_forum)
-				$topic_tracking_info += get_topic_tracking($f_id, $cur_forum['topics'], $topic_list, array($f_id => $cur_forum['forum_mark_time']));
+				$tracked_topics += get_tracked_topics($f_id, $cur_forum['topics'], $topic_list, array($f_id => $cur_forum['forum_mark_time']));
 		}
 
 		foreach ($search_set as $cur_search)
@@ -826,7 +826,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				++$post_count;
 				$icon_type = 'icon';
 
-				if (!$pun_user['is_guest'] && (isset($topic_tracking_info[$cur_search['tid']]) && $cur_search['pposted'] > $topic_tracking_info[$cur_search['tid']]))
+				if (!$pun_user['is_guest'] && (isset($tracked_topics[$cur_search['tid']]) && $cur_search['pposted'] > $tracked_topics[$cur_search['tid']]))
 				{
 					$item_status = 'inew';
 					$icon_type = 'icon icon-new';
@@ -911,7 +911,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					$item_status .= ' iclosed';
 				}
 
-				if (!$pun_user['is_guest'] && (isset($topic_tracking_info[$cur_search['tid']]) && $cur_search['last_post'] > $topic_tracking_info[$cur_search['tid']]))
+				if (!$pun_user['is_guest'] && (isset($tracked_topics[$cur_search['tid']]) && $cur_search['last_post'] > $tracked_topics[$cur_search['tid']]))
 				{
 					$item_status .= ' inew';
 					$icon_type = 'icon icon-new';

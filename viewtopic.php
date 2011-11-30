@@ -278,12 +278,10 @@ $params = array(':pids' => $post_ids);
 
 $result = $query->run($params);
 
-// Add/update this topic in our list of tracked topics
+// Get tracked topics
 if (!$pun_user['is_guest'])
 {
-	// Get topic tracking info
-	if (!isset($topic_tracking_info))
-		$topic_tracking_info = get_topic_tracking($cur_topic['forum_id'], $id, array($id => $cur_topic), array($cur_topic['forum_id'] => $cur_topic['forum_mark_time']));
+	$tracked_topics = get_tracked_topics($cur_topic['forum_id'], $id, array($id => $cur_topic), array($cur_topic['forum_id'] => $cur_topic['forum_mark_time']));
 
 	$max_post_time = $result[count($result) - 1]['posted'];
 }
@@ -403,7 +401,7 @@ foreach ($result as $cur_post)
 		$post_actions[] = '<li class="postquote"><span><a href="post.php?tid='.$id.'&amp;qid='.$cur_post['id'].'">'.$lang->t('Quote').'</a></span></li>';
 	}
 
-	if (!$pun_user['is_guest'] && isset($topic_tracking_info[$id]) && $cur_post['posted'] > $topic_tracking_info[$id])
+	if (!$pun_user['is_guest'] && isset($tracked_topics[$id]) && $cur_post['posted'] > $tracked_topics[$id])
 	{
 		$item_status = 'inew';
 		$icon_type = 'icon icon-new';
@@ -558,11 +556,8 @@ if ($pun_config['o_topic_views'] == '1')
 if (!$pun_user['is_guest'])
 {
 	// Only mark topic if it's currently unread. Also make sure we do not set topic tracking back if earlier pages are viewed.
-	if (isset($topic_tracking_info[$id]) && $cur_topic['last_post'] > $topic_tracking_info[$id] && $max_post_time > $topic_tracking_info[$id])
-	{
-		mark_read('topic', $cur_topic['forum_id'], $id, $max_post_time);
-		update_forum_tracking_info($cur_topic['forum_id'], $cur_topic['last_post'], (isset($cur_topic['forum_mark_time'])) ? $cur_topic['forum_mark_time'] : false);
-	}
+	if (isset($tracked_topics[$id]) && $cur_topic['last_post'] > $tracked_topics[$id] && $max_post_time > $tracked_topics[$id])
+		mark_read('topic', $cur_topic['forum_id'], $id, $max_post_time, $cur_topic['last_post'], (isset($cur_topic['forum_mark_time'])) ? $cur_topic['forum_mark_time'] : false);
 }
 
 $forum_id = $cur_topic['forum_id'];

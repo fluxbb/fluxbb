@@ -198,7 +198,7 @@ if (!empty($topic_ids))
 
 	$result = $query->run($params);
 
-	// Get topic tracking data
+	// Get tracked topics
 	if (!$pun_user['is_guest'])
 	{
 		// Generate topic list...
@@ -206,7 +206,7 @@ if (!empty($topic_ids))
 		foreach ($result as $cur_topic)
 			$topic_list[$cur_topic['id']] = $cur_topic;
 
-		$topic_tracking_info = get_topic_tracking($id, $topic_ids, $topic_list, array($id => $cur_forum['forum_mark_time']), false);
+		$tracked_topics = get_tracked_topics($id, $topic_ids, $topic_list, array($id => $cur_forum['forum_mark_time']), false);
 	}
 
 	foreach ($result as $cur_topic)
@@ -245,7 +245,7 @@ if (!empty($topic_ids))
 			$item_status .= ' iclosed';
 		}
 
-		if (!$pun_user['is_guest'] && isset($topic_tracking_info[$cur_topic['id']]) && $cur_topic['last_post'] > $topic_tracking_info[$cur_topic['id']] && $cur_topic['moved_to'] == null)
+		if (!$pun_user['is_guest'] && isset($tracked_topics[$cur_topic['id']]) && $cur_topic['last_post'] > $tracked_topics[$cur_topic['id']] && $cur_topic['moved_to'] == null)
 		{
 			$item_status .= ' inew';
 			$icon_type = 'icon icon-new';

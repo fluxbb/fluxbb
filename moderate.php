@@ -1215,7 +1215,7 @@ if (!empty($topic_ids))
 		foreach ($result as $cur_topic)
 			$topic_list[$cur_topic['id']] = $cur_topic;
 
-		$topic_tracking_info = get_topic_tracking($fid, $topic_ids, $topic_list, array($fid => $cur_forum['forum_mark_time']), false);
+		$tracked_topics = get_tracked_topics($fid, $topic_ids, $topic_list, array($fid => $cur_forum['forum_mark_time']), false);
 	}
 
 	foreach ($result as $cur_topic)
@@ -1261,7 +1261,7 @@ if (!empty($topic_ids))
 			$item_status .= ' iclosed';
 		}
 
-		if (!$ghost_topic && isset($topic_tracking_info[$cur_topic['id']]) && $cur_topic['last_post'] > $topic_tracking_info[$cur_topic['id']])
+		if (!$ghost_topic && isset($tracked_topics[$cur_topic['id']]) && $cur_topic['last_post'] > $tracked_topics[$cur_topic['id']])
 		{
 			$item_status .= ' inew';
 			$icon_type = 'icon icon-new';

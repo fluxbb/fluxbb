@@ -727,7 +727,10 @@ function generate_page_title($page_title, $p = null)
 }
 
 
-function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0)
+//
+// Mark as read specified data (all, forum, topic)
+//
+function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, $last_post = 0, $mark_time = 0)
 {
 	global $db, $pun_user;
 
@@ -841,13 +844,43 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0)
 		$query->run($params);
 
 		unset ($query, $params);
+
+		// Check whether there are some unread topics for the forum of current topic
+		// If there aren't, mark forum read
+
+		// Determine the users last forum mark time if not given.
+		if ($mark_time === false)
+			$mark_time = $pun_user['last_mark'];
+
+		// Check the forum for any left unread topics.
+		// If there are none, we mark the forum as read.
+		if ($mark_time >= $last_post)
+		{
+			// We do not need to mark read, this happened before.
+			return false;
+		}
+		else
+		{
+			$query = $db->select(array('1' => '1'), 'topics AS t');
+			$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :user_id AND t.id = tt.topic_id');
+			$query->where = 't.forum_id = :forum_id AND t.last_post > :mark_time AND t.moved_to IS NULL AND (tt.topic_id IS NULL OR tt.mark_time < t.last_post)';
+			$query->limit = 1;
+
+			$params = array(':user_id' => $pun_user['id'], ':forum_id' => $forum_id, ':mark_time' => $mark_time);
+
+			$result = $query->run($params);
+			if (!empty($result[0]))
+				return false;
+		}
+
+		mark_read('forum', $forum_id);
 	}
 }
 
-/**
-* Get topic tracking info by using already fetched info
-*/
-function get_topic_tracking($forum_id, $topic_ids, $topic_list, $forum_mark_time)
+//
+// Get tracked topics by using already fetched info
+//
+function get_tracked_topics($forum_id, $topic_ids, $topic_list, $forum_mark_time)
 {
 	global $pun_user;
 
@@ -883,6 +916,9 @@ function get_topic_tracking($forum_id, $topic_ids, $topic_list, $forum_mark_time
 }
 
 
+//
+// Get user's unread topics (currently not used anywhere)
+//
 function get_unread_topics()
 {
 	global $flux_config, $pun_user, $db;
@@ -918,39 +954,6 @@ function get_unread_topics()
 	return $unread_topics;
 }
 
-
-function update_forum_tracking_info($forum_id, $last_post, $mark_time = false)
-{
-	global $db, $pun_user;
-
-	// Determine the users last forum mark time if not given.
-	if ($mark_time === false)
-		$mark_time = $pun_user['last_mark'];
-
-	// Check the forum for any left unread topics.
-	// If there are none, we mark the forum as read.
-	if ($mark_time >= $last_post)
-	{
-		// We do not need to mark read, this happened before.
-		return false;
-	}
-	else
-	{
-		$query = $db->select(array('1' => '1'), 'topics AS t');
-		$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :user_id AND t.id = tt.topic_id');
-		$query->where = 't.forum_id = :forum_id AND t.last_post > :mark_time AND t.moved_to IS NULL AND (tt.topic_id IS NULL OR tt.mark_time < t.last_post)';
-		$query->limit = 1;
-
-		$params = array(':user_id' => $pun_user['id'], ':forum_id' => $forum_id, ':mark_time' => $mark_time);
-
-		$result = $query->run($params);
-		if (!empty($result[0]))
-			return false;
-	}
-
-	mark_read('forum', $forum_id);
-	return true;
-}
 
 //
 // Update posts, topics, last_post, last_post_id and last_poster for a forum
