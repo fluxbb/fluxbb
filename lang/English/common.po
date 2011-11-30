@@ -9,14 +9,12 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-# Translation of FluxBB 2.0 in English
-# This file is distributed under the same license as the FluxBB 2.0 package.
 # Language definitions for frequently used strings
+
 # Text orientation and encoding
 msgid "lang_direction"
-msgstr "ltr"
+msgstr "ltr" # ltr (Left-To-Right) or rtl (Right-To-Left)
 
-# ltr (Left-To-Right) or rtl (Right-To-Left)
 msgid "lang_identifier"
 msgstr "en"
 
@@ -54,9 +52,8 @@ msgid "Options"
 msgstr "Options"
 
 msgid "Submit"
-msgstr "Submit"
+msgstr "Submit" # "Name" of submit buttons
 
-# "Name" of submit buttons
 msgid "Ban message"
 msgstr "You are banned from this forum."
 
@@ -79,9 +76,8 @@ msgid "Yesterday"
 msgstr "Yesterday"
 
 msgid "Info"
-msgstr "Info"
+msgstr "Info" # A common table header
 
-# A common table header
 msgid "Go back"
 msgstr "Go back"
 
@@ -95,9 +91,8 @@ msgid "Click redirect"
 msgstr "Click here if you do not want to wait any longer (or if your browser does not automatically forward you)"
 
 msgid "on"
-msgstr "on"
+msgstr "on" # As in "BBCode is on"
 
-# As in "BBCode is on"
 msgid "off"
 msgstr "off"
 
@@ -108,24 +103,20 @@ msgid "Required"
 msgstr "(Required)"
 
 msgid "required field"
-msgstr "is a required field in this form."
+msgstr "is a required field in this form." # For javascript form validation
 
-# For javascript form validation
 msgid "Last post"
 msgstr "Last post"
 
 msgid "by"
-msgstr "by"
+msgstr "by" # As in last post by someuser
 
-# As in last post by someuser
 msgid "New posts"
-msgstr "New posts"
+msgstr "New posts" # The link that leads to the first new post
 
-# The link that leads to the first new post
 msgid "New posts info"
-msgstr "Go to the first new post in this topic."
+msgstr "Go to the first new post in this topic." # The popup text for new posts links
 
-# The popup text for new posts links
 msgid "Username"
 msgstr "Username"
 
@@ -169,9 +160,8 @@ msgid "Page"
 msgstr "Page %s"
 
 msgid "BBCode"
-msgstr "BBCode:"
+msgstr "BBCode:" # You probably shouldn't change this
 
-# You probably shouldn't change this
 msgid "img tag"
 msgstr "[img] tag:"
 
@@ -182,17 +172,14 @@ msgid "and"
 msgstr "and"
 
 msgid "Image link"
-msgstr "image"
+msgstr "image" # This is displayed (i.e. <image>) instead of images when "Show images" is disabled in the profile
 
-# This is displayed (i.e. <image>) instead of images when "Show images" is disabled in the profile
 msgid "wrote"
-msgstr "wrote:"
+msgstr "wrote:" # For [quote]'s
 
-# For [quote]'s
 msgid "Mailer"
-msgstr "%s Mailer"
+msgstr "%s Mailer" # As in "MyForums Mailer" in the signature of outgoing emails
 
-# As in "MyForums Mailer" in the signature of outgoing emails
 msgid "Important information"
 msgstr "Important information"
 
@@ -206,17 +193,15 @@ msgid "Next"
 msgstr "Next"
 
 msgid "Spacer"
-msgstr "…"
+msgstr "…" # Ellipsis for paginate
 
-# Ellipsis for paginate
 # Title
 msgid "Title"
 msgstr "Title"
 
 msgid "Member"
-msgstr "Member"
+msgstr "Member" # Default title
 
-# Default title
 msgid "Moderator"
 msgstr "Moderator"
 
@@ -332,9 +317,8 @@ msgid "Jump to"
 msgstr "Jump to"
 
 msgid "Go"
-msgstr " Go "
+msgstr " Go " # Submit button in forum jump
 
-# Submit button in forum jump
 msgid "Moderate topic"
 msgstr "Moderate topic"
 
@@ -389,9 +373,8 @@ msgid "RSS description topic"
 msgstr "The most recent posts in %s."
 
 msgid "RSS reply"
-msgstr "Re: "
+msgstr "Re: %s" # The topic subject will be put in this string (to signify a reply)
 
-# The topic subject will be appended to this string (to signify a reply)
 msgid "RSS active topics feed"
 msgstr "RSS active topics feed"
 

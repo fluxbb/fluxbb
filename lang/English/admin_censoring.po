@@ -10,6 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in admin_censoring.php
+
 msgid "Must enter word message"
 msgstr "You must enter a word to censor."
 

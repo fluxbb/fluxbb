@@ -10,6 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in admin-options.php
+
 msgid "Bad HTTP Referer message"
 msgstr "Bad HTTP_REFERER. If you have moved these forums from one location to another or switched domains, you need to update the Base URL manually in config.php file."
 

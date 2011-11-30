@@ -10,6 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in delete.php
+
 msgid "Delete post"
 msgstr "Delete post"
 
@@ -29,9 +30,8 @@ msgid "Topic by"
 msgstr "Topic started by %s - %s"
 
 msgid "Delete"
-msgstr "Delete"
+msgstr "Delete" # The submit button
 
-# The submit button
 msgid "Post del redirect"
 msgstr "Post deleted. Redirecting …"
 

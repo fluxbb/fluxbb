@@ -10,6 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in profile.php
+
 # Navigation and sections
 msgid "Profile menu"
 msgstr "Profile menu"
@@ -157,16 +158,14 @@ msgid "Upload avatar legend"
 msgstr "Enter an avatar file to upload"
 
 msgid "Delete avatar"
-msgstr "Delete avatar"
+msgstr "Delete avatar" # only for admins
 
-# only for admins
 msgid "File"
 msgstr "File"
 
 msgid "Upload"
-msgstr "Upload"
+msgstr "Upload" # submit button
 
-# submit button
 # Form validation stuff
 msgid "Forbidden title"
 msgstr "The title you entered contains a forbidden word. You must choose a different title."
@@ -351,9 +350,8 @@ msgid "Confirm delete user"
 msgstr "Confirm delete user"
 
 msgid "Confirmation info"
-msgstr "Please confirm that you want to delete the user"
+msgstr "Please confirm that you want to delete the user %s."
 
-# the username will be appended to this string
 msgid "Delete warning"
 msgstr "Warning! Deleted users and/or posts cannot be restored. If you choose not to delete the posts made by this user, the posts can only be deleted manually at a later time."
 
@@ -361,9 +359,8 @@ msgid "Delete posts"
 msgstr "Delete any posts and topics this user has made."
 
 msgid "Delete"
-msgstr "Delete"
+msgstr "Delete" # submit button (confirm user delete)
 
-# submit button (confirm user delete)
 msgid "User delete redirect"
 msgstr "User deleted. Redirecting …"
 

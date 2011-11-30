@@ -10,6 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in register.php
+
 # Miscellaneous
 msgid "No new regs"
 msgstr "This forum is not accepting new registrations."

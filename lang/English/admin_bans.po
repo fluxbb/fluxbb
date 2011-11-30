@@ -10,6 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in admin_bans.php
+
 msgid "No user message"
 msgstr "No user by that username registered. If you want to add a ban not tied to a specific username just leave the username blank."
 

@@ -10,6 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in various scripts
+
 msgid "Mark read redirect"
 msgstr "All topics and forums have been marked as read. Redirecting …"
 
@@ -96,9 +97,8 @@ msgid "Moderate"
 msgstr "Moderate"
 
 msgid "Select"
-msgstr "Select"
+msgstr "Select" # the header of a column of checkboxes
 
-# the header of a column of checkboxes
 msgid "Move"
 msgstr "Move"
 

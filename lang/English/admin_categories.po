@@ -10,6 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in admin-categories.php
+
 msgid "Must enter category name message"
 msgstr "You must enter a name for the category"
 

@@ -10,6 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in admin-users.php
+
 msgid "Non numeric message"
 msgstr "You entered a non-numeric value into a numeric only column."
 

@@ -10,6 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in admin_reports.php
+
 msgid "Report zapped redirect"
 msgstr "Report marked as read. Redirecting …"
 

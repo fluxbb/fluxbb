@@ -10,6 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in db_update.php
+
 msgid "Update"
 msgstr "Update FluxBB"
 

@@ -10,6 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in both profile.php and register.php
+
 msgid "Email legend"
 msgstr "Enter a valid email address"
 

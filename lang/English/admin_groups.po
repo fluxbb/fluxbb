@@ -10,6 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in admin-groups.php
+
 msgid "Must enter title message"
 msgstr "You must enter a group title."
 
