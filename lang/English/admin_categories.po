@@ -10,7 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in admin-categories.php
-msgid "Must enter name message"
+msgid "Must enter category name message"
 msgstr "You must enter a name for the category"
 
 msgid "Category added redirect"
@@ -22,10 +22,10 @@ msgstr "Category deleted. Redirecting …"
 msgid "Delete category head"
 msgstr "Delete category (together with all forums and posts it contains)"
 
-msgid "Confirm delete subhead"
+msgid "Confirm delete category subhead"
 msgstr "Confirm delete category"
 
-msgid "Confirm delete info"
+msgid "Confirm delete category info"
 msgstr "Are you sure that you want to delete the category <strong>%s</strong>?"
 
 msgid "Delete category warn"

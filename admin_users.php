@@ -684,9 +684,9 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 				<input type="hidden" name="users" value="<?php echo implode(',', $user_ids) ?>" />
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang->t('Confirm delete legend') ?></legend>
+						<legend><?php echo $lang->t('Confirm delete users subhead') ?></legend>
 						<div class="infldset">
-							<p><?php echo $lang->t('Confirm delete info') ?></p>
+							<p><?php echo $lang->t('Confirm delete users info') ?></p>
 							<div class="rbox">
 								<label><input type="checkbox" name="delete_posts" value="1" checked="checked" /><?php echo $lang->t('Delete posts') ?><br /></label>
 							</div>
@@ -839,7 +839,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 									<th scope="row"><?php echo $lang->t('Ban message label') ?></th>
 									<td>
 										<input type="text" name="ban_message" size="50" maxlength="255" tabindex="1" />
-										<span><?php echo $lang->t('Ban message help') ?></span>
+										<span><?php echo $lang->t('Bans message help') ?></span>
 									</td>
 								</tr>
 								<tr>

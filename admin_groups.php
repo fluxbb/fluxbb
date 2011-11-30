@@ -499,9 +499,9 @@ else if (isset($_GET['del_group']))
 				<div class="inform">
 				<input type="hidden" name="group_to_delete" value="<?php echo $group_id ?>" />
 					<fieldset>
-						<legend><?php echo $lang->t('Confirm delete subhead') ?></legend>
+						<legend><?php echo $lang->t('Confirm delete group subhead') ?></legend>
 						<div class="infldset">
-							<p><?php echo $lang->t('Confirm delete info', pun_htmlspecialchars($group_title)) ?></p>
+							<p><?php echo $lang->t('Confirm delete group info', pun_htmlspecialchars($group_title)) ?></p>
 							<p class="warntext"><?php echo $lang->t('Confirm delete warn') ?></p>
 						</div>
 					</fieldset>

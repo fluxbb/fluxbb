@@ -70,10 +70,10 @@ msgstr "Delete"
 msgid "Group delete head"
 msgstr "Group delete"
 
-msgid "Confirm delete subhead"
+msgid "Confirm delete group subhead"
 msgstr "Confirm delete group"
 
-msgid "Confirm delete info"
+msgid "Confirm delete group info"
 msgstr "Are you sure that you want to delete the group <strong>%s</strong>?"
 
 msgid "Confirm delete warn"

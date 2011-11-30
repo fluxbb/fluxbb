@@ -25,7 +25,7 @@ msgstr "Forum updated. Redirecting …"
 msgid "Perms reverted redirect"
 msgstr "Permissions reverted to defaults. Redirecting …"
 
-msgid "Must enter name message"
+msgid "Must enter forum name message"
 msgstr "You must enter a forum name."
 
 msgid "Must be integer message"
@@ -77,10 +77,10 @@ msgstr "Update positions"
 msgid "Confirm delete head"
 msgstr "Confirm delete forum"
 
-msgid "Confirm delete subhead"
+msgid "Confirm delete forum subhead"
 msgstr "Important! Read before deleting"
 
-msgid "Confirm delete info"
+msgid "Confirm delete forum info"
 msgstr "Are you sure that you want to delete the forum <strong>%s</strong>?"
 
 msgid "Confirm delete warn"

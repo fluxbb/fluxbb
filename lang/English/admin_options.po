@@ -16,7 +16,7 @@ msgstr "Bad HTTP_REFERER. If you have moved these forums from one location to an
 msgid "Must enter title message"
 msgstr "You must enter a board title."
 
-msgid "Invalid e-mail message"
+msgid "Invalid admin e-mail message"
 msgstr "The admin email address you entered is invalid."
 
 msgid "Invalid webmaster e-mail message"

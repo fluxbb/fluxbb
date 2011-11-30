@@ -376,7 +376,7 @@ else if ($action == 'change_email')
 		<form id="change_email" method="post" action="profile.php?action=change_email&amp;id=<?php echo $id ?>" id="change_email" onsubmit="return process_form(this)">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang->t('Email legend') ?></legend>
+					<legend><?php echo $lang->t('New email legend') ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
 						<label class="required"><strong><?php echo $lang->t('New email') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input type="text" name="req_new_email" size="50" maxlength="80" /><br /></label>
@@ -1511,7 +1511,7 @@ else
 			$username_field = '<p>'.$lang->t('Username').': '.pun_htmlspecialchars($user['username']).'</p>'."\n";
 
 			if ($pun_config['o_regs_verify'] == '1')
-				$email_field = '<p>'.$lang->t('Email info', $user['email'].' - <a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang->t('Change email').'</a>').'</p>'."\n";
+				$email_field = '<p>'.$lang->t('Email label', $user['email'].' - <a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang->t('Change email').'</a>').'</p>'."\n";
 			else
 				$email_field = '<label class="required"><strong>'.$lang->t('Email').' <span>'.$lang->t('Required').'</span></strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label>'."\n";
 		}
