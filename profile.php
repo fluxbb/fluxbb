@@ -1511,7 +1511,7 @@ else
 			$username_field = '<p>'.$lang->t('Username').': '.pun_htmlspecialchars($user['username']).'</p>'."\n";
 
 			if ($pun_config['o_regs_verify'] == '1')
-				$email_field = '<p>'.$lang->t('Email label', $user['email'].' - <a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang->t('Change email').'</a>').'</p>'."\n";
+				$email_field = '<p>'.$lang->t('Email field', $user['email'].' - <a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang->t('Change email').'</a>').'</p>'."\n";
 			else
 				$email_field = '<label class="required"><strong>'.$lang->t('Email').' <span>'.$lang->t('Required').'</span></strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label>'."\n";
 		}
