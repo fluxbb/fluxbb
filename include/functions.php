@@ -1754,7 +1754,7 @@ function forum_list_plugins($is_admin)
 //
 // Split text into chunks ($inside contains all text inside $start and $end, and $outside contains all text outside)
 //
-function split_text($text, $start, $end, &$errors, $retab = true)
+function split_text($text, $start, $end, $retab = true)
 {
 	global $pun_config, $lang_common;
 
@@ -1782,7 +1782,7 @@ function split_text($text, $start, $end, &$errors, $retab = true)
 // Extract blocks from a text with a starting and ending string
 // This function always matches the most outer block so nesting is possible
 //
-function extract_blocks($text, $start, $end, &$errors = array(), $retab = true)
+function extract_blocks($text, $start, $end, $retab = true)
 {
 	global $pun_config;
 
@@ -1984,17 +1984,17 @@ function forum_is_writable($path)
 		$path = rtrim($path, '/').'/';
 		return forum_is_writable($path.uniqid(mt_rand()).'.tmp');
 	}
-	
+
 	// Check temporary file for read/write capabilities
 	$rm = file_exists($path);
 	$f = @fopen($path, 'a');
-	
+
 	if ($f === false)
 		return false;
-	
+
 	fclose($f);
 	@unlink($path);
-	
+
 	return true;
 }
 

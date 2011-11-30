@@ -76,7 +76,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
-		list($inside, $text) = extract_blocks($text, '[code]', '[/code]', $errors);
+		list($inside, $text) = extract_blocks($text, '[code]', '[/code]');
 
 	// Tidy up lists
 	$temp = preg_replace($re_list, 'preparse_list_tag(\'$2\', \'$1\', $errors)', $text);
@@ -141,7 +141,7 @@ function strip_empty_bbcode($text, &$errors)
 {
 	// If the message contains a code tag we have to split it up (empty tags within [code][/code] are fine)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
-		list($inside, $text) = extract_blocks($text, '[code]', '[/code]', $errors);
+		list($inside, $text) = extract_blocks($text, '[code]', '[/code]');
 
 	// Remove empty tags
 	while (($new_text = preg_replace('%\[(b|u|s|ins|del|em|i|h|colou?r|quote|img|url|email|list|topic|post|forum|user)(?:\=[^\]]*)?\]\s*\[/\1\]%', '', $text)) !== NULL)
@@ -850,7 +850,7 @@ function parse_message($text, $hide_smilies)
 
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
-		list($inside, $text) = extract_blocks($text, '[code]', '[/code]', $errors);
+		list($inside, $text) = extract_blocks($text, '[code]', '[/code]');
 
 	if ($pun_config['p_message_bbcode'] == '1' && strpos($text, '[') !== false && strpos($text, ']') !== false)
 		$text = do_bbcode($text);
