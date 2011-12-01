@@ -15,9 +15,6 @@ msgstr ""
 msgid "Admin menu"
 msgstr "Admin menu"
 
-msgid "Plugins menu"
-msgstr "Plugins menu"
-
 msgid "Moderator menu"
 msgstr "Moderator menu"
 
