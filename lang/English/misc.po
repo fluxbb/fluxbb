@@ -6,10 +6,11 @@ msgstr ""
 "Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in various scripts
+
 msgid "Mark read redirect"
 msgstr "All topics and forums have been marked as read. Redirecting …"
 
@@ -96,9 +97,8 @@ msgid "Moderate"
 msgstr "Moderate"
 
 msgid "Select"
-msgstr "Select"
+msgstr "Select" # the header of a column of checkboxes
 
-# the header of a column of checkboxes
 msgid "Move"
 msgstr "Move"
 

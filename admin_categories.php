@@ -27,7 +27,7 @@ if (isset($_POST['add_cat']))
 
 	$new_cat_name = pun_trim($_POST['new_cat_name']);
 	if ($new_cat_name == '')
-		message($lang->t('Must enter name message'));
+		message($lang->t('Must enter category name message'));
 
 	$query = $db->insert(array('cat_name' => ':cat_name'), 'categories');
 	$params = array(':cat_name' => $new_cat_name);
@@ -138,9 +138,9 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 				<div class="inform">
 				<input type="hidden" name="cat_to_delete" value="<?php echo $cat_to_delete ?>" />
 					<fieldset>
-						<legend><?php echo $lang->t('Confirm delete subhead') ?></legend>
+						<legend><?php echo $lang->t('Confirm delete category subhead') ?></legend>
 						<div class="infldset">
-							<p><?php echo $lang->t('Confirm delete info', pun_htmlspecialchars($cat_name)) ?></p>
+							<p><?php echo $lang->t('Confirm delete category info', pun_htmlspecialchars($cat_name)) ?></p>
 							<p class="warntext"><?php echo $lang->t('Delete category warn') ?></p>
 						</div>
 					</fieldset>
@@ -174,7 +174,7 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 		$cur_cat['order'] = trim($cur_cat['order']);
 
 		if ($cur_cat['name'] == '')
-			message($lang->t('Must enter name message'));
+			message($lang->t('Must enter category name message'));
 
 		if ($cur_cat['order'] == '' || preg_match('%[^0-9]%', $cur_cat['order']))
 			message($lang->t('Must enter integer message'));

@@ -6,10 +6,11 @@ msgstr ""
 "Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in login.php
+
 # Miscellaneous
 msgid "Wrong user/pass"
 msgstr "Wrong username and/or password."
@@ -50,7 +51,7 @@ msgstr "If you have not registered or have forgotten your password click on the 
 msgid "New password errors"
 msgstr "Password request error"
 
-msgid "New passworderrors info"
+msgid "New password errors info"
 msgstr "The following error needs to be corrected before a new password can be sent:"
 
 # Forget password mail stuff

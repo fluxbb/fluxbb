@@ -6,10 +6,11 @@ msgstr ""
 "Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in viewtopic.php
+
 msgid "Post reply"
 msgstr "Post reply"
 
@@ -17,16 +18,14 @@ msgid "Topic closed"
 msgstr "Topic closed"
 
 msgid "From"
-msgstr "From:"
+msgstr "From:" # User location
 
-# User location
 msgid "IP address logged"
 msgstr "IP address logged"
 
 msgid "Note"
-msgstr "Note:"
+msgstr "Note:" # Admin note
 
-# Admin note
 msgid "Num posts"
 msgstr "Posts:"
 

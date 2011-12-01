@@ -684,9 +684,9 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 				<input type="hidden" name="users" value="<?php echo implode(',', $user_ids) ?>" />
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang->t('Confirm delete legend') ?></legend>
+						<legend><?php echo $lang->t('Confirm delete users subhead') ?></legend>
 						<div class="infldset">
-							<p><?php echo $lang->t('Confirm delete info') ?></p>
+							<p><?php echo $lang->t('Confirm delete users info') ?></p>
 							<div class="rbox">
 								<label><input type="checkbox" name="delete_posts" value="1" checked="checked" /><?php echo $lang->t('Delete posts') ?><br /></label>
 							</div>
@@ -729,7 +729,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 		message($lang->t('No users selected'));
 
 	// Are we trying to ban any admins?
-	$query = $db->select(array('count' => 'COUNT(u.*) AS count'), 'users AS u');
+	$query = $db->select(array('count' => 'COUNT(u.id) AS count'), 'users AS u');
 	$query->where = 'u.id IN :user_ids AND u.group_id = :group_id';
 
 	$params = array(':user_ids' => $user_ids, ':group_id' => PUN_ADMIN);
@@ -741,7 +741,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 	unset($query, $params, $result);
 
 	// Also, we cannot ban moderators
-	$query = $db->select(array('count' => 'COUNT(u.*) AS count'), 'users AS u');
+	$query = $db->select(array('count' => 'COUNT(u.id) AS count'), 'users AS u');
 	$query->innerJoin('g', 'groups AS g', 'u.group_id = g.g_id');
 	$query->where = 'g.g_moderator = 1 AND u.id IN :user_ids';
 
@@ -775,8 +775,6 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 		else
 			$ban_expire = 'NULL';
 
-		$ban_message = ($ban_message != '') ? $db->quote($ban_message) : 'NULL';
-
 		// Fetch user information
 		$user_info = array();
 		$query = $db->select(array('id' => 'u.id', 'username' => 'u.username', 'email' => 'u.email', 'registration_ip' => 'u.registration_ip'), 'users AS u');
@@ -793,9 +791,22 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 		// Overwrite the registration IP with one from the last post (if it exists)
 		if ($ban_the_ip != 0)
 		{
-			$result = $db->query('SELECT p.poster_id, p.poster_ip FROM '.$db->prefix.'posts AS p INNER JOIN (SELECT MAX(id) AS id FROM '.$db->prefix.'posts WHERE poster_id IN ('.implode(',', $user_ids).') GROUP BY poster_id) AS i ON p.id=i.id') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-			while ($cur_address = $db->fetch_assoc($result))
+			// Fetch last post id
+			$query_pid = $db->select(array('id' => 'MAX(id) AS id'), 'posts');
+			$query_pid->where = 'poster_id IN :user_ids';
+			$query_pid->group = array('poster_id' => 'poster_id');
+
+			$query = $db->select(array('poster_id' => 'p.poster_id', 'poster_ip' => 'p.poster_ip'), $db->prefix.'posts AS p');
+			$query->usePrefix = false; // Don't want prefix for innerJoin
+			$query->innerJoin('i', '('.$query_pid->compile().') AS i', 'p.id = i.id');
+
+			$params = array(':user_ids' => $user_ids);
+
+			$result = $query->run($params);
+			foreach ($result as $cur_address)
 				$user_info[$cur_address['poster_id']]['ip'] = $cur_address['poster_ip'];
+
+			unset($query_pid, $query, $params, $result);
 		}
 
 		// And insert the bans!
@@ -839,7 +850,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 									<th scope="row"><?php echo $lang->t('Ban message label') ?></th>
 									<td>
 										<input type="text" name="ban_message" size="50" maxlength="255" tabindex="1" />
-										<span><?php echo $lang->t('Ban message help') ?></span>
+										<span><?php echo $lang->t('Bans message help') ?></span>
 									</td>
 								</tr>
 								<tr>

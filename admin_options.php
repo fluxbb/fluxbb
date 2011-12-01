@@ -106,7 +106,7 @@ if (isset($_POST['form_sent']))
 	require PUN_ROOT.'include/email.php';
 
 	if (!is_valid_email($form['admin_email']))
-		message($lang->t('Invalid e-mail message'));
+		message($lang->t('Invalid admin e-mail message'));
 
 	if (!is_valid_email($form['webmaster_email']))
 		message($lang->t('Invalid webmaster e-mail message'));
