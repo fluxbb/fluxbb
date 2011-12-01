@@ -69,7 +69,7 @@ $params = array(':group_id' => $pun_user['g_id']);
 
 if (!$pun_user['is_guest'])
 {
-	// Topic/forum tracing
+	// Forum tracking
 	$query->fields['mark_time'] = 'ft.mark_time AS forum_mark_time';
 	$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :user_id AND f.id = ft.forum_id');
 	$params[':user_id'] = $pun_user['id'];

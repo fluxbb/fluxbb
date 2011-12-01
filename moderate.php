@@ -1207,7 +1207,7 @@ if (!empty($topic_ids))
 
 	$result = $query->run($params);
 
-	// Get topic tracking data
+	// Get tracked topics
 	if (!$pun_user['is_guest'])
 	{
 		// Generate topic list...
