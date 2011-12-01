@@ -629,6 +629,11 @@ function preparse_list_tag($content, $type = '*', &$errors)
 function handle_url_tag($url, $link = '', $bbcode = false)
 {
 	$url = pun_trim($url);
+
+	// Deal with [url][img]http://example.com/test.png[/img][/url]
+	if (preg_match('%<img src=\\\\"(.*?)\\\\"%', $url, $matches))
+		return handle_url_tag($matches[1], $url, $bbcode);
+
 	$full_url = str_replace(array(' ', '\'', '`', '"'), array('%20', '', '', ''), $url);
 	if (strpos($url, 'www.') === 0) // If it starts with www, we add http://
 		$full_url = 'http://'.$full_url;
