@@ -79,7 +79,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 		list($inside, $text) = extract_blocks($text, '[code]', '[/code]');
 
 	// Tidy up lists
-	$temp = preg_replace($re_list, 'preparse_list_tag(\'$2\', \'$1\', $errors)', $text);
+	$temp = preg_replace($re_list, 'preparse_list_tag(\'$2\', \'$1\')', $text);
 
 	// If the regex failed
 	if ($temp === null)
@@ -115,7 +115,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 		$text = $temp_text;
 
 	// Remove empty tags
-	while (($new_text = strip_empty_bbcode($text, $errors)) !== false)
+	while (($new_text = strip_empty_bbcode($text)) !== false)
 	{
 		if ($new_text != $text)
 		{
@@ -137,7 +137,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 //
 // Strip empty bbcode tags from some text
 //
-function strip_empty_bbcode($text, &$errors)
+function strip_empty_bbcode($text)
 {
 	// If the message contains a code tag we have to split it up (empty tags within [code][/code] are fine)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
@@ -598,7 +598,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 //
 // Preparse the contents of [list] bbcode
 //
-function preparse_list_tag($content, $type = '*', &$errors)
+function preparse_list_tag($content, $type = '*')
 {
 	global $lang_common, $re_list;
 
@@ -607,7 +607,7 @@ function preparse_list_tag($content, $type = '*', &$errors)
 
 	if (strpos($content,'[list') !== false)
 	{
-		$content = preg_replace($re_list, 'preparse_list_tag(\'$2\', \'$1\', $errors)', $content);
+		$content = preg_replace($re_list, 'preparse_list_tag(\'$2\', \'$1\')', $content);
 	}
 
 	$items = explode('[*]', str_replace('\"', '"', $content));
