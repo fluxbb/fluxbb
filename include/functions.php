@@ -729,6 +729,8 @@ function generate_page_title($page_title, $p = null)
 
 //
 // Mark as read specified data (all, forum, topic)
+// This function is very much inspired by the markread()
+// from the phpBB Group forum software phpBB3 (http://www.phpbb.com)
 //
 function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, $last_post = 0, $mark_time = false)
 {
@@ -869,6 +871,8 @@ function mark_read($mode, $forum_id = false, $topic_id = false, $post_time = 0, 
 
 //
 // Get tracked topics by using already fetched info
+// This function is very much inspired by the get_topic_tracking_info()
+// from the phpBB Group forum software phpBB3 (http://www.phpbb.com)
 //
 function get_tracked_topics($forum_id, $topic_ids, $topic_list, $forum_mark_time)
 {
@@ -903,45 +907,6 @@ function get_tracked_topics($forum_id, $topic_ids, $topic_list, $forum_mark_time
 	}
 
 	return $last_read;
-}
-
-
-//
-// Get user's unread topics (currently not used anywhere)
-//
-function get_unread_topics()
-{
-	global $flux_config, $pun_user, $db;
-
-	$unread_topics = array();
-
-	// Fetch all unread topics
-	$query = $db->select(array('id' => 't.id', 'topic_mark_time' => 'tt.mark_time AS topic_mark_time', 'forum_mark_time' => 'ft.mark_time as forum_mark_time'), 'topics AS t');
-	$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :tt_user_id AND t.id = tt.topic_id');
-	$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :ft_user_id AND t.forum_id = ft.forum_id');
-	$query->where = 't.last_post > :last_mark AND (
-				(tt.mark_time IS NOT NULL AND t.last_post > tt.mark_time) OR
-				(tt.mark_time IS NULL AND ft.mark_time IS NOT NULL AND t.last_post > ft.mark_time) OR
-				(tt.mark_time IS NULL AND ft.mark_time IS NULL))';
-	$query->limit = 1001;
-
-	$params = array(':last_mark' => $pun_user['last_mark'], ':tt_user_id' => $pun_user['id'], ':ft_user_id' => $pun_user['id']);
-
-	$result = $query->run($params);
-
-	foreach ($result as $cur_topic)
-	{
-		$mark_time = $pun_user['last_mark'];
-		if ($cur_topic['topic_mark_time'])
-			$mark_time = $cur_topic['topic_mark_time'];
-		elseif ($cur_topic['forum_mark_time'])
-			$mark_time = $cur_topic['forum_mark_time'];
-
-		$unread_topics[$cur_topic['id']] = $mark_time;
-	}
-	unset ($result, $query, $params);
-
-	return $unread_topics;
 }
 
 
