@@ -216,11 +216,11 @@ else
 }
 
 // Check if the cache directory is writable
-if (!@is_writable(FORUM_CACHE_DIR))
+if (!forum_is_writable(FORUM_CACHE_DIR))
 	$alerts[] = $lang->t('Alert cache', FORUM_CACHE_DIR);
 
 // Check if default avatar directory is writable
-if (!@is_writable(PUN_ROOT.'img/avatars/'))
+if (!forum_is_writable(PUN_ROOT.'img/avatars/'))
 	$alerts[] = $lang->t('Alert avatar', PUN_ROOT.'img/avatars/');
 
 if (!isset($_POST['form_sent']) || !empty($alerts))
@@ -924,7 +924,7 @@ else
 	$avatars = in_array(strtolower(@ini_get('file_uploads')), array('on', 'true', '1')) ? 1 : 0;
 
 	// Insert config data
-	$config = array(
+	$pun_config = array(
 		'o_cur_version'				=> FORUM_VERSION,
 		'o_database_revision'		=> FORUM_DB_REVISION,
 		'o_searchindex_revision'	=> FORUM_SI_REVISION,
@@ -1006,7 +1006,7 @@ else
 
 	$query = $db->insert(array('conf_name' => ':conf_name', 'conf_value' => ':conf_value'), 'config');
 
-	foreach ($config as $conf_name => $conf_value)
+	foreach ($pun_config as $conf_name => $conf_value)
 	{
 		$params = array(':conf_name' => $conf_name, ':conf_value' => $conf_value);
 		$query->run($params);
@@ -1052,7 +1052,6 @@ else
 
 	// Index the test post so searching for it works
 	require PUN_ROOT.'include/search_idx.php';
-	$pun_config['o_default_lang'] = $default_lang;
 	update_search_index('post', 1, $message, $subject);
 
 	$db->commitTransaction();
@@ -1072,7 +1071,7 @@ else
 
 	// Attempt to write config.php and serve it up for download if writing fails
 	$written = false;
-	if (is_writable(PUN_ROOT))
+	if (forum_is_writable(PUN_ROOT))
 	{
 		$fh = @fopen(PUN_ROOT.'config.php', 'wb');
 		if ($fh)

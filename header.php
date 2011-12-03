@@ -104,7 +104,7 @@ if (isset($required_fields))
 /* <![CDATA[ */
 function process_form(the_form)
 {
-	var element_names = {
+	var required_fields = {
 <?php
 	// Output a JavaScript object with localised field names
 	$tpl_temp = count($required_fields);
@@ -120,14 +120,11 @@ function process_form(the_form)
 		for (var i = 0; i < the_form.length; ++i)
 		{
 			var elem = the_form.elements[i];
-			if (elem.name && (/^req_/.test(elem.name)))
+			if (elem.name && required_fields[elem.name] && !elem.value && elem.type && (/^(?:text(?:area)?|password|file)$/i.test(elem.type)))
 			{
-				if (!elem.value && elem.type && (/^(?:text(?:area)?|password|file)$/i.test(elem.type)))
-				{
-					alert('"' + element_names[elem.name] + '" <?php echo $lang->t('required field') ?>');
-					elem.focus();
-					return false;
-				}
+				alert('"' + required_fields[elem.name] + '" <?php echo $lang->t('required field') ?>');
+				elem.focus();
+				return false;
 			}
 		}
 	}
