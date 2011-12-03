@@ -15,7 +15,7 @@ function fetch_board_stats()
 	global $cache, $db;
 
 	$stats = $cache->get('boardstats');
-	if ($stats === Cache::NOT_FOUND)
+	if ($stats === Flux_Cache::NOT_FOUND)
 	{
 		$stats = array();
 
@@ -1179,7 +1179,7 @@ function censor_words($text)
 	if (!isset($censors))
 	{
 		$censors = $cache->get('censors');
-		if ($censors === Cache::NOT_FOUND)
+		if ($censors === Flux_Cache::NOT_FOUND)
 		{
 			$censors = array();
 
@@ -1227,7 +1227,7 @@ function get_title($user)
 	if ($pun_config['o_ranks'] == '1' && !isset($pun_ranks))
 	{
 		$pun_ranks = $cache->get('ranks');
-		if ($pun_ranks === Cache::NOT_FOUND)
+		if ($pun_ranks === Flux_Cache::NOT_FOUND)
 		{
 			$pun_ranks = array();
 
@@ -2067,7 +2067,7 @@ function generate_stopwords_cache_id()
 //
 // Split text into chunks ($inside contains all text inside $start and $end, and $outside contains all text outside)
 //
-function split_text($text, $start, $end, &$errors, $retab = true)
+function split_text($text, $start, $end, $retab = true)
 {
 	global $pun_config, $lang;
 
@@ -2095,7 +2095,7 @@ function split_text($text, $start, $end, &$errors, $retab = true)
 // Extract blocks from a text with a starting and ending string
 // This function always matches the most outer block so nesting is possible
 //
-function extract_blocks($text, $start, $end, &$errors = array(), $retab = true)
+function extract_blocks($text, $start, $end, $retab = true)
 {
 	global $pun_config;
 
@@ -2284,6 +2284,33 @@ function ucp_preg_replace($pattern, $replace, $subject)
 
 	return $replaced;
 }
+
+//
+// Check whether a file/folder is writable.
+//
+// This function also works on Windows Server where ACLs seem to be ignored.
+//
+function forum_is_writable($path)
+{
+	if (is_dir($path))
+	{
+		$path = rtrim($path, '/').'/';
+		return forum_is_writable($path.uniqid(mt_rand()).'.tmp');
+	}
+
+	// Check temporary file for read/write capabilities
+	$rm = file_exists($path);
+	$f = @fopen($path, 'a');
+
+	if ($f === false)
+		return false;
+
+	fclose($f);
+	@unlink($path);
+
+	return true;
+}
+
 
 // DEBUG FUNCTIONS BELOW
 

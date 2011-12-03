@@ -581,10 +581,7 @@ if ($tid)
 		// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 		if (strpos($cur_quote['message'], '[code]') !== false && strpos($cur_quote['message'], '[/code]') !== false)
 		{
-			$errors = array();
-			list($inside, $outside) = split_text($cur_quote['message'], '[code]', '[/code]', $errors);
-			if (!empty($errors)) // Technically this shouldn't happen, since $cur_quote['message'] is an existing post it should only exist if it previously passed validation
-				message($errors[0]);
+			list($inside, $outside) = split_text($cur_quote['message'], '[code]', '[/code]');
 
 			$cur_quote['message'] = implode("\1", $outside);
 		}

@@ -69,7 +69,7 @@ echo "\t\t\t".'<div class="conl">'."\n";
 if ($pun_config['o_quickjump'] == '1')
 {
 	$quickjump = $cache->get('quickjump');
-	if ($quickjump === Cache::NOT_FOUND)
+	if ($quickjump === Flux_Cache::NOT_FOUND)
 	{
 		$quickjump = array();
 

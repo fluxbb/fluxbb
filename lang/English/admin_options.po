@@ -140,19 +140,19 @@ msgid "UTC+02:00"
 msgstr "(UTC+02:00) Eastern European, Central African"
 
 msgid "UTC+03:00"
-msgstr "(UTC+03:00) Moscow, Eastern African"
+msgstr "(UTC+03:00) Eastern African"
 
 msgid "UTC+03:30"
 msgstr "(UTC+03:30) Iran"
 
 msgid "UTC+04:00"
-msgstr "(UTC+04:00) Gulf, Samara"
+msgstr "(UTC+04:00) Moscow, Gulf, Samara"
 
 msgid "UTC+04:30"
 msgstr "(UTC+04:30) Afghanistan"
 
 msgid "UTC+05:00"
-msgstr "(UTC+05:00) Pakistan, Yekaterinburg"
+msgstr "(UTC+05:00) Pakistan"
 
 msgid "UTC+05:30"
 msgstr "(UTC+05:30) India, Sri Lanka"
@@ -161,46 +161,46 @@ msgid "UTC+05:45"
 msgstr "(UTC+05:45) Nepal"
 
 msgid "UTC+06:00"
-msgstr "(UTC+06:00) Bangladesh, Bhutan, Novosibirsk"
+msgstr "(UTC+06:00) Bangladesh, Bhutan, Yekaterinburg"
 
 msgid "UTC+06:30"
 msgstr "(UTC+06:30) Cocos Islands, Myanmar"
 
 msgid "UTC+07:00"
-msgstr "(UTC+07:00) Indochina, Krasnoyarsk"
+msgstr "(UTC+07:00) Indochina, Novosibirsk"
 
 msgid "UTC+08:00"
-msgstr "(UTC+08:00) Greater China, Australian Western, Irkutsk"
+msgstr "(UTC+08:00) Greater China, Australian Western, Krasnoyarsk"
 
 msgid "UTC+08:45"
 msgstr "(UTC+08:45) Southeastern Western Australia"
 
 msgid "UTC+09:00"
-msgstr "(UTC+09:00) Japan, Korea, Chita"
+msgstr "(UTC+09:00) Japan, Korea, Chita, Irkutsk"
 
 msgid "UTC+09:30"
 msgstr "(UTC+09:30) Australian Central"
 
 msgid "UTC+10:00"
-msgstr "(UTC+10:00) Australian Eastern, Vladivostok"
+msgstr "(UTC+10:00) Australian Eastern"
 
 msgid "UTC+10:30"
 msgstr "(UTC+10:30) Lord Howe"
 
 msgid "UTC+11:00"
-msgstr "(UTC+11:00) Solomon Island, Magadan"
+msgstr "(UTC+11:00) Solomon Island, Vladivostok"
 
 msgid "UTC+11:30"
 msgstr "(UTC+11:30) Norfolk Island"
 
 msgid "UTC+12:00"
-msgstr "(UTC+12:00) New Zealand, Fiji, Kamchatka"
+msgstr "(UTC+12:00) New Zealand, Fiji, Magadan"
 
 msgid "UTC+12:45"
 msgstr "(UTC+12:45) Chatham Islands"
 
 msgid "UTC+13:00"
-msgstr "(UTC+13:00) Tonga, Phoenix Islands"
+msgstr "(UTC+13:00) Tonga, Phoenix Islands, Kamchatka"
 
 msgid "UTC+14:00"
 msgstr "(UTC+14:00) Line Islands"
