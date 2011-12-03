@@ -362,7 +362,7 @@ if (isset($_POST['form_sent']))
 		else if ($fid)
 		{
 			// Create the topic
-			$query = $db->insert(array('poster' => ':poster', 'subject' => ':subject', 'poster' => ':now', 'last_post' => ':now', 'last_poster' => ':last_poster', 'sticky' => ':sticky', 'forum_id' => ':forum_id'), 'topics');
+			$query = $db->insert(array('poster' => ':poster', 'subject' => ':subject', 'posted' => ':now', 'last_post' => ':now', 'last_poster' => ':last_poster', 'sticky' => ':sticky', 'forum_id' => ':forum_id'), 'topics');
 			$params = array(':poster' => $username, ':subject' => $subject, ':now' => $now, ':last_poster' => $username, ':sticky' => $stick_topic, ':forum_id' => $fid);
 
 			$query->run($params);
@@ -585,10 +585,7 @@ if ($tid)
 		// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 		if (strpos($cur_quote['message'], '[code]') !== false && strpos($cur_quote['message'], '[/code]') !== false)
 		{
-			$errors = array();
-			list($inside, $outside) = split_text($cur_quote['message'], '[code]', '[/code]', $errors);
-			if (!empty($errors)) // Technically this shouldn't happen, since $cur_quote['message'] is an existing post it should only exist if it previously passed validation
-				message($errors[0]);
+			list($inside, $outside) = split_text($cur_quote['message'], '[code]', '[/code]');
 
 			$cur_quote['message'] = implode("\1", $outside);
 		}

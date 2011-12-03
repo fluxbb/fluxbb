@@ -6,10 +6,11 @@ msgstr ""
 "Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in install.php, localized by adaur
+
 msgid "Install message"
 msgstr "The file 'config.php' doesn't exist or is corrupt. This implies that FluxBB has not yet been installed"
 
@@ -295,10 +296,10 @@ msgstr "Members"
 msgid "Member"
 msgstr "Member"
 
-msgid "Announcement"
+msgid "Enter announcement"
 msgstr "Enter your announcement here."
 
-msgid "Rules"
+msgid "Enter rules"
 msgstr "Enter your rules here"
 
 msgid "Maintenance message"
@@ -307,7 +308,7 @@ msgstr "The forums are temporarily down for maintenance. Please try again in a f
 msgid "Test post"
 msgstr "Test topic"
 
-msgid "Message"
+msgid "Test post example"
 msgstr "If you are looking at this (which I guess you are), the install of FluxBB appears to have worked! Now log in and head over to the administration control panel to configure your forum."
 
 msgid "Test category"

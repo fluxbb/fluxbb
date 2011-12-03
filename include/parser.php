@@ -76,10 +76,10 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
-		list($inside, $text) = extract_blocks($text, '[code]', '[/code]', $errors);
+		list($inside, $text) = extract_blocks($text, '[code]', '[/code]');
 
 	// Tidy up lists
-	$temp = preg_replace($re_list, 'preparse_list_tag(\'$2\', \'$1\', $errors)', $text);
+	$temp = preg_replace($re_list, 'preparse_list_tag(\'$2\', \'$1\')', $text);
 
 	// If the regex failed
 	if ($temp === null)
@@ -115,7 +115,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 		$text = $temp_text;
 
 	// Remove empty tags
-	while (($new_text = strip_empty_bbcode($text, $errors)) !== false)
+	while (($new_text = strip_empty_bbcode($text)) !== false)
 	{
 		if ($new_text != $text)
 		{
@@ -138,11 +138,11 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 //
 // Strip empty bbcode tags from some text
 //
-function strip_empty_bbcode($text, &$errors)
+function strip_empty_bbcode($text)
 {
 	// If the message contains a code tag we have to split it up (empty tags within [code][/code] are fine)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
-		list($inside, $text) = extract_blocks($text, '[code]', '[/code]', $errors);
+		list($inside, $text) = extract_blocks($text, '[code]', '[/code]');
 
 	// Remove empty tags
 	while (($new_text = preg_replace('%\[(b|u|s|ins|del|em|i|h|colou?r|quote|img|url|email|list|topic|post|forum|user)(?:\=[^\]]*)?\]\s*\[/\1\]%', '', $text)) !== NULL)
@@ -354,18 +354,13 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			$current = strtolower($current);
 
 		// This is if we are currently in a tag which escapes other bbcode such as code
-		// We keep a cound of ignored bbcodes (code tags) so we can nest them, but
+		// We keep a count of ignored bbcodes (code tags) so we can nest them, but
 		// only balanced sets of tags can be nested
 		if ($current_ignore)
 		{
 			// Increase the current ignored tags counter
 			if ('['.$current_ignore.']' == $current)
-			{
-				if (!isset($count_ignored[$current_tag]))
-					$count_ignored[$current_tag] = 2;
-				else
-					$count_ignored[$current_tag]++;
-			}
+				$count_ignored[$current_tag]++;
 
 			// Decrease the current ignored tags counter
 			if ('[/'.$current_ignore.']' == $current)
@@ -533,6 +528,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 			{
 				// It's an ignore tag so we don't need to worry about what's inside it
 				$current_ignore = $current_tag;
+				$count_ignored[$current_tag] = 1;
 				$new_text .= $current;
 				continue;
 			}
@@ -603,7 +599,7 @@ function preparse_tags($text, &$errors, $is_signature = false)
 //
 // Preparse the contents of [list] bbcode
 //
-function preparse_list_tag($content, $type = '*', &$errors)
+function preparse_list_tag($content, $type = '*')
 {
 	global $lang, $re_list;
 
@@ -612,7 +608,7 @@ function preparse_list_tag($content, $type = '*', &$errors)
 
 	if (strpos($content,'[list') !== false)
 	{
-		$content = preg_replace($re_list, 'preparse_list_tag(\'$2\', \'$1\', $errors)', $content);
+		$content = preg_replace($re_list, 'preparse_list_tag(\'$2\', \'$1\')', $content);
 	}
 
 	$items = explode('[*]', str_replace('\"', '"', $content));
@@ -634,6 +630,11 @@ function preparse_list_tag($content, $type = '*', &$errors)
 function handle_url_tag($url, $link = '', $bbcode = false)
 {
 	$url = pun_trim($url);
+
+	// Deal with [url][img]http://example.com/test.png[/img][/url]
+	if (preg_match('%<img src=\\\\"(.*?)\\\\"%', $url, $matches))
+		return handle_url_tag($matches[1], $url, $bbcode);
+
 	$full_url = str_replace(array(' ', '\'', '`', '"'), array('%20', '', '', ''), $url);
 	if (strpos($url, 'www.') === 0) // If it starts with www, we add http://
 		$full_url = 'http://'.$full_url;
@@ -855,7 +856,7 @@ function parse_message($text, $hide_smilies)
 
 	// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 	if (strpos($text, '[code]') !== false && strpos($text, '[/code]') !== false)
-		list($inside, $text) = extract_blocks($text, '[code]', '[/code]', $errors);
+		list($inside, $text) = extract_blocks($text, '[code]', '[/code]');
 
 	if ($pun_config['p_message_bbcode'] == '1' && strpos($text, '[') !== false && strpos($text, ']') !== false)
 		$text = do_bbcode($text);

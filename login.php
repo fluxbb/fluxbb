@@ -237,7 +237,7 @@ if (!empty($errors))
 	<h2><span><?php echo $lang->t('New password errors') ?></span></h2>
 	<div class="box">
 		<div class="inbox error-info">
-			<p><?php echo $lang->t('New passworderrors info') ?></p>
+			<p><?php echo $lang->t('New password errors info') ?></p>
 			<ul class="error-list">
 <?php
 

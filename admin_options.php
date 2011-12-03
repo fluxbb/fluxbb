@@ -27,7 +27,6 @@ if (isset($_POST['form_sent']))
 	$form = array(
 		'board_title'			=> pun_trim($_POST['form']['board_title']),
 		'board_desc'			=> pun_trim($_POST['form']['board_desc']),
-		'base_url'				=> pun_trim($_POST['form']['base_url']),
 		'default_timezone'		=> floatval($_POST['form']['default_timezone']),
 		'default_dst'			=> $_POST['form']['default_dst'] != '1' ? '0' : '1',
 		'default_lang'			=> pun_trim($_POST['form']['default_lang']),
@@ -90,10 +89,6 @@ if (isset($_POST['form_sent']))
 	if ($form['board_title'] == '')
 		message($lang->t('Must enter title message'));
 
-	// Make sure base_url doesn't end with a slash
-	if (substr($form['base_url'], -1) == '/')
-		$form['base_url'] = substr($form['base_url'], 0, -1);
-
 	if (!Flux_Lang::languageExists($form['default_lang']))
 		message($lang->t('Bad request'));
 
@@ -111,7 +106,7 @@ if (isset($_POST['form_sent']))
 	require PUN_ROOT.'include/email.php';
 
 	if (!is_valid_email($form['admin_email']))
-		message($lang->t('Invalid e-mail message'));
+		message($lang->t('Invalid admin e-mail message'));
 
 	if (!is_valid_email($form['webmaster_email']))
 		message($lang->t('Invalid webmaster e-mail message'));
@@ -241,13 +236,6 @@ generate_admin_menu('options');
 									<td>
 										<input type="text" name="form[board_desc]" size="50" maxlength="255" value="<?php echo pun_htmlspecialchars($pun_config['o_board_desc']) ?>" />
 										<span><?php echo $lang->t('Board desc help') ?></span>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row"><?php echo $lang->t('Base URL label') ?></th>
-									<td>
-										<input type="text" name="form[base_url]" size="50" maxlength="100" value="<?php echo pun_htmlspecialchars($pun_config['o_base_url']) ?>" />
-										<span><?php echo $lang->t('Base URL help') ?></span>
 									</td>
 								</tr>
 								<tr>

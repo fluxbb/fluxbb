@@ -142,9 +142,9 @@ else if (isset($_GET['del_forum']))
 			<form method="post" action="admin_forums.php?del_forum=<?php echo $forum_id ?>">
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang->t('Confirm delete subhead') ?></legend>
+						<legend><?php echo $lang->t('Confirm delete forum subhead') ?></legend>
 						<div class="infldset">
-							<p><?php echo $lang->t('Confirm delete info', $forum_name) ?></p>
+							<p><?php echo $lang->t('Confirm delete forum info', $forum_name) ?></p>
 							<p class="warntext"><?php echo $lang->t('Confirm delete warn') ?></p>
 						</div>
 					</fieldset>
@@ -207,7 +207,7 @@ else if (isset($_GET['edit_forum']))
 		$redirect_url = isset($_POST['redirect_url']) ? trim($_POST['redirect_url']) : null;
 
 		if ($forum_name == '')
-			message($lang->t('Must enter name message'));
+			message($lang->t('Must enter forum name message'));
 
 		if ($cat_id < 1)
 			message($lang->t('Bad request'));

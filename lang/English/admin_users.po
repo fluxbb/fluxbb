@@ -6,10 +6,11 @@ msgstr ""
 "Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in admin-users.php
+
 msgid "Non numeric message"
 msgstr "You entered a non-numeric value into a numeric only column."
 
@@ -56,10 +57,10 @@ msgstr "User group changed. Redirecting …"
 msgid "Delete users"
 msgstr "Delete users"
 
-msgid "Confirm delete legend"
+msgid "Confirm delete users subhead"
 msgstr "Important: read before deleting users"
 
-msgid "Confirm delete info"
+msgid "Confirm delete users info"
 msgstr "Please confirm that you want to delete these users."
 
 msgid "Delete posts"
@@ -80,7 +81,7 @@ msgstr "Ban message and expiry"
 msgid "Ban message label"
 msgstr "Ban message"
 
-msgid "Ban message help"
+msgid "Bans message help"
 msgstr "A message that will be displayed to the banned users when they visit the board."
 
 msgid "Expire date label"

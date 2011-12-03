@@ -357,7 +357,7 @@ else if ($action == 'change_email')
 		<form id="change_email" method="post" action="profile.php?action=change_email&amp;id=<?php echo $id ?>" id="change_email" onsubmit="return process_form(this)">
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang->t('Email legend') ?></legend>
+					<legend><?php echo $lang->t('New email legend') ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
 						<label class="required"><strong><?php echo $lang->t('New email') ?> <span><?php echo $lang->t('Required') ?></span></strong><br /><input type="text" name="req_new_email" size="50" maxlength="80" /><br /></label>
@@ -851,7 +851,7 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 				<fieldset>
 					<legend><?php echo $lang->t('Confirm delete legend') ?></legend>
 					<div class="infldset">
-						<p><?php echo $lang->t('Confirmation info').' <strong>'.pun_htmlspecialchars($username).'</strong>.' ?></p>
+						<p><?php printf($lang->t('Confirmation info', ' <strong>'.pun_htmlspecialchars($username).'</strong>')) ?></p>
 						<div class="rbox">
 							<label><input type="checkbox" name="delete_posts" value="1" checked="checked" /><?php echo $lang->t('Delete posts') ?><br /></label>
 						</div>
@@ -1483,7 +1483,7 @@ else
 			$username_field = '<p>'.$lang->t('Username').': '.pun_htmlspecialchars($user['username']).'</p>'."\n";
 
 			if ($pun_config['o_regs_verify'] == '1')
-				$email_field = '<p>'.$lang->t('Email info', $user['email'].' - <a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang->t('Change email').'</a>').'</p>'."\n";
+				$email_field = '<p>'.$lang->t('Email field', $user['email'].' - <a href="profile.php?action=change_email&amp;id='.$id.'">'.$lang->t('Change email').'</a>').'</p>'."\n";
 			else
 				$email_field = '<label class="required"><strong>'.$lang->t('Email').' <span>'.$lang->t('Required').'</span></strong><br /><input type="text" name="req_email" value="'.$user['email'].'" size="40" maxlength="80" /><br /></label>'."\n";
 		}

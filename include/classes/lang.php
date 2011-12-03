@@ -136,7 +136,7 @@ class Flux_Lang
 
 		// TODO: Slash allowed? - I'd rather use that than an underscore
 		$trans_cache = $cache->get($this->lang.'_'.$resource);
-		if ($trans_cache === Cache::NOT_FOUND)
+		if ($trans_cache === Flux_Cache::NOT_FOUND)
 		{
 			$trans_cache = Flux_Gettext::parse($filename);
 
@@ -144,7 +144,7 @@ class Flux_Lang
 			if ($this->defaultLang != $this->lang)
 			{
 				$def_trans_cache = $cache->get($this->defaultLang.'_'.$resource);
-				if ($def_trans_cache === Cache::NOT_FOUND)
+				if ($def_trans_cache === Flux_Cache::NOT_FOUND)
 				{
 					$def_trans_cache = Flux_Gettext::parse($default_filename);
 

@@ -73,7 +73,7 @@ if (get_magic_quotes_runtime())
 	set_magic_quotes_runtime(0);
 
 // Strip slashes from GET/POST/COOKIE/REQUEST/FILES (if magic_quotes_gpc is enabled)
-if (get_magic_quotes_gpc())
+if (!defined('FORUM_DISABLE_STRIPSLASHES') && get_magic_quotes_gpc())
 {
 	function stripslashes_array($array)
 	{
@@ -84,7 +84,13 @@ if (get_magic_quotes_gpc())
 	$_POST = stripslashes_array($_POST);
 	$_COOKIE = stripslashes_array($_COOKIE);
 	$_REQUEST = stripslashes_array($_REQUEST);
-	$_FILES = stripslashes_array($_FILES);
+	if (is_array($_FILES))
+	{
+		// Don't strip valid slashes from tmp_name path on Windows
+		foreach ($_FILES AS $key => $value)
+			$_FILES[$key]['tmp_name'] = str_replace('\\', '\\\\', $value['tmp_name']);
+		$_FILES = stripslashes_array($_FILES);
+	}
 }
 
 // If a cookie name is not specified in config.php, we use the default (pun_cookie)
@@ -93,7 +99,7 @@ if (empty($cookie_name))
 
 // Load the cache module
 require PUN_ROOT.'modules/cache/cache.php';
-$cache = Cache::load($flux_config['cache']['type'], array('dir' => $flux_config['cache']['dir']), 'varexport'); // TODO: Move this config into config.php
+$cache = Flux_Cache::load($flux_config['cache']['type'], array('dir' => $flux_config['cache']['dir']), 'varexport'); // TODO: Move this config into config.php
 
 // Define a few commonly used constants
 define('PUN_UNVERIFIED', 0);
@@ -112,7 +118,7 @@ $db->startTransaction();
 
 // Load cached config
 $pun_config = $cache->get('config');
-if ($pun_config === Cache::NOT_FOUND)
+if ($pun_config === Flux_Cache::NOT_FOUND)
 {
 	$pun_config = array();
 
@@ -171,7 +177,7 @@ if ($pun_config['o_maintenance'] && $pun_user['g_id'] > PUN_ADMIN && !defined('P
 
 // Load cached bans
 $pun_bans = $cache->get('bans');
-if ($pun_bans === Cache::NOT_FOUND)
+if ($pun_bans === Flux_Cache::NOT_FOUND)
 {
 	// Get the ban list from the DB
 	$query = $db->select(array('id' => 'b.id', 'username' => 'b.username', 'ip' => 'b.ip', 'email' => 'b.email', 'message' => 'b.message', 'expire' => 'b.expire', 'ban_creator' => 'b.ban_creator'), 'bans AS b');

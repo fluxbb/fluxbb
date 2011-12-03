@@ -1195,7 +1195,7 @@ if (!empty($topic_ids))
 		$topic_ids[$key] = $value['id'];
 
 	// Select topics
-	$query = $db->select(array('id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to'), 'topics AS t');
+	$query = $db->select(array('id' => 'id', 'poster' => 'poster', 'subject' => 'subject', 'posted' => 'posted', 'last_post' => 'last_post', 'last_post_id' => 'last_post_id', 'last_poster' => 'last_poster', 'num_views' => 'num_views', 'num_replies' => 'num_replies', 'closed' => 'closed', 'sticky' => 'sticky', 'moved_to' => 'moved_to'), 'topics AS t');
 	$query->where = 't.id IN :tids';
 	$query->order = array('sticky' => 't.sticky DESC', 'sort' => $sort_by, 'id' => 't.id DESC');
 

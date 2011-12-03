@@ -6,10 +6,11 @@ msgstr ""
 "Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in profile.php
+
 # Navigation and sections
 msgid "Profile menu"
 msgstr "Profile menu"
@@ -95,7 +96,7 @@ msgstr "Your email address has been updated."
 msgid "Activate email sent"
 msgstr "An email has been sent to the specified address with instructions on how to activate the new email address. If it doesn't arrive you can contact the forum administrator at"
 
-msgid "Email legend"
+msgid "New email legend"
 msgstr "Enter your new email address"
 
 msgid "Email instructions"
@@ -182,16 +183,14 @@ msgid "Upload avatar legend"
 msgstr "Enter an avatar file to upload"
 
 msgid "Delete avatar"
-msgstr "Delete avatar"
+msgstr "Delete avatar" # only for admins
 
-# only for admins
 msgid "File"
 msgstr "File"
 
 msgid "Upload"
-msgstr "Upload"
+msgstr "Upload" # submit button
 
-# submit button
 # Form validation stuff
 msgid "Forbidden title"
 msgstr "The title you entered contains a forbidden word. You must choose a different title."
@@ -206,7 +205,7 @@ msgstr "%s's profile"
 msgid "Username info"
 msgstr "Username: %s"
 
-msgid "Email info"
+msgid "Email field"
 msgstr "Email: %s"
 
 msgid "Posts info"
@@ -376,9 +375,8 @@ msgid "Confirm delete user"
 msgstr "Confirm delete user"
 
 msgid "Confirmation info"
-msgstr "Please confirm that you want to delete the user"
+msgstr "Please confirm that you want to delete the user %s."
 
-# the username will be appended to this string
 msgid "Delete warning"
 msgstr "Warning! Deleted users and/or posts cannot be restored. If you choose not to delete the posts made by this user, the posts can only be deleted manually at a later time."
 
@@ -386,9 +384,8 @@ msgid "Delete posts"
 msgstr "Delete any posts and topics this user has made."
 
 msgid "Delete"
-msgstr "Delete"
+msgstr "Delete" # submit button (confirm user delete)
 
-# submit button (confirm user delete)
 msgid "User delete redirect"
 msgstr "User deleted. Redirecting …"
 

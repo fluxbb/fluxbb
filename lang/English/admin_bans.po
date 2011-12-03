@@ -6,10 +6,11 @@ msgstr ""
 "Last-Translator: Franz Liedke <franz@fluxbb.org>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 # Language definitions used in admin_bans.php
+
 msgid "No user message"
 msgstr "No user by that username registered. If you want to add a ban not tied to a specific username just leave the username blank."
 

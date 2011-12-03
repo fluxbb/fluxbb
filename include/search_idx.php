@@ -47,9 +47,6 @@ define('PUN_CJK_HANGUL_REGEX', '['.
 //
 function split_words($text, $idx)
 {
-	// Remove BBCode
-	$text = preg_replace('%\[/?(b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list)(?:\=[^\]]*)?\]%', ' ', $text);
-
 	// Remove any apostrophes or dashes which aren't part of words
 	$text = substr(ucp_preg_replace('%((?<=[^\p{L}\p{N}])[\'\-]|[\'\-](?=[^\p{L}\p{N}]))%u', '', ' '.$text.' '), 1, -1);
 
@@ -91,7 +88,7 @@ function validate_search_word($word, $idx)
 		$cache_id = generate_stopwords_cache_id();
 
 		$stopwords = $cache->get('stopwords.'.$cache_id);
-		if ($stopwords === Cache::NOT_FOUND)
+		if ($stopwords === Flux_Cache::NOT_FOUND)
 		{
 			$stopwords = array();
 
@@ -158,7 +155,8 @@ function strip_bbcode($text)
 		$patterns = array(
 			'%\[img=([^\]]*+)\]([^[]*+)\[/img\]%'									=>	'$2 $1',	// Keep the url and description
 			'%\[(url|email)=([^\]]*+)\]([^[]*+(?:(?!\[/\1\])\[[^[]*+)*)\[/\1\]%'	=>	'$2 $3',	// Keep the url and text
-			'%\[(img|url|email)\]([^[]*+(?:(?!\[/\1\])\[[^[]*+)*)\[/\1\]%'			=>	'$2',		// Keep the url
+			'%\[(topic|post|forum|user)\][1-9]\d*\[/\1\]%'							=>	' ',		// Do not index topic/post/forum/user ID
+			'%\[/?(b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list|topic|post|forum|user)(?:\=[^\]]*)?\]%'	=> ' ' // Remove BBCode
 		);
 	}
 
@@ -300,47 +298,65 @@ function update_search_index($mode, $post_id, $message, $subject = null)
 //
 function strip_search_index($post_ids)
 {
-	global $db_type, $db;
+	global $flux_config, $db;
 
 	// Convert the post ID string to an array - TODO: pass an array in the first place!
 	if (!is_array($post_ids))
-		$post_ids = array_map('trim', explode(',', $post_ids));
+		$post_ids = array($post_ids);
 
-	// TODO
-	switch ($db_type)
-	{
-		case 'mysql':
-		case 'mysqli':
-		case 'mysql_innodb':
-		case 'mysqli_innodb':
-		{
-			$result = $db->query('SELECT word_id FROM '.$db->prefix.'search_matches WHERE post_id IN('.$post_ids.') GROUP BY word_id') or error('Unable to fetch search index word match', __FILE__, __LINE__, $db->error());
+	$query_posts = $db->select(array('word_id' => 'word_id'), 'search_matches');
+	$query_posts->where = 'post_id IN :post_ids';
+	$query_posts->group = array('word_id' => 'word_id');
 
-			if ($db->num_rows($result))
-			{
-				$word_ids = '';
-				while ($row = $db->fetch_row($result))
-					$word_ids .= ($word_ids != '') ? ','.$row[0] : $row[0];
+	$query_words = $db->select(array('word_id' => 'word_id'), 'search_matches');
+	$query_words->where = 'word_id IN :word_ids';
+	$query_words->group = array('word_id' => 'word_id');
+	$query_words->having = 'COUNT(word_id)=1';
 
-				$result = $db->query('SELECT word_id FROM '.$db->prefix.'search_matches WHERE word_id IN('.$word_ids.') GROUP BY word_id HAVING COUNT(word_id)=1') or error('Unable to fetch search index word match', __FILE__, __LINE__, $db->error());
+	$query_delete = $db->delete('search_words');
+	$query_delete->where = 'id IN :word_ids';
 
-				if ($db->num_rows($result))
-				{
-					$word_ids = '';
-					while ($row = $db->fetch_row($result))
-						$word_ids .= ($word_ids != '') ? ','.$row[0] : $row[0];
+	// TODO: I rewrote this to the new dblayer and there was a mysql specified code (three queries) so I did this also
+	// However the one query with subqueries also works for me using mysql (so I commented rest)
+//	if ($flux_config['db']['type'] == 'MySQL')
+//	{
+//		$params = array(':post_ids' => $post_ids);
+//		$result = $query_posts->run($params);
+//		$word_ids = array();
+//		if (!empty($result))
+//		{
+//			foreach ($result as $cur_word)
+//				$word_ids[] = $cur_word['word_id'];
+//		}
+//		unset ($result, $query_posts, $params);
 
-					$db->query('DELETE FROM '.$db->prefix.'search_words WHERE id IN('.$word_ids.')') or error('Unable to delete search index word', __FILE__, __LINE__, $db->error());
-				}
-			}
+//		if (!empty($word_ids))
+//		{
+//			$params = array(':word_ids' => $word_ids);
+//			$result = $query_words->run($params);
 
-			break;
-		}
+//			$word_ids = array();
+//			foreach ($result as $cur_word)
+//				$word_ids[] = $cur_word['word_id'];
 
-		default:
-			$db->query('DELETE FROM '.$db->prefix.'search_words WHERE id IN(SELECT word_id FROM '.$db->prefix.'search_matches WHERE word_id IN(SELECT word_id FROM '.$db->prefix.'search_matches WHERE post_id IN('.$post_ids.') GROUP BY word_id) GROUP BY word_id HAVING COUNT(word_id)=1)') or error('Unable to delete from search index', __FILE__, __LINE__, $db->error());
-			break;
-	}
+//			unset ($result, $query_words, $params);
+
+//			$params = array(':word_ids' => $word_ids);
+
+//			$query_delete->run($params);
+//			unset ($query_delete, $params);
+//		}
+//	}
+//	else
+//	{
+		$query_words->where = 'word_id IN ('.$query_posts->compile().')';
+		$query_delete->where = 'id IN ('.$query_words->compile().')';
+
+		$params = array(':post_ids' => $post_ids);
+		$query_delete->run($params);
+
+		unset ($query_posts, $query_words, $query_delete, $params);
+//	}
 
 	// Delete all matches for the given posts
 	$query = $db->delete('search_matches');
