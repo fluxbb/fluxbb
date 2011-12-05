@@ -188,10 +188,10 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang->t('E-mail label') ?></th>
+									<th scope="row"><?php echo $lang->t('Email label') ?></th>
 									<td>
 										<input type="text" name="ban_email" size="40" maxlength="80" value="<?php if (isset($ban_email)) echo $ban_email; ?>" tabindex="3" />
-										<span><?php echo $lang->t('E-mail help') ?></span>
+										<span><?php echo $lang->t('Email help') ?></span>
 									</td>
 								</tr>
 							</table>
@@ -321,7 +321,7 @@ else if (isset($_POST['add_edit_ban']))
 	if ($ban_email != '' && !is_valid_email($ban_email))
 	{
 		if (!preg_match('%^[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$%', $ban_email))
-			message($lang->t('Invalid e-mail message'));
+			message($lang->t('Invalid email message'));
 	}
 
 	if ($ban_expire != '' && $ban_expire != 'Never')
@@ -497,7 +497,7 @@ else if (isset($_GET['find_ban']))
 			<thead>
 				<tr>
 					<th class="tcl" scope="col"><?php echo $lang->t('Results username head') ?></th>
-					<th class="tc2" scope="col"><?php echo $lang->t('Results e-mail head') ?></th>
+					<th class="tc2" scope="col"><?php echo $lang->t('Results email head') ?></th>
 					<th class="tc3" scope="col"><?php echo $lang->t('Results IP address head') ?></th>
 					<th class="tc4" scope="col"><?php echo $lang->t('Results expire head') ?></th>
 					<th class="tc5" scope="col"><?php echo $lang->t('Results message head') ?></th>
@@ -619,7 +619,7 @@ generate_admin_menu('bans');
 									<td><input type="text" name="form[ip]" size="30" maxlength="255" tabindex="5" /></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang->t('E-mail label') ?></th>
+									<th scope="row"><?php echo $lang->t('Email label') ?></th>
 									<td><input type="text" name="form[email]" size="30" maxlength="80" tabindex="6" /></td>
 								</tr>
 								<tr>
@@ -642,7 +642,7 @@ generate_admin_menu('bans');
 										<select name="order_by" tabindex="10">
 											<option value="username" selected="selected"><?php echo $lang->t('Order by username') ?></option>
 											<option value="ip"><?php echo $lang->t('Order by ip') ?></option>
-											<option value="email"><?php echo $lang->t('Order by e-mail') ?></option>
+											<option value="email"><?php echo $lang->t('Order by email') ?></option>
 											<option value="expire"><?php echo $lang->t('Order by expire') ?></option>
 										</select>&#160;&#160;&#160;<select name="direction" tabindex="11">
 											<option value="ASC" selected="selected"><?php echo $lang->t('Ascending') ?></option>
