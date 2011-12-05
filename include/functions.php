@@ -459,8 +459,8 @@ function check_bans()
 	$bans_altered = false;
 	$is_banned = false;
 
-	$query = $db->delete('bans AS b');
-	$query->where = 'b.id = :ban_id';
+	$query = $db->delete('bans');
+	$query->where = 'id = :ban_id';
 
 	foreach ($pun_bans as $cur_ban)
 	{
