@@ -113,6 +113,15 @@ else if (isset($_GET['del_forum']))
 		$query->run($params);
 		unset ($query, $params);
 
+		// Delete forum tracking data
+		$query = $db->delete('forums_track');
+		$query->where = 'forum_id = :forum_id';
+
+		$params = array(':forum_id' => $forum_id);
+
+		$query->run($params);
+		unset($query, $params);
+
 		// Regenerate the quick jump cache
 		$cache->delete('quickjump');
 
