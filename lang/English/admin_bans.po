@@ -32,7 +32,7 @@ msgstr "The guest user cannot be banned."
 msgid "Invalid IP message"
 msgstr "You entered an invalid IP/IP-range."
 
-msgid "Invalid e-mail message"
+msgid "Invalid email message"
 msgstr "The email address (e.g. user@domain.com) or partial email address domain (e.g. domain.com) you entered is invalid."
 
 msgid "Invalid date message"
@@ -95,7 +95,7 @@ msgstr "Username"
 msgid "Order by ip"
 msgstr "IP"
 
-msgid "Order by e-mail"
+msgid "Order by email"
 msgstr "Email"
 
 msgid "Order by expire"
@@ -110,10 +110,10 @@ msgstr "Descending"
 msgid "Submit search"
 msgstr "Submit search"
 
-msgid "E-mail label"
+msgid "Email label"
 msgstr "Email"
 
-msgid "E-mail help"
+msgid "Email help"
 msgstr "The email or email domain you wish to ban (e.g. someone@somewhere.com or somewhere.com). See \"Allow banned email addresses\" in Permissions for more info."
 
 msgid "IP label"
@@ -155,7 +155,7 @@ msgstr "Search Results"
 msgid "Results username head"
 msgstr "Username"
 
-msgid "Results e-mail head"
+msgid "Results email head"
 msgstr "Email"
 
 msgid "Results IP address head"
@@ -178,4 +178,3 @@ msgstr "No match"
 
 msgid "Unknown"
 msgstr "Unknown"
-

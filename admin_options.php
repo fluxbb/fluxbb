@@ -106,10 +106,10 @@ if (isset($_POST['form_sent']))
 	require PUN_ROOT.'include/email.php';
 
 	if (!is_valid_email($form['admin_email']))
-		message($lang->t('Invalid admin e-mail message'));
+		message($lang->t('Invalid admin email message'));
 
 	if (!is_valid_email($form['webmaster_email']))
-		message($lang->t('Invalid webmaster e-mail message'));
+		message($lang->t('Invalid webmaster email message'));
 
 	if ($form['mailing_list'] != '')
 		$form['mailing_list'] = strtolower(preg_replace('%\s%S', '', $form['mailing_list']));
@@ -602,7 +602,7 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang->t('Reporting method label') ?></th>
 									<td>
-										<input type="radio" name="form[report_method]" value="0"<?php if ($pun_config['o_report_method'] == '0') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang->t('Internal') ?></strong>&#160;&#160;&#160;<input type="radio" name="form[report_method]" value="1"<?php if ($pun_config['o_report_method'] == '1') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang->t('By e-mail') ?></strong>&#160;&#160;&#160;<input type="radio" name="form[report_method]" value="2"<?php if ($pun_config['o_report_method'] == '2') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang->t('Both') ?></strong>
+										<input type="radio" name="form[report_method]" value="0"<?php if ($pun_config['o_report_method'] == '0') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang->t('Internal') ?></strong>&#160;&#160;&#160;<input type="radio" name="form[report_method]" value="1"<?php if ($pun_config['o_report_method'] == '1') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang->t('By email') ?></strong>&#160;&#160;&#160;<input type="radio" name="form[report_method]" value="2"<?php if ($pun_config['o_report_method'] == '2') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang->t('Both') ?></strong>
 										<span><?php echo $lang->t('Reporting method help') ?></span>
 									</td>
 								</tr>
@@ -663,21 +663,21 @@ generate_admin_menu('options');
 				</div>
 				<div class="inform">
 					<fieldset>
-						<legend><?php echo $lang->t('E-mail subhead') ?></legend>
+						<legend><?php echo $lang->t('Email subhead') ?></legend>
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row"><?php echo $lang->t('Admin e-mail label') ?></th>
+									<th scope="row"><?php echo $lang->t('Admin email label') ?></th>
 									<td>
 										<input type="text" name="form[admin_email]" size="50" maxlength="80" value="<?php echo $pun_config['o_admin_email'] ?>" />
-										<span><?php echo $lang->t('Admin e-mail help') ?></span>
+										<span><?php echo $lang->t('Admin email help') ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang->t('Webmaster e-mail label') ?></th>
+									<th scope="row"><?php echo $lang->t('Webmaster email label') ?></th>
 									<td>
 										<input type="text" name="form[webmaster_email]" size="50" maxlength="80" value="<?php echo $pun_config['o_webmaster_email'] ?>" />
-										<span><?php echo $lang->t('Webmaster e-mail help') ?></span>
+										<span><?php echo $lang->t('Webmaster email help') ?></span>
 									</td>
 								</tr>
 								<tr>
@@ -770,10 +770,10 @@ generate_admin_menu('options');
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang->t('E-mail default label') ?></th>
+									<th scope="row"><?php echo $lang->t('Email default label') ?></th>
 									<td>
-										<span><?php echo $lang->t('E-mail default help') ?></span>
-										<input type="radio" name="form[default_email_setting]" value="0"<?php if ($pun_config['o_default_email_setting'] == '0') echo ' checked="checked"' ?> />&#160;<?php echo $lang->t('Display e-mail label') ?><br />
+										<span><?php echo $lang->t('Email default help') ?></span>
+										<input type="radio" name="form[default_email_setting]" value="0"<?php if ($pun_config['o_default_email_setting'] == '0') echo ' checked="checked"' ?> />&#160;<?php echo $lang->t('Display email label') ?><br />
 										<input type="radio" name="form[default_email_setting]" value="1"<?php if ($pun_config['o_default_email_setting'] == '1') echo ' checked="checked"' ?> />&#160;<?php echo $lang->t('Hide allow form label') ?><br />
 										<input type="radio" name="form[default_email_setting]" value="2"<?php if ($pun_config['o_default_email_setting'] == '2') echo ' checked="checked"' ?> />&#160;<?php echo $lang->t('Hide both label') ?><br />
 									</td>

@@ -193,7 +193,7 @@ if (isset($_GET['show_users']))
 			<thead>
 				<tr>
 					<th class="tcl" scope="col"><?php echo $lang->t('Results username head') ?></th>
-					<th class="tc2" scope="col"><?php echo $lang->t('Results e-mail head') ?></th>
+					<th class="tc2" scope="col"><?php echo $lang->t('Results email head') ?></th>
 					<th class="tc3" scope="col"><?php echo $lang->t('Results title head') ?></th>
 					<th class="tc4" scope="col"><?php echo $lang->t('Results posts head') ?></th>
 					<th class="tc5" scope="col"><?php echo $lang->t('Results admin note head') ?></th>
@@ -1049,7 +1049,7 @@ else if (isset($_GET['find_user']))
 			<thead>
 				<tr>
 					<th class="tcl" scope="col"><?php echo $lang->t('Results username head') ?></th>
-					<th class="tc2" scope="col"><?php echo $lang->t('Results e-mail head') ?></th>
+					<th class="tc2" scope="col"><?php echo $lang->t('Results email head') ?></th>
 					<th class="tc3" scope="col"><?php echo $lang->t('Results title head') ?></th>
 					<th class="tc4" scope="col"><?php echo $lang->t('Results posts head') ?></th>
 					<th class="tc5" scope="col"><?php echo $lang->t('Results admin note head') ?></th>
@@ -1157,7 +1157,7 @@ else
 									<td><input type="text" name="form[username]" size="25" maxlength="25" tabindex="2" /></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang->t('E-mail address label') ?></th>
+									<th scope="row"><?php echo $lang->t('Email address label') ?></th>
 									<td><input type="text" name="form[email]" size="30" maxlength="80" tabindex="3" /></td>
 								</tr>
 								<tr>
@@ -1247,7 +1247,7 @@ else
 									<td>
 										<select name="order_by" tabindex="21">
 											<option value="username" selected="selected"><?php echo $lang->t('Order by username') ?></option>
-											<option value="email"><?php echo $lang->t('Order by e-mail') ?></option>
+											<option value="email"><?php echo $lang->t('Order by email') ?></option>
 											<option value="num_posts"><?php echo $lang->t('Order by posts') ?></option>
 											<option value="last_post"><?php echo $lang->t('Order by last post') ?></option>
 											<option value="last_visit"><?php echo $lang->t('Order by last visit') ?></option>
