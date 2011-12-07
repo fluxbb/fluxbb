@@ -255,11 +255,10 @@ if (!isset($_POST['form_sent']) || !empty($alerts))
 /* <![CDATA[ */
 function process_form(the_form)
 {
-	var element_names = {
+	var required_fields = {
 		"req_db_type": "<?php echo $lang_install['Database type'] ?>",
 		"req_db_host": "<?php echo $lang_install['Database server hostname'] ?>",
 		"req_db_name": "<?php echo $lang_install['Database name'] ?>",
-		"db_prefix": "<?php echo $lang_install['Table prefix'] ?>",
 		"req_username": "<?php echo $lang_install['Administrator username'] ?>",
 		"req_password1": "<?php echo $lang_install['Administrator password 1'] ?>",
 		"req_password2": "<?php echo $lang_install['Administrator password 2'] ?>",
@@ -272,14 +271,11 @@ function process_form(the_form)
 		for (var i = 0; i < the_form.length; ++i)
 		{
 			var elem = the_form.elements[i];
-			if (elem.name && (/^req_/.test(elem.name)))
+			if (elem.name && required_fields[elem.name] && !elem.value && elem.type && (/^(?:text(?:area)?|password|file)$/i.test(elem.type)))
 			{
-				if (!elem.value && elem.type && (/^(?:text(?:area)?|password|file)$/i.test(elem.type)))
-				{
-					alert('"' + element_names[elem.name] + '" <?php echo $lang_install['Required field'] ?>');
-					elem.focus();
-					return false;
-				}
+				alert('"' + required_fields[elem.name] + '" <?php echo $lang_install['Required field'] ?>');
+				elem.focus();
+				return false;
 			}
 		}
 	}
