@@ -345,7 +345,7 @@ class DBLayer
 		if (!$this->table_exists($table_name, $no_prefix))
 			return true;
 
-		return $this->query('DROP TABLE '.($no_prefix ? '' : $this->prefix).$table_name) ? true : false;
+		return $this->query('DROP TABLE '.($no_prefix ? '' : $this->prefix).$this->escape($table_name)) ? true : false;
 	}
 
 
@@ -372,7 +372,7 @@ class DBLayer
 		$result &= $this->query('INSERT INTO '.($no_prefix ? '' : $this->prefix).$this->escape($new_name).' SELECT * FROM '.($no_prefix ? '' : $this->prefix).$this->escape($old_name)) ? true : false;
 
 		// Drop old table
-		$result &= $this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name));
+		$result &= $this->drop_table($table_name, $no_prefix);
 
 		return $result;
 	}
@@ -460,7 +460,7 @@ class DBLayer
 		$new_table = trim($new_table, ',')."\n".');';
 
 		// Drop old table
-		$result &= $this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name));
+		$result &= $this->drop_table($table_name, $no_prefix);
 
 		// Create new table
 		$result &= $this->query($new_table) ? true : false;
@@ -476,7 +476,7 @@ class DBLayer
 		$result &= $this->query('INSERT INTO '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).' ('.implode(', ', $old_columns).') SELECT * FROM '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now) ? true : false;
 
 		// Drop temp table
-		$result &= $this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now);
+		$result &= $this->drop_table($table_name.'_t'.$now, $no_prefix);
 
 		return $result;
 	}
@@ -520,7 +520,7 @@ class DBLayer
 		$new_table = trim($new_table, ',')."\n".');';
 
 		// Drop old table
-		$result &= $this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name));
+		$result &= $this->drop_table($table_name, $no_prefix);
 
 		// Create new table
 		$result &= $this->query($new_table) ? true : false;
@@ -537,7 +537,7 @@ class DBLayer
 		$result &= $this->query('INSERT INTO '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).' SELECT '.implode(', ', $new_columns).' FROM '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now) ? true : false;
 
 		// Drop temp table
-		$result &= $this->drop_table(($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_t'.$now);
+		$result &= $this->drop_table($table_name.'_t'.$now, $no_prefix);
 
 		return $result;
 	}
