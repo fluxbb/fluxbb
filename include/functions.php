@@ -1993,7 +1993,9 @@ function forum_is_writable($path)
 		return false;
 
 	fclose($f);
-	@unlink($path);
+
+	if (!$rm)
+		@unlink($path);
 
 	return true;
 }
