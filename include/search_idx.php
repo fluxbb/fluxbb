@@ -105,6 +105,9 @@ function validate_search_word($word, $idx)
 	if (is_cjk($word))
 		return !$idx;
 
+	// Exclude % and * when checking whether current word is valid
+	$word = str_replace(array('%', '*'), '', $word);
+
 	// Check the word is within the min/max length
 	$num_chars = pun_strlen($word);
 	return $num_chars >= PUN_SEARCH_MIN_WORD && $num_chars <= PUN_SEARCH_MAX_WORD;
