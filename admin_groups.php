@@ -207,10 +207,10 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 									</td>
 								</tr>
 <?php if ($group['g_id'] != PUN_GUEST): ?>								<tr>
-									<th scope="row"><?php echo $lang->t('Send e-mails label') ?></th>
+									<th scope="row"><?php echo $lang->t('Send emails label') ?></th>
 									<td>
 										<input type="radio" name="send_email" value="1"<?php if ($group['g_send_email'] == '1') echo ' checked="checked"' ?> tabindex="33" />&#160;<strong><?php echo $lang->t('Yes') ?></strong>&#160;&#160;&#160;<input type="radio" name="send_email" value="0"<?php if ($group['g_send_email'] == '0') echo ' checked="checked"' ?> tabindex="34" />&#160;<strong><?php echo $lang->t('No') ?></strong>
-										<span><?php echo $lang->t('Send e-mails help') ?></span>
+										<span><?php echo $lang->t('Send emails help') ?></span>
 									</td>
 								</tr>
 <?php endif; ?>								<tr>
@@ -228,10 +228,10 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 									</td>
 								</tr>
 <?php if ($group['g_id'] != PUN_GUEST): ?>								<tr>
-									<th scope="row"><?php echo $lang->t('E-mail flood label') ?></th>
+									<th scope="row"><?php echo $lang->t('Email flood label') ?></th>
 									<td>
 										<input type="text" name="email_flood" size="5" maxlength="4" value="<?php echo $group['g_email_flood'] ?>" tabindex="37" />
-										<span><?php echo $lang->t('E-mail flood help') ?></span>
+										<span><?php echo $lang->t('Email flood help') ?></span>
 									</td>
 								</tr>
 								<tr>

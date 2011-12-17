@@ -44,10 +44,10 @@ msgstr "All caps subject"
 msgid "All caps subject help"
 msgstr "Allow a subject to contain only capital letters."
 
-msgid "Require e-mail label"
+msgid "Require email label"
 msgstr "Require guest email"
 
-msgid "Require e-mail help"
+msgid "Require email help"
 msgstr "Require guests to supply an email address when posting."
 
 msgid "Signatures subhead"
@@ -86,15 +86,14 @@ msgstr "The maximum number of lines a user signature may contain."
 msgid "Registration subhead"
 msgstr "Registration"
 
-msgid "Banned e-mail label"
+msgid "Banned email label"
 msgstr "Allow banned email addresses"
 
-msgid "Banned e-mail help"
+msgid "Banned email help"
 msgstr "Allow users to register with or change to a banned email address/domain. If left at its default setting (yes), this action will be allowed, but an alert email will be sent to the mailing list (an effective way of detecting multiple registrations)."
 
-msgid "Duplicate e-mail label"
+msgid "Duplicate email label"
 msgstr "Allow duplicate email addresses"
 
-msgid "Duplicate e-mail help"
+msgid "Duplicate email help"
 msgstr "Controls whether users should be allowed to register with an email address that another user already has. If allowed, an alert email will be sent to the mailing list if a duplicate is detected."
-

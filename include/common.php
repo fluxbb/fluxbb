@@ -44,6 +44,8 @@ require PUN_ROOT.'include/functions.php';
 // Load UTF-8 functions
 require PUN_ROOT.'modules/utf8/php-utf8.php';
 require PUN_ROOT.'modules/utf8/functions/trim.php';
+require_once PUN_ROOT.'modules/utf8/utils/patterns.php'; // might be already loaded by the php-utf8.php file when using mbstring extension
+require_once PUN_ROOT.'modules/utf8/utils/bad.php'; // might be already loaded by the php-utf8.php file when using mbstring extension
 
 // Strip out "bad" UTF-8 characters
 forum_remove_bad_characters();
@@ -98,8 +100,8 @@ if (empty($cookie_name))
 	$cookie_name = 'pun_cookie';
 
 // Load the cache module
-require PUN_ROOT.'modules/cache/cache.php';
-$cache = Flux_Cache::load($flux_config['cache']['type'], array('dir' => $flux_config['cache']['dir']), 'varexport'); // TODO: Move this config into config.php
+require PUN_ROOT.'modules/cache/src/Cache.php';
+$cache = Flux_Cache::load($flux_config['cache']['type'], array('dir' => $flux_config['cache']['dir']), 'VarExport'); // TODO: Move this config into config.php
 
 // Define a few commonly used constants
 define('PUN_UNVERIFIED', 0);

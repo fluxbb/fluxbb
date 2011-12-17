@@ -203,11 +203,11 @@ msgstr "Search user list"
 msgid "User list search help"
 msgstr "Allow users in this group to freetext search for users in the user list."
 
-msgid "Send e-mails label"
-msgstr "Send e-mails"
+msgid "Send emails label"
+msgstr "Send emails"
 
-msgid "Send e-mails help"
-msgstr "Allow users in this group to send e-mails to other users."
+msgid "Send emails help"
+msgstr "Allow users in this group to send emails to other users."
 
 msgid "Post flood label"
 msgstr "Post flood interval"
@@ -221,10 +221,10 @@ msgstr "Search flood interval"
 msgid "Search flood help"
 msgstr "Number of seconds that users in this group have to wait between searches. Set to 0 to disable."
 
-msgid "E-mail flood label"
+msgid "Email flood label"
 msgstr "Email flood interval"
 
-msgid "E-mail flood help"
+msgid "Email flood help"
 msgstr "Number of seconds that users in this group have to wait between emails. Set to 0 to disable."
 
 msgid "Report flood label"
@@ -235,4 +235,3 @@ msgstr "Number of seconds that users in this group have to wait between reports.
 
 msgid "Moderator info"
 msgstr "Please note that in order for a user in this group to have moderator abilities, he/she must be assigned to moderate one or more forums. This is done via the user administration page of the user's profile."
-

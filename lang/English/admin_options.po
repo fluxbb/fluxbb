@@ -17,10 +17,10 @@ msgstr "Bad HTTP_REFERER. If you have moved these forums from one location to an
 msgid "Must enter title message"
 msgstr "You must enter a board title."
 
-msgid "Invalid admin e-mail message"
+msgid "Invalid admin email message"
 msgstr "The admin email address you entered is invalid."
 
-msgid "Invalid webmaster e-mail message"
+msgid "Invalid webmaster email message"
 msgstr "The webmaster email address you entered is invalid."
 
 msgid "SMTP passwords did not match"
@@ -423,7 +423,7 @@ msgstr "Reporting method"
 msgid "Internal"
 msgstr "Internal"
 
-msgid "By e-mail"
+msgid "By email"
 msgstr "Email"
 
 msgid "Both"
@@ -472,20 +472,20 @@ msgstr "Max size"
 msgid "Max size help"
 msgstr "The maximum allowed size of avatars in bytes (10240 is recommended)."
 
-# E-mail section
-msgid "E-mail subhead"
+# Email section
+msgid "Email subhead"
 msgstr "Email"
 
-msgid "Admin e-mail label"
+msgid "Admin email label"
 msgstr "Admin email"
 
-msgid "Admin e-mail help"
+msgid "Admin email help"
 msgstr "The email address of the board administrator."
 
-msgid "Webmaster e-mail label"
+msgid "Webmaster email label"
 msgstr "Webmaster email"
 
-msgid "Webmaster e-mail help"
+msgid "Webmaster email help"
 msgstr "This is the address that all emails sent by the board will be addressed from."
 
 msgid "Forum subscriptions label"
@@ -561,17 +561,17 @@ msgstr "Enter your rules here"
 msgid "Rules help"
 msgstr "Here you can enter any rules or other information that the user must review and accept when registering. If you enabled rules above you have to enter something here, otherwise it will be disabled. This text will not be parsed like regular posts and thus may contain HTML."
 
-msgid "E-mail default label"
+msgid "Email default label"
 msgstr "Default email setting"
 
-msgid "E-mail default help"
+msgid "Email default help"
 msgstr "Choose the default privacy setting for new user registrations."
 
-msgid "Display e-mail label"
+msgid "Display email label"
 msgstr "Display email address to other users."
 
 msgid "Hide allow form label"
-msgstr "Hide email address but allow form e-mail."
+msgstr "Hide email address but allow form email."
 
 msgid "Hide both label"
 msgstr "Hide email address and disallow form email."
@@ -607,4 +607,3 @@ msgstr "Maintenance message"
 
 msgid "Maintenance message help"
 msgstr "The message that will be displayed to users when the board is in maintenance mode. If left blank, a default message will be used. This text will not be parsed like regular posts and thus may contain HTML."
-

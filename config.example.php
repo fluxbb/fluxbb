@@ -11,7 +11,7 @@ $flux_config['db']['prefix']		= 'forum_';
 $flux_config['db']['p_connect']		= false;
 // TODO: DSN instead of separate values? Change when merging the DB branch
 
-$flux_config['cache']['type']		= 'file';
+$flux_config['cache']['type']		= 'File';
 $flux_config['cache']['dir']		= PUN_ROOT.'cache/';
 
 $flux_config['cookie']['name']		= 'pun_cookie_1';
