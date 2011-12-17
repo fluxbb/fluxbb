@@ -1,7 +1,7 @@
 <?php
 
 require_once PUN_ROOT.'modules/gettext/Gettext.php';
-require_once PUN_ROOT.'modules/cache/src/Cache/Cache.php';
+require_once PUN_ROOT.'modules/cache/src/Cache.php';
 
 class Flux_Lang
 {
