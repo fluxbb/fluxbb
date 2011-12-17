@@ -6,7 +6,7 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-require PUN_ROOT.'modules/password/password.php';
+require PUN_ROOT.'modules/password/src/Password.php';
 
 //
 // Collect some board statistics
@@ -116,7 +116,7 @@ function check_cookie()
 	// We didn't find a valid session, so create a new guest session
 	if (!isset($pun_user))
 	{
-		$sid = PasswordHash::random_bytes(32);
+		$sid = Flux_Password::randomBytes(32);
 
 		$query = $db->insert(array('id' => ':session_id', 'user_id' => '1', 'created' => ':now', 'last_visit' => ':now', 'last_ip' => ':ip'), 'sessions');
 		$params = array(':session_id' => $sid, ':now' => $now, ':ip' => get_remote_address());

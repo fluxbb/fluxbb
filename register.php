@@ -84,7 +84,7 @@ if (isset($_POST['form_sent']))
 	{
 		$email2 = strtolower(trim($_POST['req_email2']));
 
-		$password1 = PasswordHash::random_key(8);
+		$password1 = Flux_Password::randomKey(8);
 		$password2 = $password1;
 	}
 	else
@@ -165,7 +165,7 @@ if (isset($_POST['form_sent']))
 		$now = time();
 
 		$intial_group_id = ($pun_config['o_regs_verify'] == '0') ? $pun_config['o_default_user_group'] : PUN_UNVERIFIED;
-		$password_hash = PasswordHash::hash($password1);
+		$password_hash = Flux_Password::hash($password1);
 
 		// Add the user
 		$query = $db->insert(array('username' => ':username', 'group_id' => ':group_id', 'password' => ':password', 'email' => ':email', 'email_setting' => ':email_setting', 'timezone' => ':timezone', 'dst' => ':dst', 'language' => ':language', 'style' => ':style', 'registered' => ':registered', 'registration_ip' => ':registration_ip', 'last_visit' => ':last_visit'), 'users');

@@ -74,7 +74,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	if ($needs_updated)
 	{
 		// Hash their password into the correct style
-		$result[0]['password'] = PasswordHash::hash($form_password);
+		$result[0]['password'] = Flux_Password::hash($form_password);
 
 		$query = $db->update(array('password' => ':password'), 'users');
 		$query->where = 'id = :user_id';
@@ -87,7 +87,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 
 	// END TEMP PASSWORD UPDATING
 
-	if (empty($result) || !PasswordHash::validate($form_password, $result[0]['password']))
+	if (empty($result) || !Flux_Password::validate($form_password, $result[0]['password']))
 		message($lang->t('Wrong user/pass').' <a href="login.php?action=forget">'.$lang->t('Forgotten pass').'</a>');
 
 
@@ -194,13 +194,13 @@ else if ($action == 'forget' || $action == 'forget_2')
 						message($lang->t('Email flood'), true);
 
 					// Generate a new password and a new password activation code
-					$new_password = PasswordHash::random_key(8);
-					$new_password_key = PasswordHash::random_key(8);
+					$new_password = Flux_Password::randomKey(8);
+					$new_password_key = Flux_Password::randomKey(8);
 
 					$query = $db->update(array('activate_string' => ':activate_string', 'activate_key' => ':activate_key', 'last_email_sent' => ':last_email_sent'), 'users');
 					$query->where = 'id = :id';
 
-					$params = array(':activate_string' => PasswordHash::hash($new_password), ':activate_key' => $new_password_key, ':last_email_sent' => time(), ':id' => $cur_hit['id']);
+					$params = array(':activate_string' => Flux_Password::hash($new_password), ':activate_key' => $new_password_key, ':last_email_sent' => time(), ':id' => $cur_hit['id']);
 
 					$query->run($params);
 
