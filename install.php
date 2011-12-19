@@ -78,8 +78,8 @@ if (!defined('FORUM_CACHE_DIR'))
 	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
 
 // Load the cache module
-require PUN_ROOT.'modules/cache/cache.php';
-$cache = Flux_Cache::load('file', array('dir' => FORUM_CACHE_DIR), 'varexport'); // TODO: Move this config into config.php
+require PUN_ROOT.'modules/cache/src/Cache.php';
+$cache = Flux_Cache::load('File', array('dir' => FORUM_CACHE_DIR), 'VarExport'); // TODO: Move this config into config.php
 // TODO: according to the comment above - how do you want to move this to config when it doesn't exist? :)
 
 // Load the language system
