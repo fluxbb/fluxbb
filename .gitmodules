@@ -10,6 +10,3 @@
 [submodule "modules/password"]
 	path = modules/password
 	url = git://github.com/fluxbb/password.git
-[submodule "modules/gettext"]
-	path = modules/gettext
-	url = git@github.com:fluxbb/gettext.git
