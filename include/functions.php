@@ -1973,6 +1973,36 @@ function ucp_preg_replace($pattern, $replace, $subject)
 }
 
 //
+// Replace four-byte characters with a question mark
+//
+// As MySQL cannot properly handle four-byte characters with the default utf-8
+// charset up until version 5.5.3 (where a special charset has to be used), they
+// need to be replaced, by question marks in this case. 
+//
+function strip_bad_multibyte_chars($str)
+{
+	$result = '';
+	$length = strlen($str);
+	
+	for ($i = 0; $i < $length; $i++)
+	{
+		// Replace four-byte characters (11110www 10zzzzzz 10yyyyyy 10xxxxxx)
+		$ord = ord($str[$i]);
+		if ($ord >= 240 && $ord <= 244)
+		{
+			$result .= '?';
+			$i += 3;
+		}
+		else
+		{
+			$result .= $str[$i];
+		}
+	}
+	
+	return $result;
+}
+
+//
 // Check whether a file/folder is writable.
 //
 // This function also works on Windows Server where ACLs seem to be ignored.
