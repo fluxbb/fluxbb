@@ -108,6 +108,9 @@ if (isset($_POST['form_sent']))
 	$stick_topic = isset($_POST['stick_topic']) ? '1' : '0';
 	if (!$is_admmod)
 		$stick_topic = $cur_post['sticky'];
+	
+	// Replace four-byte characters (MySQL cannot handle them)
+	$message = strip_bad_multibyte_chars($message);
 
 	// Did everything go according to plan?
 	if (empty($errors) && !isset($_POST['preview']))
