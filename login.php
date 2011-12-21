@@ -120,7 +120,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	// Verify that the user does not have more than ten sessions at the same time
 	$query = $db->select(array('id' => 's.last_visit'), 'sessions AS s');
 	$query->where = 's.user_id = :user_id';
-	$query->order = array('last_visit' => 's.last_visit ASC');
+	$query->order = array('last_visit' => 's.last_visit DESC');
 	$query->offset = 10;
 	$query->limit = 1;
 	
