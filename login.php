@@ -106,8 +106,9 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		// Regenerate the users info cache
 		$cache->delete('boardstats');
 	}
-
+	
 	// Update this users session to the correct user ID
+	// TODO: What happens if the session doesn't exist?
 	$query = $db->update(array('user_id' => ':user_id'), 'sessions');
 	$query->where = 'id = :session_id';
 
@@ -115,6 +116,32 @@ if (isset($_POST['form_sent']) && $action == 'in')
 
 	$query->run($params);
 	unset ($query, $params);
+	
+	// Verify that the user does not have more than ten sessions at the same time
+	$query = $db->select(array('id' => 's.last_visit'), 'sessions AS s');
+	$query->where = 's.user_id = :user_id';
+	$query->order = array('last_visit' => 's.last_visit ASC');
+	$query->offset = 10;
+	$query->limit = 1;
+	
+	$params = array(':user_id' => $cur_user['id']);
+	
+	$result = $query->run($params);
+	unset($query, $params);
+	
+	// Too many sessions - delete the old one
+	if (!empty($result)) {
+		$delete_last_visit = $result[0]['last_visit'];
+	
+		$query = $db->delete('sessions');
+		$query->where = 'last_visit <= :last_visit';
+	
+		$params = array(':last_visit' => $last_visit);
+	
+		$query->run($params);
+		unset($query, $params);
+	}
+	unset($result);
 
 	// Reset tracked topics
 	set_tracked_topics(null);
