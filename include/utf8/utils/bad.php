@@ -114,33 +114,9 @@ function utf8_bad_findall($str)
 * @package utf8
 * @subpackage bad
 */
-function utf8_bad_strip($str)
+function utf8_bad_strip($original)
 {
-	$UTF8_BAD =
-		'([\x00-\x7F]'.                          # ASCII (including control chars)
-		'|[\xC2-\xDF][\x80-\xBF]'.               # Non-overlong 2-byte
-		'|\xE0[\xA0-\xBF][\x80-\xBF]'.           # Excluding overlongs
-		'|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}'.    # Straight 3-byte
-		'|\xED[\x80-\x9F][\x80-\xBF]'.           # Excluding surrogates
-		'|\xF0[\x90-\xBF][\x80-\xBF]{2}'.        # Planes 1-3
-		'|[\xF1-\xF3][\x80-\xBF]{3}'.            # Planes 4-15
-		'|\xF4[\x80-\x8F][\x80-\xBF]{2}'.        # Plane 16
-		'|(.{1}))';                              # Invalid byte
-
-	ob_start();
-
-	while (preg_match('/'.$UTF8_BAD.'/S', $str, $matches))
-	{
-		if (!isset($matches[2]))
-			echo $matches[0];
-
-		$str = substr($str, strlen($matches[0]));
-	}
-
-	$result = ob_get_contents();
-	ob_end_clean();
-
-	return $result;
+	return utf8_bad_replace($original, '');
 }
 
 /**
@@ -156,33 +132,52 @@ function utf8_bad_strip($str)
 * @package utf8
 * @subpackage bad
 */
-function utf8_bad_replace($str, $replace='?')
-{
-	$UTF8_BAD =
-		'([\x00-\x7F]'.                          # ASCII (including control chars)
-		'|[\xC2-\xDF][\x80-\xBF]'.               # Non-overlong 2-byte
-		'|\xE0[\xA0-\xBF][\x80-\xBF]'.           # Excluding overlongs
-		'|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}'.    # Straight 3-byte
-		'|\xED[\x80-\x9F][\x80-\xBF]'.           # Excluding surrogates
-		'|\xF0[\x90-\xBF][\x80-\xBF]{2}'.        # Planes 1-3
-		'|[\xF1-\xF3][\x80-\xBF]{3}'.            # Planes 4-15
-		'|\xF4[\x80-\x8F][\x80-\xBF]{2}'.        # Plane 16
-		'|(.{1}))';                              # Invalid byte
+function utf8_bad_replace($original, $replace = '?') {
+	$result = '';
 
-	ob_start();
+	$strlen = strlen($original);
+	for ($i = 0; $i < $strlen;) {
+		$char = $original[$i++];
+		$byte = ord($char);
 
-	while (preg_match('/'.$UTF8_BAD.'/S', $str, $matches))
-	{
-		if (!isset($matches[2]))
-			echo $matches[0];
-		else
-			echo $replace;
+		if ($byte < 0x80) $bytes = 0; // 1-bytes (00000000 - 01111111)
+		else if ($byte < 0xC0) { // 1-bytes (10000000 - 10111111)
+			$result .= $replace;
+			continue;
+		}
+		else if ($byte < 0xE0) $bytes = 1; // 2-bytes (11000000 - 11011111)
+		else if ($byte < 0xF0) $bytes = 2; // 3-bytes (11100000 - 11101111)
+		else if ($byte < 0xF8) $bytes = 3; // 4-bytes (11110000 - 11110111)
+		else if ($byte < 0xFC) $bytes = 4; // 5-bytes (11111000 - 11111011)
+		else if ($byte < 0xFE) $bytes = 5; // 6-bytes (11111100 - 11111101)
+		else { // Otherwise it's something invalid
+			$result .= $replace;
+			continue;
+		}
 
-		$str = substr($str, strlen($matches[0]));
+		// Check our input actually has enough data
+		if ($i + $bytes > $strlen) {
+			$result .= $replace;
+			continue;
+		}
+
+		// If we've got this far then we have a multiple-byte character
+		for ($j = 0; $j < $bytes; $j++) {
+			$byte = $original[$i + $j];
+
+			$char .= $byte;
+			$byte = ord($byte);
+
+			// Every following byte must be 10000000 - 10111111
+			if ($byte < 0x80 || $byte > 0xBF) {
+				$result .= $replace;
+				continue 2;
+			}
+		}
+
+		$i += $bytes;
+		$result .= $char;
 	}
-
-	$result = ob_get_contents();
-	ob_end_clean();
 
 	return $result;
 }
