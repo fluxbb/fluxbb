@@ -34,7 +34,7 @@ if (!defined('UTF8'))
 
 if (extension_loaded('mbstring') && !defined('UTF8_USE_MBSTRING') && !defined('UTF8_USE_NATIVE'))
 	define('UTF8_USE_MBSTRING', true);
-else
+else if (!defined('UTF8_USE_NATIVE'))
 	define('UTF8_USE_NATIVE', true);
 
 // utf8_strpos() and utf8_strrpos() need utf8_bad_strip() to strip invalid
