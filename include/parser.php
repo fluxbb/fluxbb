@@ -920,7 +920,7 @@ function parse_signature($text)
 	$text = str_replace($pattern, $replace, $text);
 
 	// Add paragraph tag around post, but make sure there are no empty paragraphs
-	$text = preg_replace('%<br />\s*?<br />((\s*<br />)*)%i', "</p>$1<p>", $text);
+	$text = preg_replace('%<br />\s*?<br />((\s*<br />)*+)%i', "</p>$1<p>", $text);
 	$text = str_replace('<p><br />', '<p>', $text);
 	$text = str_replace('<p></p>', '', '<p>'.$text.'</p>');
 
