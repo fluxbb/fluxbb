@@ -885,10 +885,11 @@ function parse_message($text, $hide_smilies)
 	}
 
 	// Add paragraph tag around post, but make sure there are no empty paragraphs
-	$text = preg_replace('%<br />\s*?<br />((\s*<br />)*+)%i', "</p>$1<p>", $text);
+	$text = preg_replace('%<br />\s*?<br />%i', '</p><p>', $text);
 
-	$text = str_replace('<p><br />', '<p>', $text);
-	$text = str_replace('<p></p>', '', '<p>'.$text.'</p>');
+	$text = str_replace('<p><br />', '<br /><p>', '<p>'.$text.'</p>');
+	$text = str_replace('<br /></p>', '</p><br />', $text);
+	$text = str_replace('<p></p>', '<br /><br />', $text);
 
 	return $text;
 }
@@ -920,9 +921,11 @@ function parse_signature($text)
 	$text = str_replace($pattern, $replace, $text);
 
 	// Add paragraph tag around post, but make sure there are no empty paragraphs
-	$text = preg_replace('%<br />\s*?<br />((\s*<br />)*+)%i', "</p>$1<p>", $text);
-	$text = str_replace('<p><br />', '<p>', $text);
-	$text = str_replace('<p></p>', '', '<p>'.$text.'</p>');
+	$text = preg_replace('%<br />\s*?<br />%i', '</p><p>', $text);
+
+	$text = str_replace('<p><br />', '<br /><p>', '<p>'.$text.'</p>');
+	$text = str_replace('<br /></p>', '</p><br />', $text);
+	$text = str_replace('<p></p>', '<br /><br />', $text);
 
 	return $text;
 }
