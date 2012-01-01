@@ -884,12 +884,32 @@ function parse_message($text, $hide_smilies)
 		}
 	}
 
+	return clean_paragraphs($text);
+}
+
+
+//
+// Clean up paragraphs and line breaks
+//
+function clean_paragraphs($text)
+{
 	// Add paragraph tag around post, but make sure there are no empty paragraphs
 	$text = preg_replace('%<br />\s*?<br />%i', '</p><p>', $text);
 
 	$text = str_replace('<p><br />', '<br /><p>', '<p>'.$text.'</p>');
 	$text = str_replace('<br /></p>', '</p><br />', $text);
 	$text = str_replace('<p></p>', '<br /><br />', $text);
+
+	// We could use regular expressions for below - but bad performance
+	// on huge posts due to backtracking!
+
+	// Remove line breaks from the start
+	while (substr($text, 0, 6) == '<br />')
+		$text = substr($text, 6);
+
+	// Remove line breaks from the end
+	while (substr($text, -6) == '<br />')
+		$text = substr($text, 0, -6);
 
 	return $text;
 }
@@ -920,12 +940,5 @@ function parse_signature($text)
 	$replace = array('<br />', '&#160; &#160; ', '&#160; ', ' &#160;');
 	$text = str_replace($pattern, $replace, $text);
 
-	// Add paragraph tag around post, but make sure there are no empty paragraphs
-	$text = preg_replace('%<br />\s*?<br />%i', '</p><p>', $text);
-
-	$text = str_replace('<p><br />', '<br /><p>', '<p>'.$text.'</p>');
-	$text = str_replace('<br /></p>', '</p><br />', $text);
-	$text = str_replace('<p></p>', '<br /><br />', $text);
-
-	return $text;
+	return clean_paragraphs($text);
 }
