@@ -898,8 +898,8 @@ function clean_paragraphs($text)
 	$text = '<p>'.$text.'</p>';
 
 	// Replace any breaks next to paragraphs so our replace below catches them
-	$text = preg_replace('%(</?p>)(\s*?<br />){2}%i', '$1', $text);
-	$text = preg_replace('%(<br />\s*?){2}(</?p>)%i', '$2', $text);
+	$text = preg_replace('%(</?p>)(?:\s*?<br />){1,2}%i', '$1', $text);
+	$text = preg_replace('%(?:<br />\s*?){1,2}(</?p>)%i', '$1', $text);
 
 	// Remove any empty paragraph tags (inserted via quotes/lists/code/etc) which should be stripped
 	$text = str_replace('<p></p>', '', $text);
