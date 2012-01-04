@@ -1,4 +1,10 @@
 
+/**
+ * Copyright (C) 2008-2012 FluxBB
+ * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
+ * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
+ */
+
 function select_checkboxes(curFormId, link, new_string)
 {
 	var curForm = document.getElementById(curFormId);
