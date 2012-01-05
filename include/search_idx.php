@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2011 FluxBB
+ * Copyright (C) 2008-2012 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -118,6 +118,9 @@ function validate_search_word($word, $idx)
 	// If the word if CJK we don't want to index it, but we do want to be allowed to search it
 	if (is_cjk($word))
 		return !$idx;
+
+	// Exclude % and * when checking whether current word is valid
+	$word = str_replace(array('%', '*'), '', $word);
 
 	// Check the word is within the min/max length
 	$num_chars = pun_strlen($word);

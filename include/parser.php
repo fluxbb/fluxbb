@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2011 FluxBB
+ * Copyright (C) 2008-2012 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -815,8 +815,8 @@ function do_clickable($text)
 {
 	$text = ' '.$text;
 
-	$text = ucp_preg_replace('%(?<=[\s\]\)])(<)?(\[)?(\()?([\'"]?)(https?|ftp|news){1}://([\p{L}\p{N}\-]+\.([\p{L}\p{N}\-]+\.)*[\p{L}\p{N}]+(:[0-9]+)?(/[^\s\[]*[^\s.,?!\[;:-])?)\4(?(3)(\)))(?(2)(\]))(?(1)(>))(?![^\s]*\[/(?:url|img)\])%uie', 'stripslashes(\'$1$2$3$4\').handle_url_tag(\'$5://$6\', \'$5://$6\', true).stripslashes(\'$4$10$11$12\')', $text);
-	$text = ucp_preg_replace('%(?<=[\s\]\)])(<)?(\[)?(\()?([\'"]?)(www|ftp)\.(([\p{L}\p{N}\-]+\.)*[\p{L}\p{N}]+(:[0-9]+)?(/[^\s\[]*[^\s.,?!\[;:-])?)\4(?(3)(\)))(?(2)(\]))(?(1)(>))(?![^\s]*\[/(?:url|img)\])%uie', 'stripslashes(\'$1$2$3$4\').handle_url_tag(\'$5.$6\', \'$5.$6\', true).stripslashes(\'$4$10$11$12\')', $text);
+	$text = ucp_preg_replace('%(?<=[\s\]\)])(<)?(\[)?(\()?([\'"]?)(https?|ftp|news){1}://([\p{L}\p{N}\-]+\.([\p{L}\p{N}\-]+\.)*[\p{L}\p{N}]+(:[0-9]+)?(/(?:[^\s\[]*[^\s.,?!\[;:-])?)?)\4(?(3)(\)))(?(2)(\]))(?(1)(>))(?![^\s]*\[/(?:url|img)\])%uie', 'stripslashes(\'$1$2$3$4\').handle_url_tag(\'$5://$6\', \'$5://$6\', true).stripslashes(\'$4$10$11$12\')', $text);
+	$text = ucp_preg_replace('%(?<=[\s\]\)])(<)?(\[)?(\()?([\'"]?)(www|ftp)\.(([\p{L}\p{N}\-]+\.)*[\p{L}\p{N}]+(:[0-9]+)?(/(?:[^\s\[]*[^\s.,?!\[;:-])?)?)\4(?(3)(\)))(?(2)(\]))(?(1)(>))(?![^\s]*\[/(?:url|img)\])%uie', 'stripslashes(\'$1$2$3$4\').handle_url_tag(\'$5.$6\', \'$5.$6\', true).stripslashes(\'$4$10$11$12\')', $text);
 
 	return substr($text, 1);
 }
@@ -885,10 +885,31 @@ function parse_message($text, $hide_smilies)
 		}
 	}
 
+	return clean_paragraphs($text);
+}
+
+
+//
+// Clean up paragraphs and line breaks
+//
+function clean_paragraphs($text)
+{
 	// Add paragraph tag around post, but make sure there are no empty paragraphs
-	$text = preg_replace('%<br />\s*?<br />((\s*<br />)*)%i', "</p>$1<p>", $text);
-	$text = str_replace('<p><br />', '<p>', $text);
-	$text = str_replace('<p></p>', '', '<p>'.$text.'</p>');
+
+	$text = '<p>'.$text.'</p>';
+
+	// Replace any breaks next to paragraphs so our replace below catches them
+	$text = preg_replace('%(</?p>)(?:\s*?<br />){1,2}%i', '$1', $text);
+	$text = preg_replace('%(?:<br />\s*?){1,2}(</?p>)%i', '$1', $text);
+
+	// Remove any empty paragraph tags (inserted via quotes/lists/code/etc) which should be stripped
+	$text = str_replace('<p></p>', '', $text);
+
+	$text = preg_replace('%<br />\s*?<br />%i', '</p><p>', $text);
+
+	$text = str_replace('<p><br />', '<br /><p>', $text);
+	$text = str_replace('<br /></p>', '</p><br />', $text);
+	$text = str_replace('<p></p>', '<br /><br />', $text);
 
 	return $text;
 }
@@ -919,10 +940,5 @@ function parse_signature($text)
 	$replace = array('<br />', '&#160; &#160; ', '&#160; ', ' &#160;');
 	$text = str_replace($pattern, $replace, $text);
 
-	// Add paragraph tag around post, but make sure there are no empty paragraphs
-	$text = preg_replace('%<br />\s*?<br />((\s*<br />)*)%i', "</p>$1<p>", $text);
-	$text = str_replace('<p><br />', '<p>', $text);
-	$text = str_replace('<p></p>', '', '<p>'.$text.'</p>');
-
-	return $text;
+	return clean_paragraphs($text);
 }
