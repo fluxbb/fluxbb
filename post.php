@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2011 FluxBB
+ * Copyright (C) 2008-2012 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -172,6 +172,9 @@ if (isset($_POST['form_sent']))
 	$hide_smilies = isset($_POST['hide_smilies']) ? '1' : '0';
 	$subscribe = isset($_POST['subscribe']) ? '1' : '0';
 	$stick_topic = isset($_POST['stick_topic']) && $is_admmod ? '1' : '0';
+	
+	// Replace four-byte characters (MySQL cannot handle them)
+	$message = strip_bad_multibyte_chars($message);
 
 	$now = time();
 

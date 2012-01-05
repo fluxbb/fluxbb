@@ -26,15 +26,15 @@ function minmax_bind(el) {
 		minmax_delayout();
 	}
 
-    if (cs['min-width'])
-        st['minWidth']= cs['min-width'];
+	if (cs['min-width'])
+		st['minWidth']= cs['min-width'];
 
-    ms= cs['minWidth'];
-    if (ms && ms!='auto' && ms!='none' && ms!='0' && ms!='') {
-        st.minmaxWidth= cs.width;
-        minmax_elements[minmax_elements.length]= el;
-        minmax_delayout();
-    }
+	ms= cs['minWidth'];
+	if (ms && ms!='auto' && ms!='none' && ms!='0' && ms!='') {
+		st.minmaxWidth= cs.width;
+		minmax_elements[minmax_elements.length]= el;
+		minmax_delayout();
+	}
 }
 
 var minmax_delaying= false;

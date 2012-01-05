@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2011 FluxBB
+ * Copyright (C) 2008-2012 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -10,7 +10,7 @@ if (!defined('PUN_ROOT'))
 	exit('The constant PUN_ROOT must be defined and point to a valid FluxBB installation root directory.');
 
 // Define the version and database revision that this code was written for
-define('FORUM_VERSION', '1.4.7');
+define('FORUM_VERSION', '1.4.8');
 
 define('FORUM_DB_REVISION', 15);
 define('FORUM_SI_REVISION', 2);
@@ -100,7 +100,7 @@ if (empty($cookie_name))
 	$cookie_name = 'pun_cookie';
 
 // Load the cache module
-require PUN_ROOT.'modules/cache/src/Cache/Cache.php';
+require PUN_ROOT.'modules/cache/src/Cache.php';
 $cache = Flux_Cache::load($flux_config['cache']['type'], array('dir' => $flux_config['cache']['dir']), 'VarExport'); // TODO: Move this config into config.php
 
 // Define a few commonly used constants

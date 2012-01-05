@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2011 FluxBB
+ * Copyright (C) 2008-2012 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -121,6 +121,9 @@ if (isset($_POST['form_sent']))
 	$stick_topic = isset($_POST['stick_topic']) ? '1' : '0';
 	if (!$is_admmod)
 		$stick_topic = $cur_post['sticky'];
+	
+	// Replace four-byte characters (MySQL cannot handle them)
+	$message = strip_bad_multibyte_chars($message);
 
 	// Did everything go according to plan?
 	if (empty($errors) && !isset($_POST['preview']))
