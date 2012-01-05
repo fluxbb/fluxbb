@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Copyright (C) 2008-2011 FluxBB
+ * Copyright (C) 2008-2012 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
 // The FluxBB version this script installs
-define('FORUM_VERSION', '1.4.7');
+define('FORUM_VERSION', '1.4.8');
 
 define('FORUM_DB_REVISION', 15);
 define('FORUM_SI_REVISION', 2);
@@ -245,11 +245,10 @@ if (!isset($_POST['form_sent']) || !empty($alerts))
 /* <![CDATA[ */
 function process_form(the_form)
 {
-	var element_names = {
+	var required_fields = {
 		"req_db_type": "<?php echo $lang->t('Database type') ?>",
 		"req_db_host": "<?php echo $lang->t('Database server hostname') ?>",
 		"req_db_name": "<?php echo $lang->t('Database name') ?>",
-		"db_prefix": "<?php echo $lang->t('Table prefix') ?>",
 		"req_username": "<?php echo $lang->t('Administrator username') ?>",
 		"req_password1": "<?php echo $lang->t('Administrator password 1') ?>",
 		"req_password2": "<?php echo $lang->t('Administrator password 2') ?>",
@@ -257,19 +256,17 @@ function process_form(the_form)
 		"req_title": "<?php echo $lang->t('Board title') ?>",
 		"req_base_url": "<?php echo $lang->t('Base URL') ?>"
 	};
+
 	if (document.all || document.getElementById)
 	{
 		for (var i = 0; i < the_form.length; ++i)
 		{
 			var elem = the_form.elements[i];
-			if (elem.name && (/^req_/.test(elem.name)))
+			if (elem.name && required_fields[elem.name] && !elem.value && elem.type && (/^(?:text(?:area)?|password|file)$/i.test(elem.type)))
 			{
-				if (!elem.value && elem.type && (/^(?:text(?:area)?|password|file)$/i.test(elem.type)))
-				{
-					alert('"' + element_names[elem.name] + '" <?php echo $lang->t('Required field') ?>');
-					elem.focus();
-					return false;
-				}
+				alert('"' + required_fields[elem.name] + '" <?php echo $lang_install['Required field'] ?>');
+				elem.focus();
+				return false;
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2011 FluxBB
+ * Copyright (C) 2008-2012 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -1615,7 +1615,7 @@ function remove_bad_characters($array)
 	$array = utf8_bad_clean($array);
 
 	// Remove control characters
-	$array = preg_replace('%[\x{00}-\x{08}\x{0b}-\x{0c}\x{0e}-\x{1f}]%', '', $array);
+	$array = preg_replace('%[\x00-\x08\x0b-\x0c\x0e-\x1f]%', '', $array);
 
 	// Replace some "bad" characters
 	$array = str_replace(array_keys($bad_utf8_chars), array_values($bad_utf8_chars), $array);
@@ -1907,6 +1907,36 @@ function ucp_preg_replace($pattern, $replace, $subject)
 }
 
 //
+// Replace four-byte characters with a question mark
+//
+// As MySQL cannot properly handle four-byte characters with the default utf-8
+// charset up until version 5.5.3 (where a special charset has to be used), they
+// need to be replaced, by question marks in this case. 
+//
+function strip_bad_multibyte_chars($str)
+{
+	$result = '';
+	$length = strlen($str);
+	
+	for ($i = 0; $i < $length; $i++)
+	{
+		// Replace four-byte characters (11110www 10zzzzzz 10yyyyyy 10xxxxxx)
+		$ord = ord($str[$i]);
+		if ($ord >= 240 && $ord <= 244)
+		{
+			$result .= '?';
+			$i += 3;
+		}
+		else
+		{
+			$result .= $str[$i];
+		}
+	}
+	
+	return $result;
+}
+
+//
 // Check whether a file/folder is writable.
 //
 // This function also works on Windows Server where ACLs seem to be ignored.
@@ -1927,7 +1957,9 @@ function forum_is_writable($path)
 		return false;
 
 	fclose($f);
-	@unlink($path);
+
+	if (!$rm)
+		@unlink($path);
 
 	return true;
 }
