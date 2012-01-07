@@ -1060,7 +1060,7 @@ else
 		$alerts[] = $lang->t('Alert upload');
 
 	// Add some random bytes at the end of the cookie name to prevent collisions
-	$cookie_name = 'pun_cookie_'.Flux_Password::randomKey(6);
+	$cookie_name = 'pun_cookie_'.str_replace(array('.', '/'), '_', Flux_Password::randomKey(6));
 
 	// Generate the config.php file data
 	$config = generate_config_file();
