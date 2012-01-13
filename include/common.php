@@ -31,12 +31,7 @@ if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
 }
 
 // Attempt to load the configuration file config.php
-if (file_exists(PUN_ROOT.'config.php'))
-	require PUN_ROOT.'config.php';
-
-// If we have the 1.3-legacy constant defined, define the proper 1.4 constant so we don't get an incorrect "need to install" message
-if (defined('FORUM'))
-	define('PUN', FORUM);
+$flux_config = file_exists(PUN_ROOT.'config.php') ? require PUN_ROOT.'config.php' : array();
 
 // Load the functions script
 require PUN_ROOT.'include/functions.php';
@@ -54,7 +49,7 @@ forum_remove_bad_characters();
 forum_unregister_globals();
 
 // If PUN isn't defined, config.php is missing or corrupt
-if (!defined('PUN'))
+if (empty($flux_config))
 {
 	header('Location: install.php');
 	exit;
