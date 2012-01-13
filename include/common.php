@@ -96,7 +96,7 @@ if (empty($cookie_name))
 
 // Load the cache module
 require PUN_ROOT.'modules/cache/src/Cache.php';
-$cache = Flux_Cache::load($flux_config['cache']['type'], $flux_config['cache'], $flux_config['serializer']);
+$cache = Flux_Cache::load($flux_config['cache']['type'], $flux_config['cache'], $flux_config['cache']['serializer']);
 
 // Define a few commonly used constants
 define('PUN_UNVERIFIED', 0);
