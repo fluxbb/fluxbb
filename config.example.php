@@ -13,7 +13,9 @@ return array(
 	'cache'		=> array(
 		'type'			=> 'File',
 		'dir'			=> PUN_ROOT.'cache/',
-		'serializer'	=> 'VarExport',
+		'serializer'	=> array(
+			'type'			=> 'VarExport',
+		),
 		'suffix'		=> '.php',
 	),
 	'cookie'	=> array(

@@ -95,8 +95,8 @@ if (empty($cookie_name))
 	$cookie_name = 'pun_cookie';
 
 // Load the cache module
-require PUN_ROOT.'modules/cache/src/Cache.php';
-$cache = Flux_Cache::load($flux_config['cache']['type'], $flux_config['cache'], $flux_config['cache']['serializer']);
+require PUN_ROOT.'modules/cache/src/cache.php';
+$cache = \fluxbb\cache\Cache::load($flux_config['cache']['type'], $flux_config['cache'], $flux_config['cache']['serializer']['type'], $flux_config['cache']['serializer']);
 
 // Define a few commonly used constants
 define('PUN_UNVERIFIED', 0);
@@ -115,7 +115,7 @@ $db->startTransaction();
 
 // Load cached config
 $pun_config = $cache->get('config');
-if ($pun_config === Flux_Cache::NOT_FOUND)
+if ($pun_config === \fluxbb\cache\Cache::NOT_FOUND)
 {
 	$pun_config = array();
 
@@ -175,7 +175,7 @@ if ($pun_config['o_maintenance'] && $pun_user['g_id'] > PUN_ADMIN && !defined('P
 
 // Load cached bans
 $pun_bans = $cache->get('bans');
-if ($pun_bans === Flux_Cache::NOT_FOUND)
+if ($pun_bans === \fluxbb\cache\Cache::NOT_FOUND)
 {
 	// Get the ban list from the DB
 	$query = $db->select(array('id' => 'b.id', 'username' => 'b.username', 'ip' => 'b.ip', 'email' => 'b.email', 'message' => 'b.message', 'expire' => 'b.expire', 'ban_creator' => 'b.ban_creator'), 'bans AS b');
