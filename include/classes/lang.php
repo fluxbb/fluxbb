@@ -46,16 +46,22 @@ class Flux_Lang
 	 */
 	public static function getLanguageList()
 	{
-		$return = array();
-		foreach (glob(self::$langDir.'/*', GLOB_ONLYDIR) as $dir)
+		static $list;
+		
+		if (!isset($list))
 		{
-			$dirs = explode('/', $dir);
-			$return[] = end($dirs);
+			$list = array();
+			foreach (glob(self::$langDir.'/*', GLOB_ONLYDIR) as $dir)
+			{
+				$dirs = explode('/', $dir);
+				$list[] = end($dirs);
+			}
+	
+			// TODO: Do we need sorting here?
+			natcasesort($list);
 		}
-
-		// TODO: Do we need sorting here?
-		natcasesort($return);
-		return $return;
+		
+		return $list;
 	}
 
 	/**
