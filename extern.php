@@ -440,7 +440,7 @@ if ($action == 'feed')
 		}
 
 		$now = time();
-		if (!isset($feed) || $feed === Flux_Cache::NOT_FOUND)
+		if (!isset($feed) || $feed === \fluxbb\cache\Cache::NOT_FOUND)
 		{
 			// Setup the feed
 			$feed = array(

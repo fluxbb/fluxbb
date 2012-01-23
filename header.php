@@ -234,7 +234,7 @@ else
 		if ($pun_config['o_report_method'] == '0' || $pun_config['o_report_method'] == '2')
 		{
 			$num_reports = $cache->get('num_reports');
-			if ($num_reports === Flux_Cache::NOT_FOUND)
+			if ($num_reports === \fluxbb\cache\Cache::NOT_FOUND)
 			{
 				$query = $db->select(array('num_reports' => 'COUNT(r.id) AS num_reports'), 'reports AS r');
 				$query->where = 'r.zapped IS NULL';

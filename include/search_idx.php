@@ -88,7 +88,7 @@ function validate_search_word($word, $idx)
 		$cache_id = generate_stopwords_cache_id();
 
 		$stopwords = $cache->get('stopwords.'.$cache_id);
-		if ($stopwords === Flux_Cache::NOT_FOUND)
+		if ($stopwords === \fluxbb\cache\Cache::NOT_FOUND)
 		{
 			$stopwords = array();
 
