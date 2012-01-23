@@ -64,10 +64,10 @@ else if ($action == 'new')
 		$query->leftJoin('tt', 'topics_track AS tt', 'tt.user_id = :tt_user_id AND t.id = tt.topic_id');
 		$query->leftJoin('ft', 'forums_track AS ft', 'ft.user_id = :ft_user_id AND t.forum_id = ft.forum_id');
 		$query->where = 'p.topic_id = :tid AND p.posted > :last_mark AND (
-					(tt.mark_time IS NOT NULL AND t.last_post > tt.mark_time) OR
-					(tt.mark_time IS NULL AND ft.mark_time IS NOT NULL AND t.last_post > ft.mark_time) OR
+					(tt.mark_time IS NOT NULL AND p.posted > tt.mark_time) OR
+					(tt.mark_time IS NULL AND ft.mark_time IS NOT NULL AND p.posted > ft.mark_time) OR
 					(tt.mark_time IS NULL AND ft.mark_time IS NULL))';
-		$query->limit = 1001;
+		$query->limit = 1;
 
 		$params = array(':tid' => $id, ':last_mark' => $pun_user['last_mark'], ':tt_user_id' => $pun_user['id'], ':ft_user_id' => $pun_user['id']);
 
