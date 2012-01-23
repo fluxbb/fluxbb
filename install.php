@@ -78,9 +78,9 @@ if (!defined('FORUM_CACHE_DIR'))
 	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
 
 // Load the cache module
-require PUN_ROOT.'modules/cache/src/Cache.php';
-$cache = Flux_Cache::load('File', array('dir' => FORUM_CACHE_DIR), 'VarExport'); // TODO: Move this config into config.php
-// TODO: according to the comment above - how do you want to move this to config when it doesn't exist? :)
+require PUN_ROOT.'modules/cache/src/cache.php';
+// Use a dummy cache since we don't know what cache type the user wants to use yet
+$cache = \fluxbb\cache\Cache::load('Dummy', array(), 'VarExport', array());
 
 // Load the language system
 require PUN_ROOT.'include/classes/lang.php';

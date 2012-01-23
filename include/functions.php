@@ -15,7 +15,7 @@ function fetch_board_stats()
 	global $cache, $db;
 
 	$stats = $cache->get('boardstats');
-	if ($stats === Flux_Cache::NOT_FOUND)
+	if ($stats === \fluxbb\cache\Cache::NOT_FOUND)
 	{
 		$stats = array();
 
@@ -1144,7 +1144,7 @@ function censor_words($text)
 	if (!isset($censors))
 	{
 		$censors = $cache->get('censors');
-		if ($censors === Flux_Cache::NOT_FOUND)
+		if ($censors === \fluxbb\cache\Cache::NOT_FOUND)
 		{
 			$censors = array();
 
@@ -1192,7 +1192,7 @@ function get_title($user)
 	if ($pun_config['o_ranks'] == '1' && !isset($pun_ranks))
 	{
 		$pun_ranks = $cache->get('ranks');
-		if ($pun_ranks === Flux_Cache::NOT_FOUND)
+		if ($pun_ranks === \fluxbb\cache\Cache::NOT_FOUND)
 		{
 			$pun_ranks = array();
 
