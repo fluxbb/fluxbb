@@ -115,7 +115,7 @@ function generate_config_file()
 {
 	global $db_type, $db_host, $db_name, $db_username, $db_password, $db_prefix, $cookie_name, $cookie_seed, $base_url;
 
-	return '<?php'."\n\n".'$flux_config = array();'."\n\n".'$flux_config[\'db\'][\'type\'] = \''.$db_type."';\n".'$flux_config[\'db\'][\'host\'] = \''.$db_host."';\n".'$flux_config[\'db\'][\'dbname\'] = \''.addslashes($db_name)."';\n".'$flux_config[\'db\'][\'username\'] = \''.addslashes($db_username)."';\n".'$flux_config[\'db\'][\'password\'] = \''.addslashes($db_password)."';\n".'$flux_config[\'db\'][\'prefix\'] = \''.addslashes($db_prefix)."';\n\n".'$flux_config[\'cache\'][\'type\'] = '."'File';\n".'$flux_config[\'cache\'][\'dir\'] = PUN_ROOT.\'cache/\';'."\n\n".'$flux_config[\'cookie\'][\'name\'] = '."'".$cookie_name."';\n".'$flux_config[\'cookie\'][\'domain\'] = '."'';\n".'$flux_config[\'cookie\'][\'path\'] = '."'/';\n".'$flux_config[\'cookie\'][\'secure\'] = 0;'."\n".'$flux_config[\'cookie\'][\'seed\'] = \''.Flux_Password::randomKey(16).'\';'."\n\n".'$flux_config[\'base_url\'] = \''.$base_url.'\';'."\n\n".'define(\'PUN\', 1);'."\n";
+	return '<?php'."\n\n".'$flux_config = array();'."\n\n".'$flux_config[\'db\'][\'type\'] = \''.$db_type."';\n".'$flux_config[\'db\'][\'host\'] = \''.$db_host."';\n".'$flux_config[\'db\'][\'dbname\'] = \''.addslashes($db_name)."';\n".'$flux_config[\'db\'][\'username\'] = \''.addslashes($db_username)."';\n".'$flux_config[\'db\'][\'password\'] = \''.addslashes($db_password)."';\n".'$flux_config[\'db\'][\'prefix\'] = \''.addslashes($db_prefix)."';\n\n".'$flux_config[\'cache\'][\'type\'] = '."'File';\n".'$flux_config[\'cache\'][\'dir\'] = PUN_ROOT.\'cache/\';'."\n\n".'$flux_config[\'cookie\'][\'name\'] = '."'".$cookie_name."';\n".'$flux_config[\'cookie\'][\'domain\'] = '."'';\n".'$flux_config[\'cookie\'][\'path\'] = '."'/';\n".'$flux_config[\'cookie\'][\'secure\'] = 0;'."\n".'$flux_config[\'cookie\'][\'seed\'] = \''.\fluxbb\password\randomKey(16).'\';'."\n\n".'$flux_config[\'base_url\'] = \''.$base_url.'\';'."\n\n".'define(\'PUN\', 1);'."\n";
 }
 
 
@@ -911,7 +911,7 @@ else
 	unset($query, $params);
 
 	$query = $db->insert(array('group_id' => ':group_id', 'username' => ':username', 'password' => ':password', 'email' => ':email', 'language' => ':language', 'style' => ':style', 'num_posts' => ':num_posts', 'last_post' => ':last_post', 'registered' => ':registered', 'registration_ip' => ':registration_ip', 'last_visit' => ':last_visit'), 'users');
-	$params = array(':group_id' => 1, ':username' => $username, ':password' => Flux_Password::hash($password1), ':email' => $email, ':language' => $default_lang, ':style' => $default_style, ':num_posts' => 1, ':last_post' => $now, ':registered' => $now, ':registration_ip' => get_remote_address(), ':last_visit' => $now);
+	$params = array(':group_id' => 1, ':username' => $username, ':password' => \fluxbb\password\hash($password1), ':email' => $email, ':language' => $default_lang, ':style' => $default_style, ':num_posts' => 1, ':last_post' => $now, ':registered' => $now, ':registration_ip' => get_remote_address(), ':last_visit' => $now);
 	$query->run($params);
 
 	unset($query, $params);
@@ -1060,7 +1060,7 @@ else
 		$alerts[] = $lang->t('Alert upload');
 
 	// Add some random bytes at the end of the cookie name to prevent collisions
-	$cookie_name = 'pun_cookie_'.str_replace(array('.', '/'), '_', Flux_Password::randomKey(6));
+	$cookie_name = 'pun_cookie_'.str_replace(array('.', '/'), '_', \fluxbb\password\randomKey(6));
 
 	// Generate the config.php file data
 	$config = generate_config_file();

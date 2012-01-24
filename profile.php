@@ -131,14 +131,14 @@ if ($action == 'change_pass')
 		$cur_user = $result[0];
 		unset($query, $params, $result);
 
-		if (!$pun_user['is_admmod'] && !Flux_Password::validate($old_password, $cur_user['password']))
+		if (!$pun_user['is_admmod'] && !\fluxbb\password\validate($old_password, $cur_user['password']))
 			message($lang->t('Wrong pass'));
 
 		$query = $db->update(array('password' => ':password'), 'users');
 
 		$query->where = 'id = :user_id';
 
-		$params = array(':user_id' => $id, ':password' => Flux_Password::hash($new_password1));
+		$params = array(':user_id' => $id, ':password' => \fluxbb\password\hash($new_password1));
 
 		$query->run($params);
 		unset($query, $params);
@@ -247,7 +247,7 @@ else if ($action == 'change_email')
 	}
 	else if (isset($_POST['form_sent']))
 	{
-		if (!Flux_Password::validate($_POST['req_password'], $pun_user['password']))
+		if (!\fluxbb\password\validate($_POST['req_password'], $pun_user['password']))
 			message($lang->t('Wrong pass'));
 
 		require PUN_ROOT.'include/email.php';
@@ -316,7 +316,7 @@ else if ($action == 'change_email')
 		}
 		unset($query, $params, $result);
 
-		$new_email_key = Flux_Password::randomKey(8);
+		$new_email_key = \fluxbb\password\randomKey(8);
 
 		$query = $db->update(array('activate_string' => ':activate_string', 'activate_key' => ':activate_key'), 'users');
 		$query->where = 'id = :id';

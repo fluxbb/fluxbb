@@ -116,7 +116,7 @@ function check_cookie()
 	// We didn't find a valid session, so create a new guest session
 	if (!isset($pun_user))
 	{
-		$sid = Flux_Password::randomBytes(32);
+		$sid = \fluxbb\password\randomBytes(32);
 
 		$query = $db->insert(array('id' => ':session_id', 'user_id' => '1', 'created' => ':now', 'last_visit' => ':now', 'last_ip' => ':ip'), 'sessions');
 		$params = array(':session_id' => $sid, ':now' => $now, ':ip' => get_remote_address());
@@ -1911,13 +1911,13 @@ function ucp_preg_replace($pattern, $replace, $subject)
 //
 // As MySQL cannot properly handle four-byte characters with the default utf-8
 // charset up until version 5.5.3 (where a special charset has to be used), they
-// need to be replaced, by question marks in this case. 
+// need to be replaced, by question marks in this case.
 //
 function strip_bad_multibyte_chars($str)
 {
 	$result = '';
 	$length = strlen($str);
-	
+
 	for ($i = 0; $i < $length; $i++)
 	{
 		// Replace four-byte characters (11110www 10zzzzzz 10yyyyyy 10xxxxxx)
@@ -1932,7 +1932,7 @@ function strip_bad_multibyte_chars($str)
 			$result .= $str[$i];
 		}
 	}
-	
+
 	return $result;
 }
 
