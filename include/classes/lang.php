@@ -143,7 +143,7 @@ class Flux_Lang
 		$trans_cache = $cache->get($this->lang.'_'.$resource);
 		if ($trans_cache === \fluxbb\cache\Cache::NOT_FOUND)
 		{
-			$trans_cache = \fluxbb\gettext\Gettext::parse($filename);
+			$trans_cache = \fluxbb\gettext\parse($filename);
 
 			// If this is not the default language, load that, too
 			if ($this->defaultLang != $this->lang)
@@ -151,7 +151,7 @@ class Flux_Lang
 				$def_trans_cache = $cache->get($this->defaultLang.'_'.$resource);
 				if ($def_trans_cache === \fluxbb\cache\Cache::NOT_FOUND)
 				{
-					$def_trans_cache = \fluxbb\gettext\Gettext::parse($default_filename);
+					$def_trans_cache = \fluxbb\gettext\parse($default_filename);
 
 					$cache->set($this->defaultLang.'_'.$resource, $def_trans_cache);
 				}
