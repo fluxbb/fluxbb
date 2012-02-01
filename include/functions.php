@@ -619,7 +619,7 @@ function get_tracked_topics()
 	if (!$cookie_data)
 		return array('topics' => array(), 'forums' => array());
 
-	if (strlen($cookie_data) > 4048)
+	if (strlen($cookie_data) > FORUM_MAX_COOKIE_SIZE)
 		return array('topics' => array(), 'forums' => array());
 
 	// Unserialize data from cookie
@@ -1977,13 +1977,13 @@ function ucp_preg_replace($pattern, $replace, $subject)
 //
 // As MySQL cannot properly handle four-byte characters with the default utf-8
 // charset up until version 5.5.3 (where a special charset has to be used), they
-// need to be replaced, by question marks in this case. 
+// need to be replaced, by question marks in this case.
 //
 function strip_bad_multibyte_chars($str)
 {
 	$result = '';
 	$length = strlen($str);
-	
+
 	for ($i = 0; $i < $length; $i++)
 	{
 		// Replace four-byte characters (11110www 10zzzzzz 10yyyyyy 10xxxxxx)
@@ -1998,7 +1998,7 @@ function strip_bad_multibyte_chars($str)
 			$result .= $str[$i];
 		}
 	}
-	
+
 	return $result;
 }
 
