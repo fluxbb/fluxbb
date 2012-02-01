@@ -115,7 +115,41 @@ function generate_config_file()
 {
 	global $db_type, $db_host, $db_name, $db_username, $db_password, $db_prefix, $cookie_name, $cookie_seed, $base_url;
 
-	return '<?php'."\n\n".'$flux_config = array();'."\n\n".'$flux_config[\'db\'][\'type\'] = \''.$db_type."';\n".'$flux_config[\'db\'][\'host\'] = \''.$db_host."';\n".'$flux_config[\'db\'][\'dbname\'] = \''.addslashes($db_name)."';\n".'$flux_config[\'db\'][\'username\'] = \''.addslashes($db_username)."';\n".'$flux_config[\'db\'][\'password\'] = \''.addslashes($db_password)."';\n".'$flux_config[\'db\'][\'prefix\'] = \''.addslashes($db_prefix)."';\n\n".'$flux_config[\'cache\'][\'type\'] = '."'File';\n".'$flux_config[\'cache\'][\'dir\'] = PUN_ROOT.\'cache/\';'."\n\n".'$flux_config[\'cookie\'][\'name\'] = '."'".$cookie_name."';\n".'$flux_config[\'cookie\'][\'domain\'] = '."'';\n".'$flux_config[\'cookie\'][\'path\'] = '."'/';\n".'$flux_config[\'cookie\'][\'secure\'] = 0;'."\n".'$flux_config[\'cookie\'][\'seed\'] = \''.random_key(16, false, true).'\';'."\n\n".'$flux_config[\'base_url\'] = \''.$base_url.'\';'."\n\n".'define(\'PUN\', 1);'."\n";
+	$config = <<<EOT
+<?php
+
+define('PUN', 1);
+
+return array(
+	'db'		=> array(
+		'type'			=> '%s',
+		'host'			=> '%s',
+		'dbname'		=> '%s',
+		'username'		=> '%s',
+		'password'		=> '%s',
+		'prefix'		=> '%s',
+		'p_connect'		=> false,
+	),
+	'cache'		=> array(
+		'type'			=> 'File',
+		'dir'			=> PUN_ROOT.'cache/',
+		'serializer'	=> array(
+			'type'			=> 'VarExport',
+		),
+		'suffix'		=> '.php',
+	),
+	'cookie'	=> array(
+		'name'			=> '%s',
+		'domain'		=> '',
+		'path'			=> '/',
+		'secure'		=> 0,
+		'seed'			=> '%s',
+	),
+	'base_url'	=> '%s',
+);
+EOT;
+
+	return sprintf($config, addslashes($db_type), addslashes($db_host), addslashes($db_name), addslashes($db_username), addslashes($db_password), addslashes($db_prefix), addslashes($cookie_name), addslashes($cookie_seed), addslashes($base_url));
 }
 
 
