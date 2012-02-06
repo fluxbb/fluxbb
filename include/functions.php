@@ -1651,7 +1651,7 @@ function file_size($size)
 	for ($i = 0; $size > 1024; $i++)
 		$size /= 1024;
 
-	return sprintf($lang_common['Size unit '.$units[$i]], round($size, 2));;
+	return sprintf($lang_common['Size unit '.$units[$i]], round($size, 2));
 }
 
 
