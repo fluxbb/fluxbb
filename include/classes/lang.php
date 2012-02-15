@@ -46,7 +46,7 @@ class Flux_Lang
 	 */
 	public static function getLanguageList()
 	{
-		static $list;
+		static $list = null;
 
 		if (!isset($list))
 		{
@@ -56,9 +56,6 @@ class Flux_Lang
 				$dirs = explode('/', $dir);
 				$list[] = end($dirs);
 			}
-
-			// TODO: Do we need sorting here?
-			natcasesort($list);
 		}
 
 		return $list;
