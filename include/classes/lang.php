@@ -62,7 +62,7 @@ class Flux_Lang
 		if (!isset($list))
 		{
 			$list = array();
-			foreach (glob(self::$langDir.'/*', GLOB_ONLYDIR) as $dir)
+			foreach (glob(PUN_ROOT.self::$langDir.'/*', GLOB_ONLYDIR) as $dir)
 			{
 				$dirs = explode('/', $dir);
 				$list[] = end($dirs);
@@ -81,18 +81,6 @@ class Flux_Lang
 	public static function languageExists($lang)
 	{
 		return in_array($lang, self::getLanguageList());
-	}
-
-	/**
-	 * Set the directory where language packs are located
-	 *
-	 * @param string $dir
-	 * @return void
-	 */
-	public static function setLanguageDirectory($dir)
-	{
-		// Remove any trailing slashes
-		self::$langDir = rtrim($dir, '/');
 	}
 
 	/**
@@ -144,8 +132,8 @@ class Flux_Lang
 
 		$this->loadedResources[] = $resource;
 
-		$default_filename = self::$langDir.'/'.$this->defaultLang.'/'.$resource.'.po';
-		$filename = self::$langDir.'/'.$this->lang.'/'.$resource.'.po';
+		$default_filename = PUN_ROOT.self::$langDir.'/'.$this->defaultLang.'/'.$resource.'.po';
+		$filename = PUN_ROOT.self::$langDir.'/'.$this->lang.'/'.$resource.'.po';
 
 		// TODO: Slash allowed? - I'd rather use that than an underscore
 		$trans_cache = $cache->get($this->lang.'_'.$resource);
