@@ -38,6 +38,17 @@ class Flux_Lang
 	 * @var array
 	 */
 	protected $loadedResources = array();
+	
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param string $lang
+	 */
+	public function __construct($lang)
+	{
+		$this->setLanguage($lang);
+	}
 
 	/**
 	 * Get a list of all available languages
@@ -92,7 +103,7 @@ class Flux_Lang
 	 */
 	public function setDefaultLanguage($lang)
 	{
-		if (file_exists(self::$langDir.'/'.$lang))
+		if (self::languageExists($lang))
 			$this->defaultLang = $lang;
 		else
 			throw new Exception('It seems like default language pack "'.$lang.'" does not exist.');
@@ -104,9 +115,9 @@ class Flux_Lang
 	 * @param array $lang
 	 * @return void
 	 */
-	public function setLanguage($lang)
+	protected function setLanguage($lang)
 	{
-		if (file_exists(self::$langDir.'/'.$lang))
+		if (self::languageExists($lang))
 			$this->lang = $lang;
 		else
 			throw new Exception('It seems like language pack "'.$lang.'" does not exist.');

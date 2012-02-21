@@ -162,9 +162,8 @@ check_cookie($pun_user);
 
 // Load the language system
 require PUN_ROOT.'include/classes/lang.php';
-$lang = new Flux_Lang();
+$lang = new Flux_Lang($pun_user['language']);
 $lang->setDefaultLanguage('English');
-$lang->setLanguage($pun_user['language']);
 
 // Load the common language file
 $lang->load('common');
