@@ -82,7 +82,7 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 	$temp = preg_replace($re_list, 'preparse_list_tag(\'$2\', \'$1\')', $text);
 
 	// If the regex failed
-	if ($temp === null)
+	if (is_null($temp))
 		$errors[] = $lang_common['BBCode list size error'];
 	else
 		$text = str_replace('*'."\0".']', '*]', $temp);
@@ -675,7 +675,7 @@ function handle_img_tag($url, $is_signature = false, $alt = null)
 {
 	global $lang_common, $pun_user;
 
-	if ($alt == null)
+	if (is_null($alt))
 		$alt = basename($url);
 
 	$img_tag = '<a href="'.$url.'">&lt;'.$lang_common['Image link'].' - '.$alt.'&gt;</a>';
