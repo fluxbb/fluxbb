@@ -438,7 +438,7 @@ class DBLayer
 		$query = $field_type;
 		if (!$allow_null)
 			$query .= ' NOT NULL';
-		if ($default_value === null || $default_value === '')
+		if (is_null($default_value) || $default_value === '')
 			$default_value = '\'\'';
 
 		$query .= ' DEFAULT '.$default_value;

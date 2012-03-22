@@ -169,7 +169,7 @@ if ($db->num_rows($result))
 		$item_status = ($topic_count % 2 == 0) ? 'roweven' : 'rowodd';
 		$icon_type = 'icon';
 
-		if ($cur_topic['moved_to'] == null)
+		if (is_null($cur_topic['moved_to']))
 			$last_post = '<a href="viewtopic.php?pid='.$cur_topic['last_post_id'].'#p'.$cur_topic['last_post_id'].'">'.format_time($cur_topic['last_post']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['last_poster']).'</span>';
 		else
 			$last_post = '- - -';
@@ -198,7 +198,7 @@ if ($db->num_rows($result))
 			$item_status .= ' iclosed';
 		}
 
-		if (!$pun_user['is_guest'] && $cur_topic['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$cur_topic['id']]) || $tracked_topics['topics'][$cur_topic['id']] < $cur_topic['last_post']) && (!isset($tracked_topics['forums'][$id]) || $tracked_topics['forums'][$id] < $cur_topic['last_post']) && $cur_topic['moved_to'] == null)
+		if (!$pun_user['is_guest'] && $cur_topic['last_post'] > $pun_user['last_visit'] && (!isset($tracked_topics['topics'][$cur_topic['id']]) || $tracked_topics['topics'][$cur_topic['id']] < $cur_topic['last_post']) && (!isset($tracked_topics['forums'][$id]) || $tracked_topics['forums'][$id] < $cur_topic['last_post']) && is_null($cur_topic['moved_to']))
 		{
 			$item_status .= ' inew';
 			$icon_type = 'icon icon-new';
@@ -245,8 +245,8 @@ if ($db->num_rows($result))
 							</div>
 						</div>
 					</td>
-					<td class="tc2"><?php echo ($cur_topic['moved_to'] == null) ? forum_number_format($cur_topic['num_replies']) : '-' ?></td>
-<?php if ($pun_config['o_topic_views'] == '1'): ?>					<td class="tc3"><?php echo ($cur_topic['moved_to'] == null) ? forum_number_format($cur_topic['num_views']) : '-' ?></td>
+					<td class="tc2"><?php echo (is_null($cur_topic['moved_to'])) ? forum_number_format($cur_topic['num_replies']) : '-' ?></td>
+<?php if ($pun_config['o_topic_views'] == '1'): ?>					<td class="tc3"><?php echo (is_null($cur_topic['moved_to'])) ? forum_number_format($cur_topic['num_views']) : '-' ?></td>
 <?php endif; ?>					<td class="tcr"><?php echo $last_post ?></td>
 				</tr>
 <?php

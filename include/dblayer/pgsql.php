@@ -371,7 +371,7 @@ class DBLayer
 
 		$result = $this->query('ALTER TABLE '.($no_prefix ? '' : $this->prefix).$table_name.' ADD '.$field_name.' '.$field_type) ? true : false;
 
-		if ($default_value !== null)
+		if (!is_null($default_value))
 		{
 			if (!is_int($default_value) && !is_float($default_value))
 				$default_value = '\''.$this->escape($default_value).'\'';
