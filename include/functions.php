@@ -566,7 +566,7 @@ function generate_page_title($page_title, $p = null)
 
 	$page_title = array_reverse($page_title);
 
-	if ($p != null)
+	if (!is_null($p))
 		$page_title[0] .= ' ('.sprintf($lang_common['Page'], forum_number_format($p)).')';
 
 	$crumbs = implode($lang_common['Title separator'], $page_title);
@@ -965,10 +965,10 @@ function format_time($timestamp, $date_only = false, $date_format = null, $time_
 	$timestamp += $diff;
 	$now = time();
 
-	if($date_format == null)
+	if(is_null($date_format))
 		$date_format = $forum_date_formats[$pun_user['date_format']];
 
-	if($time_format == null)
+	if(is_null($time_format))
 		$time_format = $forum_time_formats[$pun_user['time_format']];
 
 	$date = gmdate($date_format, $timestamp);
@@ -1175,7 +1175,7 @@ function is_all_uppercase($string)
 //
 function array_insert(&$input, $offset, $element, $key = null)
 {
-	if ($key == null)
+	if (is_null($key))
 		$key = $offset;
 
 	// Determine the proper offset if we're using a string
@@ -1501,7 +1501,7 @@ H2 {MARGIN: 0; COLOR: #FFFFFF; BACKGROUND-COLOR: #B84623; FONT-SIZE: 1.1em; PADD
 	<div>
 <?php
 
-	if (defined('PUN_DEBUG') && $file !== null && $line !== null)
+	if (defined('PUN_DEBUG') && !is_null($file) && !is_null($line))
 	{
 		echo "\t\t".'<strong>File:</strong> '.$file.'<br />'."\n\t\t".'<strong>Line:</strong> '.$line.'<br /><br />'."\n\t\t".'<strong>FluxBB reported</strong>: '.$message."\n";
 

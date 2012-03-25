@@ -254,7 +254,7 @@ function dcr2utf8($src)
 //
 function convert_to_utf8(&$str, $old_charset)
 {
-	if ($str === null || $str == '')
+	if (is_null($str) || $str == '')
 		return false;
 
 	$save = $str;
@@ -331,7 +331,7 @@ function alter_table_utf8($table)
 	$result = $db->query('SHOW FULL COLUMNS FROM '.$table) or error('Unable to fetch column information', __FILE__, __LINE__, $db->error());
 	while ($cur_column = $db->fetch_assoc($result))
 	{
-		if ($cur_column['Collation'] === null)
+		if (is_null($cur_column['Collation']))
 			continue;
 
 		list($type) = explode('(', $cur_column['Type']);
@@ -359,7 +359,7 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 	if ($mysql)
 	{
 		// Only set up the tables if we are doing this in 1 go, or its the first go
-		if ($start_at === null || $start_at == 0)
+		if (is_null($start_at) || $start_at == 0)
 		{
 			// Drop any temp table that exists, in-case it's left over from a failed update
 			$db->drop_table($table.'_utf8', true) or error('Unable to drop left over temp table', __FILE__, __LINE__, $db->error());
@@ -375,7 +375,7 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 		$db->set_names($old_connection_charset);
 
 		// Move & Convert everything
-		$result = $db->query('SELECT * FROM '.$table.($start_at === null ? '' : ' WHERE '.$key.'>'.$start_at).' ORDER BY '.$key.' ASC'.($start_at === null ? '' : ' LIMIT '.PER_PAGE), false) or error('Unable to select from old table', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT * FROM '.$table.(is_null($start_at) ? '' : ' WHERE '.$key.'>'.$start_at).' ORDER BY '.$key.' ASC'.(is_null($start_at) ? '' : ' LIMIT '.PER_PAGE), false) or error('Unable to select from old table', __FILE__, __LINE__, $db->error());
 
 		// Change back to utf8 mode so we can insert it into the new table
 		$db->set_names('utf8');
@@ -386,15 +386,15 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 
 			$temp = array();
 			foreach ($cur_item as $idx => $value)
-				$temp[$idx] = $value === null ? 'NULL' : '\''.$db->escape($value).'\'';
+				$temp[$idx] = is_null($value) ? 'NULL' : '\''.$db->escape($value).'\'';
 
-			$db->query('INSERT INTO '.$table.'_utf8('.implode(',', array_keys($temp)).') VALUES ('.implode(',', array_values($temp)).')') or ($error_callback === null ? error('Unable to insert data to new table', __FILE__, __LINE__, $db->error()) : call_user_func($error_callback, $cur_item));
+			$db->query('INSERT INTO '.$table.'_utf8('.implode(',', array_keys($temp)).') VALUES ('.implode(',', array_values($temp)).')') or (is_null($error_callback) ? error('Unable to insert data to new table', __FILE__, __LINE__, $db->error()) : call_user_func($error_callback, $cur_item));
 
 			$end_at = $cur_item[$key];
 		}
 
 		// If we aren't doing this all in 1 go and $end_at has a value (i.e. we have processed at least 1 row), figure out if we have more to do or not
-		if ($start_at !== null && $end_at > 0)
+		if (!is_null($start_at) && $end_at > 0)
 		{
 			$result = $db->query('SELECT 1 FROM '.$table.' WHERE '.$key.'>'.$end_at.' ORDER BY '.$key.' ASC LIMIT 1') or error('Unable to check for next row', __FILE__, __LINE__, $db->error());
 			$finished = $db->num_rows($result) == 0;
@@ -417,14 +417,14 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 	else
 	{
 		// Convert everything
-		$result = $db->query('SELECT * FROM '.$table.($start_at === null ? '' : ' WHERE '.$key.'>'.$start_at).' ORDER BY '.$key.' ASC'.($start_at === null ? '' : ' LIMIT '.PER_PAGE)) or error('Unable to select from table', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT * FROM '.$table.(is_null($start_at) ? '' : ' WHERE '.$key.'>'.$start_at).' ORDER BY '.$key.' ASC'.(is_null($start_at ) ? '' : ' LIMIT '.PER_PAGE)) or error('Unable to select from table', __FILE__, __LINE__, $db->error());
 		while ($cur_item = $db->fetch_assoc($result))
 		{
 			$cur_item = call_user_func($callback, $cur_item, $old_charset);
 
 			$temp = array();
 			foreach ($cur_item as $idx => $value)
-				$temp[] = $idx.'='.($value === null ? 'NULL' : '\''.$db->escape($value).'\'');
+				$temp[] = $idx.'='.(is_null($value) ? 'NULL' : '\''.$db->escape($value).'\'');
 
 			if (!empty($temp))
 				$db->query('UPDATE '.$table.' SET '.implode(', ', $temp).' WHERE '.$key.'=\''.$db->escape($cur_item[$key]).'\'') or error('Unable to update data', __FILE__, __LINE__, $db->error());
@@ -432,7 +432,7 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 			$end_at = $cur_item[$key];
 		}
 
-		if ($start_at !== null && $end_at > 0)
+		if (!is_null($start_at) && $end_at > 0)
 		{
 			$result = $db->query('SELECT 1 FROM '.$table.' WHERE '.$key.'>'.$end_at.' ORDER BY '.$key.' ASC LIMIT 1') or error('Unable to check for next row', __FILE__, __LINE__, $db->error());
 			if ($db->num_rows($result) == 0)
@@ -1557,7 +1557,7 @@ switch ($stage)
 
 					$temp = array();
 					foreach ($cur_user as $idx => $value)
-						$temp[$idx] = $value === null ? 'NULL' : '\''.$db->escape($value).'\'';
+						$temp[$idx] = is_null($value) ? 'NULL' : '\''.$db->escape($value).'\'';
 
 					// Insert the renamed user
 					$db->query('INSERT INTO '.$db->prefix.'users('.implode(',', array_keys($temp)).') VALUES ('.implode(',', array_values($temp)).')') or error('Unable to insert data to new table', __FILE__, __LINE__, $db->error());
