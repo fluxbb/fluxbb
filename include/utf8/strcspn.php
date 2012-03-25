@@ -24,7 +24,7 @@ function utf8_strcspn($str, $mask, $start=null, $length=null)
 
 	$mask = preg_replace('!([\\\\\\-\\]\\[/^])!','\\\${1}', $mask);
 
-	if ($start !== null || $length !== null)
+	if (!is_null($start) || !is_null($length))
 		$str = utf8_substr($str, $start, $length);
 
 	preg_match('/^[^'.$mask.']+/u', $str, $matches);
