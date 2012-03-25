@@ -927,6 +927,8 @@ else if (isset($_POST['form_sent']))
 	// If we changed the username we have to update some stuff
 	if ($username_updated)
 	{
+		if ($db->query('UPDATE '.$db->prefix.'bans SET username=\''.$db->escape($form['username']).'\' WHERE username=\''.$db->escape($old_username).'\'') or error('Unable to update bans', __FILE__, __LINE__, $db->error()))
+			$bans_updated = true;
 		$db->query('UPDATE '.$db->prefix.'posts SET poster=\''.$db->escape($form['username']).'\' WHERE poster_id='.$id) or error('Unable to update posts', __FILE__, __LINE__, $db->error());
 		$db->query('UPDATE '.$db->prefix.'posts SET edited_by=\''.$db->escape($form['username']).'\' WHERE edited_by=\''.$db->escape($old_username).'\'') or error('Unable to update posts', __FILE__, __LINE__, $db->error());
 		$db->query('UPDATE '.$db->prefix.'topics SET poster=\''.$db->escape($form['username']).'\' WHERE poster=\''.$db->escape($old_username).'\'') or error('Unable to update topics', __FILE__, __LINE__, $db->error());
@@ -965,6 +967,10 @@ else if (isset($_POST['form_sent']))
 			require PUN_ROOT.'include/cache.php';
 
 		generate_users_info_cache();
+
+		// Check if the bans table was updated and regenerate the bans cache when needed
+		if (isset($bans_updated))
+			generate_bans_cache();
 	}
 
 	redirect('profile.php?section='.$section.'&amp;id='.$id, $lang_profile['Profile redirect']);
