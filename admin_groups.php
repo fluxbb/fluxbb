@@ -404,6 +404,9 @@ else if (isset($_GET['del_group']))
 			$db->query('DELETE FROM '.$db->prefix.'groups WHERE g_id='.$group_id) or error('Unable to delete group', __FILE__, __LINE__, $db->error());
 			$db->query('DELETE FROM '.$db->prefix.'forum_perms WHERE group_id='.$group_id) or error('Unable to delete group forum permissions', __FILE__, __LINE__, $db->error());
 
+			// Don't let users be promoted to this group
+			$db->query('UPDATE '.$db->prefix.'groups SET g_promote_next_group=0 WHERE g_promote_next_group='.$group_id) or error('Unable to remove group as promotion target', __FILE__, __LINE__, $db->error());
+
 			redirect('admin_groups.php', $lang_admin_groups['Group removed redirect']);
 		}
 		else
