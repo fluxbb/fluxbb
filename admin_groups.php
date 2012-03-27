@@ -82,19 +82,19 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 									<th scope="row"><?php echo $lang_admin_groups['User title label'] ?></th>
 									<td>
 										<input type="text" name="user_title" size="25" maxlength="50" value="<?php echo pun_htmlspecialchars($group['g_user_title']) ?>" tabindex="2" />
-										<span><?php echo $lang_admin_groups['User title help'] ?></span>
+										<span><?php printf($lang_admin_groups['User title help'], $lang_common['Member']) ?></span>
 									</td>
 								</tr>
 <?php if ($group['g_id'] != PUN_ADMIN): if ($group['g_id'] != PUN_GUEST): ?>								<tr>
 									<th scope="row"><?php echo $lang_admin_groups['Promote users label'] ?></th>
 									<td>
-										<select name="promote_next_group" tabindex="4">
+										<select name="promote_next_group" tabindex="3">
 											<option value="0"><?php echo $lang_admin_groups['Disable promotion'] ?></option>
 <?php
 
 foreach ($groups as $cur_group)
 {
-	if ($cur_group['g_id'] != $group['g_id'] && $cur_group['g_id'] != PUN_ADMIN)
+	if (($cur_group['g_id'] != $group['g_id'] || $mode == 'add') && $cur_group['g_id'] != PUN_ADMIN)
 	{
 		if ($cur_group['g_id'] == $group['g_promote_next_group'])
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$cur_group['g_id'].'" selected="selected">'.pun_htmlspecialchars($cur_group['g_title']).'</option>'."\n";
@@ -105,7 +105,7 @@ foreach ($groups as $cur_group)
 
 ?>
 										</select>
-										<input type="text" name="promote_min_posts" size="5" maxlength="10" value="<?php echo pun_htmlspecialchars($group['g_promote_min_posts']) ?>" tabindex="3" />
+										<input type="text" name="promote_min_posts" size="5" maxlength="10" value="<?php echo pun_htmlspecialchars($group['g_promote_min_posts']) ?>" tabindex="4" />
 										<span><?php printf($lang_admin_groups['Promote users help'], $lang_admin_groups['Disable promotion']) ?></span>
 									</td>
 								</tr>
