@@ -59,6 +59,7 @@ $lang_common = array(
 'Pages'								=>	'Pages:',
 'Page'								=>	'Page %s',
 'BBCode'							=>	'BBCode:', // You probably shouldn't change this
+'url tag'							=>	'[url] tag:',
 'img tag'							=>	'[img] tag:',
 'Smilies'							=>	'Smilies:',
 'and'								=>	'and',
