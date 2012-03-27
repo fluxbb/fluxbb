@@ -85,7 +85,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 										<span><?php echo $lang_admin_groups['User title help'] ?></span>
 									</td>
 								</tr>
-								<tr>
+<?php if ($group['g_id'] != PUN_ADMIN): if ($group['g_id'] != PUN_GUEST): ?>								<tr>
 									<th scope="row"><?php echo $lang_admin_groups['Promote users label'] ?></th>
 									<td>
 										<select name="promote_next_group" tabindex="4">
@@ -94,7 +94,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 
 foreach ($groups as $cur_group)
 {
-	if ($cur_group['g_id'] != $group['g_id'])
+	if ($cur_group['g_id'] != $group['g_id'] && $cur_group['g_id'] != PUN_ADMIN)
 	{
 		if ($cur_group['g_id'] == $group['g_promote_next_group'])
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$cur_group['g_id'].'" selected="selected">'.pun_htmlspecialchars($cur_group['g_title']).'</option>'."\n";
@@ -109,7 +109,7 @@ foreach ($groups as $cur_group)
 										<span><?php printf($lang_admin_groups['Promote users help'], $lang_admin_groups['Disable promotion']) ?></span>
 									</td>
 								</tr>
-<?php if ($group['g_id'] != PUN_ADMIN): if ($group['g_id'] != PUN_GUEST): if ($mode != 'edit' || $pun_config['o_default_user_group'] != $group['g_id']): ?>								<tr>
+<?php if ($mode != 'edit' || $pun_config['o_default_user_group'] != $group['g_id']): ?>								<tr>
 									<th scope="row"> <?php echo $lang_admin_groups['Mod privileges label'] ?></th>
 									<td>
 										<input type="radio" name="moderator" value="1"<?php if ($group['g_moderator'] == '1') echo ' checked="checked"' ?> tabindex="5" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&#160;&#160;&#160;<input type="radio" name="moderator" value="0"<?php if ($group['g_moderator'] == '0') echo ' checked="checked"' ?> tabindex="6" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong>
@@ -276,8 +276,13 @@ else if (isset($_POST['add_edit_group']))
 
 	$title = pun_trim($_POST['req_title']);
 	$user_title = pun_trim($_POST['user_title']);
+
 	$promote_min_posts = isset($_POST['promote_min_posts']) ? intval($_POST['promote_min_posts']) : '0';
-	$promote_next_group = isset($_POST['promote_next_group']) && isset($groups[$_POST['promote_next_group']]) ? $_POST['promote_next_group'] : '0';
+	if (isset($_POST['promote_next_group']) && isset($groups[$_POST['promote_next_group']]) && !in_array($_POST['promote_next_group'], array(PUN_ADMIN, $_POST['group_id'])))
+		$promote_next_group = $_POST['promote_next_group'];
+	else
+		$promote_next_group = '0';
+
 	$moderator = isset($_POST['moderator']) && $_POST['moderator'] == '1' ? '1' : '0';
 	$mod_edit_users = $moderator == '1' && isset($_POST['mod_edit_users']) && $_POST['mod_edit_users'] == '1' ? '1' : '0';
 	$mod_rename_users = $moderator == '1' && isset($_POST['mod_rename_users']) && $_POST['mod_rename_users'] == '1' ? '1' : '0';
