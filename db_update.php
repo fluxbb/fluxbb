@@ -7,9 +7,9 @@
  */
 
 // The FluxBB version this script updates to
-define('UPDATE_TO', '1.4.8');
+define('UPDATE_TO', '1.5-dev');
 
-define('UPDATE_TO_DB_REVISION', 15);
+define('UPDATE_TO_DB_REVISION', 16);
 define('UPDATE_TO_SI_REVISION', 2);
 define('UPDATE_TO_PARSER_REVISION', 2);
 
@@ -1021,6 +1021,10 @@ switch ($stage)
 
 		// Change the search_data field to mediumtext
 		$db->alter_field('search_cache', 'search_data', 'MEDIUMTEXT', true) or error('Unable to alter search_data field', __FILE__, __LINE__, $db->error());
+
+		// Add the group promotion fields to the groups table
+		$db->add_field('groups', 'g_promote_min_posts', 'INT(10) UNSIGNED', false, 0, 'g_user_title') or error('Unable to add g_promote_min_posts field', __FILE__, __LINE__, $db->error());
+		$db->add_field('groups', 'g_promote_next_group', 'INT(10) UNSIGNED', false, 0, 'g_promote_min_posts') or error('Unable to add g_promote_next_group field', __FILE__, __LINE__, $db->error());
 
 		// Incase we had the fulltext search extension installed (1.3-legacy), remove it
 		$db->drop_index('topics', 'subject_idx') or error('Unable to drop subject_idx index', __FILE__, __LINE__, $db->error());

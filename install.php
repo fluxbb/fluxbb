@@ -7,9 +7,9 @@
  */
 
 // The FluxBB version this script installs
-define('FORUM_VERSION', '1.4.8');
+define('FORUM_VERSION', '1.5-dev');
 
-define('FORUM_DB_REVISION', 15);
+define('FORUM_DB_REVISION', 16);
 define('FORUM_SI_REVISION', 2);
 define('FORUM_PARSER_REVISION', 2);
 
@@ -848,6 +848,16 @@ else
 			'g_user_title'				=> array(
 				'datatype'		=> 'VARCHAR(50)',
 				'allow_null'	=> true
+			),
+			'g_promote_min_posts'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
+			),
+			'g_promote_next_group'		=> array(
+				'datatype'		=> 'INT(10) UNSIGNED',
+				'allow_null'	=> false,
+				'default'		=> '0'
 			),
 			'g_moderator'				=> array(
 				'datatype'		=> 'TINYINT(1)',
