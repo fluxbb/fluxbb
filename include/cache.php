@@ -68,34 +68,6 @@ function generate_bans_cache()
 
 
 //
-// Generate the ranks cache PHP script
-//
-function generate_ranks_cache()
-{
-	global $db;
-
-	// Get the rank list from the DB
-	$result = $db->query('SELECT * FROM '.$db->prefix.'ranks ORDER BY min_posts', true) or error('Unable to fetch rank list', __FILE__, __LINE__, $db->error());
-
-	$output = array();
-	while ($cur_rank = $db->fetch_assoc($result))
-		$output[] = $cur_rank;
-
-	// Output ranks list as PHP code
-	$fh = @fopen(FORUM_CACHE_DIR.'cache_ranks.php', 'wb');
-	if (!$fh)
-		error('Unable to write ranks cache file to cache directory. Please make sure PHP has write access to the directory \''.pun_htmlspecialchars(FORUM_CACHE_DIR).'\'', __FILE__, __LINE__);
-
-	fwrite($fh, '<?php'."\n\n".'define(\'PUN_RANKS_LOADED\', 1);'."\n\n".'$pun_ranks = '.var_export($output, true).';'."\n\n".'?>');
-
-	fclose($fh);
-
-	if (function_exists('apc_delete_file'))
-		@apc_delete_file(FORUM_CACHE_DIR.'cache_ranks.php');
-}
-
-
-//
 // Generate quick jump cache PHP scripts
 //
 function generate_quickjump_cache($group_id = false)

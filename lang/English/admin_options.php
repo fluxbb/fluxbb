@@ -123,8 +123,6 @@ $lang_admin_options = array(
 'Censor words help'					=>	'Enable this to censor specific words in the board. See %s for more info.',
 'Signatures label'					=>	'Signatures',
 'Signatures help'					=>	'Allow users to attach a signature to their posts.',
-'User ranks label'					=>	'User ranks',
-'User ranks help'					=>	'Enable this to use user ranks. See %s for more info.',
 'User has posted label'				=>	'User has posted earlier',
 'User has posted help'				=>	'This feature displays a dot in front of topics in viewforum.php in case the currently logged in user has posted in that topic earlier. Disable if you are experiencing high server load.',
 'Topic views label'					=>	'Topic views',
@@ -163,7 +161,7 @@ $lang_admin_options = array(
 // Avatars section
 'Avatars subhead'					=>	'Avatars',
 'Use avatars label'					=>	'Use avatars',
-'Use avatars help'					=>	'When enabled, users will be able to upload an avatar which will be displayed under their title/rank.',
+'Use avatars help'					=>	'When enabled, users will be able to upload an avatar which will be displayed under their title.',
 'Upload directory label'			=>	'Upload directory',
 'Upload directory help'				=>	'The upload directory for avatars (relative to the FluxBB root directory). PHP must have write permissions to this directory.',
 'Max width label'					=>	'Max width',

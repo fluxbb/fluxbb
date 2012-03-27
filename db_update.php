@@ -9,7 +9,7 @@
 // The FluxBB version this script updates to
 define('UPDATE_TO', '1.5-dev');
 
-define('UPDATE_TO_DB_REVISION', 16);
+define('UPDATE_TO_DB_REVISION', 17);
 define('UPDATE_TO_SI_REVISION', 2);
 define('UPDATE_TO_PARSER_REVISION', 2);
 
@@ -1167,6 +1167,14 @@ switch ($stage)
 		if ($db_type == 'mysql' || $db_type == 'mysqli')
 			$db->query('ALTER TABLE '.$db->prefix.'online ENGINE = MyISAM') or error('Unable to change engine type of online table to MyISAM', __FILE__, __LINE__, $db->error());
 
+		// Remove config option o_ranks
+		if (array_key_exists('o_ranks', $pun_config))
+			$db->query('DELETE FROM '.$db->prefix.'config WHERE conf_name=\'o_ranks\'') or error('Unable to remove config value \'o_ranks\'', __FILE__, __LINE__, $db->error());
+
+		// Remove the ranks table
+		if ($db->table_exists('ranks'))
+			$db->drop_table('ranks') or error('Unable to drop ranks table', __FILE__, __LINE__, $db->error());
+
 		// Should we do charset conversion or not?
 		if (strpos($cur_version, '1.2') === 0 && isset($_POST['convert_charset']))
 			$query_str = '?stage=conv_bans&req_old_charset='.$old_charset;
@@ -1325,7 +1333,7 @@ switch ($stage)
 
 	// Convert posts
 	case 'conv_posts':
-		$query_str = '?stage=conv_ranks&req_old_charset='.$old_charset;
+		$query_str = '?stage=conv_reports&req_old_charset='.$old_charset;
 
 		function _conv_posts($cur_item, $old_charset)
 		{
@@ -1344,24 +1352,6 @@ switch ($stage)
 
 		if ($end_at !== true)
 			$query_str = '?stage=conv_posts&req_old_charset='.$old_charset.'&start_at='.$end_at;
-
-		break;
-
-
-	// Convert ranks
-	case 'conv_ranks':
-		$query_str = '?stage=conv_reports&req_old_charset='.$old_charset;
-
-		echo sprintf($lang_update['Converting'], $lang_update['ranks']).'<br />'."\n";
-
-		function _conv_ranks($cur_item, $old_charset)
-		{
-			convert_to_utf8($cur_item['rank'], $old_charset);
-
-			return $cur_item;
-		}
-
-		convert_table_utf8($db->prefix.'ranks', '_conv_ranks', $old_charset, 'id');
 
 		break;
 

@@ -59,7 +59,6 @@ $lang_update = array(
 'forums'						=>	'forums',
 'groups'						=>	'groups',
 'post'							=>	'post',
-'ranks'							=>	'ranks',
 'report'						=>	'report',
 'topic'							=>	'topic',
 'user'							=>	'user',

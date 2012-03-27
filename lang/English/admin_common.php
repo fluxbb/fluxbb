@@ -15,7 +15,6 @@ $lang_admin_common = array(
 'Options'				=>	'Options',
 'Permissions'			=>	'Permissions',
 'Censoring'				=>	'Censoring',
-'Ranks'					=>	'Ranks',
 'Bans'					=>	'Bans',
 'Prune'					=>	'Prune',
 'Maintenance'			=>	'Maintenance',

@@ -799,7 +799,7 @@ function censor_words($text)
 function get_title($user)
 {
 	global $db, $pun_config, $pun_bans, $lang_common;
-	static $ban_list, $pun_ranks;
+	static $ban_list;
 
 	// If not already built in a previous call, build an array of lowercase banned usernames
 	if (empty($ban_list))
@@ -808,22 +808,6 @@ function get_title($user)
 
 		foreach ($pun_bans as $cur_ban)
 			$ban_list[] = strtolower($cur_ban['username']);
-	}
-
-	// If not already loaded in a previous call, load the cached ranks
-	if ($pun_config['o_ranks'] == '1' && !defined('PUN_RANKS_LOADED'))
-	{
-		if (file_exists(FORUM_CACHE_DIR.'cache_ranks.php'))
-			include FORUM_CACHE_DIR.'cache_ranks.php';
-
-		if (!defined('PUN_RANKS_LOADED'))
-		{
-			if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-				require PUN_ROOT.'include/cache.php';
-
-			generate_ranks_cache();
-			require FORUM_CACHE_DIR.'cache_ranks.php';
-		}
 	}
 
 	// If the user has a custom title
@@ -838,22 +822,9 @@ function get_title($user)
 	// If the user is a guest
 	else if ($user['g_id'] == PUN_GUEST)
 		$user_title = $lang_common['Guest'];
+	// If nothing else helps, we assign the default
 	else
-	{
-		// Are there any ranks?
-		if ($pun_config['o_ranks'] == '1' && !empty($pun_ranks))
-		{
-			foreach ($pun_ranks as $cur_rank)
-			{
-				if ($user['num_posts'] >= $cur_rank['min_posts'])
-					$user_title = pun_htmlspecialchars($cur_rank['rank']);
-			}
-		}
-
-		// If the user didn't "reach" any rank (or if ranks are disabled), we assign the default
-		if (!isset($user_title))
-			$user_title = $lang_common['Member'];
-	}
+		$user_title = $lang_common['Member'];
 
 	return $user_title;
 }

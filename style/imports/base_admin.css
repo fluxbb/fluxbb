@@ -27,7 +27,7 @@
 
 /*** Particular table settings ***/
 #categoryedit .tcl {WIDTH: 25%}
-#censoring .tcl, #censoring .tc2, #ranks .tcl, #ranks .tc2 {WIDTH: 20%}
+#censoring .tcl, #censoring .tc2 {WIDTH: 20%}
 #edforum .tcl, #edforum .tc2 {WIDTH: 8%}
 #edforum .tc2 {WIDTH: 6%}
 
