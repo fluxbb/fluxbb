@@ -152,7 +152,7 @@ if (isset($_POST['form_sent']))
 	$hide_smilies = isset($_POST['hide_smilies']) ? '1' : '0';
 	$subscribe = isset($_POST['subscribe']) ? '1' : '0';
 	$stick_topic = isset($_POST['stick_topic']) && $is_admmod ? '1' : '0';
-	
+
 	// Replace four-byte characters (MySQL cannot handle them)
 	$message = strip_bad_multibyte_chars($message);
 
@@ -418,6 +418,14 @@ if (isset($_POST['form_sent']))
 		{
 			$db->query('UPDATE '.$db->prefix.'users SET num_posts=num_posts+1, last_post='.$now.' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 
+			// Promote this user to a new group if enabled
+			if ($pun_user['g_promote_next_group'] != 0 && $pun_user['num_posts'] + 1 >= $pun_user['g_promote_min_posts'])
+			{
+				$new_group_id = $pun_user['g_promote_next_group'];
+				$db->query('UPDATE '.$db->prefix.'users SET group_id='.$new_group_id) or error('Unable to promote user to new group', __FILE__, __LINE__, $db->error());
+			}
+
+			// Topic tracking stuff...
 			$tracked_topics = get_tracked_topics();
 			$tracked_topics['topics'][$new_tid] = time();
 			set_tracked_topics($tracked_topics);
