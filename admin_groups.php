@@ -285,7 +285,10 @@ else if (isset($_POST['add_edit_group']))
 	$user_title = pun_trim($_POST['user_title']);
 
 	$promote_min_posts = isset($_POST['promote_min_posts']) ? intval($_POST['promote_min_posts']) : '0';
-	if (isset($_POST['promote_next_group']) && isset($groups[$_POST['promote_next_group']]) && !in_array($_POST['promote_next_group'], array(PUN_ADMIN, PUN_GUEST, $_POST['group_id'])))
+	if (isset($_POST['promote_next_group']) &&
+			isset($groups[$_POST['promote_next_group']]) &&
+			!in_array($_POST['promote_next_group'], array(PUN_ADMIN, PUN_GUEST)) &&
+			(!isset($_POST['group_id']) || $_POST['promote_next_group'] != $_POST['group_id']))
 		$promote_next_group = $_POST['promote_next_group'];
 	else
 		$promote_next_group = '0';
