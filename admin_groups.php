@@ -94,7 +94,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 
 foreach ($groups as $cur_group)
 {
-	if (($cur_group['g_id'] != $group['g_id'] || $mode == 'add') && $cur_group['g_id'] != PUN_ADMIN)
+	if (($cur_group['g_id'] != $group['g_id'] || $mode == 'add') && $cur_group['g_id'] != PUN_ADMIN && $cur_group['g_id'] != PUN_GUEST)
 	{
 		if ($cur_group['g_id'] == $group['g_promote_next_group'])
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$cur_group['g_id'].'" selected="selected">'.pun_htmlspecialchars($cur_group['g_title']).'</option>'."\n";
@@ -285,7 +285,7 @@ else if (isset($_POST['add_edit_group']))
 	$user_title = pun_trim($_POST['user_title']);
 
 	$promote_min_posts = isset($_POST['promote_min_posts']) ? intval($_POST['promote_min_posts']) : '0';
-	if (isset($_POST['promote_next_group']) && isset($groups[$_POST['promote_next_group']]) && !in_array($_POST['promote_next_group'], array(PUN_ADMIN, $_POST['group_id'])))
+	if (isset($_POST['promote_next_group']) && isset($groups[$_POST['promote_next_group']]) && !in_array($_POST['promote_next_group'], array(PUN_ADMIN, PUN_GUEST, $_POST['group_id'])))
 		$promote_next_group = $_POST['promote_next_group'];
 	else
 		$promote_next_group = '0';
