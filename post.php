@@ -422,7 +422,7 @@ if (isset($_POST['form_sent']))
 			if ($pun_user['g_promote_next_group'] != 0 && $pun_user['num_posts'] + 1 >= $pun_user['g_promote_min_posts'])
 			{
 				$new_group_id = $pun_user['g_promote_next_group'];
-				$db->query('UPDATE '.$db->prefix.'users SET group_id='.$new_group_id) or error('Unable to promote user to new group', __FILE__, __LINE__, $db->error());
+				$db->query('UPDATE '.$db->prefix.'users SET group_id='.$new_group_id.' WHERE id='.$pun_user['id']) or error('Unable to promote user to new group', __FILE__, __LINE__, $db->error());
 			}
 
 			// Topic tracking stuff...
