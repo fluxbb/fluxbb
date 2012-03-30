@@ -387,7 +387,11 @@ function preparse_tags($text, &$errors, $is_signature = false)
 		// Is the tag forbidden?
 		if (in_array($current_tag, $tags_forbidden))
 		{
-			$errors[] = sprintf($lang_common['BBCode error tag not allowed'], $current_tag);
+			if (isset($lang_common['BBCode error tag '.$current_tag.' not allowed']))
+				$errors[] = sprintf($lang_common['BBCode error tag '.$current_tag.' not allowed']);
+			else
+				$errors[] = sprintf($lang_common['BBCode error tag not allowed'], $current_tag);
+
 			return false;
 		}
 
