@@ -122,7 +122,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 		require PUN_ROOT.'include/email.php';
 
 		// Validate the email address
-		$email = strtolower(trim($_POST['req_email']));
+		$email = strtolower(pun_trim($_POST['req_email']));
 		if (!is_valid_email($email))
 			$errors[] = $lang_common['Invalid email'];
 

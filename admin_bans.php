@@ -183,10 +183,10 @@ else if (isset($_POST['add_edit_ban']))
 	confirm_referrer('admin_bans.php');
 
 	$ban_user = pun_trim($_POST['ban_user']);
-	$ban_ip = trim($_POST['ban_ip']);
-	$ban_email = strtolower(trim($_POST['ban_email']));
+	$ban_ip = pun_trim($_POST['ban_ip']);
+	$ban_email = strtolower(pun_trim($_POST['ban_email']));
 	$ban_message = pun_trim($_POST['ban_message']);
-	$ban_expire = trim($_POST['ban_expire']);
+	$ban_expire = pun_trim($_POST['ban_expire']);
 
 	if ($ban_user == '' && $ban_ip == '' && $ban_email == '')
 		message($lang_admin_bans['Must enter message']);
@@ -330,8 +330,8 @@ else if (isset($_GET['find_ban']))
 	$form = array_map('pun_trim', $form);
 	$conditions = $query_str = array();
 
-	$expire_after = isset($_GET['expire_after']) ? trim($_GET['expire_after']) : '';
-	$expire_before = isset($_GET['expire_before']) ? trim($_GET['expire_before']) : '';
+	$expire_after = isset($_GET['expire_after']) ? pun_trim($_GET['expire_after']) : '';
+	$expire_before = isset($_GET['expire_before']) ? pun_trim($_GET['expire_before']) : '';
 	$order_by = isset($_GET['order_by']) && in_array($_GET['order_by'], array('username', 'ip', 'email', 'expire')) ? 'b.'.$_GET['order_by'] : 'b.username';
 	$direction = isset($_GET['direction']) && $_GET['direction'] == 'DESC' ? 'DESC' : 'ASC';
 
