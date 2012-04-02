@@ -73,11 +73,11 @@ if (isset($_POST['form_sent']))
 
 
 	$username = pun_trim($_POST['req_user']);
-	$email1 = strtolower(trim($_POST['req_email1']));
+	$email1 = strtolower(pun_trim($_POST['req_email1']));
 
 	if ($pun_config['o_regs_verify'] == '1')
 	{
-		$email2 = strtolower(trim($_POST['req_email2']));
+		$email2 = strtolower(pun_trim($_POST['req_email2']));
 
 		$password1 = random_pass(8);
 		$password2 = $password1;

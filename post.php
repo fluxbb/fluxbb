@@ -91,7 +91,7 @@ if (isset($_POST['form_sent']))
 	else
 	{
 		$username = pun_trim($_POST['req_username']);
-		$email = strtolower(trim(($pun_config['p_force_guest_email'] == '1') ? $_POST['req_email'] : $_POST['email']));
+		$email = strtolower(pun_trim(($pun_config['p_force_guest_email'] == '1') ? $_POST['req_email'] : $_POST['email']));
 		$banned_email = false;
 
 		// Load the register.php/prof_reg.php language files
