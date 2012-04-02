@@ -159,7 +159,7 @@ else if (isset($_GET['edit_forum']))
 		$forum_desc = pun_linebreaks(pun_trim($_POST['forum_desc']));
 		$cat_id = intval($_POST['cat_id']);
 		$sort_by = intval($_POST['sort_by']);
-		$redirect_url = isset($_POST['redirect_url']) ? trim($_POST['redirect_url']) : null;
+		$redirect_url = isset($_POST['redirect_url']) ? pun_trim($_POST['redirect_url']) : null;
 
 		if ($forum_name == '')
 			message($lang_admin_forums['Must enter name message']);
