@@ -199,7 +199,7 @@ else if ($action == 'change_email')
 		require PUN_ROOT.'include/email.php';
 
 		// Validate the email address
-		$new_email = strtolower(trim($_POST['req_new_email']));
+		$new_email = strtolower(pun_trim($_POST['req_new_email']));
 		if (!is_valid_email($new_email))
 			message($lang_common['Invalid email']);
 
@@ -750,7 +750,7 @@ else if (isset($_POST['form_sent']))
 				require PUN_ROOT.'include/email.php';
 
 				// Validate the email address
-				$form['email'] = strtolower(trim($_POST['req_email']));
+				$form['email'] = strtolower(pun_trim($_POST['req_email']));
 				if (!is_valid_email($form['email']))
 					message($lang_common['Invalid email']);
 			}

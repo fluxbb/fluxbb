@@ -22,7 +22,7 @@ if ($pun_user['g_id'] != PUN_ADMIN)
 // Load the admin_maintenance.php language file
 require PUN_ROOT.'lang/'.$admin_language.'/admin_maintenance.php';
 
-$action = isset($_REQUEST['action']) ? trim($_REQUEST['action']) : '';
+$action = isset($_REQUEST['action']) ? pun_trim($_REQUEST['action']) : '';
 
 if ($action == 'rebuild')
 {
@@ -125,7 +125,7 @@ h1 {
 
 if ($action == 'prune')
 {
-	$prune_from = trim($_POST['prune_from']);
+	$prune_from = pun_trim($_POST['prune_from']);
 	$prune_sticky = intval($_POST['prune_sticky']);
 
 	if (isset($_POST['prune_comply']))
@@ -172,7 +172,7 @@ if ($action == 'prune')
 		redirect('admin_maintenance.php', $lang_admin_maintenance['Posts pruned redirect']);
 	}
 
-	$prune_days = trim($_POST['req_prune_days']);
+	$prune_days = pun_trim($_POST['req_prune_days']);
 	if ($prune_days == '' || preg_match('%[^0-9]%', $prune_days))
 		message($lang_admin_maintenance['Days must be integer message']);
 
