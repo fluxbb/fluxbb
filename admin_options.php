@@ -509,21 +509,21 @@ generate_admin_menu('options');
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><a name="censoring"><?php echo $lang_admin_options['Censor words label'] ?></a></th>
+									<th scope="row"><a name="censoring"></a><?php echo $lang_admin_options['Censor words label'] ?></th>
 									<td>
 										<input type="radio" name="form[censoring]" value="1"<?php if ($pun_config['o_censoring'] == '1') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&#160;&#160;&#160;<input type="radio" name="form[censoring]" value="0"<?php if ($pun_config['o_censoring'] == '0') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong>
 										<span><?php printf($lang_admin_options['Censor words help'], '<a href="admin_censoring.php">'.$lang_admin_common['Censoring'].'</a>') ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><a name="signatures"><?php echo $lang_admin_options['Signatures label'] ?></a></th>
+									<th scope="row"><a name="signatures"></a><?php echo $lang_admin_options['Signatures label'] ?></th>
 									<td>
 										<input type="radio" name="form[signatures]" value="1"<?php if ($pun_config['o_signatures'] == '1') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&#160;&#160;&#160;<input type="radio" name="form[signatures]" value="0"<?php if ($pun_config['o_signatures'] == '0') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong>
 										<span><?php echo $lang_admin_options['Signatures help'] ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><a name="ranks"><?php echo $lang_admin_options['User ranks label'] ?></a></th>
+									<th scope="row"><a name="ranks"></a><?php echo $lang_admin_options['User ranks label'] ?></th>
 									<td>
 										<input type="radio" name="form[ranks]" value="1"<?php if ($pun_config['o_ranks'] == '1') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&#160;&#160;&#160;<input type="radio" name="form[ranks]" value="0"<?php if ($pun_config['o_ranks'] == '0') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong>
 										<span><?php printf($lang_admin_options['User ranks help'], '<a href="admin_ranks.php">'.$lang_admin_common['Ranks'].'</a>') ?></span>
@@ -825,7 +825,7 @@ generate_admin_menu('options');
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row"><a name="maintenance"><?php echo $lang_admin_options['Maintenance mode label'] ?></a></th>
+									<th scope="row"><a name="maintenance"></a><?php echo $lang_admin_options['Maintenance mode label'] ?></th>
 									<td>
 										<input type="radio" name="form[maintenance]" value="1"<?php if ($pun_config['o_maintenance'] == '1') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&#160;&#160;&#160;<input type="radio" name="form[maintenance]" value="0"<?php if ($pun_config['o_maintenance'] == '0') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong>
 										<span><?php echo $lang_admin_options['Maintenance mode help'] ?></span>
