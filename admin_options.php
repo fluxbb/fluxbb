@@ -34,20 +34,20 @@ if (isset($_POST['form_sent']))
 		'default_style'			=> pun_trim($_POST['form']['default_style']),
 		'time_format'			=> pun_trim($_POST['form']['time_format']),
 		'date_format'			=> pun_trim($_POST['form']['date_format']),
-		'timeout_visit'			=> intval($_POST['form']['timeout_visit']),
-		'timeout_online'		=> intval($_POST['form']['timeout_online']),
-		'redirect_delay'		=> intval($_POST['form']['redirect_delay']),
+		'timeout_visit'			=> (intval($_POST['form']['timeout_visit']) > 0) ? intval($_POST['form']['timeout_visit']) : 1,
+		'timeout_online'		=> (intval($_POST['form']['timeout_online']) > 0) ? intval($_POST['form']['timeout_online']) : 1,
+		'redirect_delay'		=> (intval($_POST['form']['redirect_delay']) >= 0) ? intval($_POST['form']['redirect_delay']) : 0,
 		'show_version'			=> $_POST['form']['show_version'] != '1' ? '0' : '1',
 		'show_user_info'		=> $_POST['form']['show_user_info'] != '1' ? '0' : '1',
 		'show_post_count'		=> $_POST['form']['show_post_count'] != '1' ? '0' : '1',
 		'smilies'				=> $_POST['form']['smilies'] != '1' ? '0' : '1',
 		'smilies_sig'			=> $_POST['form']['smilies_sig'] != '1' ? '0' : '1',
 		'make_links'			=> $_POST['form']['make_links'] != '1' ? '0' : '1',
-		'topic_review'			=> intval($_POST['form']['topic_review']),
+		'topic_review'			=> (intval($_POST['form']['topic_review']) >= 0) ? intval($_POST['form']['topic_review']) : 0,
 		'disp_topics_default'	=> intval($_POST['form']['disp_topics_default']),
 		'disp_posts_default'	=> intval($_POST['form']['disp_posts_default']),
-		'indent_num_spaces'		=> intval($_POST['form']['indent_num_spaces']),
-		'quote_depth'			=> intval($_POST['form']['quote_depth']),
+		'indent_num_spaces'		=> (intval($_POST['form']['indent_num_spaces']) >= 0) ? intval($_POST['form']['indent_num_spaces']) : 0,
+		'quote_depth'			=> (intval($_POST['form']['quote_depth']) > 0) ? intval($_POST['form']['quote_depth']) : 1,
 		'quickpost'				=> $_POST['form']['quickpost'] != '1' ? '0' : '1',
 		'users_online'			=> $_POST['form']['users_online'] != '1' ? '0' : '1',
 		'censoring'				=> $_POST['form']['censoring'] != '1' ? '0' : '1',
@@ -64,9 +64,9 @@ if (isset($_POST['form_sent']))
 		'mailing_list'			=> pun_trim($_POST['form']['mailing_list']),
 		'avatars'				=> $_POST['form']['avatars'] != '1' ? '0' : '1',
 		'avatars_dir'			=> pun_trim($_POST['form']['avatars_dir']),
-		'avatars_width'			=> intval($_POST['form']['avatars_width']),
-		'avatars_height'		=> intval($_POST['form']['avatars_height']),
-		'avatars_size'			=> intval($_POST['form']['avatars_size']),
+		'avatars_width'			=> (intval($_POST['form']['avatars_width']) > 0) ? intval($_POST['form']['avatars_width']) : 1,
+		'avatars_height'		=> (intval($_POST['form']['avatars_height']) > 0) ? intval($_POST['form']['avatars_height']) : 1,
+		'avatars_size'			=> (intval($_POST['form']['avatars_size']) > 0) ? intval($_POST['form']['avatars_size']) : 1,
 		'admin_email'			=> strtolower(pun_trim($_POST['form']['admin_email'])),
 		'webmaster_email'		=> strtolower(pun_trim($_POST['form']['webmaster_email'])),
 		'forum_subscriptions'	=> $_POST['form']['forum_subscriptions'] != '1' ? '0' : '1',
@@ -508,14 +508,14 @@ generate_admin_menu('options');
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><a name="censoring"><?php echo $lang_admin_options['Censor words label'] ?></a></th>
+									<th scope="row"><a name="censoring"></a><?php echo $lang_admin_options['Censor words label'] ?></th>
 									<td>
 										<input type="radio" name="form[censoring]" value="1"<?php if ($pun_config['o_censoring'] == '1') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&#160;&#160;&#160;<input type="radio" name="form[censoring]" value="0"<?php if ($pun_config['o_censoring'] == '0') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong>
 										<span><?php printf($lang_admin_options['Censor words help'], '<a href="admin_censoring.php">'.$lang_admin_common['Censoring'].'</a>') ?></span>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><a name="signatures"><?php echo $lang_admin_options['Signatures label'] ?></a></th>
+									<th scope="row"><a name="signatures"></a><?php echo $lang_admin_options['Signatures label'] ?></th>
 									<td>
 										<input type="radio" name="form[signatures]" value="1"<?php if ($pun_config['o_signatures'] == '1') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&#160;&#160;&#160;<input type="radio" name="form[signatures]" value="0"<?php if ($pun_config['o_signatures'] == '0') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong>
 										<span><?php echo $lang_admin_options['Signatures help'] ?></span>
@@ -817,7 +817,7 @@ generate_admin_menu('options');
 						<div class="infldset">
 							<table class="aligntop" cellspacing="0">
 								<tr>
-									<th scope="row"><a name="maintenance"><?php echo $lang_admin_options['Maintenance mode label'] ?></a></th>
+									<th scope="row"><a name="maintenance"></a><?php echo $lang_admin_options['Maintenance mode label'] ?></th>
 									<td>
 										<input type="radio" name="form[maintenance]" value="1"<?php if ($pun_config['o_maintenance'] == '1') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&#160;&#160;&#160;<input type="radio" name="form[maintenance]" value="0"<?php if ($pun_config['o_maintenance'] == '0') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong>
 										<span><?php echo $lang_admin_options['Maintenance mode help'] ?></span>

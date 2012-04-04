@@ -621,7 +621,7 @@ $lock_error = false;
 // Generate or fetch the UID - this confirms we have a valid admin
 if (isset($_POST['req_db_pass']))
 {
-	$req_db_pass = strtolower(trim($_POST['req_db_pass']));
+	$req_db_pass = strtolower(pun_trim($_POST['req_db_pass']));
 
 	switch ($db_type)
 	{
@@ -674,7 +674,7 @@ if (isset($_POST['req_db_pass']))
 }
 else if (isset($_GET['uid']))
 {
-	$uid = trim($_GET['uid']);
+	$uid = pun_trim($_GET['uid']);
 	if (!$lock || $lock != $uid) // The lock doesn't exist or doesn't match the given UID
 		$lock_error = true;
 }

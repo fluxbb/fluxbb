@@ -133,7 +133,7 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 	foreach ($categories as $cat_id => $cur_cat)
 	{
 		$cur_cat['name'] = pun_trim($cur_cat['name']);
-		$cur_cat['order'] = trim($cur_cat['order']);
+		$cur_cat['order'] = pun_trim($cur_cat['order']);
 
 		if ($cur_cat['name'] == '')
 			message($lang_admin_categories['Must enter name message']);

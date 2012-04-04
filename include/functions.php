@@ -1126,7 +1126,7 @@ function pun_linebreaks($str)
 //
 function pun_trim($str, $charlist = false)
 {
-	return utf8_trim($str, $charlist);
+	return is_string($str) ? utf8_trim($str, $charlist) : '';
 }
 
 //
