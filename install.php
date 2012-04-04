@@ -334,7 +334,7 @@ function process_form(the_form)
 <?php endif; ?>
 
 <div class="blockform">
-	<h2><span><?php echo $lang_install['Install'] ?></span></h2>
+	<h2><span><?php echo sprintf($lang_install['Install'], FORUM_VERSION) ?></span></h2>
 	<div class="box">
 		<form id="install" method="post" action="install.php" onsubmit="this.start.disabled=true;if(process_form(this)){return true;}else{this.start.disabled=false;return false;}">
 		<div><input type="hidden" name="form_sent" value="1" /><input type="hidden" name="install_lang" value="<?php echo pun_htmlspecialchars($install_lang) ?>" /></div>
