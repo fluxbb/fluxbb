@@ -84,11 +84,9 @@ $cache = \fluxbb\cache\Cache::load('Dummy', array(), 'VarExport', array());
 
 // Load the language system
 require PUN_ROOT.'include/classes/lang.php';
-$lang = new Flux_Lang();
-
 // If we've been passed a default language, use it
 $install_lang = isset($_REQUEST['install_lang']) ? trim($_REQUEST['install_lang']) : 'English';
-$lang->setLanguage($install_lang);
+$lang = new Flux_Lang($install_lang);
 
 // Load the install.php language file
 $lang->load('install');
