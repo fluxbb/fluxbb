@@ -23,14 +23,14 @@ class Flux_Lang
 	 *
 	 * @var string
 	 */
-	protected $defaultLang = 'en';
+	protected $defaultLang = 'English';
 
 	/**
 	 * The language to use
 	 *
 	 * @var string
 	 */
-	protected $lang = 'en';
+	protected $lang = 'English';
 
 	/**
 	 * The resources that have been loaded so far
@@ -38,11 +38,11 @@ class Flux_Lang
 	 * @var array
 	 */
 	protected $loadedResources = array();
-	
-	
+
+
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param string $lang
 	 */
 	public function __construct($lang)
