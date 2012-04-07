@@ -527,7 +527,7 @@ function check_bans()
 //
 function check_username($username, $exclude_id = null)
 {
-	global $db, $pun_config, $errors, $lang, $lang, $pun_bans;
+	global $db, $pun_config, $errors, $lang, $pun_bans;
 
 	$lang->load('prof_reg');
 	$lang->load('register');
