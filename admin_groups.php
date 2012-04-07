@@ -267,10 +267,10 @@ else if (isset($_POST['add_edit_group']))
 	$search = isset($_POST['search']) ? intval($_POST['search']) : '1';
 	$search_users = isset($_POST['search_users']) ? intval($_POST['search_users']) : '1';
 	$send_email = (isset($_POST['send_email']) && $_POST['send_email'] == '1') || $is_admin_group ? '1' : '0';
-	$post_flood = isset($_POST['post_flood']) ? intval($_POST['post_flood']) : '0';
-	$search_flood = isset($_POST['search_flood']) ? intval($_POST['search_flood']) : '0';
-	$email_flood = isset($_POST['email_flood']) ? intval($_POST['email_flood']) : '0';
-	$report_flood = isset($_POST['report_flood']) ? intval($_POST['report_flood']) : '0';
+	$post_flood = (isset($_POST['post_flood']) && $_POST['post_flood'] >= 0) ? intval($_POST['post_flood']) : '0';
+	$search_flood = (isset($_POST['search_flood']) && $_POST['search_flood'] >= 0) ? intval($_POST['search_flood']) : '0';
+	$email_flood = (isset($_POST['email_flood']) && $_POST['email_flood'] >= 0) ? intval($_POST['email_flood']) : '0';
+	$report_flood = (isset($_POST['report_flood']) && $_POST['report_flood'] >= 0) ? intval($_POST['report_flood']) : '0';
 
 	if ($title == '')
 		message($lang_admin_groups['Must enter title message']);
