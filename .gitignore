@@ -3,8 +3,8 @@
 /.settings/
 /nbproject/
 *.sublime-project
-/cache/cache_*.php
 /cache/*.cache
+/cache/*.php
 /cache/db_update.lock
 /include/user/*
 /img/avatars/*.png
