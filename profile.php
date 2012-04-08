@@ -761,9 +761,9 @@ else if (isset($_POST['form_sent']))
 		case 'personal':
 		{
 			$form = array(
-				'realname'		=> pun_trim($_POST['form']['realname']),
-				'url'			=> pun_trim($_POST['form']['url']),
-				'location'		=> pun_trim($_POST['form']['location']),
+				'realname'		=> isset($_POST['form']['realname']) ? pun_trim($_POST['form']['realname']) : '',
+				'url'			=> isset($_POST['form']['url']) ? pun_trim($_POST['form']['url']) : '',
+				'location'		=> isset($_POST['form']['location']) ? pun_trim($_POST['form']['location']) : '',
 			);
 
 			// Add http:// if the URL doesn't contain it already (while allowing https://, too)
