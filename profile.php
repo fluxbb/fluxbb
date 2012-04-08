@@ -767,14 +767,24 @@ else if (isset($_POST['form_sent']))
 			);
 
 			// Add http:// if the URL doesn't contain it already (while allowing https://, too)
-			if ($form['url'] != '')
+			if ($pun_user['g_post_links'] == '1')
 			{
-				$url = url_valid($form['url']);
+				if ($form['url'] != '')
+				{
+					$url = url_valid($form['url']);
 
-				if ($url === false)
-					message($lang_profile['Invalid website URL']);
+					if ($url === false)
+						message($lang_profile['Invalid website URL']);
 
-				$form['url'] = $url['url'];
+					$form['url'] = $url['url'];
+				}
+			}
+			else
+			{
+				if (!empty($form['url']))
+					message($lang_profile['Website not allowed']);
+
+				$form['url'] = '';
 			}
 
 			if ($pun_user['g_id'] == PUN_ADMIN)
@@ -1427,7 +1437,8 @@ else
 							<label><?php echo $lang_profile['Realname'] ?><br /><input type="text" name="form[realname]" value="<?php echo pun_htmlspecialchars($user['realname']) ?>" size="40" maxlength="40" /><br /></label>
 <?php if (isset($title_field)): ?>							<?php echo $title_field ?>
 <?php endif; ?>							<label><?php echo $lang_profile['Location'] ?><br /><input type="text" name="form[location]" value="<?php echo pun_htmlspecialchars($user['location']) ?>" size="30" maxlength="30" /><br /></label>
-							<label><?php echo $lang_profile['Website'] ?><br /><input type="text" name="form[url]" value="<?php echo pun_htmlspecialchars($user['url']) ?>" size="50" maxlength="80" /><br /></label>
+<?php if ($pun_user['g_post_links'] == '1' || $pun_user['g_id'] == PUN_ADMIN) : ?>							<label><?php echo $lang_profile['Website'] ?><br /><input type="text" name="form[url]" value="<?php echo pun_htmlspecialchars($user['url']) ?>" size="50" maxlength="80" /><br /></label>
+<?php endif; ?>
 						</div>
 					</fieldset>
 				</div>
