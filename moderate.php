@@ -575,8 +575,18 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 		// Merge the posts into the topic
 		$db->query('UPDATE '.$db->prefix.'posts SET topic_id='.$merge_to_tid.' WHERE topic_id IN('.implode(',', $topics).')') or error('Unable to merge the posts into the topic', __FILE__, __LINE__, $db->error());
 
-		// Delete any subscriptions
-		$db->query('DELETE FROM '.$db->prefix.'topic_subscriptions WHERE topic_id IN('.implode(',', $topics).') AND topic_id != '.$merge_to_tid) or error('Unable to delete subscriptions', __FILE__, __LINE__, $db->error());
+		// Update any subscriptions
+		$result = $db->query('SELECT user_id FROM '.$db->prefix.'topic_subscriptions WHERE topic_id IN ('.implode(',', $topics).')') or error('Unable to fetch subscriptions of merged topics', __FILE__, __LINE__, $db->error());
+
+		$subscribed_users = array();
+		while ($cur_user_id = $db->result($result))
+			$subscribed_users[] = $cur_user_id;
+		$subscribed_users = array_unique($subscribed_users);
+
+		$db->query('DELETE FROM '.$db->prefix.'topic_subscriptions WHERE topic_id IN ('.implode(',', $topics).')') or error('Unable to delete subscriptions of merged topics', __FILE__, __LINE__, $db->error());
+
+		foreach ($subscribed_users as $cur_user_id)
+			$db->query('INSERT INTO '.$db->prefix.'topic_subscriptions (topic_id, user_id) VALUES ('.$merge_to_tid.', '.$cur_user_id.')') or error('Unable to re-enter subscriptions for merge topic', __FILE__, __LINE__, $db->error());
 
 		// Without redirection the old topics are removed
 		if (!isset($_POST['with_redirect']))
