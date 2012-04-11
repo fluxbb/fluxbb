@@ -68,9 +68,7 @@ echo "\t\t\t".'<div class="conl">'."\n";
 // Display the "Jump to" drop list
 if ($pun_config['o_quickjump'] == '1')
 {
-	$quickjump = $cache->get('quickjump');
-	if ($quickjump === \fluxbb\cache\Cache::NOT_FOUND)
-	{
+	$quickjump = $cache->remember('quickjump', function() use ($db) {
 		$quickjump = array();
 
 		// Generate the quick jump cache for all groups
@@ -101,8 +99,8 @@ if ($pun_config['o_quickjump'] == '1')
 
 		unset ($result, $query_forums);
 
-		$cache->set('quickjump', $quickjump);
-	}
+		return $quickjump;
+	});
 
 	if (!empty($quickjump[$pun_user['g_id']]))
 	{

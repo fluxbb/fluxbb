@@ -233,9 +233,7 @@ else
 	{
 		if ($pun_config['o_report_method'] == '0' || $pun_config['o_report_method'] == '2')
 		{
-			$num_reports = $cache->get('num_reports');
-			if ($num_reports === \fluxbb\cache\Cache::NOT_FOUND)
-			{
+			$num_reports = $cache->remember('num_reports', function() use ($db) {
 				$query = $db->select(array('num_reports' => 'COUNT(r.id) AS num_reports'), 'reports AS r');
 				$query->where = 'r.zapped IS NULL';
 
@@ -245,8 +243,8 @@ else
 				$num_reports = $result[0]['num_reports'];
 				unset ($result, $query, $params);
 
-				$cache->set('num_reports', $num_reports);
-			}
+				return $num_reports;
+			});
 
 			if ($num_reports > 0)
 				$page_statusinfo[] = '<li class="reportlink"><span><strong><a href="admin_reports.php">'.$lang->t('New reports').'</a></strong></span></li>';

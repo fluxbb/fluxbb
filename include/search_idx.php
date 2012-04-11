@@ -90,9 +90,7 @@ function validate_search_word($word, $idx)
 	{
 		$cache_id = generate_stopwords_cache_id();
 
-		$stopwords = $cache->get('stopwords.'.$cache_id);
-		if ($stopwords === \fluxbb\cache\Cache::NOT_FOUND)
-		{
+		$stopwords = $cache->remember('stopwords.'.$cache_id, function() {
 			$stopwords = array();
 
 			$d = dir(PUN_ROOT.'lang');
@@ -110,8 +108,8 @@ function validate_search_word($word, $idx)
 			$stopwords = array_map('pun_trim', $stopwords);
 			$stopwords = array_filter($stopwords);
 
-			$cache->set('stopwords.'.$cache_id, $stopwords);
-		}
+			return $stopwords;
+		});
 	}
 
 	// If it is a stopword it isn't valid

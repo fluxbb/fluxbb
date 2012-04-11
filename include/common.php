@@ -114,10 +114,8 @@ $db = \fluxbb\database\Adapter::factory($flux_config['db']['type'], $db_options)
 $db->startTransaction();
 
 // Load cached config
-$pun_config = $cache->get('config');
-if ($pun_config === \fluxbb\cache\Cache::NOT_FOUND)
-{
-	$pun_config = array();
+$pun_config = $cache->remember('config', function() use ($db) {
+	$cfg = array();
 
 	// Get the forum config from the DB
 	$query = $db->select(array('conf_name' => 'c.conf_name', 'conf_value' => 'c.conf_value'), 'config AS c');
@@ -125,12 +123,12 @@ if ($pun_config === \fluxbb\cache\Cache::NOT_FOUND)
 
 	$result = $query->run($params);
 	foreach ($result as $cur_config_item)
-		$pun_config[$cur_config_item['conf_name']] = $cur_config_item['conf_value'];
+		$cfg[$cur_config_item['conf_name']] = $cur_config_item['conf_value'];
 
 	unset ($query, $params, $result);
 
-	$cache->set('config', $pun_config);
-}
+	return $cfg;
+});
 
 // Verify that we are running the proper database schema revision
 /*if (!isset($pun_config['o_database_revision']) || $pun_config['o_database_revision'] < FORUM_DB_REVISION ||
@@ -173,18 +171,16 @@ if ($pun_config['o_maintenance'] && $pun_user['g_id'] > PUN_ADMIN && !defined('P
 	maintenance_message();
 
 // Load cached bans
-$pun_bans = $cache->get('bans');
-if ($pun_bans === \fluxbb\cache\Cache::NOT_FOUND)
-{
+$pun_bans = $cache->remember('bans', function() use ($db) {
 	// Get the ban list from the DB
 	$query = $db->select(array('id' => 'b.id', 'username' => 'b.username', 'ip' => 'b.ip', 'email' => 'b.email', 'message' => 'b.message', 'expire' => 'b.expire', 'ban_creator' => 'b.ban_creator'), 'bans AS b');
 	$params = array();
 
-	$pun_bans = $query->run($params);
+	$bans = $query->run($params);
 	unset ($query, $params);
 
-	$cache->set('bans', $pun_bans);
-}
+	return $bans;
+});
 
 // Check if current user is banned
 check_bans();

@@ -14,9 +14,7 @@ function fetch_board_stats()
 {
 	global $cache, $db;
 
-	$stats = $cache->get('boardstats');
-	if ($stats === \fluxbb\cache\Cache::NOT_FOUND)
-	{
+	return $cache->remember('boardstats', function() use ($db) {
 		$stats = array();
 
 		// Count total registered users
@@ -39,10 +37,8 @@ function fetch_board_stats()
 		$stats['last_user'] = current($query->run($params));
 		unset ($query, $params);
 
-		$cache->set('boardstats', $stats);
-	}
-
-	return $stats;
+		return $stats;
+	});
 }
 
 
@@ -1014,9 +1010,7 @@ function censor_words($text)
 	// If not already built in a previous call, build an array of censor words and their replacement text
 	if (!isset($censors))
 	{
-		$censors = $cache->get('censors');
-		if ($censors === \fluxbb\cache\Cache::NOT_FOUND)
-		{
+		$censors = $cache->remember('censors', function() use ($db) {
 			$censors = array();
 
 			$query = $db->select(array('search_for' => 'c.search_for', 'replace_with' => 'c.replace_with'), 'censoring AS c');
@@ -1030,8 +1024,8 @@ function censor_words($text)
 			}
 
 			unset ($result, $query, $params);
-			$cache->set('censors', $censors);
-		}
+			return $censors;
+		});
 	}
 
 	if (!empty($censors))
@@ -1062,10 +1056,8 @@ function get_title($user)
 	// If not already loaded in a previous call, load the cached ranks
 	if ($pun_config['o_ranks'] == '1' && !isset($pun_ranks))
 	{
-		$pun_ranks = $cache->get('ranks');
-		if ($pun_ranks === \fluxbb\cache\Cache::NOT_FOUND)
-		{
-			$pun_ranks = array();
+		$pun_ranks = $cache->remember('ranks', function() use ($db) {
+			$ranks = array();
 
 			// Get the rank list from the DB
 			$query = $db->select(array('ranks' => 'r.*'), 'ranks AS r');
@@ -1073,11 +1065,11 @@ function get_title($user)
 
 			$params = array();
 
-			$pun_ranks = $query->run($params);
+			$ranks = $query->run($params);
 			unset ($query, $params);
 
-			$cache->set('ranks', $pun_ranks);
-		}
+			return $ranks;
+		});
 	}
 
 	// If the user has a custom title
