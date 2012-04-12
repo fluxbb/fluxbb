@@ -1029,7 +1029,7 @@ body {
 	overflow-y: auto
 	}
 
-.pun .postmsg img.postimg, .pun .postmsg a img.postimg {
+.pun .postmsg .postimg img, .pun .postmsg a .postimg img {
 	max-width: 100%;
 	vertical-align: middle;
 	}
