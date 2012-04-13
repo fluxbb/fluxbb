@@ -11,12 +11,12 @@ require PUN_ROOT.'include/common.php';
 
 
 if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view']);
+	message($lang_common['No view'], false, '403 Forbidden');
 
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id < 1)
-	message($lang_common['Bad request']);
+	message($lang_common['Bad request'], false, '404 Not Found');
 
 // Load the viewforum.php language file
 require PUN_ROOT.'lang/'.$pun_user['language'].'/forum.php';
@@ -28,7 +28,7 @@ else
 	$result = $db->query('SELECT f.forum_name, f.redirect_url, f.moderators, f.num_topics, f.sort_by, fp.post_topics, 0 AS is_subscribed FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$id) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
 
 if (!$db->num_rows($result))
-	message($lang_common['Bad request']);
+	message($lang_common['Bad request'], false, '404 Not Found');
 
 $cur_forum = $db->fetch_assoc($result);
 

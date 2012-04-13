@@ -11,7 +11,7 @@ require PUN_ROOT.'include/common.php';
 
 
 if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view']);
+	message($lang_common['No view'], false, '403 Forbidden');
 
 
 // Load the index.php language file

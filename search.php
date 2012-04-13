@@ -18,9 +18,9 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/forum.php';
 
 
 if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view']);
+	message($lang_common['No view'], false, '403 Forbidden');
 else if ($pun_user['g_search'] == '0')
-	message($lang_search['No search permission']);
+	message($lang_search['No search permission'], false, '403 Forbidden');
 
 require PUN_ROOT.'include/search_idx.php';
 
@@ -44,7 +44,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	{
 		$search_id = intval($_GET['search_id']);
 		if ($search_id < 1)
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 	}
 	// If it's a regular search (keywords and/or author)
 	else if ($action == 'search')
@@ -73,11 +73,11 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	{
 		$user_id = (isset($_GET['user_id'])) ? intval($_GET['user_id']) : $pun_user['id'];
 		if ($user_id < 2)
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 
 		// Subscribed topics can only be viewed by admins, moderators and the users themselves
 		if ($action == 'show_subscriptions' && !$pun_user['is_admmod'] && $user_id != $pun_user['id'])
-			message($lang_common['No permission']);
+			message($lang_common['No permission'], false, '403 Forbidden');
 	}
 	else if ($action == 'show_recent')
 		$interval = isset($_GET['value']) ? intval($_GET['value']) : 86400;
@@ -323,7 +323,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			if ($action == 'show_new')
 			{
 				if ($pun_user['is_guest'])
-					message($lang_common['No permission']);
+					message($lang_common['No permission'], false, '403 Forbidden');
 
 				$result = $db->query('SELECT t.id FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.last_post>'.$pun_user['last_visit'].' AND t.moved_to IS NULL'.(isset($_GET['fid']) ? ' AND t.forum_id='.intval($_GET['fid']) : '').' ORDER BY t.last_post DESC') or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());
 				$num_hits = $db->num_rows($result);
@@ -517,7 +517,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				if ($db->num_rows($result))
 					$subscriber_name = $db->result($result);
 				else
-					message($lang_common['Bad request']);
+					message($lang_common['Bad request'], false, '404 Not Found');
 
 				$crumbs_text['search_type'] = '<a href="search.php?action=show_subscriptions&amp;user_id='.$subscriber_id.'">'.sprintf($lang_search['Quick search show_subscriptions'], pun_htmlspecialchars($subscriber_name)).'</a>';
 			}

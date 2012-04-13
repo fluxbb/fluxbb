@@ -11,9 +11,9 @@ require PUN_ROOT.'include/common.php';
 
 
 if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view']);
+	message($lang_common['No view'], false, '403 Forbidden');
 else if ($pun_user['g_view_users'] == '0')
-	message($lang_common['No permission']);
+	message($lang_common['No permission'], false, '403 Forbidden');
 
 // Load the userlist.php language file
 require PUN_ROOT.'lang/'.$pun_user['language'].'/userlist.php';
