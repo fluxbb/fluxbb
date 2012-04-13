@@ -1188,6 +1188,10 @@ MAIN FORMS
 	width: 98%;
 }
 
+input[type="radio"]+label, input[type="checkbox"]+label {
+	display:inline-block;
+}
+
 .pun #quickpost .txtarea {
 	padding-right: 12px;
 	position: relative;

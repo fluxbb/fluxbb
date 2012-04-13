@@ -626,6 +626,10 @@ html, body {
 .pun .txtarea textarea, .pun input.longinput {
 	width: 100%
 	}
+	
+input[type="radio"]+label, input[type="checkbox"]+label {
+	display:inline-block;
+	}
 
 .pun .bblinks {
 	padding-bottom: 10px;
