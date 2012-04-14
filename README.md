@@ -1,5 +1,10 @@
-FluxBB 1.4 Readme
+FluxBB 2.0 Readme
 =====================
+
+Development version
+----------------
+*PLEASE NOTE:* This is the development version of FluxBB. For a stable branch,
+please check out another branch, e.g. 'fluxbb-1.4' or 'fluxbb-1.5'.
 
 About
 ----------------
@@ -11,8 +16,8 @@ of the other forums have whilst not sacrificing essential functionality or usabi
 Requirements
 ----------------
  - A webserver
- - PHP 4.4.0 or later
- - A database such as MySQL 4.1.2 or later, PostgreSQL 7.0 or later, or SQLite 2
+ - PHP 5.3.0 or later
+ - A database such as MySQL 5, PostgreSQL 8.4 or later, or SQLite 3
 
 Recommendations
 -------------------
@@ -22,7 +27,7 @@ Recommendations
 Links
 ---------
  - Homepage: http://fluxbb.org
- - Documentation: http://fluxbb.org/docs/
+ - Documentation: http://fluxbb.org/docs/v2.0
  - Community: http://fluxbb.org/forums/
  - Resources: http://fluxbb.org/resources/
  - IRC: irc://irc.freenode.net/fluxbb
