@@ -8,7 +8,6 @@
 <body>
 
 <div id="pun<pun_page>" class="pun">
-<div class="top-box"><div><!-- Top Corners --></div></div>
 <div class="punwrap">
 
 <div id="brdheader" class="block">
@@ -31,7 +30,6 @@
 <pun_footer>
 
 </div>
-<div class="end-box"><div><!-- Bottom corners --></div></div>
 </div>
 
 </body>
