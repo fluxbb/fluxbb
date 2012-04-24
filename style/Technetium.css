@@ -749,10 +749,6 @@ body {
 	width: 100%
 	}
 
-input[type="radio"]+label, input[type="checkbox"]+label {
-	display:inline-block;
-}
-
 .pun .bblinks {
 	padding-bottom: 10px;
 	padding-left: 4px
