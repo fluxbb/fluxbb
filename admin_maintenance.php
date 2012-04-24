@@ -17,7 +17,7 @@ require PUN_ROOT.'include/common_admin.php';
 
 
 if ($pun_user['g_id'] != PUN_ADMIN)
-	message($lang_common['No permission']);
+	message($lang_common['No permission'], false, '403 Forbidden');
 
 // Load the admin_maintenance.php language file
 require PUN_ROOT.'lang/'.$admin_language.'/admin_maintenance.php';
