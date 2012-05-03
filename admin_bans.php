@@ -15,7 +15,7 @@ require PUN_ROOT.'include/common_admin.php';
 
 
 if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_ban_users'] == '0'))
-	message($lang_common['No permission']);
+	message($lang_common['No permission'], false, '403 Forbidden');
 
 // Load the admin_bans.php language file
 require PUN_ROOT.'lang/'.$admin_language.'/admin_bans.php';

@@ -15,7 +15,7 @@ require PUN_ROOT.'include/common_admin.php';
 
 
 if (!$pun_user['is_admmod'])
-	message($lang_common['No permission']);
+	message($lang_common['No permission'], false, '403 Forbidden');
 
 // Load the admin_users.php language file
 require PUN_ROOT.'lang/'.$admin_language.'/admin_users.php';
@@ -257,7 +257,7 @@ if (isset($_GET['show_users']))
 else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 {
 	if ($pun_user['g_id'] > PUN_ADMIN)
-		message($lang_common['No permission']);
+		message($lang_common['No permission'], false, '403 Forbidden');
 
 	confirm_referrer('admin_users.php');
 
@@ -383,7 +383,7 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 {
 	if ($pun_user['g_id'] > PUN_ADMIN)
-		message($lang_common['No permission']);
+		message($lang_common['No permission'], false, '403 Forbidden');
 
 	confirm_referrer('admin_users.php');
 
@@ -532,7 +532,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 {
 	if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_ban_users'] == '0'))
-		message($lang_common['No permission']);
+		message($lang_common['No permission'], false, '403 Forbidden');
 
 	confirm_referrer('admin_users.php');
 
