@@ -15,7 +15,7 @@ require PUN_ROOT.'include/common_admin.php';
 
 
 if ($pun_user['g_id'] != PUN_ADMIN)
-	message($lang_common['No permission']);
+	message($lang_common['No permission'], false, '403 Forbidden');
 
 // Load the admin_permissions.php language file
 require PUN_ROOT.'lang/'.$admin_language.'/admin_permissions.php';
@@ -28,6 +28,10 @@ if (isset($_POST['form_sent']))
 
 	foreach ($form as $key => $input)
 	{
+		// Make sure the input is never a negative value
+		if($input < 0)
+			$input = 0;
+
 		// Only update values that have changed
 		if (array_key_exists('p_'.$key, $pun_config) && $pun_config['p_'.$key] != $input)
 			$db->query('UPDATE '.$db->prefix.'config SET conf_value='.$input.' WHERE conf_name=\'p_'.$db->escape($key).'\'') or error('Unable to update board config', __FILE__, __LINE__, $db->error());

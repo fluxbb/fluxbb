@@ -49,7 +49,7 @@ if ($action == 'rules')
 else if ($action == 'markread')
 {
 	if ($pun_user['is_guest'])
-		message($lang_common['No permission']);
+		message($lang_common['No permission'], false, '403 Forbidden');
 
 	$db->query('UPDATE '.$db->prefix.'users SET last_visit='.$pun_user['logged'].' WHERE id='.$pun_user['id']) or error('Unable to update user last visit data', __FILE__, __LINE__, $db->error());
 
@@ -64,7 +64,7 @@ else if ($action == 'markread')
 else if ($action == 'markforumread')
 {
 	if ($pun_user['is_guest'])
-		message($lang_common['No permission']);
+		message($lang_common['No permission'], false, '403 Forbidden');
 
 	$fid = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 	if ($fid < 1)
@@ -81,7 +81,7 @@ else if ($action == 'markforumread')
 else if (isset($_GET['email']))
 {
 	if ($pun_user['is_guest'] || $pun_user['g_send_email'] == '0')
-		message($lang_common['No permission']);
+		message($lang_common['No permission'], false, '403 Forbidden');
 
 	$recipient_id = intval($_GET['email']);
 	if ($recipient_id < 2)

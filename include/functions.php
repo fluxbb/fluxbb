@@ -894,9 +894,14 @@ function paginate($num_pages, $cur_page, $link)
 //
 // Display a message
 //
-function message($message, $no_back_link = false)
+function message($message, $no_back_link = false, $http_status = null)
 {
 	global $db, $lang_common, $pun_config, $pun_start, $tpl_main, $pun_user;
+
+	// Did we receive a custom header?
+	if(!is_null($http_status)) {
+		header('HTTP/1.1 ' . $http_status);
+	}
 
 	if (!defined('PUN_HEADER'))
 	{

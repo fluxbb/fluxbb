@@ -15,7 +15,7 @@ require PUN_ROOT.'include/common.php';
 if (isset($_GET['get_host']))
 {
 	if (!$pun_user['is_admmod'])
-		message($lang_common['No permission']);
+		message($lang_common['No permission'], false, '403 Forbidden');
 
 	// Is get_host an IP address or a post ID?
 	if (@preg_match('%^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$%', $_GET['get_host']) || @preg_match('%^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$%', $_GET['get_host']))
@@ -28,7 +28,7 @@ if (isset($_GET['get_host']))
 
 		$result = $db->query('SELECT poster_ip FROM '.$db->prefix.'posts WHERE id='.$get_host) or error('Unable to fetch post IP address', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 
 		$ip = $db->result($result);
 	}
@@ -43,7 +43,7 @@ if (isset($_GET['get_host']))
 // All other functions require moderator/admin access
 $fid = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 if ($fid < 1)
-	message($lang_common['Bad request']);
+	message($lang_common['Bad request'], false, '404 Not Found');
 
 $result = $db->query('SELECT moderators FROM '.$db->prefix.'forums WHERE id='.$fid) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
 
@@ -51,7 +51,7 @@ $moderators = $db->result($result);
 $mods_array = ($moderators != '') ? unserialize($moderators) : array();
 
 if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] == '0' || !array_key_exists($pun_user['username'], $mods_array)))
-	message($lang_common['No permission']);
+	message($lang_common['No permission'], false, '403 Forbidden');
 
 // Get topic/forum tracking data
 if (!$pun_user['is_guest'])
@@ -66,12 +66,12 @@ if (isset($_GET['tid']))
 {
 	$tid = intval($_GET['tid']);
 	if ($tid < 1)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	// Fetch some info about the topic
 	$result = $db->query('SELECT t.subject, t.num_replies, t.first_post_id, f.id AS forum_id, forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fid.' AND t.id='.$tid.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
 	if (!$db->num_rows($result))
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$cur_topic = $db->fetch_assoc($result);
 
@@ -194,6 +194,9 @@ if (isset($_GET['tid']))
 
 			// Move the posts to the new topic
 			$db->query('UPDATE '.$db->prefix.'posts SET topic_id='.$new_tid.' WHERE id IN('.$posts.')') or error('Unable to move posts into new topic', __FILE__, __LINE__, $db->error());
+
+			// Apply every subscription to both topics
+			$db->query('INSERT INTO '.$db->prefix.'topic_subscriptions (user_id, topic_id) SELECT user_id, '.$new_tid.' FROM '.$db->prefix.'topic_subscriptions WHERE topic_id='.$tid) or error('Unable to copy existing subscriptions', __FILE__, __LINE__, $db->error());
 
 			// Get last_post, last_post_id, and last_poster from the topic and update it
 			$result = $db->query('SELECT id, poster, posted FROM '.$db->prefix.'posts WHERE topic_id='.$tid.' ORDER BY id DESC LIMIT 1') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
@@ -575,8 +578,18 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 		// Merge the posts into the topic
 		$db->query('UPDATE '.$db->prefix.'posts SET topic_id='.$merge_to_tid.' WHERE topic_id IN('.implode(',', $topics).')') or error('Unable to merge the posts into the topic', __FILE__, __LINE__, $db->error());
 
-		// Delete any subscriptions
-		$db->query('DELETE FROM '.$db->prefix.'topic_subscriptions WHERE topic_id IN('.implode(',', $topics).') AND topic_id != '.$merge_to_tid) or error('Unable to delete subscriptions', __FILE__, __LINE__, $db->error());
+		// Update any subscriptions
+		$result = $db->query('SELECT user_id FROM '.$db->prefix.'topic_subscriptions WHERE topic_id IN ('.implode(',', $topics).')') or error('Unable to fetch subscriptions of merged topics', __FILE__, __LINE__, $db->error());
+
+		$subscribed_users = array();
+		while ($cur_user_id = $db->result($result))
+			$subscribed_users[] = $cur_user_id;
+		$subscribed_users = array_unique($subscribed_users);
+
+		$db->query('DELETE FROM '.$db->prefix.'topic_subscriptions WHERE topic_id IN ('.implode(',', $topics).')') or error('Unable to delete subscriptions of merged topics', __FILE__, __LINE__, $db->error());
+
+		foreach ($subscribed_users as $cur_user_id)
+			$db->query('INSERT INTO '.$db->prefix.'topic_subscriptions (topic_id, user_id) VALUES ('.$merge_to_tid.', '.$cur_user_id.')') or error('Unable to re-enter subscriptions for merge topic', __FILE__, __LINE__, $db->error());
 
 		// Without redirection the old topics are removed
 		if (!isset($_POST['with_redirect']))
@@ -781,7 +794,7 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/forum.php';
 // Fetch some info about the forum
 $result = $db->query('SELECT f.forum_name, f.redirect_url, f.num_topics, f.sort_by FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fid) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
 if (!$db->num_rows($result))
-	message($lang_common['Bad request']);
+	message($lang_common['Bad request'], false, '404 Not Found');
 
 $cur_forum = $db->fetch_assoc($result);
 

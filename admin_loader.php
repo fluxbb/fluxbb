@@ -15,7 +15,7 @@ require PUN_ROOT.'include/common_admin.php';
 
 
 if (!$pun_user['is_admmod'])
-	message($lang_common['No permission']);
+	message($lang_common['No permission'], false, '403 Forbidden');
 
 // The plugin to load should be supplied via GET
 $plugin = isset($_GET['plugin']) ? $_GET['plugin'] : '';
@@ -25,7 +25,7 @@ if (!preg_match('%^AM?P_(\w*?)\.php$%i', $plugin))
 // AP_ == Admins only, AMP_ == admins and moderators
 $prefix = substr($plugin, 0, strpos($plugin, '_'));
 if ($pun_user['g_moderator'] == '1' && $prefix == 'AP')
-	message($lang_common['No permission']);
+	message($lang_common['No permission'], false, '403 Forbidden');
 
 // Make sure the file actually exists
 if (!file_exists(PUN_ROOT.'plugins/'.$plugin))
