@@ -296,7 +296,7 @@ function process_form(the_form)
 			var elem = the_form.elements[i];
 			if (elem.name && required_fields[elem.name] && !elem.value && elem.type && (/^(?:text(?:area)?|password|file)$/i.test(elem.type)))
 			{
-				alert('"' + required_fields[elem.name] + '" <?php echo $lang_install['Required field'] ?>');
+				alert('"' + required_fields[elem.name] + '" <?php echo $lang->t('Required field'); ?>');
 				elem.focus();
 				return false;
 			}
