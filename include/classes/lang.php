@@ -168,7 +168,11 @@ class Flux_Lang
 	/**
 	 * Return the translation of the given string
 	 *
+	 * Additional parameters will be used to fill placeholders.
+	 *
 	 * @param string $str
+	 * @param mixed $args
+	 * @param mixed $...
 	 * @return string
 	 */
 	public function t($str)
