@@ -94,7 +94,7 @@ class Flux_Lang
 		if (self::languageExists($lang))
 			self::$defaultLang = $lang;
 		else
-			throw new Exception('It seems like default language pack "'.$lang.'" does not exist.');
+			throw new Exception('It seems like default language pack "'.htmlspecialchars($lang).'" does not exist.');
 	}
 
 	/**
@@ -108,7 +108,7 @@ class Flux_Lang
 		if (self::languageExists($lang))
 			$this->lang = $lang;
 		else
-			throw new Exception('It seems like language pack "'.$lang.'" does not exist.');
+			throw new Exception('It seems like language pack "'.htmlspecialchars($lang).'" does not exist.');
 	}
 
 	/**
