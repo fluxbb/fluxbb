@@ -23,7 +23,7 @@ class Flux_Lang
 	 *
 	 * @var string
 	 */
-	protected $defaultLang = 'English';
+	protected static $defaultLang = 'English';
 
 	/**
 	 * The language to use
@@ -89,10 +89,10 @@ class Flux_Lang
 	 * @param array $lang
 	 * @return void
 	 */
-	public function setDefaultLanguage($lang)
+	public static function setDefaultLanguage($lang)
 	{
 		if (self::languageExists($lang))
-			$this->defaultLang = $lang;
+			self::$defaultLang = $lang;
 		else
 			throw new Exception('It seems like default language pack "'.$lang.'" does not exist.');
 	}
@@ -132,7 +132,7 @@ class Flux_Lang
 
 		$this->loadedResources[] = $resource;
 
-		$default_filename = PUN_ROOT.self::$langDir.'/'.$this->defaultLang.'/'.$resource.'.po';
+		$default_filename = PUN_ROOT.self::$langDir.'/'.self::$defaultLang.'/'.$resource.'.po';
 		$filename = PUN_ROOT.self::$langDir.'/'.$this->lang.'/'.$resource.'.po';
 
 		// TODO: Slash allowed? - I'd rather use that than an underscore
@@ -142,14 +142,14 @@ class Flux_Lang
 			$trans_cache = \fluxbb\gettext\parse($filename);
 
 			// If this is not the default language, load that, too
-			if ($this->defaultLang != $this->lang)
+			if (self::$defaultLang != $this->lang)
 			{
-				$def_trans_cache = $cache->get($this->defaultLang.'_'.$resource);
+				$def_trans_cache = $cache->get(self::$defaultLang.'_'.$resource);
 				if ($def_trans_cache === \fluxbb\cache\Cache::NOT_FOUND)
 				{
 					$def_trans_cache = \fluxbb\gettext\parse($default_filename);
 
-					$cache->set($this->defaultLang.'_'.$resource, $def_trans_cache);
+					$cache->set(self::$defaultLang.'_'.$resource, $def_trans_cache);
 				}
 
 				// TODO: How could we automatically regenerate these cache files when necessary? (E.g. imagine the default language files being replaced during a new release, the custom translations haven't caught up yet. How to handle that? etc.)
