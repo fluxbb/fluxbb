@@ -23,14 +23,14 @@ class Flux_Lang
 	 *
 	 * @var string
 	 */
-	protected static $defaultLang = 'English';
+	protected static $defaultLang = 'en';
 
 	/**
 	 * The language to use
 	 *
 	 * @var string
 	 */
-	protected $lang = 'English';
+	protected $lang = 'en';
 
 	/**
 	 * The resources that have been loaded so far
