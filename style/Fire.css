@@ -423,7 +423,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 /* Breadcrumbs, Postlink, Pagination
 ----------------------------------------------------------------*/
 
-.pun .linkst .inbox, .pun linksb .inbox, .pun .postlinksb .inbox {
+.pun .linkst .inbox, .pun .linksb .inbox, .pun .postlinksb .inbox {
 	overflow: hidden;
 }
 
