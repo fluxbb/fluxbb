@@ -1,3 +1,6 @@
 [submodule "laravel"]
 	path = laravel
 	url = https://github.com/laravel/laravel.git
+[submodule "bundles/fluxbb/core"]
+	path = bundles/fluxbb/core
+	url = https://github.com/fluxbb/core.git
