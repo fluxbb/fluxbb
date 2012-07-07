@@ -39,7 +39,7 @@ $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_co
 define('PUN_ACTIVE_PAGE', 'admin');
 require PUN_ROOT.'header.php';
 
-// Attempt to load the plugin. We don't use @ here to supress error messages,
+// Attempt to load the plugin. We don't use @ here to suppress error messages,
 // because if we did and a parse error occurred in the plugin, we would only
 // get the "blank page of death"
 include PUN_ROOT.'plugins/'.$plugin;

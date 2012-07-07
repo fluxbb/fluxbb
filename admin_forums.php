@@ -185,7 +185,7 @@ else if (isset($_GET['edit_forum']))
 				// Check if the new settings differ from the old
 				if ($read_forum_new != $_POST['read_forum_old'][$cur_group['g_id']] || $post_replies_new != $_POST['post_replies_old'][$cur_group['g_id']] || $post_topics_new != $_POST['post_topics_old'][$cur_group['g_id']])
 				{
-					// If the new settings are identical to the default settings for this group, delete it's row in forum_perms
+					// If the new settings are identical to the default settings for this group, delete its row in forum_perms
 					if ($read_forum_new == '1' && $post_replies_new == $cur_group['g_post_replies'] && $post_topics_new == $cur_group['g_post_topics'])
 						$db->query('DELETE FROM '.$db->prefix.'forum_perms WHERE group_id='.$cur_group['g_id'].' AND forum_id='.$forum_id) or error('Unable to delete group forum permissions', __FILE__, __LINE__, $db->error());
 					else

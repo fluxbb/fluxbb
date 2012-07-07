@@ -104,7 +104,7 @@ function validate_search_word($word, $idx)
 	if (in_array($word, $stopwords))
 		return false;
 
-	// If the word if CJK we don't want to index it, but we do want to be allowed to search it
+	// If the word is CJK we don't want to index it, but we do want to be allowed to search it
 	if (is_cjk($word))
 		return !$idx;
 

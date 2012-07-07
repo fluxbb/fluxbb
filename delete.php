@@ -55,7 +55,7 @@ if (isset($_POST['delete']))
 
 	if ($is_topic_post)
 	{
-		// Delete the topic and all of it's posts
+		// Delete the topic and all of its posts
 		delete_topic($cur_post['tid']);
 		update_forum($cur_post['fid']);
 

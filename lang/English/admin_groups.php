@@ -1,6 +1,6 @@
 <?php
 
-// Language definitions used in admin-groups.php
+// Language definitions used in admin_groups.php
 $lang_admin_groups = array(
 
 'Must enter title message'		=>	'You must enter a group title.',

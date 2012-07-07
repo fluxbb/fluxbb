@@ -84,7 +84,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 
 		redirect('admin_categories.php', $lang_admin_categories['Category deleted redirect']);
 	}
-	else // If the user hasn't comfirmed the delete
+	else // If the user hasn't confirmed the delete
 	{
 		$result = $db->query('SELECT cat_name FROM '.$db->prefix.'categories WHERE id='.$cat_to_delete) or error('Unable to fetch category info', __FILE__, __LINE__, $db->error());
 		$cat_name = $db->result($result);

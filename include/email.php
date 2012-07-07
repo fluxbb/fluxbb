@@ -158,7 +158,7 @@ function bbcode2email($text, $wrap_length = 72)
 				$replacement = '['.str_replace('$1', $matches[3], $url).']';
 		}
 
-		// Update the main text if there is a replacment
+		// Update the main text if there is a replacement
 		if (!is_null($replacement))
 		{
 			$text = str_replace($matches[0], $replacement, $text);
@@ -260,7 +260,7 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 
 //
 // This function was originally a part of the phpBB Group forum software phpBB2 (http://www.phpbb.com)
-// They deserve all the credit for writing it. I made small modifications for it to suit PunBB and it's coding standards
+// They deserve all the credit for writing it. I made small modifications for it to suit PunBB and its coding standards
 //
 function server_parse($socket, $expected_response)
 {
@@ -278,7 +278,7 @@ function server_parse($socket, $expected_response)
 
 //
 // This function was originally a part of the phpBB Group forum software phpBB2 (http://www.phpbb.com)
-// They deserve all the credit for writing it. I made small modifications for it to suit PunBB and it's coding standards.
+// They deserve all the credit for writing it. I made small modifications for it to suit PunBB and its coding standards.
 //
 function smtp_mail($to, $subject, $message, $headers = '')
 {

@@ -33,7 +33,7 @@ if ($pid)
 
 	list($id, $posted) = $db->fetch_row($result);
 
-	// Determine on what page the post is located (depending on $forum_user['disp_posts'])
+	// Determine on which page the post is located (depending on $forum_user['disp_posts'])
 	$result = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id.' AND posted<'.$posted) or error('Unable to count previous posts', __FILE__, __LINE__, $db->error());
 	$num_posts = $db->result($result) + 1;
 

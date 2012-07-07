@@ -683,7 +683,7 @@ else if (isset($_POST['form_sent']))
 
 	list($old_username, $group_id, $is_moderator) = $db->fetch_row($result);
 
-	if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. editing your own profile)
+	if ($pun_user['id'] != $id &&																	// If we aren't the user (i.e. editing your own profile)
 		(!$pun_user['is_admmod'] ||																	// and we are not an admin or mod
 		($pun_user['g_id'] != PUN_ADMIN &&															// or we aren't an admin and ...
 		($pun_user['g_mod_edit_users'] == '0' ||													// mods aren't allowed to edit users
@@ -1005,7 +1005,7 @@ if ($user['signature'] != '')
 
 
 // View or edit?
-if ($pun_user['id'] != $id &&																	// If we arent the user (i.e. editing your own profile)
+if ($pun_user['id'] != $id &&																	// If we aren't the user (i.e. editing your own profile)
 	(!$pun_user['is_admmod'] ||																	// and we are not an admin or mod
 	($pun_user['g_id'] != PUN_ADMIN &&															// or we aren't an admin and ...
 	($pun_user['g_mod_edit_users'] == '0' ||													// mods aren't allowed to edit users

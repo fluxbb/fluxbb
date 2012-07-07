@@ -360,7 +360,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				if (!$num_hits)
 					message($lang_search['No user posts']);
 
-				// Pass on the user ID so that we can later know whos posts we're searching for
+				// Pass on the user ID so that we can later know whose posts we're searching for
 				$search_type[2] = $user_id;
 			}
 			// If it's a search for topics by a specific user ID
@@ -372,7 +372,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				if (!$num_hits)
 					message($lang_search['No user topics']);
 
-				// Pass on the user ID so that we can later know whos topics we're searching for
+				// Pass on the user ID so that we can later know whose topics we're searching for
 				$search_type[2] = $user_id;
 			}
 			// If it's a search for subscribed topics

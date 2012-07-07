@@ -358,7 +358,7 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 	$end_at = 0;
 	if ($mysql)
 	{
-		// Only set up the tables if we are doing this in 1 go, or its the first go
+		// Only set up the tables if we are doing this in 1 go, or it's the first go
 		if (is_null($start_at) || $start_at == 0)
 		{
 			// Drop any temp table that exists, in-case it's left over from a failed update
@@ -400,7 +400,7 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 			$finished = $db->num_rows($result) == 0;
 		}
 
-		// Only swap the tables if we are doing this in 1 go, or its the last go
+		// Only swap the tables if we are doing this in 1 go, or it's the last go
 		if ($finished)
 		{
 			// Delete old table
@@ -713,10 +713,10 @@ switch ($stage)
 		// Add the DST option to the users table
 		$db->add_field('users', 'dst', 'TINYINT(1)', false, 0, 'timezone') or error('Unable to add dst field', __FILE__, __LINE__, $db->error());
 
-		// Add the last_post field to the online table
+		// Add the last_post column to the online table
 		$db->add_field('online', 'last_post', 'INT(10) UNSIGNED', true, null, null) or error('Unable to add last_post field', __FILE__, __LINE__, $db->error());
 
-		// Add the last_search field to the online table
+		// Add the last_search column to the online table
 		$db->add_field('online', 'last_search', 'INT(10) UNSIGNED', true, null, null) or error('Unable to add last_search field', __FILE__, __LINE__, $db->error());
 
 		// Add the last_search column to the users table
@@ -975,7 +975,7 @@ switch ($stage)
 		if (!$db->add_index('users', 'username_idx', array($field), true))
 			$db->add_index('users', 'username_idx', array($field)) or error('Unable to add username_idx field', __FILE__, __LINE__, $db->error());
 
-		// Add g_view_users field to groups table
+		// Add g_view_users column to groups table
 		$db->add_field('groups', 'g_view_users', 'TINYINT(1)', false, 1, 'g_read_board') or error('Unable to add g_view_users field', __FILE__, __LINE__, $db->error());
 
 		// Add the last_email_sent column to the users table and the g_send_email and
@@ -1019,20 +1019,20 @@ switch ($stage)
 		$db->add_field('users', 'time_format', 'TINYINT(1)', false, 0, 'dst') or error('Unable to add time_format field', __FILE__, __LINE__, $db->error());
 		$db->add_field('users', 'date_format', 'TINYINT(1)', false, 0, 'dst') or error('Unable to add date_format field', __FILE__, __LINE__, $db->error());
 
-		// Change the search_data field to mediumtext
+		// Change the search_data column to mediumtext
 		$db->alter_field('search_cache', 'search_data', 'MEDIUMTEXT', true) or error('Unable to alter search_data field', __FILE__, __LINE__, $db->error());
 
-		// Add the group promotion fields to the groups table
+		// Add the group promotion columns to the groups table
 		$db->add_field('groups', 'g_promote_min_posts', 'INT(10) UNSIGNED', false, 0, 'g_user_title') or error('Unable to add g_promote_min_posts field', __FILE__, __LINE__, $db->error());
 		$db->add_field('groups', 'g_promote_next_group', 'INT(10) UNSIGNED', false, 0, 'g_promote_min_posts') or error('Unable to add g_promote_next_group field', __FILE__, __LINE__, $db->error());
 
 		// Add a field for the per-group permission to post links
 		$db->add_field('groups', 'g_post_links', 'TINYINT(1)', false, 1, 'g_delete_topics') or error('Unable to add per-group permission to post links', __FILE__, __LINE__, $db->error());
 
-		// Incase we had the fulltext search extension installed (1.3-legacy), remove it
+		// In case we had the fulltext search extension installed (1.3-legacy), remove it
 		$db->drop_index('topics', 'subject_idx') or error('Unable to drop subject_idx index', __FILE__, __LINE__, $db->error());
 		$db->drop_index('posts', 'message_idx') or error('Unable to drop message_idx index', __FILE__, __LINE__, $db->error());
-		// Incase we had the fulltext search mod installed (1.2), remove it
+		// In case we had the fulltext search mod installed (1.2), remove it
 		$db->drop_index('topics', 'subject_fulltext_search') or error('Unable to drop subject_fulltext_search index', __FILE__, __LINE__, $db->error());
 		$db->drop_index('posts', 'message_fulltext_search') or error('Unable to drop message_fulltext_search index', __FILE__, __LINE__, $db->error());
 

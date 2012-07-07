@@ -75,7 +75,7 @@ $tpl_main = str_replace('<pun_content_direction>', $lang_common['lang_direction'
 // START SUBST - <pun_head>
 ob_start();
 
-// Define $p if its not set to avoid a PHP notice
+// Define $p if it's not set to avoid a PHP notice
 $p = isset($p) ? $p : null;
 
 // Is this a page that we want search index spiders to index?
