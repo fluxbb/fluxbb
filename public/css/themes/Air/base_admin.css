@@ -1,0 +1,163 @@
+#adminconsole .blockform .box {
+	padding-bottom: 12px;
+}
+
+#adminconsole fieldset .infldset {
+	position: relative;
+	overflow: hidden;
+}
+
+#adminconsole fieldset table {
+	margin-top: -1px;
+	margin-bottom: -1px;
+}
+
+#adminconsole fieldset td, #adminconsole fieldset th {
+	padding: 10px 8px 10px 0;
+	text-align: left;
+	white-space: normal;
+	border-style: solid none;
+	border-width: 1px 0;
+}
+
+#punadmin thead th {
+	border-top: 0;
+	font-weight: normal;
+}
+
+#adminconsole fieldset td span, #adminconsole fieldset th span {
+	display: block; font-size: 1em;
+	font-weight: normal;
+}
+
+#adminconsole fieldset td.location span {
+	display: inline-block;
+}
+
+#adminconsole fieldset tbody th {
+	width: 15em;
+	font-weight: normal;
+	padding-right: 8px;
+}
+
+#adminconsole table.aligntop th, #adminconsole table.aligntop td {
+	vertical-align: top;
+}
+
+#adminconsole table.aligntop th div {
+	padding-top: 3px;
+}
+
+#adminconsole .inform {
+	padding-bottom: 0;
+}
+
+#adminconsole .infldset {
+	padding-bottom: 0;
+	padding-top: 0;
+}
+
+#adminconsole p.submittop {
+	text-align: center;
+	border-bottom-style: dotted;
+	border-bottom-width: 1px;
+	margin: 0 18px;
+	padding-top: 12px;
+}
+
+#adminconsole p.submitend {
+	text-align: center;
+	padding-bottom: 0;
+}
+
+#adminconsole fieldset p {
+	padding: 10px 0;
+}
+
+#adminconsole .fsetsubmit {
+	padding: 10px 0 12px 0;
+}
+
+#categoryedit .tcl {
+	width: 25%;
+}
+
+#censoring .tcl, #censoring .tc2 {
+	width: 20%;
+}
+
+#edforum .tcl {
+	width: 18%;
+}
+
+#edforum .tc2 {
+	width: 12%;
+}
+
+#forumperms thead th, #forumperms tbody td {
+	text-align: center;
+}
+
+.pun .linkst .backlink, .pun .linksb .backlink {
+	padding: 7px 0;
+}
+
+#punadmin #users1 h2, #punadmin #users2 h2, #punadmin #bans1 h2 {
+	display: block;
+	left: -9999em;
+	overflow: hidden;
+	position: absolute;
+	text-indent: -9999em;
+	width: 0;
+}
+
+#punadmin #users1 th, #punadmin #users2 th, #punadmin #bans1 th {
+	font-weight: bold;
+}
+
+#users2 th, #bans1 th {
+	text-align: left;
+}
+
+#users2 th.tcmod {
+	text-align: center;
+}
+
+#users2 .tcl, #bans1 .tcl {
+	width: auto;
+	text-align: left;
+}
+
+#users2 .tc2, #bans1 .tc2 {
+	width: 18%;
+	text-align: left;
+}
+
+#users2 .tc3, #users2 .tc5, #bans1 .tc3, #bans1 .tc5, #bans1 .tc6 {
+	width: 12%;
+	text-align: left;
+}
+
+#users2 .tc4, #bans1 .tc4 {
+	width: 10%;
+	text-align: center;
+}
+
+#users2 .tcr {
+	width: 20%;
+	white-space: nowrap;
+}
+
+#bans1 .tcr {
+	width: 15%;
+	white-space: nowrap;
+}
+
+#users2 .tcmod {
+	width: 10%;
+	text-align: center;
+}
+
+.plugin p {
+	padding: 12px 18px 0;
+}
