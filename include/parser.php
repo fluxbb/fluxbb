@@ -225,7 +225,10 @@ function preparse_tags($text, &$errors, $is_signature = false)
 
 	// Disallow URL tags
 	if ($pun_user['g_post_links'] != '1')
+	{
 		$tags_forbidden[] = 'url';
+		$tags_forbidden[] = 'img';
+	}
 
 	$split_text = preg_split('%(\[[\*a-zA-Z0-9-/]*?(?:=.*?)?\])%', $text, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
