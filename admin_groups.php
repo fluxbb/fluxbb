@@ -82,7 +82,7 @@ if (isset($_POST['add_group']) || isset($_GET['edit_group']))
 									<th scope="row"><?php echo $lang_admin_groups['User title label'] ?></th>
 									<td>
 										<input type="text" name="user_title" size="25" maxlength="50" value="<?php echo pun_htmlspecialchars($group['g_user_title']) ?>" tabindex="2" />
-										<span><?php printf($lang_admin_groups['User title help'], $lang_common['Member']) ?></span>
+										<span><?php printf($lang_admin_groups['User title help'], ($group['g_id'] != PUN_GUEST ? $lang_common['Member'] : $lang_common['Guest'])) ?></span>
 									</td>
 								</tr>
 <?php if ($group['g_id'] != PUN_ADMIN): if ($group['g_id'] != PUN_GUEST): ?>								<tr>
