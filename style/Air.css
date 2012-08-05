@@ -748,6 +748,7 @@ MAIN POSTS
 
 .pun .blockpost .postleft, .pun .blockpost .postfootleft {
 	width: 194px;
+background:transparent;
 	padding: 7px 12px 7px 12px;
 	float: left;
 	margin-left: -218px;
