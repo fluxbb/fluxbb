@@ -108,7 +108,7 @@ if (isset($_POST['form_sent']))
 				$errors[] = $lang_common['Invalid email'];
 
 			// Check if it's a banned email address
-			// we should only check guests because members addresses are already verified
+			// we should only check guests because members' addresses are already verified
 			if ($pun_user['is_guest'] && is_banned_email($email))
 			{
 				if ($pun_config['p_allow_banned_email'] == '0')

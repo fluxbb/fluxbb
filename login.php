@@ -75,7 +75,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		generate_users_info_cache();
 	}
 
-	// Remove this users guest entry from the online list
+	// Remove this user's guest entry from the online list
 	$db->query('DELETE FROM '.$db->prefix.'online WHERE ident=\''.$db->escape(get_remote_address()).'\'') or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
 
 	$expire = ($save_pass == '1') ? time() + 1209600 : time() + $pun_config['o_timeout_visit'];

@@ -310,7 +310,7 @@ class DBLayer
 
 	function rename_table($old_table, $new_table, $no_prefix = false)
 	{
-		// If there new table exists and the old one doesn't, then we're happy
+		// If the new table exists and the old one doesn't, then we're happy
 		if ($this->table_exists($new_table, $no_prefix) && !$this->table_exists($old_table, $no_prefix))
 			return true;
 

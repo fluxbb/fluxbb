@@ -238,7 +238,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					}
 				}
 
-				// Sort the results - annoyingly array_multisort re-indexes arrays with numeric keys, so we need to split the keys out into a seperate array then combine them again after
+				// Sort the results - annoyingly array_multisort re-indexes arrays with numeric keys, so we need to split the keys out into a separate array then combine them again after
 				$post_ids = array_keys($keyword_results);
 				$topic_ids = array_values($keyword_results);
 

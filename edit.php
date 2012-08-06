@@ -44,7 +44,7 @@ if (($pun_user['g_edit_posts'] == '0' ||
 	!$is_admmod)
 	message($lang_common['No permission'], false, '403 Forbidden');
 
-// Load the post.php/edit.php language file
+// Load the post.php/edit.php language files
 require PUN_ROOT.'lang/'.$pun_user['language'].'/post.php';
 
 // Start with a clean slate

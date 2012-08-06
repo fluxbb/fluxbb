@@ -137,7 +137,7 @@ else if (isset($_GET['email']))
 	}
 
 
-	// Try to determine if the data in HTTP_REFERER is valid (if not, we redirect to the users profile after the email is sent)
+	// Try to determine if the data in HTTP_REFERER is valid (if not, we redirect to the user's profile after the email is sent)
 	if (!empty($_SERVER['HTTP_REFERER']))
 	{
 		$referrer = parse_url($_SERVER['HTTP_REFERER']);

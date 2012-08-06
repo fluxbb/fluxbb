@@ -28,7 +28,7 @@ if ($action != 'change_pass' || !isset($_GET['key']))
 		message($lang_common['No permission'], false, '403 Forbidden');
 }
 
-// Load the profile.php/register.php language file
+// Load the profile.php/register.php language files
 require PUN_ROOT.'lang/'.$pun_user['language'].'/prof_reg.php';
 
 // Load the profile.php language file
@@ -61,12 +61,12 @@ if ($action == 'change_pass')
 		}
 	}
 
-	// Make sure we are allowed to change this users password
+	// Make sure we are allowed to change this user's password
 	if ($pun_user['id'] != $id)
 	{
-		if (!$pun_user['is_admmod']) // A regular user trying to change another users password?
+		if (!$pun_user['is_admmod']) // A regular user trying to change another user's password?
 			message($lang_common['No permission'], false, '403 Forbidden');
-		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a users password?
+		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a user's password?
 		{
 			$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 			if (!$db->num_rows($result))
@@ -157,12 +157,12 @@ if ($action == 'change_pass')
 
 else if ($action == 'change_email')
 {
-	// Make sure we are allowed to change this users email
+	// Make sure we are allowed to change this user's email
 	if ($pun_user['id'] != $id)
 	{
-		if (!$pun_user['is_admmod']) // A regular user trying to change another users email?
+		if (!$pun_user['is_admmod']) // A regular user trying to change another user's email?
 			message($lang_common['No permission'], false, '403 Forbidden');
-		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a users email?
+		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a user's email?
 		{
 			$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 			if (!$db->num_rows($result))
