@@ -178,20 +178,22 @@ if (isset($_GET['show_users']))
 			<tbody>
 <?php
 
-	$result = $db->query('SELECT DISTINCT poster_id, poster FROM '.$db->prefix.'posts WHERE poster_ip=\''.$db->escape($ip).'\' ORDER BY poster DESC') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-	$num_posts = $db->num_rows($result);
-
-	if ($num_posts)
+	if ($num_users)
 	{
+		$result = $db->query('SELECT DISTINCT poster_id, poster FROM '.$db->prefix.'posts WHERE poster_ip=\''.$db->escape($ip).'\' ORDER BY poster DESC LIMIT '.$start_from.', 50') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+		$num_posts = $db->num_rows($result);
+
 		// Loop through users and print out some info
 		for ($i = 0; $i < $num_posts; ++$i)
 		{
 			list($poster_id, $poster) = $db->fetch_row($result);
 
-			$result2 = $db->query('SELECT u.id, u.username, u.email, u.title, u.num_posts, u.admin_note, g.g_id, g.g_user_title FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id>1 AND u.id='.$poster_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-
-			if (($user_data = $db->fetch_assoc($result2)))
+			if ($poster_id > 1)
 			{
+				$result2 = $db->query('SELECT u.id, u.username, u.email, u.title, u.num_posts, u.admin_note, g.g_id, g.g_user_title FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$poster_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+
+				// If database structure isn't corrupted, we will always fetch something here
+				$user_data = $db->fetch_assoc($result2);
 				$user_title = get_title($user_data);
 
 				$actions = '<a href="admin_users.php?ip_stats='.$user_data['id'].'">'.$lang_admin_users['Results view IP link'].'</a> | <a href="search.php?action=show_user_posts&amp;user_id='.$user_data['id'].'">'.$lang_admin_users['Results show posts link'].'</a>';
