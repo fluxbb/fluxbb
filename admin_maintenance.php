@@ -308,7 +308,8 @@ generate_admin_menu('maintenance');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_maintenance['Prune sticky label'] ?></th>
 									<td>
-										<input type="radio" name="prune_sticky" value="1" tabindex="6" checked="checked" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong>&#160;&#160;&#160;<input type="radio" name="prune_sticky" value="0" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong>
+										<label class="conl"><input type="radio" name="prune_sticky" value="1" tabindex="6" checked="checked" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong></label>
+										<label class="conl"><input type="radio" name="prune_sticky" value="0" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong></label>
 										<span><?php echo $lang_admin_maintenance['Prune sticky help'] ?></span>
 									</td>
 								</tr>
