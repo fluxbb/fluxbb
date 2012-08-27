@@ -40,5 +40,9 @@ return array(
 		'auto'		=> true,
 		'handles'	=> 'core',
 	),
+	'fluxbb_installer' => array(
+		'location'	=> 'fluxbb/installer',
+		'handles'	=> 'install',
+	),
 
 );
