@@ -4,3 +4,6 @@
 [submodule "bundles/fluxbb/core"]
 	path = bundles/fluxbb/core
 	url = https://github.com/fluxbb/core.git
+[submodule "bundles/fluxbb/installer"]
+	path = bundles/fluxbb/installer
+	url = https://github.com/fluxbb/installer.git
