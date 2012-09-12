@@ -309,7 +309,25 @@ function smtp_mail($to, $subject, $message, $headers = '')
 
 	if ($pun_config['o_smtp_user'] != '' && $pun_config['o_smtp_pass'] != '')
 	{
-		fwrite($socket, 'EHLO '.$smtp_host."\r\n");
+		// Here we try to determine the *real* hostname (reverse DNS entry preferrably)
+		$local_host = 'localhost.localdomain';
+
+		if (function_exists('php_uname'))
+		{
+			$local_host = php_uname('n');
+
+			// Able to resolve name to IP
+			if (($local_addr = @gethostbyname($local_host)) !== $local_host)
+			{
+				// Able to resolve IP back to name
+				if (($local_name = @gethostbyaddr($local_addr)) !== $local_addr)
+				{
+					$local_host = $local_name;
+				}
+			}
+		}
+
+		fwrite($socket, 'EHLO '.$local_host."\r\n");
 		server_parse($socket, '250');
 
 		fwrite($socket, 'AUTH LOGIN'."\r\n");
