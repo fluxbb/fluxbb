@@ -7,7 +7,6 @@ $lang_admin_index = array(
 'Upgrade check failed message'		=>	'Check for upgrade failed for unknown reasons.',
 'Running latest version message'	=>	'You are running the latest version of FluxBB.',
 'New version available message'		=>	'A new version of FluxBB has been released. You can download the latest version at %s.',
-'PHPinfo disabled message'			=>	'The PHP function phpinfo() has been disabled on this server.',
 'Not available'						=>	'Not available',
 'Forum admin head'					=>	'Forum administration',
 'NA'								=>	'N/A',
@@ -21,10 +20,18 @@ $lang_admin_index = array(
 'Welcome 7'							=>	'Set up user groups and promotions.',
 'Welcome 8'							=>	'Prune old posts.',
 'Welcome 9'							=>	'Handle post reports.',
-'Statistics head'					=>	'Statistics',
+'About head'						=>	'About FluxBB',
 'FluxBB version label'				=>	'FluxBB version',
 'Check for upgrade'					=>	'Check for upgrade',
 'FluxBB version data'				=>	'v%s - %s',
+'Server Statistics'					=>	'Server statistics',
+'Server Statistics data'			=>	'View server statistics',
+
+// Language definitions used in admin_statistics.php
+'PHPinfo disabled message'			=>	'The PHP function phpinfo() has been disabled on this server.',
+'Not available'						=>	'Not available',
+'NA'								=>	'N/A',
+'Server head'						=>	'Server Statistics',
 'Server load label'					=>	'Server load',
 'Server load data'					=>	'%s - %s user(s) online',
 'Environment label'					=>	'Environment',
@@ -47,5 +54,4 @@ $lang_admin_index = array(
 'Database label'					=>	'Database',
 'Database data rows'				=>	'Rows: %s',
 'Database data size'				=>	'Size: %s',
-
 );
