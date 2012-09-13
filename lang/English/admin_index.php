@@ -29,8 +29,6 @@ $lang_admin_index = array(
 
 // Language definitions used in admin_statistics.php
 'PHPinfo disabled message'			=>	'The PHP function phpinfo() has been disabled on this server.',
-'Not available'						=>	'Not available',
-'NA'								=>	'N/A',
 'Server head'						=>	'Server Statistics',
 'Server load label'					=>	'Server load',
 'Server load data'					=>	'%s - %s user(s) online',
