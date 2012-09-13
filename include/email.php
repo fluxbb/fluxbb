@@ -312,17 +312,16 @@ function smtp_mail($to, $subject, $message, $headers = '')
 		// Here we try to determine the *real* hostname (reverse DNS entry preferrably)
 		$local_host = 'localhost.localdomain';
 
-		{
-			$local_host = php_uname('n');
+	
+		$local_host = php_uname('n');
 
-			// Able to resolve name to IP
-			if (($local_addr = @gethostbyname($local_host)) !== $local_host)
+		// Able to resolve name to IP
+		if (($local_addr = @gethostbyname($local_host)) !== $local_host)
+		{
+			// Able to resolve IP back to name
+			if (($local_name = @gethostbyaddr($local_addr)) !== $local_addr)
 			{
-				// Able to resolve IP back to name
-				if (($local_name = @gethostbyaddr($local_addr)) !== $local_addr)
-				{
-					$local_host = $local_name;
-				}
+				$local_host = $local_name;
 			}
 		}
 
