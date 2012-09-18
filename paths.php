@@ -23,14 +23,14 @@
 
 $environments = array(
 
-	'local' => array('http://localhost*', 'http://fluxbb', '*.dev'),
+	'local' => array('http://localhost*', '*.dev'),
 
 );
 
 // --------------------------------------------------------------
 // The path to the application directory.
 // --------------------------------------------------------------
-$paths['app'] = 'application';
+$paths['app'] = 'fluxbb';
 
 // --------------------------------------------------------------
 // The path to the Laravel directory.
