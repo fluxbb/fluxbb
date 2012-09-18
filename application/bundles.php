@@ -38,7 +38,7 @@ return array(
 	'fluxbb' => array(
 		'location'	=> 'fluxbb/core',
 		'auto'		=> true,
-		'handles'	=> 'core',
+		'handles'	=> '',
 	),
 	'fluxbb_installer' => array(
 		'location'	=> 'fluxbb/installer',
