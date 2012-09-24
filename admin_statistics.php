@@ -97,40 +97,6 @@ else if (ini_get('xcache.cacher'))
 	$php_accelerator = '<a href="http://'.$lang_admin_index['XCache link'].'">'.$lang_admin_index['XCache'].'</a>';
 else
 	$php_accelerator = $lang_admin_index['NA'];
-	
-// Collect some statistics from the database
-if (file_exists(FORUM_CACHE_DIR.'cache_users_info.php'))
-	include FORUM_CACHE_DIR.'cache_users_info.php';
-
-if (!defined('PUN_USERS_INFO_LOADED'))
-{
-	if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-		require PUN_ROOT.'include/cache.php';
-
-	generate_users_info_cache();
-	require FORUM_CACHE_DIR.'cache_users_info.php';
-}
-
-$result = $db->query('SELECT SUM(num_topics), SUM(num_posts) FROM '.$db->prefix.'forums') or error('Unable to fetch topic/post count', __FILE__, __LINE__, $db->error());
-list($stats['total_topics'], $stats['total_posts']) = $db->fetch_row($result);
-
-if ($pun_user['g_view_users'] == '1')
-	$stats['newest_user'] = '<a href="profile.php?id='.$stats['last_user']['id'].'">'.pun_htmlspecialchars($stats['last_user']['username']).'</a>';
-else
-	$stats['newest_user'] = pun_htmlspecialchars($stats['last_user']['username']);
-
-if (!empty($forum_actions))
-{
-
-?>
-<div class="linksb">
-	<div class="inbox crumbsplus">
-		<p class="subscribelink clearb"><?php echo implode(' - ', $forum_actions); ?></p>
-	</div>
-</div>
-<?php
-
-}
 
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Server statistics']);
