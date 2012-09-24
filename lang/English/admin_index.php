@@ -24,12 +24,12 @@ $lang_admin_index = array(
 'FluxBB version label'				=>	'FluxBB version',
 'Check for upgrade'					=>	'Check for upgrade',
 'FluxBB version data'				=>	'v%s - %s',
-'Server Statistics'					=>	'Server statistics',
-'Server Statistics data'			=>	'View server statistics',
+'Server statistics label'					=>	'Server statistics',
+'View server statistics'			=>	'View server statistics',
 
 // Language definitions used in admin_statistics.php
 'PHPinfo disabled message'			=>	'The PHP function phpinfo() has been disabled on this server.',
-'Server head'						=>	'Server Statistics',
+'Server statistics head'						=>	'Server statistics',
 'Server load label'					=>	'Server load',
 'Server load data'					=>	'%s - %s user(s) online',
 'Environment label'					=>	'Environment',

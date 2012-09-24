@@ -72,9 +72,9 @@ generate_admin_menu('index');
 					<dd>
 						<?php printf($lang_admin_index['FluxBB version data']."\n", $pun_config['o_cur_version'], '<a href="admin_index.php?action=check_upgrade">'.$lang_admin_index['Check for upgrade'].'</a>') ?>
 					</dd>
-					<dt><?php echo $lang_admin_index['Server Statistics'] ?></dt>
+					<dt><?php echo $lang_admin_index['Server statistics label'] ?></dt>
 					<dd>
-						<a href="admin_statistics.php" title="<?php $lang_admin_index['Server Statistics data'] ?>"><?php echo $lang_admin_index['Server Statistics data'] ?></a>
+						<a href="admin_statistics.php"><?php echo $lang_admin_index['View server statistics'] ?></a>
 					</dd>
 				</dl>
 			</div>

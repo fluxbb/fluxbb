@@ -133,15 +133,15 @@ if (!empty($forum_actions))
 }
 
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Statistics']);
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Server statistics']);
 define('PUN_ACTIVE_PAGE', 'admin');
 require PUN_ROOT.'header.php';
 
-generate_admin_menu('statistics');
+generate_admin_menu('index');
 
 ?>
 	<div class="block">
-		<h2><span><?php echo $lang_admin_index['Server head'] ?></span></h2>
+		<h2><span><?php echo $lang_admin_index['Server statistics head'] ?></span></h2>
 		<div id="adstats" class="box">
 			<div class="inbox">
 				<dl>
@@ -152,7 +152,7 @@ generate_admin_menu('statistics');
 <?php if ($pun_user['g_id'] == PUN_ADMIN): ?>					<dt><?php echo $lang_admin_index['Environment label'] ?></dt>
 					<dd>
 						<?php printf($lang_admin_index['Environment data OS'], PHP_OS) ?><br />
-						<?php printf($lang_admin_index['Environment data version'], phpversion(), '<a href="admin_index.php?action=phpinfo">'.$lang_admin_index['Show info'].'</a>') ?><br />
+						<?php printf($lang_admin_index['Environment data version'], phpversion(), '<a href="admin_statistics.php?action=phpinfo">'.$lang_admin_index['Show info'].'</a>') ?><br />
 						<?php printf($lang_admin_index['Environment data acc']."\n", $php_accelerator) ?>
 					</dd>
 					<dt><?php echo $lang_admin_index['Database label'] ?></dt>
