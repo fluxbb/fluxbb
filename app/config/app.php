@@ -93,6 +93,7 @@ return array(
 		'Illuminate\Foundation\Providers\TranslationServiceProvider',
 		'Illuminate\Foundation\Providers\ValidatorServiceProvider',
 		'Illuminate\Foundation\Providers\ViewServiceProvider',
+		'FluxBB\Core\Providers\RouteServiceProvider',
 
 	),
 
