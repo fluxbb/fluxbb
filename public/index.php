@@ -1,34 +1,52 @@
 <?php
 /**
- * Laravel - A PHP Framework For Web Artisans
+ * Illuminate - A PHP Framework For The Bright.
  *
- * @package  Laravel
- * @version  3.2.3
+ * @package  Illuminate
+ * @version  1.0.0
  * @author   Taylor Otwell <taylorotwell@gmail.com>
- * @link     http://laravel.com
  */
 
-// --------------------------------------------------------------
-// Tick... Tock... Tick... Tock...
-// --------------------------------------------------------------
-define('LARAVEL_START', microtime(true));
+define('ILLUMINATE_START', microtime(true));
 
-// --------------------------------------------------------------
-// Indicate that the request is from the web.
-// --------------------------------------------------------------
-$web = true;
+/*
+|--------------------------------------------------------------------------
+| Register The Composer Auto Loader
+|--------------------------------------------------------------------------
+|
+| Composer provides a convenient, automatically generated class loader
+| for our application. We just need to utilize it! We'll require it
+| into the script here so that we don't have to worry about the
+| loading of any our classes manually. Feels great to relax.
+|
+*/
 
-// --------------------------------------------------------------
-// Set the core Laravel path constants.
-// --------------------------------------------------------------
-require '../paths.php';
+require __DIR__.'/../vendor/autoload.php';
 
-// --------------------------------------------------------------
-// Unset the temporary web variable.
-// --------------------------------------------------------------
-unset($web);
+/*
+|--------------------------------------------------------------------------
+| Turn On The Lights
+|--------------------------------------------------------------------------
+|
+| We need to illuminate PHP development, so let's turn on the lights.
+| This bootstrap the framework and gets it ready for use, then it
+| will load up the application so that we can run it and send
+| the responses back to the browser and delight our users.
+|
+*/
 
-// --------------------------------------------------------------
-// Launch Laravel.
-// --------------------------------------------------------------
-require path('sys').'laravel.php';
+$app = require_once __DIR__.'/../shine.php';
+
+/*
+|--------------------------------------------------------------------------
+| Run The Application
+|--------------------------------------------------------------------------
+|
+| Once we have the application, we can simple call the run method,
+| which will execute the request and send the response back to
+| the client's browser allowing them to enjoy the creative
+| this wonderful applications we have created for them.
+|
+*/
+
+$app->run();

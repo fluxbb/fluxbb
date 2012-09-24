@@ -1,0 +1,14 @@
+{
+	"require": {
+		"php": ">=5.3.0",
+		"illuminate/foundation": ">=1.0.0"
+	},
+	"autoload": {
+		"classmap": [
+			"app/controllers",
+			"app/domain",
+			"app/tests/TestCase.php"
+		]
+	},
+	"minimum-stability": "dev"
+}
