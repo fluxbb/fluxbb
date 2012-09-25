@@ -288,7 +288,7 @@ else if ($action == 'change_email')
 <div class="blockform">
 	<h2><span><?php echo $lang_profile['Change email'] ?></span></h2>
 	<div class="box">
-		<form id="change_email" method="post" action="profile.php?action=change_email&amp;id=<?php echo $id ?>" id="change_email" onsubmit="return process_form(this)">
+		<form id="change_email" method="post" action="profile.php?action=change_email&amp;id=<?php echo $id ?>" onsubmit="return process_form(this)">
 			<div class="inform">
 				<fieldset>
 					<legend><?php echo $lang_profile['Email legend'] ?></legend>
