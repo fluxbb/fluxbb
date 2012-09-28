@@ -647,7 +647,7 @@ if ($fid): ?>
 <?php
 
 $checkboxes = array();
-if ($is_admmod)
+if ($fid && $is_admmod)
 	$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" tabindex="'.($cur_index++).'"'.(isset($_POST['stick_topic']) ? ' checked="checked"' : '').' />'.$lang_common['Stick topic'].'<br /></label>';
 
 if (!$pun_user['is_guest'])
