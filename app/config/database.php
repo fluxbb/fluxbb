@@ -47,7 +47,7 @@ return array(
 
 		'sqlite' => array(
 			'driver'   => 'sqlite',
-			'database' => __DIR__.'/../db/application.sqlite',
+			'database' => __DIR__.'/../storage/database.sqlite',
 			'prefix'   => '',
 		),
 

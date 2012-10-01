@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Filesystem;
+
 /*
 |--------------------------------------------------------------------------
 | Turn On The Lights
@@ -43,6 +45,24 @@ $app->detectEnvironment(array(
 	'local' => array('localhost', '*.dev', '*.app'),
 
 ));
+
+/*
+|--------------------------------------------------------------------------
+| Register The Configuration Loader
+|--------------------------------------------------------------------------
+|
+| The configuration loader is responsible for loading the configuration
+| options for the application. By default we'll use the "file" loader
+| but you are free to use any custom loaders with your application.
+|
+*/
+
+$app['config.loader'] = $app->share(function($app)
+{
+	$path = $app['path'].'/config';
+
+	return new Illuminate\Config\FileLoader(new Filesystem, $path);
+});
 
 /*
 |--------------------------------------------------------------------------

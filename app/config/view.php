@@ -9,9 +9,9 @@ return array(
 	|
 	| This option controls the default view driver that will get used for the
 	| application. Laravel comes with a few great engines ranging from the
-	| simple PHP engine to the powerful Twig engine. Pick what you like!
+	| simple PHP engine to the powerful Blade engine. Use what you like!
 	|
-	| Supported: "php", "blade", "twig"
+	| Supported: "php", "blade"
 	|
 	*/
 

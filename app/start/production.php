@@ -2,6 +2,19 @@
 
 /*
 |--------------------------------------------------------------------------
+| Application Error Logger
+|--------------------------------------------------------------------------
+|
+| Here we will configure the error logger setup for the application which
+| is built on top of the wonderful Monolog library. By default we will
+| build a rotating log file setup which creates a new file each day.
+|
+*/
+
+Log::useDailyFiles(__DIR__.'/../storage/logs/log.txt');
+
+/*
+|--------------------------------------------------------------------------
 | Application Error Handler
 |--------------------------------------------------------------------------
 |
@@ -13,7 +26,7 @@
 |
 */
 
-App::error(function(Exception $e, $code)
+App::error(function(Exception $exception, $code)
 {
-	//
+	Log::error($exception);
 });
