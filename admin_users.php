@@ -178,31 +178,40 @@ if (isset($_GET['show_users']))
 			<tbody>
 <?php
 
-	$result = $db->query('SELECT DISTINCT poster_id, poster FROM '.$db->prefix.'posts WHERE poster_ip=\''.$db->escape($ip).'\' ORDER BY poster DESC') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT DISTINCT poster_id, poster FROM '.$db->prefix.'posts WHERE poster_ip=\''.$db->escape($ip).'\' ORDER BY poster ASC LIMIT '.$start_from.', 50') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 	$num_posts = $db->num_rows($result);
 
 	if ($num_posts)
 	{
-		// Loop through users and print out some info
-		for ($i = 0; $i < $num_posts; ++$i)
+		$posters = $poster_ids = array();
+		while ($cur_poster = $db->fetch_assoc($result))
 		{
-			list($poster_id, $poster) = $db->fetch_row($result);
+			$posters[] = $cur_poster;
+			$poster_ids[] = $cur_poster['poster_id'];
+		}
 
-			$result2 = $db->query('SELECT u.id, u.username, u.email, u.title, u.num_posts, u.admin_note, g.g_id, g.g_user_title FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id>1 AND u.id='.$poster_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT u.id, u.username, u.email, u.title, u.num_posts, u.admin_note, g.g_id, g.g_user_title FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id>1 AND u.id IN('.implode(',', $poster_ids).')') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
-			if (($user_data = $db->fetch_assoc($result2)))
+		$user_data = array();
+		while ($cur_user = $db->fetch_assoc($result))
+			$user_data[$cur_user['id']] = $cur_user;
+
+		// Loop through users and print out some info
+		foreach ($posters as $cur_poster)
+		{
+			if (isset($user_data[$cur_poster['poster_id']]))
 			{
-				$user_title = get_title($user_data);
+				$user_title = get_title($user_data[$cur_poster['poster_id']]);
 
-				$actions = '<a href="admin_users.php?ip_stats='.$user_data['id'].'">'.$lang_admin_users['Results view IP link'].'</a> | <a href="search.php?action=show_user_posts&amp;user_id='.$user_data['id'].'">'.$lang_admin_users['Results show posts link'].'</a>';
+				$actions = '<a href="admin_users.php?ip_stats='.$user_data[$cur_poster['poster_id']]['id'].'">'.$lang_admin_users['Results view IP link'].'</a> | <a href="search.php?action=show_user_posts&amp;user_id='.$user_data[$cur_poster['poster_id']]['id'].'">'.$lang_admin_users['Results show posts link'].'</a>';
 
 ?>
 				<tr>
-					<td class="tcl"><?php echo '<a href="profile.php?id='.$user_data['id'].'">'.pun_htmlspecialchars($user_data['username']).'</a>' ?></td>
-					<td class="tc2"><a href="mailto:<?php echo $user_data['email'] ?>"><?php echo $user_data['email'] ?></a></td>
+					<td class="tcl"><?php echo '<a href="profile.php?id='.$user_data[$cur_poster['poster_id']]['id'].'">'.pun_htmlspecialchars($user_data[$cur_poster['poster_id']]['username']).'</a>' ?></td>
+					<td class="tc2"><a href="mailto:<?php echo $user_data[$cur_poster['poster_id']]['email'] ?>"><?php echo $user_data[$cur_poster['poster_id']]['email'] ?></a></td>
 					<td class="tc3"><?php echo $user_title ?></td>
-					<td class="tc4"><?php echo forum_number_format($user_data['num_posts']) ?></td>
-					<td class="tc5"><?php echo ($user_data['admin_note'] != '') ? pun_htmlspecialchars($user_data['admin_note']) : '&#160;' ?></td>
+					<td class="tc4"><?php echo forum_number_format($user_data[$cur_poster['poster_id']]['num_posts']) ?></td>
+					<td class="tc5"><?php echo ($user_data[$cur_poster['poster_id']]['admin_note'] != '') ? pun_htmlspecialchars($user_data[$cur_poster['poster_id']]['admin_note']) : '&#160;' ?></td>
 					<td class="tcr"><?php echo $actions ?></td>
 				</tr>
 <?php
@@ -213,7 +222,7 @@ if (isset($_GET['show_users']))
 
 ?>
 				<tr>
-					<td class="tcl"><?php echo pun_htmlspecialchars($poster) ?></td>
+					<td class="tcl"><?php echo pun_htmlspecialchars($cur_poster['poster']) ?></td>
 					<td class="tc2">&#160;</td>
 					<td class="tc3"><?php echo $lang_admin_users['Results guest'] ?></td>
 					<td class="tc4">&#160;</td>
