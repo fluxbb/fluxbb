@@ -689,29 +689,6 @@ html, body {
 	max-width: 25em;
 	}
 
-.pun .checklist .checklist-item {
-	position: relative;
-	margin: .2em 0;
-	}
-
-.pun .checklist .checklist-item label {
-	padding: 0 0 0 2.1em;
-	}
-
-.pun .checklist .checklist-item .fld-input {
-	position: absolute;
-	left: 0;
-	top: 0;
-	padding: 0;
-	margin: 0;
-	}
-
-.pun .checklist .checklist-item input {
-	margin: 0;
-	height: 1.15em;
-	width: 1.55em;
-	}
-
 /*****************************************************************
 7. PROFILES AND ADMIN
 *****************************************************************/
