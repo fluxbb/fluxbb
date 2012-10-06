@@ -663,7 +663,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 									<td>
 										<label class="conl"><input type="radio" name="ban_the_ip" tabindex="3" value="1" checked="checked" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong></label>
 										<label class="conl"><input type="radio" name="ban_the_ip" tabindex="4" value="0" checked="checked" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong></label>
-										<span><?php echo $lang_admin_users['Ban IP help'] ?></span>
+										<span class="clearb"><?php echo $lang_admin_users['Ban IP help'] ?></span>
 									</td>
 								</tr>
 							</table>
