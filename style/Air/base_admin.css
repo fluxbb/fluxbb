@@ -34,7 +34,7 @@
 	display: inline-block;
 }
 
-#adminconsole fieldset tbody th {
+#adminconsole fieldset th {
 	width: 15em;
 	font-weight: normal;
 	padding-right: 8px;

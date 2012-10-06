@@ -1,52 +1,52 @@
-#adminconsole .block2 {MARGIN-TOP: 12px}
+#adminconsole .block2 {margin-top: 12px}
 
 /*** Admin Main Content ***/
-* HTML #adstats DD {HEIGHT: 1%}
-#adstats DD {MARGIN-LEFT: 14em; PADDING: 3px; MARGIN-BOTTOM: 5px; LINE-HEIGHT: 1.5em}
-#adstats DT {FLOAT: left; WIDTH: 13em; PADDING: 3px; LINE-HEIGHT: 1.5em}
-#adstats {PADDING: 15px 15px 5px 10px}
-#adintro {PADDING: 5px}
-#adintro P {PADDING: 10px}
-#adstats DL {PADDING: 5px 0 10px 5px}
+* html #adstats dd {height: 1%}
+#adstats dd {margin-left: 14em; padding: 3px; margin-bottom: 5px; line-height: 1.5em}
+#adstats dt {float: left; width: 13em; padding: 3px; line-height: 1.5em}
+#adstats {padding: 15px 15px 5px 10px}
+#adintro {padding: 5px}
+#adintro p {padding: 10px}
+#adstats dl {padding: 5px 0 10px 5px}
 
-#adminconsole FIELDSET TD {TEXT-ALIGN: left; PADDING: 4px; WHITE-SPACE: normal}
-#adminconsole FIELDSET TH {TEXT-ALIGN: left; PADDING: 4px; WHITE-SPACE: normal}
-#adminconsole FIELDSET TD SPAN, #adminconsole FIELDSET TH SPAN {DISPLAY: block; FONT-SIZE: 1em; FONT-WEIGHT: normal}
-#adminconsole TH {WIDTH: 15em; FONT-WEIGHT: bold}
-#adminconsole INPUT, #adminconsole SELECT, #adminconsole TEXTAREA {MARGIN-BOTTOM: 0; MARGIN-TOP: 0; FONT-WEIGHT: normal}
-#adminconsole TABLE.aligntop TH, #adminconsole TABLE.aligntop TD {VERTICAL-ALIGN: top}
-#adminconsole TABLE.aligntop TH {PADDING-TOP: 0.7em}
-#adminconsole TD, #adminconsole TH {BORDER-STYLE: solid; BORDER-WIDTH: 3px 0 3px 0}
-#adminconsole P {PADDING-BOTTOM: 6px}
-#adminconsole .topspace {PADDING-TOP: 6px}
-#adminconsole P.submittop, #adminconsole P.submitend {TEXT-ALIGN: center}
-#adminconsole TH.hidehead {COLOR: #f1f1f1}
-#adminconsole THEAD TH {PADDING-BOTTOM: 0}
-#adminconsole P.linkactions {FONT-WEIGHT: bold; PADDING-LEFT: 5px}
-#adminconsole TH INPUT, #adminconsole DIV.fsetsubmit {MARGIN-TOP: 6px}
+#adminconsole fieldset td {text-align: left; padding: 4px; white-space: normal}
+#adminconsole fieldset th {text-align: left; padding: 4px; white-space: normal}
+#adminconsole fieldset td span, #adminconsole fieldset th span {display: block; font-size: 1em; font-weight: normal}
+#adminconsole th {width: 15em; font-weight: bold}
+#adminconsole input, #adminconsole select, #adminconsole textarea {margin-bottom: 0; margin-top: 0; font-weight: normal}
+#adminconsole table.aligntop th, #adminconsole table.aligntop td {vertical-align: top}
+#adminconsole table.aligntop th {padding-top: 0.7em}
+#adminconsole td, #adminconsole th {border-style: solid; border-width: 3px 0 3px 0}
+#adminconsole p {padding-bottom: 6px}
+#adminconsole .topspace {padding-top: 6px}
+#adminconsole p.submittop, #adminconsole p.submitend {text-align: center}
+#adminconsole th.hidehead {color: #f1f1f1}
+#adminconsole thead th {padding-bottom: 0}
+#adminconsole p.linkactions {font-weight: bold; padding-left: 5px}
+#adminconsole th input, #adminconsole div.fsetsubmit {margin-top: 6px}
 
 /*** Particular table settings ***/
-#categoryedit .tcl {WIDTH: 25%}
-#censoring .tcl, #censoring .tc2 {WIDTH: 20%}
-#edforum .tcl, #edforum .tc2 {WIDTH: 8%}
-#edforum .tc2 {WIDTH: 6%}
+#categoryedit .tcl {width: 25%}
+#censoring .tcl, #censoring .tc2 {width: 20%}
+#edforum .tcl, #edforum .tc2 {width: 8%}
+#edforum .tc2 {width: 6%}
 
-TABLE#forumperms TH, TABLE#forumperms TD {WHITE-SPACE: normal; WIDTH: auto; TEXT-ALIGN: center}
-TABLE#forumperms .atcl {TEXT-ALIGN: left; WIDTH: 15em; WHITE-SPACE: nowrap}
-#adminconsole TD.nodefault {BACKGROUND-COLOR: #D59B9B}
+table#forumperms th, table#forumperms td {white-space: normal; width: auto; text-align: center}
+table#forumperms .atcl {text-align: left; width: 15em; white-space: nowrap}
+#adminconsole td.nodefault {background-color: #d59b9b}
 
 /*** User/Ban Search Result Tables ***/
-#users2 TH, #bans1 TH {TEXT-ALIGN: left}
-#users2 TH.tcmod {TEXT-ALIGN: center}
-#users2 .tcl, #bans1 .tcl {WIDTH: auto; TEXT-ALIGN: left; PADDING: 4px 6px}
-#users2 .tc2, #bans1 .tc2 {WIDTH: 18%; TEXT-ALIGN: left; PADDING: 4px 6px}
-#users2 .tc3, #users2 .tc5, #bans1 .tc3, #bans1 .tc5, #bans1 .tc6 {WIDTH: 12%; TEXT-ALIGN: left; PADDING: 4px 6px}
-#users2 .tc4, #bans1 .tc4 {WIDTH: 10%; TEXT-ALIGN: center}
-#users2 .tcr {WIDTH: 20%; WHITE-SPACE: nowrap}
-#bans1 .tcr {WIDTH: 15%; WHITE-SPACE: nowrap}
-#users2 .tcmod {WIDTH: 10%; TEXT-ALIGN: center}
-#adminconsole #linkst, #adminconsole #linksb A {FONT-WEIGHT: bold}
+#users2 th, #bans1 th {text-align: left}
+#users2 th.tcmod {text-align: center}
+#users2 .tcl, #bans1 .tcl {width: auto; text-align: left; padding: 4px 6px}
+#users2 .tc2, #bans1 .tc2 {width: 18%; text-align: left; padding: 4px 6px}
+#users2 .tc3, #users2 .tc5, #bans1 .tc3, #bans1 .tc5, #bans1 .tc6 {width: 12%; text-align: left; padding: 4px 6px}
+#users2 .tc4, #bans1 .tc4 {width: 10%; text-align: center}
+#users2 .tcr {width: 20%; white-space: nowrap}
+#bans1 .tcr {width: 15%; white-space: nowrap}
+#users2 .tcmod {width: 10%; text-align: center}
+#adminconsole #linkst, #adminconsole #linksb a {font-weight: bold}
 
 /*** Plugins ***/
-.plugin .inbox {PADDING-BOTTOM: 10px}
-.plugin p {PADDING: 10px 10px 0}
+.plugin .inbox {padding-bottom: 10px}
+.plugin p {padding: 10px 10px 0}
