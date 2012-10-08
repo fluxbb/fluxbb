@@ -26,8 +26,7 @@ $lang_post = array(
 'Subscribe'			=>	'Subscribe to this topic',
 'Stay subscribed'	=>	'Stay subscribed to this topic',
 'Topic review'		=>	'Topic review (newest first)',
-'Flood start'		=>	'At least',
-'flood end'			=>	'seconds have to pass between posts. Please wait a little while and try posting again.',
+'Flood start'		=>	'At least %s seconds have to pass between posts. Please wait %s seconds and try posting again.',
 'Preview'			=>	'Preview', // submit button to preview message
 
 // Edit post

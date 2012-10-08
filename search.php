@@ -123,7 +123,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		{
 			// Flood protection
 			if ($pun_user['last_search'] && (time() - $pun_user['last_search']) < $pun_user['g_search_flood'] && (time() - $pun_user['last_search']) >= 0)
-				message(sprintf($lang_search['Search flood'], $pun_user['g_search_flood']));
+				message(sprintf($lang_search['Search flood'], $pun_user['g_search_flood'], $pun_user['g_search_flood'] - (time() - $pun_user['last_search'])));
 
 			if (!$pun_user['is_guest'])
 				$db->query('UPDATE '.$db->prefix.'users SET last_search='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());

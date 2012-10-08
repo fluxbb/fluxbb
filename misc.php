@@ -111,7 +111,7 @@ else if (isset($_GET['email']))
 			message($lang_misc['Too long email message']);
 
 		if ($pun_user['last_email_sent'] != '' && (time() - $pun_user['last_email_sent']) < $pun_user['g_email_flood'] && (time() - $pun_user['last_email_sent']) >= 0)
-			message(sprintf($lang_misc['Email flood'], $pun_user['g_email_flood']));
+			message(sprintf($lang_misc['Email flood'], $pun_user['g_email_flood'], $pun_user['g_email_flood'] - (time() - $pun_user['last_email_sent'])));
 
 		// Load the "form email" template
 		$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/form_email.tpl'));
@@ -219,7 +219,7 @@ else if (isset($_GET['report']))
 			message($lang_misc['Reason too long']);
 
 		if ($pun_user['last_report_sent'] != '' && (time() - $pun_user['last_report_sent']) < $pun_user['g_report_flood'] && (time() - $pun_user['last_report_sent']) >= 0)
-			message(sprintf($lang_misc['Report flood'], $pun_user['g_report_flood']));
+			message(sprintf($lang_misc['Report flood'], $pun_user['g_report_flood'], $pun_user['g_report_flood'] - (time() - $pun_user['last_report_sent'])));
 
 		// Get the topic ID
 		$result = $db->query('SELECT topic_id FROM '.$db->prefix.'posts WHERE id='.$post_id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());

@@ -11,7 +11,7 @@ $lang_misc = array(
 'No email subject'				=>	'You must enter a subject.',
 'No email message'				=>	'You must enter a message.',
 'Too long email message'		=>	'Messages cannot be longer than 65535 characters (64 KB).',
-'Email flood'					=>	'At least %s seconds have to pass between sent emails. Please wait a while and try sending again.',
+'Email flood'					=>	'At least %s seconds have to pass between sent emails. Please wait %s seconds and try sending again.',
 'Email sent redirect'			=>	'Email sent. Redirecting …',
 'Send email to'					=>	'Send email to',
 'Email subject'					=>	'Subject',
@@ -22,7 +22,7 @@ $lang_misc = array(
 // Report
 'No reason'						=>	'You must enter a reason.',
 'Reason too long'				=>	'Your message must be under 65535 bytes (~64kb).',
-'Report flood'					=>	'At least %s seconds have to pass between reports. Please wait a while and try sending again.',
+'Report flood'					=>	'At least %s seconds have to pass between reports. Please wait %s seconds and try sending again.',
 'Report redirect'				=>	'Post reported. Redirecting …',
 'Report post'					=>	'Report post',
 'Reason'						=>	'Reason',

@@ -21,6 +21,6 @@ $lang_login = array(
 
 // Forget password mail stuff
 'Forget mail'				=>	'An email has been sent to the specified address with instructions on how to change your password. If it does not arrive you can contact the forum administrator at',
-'Email flood'				=>	'This account has already requested a password reset in the past hour. Please wait a while before requesting a new password again.'
+'Email flood'				=>	'This account has already requested a password reset in the past hour. Please wait %s minutes before requesting a new password again.'
 
 );
