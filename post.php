@@ -61,7 +61,10 @@ if (isset($_POST['form_sent']))
 {
 	// Flood protection
 	if (!isset($_POST['preview']) && $pun_user['last_post'] != '' && (time() - $pun_user['last_post']) < $pun_user['g_post_flood'])
-		$errors[] = $lang_post['Flood start'].' '.$pun_user['g_post_flood'].' '.$lang_post['flood end'];
+	{
+		$time_remaining = $pun_user['g_post_flood'] - (time() - $pun_user['last_post']);
+		$errors[] = sprintf($lang_post['Flood'], $pun_user['g_post_flood'], $time_remaining);
+	}
 
 	// If it's a new topic
 	if ($fid)
