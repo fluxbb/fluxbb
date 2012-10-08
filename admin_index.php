@@ -76,6 +76,10 @@ generate_admin_menu('index');
 					<dd>
 						<a href="admin_statistics.php"><?php echo $lang_admin_index['View server statistics'] ?></a>
 					</dd>
+					<dt><?php echo $lang_admin_index['Support label'] ?></dt>
+					<dd>
+						<a href="http://fluxbb.org/forums/index.php"><?php echo $lang_admin_index['Forum label'] ?></a> - <a href="http://fluxbb.org/community/irc.html"><?php echo $lang_admin_index['IRC label'] ?></a>
+					</dd>
 				</dl>
 			</div>
 		</div>
