@@ -95,6 +95,7 @@ return array(
 		'Illuminate\Foundation\Providers\ValidatorServiceProvider',
 		'Illuminate\Foundation\Providers\ViewServiceProvider',
 		'FluxBB\Core\Providers\RouteServiceProvider',
+		'FluxBB\Installer\Providers\RouteServiceProvider',
 
 	),
 
