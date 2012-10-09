@@ -6,8 +6,6 @@
 	},
 	"autoload": {
 		"classmap": [
-			"app/controllers",
-			"app/domain",
 			"app/tests/TestCase.php"
 		]
 	},
