@@ -263,6 +263,8 @@ if (!empty($_SERVER['HTTP_REFERER']))
 
 if (!isset($redirect_url))
 	$redirect_url = 'index.php';
+else if (preg_match('%viewtopic\.php\?pid=(\d+)$%', $redirect_url, $matches))
+	$redirect_url .= '#p'.$matches[1];
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Login']);
 $required_fields = array('req_username' => $lang_common['Username'], 'req_password' => $lang_common['Password']);
