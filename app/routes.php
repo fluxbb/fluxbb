@@ -17,3 +17,9 @@ Route::get('/', function()
 	return View::make('hello');
 });
 */
+
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+App::error(function(NotFoundHttpException $e) {
+	return View::make('error.404');
+});
