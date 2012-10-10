@@ -164,6 +164,8 @@ else if (isset($_GET['email']))
 
 	if (!isset($redirect_url))
 		$redirect_url = 'profile.php?id='.$recipient_id;
+	else if (preg_match('%viewtopic\.php\?pid=(\d+)$%', $redirect_url, $matches))
+		$redirect_url .= '#p'.$matches[1];
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Send email to'].' '.pun_htmlspecialchars($recipient));
 	$required_fields = array('req_subject' => $lang_misc['Email subject'], 'req_message' => $lang_misc['Email message']);
