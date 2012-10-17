@@ -133,7 +133,7 @@ else if (isset($_GET['email']))
 
 		$db->query('UPDATE '.$db->prefix.'users SET last_email_sent='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 
-		redirect(htmlspecialchars($_POST['redirect_url']), $lang_misc['Email sent redirect']);
+		redirect(pun_htmlspecialchars($_POST['redirect_url']), $lang_misc['Email sent redirect']);
 	}
 
 

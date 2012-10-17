@@ -84,7 +84,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	// Reset tracked topics
 	set_tracked_topics(null);
 
-	redirect(htmlspecialchars($_POST['redirect_url']), $lang_login['Login redirect']);
+	redirect(pun_htmlspecialchars($_POST['redirect_url']), $lang_login['Login redirect']);
 }
 
 
