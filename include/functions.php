@@ -1182,7 +1182,7 @@ function maintenance_message()
 	header('Pragma: no-cache'); // For HTTP/1.0 compatibility
 
 	// Send the Content-type header in case the web server is setup to send something else
-	header('Content-type: text/html; charset=utf-8');
+	header('Content-type: '.get_mime().'; charset=utf-8');
 
 	// Deal with newlines, tabs and multiple spaces
 	$pattern = array("\t", '  ', '  ');
@@ -1240,6 +1240,7 @@ function maintenance_message()
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Maintenance']);
 
 ?>
+<meta http-equiv="Content-Type" content="<?php echo get_mime() ?>; charset=utf-8" />
 <title><?php echo generate_page_title($page_title) ?></title>
 <link rel="stylesheet" type="text/css" href="style/<?php echo $pun_user['style'].'.css' ?>" />
 <?php
@@ -1309,7 +1310,7 @@ function redirect($destination_url, $message)
 	header('Pragma: no-cache'); // For HTTP/1.0 compatibility
 
 	// Send the Content-type header in case the web server is setup to send something else
-	header('Content-type: text/html; charset=utf-8');
+	header('Content-type: '.get_mime().'; charset=utf-8');
 
 	if (file_exists(PUN_ROOT.'style/'.$pun_user['style'].'/redirect.tpl'))
 	{
@@ -1362,6 +1363,7 @@ function redirect($destination_url, $message)
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Redirecting']);
 
 ?>
+<meta http-equiv="Content-Type" content="<?php echo get_mime() ?>; charset=utf-8" />
 <meta http-equiv="refresh" content="<?php echo $pun_config['o_redirect_delay'] ?>;URL=<?php echo $destination_url ?>" />
 <title><?php echo generate_page_title($page_title) ?></title>
 <link rel="stylesheet" type="text/css" href="style/<?php echo $pun_user['style'].'.css' ?>" />
@@ -2007,6 +2009,21 @@ function forum_is_writable($path)
 		@unlink($path);
 
 	return true;
+}
+
+
+//
+// This function returns the correct mime type to serve with XHTML
+//
+function get_mime()
+{
+	if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/xhtml+xml') !== false)
+		return 'application/xhtml+xml';
+	// special check for the W3C validation service
+	else if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'W3C_Validator') !== false)
+		return 'application/xhtml+xml';
+	else
+		return 'text/html';
 }
 
 
