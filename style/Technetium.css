@@ -129,8 +129,7 @@ body {
 	font-weight: normal;
 	padding: 4px 6px;
 	padding: 6px;
-	border-radius-topleft: 0.3em;
-	border-radius-topright: 0.3em;
+	border-radius: 0.3em 0.3em 0 0;
 }
 
 .pun h2 #brdmenu {
