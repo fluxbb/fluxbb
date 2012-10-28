@@ -41,17 +41,25 @@ else
 $tpl_main = file_get_contents($tpl_file);
 
 // START SUBST - <pun_include "*">
-preg_match_all('%<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">%i', $tpl_main, $pun_includes, PREG_SET_ORDER);
+preg_match_all('%<pun_include "(.*?)">%i', $tpl_main, $pun_includes, PREG_SET_ORDER);
 
 foreach ($pun_includes as $cur_include)
 {
 	ob_start();
 
+	$file_info = pathinfo($cur_include[1]);
+	
+	if (!in_array($file_info['extension'], array('php', 'php4', 'php5', 'inc', 'html', 'txt'))) // Allow some extensions
+		error(sprintf($lang_common['Pun include extension'], htmlspecialchars($cur_include[0]), basename($tpl_file), htmlspecialchars($file_info['extension'])));
+		
+	if (strpos($file_info['dirname'], '..') !== false) // Don't allow directory traversal
+		error(sprintf($lang_common['Pun include directory'], htmlspecialchars($cur_include[0]), basename($tpl_file)));
+
 	// Allow for overriding user includes, too.
-	if (file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
-		require $tpl_inc_dir.$cur_include[1].'.'.$cur_include[2];
-	else if (file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
-		require PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
+	if (file_exists($tpl_inc_dir.$cur_include[1]))
+		require $tpl_inc_dir.$cur_include[1];
+	else if (file_exists(PUN_ROOT.'include/user/'.$cur_include[1]))
+		require PUN_ROOT.'include/user/'.$cur_include[1];
 	else
 		error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file)));
 
