@@ -17,7 +17,9 @@ $lang_common = array(
 'No permission'						=>	'You do not have permission to access this page.',
 'Bad referrer'						=>	'Bad HTTP_REFERER. You were referred to this page from an unauthorized source. If the problem persists please make sure that \'Base URL\' is correctly set in Admin/Options and that you are visiting the forum by navigating to that URL. More information regarding the referrer check can be found in the FluxBB documentation.',
 'No cookie'							=>	'You appear to have logged in successfully, however a cookie has not been set. Please check your settings and if applicable, enable cookies for this website.',
-'Pun include error'					=>	'Unable to process user include %s from template %s. There is no such file in neither the template directory nor in the user include directory.',
+'Pun include extension'  			=>	'Unable to process user include %s from template %s. "%s" files are not allowed',
+'Pun include directory'				=>	'Unable to process user include %s from template %s. Directory traversal is not allowed',
+'Pun include error'					=>	'Unable to process user include %s from template %s. There is no such file in neither the template directory nor in the user include directory',
 
 // Miscellaneous
 'Announcement'						=>	'Announcement',
