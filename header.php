@@ -41,7 +41,7 @@ else
 $tpl_main = file_get_contents($tpl_file);
 
 // START SUBST - <pun_include "*">
-preg_match_all('%<pun_include "(.*?)">%i', $tpl_main, $pun_includes, PREG_SET_ORDER);
+preg_match_all('%<pun_include "([^"]+)">%i', $tpl_main, $pun_includes, PREG_SET_ORDER);
 
 foreach ($pun_includes as $cur_include)
 {
