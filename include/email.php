@@ -309,7 +309,7 @@ function smtp_mail($to, $subject, $message, $headers = '')
 
 	if ($pun_config['o_smtp_user'] != '' && $pun_config['o_smtp_pass'] != '')
 	{
-		// Here we try to determine the *real* hostname (reverse DNS entry preferrably)
+		// Here we try to determine the *real* hostname (reverse DNS entry preferably)
 		$local_host = php_uname('n');
 
 		// Able to resolve name to IP
