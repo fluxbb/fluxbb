@@ -506,7 +506,7 @@ generate_admin_menu('bans');
 
 		<h2 class="block2"><span><?php echo $lang_admin_bans['Ban search head'] ?></span></h2>
 		<div class="box">
-			<form id="find_band" method="get" action="admin_bans.php">
+			<form id="find_bans" method="get" action="admin_bans.php">
 				<p class="submittop"><input type="submit" name="find_ban" value="<?php echo $lang_admin_bans['Submit search'] ?>" tabindex="3" /></p>
 				<div class="inform">
 					<fieldset>
