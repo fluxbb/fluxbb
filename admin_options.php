@@ -466,14 +466,14 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Topics per page label'] ?></th>
 									<td>
-										<input type="text" name="form[disp_topics_default]" size="3" maxlength="3" value="<?php echo $pun_config['o_disp_topics_default'] ?>" />
+										<input type="text" name="form[disp_topics_default]" size="3" maxlength="2" value="<?php echo $pun_config['o_disp_topics_default'] ?>" />
 										<span><?php echo $lang_admin_options['Topics per page help'] ?></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Posts per page label'] ?></th>
 									<td>
-										<input type="text" name="form[disp_posts_default]" size="3" maxlength="3" value="<?php echo $pun_config['o_disp_posts_default'] ?>" />
+										<input type="text" name="form[disp_posts_default]" size="3" maxlength="2" value="<?php echo $pun_config['o_disp_posts_default'] ?>" />
 										<span><?php echo $lang_admin_options['Posts per page help'] ?></span>
 									</td>
 								</tr>
