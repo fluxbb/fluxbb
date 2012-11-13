@@ -66,6 +66,22 @@ function preparse_bbcode($text, &$errors, $is_signature = false)
 {
 	global $pun_config, $lang_common, $lang_post, $re_list;
 
+	// Remove empty tags
+	while (($new_text = strip_empty_bbcode($text)) !== false)
+	{
+		if ($new_text != $text)
+		{
+			$text = $new_text;
+			if ($new_text == '')
+			{
+				$errors[] = $lang_post['Empty after strip'];
+				return '';
+			}
+		}
+		else
+			break;
+	}
+
 	if ($is_signature)
 	{
 		global $lang_profile;
