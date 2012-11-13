@@ -420,7 +420,7 @@ class DBLayer
 	}
 
 
-	function add_field($table_name, $field_name, $field_type, $allow_null, $default_value = null, $after_field = 0, $no_prefix = false)
+	function add_field($table_name, $field_name, $field_type, $allow_null, $default_value = null, $after_field = null, $no_prefix = false)
 	{
 		if ($this->field_exists($table_name, $field_name, $no_prefix))
 			return true;
@@ -444,7 +444,21 @@ class DBLayer
 		$query .= ' DEFAULT '.$default_value;
 
 		$old_columns = array_keys($table['columns']);
-		array_insert($table['columns'], $after_field, $query, $field_name);
+
+		// Determine the proper offset
+		if (!is_null($after_field))
+			$offset = array_search($after_field, array_keys($table['columns']), true) + 1;
+		else
+			$offset = count($table['columns']);
+
+		// Out of bounds checks
+		if ($offset > count($table['columns']))
+			$offset = count($table['columns']);
+		else if ($offset < 0)
+			$offset = 0;
+
+		if (!is_null($field_name) && $field_name !== '')
+			$table['columns'] = array_merge(array_slice($table['columns'], 0, $offset), array($field_name => $query), array_slice($table['columns'], $offset));
 
 		$new_table = 'CREATE TABLE '.($no_prefix ? '' : $this->prefix).$this->escape($table_name).' (';
 
