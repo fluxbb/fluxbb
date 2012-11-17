@@ -55,7 +55,7 @@ class ValidationService extends ServiceProvider
 	{
 		$app['validation.presence'] = $app->share(function($app)
 		{
-			return new DatabasePresenceVerifier($app['db.connection']);
+			return new DatabasePresenceVerifier($app['db.resolver']);
 		});
 	}
 
