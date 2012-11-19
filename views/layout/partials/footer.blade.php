@@ -1,6 +1,5 @@
-<div id="brdfooter" class="block">
-	<h2><span>{{ t('common.board_footer') }}</span></h2>
-	<div class="box">
+<div id="brdfooter">
+	<h2>{{ t('common.board_footer') }}</h2>
 <?php
 /*
 if (isset($footer_style) && ($footer_style == 'viewforum' || $footer_style == 'viewtopic') && $is_admmod)
@@ -37,10 +36,7 @@ if (isset($footer_style) && ($footer_style == 'viewforum' || $footer_style == 'v
 	echo "\t\t\t".'<div class="clearer"></div>'."\n\t\t".'</div>'."\n";
 }
 */
-?>
-		<div id="brdfooternav" class="inbox">
-			<div class="conr">
-<?php
+
 /*
 // If no footer style has been specified, we use the default (only copyright/debug info)
 $footer_style = isset($footer_style) ? $footer_style : NULL;
@@ -68,9 +64,5 @@ else if ($footer_style == 'viewtopic')
 }
 */
 ?>
-				<p id="poweredby">{{ t('common.powered_by', array('link' => '<a href="http://fluxbb.org/">FluxBB</a>'.(FluxBB\Models\Config::get('o_show_version') == '1' ? ' '.FluxBB\Models\Config::get('o_cur_version') : ''))) }}</p>
-			</div>
-			<div class="clearer"></div>
-		</div>
-	</div>
+	<p id="poweredby">{{ t('common.powered_by', array('link' => '<a href="http://fluxbb.org/">FluxBB</a>'.(FluxBB\Models\Config::get('o_show_version') == '1' ? ' '.FluxBB\Models\Config::get('o_cur_version') : ''))) }}</p>
 </div>

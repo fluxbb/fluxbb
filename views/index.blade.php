@@ -12,7 +12,7 @@
 @foreach ($cat_info['forums'] as $forum)
 			<li>
 				<a href="{{ url('viewforum', $forum) }}">{{ $forum->forum_name }}</a>
-				<em class="forumdesc">{{ $forum->forum_desc }}</em>
+				<em>{{ $forum->forum_desc }}</em>
 				<ul>
 					<li>{{ $forum->numTopics() }} topics</li>
 					<li>{{ $forum->numPosts() }} posts</li>

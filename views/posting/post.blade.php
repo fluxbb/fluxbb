@@ -1,18 +1,14 @@
 @extends('layout.main')
 
 @section('main')
-<div id="postform" class="blockform">
-	<h2><span><?php echo $action ?></span></h2>
-	<div class="box">
+<h2><?php echo $action ?></h2>
 @if (isset($topic))
-		<form action="{{ url('reply', $topic) }}" method="PUT" id="post" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;">
+<form action="{{ url('reply', $topic) }}" method="PUT" id="post" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;">
 @else
-		<form action="{{ url('new_topic', $forum) }}" method="PUT" id="post" onsubmit="return process_form(this)">
+<form action="{{ url('new_topic', $forum) }}" method="PUT" id="post" onsubmit="return process_form(this)">
 @endif
-			<div class="inform">
-				<fieldset>
-					<legend>{{ t('common.write_message_legend') }}</legend>
-					<div class="infldset txtarea">
+	<fieldset>
+		<legend>{{ t('common.write_message_legend') }}</legend>
 <?php
 
 $cur_index = 1;
@@ -23,25 +19,25 @@ if (!FluxBB\Auth::isAuthed())
 	$email_form_name = FluxBB\Models\Config::enabled('p_force_guest_email') ? 'req_email' : 'email';
 
 ?>
-						<label class="conl required"><strong>{{ t('post.guest_name') }} <span>{{ t('common.required') }}</span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" value="{{ Input::old('req_username') }}" /><br /></label> {{-- TODO: Escape --}}
-						<label class="conl<?php echo FluxBB\Models\Config::enabled('p_force_guest_email') ? ' required' : '' ?>"><?php echo $email_label ?><br /><input type="text" name="{{ $email_form_name }}" size="50" maxlength="80" value="{{ Input::old($email_form_name) }}"><br /></label> {{-- TODO: Escape --}}
-						<div class="clearer"></div>
+		<label><strong>{{ t('post.guest_name') }} <span>{{ t('common.required') }}</span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" value="{{ Input::old('req_username') }}" /><br /></label> {{-- TODO: Escape --}}
+		<label class="conl<?php echo FluxBB\Models\Config::enabled('p_force_guest_email') ? ' required' : '' ?>"><?php echo $email_label ?><br /><input type="text" name="{{ $email_form_name }}" size="50" maxlength="80" value="{{ Input::old($email_form_name) }}"><br /></label> {{-- TODO: Escape --}}
 <?php
 
 }
 
 if (isset($forum)): ?>
-						<label class="required"><strong>{{ t('common.subject') }} <span>{{ t('common.required') }}</span></strong><br /><input type="text" name="req_subject" class="longinput" size="80" value="{{ Input::old('req_subject') }}" /><br /></label>{{-- TODO: Escape --}}
-<?php endif; ?>						<label class="required"><strong>{{ t('common.message') }} <span>{{ t('common.required') }}</span></strong><br />
-						<textarea name="req_message" id="req_message" cols="95" rows="20">{{ Input::old('req_message') }}</textarea><br /></label>{{-- TODO: Escape --}}
-						<ul class="bblinks">
-							<li><span><a href="help.php#bbcode" onclick="window.open(this.href); return false;">{{ t('common.bbcode') }}</a> <?php echo FluxBB\Models\Config::enabled('p_message_bbcode') ? t('common.on') : t('common.off'); ?></span></li>
-							<li><span><a href="help.php#url" onclick="window.open(this.href); return false;">{{ t('common.url_tag') }}</a> <?php echo FluxBB\Models\Config::enabled('p_message_bbcode') && FluxBB\Models\User::current()->group->g_post_links == '1' ? t('common.on') : t('common.off'); ?></span></li>
-							<li><span><a href="help.php#img" onclick="window.open(this.href); return false;">{{ t('common.img_tag') }}</a> <?php echo FluxBB\Models\Config::enabled('p_message_bbcode') && FluxBB\Models\Config::enabled('p_message_img_tag') ? t('common.on') : t('common.off'); ?></span></li>
-							<li><span><a href="help.php#smilies" onclick="window.open(this.href); return false;">{{ t('common.smilies') }}</a> <?php echo FluxBB\Models\Config::enabled('o_smilies') ? t('common.on') : t('common.off'); ?></span></li>
-						</ul>
-					</div>
-				</fieldset>
+		<label class="required"><strong>{{ t('common.subject') }} <span>{{ t('common.required') }}</span></strong><br /><input type="text" name="req_subject" class="longinput" size="80" value="{{ Input::old('req_subject') }}" /><br /></label>{{-- TODO: Escape --}}
+<?php endif; ?>						
+
+		<label class="required"><strong>{{ t('common.message') }} <span>{{ t('common.required') }}</span></strong><br /></label>
+		<textarea name="req_message" id="req_message" cols="95" rows="20">{{ Input::old('req_message') }}</textarea><br /></label>{{-- TODO: Escape --}}
+		<ul class="bblinks">
+			<li><span><a href="help.php#bbcode" onclick="window.open(this.href); return false;">{{ t('common.bbcode') }}</a> <?php echo FluxBB\Models\Config::enabled('p_message_bbcode') ? t('common.on') : t('common.off'); ?></span></li>
+			<li><span><a href="help.php#url" onclick="window.open(this.href); return false;">{{ t('common.url_tag') }}</a> <?php echo FluxBB\Models\Config::enabled('p_message_bbcode') && FluxBB\Models\User::current()->group->g_post_links == '1' ? t('common.on') : t('common.off'); ?></span></li>
+			<li><span><a href="help.php#img" onclick="window.open(this.href); return false;">{{ t('common.img_tag') }}</a> <?php echo FluxBB\Models\Config::enabled('p_message_bbcode') && FluxBB\Models\Config::enabled('p_message_img_tag') ? t('common.on') : t('common.off'); ?></span></li>
+			<li><span><a href="help.php#smilies" onclick="window.open(this.href); return false;">{{ t('common.smilies') }}</a> <?php echo FluxBB\Models\Config::enabled('o_smilies') ? t('common.on') : t('common.off'); ?></span></li>
+		</ul>
+	</fieldset>
 <?php
 
 $checkboxes = array();
@@ -74,28 +70,14 @@ if (FluxBB\Auth::isAuthed())
 else if (FluxBB\Models\Config::enabled('o_smilies'))
 	$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'"'.(Input::has('hide_smilies') ? ' checked="checked"' : '').' />'.t('post.hide_smilies').'<br /></label>';
 
-if (!empty($checkboxes))
-{
-
 ?>
-			</div>
-			<div class="inform">
-				<fieldset>
-					<legend>{{ t('common.options') }}</legend>
-					<div class="infldset">
-						<div class="rbox">
-							<?php echo implode("\n\t\t\t\t\t\t\t", $checkboxes)."\n" ?>
-						</div>
-					</div>
-				</fieldset>
-<?php
 
-}
-
-?>
-			</div>
-			<p class="buttons"><input type="submit" name="submit" value="{{ t('common.submit') }}" tabindex="<?php echo $cur_index++ ?>" accesskey="s" /> <input type="submit" name="preview" value="{{ t('post.preview') }}" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /> <a href="javascript:history.go(-1)">{{ t('common.go_back') }}</a></p>
-		</form>
-	</div>
-</div>
+@if (!empty($checkboxes))
+	<fieldset>
+		<legend>{{ t('common.options') }}</legend>
+		<?php echo implode("\n\t\t\t\t\t\t\t", $checkboxes)."\n" ?>
+	</fieldset>
+@endif
+	<p class="buttons"><input type="submit" name="submit" value="{{ t('common.submit') }}" tabindex="<?php echo $cur_index++ ?>" accesskey="s" /> <input type="submit" name="preview" value="{{ t('post.preview') }}" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /> <a href="javascript:history.go(-1)">{{ t('common.go_back') }}</a></p>
+</form>
 @stop
