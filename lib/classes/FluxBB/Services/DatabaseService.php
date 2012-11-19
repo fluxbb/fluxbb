@@ -25,7 +25,7 @@
 
 namespace FluxBB\Services;
 
-use FluxBB\Database\Resolver,
+use Illuminate\Database\ConnectionResolver,
 	Illuminate\Database\Connectors\ConnectionFactory,
 	Illuminate\Database\Eloquent\Model,
 	Illuminate\Support\ServiceProvider;
@@ -56,7 +56,11 @@ class DatabaseService extends ServiceProvider
 
 		$app['db.resolver'] = $app->share(function($app)
 		{
-			return new Resolver($app);
+			$resolver = new ConnectionResolver;
+			$resolver->addConnection('default', $app['db.connection']);
+			$resolver->setDefaultConnection('default');
+
+			return $resolver;
 		});
 
 		$this->registerEloquent($app);
