@@ -26,6 +26,7 @@
 namespace FluxBB\Routing;
 
 use FluxBB\Application;
+use FluxBB\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\Factory;
 
@@ -83,12 +84,12 @@ class Controller
 
 	public function isGuest()
 	{
-		return \FluxBB\Auth::isGuest();
+		return Auth::isGuest();
 	}
 
 	public function isAuthed()
 	{
-		return \FluxBB\Auth::isAuthed();
+		return Auth::isAuthed();
 	}
 
 }
