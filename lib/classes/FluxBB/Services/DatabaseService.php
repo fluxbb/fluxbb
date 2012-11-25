@@ -54,7 +54,7 @@ class DatabaseService extends ServiceProvider
 			return $connection;
 		});
 
-		$this->app['db.resolver'] = $this->app->share(function($app)
+		$this->app['db'] = $this->app->share(function($app)
 		{
 			$resolver = new ConnectionResolver;
 			$resolver->addConnection('default', $app['db.connection']);
@@ -62,13 +62,11 @@ class DatabaseService extends ServiceProvider
 
 			return $resolver;
 		});
-
-		$this->registerEloquent();
 	}
 
 	public function boot()
 	{
-		Model::setConnectionResolver($this->app['db.resolver']);
+		Model::setConnectionResolver($this->app['db']);
 	}
 
 }
