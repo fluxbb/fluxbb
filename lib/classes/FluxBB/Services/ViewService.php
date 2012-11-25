@@ -33,9 +33,9 @@ use Illuminate\View\Engines\CompilerEngine;
 class ViewService extends ServiceProvider
 {
 
-	public function register($app)
+	public function register()
 	{
-		$app['view'] = $app->share(function($app)
+		$this->app['view'] = $this->app->share(function($app)
 		{
 			$files = $app['files'];
 

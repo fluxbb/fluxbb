@@ -33,14 +33,14 @@ use Illuminate\Database\ConnectionResolver,
 class DatabaseService extends ServiceProvider
 {
 
-	public function register($app)
+	public function register()
 	{
-		$app['db.factory'] = $app->share(function()
+		$this->app['db.factory'] = $this->app->share(function()
 		{
 			return new ConnectionFactory;
 		});
 
-		$app['db.connection'] = $app->share(function($app)
+		$this->app['db.connection'] = $this->app->share(function($app)
 		{
 			$connection = $app['db.factory']->make($app['config']['database.connection']);
 
@@ -54,7 +54,7 @@ class DatabaseService extends ServiceProvider
 			return $connection;
 		});
 
-		$app['db.resolver'] = $app->share(function($app)
+		$this->app['db.resolver'] = $this->app->share(function($app)
 		{
 			$resolver = new ConnectionResolver;
 			$resolver->addConnection('default', $app['db.connection']);
@@ -63,12 +63,12 @@ class DatabaseService extends ServiceProvider
 			return $resolver;
 		});
 
-		$this->registerEloquent($app);
+		$this->registerEloquent();
 	}
 
-	public function registerEloquent($app)
+	public function boot()
 	{
-		Model::setConnectionResolver($app['db.resolver']);
+		Model::setConnectionResolver($this->app['db.resolver']);
 	}
 
 }

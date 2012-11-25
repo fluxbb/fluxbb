@@ -22,7 +22,7 @@ class Application extends Container
 
 	public function register(ServiceProvider $service)
 	{
-		$service->register($this);
+		$service->register();
 
 		$this->services[] = $service;
 	}
@@ -49,7 +49,7 @@ class Application extends Container
 	{
 		foreach ($this->services as $service)
 		{
-			$service->boot($this);
+			$service->boot();
 		}
 
 		$this->booted = true;

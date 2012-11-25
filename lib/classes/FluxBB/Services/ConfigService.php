@@ -31,19 +31,12 @@ use Illuminate\Support\ServiceProvider;
 class ConfigService extends ServiceProvider
 {
 
-	protected $defer = true;
-
-	public function register($app)
+	public function register()
 	{
-		$app['config.repository'] = $app->share(function($app)
+		$this->app['config.repository'] = $this->app->share(function($app)
 		{
 			return new ConfigRepository($app['cache']);
 		});
-	}
-
-	public function getProvidedServices()
-	{
-		return array('config.repository');
 	}
 
 }

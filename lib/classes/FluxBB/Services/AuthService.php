@@ -32,8 +32,10 @@ use Illuminate\Auth\Guard,
 class AuthService extends ServiceProvider
 {
 
-	public function boot($app)
+	public function boot()
 	{
+		$app = $this->app;
+
 		// Append all cookies to the response if the auth driver was used
 		$app->after(function($request, $response) use ($app)
 		{
@@ -47,16 +49,16 @@ class AuthService extends ServiceProvider
 		});
 	}
 
-	public function register($app)
+	public function register()
 	{
-		$this->registerAuthProvider($app);
+		$this->registerAuthProvider();
 
 		//$this->registerAuthFilter($app);
 	}
 
-	protected function registerAuthProvider($app)
+	protected function registerAuthProvider()
 	{
-		$app['auth'] = $app->share(function($app)
+		$this->app['auth'] = $this->app->share(function($app)
 		{
 			$app['auth.loaded'] = true;
 

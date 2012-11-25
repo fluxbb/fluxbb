@@ -33,24 +33,24 @@ use Illuminate\Support\ServiceProvider;
 class RoutingService extends ServiceProvider
 {
 
-	public function register($app)
+	public function register()
 	{
-		$app['routes'] = $app->share(function($app)
+		$this->app['routes'] = $this->app->share(function($app)
 		{
 			return include $app['path'].'/routes.php';
 		});
 
-		$app['router'] = $app->share(function($app)
+		$this->app['router'] = $this->app->share(function($app)
 		{
 			return new Router($app['routes'], $app['controller.factory']);
 		});
 
-		$app['url.generator'] = $app->share(function($app)
+		$this->app['url.generator'] = $this->app->share(function($app)
 		{
 			return new UrlGenerator($app['routes'], $app['config']['app.base_url']);
 		});
 
-		$app['controller.factory'] = $app->share(function($app)
+		$this->app['controller.factory'] = $this->app->share(function($app)
 		{
 			return new ControllerFactory($app);
 		});

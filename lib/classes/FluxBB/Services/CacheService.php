@@ -31,19 +31,12 @@ use Illuminate\Support\ServiceProvider;
 class CacheService extends ServiceProvider
 {
 
-	protected $defer = true;
-
-	public function register($app)
+	public function register()
 	{
-		$app['cache'] = $app->share(function($app)
+		$this->app['cache'] = $this->app->share(function($app)
 		{
 			return new FileStore($app['files'], $app['path.cache']);
 		});
-	}
-
-	public function getProvidedServices()
-	{
-		return array('cache');
 	}
 
 }

@@ -31,8 +31,10 @@ use FluxBB\Session\Store,
 class SessionService extends ServiceProvider
 {
 
-	public function boot($app)
+	public function boot()
 	{
+		$app = $this->app;
+
 		$app->before(function($request) use ($app)
 		{
 			$app['session']->start($app['cookie']);
@@ -44,16 +46,16 @@ class SessionService extends ServiceProvider
 		});
 	}
 
-	public function register($app)
+	public function register()
 	{
-		$this->registerSessionDriver($app);
+		$this->registerSessionDriver();
 
 		//$this->registerSessionFilter($app);
 	}
 
-	protected function registerSessionDriver($app)
+	protected function registerSessionDriver()
 	{
-		$app['session'] = $app->share(function($app)
+		$this->app['session'] = $this->app->share(function($app)
 		{
 			// TODO: Fix table name
 			$driver = new Store($app['db.connection'], $app['encrypter'], 'sessions');
