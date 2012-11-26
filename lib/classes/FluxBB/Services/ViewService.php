@@ -25,10 +25,13 @@
 
 namespace FluxBB\Services;
 
+use Illuminate\Support\MessageBag;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Environment;
+use Illuminate\View\FileViewFinder;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Engines\CompilerEngine;
+use Illuminate\View\Engines\EngineResolver;
 
 class ViewService extends ServiceProvider
 {
@@ -37,15 +40,33 @@ class ViewService extends ServiceProvider
 	{
 		$this->app['view'] = $this->app->share(function($app)
 		{
-			$files = $app['files'];
+			$resolver = new EngineResolver;
+			$resolver->register('blade', function() use ($app)
+			{
+				$cache = $app['path.cache'].'views/';
+				$compiler = new BladeCompiler($app['files'], $cache);
 
-			$compiler = new BladeCompiler($files, $app['path.cache'].'views/');
-			
+				return new CompilerEngine($compiler, $app['files']);
+			});
+
 			$paths = array($app['path.view']);
-			$engine = new CompilerEngine($compiler, $files, $paths, '.blade.php');
+			$finder = new FileViewFinder($app['files'], $paths);
 
-			return new Environment($engine, $app['events']);
-			// TODO: Setup session, errors etc. See Illuminate's ViewManager
+			$environment = new Environment($resolver, $finder, $app['events']);
+
+			if (isset($app['session']) and $app['session']->has('errors'))
+			{
+				$environment->share('errors', $app['session']->get('errors'));
+			}
+			else
+			{
+				$environment->share('errors', new MessageBag);
+			}
+
+			$environment->setContainer($app);
+			$environment->share('app', $app);
+
+			return $environment;
 		});
 	}
 
