@@ -37,7 +37,7 @@ class Core extends Facade
 
 	public static function isInstalled()
 	{
-		return file_exists(static::$app['path.config'].'/database.php');
+		return file_exists(fluxbb()->make('path').'/config/database.php');
 	}
 
 	public static function version()
