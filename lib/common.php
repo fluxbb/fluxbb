@@ -36,10 +36,10 @@ use Illuminate\Filesystem;
 use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository as ConfigRepository;
 
-$app['path.config'] = __DIR__.'/config/';
-$app['path.lang'] = __DIR__.'/lang/';
-$app['path.view'] = __DIR__.'/views/';
-$app['path.cache'] = __DIR__.'/cache/';
+$app['path.config'] = $app['path'].'/config/';
+$app['path.lang'] = $app['path'].'/lang/';
+$app['path.view'] = $app['path'].'/views/';
+$app['path.cache'] = $app['path'].'/cache/';
 
 $app['config.loader'] = $app->share(function($app)
 {
