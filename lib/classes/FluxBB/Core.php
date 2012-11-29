@@ -25,19 +25,24 @@
 
 namespace FluxBB;
 
-use Illuminate\Support\Facade
+use Illuminate\Support\Facade;
 
 class Core extends Facade
 {
 
-	protected static getFacadeAccessor()
+	protected static function getFacadeAccessor()
 	{
 		return static::$app;
 	}
 
 	public static function isInstalled()
 	{
-		return is_dir($app['path.config']).'/fluxbb');
+		return file_exists(static::$app['path.config'].'/database.php');
+	}
+
+	public static function version()
+	{
+		return '2.0.0-alpha1';
 	}
 
 }
