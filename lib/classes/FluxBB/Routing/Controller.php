@@ -82,14 +82,14 @@ class Controller
 		return trim((string) $this->app['request']->input($key)) !== '';
 	}
 
-	public function isGuest()
+	public function guest()
 	{
-		return Auth::isGuest();
+		return Auth::guest();
 	}
 
-	public function isAuthed()
+	public function check()
 	{
-		return Auth::isAuthed();
+		return Auth::check();
 	}
 
 }

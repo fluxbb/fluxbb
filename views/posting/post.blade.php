@@ -13,7 +13,7 @@
 
 $cur_index = 1;
 
-if (!FluxBB\Auth::isAuthed())
+if (!FluxBB\Auth::check())
 {
 	$email_label = FluxBB\Models\Config::enabled('p_force_guest_email') ? '<strong>'.t('common.email').' <span>'.t('common.required').'</span></strong>' : t('common.email');
 	$email_form_name = FluxBB\Models\Config::enabled('p_force_guest_email') ? 'req_email' : 'email';
@@ -44,7 +44,7 @@ $checkboxes = array();
 if (isset($topic) && $topic->forum->isAdmMod() || isset($forum) && $forum->isAdmMod())
 	$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" tabindex="'.($cur_index++).'"'.(Input::has('stick_topic') ? ' checked="checked"' : '').' />'.t('common.stick_topic').'<br /></label>';
 
-if (FluxBB\Auth::isAuthed())
+if (FluxBB\Auth::check())
 {
 	if (FluxBB\Models\Config::enabled('o_smilies'))
 		$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'"'.(Input::has('hide_smilies') ? ' checked="checked"' : '').' />'.t('post.hide_smilies').'<br /></label>';

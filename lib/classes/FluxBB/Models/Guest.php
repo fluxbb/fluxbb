@@ -38,7 +38,7 @@ class Guest extends User
 		$this->group_id = 1;
 	}
 
-	public function isGuest()
+	public function guest()
 	{
 		return true;
 	}

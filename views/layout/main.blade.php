@@ -16,13 +16,13 @@
 @if (FluxBB\Models\User::current()->group->g_read_board == '1' && FluxBB\Models\User::current()->group->g_view_users == '1')
 			<li id="navuserlist"><a href="{{ url('userlist') }}">{{ t('common.user_list') }}</a></li>
 @endif
-@if (FluxBB\Models\Config::enabled('o_rules') && (FluxBB\Auth::isAuthed() || FluxBB\Models\User::current()->group->g_read_board == '1' || FluxBB\Models\Config::enabled('o_regs_allow')))
+@if (FluxBB\Models\Config::enabled('o_rules') && (FluxBB\Auth::check() || FluxBB\Models\User::current()->group->g_read_board == '1' || FluxBB\Models\Config::enabled('o_regs_allow')))
 			<li id="navrules"><a href="{{ url('rules') }}">{{ t('common.rules') }}</a></li>
 @endif
 @if (FluxBB\Models\User::current()->group->g_read_board == '1' && FluxBB\Models\User::current()->group->g_search == '1')
 			<li id="navsearch"><a href="{{ url('search') }}">{{ t('common.search') }}</a></li>
 @endif
-@if (FluxBB\Auth::isGuest())
+@if (FluxBB\Auth::guest())
 			<li id="navregister"><a href="{{ url('register') }}">{{ t('common.register') }}</a></li>
 			<li id="navlogin"><a href="{{ url('login') }}">{{ t('common.login') }}</a></li>
 @else

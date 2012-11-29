@@ -59,7 +59,7 @@ if ($post_count == 1) $post_classes .= ' blockpost1';
 	<div class="postsignature postmsg"><hr />{{ $post->poster->signature() }}</div>
 @endif
 
-@if (!$post->poster->isGuest())
+@if (!$post->poster->guest())
 	@if ($post->poster->isOnline())
 	<p><strong>{{ t('topic.online') }}</strong></p>
 	@else

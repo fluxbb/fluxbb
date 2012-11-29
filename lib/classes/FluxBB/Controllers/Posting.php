@@ -75,7 +75,7 @@ class Posting extends Controller
 		);
 		// TODO: More validation
 
-		if ($this->isGuest())
+		if ($this->guest())
 		{
 			if (Config::enabled('p_force_guest_email') || \Input::get('email') != '')
 			{
@@ -101,7 +101,7 @@ class Posting extends Controller
 			'topic_id'			=> $tid
 		);
 
-		if ($this->isGuest())
+		if ($this->guest())
 		{
 			$post_data['poster'] = \Input::get('req_username');
 			$post_data['poster_email'] = Config::enabled('p_force_guest_email') ? \Input::get('req_email') : \Input::get('email');
@@ -132,7 +132,7 @@ class Posting extends Controller
 
 		// If the posting user is logged in, increment his/her post count
 		$user = User::current();
-		if ($this->isAuthed())
+		if ($this->check())
 		{
 			$user->num_posts += 1;
 			$user->last_post = \Request::time();
@@ -189,7 +189,7 @@ class Posting extends Controller
 		);
 		// TODO: More validation
 
-		if ($this->isGuest())
+		if ($this->guest())
 		{
 			if (Config::enabled('p_force_guest_email') || \Input::get('email') != '')
 			{
@@ -215,7 +215,7 @@ class Posting extends Controller
 			'forum_id'			=> $fid,
 		);
 
-		if ($this->isGuest())
+		if ($this->guest())
 		{
 			$topic_data['poster'] = $topic_data['last_poster'] = \Input::get('req_username');
 		}
@@ -236,7 +236,7 @@ class Posting extends Controller
 			'topic_id'			=> $topic->id
 		);
 
-		if (\FluxBB\Auth::isGuest())
+		if (\FluxBB\Auth::guest())
 		{
 			$post_data['poster'] = \Input::get('req_username');
 			$post_data['poster_email'] = Config::enabled('p_force_guest_email') ? \Input::get('req_email') : \Input::get('email');
@@ -260,7 +260,7 @@ class Posting extends Controller
 		// TODO: update_search_index();
 
 		// If the posting user is logged in, increment his/her post count
-		if ($this->isAuthed())
+		if ($this->check())
 		{
 			$user = User::current();
 

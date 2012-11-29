@@ -60,7 +60,7 @@ class Topic extends Base
 
 	public function isUserSubscribed()
 	{
-		return FluxBB\Auth::isAuthed() && !is_null($this->subscription);
+		return FluxBB\Auth::check() && !is_null($this->subscription);
 	}
 
 	public function wasMoved()
@@ -71,7 +71,7 @@ class Topic extends Base
 	public function subscribe($subscribe = true)
 	{
 		// To subscribe or not to subscribe, that ...
-		if (!Config::enabled('o_topic_subscriptions') || !FluxBB\Auth::isAuthed())
+		if (!Config::enabled('o_topic_subscriptions') || !FluxBB\Auth::check())
 		{
 			return false;
 		}

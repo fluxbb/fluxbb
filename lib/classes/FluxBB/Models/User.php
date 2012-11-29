@@ -62,7 +62,7 @@ class User extends Base implements UserInterface
 	{
 		static $current = null;
 
-		if (Auth::isGuest())
+		if (Auth::guest())
 		{
 			if (!isset($current))
 			{
@@ -76,14 +76,14 @@ class User extends Base implements UserInterface
 		return Auth::user();
 	}
 
-	public function isGuest()
+	public function guest()
 	{
 		return $this->id == static::GUEST;
 	}
 
 	public function isMember()
 	{
-		return !$this->isGuest();
+		return !$this->guest();
 	}
 
 	// TODO: Better name
@@ -136,7 +136,7 @@ class User extends Base implements UserInterface
 			return $this->group->g_user_title;
 		}
 		// If the user is a guest
-		else if ($this->isGuest())
+		else if ($this->guest())
 		{
 			return trans('Guest');
 		}

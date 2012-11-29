@@ -25,7 +25,7 @@
 
 Route::filter('only_guests', function()
 {
-	if (!FluxBB\Auth::isGuest())
+	if (!FluxBB\Auth::guest())
 	{
 		return Redirect::to_action('home@index');
 	}
@@ -33,7 +33,7 @@ Route::filter('only_guests', function()
 
 Route::filter('only_members', function()
 {
-	if (!FluxBB\Auth::isAuthed())
+	if (!FluxBB\Auth::check())
 	{
 		return Redirect::to_action('auth@login')
 			->with('message', trans('common.login_to_view'))
