@@ -31,6 +31,9 @@ use Illuminate\Session\CookieStore;
 class InstallerSessionService extends SessionService
 {
 
+	public function boot()
+	{}
+
 	protected function registerSessionDriver()
 	{
 		$this->app['session'] = $this->app->share(function($app)
