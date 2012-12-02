@@ -263,7 +263,7 @@ class Installer
 	public function createAdminUser(array $user)
 	{
 		// Create admin user
-		$admin = User::create(array(
+		$admin = array(
 			'username'			=> $user['username'],
 			'password'			=> $user['password'],
 			'email'				=> $user['email'],
@@ -272,7 +272,7 @@ class Installer
 			'registered'		=> $this->app['request']->server('REQUEST_TIME'),
 			'registration_ip'	=> $this->app['request']->getClientIp(),
 			'last_visit'		=> $this->app['request']->server('REQUEST_TIME'),
-		));
+		);
 
 		$adminGroup = Group::find(Group::ADMIN);
 
