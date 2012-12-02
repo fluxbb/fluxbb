@@ -25,9 +25,7 @@
 
 namespace FluxBB;
 
-use FluxBB\Application,
-	Illuminate\Database\ConnectionResolverInterface,
-	Illuminate\Support\Facade;
+use Illuminate\Support\Facade;
 
 class Database extends Facade
 {
