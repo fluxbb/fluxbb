@@ -26,6 +26,7 @@
 namespace FluxBB\Installer;
 
 use Closure;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -139,6 +140,7 @@ class Application extends \FluxBB\Application
 		}
 
 		$db_conf = array(
+			'driver'	=> 'mysql', // FIXME
 			'host'		=> $this->getInput('db_host'),
 			'database'	=> $this->getInput('db_name'),
 			'username'	=> $this->getInput('db_user'),
@@ -204,7 +206,7 @@ class Application extends \FluxBB\Application
 			'description'	=> $this->getInput('description'),
 		);
 
-		$this->remember('config', $board_info);
+		$this->remember('board', $board_info);
 
 		return $this->redirectTo('run');
 	}
@@ -219,16 +221,23 @@ class Application extends \FluxBB\Application
 		$installer = new Installer($this);
 
 		$db = $this->retrieve('db_conf');
+
+		// Tell the database to use this connection
+		$config = $this['config'];
+		$config['database.connection'] = $db;
+		$this['config'] = $config;
+
+		Model::setConnectionResolver($this['db']);
+
 		$installer->writeDatabaseConfig($db);
+		$installer->createDatabaseTables();
+		$installer->seedDatabase();
 
-
-		
-		//\Artisan::run(array('install:database'));
-		//\Artisan::run(array('install:board', $this->retrieve('config.title'), $this->retrieve('config.description')));
+		$board = $this->retrieve('board');
+		$installer->setBoardInfo($board);
 
 		$admin = $this->retrieve('admin');
-		//Installer::createAdminUser($admin);
-		//\Artisan::run(array('install:admin', $admin['username'], $admin['password'], $admin['email']));
+		$installer->createAdminUser($admin);
 
 		return $this->redirectTo('success');
 		// TODO: Dump errors
