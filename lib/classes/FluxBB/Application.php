@@ -28,7 +28,7 @@ namespace FluxBB;
 use Closure,
 	Illuminate\Container,
 	Illuminate\Http\Request,
-	Illuminate\Http\Response,
+	Symfony\Component\HttpFoundation\Response,
 	Illuminate\Support\ServiceProvider;
 
 class Application extends Container
