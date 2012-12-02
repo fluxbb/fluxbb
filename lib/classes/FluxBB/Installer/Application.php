@@ -55,7 +55,7 @@ class Application extends \FluxBB\Application
 	{
 		$rules = array(
 			// TODO: Verify language being valid
-			'language'	=> 'required',
+			'language'	=> 'Required',
 		);
 
 		// TODO: Set bundle (for localization)
@@ -77,9 +77,9 @@ class Application extends \FluxBB\Application
 	public function post_database()
 	{
 		$rules = array(
-			'db_host'	=> 'required',
-			'db_name'	=> 'required',
-			'db_user'	=> 'required',
+			'db_host'	=> 'Required',
+			'db_name'	=> 'Required',
+			'db_user'	=> 'Required',
 		);
 
 		if (!$this->validate($rules))
@@ -107,9 +107,9 @@ class Application extends \FluxBB\Application
 	public function post_admin()
 	{
 		$rules = array(
-			'username'	=> 'required|between:2,25|username_not_guest|no_ip|username_not_reserved|no_bbcode',
-			'email'		=> 'required|email',
-			'password'	=> 'required|min:4|confirmed',
+			'username'	=> 'Required|Between:2,25|UsernameNotGuest|NoIp|UsernameNotReserved|NoBBcode',
+			'email'		=> 'Required|Email',
+			'password'	=> 'Required|Min:4|Confirmed',
 		);
 
 		if (!$this->validate($rules))
@@ -136,8 +136,8 @@ class Application extends \FluxBB\Application
 	public function post_config()
 	{
 		$rules = array(
-			'title'			=> 'required',
-			'description'	=> 'required',
+			'title'			=> 'Required',
+			'description'	=> 'Required',
 		);
 
 		if (!$this->validate($rules))
@@ -194,8 +194,9 @@ class Application extends \FluxBB\Application
 
 	protected function validate(array $rules)
 	{
-		$this->validation = $this['validator']->make($this['request']->all(), $rules);
+		include_once $this['path'].'/lib/helpers/validators.php';
 
+		$this->validation = $this['validator']->make($this['request']->all(), $rules);
 		return $this->validation->passes();
 	}
 

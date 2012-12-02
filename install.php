@@ -38,6 +38,8 @@ use Illuminate\Validation\ValidationServiceProvider;
 
 $installer = new Application;
 
+set_fluxbb($installer);
+
 $installer['path'] = __DIR__;
 $installer['path.view'] = __DIR__.'/views/';
 $installer['path.cache'] = __DIR__.'/cache/';
@@ -56,5 +58,7 @@ $installer->register(new InstallerSessionService($installer));
 $installer->register(new TranslationServiceProvider($installer));
 $installer->register(new ValidationServiceProvider($installer));
 $installer->register(new ViewService($installer));
+
+Illuminate\Support\Facade::setFacadeApplication($installer);
 
 $installer->run();
