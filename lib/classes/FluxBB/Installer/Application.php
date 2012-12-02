@@ -26,6 +26,7 @@
 namespace FluxBB\Installer;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 
 class Application extends \FluxBB\Application
 {
@@ -41,8 +42,6 @@ class Application extends \FluxBB\Application
 		$this->step = $request->query('step', 'start');
 
 		$action = $method.'_'.$this->step;
-
-		// TODO: Set language
 
 		return $this->$action();
 	}
@@ -202,7 +201,7 @@ class Application extends \FluxBB\Application
 
 	protected function redirectTo($step)
 	{
-
+		return new RedirectResponse($this['request']->url().'?step='.$step);
 	}
 
 	protected function redirectBack()
