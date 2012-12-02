@@ -828,8 +828,12 @@ if ($pun_config['o_search_all_forums'] == '1' || $pun_user['is_admmod'])
 		echo "\t\t\t\t\t\t\t\t".'<label><input type="checkbox" name="forums[]" id="forum-'.$cur_forum['fid'].'" value="'.$cur_forum['fid'].'" />'.pun_htmlspecialchars($cur_forum['forum_name']).'</label>'."\n";
 	}
 
-	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t".'</fieldset>'."\n";
+	if ($cur_category)
+	{
+		echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
+		echo "\t\t\t\t\t\t\t".'</fieldset>'."\n";
+	}
+	
 	echo "\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t".'</div>'."\n";
 }
