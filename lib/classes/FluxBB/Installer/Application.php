@@ -65,7 +65,7 @@ class Application extends \FluxBB\Application
 			return $this->redirectBack();
 		}
 
-		$this->remember('language', $this['request']->input('language'));
+		$this->remember('language', $this->getInput('language'));
 
 		return $this->redirectTo('database');
 	}
@@ -89,10 +89,10 @@ class Application extends \FluxBB\Application
 		}
 
 		$db_conf = array(
-			'host'	=> \Input::get('db_host'),
-			'name'	=> \Input::get('db_name'),
-			'user'	=> \Input::get('db_user'),
-			'pass'	=> \Input::get('db_pass'),
+			'host'	=> $this->getInput('db_host'),
+			'name'	=> $this->getInput('db_name'),
+			'user'	=> $this->getInput('db_user'),
+			'pass'	=> $this->getInput('db_pass'),
 		);
 
 		$this->remember('db_conf', $db_conf);
@@ -119,9 +119,9 @@ class Application extends \FluxBB\Application
 		}
 
 		$user_info = array(
-			'username'	=> \Input::get('username'),
-			'email'		=> \Input::get('email'),
-			'password'	=> \Input::get('password'),
+			'username'	=> $this->getInput('username'),
+			'email'		=> $this->getInput('email'),
+			'password'	=> $this->getInput('password'),
 		);
 
 		$this->remember('admin', $user_info);
@@ -147,8 +147,8 @@ class Application extends \FluxBB\Application
 		}
 
 		$board_info = array(
-			'title'			=> \Input::get('title'),
-			'description'	=> \Input::get('description'),
+			'title'			=> $this->getInput('title'),
+			'description'	=> $this->getInput('description'),
 		);
 
 		$this->remember('config', $board_info);
@@ -186,6 +186,11 @@ class Application extends \FluxBB\Application
 		// TODO: return 404
 		echo '404';
 		exit;
+	}
+
+	protected function getInput($key, $default = null)
+	{
+		return $this['request']->input($key, $default);
 	}
 
 	protected function validate(array $rules)
