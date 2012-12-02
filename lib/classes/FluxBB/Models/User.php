@@ -220,7 +220,9 @@ class User extends Base implements UserInterface
 
 	protected function setPassword($password)
 	{
-		return Hash::make($password);
+		// TODO: Make this prettier.
+		$app = fluxbb();
+		return $app['hash']->make($password);
 		// TODO: Maybe reset some attributes like confirmation code here?
 	}
 
