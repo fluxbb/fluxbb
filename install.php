@@ -29,23 +29,32 @@ use FluxBB\Installer\Application;
 use FluxBB\Installer\InstallerSessionService;
 use FluxBB\Services\ViewService;
 use Illuminate\CookieServiceProvider;
-use Illuminate\Database\ConnectionFactory;
+use Illuminate\Database\ConnectionResolver;
 use Illuminate\Encrypter;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem;
+use Illuminate\Translation\TranslationServiceProvider;
+use Illuminate\Validation\ValidationServiceProvider;
 
 $installer = new Application;
 
-// TODO: Set language!
-
+$installer['path'] = __DIR__;
 $installer['path.view'] = __DIR__.'/views/';
 $installer['path.cache'] = __DIR__.'/cache/';
 $installer['files'] = new Filesystem;
-$installer['encrypter'] = new Encrypter('fluxbb_install'); // TODO: Do we need an encrypter here?
+$installer['encrypter'] = new Encrypter('fluxbb_install'); // TODO: Do we need a real secret key for installation?
 $installer['events'] = new Dispatcher;
+$installer['db'] = new ConnectionResolver; // Needed for validation service
+
+$installer['config'] = array(
+	'app.locale'			=> 'en',	// TODO: Set language!
+	'app.fallback_locale'	=> 'en',
+);
 
 $installer->register(new CookieServiceProvider($installer));
 $installer->register(new InstallerSessionService($installer));
+$installer->register(new TranslationServiceProvider($installer));
+$installer->register(new ValidationServiceProvider($installer));
 $installer->register(new ViewService($installer));
 
 $installer->run();
