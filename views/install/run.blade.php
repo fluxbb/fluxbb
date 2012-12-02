@@ -7,7 +7,7 @@
 	<form method="POST">
 		<p>You're ready to run the FluxBB installation.</p>
 		<p>TODO: Review information here.</p>
-		<input type="submit" name="submit" value="Continue" />
+		<input type="submit" name="submit" value="START!" />
 	</form>
 
 @stop
