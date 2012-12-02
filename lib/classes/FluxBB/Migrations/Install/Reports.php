@@ -25,9 +25,10 @@
 
 namespace FluxBB\Migrations\Install;
 
-use Schema;
+use FluxBB\Schema;
+use Illuminate\Database\Migrations\Migration;
 
-class Reports
+class Reports extends Migration
 {
 
 	public function up()

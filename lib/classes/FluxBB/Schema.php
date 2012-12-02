@@ -23,35 +23,16 @@
  * @license		http://www.gnu.org/licenses/gpl.html	GNU General Public License
  */
 
-namespace FluxBB\Migrations\Install;
+namespace FluxBB;
 
-use FluxBB\Schema;
-use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facade;
 
-class Sessions extends Migration
+class Schema extends Facade
 {
 
-	public function up()
+	protected static function getFacadeAccessor()
 	{
-		Schema::table('sessions', function($table)
-		{
-			$table->create();
-
-			$table->string('id', 40);
-			$table->integer('user_id')->unsigned()->default(1);
-			$table->integer('created')->unsigned()->default(0);
-			$table->integer('last_visit')->unsigned()->default(0);
-			$table->string('last_ip', 200)->default('0.0.0.0');
-			$table->text('data');
-
-			$table->primary('id');
-			$table->index('user_id');
-		});
-	}
-
-	public function down()
-	{
-		Schema::drop('sessions');
+		return static::$app['db.connection']->getSchemaBuilder();
 	}
 
 }

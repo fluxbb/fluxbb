@@ -25,9 +25,10 @@
 
 namespace FluxBB\Migrations\Install;
 
-use Schema;
+use FluxBB\Schema;
+use Illuminate\Database\Migrations\Migration;
 
-class Forum_Perms
+class Forum_Perms extends Migration
 {
 
 	public function up()
