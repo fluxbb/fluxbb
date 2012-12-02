@@ -34,6 +34,7 @@ use Illuminate\CookieServiceProvider;
 use Illuminate\Encrypter;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem;
+use Illuminate\Hashing\HashServiceProvider;
 use Illuminate\Translation\TranslationServiceProvider;
 
 $installer = new Application;
@@ -54,6 +55,7 @@ $installer['config'] = array(
 );
 
 $installer->register(new CookieServiceProvider($installer));
+$installer->register(new HashServiceProvider($installer));
 $installer->register(new InstallerDatabaseService($installer));
 $installer->register(new InstallerSessionService($installer));
 $installer->register(new TranslationServiceProvider($installer));
