@@ -25,7 +25,8 @@
 
 namespace FluxBB\Installer;
 
-use FluxBB\Models\Config;
+use FluxBB\Core;
+use FluxBB\Database;
 use FluxBB\Models\Group;
 use FluxBB\Models\User;
 
@@ -80,24 +81,13 @@ class Installer
 		}
 	}
 
-	protected function getMigrationPath()
-	{
-		return Bundle::path('fluxbb').'migrations'.DS.'install'.DS;
-	}
-
-	public function seedDatabase()
-	{
-		$this->seedGroups();
-		$this->seedConfig();
-	}
-
-	protected function seedGroups()
+	public function createUserGroups()
 	{
 		// Insert the three preset groups
 		$admin_group = Group::create(array(
 			'g_id'						=> Group::ADMIN,
-			'g_title'					=> trans('seed_data.administrators'),
-			'g_user_title'				=> trans('seed_data.administrator'),
+			'g_title'					=> t('seed_data.administrators'),
+			'g_user_title'				=> t('seed_data.administrator'),
 			'g_promote_min_posts'		=> 0,
 			'g_promote_next_group'		=> 0,
 			'g_moderator'				=> 0,
@@ -125,8 +115,8 @@ class Installer
 
 		$moderator_group = Group::create(array(
 			'g_id'						=> Group::MOD,
-			'g_title'					=> trans('seed_data.moderators'),
-			'g_user_title'				=> trans('seed_data.moderator'),
+			'g_title'					=> t('seed_data.moderators'),
+			'g_user_title'				=> t('seed_data.moderator'),
 			'g_promote_min_posts'		=> 0,
 			'g_promote_next_group'		=> 0,
 			'g_moderator'				=> 1,
@@ -154,7 +144,7 @@ class Installer
 
 		$member_group = Group::create(array(
 			'g_id'						=> Group::MEMBER,
-			'g_title'					=> trans('seed_data.members'),
+			'g_title'					=> t('seed_data.members'),
 			'g_user_title'				=> null,
 			'g_promote_min_posts'		=> 0,
 			'g_promote_next_group'		=> 0,
@@ -182,16 +172,16 @@ class Installer
 		));
 	}
 
-	protected function seedConfig()
+	public function setBoardInfo(array $board)
 	{
 		// Enable/disable avatars depending on file_uploads setting in PHP configuration
 		$avatars = in_array(strtolower(@ini_get('file_uploads')), array('on', 'true', '1')) ? 1 : 0;
 
 		// Insert config data
 		$config = array(
-			'o_cur_version'				=> FluxBB\Core::version(),
-			'o_board_title'				=> trans('seed_data.board_title'),
-			'o_board_desc'				=> trans('seed_data.board_desc'),
+			'o_cur_version'				=> Core::version(),
+			'o_board_title'				=> $board['title'],
+			'o_board_desc'				=> $board['description'],
 			'o_default_timezone'		=> 0,
 			'o_time_format'				=> 'H:i:s',
 			'o_date_format'				=> 'Y-m-d',
@@ -205,7 +195,7 @@ class Installer
 			'o_smilies'					=> 1,
 			'o_smilies_sig'				=> 1,
 			'o_make_links'				=> 1,
-			'o_default_lang'			=> $this->app['config']->get('app.locale'),
+			'o_default_lang'			=> $this->app['config']['app.locale'],
 			'o_default_style'			=> 'Air', // FIXME
 			'o_default_user_group'		=> 4,
 			'o_topic_review'			=> 15,
@@ -242,11 +232,11 @@ class Installer
 			'o_regs_allow'				=> 1,
 			'o_regs_verify'				=> 0,
 			'o_announcement'			=> 0,
-			'o_announcement_message'	=> trans('seed_data.announcement'),
+			'o_announcement_message'	=> t('seed_data.announcement'),
 			'o_rules'					=> 0,
-			'o_rules_message'			=> trans('seed_data.rules'),
+			'o_rules_message'			=> t('seed_data.rules'),
 			'o_maintenance'				=> 0,
-			'o_maintenance_message'		=> trans('seed_data.maintenance_message'),
+			'o_maintenance_message'		=> t('seed_data.maintenance_message'),
 			'o_default_dst'				=> 0,
 			'o_feed_type'				=> 2,
 			'o_feed_ttl'				=> 0,
@@ -266,10 +256,8 @@ class Installer
 
 		foreach ($config as $conf_name => $conf_value)
 		{
-			Config::set($conf_name, $conf_value);
+			Database::table('config')->insert(compact('conf_name', 'conf_value'));
 		}
-
-		Config::save();
 	}
 
 	public function createAdminUser(array $user)
@@ -279,7 +267,7 @@ class Installer
 			'username'			=> $user['username'],
 			'password'			=> $user['password'],
 			'email'				=> $user['email'],
-			'language'			=> $this->app['config']->get('app.locale'),
+			'language'			=> $this->app['config']['app.locale'],
 			'style'				=> 'Air',
 			'registered'		=> $this->app['request']->server('REQUEST_TIME'),
 			'registration_ip'	=> $this->app['request']->getClientIp(),
@@ -294,13 +282,5 @@ class Installer
 		}
 
 		$adminGroup->users()->insert($admin);
-	}
-
-	public function setBoardInfo(array $board)
-	{
-		Config::set('o_board_title', $board['title']);
-		Config::set('o_board_desc', $board['description']);
-
-		Config::save();
 	}
 }

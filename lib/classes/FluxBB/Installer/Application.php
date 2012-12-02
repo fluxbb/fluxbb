@@ -231,7 +231,7 @@ class Application extends \FluxBB\Application
 
 		$installer->writeDatabaseConfig($db);
 		$installer->createDatabaseTables();
-		$installer->seedDatabase();
+		$installer->createUserGroups();
 
 		$board = $this->retrieve('board');
 		$installer->setBoardInfo($board);
