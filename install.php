@@ -26,6 +26,7 @@
 require 'vendor/autoload.php';
 
 use FluxBB\Installer\Application;
+use FluxBB\Installer\InstallerDatabaseService;
 use FluxBB\Installer\InstallerSessionService;
 use FluxBB\Installer\InstallerValidationService;
 use FluxBB\Services\ViewService;
@@ -53,6 +54,7 @@ $installer['config'] = array(
 );
 
 $installer->register(new CookieServiceProvider($installer));
+$installer->register(new InstallerDatabaseService($installer));
 $installer->register(new InstallerSessionService($installer));
 $installer->register(new TranslationServiceProvider($installer));
 $installer->register(new InstallerValidationService($installer));
