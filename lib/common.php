@@ -36,10 +36,10 @@ use Illuminate\Filesystem;
 use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository as ConfigRepository;
 
-$app['path.config'] = $app['path'].'/config/';
-$app['path.lang'] = $app['path'].'/lang/';
-$app['path.view'] = $app['path'].'/views/';
-$app['path.cache'] = $app['path'].'/cache/';
+$app['path.config'] = $app['path'].'config/';
+$app['path.lang'] = $app['path'].'lang/';
+$app['path.view'] = $app['path'].'views/';
+$app['path.cache'] = $app['path'].'cache/';
 
 $app['config.loader'] = $app->share(function($app)
 {
@@ -51,7 +51,7 @@ $app['config'] = $app->share(function($app)
 	return new ConfigRepository($app['config.loader'], 'production');
 });
 
-$app['auth.model'] = 'FluxBB\\Models\\User';
+$app['auth.model'] = 'FluxBB\Models\User';
 
 
 // TODO: Set up extensions

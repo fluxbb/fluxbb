@@ -26,7 +26,7 @@
 require 'vendor/autoload.php';
 
 $app = new FluxBB\Application;
-$app['path'] = __DIR__;
+$app['path'] = __DIR__.'/';
 
 set_fluxbb($app);
 

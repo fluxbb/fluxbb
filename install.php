@@ -40,7 +40,8 @@ $installer = new Application;
 
 set_fluxbb($installer);
 
-$installer['path'] = __DIR__;
+$installer['path'] = __DIR__.'/';
+$installer['path.config'] = __DIR__.'/config/';
 $installer['path.view'] = __DIR__.'/views/';
 $installer['path.cache'] = __DIR__.'/cache/';
 $installer['files'] = new Filesystem;
