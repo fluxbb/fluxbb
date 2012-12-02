@@ -30,12 +30,19 @@ use Illuminate\Http\Request;
 class Application extends \FluxBB\Application
 {
 
+	protected $step = '';
+
+	protected $validation;
+
+
 	protected function dispatch(Request $request)
 	{
 		$method = strtolower($request->getMethod());
-		$step = $request->query('step', 'start');
+		$this->step = $request->query('step', 'start');
 
-		$action = $method.'_'.$step;
+		$action = $method.'_'.$this->step;
+
+		// TODO: Set language
 
 		return $this->$action();
 	}
@@ -53,15 +60,14 @@ class Application extends \FluxBB\Application
 		);
 
 		// TODO: Set bundle (for localization)
-		$validation = \Validator::make(\Input::all(), $rules);
-		if ($validation->fails())
+		if (!$this->validate($rules))
 		{
-			return \Redirect::route('installer_start')->withInput()->withErrors($validation);
+			return $this->redirectBack();
 		}
 
 		$this->remember('language', $this['request']->input('language'));
 
-		return \Redirect::route('installer_database');
+		return $this->redirectTo('database');
 	}
 
 	public function get_database()
@@ -77,10 +83,9 @@ class Application extends \FluxBB\Application
 			'db_user'	=> 'required',
 		);
 
-		$validation = \Validator::make(\Input::all(), $rules);
-		if ($validation->fails())
+		if (!$this->validate($rules))
 		{
-			return \Redirect::route('installer_database')->withInput()->withErrors($validation);
+			return $this->redirectBack();
 		}
 
 		$db_conf = array(
@@ -92,7 +97,7 @@ class Application extends \FluxBB\Application
 
 		$this->remember('db_conf', $db_conf);
 
-		return \Redirect::route('installer_admin');
+		return $this->redirectTo('admin');
 	}
 
 	public function get_admin()
@@ -108,10 +113,9 @@ class Application extends \FluxBB\Application
 			'password'	=> 'required|min:4|confirmed',
 		);
 
-		$validation = \Validator::make(\Input::all(), $rules);
-		if ($validation->fails())
+		if (!$this->validate($rules))
 		{
-			return \Redirect::route('installer_admin')->withInput()->withErrors($validation);
+			return $this->redirectBack();
 		}
 
 		$user_info = array(
@@ -122,7 +126,7 @@ class Application extends \FluxBB\Application
 
 		$this->remember('admin', $user_info);
 
-		return \Redirect::route('installer_config');
+		return $this->redirectTo('config');
 	}
 
 	public function get_config()
@@ -137,10 +141,9 @@ class Application extends \FluxBB\Application
 			'description'	=> 'required',
 		);
 
-		$validation = \Validator::make(\Input::all(), $rules);
-		if ($validation->fails())
+		if (!$this->validate($rules))
 		{
-			return \Redirect::route('installer_config')->withInput()->withErrors($validation);
+			return $this->redirectBack();
 		}
 
 		$board_info = array(
@@ -150,7 +153,7 @@ class Application extends \FluxBB\Application
 
 		$this->remember('config', $board_info);
 
-		return \Redirect::route('installer_run');
+		return $this->redirectTo('run');
 	}
 
 	public function get_run()
@@ -163,16 +166,13 @@ class Application extends \FluxBB\Application
 		$db = $this->retrieve('db_conf');
 		//\Artisan::run(array('install:config', 'mysql', $db['host'], $db['name'], $db['user'].':'.$db['pass'], 'forum_'));
 
-		$app = app();
-		$app['env'] = 'fluxbb';
-
 		//\Artisan::run(array('install:database'));
 		//\Artisan::run(array('install:board', $this->retrieve('config.title'), $this->retrieve('config.description')));
 
 		$admin = $this->retrieve('admin');
 		//\Artisan::run(array('install:admin', $admin['username'], $admin['password'], $admin['email']));
 
-		return \View::make('fluxbb_installer::success')->with('output', 'Success.');
+		return $this->redirectTo('success');
 		// TODO: Dump errors
 	}
 
@@ -186,6 +186,25 @@ class Application extends \FluxBB\Application
 		// TODO: return 404
 		echo '404';
 		exit;
+	}
+
+	protected function validate(array $rules)
+	{
+		$this->validation = $this['validator']->make($this['request']->all(), $rules);
+
+		return $this->validation->passes();
+	}
+
+	protected function redirectTo($step)
+	{
+
+	}
+
+	protected function redirectBack()
+	{
+		return $this->redirectTo($this->step)
+			->withInput()
+			->withErrors($this->validation);
 	}
 
 	protected function createDatabase(array $config)
