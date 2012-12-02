@@ -11,7 +11,7 @@
 		<label>Description</label>
 		<input type="text" name="description" />
 		<br><br>
-		<input type="submit" value="Weiter" />
+		<input type="submit" name="submit" value="Continue" />
 	</form>
 
 @stop

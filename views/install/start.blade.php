@@ -8,7 +8,7 @@
 		<select name="language" id="language">
 			<option value="en">English</option>
 		</select>
-		<input type="submit" value="Start!" />
+		<input type="submit" name="submit" value="Start!" />
 	</form>
 
 @stop

@@ -15,7 +15,7 @@
 		<input type="password" name="password" />
 		<input type="password" name="password_confirmation" />
 		<br><br>
-		<input type="submit" value="Weiter" />
+		<input type="submit" name="submit" value="Continue" />
 	</form>
 
 @stop

@@ -17,7 +17,7 @@
 		<label>Password</label>
 		<input type="password" name="db_pass" />
 		<br><br>
-		<input type="submit" value="Weiter" />
+		<input type="submit" name="submit" value="Continue" />
 	</form>
 
 @stop
