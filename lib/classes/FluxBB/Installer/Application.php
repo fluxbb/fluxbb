@@ -25,8 +25,10 @@
 
 namespace FluxBB\Installer;
 
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class Application extends \FluxBB\Application
 {
@@ -35,15 +37,64 @@ class Application extends \FluxBB\Application
 
 	protected $validation;
 
+	protected $beforeFilters = array();
+
+	protected $afterFilters = array();
+
+
+	protected function prepareResponse($response)
+	{
+		if (!($response instanceof Response))
+		{
+			$response = new Response($response);
+		}
+
+		$this->runAfterFilters($this['request'], $response);
+
+		return $response;
+	}
 
 	protected function dispatch(Request $request)
 	{
+		$this->runBeforeFilters($this['request']);
+
 		$method = strtolower($request->getMethod());
 		$this->step = $request->query('step', 'start');
 
 		$action = $method.'_'.$this->step;
 
 		return $this->$action();
+	}
+
+	public function before(Closure $callback)
+	{
+		$this->beforeFilters[] = $callback;
+	}
+
+	public function after(Closure $callback)
+	{
+		$this->afterFilters[] = $callback;
+	}
+
+	public function close(Closure $callback)
+	{
+		$this->afterFilters[] = $callback;
+	}
+
+	protected function runBeforeFilters(Request $request)
+	{
+		foreach ($this->beforeFilters as $filter)
+		{
+			call_user_func($filter, $request);
+		}
+	}
+
+	protected function runAfterFilters(Request $request, Response $response)
+	{
+		foreach ($this->afterFilters as $filter)
+		{
+			call_user_func($filter, $request, $response);
+		}
 	}
 
 	public function get_start()
@@ -88,10 +139,13 @@ class Application extends \FluxBB\Application
 		}
 
 		$db_conf = array(
-			'host'	=> $this->getInput('db_host'),
-			'name'	=> $this->getInput('db_name'),
-			'user'	=> $this->getInput('db_user'),
-			'pass'	=> $this->getInput('db_pass'),
+			'host'		=> $this->getInput('db_host'),
+			'database'	=> $this->getInput('db_name'),
+			'username'	=> $this->getInput('db_user'),
+			'password'	=> $this->getInput('db_pass'),
+			'charset'	=> 'utf8',
+			'collation'	=> 'utf8_unicode_ci',
+			'prefix'	=> '',
 		);
 
 		$this->remember('db_conf', $db_conf);
@@ -162,13 +216,18 @@ class Application extends \FluxBB\Application
 
 	public function post_run()
 	{
-		$db = $this->retrieve('db_conf');
-		//\Artisan::run(array('install:config', 'mysql', $db['host'], $db['name'], $db['user'].':'.$db['pass'], 'forum_'));
+		$installer = new Installer($this);
 
+		$db = $this->retrieve('db_conf');
+		$installer->writeDatabaseConfig($db);
+
+
+		
 		//\Artisan::run(array('install:database'));
 		//\Artisan::run(array('install:board', $this->retrieve('config.title'), $this->retrieve('config.description')));
 
 		$admin = $this->retrieve('admin');
+		//Installer::createAdminUser($admin);
 		//\Artisan::run(array('install:admin', $admin['username'], $admin['password'], $admin['email']));
 
 		return $this->redirectTo('success');
