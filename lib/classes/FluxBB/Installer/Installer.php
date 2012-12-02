@@ -23,138 +23,75 @@
  * @license		http://www.gnu.org/licenses/gpl.html	GNU General Public License
  */
 
-namespace FluxBB\Tasks;
+namespace FluxBB\Installer;
 
-use FluxBB\Models\Category,
-	FluxBB\Models\Config,
-	FluxBB\Models\Forum,
-	FluxBB\Models\Group,
-	FluxBB\Models\Post,
-	FluxBB\Models\Topic,
-	FluxBB\Models\User;
+use FluxBB\Models\Config;
+use FluxBB\Models\Group;
+use FluxBB\Models\User;
 
-class Install extends Base
+class Installer
 {
-	
-	public function run($arguments = array())
+
+	protected $app;
+
+	public function __construct(Application $app)
 	{
-		// Nothing here. Move on.
+		$this->app = $app;
 	}
 
-	public function config($arguments = array())
+	public function writeDatabaseConfig(array $configuration)
 	{
-		if (count($arguments) < 4)
+		$array = array('connection' => $configuration);
+		$config = '<?php'."\n\n".'return '.var_export($array, true).';'."\n";
+
+		$confFile = $this->app['path.config'].'database.php';
+
+		$success = $this->app['files']->put($confFile, $config);
+
+		if (!$success)
 		{
-			throw new BadMethodCallException('At least four arguments expected.');
+			throw new RuntimeException('Unable to write config file. Please create the file "'.$confFile.'" with the following contents:'."\n\n".$config);
 		}
+	}
 
-		$credentials = explode(':', $arguments[3], 2);
-		$username = $credentials[0];
-		$password = isset($credentials[1]) ? $credentials[1] : '';
-
-		$prefix = isset($arguments[4]) ? $arguments[4] : '';
-
-		$conf = array(
-			'default'		=> 'fluxbb_'.$arguments[0],
-			'connections'	=> array(
-				'fluxbb_'.$arguments[0]	=> array(
-					'driver'	=> $arguments[0],
-					'host'		=> $arguments[1],
-					'database'	=> $arguments[2],
-					'username'	=> $username,
-					'password'	=> $password,
-					'charset'	=> 'utf8',
-					'prefix'	=> $prefix,
-				),
-			),
+	public function createDatabaseTables()
+	{
+		$migrationClasses = array(
+			'FluxBB\Migrations\Install\Bans',
+			'FluxBB\Migrations\Install\Categories',
+			'FluxBB\Migrations\Install\Censoring',
+			'FluxBB\Migrations\Install\Config',
+			'FluxBB\Migrations\Install\ForumPerms',
+			'FluxBB\Migrations\Install\ForumSubscriptions',
+			'FluxBB\Migrations\Install\Forums',
+			'FluxBB\Migrations\Install\Groups',
+			'FluxBB\Migrations\Install\Posts',
+			'FluxBB\Migrations\Install\Reports',
+			'FluxBB\Migrations\Install\Sessions',
+			'FluxBB\Migrations\Install\TopicSubscriptions',
+			'FluxBB\Migrations\Install\Topics',
+			'FluxBB\Migrations\Install\Users',
 		);
 
-		$config = '<?php'."\n\n".'return '.var_export($conf, true).';'."\n";
-
-		$conf_dir = path('app').'config/fluxbb/';
-		$conf_file = $conf_dir.'database.php';
-
-		$dir_exists = File::mkdir($conf_dir);
-		$file_exists = File::put($conf_dir.'database.php', $config);
-
-		if (!$dir_exists || !$file_exists)
+		foreach ($migrationClasses as $class)
 		{
-			throw new RuntimeException('Unable to write config file. Please create the file "'.$conf_file.'" with the following contents:'."\n\n".$config);
-		}
-	}
-
-	public function database($arguments = array())
-	{
-		$this->structure();
-
-		$this->seed_groups();
-		$this->seed_config();
-	}
-
-	public function admin($arguments = array())
-	{
-		if (count($arguments) != 3)
-		{
-			throw new BadMethodCallException('Exactly three arguments expected.');
-		}
-
-		$username = $arguments[0];
-		$password = $arguments[1];
-		$email = $arguments[2];
-		
-		// Create admin user
-		$admin_user = User::create(array(
-			'username'			=> $username,
-			'password'			=> $password,
-			'email'				=> $email,
-			'language'			=> Laravel\Config::get('application.language'),
-			'style'				=> 'Air',
-			'last_post'			=> Request::time(),
-			'registered'		=> Request::time(),
-			'registration_ip'	=> Request::ip(),
-			'last_visit'		=> Request::time(),
-		));
-
-		$admin_group = Group::find(Group::ADMIN);
-
-		if (is_null($admin_group))
-		{
-			throw new LogicException('Could not find admin group.');
-		}
-
-		$admin_group->users()->insert($admin_user);
-	}
-
-	public function board($arguments = array())
-	{
-		if (count($arguments) != 2)
-		{
-			throw new BadMethodCallException('Exactly two arguments expected.');
-		}
-
-		Config::set('o_board_title', $arguments[0]);
-		Config::set('o_board_desc', $arguments[1]);
-
-		Config::save();
-	}
-
-	protected function structure()
-	{
-		foreach (new FilesystemIterator($this->migration_path()) as $file)
-		{
-			$migration = basename($file->getFileName(), '.php');
-
-			$this->log('Install '.$migration.'...');
-
-			$class = 'FluxBB_Install_'.Str::classify($migration);
-			include_once $file;
-
 			$instance = new $class;
 			$instance->up();
 		}
 	}
 
-	protected function seed_groups()
+	protected function getMigrationPath()
+	{
+		return Bundle::path('fluxbb').'migrations'.DS.'install'.DS;
+	}
+
+	public function seedDatabase()
+	{
+		$this->seedGroups();
+		$this->seedConfig();
+	}
+
+	protected function seedGroups()
 	{
 		// Insert the three preset groups
 		$admin_group = Group::create(array(
@@ -245,14 +182,14 @@ class Install extends Base
 		));
 	}
 
-	protected function seed_config()
+	protected function seedConfig()
 	{
 		// Enable/disable avatars depending on file_uploads setting in PHP configuration
 		$avatars = in_array(strtolower(@ini_get('file_uploads')), array('on', 'true', '1')) ? 1 : 0;
 
 		// Insert config data
 		$config = array(
-			'o_cur_version'				=> FLUXBB_VERSION,
+			'o_cur_version'				=> FluxBB\Core::version(),
 			'o_board_title'				=> trans('seed_data.board_title'),
 			'o_board_desc'				=> trans('seed_data.board_desc'),
 			'o_default_timezone'		=> 0,
@@ -268,7 +205,7 @@ class Install extends Base
 			'o_smilies'					=> 1,
 			'o_smilies_sig'				=> 1,
 			'o_make_links'				=> 1,
-			'o_default_lang'			=> Laravel\Config::get('application.language'),
+			'o_default_lang'			=> $this->app['config']->get('app.locale'),
 			'o_default_style'			=> 'Air', // FIXME
 			'o_default_user_group'		=> 4,
 			'o_topic_review'			=> 15,
@@ -335,9 +272,35 @@ class Install extends Base
 		Config::save();
 	}
 
-	protected function migration_path()
+	public function createAdminUser(array $user)
 	{
-		return Bundle::path('fluxbb').'migrations'.DS.'install'.DS;
+		// Create admin user
+		$admin = User::create(array(
+			'username'			=> $user['username'],
+			'password'			=> $user['password'],
+			'email'				=> $user['email'],
+			'language'			=> $this->app['config']->get('app.locale'),
+			'style'				=> 'Air',
+			'registered'		=> $this->app['request']->server('REQUEST_TIME'),
+			'registration_ip'	=> $this->app['request']->getClientIp(),
+			'last_visit'		=> $this->app['request']->server('REQUEST_TIME'),
+		));
+
+		$adminGroup = Group::find(Group::ADMIN);
+
+		if (is_null($adminGroup))
+		{
+			throw new \LogicException('Could not find admin group.');
+		}
+
+		$adminGroup->users()->insert($admin);
 	}
 
+	public function setBoardInfo(array $board)
+	{
+		Config::set('o_board_title', $board['title']);
+		Config::set('o_board_desc', $board['description']);
+
+		Config::save();
+	}
 }
