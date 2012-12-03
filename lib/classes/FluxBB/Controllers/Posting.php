@@ -54,7 +54,7 @@ class Posting extends Controller
 			->with('action', t('post.post_a_reply'));
 	}
 
-	public function put_reply($tid)
+	public function post_reply($tid)
 	{
 		$topic = Topic::with(array(
 			'forum',
@@ -77,7 +77,7 @@ class Posting extends Controller
 
 		if ($this->guest())
 		{
-			if (Config::enabled('p_force_guest_email') || \Input::get('email') != '')
+			if (Config::enabled('p_force_guest_email') || $this->input('email') != '')
 			{
 				$rules['req_email']	= 'required|email';
 			}
@@ -85,37 +85,37 @@ class Posting extends Controller
 			// TODO: banned email
 		}
 
-		$validation = $this->validator(\Input::all(), $rules);
+		$validation = $this->validator($this->input(), $rules);
 		if ($validation->fails())
 		{
-			return $this->redirect('posting@reply', array($tid))->with_input()->with_errors($validation);
+			return $this->redirect('posting@reply', array($tid))->withInput()->withErrors($validation);
 		}
 
 		$post_data = array(
 			'poster'			=> User::current()->username,
 			'poster_id'			=> User::current()->id,
-			'poster_ip'			=> \Request::ip(),
-			'message'			=> \Input::get('req_message'),
-			'hide_smilies'		=> \Input::get('hide_smilies') ? '1' : '0',
-			'posted'			=> \Request::time(),
+			'poster_ip'			=> $this->app['request']->getClientIp(),
+			'message'			=> $this->input('req_message'),
+			'hide_smilies'		=> $this->hasInput('hide_smilies') ? '1' : '0',
+			'posted'			=> time(), // TODO: Use SERVER_TIME
 			'topic_id'			=> $tid
 		);
 
 		if ($this->guest())
 		{
-			$post_data['poster'] = \Input::get('req_username');
-			$post_data['poster_email'] = Config::enabled('p_force_guest_email') ? \Input::get('req_email') : \Input::get('email');
+			$post_data['poster'] = $this->input('req_username');
+			$post_data['poster_email'] = Config::enabled('p_force_guest_email') ? $this->input('req_email') : $this->input('email');
 		}
 
 		// Insert the new post
 		$post = Post::create($post_data);
 
 		// To subscribe or not to subscribe
-		$topic->subscribe(\Input::get('subscribe'));
+		$topic->subscribe($this->hasInput('subscribe'));
 
 		// Update topic
 		$topic->num_replies += 1;
-		$topic->last_post = \Request::time();
+		$topic->last_post = time(); // TODO: REQUEST_TIME
 		$topic->last_post_id = $post->id;
 		$topic->last_poster = $post_data['poster'];
 		$topic->save();
@@ -135,14 +135,14 @@ class Posting extends Controller
 		if ($this->check())
 		{
 			$user->num_posts += 1;
-			$user->last_post = \Request::time();
+			$user->last_post = time(); // TODO: Request_time
 			$user->save();
 			// TODO: Promote this user to a new group if enabled
 		}
 		else
 		{
 			// TODO: Session!
-			$user->online()->update(array('last_post' => \Request::time()));
+			$user->online()->update(array('last_post' => time())); // TODO: REquest_time
 		}
 
 
@@ -167,7 +167,7 @@ class Posting extends Controller
 			->with('action', t('forum.post_topic'));
 	}
 
-	public function put_topic($fid)
+	public function post_topic($fid)
 	{
 		$forum = Forum::with(array(
 			'perms',
@@ -191,7 +191,7 @@ class Posting extends Controller
 
 		if ($this->guest())
 		{
-			if (Config::enabled('p_force_guest_email') || \Input::get('email') != '')
+			if (Config::enabled('p_force_guest_email') || $this->input('email') != '')
 			{
 				$rules['req_email']	= 'required|email';
 			}
@@ -199,47 +199,47 @@ class Posting extends Controller
 			// TODO: banned email
 		}
 
-		$validation = $this->validator(Input::all(), $rules);
+		$validation = $this->validator($this->input(), $rules);
 		if ($validation->fails())
 		{
-			return $this->redirect('new_topic', array($fid))->with_input()->with_errors($validation);
+			return $this->redirect('new_topic', array($fid))->withInput()->withErrors($validation);
 		}
 
 		$topic_data = array(
 			'poster'			=> User::current()->username,
-			'subject'			=> \Input::get('req_subject'),
-			'posted'			=> \Request::time(),
-			'last_post'			=> \Request::time(),
+			'subject'			=> $this->input('req_subject'),
+			'posted'			=> time(),
+			'last_post'			=> time(), // TODO: Use REQUEST_TIME!
 			'last_poster'		=> User::current()->username,
-			'sticky'			=> \Input::get('stick_topic') ? '1' : '0',
+			'sticky'			=> $this->hasInput('stick_topic') ? '1' : '0',
 			'forum_id'			=> $fid,
 		);
 
 		if ($this->guest())
 		{
-			$topic_data['poster'] = $topic_data['last_poster'] = \Input::get('req_username');
+			$topic_data['poster'] = $topic_data['last_poster'] = $this->input('req_username');
 		}
 
 		// Create the topic
 		$topic = Topic::create($topic_data);
 
 		// To subscribe or not to subscribe
-		$topic->subscribe(\Input::get('subscribe'));
+		$topic->subscribe($this->input('subscribe'));
 
 		$post_data = array(
 			'poster'			=> User::current()->username,
 			'poster_id'			=> User::current()->id,
-			'poster_ip'			=> \Request::ip(),
-			'message'			=> \Input::get('req_message'),
-			'hide_smilies'		=> \Input::get('hide_smilies') ? '1' : '0',
-			'posted'			=> \Request::time(),
+			'poster_ip'			=> '127.0.0.1', // TODO: Get IP from request
+			'message'			=> $this->input('req_message'),
+			'hide_smilies'		=> $this->hasInput('hide_smilies') ? '1' : '0',
+			'posted'			=> time(), // TODO: Use REQUEST_TIME
 			'topic_id'			=> $topic->id
 		);
 
 		if (\FluxBB\Auth::guest())
 		{
-			$post_data['poster'] = \Input::get('req_username');
-			$post_data['poster_email'] = Config::enabled('p_force_guest_email') ? \Input::get('req_email') : \Input::get('email');
+			$post_data['poster'] = $this->input('req_username');
+			$post_data['poster_email'] = Config::enabled('p_force_guest_email') ? $this->input('req_email') : $this->input('email');
 		}
 
 		// Create the post ("topic post")
@@ -265,14 +265,14 @@ class Posting extends Controller
 			$user = User::current();
 
 			$user->num_posts += 1;
-			$user->last_post = \Request::time();
+			$user->last_post = time(); // TODO: Use request time
 			$user->save();
 			// TODO: Promote this user to a new group if enabled
 		}
 		else
 		{
 			// TODO: Session!
-			$user->online()->update(array('last_post' => \Request::time()));
+			$user->online()->update(array('last_post' => time())); // TODO: Use Request time
 		}
 
 		return $this->redirect('topic', array($topic->id))->with('message', t('topic.topic_added'));
