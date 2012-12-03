@@ -3,9 +3,9 @@
 @section('main')
 <h2><?php echo $action ?></h2>
 @if (isset($topic))
-<form action="{{ url('reply', $topic) }}" method="PUT" id="post" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;">
+<form action="{{ url('reply', $topic) }}" method="POST" id="post">
 @else
-<form action="{{ url('new_topic', $forum) }}" method="PUT" id="post" onsubmit="return process_form(this)">
+<form action="{{ url('new_topic', $forum) }}" method="POST" id="post">
 @endif
 	<fieldset>
 		<legend>{{ t('common.write_message_legend') }}</legend>
@@ -19,18 +19,18 @@ if (!FluxBB\Auth::check())
 	$email_form_name = FluxBB\Models\Config::enabled('p_force_guest_email') ? 'req_email' : 'email';
 
 ?>
-		<label><strong>{{ t('post.guest_name') }} <span>{{ t('common.required') }}</span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" value="{{ Input::old('req_username') }}" /><br /></label> {{-- TODO: Escape --}}
-		<label class="conl<?php echo FluxBB\Models\Config::enabled('p_force_guest_email') ? ' required' : '' ?>"><?php echo $email_label ?><br /><input type="text" name="{{ $email_form_name }}" size="50" maxlength="80" value="{{ Input::old($email_form_name) }}"><br /></label> {{-- TODO: Escape --}}
+		<label><strong>{{ t('post.guest_name') }} <span>{{ t('common.required') }}</span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" value="" /><br /></label> {{-- TODO: Escape --}}
+		<label class="conl<?php echo FluxBB\Models\Config::enabled('p_force_guest_email') ? ' required' : '' ?>"><?php echo $email_label ?><br /><input type="text" name="{{ $email_form_name }}" size="50" maxlength="80" value=""><br /></label> {{-- TODO: Escape --}}
 <?php
 
 }
 
 if (isset($forum)): ?>
-		<label class="required"><strong>{{ t('common.subject') }} <span>{{ t('common.required') }}</span></strong><br /><input type="text" name="req_subject" class="longinput" size="80" value="{{ Input::old('req_subject') }}" /><br /></label>{{-- TODO: Escape --}}
+		<label class="required"><strong>{{ t('common.subject') }} <span>{{ t('common.required') }}</span></strong><br /><input type="text" name="req_subject" class="longinput" size="80" value="" /><br /></label>{{-- TODO: Escape --}}
 <?php endif; ?>						
 
 		<label class="required"><strong>{{ t('common.message') }} <span>{{ t('common.required') }}</span></strong><br /></label>
-		<textarea name="req_message" id="req_message" cols="95" rows="20">{{ Input::old('req_message') }}</textarea><br /></label>{{-- TODO: Escape --}}
+		<textarea name="req_message" id="req_message" cols="95" rows="20"></textarea><br /></label>{{-- TODO: Escape --}}
 		<ul class="bblinks">
 			<li><span><a href="help.php#bbcode" onclick="window.open(this.href); return false;">{{ t('common.bbcode') }}</a> <?php echo FluxBB\Models\Config::enabled('p_message_bbcode') ? t('common.on') : t('common.off'); ?></span></li>
 			<li><span><a href="help.php#url" onclick="window.open(this.href); return false;">{{ t('common.url_tag') }}</a> <?php echo FluxBB\Models\Config::enabled('p_message_bbcode') && FluxBB\Models\User::current()->group->g_post_links == '1' ? t('common.on') : t('common.off'); ?></span></li>
@@ -42,12 +42,12 @@ if (isset($forum)): ?>
 
 $checkboxes = array();
 if (isset($topic) && $topic->forum->isAdmMod() || isset($forum) && $forum->isAdmMod())
-	$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" tabindex="'.($cur_index++).'"'.(Input::has('stick_topic') ? ' checked="checked"' : '').' />'.t('common.stick_topic').'<br /></label>';
+	$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" tabindex="'.($cur_index++).'" />'.t('common.stick_topic').'<br /></label>';
 
 if (FluxBB\Auth::check())
 {
 	if (FluxBB\Models\Config::enabled('o_smilies'))
-		$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'"'.(Input::has('hide_smilies') ? ' checked="checked"' : '').' />'.t('post.hide_smilies').'<br /></label>';
+		$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'" />'.t('post.hide_smilies').'<br /></label>';
 
 	if (FluxBB\Models\Config::enabled('o_topic_subscriptions'))
 	{
@@ -55,10 +55,10 @@ if (FluxBB\Auth::check())
 		$subscr_checked = false;
 
 		// If it's a preview
-		if (Input::has('preview'))
-			$subscr_checked = Input::has('subscribe');
+		//if (Input::has('preview'))
+			//$subscr_checked = Input::has('subscribe');
 		// If auto subscribed
-		else if (FluxBB\Models\User::current()->auto_notify == '1')
+		/* else */ if (FluxBB\Models\User::current()->auto_notify == '1')
 			$subscr_checked = true;
 		// If already subscribed to the topic
 		else if ($is_subscribed)
@@ -68,7 +68,7 @@ if (FluxBB\Auth::check())
 	}
 }
 else if (FluxBB\Models\Config::enabled('o_smilies'))
-	$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'"'.(Input::has('hide_smilies') ? ' checked="checked"' : '').' />'.t('post.hide_smilies').'<br /></label>';
+	$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'" />'.t('post.hide_smilies').'<br /></label>';
 
 ?>
 
