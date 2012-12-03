@@ -71,7 +71,7 @@ class Controller
 	{
 		if (is_null($key))
 		{
-			return $this->app['request']->everything();
+			return $this->app['request']->all();
 		}
 		
 		return $this->app['request']->input($key, $default);
