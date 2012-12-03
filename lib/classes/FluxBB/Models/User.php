@@ -66,7 +66,7 @@ class User extends Base implements UserInterface
 		{
 			if (!isset($current))
 			{
-				$current = static::find(static::GUEST);
+				$current = new Guest;
 			}
 
 			return $current;
