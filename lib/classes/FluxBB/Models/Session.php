@@ -32,7 +32,7 @@ class Session extends Base
 
 	public function user()
 	{
-		return $this->belongsTo('FluxBB\\Models\\User');
+		return $this->belongsTo('FluxBB\Models\User', 'user_id');
 	}
 
 }

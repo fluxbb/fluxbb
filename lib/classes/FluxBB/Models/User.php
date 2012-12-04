@@ -39,22 +39,22 @@ class User extends Base implements UserInterface
 
 	public function group()
 	{
-		return $this->belongsTo('FluxBB\\Models\\Group');
+		return $this->belongsTo('FluxBB\Models\Group');
 	}
 
 	public function bans()
 	{
-		return $this->hasMany('FluxBB\\Models\\Ban');
+		return $this->hasMany('FluxBB\Models\Ban');
 	}
 
 	public function posts()
 	{
-		return $this->hasMany('FluxBB\\Models\\Post', 'poster_id');
+		return $this->hasMany('FluxBB\Models\Post', 'poster_id');
 	}
 
 	public function sessions()
 	{
-		return $this->hasMany('FluxBB\\Models\\Session');
+		return $this->hasMany('FluxBB\Models\Session', 'user_id');
 	}
 
 
