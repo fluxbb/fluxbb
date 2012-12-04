@@ -63,10 +63,17 @@ class Auth extends Controller
 			//\Session::sweep();
 			// TODO: Implement this!
 
-			// TODO: This is properly validated in URL::to, right?
-			$redirect_url = $this->input('redirect_url', url('index'));
-			// FIXME: Does this work with a URL?
-			return $this->redirect($redirect_url)
+			if ($this->app['session']->has('redirect_url'))
+			{
+				$redirectUrl = $this->app['session']->has('redirect_url');
+			}
+			else
+			{
+				$redirectUrl = route('index');
+			}
+
+			// FIXME: Redirect to $redirectUrl
+			return $this->redirect('index')
 				->with('message', 'You were successfully logged in.');
 		}
 		else
