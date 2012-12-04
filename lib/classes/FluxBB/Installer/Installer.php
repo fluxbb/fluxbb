@@ -262,8 +262,15 @@ class Installer
 
 	public function createAdminUser(array $user)
 	{
+		$adminGroup = Group::find(Group::ADMIN);
+
+		if (is_null($adminGroup))
+		{
+			throw new \LogicException('Could not find admin group.');
+		}
+
 		// Create admin user
-		$admin = array(
+		$adminGroup->users()->create(array(
 			'username'			=> $user['username'],
 			'password'			=> $user['password'],
 			'email'				=> $user['email'],
@@ -272,15 +279,6 @@ class Installer
 			'registered'		=> $this->app['request']->server('REQUEST_TIME'),
 			'registration_ip'	=> $this->app['request']->getClientIp(),
 			'last_visit'		=> $this->app['request']->server('REQUEST_TIME'),
-		);
-
-		$adminGroup = Group::find(Group::ADMIN);
-
-		if (is_null($adminGroup))
-		{
-			throw new \LogicException('Could not find admin group.');
-		}
-
-		$adminGroup->users()->insert($admin);
+		));
 	}
 }
