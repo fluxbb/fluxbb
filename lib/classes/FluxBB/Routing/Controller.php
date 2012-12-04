@@ -50,9 +50,12 @@ class Controller
 		return call_user_func_array(array($this, $call), $parameters);
 	}
 
-	public function redirect($route, $parameters = array(), $message = '')
+	public function redirect($route, $parameters = array())
 	{
-		return new RedirectResponse();
+		$redirect = new RedirectResponse(url($route, $parameters));
+		$redirect->setSession($this->app['session']);
+
+		return $redirect;
 	}
 
 	public function validator($attributes, $rules, $messages = array())
