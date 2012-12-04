@@ -42,7 +42,7 @@ class Sessions extends Migration
 			$table->integer('created')->unsigned()->default(0);
 			$table->integer('last_visit')->unsigned()->default(0);
 			$table->string('last_ip', 200)->default('0.0.0.0');
-			$table->text('data');
+			$table->text('payload');
 
 			$table->primary('id');
 			$table->index('user_id');
