@@ -36,7 +36,7 @@ class Post extends Base
 		return $this->belongsTo('FluxBB\\Models\\Topic');
 	}
 
-	public function poster()
+	public function author()
 	{
 		return $this->belongsTo('FluxBB\\Models\\User', 'poster_id');
 	}

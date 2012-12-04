@@ -108,10 +108,7 @@ class Home extends Controller
 		// TODO: Use paginate?
 		// Fetch post data
 		// TODO: Can we enforce the INNER JOIN here somehow?
-		$posts = Post::with(array(
-			'poster',
-			'poster.group',
-		))
+		$posts = Post::with('author.group')
 		->where('topic_id', '=', $tid)
 		->orderBy('id')
 		->skip($start_from)
