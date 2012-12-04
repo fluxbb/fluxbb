@@ -183,9 +183,9 @@ class Posting extends Controller
 		// TODO: Flood protection
 		$rules = array(
 			// TODO: censored words, All caps subject
-			'req_subject'	=> 'required|max:70',
+			'req_subject'	=> 'Required|Max:70',
 			// TODO: PUN_MAX_POSTSIZE, censor, All caps message
-			'req_message'	=> 'required',
+			'req_message'	=> 'Required',
 		);
 		// TODO: More validation
 
@@ -258,12 +258,11 @@ class Posting extends Controller
 		$forum->save();
 
 		// TODO: update_search_index();
+		$user = User::current();
 
 		// If the posting user is logged in, increment his/her post count
 		if ($this->check())
 		{
-			$user = User::current();
-
 			$user->num_posts += 1;
 			$user->last_post = time(); // TODO: Use request time
 			$user->save();
@@ -272,9 +271,9 @@ class Posting extends Controller
 		else
 		{
 			// TODO: Session!
-			$user->online()->update(array('last_post' => time())); // TODO: Use Request time
+			//$this->session->put('last_post', time()); // TODO: Use Request time
 		}
 
-		return $this->redirect('topic', array($topic->id))->with('message', t('topic.topic_added'));
+		return $this->redirect('viewtopic', $topic)->with('message', t('topic.topic_added'));
 	}
 }
