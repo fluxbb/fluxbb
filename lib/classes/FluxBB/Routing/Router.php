@@ -4,7 +4,7 @@ namespace FluxBB\Routing;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 class Router
 {
@@ -38,6 +38,7 @@ class Router
 		$this->findRoute($request);
 
 		$output = $this->runAction($this->route, $this->parameters);
+		// TODO: This is also run on the final output in the application - not necessary
 		$response = $this->wrapResponse($output);
 
 		$this->applyFilters('after', array($request, $response));
