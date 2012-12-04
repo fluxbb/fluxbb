@@ -44,8 +44,8 @@ class Topic extends Base
 
 	public function subscription()
 	{
-		return $this->hasOne('FluxBB\\Models\\TopicSubscription')
-			->where('user_id', '=', User::current()->id);
+		return $this->hasOne('FluxBB\\Models\\TopicSubscription');
+	//		->where('user_id', '=', User::current()->id);
 	}
 
 	public function numReplies()
