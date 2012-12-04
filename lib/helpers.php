@@ -44,11 +44,18 @@ function set_fluxbb($app)
 	$GLOBALS['__fluxbb.app'] = $app;
 }
 
-function url($route, $parameters = array())
+function route($route, $parameters = array())
 {
 	$app = fluxbb();
 
-	return $app['url.generator']->generateUrl($route, $parameters);
+	return $app['url.generator']->toRoute($route, $parameters);
+}
+
+function url($url)
+{
+	$app = fluxbb();
+
+	return $app['url.generator']->to($url);
 }
 
 function t($id, $parameters = array(), $domain = 'messages', $locale = null)

@@ -16,7 +16,7 @@ class UrlGenerator
 		$this->baseUrl = rtrim($baseUrl, '/').'/';
 	}
 
-	public function generateUrl($route, $parameters = array())
+	public function toRoute($route, $parameters = array())
 	{
 		$url = $this->routes[$route]['url'];
 
@@ -25,6 +25,11 @@ class UrlGenerator
 			return $parameters[$matches[1]];
 		}, $url);
 
+		return $this->to($url);
+	}
+
+	public function to($url)
+	{
 		return $this->baseUrl.$url;
 	}
 
