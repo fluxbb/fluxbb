@@ -270,7 +270,7 @@ else if (isset($_GET['report']))
 
 		$db->query('UPDATE '.$db->prefix.'users SET last_report_sent='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 
-		redirect('viewtopic.php?pid='.$post_id.'#p'.$post_id, $lang_misc['Report redirect']);
+		redirect('viewforum.php?id='.$forum_id, $lang_misc['Report redirect']);
 	}
 
 	// Fetch some info about the post, the topic and the forum
