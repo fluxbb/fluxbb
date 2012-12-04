@@ -52,7 +52,7 @@ class Controller
 
 	public function redirect($route, $parameters = array())
 	{
-		$redirect = new RedirectResponse(url($route, $parameters));
+		$redirect = new RedirectResponse(route($route, $parameters));
 		$redirect->setSession($this->app['session']);
 
 		return $redirect;

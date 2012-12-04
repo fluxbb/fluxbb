@@ -2,7 +2,7 @@
 
 @section('main')
 
-<a href="{{ url('reply', $topic) }}">{{ t('topic.post_reply') }}</a>
+<a href="{{ route('reply', $topic) }}">{{ t('topic.post_reply') }}</a>
 
 <?php $post_count = 0; ?>
 
@@ -17,10 +17,10 @@ if ($post_count == 1) $post_classes .= ' blockpost1';
 
 ?>
 <div id="p{{ $post->id }}">
-	<h2><span class="conr">#{{ $start_from + $post_count }}</span> <a href="{{ url('viewpost', $post) }}#p{{ $post->id }}">{{ ($post->posted) }}</a></h2>{{-- TODO: format_time for posted --}}
+	<h2><span class="conr">#{{ $start_from + $post_count }}</span> <a href="{{ route('viewpost', $post) }}#p{{ $post->id }}">{{ ($post->posted) }}</a></h2>{{-- TODO: format_time for posted --}}
 	<dl>
 	@if (fluxbb\Models\User::current()->canViewUsers())
-		<dt><strong><a href="{{ url('profile', $post->poster) }}">{{ ($post->poster_name) }}</a></strong></dt>{{-- TODO: Escape username --}}
+		<dt><strong><a href="{{ route('profile', $post->poster) }}">{{ ($post->poster_name) }}</a></strong></dt>{{-- TODO: Escape username --}}
 	@else
 		<dt><strong>{{ ($post->poster->username) }}</strong></dt><!-- TODO: linkify if logged in and g_view_users is enabled for this group and escape username! -->
 	@endif
@@ -40,7 +40,7 @@ if ($post_count == 1) $post_classes .= ' blockpost1';
 
 		<dd class="usercontacts">
 			<span class="email"><a href="mailto:{{ $post->poster_email }}">{{ t('common.email') }}</a></span>
-			<span class="email"><a href="{{ url('email', $post->poster) }}">{{ t('common.email') }}</a></span>
+			<span class="email"><a href="{{ route('email', $post->poster) }}">{{ t('common.email') }}</a></span>
 	@if ($post->poster->hasUrl())
 			<span class="website"><a href="{{ e($post->poster->url) }}">{{ t('topic.website') }}</a></span>
 	@endif
@@ -70,15 +70,15 @@ if ($post_count == 1) $post_classes .= ' blockpost1';
 @if (true)
 	<ul>
 		<!-- TODO: Only show these if appropriate -->
-		<li><a href="{{ url('post_report', $post) }}">{{ t('topic.report') }}</a></li>
-		<li><a href="{{ url('post_delete', $post) }}">{{ t('topic.delete') }}</a></li>
-		<li><a href="{{ url('post_edit', $post) }}">{{ t('topic.edit') }}</a></li>
-		<li><a href="{{ url('post_quote', $post) }}">{{ t('topic.quote') }}</a></li>
+		<li><a href="{{ route('post_report', $post) }}">{{ t('topic.report') }}</a></li>
+		<li><a href="{{ route('post_delete', $post) }}">{{ t('topic.delete') }}</a></li>
+		<li><a href="{{ route('post_edit', $post) }}">{{ t('topic.edit') }}</a></li>
+		<li><a href="{{ route('post_quote', $post) }}">{{ t('topic.quote') }}</a></li>
 	</ul>
 @endif
 
 @endforeach
 
-<a href="{{ url('reply', $topic) }}">{{ t('topic.post_reply') }}</a>
+<a href="{{ route('reply', $topic) }}">{{ t('topic.post_reply') }}</a>
 
 @stop

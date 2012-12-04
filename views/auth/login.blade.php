@@ -2,7 +2,7 @@
 
 @section('main')
 <h2>{{ t('common.login') }}</h2>
-<form id="login" method="post" action="{{ url('login') }}" onsubmit="return process_form(this)">
+<form id="login" method="post" action="{{ route('login') }}" onsubmit="return process_form(this)">
 	<fieldset>
 		<legend>{{ t('login.login_legend') }}</legend>
 		<input type="hidden" name="form_sent" value="1" />
@@ -15,7 +15,7 @@
 		</div>
 
 		<p class="clearb">{{ t('login.info') }}</p>
-		<p class="actions"><span><a href="{{ url('register') }}" tabindex="5">{{ t('login.not_registered') }}</a></span> <span><a href="{{ url('forgot_password') }}" tabindex="6">{{ t('login.forgotten_pass') }}</a></span></p>
+		<p class="actions"><span><a href="{{ route('register') }}" tabindex="5">{{ t('login.not_registered') }}</a></span> <span><a href="{{ route('forgot_password') }}" tabindex="6">{{ t('login.forgotten_pass') }}</a></span></p>
 	</fieldset>
 	<p class="buttons"><input type="submit" name="login" value="{{ t('common.login') }}" tabindex="4" /></p>
 </form>

@@ -2,7 +2,7 @@
 
 @section('main')
 
-<a href="{{ url('new_topic', $forum) }}">{{ t('forum.post_topic') }}</a>
+<a href="{{ route('new_topic', $forum) }}">{{ t('forum.post_topic') }}</a>
 
 <h2>{{ ($forum->forum_name) }}</h2>
 
@@ -32,7 +32,7 @@ if (fluxbb\Models\User::current()->isMember() && $topic->last_post > fluxbb\Mode
 ?>
 		<tr>
 			<td>
-				<a href="{{ url('viewtopic', $topic) }}">{{ ($topic->subject) }}</a> {{ t('common.by', array('author' => ($topic->poster))) }} {{-- TODO: Escape subject and poster --}}
+				<a href="{{ route('viewtopic', $topic) }}">{{ ($topic->subject) }}</a> {{ t('common.by', array('author' => ($topic->poster))) }} {{-- TODO: Escape subject and poster --}}
 			</td>
 			<td>{{ $topic->numReplies() }}</td>
 			<td>{{ $topic->numViews() }}</td> <!-- TODO: Only show if o_topic_views is enabled -->
@@ -40,7 +40,7 @@ if (fluxbb\Models\User::current()->isMember() && $topic->last_post > fluxbb\Mode
 			<td>- - -</td>
 	@else
 			<!-- TODO: Pass $last_post instead of $topic to url() -->
-			<td><a href="{{ url('viewpost', $topic) }}#p{{ $topic->last_post_id }}">{{ ($topic->last_post) }}</a> <span class="byuser">{{ t('common.by', array('author' => ($topic->last_poster))) }}</span></td>{{-- TODO: Escape author and format_time for last_post --}}
+			<td><a href="{{ route('viewpost', $topic) }}#p{{ $topic->last_post_id }}">{{ ($topic->last_post) }}</a> <span class="byuser">{{ t('common.by', array('author' => ($topic->last_poster))) }}</span></td>{{-- TODO: Escape author and format_time for last_post --}}
 	@endif
 		</tr>
 @endforeach
@@ -48,6 +48,6 @@ if (fluxbb\Models\User::current()->isMember() && $topic->last_post > fluxbb\Mode
 	</tbody>
 </table>
 
-<a href="{{ url('new_topic', $forum) }}">{{ t('forum.post_topic') }}</a>
+<a href="{{ route('new_topic', $forum) }}">{{ t('forum.post_topic') }}</a>
 
 @stop

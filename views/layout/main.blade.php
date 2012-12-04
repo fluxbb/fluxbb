@@ -7,30 +7,30 @@
 <body>
 
 <div id="brdheader">
-	<h1><a href="{{ url('index') }}">Board title</a></h1>
+	<h1><a href="{{ route('index') }}">Board title</a></h1>
 	<div id="brddesc">Board description</div>
 	<div id="brdmenu">
 		<ul>
 			<!-- TODO: Class isactive -->
-			<li id="navindex" class="isactive"><a href="{{ url('index') }}">{{ t('common.index') }}</a></li>
+			<li id="navindex" class="isactive"><a href="{{ route('index') }}">{{ t('common.index') }}</a></li>
 @if (FluxBB\Models\User::current()->group->g_read_board == '1' && FluxBB\Models\User::current()->group->g_view_users == '1')
-			<li id="navuserlist"><a href="{{ url('userlist') }}">{{ t('common.user_list') }}</a></li>
+			<li id="navuserlist"><a href="{{ route('userlist') }}">{{ t('common.user_list') }}</a></li>
 @endif
 @if (FluxBB\Models\Config::enabled('o_rules') && (FluxBB\Auth::check() || FluxBB\Models\User::current()->group->g_read_board == '1' || FluxBB\Models\Config::enabled('o_regs_allow')))
-			<li id="navrules"><a href="{{ url('rules') }}">{{ t('common.rules') }}</a></li>
+			<li id="navrules"><a href="{{ route('rules') }}">{{ t('common.rules') }}</a></li>
 @endif
 @if (FluxBB\Models\User::current()->group->g_read_board == '1' && FluxBB\Models\User::current()->group->g_search == '1')
-			<li id="navsearch"><a href="{{ url('search') }}">{{ t('common.search') }}</a></li>
+			<li id="navsearch"><a href="{{ route('search') }}">{{ t('common.search') }}</a></li>
 @endif
 @if (FluxBB\Auth::guest())
-			<li id="navregister"><a href="{{ url('register') }}">{{ t('common.register') }}</a></li>
-			<li id="navlogin"><a href="{{ url('login') }}">{{ t('common.login') }}</a></li>
+			<li id="navregister"><a href="{{ route('register') }}">{{ t('common.register') }}</a></li>
+			<li id="navlogin"><a href="{{ route('login') }}">{{ t('common.login') }}</a></li>
 @else
-			<li id="navprofile"><a href="{{ url('profile', FluxBB\Auth::user()) }}">{{ t('common.profile') }}</a></li>
+			<li id="navprofile"><a href="{{ route('profile', FluxBB\Auth::user()) }}">{{ t('common.profile') }}</a></li>
 	@if (FluxBB\Models\User::current()->isAdmin())
-			<li id="navadmin"><a href="{{ url('admin') }}">{{ t('common.admin') }}</a></li>
+			<li id="navadmin"><a href="{{ route('admin') }}">{{ t('common.admin') }}</a></li>
 	@endif
-			<li id="navlogout"><a href="{{ url('logout') }}">{{ t('common.logout') }}</a></li>
+			<li id="navlogout"><a href="{{ route('logout') }}">{{ t('common.logout') }}</a></li>
 @endif
 		</ul>
 	</div>

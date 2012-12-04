@@ -2,7 +2,7 @@
 
 @section('main')
 <h2>{{ t('register.register') }}</h2>
-<form id="register" method="post" action="{{ url('register') }}" onsubmit="this.register.disabled=true;if(process_form(this)){return true;}else{this.register.disabled=false;return false;}">
+<form id="register" method="post" action="{{ route('register') }}" onsubmit="this.register.disabled=true;if(process_form(this)){return true;}else{this.register.disabled=false;return false;}">
 	<h3>{{ t('common.important') }}</h3>
 	<p>{{ t('register.desc1') }}</p>
 	<p>{{ t('register.desc2') }}</p>

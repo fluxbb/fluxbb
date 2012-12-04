@@ -3,9 +3,9 @@
 @section('main')
 <h2><?php echo $action ?></h2>
 @if (isset($topic))
-<form action="{{ url('reply', $topic) }}" method="POST" id="post">
+<form action="{{ route('reply', $topic) }}" method="POST" id="post">
 @else
-<form action="{{ url('new_topic', $forum) }}" method="POST" id="post">
+<form action="{{ route('new_topic', $forum) }}" method="POST" id="post">
 @endif
 	<fieldset>
 		<legend>{{ t('common.write_message_legend') }}</legend>
