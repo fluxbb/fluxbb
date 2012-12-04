@@ -54,6 +54,10 @@ $app['config'] = $app->share(function($app)
 $app['auth.model'] = 'FluxBB\Models\User';
 
 
+// Set up locale
+$app['config']['app.fallback_locale'] = 'en';
+$app['config']['app.locale'] = 'en'; // TODO: Make this dynamic!
+
 // TODO: Set up extensions
 
 
