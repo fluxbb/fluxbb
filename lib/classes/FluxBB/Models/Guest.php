@@ -35,6 +35,7 @@ class Guest extends User
 	{
 		parent::__construct($attributes);
 
+		$this->id = 1;
 		$this->group_id = 1;
 	}
 
