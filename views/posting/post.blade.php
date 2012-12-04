@@ -51,7 +51,7 @@ if (FluxBB\Auth::check())
 
 	if (FluxBB\Models\Config::enabled('o_topic_subscriptions'))
 	{
-		$is_subscribed = isset($topic) && $topic->is_user_subscribed();
+		$is_subscribed = isset($topic) && $topic->isUserSubscribed();
 		$subscr_checked = false;
 
 		// If it's a preview

@@ -37,12 +37,9 @@ class Posting extends Controller
 
 	public function get_reply($tid)
 	{
-		$topic = Topic::with(array(
-			'forum',
-			'forum.perms',
-		))
-		->where('id', '=', $tid)
-		->first();
+		$topic = Topic::with('forum.perms')
+			->where('id', '=', $tid)
+			->first();
 
 		if (is_null($topic))
 		{
@@ -56,12 +53,9 @@ class Posting extends Controller
 
 	public function post_reply($tid)
 	{
-		$topic = Topic::with(array(
-			'forum',
-			'forum.perms',
-		))
-		->where('id', '=', $tid)
-		->first();
+		$topic = Topic::with('forum.perms')
+			->where('id', '=', $tid)
+			->first();
 
 		if (is_null($topic))
 		{
