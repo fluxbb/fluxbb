@@ -46,28 +46,15 @@ function set_fluxbb($app)
 
 function route($route, $parameters = array())
 {
-	$app = fluxbb();
-
-	return $app['url.generator']->toRoute($route, $parameters);
+	return fluxbb('url.generator')->toRoute($route, $parameters);
 }
 
 function url($url)
 {
-	$app = fluxbb();
-
-	return $app['url.generator']->to($url);
+	return fluxbb('url.generator')->to($url);
 }
 
 function t($id, $parameters = array(), $domain = 'messages', $locale = null)
 {
-	$app = fluxbb();
-
-	if (isset($app['translator']))
-	{
-		return $app['translator']->trans($id, $parameters, $domain, $locale);
-	}
-	else
-	{
-		throw new RuntimeException('Application translator not set.');
-	}
+	return fluxbb('translator')->trans($id, $parameters, $domain, $locale);
 }
