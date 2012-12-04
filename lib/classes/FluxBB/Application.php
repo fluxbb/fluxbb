@@ -101,7 +101,7 @@ class Application extends Container
 
 	public function close(Closure $callback)
 	{
-		return $this['router']->filter('close', $callback);
+		return $this['router']->filter('after', $callback);
 	}
 
 	public function finish(Closure $callback)
