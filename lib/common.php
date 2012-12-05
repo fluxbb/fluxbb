@@ -90,3 +90,5 @@ foreach ($services as $service)
 Illuminate\Support\Facade::setFacadeApplication($app);
 FluxBB\Models\Base::setCacheStore($app['cache']);
 
+// Include some helpers
+require __DIR__.'/helpers/validators.php';
