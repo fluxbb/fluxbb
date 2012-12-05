@@ -1,4 +1,4 @@
-@layout('layout.main')
+@extends('layout.main')
 
 @section('main')
 <?php $currentItem = 'Privacy'; ?>
@@ -8,7 +8,7 @@
 	<div class="blockform">
 		<h2><span>Privacy</span></h2>
 		<div class="box">
-			<form id="profile6" method="post" action="profile.php?section=privacy&amp;id=3">
+			<form id="profile6" method="post">
 				<div class="inform">
 					<fieldset>
 						<legend>Set your privacy options</legend>
@@ -40,4 +40,4 @@
 	</div>
 	<div class="clearer"></div>
 </div>
-@endsection
+@stop

@@ -1,4 +1,4 @@
-@layout('layout.main')
+@extends('layout.main')
 
 @section('main')
 <?php $currentItem = 'Essentials'; ?>
@@ -21,7 +21,7 @@
 							{{ $user->username }}
 							@endif
 							<br></label>
-							<p class="actions"><span><a href="profile.php?action=change_pass&amp;id=2">Change password</a></span></p>
+							<p class="actions"><span><a href="#">Change password</a></span></p>
 						</div>
 					</fieldset>
 				</div>
@@ -130,4 +130,4 @@
 	</div>
 	<div class="clearer"></div>
 </div>
-@endsection
+@stop

@@ -54,7 +54,7 @@
 						<dl>
 						
 							<dt>Posts</dt>
-							<dd>{{$user->num_posts}} - <a href="search.php?action=show_user_topics&amp;user_id=2">Show all topics</a> - <a href="search.php?action=show_user_posts&amp;user_id=2">Show all posts</a></dd>
+							<dd>{{$user->num_posts}} - <a href="#">Show all topics</a> - <a href="#">Show all posts</a></dd>
 							<dt>Last post</dt>
 							<dd><?php echo ($user->last_post) ?></dd>{{-- TODO: format_time --}}
 							<dt>Registered</dt>

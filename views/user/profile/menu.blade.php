@@ -8,10 +8,10 @@
 		<div class="inbox">
 			<ul>
 				@foreach($menuItems as $menuItem)
-					@if($menuItem == Str::title($currentItem)) <?php // with $currentItem as passed variable for the menu part which the user is viewing now ?>
-						<li class="isactive">{{ HTML::link_to_route('profile', $menuItem, array($user->id, Str::lower($menuItem))) }}</li>
+					@if($menuItem == ucfirst($currentItem)) <?php // with $currentItem as passed variable for the menu part which the user is viewing now ?>
+						<li class="isactive">{{ HTML::link_to_route('profile', $menuItem, array($user->id, strtolower($menuItem))) }}</li>
 					@else
-						<li>{{ HTML::link_to_route('profile', $menuItem, array($user->id, Str::lower($menuItem))) }}</li>
+						<li>{{ HTML::link_to_route('profile', $menuItem, array($user->id, strtolower($menuItem))) }}</li>
 					@endif
 				@endforeach
 			</ul>

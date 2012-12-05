@@ -1,4 +1,4 @@
-@layout('layout.main')
+@extends('layout.main')
 
 @section('main')
 <?php $currentItem = 'Personality'; ?>
@@ -44,4 +44,4 @@
 	</div>
 	<div class="clearer"></div>
 </div>
-@endsection
+@stop
