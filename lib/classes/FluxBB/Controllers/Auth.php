@@ -118,7 +118,7 @@ class Auth extends Controller
 		$validation = $this->validator($this->input(), $rules);
 		if ($validation->fails())
 		{
-			return $this->route('register')
+			return $this->redirect('register')
 				->withInput($this->input())
 				->with('errors', $validation->getMessages());
 		}
@@ -139,7 +139,7 @@ class Auth extends Controller
 		);
 		$user = User::create($user_data);
 	
-		return \Redirect::action('home@index')
+		return $this->redirect('index')
 			->with('message', t('register.reg_complete'));
 	}
 
