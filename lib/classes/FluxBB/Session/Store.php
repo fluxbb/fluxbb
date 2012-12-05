@@ -166,7 +166,7 @@ class Store extends DatabaseStore implements Sweeper
 		else
 		{
 			$id = $oldGuestSession->id;
-			$this->exists = false;
+			$this->exists = true;
 		}
 
 		$flash = $this->createData();
