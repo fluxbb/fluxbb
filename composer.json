@@ -1,25 +1,8 @@
 {
     "require": {
-        "illuminate/auth": ">=1.0.0",
-        "illuminate/cache": ">=1.0.0",
-        "illuminate/config": ">=1.0.0",
-        "illuminate/container": ">=1.0.0",
-        "illuminate/database": ">=1.0.0",
-        "illuminate/http": ">=1.0.0",
-        "illuminate/pagination": ">=1.0.0",
-        "illuminate/session": ">=1.0.0",
-        "illuminate/support": ">=1.0.0",
-        "illuminate/translation": ">=1.0.0",
-        "illuminate/validation": ">=1.0.0",
-        "illuminate/view": ">=1.0.0"
-    },
-    "autoload": {
-        "psr-0": {
-            "FluxBB": "lib/classes/"
-        },
-        "files": [
-            "lib/helpers.php"
-        ]
+        "illuminate/foundation": ">=1.0.0",
+        "fluxbb/core": ">=1.0.0",
+        "fluxbb/installer": ">=1.0.0"
     },
     "minimum-stability": "dev"
 }

@@ -2,7 +2,10 @@
 
 return array(
 
-	'paths' => array(__DIR__.'/../views'),
-	'pagination' => 'helpers.pagination',
+	'paths' 		=> array(
+		__DIR__.'/../views'
+	),
+	
+	'pagination'	=> 'fluxbb::helpers.pagination',
 
 );

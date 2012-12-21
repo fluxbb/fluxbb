@@ -1,37 +1,52 @@
 <?php
 /**
- * FluxBB - fast, light, user-friendly PHP forum software
- * Copyright (C) 2008-2012 FluxBB.org
- * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
+ * Laravel - A PHP Framework For Web Artisans
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public license for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- * @category	FluxBB
- * @package		Core
- * @copyright	Copyright (c) 2008-2012 FluxBB (http://fluxbb.org)
- * @license		http://www.gnu.org/licenses/gpl.html	GNU General Public License
+ * @package  Laravel
+ * @author   Taylor Otwell <taylorotwell@gmail.com>
  */
 
-require 'vendor/autoload.php';
+define('ILLUMINATE_START', microtime(true));
 
-$app = new FluxBB\Application;
-$app['path'] = __DIR__.'/';
+/*
+|--------------------------------------------------------------------------
+| Register The Composer Auto Loader
+|--------------------------------------------------------------------------
+|
+| Composer provides a convenient, automatically generated class loader
+| for our application. We just need to utilize it! We'll require it
+| into the script here so that we do not have to worry about the
+| loading of any our classes "manually". Feels great to relax.
+|
+*/
 
-set_fluxbb($app);
+require __DIR__.'/vendor/autoload.php';
 
-// Bootstrap the application
-include __DIR__.'/lib/common.php';
+/*
+|--------------------------------------------------------------------------
+| Turn On The Lights
+|--------------------------------------------------------------------------
+|
+| We need to illuminate PHP development, so let's turn on the lights.
+| This bootstrap the framework and gets it ready for use, then it
+| will load up this application so that we can run it and send
+| the responses back to the browser and delight these users.
+|
+*/
+
+$app = require_once __DIR__.'/start.php';
+
+/*
+|--------------------------------------------------------------------------
+| Run The Application
+|--------------------------------------------------------------------------
+|
+| Once we have the application, we can simple call the run method,
+| which will execute the request and send the response back to
+| the client's browser allowing them to enjoy the creative
+| this wonderful applications we have created for them.
+|
+*/
 
 $app->run();
 
