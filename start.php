@@ -2,21 +2,6 @@
 
 /*
 |--------------------------------------------------------------------------
-| Register Class Imports
-|--------------------------------------------------------------------------
-|
-| Here we will just import a few classes that we need during the booting
-| of the framework. These are mainly classes that involve loading the
-| config files for this application, such as the config repository.
-|
-*/
-
-use Illuminate\Filesystem;
-use Illuminate\Config\FileLoader;
-use Illuminate\Foundation\Application;
-
-/*
-|--------------------------------------------------------------------------
 | Create The Application
 |--------------------------------------------------------------------------
 |
@@ -26,7 +11,7 @@ use Illuminate\Foundation\Application;
 |
 */
 
-set_app($app = new Application);
+$app = new Illuminate\Foundation\Application;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,48 +47,12 @@ $env = $app->detectEnvironment(array(
 
 /*
 |--------------------------------------------------------------------------
-| Check For The Test Environment
-|--------------------------------------------------------------------------
-|
-| If the "unitTesting" variable is set, it means we are running the unit
-| tests for the application and should override this environment here
-| so we use the right configuration. The flag gets set by TestCase.
-|
-*/
-
-if (isset($unitTesting))
-{
-	$app['env'] = $env = $testEnvironment;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Register The Configuration Loader
-|--------------------------------------------------------------------------
-|
-| The configuration loader is responsible for loading the configuration
-| options for the application. By default we'll use the "file" loader
-| but you are free to use any custom loaders with your application.
-|
-*/
-
-$app['config.loader'] = $app->share(function($app)
-{
-	$path = __DIR__.'/config';
-
-	return new FileLoader(new Filesystem, $path);
-});
-
-/*
-|--------------------------------------------------------------------------
 | Load The Application
 |--------------------------------------------------------------------------
 |
-| Here we will load the Illuminate application. We keep this is in
-| a separate location so we can isolate the creation of the it
-| from the actual running of the application, allowing us
-| to easily test and inspect the application outside
-| of a web request context such as with PHPUnit.
+| Here we will load the Illuminate application. We'll keep this is in a
+| separate location so we can isolate the creation of an application
+| from the actual running of the application with a given request.
 |
 */
 
