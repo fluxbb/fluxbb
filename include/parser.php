@@ -699,7 +699,7 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 		else
 			$link = stripslashes($link);
 
-		return '<a href="'.$full_url.'">'.$link.'</a>';
+		return '<a href="'.$full_url.'" rel="nofollow">'.$link.'</a>';
 	}
 }
 
@@ -714,7 +714,7 @@ function handle_img_tag($url, $is_signature = false, $alt = null)
 	if (is_null($alt))
 		$alt = basename($url);
 
-	$img_tag = '<a href="'.$url.'">&lt;'.$lang_common['Image link'].' - '.$alt.'&gt;</a>';
+	$img_tag = '<a href="'.$url.'" rel="nofollow">&lt;'.$lang_common['Image link'].' - '.$alt.'&gt;</a>';
 
 	if ($is_signature && $pun_user['show_img_sig'] != '0')
 		$img_tag = '<img class="sigimage" src="'.$url.'" alt="'.$alt.'" />';
