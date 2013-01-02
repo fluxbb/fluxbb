@@ -83,10 +83,10 @@ if (isset($_GET['ip_stats']))
 
 ?>
 				<tr>
-					<td class="tcl"><a href="moderate.php?get_host=<?php echo $cur_ip['poster_ip'] ?>"><?php echo $cur_ip['poster_ip'] ?></a></td>
+					<td class="tcl"><a href="moderate.php?get_host=<?php echo pun_htmlspecialchars($cur_ip['poster_ip']) ?>"><?php echo pun_htmlspecialchars($cur_ip['poster_ip']) ?></a></td>
 					<td class="tc2"><?php echo format_time($cur_ip['last_used']) ?></td>
 					<td class="tc3"><?php echo $cur_ip['used_times'] ?></td>
-					<td class="tcr"><a href="admin_users.php?show_users=<?php echo $cur_ip['poster_ip'] ?>"><?php echo $lang_admin_users['Results find more link'] ?></a></td>
+					<td class="tcr"><a href="admin_users.php?show_users=<?php echo pun_htmlspecialchars($cur_ip['poster_ip']) ?>"><?php echo $lang_admin_users['Results find more link'] ?></a></td>
 				</tr>
 <?php
 
