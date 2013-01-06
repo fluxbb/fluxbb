@@ -58,4 +58,16 @@ $env = $app->detectEnvironment(array(
 
 require __DIR__.'/vendor/illuminate/foundation/src/start.php';
 
+/*
+|--------------------------------------------------------------------------
+| Bootstrap FluxBB
+|--------------------------------------------------------------------------
+|
+| Include the FluxBB start file that will setup everything that's needed
+| for FluxBB to function in a Laravel context.
+|
+*/
+
+require __DIR__.'/vendor/fluxbb/core/start.php';
+
 return $app;
