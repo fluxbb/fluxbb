@@ -677,9 +677,6 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 	else if (!preg_match('#^([a-z0-9]{3,6})://#', $url)) // Else if it doesn't start with abcdef://, we add http://
 		$full_url = 'http://'.$full_url;
 
-	if ($bbcode === false && url_valid($full_url) === false)
-		$bbcode = true;
-
 	// Ok, not very pretty :-)
 	if ($bbcode)
 	{
