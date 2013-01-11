@@ -39,6 +39,8 @@ return array(
 
 	),
 
+	'manifest' => __DIR__.'/../storage/meta',
+
 	'aliases' => array(
 
 		'App'        => 'Illuminate\Support\Facades\App',
