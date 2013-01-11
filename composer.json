@@ -1,6 +1,6 @@
 {
     "require": {
-        "illuminate/foundation": ">=1.0.0",
+        "laravel/framework": "4.0.*",
         "fluxbb/core": ">=1.0.0",
         "fluxbb/installer": ">=1.0.0"
     },
