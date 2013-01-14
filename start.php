@@ -24,7 +24,7 @@ $app = new Illuminate\Foundation\Application;
 |
 */
 
-$app->instance('path', $appPath = __DIR__);
+$app->instance('path', $appPath = __DIR__.'/app');
 
 $app->instance('path.base', __DIR__);
 
@@ -57,18 +57,6 @@ $env = $app->detectEnvironment(array(
 */
 
 require $app->getBootstrapFile();
-
-/*
-|--------------------------------------------------------------------------
-| Bootstrap FluxBB
-|--------------------------------------------------------------------------
-|
-| Include the FluxBB start file that will setup everything that's needed
-| for FluxBB to function in a Laravel context.
-|
-*/
-
-require __DIR__.'/vendor/fluxbb/core/start.php';
 
 /*
 |--------------------------------------------------------------------------

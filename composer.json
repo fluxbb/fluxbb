@@ -1,8 +1,17 @@
 {
-    "require": {
-        "laravel/framework": "4.0.*",
+	"require": {
+		"laravel/framework": "4.0.*",
         "fluxbb/core": ">=1.0.0",
         "fluxbb/installer": ">=1.0.0"
-    },
-    "minimum-stability": "dev"
+	},
+	"autoload": {
+		"classmap": [
+			"app/commands",
+			"app/controllers",
+			"app/models",
+			"app/database/migrations",
+			"app/tests/TestCase.php"
+		]
+	},
+	"minimum-stability": "dev"
 }
