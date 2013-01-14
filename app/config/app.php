@@ -106,7 +106,7 @@ return array(
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
-		'FluxBB\CoreServiceProvider',
+		'FluxBB\Core\CoreServiceProvider',
 		'FluxBB\Installer\Providers\RouteServiceProvider',
 
 	),
