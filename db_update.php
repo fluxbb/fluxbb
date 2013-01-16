@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2012 FluxBB
+ * Copyright (C) 2008-2013 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -512,7 +512,7 @@ if (empty($stage))
 <title><?php echo $lang_update['Update'] ?></title>
 <link rel="stylesheet" type="text/css" href="style/<?php echo $default_style ?>.css" />
 </head>
-<body onload="document.getElementById('install').req_db_pass.focus();document.getElementById('install').start.disabled=false;">
+<body onLoad="document.getElementById('install').req_db_pass.focus();document.getElementById('install').start.disabled=false;">
 
 <div id="pundb_update" class="pun">
 <div class="top-box"><div><!-- Top Corners --></div></div>
