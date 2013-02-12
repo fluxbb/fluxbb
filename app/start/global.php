@@ -15,6 +15,7 @@ ClassLoader::addDirectories(array(
 
 	app_path().'/controllers',
 	app_path().'/models',
+	app_path().'/database/seeds',
 
 ));
 
@@ -29,7 +30,9 @@ ClassLoader::addDirectories(array(
 |
 */
 
-Log::useDailyFiles(__DIR__.'/../storage/logs/log.txt');
+$logFile = 'log-'.php_sapi_name().'.txt';
+
+Log::useDailyFiles(__DIR__.'/../storage/logs/'.$logFile);
 
 /*
 |--------------------------------------------------------------------------
