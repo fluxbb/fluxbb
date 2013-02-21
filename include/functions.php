@@ -982,14 +982,14 @@ function forum_number_format($number, $decimals = 0)
 
 
 //
-// Generate a random key of length $len (but only up to 40 characters)
+// Generate a random key of length $len
 //
 function random_key($len, $readable = false, $hash = false)
 {
 	$value = secure_random_bytes($len);
 
 	if ($readable || $hash)
-		$value = substr(sha1($value), 0, $len);
+		$value = substr(bin2hex($value), 0, $len);
 
 	return $value;
 }
