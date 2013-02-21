@@ -986,12 +986,14 @@ function forum_number_format($number, $decimals = 0)
 //
 function random_key($len, $readable = false, $hash = false)
 {
-	$value = secure_random_bytes($len);
+	$key = secure_random_bytes($len);
 
-	if ($readable || $hash)
-		$value = substr(bin2hex($value), 0, $len);
+	if ($hash)
+		$key = substr(bin2hex($key), 0, $len);
+	else if ($readable)
+		$key = substr(base64_encode($key), 0, $len);
 
-	return $value;
+	return $key;
 }
 
 
