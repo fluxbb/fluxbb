@@ -104,13 +104,13 @@ function secure_random_bytes($len = 10)
          // Measure the time that the operations will take on average
          for ($i = 0; $i < 3; $i ++) 
          {
-            $c1 = microtime(true);
+            $c1 = get_microtime();
             $var = sha1(mt_rand());
             for ($j = 0; $j < 50; $j++)
             {
                $var = sha1($var);
             }
-            $c2 = microtime(true);
+            $c2 = get_microtime();
     	    $entropy .= $c1 . $c2;
          }
 
@@ -123,13 +123,13 @@ function secure_random_bytes($len = 10)
          $iter = $bytes*(int)(ceil(8 / $bits_per_round));
          for ($i = 0; $i < $iter; $i ++)
          {
-            $c1 = microtime();
+            $c1 = time();
             $var = sha1(mt_rand());
             for ($j = 0; $j < $rounds; $j++)
             {
                $var = sha1($var);
             }
-            $c2 = microtime();
+            $c2 = get_microtime();
             $entropy .= $c1 . $c2;
          }
             
