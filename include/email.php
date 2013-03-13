@@ -336,7 +336,7 @@ function smtp_mail($to, $subject, $message, $headers = '')
 	}
 	else
 	{
-		fwrite($socket, 'HELO '.$smtp_host."\r\n");
+		fwrite($socket, 'HELO '.$local_host."\r\n");
 		server_parse($socket, '250');
 	}
 
