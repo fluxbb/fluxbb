@@ -14,5 +14,8 @@
 			"app/tests/TestCase.php"
 		]
 	},
+	"scripts": {
+		"post-update-cmd": "php artisan optimize"
+	},
 	"minimum-stability": "dev"
 }
