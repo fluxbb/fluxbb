@@ -1,13 +1,13 @@
-## Laravel 4.x
+# FluxBB 2.0
 
-### A Framework For Web Artisans
+FluxBB is a fast, light, user-friendly forum application for your website.
 
-[Official Documentation](http://four.laravel.com) (Under Active Development)
+## Installation
 
-### Contributing To Laravel
+To install FluxBB, run the following commands from your command line:
 
-**All issues and pull requests should be filed on the [laravel/framework](http://github.com/laravel/framework) repository.**
+    git clone git://github.com/fluxbb/fluxbb2.git
+    curl -s https://getcomposer.org/installer | php
+    php composer.phar install
 
-### License
-
-The Laravel framework is open-sourced software license under the [MIT license](http://opensource.org/licenses/MIT)
+After that, you can open install.php in your favorite browser. :)
