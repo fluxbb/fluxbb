@@ -1,6 +1,7 @@
 {
 	"require": {
 		"laravel/framework": "4.0.*",
+		"filp/whoops": "dev-master",
         "fluxbb/core": ">=1.0.0",
         "fluxbb/installer": ">=1.0.0"
 	},

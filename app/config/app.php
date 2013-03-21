@@ -111,6 +111,7 @@ return array(
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
+		'Whoops\Provider\Illuminate\WhoopsServiceProvider',
 		'FluxBB\Core\CoreServiceProvider',
 		'FluxBB\Installer\Providers\RouteServiceProvider',
 
