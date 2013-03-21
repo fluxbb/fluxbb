@@ -294,7 +294,7 @@ function process_form(the_form)
 	<div class="box">
 		<div id="brdtitle" class="inbox">
 			<h1><span><?php echo $lang_install['FluxBB Installation'] ?></span></h1>
-			<div id="brddesc"><p><?php echo $lang_install['Install message'] ?></p><p><?php echo $lang_install['Welcome'] ?></p></div>
+			<div id="brddesc"><p><?php echo $lang_install['Welcome'] ?></p></div>
 		</div>
 	</div>
 </div>
@@ -359,9 +359,7 @@ foreach ($alerts as $cur_alert)
 				<legend><?php echo $lang_install['Select database'] ?></legend>
 					<div class="infldset">
 						<p><?php echo $lang_install['Info 2'] ?></p>
-<?php if ($dual_mysql): ?>						<p><?php echo $lang_install['Dual MySQL'] ?></p>
-<?php endif; ?><?php if ($mysql_innodb): ?>						<p><?php echo $lang_install['InnoDB'] ?></p>
-<?php endif; ?>						<label class="required"><strong><?php echo $lang_install['Database type'] ?> <span><?php echo $lang_install['Required'] ?></span></strong>
+						<label class="required"><strong><?php echo $lang_install['Database type'] ?> <span><?php echo $lang_install['Required'] ?></span></strong>
 						<br /><select name="req_db_type">
 <?php
 
@@ -423,29 +421,13 @@ foreach ($alerts as $cur_alert)
 					<p><?php echo $lang_install['Info 7'] ?></p>
 				</div>
 				<fieldset>
-					<legend><?php echo $lang_install['Admin enter username'] ?></legend>
+					<legend><?php echo $lang_install['Administration setup'] ?></legend>
 					<div class="infldset">
 						<p><?php echo $lang_install['Info 8'] ?></p>
 						<label class="required"><strong><?php echo $lang_install['Administrator username'] ?> <span><?php echo $lang_install['Required'] ?></span></strong><br /><input type="text" name="req_username" value="<?php echo pun_htmlspecialchars($username) ?>" size="25" maxlength="25" /><br /></label>
-					</div>
-				</fieldset>
-			</div>
-			<div class="inform">
-				<fieldset>
-					<legend><?php echo $lang_install['Admin enter password'] ?></legend>
-					<div class="infldset">
-						<p><?php echo $lang_install['Info 9'] ?></p>
 						<label class="conl required"><strong><?php echo $lang_install['Password'] ?> <span><?php echo $lang_install['Required'] ?></span></strong><br /><input id="req_password1" type="password" name="req_password1" size="16" /><br /></label>
 						<label class="conl required"><strong><?php echo $lang_install['Confirm password'] ?> <span><?php echo $lang_install['Required'] ?></span></strong><br /><input type="password" name="req_password2" size="16" /><br /></label>
 						<div class="clearer"></div>
-					</div>
-				</fieldset>
-			</div>
-			<div class="inform">
-				<fieldset>
-					<legend><?php echo $lang_install['Admin enter email'] ?></legend>
-					<div class="infldset">
-						<p><?php echo $lang_install['Info 10'] ?></p>
 						<label class="required"><strong><?php echo $lang_install['Administrator email'] ?> <span><?php echo $lang_install['Required'] ?></span></strong><br /><input id="req_email" type="text" name="req_email" value="<?php echo pun_htmlspecialchars($email) ?>" size="50" maxlength="80" /><br /></label>
 					</div>
 				</fieldset>
@@ -456,34 +438,17 @@ foreach ($alerts as $cur_alert)
 					<p><?php echo $lang_install['Info 11'] ?></p>
 				</div>
 				<fieldset>
-					<legend><?php echo $lang_install['Enter board title'] ?></legend>
+					<legend><?php echo $lang_install['General information'] ?></legend>
 					<div class="infldset">
-						<p><?php echo $lang_install['Info 12'] ?></p>
 						<label class="required"><strong><?php echo $lang_install['Board title'] ?> <span><?php echo $lang_install['Required'] ?></span></strong><br /><input id="req_title" type="text" name="req_title" value="<?php echo pun_htmlspecialchars($title) ?>" size="60" maxlength="255" /><br /></label>
-					</div>
-				</fieldset>
-			</div>
-			<div class="inform">
-				<fieldset>
-					<legend><?php echo $lang_install['Enter board description'] ?></legend>
-					<div class="infldset">
-						<p><?php echo $lang_install['Info 13'] ?></p>
 						<label><?php echo $lang_install['Board description'] ?><br /><input id="desc" type="text" name="desc" value="<?php echo pun_htmlspecialchars($description) ?>" size="60" maxlength="255" /><br /></label>
-					</div>
-				</fieldset>
-			</div>
-			<div class="inform">
-				<fieldset>
-					<legend><?php echo $lang_install['Enter base URL'] ?></legend>
-					<div class="infldset">
-						<p><?php echo $lang_install['Info 14'] ?></p>
 						<label class="required"><strong><?php echo $lang_install['Base URL'] ?> <span><?php echo $lang_install['Required'] ?></span></strong><br /><input id="req_base_url" type="text" name="req_base_url" value="<?php echo pun_htmlspecialchars($base_url) ?>" size="60" maxlength="100" /><br /></label>
 					</div>
 				</fieldset>
 			</div>
 			<div class="inform">
 				<fieldset>
-					<legend><?php echo $lang_install['Choose the default language'] ?></legend>
+					<legend><?php echo $lang_install['Appearance'] ?></legend>
 					<div class="infldset">
 						<p><?php echo $lang_install['Info 15'] ?></p>
 						<label class="required"><strong><?php echo $lang_install['Default language'] ?> <span><?php echo $lang_install['Required'] ?></span></strong><br /><select id="req_default_lang" name="req_default_lang">
@@ -500,14 +465,6 @@ foreach ($alerts as $cur_alert)
 
 ?>
 						</select><br /></label>
-					</div>
-				</fieldset>
-			</div>
-			<div class="inform">
-				<fieldset>
-					<legend><?php echo $lang_install['Choose the default style'] ?></legend>
-					<div class="infldset">
-						<p><?php echo $lang_install['Info 16'] ?></p>
 						<label class="required"><strong><?php echo $lang_install['Default style'] ?> <span><?php echo $lang_install['Required'] ?></span></strong><br /><select id="req_default_style" name="req_default_style">
 <?php
 
