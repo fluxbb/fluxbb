@@ -115,7 +115,7 @@ class DBLayer
 
 			++$this->num_queries;
 
-			$this->last_query_text[$this->query_result] = $sql;
+			$this->last_query_text[intval($this->query_result)] = $sql;
 
 			return $this->query_result;
 		}
@@ -171,9 +171,9 @@ class DBLayer
 	{
 		$query_id = $this->query_result;
 
-		if ($query_id && $this->last_query_text[$query_id] != '')
+		if ($query_id && $this->last_query_text[intval($query_id)] != '')
 		{
-			if (preg_match('%^INSERT INTO ([a-z0-9\_\-]+)%is', $this->last_query_text[$query_id], $table_name))
+			if (preg_match('%^INSERT INTO ([a-z0-9\_\-]+)%is', $this->last_query_text[intval($query_id)], $table_name))
 			{
 				// Hack (don't ask)
 				if (substr($table_name[1], -6) == 'groups')
