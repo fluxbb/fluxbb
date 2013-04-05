@@ -24,6 +24,9 @@ chmod --recursive a+rw /var/www/public/packages
 chmod --recursive a+rw /var/www/app/config/packages
 chmod --recursive a+rw /var/www/app/storage
 
+# Remove the Apache default index.html file if it exists
+rm -f /var/www/index.html
+
 cd /var/www
 composer.phar install
 
