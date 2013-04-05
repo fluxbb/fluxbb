@@ -6,10 +6,10 @@ Vagrant::Config.run do |config|
   ## Ubuntu 12.04 LTS (32-bit)
   config.vm.box = "precise32"
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"
-  config.vm.host_name = "fluxbb-dev"
+  config.vm.host_name = "fluxbb-vagrant-dev"
 
   # Set the default project share
-  config.vm.share_folder "vagrant-web", "/vagrant", ".", :create => true
+  config.vm.share_folder "vagrant-web", "/var/www/", ".", :create => true
 
   # Forward a port from the guest to the host
   # 2008 is when FluxBB was created
