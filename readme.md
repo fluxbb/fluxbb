@@ -11,7 +11,7 @@ The preferred method of getting FluxBB up for development is by using [Vagrant](
 To install FluxBB using this method:
 
  1. Download and install [Virtualbox](https://www.virtualbox.org/) which is required for using Vagrant.
- 2. Download and install [Vagrant](https://www.vagrantup.com/).
+ 2. Download and install [Vagrant](http://www.vagrantup.com/).
  3. Use Git to clone this repository: `git clone git://github.com/fluxbb/fluxbb2.git`.
  4. Run `vagrant up` from the command line. This will configure the VM for you. This can take a few minutes when you run it for the first time.
 
