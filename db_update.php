@@ -9,7 +9,7 @@
 // The FluxBB version this script updates to
 define('UPDATE_TO', '1.5.3');
 
-define('UPDATE_TO_DB_REVISION', 18);
+define('UPDATE_TO_DB_REVISION', 19);
 define('UPDATE_TO_SI_REVISION', 2);
 define('UPDATE_TO_PARSER_REVISION', 2);
 
@@ -778,6 +778,17 @@ switch ($stage)
 		// Insert new config option o_feed_ttl
 		if (!array_key_exists('o_feed_ttl', $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_feed_ttl\', \'0\')') or error('Unable to insert config value \'o_feed_ttl\'', __FILE__, __LINE__, $db->error());
+
+		// Insert new config option o_admin_ids
+		if (!array_key_exists('o_admin_ids', $pun_config))
+		{
+			$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE group_id='.PUN_ADMIN) or error('Unable to fetch users info', __FILE__, __LINE__, $db->error());
+			$admin_ids = array();
+			for ($i = 0;$cur_user_id = $db->result($result, $i);$i++)
+				$admin_ids[] = $cur_user_id;
+
+			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_admin_ids\', \''.implode(',', $admin_ids).'\')') or error('Unable to insert config value \'o_admin_ids\'', __FILE__, __LINE__, $db->error());
+		}
 
 		// Insert config option o_base_url which was removed in 1.3
 		if (!array_key_exists('o_base_url', $pun_config))

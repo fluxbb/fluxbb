@@ -458,6 +458,9 @@ else if (isset($_POST['update_group_membership']))
 
 	$new_group_id = intval($_POST['group_id']);
 
+	$result = $db->query('SELECT group_id FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch user group', __FILE__, __LINE__, $db->error());
+	$old_group_id = $db->result($result);
+
 	$db->query('UPDATE '.$db->prefix.'users SET group_id='.$new_group_id.' WHERE id='.$id) or error('Unable to change user group', __FILE__, __LINE__, $db->error());
 
 	// Regenerate the users info cache
@@ -465,6 +468,18 @@ else if (isset($_POST['update_group_membership']))
 		require PUN_ROOT.'include/cache.php';
 
 	generate_users_info_cache();
+
+	if ($old_group_id == PUN_ADMIN || $new_group_id == PUN_ADMIN)
+	{
+		$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE group_id='.PUN_ADMIN) or error('Unable to fetch users info', __FILE__, __LINE__, $db->error());
+		$admin_ids = array();
+		for ($i = 0;$cur_user_id = $db->result($result, $i);$i++)
+			$admin_ids[] = $cur_user_id;
+
+		$db->query('UPDATE '.$db->prefix.'config SET conf_value=\''.implode(',', $admin_ids).'\' WHERE conf_name=\'o_admin_ids\'') or error('Unable to update board config', __FILE__, __LINE__, $db->error());
+
+		generate_config_cache();
+	}
 
 	$result = $db->query('SELECT g_moderator FROM '.$db->prefix.'groups WHERE g_id='.$new_group_id) or error('Unable to fetch group', __FILE__, __LINE__, $db->error());
 	$new_group_mod = $db->result($result);
@@ -639,6 +654,18 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 			require PUN_ROOT.'include/cache.php';
 
 		generate_users_info_cache();
+
+		if ($group_id == PUN_ADMIN)
+		{
+			$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE group_id='.PUN_ADMIN) or error('Unable to fetch users info', __FILE__, __LINE__, $db->error());
+			$admin_ids = array();
+			for ($i = 0;$cur_user_id = $db->result($result, $i);$i++)
+				$admin_ids[] = $cur_user_id;
+
+			$db->query('UPDATE '.$db->prefix.'config SET conf_value=\''.implode(',', $admin_ids).'\' WHERE conf_name=\'o_admin_ids\'') or error('Unable to update board config', __FILE__, __LINE__, $db->error());
+
+			generate_config_cache();
+		}
 
 		redirect('index.php', $lang_profile['User delete redirect']);
 	}

@@ -90,7 +90,8 @@ if (isset($_GET['tid']))
 				message($lang_common['Bad request']);
 
 			// Verify that the post IDs are valid
-			$result = $db->query('SELECT 1 FROM '.$db->prefix.'posts WHERE id IN('.$posts.') AND topic_id='.$tid) or error('Unable to check posts', __FILE__, __LINE__, $db->error());
+			$check_admin_ids = ($pun_user['g_id'] != PUN_ADMIN) ? ' AND poster_id NOT IN('.$pun_config['o_admin_ids'].')' : '';
+			$result = $db->query('SELECT 1 FROM '.$db->prefix.'posts WHERE id IN('.$posts.') AND topic_id='.$tid.$check_admin_ids) or error('Unable to check posts', __FILE__, __LINE__, $db->error());
 
 			if ($db->num_rows($result) != substr_count($posts, ',') + 1)
 				message($lang_common['Bad request']);
@@ -665,6 +666,14 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 
 		if ($db->num_rows($result) != substr_count($topics, ',') + 1)
 			message($lang_common['Bad request']);
+
+		// Verify that the posts are not by admins
+		if ($pun_user['g_id'] != PUN_ADMIN)
+		{
+			$result = $db->query('SELECT 1 FROM '.$db->prefix.'posts WHERE topic_id IN('.$topics.') AND poster_id IN('.$pun_config['o_admin_ids'].')') or error('Unable to check posts', __FILE__, __LINE__, $db->error());
+			if ($db->num_rows($result))
+				message($lang_common['Bad request']);
+		}
 
 		// Delete the topics and any redirect topics
 		$db->query('DELETE FROM '.$db->prefix.'topics WHERE id IN('.$topics.') OR moved_to IN('.$topics.')') or error('Unable to delete topic', __FILE__, __LINE__, $db->error());
