@@ -127,7 +127,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['IP label'] ?></th>
 									<td>
-										<input type="text" name="ban_ip" size="45" maxlength="255" value="<?php if (isset($ban_ip)) echo $ban_ip; ?>" tabindex="2" />
+										<input type="text" name="ban_ip" size="45" maxlength="255" value="<?php if (isset($ban_ip)) echo pun_htmlspecialchars($ban_ip); ?>" tabindex="2" />
 										<span><?php echo $lang_admin_bans['IP help'] ?><?php if ($ban_user != '' && isset($user_id)) printf(' '.$lang_admin_bans['IP help link'], '<a href="admin_users.php?ip_stats='.$user_id.'">'.$lang_admin_common['here'].'</a>') ?></span>
 									</td>
 								</tr>
@@ -435,7 +435,7 @@ else if (isset($_GET['find_ban']))
 				<tr>
 					<td class="tcl"><?php echo ($ban_data['username'] != '') ? pun_htmlspecialchars($ban_data['username']) : '&#160;' ?></td>
 					<td class="tc2"><?php echo ($ban_data['email'] != '') ? $ban_data['email'] : '&#160;' ?></td>
-					<td class="tc3"><?php echo ($ban_data['ip'] != '') ? $ban_data['ip'] : '&#160;' ?></td>
+					<td class="tc3"><?php echo ($ban_data['ip'] != '') ? pun_htmlspecialchars($ban_data['ip']) : '&#160;' ?></td>
 					<td class="tc4"><?php echo $expire ?></td>
 					<td class="tc5"><?php echo ($ban_data['message'] != '') ? pun_htmlspecialchars($ban_data['message']) : '&#160;' ?></td>
 					<td class="tc6"><?php echo ($ban_data['ban_creator_username'] != '') ? '<a href="profile.php?id='.$ban_data['ban_creator'].'">'.pun_htmlspecialchars($ban_data['ban_creator_username']).'</a>' : $lang_admin_bans['Unknown'] ?></td>
