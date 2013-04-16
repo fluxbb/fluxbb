@@ -12,6 +12,22 @@ pear upgrade-all
 pear config-set auto_discover 1
 pear install -f --alldeps pear.phpunit.de/PHPUnit
 
+# Setup the hosts file to point to the public filder
+VHOST=$(cat <<EOF
+<VirtualHost *:80>
+  DocumentRoot "/vagrant/public"
+  ServerName localhost
+  <Directory "/vagrant/public">
+    AllowOverride All
+  </Directory>
+</VirtualHost>
+EOF
+)
+echo "${VHOST}" > /etc/apache2/sites-enabled/000-default
+
+# Enable mod_rewrite
+sudo a2enmod rewrite
+
 # Restart Apache
 apache2ctl graceful
 
