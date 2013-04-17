@@ -22,6 +22,9 @@ define('PUN_SEARCH_MAX_WORD', 20);
 
 define('PUN_ROOT', dirname(__FILE__).'/');
 
+// Send the Content-type header in case the web server is setup to send something else
+header('Content-type: text/html; charset=utf-8');
+
 // Load the functions script
 require PUN_ROOT.'include/functions.php';
 
