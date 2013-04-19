@@ -1922,9 +1922,12 @@ function url_valid($url)
 //
 // This function takes care of possibly disabled unicode properties in PCRE builds
 //
-function ucp_preg_replace($pattern, $replace, $subject)
+function ucp_preg_replace($pattern, $replace, $subject, $callback = false)
 {
-	$replaced = preg_replace($pattern, $replace, $subject);
+	if($callback) 
+		$replaced = preg_replace_callback($pattern, create_function('$matches', 'return '.$replace.';'), $subject);
+	else
+		$replaced = preg_replace($pattern, $replace, $subject);
 
 	// If preg_replace() returns false, this probably means unicode support is not built-in, so we need to modify the pattern a little
 	if ($replaced === false)
