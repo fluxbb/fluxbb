@@ -1947,6 +1947,14 @@ function ucp_preg_replace($pattern, $replace, $subject, $callback = false)
 }
 
 //
+// A wrapper for ucp_preg_replace
+//
+function ucp_preg_replace_callback($pattern, $replace, $subject)
+{
+	return ucp_preg_replace($pattern, $replace, $subject, true);
+}
+
+//
 // Replace four-byte characters with a question mark
 //
 // As MySQL cannot properly handle four-byte characters with the default utf-8
