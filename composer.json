@@ -1,9 +1,8 @@
 {
 	"require": {
 		"laravel/framework": "4.0.*",
-		"filp/whoops": "dev-master",
-        "fluxbb/core": ">=1.0.0",
-        "fluxbb/installer": ">=1.0.0"
+		"fluxbb/core": ">=1.0.0",
+		"fluxbb/installer": ">=1.0.0"
 	},
 	"autoload": {
 		"classmap": [
@@ -27,7 +26,7 @@
 		]
 	},
 	"config": {
-		"preferred-install": "dist"
+		"preferred-install": "source"
 	},
 	"minimum-stability": "dev"
 }
