@@ -240,7 +240,7 @@ if (isset($_POST['form_sent']))
 
 			pun_mail($email1, $mail_subject, $mail_message);
 
-			message($lang_register['Reg email'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
+			message($lang_register['Reg email'].' <a href="mailto:'.pun_htmlspecialchars($pun_config['o_admin_email']).'">'.pun_htmlspecialchars($pun_config['o_admin_email']).'</a>.', true);
 		}
 
 		// Regenerate the users info cache
