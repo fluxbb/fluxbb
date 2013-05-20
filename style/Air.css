@@ -964,8 +964,7 @@ MAIN POSTS
 }
 
 .pun .codebox pre {
-	overflow-y:hidden;
-	overflow: auto;
+	overflow: hidden;
 	width: 100%;
 	direction: ltr;
 	text-align: left;
