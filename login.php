@@ -168,7 +168,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 					pun_mail($email, $mail_subject, $cur_mail_message);
 				}
 
-				message($lang_login['Forget mail'].' <a href="mailto:'.$pun_config['o_admin_email'].'">'.$pun_config['o_admin_email'].'</a>.', true);
+				message($lang_login['Forget mail'].' <a href="mailto:'.pun_htmlspecialchars($pun_config['o_admin_email']).'">'.pun_htmlspecialchars($pun_config['o_admin_email']).'</a>.', true);
 			}
 			else
 				$errors[] = $lang_login['No email match'].' '.htmlspecialchars($email).'.';
