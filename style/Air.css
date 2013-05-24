@@ -253,6 +253,45 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	padding-top: 3px;
 }
 
+.pun  input[type="submit"]:hover {
+	color: #fff;
+	text-decoration:none;
+	background: #b50000;
+        font-size: 1em;
+}
+
+.pun  input[type="submit"] {
+	color: #fff;
+        background:#44699c;
+	text-decoration:none;
+	padding:4px;
+	border-radius:2px;
+        font-size: 1em;
+	border:0;
+}
+
+.pun .postlink  a, .pun .postlink  a:link, .pun .postlink  a:visited {
+        color: #fff;
+	background:#44699c;
+	text-decoration:none;
+	border-radius:2px;
+	padding:6px;
+        font-size: 1em;
+        height: 2.5em;
+        line-height: 2.5em;
+}
+
+
+.pun .postlink  a:hover,.pun .postlink  a:active, .pun.pun .postlink  a:focus {
+	color: #fff;
+	text-decoration:none;
+	border-radius:2px;
+	background: #b50000;
+        font-size: 1em;
+        height: 2.5em;
+        line-height: 2.5em;
+}
+
 /*****************************************************************
 3. COMMON BOARD ELEMENTS
 *****************************************************************/
