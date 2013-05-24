@@ -620,6 +620,23 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	font-weight: bold;
 }
 
+.pun .blocktable .tcl h3 span.newtext a, .pun .blocktable .tcl h3 span.newtext a:link, .pun .blocktable .tcl h3 span.newtext a:visited {
+	color:  #fff;
+	background:#3a87ad;
+	border-radius: 2px;
+	display: inline-block;
+        padding: 2px 4px;
+        font-size: 11.844px;
+        font-weight: bold;
+        line-height: 14px;
+}
+
+.pun .blocktable .tcl h3 span.newtext a:hover, .pun .blocktable .tcl h3 span.newtext a:active, .pun .blocktable .tcl h3 span.newtext a:focus {
+	color: #fff;
+	background:#b50000;
+	text-decoration:none;
+}
+
 #punsearch #vf .tc2 {
 	padding-left: 8px;
 	padding-right: 8px;
