@@ -115,7 +115,7 @@ $lang_admin_options = array(
 
 // Features section
 'Features subhead'					=>	'Features',
-'Quick post label'					=>	'Quick post',
+'Quick post label'					=>	'Quick reply',
 'Quick post help'					=>	'When enabled, FluxBB will add a quick post form at the bottom of topics. This way users can post directly from the topic view.',
 'Users online label'				=>	'Users online',
 'Users online help'					=>	'Display info on the index page about guests and registered users currently browsing the board.',
