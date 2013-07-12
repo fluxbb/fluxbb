@@ -794,7 +794,7 @@ switch ($stage)
 			if (substr($base_url, -1) == '/')
 				$base_url = substr($base_url, 0, -1);
 
-			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_base_url\', \''.$db->escape($base_url).'\')') or error('Unable to insert config value \'o_quote_depth\'', __FILE__, __LINE__, $db->error());
+			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_base_url\', \''.$db->escape($base_url).'\')') or error('Unable to insert config value \'o_base_url\'', __FILE__, __LINE__, $db->error());
 		}
 
 		if (strpos($cur_version, '1.2') === 0)
