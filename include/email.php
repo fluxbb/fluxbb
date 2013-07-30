@@ -229,14 +229,14 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 	$from = '"'.encode_mail_text($from_name).'" <'.$from_email.'>';
 	$subject = encode_mail_text($subject);
 
-	$headers = 'From: '.$from.PHP_EOL.'Date: '.gmdate('r').PHP_EOL.'MIME-Version: 1.0'.PHP_EOL.'Content-transfer-encoding: 8bit'.PHP_EOL.'Content-type: text/plain; charset=utf-8'.PHP_EOL.'X-Mailer: FluxBB Mailer';
+	$headers = 'From: '.$from."\r\n".'Date: '.gmdate('r')."\r\n".'MIME-Version: 1.0'."\r\n".'Content-transfer-encoding: 8bit'."\r\n".'Content-type: text/plain; charset=utf-8'."\r\n".'X-Mailer: FluxBB Mailer';
 
 	// If we specified a reply-to email, we deal with it here
 	if (!empty($reply_to_email))
 	{
 		$reply_to = '"'.encode_mail_text($reply_to_name).'" <'.$reply_to_email.'>';
 
-		$headers .= PHP_EOL.'Reply-To: '.$reply_to;
+		$headers .= "\r\n".'Reply-To: '.$reply_to;
 	}
 
 	// Make sure all linebreaks are LF in message (and strip out any NULL bytes)
