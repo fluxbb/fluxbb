@@ -1312,6 +1312,9 @@ function redirect($destination_url, $message)
 	// If the delay is 0 seconds, we might as well skip the redirect all together
 	if ($pun_config['o_redirect_delay'] == '0')
 	{
+		$db->end_transaction();
+		$db->close();
+
 		header('Location: '.str_replace('&amp;', '&', $destination_url));
 		exit;
 	}
