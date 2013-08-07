@@ -26,16 +26,8 @@ function generate_config_cache()
 		$output[$cur_config_item[0]] = $cur_config_item[1];
 
 	// Output config as PHP code
-	$fh = @fopen(FORUM_CACHE_DIR.'cache_config.php', 'wb');
-	if (!$fh)
-		error('Unable to write configuration cache file to cache directory. Please make sure PHP has write access to the directory \''.pun_htmlspecialchars(FORUM_CACHE_DIR).'\'', __FILE__, __LINE__);
-
-	fwrite($fh, '<?php'."\n\n".'define(\'PUN_CONFIG_LOADED\', 1);'."\n\n".'$pun_config = '.var_export($output, true).';'."\n\n".'?>');
-
-	fclose($fh);
-
-	if (function_exists('apc_delete_file'))
-		@apc_delete_file(FORUM_CACHE_DIR.'cache_config.php');
+	$content = '<?php'."\n\n".'define(\'PUN_CONFIG_LOADED\', 1);'."\n\n".'$pun_config = '.var_export($output, true).';'."\n\n".'?>';
+	fluxbb_write_cache_file('cache_config.php', $content);
 }
 
 
@@ -54,16 +46,8 @@ function generate_bans_cache()
 		$output[] = $cur_ban;
 
 	// Output ban list as PHP code
-	$fh = @fopen(FORUM_CACHE_DIR.'cache_bans.php', 'wb');
-	if (!$fh)
-		error('Unable to write bans cache file to cache directory. Please make sure PHP has write access to the directory \''.pun_htmlspecialchars(FORUM_CACHE_DIR).'\'', __FILE__, __LINE__);
-
-	fwrite($fh, '<?php'."\n\n".'define(\'PUN_BANS_LOADED\', 1);'."\n\n".'$pun_bans = '.var_export($output, true).';'."\n\n".'?>');
-
-	fclose($fh);
-
-	if (function_exists('apc_delete_file'))
-		@apc_delete_file(FORUM_CACHE_DIR.'cache_bans.php');
+	$content = '<?php'."\n\n".'define(\'PUN_BANS_LOADED\', 1);'."\n\n".'$pun_bans = '.var_export($output, true).';'."\n\n".'?>';
+	fluxbb_write_cache_file('cache_bans.php', $content);
 }
 
 
@@ -99,10 +83,6 @@ function generate_quickjump_cache($group_id = false)
 	foreach ($groups as $group_id => $read_board)
 	{
 		// Output quick jump as PHP code
-		$fh = @fopen(FORUM_CACHE_DIR.'cache_quickjump_'.$group_id.'.php', 'wb');
-		if (!$fh)
-			error('Unable to write quick jump cache file to cache directory. Please make sure PHP has write access to the directory \''.pun_htmlspecialchars(FORUM_CACHE_DIR).'\'', __FILE__, __LINE__);
-
 		$output = '<?php'."\n\n".'if (!defined(\'PUN\')) exit;'."\n".'define(\'PUN_QJ_LOADED\', 1);'."\n".'$forum_id = isset($forum_id) ? $forum_id : 0;'."\n\n".'?>';
 
 		if ($read_board == '1')
@@ -133,12 +113,7 @@ function generate_quickjump_cache($group_id = false)
 			}
 		}
 
-		fwrite($fh, $output);
-
-		fclose($fh);
-
-		if (function_exists('apc_delete_file'))
-			@apc_delete_file(FORUM_CACHE_DIR.'cache_quickjump_'.$group_id.'.php');
+		fluxbb_write_cache_file('cache_quickjump_'.$group_id.'.php', $output);
 	}
 }
 
@@ -161,16 +136,8 @@ function generate_censoring_cache()
 	}
 
 	// Output censored words as PHP code
-	$fh = @fopen(FORUM_CACHE_DIR.'cache_censoring.php', 'wb');
-	if (!$fh)
-		error('Unable to write censoring cache file to cache directory. Please make sure PHP has write access to the directory \''.pun_htmlspecialchars(FORUM_CACHE_DIR).'\'', __FILE__, __LINE__);
-
-	fwrite($fh, '<?php'."\n\n".'define(\'PUN_CENSOR_LOADED\', 1);'."\n\n".'$search_for = '.var_export($search_for, true).';'."\n\n".'$replace_with = '.var_export($replace_with, true).';'."\n\n".'?>');
-
-	fclose($fh);
-
-	if (function_exists('apc_delete_file'))
-		@apc_delete_file(FORUM_CACHE_DIR.'cache_censoring.php');
+	$content = '<?php'."\n\n".'define(\'PUN_CENSOR_LOADED\', 1);'."\n\n".'$search_for = '.var_export($search_for, true).';'."\n\n".'$replace_with = '.var_export($replace_with, true).';'."\n\n".'?>';
+	fluxbb_write_cache_file('cache_censoring.php', $content);
 }
 
 
@@ -197,16 +164,8 @@ function generate_stopwords_cache()
 	$stopwords = array_filter($stopwords);
 
 	// Output stopwords as PHP code
-	$fh = @fopen(FORUM_CACHE_DIR.'cache_stopwords.php', 'wb');
-	if (!$fh)
-		error('Unable to write stopwords cache file to cache directory. Please make sure PHP has write access to the directory \''.pun_htmlspecialchars(FORUM_CACHE_DIR).'\'', __FILE__, __LINE__);
-
-	fwrite($fh, '<?php'."\n\n".'$cache_id = \''.generate_stopwords_cache_id().'\';'."\n".'if ($cache_id != generate_stopwords_cache_id()) return;'."\n\n".'define(\'PUN_STOPWORDS_LOADED\', 1);'."\n\n".'$stopwords = '.var_export($stopwords, true).';'."\n\n".'?>');
-
-	fclose($fh);
-
-	if (function_exists('apc_delete_file'))
-		@apc_delete_file(FORUM_CACHE_DIR.'cache_stopwords.php');
+	$content = '<?php'."\n\n".'$cache_id = \''.generate_stopwords_cache_id().'\';'."\n".'if ($cache_id != generate_stopwords_cache_id()) return;'."\n\n".'define(\'PUN_STOPWORDS_LOADED\', 1);'."\n\n".'$stopwords = '.var_export($stopwords, true).';'."\n\n".'?>';
+	fluxbb_write_cache_file('cache_stopwords.php', $content);
 }
 
 
@@ -226,16 +185,8 @@ function generate_users_info_cache()
 	$stats['last_user'] = $db->fetch_assoc($result);
 
 	// Output users info as PHP code
-	$fh = @fopen(FORUM_CACHE_DIR.'cache_users_info.php', 'wb');
-	if (!$fh)
-		error('Unable to write users info cache file to cache directory. Please make sure PHP has write access to the directory \''.pun_htmlspecialchars(FORUM_CACHE_DIR).'\'', __FILE__, __LINE__);
-
-	fwrite($fh, '<?php'."\n\n".'define(\'PUN_USERS_INFO_LOADED\', 1);'."\n\n".'$stats = '.var_export($stats, true).';'."\n\n".'?>');
-
-	fclose($fh);
-
-	if (function_exists('apc_delete_file'))
-		@apc_delete_file(FORUM_CACHE_DIR.'cache_users_info.php');
+	$content = '<?php'."\n\n".'define(\'PUN_USERS_INFO_LOADED\', 1);'."\n\n".'$stats = '.var_export($stats, true).';'."\n\n".'?>';
+	fluxbb_write_cache_file('cache_users_info.php', $content);
 }
 
 
@@ -254,16 +205,30 @@ function generate_admins_cache()
 		$output[] = $row[0];
 
 	// Output admin list as PHP code
-	$fh = @fopen(FORUM_CACHE_DIR.'cache_admins.php', 'wb');
+	$content = '<?php'."\n\n".'define(\'PUN_ADMINS_LOADED\', 1);'."\n\n".'$pun_admins = '.var_export($output, true).';'."\n\n".'?>';
+	fluxbb_write_cache_file('cache_admins.php', $content);
+}
+
+
+//
+// Safely write out a cache file.
+//
+function fluxbb_write_cache_file($file, $content)
+{
+	$fh = @fopen(FORUM_CACHE_DIR.$file, 'wb');
 	if (!$fh)
-		error('Unable to write admins cache file to cache directory. Please make sure PHP has write access to the directory \''.pun_htmlspecialchars(FORUM_CACHE_DIR).'\'', __FILE__, __LINE__);
+		error('Unable to write cache file '.pun_htmlspecialchars($file).' to cache directory. Please make sure PHP has write access to the directory \''.pun_htmlspecialchars(FORUM_CACHE_DIR).'\'', __FILE__, __LINE__);
 
-	fwrite($fh, '<?php'."\n\n".'define(\'PUN_ADMINS_LOADED\', 1);'."\n\n".'$pun_admins = '.var_export($output, true).';'."\n\n".'?>');
+	flock($fh, LOCK_EX);
+	ftruncate($fh, 0);
 
+	fwrite($fh, $content);
+
+	flock($fh, LOCK_UN);
 	fclose($fh);
 
 	if (function_exists('apc_delete_file'))
-		@apc_delete_file(FORUM_CACHE_DIR.'cache_admins.php');
+		@apc_delete_file(FORUM_CACHE_DIR.$file);
 }
 
 
