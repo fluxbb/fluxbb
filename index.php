@@ -185,7 +185,7 @@ if (!defined('PUN_USERS_INFO_LOADED'))
 }
 
 $result = $db->query('SELECT SUM(num_topics), SUM(num_posts) FROM '.$db->prefix.'forums') or error('Unable to fetch topic/post count', __FILE__, __LINE__, $db->error());
-list($stats['total_topics'], $stats['total_posts']) = $db->fetch_row($result);
+list($stats['total_topics'], $stats['total_posts']) = array_map('intval', $db->fetch_row($result));
 
 if ($pun_user['g_view_users'] == '1')
 	$stats['newest_user'] = '<a href="profile.php?id='.$stats['last_user']['id'].'">'.pun_htmlspecialchars($stats['last_user']['username']).'</a>';
