@@ -99,6 +99,8 @@ else if (isset($_GET['email']))
 
 	if (isset($_POST['form_sent']))
 	{
+		confirm_referrer('misc.php');
+
 		// Clean up message and subject from POST
 		$subject = pun_trim($_POST['req_subject']);
 		$message = pun_trim($_POST['req_message']);
