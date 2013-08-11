@@ -56,7 +56,7 @@ function generate_bans_cache()
 //
 function generate_quickjump_cache($group_id = false)
 {
-	global $db, $lang_common, $pun_user;
+	global $db, $lang_common;
 
 	$groups = array();
 
