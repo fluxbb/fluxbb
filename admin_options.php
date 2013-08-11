@@ -92,6 +92,10 @@ if (isset($_POST['form_sent']))
 	// Make sure base_url doesn't end with a slash
 	if (substr($form['base_url'], -1) == '/')
 		$form['base_url'] = substr($form['base_url'], 0, -1);
+		
+	// Convert IDN to Punycode if needed
+	if (function_exists('idn_to_ascii') && mb_detect_encoding($form['base_url']) != 'ASCII')
+		$form['base_url'] = idn_to_ascii($form['base_url']);
 
 	$languages = forum_list_langs();
 	if (!in_array($form['default_lang'], $languages))
@@ -249,6 +253,10 @@ generate_admin_menu('options');
 									<td>
 										<input type="text" name="form[base_url]" size="50" maxlength="100" value="<?php echo pun_htmlspecialchars($pun_config['o_base_url']) ?>" />
 										<span><?php echo $lang_admin_options['Base URL help'] ?></span>
+										<?php
+										if (!function_exists('idn_to_ascii'))
+											echo '<span>'.$lang_admin_options['Base URL problem'].'</span>';
+										?>
 									</td>
 								</tr>
 								<tr>
