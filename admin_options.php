@@ -92,6 +92,15 @@ if (isset($_POST['form_sent']))
 	// Make sure base_url doesn't end with a slash
 	if (substr($form['base_url'], -1) == '/')
 		$form['base_url'] = substr($form['base_url'], 0, -1);
+		
+	// Convert IDN to Punycode if needed
+	if (preg_match('/[^\x00-\x7F]/', $form['base_url']))
+	{
+		if (!function_exists('idn_to_ascii'))
+			message($lang_admin_options['Base URL problem']);
+		else
+			$form['base_url'] = idn_to_ascii($form['base_url']);
+	}
 
 	$languages = forum_list_langs();
 	if (!in_array($form['default_lang'], $languages))
