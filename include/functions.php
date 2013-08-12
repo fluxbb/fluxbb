@@ -361,7 +361,10 @@ function pun_setcookie($user_id, $password_hash, $expire)
 //
 function forum_setcookie($name, $value, $expire)
 {
-	global $cookie_path, $cookie_domain, $cookie_secure;
+	global $cookie_path, $cookie_domain, $cookie_secure, $pun_config;
+
+	if ($expire - time() - $pun_config['o_timeout_visit'] < 1)
+		$expire = 0;
 
 	// Enable sending of a P3P header
 	header('P3P: CP="CUR ADM"');
