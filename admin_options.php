@@ -94,7 +94,7 @@ if (isset($_POST['form_sent']))
 		$form['base_url'] = substr($form['base_url'], 0, -1);
 
 	// Convert IDN to Punycode if needed
-	if(mb_detect_encoding($form['base_url']) != 'ASCII')
+	if (preg_match('/[^\x00-\x7F]/', $form['base_url']))
 	{
 		if (!function_exists('idn_to_ascii'))
 			message($lang_admin_options['Base URL problem']);
