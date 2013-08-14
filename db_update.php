@@ -7,7 +7,7 @@
  */
 
 // The FluxBB version this script updates to
-define('UPDATE_TO', '1.4.10');
+define('UPDATE_TO', '1.4.11');
 
 define('UPDATE_TO_DB_REVISION', 15);
 define('UPDATE_TO_SI_REVISION', 2);
