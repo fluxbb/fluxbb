@@ -65,7 +65,6 @@ $lang_install = array(
 'Info 11'						=>	'Settings for your board. You can change this later.',
 'General information'			=>	'Enter your board\'s title and description.',
 'Board description'				=>	'Board description (supports HTML)',
-'Info 14'						=>	'The URL (without trailing slash) of your FluxBB forum (example: http://forum.myhost.com). This must be correct. Please note that the preset value below is just an educated guess by FluxBB.',
 'Appearance'					=>	'Appearance',
 'Info 15'						=>	'Make your forum yours. Choose a language and a style for your board.',
 'Default language'				=>	'Default language',
