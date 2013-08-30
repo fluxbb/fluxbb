@@ -855,6 +855,11 @@ function do_clickable($text)
 	return substr($text, 1);
 }
 
+function flux_empty($arr, $num)
+{
+	return isset($arr[$num]) ? $arr[$num] : '';
+}
+
 
 //
 // Convert a series of smilies to images
