@@ -1014,9 +1014,17 @@ function random_key($len, $readable = false, $hash = false)
 	$key = secure_random_bytes($len);
 
 	if ($hash)
-		$key = substr(bin2hex($key), 0, $len);
+		return substr(bin2hex($key), 0, $len);
 	else if ($readable)
-		$key = substr(base64_encode($key), 0, $len);
+	{
+		$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		
+		$result = '';
+		for ($i = 0; $i < $len; ++$i)
+			$result .= substr($chars, (ord($key[$i]) % strlen($chars)), 1);
+
+		return $result;
+	}
 
 	return $key;
 }
