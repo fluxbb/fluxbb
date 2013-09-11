@@ -73,7 +73,6 @@ function generate_quickjump_cache($group_id = false)
 	{
 		// A group_id was not supplied, so we generate the quick jump cache for all groups
 		$result = $db->query('SELECT g_id, g_read_board FROM '.$db->prefix.'groups') or error('Unable to fetch user group list', __FILE__, __LINE__, $db->error());
-		$num_groups = $db->num_rows($result);
 
 		while ($row = $db->fetch_row($result))
 			$groups[$row[0]] = $row[1];
