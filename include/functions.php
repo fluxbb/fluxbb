@@ -6,7 +6,6 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-include PUN_ROOT.'include/srand.php';
 
 
 //
@@ -1011,6 +1010,9 @@ function forum_number_format($number, $decimals = 0)
 //
 function random_key($len, $readable = false, $hash = false)
 {
+	if (!function_exists('secure_random_bytes'))
+		include PUN_ROOT.'include/srand.php';
+
 	$key = secure_random_bytes($len);
 
 	if ($hash)
@@ -1018,7 +1020,7 @@ function random_key($len, $readable = false, $hash = false)
 	else if ($readable)
 	{
 		$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		
+
 		$result = '';
 		for ($i = 0; $i < $len; ++$i)
 			$result .= substr($chars, (ord($key[$i]) % strlen($chars)), 1);
