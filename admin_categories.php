@@ -41,7 +41,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 
 	$cat_to_delete = intval($_POST['cat_to_delete']);
 	if ($cat_to_delete < 1)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	if (isset($_POST['del_cat_comply'])) // Delete a category with all forums and posts
 	{
@@ -128,7 +128,7 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 
 	$categories = $_POST['cat'];
 	if (empty($categories))
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	foreach ($categories as $cat_id => $cur_cat)
 	{

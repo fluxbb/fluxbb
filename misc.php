@@ -22,7 +22,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : null;
 if ($action == 'rules')
 {
 	if ($pun_config['o_rules'] == '0' || ($pun_user['is_guest'] && $pun_user['g_read_board'] == '0' && $pun_config['o_regs_allow'] == '0'))
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	// Load the register.php language file
 	require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
@@ -68,7 +68,7 @@ else if ($action == 'markforumread')
 
 	$fid = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 	if ($fid < 1)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$tracked_topics = get_tracked_topics();
 	$tracked_topics['forums'][$fid] = time();
@@ -85,11 +85,11 @@ else if (isset($_GET['email']))
 
 	$recipient_id = intval($_GET['email']);
 	if ($recipient_id < 2)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$result = $db->query('SELECT username, email, email_setting FROM '.$db->prefix.'users WHERE id='.$recipient_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 	if (!$db->num_rows($result))
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	list($recipient, $recipient_email, $email_setting) = $db->fetch_row($result);
 
@@ -211,7 +211,7 @@ else if (isset($_GET['report']))
 
 	$post_id = intval($_GET['report']);
 	if ($post_id < 1)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	if (isset($_POST['form_sent']))
 	{
@@ -228,14 +228,14 @@ else if (isset($_GET['report']))
 		// Get the topic ID
 		$result = $db->query('SELECT topic_id FROM '.$db->prefix.'posts WHERE id='.$post_id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 
 		$topic_id = $db->result($result);
 
 		// Get the subject and forum ID
 		$result = $db->query('SELECT subject, forum_id FROM '.$db->prefix.'topics WHERE id='.$topic_id) or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 
 		list($subject, $forum_id) = $db->fetch_row($result);
 
@@ -278,7 +278,7 @@ else if (isset($_GET['report']))
 	// Fetch some info about the post, the topic and the forum
 	$result = $db->query('SELECT f.id AS fid, f.forum_name, t.id AS tid, t.subject FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.id='.$post_id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 	if (!$db->num_rows($result))
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$cur_post = $db->fetch_assoc($result);
 
@@ -334,7 +334,7 @@ else if ($action == 'subscribe')
 	$topic_id = isset($_GET['tid']) ? intval($_GET['tid']) : 0;
 	$forum_id = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 	if ($topic_id < 1 && $forum_id < 1)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	if ($topic_id)
 	{
@@ -344,7 +344,7 @@ else if ($action == 'subscribe')
 		// Make sure the user can view the topic
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$topic_id.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topic_subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$topic_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result))
@@ -363,7 +363,7 @@ else if ($action == 'subscribe')
 		// Make sure the user can view the forum
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$forum_id) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forum_subscriptions WHERE user_id='.$pun_user['id'].' AND forum_id='.$forum_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result))
@@ -384,7 +384,7 @@ else if ($action == 'unsubscribe')
 	$topic_id = isset($_GET['tid']) ? intval($_GET['tid']) : 0;
 	$forum_id = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 	if ($topic_id < 1 && $forum_id < 1)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	if ($topic_id)
 	{
@@ -417,4 +417,4 @@ else if ($action == 'unsubscribe')
 
 
 else
-	message($lang_common['Bad request']);
+	message($lang_common['Bad request'], false, '404 Not Found');

@@ -84,10 +84,10 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	else if ($action == 'show_replies')
 	{
 		if ($pun_user['is_guest'])
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 	}
 	else if ($action != 'show_new' && $action != 'show_unanswered')
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 
 	// If a valid search_id was supplied we attempt to fetch the search results from the db
@@ -379,7 +379,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			else if ($action == 'show_subscriptions')
 			{
 				if ($pun_user['is_guest'])
-					message($lang_common['Bad request']);
+					message($lang_common['Bad request'], false, '404 Not Found');
 
 				$result = $db->query('SELECT t.id FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'topic_subscriptions AS s ON (t.id=s.topic_id AND s.user_id='.$user_id.') LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) ORDER BY t.last_post DESC') or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());
 				$num_hits = $db->num_rows($result);
@@ -407,7 +407,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			$db->free_result($result);
 		}
 		else
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 
 
 		// Prune "old" search results
