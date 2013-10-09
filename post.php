@@ -33,7 +33,7 @@ $is_subscribed = $tid && $cur_posting['is_subscribed'];
 
 // Is someone trying to post into a redirect forum?
 if ($cur_posting['redirect_url'] != '')
-	message($lang_common['Bad request']);
+	message($lang_common['Bad request'], false, '404 Not Found');
 
 // Sort out who the moderators are and if we are currently a moderator (or an admin)
 $mods_array = ($cur_posting['moderators'] != '') ? unserialize($cur_posting['moderators']) : array();
@@ -523,7 +523,7 @@ else if ($fid)
 	$form = '<form id="post" method="post" action="post.php?action=post&amp;fid='.$fid.'" onsubmit="return process_form(this)">';
 }
 else
-	message($lang_common['Bad request']);
+	message($lang_common['Bad request'], false, '404 Not Found');
 
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $action);

@@ -27,7 +27,7 @@ if (isset($_POST['add_forum']))
 
 	$add_to_cat = intval($_POST['add_to_cat']);
 	if ($add_to_cat < 1)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$db->query('INSERT INTO '.$db->prefix.'forums (forum_name, cat_id) VALUES(\''.$db->escape($lang_admin_forums['New forum']).'\', '.$add_to_cat.')') or error('Unable to create forum', __FILE__, __LINE__, $db->error());
 
@@ -47,7 +47,7 @@ else if (isset($_GET['del_forum']))
 
 	$forum_id = intval($_GET['del_forum']);
 	if ($forum_id < 1)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	if (isset($_POST['del_forum_comply'])) // Delete a forum with all posts
 	{
@@ -147,7 +147,7 @@ else if (isset($_GET['edit_forum']))
 {
 	$forum_id = intval($_GET['edit_forum']);
 	if ($forum_id < 1)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	// Update group permissions for $forum_id
 	if (isset($_POST['save']))
@@ -165,7 +165,7 @@ else if (isset($_GET['edit_forum']))
 			message($lang_admin_forums['Must enter name message']);
 
 		if ($cat_id < 1)
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 
 		$forum_desc = ($forum_desc != '') ? '\''.$db->escape($forum_desc).'\'' : 'NULL';
 		$redirect_url = ($redirect_url != '') ? '\''.$db->escape($redirect_url).'\'' : 'NULL';
@@ -225,7 +225,7 @@ else if (isset($_GET['edit_forum']))
 	// Fetch forum info
 	$result = $db->query('SELECT id, forum_name, forum_desc, redirect_url, num_topics, sort_by, cat_id FROM '.$db->prefix.'forums WHERE id='.$forum_id) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
 	if (!$db->num_rows($result))
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$cur_forum = $db->fetch_assoc($result);
 
