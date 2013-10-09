@@ -30,7 +30,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		{
 			$user_id = intval($_GET['add_ban']);
 			if ($user_id < 2)
-				message($lang_common['Bad request']);
+				message($lang_common['Bad request'], false, '404 Not Found');
 
 			$result = $db->query('SELECT group_id, username, email FROM '.$db->prefix.'users WHERE id='.$user_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 			if ($db->num_rows($result))
@@ -84,13 +84,13 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 	{
 		$ban_id = intval($_GET['edit_ban']);
 		if ($ban_id < 1)
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 
 		$result = $db->query('SELECT username, ip, email, message, expire FROM '.$db->prefix.'bans WHERE id='.$ban_id) or error('Unable to fetch ban info', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result))
 			list($ban_user, $ban_ip, $ban_email, $ban_message, $ban_expire) = $db->fetch_row($result);
 		else
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 
 		$diff = ($pun_user['timezone'] + $pun_user['dst']) * 3600;
 		$ban_expire = ($ban_expire != '') ? gmdate('Y-m-d', $ban_expire + $diff) : '';
@@ -308,7 +308,7 @@ else if (isset($_GET['del_ban']))
 
 	$ban_id = intval($_GET['del_ban']);
 	if ($ban_id < 1)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$db->query('DELETE FROM '.$db->prefix.'bans WHERE id='.$ban_id) or error('Unable to delete ban', __FILE__, __LINE__, $db->error());
 
