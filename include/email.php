@@ -10,6 +10,10 @@
 if (!defined('PUN'))
 	exit;
 
+// Define line breaks in mail headers; possible values can be PHP_EOL, "\r\n", "\n" or "\r"
+if (!defined('FORUM_EOL'))
+	define('FORUM_EOL', PHP_EOL);
+
 require PUN_ROOT.'include/utf8/utils/ascii.php';
 
 //
@@ -229,14 +233,14 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 	$from = '"'.encode_mail_text($from_name).'" <'.$from_email.'>';
 	$subject = encode_mail_text($subject);
 
-	$headers = 'From: '.$from."\r\n".'Date: '.gmdate('r')."\r\n".'MIME-Version: 1.0'."\r\n".'Content-transfer-encoding: 8bit'."\r\n".'Content-type: text/plain; charset=utf-8'."\r\n".'X-Mailer: FluxBB Mailer';
+	$headers = 'From: '.$from.FORUM_EOL.'Date: '.gmdate('r').FORUM_EOL.'MIME-Version: 1.0'.FORUM_EOL.'Content-transfer-encoding: 8bit'.FORUM_EOL.'Content-type: text/plain; charset=utf-8'.FORUM_EOL.'X-Mailer: FluxBB Mailer';
 
 	// If we specified a reply-to email, we deal with it here
 	if (!empty($reply_to_email))
 	{
 		$reply_to = '"'.encode_mail_text($reply_to_name).'" <'.$reply_to_email.'>';
 
-		$headers .= "\r\n".'Reply-To: '.$reply_to;
+		$headers .= FORUM_EOL.'Reply-To: '.$reply_to;
 	}
 
 	// Make sure all linebreaks are LF in message (and strip out any NULL bytes)
