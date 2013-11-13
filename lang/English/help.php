@@ -38,7 +38,7 @@ $lang_help = array(
 'Quotes'				=>	'Quotes',
 'Quotes info'			=>	'If you want to quote someone, you should use the quote tag.',
 'Quotes info 2'			=>	'If you don\'t want to quote anyone in particular, you can use the quote tag without specifying a name.',
-'Quote text'			=>	'This is the text i want to quote.',
+'Quote text'			=>	'This is the text I want to quote.',
 'produces quote box'	=>	'produces a quote box like this:',
 'quote note'			=>	'Note: If a username contains the characters [ or ] you can enclose it in quote marks.',
 
