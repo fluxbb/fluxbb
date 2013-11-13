@@ -475,7 +475,7 @@ function check_username($username, $exclude_id = null)
 		$errors[] = $lang_register['Username censor'];
 
 	// Check that the username (or a too similar username) is not already registered
-	$query = ($exclude_id) ? ' AND id!='.$exclude_id : '';
+	$query = (!is_null($exclude_id)) ? ' AND id!='.$exclude_id : '';
 
 	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(ucp_preg_replace('%[^\p{L}\p{N}]%u', '', $username)).'\')) AND id>1'.$query) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
