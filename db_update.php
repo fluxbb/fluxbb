@@ -1282,6 +1282,7 @@ switch ($stage)
 
 			convert_to_utf8($cur_item['forum_name'], $old_charset);
 			convert_to_utf8($cur_item['forum_desc'], $old_charset);
+			convert_to_utf8($cur_item['last_poster'], $old_charset);
 
 			if (!empty($moderators_utf8))
 				$cur_item['moderators'] = serialize($moderators_utf8);
