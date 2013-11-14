@@ -1,8 +1,12 @@
 {
 	"require": {
 		"laravel/framework": "4.0.*",
-		"fluxbb/core": ">=1.0.0",
-		"fluxbb/installer": ">=1.0.0"
+		"fluxbb/core": "@dev",
+		"fluxbb/installer": "@dev"
+	},
+	"require-dev": {
+		"mockery/mockery": "0.7.2",
+		"phpunit/phpunit": "3.7.*"
 	},
 	"autoload": {
 		"classmap": [
@@ -31,5 +35,5 @@
 	"config": {
 		"preferred-install": "source"
 	},
-	"minimum-stability": "dev"
+	"minimum-stability": "stable"
 }
