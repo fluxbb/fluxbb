@@ -371,6 +371,14 @@ generate_admin_menu('forums');
 		<h2><span><?php echo $lang_admin_forums['Add forum head'] ?></span></h2>
 		<div class="box">
 			<form method="post" action="admin_forums.php?action=adddel">
+<?php
+
+$result = $db->query('SELECT id, cat_name FROM '.$db->prefix.'categories ORDER BY disp_position') or error('Unable to fetch category list', __FILE__, __LINE__, $db->error());
+
+if ($db->num_rows($result) > 0)
+{
+
+?>
 				<div class="inform">
 					<fieldset>
 						<legend><?php echo $lang_admin_forums['Create new subhead'] ?></legend>
@@ -382,14 +390,8 @@ generate_admin_menu('forums');
 										<select name="add_to_cat" tabindex="1">
 <?php
 
-	$result = $db->query('SELECT id, cat_name FROM '.$db->prefix.'categories ORDER BY disp_position') or error('Unable to fetch category list', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result) > 0)
-	{
-		while ($cur_cat = $db->fetch_assoc($result))
-			echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$cur_cat['id'].'">'.pun_htmlspecialchars($cur_cat['cat_name']).'</option>'."\n";
-	}
-	else
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="0" disabled="disabled">'.$lang_admin_forums['No categories exist'].'</option>'."\n";
+	while ($cur_cat = $db->fetch_assoc($result))
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<option value="'.$cur_cat['id'].'">'.pun_htmlspecialchars($cur_cat['cat_name']).'</option>'."\n";
 
 ?>
 										</select>
@@ -400,6 +402,26 @@ generate_admin_menu('forums');
 						</div>
 					</fieldset>
 				</div>
+<?php
+
+}
+else
+{
+
+?>
+				<div class="inform">
+					<fieldset>
+						<legend><?php echo $lang_admin_common['None'] ?></legend>
+						<div class="infldset">
+							<p><?php echo $lang_admin_forums['No categories exist'] ?></p>
+						</div>
+					</fieldset>
+				</div>
+<?php
+
+}
+
+?>
 			</form>
 		</div>
 <?php
