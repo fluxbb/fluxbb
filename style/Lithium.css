@@ -516,7 +516,6 @@ html, body {
 .pun .blocktable .tclcon {
 	padding: 0 11px 0 12px;
 	overflow: hidden;
-	height: 1%;
 	min-height: 1px;
 	position: relative;
 	}
