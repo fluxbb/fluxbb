@@ -673,7 +673,6 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 }
 
 .pun .blocktable .tclcon {
-	height: 1%;
 	min-height: 1px;
 	overflow: hidden;
 	padding: 0 11px 0 12px;
@@ -964,7 +963,7 @@ MAIN POSTS
 }
 
 .pun .codebox pre {
-	overflow: hidden;
+	overflow: auto;
 	width: 100%;
 	direction: ltr;
 	text-align: left;
