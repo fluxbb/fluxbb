@@ -454,7 +454,7 @@ function check_username($username, $exclude_id = null)
 	global $db, $pun_config, $errors, $lang_prof_reg, $lang_register, $lang_common, $pun_bans;
 
 	// Include UTF-8 function
-	require PUN_ROOT.'include/utf8/strcasecmp.php';
+	require_once PUN_ROOT.'include/utf8/strcasecmp.php';
 
 	// Convert multiple whitespace characters into one (to prevent people from registering with indistinguishable usernames)
 	$username = preg_replace('%\s+%s', ' ', $username);
