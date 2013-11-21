@@ -627,6 +627,7 @@ if (isset($_POST['req_db_pass']))
 	{
 		// For SQLite we compare against the database file name, since the password is left blank
 		case 'sqlite':
+		case 'sqlite3':
 			if ($req_db_pass != strtolower($db_name))
 				error(sprintf($lang_update['Invalid file error'], 'config.php'));
 
@@ -1123,7 +1124,7 @@ switch ($stage)
 				)
 			);
 
-			if ($db_type == 'sqlite')
+			if ($db_type == 'sqlite' || $db_type == 'sqlite3')
 			{
 				$schema['PRIMARY KEY'] = array('id');
 				$schema['UNIQUE KEYS'] = array('word_idx'	=> array('word'));
