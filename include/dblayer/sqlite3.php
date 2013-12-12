@@ -20,6 +20,8 @@ class DBLayer
 	var $saved_queries = array();
 	var $num_queries = 0;
 
+	var $last_query;
+
 	var $error_no = false;
 	var $error_msg = 'Unknown';
 
@@ -76,6 +78,8 @@ class DBLayer
 
 		// TODO: What about unbuffered queries?
 		$this->query_result = $this->pdo->query($sql);
+
+		$this->last_query = $sql;
 
 		if ($this->query_result)
 		{
@@ -137,7 +141,15 @@ class DBLayer
 
 	function num_rows($result = 0)
 	{
-		return $result ? $result->rowCount() : false;
+		if ($result && preg_match('/\bSELECT\b/i', $this->last_query))
+		{
+			$num_rows_query = preg_replace('/\bSELECT\b(.*)\bFROM\b/imsU', 'SELECT COUNT(*) FROM', $this->last_query);
+			$num_rows_result = $this->query($num_rows_query);
+
+			return intval($this->result($num_rows_result));
+		}
+
+		return false;
 	}
 
 
