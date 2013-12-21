@@ -175,7 +175,7 @@ generate_admin_menu('categories');
 					<fieldset>
 						<legend><?php echo $lang_admin_categories['Add categories subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_categories['Add category label'] ?><div><input type="submit" name="add_cat" value="<?php echo $lang_admin_categories['Add new submit'] ?>" tabindex="2" /></div></th>
 									<td>
@@ -197,7 +197,7 @@ generate_admin_menu('categories');
 					<fieldset>
 						<legend><?php echo $lang_admin_categories['Delete categories subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_categories['Delete category label'] ?><div><input type="submit" name="del_cat" value="<?php echo $lang_admin_common['Delete'] ?>" tabindex="4" /></div></th>
 									<td>
@@ -227,7 +227,7 @@ generate_admin_menu('categories');
 					<fieldset>
 						<legend><?php echo $lang_admin_categories['Edit categories subhead'] ?></legend>
 						<div class="infldset">
-							<table id="categoryedit" cellspacing="0" >
+							<table id="categoryedit">
 							<thead>
 								<tr>
 									<th class="tcl" scope="col"><?php echo $lang_admin_categories['Category name label'] ?></th>

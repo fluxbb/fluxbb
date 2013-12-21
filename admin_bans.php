@@ -116,7 +116,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 <?php endif; ?>				<fieldset>
 						<legend><?php echo $lang_admin_bans['Ban advanced subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['Username label'] ?></th>
 									<td>
@@ -147,7 +147,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 					<fieldset>
 						<legend><?php echo $lang_admin_bans['Message expiry subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['Ban message label'] ?></th>
 									<td>
@@ -407,7 +407,7 @@ else if (isset($_GET['find_ban']))
 	<h2><span><?php echo $lang_admin_bans['Results head'] ?></span></h2>
 	<div class="box">
 		<div class="inbox">
-			<table cellspacing="0">
+			<table>
 			<thead>
 				<tr>
 					<th class="tcl" scope="col"><?php echo $lang_admin_bans['Results username head'] ?></th>
@@ -489,7 +489,7 @@ generate_admin_menu('bans');
 					<fieldset>
 						<legend><?php echo $lang_admin_bans['Add ban subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['Username label'] ?><div><input type="submit" name="add_ban" value="<?php echo $lang_admin_common['Add'] ?>" tabindex="2" /></div></th>
 									<td>
@@ -513,7 +513,7 @@ generate_admin_menu('bans');
 						<legend><?php echo $lang_admin_bans['Ban search subhead'] ?></legend>
 						<div class="infldset">
 							<p><?php echo $lang_admin_bans['Ban search info'] ?></p>
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['Username label'] ?></th>
 									<td><input type="text" name="form[username]" size="25" maxlength="25" tabindex="4" /></td>

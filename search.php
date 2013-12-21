@@ -577,7 +577,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	<h2><span><?php echo $lang_search['Search results'] ?></span></h2>
 	<div class="box">
 		<div class="inbox">
-			<table cellspacing="0">
+			<table>
 			<thead>
 				<tr>
 					<th class="tcl" scope="col"><?php echo $lang_common['Topic'] ?></th>

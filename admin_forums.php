@@ -245,7 +245,7 @@ else if (isset($_GET['edit_forum']))
 					<fieldset>
 						<legend><?php echo $lang_admin_forums['Edit details subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_forums['Forum name label'] ?></th>
 									<td><input type="text" name="forum_name" size="35" maxlength="80" value="<?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?>" tabindex="1" /></td>
@@ -294,7 +294,7 @@ else if (isset($_GET['edit_forum']))
 						<legend><?php echo $lang_admin_forums['Group permissions subhead'] ?></legend>
 						<div class="infldset">
 							<p><?php printf($lang_admin_forums['Group permissions info'], '<a href="admin_groups.php">'.$lang_admin_common['User groups'].'</a>') ?></p>
-							<table id="forumperms" cellspacing="0">
+							<table id="forumperms">
 							<thead>
 								<tr>
 									<th class="atcl">&#160;</th>
@@ -383,7 +383,7 @@ if ($db->num_rows($result) > 0)
 					<fieldset>
 						<legend><?php echo $lang_admin_forums['Create new subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_forums['Add forum label'] ?><div><input type="submit" name="add_forum" value="<?php echo $lang_admin_forums['Add forum'] ?>" tabindex="2" /></div></th>
 									<td>
@@ -454,7 +454,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 					<fieldset>
 						<legend><?php echo $lang_admin_forums['Category subhead'] ?> <?php echo pun_htmlspecialchars($cur_forum['cat_name']) ?></legend>
 						<div class="infldset">
-							<table cellspacing="0">
+							<table>
 							<thead>
 								<tr>
 									<th class="tcl"><?php echo $lang_admin_common['Action'] ?></th>

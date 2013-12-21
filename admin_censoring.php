@@ -101,7 +101,7 @@ generate_admin_menu('censoring');
 						<legend><?php echo $lang_admin_censoring['Add word subhead'] ?></legend>
 						<div class="infldset">
 							<p><?php echo $lang_admin_censoring['Add word info'].' '.($pun_config['o_censoring'] == '1' ? sprintf($lang_admin_censoring['Censoring enabled'], '<a href="admin_options.php#censoring">'.$lang_admin_common['Options'].'</a>') : sprintf($lang_admin_censoring['Censoring disabled'], '<a href="admin_options.php#censoring">'.$lang_admin_common['Options'].'</a>')) ?></p>
-							<table cellspacing="0">
+							<table>
 							<thead>
 								<tr>
 									<th class="tcl" scope="col"><?php echo $lang_admin_censoring['Censored word label'] ?></th>
@@ -131,7 +131,7 @@ if ($db->num_rows($result))
 {
 
 ?>
-							<table cellspacing="0" >
+							<table>
 							<thead>
 								<tr>
 									<th class="tcl" scope="col"><?php echo $lang_admin_censoring['Censored word label'] ?></th>

@@ -76,7 +76,7 @@ if ($db->num_rows($result))
 					<fieldset>
 						<legend><?php printf($lang_admin_reports['Report subhead'], format_time($cur_report['created'])) ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php printf($lang_admin_reports['Reported by'], $reporter) ?></th>
 									<td class="location"><?php echo implode(' ', $report_location) ?></td>
@@ -140,7 +140,7 @@ if ($db->num_rows($result))
 					<fieldset>
 						<legend><?php printf($lang_admin_reports['Zapped subhead'], format_time($cur_report['zapped']), $zapped_by) ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php printf($lang_admin_reports['Reported by'], $reporter) ?></th>
 									<td class="location"><?php echo implode(' ', $report_location) ?></td>

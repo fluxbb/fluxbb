@@ -122,7 +122,7 @@ while ($cur_group = $db->fetch_assoc($result))
 	<h2><span><?php echo $lang_common['User list'] ?></span></h2>
 	<div class="box">
 		<div class="inbox">
-			<table cellspacing="0">
+			<table>
 			<thead>
 				<tr>
 					<th class="tcl" scope="col"><?php echo $lang_common['Username'] ?></th>

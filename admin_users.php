@@ -63,7 +63,7 @@ if (isset($_GET['ip_stats']))
 	<h2><span><?php echo $lang_admin_users['Results head'] ?></span></h2>
 	<div class="box">
 		<div class="inbox">
-			<table cellspacing="0">
+			<table>
 			<thead>
 				<tr>
 					<th class="tcl" scope="col"><?php echo $lang_admin_users['Results IP address head'] ?></th>
@@ -164,7 +164,7 @@ if (isset($_GET['show_users']))
 	<h2><span><?php echo $lang_admin_users['Results head'] ?></span></h2>
 	<div class="box">
 		<div class="inbox">
-			<table cellspacing="0">
+			<table>
 			<thead>
 				<tr>
 					<th class="tcl" scope="col"><?php echo $lang_admin_users['Results username head'] ?></th>
@@ -361,7 +361,7 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 					<fieldset>
 						<legend><?php echo $lang_admin_users['Move users subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_users['New group label'] ?></th>
 									<td>
@@ -643,7 +643,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 					<fieldset>
 						<legend><?php echo $lang_admin_users['Message expiry subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_users['Ban message label'] ?></th>
 									<td>
@@ -839,7 +839,7 @@ else if (isset($_GET['find_user']))
 	<h2><span><?php echo $lang_admin_users['Results head'] ?></span></h2>
 	<div class="box">
 		<div class="inbox">
-			<table cellspacing="0">
+			<table>
 			<thead>
 				<tr>
 					<th class="tcl" scope="col"><?php echo $lang_admin_users['Results username head'] ?></th>
@@ -935,7 +935,7 @@ else
 						<legend><?php echo $lang_admin_users['User search subhead'] ?></legend>
 						<div class="infldset">
 							<p><?php echo $lang_admin_users['User search info'] ?></p>
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_users['Username label'] ?></th>
 									<td><input type="text" name="form[username]" size="25" maxlength="25" tabindex="2" /></td>
@@ -1074,7 +1074,7 @@ else
 					<fieldset>
 						<legend><?php echo $lang_admin_users['IP search subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_users['IP address label'] ?><div><input type="submit" value="<?php echo $lang_admin_users['Find IP address'] ?>" tabindex="26" /></div></th>
 									<td><input type="text" name="show_users" size="18" maxlength="15" tabindex="24" />
