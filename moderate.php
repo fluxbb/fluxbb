@@ -278,6 +278,8 @@ if (isset($_GET['tid']))
 	// Used to disable the Move and Delete buttons if there are no replies to this topic
 	$button_status = ($cur_topic['num_replies'] == 0) ? ' disabled="disabled"' : '';
 
+	if (isset($_GET['action']) && $_GET['action'] == 'all')
+		$pun_user['disp_posts'] = $cur_topic['num_replies'] + 1;
 
 	// Determine the post offset (based on $_GET['p'])
 	$num_pages = ceil(($cur_topic['num_replies'] + 1) / $pun_user['disp_posts']);
