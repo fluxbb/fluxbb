@@ -1060,7 +1060,7 @@ function confirm_referrer($script, $error_msg = false)
 		$valid['host'] = substr($valid['host'], 4);
 
 	// Check the host and path match. Ignore the scheme, port, etc.
-	if ($referrer['host'] != $valid['host'] || $referrer['path'] != $valid['path'])
+	if ( $referrer['host'] != $valid['host'] || ($referrer['path'] != $valid['path'] && $valid['path'] != '/') )
 		message($error_msg ? $error_msg : $lang_common['Bad referrer']);
 }
 
