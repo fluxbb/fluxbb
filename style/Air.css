@@ -1187,6 +1187,10 @@ MAIN FORMS
 	width: 98%;
 }
 
+.pun textarea {
+    resize: vertical;
+}
+
 .pun #quickpost .txtarea {
 	padding-right: 12px;
 	position: relative;
