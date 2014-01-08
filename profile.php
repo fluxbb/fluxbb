@@ -84,7 +84,7 @@ if ($action == 'change_pass')
 		if ($pun_user['is_admmod'])
 			confirm_referrer('profile.php');
 		
-		//Make sure they got here from the site
+		// Make sure they got here from the site
 		confirm_referrer('');
 
 		$old_password = isset($_POST['req_old_password']) ? pun_trim($_POST['req_old_password']) : '';
@@ -199,7 +199,7 @@ else if ($action == 'change_email')
 		if (pun_hash($_POST['req_password']) !== $pun_user['password'])
 			message($lang_profile['Wrong pass']);
 			
-		//Make sure they got here from the site
+		// Make sure they got here from the site
 		confirm_referrer('');
 
 		require PUN_ROOT.'include/email.php';
@@ -329,7 +329,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 		if (!isset($_FILES['req_file']))
 			message($lang_profile['No file']);
 			
-		//Make sure they got here from the site
+		// Make sure they got here from the site
 		confirm_referrer('');
 
 		$uploaded_file = $_FILES['req_file'];
@@ -712,7 +712,7 @@ else if (isset($_POST['form_sent']))
 	if ($pun_user['is_admmod'])
 		confirm_referrer('profile.php');
 	
-	//Make sure they got here from the site
+	// Make sure they got here from the site
 	confirm_referrer('');
 
 	$username_updated = false;

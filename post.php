@@ -63,7 +63,7 @@ if (isset($_POST['form_sent']))
 	if (!isset($_POST['preview']) && $pun_user['last_post'] != '' && (time() - $pun_user['last_post']) < $pun_user['g_post_flood'])
 		$errors[] = sprintf($lang_post['Flood start'], $pun_user['g_post_flood'], $pun_user['g_post_flood'] - (time() - $pun_user['last_post']));
 
-	//Make sure they got here from the site
+	// Make sure they got here from the site
 	confirm_referrer('');
 	
 	// If it's a new topic

@@ -217,7 +217,7 @@ else if (isset($_GET['report']))
 	if (isset($_POST['form_sent']))
 	{
 	
-		//Make sure they got here from the site
+		// Make sure they got here from the site
 		confirm_referrer('');
 		
 		// Clean up reason from POST
