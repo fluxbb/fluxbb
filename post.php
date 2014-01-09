@@ -64,7 +64,7 @@ if (isset($_POST['form_sent']))
 		$errors[] = sprintf($lang_post['Flood start'], $pun_user['g_post_flood'], $pun_user['g_post_flood'] - (time() - $pun_user['last_post']));
 
 	// Make sure they got here from the site
-	confirm_referrer('');
+	confirm_referrer(array('post.php', 'viewtopic.php'));
 	
 	// If it's a new topic
 	if ($fid)

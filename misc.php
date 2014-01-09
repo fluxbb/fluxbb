@@ -217,7 +217,7 @@ else if (isset($_GET['report']))
 	if (isset($_POST['form_sent']))
 	{
 		// Make sure they got here from the site
-		confirm_referrer('');
+		confirm_referrer('misc.php');
 		
 		// Clean up reason from POST
 		$reason = pun_linebreaks(pun_trim($_POST['req_reason']));
