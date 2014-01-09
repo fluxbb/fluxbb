@@ -1045,7 +1045,7 @@ function confirm_referrer($scripts, $error_msg = false)
 {
 	global $pun_config, $lang_common;
 
-	if (!is_array($script))
+	if (!is_array($scripts))
 		$scripts = array($scripts);
 
 	// There is no referrer
