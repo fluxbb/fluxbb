@@ -697,9 +697,6 @@ else if (isset($_POST['form_sent']))
 		$is_moderator))))																			// or the user is another mod
 		message($lang_common['No permission'], false, '403 Forbidden');
 
-	if ($pun_user['is_admmod'])
-		confirm_referrer('profile.php');
-
 	// Make sure they got here from the site
 	confirm_referrer('profile.php');
 
