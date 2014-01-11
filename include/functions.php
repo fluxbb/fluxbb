@@ -830,7 +830,7 @@ function censor_words($text)
 //
 function get_title($user)
 {
-	global $db, $pun_bans, $lang_common;
+	global $pun_bans, $lang_common;
 	static $ban_list;
 
 	// If not already built in a previous call, build an array of lowercase banned usernames
@@ -1781,7 +1781,7 @@ function forum_list_plugins($is_admin)
 //
 function split_text($text, $start, $end, $retab = true)
 {
-	global $pun_config, $lang_common;
+	global $pun_config;
 
 	$result = array(0 => array(), 1 => array()); // 0 = inside, 1 = outside
 
