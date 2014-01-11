@@ -591,7 +591,7 @@ function generate_avatar_markup($user_id)
 //
 function generate_page_title($page_title, $p = null)
 {
-	global $pun_config, $lang_common;
+	global $lang_common;
 
 	if (!is_array($page_title))
 		$page_title = array($page_title);
@@ -830,7 +830,7 @@ function censor_words($text)
 //
 function get_title($user)
 {
-	global $db, $pun_config, $pun_bans, $lang_common;
+	global $db, $pun_bans, $lang_common;
 	static $ban_list;
 
 	// If not already built in a previous call, build an array of lowercase banned usernames
@@ -964,7 +964,7 @@ function message($message, $no_back_link = false, $http_status = null)
 //
 function format_time($timestamp, $date_only = false, $date_format = null, $time_format = null, $time_only = false, $no_text = false)
 {
-	global $pun_config, $lang_common, $pun_user, $forum_date_formats, $forum_time_formats;
+	global $lang_common, $pun_user, $forum_date_formats, $forum_time_formats;
 
 	if ($timestamp == '')
 		return $lang_common['Never'];
@@ -1043,7 +1043,7 @@ function random_key($len, $readable = false, $hash = false)
 //
 function confirm_referrer($scripts, $error_msg = false)
 {
-	global $pun_config, $lang_common;
+	global $lang_common;
 
 	if (!is_array($scripts))
 		$scripts = array($scripts);
