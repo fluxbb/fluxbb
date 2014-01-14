@@ -1029,6 +1029,9 @@ switch ($stage)
 		// Add a field for the per-group permission to post links
 		$db->add_field('groups', 'g_post_links', 'TINYINT(1)', false, 1, 'g_delete_topics') or error('Unable to add per-group permission to post links', __FILE__, __LINE__, $db->error());
 
+		// Add a field for the per-group permission to promote users to the next auto-promote group
+		$db->add_field('groups', 'g_mod_promote_users', 'TINYINT(1)', false, 0, 'g_mod_ban_users') or error('Unable to add per-group permission to post links', __FILE__, __LINE__, $db->error());
+
 		// In case we had the fulltext search extension installed (1.3-legacy), remove it
 		$db->drop_index('topics', 'subject_idx') or error('Unable to drop subject_idx index', __FILE__, __LINE__, $db->error());
 		$db->drop_index('posts', 'message_idx') or error('Unable to drop message_idx index', __FILE__, __LINE__, $db->error());
