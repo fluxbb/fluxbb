@@ -53,8 +53,8 @@ $errors = array();
 
 if (isset($_POST['form_sent']))
 {
-	if ($is_admmod)
-		confirm_referrer('edit.php');
+	// Make sure they got here from the site
+	confirm_referrer('edit.php');
 
 	// If it's a topic it must contain a subject
 	if ($can_edit_subject)
