@@ -41,6 +41,9 @@ if (defined('FORUM'))
 // Load the functions script
 require PUN_ROOT.'include/functions.php';
 
+// Load our API functions
+require PUN_ROOT.'include/api.php';
+
 // Load UTF-8 functions
 require PUN_ROOT.'include/utf8/utf8.php';
 
