@@ -6,3 +6,4 @@ composer.lock
 app/config/fluxbb.php
 public/packages
 .vagrant
+Thumbs.db
