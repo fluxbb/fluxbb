@@ -3,7 +3,7 @@
 composer.phar
 composer.lock
 .DS_Store
-app/config/fluxbb.php
+config/fluxbb.php
 public/packages
 .vagrant
 Thumbs.db
