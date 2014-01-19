@@ -4,7 +4,9 @@
 	"keywords": ["forum", "fluxbb", "laravel"],
 	"license": "MIT",
 	"require": {
-		"laravel/framework": "4.1.*"
+		"laravel/framework": "4.1.*",
+		"fluxbb/core": "@dev",
+		"fluxbb/installer": "@dev"
 	},
 	"autoload": {
 		"classmap": [
