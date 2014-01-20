@@ -598,7 +598,7 @@ function generate_page_title($page_title, $p = null)
 
 	$page_title = array_reverse($page_title);
 
-	if (!is_null($p))
+	if ($p > 1)
 		$page_title[0] .= ' ('.sprintf($lang_common['Page'], forum_number_format($p)).')';
 
 	$crumbs = implode($lang_common['Title separator'], $page_title);
