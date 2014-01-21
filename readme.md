@@ -27,7 +27,8 @@ A MySQL database will be created for you. To use this during the installation of
 
 To install FluxBB, run the following commands from your command line:
 
-    git clone git://github.com/fluxbb/fluxbb2.git
+    git clone git://github.com/fluxbb/fluxbb.git
+    git checkout 2.0
     curl -s https://getcomposer.org/installer | php
     php composer.phar install
 
