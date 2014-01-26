@@ -263,8 +263,8 @@ function process_form(the_form)
 		"req_db_host": "<?php echo $lang_install['Database server hostname'] ?>",
 		"req_db_name": "<?php echo $lang_install['Database name'] ?>",
 		"req_username": "<?php echo $lang_install['Administrator username'] ?>",
-		"req_password1": "<?php echo $lang_install['Administrator password 1'] ?>",
-		"req_password2": "<?php echo $lang_install['Administrator password 2'] ?>",
+		"req_password1": "<?php echo $lang_install['Password'] ?>",
+		"req_password2": "<?php echo $lang_install['Confirm password'] ?>",
 		"req_email": "<?php echo $lang_install['Administrator email'] ?>",
 		"req_title": "<?php echo $lang_install['Board title'] ?>",
 		"req_base_url": "<?php echo $lang_install['Base URL'] ?>"
