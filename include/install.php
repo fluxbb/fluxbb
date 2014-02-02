@@ -1188,7 +1188,7 @@ class Installer
 
 	public static function insert_default_forum_and_post($category, $forum, $forum_description, $subject, $message, $username)
 	{
-		global $db, $lang_install;
+		global $db, $db_prefix, $lang_install;
 
 		$now = time();
 
