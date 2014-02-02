@@ -1284,6 +1284,9 @@ class Installer
 
 		$now = time();
 
+		$subject = $lang_install['Test post'];
+		$message = $lang_install['Message'];
+
 		$db->start_transaction();
 
 		$db->query('INSERT INTO '.$db->prefix.'categories (cat_name, disp_position) VALUES(\''.$db->escape($lang_install['Test category']).'\', 1)')
@@ -1292,10 +1295,10 @@ class Installer
 		$db->query('INSERT INTO '.$db->prefix.'forums (forum_name, forum_desc, num_topics, num_posts, last_post, last_post_id, last_poster, disp_position, cat_id) VALUES(\''.$db->escape($lang_install['Test forum']).'\', \''.$db->escape($lang_install['This is just a test forum']).'\', 1, 1, '.$now.', 1, \''.$db->escape($username).'\', 1, 1)')
 			or error('Unable to insert into table '.$db->prefix.'forums. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 
-		$db->query('INSERT INTO '.$db->prefix.'topics (poster, subject, posted, first_post_id, last_post, last_post_id, last_poster, forum_id) VALUES(\''.$db->escape($username).'\', \''.$db->escape($lang_install['Test post']).'\', '.$now.', 1, '.$now.', 1, \''.$db->escape($username).'\', 1)')
+		$db->query('INSERT INTO '.$db->prefix.'topics (poster, subject, posted, first_post_id, last_post, last_post_id, last_poster, forum_id) VALUES(\''.$db->escape($username).'\', \''.$db->escape($subject).'\', '.$now.', 1, '.$now.', 1, \''.$db->escape($username).'\', 1)')
 			or error('Unable to insert into table '.$db->prefix.'topics. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 
-		$db->query('INSERT INTO '.$db->prefix.'posts (poster, poster_id, poster_ip, message, posted, topic_id) VALUES(\''.$db->escape($username).'\', 2, \''.$db->escape(get_remote_address()).'\', \''.$db->escape($lang_install['Message']).'\', '.$now.', 1)')
+		$db->query('INSERT INTO '.$db->prefix.'posts (poster, poster_id, poster_ip, message, posted, topic_id) VALUES(\''.$db->escape($username).'\', 2, \''.$db->escape(get_remote_address()).'\', \''.$db->escape($message).'\', '.$now.', 1)')
 			or error('Unable to insert into table '.$db->prefix.'posts. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 
 		// Index the test post so searching for it works
