@@ -66,9 +66,7 @@ class Installer
 		$db_type, $db_host, $db_name, $db_username, $db_password, $db_prefix,
 		$title, $description, $default_lang, $default_style, $username, $password, $email, $avatars, $base_url
 	) {
-
-		// Load the installer language pack
-		require PUN_ROOT.'lang/'.$default_lang.'/install.php';
+		global $lang_install;
 
 		// Load the appropriate DB layer class
 		switch ($db_type)
@@ -1186,5 +1184,32 @@ class Installer
 		$db->end_transaction();
 
 		return $db;
+	}
+
+	public static function insert_default_forum_and_post($category, $forum, $forum_description, $subject, $message, $username)
+	{
+		global $db, $lang_install;
+
+		$now = time();
+
+		$db->start_transaction();
+
+		$db->query('INSERT INTO '.$db_prefix.'categories (cat_name, disp_position) VALUES(\''.$db->escape($category).'\', 1)')
+			or error('Unable to insert into table '.$db_prefix.'categories. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+
+		$db->query('INSERT INTO '.$db_prefix.'forums (forum_name, forum_desc, num_topics, num_posts, last_post, last_post_id, last_poster, disp_position, cat_id) VALUES(\''.$db->escape($forum).'\', \''.$db->escape($forum_description).'\', 1, 1, '.$now.', 1, \''.$db->escape($username).'\', 1, 1)')
+			or error('Unable to insert into table '.$db_prefix.'forums. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+
+		$db->query('INSERT INTO '.$db_prefix.'topics (poster, subject, posted, first_post_id, last_post, last_post_id, last_poster, forum_id) VALUES(\''.$db->escape($username).'\', \''.$db->escape($subject).'\', '.$now.', 1, '.$now.', 1, \''.$db->escape($username).'\', 1)')
+			or error('Unable to insert into table '.$db_prefix.'topics. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+
+		$db->query('INSERT INTO '.$db_prefix.'posts (poster, poster_id, poster_ip, message, posted, topic_id) VALUES(\''.$db->escape($username).'\', 2, \''.$db->escape(get_remote_address()).'\', \''.$db->escape($message).'\', '.$now.', 1)')
+			or error('Unable to insert into table '.$db_prefix.'posts. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+
+		// Index the test post so searching for it works
+		require PUN_ROOT.'include/search_idx.php';
+		update_search_index('post', 1, $message, $subject);
+
+		$db->end_transaction();
 	}
 }
