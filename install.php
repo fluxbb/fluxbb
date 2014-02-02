@@ -59,11 +59,11 @@ if (get_magic_quotes_gpc())
 
 
 // If we've been passed a default language, use it
-$install_lang = isset($_REQUEST['install_lang']) ? pun_trim($_REQUEST['install_lang']) : 'English';
+$install_lang = isset($_REQUEST['install_lang']) ? pun_trim($_REQUEST['install_lang']) : Installer::DEFAULT_LANG;
 
 // If such a language pack doesn't exist, or isn't up-to-date enough to translate this page, default to English
 if (!file_exists(PUN_ROOT.'lang/'.$install_lang.'/install.php'))
-	$install_lang = 'English';
+	$install_lang = Installer::DEFAULT_LANG;
 
 require PUN_ROOT.'lang/'.$install_lang.'/install.php';
 
@@ -105,11 +105,9 @@ if (isset($_POST['generate_config']))
 
 if (!isset($_POST['form_sent']))
 {
-	// Make an educated guess regarding base_url
-	$base_url  = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';	// protocol
-	$base_url .= preg_replace('%:(80|443)$%', '', $_SERVER['HTTP_HOST']);							// host[:port]
-	$base_url .= str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));							// path
+	$base_url = Installer::guess_base_url();
 
+	// Make sure base_url doesn't end with a slash
 	if (substr($base_url, -1) == '/')
 		$base_url = substr($base_url, 0, -1);
 
@@ -118,7 +116,7 @@ if (!isset($_POST['form_sent']))
 	$title = $lang_install['My FluxBB Forum'];
 	$description = '<p><span>'.$lang_install['Description'].'</span></p>';
 	$default_lang = $install_lang;
-	$default_style = 'Air';
+	$default_style = Installer::DEFAULT_STYLE;
 }
 else
 {
@@ -137,47 +135,12 @@ else
 	$base_url = pun_trim($_POST['req_base_url']);
 	$default_lang = pun_trim($_POST['req_default_lang']);
 	$default_style = pun_trim($_POST['req_default_style']);
-	$alerts = array();
 
 	// Make sure base_url doesn't end with a slash
 	if (substr($base_url, -1) == '/')
 		$base_url = substr($base_url, 0, -1);
 
-	// Validate username and passwords
-	if (pun_strlen($username) < 2)
-		$alerts[] = $lang_install['Username 1'];
-	else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
-		$alerts[] = $lang_install['Username 2'];
-	else if (!strcasecmp($username, 'Guest'))
-		$alerts[] = $lang_install['Username 3'];
-	else if (preg_match('%[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}%', $username) || preg_match('%((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))%', $username))
-		$alerts[] = $lang_install['Username 4'];
-	else if ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
-		$alerts[] = $lang_install['Username 5'];
-	else if (preg_match('%(?:\[/?(?:b|u|i|h|colou?r|quote|code|img|url|email|list)\]|\[(?:code|quote|list)=)%i', $username))
-		$alerts[] = $lang_install['Username 6'];
-
-	if (pun_strlen($password1) < 4)
-		$alerts[] = $lang_install['Short password'];
-	else if ($password1 != $password2)
-		$alerts[] = $lang_install['Passwords not match'];
-
-	// Validate email
-	require PUN_ROOT.'include/email.php';
-
-	if (!is_valid_email($email))
-		$alerts[] = $lang_install['Wrong email'];
-
-	if ($title == '')
-		$alerts[] = $lang_install['No board title'];
-
-	$languages = forum_list_langs();
-	if (!in_array($default_lang, $languages))
-		$alerts[] = $lang_install['Error default language'];
-
-	$styles = forum_list_styles();
-	if (!in_array($default_style, $styles))
-		$alerts[] = $lang_install['Error default style'];
+	$alerts = Installer::validate_config($username, $password1, $password2, $email, $title, $default_lang, $default_style);
 }
 
 // Check if the cache directory is writable
@@ -455,16 +418,16 @@ else
 	// Enable/disable avatars depending on file_uploads setting in PHP configuration
 	$avatars = in_array(strtolower(@ini_get('file_uploads')), array('on', 'true', '1'));
 
+	// Create the tables
 	$db = Installer::create_database(
 		$db_type, $db_host, $db_name, $db_username, $db_password, $db_prefix,
-		$title, $description, $default_lang, $default_style, $username, $password1, $email, $avatars, $base_url
+		$title, $description, $default_lang, $default_style, $email, $avatars, $base_url
 	);
 
 	// Insert some other default data
-	Installer::insert_default_forum_and_post(
-		$lang_install['Test category'], $lang_install['Test forum'], $lang_install['This is just a test forum'],
-		$lang_install['Test post'], $lang_install['Message'], $username
-	);
+	Installer::insert_default_groups(); // groups
+	Installer::insert_default_users($username, $password1, $email, $default_lang, $default_style); // users
+	Installer::insert_default_forum_and_post($username); // forum & post
 
 	$alerts = array();
 

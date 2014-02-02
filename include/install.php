@@ -21,8 +21,22 @@ class Installer
 	const MIN_MYSQL_VERSION = '4.1.2';
 	const MIN_PGSQL_VERSION = '7.0.0';
 
-	public static function is_supported_php_version() {
+	const DEFAULT_LANG = 'English';
+	const DEFAULT_STYLE = 'Air';
+
+	public static function is_supported_php_version()
+	{
 		return function_exists('version_compare') && version_compare(PHP_VERSION, MIN_PHP_VERSION, '>=');
+	}
+
+	public static function guess_base_url()
+	{
+		// Make an educated guess regarding base_url
+		$base_url  = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';	// protocol
+		$base_url .= preg_replace('%:(80|443)$%', '', $_SERVER['HTTP_HOST']);							// host[:port]
+		$base_url .= str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));							// path
+
+		return $base_url;
 	}
 
 	public static function determine_database_extensions()
@@ -62,51 +76,90 @@ class Installer
 		return '<?php'."\n\n".'$db_type = \''.$db_type."';\n".'$db_host = \''.$db_host."';\n".'$db_name = \''.addslashes($db_name)."';\n".'$db_username = \''.addslashes($db_username)."';\n".'$db_password = \''.addslashes($db_password)."';\n".'$db_prefix = \''.addslashes($db_prefix)."';\n".'$p_connect = false;'."\n\n".'$cookie_name = '."'".$cookie_name."';\n".'$cookie_domain = '."'';\n".'$cookie_path = '."'/';\n".'$cookie_secure = 0;'."\n".'$cookie_seed = \''.$cookie_seed."';\n\ndefine('PUN', 1);\n";
 	}
 
-	public static function create_database(
-		$db_type, $db_host, $db_name, $db_username, $db_password, $db_prefix,
-		$title, $description, $default_lang, $default_style, $username, $password, $email, $avatars, $base_url
-	) {
+	public static function validate_config($username, $password1, $password2, $email, $title, $default_lang, $default_style)
+	{
 		global $lang_install;
 
-		// Load the appropriate DB layer class
+		$alerts = array();
+
+		// Validate username and passwords
+		if (pun_strlen($username) < 2)
+			$alerts[] = $lang_install['Username 1'];
+		else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
+			$alerts[] = $lang_install['Username 2'];
+		else if (!strcasecmp($username, 'Guest'))
+			$alerts[] = $lang_install['Username 3'];
+		else if (preg_match('%[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}%', $username) || preg_match('%((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))%', $username))
+			$alerts[] = $lang_install['Username 4'];
+		else if ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
+			$alerts[] = $lang_install['Username 5'];
+		else if (preg_match('%(?:\[/?(?:b|u|i|h|colou?r|quote|code|img|url|email|list)\]|\[(?:code|quote|list)=)%i', $username))
+			$alerts[] = $lang_install['Username 6'];
+
+		if (pun_strlen($password1) < 4)
+			$alerts[] = $lang_install['Short password'];
+		else if ($password1 != $password2)
+			$alerts[] = $lang_install['Passwords not match'];
+
+		// Validate email
+		require PUN_ROOT.'include/email.php';
+
+		if (!is_valid_email($email))
+			$alerts[] = $lang_install['Wrong email'];
+
+		if ($title == '')
+			$alerts[] = $lang_install['No board title'];
+
+		$languages = forum_list_langs();
+		if (!in_array($default_lang, $languages))
+			$alerts[] = $lang_install['Error default language'];
+
+		$styles = forum_list_styles();
+		if (!in_array($default_style, $styles))
+			$alerts[] = $lang_install['Error default style'];
+
+		return $alerts;
+	}
+
+	private static function load_database_driver($db_type)
+	{
+		global $lang_install;
+
 		switch ($db_type)
 		{
 			case 'mysql':
-				require PUN_ROOT.'include/dblayer/mysql.php';
+				require_once PUN_ROOT.'include/dblayer/mysql.php';
 				break;
 
 			case 'mysql_innodb':
-				require PUN_ROOT.'include/dblayer/mysql_innodb.php';
+				require_once PUN_ROOT.'include/dblayer/mysql_innodb.php';
 				break;
 
 			case 'mysqli':
-				require PUN_ROOT.'include/dblayer/mysqli.php';
+				require_once PUN_ROOT.'include/dblayer/mysqli.php';
 				break;
 
 			case 'mysqli_innodb':
-				require PUN_ROOT.'include/dblayer/mysqli_innodb.php';
+				require_once PUN_ROOT.'include/dblayer/mysqli_innodb.php';
 				break;
 
 			case 'pgsql':
-				require PUN_ROOT.'include/dblayer/pgsql.php';
+				require_once PUN_ROOT.'include/dblayer/pgsql.php';
 				break;
 
 			case 'sqlite':
-				require PUN_ROOT.'include/dblayer/sqlite.php';
+				require_once PUN_ROOT.'include/dblayer/sqlite.php';
 				break;
 
 			default:
 				error(sprintf($lang_install['DB type not valid'], pun_htmlspecialchars($db_type)));
 		}
+	}
 
-		// Create the database object (and connect/select db)
-		$db = new DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, false);
+	private static function validate_database_version($db_type, $db)
+	{
+		global $lang_install;
 
-		// Validate prefix
-		if (strlen($db_prefix) > 0 && (!preg_match('%^[a-zA-Z_][a-zA-Z0-9_]*$%', $db_prefix) || strlen($db_prefix) > 40))
-			error(sprintf($lang_install['Table prefix error'], $db->prefix));
-
-		// Do some DB type specific checks
 		switch ($db_type)
 		{
 			case 'mysql':
@@ -116,25 +169,22 @@ class Installer
 				$mysql_info = $db->get_version();
 				if (version_compare($mysql_info['version'], Installer::MIN_MYSQL_VERSION, '<'))
 					error(sprintf($lang_install['You are running error'], 'MySQL', $mysql_info['version'], Installer::FORUM_VERSION, Installer::MIN_MYSQL_VERSION));
+
 				break;
 
 			case 'pgsql':
 				$pgsql_info = $db->get_version();
 				if (version_compare($pgsql_info['version'], Installer::MIN_PGSQL_VERSION, '<'))
 					error(sprintf($lang_install['You are running error'], 'PostgreSQL', $pgsql_info['version'], Installer::FORUM_VERSION, Installer::MIN_PGSQL_VERSION));
+
 				break;
 
 			case 'sqlite':
-				if (strtolower($db_prefix) == 'sqlite_')
+				if (strtolower($db->prefix) == 'sqlite_')
 					error($lang_install['Prefix reserved']);
+
 				break;
 		}
-
-
-		// Make sure FluxBB isn't already installed
-		$result = $db->query('SELECT 1 FROM '.$db_prefix.'users WHERE id=1');
-		if ($db->num_rows($result))
-			error(sprintf($lang_install['Existing table error'], $db_prefix, $db_name));
 
 		// Check if InnoDB is available
 		if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
@@ -144,11 +194,34 @@ class Installer
 			if ((strtoupper($result) != 'YES'))
 				error($lang_install['InnoDB off']);
 		}
+	}
+
+	public static function create_database($db_type, $db_host, $db_name, $db_username, $db_password, $db_prefix,
+										   $title, $description, $default_lang, $default_style, $admin_email, $avatars, $base_url)
+	{
+		global $lang_install;
+
+		// Validate prefix
+		if (strlen($db_prefix) > 0 && (!preg_match('%^[a-zA-Z_][a-zA-Z0-9_]*$%', $db_prefix) || strlen($db_prefix) > 40))
+			error(sprintf($lang_install['Table prefix error'], $db->prefix));
+
+		// Load the appropriate DB layer class
+		Installer::load_database_driver($db_type);
+
+		// Create the database object (and connect/select db)
+		$db = new DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, false);
+
+		// Do some DB type specific checks
+		Installer::validate_database_version($db_type, $db);
+
+		// Make sure FluxBB isn't already installed
+		$result = $db->query('SELECT 1 FROM '.$db->prefix.'users WHERE id=1');
+		if ($db->num_rows($result))
+			error(sprintf($lang_install['Existing table error'], $db->prefix, $db_name));
 
 
 		// Start a transaction
 		$db->start_transaction();
-
 
 		// Create all tables
 		$schema = array(
@@ -1075,25 +1148,6 @@ class Installer
 
 		$db->create_table('users', $schema) or error('Unable to create users table', __FILE__, __LINE__, $db->error());
 
-
-		$now = time();
-
-		// Insert the four preset groups
-		$db->query('INSERT INTO '.$db->prefix.'groups ('.($db_type != 'pgsql' ? 'g_id, ' : '').'g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood, g_report_flood) VALUES('.($db_type != 'pgsql' ? '1, ' : '').'\''.$db->escape($lang_install['Administrators']).'\', \''.$db->escape($lang_install['Administrator']).'\', 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0)') or error('Unable to add group', __FILE__, __LINE__, $db->error());
-
-		$db->query('INSERT INTO '.$db->prefix.'groups ('.($db_type != 'pgsql' ? 'g_id, ' : '').'g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood, g_report_flood) VALUES('.($db_type != 'pgsql' ? '2, ' : '').'\''.$db->escape($lang_install['Moderators']).'\', \''.$db->escape($lang_install['Moderator']).'\', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0)') or error('Unable to add group', __FILE__, __LINE__, $db->error());
-
-		$db->query('INSERT INTO '.$db->prefix.'groups ('.($db_type != 'pgsql' ? 'g_id, ' : '').'g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood, g_report_flood) VALUES('.($db_type != 'pgsql' ? '3, ' : '').'\''.$db->escape($lang_install['Guests']).'\', NULL, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 60, 30, 0, 0)') or error('Unable to add group', __FILE__, __LINE__, $db->error());
-
-		$db->query('INSERT INTO '.$db->prefix.'groups ('.($db_type != 'pgsql' ? 'g_id, ' : '').'g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood, g_report_flood) VALUES('.($db_type != 'pgsql' ? '4, ' : '').'\''.$db->escape($lang_install['Members']).'\', NULL, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 60, 30, 60, 60)') or error('Unable to add group', __FILE__, __LINE__, $db->error());
-
-		// Insert guest and first admin user
-		$db->query('INSERT INTO '.$db_prefix.'users (group_id, username, password, email) VALUES(3, \''.$db->escape($lang_install['Guest']).'\', \''.$db->escape($lang_install['Guest']).'\', \''.$db->escape($lang_install['Guest']).'\')')
-			or error('Unable to add guest user. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
-
-		$db->query('INSERT INTO '.$db_prefix.'users (group_id, username, password, email, language, style, num_posts, last_post, registered, registration_ip, last_visit) VALUES(1, \''.$db->escape($username).'\', \''.pun_hash($password).'\', \''.$email.'\', \''.$db->escape($default_lang).'\', \''.$db->escape($default_style).'\', 1, '.$now.', '.$now.', \''.$db->escape(get_remote_address()).'\', '.$now.')')
-			or error('Unable to add administrator user. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
-
 		// Insert config data
 		$pun_config = array(
 			'o_cur_version'				=> Installer::FORUM_VERSION,
@@ -1134,7 +1188,7 @@ class Installer
 			'o_report_method'			=> 0,
 			'o_regs_report'				=> 0,
 			'o_default_email_setting'	=> 1,
-			'o_mailing_list'			=> $email,
+			'o_mailing_list'			=> $admin_email,
 			'o_avatars'					=> $avatars ? '1' : '0',
 			'o_avatars_dir'				=> 'img/avatars',
 			'o_avatars_width'			=> 60,
@@ -1142,8 +1196,8 @@ class Installer
 			'o_avatars_size'			=> 10240,
 			'o_search_all_forums'		=> 1,
 			'o_base_url'				=> $base_url,
-			'o_admin_email'				=> $email,
-			'o_webmaster_email'			=> $email,
+			'o_admin_email'				=> $admin_email,
+			'o_webmaster_email'			=> $admin_email,
 			'o_forum_subscriptions'		=> 1,
 			'o_topic_subscriptions'		=> 1,
 			'o_smtp_host'				=> NULL,
@@ -1177,8 +1231,8 @@ class Installer
 
 		foreach ($pun_config as $conf_name => $conf_value)
 		{
-			$db->query('INSERT INTO '.$db_prefix.'config (conf_name, conf_value) VALUES(\''.$conf_name.'\', '.(is_null($conf_value) ? 'NULL' : '\''.$db->escape($conf_value).'\'').')')
-				or error('Unable to insert into table '.$db_prefix.'config. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES(\''.$conf_name.'\', '.(is_null($conf_value) ? 'NULL' : '\''.$db->escape($conf_value).'\'').')')
+				or error('Unable to insert into table '.$db->prefix.'config. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 		}
 
 		$db->end_transaction();
@@ -1186,25 +1240,63 @@ class Installer
 		return $db;
 	}
 
-	public static function insert_default_forum_and_post($category, $forum, $forum_description, $subject, $message, $username)
+	public static function insert_default_users($username, $password, $email, $language, $style)
 	{
-		global $db, $db_prefix, $lang_install;
+		global $db, $db_type, $lang_install;
 
 		$now = time();
 
 		$db->start_transaction();
 
-		$db->query('INSERT INTO '.$db_prefix.'categories (cat_name, disp_position) VALUES(\''.$db->escape($category).'\', 1)')
-			or error('Unable to insert into table '.$db_prefix.'categories. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+		// Insert guest and first admin user
+		$db->query('INSERT INTO '.$db->prefix.'users (group_id, username, password, email) VALUES(3, \''.$db->escape($lang_install['Guest']).'\', \''.$db->escape($lang_install['Guest']).'\', \''.$db->escape($lang_install['Guest']).'\')')
+			or error('Unable to add guest user. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 
-		$db->query('INSERT INTO '.$db_prefix.'forums (forum_name, forum_desc, num_topics, num_posts, last_post, last_post_id, last_poster, disp_position, cat_id) VALUES(\''.$db->escape($forum).'\', \''.$db->escape($forum_description).'\', 1, 1, '.$now.', 1, \''.$db->escape($username).'\', 1, 1)')
-			or error('Unable to insert into table '.$db_prefix.'forums. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+		$db->query('INSERT INTO '.$db->prefix.'users (group_id, username, password, email, language, style, num_posts, last_post, registered, registration_ip, last_visit) VALUES(1, \''.$db->escape($username).'\', \''.pun_hash($password).'\', \''.$email.'\', \''.$db->escape($language).'\', \''.$db->escape($style).'\', 1, '.$now.', '.$now.', \''.$db->escape(get_remote_address()).'\', '.$now.')')
+			or error('Unable to add administrator user. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 
-		$db->query('INSERT INTO '.$db_prefix.'topics (poster, subject, posted, first_post_id, last_post, last_post_id, last_poster, forum_id) VALUES(\''.$db->escape($username).'\', \''.$db->escape($subject).'\', '.$now.', 1, '.$now.', 1, \''.$db->escape($username).'\', 1)')
-			or error('Unable to insert into table '.$db_prefix.'topics. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+		$db->end_transaction();
+	}
 
-		$db->query('INSERT INTO '.$db_prefix.'posts (poster, poster_id, poster_ip, message, posted, topic_id) VALUES(\''.$db->escape($username).'\', 2, \''.$db->escape(get_remote_address()).'\', \''.$db->escape($message).'\', '.$now.', 1)')
-			or error('Unable to insert into table '.$db_prefix.'posts. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+	public static function insert_default_groups()
+	{
+		global $db, $db_type, $lang_install;
+
+		$now = time();
+
+		$db->start_transaction();
+
+		// Insert the four preset groups
+		$db->query('INSERT INTO '.$db->prefix.'groups ('.($db_type != 'pgsql' ? 'g_id, ' : '').'g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood, g_report_flood) VALUES('.($db_type != 'pgsql' ? '1, ' : '').'\''.$db->escape($lang_install['Administrators']).'\', \''.$db->escape($lang_install['Administrator']).'\', 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0)') or error('Unable to add group', __FILE__, __LINE__, $db->error());
+
+		$db->query('INSERT INTO '.$db->prefix.'groups ('.($db_type != 'pgsql' ? 'g_id, ' : '').'g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood, g_report_flood) VALUES('.($db_type != 'pgsql' ? '2, ' : '').'\''.$db->escape($lang_install['Moderators']).'\', \''.$db->escape($lang_install['Moderator']).'\', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0)') or error('Unable to add group', __FILE__, __LINE__, $db->error());
+
+		$db->query('INSERT INTO '.$db->prefix.'groups ('.($db_type != 'pgsql' ? 'g_id, ' : '').'g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood, g_report_flood) VALUES('.($db_type != 'pgsql' ? '3, ' : '').'\''.$db->escape($lang_install['Guests']).'\', NULL, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 60, 30, 0, 0)') or error('Unable to add group', __FILE__, __LINE__, $db->error());
+
+		$db->query('INSERT INTO '.$db->prefix.'groups ('.($db_type != 'pgsql' ? 'g_id, ' : '').'g_title, g_user_title, g_moderator, g_mod_edit_users, g_mod_rename_users, g_mod_change_passwords, g_mod_ban_users, g_read_board, g_view_users, g_post_replies, g_post_topics, g_edit_posts, g_delete_posts, g_delete_topics, g_set_title, g_search, g_search_users, g_send_email, g_post_flood, g_search_flood, g_email_flood, g_report_flood) VALUES('.($db_type != 'pgsql' ? '4, ' : '').'\''.$db->escape($lang_install['Members']).'\', NULL, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 60, 30, 60, 60)') or error('Unable to add group', __FILE__, __LINE__, $db->error());
+
+		$db->end_transaction();
+	}
+
+	public static function insert_default_forum_and_post($username)
+	{
+		global $db, $db_type, $lang_install;
+
+		$now = time();
+
+		$db->start_transaction();
+
+		$db->query('INSERT INTO '.$db->prefix.'categories (cat_name, disp_position) VALUES(\''.$db->escape($lang_install['Test category']).'\', 1)')
+			or error('Unable to insert into table '.$db->prefix.'categories. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+
+		$db->query('INSERT INTO '.$db->prefix.'forums (forum_name, forum_desc, num_topics, num_posts, last_post, last_post_id, last_poster, disp_position, cat_id) VALUES(\''.$db->escape($lang_install['Test forum']).'\', \''.$db->escape($lang_install['This is just a test forum']).'\', 1, 1, '.$now.', 1, \''.$db->escape($username).'\', 1, 1)')
+			or error('Unable to insert into table '.$db->prefix.'forums. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+
+		$db->query('INSERT INTO '.$db->prefix.'topics (poster, subject, posted, first_post_id, last_post, last_post_id, last_poster, forum_id) VALUES(\''.$db->escape($username).'\', \''.$db->escape($lang_install['Test post']).'\', '.$now.', 1, '.$now.', 1, \''.$db->escape($username).'\', 1)')
+			or error('Unable to insert into table '.$db->prefix.'topics. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
+
+		$db->query('INSERT INTO '.$db->prefix.'posts (poster, poster_id, poster_ip, message, posted, topic_id) VALUES(\''.$db->escape($username).'\', 2, \''.$db->escape(get_remote_address()).'\', \''.$db->escape($lang_install['Message']).'\', '.$now.', 1)')
+			or error('Unable to insert into table '.$db->prefix.'posts. Please check your configuration and try again', __FILE__, __LINE__, $db->error());
 
 		// Index the test post so searching for it works
 		require PUN_ROOT.'include/search_idx.php';
