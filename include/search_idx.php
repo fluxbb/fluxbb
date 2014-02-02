@@ -14,6 +14,11 @@
 if (!defined('PUN'))
 	exit;
 
+if (!defined('PUN_SEARCH_MIN_WORD'))
+	define('PUN_SEARCH_MIN_WORD', 3);
+
+if (!defined('PUN_SEARCH_MAX_WORD'))
+	define('PUN_SEARCH_MAX_WORD', 20);
 
 // Make a regex that will match CJK or Hangul characters
 define('PUN_CJK_HANGUL_REGEX', '['.
