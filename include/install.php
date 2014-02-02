@@ -6,12 +6,25 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-// Make sure no one attempts to run this script "directly"
-if (!defined('PUN'))
-	exit;
-
 class Installer
 {
+	// The FluxBB version this script installs
+	const FORUM_VERSION = '1.5.6';
+
+	// Internal revision number of services
+	const FORUM_DB_REVISION = 20;
+	const FORUM_SI_REVISION = 2;
+	const FORUM_PARSER_REVISION = 2;
+
+	// Minimum require version of dependencies
+	const MIN_PHP_VERSION = '4.4.0';
+	const MIN_MYSQL_VERSION = '4.1.2';
+	const MIN_PGSQL_VERSION = '7.0.0';
+
+	public static function is_supported_php_version() {
+		return function_exists('version_compare') && version_compare(PHP_VERSION, MIN_PHP_VERSION, '>=');
+	}
+
 	public static function determine_database_extensions()
 	{
 		// Determine available database extensions
@@ -101,14 +114,14 @@ class Installer
 			case 'mysql_innodb':
 			case 'mysqli_innodb':
 				$mysql_info = $db->get_version();
-				if (version_compare($mysql_info['version'], MIN_MYSQL_VERSION, '<'))
-					error(sprintf($lang_install['You are running error'], 'MySQL', $mysql_info['version'], FORUM_VERSION, MIN_MYSQL_VERSION));
+				if (version_compare($mysql_info['version'], Installer::MIN_MYSQL_VERSION, '<'))
+					error(sprintf($lang_install['You are running error'], 'MySQL', $mysql_info['version'], Installer::FORUM_VERSION, Installer::MIN_MYSQL_VERSION));
 				break;
 
 			case 'pgsql':
 				$pgsql_info = $db->get_version();
-				if (version_compare($pgsql_info['version'], MIN_PGSQL_VERSION, '<'))
-					error(sprintf($lang_install['You are running error'], 'PostgreSQL', $pgsql_info['version'], FORUM_VERSION, MIN_PGSQL_VERSION));
+				if (version_compare($pgsql_info['version'], Installer::MIN_PGSQL_VERSION, '<'))
+					error(sprintf($lang_install['You are running error'], 'PostgreSQL', $pgsql_info['version'], Installer::FORUM_VERSION, Installer::MIN_PGSQL_VERSION));
 				break;
 
 			case 'sqlite':
@@ -1083,10 +1096,10 @@ class Installer
 
 		// Insert config data
 		$pun_config = array(
-			'o_cur_version'				=> FORUM_VERSION,
-			'o_database_revision'		=> FORUM_DB_REVISION,
-			'o_searchindex_revision'	=> FORUM_SI_REVISION,
-			'o_parser_revision'			=> FORUM_PARSER_REVISION,
+			'o_cur_version'				=> Installer::FORUM_VERSION,
+			'o_database_revision'		=> Installer::FORUM_DB_REVISION,
+			'o_searchindex_revision'	=> Installer::FORUM_SI_REVISION,
+			'o_parser_revision'			=> Installer::FORUM_PARSER_REVISION,
 			'o_board_title'				=> $title,
 			'o_board_desc'				=> $description,
 			'o_default_timezone'		=> 0,

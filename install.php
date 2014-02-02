@@ -6,19 +6,9 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-// The FluxBB version this script installs
-define('FORUM_VERSION', '1.5.6');
 
-define('FORUM_DB_REVISION', 20);
-define('FORUM_SI_REVISION', 2);
-define('FORUM_PARSER_REVISION', 2);
-
-define('MIN_PHP_VERSION', '4.4.0');
-define('MIN_MYSQL_VERSION', '4.1.2');
-define('MIN_PGSQL_VERSION', '7.0.0');
 define('PUN_SEARCH_MIN_WORD', 3);
 define('PUN_SEARCH_MAX_WORD', 20);
-
 
 define('PUN_ROOT', dirname(__FILE__).'/');
 
@@ -99,8 +89,8 @@ if (!defined('FORUM_CACHE_DIR'))
 	define('FORUM_CACHE_DIR', PUN_ROOT.'cache/');
 
 // Make sure we are running at least MIN_PHP_VERSION
-if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
-	exit(sprintf($lang_install['You are running error'], 'PHP', PHP_VERSION, FORUM_VERSION, MIN_PHP_VERSION));
+if (!Installer::is_supported_php_version())
+	exit(sprintf($lang_install['You are running error'], 'PHP', PHP_VERSION, Installer::FORUM_VERSION, Installer::MIN_PHP_VERSION));
 
 
 if (isset($_POST['generate_config']))
@@ -297,7 +287,7 @@ function process_form(the_form)
 <?php endif; ?>
 
 <div class="blockform">
-	<h2><span><?php echo sprintf($lang_install['Install'], FORUM_VERSION) ?></span></h2>
+	<h2><span><?php echo sprintf($lang_install['Install'], Installer::FORUM_VERSION) ?></span></h2>
 	<div class="box">
 		<form id="install" method="post" action="install.php" onsubmit="this.start.disabled=true;if(process_form(this)){return true;}else{this.start.disabled=false;return false;}">
 		<div><input type="hidden" name="form_sent" value="1" /><input type="hidden" name="install_lang" value="<?php echo pun_htmlspecialchars($install_lang) ?>" /></div>
