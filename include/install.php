@@ -26,7 +26,7 @@ class Installer
 
 	public static function is_supported_php_version()
 	{
-		return function_exists('version_compare') && version_compare(PHP_VERSION, MIN_PHP_VERSION, '>=');
+		return function_exists('version_compare') && version_compare(PHP_VERSION, Installer::MIN_PHP_VERSION, '>=');
 	}
 
 	public static function guess_base_url()
