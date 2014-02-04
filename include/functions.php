@@ -1099,7 +1099,7 @@ function pun_hash($str)
 //
 function get_remote_address()
 {
-	$remote_addr = $_SERVER['REMOTE_ADDR'];
+	$remote_addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
 
 	// If we are behind a reverse proxy try to find the real users IP
 	if (defined('FORUM_BEHIND_REVERSE_PROXY'))
