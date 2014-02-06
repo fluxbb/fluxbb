@@ -572,7 +572,7 @@ else if (isset($_POST['promote']))
 	if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_promote_users'] == '0'))
 		message($lang_common['No permission'], false, '403 Forbidden');
 
-	//confirm_referrer('profile.php');
+	confirm_referrer('profile.php');
 
 	$q = 'SELECT g.g_id, gg.g_promote_min_posts, gg.g_id AS gg_id FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'groups AS gg INNER JOIN '.$db->prefix.'users AS u ON u.group_id=gg.g_id WHERE gg.g_promote_next_group=g.g_id AND u.id='.$id.' AND u.group_id=gg.g_id AND u.num_posts>=gg.g_promote_min_posts';
 	$result = $db->query($q) or error('Unable to fetch group', __FILE__, __LINE__, $db->error());
