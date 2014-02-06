@@ -572,21 +572,21 @@ else if (isset($_POST['promote']))
 	if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_promote_users'] == '0'))
 		message($lang_common['No permission'], false, '403 Forbidden');
 
-	confirm_referrer('profile.php');
+	//confirm_referrer('profile.php');
 
-	if (isset($_POST['nextgroup_id']))
-	{
-		$group_id = intval($_POST['nextgroup_id']);
-		$q = 'SELECT g.g_id, gg.g_promote_min_posts, gg.g_id AS gg_id FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'groups AS gg INNER JOIN '.$db->prefix.'users AS u ON u.group_id=gg.g_id WHERE gg.g_promote_next_group = g.g_id AND u.id='.$id.' AND u.group_id=gg.g_id AND u.num_posts = gg.g_promote_min_posts';
-		$result = $db->query($q) or error('Unable to fetch group', __FILE__, __LINE__, $db->error());
+	$q = 'SELECT g.g_id, gg.g_promote_min_posts, gg.g_id AS gg_id FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'groups AS gg INNER JOIN '.$db->prefix.'users AS u ON u.group_id=gg.g_id WHERE gg.g_promote_next_group=g.g_id AND u.id='.$id.' AND u.group_id=gg.g_id AND u.num_posts>=gg.g_promote_min_posts';
+	$result = $db->query($q) or error('Unable to fetch group', __FILE__, __LINE__, $db->error());
 
-		if (!$db->num_rows($result))
-			message($lang_common['Bad request'], false, '404 Not Found');
+	if (!$db->num_rows($result))
+		message($lang_common['Bad request'], false, '404 Not Found');
 
-		$db->query('UPDATE '.$db->prefix.'users SET group_id='.$group_id.' WHERE id='.$id) or error('Unable to promote user', __FILE__, __LINE__, $db->error());
+	$next_group = $db->fetch_assoc($result);
+	if ($_POST['nextgroup_id'] != $next_group['g_id'])
+		message($lang_common['Bad request'], false, '404 Not Found');
 
-		redirect('profile.php?section=admin&id='.$id, $lang_profile['User promote redirect']);
-	}
+	$db->query('UPDATE '.$db->prefix.'users SET group_id='.$next_group['g_id'].' WHERE id='.$id) or error('Unable to promote user', __FILE__, __LINE__, $db->error());
+
+	redirect('profile.php?section=admin&id='.$id, $lang_profile['User promote redirect']);
 }
 
 
@@ -1732,7 +1732,7 @@ else
 
 		generate_profile_menu('admin');
 
-		$result = $db->query('SELECT g.g_title, g.g_promote_next_group AS ng_id, g.g_promote_min_posts AS posts, gg.g_title AS ng_title FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS gg ON gg.g_id = g.g_promote_next_group WHERE u.id = '.$id.' AND g.g_promote_min_posts = u.num_posts AND g.g_promote_next_group != u.group_id') or error('Unable to fetch next group', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT g.g_title, g.g_promote_next_group AS ng_id, g.g_promote_min_posts AS posts, gg.g_title AS ng_title FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS gg ON gg.g_id=g.g_promote_next_group WHERE u.id='.$id.' AND g.g_promote_min_posts=u.num_posts AND g.g_promote_next_group!=u.group_id') or error('Unable to fetch next group', __FILE__, __LINE__, $db->error());
 		$can_promote = $db->num_rows($result);
 
 		if ($can_promote)
@@ -1765,7 +1765,6 @@ else
 ?>
 				<div class="inform">
 				<input type="hidden" name="form_sent" value="1" />
-				<input type="hidden" name="nextgroup_id" value="<?php echo $promote['ng_id'] ?>" />
 					<fieldset>
 						<legend><?php echo $lang_profile['Promote user legend'] ?></legend>
 						<div class="infldset">
