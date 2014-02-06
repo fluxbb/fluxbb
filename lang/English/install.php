@@ -8,7 +8,6 @@ $lang_install = array(
 'Choose install language info'	=>	'The language used for this install script. The default language used for the board itself can be set below.',
 'Install language'				=>	'Install language',
 'Change language'				=>	'Change language',
-'Next'							=>	'Next',
 'Already installed'				=>	'It seems like FluxBB is already installed. You should go <a href="index.php">here</a> instead.',
 'You are running error'			=>	'You are running %1$s version %2$s. FluxBB %3$s requires at least %1$s %4$s to run properly. You must upgrade your %1$s installation before you can continue.',
 'My FluxBB Forum'				=>	'My FluxBB Forum',
