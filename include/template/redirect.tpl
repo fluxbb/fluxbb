@@ -8,7 +8,6 @@
 <body>
 
 <div id="punredirect" class="pun">
-<div class="top-box"><div><!-- Top Corners --></div></div>
 <div class="punwrap">
 
 <div id="brdmain">
@@ -18,7 +17,6 @@
 <pun_footer>
 
 </div>
-<div class="end-box"><div><!-- Bottom Corners --></div></div>
 </div>
 
 </body>
