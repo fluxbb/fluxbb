@@ -574,7 +574,7 @@ else if (isset($_POST['promote']))
 
 	confirm_referrer('profile.php');
 
-	$q = 'SELECT gg.g_promote_next_group FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'groups AS gg INNER JOIN '.$db->prefix.'users AS u ON u.group_id=gg.g_id WHERE gg.g_promote_next_group=g.g_id AND u.id='.$id.' AND u.group_id=gg.g_id';
+	$q = 'SELECT gg.g_promote_next_group FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'groups AS gg INNER JOIN '.$db->prefix.'users AS u ON u.group_id=gg.g_id WHERE gg.g_promote_next_group=g.g_id AND u.id='.$id.' AND u.group_id=gg.g_id AND u.num_posts>=gg.g_promote_min_posts';
 	$result = $db->query($q) or error('Unable to fetch group', __FILE__, __LINE__, $db->error());
 
 	if (!$db->num_rows($result))
@@ -1729,7 +1729,7 @@ else
 
 		generate_profile_menu('admin');
 
-		$result = $db->query('SELECT g.g_title, g.g_promote_next_group AS ng_id, g.g_promote_min_posts AS posts, gg.g_title AS ng_title FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS gg ON gg.g_id=g.g_promote_next_group WHERE u.id='.$id.' AND g.g_promote_min_posts=u.num_posts AND g.g_promote_next_group!=u.group_id') or error('Unable to fetch next group', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT g.g_title, g.g_promote_next_group AS ng_id, g.g_promote_min_posts AS posts, gg.g_title AS ng_title FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS gg ON gg.g_id=g.g_promote_next_group WHERE u.id='.$id.' AND g.g_promote_next_group!=u.group_id') or error('Unable to fetch next group', __FILE__, __LINE__, $db->error());
 		$can_promote = $db->num_rows($result);
 
 		if ($can_promote)
