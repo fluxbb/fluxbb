@@ -10,10 +10,6 @@
 if (!defined('PUN'))
 	exit;
 
-// Define line breaks in mail headers; possible values can be PHP_EOL, "\r\n", "\n" or "\r"
-if (!defined('FORUM_EOL'))
-	define('FORUM_EOL', PHP_EOL);
-
 require PUN_ROOT.'include/utf8/utils/ascii.php';
 
 //
