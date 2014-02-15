@@ -10,6 +10,10 @@
 if (!defined('PUN'))
 	exit;
 
+// Define line breaks in mail headers; possible values can be PHP_EOL, "\r\n", "\n" or "\r"
+if (!defined('FORUM_EOL'))
+	define('FORUM_EOL', PHP_EOL);
+
 require PUN_ROOT.'include/utf8/utils/ascii.php';
 
 //
@@ -215,7 +219,7 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 
 	// Use \r\n for SMTP servers, the system's line ending for local mailers
 	$smtp = $pun_config['o_smtp_host'] != '';
-	$EOL = $smtp ? "\r\n" : PHP_EOL;
+	$EOL = $smtp ? "\r\n" : FORUM_EOL;
 
 	// Default sender/return address
 	$from_name = sprintf($lang_common['Mailer'], $pun_config['o_board_title']);
