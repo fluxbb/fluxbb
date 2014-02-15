@@ -1165,7 +1165,7 @@ function pun_strlen($str)
 //
 function pun_linebreaks($str)
 {
-	return str_replace("\r", "\n", str_replace("\r\n", "\n", $str));
+	return str_replace(array("\r\n", "\r"), "\n", $str);
 }
 
 
