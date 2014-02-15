@@ -245,20 +245,10 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 
 	// Make sure all linebreaks are LF in message (and strip out any NULL bytes)
 	$message = str_replace("\0", '', pun_linebreaks($message));
-
-	if ($smtp)
-	{
-		// Headers should be \r\n
-		// Message should be ??
-		$message = str_replace("\n", "\r\n", $message);
-		smtp_mail($to, $subject, $message, $headers);
-	}
-	else
-	{
-		// Headers should be \r\n
-		// Message should be \n
-		mail($to, $subject, $message, $headers);
-	}
+	$message = str_replace("\n", $EOL, $message);
+	
+	$mailer = $smtp ? 'smtp_mail' : 'mail';
+	$mailer($to, $subject, $message, $headers);
 }
 
 
