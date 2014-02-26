@@ -574,7 +574,7 @@ else if (isset($_POST['promote']))
 
 	confirm_referrer('profile.php');
 
-	$sql = 'SELECT gg.g_promote_next_group FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'groups AS gg ON g.g_id = gg.g_promote_next_group INNER JOIN '.$db->prefix.'users AS u ON u.group_id = gg.g_id WHERE u.id = '.$id.' AND u.num_posts >= gg.g_promote_min_posts';
+	$sql = 'SELECT g.g_promote_next_group FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'users AS u ON u.group_id = g.g_id WHERE u.id = '.$id.' AND g.g_promote_next_group > 0';
 	$result = $db->query($sql) or error('Unable to fetch promotion information', __FILE__, __LINE__, $db->error());
 
 	if (!$db->num_rows($result))
