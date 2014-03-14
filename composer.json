@@ -8,16 +8,6 @@
 		"fluxbb/core": "@dev",
 		"fluxbb/installer": "@dev"
 	},
-	"autoload": {
-		"classmap": [
-			"app/commands",
-			"app/controllers",
-			"app/models",
-			"app/database/migrations",
-			"app/database/seeds",
-			"app/tests/TestCase.php"
-		]
-	},
 	"scripts": {
 		"post-install-cmd": [
 			"php artisan clear-compiled",
