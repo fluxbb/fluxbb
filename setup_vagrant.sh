@@ -15,9 +15,9 @@ pear install -f --alldeps pear.phpunit.de/PHPUnit
 # Setup the hosts file to point to the public filder
 VHOST=$(cat <<EOF
 <VirtualHost *:80>
-  DocumentRoot "/vagrant/public"
+  DocumentRoot "/vagrant"
   ServerName localhost
-  <Directory "/vagrant/public">
+  <Directory "/vagrant">
     AllowOverride All
   </Directory>
 </VirtualHost>
@@ -37,8 +37,8 @@ mv composer.phar /usr/local/bin/composer.phar
 
 # Make some directories writable
 chmod --recursive a+rw /var/www/public/packages
-chmod --recursive a+rw /var/www/app/config/packages
-chmod --recursive a+rw /var/www/app/storage
+chmod --recursive a+rw /var/www/config/packages
+chmod --recursive a+rw /var/www/storage
 
 # Remove the Apache default index.html file if it exists
 rm -f /var/www/index.html
