@@ -15,9 +15,9 @@ pear install -f --alldeps pear.phpunit.de/PHPUnit
 # Setup the hosts file to point to the public filder
 VHOST=$(cat <<EOF
 <VirtualHost *:80>
-  DocumentRoot "/vagrant"
+  DocumentRoot "/vagrant/public"
   ServerName localhost
-  <Directory "/vagrant">
+  <Directory "/vagrant/public">
     AllowOverride All
   </Directory>
 </VirtualHost>
