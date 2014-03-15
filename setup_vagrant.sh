@@ -44,7 +44,7 @@ chmod --recursive a+rw /var/www/storage
 rm -f /var/www/index.html
 
 cd /var/www
-composer.phar install
+composer.phar install --dev
 
 # Set up a dataase for FluxBB
 echo "CREATE DATABASE IF NOT EXISTS fluxbb" | mysql
