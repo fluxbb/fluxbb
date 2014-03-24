@@ -43,9 +43,16 @@ Log::useFiles(storage_path().'/logs/fluxbb.log');
 |
 */
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 App::error(function(Exception $exception, $code)
 {
 	Log::error($exception);
+});
+
+App::error(function(NotFoundHttpException $exception, $code)
+{
+	return View::make('fluxbb::error.404');
 });
 
 /*
