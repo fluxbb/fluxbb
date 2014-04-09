@@ -90,7 +90,7 @@ if ($action == 'change_pass')
 
 		if ($new_password1 != $new_password2)
 			message($lang_prof_reg['Pass not match']);
-		if (pun_strlen($new_password1) < 4)
+		if (pun_strlen($new_password1) < 6)
 			message($lang_prof_reg['Pass too short']);
 
 		$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch password', __FILE__, __LINE__, $db->error());
