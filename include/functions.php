@@ -885,11 +885,11 @@ function paginate($num_pages, $cur_page, $link)
 	{
 		// Add a previous page link
 		if ($num_pages > 1 && $cur_page > 1)
-			$pages[] = '<a rel="prev"'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p='.($cur_page - 1).'">'.$lang_common['Previous'].'</a>';
+			$pages[] = '<a rel="prev"'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.($cur_page == 2 ? '' : '&amp;p='.($cur_page - 1)).'">'.$lang_common['Previous'].'</a>';
 
 		if ($cur_page > 3)
 		{
-			$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p=1">1</a>';
+			$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'">1</a>';
 
 			if ($cur_page > 5)
 				$pages[] = '<span class="spacer">'.$lang_common['Spacer'].'</span>';
@@ -901,7 +901,7 @@ function paginate($num_pages, $cur_page, $link)
 			if ($current < 1 || $current > $num_pages)
 				continue;
 			else if ($current != $cur_page || $link_to_all)
-				$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p='.$current.'">'.forum_number_format($current).'</a>';
+				$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.($current == 1 ? '' : '&amp;p='.$current).'">'.forum_number_format($current).'</a>';
 			else
 				$pages[] = '<strong'.(empty($pages) ? ' class="item1"' : '').'>'.forum_number_format($current).'</strong>';
 		}
