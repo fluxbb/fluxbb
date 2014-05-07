@@ -169,6 +169,7 @@ else
 
 // Add relationship meta tags
 $page_head = array();
+$page_head['canonical'] = '<link rel="canonical" href="viewtopic.php?id='.$id.($p == 1 ? '' : '&amp;p='.$p).'" title="'.sprintf($lang_common['Page'], $p).'" />';
 
 if ($num_pages > 1)
 {
