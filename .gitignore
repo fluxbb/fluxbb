@@ -3,6 +3,7 @@
 composer.phar
 composer.lock
 .DS_Store
+config/local
 config/fluxbb.php
 public/packages
 .vagrant
