@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 /**
  * Copyright (C) 2008-2012 FluxBB
@@ -567,23 +567,25 @@ else if (isset($_POST['ban']))
 }
 
 
-else if (isset($_POST['promote']))
+else if ($action == 'promote')
 {
 	if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_promote_users'] == '0'))
 		message($lang_common['No permission'], false, '403 Forbidden');
 
-	confirm_referrer('profile.php');
+	confirm_referrer('viewtopic.php');
 
-	$sql = 'SELECT g.g_promote_next_group FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'users AS u ON u.group_id = g.g_id WHERE u.id = '.$id.' AND g.g_promote_next_group > 0';
+	$pid = isset($_GET['pid']) ? intval($_GET['pid']) : 0;
+
+	$sql = 'SELECT g.g_promote_next_group FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'users AS u ON u.group_id=g.g_id WHERE u.id='.$id.' AND g.g_promote_next_group>0';
 	$result = $db->query($sql) or error('Unable to fetch promotion information', __FILE__, __LINE__, $db->error());
 
 	if (!$db->num_rows($result))
 		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$next_group_id = $db->result($result);
-	$db->query('UPDATE '.$db->prefix.'users SET group_id = '.$next_group_id.' WHERE id = '.$id) or error('Unable to promote user', __FILE__, __LINE__, $db->error());
+	$db->query('UPDATE '.$db->prefix.'users SET group_id='.$next_group_id.' WHERE id='.$id) or error('Unable to promote user', __FILE__, __LINE__, $db->error());
 
-	redirect('profile.php?section=admin&amp;id='.$id, $lang_profile['User promote redirect']);
+	redirect('viewtopic.php?pid='.$pid.'#p'.$pid, $lang_profile['User promote redirect']);
 }
 
 

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 // Language definitions used in viewtopic.php
 $lang_topic = array(
@@ -6,6 +6,7 @@ $lang_topic = array(
 'Post reply'		=>	'Post reply',
 'Topic closed'		=>	'Topic closed',
 'From'				=>	'From:', // User location
+'Promote user'		=>	'Promote user',
 'IP address logged'	=>	'IP address logged',
 'Note'				=>	'Note:', // Admin note
 'Posts'				=>	'Posts:',
