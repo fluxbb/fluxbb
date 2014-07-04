@@ -134,6 +134,7 @@ $lang_profile = array(
 'Delete posts'					=>	'Delete any posts and topics this user has made.',
 'Delete'						=>	'Delete', // submit button (confirm user delete)
 'User delete redirect'			=>	'User deleted. Redirecting …',
+'User promote redirect'			=>	'User promoted. Redirecting …',
 'Group membership redirect'		=>	'Group membership saved. Redirecting …',
 'Update forums redirect'		=>	'Forum moderator rights updated. Redirecting …',
 'Ban redirect'					=>	'Redirecting …',
