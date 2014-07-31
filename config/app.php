@@ -107,6 +107,7 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		#'Illuminate\Workbench\WorkbenchServiceProvider',
 		'FluxBB\Core\CoreServiceProvider',
+		'FluxBB\Server\ServiceProvider',
 		'FluxBB\Installer\Providers\RouteServiceProvider',
 
 	),
