@@ -226,8 +226,7 @@ function fluxbb_write_cache_file($file, $content)
 	flock($fh, LOCK_UN);
 	fclose($fh);
 
-	if (function_exists('apc_delete_file'))
-		@apc_delete_file(FORUM_CACHE_DIR.$file);
+	fluxbb_invalidate_cached_file(FORUM_CACHE_DIR.$file);
 }
 
 
@@ -241,8 +240,21 @@ function clear_feed_cache()
 	{
 		if (substr($entry, 0, 10) == 'cache_feed' && substr($entry, -4) == '.php')
 			@unlink(FORUM_CACHE_DIR.$entry);
+			fluxbb_invalidate_cached_file(FORUM_CACHE_DIR.$entry);
 	}
 	$d->close();
+}
+
+
+//
+// Invalidate updated php files that are cached by an opcache
+//
+function fluxbb_invalidate_cached_file($file)
+{
+	if (function_exists('opcache_invalidate'))
+		opcache_invalidate($file, true);
+	elseif (function_exists('apc_delete_file'))
+		@apc_delete_file($file);
 }
 
 
