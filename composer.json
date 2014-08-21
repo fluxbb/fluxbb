@@ -1,6 +1,7 @@
 {
 	"name": "fluxbb/fluxbb",
 	"description": "Fast, light, user-friendly and extensible forum software.",
+	"type": "project",
 	"keywords": ["forum", "fluxbb", "laravel"],
 	"license": "MIT",
 	"require": {
