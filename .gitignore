@@ -1,7 +1,7 @@
-/bootstrap/compiled.php
 /vendor
 composer.phar
 composer.lock
+.env.*
 .DS_Store
 config/local
 config/fluxbb.php

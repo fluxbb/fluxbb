@@ -1,29 +1,38 @@
 {
-	"name": "fluxbb/fluxbb",
-	"description": "Fast, light, user-friendly and extensible forum software.",
-	"type": "project",
-	"keywords": ["forum", "fluxbb", "laravel"],
-	"license": "MIT",
-	"require": {
-		"laravel/framework": "4.2.*",
-		"fluxbb/core": "@dev",
-		"fluxbb/installer": "@dev"
-	},
-	"scripts": {
-		"post-install-cmd": [
-			"php artisan clear-compiled",
-			"php artisan optimize"
-		],
-		"post-update-cmd": [
-			"php artisan clear-compiled",
-			"php artisan optimize"
-		],
-		"post-create-project-cmd": [
-			"php artisan key:generate"
-		]
-	},
-	"config": {
-		"preferred-install": "dist"
-	},
-	"minimum-stability": "stable"
+    "name": "fluxbb/fluxbb",
+    "description": "Fast, light, user-friendly and extensible forum software.",
+    "type": "project",
+    "keywords": ["forum", "fluxbb", "laravel"],
+    "license": "MIT",
+    "require": {
+        "laravel/framework": "4.2.*",
+        "fluxbb/core": "@dev",
+        "fluxbb/installer": "@dev"
+    },
+    "autoload": {
+        "classmap": [
+            "database",
+            "tests/TestCase.php"
+        ],
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "php artisan clear-compiled",
+            "php artisan optimize"
+        ],
+        "post-update-cmd": [
+            "php artisan clear-compiled",
+            "php artisan optimize"
+        ],
+        "post-create-project-cmd": [
+            "php artisan key:generate"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "minimum-stability": "stable"
 }
