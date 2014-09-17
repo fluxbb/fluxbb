@@ -13,7 +13,8 @@ To install FluxBB, run the following commands from your command line:
     git checkout 2.0
     curl -s https://getcomposer.org/installer | php
     php composer.phar install
-    php artisan asset:publish fluxbb/core
+    php artisan publish:assets fluxbb/core
+    php artisan publish:assets fluxbb/installer
 
 After that, you can browse to the public/ folder in your favorite browser.
 FluxBB will then ask you to install it. :)
