@@ -132,6 +132,7 @@ return [
         /*
          * FluxBB Service Providers...
          */
+        'FluxBB\Integration\Laravel\ServiceProvider',
         'FluxBB\Core\CoreServiceProvider',
         'FluxBB\Server\ServiceProvider',
         'FluxBB\Web\ServiceProvider',
