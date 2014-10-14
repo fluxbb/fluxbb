@@ -101,7 +101,7 @@ return [
 		'App\Providers\AppServiceProvider',
 		'App\Providers\ArtisanServiceProvider',
 		'App\Providers\ErrorServiceProvider',
-		'App\Providers\FilterServiceProvider',
+		'App\Providers\EventServiceProvider',
 		'App\Providers\LogServiceProvider',
 		'App\Providers\RouteServiceProvider',
 
@@ -122,8 +122,8 @@ return [
 		'Illuminate\Mail\MailServiceProvider',
 		'Illuminate\Pagination\PaginationServiceProvider',
 		'Illuminate\Queue\QueueServiceProvider',
-		#'Illuminate\Redis\RedisServiceProvider',
-		#'Illuminate\Auth\Reminders\ReminderServiceProvider',
+		'Illuminate\Redis\RedisServiceProvider',
+		'Illuminate\Auth\Passwords\PasswordResetServiceProvider',
 		'Illuminate\Session\SessionServiceProvider',
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
@@ -151,7 +151,7 @@ return [
 	|
 	*/
 
-	'manifest' => storage_path().'/meta',
+	'manifest' => storage_path().'/framework',
 
 	/*
 	|--------------------------------------------------------------------------

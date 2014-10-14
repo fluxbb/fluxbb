@@ -1,11 +1,12 @@
+/.idea
 /vendor
 /node_modules
-composer.phar
-composer.lock
-.env.*
+.env
 .DS_Store
+Thumbs.db
+composer.lock
+composer.phar
 config/local
 config/fluxbb.php
 public/packages
 .vagrant
-Thumbs.db
