@@ -249,7 +249,7 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Board desc label'] ?></th>
 									<td>
-										<input type="text" name="form[board_desc]" size="50" maxlength="255" value="<?php echo pun_htmlspecialchars($pun_config['o_board_desc']) ?>" />
+										<textarea name="form[board_desc]" cols="60" rows="3"><?php echo pun_htmlspecialchars($pun_config['o_board_desc']) ?></textarea>
 										<span><?php echo $lang_admin_options['Board desc help'] ?></span>
 									</td>
 								</tr>

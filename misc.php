@@ -135,8 +135,33 @@ else if (isset($_GET['email']))
 		pun_mail($recipient_email, $mail_subject, $mail_message, $pun_user['email'], $pun_user['username']);
 
 		$db->query('UPDATE '.$db->prefix.'users SET last_email_sent='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
+		
+		// Try to determine if the data in redirect_url is valid (if not, we redirect to index.php after login)
+		$referrer = parse_url($_POST['redirect_url']);
+		
+		// Remove www subdomain if it exists
+		if (strpos($referrer['host'], 'www.') === 0)
+			$referrer['host'] = substr($referrer['host'], 4);
 
-		redirect(pun_htmlspecialchars($_POST['redirect_url']), $lang_misc['Email sent redirect']);
+		// Make sure the path component exists
+		if (!isset($referrer['path']))
+			$referrer['path'] = '';
+
+		$valid = parse_url(get_base_url());
+		// Remove www subdomain if it exists
+		if (strpos($valid['host'], 'www.') === 0)
+			$valid['host'] = substr($valid['host'], 4);
+
+		// Make sure the path component exists
+		if (!isset($valid['path']))
+			$valid['path'] = '';
+
+		if ($referrer['host'] == $valid['host'] && preg_match('%^'.preg_quote($valid['path'], '%').'/(.*?)\.php%i', $referrer['path']))
+			$redirect_url = $_SERVER['HTTP_REFERER'];
+		else
+			$redirect_url = 'index.php';
+
+		redirect(pun_htmlspecialchars($redirect_url), $lang_misc['Email sent redirect']);
 	}
 
 
