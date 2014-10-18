@@ -84,7 +84,32 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	// Reset tracked topics
 	set_tracked_topics(null);
 
-	redirect(pun_htmlspecialchars($_POST['redirect_url']), $lang_login['Login redirect']);
+	// Try to determine if the data in redirect_url is valid (if not, we redirect to index.php after login)
+	$referrer = parse_url($_POST['redirect_url']);
+	
+	// Remove www subdomain if it exists
+	if (strpos($referrer['host'], 'www.') === 0)
+		$referrer['host'] = substr($referrer['host'], 4);
+
+	// Make sure the path component exists
+	if (!isset($referrer['path']))
+		$referrer['path'] = '';
+
+	$valid = parse_url(get_base_url());
+	// Remove www subdomain if it exists
+	if (strpos($valid['host'], 'www.') === 0)
+		$valid['host'] = substr($valid['host'], 4);
+
+	// Make sure the path component exists
+	if (!isset($valid['path']))
+		$valid['path'] = '';
+
+	if ($referrer['host'] == $valid['host'] && preg_match('%^'.preg_quote($valid['path'], '%').'/(.*?)\.php%i', $referrer['path']))
+		$redirect_url = $_SERVER['HTTP_REFERER'];
+	else
+		$redirect_url = 'index.php';
+
+	redirect(pun_htmlspecialchars($redirect_url), $lang_login['Login redirect']);
 }
 
 
