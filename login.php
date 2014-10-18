@@ -85,29 +85,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	set_tracked_topics(null);
 
 	// Try to determine if the data in redirect_url is valid (if not, we redirect to index.php after login)
-	$referrer = parse_url($_POST['redirect_url']);
-	
-	// Remove www subdomain if it exists
-	if (strpos($referrer['host'], 'www.') === 0)
-		$referrer['host'] = substr($referrer['host'], 4);
-
-	// Make sure the path component exists
-	if (!isset($referrer['path']))
-		$referrer['path'] = '';
-
-	$valid = parse_url(get_base_url());
-	// Remove www subdomain if it exists
-	if (strpos($valid['host'], 'www.') === 0)
-		$valid['host'] = substr($valid['host'], 4);
-
-	// Make sure the path component exists
-	if (!isset($valid['path']))
-		$valid['path'] = '';
-
-	if ($referrer['host'] == $valid['host'] && preg_match('%^'.preg_quote($valid['path'], '%').'/(.*?)\.php%i', $referrer['path']))
-		$redirect_url = $_SERVER['HTTP_REFERER'];
-	else
-		$redirect_url = 'index.php';
+	$redirect_url = validate_redirect($_POST['redirect_url'], 'index.php');
 
 	redirect(pun_htmlspecialchars($redirect_url), $lang_login['Login redirect']);
 }
@@ -263,28 +241,7 @@ if (!$pun_user['is_guest'])
 
 // Try to determine if the data in HTTP_REFERER is valid (if not, we redirect to index.php after login)
 if (!empty($_SERVER['HTTP_REFERER']))
-{
-	$referrer = parse_url($_SERVER['HTTP_REFERER']);
-	// Remove www subdomain if it exists
-	if (strpos($referrer['host'], 'www.') === 0)
-		$referrer['host'] = substr($referrer['host'], 4);
-
-	// Make sure the path component exists
-	if (!isset($referrer['path']))
-		$referrer['path'] = '';
-
-	$valid = parse_url(get_base_url());
-	// Remove www subdomain if it exists
-	if (strpos($valid['host'], 'www.') === 0)
-		$valid['host'] = substr($valid['host'], 4);
-
-	// Make sure the path component exists
-	if (!isset($valid['path']))
-		$valid['path'] = '';
-
-	if ($referrer['host'] == $valid['host'] && preg_match('%^'.preg_quote($valid['path'], '%').'/(.*?)\.php%i', $referrer['path']))
-		$redirect_url = $_SERVER['HTTP_REFERER'];
-}
+	$redirect_url = validate_redirect($_SERVER['HTTP_REFERER'], null);
 
 if (!isset($redirect_url))
 	$redirect_url = 'index.php';
