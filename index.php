@@ -6,30 +6,9 @@
  * @author  Franz Liedke <franz@fluxbb.org>
  */
 
-use Illuminate\Config\FileLoader;
-use Illuminate\Config\Repository;
-use Illuminate\Filesystem\Filesystem;
-
-require __DIR__.'/vendor/autoload.php';
-
-
-$app = new Illuminate\Foundation\Application(__DIR__);
-Illuminate\Support\Facades\Facade::setFacadeApplication($app);
-
-$app->instance('config', $config = new Repository(
-	new FileLoader(new Filesystem, __DIR__.'/config'), 'production'
-));
-
-$app->register('Illuminate\Filesystem\FilesystemServiceProvider');
-$app->register('Illuminate\Translation\TranslationServiceProvider');
-$app->register('Illuminate\View\ViewServiceProvider');
-$app->register('Illuminate\Database\DatabaseServiceProvider');
-$app->register('FluxBB\Core\CoreServiceProvider');
-$app->register('FluxBB\Server\ServiceProvider');
-$app->register('FluxBB\Web\ServiceProvider');
+$app = require __DIR__.'/bootstrap/start.php';
 
 $app->bind('FluxBB\Web\UrlGeneratorInterface', 'FluxBB\Web\UrlGenerator');
-
 $app->boot();
 
 
