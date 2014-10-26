@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+
+use FluxBB\Installer\Console\InstallCommand;
+use FluxBB\Installer\Installer;
+use Symfony\Component\Console\Application;
+
+$app = require __DIR__.'/bootstrap/start.php';
+
+$app->boot();
+
+$installer = new Installer($app);
+$installCommand = new InstallCommand($installer, $app->make('db.factory'));
+
+$console = new Application();
+$console->add($installCommand);
+$console->run();
