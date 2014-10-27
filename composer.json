@@ -5,9 +5,24 @@
     "keywords": ["forum", "fluxbb", "laravel"],
     "license": "MIT",
     "require": {
-        "laravel/framework": "~5.0",
         "fluxbb/core": "@dev",
-        "fluxbb/installer": "@dev"
+        "fluxbb/installer": "@dev",
+        "illuminate/auth": "~5.0",
+        "illuminate/cache": "~5.0",
+        "illuminate/config": "~5.0",
+        "illuminate/container": "~5.0",
+        "illuminate/contracts": "~5.0",
+        "illuminate/cookie": "~5.0",
+        "illuminate/database": "~5.0",
+        "illuminate/filesystem": "~5.0",
+        "illuminate/hashing": "~5.0",
+        "illuminate/mail": "~5.0",
+        "illuminate/session": "~5.0",
+        "illuminate/support": "~5.0",
+        "illuminate/translation": "~5.0",
+        "illuminate/validation": "~5.0",
+        "illuminate/view": "~5.0",
+        "symfony/console": "2.6.*"
     },
     "config": {
         "preferred-install": "source"
