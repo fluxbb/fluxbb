@@ -4,7 +4,6 @@ use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository;
 use Illuminate\Filesystem\Filesystem;
 
-
 /*
  * Load the Composer autoloader.
  */
@@ -18,7 +17,8 @@ $app = new Illuminate\Foundation\Application(__DIR__.'/../');
 Illuminate\Support\Facades\Facade::setFacadeApplication($app);
 
 $app->instance('config', $config = new Repository(
-	new FileLoader(new Filesystem, __DIR__.'/../config'), 'production'
+    new FileLoader(new Filesystem, __DIR__.'/../config'),
+    'production'
 ));
 
 

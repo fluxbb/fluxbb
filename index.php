@@ -13,8 +13,8 @@ $app->boot();
 
 
 $dispatcher = new FluxBB\Web\Dispatcher(
-	$app->make('FluxBB\Web\Router'),
-	new FluxBB\Web\ControllerFactory($app)
+    $app->make('FluxBB\Web\Router'),
+    new FluxBB\Web\ControllerFactory($app)
 );
 
 $app->instance('request', $request = Symfony\Component\HttpFoundation\Request::createFromGlobals());
