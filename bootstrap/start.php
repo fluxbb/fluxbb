@@ -25,10 +25,9 @@ $app->instance('config', $config = new Repository(
 /*
  * Register all service providers.
  */
-$app->register('Illuminate\Auth\AuthServiceProvider');
 $app->register('Illuminate\Cache\CacheServiceProvider');
 $app->register('Illuminate\Cookie\CookieServiceProvider');
-$app->register('Illuminate\Database\DatabaseServiceProvider');
+$app->register('Illuminate\Database\DatabaseServiceProvider'); // TODO: Remove!
 $app->register('Illuminate\Filesystem\FilesystemServiceProvider');
 $app->register('Illuminate\Hashing\HashServiceProvider');
 $app->register('Illuminate\Mail\MailServiceProvider');
@@ -36,7 +35,9 @@ $app->register('Illuminate\Session\SessionServiceProvider');
 $app->register('Illuminate\Translation\TranslationServiceProvider');
 $app->register('Illuminate\Validation\ValidationServiceProvider');
 $app->register('Illuminate\View\ViewServiceProvider');
+$app->register('FluxBB\Auth\AuthServiceProvider');
 $app->register('FluxBB\Core\CoreServiceProvider');
+$app->register('FluxBB\Database\DatabaseServiceProvider');
 $app->register('FluxBB\Server\ServiceProvider');
 $app->register('FluxBB\Web\ServiceProvider');
 
