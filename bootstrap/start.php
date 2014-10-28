@@ -18,7 +18,7 @@ Illuminate\Support\Facades\Facade::setFacadeApplication($app);
 
 $app->instance('config', $config = new Repository(
     new FileLoader(new Filesystem, __DIR__.'/../config'),
-    'production'
+    'local'
 ));
 
 
