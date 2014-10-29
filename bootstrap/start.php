@@ -32,7 +32,6 @@ $app->instance('config', $config = new Repository(
  */
 $app->register('Illuminate\Cache\CacheServiceProvider');
 $app->register('Illuminate\Cookie\CookieServiceProvider');
-$app->register('Illuminate\Filesystem\FilesystemServiceProvider');
 $app->register('Illuminate\Hashing\HashServiceProvider');
 $app->register('Illuminate\Mail\MailServiceProvider');
 $app->register('Illuminate\Session\SessionServiceProvider');
@@ -41,6 +40,7 @@ $app->register('Illuminate\Validation\ValidationServiceProvider');
 $app->register('Illuminate\View\ViewServiceProvider');
 $app->register('FluxBB\Auth\AuthServiceProvider');
 $app->register('FluxBB\Core\CoreServiceProvider');
+$app->register('FluxBB\Core\FilesystemServiceProvider');
 $app->register('FluxBB\Database\DatabaseServiceProvider');
 $app->register('FluxBB\Server\ServiceProvider');
 $app->register('FluxBB\Validator\ValidationServiceProvider');
