@@ -15,5 +15,5 @@ To install FluxBB, run the following commands from your command line:
     curl -s https://getcomposer.org/installer | php
     php composer.phar install
 
-After that, you can browse to public/install/ in your favorite browser.
+After that, you can browse to visit /install in your favorite browser.
 FluxBB will then guide you through the installation process.
