@@ -27,7 +27,6 @@ $app->instance('config', $config = new Repository(
  */
 $app->register('Illuminate\Cache\CacheServiceProvider');
 $app->register('Illuminate\Cookie\CookieServiceProvider');
-$app->register('Illuminate\Database\DatabaseServiceProvider'); // TODO: Remove!
 $app->register('Illuminate\Filesystem\FilesystemServiceProvider');
 $app->register('Illuminate\Hashing\HashServiceProvider');
 $app->register('Illuminate\Mail\MailServiceProvider');
