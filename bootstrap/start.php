@@ -39,6 +39,7 @@ $app->register('FluxBB\Auth\AuthServiceProvider');
 $app->register('FluxBB\Core\CoreServiceProvider');
 $app->register('FluxBB\Database\DatabaseServiceProvider');
 $app->register('FluxBB\Server\ServiceProvider');
+$app->register('FluxBB\Validator\ValidationServiceProvider');
 $app->register('FluxBB\Web\ServiceProvider');
 
 
