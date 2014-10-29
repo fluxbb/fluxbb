@@ -16,8 +16,13 @@ require __DIR__.'/../vendor/autoload.php';
 $app = new Illuminate\Foundation\Application(__DIR__.'/../');
 Illuminate\Support\Facades\Facade::setFacadeApplication($app);
 
+$basePath = __DIR__ . '/../';
+$configPath = __DIR__ . '/../config';
+$app->instance('path', $basePath);
+$app->instance('path.config', $configPath);
+
 $app->instance('config', $config = new Repository(
-    new FileLoader(new Filesystem, __DIR__.'/../config'),
+    new FileLoader(new Filesystem, $configPath),
     'local'
 ));
 
