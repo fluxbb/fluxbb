@@ -21,7 +21,7 @@ $configPath = __DIR__ . '/../config';
 $app->instance('path', $basePath);
 $app->instance('path.config', $configPath);
 
-$app->instance('config', $config = new Repository(
+$app->instance('config', new Repository(
     new FileLoader(new Filesystem, $configPath),
     'local'
 ));
