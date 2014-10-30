@@ -36,7 +36,6 @@ $app->register('Illuminate\Hashing\HashServiceProvider');
 $app->register('Illuminate\Mail\MailServiceProvider');
 $app->register('Illuminate\Session\SessionServiceProvider');
 $app->register('Illuminate\Translation\TranslationServiceProvider');
-$app->register('Illuminate\Validation\ValidationServiceProvider');
 $app->register('Illuminate\View\ViewServiceProvider');
 $app->register('FluxBB\Auth\AuthServiceProvider');
 $app->register('FluxBB\Core\CoreServiceProvider');
