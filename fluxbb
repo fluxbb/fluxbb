@@ -9,6 +9,7 @@ $app = require __DIR__.'/bootstrap/start.php';
  * Set up the console application.
  */
 $app->instance('console', $console = new Application());
+$app->register('FluxBB\Console\ConsoleServiceProvider');
 $app->register('FluxBB\Installer\Console\ConsoleServiceProvider');
 
 $app->boot();

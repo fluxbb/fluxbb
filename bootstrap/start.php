@@ -44,6 +44,7 @@ $app->register('FluxBB\Database\DatabaseServiceProvider');
 $app->register('FluxBB\Server\ServiceProvider');
 $app->register('FluxBB\Validator\ValidationServiceProvider');
 $app->register('FluxBB\Web\ServiceProvider');
+$app->register('FluxBB\Installer\Providers\InstallerServiceProvider');
 
 
 /*
