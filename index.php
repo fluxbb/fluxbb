@@ -8,7 +8,7 @@
 
 $app = require __DIR__.'/bootstrap/start.php';
 
-$app->register('FluxBB\Installer\Providers\RouteServiceProvider');
+$app->register('FluxBB\Installer\Web\RouteServiceProvider');
 
 $app->bind('FluxBB\Web\UrlGeneratorInterface', 'FluxBB\Web\UrlGenerator');
 $app->boot();
