@@ -20,8 +20,11 @@ $kernel = new FluxBB\Web\Dispatcher(
     new FluxBB\Web\ControllerFactory($app)
 );
 
-$kernel = new FluxBB\Web\SessionKernel($kernel, $app->make('Illuminate\Database\ConnectionInterface'));
-$kernel = new FluxBB\Web\CookieKernel($kernel, $app->make('Illuminate\Contracts\Cookie\QueueingFactory'));
+$session = $app->make('Symfony\Component\HttpFoundation\Session\SessionInterface');
+$cookies = $app->make('Illuminate\Contracts\Cookie\QueueingFactory');
+
+$kernel = new FluxBB\Web\SessionKernel($kernel, $session);
+$kernel = new FluxBB\Web\CookieKernel($kernel, $cookies);
 
 $response = $kernel->handle($request);
 $response->send();
