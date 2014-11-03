@@ -219,7 +219,10 @@ html, body {
 	}
 
 .pun {
-	margin: 12px 20px
+	max-width: 1070px;
+	width: 95%;
+	margin: 0 auto;
+	padding: 12px 20px;
 	}
 
 #punredirect, #punmaint, #puninstall, #pundb_update {
@@ -918,12 +921,12 @@ html, body {
 	max-width: 98%;
 	vertical-align: middle;
 	margin: 7px 0.5em 7px 0;
-}
+	}
 
 .pun .postmsg .postimg a:link img, .pun .postmsg .postimg a:visited img {
 	border-style: solid;
 	border-width: 2px;
-}
+	}
 
 .pun .blockpost label {
 	padding: 3px 6px;
@@ -1097,11 +1100,11 @@ body {
 
 .pun .postmsg .postimg a:link img, .pun .postmsg .postimg a:visited img {
 	border-color: #60a0dc;
-}
+	}
 
 .pun .postmsg .postimg a:hover img, .pun .postmsg .postimg a:active img, .pun .postmsg .postimg a:focus img {
 	border-color: #80d6ff;
-}
+	}
 
 .pun h2 a:link, .pun h2 a:visited,
 #brdmenu a:link, #brdmenu a:visited {

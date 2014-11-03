@@ -91,7 +91,7 @@ if (isset($_POST['form_sent']))
 	// Validate username and passwords
 	check_username($username);
 
-	if (pun_strlen($password1) < 4)
+	if (pun_strlen($password1) < 6)
 		$errors[] = $lang_prof_reg['Pass too short'];
 	else if ($password1 != $password2)
 		$errors[] = $lang_prof_reg['Pass not match'];
@@ -223,6 +223,7 @@ if (isset($_POST['form_sent']))
 				$mail_message = str_replace('<username>', $username, $mail_message);
 				$mail_message = str_replace('<base_url>', get_base_url().'/', $mail_message);
 				$mail_message = str_replace('<profile_url>', get_base_url().'/profile.php?id='.$new_uid, $mail_message);
+				$mail_message = str_replace('<admin_url>', get_base_url().'/profile.php?section=admin&id='.$new_uid, $mail_message);
 				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
 
 				pun_mail($pun_config['o_mailing_list'], $mail_subject, $mail_message);
