@@ -15,12 +15,12 @@ $app->bind('FluxBB\Web\UrlGeneratorInterface', 'FluxBB\Web\UrlGenerator');
 $app->boot();
 
 
-$dispatcher = new FluxBB\Web\Dispatcher(
+$kernel = new FluxBB\Web\Dispatcher(
     $app->make('FluxBB\Web\Router'),
     new FluxBB\Web\ControllerFactory($app)
 );
 
-$dispatcher = new FluxBB\Web\SessionWrapper($dispatcher, $queue = $app->make('Illuminate\Contracts\Cookie\QueueingFactory'));
+$kernel = new FluxBB\Web\SessionWrapper($kernel, $app->make('Illuminate\Contracts\Cookie\QueueingFactory'));
 
-$response = $dispatcher->handle($request);
+$response = $kernel->handle($request);
 $response->send();
