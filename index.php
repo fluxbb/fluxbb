@@ -10,6 +10,7 @@ $app = require __DIR__.'/bootstrap/start.php';
 
 $app->register('FluxBB\Installer\Web\RouteServiceProvider');
 
+$app->instance('request', $request = Symfony\Component\HttpFoundation\Request::createFromGlobals());
 $app->bind('FluxBB\Web\UrlGeneratorInterface', 'FluxBB\Web\UrlGenerator');
 $app->boot();
 
@@ -19,7 +20,7 @@ $dispatcher = new FluxBB\Web\Dispatcher(
     new FluxBB\Web\ControllerFactory($app)
 );
 
-$app->instance('request', $request = Symfony\Component\HttpFoundation\Request::createFromGlobals());
+$dispatcher = new FluxBB\Web\SessionWrapper($dispatcher, $queue = $app->make('Illuminate\Contracts\Cookie\QueueingFactory'));
 
 $response = $dispatcher->handle($request);
 $response->send();
