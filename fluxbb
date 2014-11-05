@@ -5,6 +5,9 @@ use Symfony\Component\Console\Application;
 
 $app = require __DIR__.'/bootstrap/start.php';
 
+// TODO: Remove this!
+$app->bind('FluxBB\Web\UrlGeneratorInterface', 'FluxBB\Web\UrlGenerator');
+
 /*
  * Set up the console application.
  */
