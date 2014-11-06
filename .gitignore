@@ -8,5 +8,3 @@ composer.lock
 composer.phar
 config/local
 config/fluxbb.php
-public/packages
-.vagrant
