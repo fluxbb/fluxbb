@@ -42,6 +42,7 @@ $app->register('FluxBB\Core\FilesystemServiceProvider');
 $app->register('FluxBB\Database\DatabaseServiceProvider');
 $app->register('FluxBB\Server\ServiceProvider');
 $app->register('FluxBB\Validation\ValidationServiceProvider');
+$app->register('FluxBB\Web\Assets\AssetsServiceProvider');
 $app->register('FluxBB\Web\ServiceProvider');
 $app->register('FluxBB\Web\SessionServiceProvider');
 $app->register('FluxBB\Installer\InstallerServiceProvider');
