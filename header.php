@@ -144,9 +144,6 @@ function process_form(the_form)
 
 }
 
-// JavaScript tricks for IE6 and older
-echo '<!--[if lte IE 6]><script type="text/javascript" src="style/imports/minmax.js"></script><![endif]-->'."\n";
-
 if (!empty($page_head))
 	echo implode("\n", $page_head)."\n";
 
