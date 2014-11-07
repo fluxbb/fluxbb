@@ -25,9 +25,11 @@ function trans($id, $parameters = [])
 $basePath = __DIR__ . '/../';
 $configPath = __DIR__ . '/../config';
 $langPath = __DIR__ . '/../lang';
+$cachePath = __DIR__ . '/../cache';
 $app->instance('path', $basePath);
 $app->instance('path.config', $configPath);
 $app->instance('path.lang', $langPath);
+$app->instance('path.cache', $cachePath);
 
 $app->instance('config', new Repository(
     new FileLoader(new Filesystem, $configPath),
@@ -44,16 +46,16 @@ $app->alias('view', 'Illuminate\Contracts\View\Factory');
 /*
  * Register all service providers.
  */
-$app->register('Illuminate\Cache\CacheServiceProvider');
 $app->register('Illuminate\Cookie\CookieServiceProvider');
 $app->register('Illuminate\Hashing\HashServiceProvider');
-$app->register('Illuminate\Mail\MailServiceProvider');
 $app->register('Illuminate\Translation\TranslationServiceProvider');
 $app->register('Illuminate\View\ViewServiceProvider');
 $app->register('FluxBB\Auth\AuthServiceProvider');
+$app->register('FluxBB\Cache\CacheServiceProvider');
 $app->register('FluxBB\Core\CoreServiceProvider');
 $app->register('FluxBB\Core\FilesystemServiceProvider');
 $app->register('FluxBB\Database\DatabaseServiceProvider');
+$app->register('FluxBB\Mail\MailServiceProvider');
 $app->register('FluxBB\Server\ServiceProvider');
 $app->register('FluxBB\Validation\ValidationServiceProvider');
 $app->register('FluxBB\Web\Assets\AssetsServiceProvider');
