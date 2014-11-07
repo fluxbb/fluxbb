@@ -14,6 +14,7 @@
         "illuminate/contracts": "~5.0",
         "illuminate/cookie": "~5.0",
         "illuminate/database": "~5.0",
+        "illuminate/events": "~5.0",
         "illuminate/filesystem": "~5.0",
         "illuminate/hashing": "~5.0",
         "illuminate/mail": "~5.0",
