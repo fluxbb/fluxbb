@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'path' => storage_path().'/framework/cache',
+    'path' => __DIR__.'/../storage/framework/cache',
 
     /*
     |--------------------------------------------------------------------------

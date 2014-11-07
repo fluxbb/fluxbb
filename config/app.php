@@ -151,7 +151,7 @@ return [
     |
     */
 
-    'manifest' => storage_path().'/framework',
+    'manifest' => __DIR__.'/../storage/framework',
 
     /*
     |--------------------------------------------------------------------------

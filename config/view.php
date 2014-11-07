@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'paths' => [base_path().'/resources/views'],
+    'paths' => [__DIR__ . '/../resources/views'],
 
     /*
     |--------------------------------------------------------------------------
@@ -26,6 +26,6 @@ return [
     |
     */
 
-    'compiled' => storage_path().'/framework/views',
+    'compiled' => __DIR__.'/../storage/framework/views',
 
 ];
