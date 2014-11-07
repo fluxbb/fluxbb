@@ -16,16 +16,30 @@ require __DIR__.'/../vendor/autoload.php';
 $app = new FluxBB\Core\Application();
 Illuminate\Support\Facades\Facade::setFacadeApplication($app);
 
+function trans($id, $parameters = [])
+{
+    global $app;
+    return $app->make('translator')->trans($id, $parameters);
+}
+
 $basePath = __DIR__ . '/../';
 $configPath = __DIR__ . '/../config';
+$langPath = __DIR__ . '/../lang';
 $app->instance('path', $basePath);
 $app->instance('path.config', $configPath);
+$app->instance('path.lang', $langPath);
 
 $app->instance('config', new Repository(
     new FileLoader(new Filesystem, $configPath),
     'local'
 ));
 
+$app->alias('config', 'Illuminate\Contracts\Config\Repository');
+$app->alias('cookie', 'Illuminate\Contracts\Cookie\QueueingFactory');
+$app->alias('events', 'Illuminate\Contracts\Events\Dispatcher');
+$app->alias('hash', 'Illuminate\Contracts\Hashing\Hasher');
+$app->alias('mailer', 'Illuminate\Contracts\Mail\Mailer');
+$app->alias('view', 'Illuminate\Contracts\View\Factory');
 
 /*
  * Register all service providers.
