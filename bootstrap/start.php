@@ -13,7 +13,7 @@ require __DIR__.'/../vendor/autoload.php';
 /*
  * Create the main application.
  */
-$app = new Illuminate\Foundation\Application(__DIR__.'/../');
+$app = new FluxBB\Core\Application();
 Illuminate\Support\Facades\Facade::setFacadeApplication($app);
 
 $basePath = __DIR__ . '/../';
