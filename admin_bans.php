@@ -134,7 +134,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 								<tr>
 									<th scope="row"><?php echo $lang_admin_bans['E-mail label'] ?></th>
 									<td>
-										<input type="text" name="ban_email" size="40" maxlength="80" value="<?php if (isset($ban_email)) echo $ban_email; ?>" tabindex="3" />
+										<input type="text" name="ban_email" size="40" maxlength="80" value="<?php if (isset($ban_email)) echo pun_htmlspecialchars($ban_email); ?>" tabindex="3" />
 										<span><?php echo $lang_admin_bans['E-mail help'] ?></span>
 									</td>
 								</tr>
@@ -259,7 +259,7 @@ else if (isset($_POST['add_edit_ban']))
 	require PUN_ROOT.'include/email.php';
 	if ($ban_email != '' && !is_valid_email($ban_email))
 	{
-		if (!preg_match('%^[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$%', $ban_email))
+		if (!preg_match('%^[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,63})$%', $ban_email))
 			message($lang_admin_bans['Invalid e-mail message']);
 	}
 
@@ -434,7 +434,7 @@ else if (isset($_GET['find_ban']))
 ?>
 				<tr>
 					<td class="tcl"><?php echo ($ban_data['username'] != '') ? pun_htmlspecialchars($ban_data['username']) : '&#160;' ?></td>
-					<td class="tc2"><?php echo ($ban_data['email'] != '') ? $ban_data['email'] : '&#160;' ?></td>
+					<td class="tc2"><?php echo ($ban_data['email'] != '') ? pun_htmlspecialchars($ban_data['email']) : '&#160;' ?></td>
 					<td class="tc3"><?php echo ($ban_data['ip'] != '') ? pun_htmlspecialchars($ban_data['ip']) : '&#160;' ?></td>
 					<td class="tc4"><?php echo $expire ?></td>
 					<td class="tc5"><?php echo ($ban_data['message'] != '') ? pun_htmlspecialchars($ban_data['message']) : '&#160;' ?></td>
