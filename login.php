@@ -244,7 +244,7 @@ if (!empty($_SERVER['HTTP_REFERER']))
 	$redirect_url = validate_redirect($_SERVER['HTTP_REFERER'], null);
 
 if (!isset($redirect_url))
-	$redirect_url = 'index.php';
+	$redirect_url = get_base_url(true).'/index.php';
 else if (preg_match('%viewtopic\.php\?pid=(\d+)$%', $redirect_url, $matches))
 	$redirect_url .= '#p'.$matches[1];
 
