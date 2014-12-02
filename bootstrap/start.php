@@ -56,7 +56,7 @@ $app->register('FluxBB\Core\CoreServiceProvider');
 $app->register('FluxBB\Core\FilesystemServiceProvider');
 $app->register('FluxBB\Database\DatabaseServiceProvider');
 $app->register('FluxBB\Mail\MailServiceProvider');
-$app->register('FluxBB\Server\ServiceProvider');
+$app->register('FluxBB\Server\ServerServiceProvider');
 $app->register('FluxBB\Validation\ValidationServiceProvider');
 $app->register('FluxBB\Web\Assets\AssetsServiceProvider');
 $app->register('FluxBB\Web\WebServiceProvider');
