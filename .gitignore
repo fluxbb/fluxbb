@@ -4,7 +4,6 @@
 .env
 .DS_Store
 Thumbs.db
-composer.lock
 composer.phar
 config/local
 config/fluxbb.php
