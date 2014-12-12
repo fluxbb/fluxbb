@@ -227,7 +227,7 @@ function utf8_substr($str, $offset, $length = false)
 			if ($Lx) $Lp = '(?:.{65535}){'.$Lx.'}';
 			$Lp = '('.$Lp.'.{'.$Ly.'})';
 		}
-		else if ($length < 0)
+		elseif ($length < 0)
 		{
 
 			if ($length < ($offset - $strlen))

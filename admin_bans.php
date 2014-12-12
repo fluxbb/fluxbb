@@ -178,7 +178,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 }
 
 // Add/edit a ban (stage 2)
-else if (isset($_POST['add_edit_ban']))
+elseif (isset($_POST['add_edit_ban']))
 {
 	confirm_referrer('admin_bans.php');
 
@@ -190,7 +190,7 @@ else if (isset($_POST['add_edit_ban']))
 
 	if ($ban_user == '' && $ban_ip == '' && $ban_email == '')
 		message($lang_admin_bans['Must enter message']);
-	else if (strtolower($ban_user) == 'guest')
+	elseif (strtolower($ban_user) == 'guest')
 		message($lang_admin_bans['Cannot ban guest message']);
 
 	// Make sure we're not banning an admin or moderator
@@ -302,7 +302,7 @@ else if (isset($_POST['add_edit_ban']))
 }
 
 // Remove a ban
-else if (isset($_GET['del_ban']))
+elseif (isset($_GET['del_ban']))
 {
 	confirm_referrer('admin_bans.php');
 
@@ -322,7 +322,7 @@ else if (isset($_GET['del_ban']))
 }
 
 // Find bans
-else if (isset($_GET['find_ban']))
+elseif (isset($_GET['find_ban']))
 {
 	$form = isset($_GET['form']) ? $_GET['form'] : array();
 

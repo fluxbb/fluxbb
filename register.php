@@ -32,7 +32,7 @@ if (isset($_GET['cancel']))
 	redirect('index.php', $lang_register['Reg cancel redirect']);
 
 
-else if ($pun_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POST['form_sent']))
+elseif ($pun_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POST['form_sent']))
 {
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_register['Register'], $lang_register['Forum rules']);
 	define('PUN_ACTIVE_PAGE', 'register');
@@ -93,7 +93,7 @@ if (isset($_POST['form_sent']))
 
 	if (pun_strlen($password1) < 4)
 		$errors[] = $lang_prof_reg['Pass too short'];
-	else if ($password1 != $password2)
+	elseif ($password1 != $password2)
 		$errors[] = $lang_prof_reg['Pass not match'];
 
 	// Validate email
@@ -101,7 +101,7 @@ if (isset($_POST['form_sent']))
 
 	if (!is_valid_email($email1))
 		$errors[] = $lang_common['Invalid email'];
-	else if ($pun_config['o_regs_verify'] == '1' && $email1 != $email2)
+	elseif ($pun_config['o_regs_verify'] == '1' && $email1 != $email2)
 		$errors[] = $lang_register['Email not match'];
 
 	// Check if it's a banned email address

@@ -31,7 +31,7 @@ if (!$pun_user['is_guest'])
 
 if ($pun_config['o_feed_type'] == '1')
 	$page_head = array('feed' => '<link rel="alternate" type="application/rss+xml" href="extern.php?action=feed&amp;type=rss" title="'.$lang_common['RSS active topics feed'].'" />');
-else if ($pun_config['o_feed_type'] == '2')
+elseif ($pun_config['o_feed_type'] == '2')
 	$page_head = array('feed' => '<link rel="alternate" type="application/atom+xml" href="extern.php?action=feed&amp;type=atom" title="'.$lang_common['Atom active topics feed'].'" />');
 
 $forum_actions = array();
@@ -126,7 +126,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 	// If there is a last_post/last_poster
 	if ($cur_forum['last_post'] != '')
 		$last_post = '<a href="viewtopic.php?pid='.$cur_forum['last_post_id'].'#p'.$cur_forum['last_post_id'].'">'.format_time($cur_forum['last_post']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_forum['last_poster']).'</span>';
-	else if ($cur_forum['redirect_url'] != '')
+	elseif ($cur_forum['redirect_url'] != '')
 		$last_post = '- - -';
 	else
 		$last_post = $lang_common['Never'];

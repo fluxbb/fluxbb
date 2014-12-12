@@ -76,11 +76,11 @@ if (isset($_POST['form_sent']))
 
 		if ($subject == '')
 			$errors[] = $lang_post['No subject'];
-		else if ($pun_config['o_censoring'] == '1' && $censored_subject == '')
+		elseif ($pun_config['o_censoring'] == '1' && $censored_subject == '')
 			$errors[] = $lang_post['No subject after censoring'];
-		else if (pun_strlen($subject) > 70)
+		elseif (pun_strlen($subject) > 70)
 			$errors[] = $lang_post['Too long subject'];
-		else if ($pun_config['p_subject_all_caps'] == '0' && is_all_uppercase($subject) && !$pun_user['is_admmod'])
+		elseif ($pun_config['p_subject_all_caps'] == '0' && is_all_uppercase($subject) && !$pun_user['is_admmod'])
 			$errors[] = $lang_post['All caps subject'];
 	}
 
@@ -128,7 +128,7 @@ if (isset($_POST['form_sent']))
 	// Here we use strlen() not pun_strlen() as we want to limit the post to PUN_MAX_POSTSIZE bytes, not characters
 	if (strlen($message) > PUN_MAX_POSTSIZE)
 		$errors[] = sprintf($lang_post['Too long message'], forum_number_format(PUN_MAX_POSTSIZE));
-	else if ($pun_config['p_message_all_caps'] == '0' && is_all_uppercase($message) && !$pun_user['is_admmod'])
+	elseif ($pun_config['p_message_all_caps'] == '0' && is_all_uppercase($message) && !$pun_user['is_admmod'])
 		$errors[] = $lang_post['All caps message'];
 
 	// Validate BBCode syntax
@@ -142,7 +142,7 @@ if (isset($_POST['form_sent']))
 	{
 		if ($message == '')
 			$errors[] = $lang_post['No message'];
-		else if ($pun_config['o_censoring'] == '1')
+		elseif ($pun_config['o_censoring'] == '1')
 		{
 			// Censor message to see if that causes problems
 			$censored_message = pun_trim(censor_words($message));
@@ -182,7 +182,7 @@ if (isset($_POST['form_sent']))
 				{
 					if ($subscribe && !$is_subscribed)
 						$db->query('INSERT INTO '.$db->prefix.'topic_subscriptions (user_id, topic_id) VALUES('.$pun_user['id'].' ,'.$tid.')') or error('Unable to add subscription', __FILE__, __LINE__, $db->error());
-					else if (!$subscribe && $is_subscribed)
+					elseif (!$subscribe && $is_subscribed)
 						$db->query('DELETE FROM '.$db->prefix.'topic_subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$tid) or error('Unable to remove subscription', __FILE__, __LINE__, $db->error());
 				}
 			}
@@ -283,7 +283,7 @@ if (isset($_POST['form_sent']))
 			}
 		}
 		// If it's a new topic
-		else if ($fid)
+		elseif ($fid)
 		{
 			// Create the topic
 			$db->query('INSERT INTO '.$db->prefix.'topics (poster, subject, posted, last_post, last_poster, sticky, forum_id) VALUES(\''.$db->escape($username).'\', \''.$db->escape($subject).'\', '.$now.', '.$now.', \''.$db->escape($username).'\', '.$stick_topic.', '.$fid.')') or error('Unable to create topic', __FILE__, __LINE__, $db->error());
@@ -509,7 +509,7 @@ if ($tid)
 				// Deal with quoting "Username" or 'Username' (becomes '"Username"' or "'Username'")
 				if ($ends == '\'\'')
 					$q_poster = '"'.$q_poster.'"';
-				else if ($ends == '""')
+				elseif ($ends == '""')
 					$q_poster = '\''.$q_poster.'\'';
 			}
 
@@ -520,7 +520,7 @@ if ($tid)
 	}
 }
 // If a forum ID was specified in the url (new topic)
-else if ($fid)
+elseif ($fid)
 {
 	$action = $lang_post['Post new topic'];
 	$form = '<form id="post" method="post" action="post.php?action=post&amp;fid='.$fid.'" onsubmit="return process_form(this)">';
@@ -584,7 +584,7 @@ if (!empty($errors))
 <?php
 
 }
-else if (isset($_POST['preview']))
+elseif (isset($_POST['preview']))
 {
 	require_once PUN_ROOT.'include/parser.php';
 	$preview_message = parse_message($message, $hide_smilies);
@@ -668,16 +668,16 @@ if (!$pun_user['is_guest'])
 		if (isset($_POST['preview']))
 			$subscr_checked = isset($_POST['subscribe']) ? true : false;
 		// If auto subscribed
-		else if ($pun_user['auto_notify'])
+		elseif ($pun_user['auto_notify'])
 			$subscr_checked = true;
 		// If already subscribed to the topic
-		else if ($is_subscribed)
+		elseif ($is_subscribed)
 			$subscr_checked = true;
 
 		$checkboxes[] = '<label><input type="checkbox" name="subscribe" value="1" tabindex="'.($cur_index++).'"'.($subscr_checked ? ' checked="checked"' : '').' />'.($is_subscribed ? $lang_post['Stay subscribed'] : $lang_post['Subscribe']).'<br /></label>';
 	}
 }
-else if ($pun_config['o_smilies'] == '1')
+elseif ($pun_config['o_smilies'] == '1')
 	$checkboxes[] = '<label><input type="checkbox" name="hide_smilies" value="1" tabindex="'.($cur_index++).'"'.(isset($_POST['hide_smilies']) ? ' checked="checked"' : '').' />'.$lang_post['Hide smilies'].'<br /></label>';
 
 if (!empty($checkboxes))

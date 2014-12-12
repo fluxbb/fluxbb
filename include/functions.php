@@ -462,15 +462,15 @@ function check_username($username, $exclude_id = null)
 	// Validate username
 	if (pun_strlen($username) < 2)
 		$errors[] = $lang_prof_reg['Username too short'];
-	else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
+	elseif (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
 		$errors[] = $lang_prof_reg['Username too long'];
-	else if (!strcasecmp($username, 'Guest') || !utf8_strcasecmp($username, $lang_common['Guest']))
+	elseif (!strcasecmp($username, 'Guest') || !utf8_strcasecmp($username, $lang_common['Guest']))
 		$errors[] = $lang_prof_reg['Username guest'];
-	else if (preg_match('%[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}%', $username) || preg_match('%((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))%', $username))
+	elseif (preg_match('%[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}%', $username) || preg_match('%((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))%', $username))
 		$errors[] = $lang_prof_reg['Username IP'];
-	else if ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
+	elseif ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
 		$errors[] = $lang_prof_reg['Username reserved chars'];
-	else if (preg_match('%(?:\[/?(?:b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list|\*|topic|post|forum|user)\]|\[(?:img|url|quote|list)=)%i', $username))
+	elseif (preg_match('%(?:\[/?(?:b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list|\*|topic|post|forum|user)\]|\[(?:img|url|quote|list)=)%i', $username))
 		$errors[] = $lang_prof_reg['Username BBCode'];
 
 	// Check username for any censored words
@@ -524,7 +524,7 @@ function update_users_online()
 				$db->query('UPDATE '.$db->prefix.'users SET last_visit='.$cur_user['logged'].' WHERE id='.$cur_user['user_id']) or error('Unable to update user visit data', __FILE__, __LINE__, $db->error());
 				$db->query('DELETE FROM '.$db->prefix.'online WHERE user_id='.$cur_user['user_id']) or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
 			}
-			else if ($cur_user['idle'] == '0')
+			elseif ($cur_user['idle'] == '0')
 				$db->query('UPDATE '.$db->prefix.'online SET idle=1 WHERE user_id='.$cur_user['user_id']) or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
 		}
 	}
@@ -846,13 +846,13 @@ function get_title($user)
 	if ($user['title'] != '')
 		$user_title = pun_htmlspecialchars($user['title']);
 	// If the user is banned
-	else if (in_array(utf8_strtolower($user['username']), $ban_list))
+	elseif (in_array(utf8_strtolower($user['username']), $ban_list))
 		$user_title = $lang_common['Banned'];
 	// If the user group has a default user title
-	else if ($user['g_user_title'] != '')
+	elseif ($user['g_user_title'] != '')
 		$user_title = pun_htmlspecialchars($user['g_user_title']);
 	// If the user is a guest
-	else if ($user['g_id'] == PUN_GUEST)
+	elseif ($user['g_id'] == PUN_GUEST)
 		$user_title = $lang_common['Guest'];
 	// If nothing else helps, we assign the default
 	else
@@ -900,7 +900,7 @@ function paginate($num_pages, $cur_page, $link)
 		{
 			if ($current < 1 || $current > $num_pages)
 				continue;
-			else if ($current != $cur_page || $link_to_all)
+			elseif ($current != $cur_page || $link_to_all)
 				$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p='.$current.'">'.forum_number_format($current).'</a>';
 			else
 				$pages[] = '<strong'.(empty($pages) ? ' class="item1"' : '').'>'.forum_number_format($current).'</strong>';
@@ -987,13 +987,13 @@ function format_time($timestamp, $date_only = false, $date_format = null, $time_
 	{
 		if ($date == $today)
 			$date = $lang_common['Today'];
-		else if ($date == $yesterday)
+		elseif ($date == $yesterday)
 			$date = $lang_common['Yesterday'];
 	}
 
 	if ($date_only)
 		return $date;
-	else if ($time_only)
+	elseif ($time_only)
 		return gmdate($time_format, $timestamp);
 	else
 		return $date.' '.gmdate($time_format, $timestamp);
@@ -1023,7 +1023,7 @@ function random_key($len, $readable = false, $hash = false)
 
 	if ($hash)
 		return substr(bin2hex($key), 0, $len);
-	else if ($readable)
+	elseif ($readable)
 	{
 		$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -1236,7 +1236,7 @@ function array_insert(&$input, $offset, $element, $key = null)
 	// Out of bounds checks
 	if ($offset > count($input))
 		$offset = count($input);
-	else if ($offset < 0)
+	elseif ($offset < 0)
 		$offset = 0;
 
 	$input = array_merge(array_slice($input, 0, $offset), array($key => $element), array_slice($input, $offset));
@@ -1287,7 +1287,7 @@ function maintenance_message()
 		// Allow for overriding user includes, too.
 		if (file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
 			require $tpl_inc_dir.$cur_include[1].'.'.$cur_include[2];
-		else if (file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
+		elseif (file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
 			require PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
 		else
 			error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file)));
@@ -1412,7 +1412,7 @@ function redirect($destination_url, $message)
 		// Allow for overriding user includes, too.
 		if (file_exists($tpl_inc_dir.$cur_include[1].'.'.$cur_include[2]))
 			require $tpl_inc_dir.$cur_include[1].'.'.$cur_include[2];
-		else if (file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
+		elseif (file_exists(PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2]))
 			require PUN_ROOT.'include/user/'.$cur_include[1].'.'.$cur_include[2];
 		else
 			error(sprintf($lang_common['Pun include error'], htmlspecialchars($cur_include[0]), basename($tpl_file)));

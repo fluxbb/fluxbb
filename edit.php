@@ -69,11 +69,11 @@ if (isset($_POST['form_sent']))
 
 		if ($subject == '')
 			$errors[] = $lang_post['No subject'];
-		else if ($pun_config['o_censoring'] == '1' && $censored_subject == '')
+		elseif ($pun_config['o_censoring'] == '1' && $censored_subject == '')
 			$errors[] = $lang_post['No subject after censoring'];
-		else if (pun_strlen($subject) > 70)
+		elseif (pun_strlen($subject) > 70)
 			$errors[] = $lang_post['Too long subject'];
-		else if ($pun_config['p_subject_all_caps'] == '0' && is_all_uppercase($subject) && !$pun_user['is_admmod'])
+		elseif ($pun_config['p_subject_all_caps'] == '0' && is_all_uppercase($subject) && !$pun_user['is_admmod'])
 			$errors[] = $lang_post['All caps subject'];
 	}
 
@@ -83,7 +83,7 @@ if (isset($_POST['form_sent']))
 	// Here we use strlen() not pun_strlen() as we want to limit the post to PUN_MAX_POSTSIZE bytes, not characters
 	if (strlen($message) > PUN_MAX_POSTSIZE)
 		$errors[] = sprintf($lang_post['Too long message'], forum_number_format(PUN_MAX_POSTSIZE));
-	else if ($pun_config['p_message_all_caps'] == '0' && is_all_uppercase($message) && !$pun_user['is_admmod'])
+	elseif ($pun_config['p_message_all_caps'] == '0' && is_all_uppercase($message) && !$pun_user['is_admmod'])
 		$errors[] = $lang_post['All caps message'];
 
 	// Validate BBCode syntax
@@ -97,7 +97,7 @@ if (isset($_POST['form_sent']))
 	{
 		if ($message == '')
 			$errors[] = $lang_post['No message'];
-		else if ($pun_config['o_censoring'] == '1')
+		elseif ($pun_config['o_censoring'] == '1')
 		{
 			// Censor message to see if that causes problems
 			$censored_message = pun_trim(censor_words($message));
@@ -188,7 +188,7 @@ if (!empty($errors))
 <?php
 
 }
-else if (isset($_POST['preview']))
+elseif (isset($_POST['preview']))
 {
 	require_once PUN_ROOT.'include/parser.php';
 	$preview_message = parse_message($message, $hide_smilies);

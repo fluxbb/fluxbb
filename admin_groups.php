@@ -291,7 +291,7 @@ foreach ($groups as $cur_group)
 
 
 // Add/edit a group (stage 2)
-else if (isset($_POST['add_edit_group']))
+elseif (isset($_POST['add_edit_group']))
 {
 	confirm_referrer('admin_groups.php');
 
@@ -375,7 +375,7 @@ else if (isset($_POST['add_edit_group']))
 
 
 // Set default group
-else if (isset($_POST['set_default_group']))
+elseif (isset($_POST['set_default_group']))
 {
 	confirm_referrer('admin_groups.php');
 
@@ -402,7 +402,7 @@ else if (isset($_POST['set_default_group']))
 
 
 // Remove a group
-else if (isset($_GET['del_group']))
+elseif (isset($_GET['del_group']))
 {
 	confirm_referrer('admin_groups.php');
 

@@ -80,7 +80,7 @@ $paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.pa
 
 if ($pun_config['o_feed_type'] == '1')
 	$page_head = array('feed' => '<link rel="alternate" type="application/rss+xml" href="extern.php?action=feed&amp;fid='.$id.'&amp;type=rss" title="'.$lang_common['RSS forum feed'].'" />');
-else if ($pun_config['o_feed_type'] == '2')
+elseif ($pun_config['o_feed_type'] == '2')
 	$page_head = array('feed' => '<link rel="alternate" type="application/atom+xml" href="extern.php?action=feed&amp;fid='.$id.'&amp;type=atom" title="'.$lang_common['Atom forum feed'].'" />');
 
 $forum_actions = array();
@@ -186,7 +186,7 @@ if ($db->num_rows($result))
 			$status_text[] = '<span class="movedtext">'.$lang_forum['Moved'].'</span>';
 			$item_status .= ' imoved';
 		}
-		else if ($cur_topic['closed'] == '0')
+		elseif ($cur_topic['closed'] == '0')
 			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
 		else
 		{

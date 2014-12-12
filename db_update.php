@@ -184,11 +184,11 @@ function seems_utf8($str)
 	for ($i = 0; $i < $str_len; ++$i)
 	{
 		if (ord($str[$i]) < 0x80) continue; # 0bbbbbbb
-		else if ((ord($str[$i]) & 0xE0) == 0xC0) $n=1; # 110bbbbb
-		else if ((ord($str[$i]) & 0xF0) == 0xE0) $n=2; # 1110bbbb
-		else if ((ord($str[$i]) & 0xF8) == 0xF0) $n=3; # 11110bbb
-		else if ((ord($str[$i]) & 0xFC) == 0xF8) $n=4; # 111110bb
-		else if ((ord($str[$i]) & 0xFE) == 0xFC) $n=5; # 1111110b
+		elseif ((ord($str[$i]) & 0xE0) == 0xC0) $n=1; # 110bbbbb
+		elseif ((ord($str[$i]) & 0xF0) == 0xE0) $n=2; # 1110bbbb
+		elseif ((ord($str[$i]) & 0xF8) == 0xF0) $n=3; # 11110bbb
+		elseif ((ord($str[$i]) & 0xFC) == 0xF8) $n=4; # 111110bb
+		elseif ((ord($str[$i]) & 0xFE) == 0xFC) $n=5; # 1111110b
 		else return false; # Does not match any model
 
 		for ($j = 0; $j < $n; ++$j) # n bytes matching 10bbbbbb follow ?
@@ -210,29 +210,29 @@ function dcr2utf8($src)
 	$dest = '';
 	if ($src < 0)
 		return false;
-	else if ($src <= 0x007f)
+	elseif ($src <= 0x007f)
 		$dest .= chr($src);
-	else if ($src <= 0x07ff)
+	elseif ($src <= 0x07ff)
 	{
 		$dest .= chr(0xc0 | ($src >> 6));
 		$dest .= chr(0x80 | ($src & 0x003f));
 	}
-	else if ($src == 0xFEFF)
+	elseif ($src == 0xFEFF)
 	{
 		// nop -- zap the BOM
 	}
-	else if ($src >= 0xD800 && $src <= 0xDFFF)
+	elseif ($src >= 0xD800 && $src <= 0xDFFF)
 	{
 		// found a surrogate
 		return false;
 	}
-	else if ($src <= 0xffff)
+	elseif ($src <= 0xffff)
 	{
 		$dest .= chr(0xe0 | ($src >> 12));
 		$dest .= chr(0x80 | (($src >> 6) & 0x003f));
 		$dest .= chr(0x80 | ($src & 0x003f));
 	}
-	else if ($src <= 0x10ffff)
+	elseif ($src <= 0x10ffff)
 	{
 		$dest .= chr(0xf0 | ($src >> 18));
 		$dest .= chr(0x80 | (($src >> 12) & 0x3f));
@@ -267,9 +267,9 @@ function convert_to_utf8(&$str, $old_charset)
 	{
 		if (function_exists('iconv'))
 			$str = iconv(!empty($old_charset) ? $old_charset : 'ISO-8859-1', 'UTF-8', $str);
-		else if (function_exists('mb_convert_encoding'))
+		elseif (function_exists('mb_convert_encoding'))
 			$str = mb_convert_encoding($str, 'UTF-8', !empty($old_charset) ? $old_charset : 'ISO-8859-1');
-		else if ($old_charset == 'ISO-8859-1')
+		elseif ($old_charset == 'ISO-8859-1')
 			$str = utf8_encode($str);
 	}
 
@@ -672,7 +672,7 @@ if (isset($_POST['req_db_pass']))
 		generate_config_cache();
 	}
 }
-else if (isset($_GET['uid']))
+elseif (isset($_GET['uid']))
 {
 	$uid = pun_trim($_GET['uid']);
 	if (!$lock || $lock != $uid) // The lock doesn't exist or doesn't match the given UID
@@ -804,7 +804,7 @@ switch ($stage)
 
 			$db->query('UPDATE '.$db->prefix.'users SET group_id = 0 WHERE group_id = 32000') or error('Unable to update unverified users', __FILE__, __LINE__, $db->error());
 		}
-		else if (strpos($cur_version, '1.3') === 0)
+		elseif (strpos($cur_version, '1.3') === 0)
 		{
 			// Groups have changed quite a lot from 1.3:
 			// unverified:	0 -> 0
@@ -1502,7 +1502,7 @@ switch ($stage)
 
 		if ($end_at !== true)
 			$query_str = '?stage=conv_users&req_old_charset='.$old_charset.'&start_at='.$end_at;
-		else if (!empty($_SESSION['dupe_users']))
+		elseif (!empty($_SESSION['dupe_users']))
 			$query_str = '?stage=conv_users_dupe';
 
 		break;
@@ -1529,15 +1529,15 @@ switch ($stage)
 
 				if (pun_strlen($username) < 2)
 					$errors[$id][] = $lang_update['Username too short error'];
-				else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
+				elseif (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
 					$errors[$id][] = $lang_update['Username too long error'];
-				else if (!strcasecmp($username, 'Guest'))
+				elseif (!strcasecmp($username, 'Guest'))
 					$errors[$id][] = $lang_update['Username Guest reserved error'];
-				else if (preg_match('%[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}%', $username) || preg_match('%((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))%', $username))
+				elseif (preg_match('%[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}%', $username) || preg_match('%((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))%', $username))
 					$errors[$id][] = $lang_update['Username IP format error'];
-				else if ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
+				elseif ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
 					$errors[$id][] = $lang_update['Username bad characters error'];
-				else if (preg_match('%(?:\[/?(?:b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list|\*)\]|\[(?:img|url|quote|list)=)%i', $username))
+				elseif (preg_match('%(?:\[/?(?:b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list|\*)\]|\[(?:img|url|quote|list)=)%i', $username))
 					$errors[$id][] = $lang_update['Username BBCode error'];
 
 				$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(ucp_preg_replace('%[^\p{L}\p{N}]%u', '', $username)).'\')) AND id>1') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
@@ -1596,7 +1596,7 @@ switch ($stage)
 					// Email the user alerting them of the change
 					if (file_exists(PUN_ROOT.'lang/'.$cur_user['language'].'/mail_templates/rename.tpl'))
 						$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$cur_user['language'].'/mail_templates/rename.tpl'));
-					else if (file_exists(PUN_ROOT.'lang/'.$pun_config['o_default_lang'].'/mail_templates/rename.tpl'))
+					elseif (file_exists(PUN_ROOT.'lang/'.$pun_config['o_default_lang'].'/mail_templates/rename.tpl'))
 						$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_config['o_default_lang'].'/mail_templates/rename.tpl'));
 					else
 						$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/English/mail_templates/rename.tpl'));

@@ -22,7 +22,7 @@ header('Content-type: text/html; charset=utf-8');
 // Load the template
 if (defined('PUN_ADMIN_CONSOLE'))
 	$tpl_file = 'admin.tpl';
-else if (defined('PUN_HELP'))
+elseif (defined('PUN_HELP'))
 	$tpl_file = 'help.tpl';
 else
 	$tpl_file = 'main.tpl';
@@ -58,7 +58,7 @@ foreach ($pun_includes as $cur_include)
 	// Allow for overriding user includes, too.
 	if (file_exists($tpl_inc_dir.$cur_include[1]))
 		require $tpl_inc_dir.$cur_include[1];
-	else if (file_exists(PUN_ROOT.'include/user/'.$cur_include[1]))
+	elseif (file_exists(PUN_ROOT.'include/user/'.$cur_include[1]))
 		require PUN_ROOT.'include/user/'.$cur_include[1];
 	else
 		error(sprintf($lang_common['Pun include error'], pun_htmlspecialchars($cur_include[0]), basename($tpl_file)));

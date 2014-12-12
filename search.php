@@ -19,7 +19,7 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/forum.php';
 
 if ($pun_user['g_read_board'] == '0')
 	message($lang_common['No view'], false, '403 Forbidden');
-else if ($pun_user['g_search'] == '0')
+elseif ($pun_user['g_search'] == '0')
 	message($lang_search['No search permission'], false, '403 Forbidden');
 
 require PUN_ROOT.'include/search_idx.php';
@@ -36,7 +36,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	// Allow the old action names for backwards compatibility reasons
 	if ($action == 'show_user')
 		$action = 'show_user_posts';
-	else if ($action == 'show_24h')
+	elseif ($action == 'show_24h')
 		$action = 'show_recent';
 
 	// If a search_id was supplied
@@ -47,7 +47,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			message($lang_common['Bad request'], false, '404 Not Found');
 	}
 	// If it's a regular search (keywords and/or author)
-	else if ($action == 'search')
+	elseif ($action == 'search')
 	{
 		$keywords = (isset($_GET['keywords'])) ? utf8_strtolower(pun_trim($_GET['keywords'])) : null;
 		$author = (isset($_GET['author'])) ? utf8_strtolower(pun_trim($_GET['author'])) : null;
@@ -69,7 +69,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		$search_in = (!isset($_GET['search_in']) || $_GET['search_in'] == '0') ? 0 : (($_GET['search_in'] == '1') ? 1 : -1);
 	}
 	// If it's a user search (by ID)
-	else if ($action == 'show_user_posts' || $action == 'show_user_topics' || $action == 'show_subscriptions')
+	elseif ($action == 'show_user_posts' || $action == 'show_user_topics' || $action == 'show_subscriptions')
 	{
 		$user_id = (isset($_GET['user_id'])) ? intval($_GET['user_id']) : $pun_user['id'];
 		if ($user_id < 2)
@@ -79,14 +79,14 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		if ($action == 'show_subscriptions' && !$pun_user['is_admmod'] && $user_id != $pun_user['id'])
 			message($lang_common['No permission'], false, '403 Forbidden');
 	}
-	else if ($action == 'show_recent')
+	elseif ($action == 'show_recent')
 		$interval = isset($_GET['value']) ? intval($_GET['value']) : 86400;
-	else if ($action == 'show_replies')
+	elseif ($action == 'show_replies')
 	{
 		if ($pun_user['is_guest'])
 			message($lang_common['Bad request'], false, '404 Not Found');
 	}
-	else if ($action != 'show_new' && $action != 'show_unanswered')
+	elseif ($action != 'show_new' && $action != 'show_unanswered')
 		message($lang_common['Bad request'], false, '404 Not Found');
 
 
@@ -206,12 +206,12 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 									$keyword_results[$temp['post_id']] = $temp['topic_id'];
 									$sort_data[$temp['post_id']] = $temp['sort_by'];
 								}
-								else if ($match_type == 'or')
+								elseif ($match_type == 'or')
 								{
 									$keyword_results[$temp['post_id']] = $temp['topic_id'];
 									$sort_data[$temp['post_id']] = $temp['sort_by'];
 								}
-								else if ($match_type == 'not')
+								elseif ($match_type == 'not')
 								{
 									unset($keyword_results[$temp['post_id']]);
 									unset($sort_data[$temp['post_id']]);
@@ -287,7 +287,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$search_ids = array_intersect_assoc($keyword_results, $author_results);
 				$search_type = array('both', array($keywords, pun_trim($_GET['author'])), implode(',', $forums), $search_in);
 			}
-			else if ($keywords)
+			elseif ($keywords)
 			{
 				$search_ids = $keyword_results;
 				$search_type = array('keywords', $keywords, implode(',', $forums), $search_in);
@@ -311,7 +311,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			if (!$num_hits)
 				message($lang_search['No hits']);
 		}
-		else if ($action == 'show_new' || $action == 'show_recent' || $action == 'show_replies' || $action == 'show_user_posts' || $action == 'show_user_topics' || $action == 'show_subscriptions' || $action == 'show_unanswered')
+		elseif ($action == 'show_new' || $action == 'show_recent' || $action == 'show_replies' || $action == 'show_user_posts' || $action == 'show_user_topics' || $action == 'show_subscriptions' || $action == 'show_unanswered')
 		{
 			$search_type = array('action', $action);
 			$show_as = 'topics';
@@ -332,7 +332,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					message($lang_search['No new posts']);
 			}
 			// If it's a search for recent posts (in a certain time interval)
-			else if ($action == 'show_recent')
+			elseif ($action == 'show_recent')
 			{
 				$result = $db->query('SELECT t.id FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.last_post>'.(time() - $interval).' AND t.moved_to IS NULL'.(isset($_GET['fid']) ? ' AND t.forum_id='.intval($_GET['fid']) : '').' ORDER BY t.last_post DESC') or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());
 				$num_hits = $db->num_rows($result);
@@ -341,7 +341,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					message($lang_search['No recent posts']);
 			}
 			// If it's a search for topics in which the user has posted
-			else if ($action == 'show_replies')
+			elseif ($action == 'show_replies')
 			{
 				$result = $db->query('SELECT t.id FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'posts AS p ON t.id=p.topic_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id='.$pun_user['id'].' GROUP BY t.id'.($db_type == 'pgsql' ? ', t.last_post' : '').' ORDER BY t.last_post DESC') or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());
 				$num_hits = $db->num_rows($result);
@@ -350,7 +350,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 					message($lang_search['No user posts']);
 			}
 			// If it's a search for posts by a specific user ID
-			else if ($action == 'show_user_posts')
+			elseif ($action == 'show_user_posts')
 			{
 				$show_as = 'posts';
 
@@ -364,7 +364,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$search_type[2] = $user_id;
 			}
 			// If it's a search for topics by a specific user ID
-			else if ($action == 'show_user_topics')
+			elseif ($action == 'show_user_topics')
 			{
 				$result = $db->query('SELECT t.id FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'posts AS p ON t.first_post_id=p.id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id='.$user_id.' ORDER BY t.last_post DESC') or error('Unable to fetch user topics', __FILE__, __LINE__, $db->error());
 				$num_hits = $db->num_rows($result);
@@ -376,7 +376,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				$search_type[2] = $user_id;
 			}
 			// If it's a search for subscribed topics
-			else if ($action == 'show_subscriptions')
+			elseif ($action == 'show_subscriptions')
 			{
 				if ($pun_user['is_guest'])
 					message($lang_common['Bad request'], false, '404 Not Found');
@@ -506,9 +506,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		{
 			if ($search_type[1] == 'show_user_topics')
 				$crumbs_text['search_type'] = '<a href="search.php?action=show_user_topics&amp;user_id='.$search_type[2].'">'.sprintf($lang_search['Quick search show_user_topics'], pun_htmlspecialchars($search_set[0]['poster'])).'</a>';
-			else if ($search_type[1] == 'show_user_posts')
+			elseif ($search_type[1] == 'show_user_posts')
 				$crumbs_text['search_type'] = '<a href="search.php?action=show_user_posts&amp;user_id='.$search_type[2].'">'.sprintf($lang_search['Quick search show_user_posts'], pun_htmlspecialchars($search_set[0]['pposter'])).'</a>';
-			else if ($search_type[1] == 'show_subscriptions')
+			elseif ($search_type[1] == 'show_subscriptions')
 			{
 				// Fetch username of subscriber
 				$subscriber_id = $search_type[2];
@@ -533,12 +533,12 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				list ($keywords, $author) = $search_type[1];
 				$crumbs_text['search_type'] = sprintf($lang_search['By both show as '.$show_as], pun_htmlspecialchars($keywords), pun_htmlspecialchars($author));
 			}
-			else if ($search_type[0] == 'keywords')
+			elseif ($search_type[0] == 'keywords')
 			{
 				$keywords = $search_type[1];
 				$crumbs_text['search_type'] = sprintf($lang_search['By keywords show as '.$show_as], pun_htmlspecialchars($keywords));
 			}
-			else if ($search_type[0] == 'author')
+			elseif ($search_type[0] == 'author')
 			{
 				$author = $search_type[1];
 				$crumbs_text['search_type'] = sprintf($lang_search['By user show as '.$show_as], pun_htmlspecialchars($author));
@@ -590,7 +590,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 <?php
 
 		}
-		else if ($show_as == 'posts')
+		elseif ($show_as == 'posts')
 		{
 			require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
 

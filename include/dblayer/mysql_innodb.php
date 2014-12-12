@@ -168,7 +168,7 @@ class DBLayer
 	{
 		if (is_array($str))
 			return '';
-		else if (function_exists('mysql_real_escape_string'))
+		elseif (function_exists('mysql_real_escape_string'))
 			return mysql_real_escape_string($str, $this->link_id);
 		else
 			return mysql_escape_string($str);
