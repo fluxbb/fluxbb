@@ -46,7 +46,7 @@ if ($action == 'rules')
 }
 
 
-else if ($action == 'markread')
+elseif ($action == 'markread')
 {
 	if ($pun_user['is_guest'])
 		message($lang_common['No permission'], false, '403 Forbidden');
@@ -61,7 +61,7 @@ else if ($action == 'markread')
 
 
 // Mark the topics/posts in a forum as read?
-else if ($action == 'markforumread')
+elseif ($action == 'markforumread')
 {
 	if ($pun_user['is_guest'])
 		message($lang_common['No permission'], false, '403 Forbidden');
@@ -78,7 +78,7 @@ else if ($action == 'markforumread')
 }
 
 
-else if (isset($_GET['email']))
+elseif (isset($_GET['email']))
 {
 	if ($pun_user['is_guest'] || $pun_user['g_send_email'] == '0')
 		message($lang_common['No permission'], false, '403 Forbidden');
@@ -107,10 +107,10 @@ else if (isset($_GET['email']))
 
 		if ($subject == '')
 			message($lang_misc['No email subject']);
-		else if ($message == '')
+		elseif ($message == '')
 			message($lang_misc['No email message']);
 		// Here we use strlen() not pun_strlen() as we want to limit the post to PUN_MAX_POSTSIZE bytes, not characters
-		else if (strlen($message) > PUN_MAX_POSTSIZE)
+		elseif (strlen($message) > PUN_MAX_POSTSIZE)
 			message($lang_misc['Too long email message']);
 
 		if ($pun_user['last_email_sent'] != '' && (time() - $pun_user['last_email_sent']) < $pun_user['g_email_flood'] && (time() - $pun_user['last_email_sent']) >= 0)
@@ -149,7 +149,7 @@ else if (isset($_GET['email']))
 
 	if (!isset($redirect_url))
 		$redirect_url = 'profile.php?id='.$recipient_id;
-	else if (preg_match('%viewtopic\.php\?pid=(\d+)$%', $redirect_url, $matches))
+	elseif (preg_match('%viewtopic\.php\?pid=(\d+)$%', $redirect_url, $matches))
 		$redirect_url .= '#p'.$matches[1];
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Send email to'].' '.pun_htmlspecialchars($recipient));
@@ -187,7 +187,7 @@ else if (isset($_GET['email']))
 }
 
 
-else if (isset($_GET['report']))
+elseif (isset($_GET['report']))
 {
 	if ($pun_user['is_guest'])
 		message($lang_common['No permission'], false, '403 Forbidden');
@@ -205,7 +205,7 @@ else if (isset($_GET['report']))
 		$reason = pun_linebreaks(pun_trim($_POST['req_reason']));
 		if ($reason == '')
 			message($lang_misc['No reason']);
-		else if (strlen($reason) > 65535) // TEXT field can only hold 65535 bytes
+		elseif (strlen($reason) > 65535) // TEXT field can only hold 65535 bytes
 			message($lang_misc['Reason too long']);
 
 		if ($pun_user['last_report_sent'] != '' && (time() - $pun_user['last_report_sent']) < $pun_user['g_report_flood'] && (time() - $pun_user['last_report_sent']) >= 0)
@@ -312,7 +312,7 @@ else if (isset($_GET['report']))
 }
 
 
-else if ($action == 'subscribe')
+elseif ($action == 'subscribe')
 {
 	if ($pun_user['is_guest'])
 		message($lang_common['No permission'], false, '403 Forbidden');
@@ -362,7 +362,7 @@ else if ($action == 'subscribe')
 }
 
 
-else if ($action == 'unsubscribe')
+elseif ($action == 'unsubscribe')
 {
 	if ($pun_user['is_guest'])
 		message($lang_common['No permission'], false, '403 Forbidden');

@@ -355,10 +355,10 @@ class DBLayer
 		if (!$this->table_exists($old_table, $no_prefix))
 			return false;
 		// If the table names are the same
-		else if ($old_table == $new_table)
+		elseif ($old_table == $new_table)
 			return true;
 		// If the new table already exists
-		else if ($this->table_exists($new_table, $no_prefix))
+		elseif ($this->table_exists($new_table, $no_prefix))
 			return false;
 
 		$table = $this->get_table_info($old_table, $no_prefix);
@@ -419,11 +419,11 @@ class DBLayer
 			$table_line = trim($table_line, " \t\n\r,"); // trim spaces, tabs, newlines, and commas
 			if (substr($table_line, 0, 12) == 'CREATE TABLE')
 				continue;
-			else if (substr($table_line, 0, 11) == 'PRIMARY KEY')
+			elseif (substr($table_line, 0, 11) == 'PRIMARY KEY')
 				$table['primary_key'] = $table_line;
-			else if (substr($table_line, 0, 6) == 'UNIQUE')
+			elseif (substr($table_line, 0, 6) == 'UNIQUE')
 				$table['unique'] = $table_line;
-			else if (substr($table_line, 0, strpos($table_line, ' ')) != '')
+			elseif (substr($table_line, 0, strpos($table_line, ' ')) != '')
 				$table['columns'][substr($table_line, 0, strpos($table_line, ' '))] = trim(substr($table_line, strpos($table_line, ' ')));
 		}
 
@@ -468,7 +468,7 @@ class DBLayer
 		// Out of bounds checks
 		if ($offset > count($table['columns']))
 			$offset = count($table['columns']);
-		else if ($offset < 0)
+		elseif ($offset < 0)
 			$offset = 0;
 
 		if (!is_null($field_name) && $field_name !== '')

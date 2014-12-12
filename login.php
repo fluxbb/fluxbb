@@ -46,7 +46,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 			}
 		}
 		// If the length isn't 40 then the password isn't using sha1, so it must be md5 from 1.2
-		else if (strlen($cur_user['password']) != 40)
+		elseif (strlen($cur_user['password']) != 40)
 		{
 			if (md5($form_password) == $cur_user['password'])
 			{
@@ -91,7 +91,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 }
 
 
-else if ($action == 'out')
+elseif ($action == 'out')
 {
 	if ($pun_user['is_guest'] || !isset($_GET['id']) || $_GET['id'] != $pun_user['id'] || !isset($_GET['csrf_token']) || $_GET['csrf_token'] != pun_hash($pun_user['id'].pun_hash(get_remote_address())))
 	{
@@ -112,7 +112,7 @@ else if ($action == 'out')
 }
 
 
-else if ($action == 'forget' || $action == 'forget_2')
+elseif ($action == 'forget' || $action == 'forget_2')
 {
 	if (!$pun_user['is_guest'])
 	{
@@ -245,7 +245,7 @@ if (!empty($_SERVER['HTTP_REFERER']))
 
 if (!isset($redirect_url))
 	$redirect_url = 'index.php';
-else if (preg_match('%viewtopic\.php\?pid=(\d+)$%', $redirect_url, $matches))
+elseif (preg_match('%viewtopic\.php\?pid=(\d+)$%', $redirect_url, $matches))
 	$redirect_url .= '#p'.$matches[1];
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Login']);

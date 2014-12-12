@@ -12,7 +12,7 @@ require PUN_ROOT.'include/common.php';
 
 if ($pun_user['g_read_board'] == '0')
 	message($lang_common['No view'], false, '403 Forbidden');
-else if ($pun_user['g_view_users'] == '0')
+elseif ($pun_user['g_view_users'] == '0')
 	message($lang_common['No permission'], false, '403 Forbidden');
 
 // Load the userlist.php language file

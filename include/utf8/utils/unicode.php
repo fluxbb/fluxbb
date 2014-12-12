@@ -57,7 +57,7 @@ function utf8_to_unicode($str)
 				$out[] = $in;
 				$mBytes = 1;
 			}
-			else if (0xC0 == (0xE0 & ($in)))
+			elseif (0xC0 == (0xE0 & ($in)))
 			{
 				// First octet of 2 octet sequence
 				$mUcs4 = ($in);
@@ -65,7 +65,7 @@ function utf8_to_unicode($str)
 				$mState = 1;
 				$mBytes = 2;
 			}
-			else if (0xE0 == (0xF0 & ($in)))
+			elseif (0xE0 == (0xF0 & ($in)))
 			{
 				// First octet of 3 octet sequence
 				$mUcs4 = ($in);
@@ -73,7 +73,7 @@ function utf8_to_unicode($str)
 				$mState = 2;
 				$mBytes = 3;
 			}
-			else if (0xF0 == (0xF8 & ($in)))
+			elseif (0xF0 == (0xF8 & ($in)))
 			{
 				// First octet of 4 octet sequence
 				$mUcs4 = ($in);
@@ -81,7 +81,7 @@ function utf8_to_unicode($str)
 				$mState = 3;
 				$mBytes = 4;
 			}
-			else if (0xF8 == (0xFC & ($in)))
+			elseif (0xF8 == (0xFC & ($in)))
 			{
 				/* First octet of 5 octet sequence.
 				*
@@ -96,7 +96,7 @@ function utf8_to_unicode($str)
 				$mState = 4;
 				$mBytes = 5;
 			}
-			else if (0xFC == (0xFE & ($in)))
+			elseif (0xFC == (0xFE & ($in)))
 			{
 				// First octet of 6 octet sequence, see comments for 5 octet sequence.
 				$mUcs4 = ($in);
@@ -196,29 +196,29 @@ function utf8_from_unicode($arr)
 		{
 			echo chr($arr[$k]);
 		}
-		else if ($arr[$k] <= 0x07ff) //2 byte sequence
+		elseif ($arr[$k] <= 0x07ff) //2 byte sequence
 		{
 			echo chr(0xc0 | ($arr[$k] >> 6));
 			echo chr(0x80 | ($arr[$k] & 0x003f));
 		}
-		else if($arr[$k] == 0xFEFF) // Byte order mark (skip)
+		elseif($arr[$k] == 0xFEFF) // Byte order mark (skip)
 		{
 			// Nop -- zap the BOM
 		}
-		else if ($arr[$k] >= 0xD800 && $arr[$k] <= 0xDFFF) // Test for illegal surrogates
+		elseif ($arr[$k] >= 0xD800 && $arr[$k] <= 0xDFFF) // Test for illegal surrogates
 		{
 			// Found a surrogate
 			trigger_error('utf8_from_unicode: Illegal surrogate at index: '.$k.', value: '.$arr[$k], E_USER_WARNING);
 
 			return false;
 		}
-		else if ($arr[$k] <= 0xffff) // 3 byte sequence
+		elseif ($arr[$k] <= 0xffff) // 3 byte sequence
 		{
 			echo chr(0xe0 | ($arr[$k] >> 12));
 			echo chr(0x80 | (($arr[$k] >> 6) & 0x003f));
 			echo chr(0x80 | ($arr[$k] & 0x003f));
 		}
-		else if ($arr[$k] <= 0x10ffff) // 4 byte sequence
+		elseif ($arr[$k] <= 0x10ffff) // 4 byte sequence
 		{
 			echo chr(0xf0 | ($arr[$k] >> 18));
 			echo chr(0x80 | (($arr[$k] >> 12) & 0x3f));

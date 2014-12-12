@@ -144,7 +144,7 @@ if (isset($_GET['tid']))
 
 		require PUN_ROOT.'footer.php';
 	}
-	else if (isset($_POST['split_posts']) || isset($_POST['split_posts_comply']))
+	elseif (isset($_POST['split_posts']) || isset($_POST['split_posts_comply']))
 	{
 		$posts = isset($_POST['posts']) ? $_POST['posts'] : array();
 		if (empty($posts))
@@ -182,7 +182,7 @@ if (isset($_GET['tid']))
 
 			if ($new_subject == '')
 				message($lang_post['No subject']);
-			else if (pun_strlen($new_subject) > 70)
+			elseif (pun_strlen($new_subject) > 70)
 				message($lang_post['Too long subject']);
 
 			// Get data from the new first post
@@ -548,7 +548,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 }
 
 // Merge two or more topics
-else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
+elseif (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 {
 	if (isset($_POST['merge_topics_comply']))
 	{
@@ -647,7 +647,7 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 }
 
 // Delete one or more topics
-else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply']))
+elseif (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply']))
 {
 	$topics = isset($_POST['topics']) ? $_POST['topics'] : array();
 	if (empty($topics))
@@ -731,7 +731,7 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 
 
 // Open or close one or more topics
-else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
+elseif (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 {
 	$action = (isset($_REQUEST['open'])) ? 0 : 1;
 
@@ -767,7 +767,7 @@ else if (isset($_REQUEST['open']) || isset($_REQUEST['close']))
 
 
 // Stick a topic
-else if (isset($_GET['stick']))
+elseif (isset($_GET['stick']))
 {
 	confirm_referrer('viewtopic.php');
 
@@ -782,7 +782,7 @@ else if (isset($_GET['stick']))
 
 
 // Unstick a topic
-else if (isset($_GET['unstick']))
+elseif (isset($_GET['unstick']))
 {
 	confirm_referrer('viewtopic.php');
 
@@ -924,7 +924,7 @@ if ($db->num_rows($result))
 			$status_text[] = '<span class="movedtext">'.$lang_forum['Moved'].'</span>';
 			$item_status .= ' imoved';
 		}
-		else if ($cur_topic['closed'] == '0')
+		elseif ($cur_topic['closed'] == '0')
 			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
 		else
 		{

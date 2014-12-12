@@ -35,7 +35,7 @@ if (isset($_POST['add_cat']))
 }
 
 // Delete a category
-else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
+elseif (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 {
 	confirm_referrer('admin_categories.php');
 
@@ -122,7 +122,7 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 	}
 }
 
-else if (isset($_POST['update'])) // Change position and name of the categories
+elseif (isset($_POST['update'])) // Change position and name of the categories
 {
 	confirm_referrer('admin_categories.php');
 

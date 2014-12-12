@@ -24,7 +24,7 @@ if ($action != 'change_pass' || !isset($_GET['key']))
 {
 	if ($pun_user['g_read_board'] == '0')
 		message($lang_common['No view'], false, '403 Forbidden');
-	else if ($pun_user['g_view_users'] == '0' && ($pun_user['is_guest'] || $pun_user['id'] != $id))
+	elseif ($pun_user['g_view_users'] == '0' && ($pun_user['is_guest'] || $pun_user['id'] != $id))
 		message($lang_common['No permission'], false, '403 Forbidden');
 }
 
@@ -66,7 +66,7 @@ if ($action == 'change_pass')
 	{
 		if (!$pun_user['is_admmod']) // A regular user trying to change another user's password?
 			message($lang_common['No permission'], false, '403 Forbidden');
-		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a user's password?
+		elseif ($pun_user['g_moderator'] == '1') // A moderator trying to change a user's password?
 		{
 			$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 			if (!$db->num_rows($result))
@@ -155,14 +155,14 @@ if ($action == 'change_pass')
 }
 
 
-else if ($action == 'change_email')
+elseif ($action == 'change_email')
 {
 	// Make sure we are allowed to change this user's email
 	if ($pun_user['id'] != $id)
 	{
 		if (!$pun_user['is_admmod']) // A regular user trying to change another user's email?
 			message($lang_common['No permission'], false, '403 Forbidden');
-		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a user's email?
+		elseif ($pun_user['g_moderator'] == '1') // A moderator trying to change a user's email?
 		{
 			$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 			if (!$db->num_rows($result))
@@ -191,7 +191,7 @@ else if ($action == 'change_email')
 			message($lang_profile['Email updated'], true);
 		}
 	}
-	else if (isset($_POST['form_sent']))
+	elseif (isset($_POST['form_sent']))
 	{
 		if (pun_hash($_POST['req_password']) !== $pun_user['password'])
 			message($lang_profile['Wrong pass']);
@@ -211,7 +211,7 @@ else if ($action == 'change_email')
 		{
 			if ($pun_config['p_allow_banned_email'] == '0')
 				message($lang_prof_reg['Banned email']);
-			else if ($pun_config['o_mailing_list'] != '')
+			elseif ($pun_config['o_mailing_list'] != '')
 			{
 				// Load the "banned email change" template
 				$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/banned_email_change.tpl'));
@@ -236,7 +236,7 @@ else if ($action == 'change_email')
 		{
 			if ($pun_config['p_allow_dupe_email'] == '0')
 				message($lang_prof_reg['Dupe email']);
-			else if ($pun_config['o_mailing_list'] != '')
+			elseif ($pun_config['o_mailing_list'] != '')
 			{
 				while ($cur_dupe = $db->fetch_assoc($result))
 					$dupe_list[] = $cur_dupe['username'];
@@ -313,7 +313,7 @@ else if ($action == 'change_email')
 }
 
 
-else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
+elseif ($action == 'upload_avatar' || $action == 'upload_avatar2')
 {
 	if ($pun_config['o_avatars'] == '0')
 		message($lang_profile['Avatars disabled']);
@@ -381,9 +381,9 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 			// Determine type
 			if ($type == IMAGETYPE_GIF)
 				$extension = '.gif';
-			else if ($type == IMAGETYPE_JPEG)
+			elseif ($type == IMAGETYPE_JPEG)
 				$extension = '.jpg';
-			else if ($type == IMAGETYPE_PNG)
+			elseif ($type == IMAGETYPE_PNG)
 				$extension = '.png';
 			else
 			{
@@ -442,7 +442,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 }
 
 
-else if ($action == 'delete_avatar')
+elseif ($action == 'delete_avatar')
 {
 	if ($pun_user['id'] != $id && !$pun_user['is_admmod'])
 		message($lang_common['No permission'], false, '403 Forbidden');
@@ -455,7 +455,7 @@ else if ($action == 'delete_avatar')
 }
 
 
-else if (isset($_POST['update_group_membership']))
+elseif (isset($_POST['update_group_membership']))
 {
 	if ($pun_user['g_id'] > PUN_ADMIN)
 		message($lang_common['No permission'], false, '403 Forbidden');
@@ -505,7 +505,7 @@ else if (isset($_POST['update_group_membership']))
 }
 
 
-else if (isset($_POST['update_forums']))
+elseif (isset($_POST['update_forums']))
 {
 	if ($pun_user['g_id'] > PUN_ADMIN)
 		message($lang_common['No permission'], false, '403 Forbidden');
@@ -533,7 +533,7 @@ else if (isset($_POST['update_forums']))
 			$db->query('UPDATE '.$db->prefix.'forums SET moderators=\''.$db->escape(serialize($cur_moderators)).'\' WHERE id='.$cur_forum['id']) or error('Unable to update forum', __FILE__, __LINE__, $db->error());
 		}
 		// If the user shouldn't have moderator access (and he/she already has it)
-		else if (!in_array($cur_forum['id'], $moderator_in) && in_array($id, $cur_moderators))
+		elseif (!in_array($cur_forum['id'], $moderator_in) && in_array($id, $cur_moderators))
 		{
 			unset($cur_moderators[$username]);
 			$cur_moderators = (!empty($cur_moderators)) ? '\''.$db->escape(serialize($cur_moderators)).'\'' : 'NULL';
@@ -546,7 +546,7 @@ else if (isset($_POST['update_forums']))
 }
 
 
-else if (isset($_POST['ban']))
+elseif (isset($_POST['ban']))
 {
 	if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_ban_users'] == '0'))
 		message($lang_common['No permission'], false, '403 Forbidden');
@@ -567,7 +567,7 @@ else if (isset($_POST['ban']))
 }
 
 
-else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
+elseif (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 {
 	if ($pun_user['g_id'] > PUN_ADMIN)
 		message($lang_common['No permission'], false, '403 Forbidden');
@@ -689,7 +689,7 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 }
 
 
-else if (isset($_POST['form_sent']))
+elseif (isset($_POST['form_sent']))
 {
 	// Fetch the user group of the user we are editing
 	$result = $db->query('SELECT u.username, u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
@@ -804,7 +804,7 @@ else if (isset($_POST['form_sent']))
 
 			if ($pun_user['g_id'] == PUN_ADMIN)
 				$form['title'] = pun_trim($_POST['title']);
-			else if ($pun_user['g_set_title'] == '1')
+			elseif ($pun_user['g_set_title'] == '1')
 			{
 				$form['title'] = pun_trim($_POST['title']);
 
@@ -851,9 +851,9 @@ else if (isset($_POST['form_sent']))
 				// Validate signature
 				if (pun_strlen($form['signature']) > $pun_config['p_sig_length'])
 					message(sprintf($lang_prof_reg['Sig too long'], $pun_config['p_sig_length'], pun_strlen($form['signature']) - $pun_config['p_sig_length']));
-				else if (substr_count($form['signature'], "\n") > ($pun_config['p_sig_lines']-1))
+				elseif (substr_count($form['signature'], "\n") > ($pun_config['p_sig_lines']-1))
 					message(sprintf($lang_prof_reg['Sig too many lines'], $pun_config['p_sig_lines']));
-				else if ($form['signature'] && $pun_config['p_sig_all_caps'] == '0' && is_all_uppercase($form['signature']) && !$pun_user['is_admmod'])
+				elseif ($form['signature'] && $pun_config['p_sig_all_caps'] == '0' && is_all_uppercase($form['signature']) && !$pun_user['is_admmod'])
 					$form['signature'] = utf8_ucwords(utf8_strtolower($form['signature']));
 
 				// Validate BBCode syntax
@@ -890,7 +890,7 @@ else if (isset($_POST['form_sent']))
 				$form['disp_topics'] = intval($form['disp_topics']);
 				if ($form['disp_topics'] < 3)
 					$form['disp_topics'] = 3;
-				else if ($form['disp_topics'] > 75)
+				elseif ($form['disp_topics'] > 75)
 					$form['disp_topics'] = 75;
 			}
 
@@ -899,7 +899,7 @@ else if (isset($_POST['form_sent']))
 				$form['disp_posts'] = intval($form['disp_posts']);
 				if ($form['disp_posts'] < 3)
 					$form['disp_posts'] = 3;
-				else if ($form['disp_posts'] > 75)
+				elseif ($form['disp_posts'] > 75)
 					$form['disp_posts'] = 75;
 			}
 
@@ -1057,7 +1057,7 @@ if ($pun_user['id'] != $id &&																	// If we aren't the user (i.e. edi
 
 	if ($user['email_setting'] == '0' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
 		$email_field = '<a href="mailto:'.pun_htmlspecialchars($user['email']).'">'.pun_htmlspecialchars($user['email']).'</a>';
-	else if ($user['email_setting'] == '1' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
+	elseif ($user['email_setting'] == '1' && !$pun_user['is_guest'] && $pun_user['g_send_email'] == '1')
 		$email_field = '<a href="misc.php?email='.$id.'">'.$lang_common['Send email'].'</a>';
 	else
 		$email_field = '';
@@ -1244,7 +1244,7 @@ else
 
 		if ($pun_user['g_id'] == PUN_ADMIN)
 			$posts_field .= '<label>'.$lang_common['Posts'].'<br /><input type="text" name="num_posts" value="'.$user['num_posts'].'" size="8" maxlength="8" /><br /></label>';
-		else if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
+		elseif ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
 			$posts_actions[] = sprintf($lang_profile['Posts info'], forum_number_format($user['num_posts']));
 
 		if ($pun_user['g_search'] == '1' || $pun_user['g_id'] == PUN_ADMIN)
@@ -1428,7 +1428,7 @@ else
 <?php
 
 	}
-	else if ($section == 'personal')
+	elseif ($section == 'personal')
 	{
 		if ($pun_user['g_set_title'] == '1')
 			$title_field = '<label>'.$lang_common['Title'].' <em>('.$lang_profile['Leave blank'].')</em><br /><input type="text" name="title" value="'.pun_htmlspecialchars($user['title']).'" size="30" maxlength="50" /><br /></label>'."\n";
@@ -1464,7 +1464,7 @@ else
 <?php
 
 	}
-	else if ($section == 'messaging')
+	elseif ($section == 'messaging')
 	{
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section messaging']);
@@ -1498,7 +1498,7 @@ else
 <?php
 
 	}
-	else if ($section == 'personality')
+	elseif ($section == 'personality')
 	{
 		if ($pun_config['o_avatars'] == '0' && $pun_config['o_signatures'] == '0')
 			message($lang_common['Bad request'], false, '404 Not Found');
@@ -1565,7 +1565,7 @@ else
 <?php
 
 	}
-	else if ($section == 'display')
+	elseif ($section == 'display')
 	{
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section display']);
 		define('PUN_ACTIVE_PAGE', 'profile');
@@ -1586,7 +1586,7 @@ else
 		// Only display the style selection box if there's more than one style available
 		if (count($styles) == 1)
 			echo "\t\t\t".'<div><input type="hidden" name="form[style]" value="'.$styles[0].'" /></div>'."\n";
-		else if (count($styles) > 1)
+		elseif (count($styles) > 1)
 		{
 
 ?>
@@ -1652,7 +1652,7 @@ else
 <?php
 
 	}
-	else if ($section == 'privacy')
+	elseif ($section == 'privacy')
 	{
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section privacy']);
 		define('PUN_ACTIVE_PAGE', 'profile');
@@ -1698,7 +1698,7 @@ else
 <?php
 
 	}
-	else if ($section == 'admin')
+	elseif ($section == 'admin')
 	{
 		if (!$pun_user['is_admmod'] || ($pun_user['g_moderator'] == '1' && $pun_user['g_mod_ban_users'] == '0'))
 			message($lang_common['Bad request'], false, '403 Forbidden');

@@ -41,7 +41,7 @@ if (isset($_POST['add_forum']))
 }
 
 // Delete a forum
-else if (isset($_GET['del_forum']))
+elseif (isset($_GET['del_forum']))
 {
 	confirm_referrer('admin_forums.php');
 
@@ -121,7 +121,7 @@ else if (isset($_GET['del_forum']))
 }
 
 // Update forum positions
-else if (isset($_POST['update_positions']))
+elseif (isset($_POST['update_positions']))
 {
 	confirm_referrer('admin_forums.php');
 
@@ -143,7 +143,7 @@ else if (isset($_POST['update_positions']))
 	redirect('admin_forums.php', $lang_admin_forums['Forums updated redirect']);
 }
 
-else if (isset($_GET['edit_forum']))
+elseif (isset($_GET['edit_forum']))
 {
 	$forum_id = intval($_GET['edit_forum']);
 	if ($forum_id < 1)
@@ -207,7 +207,7 @@ else if (isset($_GET['edit_forum']))
 
 		redirect('admin_forums.php', $lang_admin_forums['Forum updated redirect']);
 	}
-	else if (isset($_POST['revert_perms']))
+	elseif (isset($_POST['revert_perms']))
 	{
 		confirm_referrer('admin_forums.php');
 

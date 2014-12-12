@@ -174,12 +174,12 @@ if (isset($_POST['form_sent']))
 	// Make sure the number of displayed topics and posts is between 3 and 75
 	if ($form['disp_topics_default'] < 3)
 		$form['disp_topics_default'] = 3;
-	else if ($form['disp_topics_default'] > 75)
+	elseif ($form['disp_topics_default'] > 75)
 		$form['disp_topics_default'] = 75;
 
 	if ($form['disp_posts_default'] < 3)
 		$form['disp_posts_default'] = 3;
-	else if ($form['disp_posts_default'] > 75)
+	elseif ($form['disp_posts_default'] > 75)
 		$form['disp_posts_default'] = 75;
 
 	if ($form['feed_type'] < 0 || $form['feed_type'] > 2)

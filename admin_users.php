@@ -263,7 +263,7 @@ if (isset($_GET['show_users']))
 
 
 // Move multiple users to other user groups
-else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
+elseif (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 {
 	if ($pun_user['g_id'] > PUN_ADMIN)
 		message($lang_common['No permission'], false, '403 Forbidden');
@@ -389,7 +389,7 @@ else if (isset($_POST['move_users']) || isset($_POST['move_users_comply']))
 
 
 // Delete multiple users
-else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
+elseif (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 {
 	if ($pun_user['g_id'] > PUN_ADMIN)
 		message($lang_common['No permission'], false, '403 Forbidden');
@@ -538,7 +538,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 
 
 // Ban multiple users
-else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
+elseif (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 {
 	if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_ban_users'] == '0'))
 		message($lang_common['No permission'], false, '403 Forbidden');
@@ -682,7 +682,7 @@ else if (isset($_POST['ban_users']) || isset($_POST['ban_users_comply']))
 }
 
 
-else if (isset($_GET['find_user']))
+elseif (isset($_GET['find_user']))
 {
 	$form = isset($_GET['form']) ? $_GET['form'] : array();
 

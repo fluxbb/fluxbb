@@ -43,7 +43,7 @@ if (isset($_POST['add_word']))
 }
 
 // Update a censor word
-else if (isset($_POST['update']))
+elseif (isset($_POST['update']))
 {
 	confirm_referrer('admin_censoring.php');
 
@@ -67,7 +67,7 @@ else if (isset($_POST['update']))
 }
 
 // Remove a censor word
-else if (isset($_POST['remove']))
+elseif (isset($_POST['remove']))
 {
 	confirm_referrer('admin_censoring.php');
 

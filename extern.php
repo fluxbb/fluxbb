@@ -339,7 +339,7 @@ if ($action == 'feed')
 
 				$item['author']['uri'] = get_base_url(true).'/profile.php?id='.$cur_post['poster_id'];
 			}
-			else if ($cur_post['poster_email'] != '' && !$pun_user['is_guest'])
+			elseif ($cur_post['poster_email'] != '' && !$pun_user['is_guest'])
 				$item['author']['email'] = $cur_post['poster_email'];
 
 			$feed['items'][] = $item;
@@ -429,7 +429,7 @@ if ($action == 'feed')
 
 					$item['author']['uri'] = '/profile.php?id='.$cur_topic['poster_id'];
 				}
-				else if ($cur_topic['poster_email'] != '' && !$pun_user['is_guest'])
+				elseif ($cur_topic['poster_email'] != '' && !$pun_user['is_guest'])
 					$item['author']['email'] = $cur_topic['poster_email'];
 
 				$feed['items'][] = $item;
@@ -469,7 +469,7 @@ if ($action == 'feed')
 }
 
 // Show users online
-else if ($action == 'online' || $action == 'online_full')
+elseif ($action == 'online' || $action == 'online_full')
 {
 	// Load the index.php language file
 	require PUN_ROOT.'lang/'.$pun_config['o_default_lang'].'/index.php';
@@ -508,7 +508,7 @@ else if ($action == 'online' || $action == 'online_full')
 }
 
 // Show board statistics
-else if ($action == 'stats')
+elseif ($action == 'stats')
 {
 	// Load the index.php language file
 	require PUN_ROOT.'lang/'.$pun_config['o_default_lang'].'/index.php';
