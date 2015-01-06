@@ -23,7 +23,8 @@
         "illuminate/translation": "~5.0",
         "illuminate/validation": "~5.0",
         "illuminate/view": "~5.0",
-        "symfony/console": "2.6.*"
+        "symfony/console": "2.6.*",
+        "roave/security-advisories": "dev-master"
     },
     "config": {
         "preferred-install": "source"
