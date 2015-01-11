@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Config\FileLoader;
+use FluxBB\Util\ConfigLoader;
 use Illuminate\Config\Repository;
-use Illuminate\Filesystem\Filesystem;
 
 /*
  * Load the Composer autoloader.
@@ -31,10 +30,8 @@ $app->instance('path.config', $configPath);
 $app->instance('path.lang', $langPath);
 $app->instance('path.cache', $cachePath);
 
-$app->instance('config', new Repository(
-    new FileLoader(new Filesystem, $configPath),
-    'local'
-));
+$app->instance('config', $config = new Repository());
+(new ConfigLoader())->loadFrom($config, $configPath);
 
 $app->alias('config', 'Illuminate\Contracts\Config\Repository');
 $app->alias('cookie', 'Illuminate\Contracts\Cookie\QueueingFactory');
