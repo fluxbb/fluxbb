@@ -4,20 +4,143 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "caf1920d0a7b4da8464b90176026c863",
+    "hash": "8c6053b92b7490792c3f1f7512cbde8c",
     "packages": [
+        {
+            "name": "danielstjules/stringy",
+            "version": "1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/danielstjules/Stringy.git",
+                "reference": "6a7b0391b2baf0bfdca3ec0c8d33ff379c2835ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielstjules/Stringy/zipball/6a7b0391b2baf0bfdca3ec0c8d33ff379c2835ad",
+                "reference": "6a7b0391b2baf0bfdca3ec0c8d33ff379c2835ad",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Stringy\\": "src/"
+                },
+                "files": [
+                    "src/Create.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel St. Jules",
+                    "email": "danielst.jules@gmail.com",
+                    "homepage": "http://www.danielstjules.com"
+                }
+            ],
+            "description": "A string manipulation library with multibyte support",
+            "homepage": "https://github.com/danielstjules/Stringy",
+            "keywords": [
+                "UTF",
+                "helpers",
+                "manipulation",
+                "methods",
+                "multibyte",
+                "string",
+                "utf-8",
+                "utility",
+                "utils"
+            ],
+            "time": "2015-01-08 15:21:43"
+        },
+        {
+            "name": "doctrine/inflector",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/inflector.git",
+                "reference": "e5eaf8c7ded0877195b5d2848491e17b1c0a6c4d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/inflector/zipball/e5eaf8c7ded0877195b5d2848491e17b1c0a6c4d",
+                "reference": "e5eaf8c7ded0877195b5d2848491e17b1c0a6c4d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\Inflector\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "Common String Manipulations with regard to casing and singular/plural rules.",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "inflection",
+                "pluralize",
+                "singularize",
+                "string"
+            ],
+            "time": "2015-01-01 18:34:57"
+        },
         {
             "name": "fluxbb/core",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fluxbb/core.git",
-                "reference": "fe529701ed1ee4e75571c6a16656e08667deeb8c"
+                "reference": "466f45c0ef989fa981d2d5a98b121e9e3b803bc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fluxbb/core/zipball/fe529701ed1ee4e75571c6a16656e08667deeb8c",
-                "reference": "fe529701ed1ee4e75571c6a16656e08667deeb8c",
+                "url": "https://api.github.com/repos/fluxbb/core/zipball/466f45c0ef989fa981d2d5a98b121e9e3b803bc3",
+                "reference": "466f45c0ef989fa981d2d5a98b121e9e3b803bc3",
                 "shasum": ""
             },
             "require": {
@@ -67,7 +190,7 @@
                 "forum",
                 "laravel"
             ],
-            "time": "2014-12-03 01:08:00"
+            "time": "2015-01-11 20:06:08"
         },
         {
             "name": "fluxbb/installer",
@@ -75,12 +198,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fluxbb/installer.git",
-                "reference": "c5a8747f54a8d8430795fd1acf77fdbcd8308799"
+                "reference": "d543fc944c05cbfeb549f4289c3d973dba71a628"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fluxbb/installer/zipball/c5a8747f54a8d8430795fd1acf77fdbcd8308799",
-                "reference": "c5a8747f54a8d8430795fd1acf77fdbcd8308799",
+                "url": "https://api.github.com/repos/fluxbb/installer/zipball/d543fc944c05cbfeb549f4289c3d973dba71a628",
+                "reference": "d543fc944c05cbfeb549f4289c3d973dba71a628",
                 "shasum": ""
             },
             "require": {
@@ -117,7 +240,7 @@
             "keywords": [
                 "forum"
             ],
-            "time": "2014-11-12 11:56:42"
+            "time": "2015-01-11 20:05:20"
         },
         {
             "name": "illuminate/auth",
@@ -125,12 +248,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/auth.git",
-                "reference": "dbce6f3ff16c88ab99b1e2f4c3c22db8ab47431b"
+                "reference": "76698bad9833ec973c24ef09d2d61a1297f108d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/auth/zipball/dbce6f3ff16c88ab99b1e2f4c3c22db8ab47431b",
-                "reference": "dbce6f3ff16c88ab99b1e2f4c3c22db8ab47431b",
+                "url": "https://api.github.com/repos/illuminate/auth/zipball/76698bad9833ec973c24ef09d2d61a1297f108d1",
+                "reference": "76698bad9833ec973c24ef09d2d61a1297f108d1",
                 "shasum": ""
             },
             "require": {
@@ -167,7 +290,7 @@
                 }
             ],
             "description": "The Illuminate Auth package.",
-            "time": "2014-11-11 18:52:01"
+            "time": "2015-01-09 20:34:57"
         },
         {
             "name": "illuminate/cache",
@@ -175,12 +298,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/cache.git",
-                "reference": "834981f254d8f1ba798168c24dc0d0fe1a101720"
+                "reference": "28982a5e07f791d6f6e5931530f7e4ec421a927f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/cache/zipball/834981f254d8f1ba798168c24dc0d0fe1a101720",
-                "reference": "834981f254d8f1ba798168c24dc0d0fe1a101720",
+                "url": "https://api.github.com/repos/illuminate/cache/zipball/28982a5e07f791d6f6e5931530f7e4ec421a927f",
+                "reference": "28982a5e07f791d6f6e5931530f7e4ec421a927f",
                 "shasum": ""
             },
             "require": {
@@ -216,7 +339,7 @@
                 }
             ],
             "description": "The Illuminate Cache package.",
-            "time": "2014-11-20 04:36:49"
+            "time": "2015-01-05 10:00:11"
         },
         {
             "name": "illuminate/config",
@@ -224,12 +347,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/config.git",
-                "reference": "ec151491cca242ddd5adff0d40cfde6ab7361f59"
+                "reference": "229669a865984860756025446a5f1cf6facb84df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/config/zipball/ec151491cca242ddd5adff0d40cfde6ab7361f59",
-                "reference": "ec151491cca242ddd5adff0d40cfde6ab7361f59",
+                "url": "https://api.github.com/repos/illuminate/config/zipball/229669a865984860756025446a5f1cf6facb84df",
+                "reference": "229669a865984860756025446a5f1cf6facb84df",
                 "shasum": ""
             },
             "require": {
@@ -260,7 +383,7 @@
                 }
             ],
             "description": "The Illuminate Config package.",
-            "time": "2014-11-20 04:26:48"
+            "time": "2014-12-27 21:36:38"
         },
         {
             "name": "illuminate/console",
@@ -268,12 +391,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/console.git",
-                "reference": "d37e42edc6f040317bfdb3cf82650a2b8da2b49d"
+                "reference": "ec49c777a1bb28e7c2e3f5436a943370bd909b94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/console/zipball/d37e42edc6f040317bfdb3cf82650a2b8da2b49d",
-                "reference": "d37e42edc6f040317bfdb3cf82650a2b8da2b49d",
+                "url": "https://api.github.com/repos/illuminate/console/zipball/ec49c777a1bb28e7c2e3f5436a943370bd909b94",
+                "reference": "ec49c777a1bb28e7c2e3f5436a943370bd909b94",
                 "shasum": ""
             },
             "require": {
@@ -283,6 +406,7 @@
             },
             "require-dev": {
                 "mtdowling/cron-expression": "~1.0",
+                "nesbot/carbon": "~1.0",
                 "symfony/process": "2.6.*"
             },
             "type": "library",
@@ -307,7 +431,7 @@
                 }
             ],
             "description": "The Illuminate Console package.",
-            "time": "2014-11-26 22:56:23"
+            "time": "2014-12-29 04:45:09"
         },
         {
             "name": "illuminate/container",
@@ -315,12 +439,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
-                "reference": "867aa9c08e707a71987946afd23b2bc9ee8b2e5c"
+                "reference": "22fae557d2a631585536654fadb069f34c315040"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/867aa9c08e707a71987946afd23b2bc9ee8b2e5c",
-                "reference": "867aa9c08e707a71987946afd23b2bc9ee8b2e5c",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/22fae557d2a631585536654fadb069f34c315040",
+                "reference": "22fae557d2a631585536654fadb069f34c315040",
                 "shasum": ""
             },
             "require": {
@@ -349,7 +473,7 @@
                 }
             ],
             "description": "The Illuminate Container package.",
-            "time": "2014-11-26 22:59:49"
+            "time": "2015-01-07 02:06:23"
         },
         {
             "name": "illuminate/contracts",
@@ -357,12 +481,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "1effd8824d8b3b7679e0ee9b332750647953f7c0"
+                "reference": "d74a93ef629d29bbf10d66de9ea9feb56df7cd87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/1effd8824d8b3b7679e0ee9b332750647953f7c0",
-                "reference": "1effd8824d8b3b7679e0ee9b332750647953f7c0",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/d74a93ef629d29bbf10d66de9ea9feb56df7cd87",
+                "reference": "d74a93ef629d29bbf10d66de9ea9feb56df7cd87",
                 "shasum": ""
             },
             "require": {
@@ -390,7 +514,7 @@
                 }
             ],
             "description": "The Illuminate Contracts package.",
-            "time": "2014-11-29 19:55:20"
+            "time": "2015-01-07 01:43:59"
         },
         {
             "name": "illuminate/cookie",
@@ -398,12 +522,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/cookie.git",
-                "reference": "3824766d98bfca163ce63f746571c5ffc0ad7516"
+                "reference": "69230e0096c41da580bc948cd8159a85ee820330"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/cookie/zipball/3824766d98bfca163ce63f746571c5ffc0ad7516",
-                "reference": "3824766d98bfca163ce63f746571c5ffc0ad7516",
+                "url": "https://api.github.com/repos/illuminate/cookie/zipball/69230e0096c41da580bc948cd8159a85ee820330",
+                "reference": "69230e0096c41da580bc948cd8159a85ee820330",
                 "shasum": ""
             },
             "require": {
@@ -435,7 +559,7 @@
                 }
             ],
             "description": "The Illuminate Cookie package.",
-            "time": "2014-11-10 19:21:41"
+            "time": "2014-12-13 17:31:00"
         },
         {
             "name": "illuminate/database",
@@ -443,12 +567,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "9b95caf7c6fca7df390523971b8a1af68bad2d71"
+                "reference": "87370364f3ad95596d89b18840f02896c5469996"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/9b95caf7c6fca7df390523971b8a1af68bad2d71",
-                "reference": "9b95caf7c6fca7df390523971b8a1af68bad2d71",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/87370364f3ad95596d89b18840f02896c5469996",
+                "reference": "87370364f3ad95596d89b18840f02896c5469996",
                 "shasum": ""
             },
             "require": {
@@ -490,7 +614,7 @@
                 "orm",
                 "sql"
             ],
-            "time": "2014-11-27 02:30:22"
+            "time": "2015-01-09 21:34:55"
         },
         {
             "name": "illuminate/events",
@@ -498,12 +622,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/events.git",
-                "reference": "21e82aa6c2c2b4ad93372eb8ffce144e1c687047"
+                "reference": "4d295bced34149a4ea39184e45270824dcc9428c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/events/zipball/21e82aa6c2c2b4ad93372eb8ffce144e1c687047",
-                "reference": "21e82aa6c2c2b4ad93372eb8ffce144e1c687047",
+                "url": "https://api.github.com/repos/illuminate/events/zipball/4d295bced34149a4ea39184e45270824dcc9428c",
+                "reference": "4d295bced34149a4ea39184e45270824dcc9428c",
                 "shasum": ""
             },
             "require": {
@@ -534,7 +658,7 @@
                 }
             ],
             "description": "The Illuminate Events package.",
-            "time": "2014-11-28 05:08:09"
+            "time": "2015-01-08 17:26:32"
         },
         {
             "name": "illuminate/filesystem",
@@ -542,18 +666,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/filesystem.git",
-                "reference": "0af32af114acb0d048d7de870726339bd350a45b"
+                "reference": "edc3bb5f33d351db05a4390431e8df6ec3856c9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/filesystem/zipball/0af32af114acb0d048d7de870726339bd350a45b",
-                "reference": "0af32af114acb0d048d7de870726339bd350a45b",
+                "url": "https://api.github.com/repos/illuminate/filesystem/zipball/edc3bb5f33d351db05a4390431e8df6ec3856c9e",
+                "reference": "edc3bb5f33d351db05a4390431e8df6ec3856c9e",
                 "shasum": ""
             },
             "require": {
                 "illuminate/contracts": "5.0.*",
                 "illuminate/support": "5.0.*",
-                "league/flysystem": "0.6.*",
+                "league/flysystem": "~1.0",
                 "php": ">=5.4.0",
                 "symfony/finder": "2.6.*"
             },
@@ -579,7 +703,7 @@
                 }
             ],
             "description": "The Illuminate Filesystem package.",
-            "time": "2014-11-21 18:47:05"
+            "time": "2015-01-04 23:25:22"
         },
         {
             "name": "illuminate/hashing",
@@ -587,12 +711,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/hashing.git",
-                "reference": "e986a20f65977ad9c60fc47f809cae08dd9b6fa5"
+                "reference": "2d104e7eb2a81810a7cafa24215fdb2b78754cf5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/hashing/zipball/e986a20f65977ad9c60fc47f809cae08dd9b6fa5",
-                "reference": "e986a20f65977ad9c60fc47f809cae08dd9b6fa5",
+                "url": "https://api.github.com/repos/illuminate/hashing/zipball/2d104e7eb2a81810a7cafa24215fdb2b78754cf5",
+                "reference": "2d104e7eb2a81810a7cafa24215fdb2b78754cf5",
                 "shasum": ""
             },
             "require": {
@@ -623,7 +747,7 @@
                 }
             ],
             "description": "The Illuminate Hashing package.",
-            "time": "2014-11-10 19:21:41"
+            "time": "2014-12-20 13:59:00"
         },
         {
             "name": "illuminate/http",
@@ -631,12 +755,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/http.git",
-                "reference": "c7a86b49e9ec1c2b678dd475f486d8922fad46c7"
+                "reference": "d02da9c077d835caf5db602d1690e7f74e314383"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/http/zipball/c7a86b49e9ec1c2b678dd475f486d8922fad46c7",
-                "reference": "c7a86b49e9ec1c2b678dd475f486d8922fad46c7",
+                "url": "https://api.github.com/repos/illuminate/http/zipball/d02da9c077d835caf5db602d1690e7f74e314383",
+                "reference": "d02da9c077d835caf5db602d1690e7f74e314383",
                 "shasum": ""
             },
             "require": {
@@ -668,7 +792,7 @@
                 }
             ],
             "description": "The Illuminate Http package.",
-            "time": "2014-11-20 04:24:15"
+            "time": "2015-01-02 21:34:50"
         },
         {
             "name": "illuminate/mail",
@@ -676,12 +800,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/mail.git",
-                "reference": "4614bd104f40cec2fc7b72964c9cbc591306772a"
+                "reference": "0d99113f1a6a313ff331db530abd359efd2cefab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/mail/zipball/4614bd104f40cec2fc7b72964c9cbc591306772a",
-                "reference": "4614bd104f40cec2fc7b72964c9cbc591306772a",
+                "url": "https://api.github.com/repos/illuminate/mail/zipball/0d99113f1a6a313ff331db530abd359efd2cefab",
+                "reference": "0d99113f1a6a313ff331db530abd359efd2cefab",
                 "shasum": ""
             },
             "require": {
@@ -717,7 +841,7 @@
                 }
             ],
             "description": "The Illuminate Mail package.",
-            "time": "2014-11-27 02:29:40"
+            "time": "2014-12-20 13:59:00"
         },
         {
             "name": "illuminate/session",
@@ -725,12 +849,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/session.git",
-                "reference": "6e97d2c4db891c54fcbe94ecb6e7991087da7795"
+                "reference": "206da882f5c54b900623817b8b950aafc5602fb3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/session/zipball/6e97d2c4db891c54fcbe94ecb6e7991087da7795",
-                "reference": "6e97d2c4db891c54fcbe94ecb6e7991087da7795",
+                "url": "https://api.github.com/repos/illuminate/session/zipball/206da882f5c54b900623817b8b950aafc5602fb3",
+                "reference": "206da882f5c54b900623817b8b950aafc5602fb3",
                 "shasum": ""
             },
             "require": {
@@ -766,7 +890,7 @@
                 }
             ],
             "description": "The Illuminate Session package.",
-            "time": "2014-11-26 15:48:41"
+            "time": "2015-01-02 13:50:36"
         },
         {
             "name": "illuminate/support",
@@ -774,21 +898,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "9fdfae8a13cd2b6c44509102f88111c8f8f2e9d4"
+                "reference": "aa34f1ec7502665cad3439ff5d0c194f37c9634b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/9fdfae8a13cd2b6c44509102f88111c8f8f2e9d4",
-                "reference": "9fdfae8a13cd2b6c44509102f88111c8f8f2e9d4",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/aa34f1ec7502665cad3439ff5d0c194f37c9634b",
+                "reference": "aa34f1ec7502665cad3439ff5d0c194f37c9634b",
                 "shasum": ""
             },
             "require": {
+                "danielstjules/stringy": "~1.5",
+                "doctrine/inflector": "~1.0",
+                "ext-mbstring": "*",
                 "illuminate/contracts": "5.0.*",
                 "php": ">=5.4.0"
             },
             "require-dev": {
-                "jeremeamia/superclosure": "~1.0.1",
-                "patchwork/utf8": "~1.1"
+                "jeremeamia/superclosure": "~1.0.1"
             },
             "type": "library",
             "extra": {
@@ -815,7 +941,7 @@
                 }
             ],
             "description": "The Illuminate Support package.",
-            "time": "2014-11-27 02:38:32"
+            "time": "2015-01-08 19:45:11"
         },
         {
             "name": "illuminate/translation",
@@ -867,12 +993,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/validation.git",
-                "reference": "960a70962e226d094b2f3ee35fabcb99a8a486c4"
+                "reference": "4a4fd57e3658455a24141e88e9ee868604722878"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/validation/zipball/960a70962e226d094b2f3ee35fabcb99a8a486c4",
-                "reference": "960a70962e226d094b2f3ee35fabcb99a8a486c4",
+                "url": "https://api.github.com/repos/illuminate/validation/zipball/4a4fd57e3658455a24141e88e9ee868604722878",
+                "reference": "4a4fd57e3658455a24141e88e9ee868604722878",
                 "shasum": ""
             },
             "require": {
@@ -908,7 +1034,7 @@
                 }
             ],
             "description": "The Illuminate Validation package.",
-            "time": "2014-11-13 23:12:07"
+            "time": "2015-01-07 01:58:12"
         },
         {
             "name": "illuminate/view",
@@ -916,12 +1042,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/view.git",
-                "reference": "f25d576381d2e76f29530ce9f763e89fda54a1c9"
+                "reference": "73de450cee28e2d4fdb550c58a4812ff7cb1cc75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/view/zipball/f25d576381d2e76f29530ce9f763e89fda54a1c9",
-                "reference": "f25d576381d2e76f29530ce9f763e89fda54a1c9",
+                "url": "https://api.github.com/repos/illuminate/view/zipball/73de450cee28e2d4fdb550c58a4812ff7cb1cc75",
+                "reference": "73de450cee28e2d4fdb550c58a4812ff7cb1cc75",
                 "shasum": ""
             },
             "require": {
@@ -953,7 +1079,7 @@
                 }
             ],
             "description": "The Illuminate View package.",
-            "time": "2014-11-26 22:13:43"
+            "time": "2015-01-05 01:09:29"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -1003,12 +1129,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "161f915a8ccc60166db45ef1a295e15db6536d92"
+                "reference": "59f43cc2624145ea2f091ce10ddaf389a4296d86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/161f915a8ccc60166db45ef1a295e15db6536d92",
-                "reference": "161f915a8ccc60166db45ef1a295e15db6536d92",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/59f43cc2624145ea2f091ce10ddaf389a4296d86",
+                "reference": "59f43cc2624145ea2f091ce10ddaf389a4296d86",
                 "shasum": ""
             },
             "require": {
@@ -1023,30 +1149,30 @@
                 "league/phpunit-coverage-listener": "~1.1",
                 "mockery/mockery": "~0.9",
                 "phpseclib/phpseclib": "~0.3.5",
-                "phpspec/phpspec": "~2.0",
+                "phpspec/phpspec": "~2.0.0",
                 "phpunit/phpunit": "~4.0",
                 "predis/predis": "~1.0",
                 "rackspace/php-opencloud": "~1.11",
-                "sabre/dav": "~2.0",
                 "tedivm/stash": "~0.12.0"
             },
             "suggest": {
-                "aws/aws-sdk-php": "Allows you to use AWS S3 storage",
-                "barracuda/copy": "Allows you to use Copy.com storage",
-                "dropbox/dropbox-sdk": "Allows you to use Dropbox storage",
                 "ext-fileinfo": "Required for MimeType",
-                "guzzlehttp/guzzle": "Allows you to use http files (reading only)",
                 "league/event": "Required for EventableFilesystem",
+                "league/flysystem-aws-s3-v2": "Use S3 storage with AWS SDK v2",
+                "league/flysystem-aws-s3-v3": "Use S3 storage with AWS SDK v3",
+                "league/flysystem-azure": "Allows you to use Windows Azure Blob storage",
+                "league/flysystem-copy": "Allows you to use Copy.com storage",
+                "league/flysystem-dropbox": "Use Dropbox storage",
+                "league/flysystem-rackspace": "Allows you to use Rackspace Cloud Files",
+                "league/flysystem-webdav": "Allows you to use WebDAV storage",
                 "phpseclib/phpseclib": "Allows SFTP server storage",
                 "predis/predis": "Allows you to use Predis for caching",
-                "rackspace/php-opencloud": "Allows you to use Rackspace Cloud Files",
-                "sabre/dav": "Enables WebDav support",
                 "tedivm/stash": "Allows you to use Stash as cache implementation"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.6-dev"
+                    "dev-master": "1.0-dev"
                 }
             },
             "autoload": {
@@ -1082,7 +1208,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2014-11-30 12:09:36"
+            "time": "2015-01-11 15:40:33"
         },
         {
             "name": "nesbot/carbon",
@@ -1285,12 +1411,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "e1f77dd0109e1137bcdeaccb9197c95d17624cab"
+                "reference": "e29c7b692bae6610b137670d6749151fd6e41608"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/e1f77dd0109e1137bcdeaccb9197c95d17624cab",
-                "reference": "e1f77dd0109e1137bcdeaccb9197c95d17624cab",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/e29c7b692bae6610b137670d6749151fd6e41608",
+                "reference": "e29c7b692bae6610b137670d6749151fd6e41608",
                 "shasum": ""
             },
             "require": {
@@ -1329,7 +1455,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2014-11-30 16:14:17"
+            "time": "2014-12-05 14:17:46"
         },
         {
             "name": "symfony/console",
@@ -1338,12 +1464,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "d3bac228fd7a2aac9193e241b239880b3ba39a10"
+                "reference": "6ac6491ff60c0e5a941db3ccdc75a07adbb61476"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/d3bac228fd7a2aac9193e241b239880b3ba39a10",
-                "reference": "d3bac228fd7a2aac9193e241b239880b3ba39a10",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/6ac6491ff60c0e5a941db3ccdc75a07adbb61476",
+                "reference": "6ac6491ff60c0e5a941db3ccdc75a07adbb61476",
                 "shasum": ""
             },
             "require": {
@@ -1386,7 +1512,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-11-20 13:24:23"
+            "time": "2015-01-06 17:50:02"
         },
         {
             "name": "symfony/debug",
@@ -1395,21 +1521,22 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Debug.git",
-                "reference": "4d01c33fd7d240a46b5dca68bb68debb67e7e553"
+                "reference": "e604b148625cb107b181afcd5db8a3e92b491cd0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Debug/zipball/4d01c33fd7d240a46b5dca68bb68debb67e7e553",
-                "reference": "4d01c33fd7d240a46b5dca68bb68debb67e7e553",
+                "url": "https://api.github.com/repos/symfony/Debug/zipball/e604b148625cb107b181afcd5db8a3e92b491cd0",
+                "reference": "e604b148625cb107b181afcd5db8a3e92b491cd0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3",
+                "php": ">=5.3.9",
                 "psr/log": "~1.0"
             },
             "require-dev": {
-                "symfony/http-foundation": "~2.1",
-                "symfony/http-kernel": "~2.1"
+                "symfony/class-loader": "~2.2",
+                "symfony/http-foundation": "~2.1|~3.0.0",
+                "symfony/http-kernel": "~2.3.24|~2.5.9|~2.6,>=2.6.2|~3.0.0"
             },
             "suggest": {
                 "symfony/http-foundation": "",
@@ -1442,7 +1569,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "http://symfony.com",
-            "time": "2014-11-29 14:43:05"
+            "time": "2015-01-09 13:24:18"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -1451,23 +1578,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "a8d31f90f544e17abae891b3876c2739d8bd6965"
+                "reference": "eab88ace7a54741087fe4e0c7acd737d1f6186bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/a8d31f90f544e17abae891b3876c2739d8bd6965",
-                "reference": "a8d31f90f544e17abae891b3876c2739d8bd6965",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/eab88ace7a54741087fe4e0c7acd737d1f6186bf",
+                "reference": "eab88ace7a54741087fe4e0c7acd737d1f6186bf",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": ">=5.3.9"
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/config": "~2.0",
-                "symfony/dependency-injection": "~2.6",
-                "symfony/expression-language": "~2.6",
-                "symfony/stopwatch": "~2.2"
+                "symfony/config": "~2.0,>=2.0.5|~3.0.0",
+                "symfony/dependency-injection": "~2.6|~3.0.0",
+                "symfony/expression-language": "~2.6|~3.0.0",
+                "symfony/stopwatch": "~2.3|~3.0.0"
             },
             "suggest": {
                 "symfony/dependency-injection": "",
@@ -1500,7 +1627,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2014-11-29 12:40:43"
+            "time": "2015-01-09 06:51:41"
         },
         {
             "name": "symfony/finder",
@@ -1509,12 +1636,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "d574347c652a14cfee0349f744c7880e1d9029fd"
+                "reference": "16513333bca64186c01609961a2bb1b95b5e1355"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/d574347c652a14cfee0349f744c7880e1d9029fd",
-                "reference": "d574347c652a14cfee0349f744c7880e1d9029fd",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/16513333bca64186c01609961a2bb1b95b5e1355",
+                "reference": "16513333bca64186c01609961a2bb1b95b5e1355",
                 "shasum": ""
             },
             "require": {
@@ -1547,7 +1674,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2014-11-28 10:00:40"
+            "time": "2015-01-03 08:01:59"
         },
         {
             "name": "symfony/http-foundation",
@@ -1556,12 +1683,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation.git",
-                "reference": "bb46e43145184ce8c3069a8ea2c299fb53d432f9"
+                "reference": "3f4ba2c658be910fe6cec46ed34ee900bd18bb01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/bb46e43145184ce8c3069a8ea2c299fb53d432f9",
-                "reference": "bb46e43145184ce8c3069a8ea2c299fb53d432f9",
+                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/3f4ba2c658be910fe6cec46ed34ee900bd18bb01",
+                "reference": "3f4ba2c658be910fe6cec46ed34ee900bd18bb01",
                 "shasum": ""
             },
             "require": {
@@ -1600,7 +1727,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "http://symfony.com",
-            "time": "2014-11-28 10:00:40"
+            "time": "2015-01-05 17:41:06"
         },
         {
             "name": "symfony/http-kernel",
@@ -1609,34 +1736,36 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpKernel.git",
-                "reference": "e76b343611a2554f34e790693e2a3ea658ad481b"
+                "reference": "276be2d1ba1c3327af255b3ec64abb9caaf84844"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/e76b343611a2554f34e790693e2a3ea658ad481b",
-                "reference": "e76b343611a2554f34e790693e2a3ea658ad481b",
+                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/276be2d1ba1c3327af255b3ec64abb9caaf84844",
+                "reference": "276be2d1ba1c3327af255b3ec64abb9caaf84844",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
                 "psr/log": "~1.0",
-                "symfony/debug": "~2.6",
-                "symfony/event-dispatcher": "~2.5",
-                "symfony/http-foundation": "~2.5"
+                "symfony/debug": "~2.6,>=2.6.2",
+                "symfony/event-dispatcher": "~2.5.9|~2.6,>=2.6.2",
+                "symfony/http-foundation": "~2.5,>=2.5.4"
             },
             "require-dev": {
-                "symfony/browser-kit": "~2.2",
+                "symfony/browser-kit": "~2.3",
                 "symfony/class-loader": "~2.1",
-                "symfony/config": "~2.0",
-                "symfony/console": "~2.2",
-                "symfony/dependency-injection": "~2.0",
+                "symfony/config": "~2.0,>=2.0.5",
+                "symfony/console": "~2.3",
+                "symfony/css-selector": "~2.0,>=2.0.5",
+                "symfony/dependency-injection": "~2.2",
+                "symfony/dom-crawler": "~2.0,>=2.0.5",
                 "symfony/expression-language": "~2.4",
-                "symfony/finder": "~2.0",
-                "symfony/process": "~2.0",
+                "symfony/finder": "~2.0,>=2.0.5",
+                "symfony/process": "~2.0,>=2.0.5",
                 "symfony/routing": "~2.2",
-                "symfony/stopwatch": "~2.2",
+                "symfony/stopwatch": "~2.3",
                 "symfony/templating": "~2.2",
-                "symfony/translation": "~2.0",
+                "symfony/translation": "~2.0,>=2.0.5",
                 "symfony/var-dumper": "~2.6"
             },
             "suggest": {
@@ -1675,7 +1804,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "http://symfony.com",
-            "time": "2014-11-29 10:21:18"
+            "time": "2015-01-07 15:48:51"
         },
         {
             "name": "symfony/translation",
@@ -1684,12 +1813,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Translation.git",
-                "reference": "0a3711860976f15ee46642b4dd354e9ef9fc9a15"
+                "reference": "f289cdf8179d32058c1e1cbac723106a5ff6fa39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Translation/zipball/0a3711860976f15ee46642b4dd354e9ef9fc9a15",
-                "reference": "0a3711860976f15ee46642b4dd354e9ef9fc9a15",
+                "url": "https://api.github.com/repos/symfony/Translation/zipball/f289cdf8179d32058c1e1cbac723106a5ff6fa39",
+                "reference": "f289cdf8179d32058c1e1cbac723106a5ff6fa39",
                 "shasum": ""
             },
             "require": {
@@ -1697,7 +1826,7 @@
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/config": "~2.0",
+                "symfony/config": "~2.3,>=2.3.12",
                 "symfony/intl": "~2.3",
                 "symfony/yaml": "~2.2"
             },
@@ -1733,7 +1862,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "http://symfony.com",
-            "time": "2014-11-28 10:00:40"
+            "time": "2015-01-03 15:33:07"
         }
     ],
     "packages-dev": [],
@@ -1745,6 +1874,7 @@
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": [],
     "platform-dev": []
 }
