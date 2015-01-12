@@ -90,7 +90,7 @@ if ($action == 'change_pass')
 
 		if ($new_password1 != $new_password2)
 			message($lang_prof_reg['Pass not match']);
-		if (pun_strlen($new_password1) < 4)
+		if (pun_strlen($new_password1) < 6)
 			message($lang_prof_reg['Pass too short']);
 
 		$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch password', __FILE__, __LINE__, $db->error());
@@ -564,6 +564,28 @@ else if (isset($_POST['ban']))
 	}
 	else
 		redirect('admin_bans.php?add_ban='.$id, $lang_profile['Ban redirect']);
+}
+
+
+else if ($action == 'promote')
+{
+	if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_promote_users'] == '0'))
+		message($lang_common['No permission'], false, '403 Forbidden');
+
+	confirm_referrer('viewtopic.php');
+
+	$pid = isset($_GET['pid']) ? intval($_GET['pid']) : 0;
+
+	$sql = 'SELECT g.g_promote_next_group FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'users AS u ON u.group_id=g.g_id WHERE u.id='.$id.' AND g.g_promote_next_group>0';
+	$result = $db->query($sql) or error('Unable to fetch promotion information', __FILE__, __LINE__, $db->error());
+
+	if (!$db->num_rows($result))
+		message($lang_common['Bad request'], false, '404 Not Found');
+
+	$next_group_id = $db->result($result);
+	$db->query('UPDATE '.$db->prefix.'users SET group_id='.$next_group_id.' WHERE id='.$id) or error('Unable to promote user', __FILE__, __LINE__, $db->error());
+
+	redirect('viewtopic.php?pid='.$pid.'#p'.$pid, $lang_profile['User promote redirect']);
 }
 
 
