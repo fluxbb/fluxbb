@@ -10,7 +10,7 @@
 if (!defined('PUN'))
 	exit;
 
-$flux_antispam = [];
+$flux_antispam = array();
 $flux_antispam_loaded = false;
 
 function flux_antispam_load()
