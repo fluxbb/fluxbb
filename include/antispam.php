@@ -37,5 +37,23 @@ function flux_antispam_hook($name)
 
 	// Give every plugin the chance to run some code specific for this hook
 	foreach ($flux_antispam as $plugin)
-		$plugin->$name();
+	{
+		$hook = 'hook_'.$name;
+		$plugin->$hook();
+	}
+}
+
+/**
+ * Class plugin_antispam
+ *
+ * This class can be extended by antispam plugins.
+ * This way, they do not have to worry about implementing functions for all possible hooks.
+ */
+class plugin_antispam
+{
+	function hook_register_validate()
+	{ }
+
+	function hook_register_pre_submit()
+	{ }
 }
