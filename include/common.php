@@ -41,8 +41,8 @@ if (defined('FORUM'))
 // Load the functions script
 require PUN_ROOT.'include/functions.php';
 
-// Load antispam functionality
-require PUN_ROOT.'include/antispam.php';
+// Load addon functionality
+require PUN_ROOT . 'include/addons.php';
 
 // Load UTF-8 functions
 require PUN_ROOT.'include/utf8/utf8.php';

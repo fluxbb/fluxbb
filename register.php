@@ -96,7 +96,7 @@ if (isset($_POST['form_sent']))
 	else if ($password1 != $password2)
 		$errors[] = $lang_prof_reg['Pass not match'];
 
-	flux_antispam_hook('register_validate');
+	flux_hook('register_validate');
 
 	// Validate email
 	require PUN_ROOT.'include/email.php';
@@ -433,7 +433,7 @@ if (!empty($errors))
 					</div>
 				</fieldset>
 			</div>
-<?php flux_antispam_hook('register_pre_submit'); ?>
+<?php flux_hook('register_pre_submit'); ?>
 			<p class="buttons"><input type="submit" name="register" value="<?php echo $lang_register['Register'] ?>" /></p>
 		</form>
 	</div>
