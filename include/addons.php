@@ -10,9 +10,12 @@
 if (!defined('PUN'))
 	exit;
 
-$flux_addons = new flux_addon_manager();
 
-
+/**
+ * Class flux_addon_manager
+ *
+ * This class is responsible for loading the addons and storing their hook listeners.
+ */
 class flux_addon_manager
 {
 	var $hooks = array();
@@ -63,7 +66,8 @@ class flux_addon_manager
  * Class flux_addon
  *
  * This class can be extended to provide addon functionality.
- * This way, subclasses do not have to worry about implementing functions for all possible hooks.
+ * Subclasses should implement the register method which will be called so that they have a chance to register possible
+ * listeners for all hooks.
  */
 class flux_addon
 {
