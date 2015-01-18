@@ -10,38 +10,54 @@
 if (!defined('PUN'))
 	exit;
 
-$flux_addons = array();
-$flux_addons_loaded = false;
+$flux_addons = new flux_addon_manager();
 
-function flux_addons_load()
+
+class flux_addon_manager
 {
-	global $flux_addons, $flux_addons_loaded;
+	var $hooks = array();
 
-	foreach (glob(PUN_ROOT.'addons/*.php') as $addon_file)
+	var $loaded = false;
+
+	function load()
 	{
-		$addon_name = 'addon_'.basename($addon_file, '.php');
-		include $addon_file;
+		$this->loaded = true;
 
-		$flux_addons[] = new $addon_name;
+		foreach (glob(PUN_ROOT.'addons/*.php') as $addon_file)
+		{
+			$addon_name = 'addon_'.basename($addon_file, '.php');
+
+			include $addon_file;
+			$addon = new $addon_name;
+
+			$addon->register($this);
+		}
 	}
 
-	$flux_addons_loaded = true;
-}
-
-function flux_hook($name)
-{
-	global $flux_addons, $flux_addons_loaded;
-
-	if (!$flux_addons_loaded)
-		flux_addons_load();
-
-	// Give every plugin the chance to run some code specific for this hook
-	foreach ($flux_addons as $addon)
+	function bind($hook, $callback)
 	{
-		$hook = 'hook_'.$name;
-		$addon->$hook();
+		if (!isset($this->hooks[$hook]))
+			$this->hooks[$hook] = array();
+
+		$this->hooks[$hook][] = $callback;
+	}
+
+	function hook($name)
+	{
+		if (!$this->loaded)
+			$this->load();
+
+		$callbacks = isset($this->hooks[$name]) ? $this->hooks[$name] : array();
+
+		// Execute every registered callback for this hook
+		foreach ($callbacks as $callback)
+		{
+			list($addon, $method) = $callback;
+			$addon->$method();
+		}
 	}
 }
+
 
 /**
  * Class flux_addon
@@ -51,9 +67,6 @@ function flux_hook($name)
  */
 class flux_addon
 {
-	function hook_register_validate()
-	{ }
-
-	function hook_register_pre_submit()
+	function register($manager)
 	{ }
 }
