@@ -19,7 +19,7 @@ function flux_addons_load()
 
 	foreach (glob(PUN_ROOT.'addons/*.php') as $addon_file)
 	{
-		$addon_name = 'hook_'.basename($addon_file, '.php');
+		$addon_name = 'addon_'.basename($addon_file, '.php');
 		include $addon_file;
 
 		$flux_addons[] = new $addon_name;
