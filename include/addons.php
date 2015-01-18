@@ -42,7 +42,8 @@ class flux_addon_manager
 		if (!isset($this->hooks[$hook]))
 			$this->hooks[$hook] = array();
 
-		$this->hooks[$hook][] = $callback;
+		if (is_callable($callback))
+			$this->hooks[$hook][] = $callback;
 	}
 
 	function hook($name)
