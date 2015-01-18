@@ -217,6 +217,10 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 {
 	global $pun_config, $lang_common;
 
+	// Use \r\n for SMTP servers, the system's line ending for local mailers
+	$smtp = $pun_config['o_smtp_host'] != '';
+	$EOL = $smtp ? "\r\n" : FORUM_EOL;
+
 	// Default sender/return address
 	$from_name = sprintf($lang_common['Mailer'], $pun_config['o_board_title']);
 	$from_email = $pun_config['o_webmaster_email'];
@@ -233,32 +237,22 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 	$from = '"'.encode_mail_text($from_name).'" <'.$from_email.'>';
 	$subject = encode_mail_text($subject);
 
-	$headers = 'From: '.$from.FORUM_EOL.'Date: '.gmdate('r').FORUM_EOL.'MIME-Version: 1.0'.FORUM_EOL.'Content-transfer-encoding: 8bit'.FORUM_EOL.'Content-type: text/plain; charset=utf-8'.FORUM_EOL.'X-Mailer: FluxBB Mailer';
+	$headers = 'From: '.$from.$EOL.'Date: '.gmdate('r').$EOL.'MIME-Version: 1.0'.$EOL.'Content-transfer-encoding: 8bit'.$EOL.'Content-type: text/plain; charset=utf-8'.$EOL.'X-Mailer: FluxBB Mailer';
 
 	// If we specified a reply-to email, we deal with it here
 	if (!empty($reply_to_email))
 	{
 		$reply_to = '"'.encode_mail_text($reply_to_name).'" <'.$reply_to_email.'>';
 
-		$headers .= FORUM_EOL.'Reply-To: '.$reply_to;
+		$headers .= $EOL.'Reply-To: '.$reply_to;
 	}
 
 	// Make sure all linebreaks are LF in message (and strip out any NULL bytes)
 	$message = str_replace("\0", '', pun_linebreaks($message));
-
-	if ($pun_config['o_smtp_host'] != '')
-	{
-		// Headers should be \r\n
-		// Message should be ??
-		$message = str_replace("\n", "\r\n", $message);
-		smtp_mail($to, $subject, $message, $headers);
-	}
-	else
-	{
-		// Headers should be \r\n
-		// Message should be \n
-		mail($to, $subject, $message, $headers);
-	}
+	$message = str_replace("\n", $EOL, $message);
+	
+	$mailer = $smtp ? 'smtp_mail' : 'mail';
+	$mailer($to, $subject, $message, $headers);
 }
 
 
