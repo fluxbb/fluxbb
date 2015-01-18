@@ -68,6 +68,9 @@ if (get_magic_quotes_gpc())
 // If we've been passed a default language, use it
 $install_lang = isset($_REQUEST['install_lang']) ? pun_trim($_REQUEST['install_lang']) : 'English';
 
+// Make sure we got a valid language string
+$install_lang = preg_replace('%[\.\\\/]%', '', $install_lang);
+
 // If such a language pack doesn't exist, or isn't up-to-date enough to translate this page, default to English
 if (!file_exists(PUN_ROOT.'lang/'.$install_lang.'/install.php'))
 	$install_lang = 'English';
