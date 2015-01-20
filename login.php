@@ -126,6 +126,8 @@ else if ($action == 'forget' || $action == 'forget_2')
 
 	if (isset($_POST['form_sent']))
 	{
+		flux_hook('forget_password_before_validation');
+
 		// Start with a clean slate
 		$errors = array();
 
@@ -135,6 +137,8 @@ else if ($action == 'forget' || $action == 'forget_2')
 		$email = strtolower(pun_trim($_POST['req_email']));
 		if (!is_valid_email($email))
 			$errors[] = $lang_common['Invalid email'];
+
+		flux_hook('forget_password_after_validation');
 
 		// Did everything go according to plan?
 		if (empty($errors))
@@ -185,6 +189,9 @@ else if ($action == 'forget' || $action == 'forget_2')
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_login['Request pass']);
 	$required_fields = array('req_email' => $lang_common['Email']);
 	$focus_element = array('request_pass', 'req_email');
+
+	flux_hook('forget_password_before_header');
+
 	define ('PUN_ACTIVE_PAGE', 'login');
 	require PUN_ROOT.'header.php';
 
@@ -227,6 +234,7 @@ if (!empty($errors))
 					</div>
 				</fieldset>
 			</div>
+<?php flux_hook('forget_password_before_submit') ?>
 			<p class="buttons"><input type="submit" name="request_pass" value="<?php echo $lang_common['Submit'] ?>" /><?php if (empty($errors)): ?> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a><?php endif; ?></p>
 		</form>
 	</div>
