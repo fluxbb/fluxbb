@@ -671,6 +671,17 @@ function get_tracked_topics()
 
 
 //
+// Shortcut method for executing all callbacks registered with the addon manager for the given hook
+//
+function flux_hook($name)
+{
+	global $flux_addons;
+
+	$flux_addons->hook($name);
+}
+
+
+//
 // Update posts, topics, last_post, last_post_id and last_poster for a forum
 //
 function update_forum($forum_id)

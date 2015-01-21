@@ -65,6 +65,8 @@ $errors = array();
 
 if (isset($_POST['form_sent']))
 {
+	flux_hook('register_before_validation');
+
 	// Check that someone from this IP didn't register a user within the last hour (DoS prevention)
 	$result = $db->query('SELECT 1 FROM '.$db->prefix.'users WHERE registration_ip=\''.$db->escape(get_remote_address()).'\' AND registered>'.(time() - 3600)) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
@@ -145,6 +147,8 @@ if (isset($_POST['form_sent']))
 	$email_setting = intval($_POST['email_setting']);
 	if ($email_setting < 0 || $email_setting > 2)
 		$email_setting = $pun_config['o_default_email_setting'];
+
+	flux_hook('register_after_validation');
 
 	// Did everything go according to plan?
 	if (empty($errors))
@@ -263,6 +267,9 @@ if (isset($_POST['form_sent']))
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_register['Register']);
 $required_fields = array('req_user' => $lang_common['Username'], 'req_password1' => $lang_common['Password'], 'req_password2' => $lang_prof_reg['Confirm pass'], 'req_email1' => $lang_common['Email'], 'req_email2' => $lang_common['Email'].' 2');
 $focus_element = array('register', 'req_user');
+
+flux_hook('register_before_header');
+
 define('PUN_ACTIVE_PAGE', 'register');
 require PUN_ROOT.'header.php';
 
@@ -431,6 +438,7 @@ if (!empty($errors))
 					</div>
 				</fieldset>
 			</div>
+<?php flux_hook('register_before_submit'); ?>
 			<p class="buttons"><input type="submit" name="register" value="<?php echo $lang_register['Register'] ?>" /></p>
 		</form>
 	</div>
