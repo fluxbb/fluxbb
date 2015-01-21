@@ -1728,10 +1728,10 @@ else
 			message($lang_common['Bad request'], false, '403 Forbidden');
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section admin']);
-		define('PUN_ACTIVE_PAGE', 'profile');
 
 		flux_hook('profile_admin_before_header');
 
+		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
 		generate_profile_menu('admin');
