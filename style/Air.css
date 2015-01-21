@@ -1179,8 +1179,13 @@ MAIN FORMS
 	width: 1em;
 }
 
-.pun input[type=text], .pun select, .pun textarea {
+.pun select, .pun textarea {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.pun input[type=text]{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	border:1px solid #b9c5ce;
 }
 
 .pun .txtarea textarea, .pun input.longinput {
