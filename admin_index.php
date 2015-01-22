@@ -77,7 +77,7 @@ generate_admin_menu('index');
 		</div>
 
 <?php if ($install_file_exists) : ?>
-		<h2 class="block2"><span>Warning</span></h2>
+		<h2 class="block2"><span><?php echo $lang_admin_index['Alerts head'] ?></span></h2>
 		<div id="adalerts" class="box">
 			<p><?php printf($lang_admin_index['Install file exists'], '<a href="admin_index.php?action=remove_install_file">'.$lang_admin_index['Delete install file'].'</a>') ?></p>
 		</div>
