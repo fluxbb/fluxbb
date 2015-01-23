@@ -12,7 +12,7 @@ if (!defined('PUN_ROOT'))
 // Define the version and database revision that this code was written for
 define('FORUM_VERSION', '1.5.7');
 
-define('FORUM_DB_REVISION', 20);
+define('FORUM_DB_REVISION', 21);
 define('FORUM_SI_REVISION', 2);
 define('FORUM_PARSER_REVISION', 2);
 
@@ -41,6 +41,9 @@ if (defined('FORUM'))
 // Load the functions script
 require PUN_ROOT.'include/functions.php';
 
+// Load addon functionality
+require PUN_ROOT.'include/addons.php';
+
 // Load UTF-8 functions
 require PUN_ROOT.'include/utf8/utf8.php';
 
@@ -56,6 +59,9 @@ if (!defined('PUN'))
 	header('Location: install.php');
 	exit;
 }
+
+// The addon manager is responsible for storing the hook listeners and communicating with the addons
+$flux_addons = new flux_addon_manager();
 
 // Record the start time (will be used to calculate the generation time for the page)
 $pun_start = get_microtime();

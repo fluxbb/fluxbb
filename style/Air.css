@@ -165,6 +165,8 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 ----------------------------------------------------------------*/
 
 .pun {
+	max-width: 1070px;
+	margin: 0 auto;
 	padding: 30px 40px;
 }
 
@@ -178,33 +180,8 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 
 .pun .punwrap {
 	border: 1px solid;
+	border-radius: 10px;
 	padding: 18px;
-}
-
-.pun .top-box {
-	height: 18px;
-	margin-bottom: -18px;
-	position: relative;
-	background: url(Air/img/main_top.png) top left no-repeat;
-}
-
-.pun .top-box div {
-	height: 18px;
-	margin-left: 50%;
-	background: url(Air/img/main_top.png) top right no-repeat;
-}
-
-.pun .end-box {
-	margin-top: -17px;
-	height: 18px;
-	position: relative;
-	background: url(Air/img/main_end.png) bottom left no-repeat;
-}
-
-.pun .end-box div {
-	height: 18px;
-	margin-left: 50%;
-	background: url(Air/img/main_end.png) bottom right no-repeat;
 }
 
 #punredirect h2, #punmaint h2 {
@@ -978,7 +955,7 @@ MAIN POSTS
 }
 
 .pun .codebox pre code {
-	padding: 0.75em;
+	padding: 0.5em;
 	white-space: pre;
 }
 
@@ -1378,7 +1355,7 @@ PROFILES (+ ADMIN MENU)
 	position: relative;
 }
 
-#adintro, #adstats {
+#adintro, #adstats, #adalerts {
 	border-style: solid;
 	border-width: 1px;
 	padding: 18px;
@@ -1392,7 +1369,7 @@ PROFILES (+ ADMIN MENU)
 	background: url(Air/img/bull.png) center left no-repeat;
 }
 
-#adstats .inbox, #adintro .inbox {
+#adstats .inbox, #adintro .inbox, #adalerts p {
 	border-style: solid;
 	border-width: 1px;
 	padding: 18px;
@@ -1561,7 +1538,7 @@ html, body, .pun {
 /* Main Forms + Profile
 ----------------------------------------------------------------*/
 
-.pun .blockform .box, #adstats, #adintro, #postpreview, #posterror {
+.pun .blockform .box, #adstats, #adintro, #adalerts, #postpreview, #posterror {
 	border-color: #b9c5ce #d9e1e7;
 	background: #ebf1f5;
 }
@@ -1587,7 +1564,7 @@ html, body, .pun {
 	color: #fff;
 }
 
-.pun #posterror .error-info {
+.pun #posterror .error-info, .pun #adalerts p {
 	background: #ffffe1;
 	border-color: #dfe6ee;
 }

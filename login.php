@@ -20,6 +20,8 @@ $action = isset($_GET['action']) ? $_GET['action'] : null;
 
 if (isset($_POST['form_sent']) && $action == 'in')
 {
+	flux_hook('login_before_validation');
+
 	$form_username = pun_trim($_POST['req_username']);
 	$form_password = pun_trim($_POST['req_password']);
 	$save_pass = isset($_POST['save_pass']);
@@ -62,6 +64,8 @@ if (isset($_POST['form_sent']) && $action == 'in')
 
 	if (!$authorized)
 		message($lang_login['Wrong user/pass'].' <a href="login.php?action=forget">'.$lang_login['Forgotten pass'].'</a>');
+
+	flux_hook('login_after_validation');
 
 	// Update the status if this is the first time the user logged in
 	if ($cur_user['group_id'] == PUN_UNVERIFIED)
@@ -122,6 +126,8 @@ else if ($action == 'forget' || $action == 'forget_2')
 
 	if (isset($_POST['form_sent']))
 	{
+		flux_hook('forget_password_before_validation');
+
 		// Start with a clean slate
 		$errors = array();
 
@@ -131,6 +137,8 @@ else if ($action == 'forget' || $action == 'forget_2')
 		$email = strtolower(pun_trim($_POST['req_email']));
 		if (!is_valid_email($email))
 			$errors[] = $lang_common['Invalid email'];
+
+		flux_hook('forget_password_after_validation');
 
 		// Did everything go according to plan?
 		if (empty($errors))
@@ -158,7 +166,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 						message(sprintf($lang_login['Email flood'], intval((3600 - (time() - $cur_hit['last_email_sent'])) / 60)), true);
 
 					// Generate a new password and a new password activation code
-					$new_password = random_pass(8);
+					$new_password = random_pass(12);
 					$new_password_key = random_pass(8);
 
 					$db->query('UPDATE '.$db->prefix.'users SET activate_string=\''.pun_hash($new_password).'\', activate_key=\''.$new_password_key.'\', last_email_sent = '.time().' WHERE id='.$cur_hit['id']) or error('Unable to update activation data', __FILE__, __LINE__, $db->error());
@@ -181,6 +189,9 @@ else if ($action == 'forget' || $action == 'forget_2')
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_login['Request pass']);
 	$required_fields = array('req_email' => $lang_common['Email']);
 	$focus_element = array('request_pass', 'req_email');
+
+	flux_hook('forget_password_before_header');
+
 	define ('PUN_ACTIVE_PAGE', 'login');
 	require PUN_ROOT.'header.php';
 
@@ -223,6 +234,7 @@ if (!empty($errors))
 					</div>
 				</fieldset>
 			</div>
+<?php flux_hook('forget_password_before_submit') ?>
 			<p class="buttons"><input type="submit" name="request_pass" value="<?php echo $lang_common['Submit'] ?>" /><?php if (empty($errors)): ?> <a href="javascript:history.go(-1)"><?php echo $lang_common['Go back'] ?></a><?php endif; ?></p>
 		</form>
 	</div>
@@ -244,13 +256,16 @@ if (!empty($_SERVER['HTTP_REFERER']))
 	$redirect_url = validate_redirect($_SERVER['HTTP_REFERER'], null);
 
 if (!isset($redirect_url))
-	$redirect_url = 'index.php';
+	$redirect_url = get_base_url(true).'/index.php';
 else if (preg_match('%viewtopic\.php\?pid=(\d+)$%', $redirect_url, $matches))
 	$redirect_url .= '#p'.$matches[1];
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Login']);
 $required_fields = array('req_username' => $lang_common['Username'], 'req_password' => $lang_common['Password']);
 $focus_element = array('login', 'req_username');
+
+flux_hook('login_before_header');
+
 define('PUN_ACTIVE_PAGE', 'login');
 require PUN_ROOT.'header.php';
 
@@ -277,6 +292,7 @@ require PUN_ROOT.'header.php';
 					</div>
 				</fieldset>
 			</div>
+<?php flux_hook('login_before_submit') ?>
 			<p class="buttons"><input type="submit" name="login" value="<?php echo $lang_common['Login'] ?>" tabindex="4" /></p>
 		</form>
 	</div>

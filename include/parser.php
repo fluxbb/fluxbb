@@ -664,7 +664,7 @@ function handle_url_tag($url, $link = '', $bbcode = false)
 	$url = pun_trim($url);
 
 	// Deal with [url][img]http://example.com/test.png[/img][/url]
-	if (preg_match('%<img src=\\\\"(.*?)\\\\"%', $url, $matches))
+	if (preg_match('%<img src=\"(.*?)\"%', $url, $matches))
 		return handle_url_tag($matches[1], $url, $bbcode);
 
 	$full_url = str_replace(array(' ', '\'', '`', '"'), array('%20', '', '', ''), $url);

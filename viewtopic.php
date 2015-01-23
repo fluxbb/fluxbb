@@ -39,41 +39,42 @@ if ($pid)
 
 	$_GET['p'] = ceil($num_posts / $pun_user['disp_posts']);
 }
-
-// If action=new, we redirect to the first new post (if any)
-else if ($action == 'new')
+else
 {
-	if (!$pun_user['is_guest'])
+	// If action=new, we redirect to the first new post (if any)
+	if ($action == 'new')
 	{
-		// We need to check if this topic has been viewed recently by the user
-		$tracked_topics = get_tracked_topics();
-		$last_viewed = isset($tracked_topics['topics'][$id]) ? $tracked_topics['topics'][$id] : $pun_user['last_visit'];
-
-		$result = $db->query('SELECT MIN(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id.' AND posted>'.$last_viewed) or error('Unable to fetch first new post info', __FILE__, __LINE__, $db->error());
-		$first_new_post_id = $db->result($result);
-
-		if ($first_new_post_id)
+		if (!$pun_user['is_guest'])
 		{
-			header('Location: viewtopic.php?pid='.$first_new_post_id.'#p'.$first_new_post_id);
-			exit;
+			// We need to check if this topic has been viewed recently by the user
+			$tracked_topics = get_tracked_topics();
+			$last_viewed = isset($tracked_topics['topics'][$id]) ? $tracked_topics['topics'][$id] : $pun_user['last_visit'];
+
+			$result = $db->query('SELECT MIN(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id.' AND posted>'.$last_viewed) or error('Unable to fetch first new post info', __FILE__, __LINE__, $db->error());
+			$first_new_post_id = $db->result($result);
+
+			if ($first_new_post_id)
+			{
+				header('Location: viewtopic.php?pid='.$first_new_post_id.'#p'.$first_new_post_id);
+				exit;
+			}
 		}
+
+		// If there is no new post, we go to the last post
+		$action = 'last';
 	}
 
-	// If there is no new post, we go to the last post
-	header('Location: viewtopic.php?id='.$id.'&action=last');
-	exit;
-}
-
-// If action=last, we redirect to the last post
-else if ($action == 'last')
-{
-	$result = $db->query('SELECT MAX(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id) or error('Unable to fetch last post info', __FILE__, __LINE__, $db->error());
-	$last_post_id = $db->result($result);
-
-	if ($last_post_id)
+	// If action=last, we redirect to the last post
+	if ($action == 'last')
 	{
-		header('Location: viewtopic.php?pid='.$last_post_id.'#p'.$last_post_id);
-		exit;
+		$result = $db->query('SELECT MAX(id) FROM '.$db->prefix.'posts WHERE topic_id='.$id) or error('Unable to fetch last post info', __FILE__, __LINE__, $db->error());
+		$last_post_id = $db->result($result);
+
+		if ($last_post_id)
+		{
+			header('Location: viewtopic.php?pid='.$last_post_id.'#p'.$last_post_id);
+			exit;
+		}
 	}
 }
 
@@ -166,10 +167,22 @@ if (!$pun_user['is_guest'] && $pun_config['o_topic_subscriptions'] == '1')
 else
 	$subscraction = '';
 
+// Add relationship meta tags
+$page_head = array();
+$page_head['canonical'] = '<link rel="canonical" href="viewtopic.php?id='.$id.($p == 1 ? '' : '&amp;p='.$p).'" title="'.sprintf($lang_common['Page'], $p).'" />';
+
+if ($num_pages > 1)
+{
+	if ($p > 1)
+		$page_head['prev'] = '<link rel="prev" href="viewtopic.php?id='.$id.($p == 2 ? '' : '&amp;p='.($p - 1)).'" title="'.sprintf($lang_common['Page'], $p - 1).'" />';
+	if ($p < $num_pages)
+		$page_head['next'] = '<link rel="next" href="viewtopic.php?id='.$id.'&amp;p='.($p + 1).'" title="'.sprintf($lang_common['Page'], $p + 1).'" />';
+}
+
 if ($pun_config['o_feed_type'] == '1')
-	$page_head = array('feed' => '<link rel="alternate" type="application/rss+xml" href="extern.php?action=feed&amp;tid='.$id.'&amp;type=rss" title="'.$lang_common['RSS topic feed'].'" />');
+	$page_head['feed'] = '<link rel="alternate" type="application/rss+xml" href="extern.php?action=feed&amp;tid='.$id.'&amp;type=rss" title="'.$lang_common['RSS topic feed'].'" />';
 else if ($pun_config['o_feed_type'] == '2')
-	$page_head = array('feed' => '<link rel="alternate" type="application/atom+xml" href="extern.php?action=feed&amp;tid='.$id.'&amp;type=atom" title="'.$lang_common['Atom topic feed'].'" />');
+	$page_head['feed'] = '<link rel="alternate" type="application/atom+xml" href="extern.php?action=feed&amp;tid='.$id.'&amp;type=atom" title="'.$lang_common['Atom topic feed'].'" />';
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), pun_htmlspecialchars($cur_topic['forum_name']), pun_htmlspecialchars($cur_topic['subject']));
 define('PUN_ALLOW_INDEX', 1);
@@ -210,7 +223,7 @@ if (empty($post_ids))
 	error('The post table and topic table seem to be out of sync!', __FILE__, __LINE__);
 
 // Retrieve the posts (and their respective poster/online status)
-$result = $db->query('SELECT u.email, u.title, u.url, u.location, u.signature, u.email_setting, u.num_posts, u.registered, u.admin_note, p.id, p.poster AS username, p.poster_id, p.poster_ip, p.poster_email, p.message, p.hide_smilies, p.posted, p.edited, p.edited_by, g.g_id, g.g_user_title, o.user_id AS is_online FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON (o.user_id=u.id AND o.user_id!=1 AND o.idle=0) WHERE p.id IN ('.implode(',', $post_ids).') ORDER BY p.id', true) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT u.email, u.title, u.url, u.location, u.signature, u.email_setting, u.num_posts, u.registered, u.admin_note, p.id, p.poster AS username, p.poster_id, p.poster_ip, p.poster_email, p.message, p.hide_smilies, p.posted, p.edited, p.edited_by, g.g_id, g.g_user_title, g.g_promote_next_group, o.user_id AS is_online FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON (o.user_id=u.id AND o.user_id!=1 AND o.idle=0) WHERE p.id IN ('.implode(',', $post_ids).') ORDER BY p.id', true) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 while ($cur_post = $db->fetch_assoc($result))
 {
 	$post_count++;
@@ -274,6 +287,12 @@ while ($cur_post = $db->fetch_assoc($result))
 
 				$user_contacts[] = '<span class="website"><a href="'.pun_htmlspecialchars($cur_post['url']).'" rel="nofollow">'.$lang_topic['Website'].'</a></span>';
 			}
+		}
+
+		if ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1' && $pun_user['g_mod_promote_users'] == '1'))
+		{
+			if ($cur_post['g_promote_next_group'])
+				$user_info[] = '<dd><span><a href="profile.php?action=promote&amp;id='.$cur_post['poster_id'].'&amp;pid='.$cur_post['id'].'">'.$lang_topic['Promote user'].'</a></span></dd>';
 		}
 
 		if ($pun_user['is_admmod'])
@@ -426,8 +445,8 @@ if ($pun_user['is_guest'])
 	$email_form_name = ($pun_config['p_force_guest_email'] == '1') ? 'req_email' : 'email';
 
 ?>
-						<label class="conl required"><strong><?php echo $lang_post['Guest name'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_username" value="<?php if (isset($_POST['req_username'])) echo pun_htmlspecialchars($username); ?>" size="25" maxlength="25" tabindex="<?php echo $cur_index++ ?>" /><br /></label>
-						<label class="conl<?php echo ($pun_config['p_force_guest_email'] == '1') ? ' required' : '' ?>"><?php echo $email_label ?><br /><input type="text" name="<?php echo $email_form_name ?>" value="<?php if (isset($_POST[$email_form_name])) echo pun_htmlspecialchars($email); ?>" size="50" maxlength="80" tabindex="<?php echo $cur_index++ ?>" /><br /></label>
+						<label class="conl required"><strong><?php echo $lang_post['Guest name'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" tabindex="<?php echo $cur_index++ ?>" /><br /></label>
+						<label class="conl<?php echo ($pun_config['p_force_guest_email'] == '1') ? ' required' : '' ?>"><?php echo $email_label ?><br /><input type="text" name="<?php echo $email_form_name ?>" size="50" maxlength="80" tabindex="<?php echo $cur_index++ ?>" /><br /></label>
 						<div class="clearer"></div>
 <?php
 
@@ -447,6 +466,7 @@ else
 					</div>
 				</fieldset>
 			</div>
+<?php flux_hook('quickpost_before_submit') ?>
 			<p class="buttons"><input type="submit" name="submit" tabindex="<?php echo $cur_index++ ?>" value="<?php echo $lang_common['Submit'] ?>" accesskey="s" /> <input type="submit" name="preview" value="<?php echo $lang_topic['Preview'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /></p>
 		</form>
 	</div>

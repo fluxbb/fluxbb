@@ -30,7 +30,7 @@ $lang_profile = array(
 'Old pass'						=>	'Old password',
 'New pass'						=>	'New password',
 'Confirm new pass'				=>	'Confirm new password',
-'Pass info'						=>	'Passwords must be at least 4 characters long. Passwords are case sensitive.',
+'Pass info'						=>	'Passwords must be at least 6 characters long. Passwords are case sensitive.',
 
 // Email stuff
 'Email key bad'					=>	'The specified email activation key was incorrect or has expired. Please re-request change of email address. If that fails, contact the forum administrator at',
@@ -134,6 +134,7 @@ $lang_profile = array(
 'Delete posts'					=>	'Delete any posts and topics this user has made.',
 'Delete'						=>	'Delete', // submit button (confirm user delete)
 'User delete redirect'			=>	'User deleted. Redirecting …',
+'User promote redirect'			=>	'User promoted. Redirecting …',
 'Group membership redirect'		=>	'Group membership saved. Redirecting …',
 'Update forums redirect'		=>	'Forum moderator rights updated. Redirecting …',
 'Ban redirect'					=>	'Redirecting …',

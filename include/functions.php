@@ -591,14 +591,14 @@ function generate_avatar_markup($user_id)
 //
 function generate_page_title($page_title, $p = null)
 {
-	global $pun_config, $lang_common;
+	global $lang_common;
 
 	if (!is_array($page_title))
 		$page_title = array($page_title);
 
 	$page_title = array_reverse($page_title);
 
-	if (!is_null($p))
+	if ($p > 1)
 		$page_title[0] .= ' ('.sprintf($lang_common['Page'], forum_number_format($p)).')';
 
 	$crumbs = implode($lang_common['Title separator'], $page_title);
@@ -667,6 +667,17 @@ function get_tracked_topics()
 	}
 
 	return $tracked_topics;
+}
+
+
+//
+// Shortcut method for executing all callbacks registered with the addon manager for the given hook
+//
+function flux_hook($name)
+{
+	global $flux_addons;
+
+	$flux_addons->hook($name);
 }
 
 
@@ -830,7 +841,7 @@ function censor_words($text)
 //
 function get_title($user)
 {
-	global $db, $pun_config, $pun_bans, $lang_common;
+	global $pun_bans, $lang_common;
 	static $ban_list;
 
 	// If not already built in a previous call, build an array of lowercase banned usernames
@@ -885,11 +896,11 @@ function paginate($num_pages, $cur_page, $link)
 	{
 		// Add a previous page link
 		if ($num_pages > 1 && $cur_page > 1)
-			$pages[] = '<a rel="prev"'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p='.($cur_page - 1).'">'.$lang_common['Previous'].'</a>';
+			$pages[] = '<a rel="prev"'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.($cur_page == 2 ? '' : '&amp;p='.($cur_page - 1)).'">'.$lang_common['Previous'].'</a>';
 
 		if ($cur_page > 3)
 		{
-			$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p=1">1</a>';
+			$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'">1</a>';
 
 			if ($cur_page > 5)
 				$pages[] = '<span class="spacer">'.$lang_common['Spacer'].'</span>';
@@ -901,7 +912,7 @@ function paginate($num_pages, $cur_page, $link)
 			if ($current < 1 || $current > $num_pages)
 				continue;
 			else if ($current != $cur_page || $link_to_all)
-				$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.'&amp;p='.$current.'">'.forum_number_format($current).'</a>';
+				$pages[] = '<a'.(empty($pages) ? ' class="item1"' : '').' href="'.$link.($current == 1 ? '' : '&amp;p='.$current).'">'.forum_number_format($current).'</a>';
 			else
 				$pages[] = '<strong'.(empty($pages) ? ' class="item1"' : '').'>'.forum_number_format($current).'</strong>';
 		}
@@ -964,7 +975,7 @@ function message($message, $no_back_link = false, $http_status = null)
 //
 function format_time($timestamp, $date_only = false, $date_format = null, $time_format = null, $time_only = false, $no_text = false)
 {
-	global $pun_config, $lang_common, $pun_user, $forum_date_formats, $forum_time_formats;
+	global $lang_common, $pun_user, $forum_date_formats, $forum_time_formats;
 
 	if ($timestamp == '')
 		return $lang_common['Never'];
@@ -1043,7 +1054,7 @@ function random_key($len, $readable = false, $hash = false)
 //
 function confirm_referrer($scripts, $error_msg = false)
 {
-	global $pun_config, $lang_common;
+	global $lang_common;
 
 	if (!is_array($scripts))
 		$scripts = array($scripts);
@@ -1081,7 +1092,11 @@ function confirm_referrer($scripts, $error_msg = false)
 function validate_redirect($redirect_url, $fallback_url)
 {
 	$referrer = parse_url(strtolower($redirect_url));
-	
+
+	// Make sure the host component exists
+	if (!isset($referrer['host']))
+		$referrer['host'] = '';
+
 	// Remove www subdomain if it exists
 	if (strpos($referrer['host'], 'www.') === 0)
 		$referrer['host'] = substr($referrer['host'], 4);
@@ -1197,7 +1212,7 @@ function pun_strlen($str)
 //
 function pun_linebreaks($str)
 {
-	return str_replace("\r", "\n", str_replace("\r\n", "\n", $str));
+	return str_replace(array("\r\n", "\r"), "\n", $str);
 }
 
 
@@ -1813,7 +1828,7 @@ function forum_list_plugins($is_admin)
 //
 function split_text($text, $start, $end, $retab = true)
 {
-	global $pun_config, $lang_common;
+	global $pun_config;
 
 	$result = array(0 => array(), 1 => array()); // 0 = inside, 1 = outside
 
@@ -1990,11 +2005,9 @@ function url_valid($url)
 			  [0-9A-Za-z]		   # Part last char is alphanum (no dash).
 			  \.				   # Each part followed by literal dot.
 			)*					   # One or more parts before top level domain.
-			(?:					   # Explicitly specify top level domains.
-			  com|edu|gov|int|mil|net|org|biz|
-			  info|name|pro|aero|coop|museum|
-			  asia|cat|jobs|mobi|tel|travel|
-			  [A-Za-z]{2})		   # Country codes are exqactly two alpha chars.
+			(?:					   # Top level domains
+			  [A-Za-z]{2,63}|	   # Country codes are exactly two alpha chars.
+			  xn--[0-9A-Za-z]{4,59})		   # Internationalized Domain Name (IDN)
 			$					   # Anchor to end of string.
 			/ix', $m['host'])) return FALSE;
 	}

@@ -8,6 +8,8 @@
 #adintro {padding: 5px}
 #adintro p {padding: 10px}
 #adstats dl {padding: 5px 0 10px 5px}
+#adalerts {padding: 10px}
+#adalerts p {padding: 10px; background: #ffffe1; border: 1px solid #dfe6ee}
 
 #adminconsole fieldset td {text-align: left; padding: 4px; white-space: normal}
 #adminconsole fieldset th {text-align: left; padding: 4px; white-space: normal}

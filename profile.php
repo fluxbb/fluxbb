@@ -90,7 +90,7 @@ if ($action == 'change_pass')
 
 		if ($new_password1 != $new_password2)
 			message($lang_prof_reg['Pass not match']);
-		if (pun_strlen($new_password1) < 4)
+		if (pun_strlen($new_password1) < 6)
 			message($lang_prof_reg['Pass too short']);
 
 		$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE id='.$id) or error('Unable to fetch password', __FILE__, __LINE__, $db->error());
@@ -567,6 +567,28 @@ else if (isset($_POST['ban']))
 }
 
 
+else if ($action == 'promote')
+{
+	if ($pun_user['g_id'] != PUN_ADMIN && ($pun_user['g_moderator'] != '1' || $pun_user['g_mod_promote_users'] == '0'))
+		message($lang_common['No permission'], false, '403 Forbidden');
+
+	confirm_referrer('viewtopic.php');
+
+	$pid = isset($_GET['pid']) ? intval($_GET['pid']) : 0;
+
+	$sql = 'SELECT g.g_promote_next_group FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'users AS u ON u.group_id=g.g_id WHERE u.id='.$id.' AND g.g_promote_next_group>0';
+	$result = $db->query($sql) or error('Unable to fetch promotion information', __FILE__, __LINE__, $db->error());
+
+	if (!$db->num_rows($result))
+		message($lang_common['Bad request'], false, '404 Not Found');
+
+	$next_group_id = $db->result($result);
+	$db->query('UPDATE '.$db->prefix.'users SET group_id='.$next_group_id.' WHERE id='.$id) or error('Unable to promote user', __FILE__, __LINE__, $db->error());
+
+	redirect('viewtopic.php?pid='.$pid.'#p'.$pid, $lang_profile['User promote redirect']);
+}
+
+
 else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 {
 	if ($pun_user['g_id'] > PUN_ADMIN)
@@ -1002,6 +1024,8 @@ else if (isset($_POST['form_sent']))
 
 	redirect('profile.php?section='.$section.'&amp;id='.$id, $lang_profile['Profile redirect']);
 }
+
+flux_hook('profile_after_form_handling');
 
 
 $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.msn, u.aim, u.yahoo, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, u.date_format, u.time_format, u.last_visit, g.g_id, g.g_user_title, g.g_moderator FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
@@ -1704,6 +1728,9 @@ else
 			message($lang_common['Bad request'], false, '403 Forbidden');
 
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Profile'], $lang_profile['Section admin']);
+
+		flux_hook('profile_admin_before_header');
+
 		define('PUN_ACTIVE_PAGE', 'profile');
 		require PUN_ROOT.'header.php';
 
@@ -1821,6 +1848,7 @@ else
 
 ?>
 			</form>
+<?php flux_hook('profile_admin_after_form') ?>
 		</div>
 	</div>
 <?php

@@ -3,6 +3,7 @@
 /.settings/
 /nbproject/
 *.sublime-project
+.idea
 /cache/cache_*.php
 /cache/*.cache
 /cache/db_update.lock
