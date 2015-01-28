@@ -124,12 +124,12 @@ else if ($action == 'forget' || $action == 'forget_2')
 		exit;
 	}
 
+	// Start with a clean slate
+	$errors = array();
+
 	if (isset($_POST['form_sent']))
 	{
 		flux_hook('forget_password_before_validation');
-
-		// Start with a clean slate
-		$errors = array();
 
 		require PUN_ROOT.'include/email.php';
 
