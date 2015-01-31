@@ -26,7 +26,11 @@ class flux_addon_manager
 	{
 		$this->loaded = true;
 
-		foreach (glob(PUN_ROOT.'addons/*.php') as $addon_file)
+		$addon_files = glob(PUN_ROOT.'addons/*.php');
+		if ($addon_files === false)
+			return;
+
+		foreach ($addon_files as $addon_file)
 		{
 			$addon_name = 'addon_'.basename($addon_file, '.php');
 
