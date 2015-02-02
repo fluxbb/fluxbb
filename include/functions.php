@@ -1797,33 +1797,6 @@ function generate_stopwords_cache_id()
 
 
 //
-// Fetch a list of available admin plugins
-//
-function forum_list_plugins($is_admin)
-{
-	$plugins = array();
-
-	$d = dir(PUN_ROOT.'plugins');
-	while (($entry = $d->read()) !== false)
-	{
-		if ($entry{0} == '.')
-			continue;
-
-		$prefix = substr($entry, 0, strpos($entry, '_'));
-		$suffix = substr($entry, strlen($entry) - 4);
-
-		if ($suffix == '.php' && ((!$is_admin && $prefix == 'AMP') || ($is_admin && ($prefix == 'AP' || $prefix == 'AMP'))))
-			$plugins[$entry] = substr($entry, strpos($entry, '_') + 1, -4);
-	}
-	$d->close();
-
-	natcasesort($plugins);
-
-	return $plugins;
-}
-
-
-//
 // Split text into chunks ($inside contains all text inside $start and $end, and $outside contains all text outside)
 //
 function split_text($text, $start, $end, $retab = true)
