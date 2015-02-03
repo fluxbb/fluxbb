@@ -29,16 +29,17 @@ function forum_list_plugins($is_admin)
 	$plugins = array();
 
 	$d = dir(PUN_ROOT.'plugins');
+	if (!$d) return $plugins; 
+
 	while (($entry = $d->read()) !== false)
 	{
-		if ($entry{0} == '.')
-			continue;
+		if (!is_dir(PUN_ROOT.'plugins/'.$entry) && preg_match('%^AM?P_(\w+)\.php$%i', $entry))
+		{
+			$prefix = substr($entry, 0, strpos($entry, '_'));
 
-		$prefix = substr($entry, 0, strpos($entry, '_'));
-		$suffix = substr($entry, strlen($entry) - 4);
-
-		if ($suffix == '.php' && ((!$is_admin && $prefix == 'AMP') || ($is_admin && ($prefix == 'AP' || $prefix == 'AMP'))))
-			$plugins[$entry] = substr($entry, strpos($entry, '_') + 1, -4);
+			if ($prefix == 'AMP' || ($is_admin && $prefix == 'AP'))
+				$plugins[$entry] = substr($entry, strlen($prefix) + 1, -4);
+		}
 	}
 	$d->close();
 
