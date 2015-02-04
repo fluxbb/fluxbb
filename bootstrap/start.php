@@ -12,7 +12,7 @@ require __DIR__.'/../vendor/autoload.php';
 /*
  * Create the main application.
  */
-$app = new FluxBB\Core\Application();
+$app = new FluxBB\Core\Application(realpath(__DIR__.'/../'));
 Illuminate\Support\Facades\Facade::setFacadeApplication($app);
 
 function trans($id, $parameters = [])
