@@ -1155,7 +1155,7 @@ MAIN FORMS
 	width: 1em;
 }
 
-.pun input[type=text], .pun select, .pun textarea {
+.pun input[type=text], .pun input[type=password], .pun select, .pun textarea {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
