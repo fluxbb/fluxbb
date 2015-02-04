@@ -12,10 +12,10 @@ $app->register('FluxBB\Installer\Web\RouteServiceProvider');
 
 $app->instance('request', $request = Symfony\Component\HttpFoundation\Request::createFromGlobals());
 $app->bind('FluxBB\Web\UrlGeneratorInterface', 'FluxBB\Web\UrlGenerator');
-$app->boot();
 
 
 $kernel = new FluxBB\Web\Dispatcher(
+    $app,
     $app->make('FluxBB\Web\Router'),
     new FluxBB\Web\ControllerFactory($app)
 );
