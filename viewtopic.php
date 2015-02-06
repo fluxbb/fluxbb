@@ -361,6 +361,8 @@ while ($cur_post = $db->fetch_assoc($result))
 			$signature_cache[$cur_post['poster_id']] = $signature;
 		}
 	}
+	
+	flux_hook('viewtopic_before_display');
 
 ?>
 <div id="p<?php echo $cur_post['id'] ?>" class="blockpost<?php echo ($post_count % 2 == 0) ? ' roweven' : ' rowodd' ?><?php if ($cur_post['id'] == $cur_topic['first_post_id']) echo ' firstpost'; ?><?php if ($post_count == 1) echo ' blockpost1'; ?>">
