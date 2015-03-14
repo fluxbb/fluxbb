@@ -17,6 +17,7 @@ require PUN_ROOT.'include/common.php';
 require PUN_ROOT.'lang/'.$pun_user['language'].'/login.php';
 
 $action = isset($_GET['action']) ? $_GET['action'] : null;
+$errors = array();
 
 if (isset($_POST['form_sent']) && $action == 'in')
 {
@@ -63,35 +64,39 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	}
 
 	if (!$authorized)
-		message($lang_login['Wrong user/pass'].' <a href="login.php?action=forget">'.$lang_login['Forgotten pass'].'</a>');
+		$errors[] = $lang_login['Wrong user/pass'];
 
 	flux_hook('login_after_validation');
 
-	// Update the status if this is the first time the user logged in
-	if ($cur_user['group_id'] == PUN_UNVERIFIED)
+	// Did everything go according to plan?
+	if (empty($errors))
 	{
-		$db->query('UPDATE '.$db->prefix.'users SET group_id='.$pun_config['o_default_user_group'].' WHERE id='.$cur_user['id']) or error('Unable to update user status', __FILE__, __LINE__, $db->error());
+		// Update the status if this is the first time the user logged in
+		if ($cur_user['group_id'] == PUN_UNVERIFIED)
+		{
+			$db->query('UPDATE '.$db->prefix.'users SET group_id='.$pun_config['o_default_user_group'].' WHERE id='.$cur_user['id']) or error('Unable to update user status', __FILE__, __LINE__, $db->error());
 
-		// Regenerate the users info cache
-		if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
-			require PUN_ROOT.'include/cache.php';
+			// Regenerate the users info cache
+			if (!defined('FORUM_CACHE_FUNCTIONS_LOADED'))
+				require PUN_ROOT.'include/cache.php';
 
-		generate_users_info_cache();
+			generate_users_info_cache();
+		}
+
+		// Remove this user's guest entry from the online list
+		$db->query('DELETE FROM '.$db->prefix.'online WHERE ident=\''.$db->escape(get_remote_address()).'\'') or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
+
+		$expire = ($save_pass == '1') ? time() + 1209600 : time() + $pun_config['o_timeout_visit'];
+		pun_setcookie($cur_user['id'], $form_password_hash, $expire);
+
+		// Reset tracked topics
+		set_tracked_topics(null);
+
+		// Try to determine if the data in redirect_url is valid (if not, we redirect to index.php after login)
+		$redirect_url = validate_redirect($_POST['redirect_url'], 'index.php');
+
+		redirect(pun_htmlspecialchars($redirect_url), $lang_login['Login redirect']);
 	}
-
-	// Remove this user's guest entry from the online list
-	$db->query('DELETE FROM '.$db->prefix.'online WHERE ident=\''.$db->escape(get_remote_address()).'\'') or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
-
-	$expire = ($save_pass == '1') ? time() + 1209600 : time() + $pun_config['o_timeout_visit'];
-	pun_setcookie($cur_user['id'], $form_password_hash, $expire);
-
-	// Reset tracked topics
-	set_tracked_topics(null);
-
-	// Try to determine if the data in redirect_url is valid (if not, we redirect to index.php after login)
-	$redirect_url = validate_redirect($_POST['redirect_url'], 'index.php');
-
-	redirect(pun_htmlspecialchars($redirect_url), $lang_login['Login redirect']);
 }
 
 
@@ -123,9 +128,6 @@ else if ($action == 'forget' || $action == 'forget_2')
 		header('Location: index.php');
 		exit;
 	}
-
-	// Start with a clean slate
-	$errors = array();
 
 	if (isset($_POST['form_sent']))
 	{
@@ -229,7 +231,7 @@ if (!empty($errors))
 					<legend><?php echo $lang_login['Request pass legend'] ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
-						<label class="required"><strong><?php echo $lang_common['Email'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input id="req_email" type="text" name="req_email" size="50" maxlength="80" /><br /></label>
+						<label class="required"><strong><?php echo $lang_common['Email'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input id="req_email" type="text" name="req_email" value="<?php if (isset($_POST['req_email'])) echo pun_htmlspecialchars($_POST['req_email']); ?>" size="50" maxlength="80" /><br /></label>
 						<p><?php echo $lang_login['Request pass info'] ?></p>
 					</div>
 				</fieldset>
@@ -269,6 +271,30 @@ flux_hook('login_before_header');
 define('PUN_ACTIVE_PAGE', 'login');
 require PUN_ROOT.'header.php';
 
+// If there are errors, we display them
+if (!empty($errors))
+{
+
+?>
+<div id="posterror" class="block">
+	<h2><span><?php echo $lang_login['Login errors'] ?></span></h2>
+	<div class="box">
+		<div class="inbox error-info">
+			<p><?php echo $lang_login['Login errors info'] ?></p>
+			<ul class="error-list">
+<?php
+
+	foreach ($errors as $cur_error)
+		echo "\t\t\t\t".'<li><strong>'.$cur_error.'</strong></li>'."\n";
+?>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<?php
+
+}
 ?>
 <div class="blockform">
 	<h2><span><?php echo $lang_common['Login'] ?></span></h2>
@@ -280,11 +306,11 @@ require PUN_ROOT.'header.php';
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="redirect_url" value="<?php echo pun_htmlspecialchars($redirect_url) ?>" />
-						<label class="conl required"><strong><?php echo $lang_common['Username'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" tabindex="1" /><br /></label>
-						<label class="conl required"><strong><?php echo $lang_common['Password'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="password" name="req_password" size="25" tabindex="2" /><br /></label>
+						<label class="conl required"><strong><?php echo $lang_common['Username'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_username" value="<?php if (isset($_POST['req_username'])) echo pun_htmlspecialchars($_POST['req_username']); ?>" size="25" maxlength="25" tabindex="1" /><br /></label>
+						<label class="conl required"><strong><?php echo $lang_common['Password'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="password" name="req_password" value="<?php if (isset($_POST['req_password'])) echo pun_htmlspecialchars($_POST['req_password']); ?>" size="25" tabindex="2" /><br /></label>
 
 						<div class="rbox clearb">
-							<label><input type="checkbox" name="save_pass" value="1" tabindex="3" /><?php echo $lang_login['Remember me'] ?><br /></label>
+							<label><input type="checkbox" name="save_pass" value="1"<?php if (isset($_POST['save_pass'])) echo ' checked="checked"'; ?> tabindex="3" /><?php echo $lang_login['Remember me'] ?><br /></label>
 						</div>
 
 						<p class="clearb"><?php echo $lang_login['Login info'] ?></p>
