@@ -7,13 +7,13 @@
  */
 
 // The FluxBB version this script updates to
-define('UPDATE_TO', '1.5.7');
+define('UPDATE_TO', '1.5.9');
 
 define('UPDATE_TO_DB_REVISION', 21);
 define('UPDATE_TO_SI_REVISION', 2);
 define('UPDATE_TO_PARSER_REVISION', 2);
 
-define('MIN_PHP_VERSION', '4.4.0');
+define('MIN_PHP_VERSION', '5.0.0');
 define('MIN_MYSQL_VERSION', '4.1.2');
 define('MIN_PGSQL_VERSION', '7.0.0');
 define('PUN_SEARCH_MIN_WORD', 3);
