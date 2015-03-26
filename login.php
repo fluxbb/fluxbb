@@ -184,7 +184,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 				message($lang_login['Forget mail'].' <a href="mailto:'.pun_htmlspecialchars($pun_config['o_admin_email']).'">'.pun_htmlspecialchars($pun_config['o_admin_email']).'</a>.', true);
 			}
 			else
-				$errors[] = $lang_login['No email match'].' '.htmlspecialchars($email).'.';
+				$errors[] = $lang_login['No email match'].' '.pun_htmlspecialchars($email).'.';
 			}
 		}
 
