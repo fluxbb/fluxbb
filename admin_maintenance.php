@@ -120,7 +120,9 @@ h1 {
 	$db->end_transaction();
 	$db->close();
 
-	exit('<script type="text/javascript">window.location="admin_maintenance.php'.$query_str.'"</script><hr /><p>'.sprintf($lang_admin_maintenance['Javascript redirect failed'], '<a href="admin_maintenance.php'.$query_str.'">'.$lang_admin_maintenance['Click here'].'</a>').'</p>');
+	ob_end_clean();
+	header('Location: admin_maintenance.php'.$query_str);
+	exit;
 }
 
 if ($action == 'prune')
