@@ -7,7 +7,7 @@
  */
 
 // The FluxBB version this script installs
-define('FORUM_VERSION', '1.5.7');
+define('FORUM_VERSION', '1.5.8');
 
 define('FORUM_DB_REVISION', 21);
 define('FORUM_SI_REVISION', 2);
@@ -67,6 +67,9 @@ if (get_magic_quotes_gpc())
 
 // If we've been passed a default language, use it
 $install_lang = isset($_REQUEST['install_lang']) ? pun_trim($_REQUEST['install_lang']) : 'English';
+
+// Make sure we got a valid language string
+$install_lang = preg_replace('%[\.\\\/]%', '', $install_lang);
 
 // If such a language pack doesn't exist, or isn't up-to-date enough to translate this page, default to English
 if (!file_exists(PUN_ROOT.'lang/'.$install_lang.'/install.php'))

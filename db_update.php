@@ -7,7 +7,7 @@
  */
 
 // The FluxBB version this script updates to
-define('UPDATE_TO', '1.5.7');
+define('UPDATE_TO', '1.5.8');
 
 define('UPDATE_TO_DB_REVISION', 21);
 define('UPDATE_TO_SI_REVISION', 2);
@@ -1906,4 +1906,8 @@ $db->end_transaction();
 $db->close();
 
 if ($query_str != '')
-	exit('<script type="text/javascript">window.location="db_update.php'.$query_str.'&uid='.$uid.'"</script><noscript><meta http-equiv="refresh" content="0;url=db_update.php'.$query_str.'&uid='.$uid.'" /></noscript>');
+{
+	ob_end_clean();
+	header('Location: db_update.php'.$query_str.'&uid='.$uid);
+	exit;
+}
