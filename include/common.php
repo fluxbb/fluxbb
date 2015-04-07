@@ -38,6 +38,13 @@ if (file_exists(PUN_ROOT.'config.php'))
 if (defined('FORUM'))
 	define('PUN', FORUM);
 
+// If PUN isn't defined, config.php is missing or corrupt
+if (!defined('PUN'))
+{
+	header('Location: install.php');
+	exit;
+}
+
 // Load the functions script
 require PUN_ROOT.'include/functions.php';
 
@@ -52,13 +59,6 @@ forum_remove_bad_characters();
 
 // Reverse the effect of register_globals
 forum_unregister_globals();
-
-// If PUN isn't defined, config.php is missing or corrupt
-if (!defined('PUN'))
-{
-	header('Location: install.php');
-	exit;
-}
 
 // The addon manager is responsible for storing the hook listeners and communicating with the addons
 $flux_addons = new flux_addon_manager();

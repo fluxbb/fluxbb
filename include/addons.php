@@ -26,15 +26,22 @@ class flux_addon_manager
 	{
 		$this->loaded = true;
 
-		foreach (glob(PUN_ROOT.'addons/*.php') as $addon_file)
+		$d = dir(PUN_ROOT.'addons');
+		if (!$d) return;
+
+		while (($addon_file = $d->read()) !== false)
 		{
-			$addon_name = 'addon_'.basename($addon_file, '.php');
+			if (!is_dir(PUN_ROOT.'addons/'.$addon_file) && preg_match('%(\w+)\.php$%', $addon_file))
+			{
+				$addon_name = 'addon_'.substr($addon_file, 0, -4);
 
-			include $addon_file;
-			$addon = new $addon_name;
+				include PUN_ROOT.'addons/'.$addon_file;
+				$addon = new $addon_name;
 
-			$addon->register($this);
+				$addon->register($this);
+			}
 		}
+		$d->close();
 	}
 
 	function bind($hook, $callback)
