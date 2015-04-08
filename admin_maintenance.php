@@ -26,6 +26,7 @@ $action = isset($_REQUEST['action']) ? pun_trim($_REQUEST['action']) : '';
 
 if ($action == 'rebuild')
 {
+	ob_start();
 	$per_page = isset($_GET['i_per_page']) ? intval($_GET['i_per_page']) : 0;
 	$start_at = isset($_GET['i_start_at']) ? intval($_GET['i_start_at']) : 0;
 
@@ -120,7 +121,10 @@ h1 {
 	$db->end_transaction();
 	$db->close();
 
-	exit('<script type="text/javascript">window.location="admin_maintenance.php'.$query_str.'"</script><hr /><p>'.sprintf($lang_admin_maintenance['Javascript redirect failed'], '<a href="admin_maintenance.php'.$query_str.'">'.$lang_admin_maintenance['Click here'].'</a>').'</p>');
+	ob_end_clean();
+	ob_start();
+	header('Location: admin_maintenance.php'.$query_str);
+	exit;
 }
 
 if ($action == 'prune')
