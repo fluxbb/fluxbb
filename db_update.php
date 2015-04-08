@@ -1622,6 +1622,7 @@ switch ($stage)
 			}
 		}
 
+		ob_start(); // Start output buffering to avoid 'cannot modify header information' error for header() redirect
 		if (!empty($_SESSION['dupe_users']))
 		{
 			$query_str = '';
