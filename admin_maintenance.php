@@ -26,6 +26,7 @@ $action = isset($_REQUEST['action']) ? pun_trim($_REQUEST['action']) : '';
 
 if ($action == 'rebuild')
 {
+	ob_start();
 	$per_page = isset($_GET['i_per_page']) ? intval($_GET['i_per_page']) : 0;
 	$start_at = isset($_GET['i_start_at']) ? intval($_GET['i_start_at']) : 0;
 
@@ -121,6 +122,7 @@ h1 {
 	$db->close();
 
 	ob_end_clean();
+	ob_start();
 	header('Location: admin_maintenance.php'.$query_str);
 	exit;
 }
