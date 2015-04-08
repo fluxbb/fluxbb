@@ -1622,6 +1622,7 @@ switch ($stage)
 			}
 		}
 
+		ob_start(); // Start output buffering to avoid 'cannot modify header information' error for header() redirect
 		if (!empty($_SESSION['dupe_users']))
 		{
 			$query_str = '';
@@ -1906,4 +1907,8 @@ $db->end_transaction();
 $db->close();
 
 if ($query_str != '')
-	exit('<script type="text/javascript">window.location="db_update.php'.$query_str.'&uid='.$uid.'"</script><noscript><meta http-equiv="refresh" content="0;url=db_update.php'.$query_str.'&uid='.$uid.'" /></noscript>');
+{
+	ob_end_clean();
+	header('Location: db_update.php'.$query_str.'&uid='.$uid);
+	exit;
+}
