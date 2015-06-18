@@ -37,6 +37,10 @@ switch ($db_type)
 	case 'sqlite':
 		require_once PUN_ROOT.'include/dblayer/sqlite.php';
 		break;
+		
+	case 'sqlite3':
+		require_once PUN_ROOT.'include/dblayer/sqlite3.php';
+		break;
 
 	default:
 		error('\''.$db_type.'\' is not a valid database type. Please check settings in config.php.', __FILE__, __LINE__);
