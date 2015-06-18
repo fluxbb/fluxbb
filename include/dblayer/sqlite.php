@@ -31,7 +31,7 @@ class DBLayer
 	);
 
 
-	function DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
+	function __construct($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
 	{
 		// Prepend $db_name with the path to the forum root directory
 		$db_name = PUN_ROOT.$db_name;
@@ -61,6 +61,12 @@ class DBLayer
 			error('Unable to open database \''.$db_name.'\'. SQLite reported: '.$sqlite_error, __FILE__, __LINE__);
 		else
 			return $this->link_id;
+	}
+	
+	
+	function DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
+	{
+		$this->__construct($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect);
 	}
 
 
