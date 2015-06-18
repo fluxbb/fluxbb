@@ -19,9 +19,9 @@ header('Pragma: no-cache'); // For HTTP/1.0 compatibility
 // Send the Content-type header in case the web server is setup to send something else
 header('Content-type: text/html; charset=utf-8');
 
-// Prevent site from being embedded in a frame, if that's not what we want
-if (!defined('FORUM_EMBEDDED_IFRAME'))
-	header('X-Frame-Options: deny');
+// Prevent site from being embedded in a frame
+$frame_options = defined('FORUM_FRAME_OPTIONS') ? FORUM_FRAME_OPTIONS : 'deny';
+header('X-Frame-Options: '.$frame_options);
 
 // Load the template
 if (defined('PUN_ADMIN_CONSOLE'))
