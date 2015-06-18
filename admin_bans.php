@@ -280,7 +280,7 @@ else if (isset($_POST['add_edit_ban']))
 		$ban_expire = 'NULL';
 
 	$ban_user = ($ban_user != '') ? '\''.$db->escape($ban_user).'\'' : 'NULL';
-	$ban_ip = ($ban_ip != '' && $ban_ip != '127.0.0.1' && $ban_ip != '::1') ? '\''.$db->escape($ban_ip).'\'' : 'NULL';
+	$ban_ip = ($ban_ip != '' && !in_array($ban_ip, array('127.0.0.1', '::1'), true)) ? '\''.$db->escape($ban_ip).'\'' : 'NULL';
 	$ban_email = ($ban_email != '') ? '\''.$db->escape($ban_email).'\'' : 'NULL';
 	$ban_message = ($ban_message != '') ? '\''.$db->escape($ban_message).'\'' : 'NULL';
 	
