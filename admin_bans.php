@@ -280,9 +280,13 @@ else if (isset($_POST['add_edit_ban']))
 		$ban_expire = 'NULL';
 
 	$ban_user = ($ban_user != '') ? '\''.$db->escape($ban_user).'\'' : 'NULL';
-	$ban_ip = ($ban_ip != '') ? '\''.$db->escape($ban_ip).'\'' : 'NULL';
+	$ban_ip = ($ban_ip != '' && !in_array($ban_ip, array('127.0.0.1', '::1'), true)) ? '\''.$db->escape($ban_ip).'\'' : 'NULL';
 	$ban_email = ($ban_email != '') ? '\''.$db->escape($ban_email).'\'' : 'NULL';
 	$ban_message = ($ban_message != '') ? '\''.$db->escape($ban_message).'\'' : 'NULL';
+	
+	// Don't insert an empty record
+	if ($ban_user == 'NULL' && $ban_ip == 'NULL' && $ban_email == 'NULL' && $ban_message == 'NULL')
+		redirect('admin_bans.php', $lang_admin_bans['Ban added redirect']);
 
 	if ($_POST['mode'] == 'add')
 		$db->query('INSERT INTO '.$db->prefix.'bans (username, ip, email, message, expire, ban_creator) VALUES('.$ban_user.', '.$ban_ip.', '.$ban_email.', '.$ban_message.', '.$ban_expire.', '.$pun_user['id'].')') or error('Unable to add ban', __FILE__, __LINE__, $db->error());
