@@ -99,15 +99,17 @@ $forum_actions = array();
 
 if (!$pun_user['is_guest'])
 {
+	$token_url = '&amp;csrf_token='.pun_csrf_token();
+
 	if ($pun_config['o_forum_subscriptions'] == '1')
 	{
 		if ($cur_forum['is_subscribed'])
-			$forum_actions[] = '<span>'.$lang_forum['Is subscribed'].' - </span><a href="misc.php?action=unsubscribe&amp;fid='.$id.'">'.$lang_forum['Unsubscribe'].'</a>';
+			$forum_actions[] = '<span>'.$lang_forum['Is subscribed'].' - </span><a href="misc.php?action=unsubscribe&amp;fid='.$id.$token_url.'">'.$lang_forum['Unsubscribe'].'</a>';
 		else
-			$forum_actions[] = '<a href="misc.php?action=subscribe&amp;fid='.$id.'">'.$lang_forum['Subscribe'].'</a>';
+			$forum_actions[] = '<a href="misc.php?action=subscribe&amp;fid='.$id.$token_url.'">'.$lang_forum['Subscribe'].'</a>';
 	}
 
-	$forum_actions[] = '<a href="misc.php?action=markforumread&amp;fid='.$id.'">'.$lang_common['Mark forum read'].'</a>';
+	$forum_actions[] = '<a href="misc.php?action=markforumread&amp;fid='.$id.$token_url.'">'.$lang_common['Mark forum read'].'</a>';
 }
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), pun_htmlspecialchars($cur_forum['forum_name']));
