@@ -97,11 +97,13 @@ if (isset($_POST['form_sent']) && $action == 'in')
 
 else if ($action == 'out')
 {
-	if ($pun_user['is_guest'] || !isset($_GET['id']) || $_GET['id'] != $pun_user['id'] || !isset($_GET['csrf_token']) || $_GET['csrf_token'] != pun_hash($pun_user['id'].pun_hash(get_remote_address())))
+	if ($pun_user['is_guest'] || !isset($_GET['id']) || $_GET['id'] != $pun_user['id'])
 	{
 		header('Location: index.php');
 		exit;
 	}
+
+	check_csrf($_GET['csrf_token']);
 
 	// Remove user from "users online" list
 	$db->query('DELETE FROM '.$db->prefix.'online WHERE user_id='.$pun_user['id']) or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
