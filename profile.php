@@ -753,6 +753,8 @@ else if (isset($_POST['form_sent']))
 				if (!in_array($form['language'], $languages))
 					message($lang_common['Bad request'], false, '404 Not Found');
 			}
+			else
+				$form['language'] = $pun_config['o_default_lang'];
 
 			if ($pun_user['is_admmod'])
 			{
