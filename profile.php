@@ -1536,7 +1536,7 @@ else
 		$user_avatar = generate_avatar_markup($id);
 		if ($user_avatar)
 			$avatar_field .= ' <span><a href="profile.php?action=delete_avatar&amp;id='.$id.'&amp;csrf_token='.pun_csrf_token().'">'.$lang_profile['Delete avatar'].'</a></span>';
- 		else
+		else
 			$avatar_field = '<span><a href="profile.php?action=upload_avatar&amp;id='.$id.'">'.$lang_profile['Upload avatar'].'</a></span>';
 
 		if ($user['signature'] != '')
