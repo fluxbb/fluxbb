@@ -449,6 +449,8 @@ else if ($action == 'delete_avatar')
 
 	confirm_referrer('profile.php');
 
+	check_csrf($_GET['csrf_token']);
+
 	delete_avatar($id);
 
 	redirect('profile.php?section=personality&amp;id='.$id, $lang_profile['Avatar deleted redirect']);
@@ -1533,8 +1535,8 @@ else
 
 		$user_avatar = generate_avatar_markup($id);
 		if ($user_avatar)
-			$avatar_field .= ' <span><a href="profile.php?action=delete_avatar&amp;id='.$id.'">'.$lang_profile['Delete avatar'].'</a></span>';
-		else
+			$avatar_field .= ' <span><a href="profile.php?action=delete_avatar&amp;id='.$id.'&amp;csrf_token='.pun_csrf_token().'">'.$lang_profile['Delete avatar'].'</a></span>';
+ 		else
 			$avatar_field = '<span><a href="profile.php?action=upload_avatar&amp;id='.$id.'">'.$lang_profile['Upload avatar'].'</a></span>';
 
 		if ($user['signature'] != '')
