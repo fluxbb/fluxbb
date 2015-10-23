@@ -452,7 +452,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 	// If we're on the new posts search, display a "mark all as read" link
 	if (!$pun_user['is_guest'] && $search_type[0] == 'action' && $search_type[1] == 'show_new')
-		$forum_actions[] = '<a href="misc.php?action=markread">'.$lang_common['Mark all as read'].'</a>';
+		$forum_actions[] = '<a href="misc.php?action=markread&amp;csrf_token='.pun_csrf_token().'">'.$lang_common['Mark all as read'].'</a>';
 
 	// Fetch results to display
 	if (!empty($search_ids))
