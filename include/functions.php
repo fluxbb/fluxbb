@@ -1149,9 +1149,8 @@ function pun_csrf_token()
 	global $pun_user;
 	static $token;
 
-	if (!$token) {
+	if (!isset($token))
 		$token = pun_hash($pun_user['id'].$pun_user['password'].pun_hash(get_remote_address()));
-	}
 
 	return $token;
 }
