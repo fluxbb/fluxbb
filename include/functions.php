@@ -1147,8 +1147,12 @@ function pun_hash($str)
 function pun_csrf_token()
 {
 	global $pun_user;
+	static $token;
 
-	return pun_hash($pun_user['id'].pun_hash(get_remote_address()));
+	if (!isset($token))
+		$token = pun_hash($pun_user['id'].$pun_user['password'].pun_hash(get_remote_address()));
+
+	return $token;
 }
 
 //
@@ -2018,7 +2022,7 @@ function url_valid($url)
 //
 function ucp_preg_replace($pattern, $replace, $subject, $callback = false)
 {
-	if($callback) 
+	if($callback)
 		$replaced = preg_replace_callback($pattern, create_function('$matches', 'return '.$replace.';'), $subject);
 	else
 		$replaced = preg_replace($pattern, $replace, $subject);
