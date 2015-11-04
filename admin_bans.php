@@ -76,6 +76,10 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 				$result = $db->query('SELECT registration_ip FROM '.$db->prefix.'users WHERE id='.$user_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 				$ban_ip = ($db->num_rows($result)) ? $db->result($result) : '';
 			}
+
+			// Disable localhost IP ban
+			if (in_array($ban_ip, array('', '127.0.0.1', '::1'), true))
+				$ban_ip = '';
 		}
 
 		$mode = 'add';
@@ -91,6 +95,10 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 			list($ban_user, $ban_ip, $ban_email, $ban_message, $ban_expire) = $db->fetch_row($result);
 		else
 			message($lang_common['Bad request'], false, '404 Not Found');
+
+	    // Disable localhost IP ban
+	    if (in_array($ban_ip, array('', '127.0.0.1', '::1'), true))
+	        $ban_ip = '';
 
 		$diff = ($pun_user['timezone'] + $pun_user['dst']) * 3600;
 		$ban_expire = ($ban_expire != '') ? gmdate('Y-m-d', $ban_expire + $diff) : '';
@@ -187,6 +195,10 @@ else if (isset($_POST['add_edit_ban']))
 	$ban_email = strtolower(pun_trim($_POST['ban_email']));
 	$ban_message = pun_trim($_POST['ban_message']);
 	$ban_expire = pun_trim($_POST['ban_expire']);
+
+	// Disable localhost IP ban
+	if (in_array($ban_ip, array('', '127.0.0.1', '::1'), true))
+		$ban_ip = '';
 
 	if ($ban_user == '' && $ban_ip == '' && $ban_email == '')
 		message($lang_admin_bans['Must enter message']);
