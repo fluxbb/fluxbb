@@ -78,8 +78,8 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 			}
 
 			// Disable localhost IP ban
-	        if (in_array($ban_ip, array('', '127.0.0.1', '::1'), true))
-	            $ban_ip = '';
+			if (in_array($ban_ip, array('', '127.0.0.1', '::1'), true))
+				$ban_ip = '';
 		}
 
 		$mode = 'add';
@@ -196,9 +196,9 @@ else if (isset($_POST['add_edit_ban']))
 	$ban_message = pun_trim($_POST['ban_message']);
 	$ban_expire = pun_trim($_POST['ban_expire']);
 
-    // Disable localhost IP ban
+	// Disable localhost IP ban
 	if (in_array($ban_ip, array('', '127.0.0.1', '::1'), true))
-	    $ban_ip = '';
+		$ban_ip = '';
 
 	if ($ban_user == '' && $ban_ip == '' && $ban_email == '')
 		message($lang_admin_bans['Must enter message']);
