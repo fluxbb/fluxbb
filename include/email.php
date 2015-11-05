@@ -64,6 +64,8 @@ function encode_mail_text($str)
 //
 function bbcode2email($text, $wrap_length = 72)
 {
+	global $lang_common;
+
 	static $base_url;
 
 	if (!isset($base_url))
@@ -113,7 +115,7 @@ function bbcode2email($text, $wrap_length = 72)
 			$replacement = preg_replace(
 				array('%^(?=\>)%m', '%^(?!\>)%m'),
 				array('>', '> '),
-				$matches[2]." said:\n".$matches[3]);
+				$matches[2].' '.$lang_common['wrote']."\n".$matches[3]);
 		}
 
 		// List items
@@ -250,7 +252,7 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 	// Make sure all linebreaks are LF in message (and strip out any NULL bytes)
 	$message = str_replace("\0", '', pun_linebreaks($message));
 	$message = str_replace("\n", $EOL, $message);
-	
+
 	$mailer = $smtp ? 'smtp_mail' : 'mail';
 	$mailer($to, $subject, $message, $headers);
 }
