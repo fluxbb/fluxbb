@@ -65,7 +65,6 @@ function encode_mail_text($str)
 function bbcode2email($text, $wrap_length = 72)
 {
 	global $lang_common;
-
 	static $base_url;
 
 	if (!isset($base_url))
