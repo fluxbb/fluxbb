@@ -1194,9 +1194,9 @@ function check_csrf($token)
 {
 	global $lang_common;
 
-	$is_authorized_hash = pun_hash_equals($token, pun_csrf_token());
+	$is_hash_authorized = pun_hash_equals($token, pun_csrf_token());
 
-	if (!isset($token) || !$is_authorized_hash)
+	if (!isset($token) || !$is_hash_authorized)
 		message($lang_common['Bad csrf hash'], false, '404 Not Found');
 }
 
