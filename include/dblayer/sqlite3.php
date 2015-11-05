@@ -32,7 +32,7 @@ class DBLayer
 	);
 
 
-	function DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
+	function __construct($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
 	{
 		// Prepend $db_name with the path to the forum root directory
 		$db_name = PUN_ROOT.$db_name;
@@ -50,6 +50,12 @@ class DBLayer
 		}
 
 		return $this->pdo;
+	}
+
+
+	function DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
+	{
+		$this->__construct($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect);
 	}
 
 
@@ -426,7 +432,7 @@ class DBLayer
 
 		if (!$allow_null)
 			$query .= ' NOT NULL';
-		
+
 		if ($default_value === '')
 			$default_value = '\'\'';
 
