@@ -64,6 +64,8 @@ function encode_mail_text($str)
 //
 function bbcode2email($text, $wrap_length = 72)
 {
+	global $lang_common;
+
 	static $base_url;
 
 	if (!isset($base_url))
@@ -113,7 +115,7 @@ function bbcode2email($text, $wrap_length = 72)
 			$replacement = preg_replace(
 				array('%^(?=\>)%m', '%^(?!\>)%m'),
 				array('>', '> '),
-				$matches[2]." said:\n".$matches[3]);
+				$matches[2]." ".$lang_common['wrote']."\n".$matches[3]);
 		}
 
 		// List items
