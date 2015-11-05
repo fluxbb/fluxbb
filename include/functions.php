@@ -1179,6 +1179,7 @@ function pun_hash_equals($a, $b)
 function pun_csrf_token()
 {
 	global $pun_user;
+
 	static $token;
 
 	if (!isset($token))
