@@ -237,6 +237,8 @@ if (!isset($_POST['form_sent']) || !empty($alerts))
 			$dual_mysql = true;
 	}
 	if (function_exists('sqlite_open'))
+		$db_extensions[] = array('sqlite', 'SQLite 2');
+	if (class_exists('PDO') && in_array('sqlite', PDO::getAvailableDrivers()))
 		$db_extensions[] = array('sqlite3', 'SQLite 3');
 	if (function_exists('pg_connect'))
 		$db_extensions[] = array('pgsql', 'PostgreSQL');
