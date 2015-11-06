@@ -1163,9 +1163,8 @@ function pun_hash_equals($a, $b)
 	$result = 0;
 
 	// Do not attempt to "optimize" this.
-	for ($i = 0; $i < $a_length; $i++) {
+	for ($i = 0; $i < $a_length; $i++)
 		$result |= ord($a[$i]) ^ ord($b[$i]);
-	}
 
 	return $result === 0;
 }
