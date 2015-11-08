@@ -1906,4 +1906,4 @@ $db->end_transaction();
 $db->close();
 
 if ($query_str != '')
-	exit('<script type="text/javascript">window.location="db_update.php'.$query_str.'&uid='.$uid.'"</script><noscript><meta http-equiv="refresh" content="0;url=db_update.php'.$query_str.'&uid='.$uid.'" /></noscript>');
+	exit('<meta http-equiv="refresh" content="0;url=db_update.php'.$query_str.'&uid='.$uid.'" /><hr /><p>'.sprintf($lang_update['Automatic redirect failed'], '<a href="db_update.php'.$query_str.'&uid='.$uid.'">'.$lang_update['Click here'].'</a>').'</p>');
