@@ -52,3 +52,22 @@ table#forumperms .atcl {text-align: left; width: 15em; white-space: nowrap}
 /*** Plugins ***/
 .plugin .inbox {padding-bottom: 10px}
 .plugin p {padding: 10px 10px 0}
+
+/*** Responsive ***/
+@media only screen and (max-width: 1024px) {
+    #punadmin.pun textarea {
+    	width: 98%;
+    }
+}
+
+@media only screen and (max-width: 960px) {
+#punadmin.pun input[size="50"], #punadmin.pun input[size="45"], #punadmin.pun input[size="40"], #punadmin.pun select[name*="timezone"] {
+    	width: 98%;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+#adminconsole th {
+    	width: 10em;
+    }
+}

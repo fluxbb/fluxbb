@@ -165,6 +165,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 
 .pun {
 	max-width: 1070px;
+	min-width: 320px;
 	margin: 0 auto;
 	padding: 30px 40px;
 }
@@ -1641,4 +1642,281 @@ html, body, .pun {
 
 .pun .inew .icon {
 	border-color: #ca0000 #ab0000 #bb0000 #d30000;
+}
+
+/* Responsive
+----------------------------------------------------------------*/
+
+#brdmenu-button {
+	display: none;
+	color: #ddd;
+}
+
+.pun .blockpost .postleft dd img {
+	max-width: 100%;
+	height: auto;
+}
+
+@media only screen and (max-width: 1024px) {
+	.pun {
+		padding: 10px 20px;
+	}
+}
+
+@media only screen and (max-width: 960px) {
+	.pun {
+		padding: 10px;
+	}
+}
+
+@media only screen and (max-width: 800px) {
+	.pun {
+		padding: 5px;
+	}
+
+	.pun .punwrap {
+		padding: 18px 5px;
+	}
+
+	.pun .quotebox {
+		margin: 0.5em;
+		padding: 0 0.5em;
+	}
+
+	.pun .block2col .blockform, .pun .block2col .block {
+		margin-left: 13.5em;
+	}
+
+	.pun .inform {
+		padding: 0 5px;
+	}
+
+	.pun form .buttons {
+		padding-left: 21px;
+	}
+
+	#adintro, #adstats, #adalerts {
+		padding: 5px;
+	}
+
+	#brdmenu ul li {
+		display: none;
+	}
+
+	#brdmenu li {
+		width: 50%;
+		text-align: center;
+	}
+
+	#brdmenu li:nth-child(odd) a {
+		border-right-style: none;
+	}
+
+	#brdmenu-button {
+		text-align: center;
+		display: block;
+		cursor: pointer;
+		font-weight: bold;
+		font-size: 1.5em;
+	}
+
+	#brdmenu-button:after {
+		content: attr(data-open);
+		display: block;
+		padding: 12px 16px 6px 8px;
+	}
+
+	#brdmenu #brdmenu-checkbox:checked + ul li {
+		display: block;
+	}
+
+	#brdmenu #brdmenu-checkbox:checked + ul #brdmenu-button:after {
+		content: attr(data-close);
+	}
+
+	#brdwelcome .conl + .conr {
+		float: left;
+	}
+
+	#punedit .blockform h2, #punpost .blockform h2, #postpreview h2, #posterror h2, .pun #quickpost h2, .pun #reportform h2, #pundelete .blockform h2 {
+		padding: 10px 19px 4px 24px;
+	}
+}
+
+@media only screen and (max-width: 720px) {
+	.pun {
+		padding: 0px;
+	}
+
+	.pun .blocktable .tc3 {
+		display: none;
+	}
+
+	.pun .blockmenu {
+		width: 100%;
+	}
+
+	.pun .blockmenu h2 {
+		display: none;
+	}
+
+	.pun .block2col .blockform, .pun .block2col .block {
+		margin-left: 0em;
+		width: 100%;
+		clear: both;
+	}
+
+	.pun .blockmenu ul {
+		border-width: 0;
+	}
+
+	.pun .blockmenu li {
+		border-width: 0;
+		float: left;
+	}
+
+	.pun .blockmenu a, .pun .blockmenu a:link, .pun .blockmenu a:visited {
+		padding: 7px;
+		margin: 5px 5px 0 0;
+		border-radius: 10px;
+		border: 1px solid;
+	}
+}
+
+@media only screen and (max-width: 640px) {
+	.pun .blocktable .tc2 {
+		display: none;
+	}
+
+	.pun .blocktable .tcr {
+		width: 35%;
+	}
+
+	.pun .blockpost .postbody, .pun .blockpost .postfoot {
+		margin-right: -150px;
+	}
+
+	.pun .blockpost .postleft, .pun .blockpost .postfootleft {
+		margin-left: -150px;
+		padding: 7px 4px;
+		width: 142px;
+	}
+
+	.pun .blockpost .postright {
+		padding: 4px 154px 7px 4px;
+	}
+
+	.pun .blockpost .postfootright {
+		padding: 7px 154px 7px 4px;
+	}
+
+	#punviewtopic.pun .blockpost h2, #punmoderate.pun .blockpost h2 {
+		padding: 0.538em 8px 0.538em 8px;
+	}
+
+	#punviewtopic.pun .blockpost h2 span, #punmoderate.pun .blockpost h2 span {
+		float: right;
+	}
+
+	.pun .blockpost h2 .conr {
+		padding-left: 4px;
+	}
+}
+
+@media only screen and (max-width: 540px) {
+	.pun .blockpost .postleft .postavatar {
+		display: none;
+	}
+
+	.pun .blockpost .postbody, .pun .blockpost .postfoot {
+		margin: 0px;
+	}
+
+	.pun .blockpost .postleft, .pun .blockpost .postfootleft {
+		margin: 0px;
+		padding: 7px 4px;
+		width: 100%;
+		float: none;
+	}
+
+	.pun .blockpost .postleft dd, .pun .blockpost .postleft .usertitle {
+		display: inline-block;
+		padding: 0 5px;
+		white-space: nowrap;
+	}
+
+	.pun .blockpost .postleft .usertitle {
+		border-radius: 5px;
+		border: 1px solid;
+		margin: 4px 4px 0 0;
+	}
+
+	.pun .blockpost .postright {
+		padding: 10px 4px 7px;
+	}
+
+	.pun .blockpost .postfootright {
+		padding: 7px 4px 7px;
+	}
+
+	.pun .blockpost .postfootleft {
+		position: absolute;
+	}
+
+	.pun .blockpost .postleft {
+		background-color: #ebf1f5; /* #565656; */
+	}
+
+	#punsearch .blockpost .icon {
+		left: 4px;
+	}
+
+	#punsearch .blockpost .postleft dd:last-child {
+		float: left;
+		margin-left: -9999px;
+	}
+}
+
+@media only screen and (max-width: 480px) {
+	.pun input[size="50"], .pun input[size="45"], .pun input[size="40"], .pun select[name*="timezone"] {
+		width: 100%;
+	}
+
+	.pun .required strong, #brdwelcome li span {
+		white-space: normal;
+	}
+
+	#viewprofile dt, #adstats dt {
+		width: 9em;
+	}
+
+	#viewprofile dd, #adstats dd {
+		padding: 7px 0 7px 9em;
+	}
+}
+
+@media only screen and (max-width: 400px) {
+	#brdwelcome .conr {
+		float: left;
+	}
+
+	#brdmenu li {
+		width: 100%;
+	}
+
+	#brdmenu li:nth-child(2n) a {
+		border-right-style: none;
+	}
+
+	#brdmenu label + li a {
+		border-top-style: solid;
+	}
+
+	#punpost .blockform h2, #punedit .blockform h2, .pun #quickpost h2, #pundelete .blockform h2 {
+		width: 18em;
+	}
+
+	.pun #quickpost legend, #punpost legend, #punedit legend {
+		width: 18em;
+	}
 }

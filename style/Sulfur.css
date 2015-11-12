@@ -1147,3 +1147,9 @@ body {
 .pun .inew .icon {
 	border-color: #c23000 #af2c00 #992600 #ac2b00
 	}
+
+/* Responsive
++----------------------------------------------------------------*/
+#brdmenu-button {
+	display: none;
+}
