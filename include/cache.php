@@ -239,8 +239,10 @@ function clear_feed_cache()
 	while (($entry = $d->read()) !== false)
 	{
 		if (substr($entry, 0, 10) == 'cache_feed' && substr($entry, -4) == '.php')
+		{
 			@unlink(FORUM_CACHE_DIR.$entry);
 			fluxbb_invalidate_cached_file(FORUM_CACHE_DIR.$entry);
+		}
 	}
 	$d->close();
 }
