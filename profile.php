@@ -576,6 +576,8 @@ else if ($action == 'promote')
 
 	confirm_referrer('viewtopic.php');
 
+	check_csrf($_GET['csrf_token']);
+
 	$pid = isset($_GET['pid']) ? intval($_GET['pid']) : 0;
 
 	$sql = 'SELECT g.g_promote_next_group FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'users AS u ON u.group_id=g.g_id WHERE u.id='.$id.' AND g.g_promote_next_group>0';
