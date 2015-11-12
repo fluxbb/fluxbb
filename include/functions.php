@@ -1153,7 +1153,7 @@ function pun_hash($str)
 function pun_hash_equals($a, $b)
 {
 	if (function_exists('hash_equals'))
-		return hash_equals($a, $b);
+		return hash_equals((string)$a, (string)$b);
 
 	$a_length = strlen($a);
 
