@@ -284,11 +284,11 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 }
 
 #brdwelcome .conl {
-  float: left;
+	float: left;
 }
 
 #brdwelcome .conr {
-  float: right;
+	float: right;
 }
 
 #brdwelcome li span {
@@ -628,11 +628,11 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 
 #debug .tcr {
 	width: 90%;
-	white-space: normal
+	white-space: normal;
 }
 
 #punindex .tcr .byuser {
-	display: block
+	display: block;
 }
 
 #punindex td.tc2, #punindex td.tc3, #punindex td.tcr, .pun #vf td.tc2, .pun #vf td.tc3,
@@ -717,7 +717,7 @@ MAIN POSTS
 #punsearch .blockpost h2 span span {
 	white-space: nowrap;
 	display: inline-block;
-	font: 1.077em "Trebuchet MS", Arial, Helvetica, sans-serif
+	font: 1.077em "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 
 #punsearch .blockpost .icon {
@@ -969,7 +969,7 @@ MAIN POSTS
 .pun .codebox pre.vscroll {
 	height: 32em;
 	overflow: auto;
-	overflow-y: auto
+	overflow-y: auto;
 }
 
 .pun .postmsg img, #punhelp samp img {
@@ -1598,7 +1598,7 @@ html, body, .pun {
 .pun .blockmenu .isactive a:link, .pun .blockmenu .isactive a:visited {
 	color: #333;
 	background: #f3f2ed;
-	}
+}
 
 .pun #viewprofile .box {
 	border-color: #cec7b9 #e7e2d9;
