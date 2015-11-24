@@ -675,7 +675,7 @@ if (isset($_POST['req_db_pass']))
 else if (isset($_GET['uid']))
 {
 	$uid = pun_trim($_GET['uid']);
-	if (!$lock || $lock != $uid) // The lock doesn't exist or doesn't match the given UID
+	if (!$lock || $lock !== $uid) // The lock doesn't exist or doesn't match the given UID
 		$lock_error = true;
 }
 else
