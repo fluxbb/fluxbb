@@ -9,7 +9,7 @@
 
 <div id="pun<pun_page>" class="pun">
 <div class="top-box"></div>
-<div class="punwrap">
+<div class="punwrap<pun_class>">
 
 <div id="brdheader" class="block">
 	<div class="box">
