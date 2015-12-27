@@ -46,6 +46,11 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	font-size: 1em;
 }
 
+.pun .code {
+    padding: 2px 4px;
+    font-size: 90%;
+}
+
 .pun table {
 	border-collapse: collapse;
 	border-spacing: 0;
@@ -1424,6 +1429,11 @@ html, body, .pun {
 
 .pun .postmsg .postimg a:hover img, .pun .postmsg .postimg a:active img, .pun .postmsg .postimg a:focus img {
 	border-color: #73A900;
+}
+
+.pun .code {
+    color: #257ec7;
+    background-color: #f1f5f9;
 }
 
 /* Primary Navigation
