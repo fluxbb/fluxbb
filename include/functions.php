@@ -314,37 +314,11 @@ function set_default_user()
 
 
 //
-// SHA1 HMAC with PHP 4 fallback
+// Wrapper for hash_hmac with sha1
 //
 function forum_hmac($data, $key, $raw_output = false)
 {
-	if (function_exists('hash_hmac'))
-		return hash_hmac('sha1', $data, $key, $raw_output);
-
-	// If key size more than blocksize then we hash it once
-	if (strlen($key) > 64)
-		$key = pack('H*', sha1($key)); // we have to use raw output here to match the standard
-
-	// Ensure we're padded to exactly one block boundary
-	$key = str_pad($key, 64, chr(0x00));
-
-	$hmac_opad = str_repeat(chr(0x5C), 64);
-	$hmac_ipad = str_repeat(chr(0x36), 64);
-
-	// Do inner and outer padding
-	for ($i = 0;$i < 64;$i++) {
-		$hmac_opad[$i] = $hmac_opad[$i] ^ $key[$i];
-		$hmac_ipad[$i] = $hmac_ipad[$i] ^ $key[$i];
-	}
-
-	// Finally, calculate the HMAC
-	$hash = sha1($hmac_opad.pack('H*', sha1($hmac_ipad.$data)));
-
-	// If we want raw output then we need to pack the final result
-	if ($raw_output)
-		$hash = pack('H*', $hash);
-
-	return $hash;
+	return hash_hmac('sha1', $data, $key, $raw_output);
 }
 
 
