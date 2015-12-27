@@ -244,11 +244,11 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 				array_multisort(array_values($sort_data), $sort_dir == 'DESC' ? SORT_DESC : SORT_ASC, $sort_type, $post_ids, $topic_ids);
 
-				// combine the arrays back into a key=>value array (array_combine is PHP5 only unfortunately)
+				// combine the arrays back into a key=>value array
 				$num_results = count($keyword_results);
 				$keyword_results = array();
-				for ($i = 0;$i < $num_results;$i++)
-					$keyword_results[$post_ids[$i]] = $topic_ids[$i];
+
+				$keyword_results = array_combine($post_ids, $topic_ids);
 
 				unset($sort_data, $post_ids, $topic_ids);
 			}
@@ -819,7 +819,7 @@ if ($pun_config['o_search_all_forums'] == '1' || $pun_user['is_admmod'])
 				echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
 				echo "\t\t\t\t\t\t\t".'</fieldset>'."\n";
 			}
-			
+
 			echo "\t\t\t\t\t\t\t".'<fieldset><legend><span>'.pun_htmlspecialchars($cur_forum['cat_name']).'</span></legend>'."\n";
 			echo "\t\t\t\t\t\t\t\t".'<div class="rbox">';
 			$cur_category = $cur_forum['cid'];
@@ -833,7 +833,7 @@ if ($pun_config['o_search_all_forums'] == '1' || $pun_user['is_admmod'])
 		echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
 		echo "\t\t\t\t\t\t\t".'</fieldset>'."\n";
 	}
-	
+
 	echo "\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t".'</div>'."\n";
 }
