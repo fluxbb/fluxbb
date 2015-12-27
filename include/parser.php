@@ -780,8 +780,8 @@ function do_bbcode($text, $is_signature = false)
 	$pattern[] = '%\[colou?r=([a-zA-Z]{3,20}|\#[0-9a-fA-F]{6}|\#[0-9a-fA-F]{3})](.*?)\[/colou?r\]%ms';
 	$pattern[] = '%\[h\](.*?)\[/h\]%ms';
 
-	$replace[] = '<strong>$1</strong>';
-	$replace[] = '<em>$1</em>';
+	$replace[] = '<b>$1</b>';
+	$replace[] = '<i>$1</i>';
 	$replace[] = '<span class="bbu">$1</span>';
 	$replace[] = '<span class="bbs">$1</span>';
 	$replace[] = '<del>$1</del>';
