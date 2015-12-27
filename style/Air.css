@@ -1247,14 +1247,14 @@ MAIN FORMS
 	line-height: normal;
 }
 
-#punmisc #rules .box {
+#punmisc #rules .infobox {
 	border-style: solid;
 	border-width: 1px;
 	padding: 5px 18px;
 }
 
 
-#punhelp .box {
+#punhelp .infobox {
 	border-style: solid;
 	border-width: 1px;
 	padding: 7px 12px;
@@ -1543,7 +1543,7 @@ html, body, .pun {
 	background: #ebf1f5;
 }
 
-#punmisc #rules .box, #punhelp .box {
+#punmisc #rules .infobox, #punhelp .infobox {
 	border-color: #b9c5ce #d9e1e7;
 	background: #f6f9fc;
 }

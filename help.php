@@ -6,9 +6,6 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-// Tell header.php to use the help template
-define('PUN_HELP', 1);
-
 define('PUN_ROOT', dirname(__FILE__).'/');
 require PUN_ROOT.'include/common.php';
 
@@ -27,14 +24,14 @@ require PUN_ROOT.'header.php';
 
 ?>
 <h2><span><?php echo $lang_help['BBCode'] ?></span></h2>
-<div class="box">
+<div class="box infobox">
 	<div class="inbox">
 		<p><a name="bbcode"></a><?php echo $lang_help['BBCode info 1'] ?></p>
 		<p><?php echo $lang_help['BBCode info 2'] ?></p>
 	</div>
 </div>
 <h2><span><?php echo $lang_help['Text style'] ?></span></h2>
-<div class="box">
+<div class="box infobox">
 	<div class="inbox">
 		<p><?php echo $lang_help['Text style info'] ?></p>
 		<p><code>[b]<?php echo $lang_help['Bold text'] ?>[/b]</code> <?php echo $lang_help['produces'] ?> <samp><b><?php echo $lang_help['Bold text'] ?></b></samp></p>
@@ -50,7 +47,7 @@ require PUN_ROOT.'header.php';
 	</div>
 </div>
 <h2><span><?php echo $lang_help['Links and images'] ?></span></h2>
-<div class="box">
+<div class="box infobox">
 	<div class="inbox">
 		<p><?php echo $lang_help['Links info'] ?></p>
 		<p><a name="url"></a><code>[url=<?php echo pun_htmlspecialchars(get_base_url(true).'/') ?>]<?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?>[/url]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/') ?>"><?php echo pun_htmlspecialchars($pun_config['o_board_title']) ?></a></samp></p>
@@ -66,14 +63,12 @@ require PUN_ROOT.'header.php';
 		<p><code>[forum]1[/forum]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/viewforum.php?id=1') ?>"><?php echo pun_htmlspecialchars(get_base_url(true).'/viewforum.php?id=1') ?></a></samp></p>
 		<p><code>[user=2]<?php echo $lang_help['Test user'] ?>[/user]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/profile.php?id=2') ?>"><?php echo $lang_help['Test user'] ?></a></samp></p>
 		<p><code>[user]2[/user]</code> <?php echo $lang_help['produces'] ?> <samp><a href="<?php echo pun_htmlspecialchars(get_base_url(true).'/profile.php?id=2') ?>"><?php echo pun_htmlspecialchars(get_base_url(true).'/profile.php?id=2') ?></a></samp></p>
-	</div>
-	<div class="inbox">
 		<p><a name="img"></a><?php echo $lang_help['Images info'] ?></p>
 		<p><code>[img=<?php echo $lang_help['FluxBB bbcode test'] ?>]<?php echo pun_htmlspecialchars(get_base_url(true)) ?>/img/test.png[/img]</code> <?php echo $lang_help['produces'] ?> <samp><img style="height: 21px" src="<?php echo pun_htmlspecialchars(get_base_url(true)) ?>/img/test.png" alt="<?php echo $lang_help['FluxBB bbcode test'] ?>" /></samp></p>
 	</div>
 </div>
 <h2><span><?php echo $lang_help['Quotes'] ?></span></h2>
-<div class="box">
+<div class="box infobox">
 	<div class="inbox">
 		<p><?php echo $lang_help['Quotes info'] ?></p>
 		<p><code>[quote=James]<?php echo $lang_help['Quote text'] ?>[/quote]</code></p>
@@ -91,7 +86,7 @@ require PUN_ROOT.'header.php';
 	</div>
 </div>
 <h2><span><?php echo $lang_help['Code'] ?></span></h2>
-<div class="box">
+<div class="box infobox">
 	<div class="inbox">
 		<p><?php echo $lang_help['Code info'] ?></p>
 		<p><code>[code]<?php echo $lang_help['Code text'] ?>[/code]</code></p>
@@ -102,7 +97,7 @@ require PUN_ROOT.'header.php';
 	</div>
 </div>
 <h2><span><?php echo $lang_help['Lists'] ?></span></h2>
-<div class="box">
+<div class="box infobox">
 	<div class="inbox">
 		<p><a name="lists"></a><?php echo $lang_help['List info'] ?></p>
 		<p><code>[list][*]<?php echo $lang_help['List text 1'] ?>[/*][*]<?php echo $lang_help['List text 2'] ?>[/*][*]<?php echo $lang_help['List text 3'] ?>[/*][/list]</code>
@@ -123,14 +118,14 @@ require PUN_ROOT.'header.php';
 	</div>
 </div>
 <h2><span><?php echo $lang_help['Nested tags'] ?></span></h2>
-<div class="box">
+<div class="box infobox">
 	<div class="inbox">
 		<p><?php echo $lang_help['Nested tags info'] ?></p>
 		<p><code>[b][u]<?php echo $lang_help['Bold, underlined text'] ?>[/u][/b]</code> <?php echo $lang_help['produces'] ?> <samp><strong><span class="bbu"><?php echo $lang_help['Bold, underlined text'] ?></span></strong></samp></p>
 	</div>
 </div>
 <h2><span><?php echo $lang_help['Smilies'] ?></span></h2>
-<div class="box">
+<div class="box infobox">
 	<div class="inbox">
 		<p><a name="smilies"></a><?php echo $lang_help['Smilies info'] ?></p>
 <?php

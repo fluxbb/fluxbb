@@ -26,8 +26,6 @@ header('X-Frame-Options: '.$frame_options);
 // Load the template
 if (defined('PUN_ADMIN_CONSOLE'))
 	$tpl_file = 'admin.tpl';
-else if (defined('PUN_HELP'))
-	$tpl_file = 'help.tpl';
 else
 	$tpl_file = 'main.tpl';
 
@@ -52,10 +50,10 @@ foreach ($pun_includes as $cur_include)
 	ob_start();
 
 	$file_info = pathinfo($cur_include[1]);
-	
+
 	if (!in_array($file_info['extension'], array('php', 'php4', 'php5', 'inc', 'html', 'txt'))) // Allow some extensions
 		error(sprintf($lang_common['Pun include extension'], pun_htmlspecialchars($cur_include[0]), basename($tpl_file), pun_htmlspecialchars($file_info['extension'])));
-		
+
 	if (strpos($file_info['dirname'], '..') !== false) // Don't allow directory traversal
 		error(sprintf($lang_common['Pun include directory'], pun_htmlspecialchars($cur_include[0]), basename($tpl_file)));
 
