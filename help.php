@@ -99,6 +99,7 @@ require PUN_ROOT.'header.php';
 		<div class="postmsg">
 			<div class="codebox"><pre><code><?php echo $lang_help['Code text'] ?></code></pre></div>
 		</div>
+		<p><code class="code">[c]<?php echo $lang_help['Code text'] ?>[/c]</code> <?php echo $lang_help['produces'] ?> <code class="code"><?php echo $lang_help['Code text'] ?></code></p>
 	</div>
 </div>
 <h2><span><?php echo $lang_help['Lists'] ?></span></h2>
