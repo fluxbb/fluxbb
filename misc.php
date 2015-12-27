@@ -34,7 +34,7 @@ if ($action == 'rules')
 ?>
 <div id="rules" class="block">
 	<div class="hd"><h2><span><?php echo $lang_register['Forum rules'] ?></span></h2></div>
-	<div class="box">
+	<div class="box infobox">
 		<div id="rules-block" class="inbox">
 			<div class="usercontent"><?php echo $pun_config['o_rules_message'] ?></div>
 		</div>
@@ -204,7 +204,7 @@ else if (isset($_GET['report']))
 	{
 		// Make sure they got here from the site
 		confirm_referrer('misc.php');
-		
+
 		// Clean up reason from POST
 		$reason = pun_linebreaks(pun_trim($_POST['req_reason']));
 		if ($reason == '')
