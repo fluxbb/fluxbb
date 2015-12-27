@@ -1512,10 +1512,6 @@ html, body, .pun {
 	color: #fbfaf5;
 }
 
-.pun .postmsg, #punhelp code, #punhelp samp {
-	color: #333;
-}
-
 .pun .postsignature, .pun .postmsg .postedit {
 	color: #665858;
 }
