@@ -126,7 +126,7 @@ require PUN_ROOT.'header.php';
 <div class="box">
 	<div class="inbox">
 		<p><?php echo $lang_help['Nested tags info'] ?></p>
-		<p><code>[b][u]<?php echo $lang_help['Bold, underlined text'] ?>[/u][/b]</code> <?php echo $lang_help['produces'] ?> <samp><strong><span class="bbu"><?php echo $lang_help['Bold, underlined text'] ?></span></strong></samp></p>
+		<p><code>[b][u]<?php echo $lang_help['Bold, underlined text'] ?>[/u][/b]</code> <?php echo $lang_help['produces'] ?> <samp><b><span class="bbu"><?php echo $lang_help['Bold, underlined text'] ?></span></b></samp></p>
 	</div>
 </div>
 <h2><span><?php echo $lang_help['Smilies'] ?></span></h2>
