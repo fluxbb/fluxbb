@@ -347,10 +347,7 @@ function forum_setcookie($name, $value, $expire)
 	// Enable sending of a P3P header
 	header('P3P: CP="CUR ADM"');
 
-	if (version_compare(PHP_VERSION, '5.2.0', '>='))
-		setcookie($name, $value, $expire, $cookie_path, $cookie_domain, $cookie_secure, true);
-	else
-		setcookie($name, $value, $expire, $cookie_path.'; HttpOnly', $cookie_domain, $cookie_secure);
+	setcookie($name, $value, $expire, $cookie_path, $cookie_domain, $cookie_secure, true);
 }
 
 
@@ -1324,7 +1321,7 @@ function maintenance_message()
 	$tpl_maint = file_get_contents($tpl_file);
 
 	// START SUBST - <pun_include "*">
-	preg_match_all('%<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">%i', $tpl_maint, $pun_includes, PREG_SET_ORDER);
+	preg_match_all('%<pun_include "([^/\\\\]*?)\.(php5?|inc|html?|txt)">%i', $tpl_maint, $pun_includes, PREG_SET_ORDER);
 
 	foreach ($pun_includes as $cur_include)
 	{
@@ -1449,7 +1446,7 @@ function redirect($destination_url, $message)
 	$tpl_redir = file_get_contents($tpl_file);
 
 	// START SUBST - <pun_include "*">
-	preg_match_all('%<pun_include "([^/\\\\]*?)\.(php[45]?|inc|html?|txt)">%i', $tpl_redir, $pun_includes, PREG_SET_ORDER);
+	preg_match_all('%<pun_include "([^/\\\\]*?)\.(php5?|inc|html?|txt)">%i', $tpl_redir, $pun_includes, PREG_SET_ORDER);
 
 	foreach ($pun_includes as $cur_include)
 	{
