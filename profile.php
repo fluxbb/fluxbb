@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2012 FluxBB
+ * Copyright (C) 2008-2016 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -195,7 +195,7 @@ else if ($action == 'change_email')
 	{
 		if (pun_hash($_POST['req_password']) !== $pun_user['password'])
 			message($lang_profile['Wrong pass']);
-			
+
 		// Make sure they got here from the site
 		confirm_referrer('profile.php');
 
@@ -325,7 +325,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 	{
 		if (!isset($_FILES['req_file']))
 			message($lang_profile['No file']);
-			
+
 		// Make sure they got here from the site
 		confirm_referrer('profile.php');
 

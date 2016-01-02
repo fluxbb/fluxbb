@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2012 FluxBB
+ * Copyright (C) 2008-2016 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -90,7 +90,7 @@ if (isset($_GET['tid']))
 				message($lang_common['Bad request'], false, '404 Not Found');
 
 			// Verify that the post IDs are valid
-			$admins_sql = ($pun_user['g_id'] != PUN_ADMIN) ? ' AND poster_id NOT IN('.implode(',', get_admin_ids()).')' : ''; 
+			$admins_sql = ($pun_user['g_id'] != PUN_ADMIN) ? ' AND poster_id NOT IN('.implode(',', get_admin_ids()).')' : '';
 			$result = $db->query('SELECT 1 FROM '.$db->prefix.'posts WHERE id IN('.$posts.') AND topic_id='.$tid.$admins_sql) or error('Unable to check posts', __FILE__, __LINE__, $db->error());
 
 			if ($db->num_rows($result) != substr_count($posts, ',') + 1)

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2012 FluxBB
+ * Copyright (C) 2008-2016 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -92,7 +92,7 @@ if (isset($_POST['form_sent']))
 	// Make sure base_url doesn't end with a slash
 	if (substr($form['base_url'], -1) == '/')
 		$form['base_url'] = substr($form['base_url'], 0, -1);
-		
+
 	// Convert IDN to Punycode if needed
 	if (preg_match('/[^\x00-\x7F]/', $form['base_url']))
 	{

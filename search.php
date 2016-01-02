@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2012 FluxBB
+ * Copyright (C) 2008-2016 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -819,7 +819,7 @@ if ($pun_config['o_search_all_forums'] == '1' || $pun_user['is_admmod'])
 				echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
 				echo "\t\t\t\t\t\t\t".'</fieldset>'."\n";
 			}
-			
+
 			echo "\t\t\t\t\t\t\t".'<fieldset><legend><span>'.pun_htmlspecialchars($cur_forum['cat_name']).'</span></legend>'."\n";
 			echo "\t\t\t\t\t\t\t\t".'<div class="rbox">';
 			$cur_category = $cur_forum['cid'];
@@ -833,7 +833,7 @@ if ($pun_config['o_search_all_forums'] == '1' || $pun_user['is_admmod'])
 		echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
 		echo "\t\t\t\t\t\t\t".'</fieldset>'."\n";
 	}
-	
+
 	echo "\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t".'</div>'."\n";
 }
