@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2012 FluxBB
+ * Copyright (C) 2008-2016 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -204,7 +204,7 @@ else if (isset($_GET['report']))
 	{
 		// Make sure they got here from the site
 		confirm_referrer('misc.php');
-		
+
 		// Clean up reason from POST
 		$reason = pun_linebreaks(pun_trim($_POST['req_reason']));
 		if ($reason == '')

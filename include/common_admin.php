@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2008-2012 FluxBB
+ * Copyright (C) 2008-2016 FluxBB
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
@@ -29,7 +29,7 @@ function forum_list_plugins($is_admin)
 	$plugins = array();
 
 	$d = dir(PUN_ROOT.'plugins');
-	if (!$d) return $plugins; 
+	if (!$d) return $plugins;
 
 	while (($entry = $d->read()) !== false)
 	{
