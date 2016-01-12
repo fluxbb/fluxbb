@@ -769,6 +769,14 @@ MAIN POSTS
 	left: 0;
 	overflow: hidden;
 	width: 206px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#postreview .blockpost dt, #punsearch .blockpost dt {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .pun .blockpost dt strong {
