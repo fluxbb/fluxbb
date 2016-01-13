@@ -771,6 +771,12 @@ MAIN POSTS
 	width: 206px;
 }
 
+.pun .blockpost dt {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
 .pun .blockpost dt strong {
 	font-size: 1.231em;
 	font-weight: bold;
