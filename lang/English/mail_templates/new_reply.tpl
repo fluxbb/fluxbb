@@ -4,7 +4,7 @@ Subject: Reply to topic: '<topic_subject>'
 
 The post is located at <post_url>
 
-You can unsubscribe by going to <unsubscribe_url>
+You can unsubscribe by going to <unsubscribe_url> and clicking the Unsubscribe link at the bottom of the page.
 
 --
 <board_mailer> Mailer
