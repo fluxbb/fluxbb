@@ -576,9 +576,9 @@ else
 	// Check if InnoDB is available
 	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
 	{
-		$result = $db->query('SHOW VARIABLES LIKE \'have_innodb\'');
-		list (, $result) = $db->fetch_row($result);
-		if ((strtoupper($result) != 'YES'))
+		$result = $db->query('SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE=\'InnoDB\'');
+		$result = $db->result($result);
+		if (!in_array($result, array('YES', 'DEFAULT')))
 			error($lang_install['InnoDB off']);
 	}
 
