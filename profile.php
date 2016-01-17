@@ -904,11 +904,6 @@ else if (isset($_POST['form_sent']))
 			$form = array(
 				'disp_topics'		=> pun_trim($_POST['form']['disp_topics']),
 				'disp_posts'		=> pun_trim($_POST['form']['disp_posts']),
-				'show_smilies'		=> isset($_POST['form']['show_smilies']) ? '1' : '0',
-				'show_img'			=> isset($_POST['form']['show_img']) ? '1' : '0',
-				'show_img_sig'		=> isset($_POST['form']['show_img_sig']) ? '1' : '0',
-				'show_avatars'		=> isset($_POST['form']['show_avatars']) ? '1' : '0',
-				'show_sig'			=> isset($_POST['form']['show_sig']) ? '1' : '0',
 			);
 
 			if ($form['disp_topics'] != '')
@@ -928,6 +923,21 @@ else if (isset($_POST['form_sent']))
 				else if ($form['disp_posts'] > 75)
 					$form['disp_posts'] = 75;
 			}
+
+			if ($pun_config['o_smilies'] == '1' || $pun_config['o_smilies_sig'] == '1')
+				$form['show_smilies'] = isset($_POST['form']['show_smilies']) ? '1' : '0';
+
+			if ($pun_config['p_message_bbcode'] == '1' && $pun_config['p_message_img_tag'] == '1')
+				$form['show_img'] = isset($_POST['form']['show_img']) ? '1' : '0';
+
+			if ($pun_config['o_signatures'] == '1' && $pun_config['p_sig_bbcode'] == '1' && $pun_config['p_sig_img_tag'] == '1')
+				$form['show_img_sig'] = isset($_POST['form']['show_img_sig']) ? '1' : '0';
+
+			if ($pun_config['o_avatars'] == '1')
+				$form['show_avatars'] = isset($_POST['form']['show_avatars']) ? '1' : '0';
+
+			if ($pun_config['o_signatures'] == '1')
+				$form['show_sig'] = isset($_POST['form']['show_sig']) ? '1' : '0';
 
 			// Make sure we got a valid style string
 			if (isset($_POST['form']['style']))
