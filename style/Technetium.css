@@ -1371,3 +1371,9 @@ body {
 .pun .imoved .icon {
 	background-image:url(Technetium/icon-moved.png);
 }
+
+/* Responsive
++----------------------------------------------------------------*/
+#brdmenu-button {
+	display: none;
+}
