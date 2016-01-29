@@ -456,9 +456,9 @@ class DBLayer
 
 		if (!$allow_null)
 			$query .= ' NOT NULL';
-		
-		if ($default_value === '')
-			$default_value = '\'\'';
+
+		if (is_string($default_value))
+			$default_value = '\''.$this->escape($default_value).'\'';
 
 		if (!is_null($default_value))
 			$query .= ' DEFAULT '.$default_value;
