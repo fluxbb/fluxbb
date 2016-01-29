@@ -46,6 +46,10 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	font-size: 1em;
 }
 
+.pun .code {
+    padding: 2px 4px;
+}
+
 .pun table {
 	border-collapse: collapse;
 	border-spacing: 0;
@@ -1426,6 +1430,11 @@ html, body, .pun {
 	border-color: #73A900;
 }
 
+.pun .code {
+    color: #257ec7;
+    background-color: #f1f5f9;
+}
+
 /* Primary Navigation
 ----------------------------------------------------------------*/
 
@@ -1501,10 +1510,6 @@ html, body, .pun {
 
 .pun .blockpost .postfootright li {
 	color: #fcfcf4;
-}
-
-.pun .postmsg, #punhelp code, #punhelp samp {
-	color: #333;
 }
 
 .pun .postsignature, .pun .postmsg .postedit {
