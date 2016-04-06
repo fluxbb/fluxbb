@@ -858,12 +858,12 @@ function get_title($user)
 			$ban_list[] = utf8_strtolower($cur_ban['username']);
 	}
 
-	// If the user has a custom title
-	if ($user['title'] != '')
-		$user_title = pun_htmlspecialchars($user['title']);
 	// If the user is banned
-	else if (in_array(utf8_strtolower($user['username']), $ban_list))
+	if (in_array(utf8_strtolower($user['username']), $ban_list))
 		$user_title = $lang_common['Banned'];
+	// If the user has a custom title
+	else if ($user['title'] != '')
+		$user_title = pun_htmlspecialchars($user['title']);
 	// If the user group has a default user title
 	else if ($user['g_user_title'] != '')
 		$user_title = pun_htmlspecialchars($user['g_user_title']);
