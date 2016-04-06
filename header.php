@@ -23,7 +23,7 @@ header('Content-type: text/html; charset=utf-8');
 // to a valid X-Frame-Options header value or false
 if (defined('FORUM_FRAME_OPTIONS'))
 {
-	if (preg_match('%^(?:allow-from|deny|sameorigin)%i', FORUM_FRAME_OPTIONS))
+	if (preg_match('/^(?:allow-from|deny|sameorigin)/i', FORUM_FRAME_OPTIONS))
 		header('X-Frame-Options: '.FORUM_FRAME_OPTIONS);
 }
 else
