@@ -33,7 +33,7 @@ if (!file_exists(PUN_ROOT.'plugins/'.$plugin))
 
 // Construct REQUEST_URI if it isn't set
 if (!isset($_SERVER['REQUEST_URI']))
-	$_SERVER['REQUEST_URI'] = (isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '').'?'.(isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '');
+	$_SERVER['REQUEST_URI'] = (isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '').'?'.(isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '');
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], str_replace('_', ' ', substr($plugin, strpos($plugin, '_') + 1, -4)));
 define('PUN_ACTIVE_PAGE', 'admin');
