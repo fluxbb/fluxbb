@@ -173,8 +173,7 @@ if (isset($focus_element))
 
 
 // START SUBST - <pun_page>
-$script_name = preg_replace('/(\?.*)?$/', '', $_SERVER['REQUEST_URI']);
-$tpl_main = str_replace('<pun_page>', htmlspecialchars(basename($script_name, '.php')), $tpl_main);
+$tpl_main = str_replace('<pun_page>', htmlspecialchars(basename($_SERVER['SCRIPT_NAME'], '.php')), $tpl_main);
 // END SUBST - <pun_page>
 
 
