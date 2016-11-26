@@ -75,6 +75,8 @@ if (isset($_POST['form_sent']))
 			$errors[] = $lang_post['Too long subject'];
 		else if ($pun_config['p_subject_all_caps'] == '0' && is_all_uppercase($subject) && !$pun_user['is_admmod'])
 			$errors[] = $lang_post['All caps subject'];
+		else if ($pun_user['g_post_links'] != '1' && preg_match('%(?:h\s*t|f)\s*t\s*p\s*(?:s\s*)?:\s*/\s*/%', $subject))
+			$errors[] = $lang_common['BBCode error tag url not allowed'];
 	}
 
 	// Clean up message from POST
