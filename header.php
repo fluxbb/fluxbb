@@ -58,10 +58,10 @@ foreach ($pun_includes as $cur_include)
 	ob_start();
 
 	$file_info = pathinfo($cur_include[1]);
-	
+
 	if (!in_array($file_info['extension'], array('php', 'php4', 'php5', 'inc', 'html', 'txt'))) // Allow some extensions
 		error(sprintf($lang_common['Pun include extension'], pun_htmlspecialchars($cur_include[0]), basename($tpl_file), pun_htmlspecialchars($file_info['extension'])));
-		
+
 	if (strpos($file_info['dirname'], '..') !== false) // Don't allow directory traversal
 		error(sprintf($lang_common['Pun include directory'], pun_htmlspecialchars($cur_include[0]), basename($tpl_file)));
 
@@ -175,6 +175,11 @@ if (isset($focus_element))
 // START SUBST - <pun_page>
 $tpl_main = str_replace('<pun_page>', htmlspecialchars(basename($_SERVER['SCRIPT_NAME'], '.php')), $tpl_main);
 // END SUBST - <pun_page>
+
+
+// START SUBST - <pun_class>
+$tpl_main = str_replace('<pun_class>', (isset($css_class) ? ' '.$css_class : ''), $tpl_main);
+// END SUBST - <pun_class>
 
 
 // START SUBST - <pun_title>
