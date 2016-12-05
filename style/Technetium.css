@@ -103,6 +103,10 @@ body {
 	font-size: 1em;
 }
 
+.pun .code {
+    padding: 2px 4px;
+}
+
 .pun strong {
 	font-weight: bold;
 }
@@ -1197,6 +1201,11 @@ body {
 .pun .checklist {
 	background: white;
 	border-color: #A2B5CC;
+}
+
+.pun .code {
+    color: #257ec7;
+    background-color: #f1f5f9;
 }
 
 /* Posts
