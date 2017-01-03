@@ -104,11 +104,11 @@ if (isset($_POST['form_sent']))
 
 	$languages = forum_list_langs();
 	if (!in_array($form['default_lang'], $languages))
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$styles = forum_list_styles();
 	if (!in_array($form['default_style'], $styles))
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	if ($form['time_format'] == '')
 		$form['time_format'] = 'H:i:s';
@@ -183,16 +183,16 @@ if (isset($_POST['form_sent']))
 		$form['disp_posts_default'] = 75;
 
 	if ($form['feed_type'] < 0 || $form['feed_type'] > 2)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	if ($form['feed_ttl'] < 0)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	if ($form['report_method'] < 0 || $form['report_method'] > 2)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	if ($form['default_email_setting'] < 0 || $form['default_email_setting'] > 2)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	if ($form['timeout_online'] >= $form['timeout_visit'])
 		message($lang_admin_options['Timeout error message']);
@@ -238,7 +238,7 @@ generate_admin_menu('options');
 					<fieldset>
 						<legend><?php echo $lang_admin_options['Essentials subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Board title label'] ?></th>
 									<td>
@@ -249,7 +249,7 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Board desc label'] ?></th>
 									<td>
-										<input type="text" name="form[board_desc]" size="50" maxlength="255" value="<?php echo pun_htmlspecialchars($pun_config['o_board_desc']) ?>" />
+										<textarea name="form[board_desc]" cols="60" rows="3"><?php echo pun_htmlspecialchars($pun_config['o_board_desc']) ?></textarea>
 										<span><?php echo $lang_admin_options['Board desc help'] ?></span>
 									</td>
 								</tr>
@@ -372,7 +372,7 @@ generate_admin_menu('options');
 					<fieldset>
 						<legend><?php echo $lang_admin_options['Timeouts subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Time format label'] ?></th>
 									<td>
@@ -416,7 +416,7 @@ generate_admin_menu('options');
 					<fieldset>
 						<legend><?php echo $lang_admin_options['Display subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Version number label'] ?></th>
 									<td>
@@ -508,7 +508,7 @@ generate_admin_menu('options');
 					<fieldset>
 						<legend><?php echo $lang_admin_options['Features subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Quick post label'] ?></th>
 									<td>
@@ -596,7 +596,7 @@ generate_admin_menu('options');
 					<fieldset>
 						<legend><?php echo $lang_admin_options['Feed subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Default feed label'] ?></th>
 									<td>
@@ -631,7 +631,7 @@ generate_admin_menu('options');
 					<fieldset>
 						<legend><?php echo $lang_admin_options['Reports subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Reporting method label'] ?></th>
 									<td>
@@ -656,7 +656,7 @@ generate_admin_menu('options');
 					<fieldset>
 						<legend><?php echo $lang_admin_options['Avatars subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Use avatars label'] ?></th>
 									<td>
@@ -701,18 +701,18 @@ generate_admin_menu('options');
 					<fieldset>
 						<legend><?php echo $lang_admin_options['E-mail subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Admin e-mail label'] ?></th>
 									<td>
-										<input type="text" name="form[admin_email]" size="50" maxlength="80" value="<?php echo $pun_config['o_admin_email'] ?>" />
+										<input type="text" name="form[admin_email]" size="50" maxlength="80" value="<?php echo pun_htmlspecialchars($pun_config['o_admin_email']) ?>" />
 										<span><?php echo $lang_admin_options['Admin e-mail help'] ?></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Webmaster e-mail label'] ?></th>
 									<td>
-										<input type="text" name="form[webmaster_email]" size="50" maxlength="80" value="<?php echo $pun_config['o_webmaster_email'] ?>" />
+										<input type="text" name="form[webmaster_email]" size="50" maxlength="80" value="<?php echo pun_htmlspecialchars($pun_config['o_webmaster_email']) ?>" />
 										<span><?php echo $lang_admin_options['Webmaster e-mail help'] ?></span>
 									</td>
 								</tr>
@@ -772,7 +772,7 @@ generate_admin_menu('options');
 					<fieldset>
 						<legend><?php echo $lang_admin_options['Registration subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Allow new label'] ?></th>
 									<td>
@@ -829,7 +829,7 @@ generate_admin_menu('options');
 					<fieldset>
 						<legend><?php echo $lang_admin_options['Announcement subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Display announcement label'] ?></th>
 									<td>
@@ -853,7 +853,7 @@ generate_admin_menu('options');
 					<fieldset>
 						<legend><?php echo $lang_admin_options['Maintenance subhead'] ?></legend>
 						<div class="infldset">
-							<table class="aligntop" cellspacing="0">
+							<table class="aligntop">
 								<tr>
 									<th scope="row"><a name="maintenance"></a><?php echo $lang_admin_options['Maintenance mode label'] ?></th>
 									<td>

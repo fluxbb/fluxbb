@@ -108,7 +108,7 @@ function generate_quickjump_cache($group_id = false)
 					$output .= "\t\t\t\t\t\t\t".'<option value="'.$cur_forum['fid'].'"<?php echo ($forum_id == '.$cur_forum['fid'].') ? \' selected="selected"\' : \'\' ?>>'.pun_htmlspecialchars($cur_forum['forum_name']).$redirect_tag.'</option>'."\n";
 				}
 
-				$output .= "\t\t\t\t\t\t".'</optgroup>'."\n\t\t\t\t\t".'</select>'."\n\t\t\t\t\t".'<input type="submit" value="<?php echo $lang_common[\'Go\'] ?>" accesskey="g" />'."\n\t\t\t\t\t".'</label></div>'."\n\t\t\t\t".'</form>'."\n";
+				$output .= "\t\t\t\t\t\t".'</optgroup>'."\n\t\t\t\t\t".'</select></label>'."\n\t\t\t\t\t".'<input type="submit" value="<?php echo $lang_common[\'Go\'] ?>" accesskey="g" />'."\n\t\t\t\t\t".'</div>'."\n\t\t\t\t".'</form>'."\n";
 			}
 		}
 
@@ -226,8 +226,7 @@ function fluxbb_write_cache_file($file, $content)
 	flock($fh, LOCK_UN);
 	fclose($fh);
 
-	if (function_exists('apc_delete_file'))
-		@apc_delete_file(FORUM_CACHE_DIR.$file);
+	fluxbb_invalidate_cached_file(FORUM_CACHE_DIR.$file);
 }
 
 
@@ -240,9 +239,24 @@ function clear_feed_cache()
 	while (($entry = $d->read()) !== false)
 	{
 		if (substr($entry, 0, 10) == 'cache_feed' && substr($entry, -4) == '.php')
+		{
 			@unlink(FORUM_CACHE_DIR.$entry);
+			fluxbb_invalidate_cached_file(FORUM_CACHE_DIR.$entry);
+		}
 	}
 	$d->close();
+}
+
+
+//
+// Invalidate updated php files that are cached by an opcache
+//
+function fluxbb_invalidate_cached_file($file)
+{
+	if (function_exists('opcache_invalidate'))
+		opcache_invalidate($file, true);
+	elseif (function_exists('apc_delete_file'))
+		@apc_delete_file($file);
 }
 
 

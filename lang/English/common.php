@@ -16,6 +16,7 @@ $lang_common = array(
 'No view'							=>	'You do not have permission to view these forums.',
 'No permission'						=>	'You do not have permission to access this page.',
 'Bad referrer'						=>	'Bad HTTP_REFERER. You were referred to this page from an unauthorized source. If the problem persists please make sure that \'Base URL\' is correctly set in Admin/Options and that you are visiting the forum by navigating to that URL. More information regarding the referrer check can be found in the FluxBB documentation.',
+'Bad csrf hash'						=>	'Bad CSRF hash. You were referred to this page from an unauthorized source.',
 'No cookie'							=>	'You appear to have logged in successfully, however a cookie has not been set. Please check your settings and if applicable, enable cookies for this website.',
 'Pun include extension'  			=>	'Unable to process user include %s from template %s. "%s" files are not allowed',
 'Pun include directory'				=>	'Unable to process user include %s from template %s. Directory traversal is not allowed',
@@ -90,7 +91,6 @@ $lang_common = array(
 'BBCode error empty attribute'		=>	'[%s] tag had an empty attribute section',
 'BBCode error tag not allowed'		=>	'You are not allowed to use [%s] tags',
 'BBCode error tag url not allowed'	=>	'You are not allowed to post links',
-'BBCode code problem'				=>	'There is a problem with your [code] tags',
 'BBCode list size error'			=>	'Your list was too long to parse, please make it smaller!',
 
 // Stuff for the navigator (top of every page)
@@ -124,6 +124,7 @@ $lang_common = array(
 'Jump to'							=>	'Jump to',
 'Go'								=>	' Go ', // Submit button in forum jump
 'Moderate topic'					=>	'Moderate topic',
+'All'					=>	'All',
 'Move topic'						=>	'Move topic',
 'Open topic'						=>	'Open topic',
 'Close topic'						=>	'Close topic',

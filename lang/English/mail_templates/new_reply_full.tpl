@@ -11,7 +11,7 @@ The message reads as follows:
 
 -----------------------------------------------------------------------
 
-You can unsubscribe by going to <unsubscribe_url>
+You can unsubscribe by going to <unsubscribe_url> and clicking the Unsubscribe link at the bottom of the page.
 
 --
 <board_mailer> Mailer

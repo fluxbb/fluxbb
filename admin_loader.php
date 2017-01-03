@@ -20,7 +20,7 @@ if (!$pun_user['is_admmod'])
 // The plugin to load should be supplied via GET
 $plugin = isset($_GET['plugin']) ? $_GET['plugin'] : '';
 if (!preg_match('%^AM?P_(\w*?)\.php$%i', $plugin))
-	message($lang_common['Bad request']);
+	message($lang_common['Bad request'], false, '404 Not Found');
 
 // AP_ == Admins only, AMP_ == admins and moderators
 $prefix = substr($plugin, 0, strpos($plugin, '_'));
@@ -35,7 +35,7 @@ if (!file_exists(PUN_ROOT.'plugins/'.$plugin))
 if (!isset($_SERVER['REQUEST_URI']))
 	$_SERVER['REQUEST_URI'] = (isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '').'?'.(isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '');
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Admin'], str_replace('_', ' ', substr($plugin, strpos($plugin, '_') + 1, -4)));
+$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], str_replace('_', ' ', substr($plugin, strpos($plugin, '_') + 1, -4)));
 define('PUN_ACTIVE_PAGE', 'admin');
 require PUN_ROOT.'header.php';
 

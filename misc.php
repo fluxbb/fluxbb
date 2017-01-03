@@ -22,7 +22,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : null;
 if ($action == 'rules')
 {
 	if ($pun_config['o_rules'] == '0' || ($pun_user['is_guest'] && $pun_user['g_read_board'] == '0' && $pun_config['o_regs_allow'] == '0'))
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	// Load the register.php language file
 	require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
@@ -51,6 +51,8 @@ else if ($action == 'markread')
 	if ($pun_user['is_guest'])
 		message($lang_common['No permission'], false, '403 Forbidden');
 
+	check_csrf($_GET['csrf_token']);
+
 	$db->query('UPDATE '.$db->prefix.'users SET last_visit='.$pun_user['logged'].' WHERE id='.$pun_user['id']) or error('Unable to update user last visit data', __FILE__, __LINE__, $db->error());
 
 	// Reset tracked topics
@@ -66,9 +68,11 @@ else if ($action == 'markforumread')
 	if ($pun_user['is_guest'])
 		message($lang_common['No permission'], false, '403 Forbidden');
 
+	check_csrf($_GET['csrf_token']);
+
 	$fid = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 	if ($fid < 1)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$tracked_topics = get_tracked_topics();
 	$tracked_topics['forums'][$fid] = time();
@@ -85,11 +89,11 @@ else if (isset($_GET['email']))
 
 	$recipient_id = intval($_GET['email']);
 	if ($recipient_id < 2)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$result = $db->query('SELECT username, email, email_setting FROM '.$db->prefix.'users WHERE id='.$recipient_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 	if (!$db->num_rows($result))
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	list($recipient, $recipient_email, $email_setting) = $db->fetch_row($result);
 
@@ -109,7 +113,8 @@ else if (isset($_GET['email']))
 			message($lang_misc['No email subject']);
 		else if ($message == '')
 			message($lang_misc['No email message']);
-		else if (pun_strlen($message) > PUN_MAX_POSTSIZE)
+		// Here we use strlen() not pun_strlen() as we want to limit the post to PUN_MAX_POSTSIZE bytes, not characters
+		else if (strlen($message) > PUN_MAX_POSTSIZE)
 			message($lang_misc['Too long email message']);
 
 		if ($pun_user['last_email_sent'] != '' && (time() - $pun_user['last_email_sent']) < $pun_user['g_email_flood'] && (time() - $pun_user['last_email_sent']) >= 0)
@@ -135,37 +140,19 @@ else if (isset($_GET['email']))
 
 		$db->query('UPDATE '.$db->prefix.'users SET last_email_sent='.time().' WHERE id='.$pun_user['id']) or error('Unable to update user', __FILE__, __LINE__, $db->error());
 
-		redirect(pun_htmlspecialchars($_POST['redirect_url']), $lang_misc['Email sent redirect']);
+		// Try to determine if the data in redirect_url is valid (if not, we redirect to index.php after the email is sent)
+		$redirect_url = validate_redirect($_POST['redirect_url'], 'index.php');
+
+		redirect(pun_htmlspecialchars($redirect_url), $lang_misc['Email sent redirect']);
 	}
 
 
 	// Try to determine if the data in HTTP_REFERER is valid (if not, we redirect to the user's profile after the email is sent)
 	if (!empty($_SERVER['HTTP_REFERER']))
-	{
-		$referrer = parse_url($_SERVER['HTTP_REFERER']);
-		// Remove www subdomain if it exists
-		if (strpos($referrer['host'], 'www.') === 0)
-			$referrer['host'] = substr($referrer['host'], 4);
-
-		// Make sure the path component exists
-		if (!isset($referrer['path']))
-			$referrer['path'] = '';
-
-		$valid = parse_url(get_base_url());
-		// Remove www subdomain if it exists
-		if (strpos($valid['host'], 'www.') === 0)
-			$valid['host'] = substr($valid['host'], 4);
-
-		// Make sure the path component exists
-		if (!isset($valid['path']))
-			$valid['path'] = '';
-
-		if ($referrer['host'] == $valid['host'] && preg_match('%^'.preg_quote($valid['path'], '%').'/(.*?)\.php%i', $referrer['path']))
-			$redirect_url = $_SERVER['HTTP_REFERER'];
-	}
+		$redirect_url = validate_redirect($_SERVER['HTTP_REFERER'], null);
 
 	if (!isset($redirect_url))
-		$redirect_url = 'profile.php?id='.$recipient_id;
+		$redirect_url = get_base_url(true).'/profile.php?id='.$recipient_id;
 	else if (preg_match('%viewtopic\.php\?pid=(\d+)$%', $redirect_url, $matches))
 		$redirect_url .= '#p'.$matches[1];
 
@@ -207,14 +194,17 @@ else if (isset($_GET['email']))
 else if (isset($_GET['report']))
 {
 	if ($pun_user['is_guest'])
-		message($lang_common['No permission']);
+		message($lang_common['No permission'], false, '403 Forbidden');
 
 	$post_id = intval($_GET['report']);
 	if ($post_id < 1)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	if (isset($_POST['form_sent']))
 	{
+		// Make sure they got here from the site
+		confirm_referrer('misc.php');
+		
 		// Clean up reason from POST
 		$reason = pun_linebreaks(pun_trim($_POST['req_reason']));
 		if ($reason == '')
@@ -228,14 +218,14 @@ else if (isset($_GET['report']))
 		// Get the topic ID
 		$result = $db->query('SELECT topic_id FROM '.$db->prefix.'posts WHERE id='.$post_id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 
 		$topic_id = $db->result($result);
 
 		// Get the subject and forum ID
 		$result = $db->query('SELECT subject, forum_id FROM '.$db->prefix.'topics WHERE id='.$topic_id) or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 
 		list($subject, $forum_id) = $db->fetch_row($result);
 
@@ -278,7 +268,7 @@ else if (isset($_GET['report']))
 	// Fetch some info about the post, the topic and the forum
 	$result = $db->query('SELECT f.id AS fid, f.forum_name, t.id AS tid, t.subject FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.id='.$post_id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 	if (!$db->num_rows($result))
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$cur_post = $db->fetch_assoc($result);
 
@@ -329,22 +319,24 @@ else if (isset($_GET['report']))
 else if ($action == 'subscribe')
 {
 	if ($pun_user['is_guest'])
-		message($lang_common['No permission']);
+		message($lang_common['No permission'], false, '403 Forbidden');
+
+	check_csrf($_GET['csrf_token']);
 
 	$topic_id = isset($_GET['tid']) ? intval($_GET['tid']) : 0;
 	$forum_id = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 	if ($topic_id < 1 && $forum_id < 1)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	if ($topic_id)
 	{
 		if ($pun_config['o_topic_subscriptions'] != '1')
-			message($lang_common['No permission']);
+			message($lang_common['No permission'], false, '403 Forbidden');
 
 		// Make sure the user can view the topic
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.id='.$topic_id.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topic_subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$topic_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result))
@@ -358,12 +350,12 @@ else if ($action == 'subscribe')
 	if ($forum_id)
 	{
 		if ($pun_config['o_forum_subscriptions'] != '1')
-			message($lang_common['No permission']);
+			message($lang_common['No permission'], false, '403 Forbidden');
 
 		// Make sure the user can view the forum
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$forum_id) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
-			message($lang_common['Bad request']);
+			message($lang_common['Bad request'], false, '404 Not Found');
 
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forum_subscriptions WHERE user_id='.$pun_user['id'].' AND forum_id='.$forum_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if ($db->num_rows($result))
@@ -379,17 +371,19 @@ else if ($action == 'subscribe')
 else if ($action == 'unsubscribe')
 {
 	if ($pun_user['is_guest'])
-		message($lang_common['No permission']);
+		message($lang_common['No permission'], false, '403 Forbidden');
+
+	check_csrf($_GET['csrf_token']);
 
 	$topic_id = isset($_GET['tid']) ? intval($_GET['tid']) : 0;
 	$forum_id = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 	if ($topic_id < 1 && $forum_id < 1)
-		message($lang_common['Bad request']);
+		message($lang_common['Bad request'], false, '404 Not Found');
 
 	if ($topic_id)
 	{
 		if ($pun_config['o_topic_subscriptions'] != '1')
-			message($lang_common['No permission']);
+			message($lang_common['No permission'], false, '403 Forbidden');
 
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topic_subscriptions WHERE user_id='.$pun_user['id'].' AND topic_id='.$topic_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
@@ -403,7 +397,7 @@ else if ($action == 'unsubscribe')
 	if ($forum_id)
 	{
 		if ($pun_config['o_forum_subscriptions'] != '1')
-			message($lang_common['No permission']);
+			message($lang_common['No permission'], false, '403 Forbidden');
 
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forum_subscriptions WHERE user_id='.$pun_user['id'].' AND forum_id='.$forum_id) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
@@ -417,4 +411,4 @@ else if ($action == 'unsubscribe')
 
 
 else
-	message($lang_common['Bad request']);
+	message($lang_common['Bad request'], false, '404 Not Found');

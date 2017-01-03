@@ -10,6 +10,10 @@
 if (!defined('PUN'))
 	exit;
 
+// Define line breaks in mail headers; possible values can be PHP_EOL, "\r\n", "\n" or "\r"
+if (!defined('FORUM_EOL'))
+	define('FORUM_EOL', PHP_EOL);
+
 require PUN_ROOT.'include/utf8/utils/ascii.php';
 
 //
@@ -213,6 +217,10 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 {
 	global $pun_config, $lang_common;
 
+	// Use \r\n for SMTP servers, the system's line ending for local mailers
+	$smtp = $pun_config['o_smtp_host'] != '';
+	$EOL = $smtp ? "\r\n" : FORUM_EOL;
+
 	// Default sender/return address
 	$from_name = sprintf($lang_common['Mailer'], $pun_config['o_board_title']);
 	$from_email = $pun_config['o_webmaster_email'];
@@ -229,32 +237,22 @@ function pun_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name 
 	$from = '"'.encode_mail_text($from_name).'" <'.$from_email.'>';
 	$subject = encode_mail_text($subject);
 
-	$headers = 'From: '.$from."\r\n".'Date: '.gmdate('r')."\r\n".'MIME-Version: 1.0'."\r\n".'Content-transfer-encoding: 8bit'."\r\n".'Content-type: text/plain; charset=utf-8'."\r\n".'X-Mailer: FluxBB Mailer';
+	$headers = 'From: '.$from.$EOL.'Date: '.gmdate('r').$EOL.'MIME-Version: 1.0'.$EOL.'Content-transfer-encoding: 8bit'.$EOL.'Content-type: text/plain; charset=utf-8'.$EOL.'X-Mailer: FluxBB Mailer';
 
 	// If we specified a reply-to email, we deal with it here
 	if (!empty($reply_to_email))
 	{
 		$reply_to = '"'.encode_mail_text($reply_to_name).'" <'.$reply_to_email.'>';
 
-		$headers .= "\r\n".'Reply-To: '.$reply_to;
+		$headers .= $EOL.'Reply-To: '.$reply_to;
 	}
 
 	// Make sure all linebreaks are LF in message (and strip out any NULL bytes)
 	$message = str_replace("\0", '', pun_linebreaks($message));
-
-	if ($pun_config['o_smtp_host'] != '')
-	{
-		// Headers should be \r\n
-		// Message should be ??
-		$message = str_replace("\n", "\r\n", $message);
-		smtp_mail($to, $subject, $message, $headers);
-	}
-	else
-	{
-		// Headers should be \r\n
-		// Message should be \n
-		mail($to, $subject, $message, $headers);
-	}
+	$message = str_replace("\n", $EOL, $message);
+	
+	$mailer = $smtp ? 'smtp_mail' : 'mail';
+	$mailer($to, $subject, $message, $headers);
 }
 
 
@@ -283,6 +281,7 @@ function server_parse($socket, $expected_response)
 function smtp_mail($to, $subject, $message, $headers = '')
 {
 	global $pun_config;
+	static $local_host;
 
 	$recipients = explode(',', $to);
 
@@ -307,7 +306,7 @@ function smtp_mail($to, $subject, $message, $headers = '')
 
 	server_parse($socket, '220');
 
-	if ($pun_config['o_smtp_user'] != '' && $pun_config['o_smtp_pass'] != '')
+	if (!isset($local_host))
 	{
 		// Here we try to determine the *real* hostname (reverse DNS entry preferably)
 		$local_host = php_uname('n');
@@ -317,11 +316,12 @@ function smtp_mail($to, $subject, $message, $headers = '')
 		{
 			// Able to resolve IP back to name
 			if (($local_name = @gethostbyaddr($local_addr)) !== $local_addr)
-			{
 				$local_host = $local_name;
-			}
 		}
+	}
 
+	if ($pun_config['o_smtp_user'] != '' && $pun_config['o_smtp_pass'] != '')
+	{
 		fwrite($socket, 'EHLO '.$local_host."\r\n");
 		server_parse($socket, '250');
 
@@ -336,7 +336,7 @@ function smtp_mail($to, $subject, $message, $headers = '')
 	}
 	else
 	{
-		fwrite($socket, 'HELO '.$smtp_host."\r\n");
+		fwrite($socket, 'HELO '.$local_host."\r\n");
 		server_parse($socket, '250');
 	}
 

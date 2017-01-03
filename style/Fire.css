@@ -164,6 +164,8 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 ----------------------------------------------------------------*/
 
 .pun {
+	max-width: 1070px;
+	margin: 0 auto;
 	padding: 30px 40px;
 }
 
@@ -177,33 +179,8 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 
 .pun .punwrap {
 	border: 1px solid;
+	border-radius: 10px;
 	padding: 18px;
-}
-
-.pun .top-box {
-	height: 18px;
-	margin-bottom: -18px;
-	position: relative;
-	background: url(Fire/img/main_top.png) top left no-repeat;
-}
-
-.pun .top-box div {
-	height: 18px;
-	margin-left: 50%;
-	background: url(Fire/img/main_top.png) top right no-repeat;
-}
-
-.pun .end-box {
-	margin-top: -17px;
-	height: 18px;
-	position: relative;
-	background: url(Fire/img/main_end.png) bottom left no-repeat;
-}
-
-.pun .end-box div {
-	height: 18px;
-	margin-left: 50%;
-	background: url(Fire/img/main_end.png) bottom right no-repeat;
 }
 
 #punredirect h2, #punmaint h2 {
@@ -307,11 +284,11 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 }
 
 #brdwelcome .conl {
-  float: left;
+	float: left;
 }
 
 #brdwelcome .conr {
-  float: right;
+	float: right;
 }
 
 #brdwelcome li span {
@@ -651,11 +628,11 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 
 #debug .tcr {
 	width: 90%;
-	white-space: normal
+	white-space: normal;
 }
 
 #punindex .tcr .byuser {
-	display: block
+	display: block;
 }
 
 #punindex td.tc2, #punindex td.tc3, #punindex td.tcr, .pun #vf td.tc2, .pun #vf td.tc3,
@@ -672,7 +649,6 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 }
 
 .pun .blocktable .tclcon {
-	height: 1%;
 	min-height: 1px;
 	overflow: hidden;
 	padding: 0 11px 0 12px;
@@ -741,7 +717,7 @@ MAIN POSTS
 #punsearch .blockpost h2 span span {
 	white-space: nowrap;
 	display: inline-block;
-	font: 1.077em "Trebuchet MS", Arial, Helvetica, sans-serif
+	font: 1.077em "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 
 #punsearch .blockpost .icon {
@@ -792,6 +768,12 @@ MAIN POSTS
 	left: 0;
 	overflow: hidden;
 	width: 206px;
+}
+
+.pun .blockpost dt {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .pun .blockpost dt strong {
@@ -963,8 +945,7 @@ MAIN POSTS
 }
 
 .pun .codebox pre {
-	overflow-y: hidden;
-	height: 100%;
+	overflow: auto;
 	width: 100%;
 	direction: ltr;
 	text-align: left;
@@ -979,7 +960,7 @@ MAIN POSTS
 }
 
 .pun .codebox pre code {
-	padding: 0.75em;
+	padding: 0.5em;
 	white-space: pre;
 }
 
@@ -994,7 +975,7 @@ MAIN POSTS
 .pun .codebox pre.vscroll {
 	height: 32em;
 	overflow: auto;
-	overflow-y: auto
+	overflow-y: auto;
 }
 
 .pun .postmsg img, #punhelp samp img {
@@ -1180,12 +1161,16 @@ MAIN FORMS
 	width: 1em;
 }
 
-.pun input[type=text], .pun select, .pun textarea {
+.pun input[type=text], .pun input[type=password], .pun select, .pun textarea {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .pun .txtarea textarea, .pun input.longinput {
 	width: 98%;
+}
+
+.pun textarea {
+	resize: vertical;
 }
 
 .pun #quickpost .txtarea {
@@ -1375,7 +1360,7 @@ PROFILES (+ ADMIN MENU)
 	position: relative;
 }
 
-#adintro, #adstats {
+#adintro, #adstats, #adalerts {
 	border-style: solid;
 	border-width: 1px;
 	padding: 18px;
@@ -1389,7 +1374,7 @@ PROFILES (+ ADMIN MENU)
 	background: url(Fire/img/bull.png) center left no-repeat;
 }
 
-#adstats .inbox, #adintro .inbox {
+#adstats .inbox, #adintro .inbox, #adalerts p {
 	border-style: solid;
 	border-width: 1px;
 	padding: 18px;
@@ -1558,7 +1543,7 @@ html, body, .pun {
 /* Main Forms + Profile
 ----------------------------------------------------------------*/
 
-.pun .blockform .box, #adstats, #adintro, #postpreview, #posterror {
+.pun .blockform .box, #adstats, #adintro, #adalerts, #postpreview, #posterror {
 	border-color: #cec7b9 #e7e2d9;
 	background: #ecebe7;
 }
@@ -1584,7 +1569,7 @@ html, body, .pun {
 	color: #fff;
 }
 
-.pun #posterror .error-info {
+.pun #posterror .error-info, .pun #adalerts p {
 	background: #ffffe1;
 	border-color: #dfe6ee;
 }
@@ -1619,7 +1604,7 @@ html, body, .pun {
 .pun .blockmenu .isactive a:link, .pun .blockmenu .isactive a:visited {
 	color: #333;
 	background: #f3f2ed;
-	}
+}
 
 .pun #viewprofile .box {
 	border-color: #cec7b9 #e7e2d9;

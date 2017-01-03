@@ -30,7 +30,7 @@ $lang_register = array(
 'Desc 2'					=>	'Below is a form you must fill out in order to register. Once you are registered you should visit your profile and review the different settings you can change. The fields below only make up a small part of all the settings you can alter in your profile.',
 'Username legend'			=>	'Please enter a username between 2 and 25 characters long',
 'Pass legend'				=>	'Please enter and confirm your chosen password',
-'Pass info'					=>	'Passwords must be at least 4 characters long. Passwords are case sensitive.',
+'Pass info'					=>	'Passwords must be at least 6 characters long. Passwords are case sensitive.',
 'Email info'				=>	'You must enter a valid email address as your randomly generated password will be sent to that address.',
 'Confirm email'				=>	'Confirm email address',
 

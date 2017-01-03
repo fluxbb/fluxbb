@@ -7,9 +7,9 @@
  */
 
 // The FluxBB version this script updates to
-define('UPDATE_TO', '1.5.4');
+define('UPDATE_TO', '1.5.10');
 
-define('UPDATE_TO_DB_REVISION', 20);
+define('UPDATE_TO_DB_REVISION', 21);
 define('UPDATE_TO_SI_REVISION', 2);
 define('UPDATE_TO_PARSER_REVISION', 2);
 
@@ -266,9 +266,9 @@ function convert_to_utf8(&$str, $old_charset)
 	if ($old_charset != 'UTF-8' && !seems_utf8($str))
 	{
 		if (function_exists('iconv'))
-			$str = iconv($old_charset == 'ISO-8859-1' ? 'WINDOWS-1252' : 'ISO-8859-1', 'UTF-8', $str);
+			$str = iconv(!empty($old_charset) ? $old_charset : 'ISO-8859-1', 'UTF-8', $str);
 		else if (function_exists('mb_convert_encoding'))
-			$str = mb_convert_encoding($str, 'UTF-8', $old_charset == 'ISO-8859-1' ? 'WINDOWS-1252' : 'ISO-8859-1');
+			$str = mb_convert_encoding($str, 'UTF-8', !empty($old_charset) ? $old_charset : 'ISO-8859-1');
 		else if ($old_charset == 'ISO-8859-1')
 			$str = utf8_encode($str);
 	}
@@ -675,7 +675,7 @@ if (isset($_POST['req_db_pass']))
 else if (isset($_GET['uid']))
 {
 	$uid = pun_trim($_GET['uid']);
-	if (!$lock || $lock != $uid) // The lock doesn't exist or doesn't match the given UID
+	if (!$lock || $lock !== $uid) // The lock doesn't exist or doesn't match the given UID
 		$lock_error = true;
 }
 else
@@ -1029,6 +1029,9 @@ switch ($stage)
 		// Add a field for the per-group permission to post links
 		$db->add_field('groups', 'g_post_links', 'TINYINT(1)', false, 1, 'g_delete_topics') or error('Unable to add per-group permission to post links', __FILE__, __LINE__, $db->error());
 
+		// Add a field for the per-group permission to promote users to the next auto-promote group
+		$db->add_field('groups', 'g_mod_promote_users', 'TINYINT(1)', false, 0, 'g_mod_ban_users') or error('Unable to add per-group permission to promote users', __FILE__, __LINE__, $db->error());
+
 		// In case we had the fulltext search extension installed (1.3-legacy), remove it
 		$db->drop_index('topics', 'subject_idx') or error('Unable to drop subject_idx index', __FILE__, __LINE__, $db->error());
 		$db->drop_index('posts', 'message_idx') or error('Unable to drop message_idx index', __FILE__, __LINE__, $db->error());
@@ -1282,6 +1285,7 @@ switch ($stage)
 
 			convert_to_utf8($cur_item['forum_name'], $old_charset);
 			convert_to_utf8($cur_item['forum_desc'], $old_charset);
+			convert_to_utf8($cur_item['last_poster'], $old_charset);
 
 			if (!empty($moderators_utf8))
 				$cur_item['moderators'] = serialize($moderators_utf8);
@@ -1902,4 +1906,4 @@ $db->end_transaction();
 $db->close();
 
 if ($query_str != '')
-	exit('<script type="text/javascript">window.location="db_update.php'.$query_str.'&uid='.$uid.'"</script><noscript><meta http-equiv="refresh" content="0;url=db_update.php'.$query_str.'&uid='.$uid.'" /></noscript>');
+	exit('<meta http-equiv="refresh" content="0;url=db_update.php'.$query_str.'&uid='.$uid.'" /><hr /><p>'.sprintf($lang_update['Automatic redirect failed'], '<a href="db_update.php'.$query_str.'&uid='.$uid.'">'.$lang_update['Click here'].'</a>').'</p>');

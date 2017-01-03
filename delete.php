@@ -51,8 +51,8 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/delete.php';
 
 if (isset($_POST['delete']))
 {
-	if ($is_admmod)
-		confirm_referrer('delete.php');
+	// Make sure they got here from the site
+	confirm_referrer('delete.php');
 
 	require PUN_ROOT.'include/search_idx.php';
 

@@ -4,7 +4,7 @@ Subject: New topic in forum: '<forum_name>'
 
 The topic is located at <topic_url>
 
-You can unsubscribe by going to <unsubscribe_url>
+You can unsubscribe by going to <unsubscribe_url> and clicking the Unsubscribe link at the bottom of the page.
 
 --
 <board_mailer> Mailer
