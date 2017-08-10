@@ -6,20 +6,21 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-// Make sure we have built in support for SQLite
-if (!function_exists('sqlite_open'))
-	exit('This PHP environment doesn\'t have SQLite support built in. SQLite support is required if you want to use a SQLite database to run this forum. Consult the PHP documentation for further assistance.');
+// Make sure we have built in support for SQLite3
+if (!extension_loaded('pdo_sqlite'))
+	exit('This PHP environment doesn\'t have SQLite3 support built in. SQLite3 support is required if you want to use a SQLite3 database to run this forum. Consult the PHP documentation for further assistance.');
 
 
 class DBLayer
 {
 	var $prefix;
-	var $link_id;
+	var $pdo;
 	var $query_result;
-	var $in_transaction = 0;
 
 	var $saved_queries = array();
 	var $num_queries = 0;
+
+	var $last_query;
 
 	var $error_no = false;
 	var $error_msg = 'Unknown';
@@ -38,32 +39,20 @@ class DBLayer
 
 		$this->prefix = $db_prefix;
 
-		if (!file_exists($db_name))
+		// TODO: p_connect?
+		try
 		{
-			@touch($db_name);
-			@chmod($db_name, 0666);
-			if (!file_exists($db_name))
-				error('Unable to create new database \''.$db_name.'\'. Permission denied', __FILE__, __LINE__);
+			$this->pdo = new PDO('sqlite:'.$db_name);
+		}
+		catch (PDOException $e)
+		{
+			error('Unable to open database \''.$db_name.'\'. SQLite3 reported: '.$e->getMessage(), __FILE__, __LINE__);
 		}
 
-		if (!is_readable($db_name))
-			error('Unable to open database \''.$db_name.'\' for reading. Permission denied', __FILE__, __LINE__);
-
-		if (!forum_is_writable($db_name))
-			error('Unable to open database \''.$db_name.'\' for writing. Permission denied', __FILE__, __LINE__);
-
-		if ($p_connect)
-			$this->link_id = @sqlite_popen($db_name, 0666, $sqlite_error);
-		else
-			$this->link_id = @sqlite_open($db_name, 0666, $sqlite_error);
-
-		if (!$this->link_id)
-			error('Unable to open database \''.$db_name.'\'. SQLite reported: '.$sqlite_error, __FILE__, __LINE__);
-		else
-			return $this->link_id;
+		return $this->pdo;
 	}
-	
-	
+
+
 	function DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
 	{
 		$this->__construct($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect);
@@ -72,21 +61,17 @@ class DBLayer
 
 	function start_transaction()
 	{
-		++$this->in_transaction;
-
-		return (@sqlite_query($this->link_id, 'BEGIN')) ? true : false;
+		return $this->pdo->beginTransaction();
 	}
 
 
 	function end_transaction()
 	{
-		--$this->in_transaction;
-
-		if (@sqlite_query($this->link_id, 'COMMIT'))
+		if ($this->pdo->commit())
 			return true;
 		else
 		{
-			@sqlite_query($this->link_id, 'ROLLBACK');
+			$this->pdo->rollBack();
 			return false;
 		}
 	}
@@ -97,10 +82,10 @@ class DBLayer
 		if (defined('PUN_SHOW_QUERIES'))
 			$q_start = get_microtime();
 
-		if ($unbuffered)
-			$this->query_result = @sqlite_unbuffered_query($this->link_id, $sql);
-		else
-			$this->query_result = @sqlite_query($this->link_id, $sql);
+		// TODO: What about unbuffered queries?
+		$this->query_result = $this->pdo->query($sql);
+
+		$this->last_query = $sql;
 
 		if ($this->query_result)
 		{
@@ -116,27 +101,28 @@ class DBLayer
 			if (defined('PUN_SHOW_QUERIES'))
 				$this->saved_queries[] = array($sql, 0);
 
-			$this->error_no = @sqlite_last_error($this->link_id);
-			$this->error_msg = @sqlite_error_string($this->error_no);
+			$error = $this->pdo->errorInfo();
+			$this->error_no = $error[1];
+			$this->error_msg = $error[2];
 
-			if ($this->in_transaction)
-				@sqlite_query($this->link_id, 'ROLLBACK');
-
-			--$this->in_transaction;
+			if ($this->pdo->inTransaction())
+			{
+				$this->pdo->rollBack();
+			}
 
 			return false;
 		}
 	}
 
 
-	function result($query_id = 0, $row = 0, $col = 0)
+	function result($result = 0, $row = 0, $col = 0)
 	{
-		if ($query_id)
+		if ($result)
 		{
-			if ($row !== 0 && @sqlite_seek($query_id, $row) === false)
-				return false;
+			//if ($row !== 0 && @sqlite_seek($result, $row) === false)
+			//	return false;
 
-			$cur_row = @sqlite_current($query_id);
+			$cur_row = $result->fetch();
 			if ($cur_row === false)
 				return false;
 
@@ -147,54 +133,41 @@ class DBLayer
 	}
 
 
-	function fetch_assoc($query_id = 0)
+	function fetch_assoc($result = 0)
 	{
-		if ($query_id)
+		return $result ? $result->fetch(PDO::FETCH_ASSOC) : false;
+	}
+
+
+	function fetch_row($result = 0)
+	{
+		return $result ? $result->fetch(PDO::FETCH_NUM) : false;
+	}
+
+
+	function num_rows($result = 0)
+	{
+		if ($result && preg_match('/\bSELECT\b/i', $this->last_query))
 		{
-			$cur_row = @sqlite_fetch_array($query_id, SQLITE_ASSOC);
-			if ($cur_row)
-			{
-				// Horrible hack to get rid of table names and table aliases from the array keys
-				foreach ($cur_row as $key => $value)
-				{
-					$dot_spot = strpos($key, '.');
-					if ($dot_spot !== false)
-					{
-						unset($cur_row[$key]);
-						$key = substr($key, $dot_spot+1);
-						$cur_row[$key] = $value;
-					}
-				}
-			}
+			$num_rows_query = preg_replace('/\bSELECT\b(.*)\bFROM\b/imsU', 'SELECT COUNT(*) FROM', $this->last_query);
+			$num_rows_result = $this->query($num_rows_query);
 
-			return $cur_row;
+			return intval($this->result($num_rows_result));
 		}
-		else
-			return false;
-	}
 
-
-	function fetch_row($query_id = 0)
-	{
-		return ($query_id) ? @sqlite_fetch_array($query_id, SQLITE_NUM) : false;
-	}
-
-
-	function num_rows($query_id = 0)
-	{
-		return ($query_id) ? @sqlite_num_rows($query_id) : false;
+		return false;
 	}
 
 
 	function affected_rows()
 	{
-		return ($this->link_id) ? @sqlite_changes($this->link_id) : false;
+		return $this->query_result->rowCount();
 	}
 
 
 	function insert_id()
 	{
-		return ($this->link_id) ? @sqlite_last_insert_rowid($this->link_id) : false;
+		return $this->pdo ? (int) $this->pdo->lastInsertId() : false;
 	}
 
 
@@ -210,15 +183,15 @@ class DBLayer
 	}
 
 
-	function free_result($query_id = false)
+	function free_result($result = false)
 	{
-		return true;
+		return $result ? $result->closeCursor() : true;
 	}
 
 
 	function escape($str)
 	{
-		return is_array($str) ? '' : sqlite_escape_string($str);
+		return is_array($str) ? '' : substr($this->pdo->quote($str), 1, -1);
 	}
 
 
@@ -234,17 +207,18 @@ class DBLayer
 
 	function close()
 	{
-		if ($this->link_id)
+		if ($this->pdo)
 		{
-			if ($this->in_transaction)
+			if ($this->pdo->inTransaction())
 			{
 				if (defined('PUN_SHOW_QUERIES'))
 					$this->saved_queries[] = array('COMMIT', 0);
 
-				@sqlite_query($this->link_id, 'COMMIT');
+				$this->pdo->commit();
 			}
 
-			return @sqlite_close($this->link_id);
+			$this->pdo = null;
+			return true;
 		}
 		else
 			return false;
@@ -265,9 +239,11 @@ class DBLayer
 
 	function get_version()
 	{
+		$version = SQLite3::version();
+
 		return array(
 			'name'		=> 'SQLite',
-			'version'	=> sqlite_libversion()
+			'version'	=> $version['versionString']
 		);
 	}
 
