@@ -8,7 +8,7 @@
 
 // Make sure we have built in support for PDO SQLite
 if (!extension_loaded('pdo_sqlite'))
-	exit('This PHP environment doesn\'t have SQLite3 support built in. SQLite3 support is required if you want to use a SQLite3 database to run this forum. Consult the PHP documentation for further assistance.');
+	exit('This PHP environment doesn\'t have PDO SQLite support built in. PDO SQLite support is required if you want to use a SQLite database to run this forum. Consult the PHP documentation for further assistance.');
 
 
 class DBLayer
