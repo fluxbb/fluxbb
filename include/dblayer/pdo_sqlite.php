@@ -6,7 +6,7 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-// Make sure we have built in support for SQLite3
+// Make sure we have built in support for PDO SQLite
 if (!extension_loaded('pdo_sqlite'))
 	exit('This PHP environment doesn\'t have SQLite3 support built in. SQLite3 support is required if you want to use a SQLite3 database to run this forum. Consult the PHP documentation for further assistance.');
 
