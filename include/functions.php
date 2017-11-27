@@ -164,7 +164,7 @@ function authenticate_user($user, $password, $password_is_hash = false)
 	$pun_user = $db->fetch_assoc($result);
 
 	$is_password_authorized = pun_hash_equals($password, $pun_user['password']);
-	$is_hash_authorized = pun_hash_equals(pun_hash($password), $pun_user['password']);
+	$is_hash_authorized = pun_password_verify($password, $pun_user['password']);
 
 	if (!isset($pun_user['id']) ||
 		($password_is_hash && !$is_password_authorized ||
@@ -1124,6 +1124,36 @@ function validate_redirect($redirect_url, $fallback_url)
 		return $redirect_url;
 	else
 		return $fallback_url;
+}
+
+
+//
+// Compute the hash of a password
+// using a secure password hashing algorithm, if available
+// As of PHP 7.2, this is BLOWFISH.
+// This function will fall back to unsecure defaults if
+// password_hash does not exist (requires >=PHP5.5)
+//
+function pun_password_hash($pass)
+{
+	if (function_exists('password_hash'))
+		return password_hash($pass, PASSWORD_DEFAULT, array('cost' => 12));
+	else
+		return pun_hash($pass);
+}
+
+
+//
+// Verify that $pass and $hash match
+// This supports any password hashing algorithm
+// used by pun_password_hash
+//
+function pun_password_verify($pass, $hash)
+{
+	if (!empty($hash) && $hash[0] !== '$')
+		return pun_hash_equals(pun_hash($pass), $hash);
+	else
+		return password_verify($pass, $hash);
 }
 
 

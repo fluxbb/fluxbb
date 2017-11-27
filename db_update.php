@@ -9,7 +9,7 @@
 // The FluxBB version this script updates to
 define('UPDATE_TO', '1.5.10');
 
-define('UPDATE_TO_DB_REVISION', 21);
+define('UPDATE_TO_DB_REVISION', 22);
 define('UPDATE_TO_SI_REVISION', 2);
 define('UPDATE_TO_PARSER_REVISION', 2);
 
@@ -702,6 +702,10 @@ switch ($stage)
 		$db->alter_field('users', 'jabber', 'VARCHAR(80)', true) or error('Unable to alter jabber field', __FILE__, __LINE__, $db->error());
 		$db->alter_field('users', 'msn', 'VARCHAR(80)', true) or error('Unable to alter msn field', __FILE__, __LINE__, $db->error());
 		$db->alter_field('users', 'activate_string', 'VARCHAR(80)', true) or error('Unable to alter activate_string field', __FILE__, __LINE__, $db->error());
+
+		// Make password field VARCHAR(255) to support password_hash
+		// 255 is recommended by the PHP manual: http://php.net/manual/en/function.password-hash.php
+		$db->alter_field('users', 'password', 'VARCHAR(255)', false) or error('Unable to alter password field', __FILE__, __LINE__, $db->error());
 
 		// Make all IP fields VARCHAR(39) to support IPv6
 		$db->alter_field('posts', 'poster_ip', 'VARCHAR(39)', true) or error('Unable to alter poster_ip field', __FILE__, __LINE__, $db->error());
