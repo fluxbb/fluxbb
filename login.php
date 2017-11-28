@@ -41,41 +41,18 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		// this allows the cookie token to reflect the new hash
 		$user_password = $cur_user['password'];
 
-		// If there is a salt in the database we have upgraded from 1.3-legacy though haven't yet logged in
-		if (!empty($cur_user['salt']))
+		if (pun_password_verify_legacy($form_password, $user_password, $cur_user['salt']))
 		{
-			$is_salt_authorized = pun_hash_equals(sha1($cur_user['salt'].sha1($form_password)), $cur_user['password']);
-			if ($is_salt_authorized) // 1.3 used sha1(salt.sha1(pass))
- 			{
-				$authorized = true;
+			$authorized = true;
 
-				$user_password = pun_password_hash($form_password);
-				$db->query('UPDATE '.$db->prefix.'users SET password=\''.$db->escape($user_password).'\', salt=NULL WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
-			}
-		}
-		// If the length is less than 40 then the password must be md5 from 1.2
-		else if (strlen($cur_user['password']) < 40)
-		{
-			$is_md5_authorized = pun_hash_equals(md5($form_password), $cur_user['password']);
-			if ($is_md5_authorized)
-			{
-				$authorized = true;
+			$remove_salt = !empty($cur_user['salt']);
+			$rehash = $remove_salt || pun_password_needs_rehash($user_password);
 
-				$user_password = pun_password_hash($form_password);
-				$db->query('UPDATE '.$db->prefix.'users SET password=\''.$db->escape($user_password).'\' WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
-			}
-		}
-		// Otherwise we should have a normal sha1 password
-		else
-		{
-			$authorized = pun_password_verify($form_password, $cur_user['password']);
-
-			// Rehash password transparently if not created with pun_password_hash
-			if ($authorized && $cur_user['password'][0] !== '$')
+			if ($rehash)
 			{
 				$user_password = pun_password_hash($form_password);
-				//$user_password = $form_password;
-				$db->query('UPDATE '.$db->prefix.'users SET password=\''.$db->escape($user_password).'\' WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
+				$salt_sql = ($remove_salt ? 'salt=NULL,' : '');
+				$db->query('UPDATE '.$db->prefix.'users SET '.$salt_sql.' password=\''.$db->escape($user_password).'\' WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
 			}
 		}
 	}
