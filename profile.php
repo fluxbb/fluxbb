@@ -1388,7 +1388,7 @@ else
 									echo "\t\t\t\t\t\t\t\t".'<option value="'.$key.'"';
 									if ($user['time_format'] == $key)
 										echo ' selected="selected"';
-									echo '>'. format_time(time(), false, null, $time_format, true, true);
+									echo '>'. format_time(time(), false, null, $time_format, true, true, $user);
 									if ($key == 0)
 										echo ' ('.$lang_prof_reg['Default'].')';
 									echo "</option>\n";
@@ -1405,7 +1405,7 @@ else
 									echo "\t\t\t\t\t\t\t\t".'<option value="'.$key.'"';
 									if ($user['date_format'] == $key)
 										echo ' selected="selected"';
-									echo '>'. format_time(time(), true, $date_format, null, false, true);
+									echo '>'. format_time(time(), true, $date_format, null, false, true, $user);
 									if ($key == 0)
 										echo ' ('.$lang_prof_reg['Default'].')';
 									echo "</option>\n";
