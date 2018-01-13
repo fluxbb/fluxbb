@@ -117,7 +117,7 @@ class DBLayer
 		if (pg_result_status($this->query_result) != PGSQL_FATAL_ERROR)
 		{
 			if (defined('PUN_SHOW_QUERIES'))
-				$this->saved_queries[] = array($sql, sprintf('%.5f', get_microtime() - $q_start));
+				$this->saved_queries[] = array($sql, sprintf('%.5F', get_microtime() - $q_start));
 
 			++$this->num_queries;
 
