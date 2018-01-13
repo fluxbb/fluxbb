@@ -36,11 +36,17 @@
  * The execution time should be at most 10-20 ms in any system.
  */
 function secure_random_bytes($len = 10)
-{  
+{
+   /*
+    * On PHP 7 and above, the native random_bytes should be available.
+    */
+   if (function_exists('random_bytes')) {
+      return random_bytes($len);
+   }
  
    /*
-    * Our primary choice for a cryptographic strong randomness function is
-    * openssl_random_pseudo_bytes. 
+    * On older versions of PHP, our primary choice for a cryptographic strong
+    * randomness function is openssl_random_pseudo_bytes.
     */
    $SSLstr = '4'; // http://xkcd.com/221/
    if (function_exists('openssl_random_pseudo_bytes') && 
