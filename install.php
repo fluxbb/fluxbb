@@ -256,7 +256,7 @@ if (!isset($_POST['form_sent']) || !empty($alerts))
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo $lang_install['FluxBB Installation'] ?></title>
-<link rel="stylesheet" type="text/css" href="style/<?php echo $default_style ?>.css" />
+<link rel="stylesheet" type="text/css" href="style/<?php echo pun_htmlspecialchars($default_style) ?>.css" />
 <script type="text/javascript">
 /* <![CDATA[ */
 function process_form(the_form)
@@ -533,7 +533,7 @@ else
 			break;
 
 		default:
-			error(sprintf($lang_install['DB type not valid'], pun_htmlspecialchars($db_type)));
+			error(sprintf($lang_install['DB type not valid'], $db_type));
 	}
 
 	// Create the database object (and connect/select db)
@@ -1683,7 +1683,7 @@ else
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo $lang_install['FluxBB Installation'] ?></title>
-<link rel="stylesheet" type="text/css" href="style/<?php echo $default_style ?>.css" />
+<link rel="stylesheet" type="text/css" href="style/<?php echo pun_htmlspecialchars($default_style) ?>.css" />
 </head>
 <body>
 
@@ -1718,8 +1718,8 @@ if (!$written)
 					<p><?php echo $lang_install['Info 18'] ?></p>
 				</div>
 				<input type="hidden" name="generate_config" value="1" />
-				<input type="hidden" name="db_type" value="<?php echo $db_type; ?>" />
-				<input type="hidden" name="db_host" value="<?php echo $db_host; ?>" />
+				<input type="hidden" name="db_type" value="<?php echo pun_htmlspecialchars($db_type); ?>" />
+				<input type="hidden" name="db_host" value="<?php echo pun_htmlspecialchars($db_host); ?>" />
 				<input type="hidden" name="db_name" value="<?php echo pun_htmlspecialchars($db_name); ?>" />
 				<input type="hidden" name="db_username" value="<?php echo pun_htmlspecialchars($db_username); ?>" />
 				<input type="hidden" name="db_password" value="<?php echo pun_htmlspecialchars($db_password); ?>" />

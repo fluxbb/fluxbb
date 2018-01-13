@@ -1652,7 +1652,7 @@ H2 {MARGIN: 0; COLOR: #FFFFFF; BACKGROUND-COLOR: #B84623; FONT-SIZE: 1.1em; PADD
 		}
 	}
 	else
-		echo "\t\t".'Error: <strong>'.$message.'.</strong>'."\n";
+		echo "\t\t".'Error: <strong>'.pun_htmlspecialchars($message).'.</strong>'."\n";
 
 ?>
 	</div>
