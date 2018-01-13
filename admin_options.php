@@ -735,14 +735,14 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['SMTP address label'] ?></th>
 									<td>
-										<input type="text" name="form[smtp_host]" size="30" maxlength="100" value="<?php echo pun_htmlspecialchars($pun_config['o_smtp_host']) ?>" />
+										<input type="text" name="form[smtp_host]" size="30" value="<?php echo pun_htmlspecialchars($pun_config['o_smtp_host']) ?>" />
 										<span><?php echo $lang_admin_options['SMTP address help'] ?></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['SMTP username label'] ?></th>
 									<td>
-										<input type="text" name="form[smtp_user]" size="25" maxlength="50" value="<?php echo pun_htmlspecialchars($pun_config['o_smtp_user']) ?>" />
+										<input type="text" name="form[smtp_user]" size="25" value="<?php echo pun_htmlspecialchars($pun_config['o_smtp_user']) ?>" />
 										<span><?php echo $lang_admin_options['SMTP username help'] ?></span>
 									</td>
 								</tr>
@@ -751,8 +751,8 @@ generate_admin_menu('options');
 									<td>
 										<label><input type="checkbox" name="form[smtp_change_pass]" value="1" />&#160;<?php echo $lang_admin_options['SMTP change password help'] ?></label>
 <?php $smtp_pass = !empty($pun_config['o_smtp_pass']) ? random_key(pun_strlen($pun_config['o_smtp_pass']), true) : ''; ?>
-										<input type="password" name="form[smtp_pass1]" size="25" maxlength="50" value="<?php echo $smtp_pass ?>" />
-										<input type="password" name="form[smtp_pass2]" size="25" maxlength="50" value="<?php echo $smtp_pass ?>" />
+										<input type="password" name="form[smtp_pass1]" size="25" value="<?php echo $smtp_pass ?>" />
+										<input type="password" name="form[smtp_pass2]" size="25" value="<?php echo $smtp_pass ?>" />
 										<span><?php echo $lang_admin_options['SMTP password help'] ?></span>
 									</td>
 								</tr>
