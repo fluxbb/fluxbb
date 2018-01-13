@@ -294,7 +294,7 @@ while ($cur_post = $db->fetch_assoc($result))
 		if ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1' && $pun_user['g_mod_promote_users'] == '1'))
 		{
 			if ($cur_post['g_promote_next_group'])
-				$user_info[] = '<dd><span><a href="profile.php?action=promote&amp;id='.$cur_post['poster_id'].'&amp;pid='.$cur_post['id'].'">'.$lang_topic['Promote user'].'</a></span></dd>';
+				$user_info[] = '<dd><span><a href="profile.php?action=promote&amp;id='.$cur_post['poster_id'].'&amp;pid='.$cur_post['id'].'&amp;csrf_token='.pun_csrf_token().'">'.$lang_topic['Promote user'].'</a></span></dd>';
 		}
 
 		if ($pun_user['is_admmod'])
