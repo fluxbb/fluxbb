@@ -35,7 +35,7 @@ $where_sql = array();
 $like_command = ($db_type == 'pgsql') ? 'ILIKE' : 'LIKE';
 
 if ($username != '')
-	$where_sql[] = 'u.username '.$like_command.' \''.$db->escape(str_replace('*', '%', $username)).'\'';
+	$where_sql[] = 'u.username '.$like_command.' \''.$db->escape(str_replace(array('*', '_',), array('%', '\\_'), $username)).'\'';
 if ($show_group > -1)
 	$where_sql[] = 'u.group_id='.$show_group;
 

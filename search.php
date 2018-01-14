@@ -62,7 +62,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			message($lang_search['No terms']);
 
 		if ($author)
-			$author = str_replace('*', '%', $author);
+			$author = str_replace(array('*', '_'), array('%', '\\_'), $author);
 
 		$show_as = (isset($_GET['show_as']) && $_GET['show_as'] == 'topics') ? 'topics' : 'posts';
 		$sort_by = (isset($_GET['sort_by'])) ? intval($_GET['sort_by']) : 0;
