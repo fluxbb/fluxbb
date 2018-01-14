@@ -73,17 +73,24 @@ if (isset($_POST['form_sent']))
 	{
 		$subject = pun_trim($_POST['req_subject']);
 
-		if ($pun_config['o_censoring'] == '1')
-			$censored_subject = pun_trim(censor_words($subject));
-
 		if ($subject == '')
 			$errors[] = $lang_post['No subject'];
-		else if ($pun_config['o_censoring'] == '1' && $censored_subject == '')
-			$errors[] = $lang_post['No subject after censoring'];
-		else if (pun_strlen($subject) > 70)
-			$errors[] = $lang_post['Too long subject'];
-		else if ($pun_config['p_subject_all_caps'] == '0' && is_all_uppercase($subject) && !$pun_user['is_admmod'])
-			$errors[] = $lang_post['All caps subject'];
+		else if ($pun_config['o_censoring'] == '1')
+		{
+			// Censor subject to see if that causes problems
+			$subject = pun_trim(censor_words($subject));
+
+			if ($subject == '')
+				$errors[] = $lang_post['No subject after censoring'];
+		}
+
+		if (empty($errors))
+		{
+			if (pun_strlen($subject) > 70)
+				$errors[] = $lang_post['Too long subject'];
+			else if ($pun_config['p_subject_all_caps'] == '0' && is_all_uppercase($subject) && !$pun_user['is_admmod'])
+				$errors[] = $lang_post['All caps subject'];
+		}
 	}
 
 	// If the user is logged in we get the username and email from $pun_user
@@ -147,9 +154,9 @@ if (isset($_POST['form_sent']))
 		else if ($pun_config['o_censoring'] == '1')
 		{
 			// Censor message to see if that causes problems
-			$censored_message = pun_trim(censor_words($message));
+			$message = pun_trim(censor_words($message));
 
-			if ($censored_message == '')
+			if ($message == '')
 				$errors[] = $lang_post['No message after censoring'];
 		}
 	}
@@ -221,10 +228,7 @@ if (isset($_POST['form_sent']))
 					$notification_emails = array();
 					$languages = forum_list_langs();
 
-					if ($pun_config['o_censoring'] == '1')
-						$cleaned_message = bbcode2email($censored_message, -1);
-					else
-						$cleaned_message = bbcode2email($message, -1);
+					$cleaned_message = bbcode2email($message, -1);
 
 					// Loop through subscribed users and send emails
 					while ($cur_subscriber = $db->fetch_assoc($result))
@@ -333,10 +337,7 @@ if (isset($_POST['form_sent']))
 					$notification_emails = array();
 					$languages = forum_list_langs();
 
-					if ($pun_config['o_censoring'] == '1')
-						$cleaned_message = bbcode2email($censored_message, -1);
-					else
-						$cleaned_message = bbcode2email($message, -1);
+					$cleaned_message = bbcode2email($message, -1);
 
 					// Loop through subscribed users and send emails
 					while ($cur_subscriber = $db->fetch_assoc($result))
@@ -365,7 +366,7 @@ if (isset($_POST['form_sent']))
 								$mail_message_full = trim(substr($mail_tpl_full, $first_crlf));
 
 								$mail_subject = str_replace('<forum_name>', $cur_posting['forum_name'], $mail_subject);
-								$mail_message = str_replace('<topic_subject>', $pun_config['o_censoring'] == '1' ? $censored_subject : $subject, $mail_message);
+								$mail_message = str_replace('<topic_subject>', $subject, $mail_message);
 								$mail_message = str_replace('<forum_name>', $cur_posting['forum_name'], $mail_message);
 								$mail_message = str_replace('<poster>', $username, $mail_message);
 								$mail_message = str_replace('<topic_url>', get_base_url().'/viewtopic.php?id='.$new_tid, $mail_message);
@@ -373,7 +374,7 @@ if (isset($_POST['form_sent']))
 								$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
 
 								$mail_subject_full = str_replace('<forum_name>', $cur_posting['forum_name'], $mail_subject_full);
-								$mail_message_full = str_replace('<topic_subject>', $pun_config['o_censoring'] == '1' ? $censored_subject : $subject, $mail_message_full);
+								$mail_message_full = str_replace('<topic_subject>', $subject, $mail_message_full);
 								$mail_message_full = str_replace('<forum_name>', $cur_posting['forum_name'], $mail_message_full);
 								$mail_message_full = str_replace('<poster>', $username, $mail_message_full);
 								$mail_message_full = str_replace('<message>', $cleaned_message, $mail_message_full);
@@ -652,7 +653,7 @@ if ($pun_user['is_guest'])
 }
 
 if ($fid): ?>
-						<label class="required"><strong><?php echo $lang_common['Subject'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input class="longinput" type="text" name="req_subject" value="<?php if (isset($_POST['req_subject'])) echo pun_htmlspecialchars($subject); ?>" size="80" maxlength="70" tabindex="<?php echo $cur_index++ ?>" /><br /></label>
+						<label class="required"><strong><?php echo $lang_common['Subject'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input class="longinput" type="text" name="req_subject" value="<?php if (isset($_POST['req_subject'])) echo pun_htmlspecialchars($_POST['req_subject']); ?>" size="80" maxlength="70" tabindex="<?php echo $cur_index++ ?>" /><br /></label>
 <?php endif; ?>						<label class="required"><strong><?php echo $lang_common['Message'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br />
 						<textarea name="req_message" rows="20" cols="95" tabindex="<?php echo $cur_index++ ?>"><?php echo isset($_POST['req_message']) ? pun_htmlspecialchars($orig_message) : (isset($quote) ? $quote : ''); ?></textarea><br /></label>
 						<ul class="bblinks">
