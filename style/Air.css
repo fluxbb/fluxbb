@@ -1361,7 +1361,7 @@ PROFILES (+ ADMIN MENU)
 	position: relative;
 }
 
-#adintro, #adstats, #adalerts {
+#adintro, #adstats {
 	border-style: solid;
 	border-width: 1px;
 	padding: 18px;
@@ -1375,7 +1375,7 @@ PROFILES (+ ADMIN MENU)
 	background: url(Air/img/bull.png) center left no-repeat;
 }
 
-#adstats .inbox, #adintro .inbox, #adalerts p {
+#adstats .inbox, #adintro .inbox {
 	border-style: solid;
 	border-width: 1px;
 	padding: 18px;
@@ -1544,7 +1544,7 @@ html, body, .pun {
 /* Main Forms + Profile
 ----------------------------------------------------------------*/
 
-.pun .blockform .box, #adstats, #adintro, #adalerts, #postpreview, #posterror {
+.pun .blockform .box, #adstats, #adintro, #postpreview, #posterror {
 	border-color: #b9c5ce #d9e1e7;
 	background: #ebf1f5;
 }
@@ -1570,7 +1570,7 @@ html, body, .pun {
 	color: #fff;
 }
 
-.pun #posterror .error-info, .pun #adalerts p {
+.pun #posterror .error-info {
 	background: #ffffe1;
 	border-color: #dfe6ee;
 }

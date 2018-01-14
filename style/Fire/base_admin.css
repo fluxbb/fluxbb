@@ -78,6 +78,20 @@
 	padding: 10px 0 12px 0;
 }
 
+#adalerts {
+	border-style: solid;
+	border-width: 1px;
+	border-color: #b9c5ce #d9e1e7;
+	background: #ebf1f5;
+	padding: 18px;
+}
+
+#adalerts p {
+	border: 1px solid #dfe6ee;
+	background: #ffffe1;
+	padding: 18px;
+}
+
 #categoryedit .tcl {
 	width: 25%;
 }
