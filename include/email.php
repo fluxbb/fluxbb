@@ -113,7 +113,7 @@ function bbcode2email($text, $wrap_length = 72)
 			$replacement = preg_replace(
 				array('%^(?=\>)%m', '%^(?!\>)%m'),
 				array('>', '> '),
-				$matches[2]." said:\n".$matches[3]);
+				$matches[2].":\n".$matches[3]);
 		}
 
 		// List items
