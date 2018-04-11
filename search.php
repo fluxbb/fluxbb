@@ -431,7 +431,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			'show_as'			=> $show_as,
 			'search_type'		=> $search_type
 		));
-		$search_id = mt_rand(1, 2147483647);
+		$search_id = rand(1, 2147483647);
 
 		$ident = ($pun_user['is_guest']) ? get_remote_address() : $pun_user['username'];
 
