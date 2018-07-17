@@ -23,6 +23,8 @@ if (isset($_POST['form_sent']) && $action == 'in')
 {
 	flux_hook('login_before_validation');
 
+	check_csrf($_POST['csrf_token']);
+
 	$form_username = pun_trim($_POST['req_username']);
 	$form_password = pun_trim($_POST['req_password']);
 	$save_pass = isset($_POST['save_pass']);
@@ -310,6 +312,7 @@ if (!empty($errors))
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
 						<input type="hidden" name="redirect_url" value="<?php echo pun_htmlspecialchars($redirect_url) ?>" />
+						<input type="hidden" name="csrf_token" value="<?php echo pun_csrf_token() ?>" />
 						<label class="conl required"><strong><?php echo $lang_common['Username'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_username" value="<?php if (isset($_POST['req_username'])) echo pun_htmlspecialchars($_POST['req_username']); ?>" size="25" maxlength="25" tabindex="1" /><br /></label>
 						<label class="conl required"><strong><?php echo $lang_common['Password'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="password" name="req_password" size="25" tabindex="2" /><br /></label>
 
