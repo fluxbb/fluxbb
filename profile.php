@@ -34,6 +34,9 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/prof_reg.php';
 // Load the profile.php language file
 require PUN_ROOT.'lang/'.$pun_user['language'].'/profile.php';
 
+// Add a page-specific class
+$css_class = 'user-'.$id;
+
 
 if ($action == 'change_pass')
 {
@@ -195,7 +198,7 @@ else if ($action == 'change_email')
 	{
 		if (pun_hash($_POST['req_password']) !== $pun_user['password'])
 			message($lang_profile['Wrong pass']);
-			
+
 		// Make sure they got here from the site
 		confirm_referrer('profile.php');
 
@@ -325,7 +328,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 	{
 		if (!isset($_FILES['req_file']))
 			message($lang_profile['No file']);
-			
+
 		// Make sure they got here from the site
 		confirm_referrer('profile.php');
 

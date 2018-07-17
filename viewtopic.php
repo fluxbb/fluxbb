@@ -9,7 +9,6 @@
 define('PUN_ROOT', dirname(__FILE__).'/');
 require PUN_ROOT.'include/common.php';
 
-
 if ($pun_user['g_read_board'] == '0')
 	message($lang_common['No view'], false, '403 Forbidden');
 
@@ -23,6 +22,8 @@ if ($id < 1 && $pid < 1)
 // Load the viewtopic.php language file
 require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
 
+// Add a page-specific class
+$css_class = 'topic-'.$id;
 
 // If a post ID is specified we determine topic ID and page number so we can redirect to the correct message
 if ($pid)
