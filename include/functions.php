@@ -1326,6 +1326,7 @@ function maintenance_message()
 	global $db, $pun_config, $lang_common, $pun_user;
 
 	// Send no-cache headers
+	header("HTTP/1.1 503 Service Unavailable");
 	header('Expires: Thu, 21 Jul 1977 07:30:00 GMT'); // When yours truly first set eyes on this world! :)
 	header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
 	header('Cache-Control: post-check=0, pre-check=0', false);
