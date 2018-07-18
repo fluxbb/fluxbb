@@ -259,10 +259,6 @@ function convert_to_utf8(&$str, $old_charset)
 
 	$save = $str;
 
-	// Replace literal entities (for non-UTF-8 compliant html_entity_encode)
-	if (version_compare(PHP_VERSION, '5.0.0', '<') && $old_charset == 'ISO-8859-1' || $old_charset == 'ISO-8859-15')
-		$str = html_entity_decode($str, ENT_QUOTES, $old_charset);
-
 	if ($old_charset != 'UTF-8' && !seems_utf8($str))
 	{
 		if (function_exists('iconv'))
@@ -273,9 +269,8 @@ function convert_to_utf8(&$str, $old_charset)
 			$str = utf8_encode($str);
 	}
 
-	// Replace literal entities (for UTF-8 compliant html_entity_encode)
-	if (version_compare(PHP_VERSION, '5.0.0', '>='))
-		$str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
+	// Replace literal entities
+    $str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
 
 	// Replace numeric entities
 	$str = preg_replace_callback('%&#([0-9]+);%', 'utf8_callback_1', $str);

@@ -373,10 +373,7 @@ function forum_setcookie($name, $value, $expire)
 	// Enable sending of a P3P header
 	header('P3P: CP="CUR ADM"');
 
-	if (version_compare(PHP_VERSION, '5.2.0', '>='))
-		setcookie($name, $value, $expire, $cookie_path, $cookie_domain, $cookie_secure, true);
-	else
-		setcookie($name, $value, $expire, $cookie_path.'; HttpOnly', $cookie_domain, $cookie_secure);
+    setcookie($name, $value, $expire, $cookie_path, $cookie_domain, $cookie_secure, true);
 }
 
 
