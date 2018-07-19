@@ -130,7 +130,7 @@ if (defined('PUN_DEBUG'))
 	echo '<p id="debugtime">[ ';
 
 	// Calculate script generation time
-	$time_diff = sprintf('%.3f', get_microtime() - $pun_start);
+	$time_diff = sprintf('%.3f', microtime(true) - $pun_start);
 	echo sprintf($lang_common['Querytime'], $time_diff, $db->get_num_queries());
 
 	if (function_exists('memory_get_usage'))

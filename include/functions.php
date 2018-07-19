@@ -9,15 +9,6 @@
 
 
 //
-// Return current timestamp (with microseconds) as a float
-//
-function get_microtime()
-{
-	list($usec, $sec) = explode(' ', microtime());
-	return ((float)$usec + (float)$sec);
-}
-
-//
 // Cookie stuff!
 //
 function check_cookie(&$pun_user)
@@ -941,7 +932,7 @@ function paginate($num_pages, $cur_page, $link)
 //
 function message($message, $no_back_link = false, $http_status = null)
 {
-	global $db, $lang_common, $pun_config, $pun_start, $tpl_main, $pun_user;
+	global $db, $lang_common, $pun_config, $tpl_main, $pun_user;
 
 	// Did we receive a custom header?
 	if(!is_null($http_status)) {

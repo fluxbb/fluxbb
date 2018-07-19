@@ -87,7 +87,7 @@ class DBLayer
 	function query($sql, $unbuffered = false)
 	{
 		if (defined('PUN_SHOW_QUERIES'))
-			$q_start = get_microtime();
+			$q_start = microtime(true);
 
 		if ($unbuffered)
 			$this->query_result = @sqlite_unbuffered_query($this->link_id, $sql);
@@ -97,7 +97,7 @@ class DBLayer
 		if ($this->query_result)
 		{
 			if (defined('PUN_SHOW_QUERIES'))
-				$this->saved_queries[] = array($sql, sprintf('%.5F', get_microtime() - $q_start));
+				$this->saved_queries[] = array($sql, sprintf('%.5F', microtime(true) - $q_start));
 
 			++$this->num_queries;
 
