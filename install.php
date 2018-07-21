@@ -221,7 +221,6 @@ if (!forum_is_writable(PUN_ROOT.'img/avatars/'))
 if (!isset($_POST['form_sent']) || !empty($alerts))
 {
 	// Determine available database extensions
-	$dual_mysql = false;
 	$db_extensions = array();
 	$mysql_innodb = false;
 	if (function_exists('mysqli_connect'))
@@ -229,15 +228,6 @@ if (!isset($_POST['form_sent']) || !empty($alerts))
 		$db_extensions[] = array('mysqli', 'MySQL Improved');
 		$db_extensions[] = array('mysqli_innodb', 'MySQL Improved (InnoDB)');
 		$mysql_innodb = true;
-	}
-	if (function_exists('mysql_connect'))
-	{
-		$db_extensions[] = array('mysql', 'MySQL Standard');
-		$db_extensions[] = array('mysql_innodb', 'MySQL Standard (InnoDB)');
-		$mysql_innodb = true;
-
-		if (count($db_extensions) > 2)
-			$dual_mysql = true;
 	}
 	if (function_exists('sqlite_open'))
 		$db_extensions[] = array('sqlite', 'SQLite');
@@ -508,14 +498,6 @@ else
 	// Load the appropriate DB layer class
 	switch ($db_type)
 	{
-		case 'mysql':
-			require PUN_ROOT.'include/dblayer/mysql.php';
-			break;
-
-		case 'mysql_innodb':
-			require PUN_ROOT.'include/dblayer/mysql_innodb.php';
-			break;
-
 		case 'mysqli':
 			require PUN_ROOT.'include/dblayer/mysqli.php';
 			break;
@@ -546,9 +528,7 @@ else
 	// Do some DB type specific checks
 	switch ($db_type)
 	{
-		case 'mysql':
 		case 'mysqli':
-		case 'mysql_innodb':
 		case 'mysqli_innodb':
 			$mysql_info = $db->get_version();
 			if (version_compare($mysql_info['version'], MIN_MYSQL_VERSION, '<'))
@@ -574,7 +554,7 @@ else
 		error(sprintf($lang_install['Existing table error'], $db_prefix, $db_name));
 
 	// Check if InnoDB is available
-	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+	if ($db_type == 'mysqli_innodb')
 	{
 		$result = $db->query('SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE=\'InnoDB\'');
 		$result = $db->result($result);
@@ -626,7 +606,7 @@ else
 		)
 	);
 
-	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+	if ($db_type == 'mysqli' || $db_type == 'mysqli_innodb')
 		$schema['INDEXES']['username_idx'] = array('username(25)');
 
 	$db->create_table('bans', $schema) or error('Unable to create bans table', __FILE__, __LINE__, $db->error());
@@ -979,13 +959,13 @@ else
 		)
 	);
 
-	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+	if ($db_type == 'mysqli' || $db_type == 'mysqli_innodb')
 	{
 		$schema['UNIQUE KEYS']['user_id_ident_idx'] = array('user_id', 'ident(25)');
 		$schema['INDEXES']['ident_idx'] = array('ident(25)');
 	}
 
-	if ($db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+	if ($db_type == 'mysqli_innodb')
 		$schema['ENGINE'] = 'InnoDB';
 
 	$db->create_table('online', $schema) or error('Unable to create online table', __FILE__, __LINE__, $db->error());
@@ -1129,7 +1109,7 @@ else
 		)
 	);
 
-	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+	if ($db_type == 'mysqli' || $db_type == 'mysqli_innodb')
 		$schema['INDEXES']['ident_idx'] = array('ident(8)');
 
 	$db->create_table('search_cache', $schema) or error('Unable to create search_cache table', __FILE__, __LINE__, $db->error());
@@ -1512,7 +1492,7 @@ else
 		)
 	);
 
-	if ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb')
+	if ($db_type == 'mysqli' || $db_type == 'mysqli_innodb')
 		$schema['UNIQUE KEYS']['username_idx'] = array('username(25)');
 
 	$db->create_table('users', $schema) or error('Unable to create users table', __FILE__, __LINE__, $db->error());
