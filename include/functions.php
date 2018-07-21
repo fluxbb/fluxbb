@@ -305,37 +305,11 @@ function set_default_user()
 
 
 //
-// SHA1 HMAC with PHP 4 fallback
+// SHA1 HMAC
 //
 function forum_hmac($data, $key, $raw_output = false)
 {
-	if (function_exists('hash_hmac'))
-		return hash_hmac('sha1', $data, $key, $raw_output);
-
-	// If key size more than blocksize then we hash it once
-	if (strlen($key) > 64)
-		$key = pack('H*', sha1($key)); // we have to use raw output here to match the standard
-
-	// Ensure we're padded to exactly one block boundary
-	$key = str_pad($key, 64, chr(0x00));
-
-	$hmac_opad = str_repeat(chr(0x5C), 64);
-	$hmac_ipad = str_repeat(chr(0x36), 64);
-
-	// Do inner and outer padding
-	for ($i = 0;$i < 64;$i++) {
-		$hmac_opad[$i] = $hmac_opad[$i] ^ $key[$i];
-		$hmac_ipad[$i] = $hmac_ipad[$i] ^ $key[$i];
-	}
-
-	// Finally, calculate the HMAC
-	$hash = sha1($hmac_opad.pack('H*', sha1($hmac_ipad.$data)));
-
-	// If we want raw output then we need to pack the final result
-	if ($raw_output)
-		$hash = pack('H*', $hash);
-
-	return $hash;
+	return hash_hmac('sha1', $data, $key, $raw_output);
 }
 
 
@@ -1143,21 +1117,7 @@ function pun_hash($str)
 //
 function pun_hash_equals($a, $b)
 {
-	if (function_exists('hash_equals'))
-		return hash_equals((string) $a, (string) $b);
-
-	$a_length = strlen($a);
-
-	if ($a_length !== strlen($b))
-		return false;
-
-	$result = 0;
-
-	// Do not attempt to "optimize" this.
-	for ($i = 0; $i < $a_length; $i++)
-		$result |= ord($a[$i]) ^ ord($b[$i]);
-
-	return $result === 0;
+	return hash_equals((string) $a, (string) $b);
 }
 
 
@@ -1231,18 +1191,7 @@ function pun_htmlspecialchars($str)
 //
 function pun_htmlspecialchars_decode($str)
 {
-	if (function_exists('htmlspecialchars_decode'))
-		return htmlspecialchars_decode($str, ENT_QUOTES);
-
-	static $translations;
-	if (!isset($translations))
-	{
-		$translations = get_html_translation_table(HTML_SPECIALCHARS, ENT_QUOTES);
-		$translations['&#039;'] = '\''; // get_html_translation_table doesn't include &#039; which is what htmlspecialchars translates ' to, but apparently that is okay?! http://bugs.php.net/bug.php?id=25927
-		$translations = array_flip($translations);
-	}
-
-	return strtr($str, $translations);
+	return htmlspecialchars_decode($str, ENT_QUOTES);
 }
 
 
