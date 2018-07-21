@@ -134,14 +134,6 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	min-height: 1px;
 }
 
-* html .pun .inbox, * html .pun #brdmain, * html .pun .infldset, * html .pun .crumbs, * html .pun .pagepost, * html .pun .block2col {
-	display: inline-block;
-}
-
-* html .pun .inbox, * html .pun #bdrdmain, * html .pun .infldset, * html .pun .crumbs, * html .pun .pagepost, * html .pun .block2col {
-	display: block;
-}
-
 .pun .inbox:after, .pun #brdmain:after, .pun .crumbs:after, .pun .pagepost:after, .pun .block2col:after {
 	content: " ";
 	display: block;
@@ -534,10 +526,6 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	position: relative;
 }
 
-* html .pun .blocktable .box {
-	display: inline-block;
-}
-
 .pun .blocktable table {
 	table-layout: fixed;
 	margin-bottom: -1px;
@@ -697,10 +685,6 @@ MAIN POSTS
 	margin-bottom: -1px;
 	overflow: hidden;
 	position: relative;
-}
-
-* html .pun .blockpost {
-	display: inline-block;
 }
 
 .pun .blockpost h2 {
@@ -956,14 +940,6 @@ MAIN POSTS
 	text-align: left;
 }
 
-* html .pun .codebox pre {
-	padding-bottom: 10px;
-}
-
-*:first-child+html .pun .codebox pre {
-	padding-bottom: 10px;
-}
-
 .pun .codebox pre code {
 	padding: 0.5em;
 	white-space: pre;
@@ -971,10 +947,6 @@ MAIN POSTS
 
 .pun div[class*=codebox] pre code {
 	display: inline-block;
-}
-
-* html .pun .codebox pre code {
-	display: block;
 }
 
 .pun .codebox pre.vscroll {
@@ -1040,10 +1012,6 @@ MAIN FORMS
 	padding: 0 18px 12px 18px;
 }
 
-* html .pun .blockform .box, * html .pun #posterror {
-	display: inline-block;
-}
-
 .pun .blockform .forminfo, .pun .error-info {
 	padding: 12px 18px;
 	border-style: solid;
@@ -1075,14 +1043,6 @@ MAIN FORMS
 .pun legend {
 	font-weight: bold;
 	padding: 10px 19px 4px 19px;
-}
-
-* html .pun legend {
-	margin-left: -7px;
-}
-
-*:first-child+html .pun legend {
-	margin-left: -7px;
 }
 
 .pun .infldset {
@@ -1149,11 +1109,6 @@ MAIN FORMS
 	padding: 3px 0 3px 1.75em;
 	position: relative;
 	min-height: 1px;
-}
-
-* html .pun .rbox label {
-	text-indent: -3px;
-	height: 1%;
 }
 
 .pun .rbox input {
@@ -1333,10 +1288,6 @@ PROFILES (+ ADMIN MENU)
 	padding: 9px 6px 3px 6px;
 	min-height: 1px;
 	text-decoration: none;
-}
-
-* html .pun .blockmenu a:link,  * html .pun .blockmenu a:visited {
-	height: 1%;
 }
 
 .pun .blockmenu a:hover, .pun .blockmenu a:active, .pun .blockmenu a:focus {
