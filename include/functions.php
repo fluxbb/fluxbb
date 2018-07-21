@@ -1656,35 +1656,6 @@ H2 {MARGIN: 0; COLOR: #FFFFFF; BACKGROUND-COLOR: #B84623; FONT-SIZE: 1.1em; PADD
 
 
 //
-// Unset any variables instantiated as a result of register_globals being enabled
-//
-function forum_unregister_globals()
-{
-	$register_globals = ini_get('register_globals');
-	if ($register_globals === '' || $register_globals === '0' || strtolower($register_globals) === 'off')
-		return;
-
-	// Prevent script.php?GLOBALS[foo]=bar
-	if (isset($_REQUEST['GLOBALS']) || isset($_FILES['GLOBALS']))
-		exit('I\'ll have a steak sandwich and... a steak sandwich.');
-
-	// Variables that shouldn't be unset
-	$no_unset = array('GLOBALS', '_GET', '_POST', '_COOKIE', '_REQUEST', '_SERVER', '_ENV', '_FILES');
-
-	// Remove elements in $GLOBALS that are present in any of the superglobals
-	$input = array_merge($_GET, $_POST, $_COOKIE, $_SERVER, $_ENV, $_FILES, isset($_SESSION) && is_array($_SESSION) ? $_SESSION : array());
-	foreach ($input as $k => $v)
-	{
-		if (!in_array($k, $no_unset) && isset($GLOBALS[$k]))
-		{
-			unset($GLOBALS[$k]);
-			unset($GLOBALS[$k]); // Double unset to circumvent the zend_hash_del_key_or_index hole in PHP <4.4.3 and <5.1.4
-		}
-	}
-}
-
-
-//
 // Removes any "bad" characters (characters which mess with the display of a page, are invisible, etc) from user input
 //
 function forum_remove_bad_characters()

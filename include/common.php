@@ -57,9 +57,6 @@ require PUN_ROOT.'include/utf8/utf8.php';
 // Strip out "bad" UTF-8 characters
 forum_remove_bad_characters();
 
-// Reverse the effect of register_globals
-forum_unregister_globals();
-
 // The addon manager is responsible for storing the hook listeners and communicating with the addons
 $flux_addons = new flux_addon_manager();
 
