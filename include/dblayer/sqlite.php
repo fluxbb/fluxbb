@@ -178,6 +178,12 @@ class DBLayer
 	}
 
 
+	function has_rows($query_id)
+	{
+		return sqlite_num_rows($query_id) > 0;
+	}
+
+
 	function affected_rows()
 	{
 		return ($this->link_id) ? @sqlite_changes($this->link_id) : false;

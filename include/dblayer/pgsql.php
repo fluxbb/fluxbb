@@ -159,6 +159,12 @@ class DBLayer
 	}
 
 
+	function has_rows($query_id)
+	{
+		return pg_num_rows($query_id) > 0;
+	}
+
+
 	function affected_rows()
 	{
 		return ($this->query_result) ? @pg_affected_rows($this->query_result) : false;
