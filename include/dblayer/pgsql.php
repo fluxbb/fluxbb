@@ -153,6 +153,9 @@ class DBLayer
 	}
 
 
+	/**
+	 * @deprecated since 1.6.0
+	 */
 	function num_rows($query_id = 0)
 	{
 		return ($query_id) ? @pg_num_rows($query_id) : false;
