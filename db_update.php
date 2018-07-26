@@ -249,7 +249,7 @@ function convert_to_utf8(&$str, $old_charset)
 	}
 
 	// Replace literal entities
-    $str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
+	$str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
 
 	// Replace numeric entities
 	$str = preg_replace_callback('%&#([0-9]+);%', 'utf8_callback_1', $str);
