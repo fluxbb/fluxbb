@@ -529,7 +529,7 @@ else
 
 	// Make sure FluxBB isn't already installed
 	$result = $db->query('SELECT 1 FROM '.$db_prefix.'users WHERE id=1');
-	if ($db->num_rows($result))
+	if ($db->has_rows($result))
 		error(sprintf($lang_install['Existing table error'], $db_prefix, $db_name));
 
 	// Check if InnoDB is available

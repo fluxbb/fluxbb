@@ -371,7 +371,7 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 		if (!is_null($start_at) && $end_at > 0)
 		{
 			$result = $db->query('SELECT 1 FROM '.$table.' WHERE '.$key.'>'.$end_at.' ORDER BY '.$key.' ASC LIMIT 1') or error('Unable to check for next row', __FILE__, __LINE__, $db->error());
-			$finished = $db->num_rows($result) == 0;
+			$finished = !$db->has_rows($result);
 		}
 
 		// Only swap the tables if we are doing this in 1 go, or it's the last go
@@ -409,7 +409,7 @@ function convert_table_utf8($table, $callback, $old_charset, $key = null, $start
 		if (!is_null($start_at) && $end_at > 0)
 		{
 			$result = $db->query('SELECT 1 FROM '.$table.' WHERE '.$key.'>'.$end_at.' ORDER BY '.$key.' ASC LIMIT 1') or error('Unable to check for next row', __FILE__, __LINE__, $db->error());
-			if ($db->num_rows($result) == 0)
+			if (!$db->has_rows($result))
 				return true;
 
 			return $end_at;
@@ -791,7 +791,7 @@ switch ($stage)
 			$temp_id = $db->result($result);
 
 			$result = $db->query('SELECT g_id FROM '.$db->prefix.'groups WHERE g_moderator = 1 AND g_id > 1 LIMIT 1') or error('Unable to select moderator group', __FILE__, __LINE__, $db->error());
-			if ($db->num_rows($result))
+			if ($db->has_rows($result))
 				$mod_gid = $db->result($result);
 			else
 			{
@@ -1519,7 +1519,7 @@ switch ($stage)
 
 				$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(ucp_preg_replace('%[^\p{L}\p{N}]%u', '', $username)).'\')) AND id>1') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
-				if ($db->num_rows($result))
+				if ($db->has_rows($result))
 				{
 					$busy = $db->result($result);
 					$errors[$id][] = sprintf($lang_update['Username duplicate error'], pun_htmlspecialchars($busy));
@@ -1701,7 +1701,7 @@ foreach ($errors[$id] as $cur_error)
 		{
 			$result = $db->query('SELECT 1 FROM '.$db->prefix.'posts WHERE id > '.$end_at.' ORDER BY id ASC LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
-			if ($db->num_rows($result) > 0)
+			if ($db->has_rows($result))
 				$query_str = '?stage=preparse_posts&start_at='.$end_at;
 		}
 
@@ -1735,7 +1735,7 @@ foreach ($errors[$id] as $cur_error)
 		if ($end_at > 0)
 		{
 			$result = $db->query('SELECT 1 FROM '.$db->prefix.'users WHERE id > '.$end_at.' ORDER BY id ASC LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
-			if ($db->num_rows($result) > 0)
+			if ($db->has_rows($result))
 				$query_str = '?stage=preparse_sigs&start_at='.$end_at;
 		}
 
@@ -1796,7 +1796,7 @@ foreach ($errors[$id] as $cur_error)
 		{
 			$result = $db->query('SELECT 1 FROM '.$db->prefix.'posts WHERE id > '.$end_at.' ORDER BY id ASC LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
-			if ($db->num_rows($result) > 0)
+			if ($db->has_rows($result))
 				$query_str = '?stage=rebuild_idx&start_at='.$end_at;
 		}
 

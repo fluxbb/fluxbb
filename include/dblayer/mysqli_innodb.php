@@ -235,14 +235,14 @@ class DBLayer
 	function table_exists($table_name, $no_prefix = false)
 	{
 		$result = $this->query('SHOW TABLES LIKE \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\'');
-		return $this->num_rows($result) > 0;
+		return $this->has_rows($result);
 	}
 
 
 	function field_exists($table_name, $field_name, $no_prefix = false)
 	{
 		$result = $this->query('SHOW COLUMNS FROM '.($no_prefix ? '' : $this->prefix).$table_name.' LIKE \''.$this->escape($field_name).'\'');
-		return $this->num_rows($result) > 0;
+		return $this->has_rows($result);
 	}
 
 

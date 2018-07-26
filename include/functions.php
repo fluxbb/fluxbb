@@ -264,7 +264,7 @@ function set_default_user()
 
 	// Fetch guest user
 	$result = $db->query('SELECT u.*, g.*, o.logged, o.last_post, o.last_search FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id LEFT JOIN '.$db->prefix.'online AS o ON o.ident=\''.$db->escape($remote_addr).'\' WHERE u.id=1') or error('Unable to fetch guest information', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
+	if (!$db->has_rows($result))
 		exit('Unable to fetch guest information. Your database must contain both a guest user and a guest user group.');
 
 	$pun_user = $db->fetch_assoc($result);
@@ -449,7 +449,7 @@ function check_username($username, $exclude_id = null)
 
 	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(ucp_preg_replace('%[^\p{L}\p{N}]%u', '', $username)).'\')) AND id>1'.$query) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
-	if ($db->num_rows($result))
+	if ($db->has_rows($result))
 	{
 		$busy = $db->result($result);
 		$errors[] = $lang_register['Username dupe 1'].' '.pun_htmlspecialchars($busy).'. '.$lang_register['Username dupe 2'];
@@ -661,7 +661,7 @@ function update_forum($forum_id)
 	$num_posts = $num_posts + $num_topics; // $num_posts is only the sum of all replies (we have to add the topic posts)
 
 	$result = $db->query('SELECT last_post, last_post_id, last_poster FROM '.$db->prefix.'topics WHERE forum_id='.$forum_id.' AND moved_to IS NULL ORDER BY last_post DESC LIMIT 1') or error('Unable to fetch last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result)) // There are topics in the forum
+	if ($db->has_rows($result)) // There are topics in the forum
 	{
 		list($last_post, $last_post_id, $last_poster) = $db->fetch_row($result);
 

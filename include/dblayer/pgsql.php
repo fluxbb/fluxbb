@@ -278,21 +278,21 @@ class DBLayer
 	function table_exists($table_name, $no_prefix = false)
 	{
 		$result = $this->query('SELECT 1 FROM pg_class WHERE relname = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\'');
-		return $this->num_rows($result) > 0;
+		return $this->has_rows($result);
 	}
 
 
 	function field_exists($table_name, $field_name, $no_prefix = false)
 	{
 		$result = $this->query('SELECT 1 FROM pg_class c INNER JOIN pg_attribute a ON a.attrelid = c.oid WHERE c.relname = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\' AND a.attname = \''.$this->escape($field_name).'\'');
-		return $this->num_rows($result) > 0;
+		return $this->has_rows($result);
 	}
 
 
 	function index_exists($table_name, $index_name, $no_prefix = false)
 	{
 		$result = $this->query('SELECT 1 FROM pg_index i INNER JOIN pg_class c1 ON c1.oid = i.indrelid INNER JOIN pg_class c2 ON c2.oid = i.indexrelid WHERE c1.relname = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\' AND c2.relname = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_'.$this->escape($index_name).'\'');
-		return $this->num_rows($result) > 0;
+		return $this->has_rows($result);
 	}
 
 

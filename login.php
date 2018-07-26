@@ -151,7 +151,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 		{
 			$result = $db->query('SELECT id, username, last_email_sent FROM '.$db->prefix.'users WHERE email=\''.$db->escape($email).'\'') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
-			if ($db->num_rows($result))
+			if ($db->has_rows($result))
 			{
 				// Load the "activate password" template
 				$mail_tpl = trim(file_get_contents(PUN_ROOT.'lang/'.$pun_user['language'].'/mail_templates/activate_password.tpl'));

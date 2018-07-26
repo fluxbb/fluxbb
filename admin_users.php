@@ -76,7 +76,7 @@ if (isset($_GET['ip_stats']))
 <?php
 
 	$result = $db->query('SELECT poster_ip, MAX(posted) AS last_used, COUNT(id) AS used_times FROM '.$db->prefix.'posts WHERE poster_id='.$ip_stats.' GROUP BY poster_ip ORDER BY last_used DESC LIMIT '.$start_from.', 50') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result))
+	if ($db->has_rows($result))
 	{
 		while ($cur_ip = $db->fetch_assoc($result))
 		{
@@ -465,7 +465,7 @@ else if (isset($_POST['delete_users']) || isset($_POST['delete_users_comply']))
 
 			// Find all posts made by this user
 			$result = $db->query('SELECT p.id, p.topic_id, t.forum_id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE p.poster_id IN ('.implode(',', $user_ids).')') or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
-			if ($db->num_rows($result))
+			if ($db->has_rows($result))
 			{
 				while ($cur_post = $db->fetch_assoc($result))
 				{
@@ -856,7 +856,7 @@ else if (isset($_GET['find_user']))
 <?php
 
 	$result = $db->query('SELECT u.id, u.username, u.email, u.title, u.num_posts, u.admin_note, g.g_id, g.g_user_title FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id>1'.(!empty($conditions) ? ' AND '.implode(' AND ', $conditions) : '').' ORDER BY '.$db->escape($order_by).' '.$db->escape($direction).' LIMIT '.$start_from.', 50') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result))
+	if ($db->has_rows($result))
 	{
 		while ($user_data = $db->fetch_assoc($result))
 		{

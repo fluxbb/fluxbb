@@ -27,7 +27,7 @@ if (!$pun_user['is_guest'])
 else
 	$result = $db->query('SELECT f.forum_name, f.redirect_url, f.moderators, f.num_topics, f.sort_by, fp.post_topics, 0 AS is_subscribed FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$id) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
 
-if (!$db->num_rows($result))
+if (!$db->has_rows($result))
 	message($lang_common['Bad request'], false, '404 Not Found');
 
 $cur_forum = $db->fetch_assoc($result);
@@ -152,7 +152,7 @@ require PUN_ROOT.'header.php';
 $result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE forum_id='.$id.' ORDER BY sticky DESC, '.$sort_by.', id DESC LIMIT '.$start_from.', '.$pun_user['disp_topics']) or error('Unable to fetch topic IDs', __FILE__, __LINE__, $db->error());
 
 // If there are topics in this forum
-if ($db->num_rows($result))
+if ($db->has_rows($result))
 {
 	$topic_ids = array();
 	for ($i = 0; $cur_topic_id = $db->result($result, $i); $i++)

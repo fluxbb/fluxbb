@@ -113,7 +113,7 @@ h1 {
 	{
 		$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE id > '.$end_at.' ORDER BY id ASC LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
-		if ($db->num_rows($result) > 0)
+		if ($db->has_rows($result))
 			$query_str = '?action=rebuild&i_per_page='.$per_page.'&i_start_at='.$db->result($result);
 	}
 
@@ -242,7 +242,7 @@ if ($action == 'prune')
 
 // Get the first post ID from the db
 $result = $db->query('SELECT id FROM '.$db->prefix.'posts ORDER BY id ASC LIMIT 1') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
-if ($db->num_rows($result))
+if ($db->has_rows($result))
 	$first_id = $db->result($result);
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Maintenance']);
