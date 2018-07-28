@@ -77,6 +77,13 @@ if (!file_exists(PUN_ROOT.'lang/'.$install_lang.'/install.php'))
 
 require PUN_ROOT.'lang/'.$install_lang.'/install.php';
 
+if (function_exists('define_forum_config'))
+{
+	// Assume configuration provided by a custom function is always
+	// valid.
+	exit($lang_install['Already installed']);
+}
+
 if (file_exists(PUN_ROOT.'config.php'))
 {
 	// Check to see whether FluxBB is already installed

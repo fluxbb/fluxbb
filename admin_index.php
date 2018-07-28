@@ -37,8 +37,9 @@ if ($action == 'check_upgrade')
 	else
 		message(sprintf($lang_admin_index['New version available message'], '<a href="http://fluxbb.org/">FluxBB.org</a>'));
 }
-// Remove install.php
-else if ($action == 'remove_install_file')
+// Remove install.php unless the configuration is provided by a custom
+// function when PUN_ROOT can be readonly.
+else if ($action == 'remove_install_file' && !function_exists('define_forum_config'))
 {
 	$deleted = @unlink(PUN_ROOT.'install.php');
 
@@ -48,7 +49,8 @@ else if ($action == 'remove_install_file')
 		message($lang_admin_index['Delete install.php failed']);
 }
 
-$install_file_exists = is_file(PUN_ROOT.'install.php');
+$ask_to_remove_install_file =
+	!function_exists('define_forum_config') && is_file(PUN_ROOT.'install.php');
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Index']);
 define('PUN_ACTIVE_PAGE', 'admin');
@@ -76,7 +78,7 @@ generate_admin_menu('index');
 			</div>
 		</div>
 
-<?php if ($install_file_exists) : ?>
+<?php if ($ask_to_remove_install_file) : ?>
 		<h2 class="block2"><span><?php echo $lang_admin_index['Alerts head'] ?></span></h2>
 		<div id="adalerts" class="box">
 			<p><?php printf($lang_admin_index['Install file exists'], '<a href="admin_index.php?action=remove_install_file">'.$lang_admin_index['Delete install file'].'</a>') ?></p>
