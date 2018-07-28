@@ -179,17 +179,16 @@ if (isset($_GET['show_users']))
 <?php
 
 	$result = $db->query('SELECT DISTINCT poster_id, poster FROM '.$db->prefix.'posts WHERE poster_ip=\''.$db->escape($ip).'\' ORDER BY poster ASC LIMIT '.$start_from.', 50') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-	$num_posts = $db->num_rows($result);
 
-	if ($num_posts)
+	$posters = $poster_ids = array();
+	while ($cur_poster = $db->fetch_assoc($result))
 	{
-		$posters = $poster_ids = array();
-		while ($cur_poster = $db->fetch_assoc($result))
-		{
-			$posters[] = $cur_poster;
-			$poster_ids[] = $cur_poster['poster_id'];
-		}
+		$posters[] = $cur_poster;
+		$poster_ids[] = $cur_poster['poster_id'];
+	}
 
+	if (!empty($posters))
+	{
 		$result = $db->query('SELECT u.id, u.username, u.email, u.title, u.num_posts, u.admin_note, g.g_id, g.g_user_title FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id>1 AND u.id IN('.implode(',', $poster_ids).')') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
 		$user_data = array();
