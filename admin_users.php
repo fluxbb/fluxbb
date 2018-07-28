@@ -28,8 +28,8 @@ if (isset($_GET['ip_stats']))
 		message($lang_common['Bad request'], false, '404 Not Found');
 
 	// Fetch ip count
-	$result = $db->query('SELECT poster_ip, MAX(posted) AS last_used FROM '.$db->prefix.'posts WHERE poster_id='.$ip_stats.' GROUP BY poster_ip') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-	$num_ips = $db->num_rows($result);
+	$result = $db->query('SELECT COUNT(DISTINCT poster_ip) FROM '.$db->prefix.'posts WHERE poster_id='.$ip_stats) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+	$num_ips = $db->result($result);
 
 	// Determine the ip offset (based on $_GET['p'])
 	$num_pages = ceil($num_ips / 50);
@@ -129,8 +129,8 @@ if (isset($_GET['show_users']))
 		message($lang_admin_users['Bad IP message']);
 
 	// Fetch user count
-	$result = $db->query('SELECT DISTINCT poster_id, poster FROM '.$db->prefix.'posts WHERE poster_ip=\''.$db->escape($ip).'\'') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-	$num_users = $db->num_rows($result);
+	$result = $db->query('SELECT COUNT(DISTINCT poster_id, poster) FROM '.$db->prefix.'posts WHERE poster_ip=\''.$db->escape($ip).'\'') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+	$num_users = $db->result($result);
 
 	// Determine the user offset (based on $_GET['p'])
 	$num_pages = ceil($num_users / 50);
