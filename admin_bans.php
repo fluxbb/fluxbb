@@ -257,10 +257,43 @@ else if (isset($_POST['add_edit_ban']))
 	}
 
 	require PUN_ROOT.'include/email.php';
-	if ($ban_email != '' && !is_valid_email($ban_email))
+	if ($ban_email != '')
 	{
-		if (!preg_match('%^[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,63})$%', $ban_email))
+	    // Validate email or domain format
+		if (!is_valid_email($ban_email) && !preg_match('%^[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,63})$%', $ban_email))
 			message($lang_admin_bans['Invalid e-mail message']);
+
+		// Let's ensure we are not adding a duplicate ban
+        $dup_conditions = array('(expire IS NULL OR expire > '.time().')');
+
+        // If we're adding an email address, we can also check for the domain
+        $domain_index = strpos($ban_email, '@');
+
+        if ($domain_index !== false && $_POST['mode'] == 'add')
+        {
+            // We are not checking for domains when editing bans, as that might
+            // prevent editing other fields of already existing email bans for
+            // which a domain ban was added later.
+            $ban_domain = substr($ban_email, $domain_index + 1);
+            $dup_conditions[] = 'email IN (\''.$db->escape($ban_email).'\', \''.$db->escape($ban_domain).'\')';
+        }
+        else
+			$dup_conditions[] = 'email = \''.$db->escape($ban_email).'\'';
+
+        // When editing, we also need to exclude the current ban
+		if ($_POST['mode'] == 'edit')
+		    $dup_conditions[] = 'id != '.intval($_POST['ban_id']);
+
+        $result = $db->query('SELECT email FROM '.$db->prefix.'bans WHERE '.implode(' AND ', $dup_conditions)) or error('Unable to check for duplicate bans', __FILE__, __LINE__, $db->error());
+        if ($match = $db->result($result))
+        {
+            $is_domain = strpos($match, '@') === false;
+
+            if ($is_domain)
+				message(sprintf($lang_admin_bans['Duplicate domain message'], $match));
+			else
+				message(sprintf($lang_admin_bans['Duplicate e-mail message'], $match));
+        }
 	}
 
 	if ($ban_expire != '' && $ban_expire != 'Never')
