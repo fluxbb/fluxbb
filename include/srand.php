@@ -43,9 +43,10 @@ function secure_random_bytes($len = 10)
     * openssl_random_pseudo_bytes. 
     */
    $SSLstr = '4'; // http://xkcd.com/221/
-   if (function_exists('openssl_random_pseudo_bytes') && 
-       (version_compare(PHP_VERSION, '5.3.4') >= 0 || 
-        substr(PHP_OS, 0, 3) !== 'WIN'))
+   if (function_exists('openssl_random_pseudo_bytes') &&
+       (substr(PHP_VERSION, 0, 3) == '5.4' && version_compare(PHP_VERSION, '5.4.44') >= 0) ||
+       (substr(PHP_VERSION, 0, 3) == '5.5' && version_compare(PHP_VERSION, '5.5.28') >= 0) ||
+       (version_compare(PHP_VERSION, '5.6.12') >= 0))
    {
       $SSLstr = openssl_random_pseudo_bytes($len, $strong);
       if ($strong) {
