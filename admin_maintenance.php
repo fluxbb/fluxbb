@@ -28,6 +28,8 @@ if ($action == 'rebuild')
 {
     confirm_referrer('admin_maintenance.php');
 
+    check_csrf($_GET['csrf_token']);
+
 	$per_page = isset($_GET['i_per_page']) ? intval($_GET['i_per_page']) : 0;
 	$start_at = isset($_GET['i_start_at']) ? intval($_GET['i_start_at']) : 0;
 
@@ -113,7 +115,7 @@ h1 {
 		$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE id > '.$end_at.' ORDER BY id ASC LIMIT 1') or error('Unable to fetch next ID', __FILE__, __LINE__, $db->error());
 
 		if ($db->num_rows($result) > 0)
-			$query_str = '?action=rebuild&i_per_page='.$per_page.'&i_start_at='.$db->result($result);
+			$query_str = '?action=rebuild&csrf_token='.pun_csrf_token().'&i_per_page='.$per_page.'&i_start_at='.$db->result($result);
 	}
 
 	$db->end_transaction();
@@ -257,6 +259,7 @@ generate_admin_menu('maintenance');
 			<form method="get" action="admin_maintenance.php">
 				<div class="inform">
 					<input type="hidden" name="action" value="rebuild" />
+                    <input type="hidden" name="csrf_token" value="<?php echo pun_csrf_token() ?>" />
 					<fieldset>
 						<legend><?php echo $lang_admin_maintenance['Rebuild index subhead'] ?></legend>
 						<div class="infldset">
