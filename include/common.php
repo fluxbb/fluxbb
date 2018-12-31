@@ -66,6 +66,9 @@ $flux_addons = new flux_addon_manager();
 // Record the start time (will be used to calculate the generation time for the page)
 $pun_start = get_microtime();
 
+// Seed the random number generator for systems where this does not happen automatically
+mt_srand();
+
 // Make sure PHP reports all errors except E_NOTICE. FluxBB supports E_ALL, but a lot of scripts it may interact with, do not
 error_reporting(E_ALL ^ E_NOTICE);
 
