@@ -45,14 +45,10 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		{
 			$authorized = true;
 
-			$remove_salt = !empty($cur_user['salt']);
-			$rehash = $remove_salt || pun_password_needs_rehash($user_password);
-
-			if ($rehash)
+			if (!empty($cur_user['salt']) || pun_password_needs_rehash($user_password))
 			{
 				$user_password = pun_password_hash($form_password);
-				$salt_sql = ($remove_salt ? 'salt=NULL,' : '');
-				$db->query('UPDATE '.$db->prefix.'users SET '.$salt_sql.' password=\''.$db->escape($user_password).'\' WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
+				$db->query('UPDATE '.$db->prefix.'users SET salt=NULL, password=\''.$db->escape($user_password).'\' WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
 			}
 		}
 	}
