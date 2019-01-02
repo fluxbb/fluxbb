@@ -1096,8 +1096,6 @@ function validate_redirect($redirect_url, $fallback_url)
 // Compute the hash of a password
 // using a secure password hashing algorithm, if available
 // As of PHP 7.2, this is BLOWFISH.
-// This function will fall back to unsecure defaults if
-// password_hash does not exist (requires >=PHP5.5)
 //
 function pun_password_hash($pass)
 {
@@ -1107,10 +1105,7 @@ function pun_password_hash($pass)
 	if (empty($cost))
 		$cost = 10;
 
-	if (function_exists('password_hash'))
-		return password_hash($pass, PASSWORD_DEFAULT, array('cost' => $cost));
-	else
-		return pun_hash($pass);
+	return password_hash($pass, PASSWORD_DEFAULT, array('cost' => $cost));
 }
 
 
@@ -1131,7 +1126,7 @@ function pun_password_verify($pass, $hash)
 // Verify that $pass and $hash match
 // This supports any password hashing algorithm
 // used by pun_password_hash, but is also
-// backwards-compatable with older versions of this software.
+// backwards-compatible with older versions of this software.
 //
 function pun_password_verify_legacy($pass, $hash, $salt = null)
 {
@@ -1164,20 +1159,12 @@ function pun_password_needs_rehash($hash)
 	if (empty($cost))
 		$cost = 10;
 
-	// Check for legacy md5 hash
-	if (strlen($hash) < 40)
-		return true;
-
-	// Check for legacy sha1 hash. Note: legacy sha1 is used
-	// if password_hash is not available
-	if (function_exists('password_hash') && strlen($hash) == 40)
+	// Check for legacy md5 or sha1 hash
+	if (strlen($hash) <= 40)
 		return true;
 
 	// Check for out-of-date hash type or cost
-	if (function_exists('password_needs_rehash'))
-		return password_needs_rehash($hash, PASSWORD_DEFAULT, array('cost' => $cost));
-
-	return false;
+	return password_needs_rehash($hash, PASSWORD_DEFAULT, array('cost' => $cost));
 }
 
 
