@@ -36,33 +36,25 @@ if (isset($_POST['form_sent']) && $action == 'in')
 
 	if (!empty($cur_user['password']))
 	{
-		$form_password_hash = pun_hash($form_password); // Will result in a SHA-1 hash
+		// Represents the hash of the user's password
+		// If it's transparently changed in this function,
+		// this allows the cookie token to reflect the new hash
+		$user_password = $cur_user['password'];
 
-		// If there is a salt in the database we have upgraded from 1.3-legacy though haven't yet logged in
-		if (!empty($cur_user['salt']))
+		if (pun_password_verify_legacy($form_password, $user_password, $cur_user['salt']))
 		{
-			$is_salt_authorized = pun_hash_equals(sha1($cur_user['salt'].sha1($form_password)), $cur_user['password']);
-			if ($is_salt_authorized) // 1.3 used sha1(salt.sha1(pass))
- 			{
-				$authorized = true;
+			$authorized = true;
 
-				$db->query('UPDATE '.$db->prefix.'users SET password=\''.$form_password_hash.'\', salt=NULL WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
-			}
-		}
-		// If the length isn't 40 then the password isn't using sha1, so it must be md5 from 1.2
-		else if (strlen($cur_user['password']) != 40)
-		{
-			$is_md5_authorized = pun_hash_equals(md5($form_password), $cur_user['password']);
-			if ($is_md5_authorized)
+			$remove_salt = !empty($cur_user['salt']);
+			$rehash = $remove_salt || pun_password_needs_rehash($user_password);
+
+			if ($rehash)
 			{
-				$authorized = true;
-
-				$db->query('UPDATE '.$db->prefix.'users SET password=\''.$form_password_hash.'\' WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
+				$user_password = pun_password_hash($form_password);
+				$salt_sql = ($remove_salt ? 'salt=NULL,' : '');
+				$db->query('UPDATE '.$db->prefix.'users SET '.$salt_sql.' password=\''.$db->escape($user_password).'\' WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
 			}
 		}
-		// Otherwise we should have a normal sha1 password
-		else
-			$authorized = pun_hash_equals($cur_user['password'], $form_password_hash);
 	}
 
 	if (!$authorized)
@@ -89,7 +81,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		$db->query('DELETE FROM '.$db->prefix.'online WHERE ident=\''.$db->escape(get_remote_address()).'\'') or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
 
 		$expire = ($save_pass == '1') ? time() + 1209600 : time() + $pun_config['o_timeout_visit'];
-		pun_setcookie($cur_user['id'], $form_password_hash, $expire);
+		pun_setcookie($cur_user['id'], $user_password, $expire);
 
 		// Reset tracked topics
 		set_tracked_topics(null);

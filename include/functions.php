@@ -155,7 +155,7 @@ function authenticate_user($user, $password, $password_is_hash = false)
 	$pun_user = $db->fetch_assoc($result);
 
 	$is_password_authorized = pun_hash_equals($password, $pun_user['password']);
-	$is_hash_authorized = pun_hash_equals(pun_hash($password), $pun_user['password']);
+	$is_hash_authorized = pun_password_verify($password, $pun_user['password']);
 
 	if (!isset($pun_user['id']) ||
 		($password_is_hash && !$is_password_authorized ||
@@ -1089,6 +1089,95 @@ function validate_redirect($redirect_url, $fallback_url)
 		return $redirect_url;
 	else
 		return $fallback_url;
+}
+
+
+//
+// Compute the hash of a password
+// using a secure password hashing algorithm, if available
+// As of PHP 7.2, this is BLOWFISH.
+// This function will fall back to unsecure defaults if
+// password_hash does not exist (requires >=PHP5.5)
+//
+function pun_password_hash($pass)
+{
+	global $password_hash_cost;
+
+	$cost = $password_hash_cost;
+	if (empty($cost))
+		$cost = 10;
+
+	if (function_exists('password_hash'))
+		return password_hash($pass, PASSWORD_DEFAULT, array('cost' => $cost));
+	else
+		return pun_hash($pass);
+}
+
+
+//
+// Verify that $pass and $hash match
+// This supports any password hashing algorithm
+// used by pun_password_hash
+//
+function pun_password_verify($pass, $hash)
+{
+	if (!empty($hash) && $hash[0] !== '$')
+		return pun_hash_equals(pun_hash($pass), $hash);
+	else
+		return password_verify($pass, $hash);
+}
+
+//
+// Verify that $pass and $hash match
+// This supports any password hashing algorithm
+// used by pun_password_hash, but is also
+// backwards-compatable with older versions of this software.
+//
+function pun_password_verify_legacy($pass, $hash, $salt = null)
+{
+	// MD5 from 1.2
+	if (strlen($hash) < 40)
+		return pun_hash_equals(md5($pass), $hash);
+
+	// SHA1-With-Salt from 1.3
+	if (!empty($salt))
+		return pun_hash_equals(sha1($salt . sha1($pass)), $hash);
+
+	// SHA1-Without-Salt from 1.4
+	if (strlen($hash) == 40)
+		return pun_hash_equals(sha1($pass), $hash);
+
+	// Support current password standard
+	return pun_password_verify($pass, $hash);
+}
+
+
+//
+// Check if $hash is outdated and needs to be rehashed
+//
+function pun_password_needs_rehash($hash)
+{
+	global $password_hash_cost;
+
+	// Determine appropriate cost
+	$cost = $password_hash_cost;
+	if (empty($cost))
+		$cost = 10;
+
+	// Check for legacy md5 hash
+	if (strlen($hash) < 40)
+		return true;
+
+	// Check for legacy sha1 hash. Note: legacy sha1 is used
+	// if password_hash is not available
+	if (function_exists('password_hash') && strlen($hash) == 40)
+		return true;
+
+	// Check for out-of-date hash type or cost
+	if (function_exists('password_needs_rehash'))
+		return password_needs_rehash($hash, PASSWORD_DEFAULT, array('cost' => $cost));
+
+	return false;
 }
 
 

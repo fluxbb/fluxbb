@@ -102,16 +102,16 @@ if ($action == 'change_pass')
 		{
 			$old_password_hash = pun_hash($old_password);
 
-			if ($cur_user['password'] == $old_password_hash || $pun_user['is_admmod'])
+			if (pun_password_verify($old_password, $cur_user['password']) || $pun_user['is_admmod'])
 				$authorized = true;
 		}
 
 		if (!$authorized)
 			message($lang_profile['Wrong pass']);
 
-		$new_password_hash = pun_hash($new_password1);
+		$new_password_hash = pun_password_hash($new_password1);
 
-		$db->query('UPDATE '.$db->prefix.'users SET password=\''.$new_password_hash.'\''.(!empty($cur_user['salt']) ? ', salt=NULL' : '').' WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
+		$db->query('UPDATE '.$db->prefix.'users SET password=\''.$db->escape($new_password_hash).'\''.(!empty($cur_user['salt']) ? ', salt=NULL' : '').' WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
 
 		if ($pun_user['id'] == $id)
 			pun_setcookie($pun_user['id'], $new_password_hash, time() + $pun_config['o_timeout_visit']);
@@ -193,7 +193,7 @@ else if ($action == 'change_email')
 	}
 	else if (isset($_POST['form_sent']))
 	{
-		if (pun_hash($_POST['req_password']) !== $pun_user['password'])
+		if (!pun_password_verify($_POST['req_password'], $pun_user['password']))
 			message($lang_profile['Wrong pass']);
 
 		// Make sure they got here from the site
