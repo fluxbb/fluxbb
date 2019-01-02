@@ -155,7 +155,7 @@ function authenticate_user($user, $password, $password_is_hash = false)
 	$pun_user = $db->fetch_assoc($result);
 
 	$is_password_authorized = hash_equals($password, $pun_user['password']);
-	$is_hash_authorized = pun_password_verify($password, $pun_user['password']);
+	$is_hash_authorized = flux_password_verify($password, $pun_user['password']);
 
 	if (!isset($pun_user['id']) ||
 		($password_is_hash && !$is_password_authorized ||
@@ -1097,7 +1097,7 @@ function validate_redirect($redirect_url, $fallback_url)
 // using a secure password hashing algorithm, if available
 // As of PHP 7.2, this is BLOWFISH.
 //
-function pun_password_hash($pass)
+function flux_password_hash($pass)
 {
 	global $password_hash_cost;
 
@@ -1112,9 +1112,9 @@ function pun_password_hash($pass)
 //
 // Verify that $pass and $hash match
 // This supports any password hashing algorithm
-// used by pun_password_hash
+// used by flux_password_hash
 //
-function pun_password_verify($pass, $hash)
+function flux_password_verify($pass, $hash)
 {
 	if (!empty($hash) && $hash[0] !== '$')
 		return hash_equals(pun_hash($pass), $hash);
@@ -1125,10 +1125,10 @@ function pun_password_verify($pass, $hash)
 //
 // Verify that $pass and $hash match
 // This supports any password hashing algorithm
-// used by pun_password_hash, but is also
+// used by flux_password_hash, but is also
 // backwards-compatible with older versions of this software.
 //
-function pun_password_verify_legacy($pass, $hash, $salt = null)
+function flux_password_verify_legacy($pass, $hash, $salt = null)
 {
 	// MD5 from 1.2
 	if (strlen($hash) < 40)
@@ -1143,14 +1143,14 @@ function pun_password_verify_legacy($pass, $hash, $salt = null)
 		return hash_equals(sha1($pass), $hash);
 
 	// Support current password standard
-	return pun_password_verify($pass, $hash);
+	return flux_password_verify($pass, $hash);
 }
 
 
 //
 // Check if $hash is outdated and needs to be rehashed
 //
-function pun_password_needs_rehash($hash)
+function flux_password_needs_rehash($hash)
 {
 	global $password_hash_cost;
 
