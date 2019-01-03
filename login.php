@@ -41,7 +41,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		// this allows the cookie token to reflect the new hash
 		$user_password = $cur_user['password'];
 
-		if (flux_password_verify_legacy($form_password, $user_password, $cur_user['salt']))
+		if (flux_password_verify($form_password, $user_password, $cur_user['salt']))
 		{
 			$authorized = true;
 

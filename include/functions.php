@@ -1112,23 +1112,10 @@ function flux_password_hash($pass)
 //
 // Verify that $pass and $hash match
 // This supports any password hashing algorithm
-// used by flux_password_hash
-//
-function flux_password_verify($pass, $hash)
-{
-	if (!empty($hash) && $hash[0] !== '$')
-		return hash_equals(pun_hash($pass), $hash);
-	else
-		return password_verify($pass, $hash);
-}
-
-//
-// Verify that $pass and $hash match
-// This supports any password hashing algorithm
 // used by flux_password_hash, but is also
 // backwards-compatible with older versions of this software.
 //
-function flux_password_verify_legacy($pass, $hash, $salt = null)
+function flux_password_verify($pass, $hash, $salt = null)
 {
 	// MD5 from 1.2
 	if (strlen($hash) < 40)
@@ -1143,7 +1130,7 @@ function flux_password_verify_legacy($pass, $hash, $salt = null)
 		return hash_equals(sha1($pass), $hash);
 
 	// Support current password standard
-	return flux_password_verify($pass, $hash);
+	return password_verify($pass, $hash);
 }
 
 
