@@ -1101,11 +1101,7 @@ function flux_password_hash($pass)
 {
 	global $password_hash_cost;
 
-	$cost = $password_hash_cost;
-	if (empty($cost))
-		$cost = 10;
-
-	return password_hash($pass, PASSWORD_DEFAULT, array('cost' => $cost));
+	return password_hash($pass, PASSWORD_DEFAULT, array('cost' => $password_hash_cost));
 }
 
 
@@ -1141,17 +1137,12 @@ function flux_password_needs_rehash($hash)
 {
 	global $password_hash_cost;
 
-	// Determine appropriate cost
-	$cost = $password_hash_cost;
-	if (empty($cost))
-		$cost = 10;
-
 	// Check for legacy md5 or sha1 hash
 	if (strlen($hash) <= 40)
 		return true;
 
 	// Check for out-of-date hash type or cost
-	return password_needs_rehash($hash, PASSWORD_DEFAULT, array('cost' => $cost));
+	return password_needs_rehash($hash, PASSWORD_DEFAULT, array('cost' => $password_hash_cost));
 }
 
 
