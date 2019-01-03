@@ -55,7 +55,7 @@ if ($action == 'change_pass')
 			message($lang_profile['Pass key bad'].' <a href="mailto:'.pun_htmlspecialchars($pun_config['o_admin_email']).'">'.pun_htmlspecialchars($pun_config['o_admin_email']).'</a>.');
 		else
 		{
-			$db->query('UPDATE '.$db->prefix.'users SET password=\''.$db->escape($cur_user['activate_string']).'\', activate_string=NULL, activate_key=NULL'.(!empty($cur_user['salt']) ? ', salt=NULL' : '').' WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'users SET password=\''.$db->escape($cur_user['activate_string']).'\', activate_string=NULL, activate_key=NULL WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
 
 			message($lang_profile['Pass updated'], true);
 		}
@@ -111,7 +111,7 @@ if ($action == 'change_pass')
 
 		$new_password_hash = flux_password_hash($new_password1);
 
-		$db->query('UPDATE '.$db->prefix.'users SET password=\''.$db->escape($new_password_hash).'\''.(!empty($cur_user['salt']) ? ', salt=NULL' : '').' WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
+		$db->query('UPDATE '.$db->prefix.'users SET password=\''.$db->escape($new_password_hash).'\' WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
 
 		if ($pun_user['id'] == $id)
 			pun_setcookie($pun_user['id'], $new_password_hash, time() + $pun_config['o_timeout_visit']);

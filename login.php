@@ -41,14 +41,14 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		// this allows the cookie token to reflect the new hash
 		$user_password = $cur_user['password'];
 
-		if (flux_password_verify($form_password, $user_password, $cur_user['salt']))
+		if (flux_password_verify($form_password, $user_password))
 		{
 			$authorized = true;
 
-			if (!empty($cur_user['salt']) || flux_password_needs_rehash($user_password))
+			if (flux_password_needs_rehash($user_password))
 			{
 				$user_password = flux_password_hash($form_password);
-				$db->query('UPDATE '.$db->prefix.'users SET salt=NULL, password=\''.$db->escape($user_password).'\' WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
+				$db->query('UPDATE '.$db->prefix.'users SET password=\''.$db->escape($user_password).'\' WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
 			}
 		}
 	}

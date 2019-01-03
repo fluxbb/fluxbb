@@ -1111,19 +1111,30 @@ function flux_password_hash($pass)
 // used by flux_password_hash, but is also
 // backwards-compatible with older versions of this software.
 //
-function flux_password_verify($pass, $hash, $salt = null)
+function flux_password_verify($pass, $hash)
 {
-	// MD5 from 1.2
-	if (strlen($hash) < 40)
-		return hash_equals(md5($pass), $hash);
-
-	// SHA1-With-Salt from 1.3
-	if (!empty($salt))
-		return hash_equals(sha1($salt . sha1($pass)), $hash);
-
-	// SHA1-Without-Salt from 1.4
-	if (strlen($hash) == 40)
-		return hash_equals(sha1($pass), $hash);
+	if ($hash[0] == '#')
+	{
+		// MD5 from 1.2
+		if (substr($hash, 0, 5) == '#MD5#')
+		{
+			$pass = md5($pass);
+			$hash = substr($hash, 5);
+		}
+		// SHA1-With-Salt from 1.3
+		else if (substr($hash, 0, 8) == '#SHA1-S#')
+		{
+			preg_match('/^#SHA1-S#(.+)#(.+)$/', $hash, $matches);
+			list(, $salt, $hash) = $matches;
+			$pass = sha1($salt.sha1($pass));
+		}
+		// SHA1-Without-Salt from 1.4
+		else if (substr($hash, 0, 6) == '#SHA1#')
+		{
+			$pass = sha1($pass);
+			$hash = substr($hash, 6);
+		}
+	}
 
 	// Support current password standard
 	return password_verify($pass, $hash);
@@ -1137,8 +1148,8 @@ function flux_password_needs_rehash($hash)
 {
 	global $password_hash_cost;
 
-	// Check for legacy md5 or sha1 hash
-	if (strlen($hash) <= 40)
+	// Check for legacy password (md5 or sha1 hash)
+	if ($hash[0] === '#')
 		return true;
 
 	// Check for out-of-date hash type or cost
