@@ -9,7 +9,7 @@
 // The FluxBB version this script updates to
 define('UPDATE_TO', '1.5.10');
 
-define('UPDATE_TO_DB_REVISION', 22);
+define('UPDATE_TO_DB_REVISION', 23);
 define('UPDATE_TO_SI_REVISION', 2);
 define('UPDATE_TO_PARSER_REVISION', 2);
 
@@ -116,6 +116,9 @@ $cur_version = $pun_config['o_cur_version'];
 
 if (version_compare($cur_version, '1.2', '<'))
 	error(sprintf($lang_update['Version mismatch error'], $db_name));
+
+if (!isset($password_hash_cost))
+    error(sprintf($lang_update['Password cost missing error']));
 
 // Do some DB type specific checks
 $mysql = false;
@@ -676,10 +679,6 @@ switch ($stage)
 		$db->alter_field('users', 'jabber', 'VARCHAR(80)', true) or error('Unable to alter jabber field', __FILE__, __LINE__, $db->error());
 		$db->alter_field('users', 'msn', 'VARCHAR(80)', true) or error('Unable to alter msn field', __FILE__, __LINE__, $db->error());
 		$db->alter_field('users', 'activate_string', 'VARCHAR(80)', true) or error('Unable to alter activate_string field', __FILE__, __LINE__, $db->error());
-
-		// Make password field VARCHAR(255) to support password_hash
-		// 255 is recommended by the PHP manual: http://php.net/manual/en/function.password-hash.php
-		$db->alter_field('users', 'password', 'VARCHAR(255)', false) or error('Unable to alter password field', __FILE__, __LINE__, $db->error());
 
 		// Make all IP fields VARCHAR(39) to support IPv6
 		$db->alter_field('posts', 'poster_ip', 'VARCHAR(39)', true) or error('Unable to alter poster_ip field', __FILE__, __LINE__, $db->error());
@@ -1714,7 +1713,7 @@ foreach ($errors[$id] as $cur_error)
 
 	// Preparse signatures
 	case 'preparse_sigs':
-		$query_str = '?stage=rebuild_idx';
+		$query_str = '?stage=harden_passwords';
 
 		// If we don't need to parse the sigs, skip this stage
 		if (isset($pun_config['o_parser_revision']) && $pun_config['o_parser_revision'] >= UPDATE_TO_PARSER_REVISION)
@@ -1742,6 +1741,51 @@ foreach ($errors[$id] as $cur_error)
 			if ($db->has_rows($result))
 				$query_str = '?stage=preparse_sigs&start_at='.$end_at;
 		}
+
+		break;
+
+
+	// Convert legacy passwords
+	case 'harden_passwords':
+		$query_str = '?stage=rebuild_idx';
+
+		// Make password field VARCHAR(255) to support password_hash
+		// 255 is recommended by the PHP manual: http://php.net/manual/en/function.password-hash.php
+		if ($start_at == 0)
+			$db->alter_field('users', 'password', 'VARCHAR(255)', false) or error('Unable to alter password field', __FILE__, __LINE__, $db->error());
+
+		// Fetch passwords in batches
+		$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE id>'.$start_at.' ORDER BY id ASC LIMIT '.PER_PAGE, false) or error('Unable to fetch user password hashes', __FILE__, __LINE__, $db->error());
+
+		while ($cur_user = $db->fetch_assoc($result))
+		{
+			$old_password = $cur_user['password'];
+			$remove_salt = !empty($cur_user['salt']);
+
+			if (strlen($old_password) == 32) // MD5 from 1.2
+				$new_password_hash = '#MD5#'.flux_password_hash($old_password);
+			else if ($remove_salt) // Salted SHA1 from 1.3
+				$new_password_hash = '#SHA1-S#'.$cur_user['salt'].'#'.flux_password_hash($old_password);
+			else if (strlen($old_password) == 40) // Unsalted SHA1 from 1.4
+				$new_password_hash = '#SHA1#'.flux_password_hash($old_password);
+			else
+				$new_password_hash = $old_password;
+
+			$db->query('UPDATE '.$db->prefix.'users SET '.($remove_salt ? 'salt=NULL,' : '').' password=\''.$db->escape($new_password_hash).'\' WHERE id='.$cur_user['id']) or error('Unable to save updated password', __FILE__, __LINE__, $db->error());
+
+			$end_at = $cur_user['id'];
+		}
+
+		if ($end_at > 0)
+		{
+			$result = $db->query('SELECT 1 FROM '.$db->prefix.'users WHERE id>'.$end_at.' ORDER BY id ASC LIMIT 1') or error('Unable to check for next row', __FILE__, __LINE__, $db->error());
+			if ($db->has_rows($result))
+				$query_str = '?stage=harden_passwords&start_at='.$end_at;
+			else
+				$db->drop_field('users', 'salt');
+		}
+		else
+		    $db->drop_field('users', 'salt');
 
 		break;
 
