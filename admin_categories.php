@@ -48,30 +48,24 @@ else if (isset($_POST['del_cat']) || isset($_POST['del_cat_comply']))
 		@set_time_limit(0);
 
 		$result = $db->query('SELECT id FROM '.$db->prefix.'forums WHERE cat_id='.$cat_to_delete) or error('Unable to fetch forum list', __FILE__, __LINE__, $db->error());
-		$num_forums = $db->num_rows($result);
 
-		for ($i = 0; $i < $num_forums; ++$i)
+		while ($cur_forum = $db->fetch_assoc($result))
 		{
-			$cur_forum = $db->result($result, $i);
-
 			// Prune all posts and topics
-			prune($cur_forum, 1, -1);
+			prune($cur_forum['id'], 1, -1);
 
 			// Delete the forum
-			$db->query('DELETE FROM '.$db->prefix.'forums WHERE id='.$cur_forum) or error('Unable to delete forum', __FILE__, __LINE__, $db->error());
+			$db->query('DELETE FROM '.$db->prefix.'forums WHERE id='.$cur_forum['id']) or error('Unable to delete forum', __FILE__, __LINE__, $db->error());
 		}
 
 		// Locate any "orphaned redirect topics" and delete them
 		$result = $db->query('SELECT t1.id FROM '.$db->prefix.'topics AS t1 LEFT JOIN '.$db->prefix.'topics AS t2 ON t1.moved_to=t2.id WHERE t2.id IS NULL AND t1.moved_to IS NOT NULL') or error('Unable to fetch redirect topics', __FILE__, __LINE__, $db->error());
-		$num_orphans = $db->num_rows($result);
 
-		if ($num_orphans)
-		{
-			for ($i = 0; $i < $num_orphans; ++$i)
-				$orphans[] = $db->result($result, $i);
+		while ($cur_topic = $db->fetch_assoc($result))
+			$orphans[] = $cur_topic['id'];
 
+		if (!empty($orphans))
 			$db->query('DELETE FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $orphans).')') or error('Unable to delete redirect topics', __FILE__, __LINE__, $db->error());
-		}
 
 		// Delete the category
 		$db->query('DELETE FROM '.$db->prefix.'categories WHERE id='.$cat_to_delete) or error('Unable to delete category', __FILE__, __LINE__, $db->error());
@@ -155,10 +149,9 @@ else if (isset($_POST['update'])) // Change position and name of the categories
 
 // Generate an array with all categories
 $result = $db->query('SELECT id, cat_name, disp_position FROM '.$db->prefix.'categories ORDER BY disp_position') or error('Unable to fetch category list', __FILE__, __LINE__, $db->error());
-$num_cats = $db->num_rows($result);
 
-for ($i = 0; $i < $num_cats; ++$i)
-	$cat_list[] = $db->fetch_assoc($result);
+while ($cur_cat = $db->fetch_assoc($result))
+	$cat_list[] = $cur_cat;
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Categories']);
 define('PUN_ACTIVE_PAGE', 'admin');
@@ -190,7 +183,7 @@ generate_admin_menu('categories');
 			</form>
 		</div>
 
-<?php if ($num_cats): ?>		<h2 class="block2"><span><?php echo $lang_admin_categories['Delete categories head'] ?></span></h2>
+<?php if (!empty($cat_list)): ?>		<h2 class="block2"><span><?php echo $lang_admin_categories['Delete categories head'] ?></span></h2>
 		<div class="box">
 			<form method="post" action="admin_categories.php">
 				<div class="inform">
@@ -220,7 +213,7 @@ generate_admin_menu('categories');
 		</div>
 <?php endif; ?>
 
-<?php if ($num_cats): ?>		<h2 class="block2"><span><?php echo $lang_admin_categories['Edit categories head'] ?></span></h2>
+<?php if (!empty($cat_list)): ?>		<h2 class="block2"><span><?php echo $lang_admin_categories['Edit categories head'] ?></span></h2>
 		<div class="box">
 			<form method="post" action="admin_categories.php">
 				<div class="inform">

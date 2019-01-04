@@ -59,15 +59,12 @@ else if (isset($_GET['del_forum']))
 
 		// Locate any "orphaned redirect topics" and delete them
 		$result = $db->query('SELECT t1.id FROM '.$db->prefix.'topics AS t1 LEFT JOIN '.$db->prefix.'topics AS t2 ON t1.moved_to=t2.id WHERE t2.id IS NULL AND t1.moved_to IS NOT NULL') or error('Unable to fetch redirect topics', __FILE__, __LINE__, $db->error());
-		$num_orphans = $db->num_rows($result);
 
-		if ($num_orphans)
-		{
-			for ($i = 0; $i < $num_orphans; ++$i)
-				$orphans[] = $db->result($result, $i);
+		while ($cur_topic = $db->fetch_assoc($result))
+			$orphans[] = $cur_topic['id'];
 
+		if (!empty($orphans))
 			$db->query('DELETE FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $orphans).')') or error('Unable to delete redirect topics', __FILE__, __LINE__, $db->error());
-		}
 
 		// Delete the forum and any forum specific group permissions
 		$db->query('DELETE FROM '.$db->prefix.'forums WHERE id='.$forum_id) or error('Unable to delete forum', __FILE__, __LINE__, $db->error());
@@ -225,7 +222,7 @@ else if (isset($_GET['edit_forum']))
 
 	// Fetch forum info
 	$result = $db->query('SELECT id, forum_name, forum_desc, redirect_url, num_topics, sort_by, cat_id FROM '.$db->prefix.'forums WHERE id='.$forum_id) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
+	if (!$db->has_rows($result))
 		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$cur_forum = $db->fetch_assoc($result);
@@ -376,7 +373,7 @@ generate_admin_menu('forums');
 
 $result = $db->query('SELECT id, cat_name FROM '.$db->prefix.'categories ORDER BY disp_position') or error('Unable to fetch category list', __FILE__, __LINE__, $db->error());
 
-if ($db->num_rows($result) > 0)
+if ($db->has_rows($result))
 {
 
 ?>
@@ -430,7 +427,7 @@ else
 // Display all the categories and forums
 $result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name, f.disp_position FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id ORDER BY c.disp_position, c.id, f.disp_position') or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
 
-if ($db->num_rows($result) > 0)
+if ($db->has_rows($result))
 {
 
 ?>

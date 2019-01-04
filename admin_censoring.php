@@ -127,7 +127,7 @@ generate_admin_menu('censoring');
 <?php
 
 $result = $db->query('SELECT id, search_for, replace_with FROM '.$db->prefix.'censoring ORDER BY id') or error('Unable to fetch censor word list', __FILE__, __LINE__, $db->error());
-if ($db->num_rows($result))
+if ($db->has_rows($result))
 {
 
 ?>

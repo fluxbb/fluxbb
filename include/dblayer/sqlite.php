@@ -59,14 +59,6 @@ class DBLayer
 
 		if (!$this->link_id)
 			error('Unable to open database \''.$db_name.'\'. SQLite reported: '.$sqlite_error, __FILE__, __LINE__);
-		else
-			return $this->link_id;
-	}
-	
-	
-	function DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
-	{
-		$this->__construct($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect);
 	}
 
 
@@ -95,7 +87,7 @@ class DBLayer
 	function query($sql, $unbuffered = false)
 	{
 		if (defined('PUN_SHOW_QUERIES'))
-			$q_start = get_microtime();
+			$q_start = microtime(true);
 
 		if ($unbuffered)
 			$this->query_result = @sqlite_unbuffered_query($this->link_id, $sql);
@@ -105,7 +97,7 @@ class DBLayer
 		if ($this->query_result)
 		{
 			if (defined('PUN_SHOW_QUERIES'))
-				$this->saved_queries[] = array($sql, sprintf('%.5F', get_microtime() - $q_start));
+				$this->saved_queries[] = array($sql, sprintf('%.5F', microtime(true) - $q_start));
 
 			++$this->num_queries;
 
@@ -180,9 +172,9 @@ class DBLayer
 	}
 
 
-	function num_rows($query_id = 0)
+	function has_rows($query_id)
 	{
-		return ($query_id) ? @sqlite_num_rows($query_id) : false;
+		return sqlite_num_rows($query_id) > 0;
 	}
 
 
@@ -275,14 +267,14 @@ class DBLayer
 	function table_exists($table_name, $no_prefix = false)
 	{
 		$result = $this->query('SELECT 1 FROM sqlite_master WHERE name = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\' AND type=\'table\'');
-		return $this->num_rows($result) > 0;
+		return $this->has_rows($result);
 	}
 
 
 	function field_exists($table_name, $field_name, $no_prefix = false)
 	{
 		$result = $this->query('SELECT sql FROM sqlite_master WHERE name = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\' AND type=\'table\'');
-		if (!$this->num_rows($result))
+		if (!$this->has_rows($result))
 			return false;
 
 		return preg_match('%[\r\n]'.preg_quote($field_name, '%').' %', $this->result($result));
@@ -292,7 +284,7 @@ class DBLayer
 	function index_exists($table_name, $index_name, $no_prefix = false)
 	{
 		$result = $this->query('SELECT 1 FROM sqlite_master WHERE tbl_name = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\' AND name = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'_'.$this->escape($index_name).'\' AND type=\'index\'');
-		return $this->num_rows($result) > 0;
+		return $this->has_rows($result);
 	}
 
 
@@ -399,9 +391,7 @@ class DBLayer
 	{
 		// Grab table info
 		$result = $this->query('SELECT sql FROM sqlite_master WHERE tbl_name = \''.($no_prefix ? '' : $this->prefix).$this->escape($table_name).'\' ORDER BY type DESC') or error('Unable to fetch table information', __FILE__, __LINE__, $this->error());
-		$num_rows = $this->num_rows($result);
-
-		if ($num_rows == 0)
+		if (!$this->has_rows($result))
 			return;
 
 		$table = array();

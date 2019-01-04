@@ -27,7 +27,7 @@ if (isset($_GET['get_host']))
 			message($lang_common['Bad request'], false, '404 Not Found');
 
 		$result = $db->query('SELECT poster_ip FROM '.$db->prefix.'posts WHERE id='.$get_host) or error('Unable to fetch post IP address', __FILE__, __LINE__, $db->error());
-		if (!$db->num_rows($result))
+		if (!$db->has_rows($result))
 			message($lang_common['Bad request'], false, '404 Not Found');
 
 		$ip = $db->result($result);
@@ -70,7 +70,7 @@ if (isset($_GET['tid']))
 
 	// Fetch some info about the topic
 	$result = $db->query('SELECT t.subject, t.num_replies, t.first_post_id, f.id AS forum_id, forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fid.' AND t.id='.$tid.' AND t.moved_to IS NULL') or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
+	if (!$db->has_rows($result))
 		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$cur_topic = $db->fetch_assoc($result);
@@ -90,10 +90,10 @@ if (isset($_GET['tid']))
 				message($lang_common['Bad request'], false, '404 Not Found');
 
 			// Verify that the post IDs are valid
-			$admins_sql = ($pun_user['g_id'] != PUN_ADMIN) ? ' AND poster_id NOT IN('.implode(',', get_admin_ids()).')' : ''; 
-			$result = $db->query('SELECT 1 FROM '.$db->prefix.'posts WHERE id IN('.$posts.') AND topic_id='.$tid.$admins_sql) or error('Unable to check posts', __FILE__, __LINE__, $db->error());
+			$admins_sql = ($pun_user['g_id'] != PUN_ADMIN) ? ' AND poster_id NOT IN('.implode(',', get_admin_ids()).')' : '';
+			$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'posts WHERE id IN('.$posts.') AND topic_id='.$tid.$admins_sql) or error('Unable to check posts', __FILE__, __LINE__, $db->error());
 
-			if ($db->num_rows($result) != substr_count($posts, ',') + 1)
+			if ($db->result($result) != substr_count($posts, ',') + 1)
 				message($lang_common['Bad request'], false, '404 Not Found');
 
 			// Delete the posts
@@ -165,13 +165,13 @@ if (isset($_GET['tid']))
 			$num_posts_splitted = substr_count($posts, ',') + 1;
 
 			// Verify that the post IDs are valid
-			$result = $db->query('SELECT 1 FROM '.$db->prefix.'posts WHERE id IN('.$posts.') AND topic_id='.$tid) or error('Unable to check posts', __FILE__, __LINE__, $db->error());
-			if ($db->num_rows($result) != $num_posts_splitted)
+			$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'posts WHERE id IN('.$posts.') AND topic_id='.$tid) or error('Unable to check posts', __FILE__, __LINE__, $db->error());
+			if ($db->result($result) != $num_posts_splitted)
 				message($lang_common['Bad request'], false, '404 Not Found');
 
 			// Verify that the move to forum ID is valid
 			$result = $db->query('SELECT 1 FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.group_id='.$pun_user['g_id'].' AND fp.forum_id='.$move_to_forum.') WHERE f.redirect_url IS NULL AND (fp.post_topics IS NULL OR fp.post_topics=1)') or error('Unable to fetch forum permissions', __FILE__, __LINE__, $db->error());
-			if (!$db->num_rows($result))
+			if (!$db->has_rows($result))
 				message($lang_common['Bad request'], false, '404 Not Found');
 
 			// Load the post.php language file
@@ -435,14 +435,14 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 			message($lang_common['Bad request'], false, '404 Not Found');
 
 		// Verify that the topic IDs are valid
-		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topics WHERE id IN('.implode(',',$topics).') AND forum_id='.$fid) or error('Unable to check topics', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'topics WHERE id IN('.implode(',',$topics).') AND forum_id='.$fid) or error('Unable to check topics', __FILE__, __LINE__, $db->error());
 
-		if ($db->num_rows($result) != count($topics))
+		if ($db->result($result) != count($topics))
 			message($lang_common['Bad request'], false, '404 Not Found');
 
 		// Verify that the move to forum ID is valid
 		$result = $db->query('SELECT 1 FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.group_id='.$pun_user['g_id'].' AND fp.forum_id='.$move_to_forum.') WHERE f.redirect_url IS NULL AND (fp.post_topics IS NULL OR fp.post_topics=1)') or error('Unable to fetch forum permissions', __FILE__, __LINE__, $db->error());
-		if (!$db->num_rows($result))
+		if (!$db->has_rows($result))
 			message($lang_common['Bad request'], false, '404 Not Found');
 
 		// Delete any redirect topics if there are any (only if we moved/copied the topic back to where it was once moved from)
@@ -491,7 +491,12 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 	}
 
 	$result = $db->query('SELECT c.id AS cid, c.cat_name, f.id AS fid, f.forum_name FROM '.$db->prefix.'categories AS c INNER JOIN '.$db->prefix.'forums AS f ON c.id=f.cat_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.post_topics IS NULL OR fp.post_topics=1) AND f.redirect_url IS NULL ORDER BY c.disp_position, c.id, f.disp_position') or error('Unable to fetch category/forum list', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result) < 2)
+
+	$forums = array();
+	while ($row = $db->fetch_assoc($result))
+		$forums[] = $row;
+
+	if (count($forums) < 2)
 		message($lang_misc['Nowhere to move']);
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Moderate']);
@@ -513,7 +518,7 @@ if (isset($_REQUEST['move_topics']) || isset($_POST['move_topics_to']))
 <?php
 
 	$cur_category = 0;
-	while ($cur_forum = $db->fetch_assoc($result))
+	foreach ($forums as $cur_forum)
 	{
 		if ($cur_forum['cid'] != $cur_category) // A new category since last iteration?
 		{
@@ -563,11 +568,16 @@ else if (isset($_POST['merge_topics']) || isset($_POST['merge_topics_comply']))
 
 		// Verify that the topic IDs are valid (redirect links will point to the merged topic after the merge)
 		$result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topics).') AND forum_id='.$fid.' ORDER BY id ASC') or error('Unable to check topics', __FILE__, __LINE__, $db->error());
-		if ($db->num_rows($result) != count($topics))
+
+		$tids = array();
+		while ($cur_tid = $db->result($result))
+			$tids[] = $cur_tid;
+
+		if (count($tids) != count($topics))
 			message($lang_common['Bad request'], false, '404 Not Found');
 
 		// The topic that we are merging into is the one with the smallest ID
-		$merge_to_tid = $db->result($result);
+		$merge_to_tid = $tids[0];
 
 		// Make any redirect topics point to our new, merged topic
 		$query = 'UPDATE '.$db->prefix.'topics SET moved_to='.$merge_to_tid.' WHERE moved_to IN('.implode(',', $topics).')';
@@ -663,16 +673,16 @@ else if (isset($_POST['delete_topics']) || isset($_POST['delete_topics_comply'])
 		require PUN_ROOT.'include/search_idx.php';
 
 		// Verify that the topic IDs are valid
-		$result = $db->query('SELECT 1 FROM '.$db->prefix.'topics WHERE id IN('.$topics.') AND forum_id='.$fid) or error('Unable to check topics', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'topics WHERE id IN('.$topics.') AND forum_id='.$fid) or error('Unable to check topics', __FILE__, __LINE__, $db->error());
 
-		if ($db->num_rows($result) != substr_count($topics, ',') + 1)
+		if ($db->result($result) != substr_count($topics, ',') + 1)
 			message($lang_common['Bad request'], false, '404 Not Found');
 
 		// Verify that the posts are not by admins
 		if ($pun_user['g_id'] != PUN_ADMIN)
 		{
 			$result = $db->query('SELECT 1 FROM '.$db->prefix.'posts WHERE topic_id IN('.$topics.') AND poster_id IN('.implode(',', get_admin_ids()).')') or error('Unable to check posts', __FILE__, __LINE__, $db->error());
-			if ($db->num_rows($result))
+			if ($db->has_rows($result))
 				message($lang_common['No permission'], false, '403 Forbidden');
 		}
 
@@ -809,7 +819,7 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/forum.php';
 
 // Fetch some info about the forum
 $result = $db->query('SELECT f.forum_name, f.redirect_url, f.num_topics, f.sort_by FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fid) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
-if (!$db->num_rows($result))
+if (!$db->has_rows($result))
 	message($lang_common['Bad request'], false, '404 Not Found');
 
 $cur_forum = $db->fetch_assoc($result);
@@ -885,7 +895,7 @@ require PUN_ROOT.'header.php';
 $result = $db->query('SELECT id FROM '.$db->prefix.'topics WHERE forum_id='.$fid.' ORDER BY sticky DESC, '.$sort_by.', id DESC LIMIT '.$start_from.', '.$pun_user['disp_topics']) or error('Unable to fetch topic IDs', __FILE__, __LINE__, $db->error());
 
 // If there are topics in this forum
-if ($db->num_rows($result))
+if ($db->has_rows($result))
 {
 	$topic_ids = array();
 	for ($i = 0;$cur_topic_id = $db->result($result, $i);$i++)

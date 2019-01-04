@@ -55,7 +55,7 @@ if ($action == 'change_pass')
 			message($lang_profile['Pass key bad'].' <a href="mailto:'.pun_htmlspecialchars($pun_config['o_admin_email']).'">'.pun_htmlspecialchars($pun_config['o_admin_email']).'</a>.');
 		else
 		{
-			$db->query('UPDATE '.$db->prefix.'users SET password=\''.$db->escape($cur_user['activate_string']).'\', activate_string=NULL, activate_key=NULL'.(!empty($cur_user['salt']) ? ', salt=NULL' : '').' WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'users SET password=\''.$db->escape($cur_user['activate_string']).'\', activate_string=NULL, activate_key=NULL WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
 
 			message($lang_profile['Pass updated'], true);
 		}
@@ -69,7 +69,7 @@ if ($action == 'change_pass')
 		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a user's password?
 		{
 			$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-			if (!$db->num_rows($result))
+			if (!$db->has_rows($result))
 				message($lang_common['Bad request'], false, '404 Not Found');
 
 			list($group_id, $is_moderator) = $db->fetch_row($result);
@@ -102,16 +102,16 @@ if ($action == 'change_pass')
 		{
 			$old_password_hash = pun_hash($old_password);
 
-			if ($cur_user['password'] == $old_password_hash || $pun_user['is_admmod'])
+			if (flux_password_verify($old_password, $cur_user['password']) || $pun_user['is_admmod'])
 				$authorized = true;
 		}
 
 		if (!$authorized)
 			message($lang_profile['Wrong pass']);
 
-		$new_password_hash = pun_hash($new_password1);
+		$new_password_hash = flux_password_hash($new_password1);
 
-		$db->query('UPDATE '.$db->prefix.'users SET password=\''.$new_password_hash.'\''.(!empty($cur_user['salt']) ? ', salt=NULL' : '').' WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
+		$db->query('UPDATE '.$db->prefix.'users SET password=\''.$db->escape($new_password_hash).'\' WHERE id='.$id) or error('Unable to update password', __FILE__, __LINE__, $db->error());
 
 		if ($pun_user['id'] == $id)
 			pun_setcookie($pun_user['id'], $new_password_hash, time() + $pun_config['o_timeout_visit']);
@@ -165,7 +165,7 @@ else if ($action == 'change_email')
 		else if ($pun_user['g_moderator'] == '1') // A moderator trying to change a user's email?
 		{
 			$result = $db->query('SELECT u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-			if (!$db->num_rows($result))
+			if (!$db->has_rows($result))
 				message($lang_common['Bad request'], false, '404 Not Found');
 
 			list($group_id, $is_moderator) = $db->fetch_row($result);
@@ -193,9 +193,9 @@ else if ($action == 'change_email')
 	}
 	else if (isset($_POST['form_sent']))
 	{
-		if (pun_hash($_POST['req_password']) !== $pun_user['password'])
+		if (!flux_password_verify($_POST['req_password'], $pun_user['password']))
 			message($lang_profile['Wrong pass']);
-			
+
 		// Make sure they got here from the site
 		confirm_referrer('profile.php');
 
@@ -232,7 +232,7 @@ else if ($action == 'change_email')
 
 		// Check if someone else already has registered with that email address
 		$result = $db->query('SELECT id, username FROM '.$db->prefix.'users WHERE email=\''.$db->escape($new_email).'\'') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-		if ($db->num_rows($result))
+		if ($db->has_rows($result))
 		{
 			if ($pun_config['p_allow_dupe_email'] == '0')
 				message($lang_prof_reg['Dupe email']);
@@ -325,7 +325,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 	{
 		if (!isset($_FILES['req_file']))
 			message($lang_profile['No file']);
-			
+
 		// Make sure they got here from the site
 		confirm_referrer('profile.php');
 
@@ -559,7 +559,7 @@ else if (isset($_POST['ban']))
 
 	// Check whether user is already banned
 	$result = $db->query('SELECT id FROM '.$db->prefix.'bans WHERE username = \''.$db->escape($username).'\' ORDER BY expire IS NULL DESC, expire DESC LIMIT 1') or error('Unable to fetch ban ID', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result))
+	if ($db->has_rows($result))
 	{
 		$ban_id = $db->result($result);
 		redirect('admin_bans.php?edit_ban='.$ban_id.'&amp;exists', $lang_profile['Ban redirect']);
@@ -583,7 +583,7 @@ else if ($action == 'promote')
 	$sql = 'SELECT g.g_promote_next_group FROM '.$db->prefix.'groups AS g INNER JOIN '.$db->prefix.'users AS u ON u.group_id=g.g_id WHERE u.id='.$id.' AND g.g_promote_next_group>0';
 	$result = $db->query($sql) or error('Unable to fetch promotion information', __FILE__, __LINE__, $db->error());
 
-	if (!$db->num_rows($result))
+	if (!$db->has_rows($result))
 		message($lang_common['Bad request'], false, '404 Not Found');
 
 	$next_group_id = $db->result($result);
@@ -646,7 +646,7 @@ else if (isset($_POST['delete_user']) || isset($_POST['delete_user_comply']))
 
 			// Find all posts made by this user
 			$result = $db->query('SELECT p.id, p.topic_id, t.forum_id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE p.poster_id='.$id) or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
-			if ($db->num_rows($result))
+			if ($db->has_rows($result))
 			{
 				while ($cur_post = $db->fetch_assoc($result))
 				{
@@ -719,7 +719,7 @@ else if (isset($_POST['form_sent']))
 {
 	// Fetch the user group of the user we are editing
 	$result = $db->query('SELECT u.username, u.group_id, g.g_moderator FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON (g.g_id=u.group_id) WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
+	if (!$db->has_rows($result))
 		message($lang_common['Bad request'], false, '404 Not Found');
 
 	list($old_username, $group_id, $is_moderator) = $db->fetch_row($result);
@@ -1045,7 +1045,7 @@ flux_hook('profile_after_form_handling');
 
 
 $result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.msn, u.aim, u.yahoo, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, u.date_format, u.time_format, u.last_visit, g.g_id, g.g_user_title, g.g_moderator FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-if (!$db->num_rows($result))
+if (!$db->has_rows($result))
 	message($lang_common['Bad request'], false, '404 Not Found');
 
 $user = $db->fetch_assoc($result);

@@ -286,7 +286,7 @@ function strip_search_index($post_ids)
 		{
 			$result = $db->query('SELECT word_id FROM '.$db->prefix.'search_matches WHERE post_id IN('.$post_ids.') GROUP BY word_id') or error('Unable to fetch search index word match', __FILE__, __LINE__, $db->error());
 
-			if ($db->num_rows($result))
+			if ($db->has_rows($result))
 			{
 				$word_ids = '';
 				while ($row = $db->fetch_row($result))
@@ -294,7 +294,7 @@ function strip_search_index($post_ids)
 
 				$result = $db->query('SELECT word_id FROM '.$db->prefix.'search_matches WHERE word_id IN('.$word_ids.') GROUP BY word_id HAVING COUNT(word_id)=1') or error('Unable to fetch search index word match', __FILE__, __LINE__, $db->error());
 
-				if ($db->num_rows($result))
+				if ($db->has_rows($result))
 				{
 					$word_ids = '';
 					while ($row = $db->fetch_row($result))

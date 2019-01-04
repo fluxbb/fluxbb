@@ -15,17 +15,11 @@ if (!defined('PUN'))
 switch ($db_type)
 {
 	case 'mysql':
-		require_once PUN_ROOT.'include/dblayer/mysql.php';
-		break;
-
-	case 'mysql_innodb':
-		require_once PUN_ROOT.'include/dblayer/mysql_innodb.php';
-		break;
-
 	case 'mysqli':
 		require_once PUN_ROOT.'include/dblayer/mysqli.php';
 		break;
 
+	case 'mysql_innodb':
 	case 'mysqli_innodb':
 		require_once PUN_ROOT.'include/dblayer/mysqli_innodb.php';
 		break;

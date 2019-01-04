@@ -295,7 +295,7 @@ if ($action == 'feed')
 
 		// Fetch topic subject
 		$result = $db->query('SELECT t.subject, t.first_post_id FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND t.moved_to IS NULL AND t.id='.$tid) or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
-		if (!$db->num_rows($result))
+		if (!$db->has_rows($result))
 		{
 			http_authenticate_user();
 			exit($lang_common['Bad request']);
@@ -367,7 +367,7 @@ if ($action == 'feed')
 			{
 				// Fetch forum name
 				$result = $db->query('SELECT f.forum_name FROM '.$db->prefix.'forums AS f LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND f.id='.$fids[0]) or error('Unable to fetch forum name', __FILE__, __LINE__, $db->error());
-				if ($db->num_rows($result))
+				if ($db->has_rows($result))
 					$forum_name = $lang_common['Title separator'].$db->result($result);
 			}
 		}

@@ -9,15 +9,6 @@
 
 
 //
-// Return current timestamp (with microseconds) as a float
-//
-function get_microtime()
-{
-	list($usec, $sec) = explode(' ', microtime());
-	return ((float)$usec + (float)$sec);
-}
-
-//
 // Cookie stuff!
 //
 function check_cookie(&$pun_user)
@@ -41,7 +32,7 @@ function check_cookie(&$pun_user)
 	if (isset($cookie) && $cookie['user_id'] > 1 && $cookie['expiration_time'] > $now)
 	{
 		// If the cookie has been tampered with
-		$is_authorized = pun_hash_equals(forum_hmac($cookie['user_id'].'|'.$cookie['expiration_time'], $cookie_seed.'_cookie_hash'), $cookie['cookie_hash']);
+		$is_authorized = hash_equals(forum_hmac($cookie['user_id'].'|'.$cookie['expiration_time'], $cookie_seed.'_cookie_hash'), $cookie['cookie_hash']);
 		if (!$is_authorized)
 		{
 			$expire = $now + 31536000; // The cookie expires after a year
@@ -56,7 +47,7 @@ function check_cookie(&$pun_user)
 		$pun_user = $db->fetch_assoc($result);
 
 		// If user authorisation failed
-		$is_authorized = pun_hash_equals(forum_hmac($pun_user['password'], $cookie_seed.'_password_hash'), $cookie['password_hash']);
+		$is_authorized = hash_equals(forum_hmac($pun_user['password'], $cookie_seed.'_password_hash'), $cookie['password_hash']);
 		if (!isset($pun_user['id']) || !$is_authorized)
 		{
 			$expire = $now + 31536000; // The cookie expires after a year
@@ -163,8 +154,8 @@ function authenticate_user($user, $password, $password_is_hash = false)
 	$result = $db->query('SELECT u.*, g.*, o.logged, o.idle FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON o.user_id=u.id WHERE '.(is_int($user) ? 'u.id='.intval($user) : 'u.username=\''.$db->escape($user).'\'')) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 	$pun_user = $db->fetch_assoc($result);
 
-	$is_password_authorized = pun_hash_equals($password, $pun_user['password']);
-	$is_hash_authorized = pun_hash_equals(pun_hash($password), $pun_user['password']);
+	$is_password_authorized = hash_equals($password, $pun_user['password']);
+	$is_hash_authorized = flux_password_verify($password, $pun_user['password']);
 
 	if (!isset($pun_user['id']) ||
 		($password_is_hash && !$is_password_authorized ||
@@ -273,7 +264,7 @@ function set_default_user()
 
 	// Fetch guest user
 	$result = $db->query('SELECT u.*, g.*, o.logged, o.last_post, o.last_search FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id LEFT JOIN '.$db->prefix.'online AS o ON o.ident=\''.$db->escape($remote_addr).'\' WHERE u.id=1') or error('Unable to fetch guest information', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
+	if (!$db->has_rows($result))
 		exit('Unable to fetch guest information. Your database must contain both a guest user and a guest user group.');
 
 	$pun_user = $db->fetch_assoc($result);
@@ -314,37 +305,11 @@ function set_default_user()
 
 
 //
-// SHA1 HMAC with PHP 4 fallback
+// SHA1 HMAC
 //
 function forum_hmac($data, $key, $raw_output = false)
 {
-	if (function_exists('hash_hmac'))
-		return hash_hmac('sha1', $data, $key, $raw_output);
-
-	// If key size more than blocksize then we hash it once
-	if (strlen($key) > 64)
-		$key = pack('H*', sha1($key)); // we have to use raw output here to match the standard
-
-	// Ensure we're padded to exactly one block boundary
-	$key = str_pad($key, 64, chr(0x00));
-
-	$hmac_opad = str_repeat(chr(0x5C), 64);
-	$hmac_ipad = str_repeat(chr(0x36), 64);
-
-	// Do inner and outer padding
-	for ($i = 0;$i < 64;$i++) {
-		$hmac_opad[$i] = $hmac_opad[$i] ^ $key[$i];
-		$hmac_ipad[$i] = $hmac_ipad[$i] ^ $key[$i];
-	}
-
-	// Finally, calculate the HMAC
-	$hash = sha1($hmac_opad.pack('H*', sha1($hmac_ipad.$data)));
-
-	// If we want raw output then we need to pack the final result
-	if ($raw_output)
-		$hash = pack('H*', $hash);
-
-	return $hash;
+	return hash_hmac('sha1', $data, $key, $raw_output);
 }
 
 
@@ -373,10 +338,7 @@ function forum_setcookie($name, $value, $expire)
 	// Enable sending of a P3P header
 	header('P3P: CP="CUR ADM"');
 
-	if (version_compare(PHP_VERSION, '5.2.0', '>='))
-		setcookie($name, $value, $expire, $cookie_path, $cookie_domain, $cookie_secure, true);
-	else
-		setcookie($name, $value, $expire, $cookie_path.'; HttpOnly', $cookie_domain, $cookie_secure);
+	setcookie($name, $value, $expire, $cookie_path, $cookie_domain, $cookie_secure, true);
 }
 
 
@@ -487,7 +449,7 @@ function check_username($username, $exclude_id = null)
 
 	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(ucp_preg_replace('%[^\p{L}\p{N}]%u', '', $username)).'\')) AND id>1'.$query) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
-	if ($db->num_rows($result))
+	if ($db->has_rows($result))
 	{
 		$busy = $db->result($result);
 		$errors[] = $lang_register['Username dupe 1'].' '.pun_htmlspecialchars($busy).'. '.$lang_register['Username dupe 2'];
@@ -699,7 +661,7 @@ function update_forum($forum_id)
 	$num_posts = $num_posts + $num_topics; // $num_posts is only the sum of all replies (we have to add the topic posts)
 
 	$result = $db->query('SELECT last_post, last_post_id, last_poster FROM '.$db->prefix.'topics WHERE forum_id='.$forum_id.' AND moved_to IS NULL ORDER BY last_post DESC LIMIT 1') or error('Unable to fetch last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result)) // There are topics in the forum
+	if ($db->has_rows($result)) // There are topics in the forum
 	{
 		list($last_post, $last_post_id, $last_poster) = $db->fetch_row($result);
 
@@ -944,7 +906,7 @@ function paginate($num_pages, $cur_page, $link)
 //
 function message($message, $no_back_link = false, $http_status = null)
 {
-	global $db, $lang_common, $pun_config, $pun_start, $tpl_main, $pun_user;
+	global $db, $lang_common, $pun_config, $tpl_main, $pun_user;
 
 	// Did we receive a custom header?
 	if(!is_null($http_status)) {
@@ -1131,6 +1093,71 @@ function validate_redirect($redirect_url, $fallback_url)
 
 
 //
+// Compute the hash of a password
+// using a secure password hashing algorithm, if available
+// As of PHP 7.2, this is BLOWFISH.
+//
+function flux_password_hash($pass)
+{
+	global $password_hash_cost;
+
+	return password_hash($pass, PASSWORD_DEFAULT, array('cost' => $password_hash_cost));
+}
+
+
+//
+// Verify that $pass and $hash match
+// This supports any password hashing algorithm
+// used by flux_password_hash, but is also
+// backwards-compatible with older versions of this software.
+//
+function flux_password_verify($pass, $hash)
+{
+	if ($hash[0] == '#')
+	{
+		// MD5 from 1.2
+		if (substr($hash, 0, 5) == '#MD5#')
+		{
+			$pass = md5($pass);
+			$hash = substr($hash, 5);
+		}
+		// SHA1-With-Salt from 1.3
+		else if (substr($hash, 0, 8) == '#SHA1-S#')
+		{
+			preg_match('/^#SHA1-S#(.+)#(.+)$/', $hash, $matches);
+			list(, $salt, $hash) = $matches;
+			$pass = sha1($salt.sha1($pass));
+		}
+		// SHA1-Without-Salt from 1.4
+		else if (substr($hash, 0, 6) == '#SHA1#')
+		{
+			$pass = sha1($pass);
+			$hash = substr($hash, 6);
+		}
+	}
+
+	// Support current password standard
+	return password_verify($pass, $hash);
+}
+
+
+//
+// Check if $hash is outdated and needs to be rehashed
+//
+function flux_password_needs_rehash($hash)
+{
+	global $password_hash_cost;
+
+	// Check for legacy password (md5 or sha1 hash)
+	if ($hash[0] === '#')
+		return true;
+
+	// Check for out-of-date hash type or cost
+	return password_needs_rehash($hash, PASSWORD_DEFAULT, array('cost' => $password_hash_cost));
+}
+
+
+//
 // Generate a random password of length $len
 // Compatibility wrapper for random_key
 //
@@ -1152,24 +1179,11 @@ function pun_hash($str)
 //
 // Compare two strings in constant time
 // Inspired by WordPress
+// @deprecated
 //
 function pun_hash_equals($a, $b)
 {
-	if (function_exists('hash_equals'))
-		return hash_equals((string) $a, (string) $b);
-
-	$a_length = strlen($a);
-
-	if ($a_length !== strlen($b))
-		return false;
-
-	$result = 0;
-
-	// Do not attempt to "optimize" this.
-	for ($i = 0; $i < $a_length; $i++)
-		$result |= ord($a[$i]) ^ ord($b[$i]);
-
-	return $result === 0;
+	return hash_equals((string) $a, (string) $b);
 }
 
 
@@ -1194,7 +1208,7 @@ function check_csrf($token)
 {
 	global $lang_common;
 
-	$is_hash_authorized = pun_hash_equals($token, pun_csrf_token());
+	$is_hash_authorized = hash_equals($token, pun_csrf_token());
 
 	if (!isset($token) || !$is_hash_authorized)
 		message($lang_common['Bad csrf hash'], false, '404 Not Found');
@@ -1243,18 +1257,7 @@ function pun_htmlspecialchars($str)
 //
 function pun_htmlspecialchars_decode($str)
 {
-	if (function_exists('htmlspecialchars_decode'))
-		return htmlspecialchars_decode($str, ENT_QUOTES);
-
-	static $translations;
-	if (!isset($translations))
-	{
-		$translations = get_html_translation_table(HTML_SPECIALCHARS, ENT_QUOTES);
-		$translations['&#039;'] = '\''; // get_html_translation_table doesn't include &#039; which is what htmlspecialchars translates ' to, but apparently that is okay?! http://bugs.php.net/bug.php?id=25927
-		$translations = array_flip($translations);
-	}
-
-	return strtr($str, $translations);
+	return htmlspecialchars_decode($str, ENT_QUOTES);
 }
 
 
@@ -1671,35 +1674,6 @@ H2 {MARGIN: 0; COLOR: #FFFFFF; BACKGROUND-COLOR: #B84623; FONT-SIZE: 1.1em; PADD
 
 
 //
-// Unset any variables instantiated as a result of register_globals being enabled
-//
-function forum_unregister_globals()
-{
-	$register_globals = ini_get('register_globals');
-	if ($register_globals === '' || $register_globals === '0' || strtolower($register_globals) === 'off')
-		return;
-
-	// Prevent script.php?GLOBALS[foo]=bar
-	if (isset($_REQUEST['GLOBALS']) || isset($_FILES['GLOBALS']))
-		exit('I\'ll have a steak sandwich and... a steak sandwich.');
-
-	// Variables that shouldn't be unset
-	$no_unset = array('GLOBALS', '_GET', '_POST', '_COOKIE', '_REQUEST', '_SERVER', '_ENV', '_FILES');
-
-	// Remove elements in $GLOBALS that are present in any of the superglobals
-	$input = array_merge($_GET, $_POST, $_COOKIE, $_SERVER, $_ENV, $_FILES, isset($_SESSION) && is_array($_SESSION) ? $_SESSION : array());
-	foreach ($input as $k => $v)
-	{
-		if (!in_array($k, $no_unset) && isset($GLOBALS[$k]))
-		{
-			unset($GLOBALS[$k]);
-			unset($GLOBALS[$k]); // Double unset to circumvent the zend_hash_del_key_or_index hole in PHP <4.4.3 and <5.1.4
-		}
-	}
-}
-
-
-//
 // Removes any "bad" characters (characters which mess with the display of a page, are invisible, etc) from user input
 //
 function forum_remove_bad_characters()
@@ -2062,8 +2036,8 @@ function url_valid($url)
 //
 function ucp_preg_replace($pattern, $replace, $subject, $callback = false)
 {
-	if($callback)
-		$replaced = preg_replace_callback($pattern, create_function('$matches', 'return '.$replace.';'), $subject);
+	if ($callback)
+		$replaced = preg_replace_callback($pattern, $replace, $subject);
 	else
 		$replaced = preg_replace($pattern, $replace, $subject);
 

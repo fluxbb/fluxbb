@@ -18,6 +18,7 @@ $lang_update = array(
 
 'You are running error'			=>	'You are running %1$s version %2$s. FluxBB %3$s requires at least %1$s %4$s to run properly. You must upgrade your %1$s installation before you can continue.',
 'Version mismatch error'		=>	'Version mismatch. The database \'%s\' doesn\'t seem to be running a FluxBB database schema supported by this update script.',
+'Password cost missing error'	=>	'Update cannot proceed before you add a line containing <code>$password_hash_cost = 10;</code> to your config.php file in the FluxBB root directory',
 'Invalid file error'			=>	'Invalid database file name. When using SQLite the database file name must be entered exactly as it appears in your \'%s\'',
 'Invalid password error'		=>	'Invalid database password. To upgrade FluxBB you must enter your database password exactly as it appears in your \'%s\'',
 'No password error'				=>	'No database password provided',
