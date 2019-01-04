@@ -32,7 +32,7 @@ function check_cookie(&$pun_user)
 	if (isset($cookie) && $cookie['user_id'] > 1 && $cookie['expiration_time'] > $now)
 	{
 		// If the cookie has been tampered with
-		$is_authorized = pun_hash_equals(forum_hmac($cookie['user_id'].'|'.$cookie['expiration_time'], $cookie_seed.'_cookie_hash'), $cookie['cookie_hash']);
+		$is_authorized = hash_equals(forum_hmac($cookie['user_id'].'|'.$cookie['expiration_time'], $cookie_seed.'_cookie_hash'), $cookie['cookie_hash']);
 		if (!$is_authorized)
 		{
 			$expire = $now + 31536000; // The cookie expires after a year
@@ -47,7 +47,7 @@ function check_cookie(&$pun_user)
 		$pun_user = $db->fetch_assoc($result);
 
 		// If user authorisation failed
-		$is_authorized = pun_hash_equals(forum_hmac($pun_user['password'], $cookie_seed.'_password_hash'), $cookie['password_hash']);
+		$is_authorized = hash_equals(forum_hmac($pun_user['password'], $cookie_seed.'_password_hash'), $cookie['password_hash']);
 		if (!isset($pun_user['id']) || !$is_authorized)
 		{
 			$expire = $now + 31536000; // The cookie expires after a year
@@ -154,8 +154,8 @@ function authenticate_user($user, $password, $password_is_hash = false)
 	$result = $db->query('SELECT u.*, g.*, o.logged, o.idle FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON o.user_id=u.id WHERE '.(is_int($user) ? 'u.id='.intval($user) : 'u.username=\''.$db->escape($user).'\'')) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 	$pun_user = $db->fetch_assoc($result);
 
-	$is_password_authorized = pun_hash_equals($password, $pun_user['password']);
-	$is_hash_authorized = pun_hash_equals(pun_hash($password), $pun_user['password']);
+	$is_password_authorized = hash_equals($password, $pun_user['password']);
+	$is_hash_authorized = flux_password_verify($password, $pun_user['password']);
 
 	if (!isset($pun_user['id']) ||
 		($password_is_hash && !$is_password_authorized ||
@@ -1093,6 +1093,71 @@ function validate_redirect($redirect_url, $fallback_url)
 
 
 //
+// Compute the hash of a password
+// using a secure password hashing algorithm, if available
+// As of PHP 7.2, this is BLOWFISH.
+//
+function flux_password_hash($pass)
+{
+	global $password_hash_cost;
+
+	return password_hash($pass, PASSWORD_DEFAULT, array('cost' => $password_hash_cost));
+}
+
+
+//
+// Verify that $pass and $hash match
+// This supports any password hashing algorithm
+// used by flux_password_hash, but is also
+// backwards-compatible with older versions of this software.
+//
+function flux_password_verify($pass, $hash)
+{
+	if ($hash[0] == '#')
+	{
+		// MD5 from 1.2
+		if (substr($hash, 0, 5) == '#MD5#')
+		{
+			$pass = md5($pass);
+			$hash = substr($hash, 5);
+		}
+		// SHA1-With-Salt from 1.3
+		else if (substr($hash, 0, 8) == '#SHA1-S#')
+		{
+			preg_match('/^#SHA1-S#(.+)#(.+)$/', $hash, $matches);
+			list(, $salt, $hash) = $matches;
+			$pass = sha1($salt.sha1($pass));
+		}
+		// SHA1-Without-Salt from 1.4
+		else if (substr($hash, 0, 6) == '#SHA1#')
+		{
+			$pass = sha1($pass);
+			$hash = substr($hash, 6);
+		}
+	}
+
+	// Support current password standard
+	return password_verify($pass, $hash);
+}
+
+
+//
+// Check if $hash is outdated and needs to be rehashed
+//
+function flux_password_needs_rehash($hash)
+{
+	global $password_hash_cost;
+
+	// Check for legacy password (md5 or sha1 hash)
+	if ($hash[0] === '#')
+		return true;
+
+	// Check for out-of-date hash type or cost
+	return password_needs_rehash($hash, PASSWORD_DEFAULT, array('cost' => $password_hash_cost));
+}
+
+
+//
 // Generate a random password of length $len
 // Compatibility wrapper for random_key
 //
@@ -1114,6 +1179,7 @@ function pun_hash($str)
 //
 // Compare two strings in constant time
 // Inspired by WordPress
+// @deprecated
 //
 function pun_hash_equals($a, $b)
 {
@@ -1142,7 +1208,7 @@ function check_csrf($token)
 {
 	global $lang_common;
 
-	$is_hash_authorized = pun_hash_equals($token, pun_csrf_token());
+	$is_hash_authorized = hash_equals($token, pun_csrf_token());
 
 	if (!isset($token) || !$is_hash_authorized)
 		message($lang_common['Bad csrf hash'], false, '404 Not Found');
