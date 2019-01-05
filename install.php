@@ -474,31 +474,32 @@ foreach ($alerts as $cur_alert)
 }
 else
 {
-	// Load the appropriate DB layer class
+	// Load and create the appropriate DB adapter (and open/connect to/select db)
 	switch ($db_type)
 	{
 		case 'mysqli':
 			require PUN_ROOT.'include/dblayer/mysqli.php';
+			$db = new MysqlDBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, false);
 			break;
 
 		case 'mysqli_innodb':
 			require PUN_ROOT.'include/dblayer/mysqli_innodb.php';
+			$db = new MysqlInnodbDBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, false);
 			break;
 
 		case 'pgsql':
 			require PUN_ROOT.'include/dblayer/pgsql.php';
+			$db = new PgsqlDBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, false);
 			break;
 
 		case 'sqlite':
 			require PUN_ROOT.'include/dblayer/sqlite.php';
+			$db = new SqliteDBLayer($db_name, $db_prefix, false);
 			break;
 
 		default:
 			error(sprintf($lang_install['DB type not valid'], $db_type));
 	}
-
-	// Create the database object (and connect/select db)
-	$db = new DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, false);
 
 	// Validate prefix
 	if (strlen($db_prefix) > 0 && (!preg_match('%^[a-zA-Z_][a-zA-Z0-9_]*$%', $db_prefix) || strlen($db_prefix) > 40))

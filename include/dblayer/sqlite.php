@@ -11,7 +11,10 @@ if (!function_exists('sqlite_open'))
 	exit('This PHP environment doesn\'t have SQLite support built in. SQLite support is required if you want to use a SQLite database to run this forum. Consult the PHP documentation for further assistance.');
 
 
-class DBLayer
+require_once PUN_ROOT.'include/dblayer/interface.php';
+
+
+class SqliteDBLayer implements DBLayer
 {
 	var $prefix;
 	var $link_id;
@@ -31,7 +34,7 @@ class DBLayer
 	);
 
 
-	function __construct($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect)
+	function __construct($db_name, $db_prefix, $p_connect)
 	{
 		// Prepend $db_name with the path to the forum root directory
 		$db_name = PUN_ROOT.$db_name;

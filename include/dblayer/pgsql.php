@@ -11,7 +11,10 @@ if (!function_exists('pg_connect'))
 	exit('This PHP environment doesn\'t have PostgreSQL support built in. PostgreSQL support is required if you want to use a PostgreSQL database to run this forum. Consult the PHP documentation for further assistance.');
 
 
-class DBLayer
+require_once PUN_ROOT.'include/dblayer/interface.php';
+
+
+class PgsqlDBLayer implements DBLayer
 {
 	var $prefix;
 	var $link_id;

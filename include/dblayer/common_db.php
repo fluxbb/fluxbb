@@ -11,32 +11,32 @@ if (!defined('PUN'))
 	exit;
 
 
-// Load the appropriate DB layer class
+// Load and create the appropriate DB adapter (and open/connect to/select db)
 switch ($db_type)
 {
 	case 'mysql':
 	case 'mysqli':
 		require_once PUN_ROOT.'include/dblayer/mysqli.php';
+		$db = new MysqlDBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect);
 		break;
 
 	case 'mysql_innodb':
 	case 'mysqli_innodb':
 		require_once PUN_ROOT.'include/dblayer/mysqli_innodb.php';
+		$db = new MysqlInnodbDBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect);
 		break;
 
 	case 'pgsql':
 		require_once PUN_ROOT.'include/dblayer/pgsql.php';
+		$db = new PgsqlDBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect);
 		break;
 
 	case 'sqlite':
 		require_once PUN_ROOT.'include/dblayer/sqlite.php';
+		$db = new SqliteDBLayer($db_name, $db_prefix, $p_connect);
 		break;
 
 	default:
 		error('\''.$db_type.'\' is not a valid database type. Please check settings in config.php.', __FILE__, __LINE__);
 		break;
 }
-
-
-// Create the database adapter object (and open/connect to/select db)
-$db = new DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect);
