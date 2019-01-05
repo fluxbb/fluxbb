@@ -1,3 +1,7 @@
+# Composer dependencies
+/vendor/
+
+# FluxBB-specific files
 /cache/cache_*.php
 /cache/*.cache
 /cache/db_update.lock
