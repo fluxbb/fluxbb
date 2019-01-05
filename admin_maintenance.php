@@ -26,9 +26,9 @@ $action = isset($_REQUEST['action']) ? pun_trim($_REQUEST['action']) : '';
 
 if ($action == 'rebuild')
 {
-    confirm_referrer('admin_maintenance.php');
+	confirm_referrer('admin_maintenance.php');
 
-    check_csrf($_GET['csrf_token']);
+	check_csrf($_GET['csrf_token']);
 
 	$per_page = isset($_GET['i_per_page']) ? intval($_GET['i_per_page']) : 0;
 	$start_at = isset($_GET['i_start_at']) ? intval($_GET['i_start_at']) : 0;
@@ -253,7 +253,7 @@ generate_admin_menu('maintenance');
 			<form method="get" action="admin_maintenance.php">
 				<div class="inform">
 					<input type="hidden" name="action" value="rebuild" />
-                    <input type="hidden" name="csrf_token" value="<?php echo pun_csrf_token() ?>" />
+					<input type="hidden" name="csrf_token" value="<?php echo pun_csrf_token() ?>" />
 					<fieldset>
 						<legend><?php echo $lang_admin_maintenance['Rebuild index subhead'] ?></legend>
 						<div class="infldset">

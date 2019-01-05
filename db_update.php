@@ -120,7 +120,7 @@ if (version_compare($cur_version, '1.2', '<'))
 	error(sprintf($lang_update['Version mismatch error'], $db_name));
 
 if (!isset($password_hash_cost))
-    error(sprintf($lang_update['Password cost missing error']));
+	error(sprintf($lang_update['Password cost missing error']));
 
 // Do some DB type specific checks
 $mysql = false;
@@ -1787,7 +1787,7 @@ foreach ($errors[$id] as $cur_error)
 				$db->drop_field('users', 'salt');
 		}
 		else
-		    $db->drop_field('users', 'salt');
+			$db->drop_field('users', 'salt');
 
 		break;
 
