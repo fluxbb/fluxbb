@@ -177,7 +177,7 @@ class SqliteDBLayer implements DBLayer
 
 	function has_rows($query_id)
 	{
-		return sqlite_num_rows($query_id) > 0;
+		return $query_id ? sqlite_num_rows($query_id) > 0 : false;
 	}
 
 

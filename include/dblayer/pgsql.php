@@ -158,7 +158,7 @@ class PgsqlDBLayer implements DBLayer
 
 	function has_rows($query_id)
 	{
-		return pg_num_rows($query_id) > 0;
+		return $query_id ? pg_num_rows($query_id) > 0 : false;
 	}
 
 

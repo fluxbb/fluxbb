@@ -141,7 +141,7 @@ class MysqlInnodbDBLayer implements DBLayer
 
 	function has_rows($query_id)
 	{
-		return mysqli_num_rows($query_id) > 0;
+		return $query_id ? mysqli_num_rows($query_id) > 0 : false;
 	}
 
 
