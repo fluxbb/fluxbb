@@ -166,7 +166,7 @@ else
 	else if (preg_match('%(?:\[/?(?:b|u|i|h|colou?r|quote|code|img|url|email|list)\]|\[(?:code|quote|list)=)%i', $username))
 		$alerts[] = $lang_install['Username 6'];
 
-	if (pun_strlen($password1) < 6)
+	if (pun_strlen($password1) < 9)
 		$alerts[] = $lang_install['Short password'];
 	else if ($password1 != $password2)
 		$alerts[] = $lang_install['Passwords not match'];
