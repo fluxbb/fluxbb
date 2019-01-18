@@ -968,10 +968,6 @@ else
 									<td><input type="text" name="form[msn]" size="30" maxlength="50" tabindex="9" /></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang_admin_users['AOL label'] ?></th>
-									<td><input type="text" name="form[aim]" size="20" maxlength="20" tabindex="10" /></td>
-								</tr>
-								<tr>
 									<th scope="row"><?php echo $lang_admin_users['Yahoo label'] ?></th>
 									<td><input type="text" name="form[yahoo]" size="20" maxlength="20" tabindex="11" /></td>
 								</tr>
