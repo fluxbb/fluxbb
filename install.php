@@ -1320,10 +1320,6 @@ else
 				'datatype'		=> 'VARCHAR(80)',
 				'allow_null'	=> true
 			),
-			'aim'				=> array(
-				'datatype'		=> 'VARCHAR(30)',
-				'allow_null'	=> true
-			),
 			'yahoo'				=> array(
 				'datatype'		=> 'VARCHAR(30)',
 				'allow_null'	=> true
