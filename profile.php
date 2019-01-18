@@ -856,7 +856,6 @@ else if (isset($_POST['form_sent']))
 				'jabber'		=> pun_trim($_POST['form']['jabber']),
 				'icq'			=> pun_trim($_POST['form']['icq']),
 				'msn'			=> pun_trim($_POST['form']['msn']),
-				'aim'			=> pun_trim($_POST['form']['aim']),
 				'yahoo'			=> pun_trim($_POST['form']['yahoo']),
 			);
 
@@ -1125,12 +1124,6 @@ if ($pun_user['id'] != $id &&																	// If we aren't the user (i.e. edi
 	{
 		$user_messaging[] = '<dt>'.$lang_profile['MSN'].'</dt>';
 		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['msn']) : $user['msn']).'</dd>';
-	}
-
-	if ($user['aim'] != '')
-	{
-		$user_messaging[] = '<dt>'.$lang_profile['AOL IM'].'</dt>';
-		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['aim']) : $user['aim']).'</dd>';
 	}
 
 	if ($user['yahoo'] != '')
@@ -1526,7 +1519,6 @@ else
 							<label><?php echo $lang_profile['Jabber'] ?><br /><input id="jabber" type="text" name="form[jabber]" value="<?php echo pun_htmlspecialchars($user['jabber']) ?>" size="40" maxlength="75" /><br /></label>
 							<label><?php echo $lang_profile['ICQ'] ?><br /><input id="icq" type="text" name="form[icq]" value="<?php echo $user['icq'] ?>" size="12" maxlength="12" /><br /></label>
 							<label><?php echo $lang_profile['MSN'] ?><br /><input id="msn" type="text" name="form[msn]" value="<?php echo pun_htmlspecialchars($user['msn']) ?>" size="40" maxlength="50" /><br /></label>
-							<label><?php echo $lang_profile['AOL IM'] ?><br /><input id="aim" type="text" name="form[aim]" value="<?php echo pun_htmlspecialchars($user['aim']) ?>" size="20" maxlength="30" /><br /></label>
 							<label><?php echo $lang_profile['Yahoo'] ?><br /><input id="yahoo" type="text" name="form[yahoo]" value="<?php echo pun_htmlspecialchars($user['yahoo']) ?>" size="20" maxlength="30" /><br /></label>
 						</div>
 					</fieldset>
