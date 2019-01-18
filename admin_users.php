@@ -773,7 +773,7 @@ else if (isset($_GET['find_user']))
 	$like_command = ($db_type == 'pgsql') ? 'ILIKE' : 'LIKE';
 	foreach ($form as $key => $input)
 	{
-		if ($input != '' && in_array($key, array('username', 'email', 'title', 'realname', 'url', 'jabber', 'icq', 'msn', 'aim', 'yahoo', 'location', 'signature', 'admin_note')))
+		if ($input != '' && in_array($key, array('username', 'email', 'title', 'realname', 'url', 'jabber', 'icq', 'msn', 'yahoo', 'location', 'signature', 'admin_note')))
 		{
 			$conditions[] = 'u.'.$db->escape($key).' '.$like_command.' \''.$db->escape(str_replace(array('*', '_'), array('%', '\\_'), $input)).'\'';
 			$query_str[] = 'form%5B'.$key.'%5D='.urlencode($input);
