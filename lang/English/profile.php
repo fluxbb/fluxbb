@@ -86,7 +86,6 @@ $lang_profile = array(
 'Jabber'						=>	'Jabber',
 'ICQ'							=>	'ICQ',
 'MSN'							=>	'Microsoft Account',
-'AOL IM'						=>	'AOL IM',
 'Yahoo'							=>	'Yahoo! Messenger',
 'Avatar'						=>	'Avatar',
 'Signature'						=>	'Signature',
