@@ -812,7 +812,7 @@ function get_title($user)
 	static $ban_list;
 
 	// If not already built in a previous call, build an array of lowercase banned usernames
-	if (empty($ban_list))
+	if (!isset($ban_list))
 	{
 		$ban_list = array();
 
