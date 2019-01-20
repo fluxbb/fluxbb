@@ -21,11 +21,8 @@ header('Content-type: text/html; charset=utf-8');
 
 // Prevent site from being embedded in a frame unless FORUM_FRAME_OPTIONS is set
 // to a valid X-Frame-Options header value or false
-if (defined('FORUM_FRAME_OPTIONS'))
-{
-	if (preg_match('/^(?:allow-from|deny|sameorigin)/i', FORUM_FRAME_OPTIONS))
-		header('X-Frame-Options: '.FORUM_FRAME_OPTIONS);
-}
+if (defined('FORUM_FRAME_OPTIONS') && preg_match('/^(?:allow-from|deny|sameorigin)/i', FORUM_FRAME_OPTIONS))
+	header('X-Frame-Options: '.FORUM_FRAME_OPTIONS);
 else
 	header('X-Frame-Options: deny');
 
