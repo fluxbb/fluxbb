@@ -25,4 +25,4 @@ of the other forums have whilst not sacrificing essential functionality or usabi
 * Community: https://fluxbb.org/forums/
 * Resources: https://fluxbb.org/resources/
 * IRC: irc://irc.freenode.net/fluxbb
-* Development: http://github.com/fluxbb/fluxbb
+* Development: https://github.com/fluxbb/fluxbb
