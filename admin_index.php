@@ -28,14 +28,14 @@ if ($action == 'check_upgrade')
 	if (!ini_get('allow_url_fopen'))
 		message($lang_admin_index['fopen disabled message']);
 
-	$latest_version = trim(@file_get_contents('http://fluxbb.org/latest_version'));
+	$latest_version = trim(@file_get_contents('https://fluxbb.org/latest_version'));
 	if (empty($latest_version))
 		message($lang_admin_index['Upgrade check failed message']);
 
 	if (version_compare($pun_config['o_cur_version'], $latest_version, '>='))
 		message($lang_admin_index['Running latest version message']);
 	else
-		message(sprintf($lang_admin_index['New version available message'], '<a href="http://fluxbb.org/">FluxBB.org</a>'));
+		message(sprintf($lang_admin_index['New version available message'], '<a href="https://fluxbb.org/">FluxBB.org</a>'));
 }
 // Remove install.php
 else if ($action == 'remove_install_file')
@@ -97,7 +97,7 @@ generate_admin_menu('index');
 					</dd>
 					<dt><?php echo $lang_admin_index['Support label'] ?></dt>
 					<dd>
-						<a href="http://fluxbb.org/forums/index.php"><?php echo $lang_admin_index['Forum label'] ?></a> - <a href="http://fluxbb.org/community/irc.html"><?php echo $lang_admin_index['IRC label'] ?></a>
+						<a href="https://fluxbb.org/forums/index.php"><?php echo $lang_admin_index['Forum label'] ?></a> - <a href="https://fluxbb.org/community/irc.html"><?php echo $lang_admin_index['IRC label'] ?></a>
 					</dd>
 				</dl>
 			</div>
