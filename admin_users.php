@@ -40,6 +40,11 @@ if (isset($_GET['ip_stats']))
 	// Generate paging links
 	$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'admin_users.php?ip_stats='.$ip_stats );
 
+	$crumbs = generate_crumbs(array(
+		array($lang_admin_common['Admin'].' '.$lang_admin_common['Index'], 'admin_index.php'),
+		array($lang_admin_common['Users'], 'admin_users.php'),
+		$lang_admin_users['Results head']));
+
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Users'], $lang_admin_users['Results head']);
 	define('PUN_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
@@ -47,11 +52,7 @@ if (isset($_GET['ip_stats']))
 ?>
 <div class="linkst">
 	<div class="inbox crumbsplus">
-		<ul class="crumbs">
-			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_admin_users['Results head'] ?></strong></li>
-		</ul>
+		<?php echo $crumbs ?>
 		<div class="pagepost">
 			<p class="pagelink"><?php echo $paging_links ?></p>
 		</div>
@@ -107,11 +108,7 @@ if (isset($_GET['ip_stats']))
 		<div class="pagepost">
 			<p class="pagelink"><?php echo $paging_links ?></p>
 		</div>
-		<ul class="crumbs">
-			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_admin_users['Results head'] ?></strong></li>
-		</ul>
+		<?php echo $crumbs ?>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -141,6 +138,11 @@ if (isset($_GET['show_users']))
 	// Generate paging links
 	$paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'admin_users.php?show_users='.$ip);
 
+	$crumbs = generate_crumbs(array(
+		array($lang_admin_common['Admin'].' '.$lang_admin_common['Index'], 'admin_index.php'),
+		array($lang_admin_common['Users'], 'admin_users.php'),
+		$lang_admin_users['Results head']));
+
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Users'], $lang_admin_users['Results head']);
 	define('PUN_ACTIVE_PAGE', 'admin');
 	require PUN_ROOT.'header.php';
@@ -148,11 +150,7 @@ if (isset($_GET['show_users']))
 ?>
 <div class="linkst">
 	<div class="inbox crumbsplus">
-		<ul class="crumbs">
-			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_admin_users['Results head'] ?></strong></li>
-		</ul>
+		<?php echo $crumbs ?>
 		<div class="pagepost">
 			<p class="pagelink"><?php echo $paging_links ?></p>
 		</div>
@@ -248,11 +246,7 @@ if (isset($_GET['show_users']))
 		<div class="pagepost">
 			<p class="pagelink"><?php echo $paging_links ?></p>
 		</div>
-		<ul class="crumbs">
-			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_admin_users['Results head'] ?></strong></li>
-		</ul>
+		<?php echo $crumbs ?>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -812,6 +806,11 @@ else if (isset($_GET['find_user']))
 	$can_ban = $pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1' && $pun_user['g_mod_ban_users'] == '1');
 	$can_action = ($can_delete || $can_ban || $can_move) && $num_users > 0;
 
+	$crumbs = generate_crumbs(array(
+		array($lang_admin_common['Admin'].' '.$lang_admin_common['Index'], 'admin_index.php'),
+		array($lang_admin_common['Users'], 'admin_users.php'),
+		$lang_admin_users['Results head']));
+
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Users'], $lang_admin_users['Results head']);
 	$page_head = array('js' => '<script type="text/javascript" src="common.js"></script>');
 	define('PUN_ACTIVE_PAGE', 'admin');
@@ -820,11 +819,7 @@ else if (isset($_GET['find_user']))
 ?>
 <div class="linkst">
 	<div class="inbox crumbsplus">
-		<ul class="crumbs">
-			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_admin_users['Results head'] ?></strong></li>
-		</ul>
+		<?php echo $crumbs ?>
 		<div class="pagepost">
 			<p class="pagelink"><?php echo $paging_links ?></p>
 		</div>
@@ -899,11 +894,7 @@ else if (isset($_GET['find_user']))
 <?php if ($can_action): ?>			<p class="conr modbuttons"><a href="#" onclick="return select_checkboxes('search-users-form', this, '<?php echo $lang_admin_users['Unselect all'] ?>')"><?php echo $lang_admin_users['Select all'] ?></a> <?php if ($can_ban) : ?><input type="submit" name="ban_users" value="<?php echo $lang_admin_users['Ban'] ?>" /><?php endif; if ($can_delete) : ?><input type="submit" name="delete_users" value="<?php echo $lang_admin_users['Delete'] ?>" /><?php endif; if ($can_move) : ?><input type="submit" name="move_users" value="<?php echo $lang_admin_users['Change group'] ?>" /><?php endif; ?></p>
 <?php endif; ?>
 		</div>
-		<ul class="crumbs">
-			<li><a href="admin_index.php"><?php echo $lang_admin_common['Admin'].' '.$lang_admin_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><a href="admin_users.php"><?php echo $lang_admin_common['Users'] ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $lang_admin_users['Results head'] ?></strong></li>
-		</ul>
+		<?php echo $crumbs ?>
 		<div class="clearer"></div>
 	</div>
 </div>
