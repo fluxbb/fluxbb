@@ -112,6 +112,10 @@ if (!$pun_user['is_guest'])
 	$forum_actions[] = '<a href="misc.php?action=markforumread&amp;fid='.$id.$token_url.'">'.$lang_common['Mark forum read'].'</a>';
 }
 
+$crumbs = generate_crumbs(array(
+	array($lang_common['Index'], 'index.php'),
+	array(pun_htmlspecialchars($cur_forum['forum_name']), 'viewforum.php?id='.$id)));
+
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), pun_htmlspecialchars($cur_forum['forum_name']));
 define('PUN_ALLOW_INDEX', 1);
 define('PUN_ACTIVE_PAGE', 'index');
@@ -120,10 +124,7 @@ require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">
 	<div class="inbox crumbsplus">
-		<ul class="crumbs">
-			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><strong><a href="viewforum.php?id=<?php echo $id ?>"><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></a></strong></li>
-		</ul>
+		<?php echo $crumbs ?>
 		<div class="pagepost">
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
 <?php echo $post_link ?>
@@ -296,10 +297,7 @@ else
 			<p class="pagelink conl"><?php echo $paging_links ?></p>
 <?php echo $post_link ?>
 		</div>
-		<ul class="crumbs">
-			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><strong><a href="viewforum.php?id=<?php echo $id ?>"><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></a></strong></li>
-		</ul>
+		<?php echo $crumbs ?>
 <?php echo (!empty($forum_actions) ? "\t\t".'<p class="subscribelink clearb">'.implode(' - ', $forum_actions).'</p>'."\n" : '') ?>
 		<div class="clearer"></div>
 	</div>
