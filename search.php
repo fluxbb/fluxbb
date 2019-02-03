@@ -542,6 +542,11 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			$crumbs_text['search_type'] = '<a href="search.php?action=search&amp;keywords='.urlencode($keywords).'&amp;author='.urlencode($author).'&amp;forums='.$search_type[2].'&amp;search_in='.$search_type[3].'&amp;sort_by='.$sort_by.'&amp;sort_dir='.$sort_dir.'&amp;show_as='.$show_as.'">'.$crumbs_text['search_type'].'</a>';
 		}
 
+		$crumbs = generate_crumbs(array(
+			array($lang_common['Index'], 'index.php'),
+			array($crumbs_text['show_as'], 'search.php'),
+			$crumbs_text['search_type']));
+
 		$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_search['Search results']);
 		define('PUN_ACTIVE_PAGE', 'search');
 		require PUN_ROOT.'header.php';
@@ -549,11 +554,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 ?>
 <div class="linkst">
 	<div class="inbox crumbsplus">
-		<ul class="crumbs">
-			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><a href="search.php"><?php echo $crumbs_text['show_as'] ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $crumbs_text['search_type'] ?></strong></li>
-		</ul>
+		<?php echo $crumbs ?>
 		<div class="pagepost">
 			<p class="pagelink"><?php echo $paging_links ?></p>
 		</div>
@@ -750,11 +751,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		<div class="pagepost">
 			<p class="pagelink"><?php echo $paging_links ?></p>
 		</div>
-		<ul class="crumbs">
-			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><a href="search.php"><?php echo $crumbs_text['show_as'] ?></a></li>
-			<li><span>»&#160;</span><strong><?php echo $crumbs_text['search_type'] ?></strong></li>
-		</ul>
+		<?php echo $crumbs ?>
 <?php echo (!empty($forum_actions) ? "\t\t".'<p class="subscribelink clearb">'.implode(' - ', $forum_actions).'</p>'."\n" : '') ?>
 		<div class="clearer"></div>
 	</div>
