@@ -224,68 +224,68 @@ foreach ($groups as $cur_group)
 								<tr>
 									<th scope="row"><?php echo $lang_admin_groups['Post images label'] ?></th>
 									<td>
-										<label class="conl"><input type="radio" name="post_images" value="1"<?php if ($group['g_post_images'] == '1') echo ' checked="checked"' ?> tabindex="31" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong></label>
-										<label class="conl"><input type="radio" name="post_images" value="0"<?php if ($group['g_post_images'] == '0') echo ' checked="checked"' ?> tabindex="32" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong></label>
+										<label class="conl"><input type="radio" name="post_images" value="1"<?php if ($group['g_post_images'] == '1') echo ' checked="checked"' ?> tabindex="33" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong></label>
+										<label class="conl"><input type="radio" name="post_images" value="0"<?php if ($group['g_post_images'] == '0') echo ' checked="checked"' ?> tabindex="34" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong></label>
 										<span class="clearb"><?php echo $lang_admin_groups['Post images help'] ?></span>
 									</td>
 								</tr>
 <?php if ($group['g_id'] != PUN_GUEST): ?>								<tr>
 									<th scope="row"><?php echo $lang_admin_groups['Set own title label'] ?></th>
 									<td>
-										<label class="conl"><input type="radio" name="set_title" value="1"<?php if ($group['g_set_title'] == '1') echo ' checked="checked"' ?> tabindex="33" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong></label>
-										<label class="conl"><input type="radio" name="set_title" value="0"<?php if ($group['g_set_title'] == '0') echo ' checked="checked"' ?> tabindex="34" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong></label>
+										<label class="conl"><input type="radio" name="set_title" value="1"<?php if ($group['g_set_title'] == '1') echo ' checked="checked"' ?> tabindex="35" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong></label>
+										<label class="conl"><input type="radio" name="set_title" value="0"<?php if ($group['g_set_title'] == '0') echo ' checked="checked"' ?> tabindex="36" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong></label>
 										<span class="clearb"><?php echo $lang_admin_groups['Set own title help'] ?></span>
 									</td>
 								</tr>
 <?php endif; ?>								<tr>
 									<th scope="row"><?php echo $lang_admin_groups['User search label'] ?></th>
 									<td>
-										<label class="conl"><input type="radio" name="search" value="1"<?php if ($group['g_search'] == '1') echo ' checked="checked"' ?> tabindex="35" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong></label>
-										<label class="conl"><input type="radio" name="search" value="0"<?php if ($group['g_search'] == '0') echo ' checked="checked"' ?> tabindex="36" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong></label>
+										<label class="conl"><input type="radio" name="search" value="1"<?php if ($group['g_search'] == '1') echo ' checked="checked"' ?> tabindex="37" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong></label>
+										<label class="conl"><input type="radio" name="search" value="0"<?php if ($group['g_search'] == '0') echo ' checked="checked"' ?> tabindex="38" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong></label>
 										<span class="clearb"><?php echo $lang_admin_groups['User search help'] ?></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_groups['User list search label'] ?></th>
 									<td>
-										<label class="conl"><input type="radio" name="search_users" value="1"<?php if ($group['g_search_users'] == '1') echo ' checked="checked"' ?> tabindex="37" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong></label>
-										<label class="conl"><input type="radio" name="search_users" value="0"<?php if ($group['g_search_users'] == '0') echo ' checked="checked"' ?> tabindex="38" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong></label>
+										<label class="conl"><input type="radio" name="search_users" value="1"<?php if ($group['g_search_users'] == '1') echo ' checked="checked"' ?> tabindex="39" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong></label>
+										<label class="conl"><input type="radio" name="search_users" value="0"<?php if ($group['g_search_users'] == '0') echo ' checked="checked"' ?> tabindex="40" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong></label>
 										<span class="clearb"><?php echo $lang_admin_groups['User list search help'] ?></span>
 									</td>
 								</tr>
 <?php if ($group['g_id'] != PUN_GUEST): ?>								<tr>
 									<th scope="row"><?php echo $lang_admin_groups['Send e-mails label'] ?></th>
 									<td>
-										<label class="conl"><input type="radio" name="send_email" value="1"<?php if ($group['g_send_email'] == '1') echo ' checked="checked"' ?> tabindex="39" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong></label>
-										<label class="conl"><input type="radio" name="send_email" value="0"<?php if ($group['g_send_email'] == '0') echo ' checked="checked"' ?> tabindex="40" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong></label>
+										<label class="conl"><input type="radio" name="send_email" value="1"<?php if ($group['g_send_email'] == '1') echo ' checked="checked"' ?> tabindex="41" />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong></label>
+										<label class="conl"><input type="radio" name="send_email" value="0"<?php if ($group['g_send_email'] == '0') echo ' checked="checked"' ?> tabindex="42" />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong></label>
 										<span class="clearb"><?php echo $lang_admin_groups['Send e-mails help'] ?></span>
 									</td>
 								</tr>
 <?php endif; ?>								<tr>
 									<th scope="row"><?php echo $lang_admin_groups['Post flood label'] ?></th>
 									<td>
-										<input type="text" name="post_flood" size="5" maxlength="4" value="<?php echo $group['g_post_flood'] ?>" tabindex="41" />
+										<input type="text" name="post_flood" size="5" maxlength="4" value="<?php echo $group['g_post_flood'] ?>" tabindex="43" />
 										<span><?php echo $lang_admin_groups['Post flood help'] ?></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_groups['Search flood label'] ?></th>
 									<td>
-										<input type="text" name="search_flood" size="5" maxlength="4" value="<?php echo $group['g_search_flood'] ?>" tabindex="42" />
+										<input type="text" name="search_flood" size="5" maxlength="4" value="<?php echo $group['g_search_flood'] ?>" tabindex="44" />
 										<span><?php echo $lang_admin_groups['Search flood help'] ?></span>
 									</td>
 								</tr>
 <?php if ($group['g_id'] != PUN_GUEST): ?>								<tr>
 									<th scope="row"><?php echo $lang_admin_groups['E-mail flood label'] ?></th>
 									<td>
-										<input type="text" name="email_flood" size="5" maxlength="4" value="<?php echo $group['g_email_flood'] ?>" tabindex="43" />
+										<input type="text" name="email_flood" size="5" maxlength="4" value="<?php echo $group['g_email_flood'] ?>" tabindex="45" />
 										<span><?php echo $lang_admin_groups['E-mail flood help'] ?></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_groups['Report flood label'] ?></th>
 									<td>
-										<input type="text" name="report_flood" size="5" maxlength="4" value="<?php echo $group['g_report_flood'] ?>" tabindex="44" />
+										<input type="text" name="report_flood" size="5" maxlength="4" value="<?php echo $group['g_report_flood'] ?>" tabindex="46" />
 										<span><?php echo $lang_admin_groups['Report flood help'] ?></span>
 									</td>
 								</tr>
@@ -294,7 +294,7 @@ foreach ($groups as $cur_group)
 <?php endif; ?>						</div>
 					</fieldset>
 				</div>
-				<p class="submitend"><input type="submit" name="add_edit_group" value="<?php echo $lang_admin_common['Save'] ?>" tabindex="45" /></p>
+				<p class="submitend"><input type="submit" name="add_edit_group" value="<?php echo $lang_admin_common['Save'] ?>" tabindex="47" /></p>
 			</form>
 		</div>
 	</div>
