@@ -296,8 +296,8 @@ if (isset($_GET['tid']))
 
 	$crumbs = generate_crumbs(array(
 		array($lang_common['Index'], 'index.php'),
-		array(pun_htmlspecialchars($cur_topic['forum_name']), 'viewforum.php?id='.$fid),
-		array(pun_htmlspecialchars($cur_topic['subject']), 'viewtopic.php?id='.$tid),
+		array($cur_topic['forum_name'], 'viewforum.php?id='.$fid),
+		array($cur_topic['subject'], 'viewtopic.php?id='.$tid),
 		$lang_misc['Moderate']));
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), pun_htmlspecialchars($cur_topic['forum_name']), pun_htmlspecialchars($cur_topic['subject']));
@@ -850,7 +850,7 @@ $paging_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.pa
 
 $crumbs = generate_crumbs(array(
 	array($lang_common['Index'], 'index.php'),
-	array(pun_htmlspecialchars($cur_forum['forum_name']), 'viewforum.php?id='.$fid),
+	array($cur_forum['forum_name'], 'viewforum.php?id='.$fid),
 	$lang_misc['Moderate']));
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), pun_htmlspecialchars($cur_forum['forum_name']));
