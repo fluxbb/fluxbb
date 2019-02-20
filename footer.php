@@ -25,7 +25,10 @@ ob_start();
 	<div class="box">
 <?php
 
-if (isset($footer_style) && ($footer_style == 'viewforum' || $footer_style == 'viewtopic') && $is_admmod)
+// If no footer style has been specified, we use the default (only copyright/debug info)
+$footer_style = isset($footer_style) ? $footer_style : NULL;
+
+if (($footer_style == 'viewforum' || $footer_style == 'viewtopic') && $is_admmod)
 {
 	echo "\t\t".'<div id="modcontrols" class="inbox">'."\n";
 
@@ -89,9 +92,6 @@ echo "\t\t\t".'</div>'."\n";
 ?>
 			<div class="conr">
 <?php
-
-// If no footer style has been specified, we use the default (only copyright/debug info)
-$footer_style = isset($footer_style) ? $footer_style : NULL;
 
 if ($footer_style == 'index')
 {
