@@ -419,7 +419,8 @@ else if (isset($_GET['find_ban']))
 	$crumbs = generate_crumbs(array(
 		array($lang_admin_common['Admin'].' '.$lang_admin_common['Index'], 'admin_index.php'),
 		array($lang_admin_common['Bans'], 'admin_bans.php'),
-		$lang_admin_bans['Results head']));
+		$lang_admin_bans['Results head']),
+	);
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_admin_common['Admin'], $lang_admin_common['Bans'], $lang_admin_bans['Results head']);
 	define('PUN_ACTIVE_PAGE', 'admin');
