@@ -554,7 +554,8 @@ $crumbs = generate_crumbs(array_filter(array(
 	array($lang_common['Index'], 'index.php'),
 	array($cur_posting['forum_name'], 'viewforum.php?id='.$cur_posting['id']),
 	$subject_crumb,
-	$action)));
+	$action,
+)));
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $action);
 $required_fields = array('req_email' => $lang_common['Email'], 'req_subject' => $lang_common['Subject'], 'req_message' => $lang_common['Message']);
