@@ -279,8 +279,8 @@ else if (isset($_GET['report']))
 		array($lang_common['Index'], 'index.php'),
 		array($cur_post['forum_name'], 'viewforum.php?id='.$cur_post['fid']),
 		array($cur_post['subject'], 'viewtopic.php?pid='.$post_id.'#p'.$post_id),
-		$lang_misc['Report post']),
-	);
+		$lang_misc['Report post'],
+	));
 
 	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_misc['Report post']);
 	$required_fields = array('req_reason' => $lang_misc['Reason']);
