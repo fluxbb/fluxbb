@@ -144,8 +144,8 @@ if (isset($_POST['form_sent']))
 
 $crumbs = generate_crumbs(array(
 	array($lang_common['Index'], 'index.php'),
-	array(pun_htmlspecialchars($cur_post['forum_name']), 'viewforum.php?id='.$cur_post['fid']),
-	array(pun_htmlspecialchars($cur_post['subject']), 'viewtopic.php?id='.$cur_post['tid']),
+	array($cur_post['forum_name'], 'viewforum.php?id='.$cur_post['fid']),
+	array($cur_post['subject'], 'viewtopic.php?id='.$cur_post['tid']),
 	$lang_post['Edit post']));
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_post['Edit post']);
