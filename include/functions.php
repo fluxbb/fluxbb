@@ -575,6 +575,27 @@ function generate_page_title($page_title, $p = null)
 
 
 //
+// Generate breadcrumb navigation
+//
+function generate_crumbs($crumbs)
+{
+	$last_key = end(array_keys($crumbs));
+
+	$crumbs_markup = '<ol class="crumbs">';
+	foreach ($crumbs as $idx => $crumb)
+	{
+		$crumbs_markup .= '<li>'.($idx ? '<span>»&#160;</span>' : '');
+		$item = is_array($crumb) ? '<a href="'.$crumb[1].'">'.$crumb[0].'</a>' : $crumb;
+		$crumbs_markup .= ($idx == $last_key) ? '<strong>'.$item.'</strong>' : $item;
+		$crumbs_markup .= '</li>';
+	}
+	$crumbs_markup .= '</ol>';
+
+	return $crumbs_markup;
+}
+
+
+//
 // Save array of tracked topics in cookie
 //
 function set_tracked_topics($tracked_topics)
