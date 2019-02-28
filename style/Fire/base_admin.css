@@ -175,3 +175,39 @@
 .plugin p {
 	padding: 12px 18px 0;
 }
+
+/* Responsive
+----------------------------------------------------------------*/
+@media only screen and (max-width: 1024px) {
+	#punadmin.pun textarea {
+		width: 100%;
+	}
+}
+
+@media only screen and (max-width: 960px) {
+	#punadmin.pun input[size="50"], #punadmin.pun input[size="45"], #punadmin.pun input[size="40"], #punadmin.pun select[name*="timezone"] {
+		width: 100%;
+	}
+}
+
+@media only screen and (max-width: 800px) {
+	#adminconsole fieldset th {
+		width: 10em;
+	}
+}
+
+@media only screen and (max-width: 480px) {
+	#punadmin.pun input[size="25"], #punadmin.pun input[size="30"], #punadmin.pun input[size="35"] {
+		width: 100%;
+	}
+
+	#punadmin.pun input[size="24"] {
+		width: 9em;
+	}
+}
+
+@media only screen and (max-width: 400px) {
+	#punadmin.pun input[size], #punadmin.pun select {
+		width: 100%;
+	}
+}
