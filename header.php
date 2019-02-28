@@ -230,6 +230,7 @@ if ($pun_user['g_read_board'] == '1' && $pun_config['o_additional_navlinks'] != 
 }
 
 $tpl_temp = '<div id="brdmenu" class="inbox">'."\n\t\t\t".'<ul>'."\n\t\t\t\t".implode("\n\t\t\t\t", $links)."\n\t\t\t".'</ul>'."\n\t\t".'</div>';
+$tpl_temp = str_replace('<div id="brdmenu" class="inbox">'."\n\t\t\t".'<ul>', '<div id="brdmenu" class="inbox">'."\n\t\t\t".'<input type="checkbox" id="brdmenu-checkbox" style="display: none;" />'."\n\t\t\t".'<ul>'.'<label for="brdmenu-checkbox" id="brdmenu-button" data-open="&#9776;" data-close="&#10006;" onclick></label>'."\n\t\t\t\t", $tpl_temp);
 $tpl_main = str_replace('<pun_navlinks>', $tpl_temp, $tpl_main);
 // END SUBST - <pun_navlinks>
 
