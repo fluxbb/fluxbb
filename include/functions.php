@@ -585,7 +585,7 @@ function generate_crumbs($crumbs)
 	foreach ($crumbs as $idx => $crumb)
 	{
 		$crumbs_markup .= '<li>'.($idx ? '<span>»&#160;</span>' : '');
-		$item = is_array($crumb) ? '<a href="'.$crumb[1].'">'.$crumb[0].'</a>' : $crumb;
+		$item = is_array($crumb) ? '<a href="'.$crumb[1].'">'.pun_htmlspecialchars($crumb[0]).'</a>' : pun_htmlspecialchars($crumb);
 		$crumbs_markup .= ($idx == $last_key) ? '<strong>'.$item.'</strong>' : $item;
 		$crumbs_markup .= '</li>';
 	}

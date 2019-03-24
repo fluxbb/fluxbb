@@ -277,8 +277,8 @@ else if (isset($_GET['report']))
 
 	$crumbs = generate_crumbs(array(
 		array($lang_common['Index'], 'index.php'),
-		array(pun_htmlspecialchars($cur_post['forum_name']), 'viewforum.php?id='.$cur_post['fid']),
-		array(pun_htmlspecialchars($cur_post['subject']), 'viewtopic.php?pid='.$post_id.'#p'.$post_id),
+		array($cur_post['forum_name'], 'viewforum.php?id='.$cur_post['fid']),
+		array($cur_post['subject'], 'viewtopic.php?pid='.$post_id.'#p'.$post_id),
 		$lang_misc['Report post'],
 	));
 

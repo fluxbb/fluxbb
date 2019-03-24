@@ -80,8 +80,8 @@ if (isset($_POST['delete']))
 
 $crumbs = generate_crumbs(array(
 	array($lang_common['Index'], 'index.php'),
-	array(pun_htmlspecialchars($cur_post['forum_name']), 'viewforum.php?id='.$cur_post['fid']),
-	array(pun_htmlspecialchars($cur_post['subject']), 'viewtopic.php?pid='.$id.'#p'.$id),
+	array($cur_post['forum_name'], 'viewforum.php?id='.$cur_post['fid']),
+	array($cur_post['subject'], 'viewtopic.php?pid='.$id.'#p'.$id),
 	$lang_delete['Delete post'],
 ));
 

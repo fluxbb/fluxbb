@@ -544,15 +544,15 @@ else
 	message($lang_common['Bad request'], false, '404 Not Found');
 
 if (isset($_POST['req_subject']))
-	$subject_crumb = pun_htmlspecialchars($_POST['req_subject']);
+	$subject_crumb = $_POST['req_subject'];
 else if (isset($cur_posting['subject']))
-	$subject_crumb = array(pun_htmlspecialchars($cur_posting['subject']), 'viewtopic.php?id='.$tid);
+	$subject_crumb = array($cur_posting['subject'], 'viewtopic.php?id='.$tid);
 else
 	$subject_crumb = '';
 
 $crumbs = generate_crumbs(array_filter(array(
 	array($lang_common['Index'], 'index.php'),
-	array(pun_htmlspecialchars($cur_posting['forum_name']), 'viewforum.php?id='.$cur_posting['id']),
+	array($cur_posting['forum_name'], 'viewforum.php?id='.$cur_posting['id']),
 	$subject_crumb,
 	$action,
 )));

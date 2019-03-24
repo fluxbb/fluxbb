@@ -188,8 +188,8 @@ else if ($pun_config['o_feed_type'] == '2')
 
 $crumbs = generate_crumbs(array(
 	array($lang_common['Index'], 'index.php'),
-	array(pun_htmlspecialchars($cur_topic['forum_name']), 'viewforum.php?id='.$cur_topic['forum_id']),
-	array(pun_htmlspecialchars($cur_topic['subject']), 'viewtopic.php?id='.$id),
+	array($cur_topic['forum_name'], 'viewforum.php?id='.$cur_topic['forum_id']),
+	array($cur_topic['subject'], 'viewtopic.php?id='.$id),
 ));
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), pun_htmlspecialchars($cur_topic['forum_name']), pun_htmlspecialchars($cur_topic['subject']));

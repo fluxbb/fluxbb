@@ -500,9 +500,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		if ($search_type[0] == 'action')
 		{
 			if ($search_type[1] == 'show_user_topics')
-				$crumbs_text['search_type'] = array(sprintf($lang_search['Quick search show_user_topics'], pun_htmlspecialchars($search_set[0]['poster'])), 'search.php?action=show_user_topics&amp;user_id='.$search_type[2]);
+				$crumbs_text['search_type'] = array(sprintf($lang_search['Quick search show_user_topics'], $search_set[0]['poster']), 'search.php?action=show_user_topics&amp;user_id='.$search_type[2]);
 			else if ($search_type[1] == 'show_user_posts')
-				$crumbs_text['search_type'] = array(sprintf($lang_search['Quick search show_user_posts'], pun_htmlspecialchars($search_set[0]['pposter'])), 'search.php?action=show_user_posts&amp;user_id='.$search_type[2]);
+				$crumbs_text['search_type'] = array(sprintf($lang_search['Quick search show_user_posts'], $search_set[0]['pposter']), 'search.php?action=show_user_posts&amp;user_id='.$search_type[2]);
 			else if ($search_type[1] == 'show_subscriptions')
 			{
 				// Fetch username of subscriber
@@ -514,7 +514,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				else
 					message($lang_common['Bad request'], false, '404 Not Found');
 
-				$crumbs_text['search_type'] = array(sprintf($lang_search['Quick search show_subscriptions'], pun_htmlspecialchars($subscriber_name)), 'search.php?action=show_subscriptions&amp;user_id='.$subscriber_id);
+				$crumbs_text['search_type'] = array(sprintf($lang_search['Quick search show_subscriptions'], $subscriber_name), 'search.php?action=show_subscriptions&amp;user_id='.$subscriber_id);
 			}
 			else
 				$crumbs_text['search_type'] = array($lang_search['Quick search '.$search_type[1]], 'search.php?action='.$search_type[1]);
@@ -526,17 +526,17 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			if ($search_type[0] == 'both')
 			{
 				list ($keywords, $author) = $search_type[1];
-				$crumbs_text['search_type'] = sprintf($lang_search['By both show as '.$show_as], pun_htmlspecialchars($keywords), pun_htmlspecialchars($author));
+				$crumbs_text['search_type'] = sprintf($lang_search['By both show as '.$show_as], $keywords, $author);
 			}
 			else if ($search_type[0] == 'keywords')
 			{
 				$keywords = $search_type[1];
-				$crumbs_text['search_type'] = sprintf($lang_search['By keywords show as '.$show_as], pun_htmlspecialchars($keywords));
+				$crumbs_text['search_type'] = sprintf($lang_search['By keywords show as '.$show_as], $keywords);
 			}
 			else if ($search_type[0] == 'author')
 			{
 				$author = $search_type[1];
-				$crumbs_text['search_type'] = sprintf($lang_search['By user show as '.$show_as], pun_htmlspecialchars($author));
+				$crumbs_text['search_type'] = sprintf($lang_search['By user show as '.$show_as], $author);
 			}
 
 			$crumbs_text['search_type'] = array($crumbs_text['search_type'], 'search.php?action=search&amp;keywords='.urlencode($keywords).'&amp;author='.urlencode($author).'&amp;forums='.$search_type[2].'&amp;search_in='.$search_type[3].'&amp;sort_by='.$sort_by.'&amp;sort_dir='.$sort_dir.'&amp;show_as='.$show_as);

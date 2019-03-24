@@ -114,7 +114,7 @@ if (!$pun_user['is_guest'])
 
 $crumbs = generate_crumbs(array(
 	array($lang_common['Index'], 'index.php'),
-	array(pun_htmlspecialchars($cur_forum['forum_name']), 'viewforum.php?id='.$id),
+	array($cur_forum['forum_name'], 'viewforum.php?id='.$id),
 ));
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), pun_htmlspecialchars($cur_forum['forum_name']));
