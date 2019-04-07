@@ -242,11 +242,11 @@ if ($db->has_rows($result))
 			$subject_multipage = null;
 
 		// Should we show the "New posts" and/or the multipage links?
-		if (!empty($subject_new_posts) || !empty($subject_multipage))
-		{
-			$subject .= !empty($subject_new_posts) ? ' '.$subject_new_posts : '';
-			$subject .= !empty($subject_multipage) ? ' '.$subject_multipage : '';
-		}
+		if (!empty($subject_new_posts))
+			$subject .= ' '.$subject_new_posts;
+
+		if (!empty($subject_multipage))
+			$subject .= ' '.$subject_multipage;
 
 ?>
 				<tr class="<?php echo $item_status ?>">
