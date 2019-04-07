@@ -216,10 +216,8 @@ if ($db->has_rows($result))
 			$item_status .= ' inew';
 			$icon_type = 'icon icon-new';
 			$subject = '<strong>'.$subject.'</strong>';
-			$subject_new_posts = ' <span class="newtext">[ <a href="viewtopic.php?id='.$cur_topic['id'].'&amp;action=new" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a> ]</span>';
+			$subject .= ' <span class="newtext">[ <a href="viewtopic.php?id='.$cur_topic['id'].'&amp;action=new" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a> ]</span>';
 		}
-		else
-			$subject_new_posts = null;
 
 		// Insert the status text before the subject
 		$subject = implode(' ', $status_text).' '.$subject;
@@ -237,16 +235,7 @@ if ($db->has_rows($result))
 		$num_pages_topic = ceil(($cur_topic['num_replies'] + 1) / $pun_user['disp_posts']);
 
 		if ($num_pages_topic > 1)
-			$subject_multipage = ' <span class="pagestext">[ '.paginate($num_pages_topic, -1, 'viewtopic.php?id='.$cur_topic['id']).' ]</span>';
-		else
-			$subject_multipage = null;
-
-		// Should we show the "New posts" and/or the multipage links?
-		if (!empty($subject_new_posts))
-			$subject .= $subject_new_posts;
-
-		if (!empty($subject_multipage))
-			$subject .= $subject_multipage;
+			$subject .= ' <span class="pagestext">[ '.paginate($num_pages_topic, -1, 'viewtopic.php?id='.$cur_topic['id']).' ]</span>';
 
 ?>
 				<tr class="<?php echo $item_status ?>">
