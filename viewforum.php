@@ -215,8 +215,7 @@ if ($db->has_rows($result))
 		{
 			$item_status .= ' inew';
 			$icon_type = 'icon icon-new';
-			$subject = '<strong>'.$subject.'</strong>';
-			$subject .= ' <span class="newtext">[ <a href="viewtopic.php?id='.$cur_topic['id'].'&amp;action=new" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a> ]</span>';
+			$subject = '<strong>'.$subject.'</strong> <span class="newtext">[ <a href="viewtopic.php?id='.$cur_topic['id'].'&amp;action=new" title="'.$lang_common['New posts info'].'">'.$lang_common['New posts'].'</a> ]</span>';
 		}
 
 		// Insert the status text before the subject
