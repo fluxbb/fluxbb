@@ -855,8 +855,6 @@ else if (isset($_POST['form_sent']))
 			$form = array(
 				'jabber'		=> pun_trim($_POST['form']['jabber']),
 				'icq'			=> pun_trim($_POST['form']['icq']),
-				'msn'			=> pun_trim($_POST['form']['msn']),
-				'yahoo'			=> pun_trim($_POST['form']['yahoo']),
 			);
 
 			// If the ICQ UIN contains anything other than digits it's invalid
@@ -1043,7 +1041,7 @@ else if (isset($_POST['form_sent']))
 flux_hook('profile_after_form_handling');
 
 
-$result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.msn, u.yahoo, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, u.date_format, u.time_format, u.last_visit, g.g_id, g.g_user_title, g.g_moderator FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, u.date_format, u.time_format, u.last_visit, g.g_id, g.g_user_title, g.g_moderator FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 if (!$db->has_rows($result))
 	message($lang_common['Bad request'], false, '404 Not Found');
 
@@ -1118,18 +1116,6 @@ if ($pun_user['id'] != $id &&																	// If we aren't the user (i.e. edi
 	{
 		$user_messaging[] = '<dt>'.$lang_profile['ICQ'].'</dt>';
 		$user_messaging[] = '<dd>'.$user['icq'].'</dd>';
-	}
-
-	if ($user['msn'] != '')
-	{
-		$user_messaging[] = '<dt>'.$lang_profile['MSN'].'</dt>';
-		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['msn']) : $user['msn']).'</dd>';
-	}
-
-	if ($user['yahoo'] != '')
-	{
-		$user_messaging[] = '<dt>'.$lang_profile['Yahoo'].'</dt>';
-		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['yahoo']) : $user['yahoo']).'</dd>';
 	}
 
 	$user_personality = array();
@@ -1518,8 +1504,6 @@ else
 							<input type="hidden" name="form_sent" value="1" />
 							<label><?php echo $lang_profile['Jabber'] ?><br /><input id="jabber" type="text" name="form[jabber]" value="<?php echo pun_htmlspecialchars($user['jabber']) ?>" size="40" maxlength="75" /><br /></label>
 							<label><?php echo $lang_profile['ICQ'] ?><br /><input id="icq" type="text" name="form[icq]" value="<?php echo $user['icq'] ?>" size="12" maxlength="12" /><br /></label>
-							<label><?php echo $lang_profile['MSN'] ?><br /><input id="msn" type="text" name="form[msn]" value="<?php echo pun_htmlspecialchars($user['msn']) ?>" size="40" maxlength="50" /><br /></label>
-							<label><?php echo $lang_profile['Yahoo'] ?><br /><input id="yahoo" type="text" name="form[yahoo]" value="<?php echo pun_htmlspecialchars($user['yahoo']) ?>" size="20" maxlength="30" /><br /></label>
 						</div>
 					</fieldset>
 				</div>
