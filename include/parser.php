@@ -749,15 +749,15 @@ function handle_list_tag($content, $type = '*')
 		);
 	}
 
-	$content = preg_replace('#\s*\[\*\](.*?)\[/\*\]\s*#s', '<li><p dir="auto">$1</p></li>', pun_trim($content));
+	$content = preg_replace('#\s*\[\*\](.*?)\[/\*\]\s*#s', '<li>$1</li>', pun_trim($content));
 
 	if ($type == '*')
-		$content = '<ul>'.$content.'</ul>';
+		$content = '<ul dir="auto">'.$content.'</ul>';
 	else
 		if ($type == 'a')
-			$content = '<ol class="alpha">'.$content.'</ol>';
+			$content = '<ol class="alpha" dir="auto">'.$content.'</ol>';
 		else
-			$content = '<ol class="decimal">'.$content.'</ol>';
+			$content = '<ol class="decimal" dir="auto">'.$content.'</ol>';
 
 	return '</p>'.$content.'<p dir="auto">';
 }
