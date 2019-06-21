@@ -772,11 +772,11 @@ function do_bbcode($text, $is_signature = false)
 
 	if (strpos($text, '[quote') !== false)
 	{
-		$text = preg_replace('%\[quote\]\s*%', '</p><div class="quotebox" dir="auto"><blockquote><div><p dir="auto">', $text);
+		$text = preg_replace('%\[quote\]\s*%', '</p><div class="quotebox"><blockquote><div><p dir="auto">', $text);
 		$text = preg_replace_callback(
 			'%\[quote=(&quot;|&\#039;|"|\'|)([^\r\n]*?)\\1\]%s',
 			function ($match) use ($lang_common) {
-				return '</p><div class="quotebox" dir="auto"><cite>'.
+				return '</p><div class="quotebox"><cite>'.
 					str_replace(array('[', '\"'), array('&#91;', '"'), $match[2]).
 					' '.$lang_common['wrote'].'</cite><blockquote><div><p dir="auto">';
 			},
