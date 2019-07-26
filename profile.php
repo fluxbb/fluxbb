@@ -433,7 +433,6 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 							$pun_config['o_avatars_width'],
 							$pun_config['o_avatars_height'],
 							forum_number_format($pun_config['o_avatars_size']),
-							$lang_profile['bytes'],
 							file_size($pun_config['o_avatars_size'])
 						); ?></p>
 					</div>
