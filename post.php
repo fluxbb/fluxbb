@@ -543,6 +543,19 @@ else if ($fid)
 else
 	message($lang_common['Bad request'], false, '404 Not Found');
 
+if (isset($_POST['req_subject']))
+	$subject_crumb = $_POST['req_subject'];
+else if (isset($cur_posting['subject']))
+	$subject_crumb = array($cur_posting['subject'], 'viewtopic.php?id='.$tid);
+else
+	$subject_crumb = '';
+
+$crumbs = generate_crumbs(array_filter(array(
+	array($lang_common['Index'], 'index.php'),
+	array($cur_posting['forum_name'], 'viewforum.php?id='.$cur_posting['id']),
+	$subject_crumb,
+	$action,
+)));
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $action);
 $required_fields = array('req_email' => $lang_common['Email'], 'req_subject' => $lang_common['Subject'], 'req_message' => $lang_common['Message']);
@@ -564,14 +577,7 @@ require PUN_ROOT.'header.php';
 ?>
 <div class="linkst">
 	<div class="inbox">
-		<ul class="crumbs">
-			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
-			<li><span>»&#160;</span><a href="viewforum.php?id=<?php echo $cur_posting['id'] ?>"><?php echo pun_htmlspecialchars($cur_posting['forum_name']) ?></a></li>
-<?php if (isset($_POST['req_subject'])): ?>			<li><span>»&#160;</span><?php echo pun_htmlspecialchars($_POST['req_subject']) ?></li>
-<?php endif; ?>
-<?php if (isset($cur_posting['subject'])): ?>			<li><span>»&#160;</span><a href="viewtopic.php?id=<?php echo $tid ?>"><?php echo pun_htmlspecialchars($cur_posting['subject']) ?></a></li>
-<?php endif; ?>			<li><span>»&#160;</span><strong><?php echo $action ?></strong></li>
-		</ul>
+		<?php echo $crumbs ?>
 	</div>
 </div>
 
