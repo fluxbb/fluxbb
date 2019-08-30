@@ -370,7 +370,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 
 			// Make sure the file isn't too big
 			if ($uploaded_file['size'] > $pun_config['o_avatars_size'])
-				message($lang_profile['Too large'].' '.forum_number_format($pun_config['o_avatars_size']).' '.$lang_profile['bytes'].'.');
+				message(sprintf($lang_profile['Too large'], forum_number_format($pun_config['o_avatars_size'])));
 
 			// Move the file to the avatar directory. We do this before checking the width/height to circumvent open_basedir restrictions
 			if (!@move_uploaded_file($uploaded_file['tmp_name'], PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$id.'.tmp'))
@@ -396,7 +396,7 @@ else if ($action == 'upload_avatar' || $action == 'upload_avatar2')
 			if (empty($width) || empty($height) || $width > $pun_config['o_avatars_width'] || $height > $pun_config['o_avatars_height'])
 			{
 				@unlink(PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$id.'.tmp');
-				message($lang_profile['Too wide or high'].' '.$pun_config['o_avatars_width'].'x'.$pun_config['o_avatars_height'].' '.$lang_profile['pixels'].'.');
+				message(sprintf($lang_profile['Too wide or high'], $pun_config['o_avatars_width'], $pun_config['o_avatars_height']));
 			}
 
 			// Delete any old avatars and put the new one in place
