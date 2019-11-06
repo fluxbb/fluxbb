@@ -296,7 +296,6 @@ function set_default_user()
 	$pun_user['disp_topics'] = $pun_config['o_disp_topics_default'];
 	$pun_user['disp_posts'] = $pun_config['o_disp_posts_default'];
 	$pun_user['timezone'] = $pun_config['o_default_timezone'];
-	$pun_user['dst'] = $pun_config['o_default_dst'];
 	$pun_user['language'] = $pun_config['o_default_lang'];
 	$pun_user['style'] = $pun_config['o_default_style'];
 	$pun_user['is_guest'] = true;
@@ -971,7 +970,7 @@ function format_time($timestamp, $date_only = false, $date_format = null, $time_
 	if (is_null($user))
 		$user = $pun_user;
 
-	$diff = ($user['timezone'] + $user['dst']) * 3600;
+	$diff = timezone_get_offset($user['timezone']);
 	$timestamp += $diff;
 	$now = time();
 
@@ -2219,4 +2218,61 @@ function dump()
 
 	echo '</pre>';
 	exit;
+}
+
+
+function html_timezone_select($name, $selected = null) {
+	$out = sprintf('<select name="%s">', $name);
+
+	$tz_list = \DateTimeZone::listIdentifiers();
+	natcasesort($tz_list);
+
+	static $replace = ['/' => ' / ', '_' => ' '];
+
+	foreach ($tz_list as $tz) {
+		$tz_continent = strtok($tz, '/');
+
+		if (!isset($continent) || $tz_continent !== $continent) {
+			if (isset($continent)) {
+				$out .= '</optgroup>';
+			}
+
+			$continent = $tz_continent;
+			$out .= sprintf('<optgroup label="%s">', $continent);
+		}
+
+		$out .= sprintf('<option value="%s"%s>%s</option>',
+			htmlspecialchars($tz),
+			$tz === $selected ? ' selected="selected"' : '',
+			htmlspecialchars(strtr($tz, $replace))
+		);
+	}
+
+	$out .= '</optgroup></select>';
+
+	return $out;
+}
+
+function timezone_check($tz) {
+	return in_array($tz, \DateTimeZone::listIdentifiers(), true);
+}
+
+$_tz_cache = [];
+
+function timezone_get_offset($tz_name) {
+	if (isset($_tz_cache[$tz_name])) {
+		return $_tz_cache[$tz_name];
+	}
+
+	try {
+		$tz = new \DateTimeZone($tz_name);
+		$date = new \DateTime('now', $tz);
+		$offset = $date->getOffset();
+	}
+	catch (\Exception $e) {
+		$offset = -1;
+	}
+
+	$_tz_cache[$tz_name] = $offset;
+	return $offset;
 }
