@@ -148,12 +148,11 @@ if ($db->has_rows($result))
 
 	while ($user_data = $db->fetch_assoc($result))
 	{
-		$user_title_field = get_title($user_data);
 
 ?>
 				<tr>
 					<td class="tcl"><?php echo '<a href="profile.php?id='.$user_data['id'].'">'.pun_htmlspecialchars($user_data['username']).'</a>' ?></td>
-					<td class="tc2"><?php echo $user_title_field ?></td>
+					<td class="tc2"><?php echo get_title($user_data) ?></td>
 <?php if ($show_post_count): ?>					<td class="tc3"><?php echo forum_number_format($user_data['num_posts']) ?></td>
 <?php endif; ?>
 					<td class="tcr"><?php echo format_time($user_data['registered'], true) ?></td>
