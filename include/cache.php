@@ -150,7 +150,7 @@ function generate_stopwords_cache()
 	$d = dir(PUN_ROOT.'lang');
 	while (($entry = $d->read()) !== false)
 	{
-		if ($entry{0} == '.')
+		if ($entry[0] == '.')
 			continue;
 
 		if (is_dir(PUN_ROOT.'lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/stopwords.txt'))
