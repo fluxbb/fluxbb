@@ -117,7 +117,7 @@ class MysqlInnodbDBLayer implements DBLayer
 				return false;
 
 			$cur_row = @mysqli_fetch_row($query_id);
-			if ($cur_row === false)
+			if ($cur_row === null)
 				return false;
 
 			return $cur_row[$col];
