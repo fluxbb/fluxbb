@@ -67,6 +67,7 @@ if (file_exists(PUN_ROOT.'config.php'))
 
 	// If PUN is defined, config.php is probably valid and thus the software is installed
 	if (defined('PUN'))
+		header("Location: index.php");
 		exit($lang_install['Already installed']);
 }
 
@@ -1653,6 +1654,7 @@ else
 		<div id="brdtitle" class="inbox">
 			<h1><span><?php echo $lang_install['FluxBB Installation'] ?></span></h1>
 			<div id="brddesc"><p><?php echo $lang_install['FluxBB has been installed'] ?></p></div>
+			<?php header("Location: index.php"); ?>
 		</div>
 	</div>
 </div>
