@@ -1316,14 +1316,6 @@ else
 				'datatype'		=> 'VARCHAR(12)',
 				'allow_null'	=> true
 			),
-			'msn'				=> array(
-				'datatype'		=> 'VARCHAR(80)',
-				'allow_null'	=> true
-			),
-			'yahoo'				=> array(
-				'datatype'		=> 'VARCHAR(30)',
-				'allow_null'	=> true
-			),
 			'location'			=> array(
 				'datatype'		=> 'VARCHAR(30)',
 				'allow_null'	=> true

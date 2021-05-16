@@ -769,7 +769,7 @@ else if (isset($_GET['find_user']))
 	$like_command = ($db_type == 'pgsql') ? 'ILIKE' : 'LIKE';
 	foreach ($form as $key => $input)
 	{
-		if ($input != '' && in_array($key, array('username', 'email', 'title', 'realname', 'url', 'jabber', 'icq', 'msn', 'yahoo', 'location', 'signature', 'admin_note')))
+		if ($input != '' && in_array($key, array('username', 'email', 'title', 'realname', 'url', 'jabber', 'icq', 'location', 'signature', 'admin_note')))
 		{
 			$conditions[] = 'u.'.$db->escape($key).' '.$like_command.' \''.$db->escape(str_replace(array('*', '_'), array('%', '\\_'), $input)).'\'';
 			$query_str[] = 'form%5B'.$key.'%5D='.urlencode($input);
@@ -956,14 +956,6 @@ else
 								<tr>
 									<th scope="row"><?php echo $lang_admin_users['ICQ label'] ?></th>
 									<td><input type="text" name="form[icq]" size="12" maxlength="12" tabindex="8" /></td>
-								</tr>
-								<tr>
-									<th scope="row"><?php echo $lang_admin_users['MSN label'] ?></th>
-									<td><input type="text" name="form[msn]" size="30" maxlength="50" tabindex="9" /></td>
-								</tr>
-								<tr>
-									<th scope="row"><?php echo $lang_admin_users['Yahoo label'] ?></th>
-									<td><input type="text" name="form[yahoo]" size="20" maxlength="20" tabindex="11" /></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_users['Location label'] ?></th>
