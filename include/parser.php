@@ -751,17 +751,17 @@ function handle_list_tag($content, $type = '*')
 		);
 	}
 
-	$content = preg_replace('#\s*\[\*\](.*?)\[/\*\]\s*#s', '<li><p>$1</p></li>', pun_trim($content));
+	$content = preg_replace('#\s*\[\*\](.*?)\[/\*\]\s*#s', '<li>$1</li>', pun_trim($content));
 
 	if ($type == '*')
-		$content = '<ul>'.$content.'</ul>';
+		$content = '<ul dir="auto">'.$content.'</ul>';
 	else
 		if ($type == 'a')
-			$content = '<ol class="alpha">'.$content.'</ol>';
+			$content = '<ol class="alpha" dir="auto">'.$content.'</ol>';
 		else
-			$content = '<ol class="decimal">'.$content.'</ol>';
+			$content = '<ol class="decimal" dir="auto">'.$content.'</ol>';
 
-	return '</p>'.$content.'<p>';
+	return '</p>'.$content.'<p dir="auto">';
 }
 
 
@@ -774,17 +774,17 @@ function do_bbcode($text, $is_signature = false)
 
 	if (strpos($text, '[quote') !== false)
 	{
-		$text = preg_replace('%\[quote\]\s*%', '</p><div class="quotebox"><blockquote><div><p>', $text);
+		$text = preg_replace('%\[quote\]\s*%', '</p><div class="quotebox"><blockquote><div><p dir="auto">', $text);
 		$text = preg_replace_callback(
 			'%\[quote=(&quot;|&\#039;|"|\'|)([^\r\n]*?)\\1\]%s',
 			function ($match) use ($lang_common) {
 				return '</p><div class="quotebox"><cite>'.
 					str_replace(array('[', '\"'), array('&#91;', '"'), $match[2]).
-					' '.$lang_common['wrote'].'</cite><blockquote><div><p>';
+					' '.$lang_common['wrote'].'</cite><blockquote><div><p dir="auto">';
 			},
 			$text
 		);
-		$text = preg_replace('%\s*\[\/quote\]%S', '</p></div></blockquote></div><p>', $text);
+		$text = preg_replace('%\s*\[\/quote\]%S', '</p></div></blockquote></div><p dir="auto">', $text);
 	}
 	if (!$is_signature)
 	{
@@ -812,7 +812,7 @@ function do_bbcode($text, $is_signature = false)
 	$replace[] = '<ins>$1</ins>';
 	$replace[] = '<em>$1</em>';
 	$replace[] = '<span style="color: $1">$2</span>';
-	$replace[] = '</p><h5>$1</h5><p>';
+	$replace[] = '</p><h5 dir="auto">$1</h5><p dir="auto">';
 
 	if (($is_signature && $pun_config['p_sig_img_tag'] == '1') || (!$is_signature && $pun_config['p_message_img_tag'] == '1'))
 	{
@@ -955,7 +955,7 @@ function parse_message($text, $hide_smilies)
 			if (isset($inside[$i]))
 			{
 				$num_lines = (substr_count($inside[$i], "\n"));
-				$text .= '</p><div class="codebox"><pre'.(($num_lines > 28) ? ' class="vscroll"' : '').'><code>'.pun_trim($inside[$i], "\n\r").'</code></pre></div><p>';
+				$text .= '</p><div class="codebox"><pre'.(($num_lines > 28) ? ' class="vscroll"' : '').'><code>'.pun_trim($inside[$i], "\n\r").'</code></pre></div><p dir="auto">';
 			}
 		}
 	}
@@ -971,7 +971,7 @@ function clean_paragraphs($text)
 {
 	// Add paragraph tag around post, but make sure there are no empty paragraphs
 
-	$text = '<p>'.$text.'</p>';
+	$text = '<p dir="auto">'.$text.'</p>';
 
 	// Replace any breaks next to paragraphs so our replace below catches them
 	$text = preg_replace('%(</?p>)(?:\s*?<br />){1,2}%i', '$1', $text);
@@ -979,12 +979,15 @@ function clean_paragraphs($text)
 
 	// Remove any empty paragraph tags (inserted via quotes/lists/code/etc) which should be stripped
 	$text = str_replace('<p></p>', '', $text);
+	$text = str_replace('<p dir="auto"></p>', '', $text);
 
-	$text = preg_replace('%<br />\s*?<br />%i', '</p><p>', $text);
+	$text = preg_replace('%<br />\s*?<br />%i', '</p><p dir="auto">', $text);
 
-	$text = str_replace('<p><br />', '<br /><p>', $text);
+	$text = str_replace('<p><br />', '<br /><p dir="auto">', $text);
+	$text = str_replace('<p dir="auto"><br />', '<br /><p dir="auto">', $text);
 	$text = str_replace('<br /></p>', '</p><br />', $text);
 	$text = str_replace('<p></p>', '<br /><br />', $text);
+	$text = str_replace('<p dir="auto"></p>', '<br /><br />', $text);
 
 	return $text;
 }

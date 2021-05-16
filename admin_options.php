@@ -249,7 +249,7 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Board desc label'] ?></th>
 									<td>
-										<textarea name="form[board_desc]" cols="60" rows="3"><?php echo pun_htmlspecialchars($pun_config['o_board_desc']) ?></textarea>
+										<textarea dir="auto" name="form[board_desc]" cols="60" rows="3"><?php echo pun_htmlspecialchars($pun_config['o_board_desc']) ?></textarea>
 										<span><?php echo $lang_admin_options['Board desc help'] ?></span>
 									</td>
 								</tr>
@@ -584,7 +584,7 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Menu items label'] ?></th>
 									<td>
-										<textarea name="form[additional_navlinks]" rows="3" cols="55"><?php echo pun_htmlspecialchars($pun_config['o_additional_navlinks']) ?></textarea>
+										<textarea dir="auto" name="form[additional_navlinks]" rows="3" cols="55"><?php echo pun_htmlspecialchars($pun_config['o_additional_navlinks']) ?></textarea>
 										<span><?php echo $lang_admin_options['Menu items help'] ?></span>
 									</td>
 								</tr>
@@ -644,7 +644,7 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Mailing list label'] ?></th>
 									<td>
-										<textarea name="form[mailing_list]" rows="5" cols="55"><?php echo pun_htmlspecialchars($pun_config['o_mailing_list']) ?></textarea>
+										<textarea dir="auto" name="form[mailing_list]" rows="5" cols="55"><?php echo pun_htmlspecialchars($pun_config['o_mailing_list']) ?></textarea>
 										<span><?php echo $lang_admin_options['Mailing list help'] ?></span>
 									</td>
 								</tr>
@@ -808,7 +808,7 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Rules label'] ?></th>
 									<td>
-										<textarea name="form[rules_message]" rows="10" cols="55"><?php echo pun_htmlspecialchars($pun_config['o_rules_message']) ?></textarea>
+										<textarea dir="auto" name="form[rules_message]" rows="10" cols="55"><?php echo pun_htmlspecialchars($pun_config['o_rules_message']) ?></textarea>
 										<span><?php echo $lang_admin_options['Rules help'] ?></span>
 									</td>
 								</tr>
@@ -841,7 +841,7 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Announcement message label'] ?></th>
 									<td>
-										<textarea name="form[announcement_message]" rows="5" cols="55"><?php echo pun_htmlspecialchars($pun_config['o_announcement_message']) ?></textarea>
+										<textarea dir="auto" name="form[announcement_message]" rows="5" cols="55"><?php echo pun_htmlspecialchars($pun_config['o_announcement_message']) ?></textarea>
 										<span><?php echo $lang_admin_options['Announcement message help'] ?></span>
 									</td>
 								</tr>
@@ -865,7 +865,7 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Maintenance message label'] ?></th>
 									<td>
-										<textarea name="form[maintenance_message]" rows="5" cols="55"><?php echo pun_htmlspecialchars($pun_config['o_maintenance_message']) ?></textarea>
+										<textarea dir="auto" name="form[maintenance_message]" rows="5" cols="55"><?php echo pun_htmlspecialchars($pun_config['o_maintenance_message']) ?></textarea>
 										<span><?php echo $lang_admin_options['Maintenance message help'] ?></span>
 									</td>
 								</tr>

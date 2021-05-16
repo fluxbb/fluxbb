@@ -522,7 +522,7 @@ if (empty($stage))
 						<p><?php echo $lang_update['Maintenance message info'] ?></p>
 						<div class="txtarea">
 							<label class="required"><strong><?php echo $lang_update['Maintenance message'] ?> <span><?php echo $lang_update['Required'] ?></span></strong><br />
-							<textarea name="req_maintenance_message" rows="4" cols="65"><?php echo pun_htmlspecialchars($pun_config['o_maintenance_message']) ?></textarea><br /></label>
+							<textarea dir="auto" name="req_maintenance_message" rows="4" cols="65"><?php echo pun_htmlspecialchars($pun_config['o_maintenance_message']) ?></textarea><br /></label>
 						</div>
 					</div>
 				</fieldset>

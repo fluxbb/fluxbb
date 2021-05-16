@@ -250,7 +250,7 @@ else if (isset($_GET['edit_forum']))
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_forums['Forum description label'] ?></th>
-									<td><textarea name="forum_desc" rows="3" cols="50" tabindex="2"><?php echo pun_htmlspecialchars($cur_forum['forum_desc']) ?></textarea></td>
+									<td><textarea dir="auto" name="forum_desc" rows="3" cols="50" tabindex="2"><?php echo pun_htmlspecialchars($cur_forum['forum_desc']) ?></textarea></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_forums['Category label'] ?></th>
