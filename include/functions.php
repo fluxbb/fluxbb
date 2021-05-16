@@ -1720,9 +1720,6 @@ function remove_bad_characters($array)
 			"\xcc\xb8"		=> '',		// COMBINING LONG SOLIDUS OVERLAY		0338	*
 			"\xe1\x85\x9F"	=> '',		// HANGUL CHOSEONG FILLER				115F	*
 			"\xe1\x85\xA0"	=> '',		// HANGUL JUNGSEONG FILLER				1160	*
-			"\xe2\x80\x8b"	=> '',		// ZERO WIDTH SPACE						200B	*
-			"\xe2\x80\x8c"	=> '',		// ZERO WIDTH NON-JOINER				200C
-			"\xe2\x80\x8d"	=> '',		// ZERO WIDTH JOINER					200D
 			"\xe2\x80\x8e"	=> '',		// LEFT-TO-RIGHT MARK					200E
 			"\xe2\x80\x8f"	=> '',		// RIGHT-TO-LEFT MARK					200F
 			"\xe2\x80\xaa"	=> '',		// LEFT-TO-RIGHT EMBEDDING				202A
