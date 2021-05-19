@@ -30,8 +30,10 @@ if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
 	exit;
 }
 
-// Attempt to load the configuration file config.php
-if (file_exists(PUN_ROOT.'config.php'))
+// Define a configuration either from a function or config.php file.
+if (function_exists('define_forum_config'))
+	define_forum_config();
+elseif (file_exists(PUN_ROOT.'config.php'))
 	require PUN_ROOT.'config.php';
 
 // If we have the 1.3-legacy constant defined, define the proper 1.4 constant so we don't get an incorrect "need to install" message
