@@ -28,8 +28,7 @@ if (isset($_POST['form_sent']))
 		'board_title'			=> pun_trim($_POST['form']['board_title']),
 		'board_desc'			=> pun_trim($_POST['form']['board_desc']),
 		'base_url'				=> pun_trim($_POST['form']['base_url']),
-		'default_timezone'		=> floatval($_POST['form']['default_timezone']),
-		'default_dst'			=> $_POST['form']['default_dst'] != '1' ? '0' : '1',
+		'default_timezone'		=> trim($_POST['form']['default_timezone']),
 		'default_lang'			=> pun_trim($_POST['form']['default_lang']),
 		'default_style'			=> pun_trim($_POST['form']['default_style']),
 		'time_format'			=> pun_trim($_POST['form']['time_format']),
@@ -263,57 +262,8 @@ generate_admin_menu('options');
 								<tr>
 									<th scope="row"><?php echo $lang_admin_options['Timezone label'] ?></th>
 									<td>
-										<select name="form[default_timezone]">
-											<option value="-12"<?php if ($pun_config['o_default_timezone'] == -12) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC-12:00'] ?></option>
-											<option value="-11"<?php if ($pun_config['o_default_timezone'] == -11) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC-11:00'] ?></option>
-											<option value="-10"<?php if ($pun_config['o_default_timezone'] == -10) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC-10:00'] ?></option>
-											<option value="-9.5"<?php if ($pun_config['o_default_timezone'] == -9.5) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC-09:30'] ?></option>
-											<option value="-9"<?php if ($pun_config['o_default_timezone'] == -9) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC-09:00'] ?></option>
-											<option value="-8.5"<?php if ($pun_config['o_default_timezone'] == -8.5) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC-08:30'] ?></option>
-											<option value="-8"<?php if ($pun_config['o_default_timezone'] == -8) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC-08:00'] ?></option>
-											<option value="-7"<?php if ($pun_config['o_default_timezone'] == -7) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC-07:00'] ?></option>
-											<option value="-6"<?php if ($pun_config['o_default_timezone'] == -6) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC-06:00'] ?></option>
-											<option value="-5"<?php if ($pun_config['o_default_timezone'] == -5) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC-05:00'] ?></option>
-											<option value="-4"<?php if ($pun_config['o_default_timezone'] == -4) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC-04:00'] ?></option>
-											<option value="-3.5"<?php if ($pun_config['o_default_timezone'] == -3.5) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC-03:30'] ?></option>
-											<option value="-3"<?php if ($pun_config['o_default_timezone'] == -3) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC-03:00'] ?></option>
-											<option value="-2"<?php if ($pun_config['o_default_timezone'] == -2) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC-02:00'] ?></option>
-											<option value="-1"<?php if ($pun_config['o_default_timezone'] == -1) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC-01:00'] ?></option>
-											<option value="0"<?php if ($pun_config['o_default_timezone'] == 0) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC'] ?></option>
-											<option value="1"<?php if ($pun_config['o_default_timezone'] == 1) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+01:00'] ?></option>
-											<option value="2"<?php if ($pun_config['o_default_timezone'] == 2) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+02:00'] ?></option>
-											<option value="3"<?php if ($pun_config['o_default_timezone'] == 3) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+03:00'] ?></option>
-											<option value="3.5"<?php if ($pun_config['o_default_timezone'] == 3.5) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+03:30'] ?></option>
-											<option value="4"<?php if ($pun_config['o_default_timezone'] == 4) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+04:00'] ?></option>
-											<option value="4.5"<?php if ($pun_config['o_default_timezone'] == 4.5) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+04:30'] ?></option>
-											<option value="5"<?php if ($pun_config['o_default_timezone'] == 5) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+05:00'] ?></option>
-											<option value="5.5"<?php if ($pun_config['o_default_timezone'] == 5.5) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+05:30'] ?></option>
-											<option value="5.75"<?php if ($pun_config['o_default_timezone'] == 5.75) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+05:45'] ?></option>
-											<option value="6"<?php if ($pun_config['o_default_timezone'] == 6) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+06:00'] ?></option>
-											<option value="6.5"<?php if ($pun_config['o_default_timezone'] == 6.5) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+06:30'] ?></option>
-											<option value="7"<?php if ($pun_config['o_default_timezone'] == 7) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+07:00'] ?></option>
-											<option value="8"<?php if ($pun_config['o_default_timezone'] == 8) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+08:00'] ?></option>
-											<option value="8.75"<?php if ($pun_config['o_default_timezone'] == 8.75) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+08:45'] ?></option>
-											<option value="9"<?php if ($pun_config['o_default_timezone'] == 9) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+09:00'] ?></option>
-											<option value="9.5"<?php if ($pun_config['o_default_timezone'] == 9.5) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+09:30'] ?></option>
-											<option value="10"<?php if ($pun_config['o_default_timezone'] == 10) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+10:00'] ?></option>
-											<option value="10.5"<?php if ($pun_config['o_default_timezone'] == 10.5) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+10:30'] ?></option>
-											<option value="11"<?php if ($pun_config['o_default_timezone'] == 11) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+11:00'] ?></option>
-											<option value="11.5"<?php if ($pun_config['o_default_timezone'] == 11.5) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+11:30'] ?></option>
-											<option value="12"<?php if ($pun_config['o_default_timezone'] == 12) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+12:00'] ?></option>
-											<option value="12.75"<?php if ($pun_config['o_default_timezone'] == 12.75) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+12:45'] ?></option>
-											<option value="13"<?php if ($pun_config['o_default_timezone'] == 13) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+13:00'] ?></option>
-											<option value="14"<?php if ($pun_config['o_default_timezone'] == 14) echo ' selected="selected"' ?>><?php echo $lang_admin_options['UTC+14:00'] ?></option>
-										</select>
+										<?=html_timezone_select('form[default_timezone]', $pun_config['o_default_timezone'])?>
 										<span><?php echo $lang_admin_options['Timezone help'] ?></span>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row"><?php echo $lang_admin_options['DST label'] ?></th>
-									<td>
-										<label class="conl"><input type="radio" name="form[default_dst]" value="1"<?php if ($pun_config['o_default_dst'] == '1') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['Yes'] ?></strong></label>
-										<label class="conl"><input type="radio" name="form[default_dst]" value="0"<?php if ($pun_config['o_default_dst'] == '0') echo ' checked="checked"' ?> />&#160;<strong><?php echo $lang_admin_common['No'] ?></strong></label>
-										<span class="clearb"><?php echo $lang_admin_options['DST help'] ?></span>
 									</td>
 								</tr>
 								<tr>
@@ -364,8 +314,7 @@ generate_admin_menu('options');
 				</div>
 <?php
 
-	$diff = ($pun_user['timezone'] + $pun_user['dst']) * 3600;
-	$timestamp = time() + $diff;
+	$timestamp = time() + timezone_get_offset($pun_user['timezone']);
 
 ?>
 				<div class="inform">

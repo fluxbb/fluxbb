@@ -689,9 +689,69 @@ switch ($stage)
 		// Make the message field MEDIUMTEXT to allow proper conversion of 65535 character posts to UTF-8
 		$db->alter_field('posts', 'message', 'MEDIUMTEXT', true) or error('Unable to alter message field', __FILE__, __LINE__, $db->error());
 
-		// Add the DST option to the users table
-		$db->add_field('users', 'dst', 'TINYINT(1)', false, 0, 'timezone') or error('Unable to add dst field', __FILE__, __LINE__, $db->error());
+		// Remove DST option, migrate timezones
+		if (array_key_exists('o_default_dst', $pun_config)) {
+			$db->drop_field('users', 'dst') or error('Unable to drop dst field', __FILE__, __LINE__, $db->error());
+			$db->alter_field('users', 'timezone', 'VARCHAR(255)', false) or error('Unable to alter timezone field', __FILE__, __LINE__, $db->error());
+			$db->query(sprintf('DELETE FROM %sconfig WHERE conf_name = \'%s\'', $db->prefix, 'o_default_dst'));
 
+
+			// Migrate timezones from offsets to names
+			$tz_table = [
+				-12   => 'Europe/London', // Doesn't exist
+				-11   => 'Pacific/Apia',
+				-10   => 'Pacific/Honolulu',
+				-9.5  => 'Pacific/Marquesas',
+				-9    => 'America/Anchorage',
+				-8.5  => 'America/Vancouver', // Doesn't exist either
+				-8    => 'America/Vancouver',
+				-7    => 'America/Denver',
+				-6    => 'America/Chicago',
+				-5    => 'America/New_York',
+				-4    => 'America/Halifax',
+				-3.5  => 'America/St_Johns',
+				-3    => 'America/Sao_Paulo',
+				-2    => 'America/Noronha',
+				-1    => 'Atlantic/Azores',
+				0     => 'Europe/Londo',
+				1     => 'Europe/Paris',
+				2     => 'Europe/Helsinki',
+				3     => 'Europe/Moscow',
+				3.5   => 'Asia/Tehran',
+				4     => 'Asia/Dubai',
+				4.5   => 'Asia/Kabul',
+				5     => 'Asia/Karachi',
+				5.5   => 'Asia/Kolkata',
+				6     => 'Asia/Urumqi',
+				6.5   => 'Asia/Rangoon',
+				7     => 'Asia/Tomsk',
+				8     => 'Asia/Shanghai',
+				8.75  => 'Australia/Eucla',
+				9     => 'Asia/Tokyo',
+				9.5   => 'Australia/Adelaide',
+				10    => 'Australia/Melbourne',
+				10.5  => 'Australia/Lord_Howe',
+				11    => 'Pacific/Noumea',
+				11.5  => 'Pacific/Norfolk', // Doesn't exist
+				12    => 'Pacific/Auckland',
+				12.75 => 'Pacific/Chatham',
+				13    => 'Pacific/Apia',
+				14    => 'Pacific/Kiritimati',
+			];
+
+			foreach ($tz_table as $offset => &$name) {
+				try {
+					$tz = new \DateTimeZone($name);
+				}
+				catch (\Exception $e) {
+					$name = 'UTC';
+				}
+
+				$db->query(sprintf('UPDATE %susers SET timezone = \'%s\' WHERE timezone = \'%s\';', $db->prefix, $db->escape($name), $db->escape($offset)));
+			}
+
+			$db->query(sprintf('UPDATE %sconfig SET conf_value = \'%s\' WHERE conf_name = \'o_default_timezone\'', $db->prefix, $db->escape($tz_table[$default_offset])));
+		}
 		// Add the last_post column to the online table
 		$db->add_field('online', 'last_post', 'INT(10) UNSIGNED', true, null, null) or error('Unable to add last_post field', __FILE__, __LINE__, $db->error());
 
@@ -744,10 +804,6 @@ switch ($stage)
 		// Insert new config option o_smtp_ssl
 		if (!array_key_exists('o_smtp_ssl', $pun_config))
 			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_smtp_ssl\', \'0\')') or error('Unable to insert config value \'o_smtp_ssl\'', __FILE__, __LINE__, $db->error());
-
-		// Insert new config option o_default_dst
-		if (!array_key_exists('o_default_dst', $pun_config))
-			$db->query('INSERT INTO '.$db->prefix.'config (conf_name, conf_value) VALUES (\'o_default_dst\', \'0\')') or error('Unable to insert config value \'o_default_dst\'', __FILE__, __LINE__, $db->error());
 
 		// Insert new config option o_quote_depth
 		if (!array_key_exists('o_quote_depth', $pun_config))
@@ -998,8 +1054,8 @@ switch ($stage)
 		$db->add_field('bans', 'ban_creator', 'INT(10) UNSIGNED', false, 0) or error('Unable to add ban_creator field', __FILE__, __LINE__, $db->error());
 
 		// Add the time/date format settings to the user table
-		$db->add_field('users', 'time_format', 'TINYINT(1)', false, 0, 'dst') or error('Unable to add time_format field', __FILE__, __LINE__, $db->error());
-		$db->add_field('users', 'date_format', 'TINYINT(1)', false, 0, 'dst') or error('Unable to add date_format field', __FILE__, __LINE__, $db->error());
+		$db->add_field('users', 'time_format', 'TINYINT(1)', false, 0, 'timezone') or error('Unable to add time_format field', __FILE__, __LINE__, $db->error());
+		$db->add_field('users', 'date_format', 'TINYINT(1)', false, 0, 'timezone') or error('Unable to add date_format field', __FILE__, __LINE__, $db->error());
 
 		// Change the search_data column to mediumtext
 		$db->alter_field('search_cache', 'search_data', 'MEDIUMTEXT', true) or error('Unable to alter search_data field', __FILE__, __LINE__, $db->error());

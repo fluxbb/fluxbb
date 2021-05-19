@@ -92,7 +92,7 @@ if (isset($_REQUEST['add_ban']) || isset($_GET['edit_ban']))
 		else
 			message($lang_common['Bad request'], false, '404 Not Found');
 
-		$diff = ($pun_user['timezone'] + $pun_user['dst']) * 3600;
+		$diff = timezone_get_offset($pun_user['timezone']);
 		$ban_expire = ($ban_expire != '') ? gmdate('Y-m-d', $ban_expire + $diff) : '';
 
 		$mode = 'edit';
@@ -303,7 +303,7 @@ else if (isset($_POST['add_edit_ban']))
 		if ($ban_expire == -1 || !$ban_expire)
 			message($lang_admin_bans['Invalid date message'].' '.$lang_admin_bans['Invalid date reasons']);
 
-		$diff = ($pun_user['timezone'] + $pun_user['dst']) * 3600;
+		$diff = timezone_get_offset($pun_user['timezone']);
 		$ban_expire -= $diff;
 
 		if ($ban_expire <= time())

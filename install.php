@@ -1381,14 +1381,9 @@ else
 				'default'		=> '1'
 			),
 			'timezone'			=> array(
-				'datatype'		=> 'FLOAT',
+				'datatype'		=> 'VARCHAR(255)',
 				'allow_null'	=> false,
-				'default'		=> '0'
-			),
-			'dst'				=> array(
-				'datatype'		=> 'TINYINT(1)',
-				'allow_null'	=> false,
-				'default'		=> '0'
+				'default'		=> '\''.$db->escape('Europe/Paris').'\'',
 			),
 			'time_format'		=> array(
 				'datatype'		=> 'TINYINT(1)',
@@ -1504,7 +1499,7 @@ else
 		'o_parser_revision'			=> FORUM_PARSER_REVISION,
 		'o_board_title'				=> $title,
 		'o_board_desc'				=> $description,
-		'o_default_timezone'		=> 0,
+		'o_default_timezone'		=> 'Europe/Paris',
 		'o_time_format'				=> 'H:i:s',
 		'o_date_format'				=> 'Y-m-d',
 		'o_timeout_visit'			=> 1800,
@@ -1560,7 +1555,6 @@ else
 		'o_rules_message'			=> $lang_install['Rules'],
 		'o_maintenance'				=> 0,
 		'o_maintenance_message'		=> $lang_install['Maintenance message'],
-		'o_default_dst'				=> 0,
 		'o_feed_type'				=> 2,
 		'o_feed_ttl'				=> 0,
 		'p_message_bbcode'			=> 1,
