@@ -829,7 +829,7 @@ function censor_words($text)
 //
 function get_title($user)
 {
-	global $pun_bans, $lang_common;
+	global $pun_bans, $lang_common, $pun_config;
 	static $ban_list;
 
 	// If not already built in a previous call, build an array of lowercase banned usernames
@@ -846,7 +846,7 @@ function get_title($user)
 		$user_title = $lang_common['Banned'];
 	// If the user has a custom title
 	else if ($user['title'] != '')
-		$user_title = pun_htmlspecialchars($user['title']);
+		$user_title = pun_htmlspecialchars($pun_config['o_censoring'] == '1' ? censor_words($user['title']) : $user['title']);
 	// If the user group has a default user title
 	else if ($user['g_user_title'] != '')
 		$user_title = pun_htmlspecialchars($user['g_user_title']);

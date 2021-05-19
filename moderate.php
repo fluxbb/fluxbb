@@ -348,9 +348,6 @@ if (isset($_GET['tid']))
 			// get_title() requires that an element 'username' be present in the array
 			$cur_post['username'] = $cur_post['poster'];
 			$user_title = get_title($cur_post);
-
-			if ($pun_config['o_censoring'] == '1')
-				$user_title = censor_words($user_title);
 		}
 		// If the poster is a guest (or a user that has been deleted)
 		else
