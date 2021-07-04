@@ -247,6 +247,10 @@ function preparse_tags($text, &$errors, $is_signature = false)
 	if ($pun_user['g_post_links'] != '1')
 		$tags_forbidden[] = 'url';
 
+	// Disallow IMG tags
+	if ($pun_user['g_post_images'] != '1')
+		$tags_forbidden[] = 'img';
+
 	$split_text = preg_split('%(\[[\*a-zA-Z0-9-/]*?(?:=.*?)?\])%', $text, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
 	$open_tags = array('fluxbb-bbcode');
