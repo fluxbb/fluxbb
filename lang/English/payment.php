@@ -9,7 +9,7 @@ $lang_payment = array(
     'PayPal 5'              =>  'Complete the payment. Make sure to submit Transaction ID, and your email address associated to your PayPal account below. An administrator will review your payment manually. This process may take up to 24 hours, so please be patient!',
     'Plan'                  =>  '%s for %s days',
     'Transaction ID'        =>  'Transaction ID',
-    'Billing Email'         =>  'Blling Email',
+    'Billing Email'         =>  'Billing Email',
     'Submit'                =>  'Submit',
     'Cancel'                =>  'Cancel'
 );
