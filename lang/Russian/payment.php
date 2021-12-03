@@ -2,14 +2,14 @@
 
 // Language definitions used in payment.php, newpayment.php, payment_query.php and motify_payments.php
 $lang_payment = array(
-    'PayPal 1'			    =>	'',
-    'PayPal 2'              =>  '',
-    'PayPal 3'              =>  '',
-    'PayPal 4'              =>  '',
-    'PayPal 5'              =>  '',
-    'Plan'                  =>  '',
-    'Transaction ID'        =>  '',
-    'Billing Email'         =>  '',
-    'Submit'                =>  '',
-    'Cancel'                =>  ''
+    'PayPal 1'			    =>	'Войдите в свой PayPal аккаунт, используя браузер. Нажмите %sSend &amp; Request%s в верху страницы. В качестве адреса получается введите эл. почту, указанную ниже.',
+    'PayPal 2'              =>  'Укажите сумму платежа: %s; валюту: EUR; и введите фразу ниже в качестве примечания, а затем нажмите %sПродолжить%s.',
+    'PayPal 3'              =>  'Укажите тип перевода %sSending to a friend%s, если потребуется.',
+    'PayPal 4'              =>  'Вы должны совершить перевод, используя %sFriends &amp; Family%s! Все другие типы платежей, кроме &apos;Friends &amp; Family&apos; приведут к блокировке аккаунта!',
+    'PayPal 5'              =>  'Завершите платеж. Укажите ID Транзакции, а также адрес эл. почты, привязанный к вашему PayPal аккаунту. Платеж будет рассмотрен администрацией вручную. Это может занять до 24 часов - пожалуйста, будьте терпеливыми.',
+    'Plan'                  =>  '%s за %s дней',
+    'Transaction ID'        =>  'ID транзакции',
+    'Billing Email'         =>  'Эл. почта',
+    'Submit'                =>  'Отправить',
+    'Cancel'                =>  'Отмена'
 );
