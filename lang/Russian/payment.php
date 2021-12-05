@@ -11,11 +11,14 @@ $lang_payment = array(
     'Transaction ID'        =>  'ID транзакции',
     'Billing Email'         =>  'Эл. почта',
     'Submit'                =>  'Отправить',
-    'Cancel'                =>  'Отмена',
-	'501'                   =>  'К сожалению, данный метод оплаты сейчас недоступен. Попробуйте использовать другой способ.', // Payment method not enabled
-	'403'					=>	'Запрещенный',
+    'Cancel'                =>  'Отмена'
+	'501'                   =>  'К сожалению, данный метод оплаты сейчас недоступен. Попробуйте использовать другой способ.',
+	'403'          			=>  'Запрещено',
     '400'                   =>  'Недействительные параметры запроса.',
-	'429'					=>	'',
-	'200'					=>	'', // Success message for PayPal
-	'PayPal noticebar'		=>	'',
-);
+	'429'          			=>  '',
+    'Invoice confirmation'  =>  '',
+    'Success'               =>  '', // Used for status title
+    'Success Text'          =>  '',
+	'Failed' 				=>  '',
+    'Awaiting Approval'     =>  ''
+),
