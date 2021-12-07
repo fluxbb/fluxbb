@@ -10,6 +10,16 @@ $lang_payment = array(
     'Plan'                  =>  '',
     'Transaction ID'        =>  '',
     'Billing Email'         =>  '',
+	'Billing Email Tooltip' =>  '',
     'Submit'                =>  '',
-    'Cancel'                =>  ''
-);
+    'Cancel'                =>  '',
+	'501'                   =>  '',
+    '403'                   =>  '',
+    '400'                   =>  '',
+	'429'          			=>  '',
+    'Invoice confirmation'  =>  '',
+    'Success'               =>  '',
+    'Success Text'          =>  '',
+    'Failed' 				=>  '',
+    'Awaiting Approval'     =>  '',
+  );
