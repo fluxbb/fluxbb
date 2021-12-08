@@ -432,7 +432,7 @@ while (@ob_end_clean());
 
 
 $stage = isset($_REQUEST['stage']) ? $_REQUEST['stage'] : '';
-$old_charset = isset($_REQUEST['req_old_charset']) ? str_replace('ISO8859', 'ISO-8859', strtoupper($_REQUEST['req_old_charset'])) : 'ISO-8859-1';
+$old_charset = isset($_REQUEST['req_old_charset']) ? str_replace('ISO8859', 'ISO-8859', strtoupper(htmlspecialchars($_REQUEST['req_old_charset']))) : 'ISO-8859-1';
 $start_at = isset($_REQUEST['start_at']) ? intval($_REQUEST['start_at']) : 0;
 $query_str = '';
 
