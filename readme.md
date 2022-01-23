@@ -7,4 +7,4 @@ Join us on [Discord](https://discord.com/invite/txrsskxq6n)
 
 ## Credits
 * Powered by [FluxBB](https://fluxbb.org)
-* Translations by [@alyx4000](https://github.com/alyx4000), [@yagodnick](https://github.com/yagodnick), [@ZeynoxClapp](https://github.com/ZeynoxClapp).
+* Translations by [@alyx4000](https://github.com/alyx4000), [@cat1337](https://github.com/cat1337), [@yagodnick](https://github.com/yagodnick), [@ZeynoxClapp](https://github.com/ZeynoxClapp).
